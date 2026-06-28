@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import {
     defineModels,
     getPagerLimit,
@@ -72,7 +72,7 @@ test("pager is correctly updated", async () => {
         static template = xml`<ControlPanel />`;
         static props = ["*"];
         setup() {
-            this.state = useState({ offset: 0, limit: 10 });
+            this.state = proxy({ offset: 0, limit: 10 });
             usePager(() => ({
                 offset: this.state.offset,
                 limit: this.state.limit,
@@ -108,7 +108,7 @@ test("pager is correctly updated on desktop", async () => {
         static template = xml`<ControlPanel />`;
         static props = ["*"];
         setup() {
-            this.state = useState({ offset: 0, limit: 10 });
+            this.state = proxy({ offset: 0, limit: 10 });
             usePager(() => ({
                 offset: this.state.offset,
                 limit: this.state.limit,

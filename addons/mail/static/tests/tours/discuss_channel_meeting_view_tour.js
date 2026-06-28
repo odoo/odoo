@@ -28,8 +28,13 @@ function getMeetingViewTourSteps({ inWelcomePage = false } = {}) {
         },
         {
             trigger:
-                ".o-mail-Meeting .o-mail-ActionPanel .o-mail-Thread:contains('Meeting - Jan 1, 2026')",
+                ".o-mail-Meeting .o-mail-ActionPanel .o-mail-Thread:contains('Meeting, Jan 1')",
         },
+        {
+            trigger: ".o-mail-Meeting .o-mail-ActionPanel .o-mail-Composer-input",
+            run: "click",
+        },
+        { trigger: ".o-mail-Meeting [title='Chat']:not(:has(.badge))" },
         {
             trigger: ".o-mail-Message[data-persistent]:contains('Hello everyone!')",
             run: "hover && click .o-mail-Meeting .o-mail-Message-actions button[title='Expand']",
@@ -61,8 +66,8 @@ function getMeetingViewTourSteps({ inWelcomePage = false } = {}) {
         },
         { trigger: ".o-mail-Meeting:not(:has(.o-mail-ActionPanel))" },
         {
-            trigger: ".o-mail-Meeting [title='Exit Fullscreen']",
-            run: "click",
+            trigger: ".o-mail-Meeting",
+            run: "press Escape",
         },
         { trigger: "body:not(:has(.o-mail-Meeting))" },
     ];
@@ -86,18 +91,7 @@ registry
             // Avoid starting with mic/camera to prevent an unhandleable browser permission popup.
             browser.localStorage.setItem("discuss_call_preview_join_mute", "true");
             browser.localStorage.setItem("discuss_call_preview_join_video", "false");
-            const steps = getMeetingViewTourSteps();
-            const clickOnChatIndex = steps.find((step) => step.content === CLICK_ON_CHAT_STEP);
-            steps.splice(
-                clickOnChatIndex,
-                0,
-                {
-                    trigger: ".o-mail-Composer.o-focused .o-mail-Composer-input",
-                    run: "edit Hello everyone!",
-                },
-                { trigger: ".o-mail-Composer button[title='Send']:enabled", run: "click" }
-            );
-            return steps;
+            return getMeetingViewTourSteps();
         },
     })
     .add("discuss.meeting_view_public_tour", {

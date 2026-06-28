@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
@@ -17,7 +17,7 @@ export class WebsiteSlidesCourseQuizQuestionForm extends Component {
         this.slidesService = useService("website_slides");
         this.slide = this.slidesService.data.slide;
         this.bus = this.slidesService.bus;
-        this.state = useState({
+        this.state = proxy({
             answerLines: [],
             error: null,
         });

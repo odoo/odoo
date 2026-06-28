@@ -39,9 +39,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
             before creating the invoice.
         """
         if self.advance_payment_method == 'delivered' and self.invoicing_timesheet_enabled:
-            if self.date_start_invoice_timesheet or self.date_end_invoice_timesheet:
-                sale_orders.order_line._recompute_qty_to_invoice(
-                    self.date_start_invoice_timesheet, self.date_end_invoice_timesheet)
+            sale_orders.order_line._recompute_qty_to_invoice(
+                self.date_start_invoice_timesheet, self.date_end_invoice_timesheet)
 
             return sale_orders.with_context(
                 timesheet_start_date=self.date_start_invoice_timesheet,

@@ -1,11 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { addToCartValues } from "./add_to_cart_option";
+import { _t } from "@web/core/l10n/translation";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class AddToCartOptionPlugin extends Plugin {
     static id = "addToCartOption";
-    static dependencies = ["builderActions"];
+    static dependencies = ["builderActions", "websiteBridge"];
+    static shared = ["addToCartValues"];
     resources = {
         so_content_addition_selectors: [".s_add_to_cart"],
         builder_actions: {
@@ -14,6 +15,13 @@ export class AddToCartOptionPlugin extends Plugin {
             AddToCartActionAction,
         },
     };
+    addToCartValues() {
+        return {
+            addToCart: { action: "add_to_cart", icon: "fa-cart-plus", label: _t("Add to Cart"), label_website: this.dependencies.websiteBridge._t("Add to Cart") },
+            buyNow: { action: "buy_now", icon: "fa-credit-card", label: _t("Buy Now"), label_website: this.dependencies.websiteBridge._t("Buy Now") },
+        };
+    };
+
 }
 
 export class ProductToCartAction extends BuilderAction {
@@ -112,8 +120,8 @@ export class VariantToCartAction extends BuilderAction {
 }
 export class AddToCartActionAction extends BuilderAction {
     static id = "addToCartAction";
-    static dependencies = ["builderActions"];
-    apply({ editingElement, params: { action, icon, label } }) {
+    static dependencies = ["builderActions", "addToCartOption"];
+    apply({ editingElement, params: { action, icon, label_website: label } }) {
         const classAction = this.dependencies.builderActions.getAction("classAction");
         editingElement.dataset.action = action;
         const buttonEl = editingElement.querySelector(".s_add_to_cart_btn");
@@ -142,6 +150,7 @@ export class AddToCartActionAction extends BuilderAction {
     }
 
     resetDefaultAction(editingElement) {
+        const addToCartValues = this.dependencies.addToCartOption.addToCartValues();
         if (this.isApplied({ editingElement, params: addToCartValues.buyNow })) {
             this.clean({ editingElement, params: addToCartValues.buyNow });
             this.apply({ editingElement, params: addToCartValues.addToCart });

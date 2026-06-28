@@ -1,41 +1,31 @@
-import { useState } from "@web/owl2/utils";
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog, dialogProps } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 
 const NO_OP = () => {};
 
 export class WebsiteDialog extends Component {
     static template = "website.WebsiteDialog";
     static components = { Dialog };
-    static props = {
-        ...Dialog.props,
-        primaryTitle: { type: String, optional: true },
-        primaryClick: { type: Function, optional: true },
-        secondaryTitle: { type: String, optional: true },
-        secondaryClick: { type: Function, optional: true },
-        showSecondaryButton: { type: Boolean, optional: true },
-        close: { type: Function, optional: true },
-        closeOnClick: { type: Boolean, optional: true },
-        body: { type: String, optional: true },
-        slots: { type: Object, optional: true },
-        showFooter: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        ...Dialog.defaultProps,
-        title: _t("Confirmation"),
-        showFooter: true,
-        primaryTitle: _t("Ok"),
-        secondaryTitle: _t("Discard"),
-        showSecondaryButton: true,
-        size: "md",
-        closeOnClick: true,
-        close: NO_OP,
-    };
+    props = props({
+        ...dialogProps,
+        title: t.string().optional(_t("Confirmation")),
+        size: t.selection(["sm", "md", "lg", "xl", "fs", "fullscreen"]).optional("md"),
+        primaryTitle: t.string().optional(_t("Ok")),
+        primaryClick: t.function().optional(),
+        secondaryTitle: t.string().optional(_t("Discard")),
+        secondaryClick: t.function().optional(),
+        showSecondaryButton: t.boolean().optional(true),
+        close: t.function().optional(() => NO_OP),
+        closeOnClick: t.boolean().optional(true),
+        body: t.string().optional(),
+        slots: t.object().optional(),
+        showFooter: t.boolean().optional(true),
+    });
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             disabled: false,
         });
         this.modalRef = useChildRef();

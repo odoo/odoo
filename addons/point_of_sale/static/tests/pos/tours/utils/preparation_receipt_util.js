@@ -24,9 +24,13 @@ async function generateFireCourseReceipts() {
     const order = posmodel.getOrder();
     const course = order.getSelectedCourse();
     const orderChange = {
-        new: [],
-        cancelled: [],
-        noteUpdate: course.lines.map((line) => ({ product_id: line.getProduct().id })),
+        quantity: 0,
+        categoryCount: [],
+        addedQuantity: [],
+        removedQuantity: [],
+        noteUpdate: course.line_ids.map((line) => ({
+            product_id: line.getProduct().id,
+        })),
         noteUpdateTitle: `${course.name} ${_t("fired")}`,
         printNoteUpdateData: false,
     };
@@ -34,8 +38,8 @@ async function generateFireCourseReceipts() {
 }
 
 // Return rendered order change receipts that will be printed when clicking "Order" button
-export async function generatePreparationReceipts() {
-    return await generateReceiptsToPrint(posmodel.getOrder());
+export async function generatePreparationReceipts(opts = {}) {
+    return await generateReceiptsToPrint(posmodel.getOrder(), opts);
 }
 
 export function checkPreparationTicketData(
@@ -45,6 +49,7 @@ export function checkPreparationTicketData(
         invisibleInDom: [],
         lineOrder: [],
         fireCourse: false,
+        cancelled: false,
     }
 ) {
     const check = async () => {
@@ -53,7 +58,7 @@ export function checkPreparationTicketData(
         if (opts.fireCourse) {
             tickets = await generateFireCourseReceipts();
         } else {
-            tickets = await generatePreparationReceipts();
+            tickets = await generatePreparationReceipts({ cancelled: opts.cancelled });
         }
 
         if (

@@ -1,10 +1,6 @@
 import { generateQRCodeDataUrl } from "@point_of_sale/utils";
 import { formatCurrency } from "@web/core/currency";
-import {
-    changesToOrder,
-    filterChangeByCategories,
-    getStrNotes,
-} from "../../models/utils/order_change";
+import { filterChangeByCategories, getStrNotes } from "../../models/utils/order_change";
 import { _t } from "@web/core/l10n/translation";
 
 const { DateTime } = luxon;
@@ -16,14 +12,15 @@ export class GeneratePrinterData {
         this.setup(...arguments);
     }
 
-    setup({ models, order = false, basicReceipt = false }) {
+    setup({ models, order = false, basicReceipt = false, simplified = false }) {
         this.models = models;
         this.order = order;
         this.basicReceipt = basicReceipt;
+        this.simplified = simplified;
     }
 
     get config() {
-        return this.models["pos.config"].getFirst();
+        return this.models["pos.config"].get(odoo.pos_config_id);
     }
 
     get currency() {
@@ -38,7 +35,7 @@ export class GeneratePrinterData {
         return {
             company_state_name: this.company.state_id?.name || "",
             company_country_name: this.company.country_id?.name || "",
-            vat_label: this.company.country_id.vat_label || "Tax ID",
+            vat_label: this.company.country_id?.vat_label || "Tax ID",
         };
     }
 
@@ -104,7 +101,9 @@ export class GeneratePrinterData {
                 taxes: processedTaxes,
                 sold: processData(saleDetails.products),
                 refund: processData(saleDetails.refund_products),
+                cancel: processData(saleDetails.cancelled_products),
                 payments: processedPayments,
+                session_state: saleDetails.session_state,
             },
         };
     }
@@ -184,7 +183,6 @@ export class GeneratePrinterData {
         return this.order.lines.map((line) => {
             const productData = { ...line.product_id.raw };
             productData.display_name = line.getFullProductName();
-
             return {
                 ...line.raw,
                 product_data: productData,
@@ -192,9 +190,8 @@ export class GeneratePrinterData {
                 unit_price: line.currencyDisplayPriceUnit,
                 product_unit_price: line.product_id.displayPriceUnit,
                 price_subtotal_incl: line.currencyDisplayPrice,
-                lot_names: line.pack_lot_ids?.length
-                    ? line.pack_lot_ids.map((l) => l.lot_name)
-                    : false,
+                is_service_fee_line: line.isServiceFeeLine(),
+                service_fee_display_info: line.getServiceFeeDisplayInfo(),
             };
         });
     }
@@ -225,6 +222,17 @@ export class GeneratePrinterData {
               ])
             : false;
 
+        const serviceFeeLines = this.order.serviceFeeLines;
+        let serviceFee = false;
+        const serviceFeeLine = serviceFeeLines?.[0];
+        if (serviceFeeLine) {
+            serviceFee = {
+                amount: serviceFeeLine.currencyDisplayPrice,
+                qty: serviceFeeLine.qty,
+                name: serviceFeeLine.getFullProductName(),
+            };
+        }
+
         return {
             order: this.order.raw,
             config: this.config.raw,
@@ -239,6 +247,7 @@ export class GeneratePrinterData {
             },
             conditions: {
                 basic_receipt: this.basicReceipt,
+                simplified_receipt: this.simplified,
                 display_vat: this.config._IS_VAT,
                 display_qr_code: useQrCode,
                 display_url: company.point_of_sale_ticket_portal_url_display_mode != "qr_code",
@@ -254,7 +263,7 @@ export class GeneratePrinterData {
                 prices: this.generateTaxData(),
                 cashier_name: this.order.getCashierName(),
                 formated_date_order: this.order.formatDateOrTime("date_order", "datetime"),
-                formated_shipping_date: this.order.formatDateOrTime("shipping_date", "date"),
+                service_fee: serviceFee,
             },
         };
     }
@@ -280,11 +289,11 @@ export class GeneratePrinterData {
 
     generatePreparationChanges(orderChange, categoryIdsSet) {
         const isPartOfCombo = (line) =>
-            line.isCombo ||
+            line.combo_line_ids?.length ||
             line.combo_parent_uuid ||
             this.models["product.product"].get(line.product_id).type == "combo";
-        const comboChanges = orderChange.new.filter(isPartOfCombo);
-        const normalChanges = orderChange.new.filter((line) => !isPartOfCombo(line));
+        const comboChanges = orderChange.addedQuantity.filter(isPartOfCombo);
+        const normalChanges = orderChange.addedQuantity.filter((line) => !isPartOfCombo(line));
         normalChanges.sort((a, b) => {
             const sequenceA = a.pos_categ_sequence;
             const sequenceB = b.pos_categ_sequence;
@@ -294,27 +303,27 @@ export class GeneratePrinterData {
 
             return sequenceA - sequenceB;
         });
-        orderChange.new = [...comboChanges, ...normalChanges];
+        orderChange.addedQuantity = [...comboChanges, ...normalChanges];
         return filterChangeByCategories(categoryIdsSet, orderChange, this.models);
     }
 
     generatePreparationReceipts(orderChange, categoryIdsSet) {
         const changes = this.generatePreparationChanges(orderChange, categoryIdsSet);
         const receiptsData = [];
-        if (changes.new.length) {
+        if (changes.addedQuantity.length) {
             receiptsData.push(
                 this.preparePreparationGroupedData({
                     title: _t("NEW"),
-                    data: changes.new,
+                    data: changes.addedQuantity,
                 })
             );
         }
 
-        if (changes.cancelled.length) {
+        if (changes.removedQuantity.length) {
             receiptsData.push(
                 this.preparePreparationGroupedData({
                     title: _t("CANCELLED"),
-                    data: changes.cancelled,
+                    data: changes.removedQuantity,
                 })
             );
         }
@@ -329,7 +338,11 @@ export class GeneratePrinterData {
             );
         }
 
-        if (orderChange.internal_note || orderChange.general_customer_note) {
+        // Print a separate order note ticket only if no other tickets exist
+        if (
+            !receiptsData.length &&
+            (orderChange.internal_note || orderChange.general_customer_note)
+        ) {
             receiptsData.push(this.preparePreparationGroupedData({ title: "", data: [] }));
         }
         return receiptsData;
@@ -338,21 +351,21 @@ export class GeneratePrinterData {
     generatePreparationData(categoryIdsSet, opts = { orderChange: null }) {
         const order = this.order;
         const override = opts.orderChange;
-        let orderChange = override || changesToOrder(this.order, categoryIdsSet, opts.cancelled);
+        let orderChange = override || order.getChanges({ cancelled: opts.cancelled });
         let reprint = false;
 
         if (
-            !orderChange.new.length &&
-            !orderChange.cancelled.length &&
+            !orderChange.addedQuantity.length &&
+            !orderChange.removedQuantity.length &&
             !orderChange.noteUpdate.length &&
             !orderChange.internal_note &&
             !orderChange.general_customer_note &&
-            order.uiState.lastPrints
+            order.lastPrints.length
         ) {
-            orderChange = [order.uiState.lastPrints.at(-1)];
+            orderChange = [order.lastPrints.at(-1)];
             reprint = true;
         } else {
-            order.uiState.lastPrints.push(orderChange);
+            order.pushLastPrints(orderChange);
             orderChange = [orderChange];
         }
 
@@ -378,13 +391,14 @@ export class GeneratePrinterData {
                         reprint: Boolean(reprint),
                         time: DateTime.now().toFormat("HH:mm"),
                         internal_note: getStrNotes(change.internal_note) || false,
-                        general_customer_note: orderChange.general_customer_note || false,
+                        general_customer_note: change.general_customer_note || false,
                         employee_name: order.employee_id?.name || order.user_id?.name || false,
                         preset_time: order.presetDateTime || false,
                     },
                     conditions: {
                         module_pos_restaurant: this.config.module_pos_restaurant,
                     },
+                    _rawChange: reprint ? null : changes[0],
                 });
             }
         }

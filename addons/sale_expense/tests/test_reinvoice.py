@@ -108,7 +108,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             }),
         })
         # create SO line and confirm SO (with only one line)
-        cls.expense_sale_order = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        cls.expense_sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,
@@ -414,7 +414,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         })
 
         # create SO line and confirm SO (with only one line)
-        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -497,7 +497,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         })
 
         # create SO line and confirm SO (with only one line)
-        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
@@ -537,4 +537,27 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                 'product_uom_qty': 1.0,
                 'is_expense': True,
             },
+        ])
+
+    def test_expenses_reinvoice_paid_by_company(self):
+        """ Test expense line paid by company is re-invoiced correctly """
+        expense = self.create_expenses({
+            'name': 'expense_1',
+            'date': '2016-01-01',
+            'product_id': self.company_data['service_order_cost_price'].id,
+            'quantity': 5,  # 235.28 * 5 = 1176.4
+            'employee_id': self.expense_employee.id,
+            'sale_order_id': self.expense_sale_order.id,
+            'payment_mode': 'company_account',
+        })
+
+        expense.action_submit()
+        expense._do_approve()
+        expense.action_post()
+
+        self.assertRecordValues(self.expense_sale_order.order_line, [
+            # Original SO line:
+            {'qty_delivered': 0.0, 'product_uom_qty': 3.0, 'price_unit': 235.0, 'price_total': 705.0, 'price_subtotal': 705.0, 'is_expense': False},
+            # Expense line:
+            {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'price_unit': 1045.7, 'price_total': 1176.4, 'price_subtotal': 1045.7, 'is_expense': True},
         ])

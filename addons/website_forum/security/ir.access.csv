@@ -1,0 +1,26 @@
+id,name,model_id,group_id/id,operation,domain
+access_forum_forum_public,forum.forum,forum.forum,base.group_public,r,
+access_forum_forum_portal,forum.forum,forum.forum,base.group_portal,r,
+access_forum_forum_employee,forum.forum,forum.forum,base.group_user,r,
+access_forum_forum_manager,forum.forum.manager,forum.forum,base.group_erp_manager,crud,
+website_forum_create_website_designer,Website forum: Website designer can create private forum,forum.forum,website.group_website_designer,c,
+website_forum,Website forum,forum.forum,,crud,"[('can_access', '=', True)]"
+access_forum_post_public,forum.post.public,forum.post,base.group_public,r,
+access_forum_post_portal,forum.post.portal,forum.post,base.group_portal,crud,
+access_forum_post_user,forum.post.user,forum.post,base.group_user,crud,
+website_forum_post,Website forum post,forum.post,,crud,"[('forum_id.can_access', '=', True)]"
+access_forum_post_comment_public,forum.post.comment.public,forum.post.comment,base.group_public,r,
+access_forum_post_comment_portal,forum.post.comment.portal,forum.post.comment,base.group_portal,crud,
+access_forum_post_comment_user,forum.post.comment.user,forum.post.comment,base.group_user,crud,
+website_forum_post_comment,Website forum post comment,forum.post.comment,,crud,"[('post_id.forum_id.can_access', '=', True)]"
+website_forum_post_vote_own,Website forum vote: own votes only,forum.post.vote,base.group_portal,cru,"[('user_id', '=', user.id)]"
+website_forum_post_vote_own_1,Website forum vote: own votes only,forum.post.vote,base.group_user,crud,"[('user_id', '=', user.id)]"
+website_forum_post_vote_all,Website forum vote: all votes,forum.post.vote,base.group_erp_manager,crud,
+access_forum_post_reason_public,forum.post.reason.public,forum.post.reason,base.group_public,r,
+access_forum_post_reason_portal,forum.post.reason.portal,forum.post.reason,base.group_portal,r,
+access_forum_post_reason_user,forum.post.reason.user,forum.post.reason,base.group_user,r,
+access_forum_post_reason_website_designer,forum.post.reason.website.designer,forum.post.reason,website.group_website_designer,crud,
+access_forum_tag_public,forum.tag.public,forum.tag,base.group_public,cr,
+access_forum_tag_portal,forum.tag.portal,forum.tag,base.group_portal,cr,
+access_forum_tag_user,forum.tag.user,forum.tag,base.group_user,crud,
+website_forum_tag,Website forum tag,forum.tag,,crud,"[('forum_id.can_access', '=', True)]"

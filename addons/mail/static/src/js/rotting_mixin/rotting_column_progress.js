@@ -1,12 +1,14 @@
-import { ColumnProgress } from "@web/views/view_components/column_progress";
+import { props, t } from "@odoo/owl";
+
+import { ColumnProgress, columnProgressProps } from "@web/views/view_components/column_progress";
 
 export class RottingColumnProgress extends ColumnProgress {
     static template = "mail.RottingColumnProgress";
-    static props = {
-        ...ColumnProgress.props,
-        progressBarState: { type: Object },
-        onRotIconClicked: { type: Function },
-    };
+    props = props({
+        ...columnProgressProps,
+        progressBarState: t.object(),
+        onRotIconClicked: t.function(),
+    });
 
     getRottingGroupCount(group) {
         const isRottingField = group._config.fields.is_rotting;

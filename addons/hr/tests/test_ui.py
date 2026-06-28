@@ -53,3 +53,7 @@ class TestEmployeeUi(HttpCase):
 
         emp = self.env['hr.employee'].search([('name', 'ilike', 'My Employee')])
         self.assertTrue(emp)
+
+    def test_first_contract_date_with_hr_user_rights(self):
+        new_test_user(self.env, login='hr_user', groups='hr.group_hr_user')
+        self.start_tour('/odoo', 'hr_user_kanban_view_tour', login='hr_user', timeout=350)

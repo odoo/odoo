@@ -12,6 +12,7 @@ TIMEOUT = 10
 PEPPOL_PROXY_URLS = {
     'prod': 'https://peppol.api.odoo.com',
     'test': 'https://peppol.test.odoo.com',
+    'demo': None,  # 'demo' has no real proxy; only lookup() works (querying the prod proxy).
 }
 
 
@@ -19,10 +20,12 @@ class PeppolIAPConnector:
 
     def __init__(self, company):
         assert company.exists()
+        proxy_mode = company._get_peppol_edi_mode()
+        # Write operations (can_connect, create_connection) require a real proxy.
+        # For read-only `lookup` use the classmethod, which doesn't need an instance.
+        assert proxy_mode != 'demo'
         self.company = company
         self.env = company.env
-        proxy_mode = company._get_peppol_edi_mode()
-        assert proxy_mode in ('prod', 'test')
         self.proxy_mode = proxy_mode
         self.base_url = PEPPOL_PROXY_URLS[proxy_mode]
 
@@ -37,15 +40,20 @@ class PeppolIAPConnector:
         except requests.exceptions.RequestException as e:
             if response_vals and 'code' in response_vals:
                 raise UserError(get_peppol_error_message(self.env, response_vals))
-            _logger.debug("Failed to connect to Odoo Peppol Proxy %s, %s", endpoint, e)
+            _logger.debug("Failed to connect to Odoo Peppol Proxy %s, %s, %s", endpoint, data or params, e)
             raise UserError(self.env._("Failed to connect to Odoo Peppol Proxy."))
+        except ValueError as ve:
+            _logger.debug("Odoo Peppol Proxy returned an invalid response %s, %s, %s", endpoint, data or params, ve)
+            raise UserError(self.env._("Odoo Peppol Proxy returned an invalid response."))
         return response_vals
 
     def can_connect(self, *, peppol_identifier, db_uuid, callback_url, connect_token):
+        assert self.proxy_mode != 'demo'
         params = {'dbuuid': db_uuid, 'peppol_identifier': peppol_identifier, 'callback_url': callback_url, 'connect_token': connect_token}
         return self.request_public_http('GET', '/api/peppol/2/can_connect', params=params)
 
     def create_connection(self, *, peppol_identifier, db_uuid, public_key, auth_token=None, **company_details):
+        assert self.proxy_mode != 'demo'
         params = {
             'peppol_identifier': peppol_identifier,
             'dbuuid': db_uuid,

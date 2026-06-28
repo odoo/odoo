@@ -94,9 +94,9 @@
         "B12": "=_t(\"Hourly Total Revenue\")",
         "B30": "=_t(\"Daily Total Revenue\")",
         "B49": "=_t(\"Top 15 Products per Margin\") ",
-        "B50": "=PIVOT(6, 10, FALSE, FALSE)",
+        "B50": "=PIVOT(6, 15, FALSE, FALSE)",
         "B67": "=_t(\"Top 15 Tables per Revenue\")",
-        "B68": "=PIVOT(7, 10, FALSE, FALSE)",
+        "B68": "=PIVOT(7, 15, FALSE, FALSE)",
         "G50": "#",
         "G51": "1",
         "G52": "2",
@@ -113,10 +113,10 @@
         "G63": "13",
         "G64": "14",
         "G65": "15",
-        "H50": "=PIVOT(9, 10, FALSE, FALSE)",
+        "H50": "=PIVOT(9, 15, FALSE, FALSE)",
         "H67": "=_t(\"Top Responsibles\")",
-        "H68": "=CHOOSECOLS(PIVOT(10, 10, FALSE, FALSE), 1)",
-        "J68": "=CHOOSECOLS(PIVOT(10, 10, FALSE, FALSE), 2, 3)"
+        "H68": "=CHOOSECOLS(PIVOT(10, 15, FALSE, FALSE), 1)",
+        "J68": "=CHOOSECOLS(PIVOT(10, 15, FALSE, FALSE), 2, 3)"
       },
       "styles": {
         "A50": 1,
@@ -187,9 +187,9 @@
           "ranges": ["B69:B83"]
         },
         {
-          "rule": { "type": "DataBarRule", "color": 16708338, "rangeValues": "K69:K78" },
+          "rule": { "type": "DataBarRule", "color": 16708338, "rangeValues": "K69:K83" },
           "id": "acf8e638-6670-4ab2-a451-aa5455e1e9ea",
-          "ranges": ["H69:H78"]
+          "ranges": ["H69:H83"]
         }
       ],
       "dataValidationRules": [],
@@ -389,7 +389,7 @@
             "humanize": false,
             "chartId": "150978db-0307-4a65-a70a-e3a634dcfd48"
           },
-          "offset": { "x": 620, "y": 127 },
+          "offset": { "x": 827, "y": 10 },
           "col": 0,
           "row": 0
         },
@@ -414,6 +414,26 @@
           "row": 0
         },
         {
+          "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          "width": 200,
+          "height": 108,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#EA6175",
+            "baselineColorUp": "#43C5B1",
+            "baselineMode": "difference",
+            "title": { "text": "Total guests", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "keyValue": "Data!B10",
+            "humanize": false,
+            "chartId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+          },
+          "offset": { "x": 414, "y": 127 },
+          "col": 0,
+          "row": 0
+        },
+        {
           "id": "87cda1aa-ba42-4865-8f56-912dd9e323a7",
           "width": 200,
           "height": 108,
@@ -429,7 +449,7 @@
             "humanize": false,
             "chartId": "87cda1aa-ba42-4865-8f56-912dd9e323a7"
           },
-          "offset": { "x": 414, "y": 127 },
+          "offset": { "x": 620, "y": 127 },
           "col": 0,
           "row": 0
         },
@@ -445,7 +465,6 @@
             "chartDefinitions": {
               "bb13976b-be42": {
                 "title": {},
-                "background": "#FFFFFF",
                 "legendPosition": "top",
                 "metaData": {
                   "groupBy": ["product_categ_id"],
@@ -461,11 +480,7 @@
                   "domain": [
                     "&",
                     ["state", "!=", "cancel"],
-                    [
-                      "config_id",
-                      "in",
-                      [4, 5]
-                    ]
+                    ["config_id.module_pos_restaurant", "=", true]
                   ],
                   "groupBy": ["product_categ_id"],
                   "orderBy": []
@@ -502,7 +517,7 @@
       ],
       "tables": [
         {
-          "range": "A49:E65",
+          "range": "A50:E65",
           "type": "static",
           "config": {
             "hasFilters": false,
@@ -517,7 +532,7 @@
           }
         },
         {
-          "range": "A67:E83",
+          "range": "A68:E83",
           "type": "static",
           "config": {
             "hasFilters": false,
@@ -532,7 +547,7 @@
           }
         },
         {
-          "range": "G49:K65",
+          "range": "G50:K65",
           "type": "static",
           "config": {
             "hasFilters": false,
@@ -547,7 +562,7 @@
           }
         },
         {
-          "range": "H67:K83",
+          "range": "H68:K83",
           "type": "static",
           "config": {
             "hasFilters": false,
@@ -595,6 +610,7 @@
         "A7": "Average net revenue / sitting ",
         "A8": "Average total revenue / sitting",
         "A9": "Average discount",
+        "A10": "Total guests",
         "A12": "=_t(\"Revenue per hour\")",
         "A13": "=_t(\"Time\")",
         "A14": "0",
@@ -630,6 +646,7 @@
         "B7": "=PIVOT.VALUE(5,\"Untaxed revenue per sitting:sum\")",
         "B8": "=PIVOT.VALUE(5,\"Total revenue per sitting:sum\")",
         "B9": "=iferror(PIVOT.VALUE(4,\"Discount / Order:sum\"))",
+        "B10": "=PIVOT.VALUE(5,\"customer_count:sum\")",
         "B13": "=_t(\"Revenue\")",
         "B14": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",0)",
         "B15": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",1)",
@@ -705,7 +722,6 @@
         "D35": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A35)",
         "D36": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A36)",
         "D37": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A37)",
-        "D38": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A38)",
         "F12": "=_t(\"Revenue per day\")",
         "F13": "=_t(\"Time\")",
         "F14": "1",
@@ -756,7 +772,7 @@
       "figures": [],
       "tables": [
         {
-          "range": "A13:D38",
+          "range": "A13:D37",
           "type": "static",
           "config": {
             "hasFilters": false,
@@ -1110,17 +1126,15 @@
           "userDefinedName": "Quantity Sold"
         },
         {
-          "id": "product_qty:sum",
-          "fieldName": "product_qty",
+          "id": "price_total:sum",
+          "fieldName": "price_total",
           "aggregator": "sum",
           "userDefinedName": "Revenue"
         },
         {
-          "id": "price_total:sum",
-          "fieldName": "price_total",
-          "aggregator": "sum",
-          "userDefinedName": "Margin",
-          "format": ""
+          "id": "margin:sum",
+          "fieldName": "margin",
+          "aggregator": "sum"
         }
       ],
       "model": "report.pos.order",
@@ -1138,6 +1152,11 @@
         "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" },
         "cdfaa4f9-2517-2312-a597-7gfth345621g":	{ "chain": "config_id", "type": "many2one" },
         "706960e9-94d1-4927-bac5-52528cc4c1ed": { "chain": "preset_id", "type": "many2one" }
+      },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "margin:sum"
       }
     },
     "2ada09e2-9b25-41c4-96b9-f3d7f077e5cf": {
@@ -1160,14 +1179,14 @@
         }
       },
       "measures": [
+        { "id": "__count", "fieldName": "__count", "userDefinedName": "Orders" },
         {
           "id": "amount_total:sum",
           "fieldName": "amount_total",
           "aggregator": "sum",
           "format": "",
-          "userDefinedName": "Orders"
+          "userDefinedName": "Revenue"
         },
-        { "id": "__count", "fieldName": "__count", "userDefinedName": "Revenue" },
         {
           "id": "tip_amount:sum",
           "fieldName": "tip_amount",
@@ -1191,6 +1210,11 @@
         "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" },
         "cdfaa4f9-2517-2312-a597-7gfth345621g":	{ "chain": "config_id", "type": "many2one" },
         "706960e9-94d1-4927-bac5-52528cc4c1ed": { "chain": "preset_id", "type": "many2one" }
+      },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "amount_total:sum"
       }
     },
     "46b474b9-dc26-424c-b423-ac9209ba9899": {
@@ -1203,10 +1227,9 @@
       },
       "measures": [
         {
-          "id": "order_id:count_distinct",
-          "fieldName": "order_id",
-          "aggregator": "count_distinct",
-          "userDefinedName": "Product "
+          "id": "product_id:count",
+          "fieldName": "product_id",
+          "aggregator": "count"
         },
         {
           "id": "product_qty:sum",
@@ -1219,14 +1242,13 @@
           "fieldName": "price_total",
           "aggregator": "sum",
           "format": "",
-          "userDefinedName": "Revenue "
+          "userDefinedName": "Revenue"
         }
       ],
       "model": "report.pos.order",
       "columns": [],
       "rows": [
-        { "fieldName": "pos_categ_id" },
-        { "fieldName": "product_id" }
+        { "fieldName": "pos_categ_id" }
       ],
       "name": "Category ",
       "actionXmlId": "point_of_sale.action_report_pos_order_all",
@@ -1238,6 +1260,11 @@
         "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" },
         "cdfaa4f9-2517-2312-a597-7gfth345621g":	{ "chain": "config_id", "type": "many2one" },
         "706960e9-94d1-4927-bac5-52528cc4c1ed": { "chain": "preset_id", "type": "many2one" }
+      },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "price_total:sum"
       }
     },
     "bc1df90b-fa7e-417a-868c-5f48e0e20349": {
@@ -1256,7 +1283,6 @@
       "context": {
         "group_by": []
       },
-      "sortedColumn": null,
       "measures": [
         {
           "id": "order_id:count_distinct",
@@ -1286,6 +1312,11 @@
         "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" },
         "cdfaa4f9-2517-2312-a597-7gfth345621g":	{ "chain": "config_id", "type": "many2one" },
         "706960e9-94d1-4927-bac5-52528cc4c1ed": { "chain": "preset_id", "type": "many2one" }
+      },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "price_total:sum"
       }
     }
   },

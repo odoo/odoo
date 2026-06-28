@@ -49,11 +49,14 @@ class _Relational(Field[BaseModel]):
         env.su or self in env._field_access_memo or records.check_field_access(self, 'read')
 
         # multi-record case
-        if self.compute and self.store:
+        if self.compute and self.store and env.transaction.tocompute.get(self):
             self.recompute(records)
 
         # get the cache
-        field_cache = self._get_cache(env)
+        try:
+            field_cache = env._field_cache_memo[self]
+        except KeyError:
+            field_cache = self._get_cache(env)
 
         # retrieve values in cache, and fetch missing ones
         vals = []
@@ -93,6 +96,11 @@ class _Relational(Field[BaseModel]):
         super().setup_nonrelated(model)
         assert self.comodel_name in model.pool, \
             f"Field {self} with unknown comodel_name {self.comodel_name or '???'!r}"
+
+    def _compute_related(self, records):
+        # Related fields for x2m must be computed in sudo to ensure cache
+        # consistency with the related field which is fetched in sudo.
+        return super()._compute_related(records.sudo())
 
     def setup_inverses(self, registry: Registry, inverses: Collector[Field, Field]):
         """ Populate ``inverses`` with ``self`` and its inverse fields. """
@@ -274,6 +282,8 @@ class Many2one(_Relational):
         #    this is considered a programming error.
         if not self.ondelete:
             comodel = model.env[self.comodel_name]
+            # Safe to update shared fields' attributes
+            # because _check_model_extension guarantees model_cls._transient is not overridable.
             if model.is_transient() and not comodel.is_transient():
                 # Many2one relations from TransientModel Model are annoying because
                 # they can block deletion due to foreign keys. So unless stated
@@ -404,6 +414,13 @@ class Many2one(_Relational):
 
         # discard the records that are not modified
         cache_value = self.convert_to_cache(value, records)
+
+        if self.bypass_search_access and not records.env.su:
+            try:
+                records.env[self.comodel_name].browse(cache_value).check_access('read')
+            except AccessError as e:
+                raise AccessError(records.env._("Failed to write field %s", self) + "\n" + str(e)) from e
+
         records = self._filter_not_equal(records, cache_value)
         if not records:
             return
@@ -517,7 +534,9 @@ class Many2one(_Relational):
                 sql = self._condition_to_sql_company(table, sql, field_expr, operator, value)
             if can_be_null:
                 if positive:
-                    sql = SQL("(%s IS NOT NULL AND %s)", sql_field, sql)
+                    # PERF: Explicitly rejecting NULLs on the joined primary key allows PostgreSQL
+                    # to reduce the LEFT JOIN to an INNER JOIN and potentially choose a better plan.
+                    sql = SQL("(%s IS NOT NULL AND %s IS NOT NULL AND %s)", sql_field, cotable.id, sql)
                 else:
                     sql = SQL("(%s IS NULL OR %s)", sql_field, sql)
             return sql
@@ -580,6 +599,7 @@ class Many2one(_Relational):
 
 class _RelationalMulti(_Relational):
     r"Abstract class for relational fields \*2many."
+    # X2many fields must be written last, because they flush other fields when deleting lines.
     write_sequence = 20
 
     # Important: the cache contains the ids of all the records in the relation,
@@ -665,30 +685,46 @@ class _RelationalMulti(_Relational):
 
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
-    def convert_to_record(self, value, record):
+    def convert_to_record(self, value, record: BaseModel):
         # use registry to avoid creating a recordset for the model
         prefetch_ids = Prefetch.relational(self, record)
-        Comodel = record.pool[self.comodel_name]
-        corecords = Comodel(record.env, value, prefetch_ids)
+        env = record.env
+        Comodel = env.registry[self.comodel_name]
+        corecords = Comodel(env, value, prefetch_ids)
+        if not env.su and corecords and not self.bypass_search_access:
+            # For performance, this slightly modified version of
+            # `_filtered_access` does not recheck permissions for records marked
+            # as inaccessible. Without this, we would recheck record access on
+            # each `convert_to_record` call if one of them in inaccessible.
+            read_access = env._access_cache[Comodel._name]
+            if all(map(read_access.get, corecords._ids)):
+                pass  # all records are accessible
+            elif all(map(read_access.__contains__, corecords._origin)):
+                # we have a value for all origins in access
+                # consider inaccessible records as inaccessible
+                if not corecords.browse().has_access('read'):
+                    return corecords.browse()
+                if corecords._origin:
+                    def accessible(rec):
+                        origin = rec._origin
+                        # no origin: new id without origin
+                        return not origin or read_access[origin.id]
+                    corecords = corecords.filtered(accessible)
+            else:
+                # default behaviour
+                corecords = corecords._filtered_access('read')
         if (
             Comodel._active_name
-            and self.context.get('active_test', record.env.context.get('active_test', True))
+            and self.context.get('active_test', env.context.get('active_test', True))
         ):
             corecords = corecords.filtered(Comodel._active_name).with_prefetch(prefetch_ids)
         return corecords
 
-    def convert_to_record_multi(self, values, records):
+    def convert_to_record_multi(self, values, records: BaseModel):
         # return the list of ids as a recordset without duplicates
-        prefetch_ids = Prefetch.relational(self, records)
-        Comodel = records.pool[self.comodel_name]
+        # same logic as convert_to_record (but references multiple source records)
         ids = tuple(unique(id_ for ids in values for id_ in ids))
-        corecords = Comodel(records.env, ids, prefetch_ids)
-        if (
-            Comodel._active_name
-            and self.context.get('active_test', records.env.context.get('active_test', True))
-        ):
-            corecords = corecords.filtered(Comodel._active_name).with_prefetch(prefetch_ids)
-        return corecords
+        return self.convert_to_record(ids, records)
 
     def convert_to_read(self, value, record, use_display_name=True):
         return value.ids
@@ -811,35 +847,11 @@ class _RelationalMulti(_Relational):
         if not self.store:
             raise ValueError(f"Cannot convert {self} to SQL because it is not stored")
 
-        # update the operator to 'any'
-        if operator in ('in', 'not in'):
-            operator = 'any' if operator == 'in' else 'not any'
         assert operator in ('any', 'not any', 'any!', 'not any!'), \
             f"Relational field {self} expects 'any' operator"
         exists = operator in ('any', 'any!')
 
-        # check the value and execute the query
-        if isinstance(value, COLLECTION_TYPES):
-            value = OrderedSet(value)
-            comodel = comodel.sudo().with_context(active_test=False)
-            if False in value:
-                #  [not]in (False, 1) => split conditions
-                #  We want records that have a record such as condition or
-                #  that don't have any records.
-                if len(value) > 1:
-                    in_operator = 'in' if exists else 'not in'
-                    return SQL(
-                        "(%s OR %s)" if exists else "(%s AND %s)",
-                        self.condition_to_sql(table, field_expr, in_operator, (False,)),
-                        self.condition_to_sql(table, field_expr, in_operator, value - {False}),
-                    )
-                #  in (False) => not any (Domain.TRUE)
-                #  not in (False) => any (Domain.TRUE)
-                value = comodel._search(Domain.TRUE)
-                exists = not exists
-            else:
-                value = comodel.browse(value)._as_query(ordered=False)
-        elif isinstance(value, SQL):
+        if isinstance(value, SQL):
             # wrap SQL into a simple query
             comodel = comodel.sudo()
             value = Domain('id', 'any', value)
@@ -851,9 +863,13 @@ class _RelationalMulti(_Relational):
         field_domain = self.get_comodel_domain(model)
         if isinstance(value, Domain):
             domain = value & field_domain
-            comodel = comodel.with_context(**self.context)
             bypass_access = self.bypass_search_access or operator in ('any!', 'not any!')
-            query = comodel._search(domain, bypass_access=bypass_access)
+            if bypass_access and domain.is_condition('id', value=Query):
+                # ('id', 'any!', Query), so we can just use the query
+                query = domain.value
+            else:
+                comodel = comodel.with_context(**self.context)
+                query = comodel._search(domain, bypass_access=bypass_access)
             assert isinstance(query, Query)
             return query
         if isinstance(value, Query):
@@ -976,13 +992,15 @@ class One2many(_RelationalMulti):
 
         # optimization: fetch the inverse and active fields with search()
         domain = self.get_comodel_domain(records) & Domain(inverse, 'in', records.ids)
-        field_names = [inverse]
+        field_names = OrderedSet((inverse,))
         if comodel._active_name:
-            field_names.append(comodel._active_name)
-        try:
-            lines = comodel.search_fetch(domain, field_names)
-        except AccessError as e:
-            raise AccessError(records.env._("Failed to read field %s", self) + '\n' + str(e)) from e
+            # add the active field
+            field_names.add(comodel._active_name)
+        if not comodel.env.su:
+            # add fields for security rules
+            sec_domain = comodel._access_domain('read')
+            field_names.update(c.field_expr for c in sec_domain.optimize(comodel.sudo()).iter_conditions())
+        lines = comodel.sudo().search_fetch(domain, field_names)
 
         # group lines by inverse field (without prefetching other fields)
         get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
@@ -1338,6 +1356,8 @@ class Many2many(_RelationalMulti):
                         "table is not possible when source and destination models " \
                         "are the same" % self
                     self.relation = '%s_%s_rel' % tuple(tables)
+                # Safe to update shared fields' attributes
+                # because _check_model_extension guarantees model_cls._table is not overridable.
                 if not self.column1:
                     self.column1 = '%s_id' % model._table
                 if not self.column2:
@@ -1421,16 +1441,10 @@ class Many2many(_RelationalMulti):
         context.update(self.context)
         comodel = records.env[self.comodel_name].with_context(**context)
 
-        # bypass the access during search if method is overwriten to avoid
-        # possibly filtering all records of the comodel before joining
-        bypass_access = self.bypass_search_access and getattr(comodel, '_access_domain_heavy', False)
-
         # make the query for the lines
         domain = self.get_comodel_domain(records)
-        try:
-            query = comodel._search(domain, order=comodel._order, bypass_access=bypass_access)
-        except AccessError as e:
-            raise AccessError(records.env._("Failed to read field %s", self) + '\n' + str(e)) from e
+        # bypass_access set because of context management in ir.attachment
+        query = comodel.sudo()._search(domain, order=comodel._order, bypass_access=True)
 
         # join with many2many relation table
         sql_id1 = SQL.identifier(self.relation, self.column1)
@@ -1446,19 +1460,6 @@ class Many2many(_RelationalMulti):
         for id1, id2 in records.env.execute_query(query.select(sql_id1, sql_id2)):
             group[id1].append(id2)
             corecord_ids.add(id2)
-
-        # filter using record rules
-        if bypass_access and corecord_ids:
-            accessible_corecords = comodel.browse(corecord_ids)._filtered_access('read')
-            if len(accessible_corecords) < len(corecord_ids):
-                # some records are inaccessible, remove them from groups
-                corecord_ids = set(accessible_corecords._ids)
-                for id1, ids in group.items():
-                    group[id1] = [id_ for id_ in ids if id_ in corecord_ids]
-        elif corecord_ids and not comodel.env.su:
-            # query is already filtered, corecords are accessible
-            accessible_corecords = comodel.browse(corecord_ids)
-            comodel.env._add_to_access_cache(accessible_corecords)
 
         # store result in cache
         values = [tuple(group[id_]) for id_ in records._ids]
@@ -1489,28 +1490,46 @@ class Many2many(_RelationalMulti):
                 self.read(records.browse(missing_ids))
 
         # determine new relation {x: ys}
-        old_relation = {record.id: set(record[self.name]._ids) for record in records}
+        old_relation = {record.id: set(record[self.name]._ids) for record in records.sudo()}
+        if records.env.context.get('active_test', True):
+            old_inactive_relation = {
+                record.id: set(record[self.name]._ids) - old_relation[record.id]
+                for record in records.sudo().with_context(active_test=False)
+            }
+        else:
+            old_inactive_relation = None
         new_relation = {x: set(ys) for x, ys in old_relation.items()}
+        inaccessible_coids = set() if model.env.su else set(records.sudo()[self.name]._ids) - set(records[self.name]._ids)
+        added_ids = set()
 
         # operations on new relation
         def relation_add(xs, y):
+            added_ids.add(y)
             for x in xs:
                 new_relation[x].add(y)
 
         def relation_remove(xs, y):
+            if y in inaccessible_coids:
+                return
             for x in xs:
                 new_relation[x].discard(y)
 
         def relation_set(xs, ys):
-            for x in xs:
-                new_relation[x] = set(ys)
+            added_ids.update(ys)
+            if inaccessible_coids:
+                for x in xs:
+                    new_relation[x] = set(ys) | (new_relation[x] & inaccessible_coids)
+            else:
+                for x in xs:
+                    new_relation[x] = set(ys)
 
         def relation_delete(ys):
+            ys = set(ys) - inaccessible_coids
             # the pairs (x, y) have been cascade-deleted from relation
             for ys1 in old_relation.values():
-                ys1 -= ys
+                ys1.difference_update(ys)
             for ys1 in new_relation.values():
-                ys1 -= ys
+                ys1.difference_update(ys)
 
         for recs, commands in records_commands_list:
             to_create = []  # line vals to create
@@ -1550,17 +1569,16 @@ class Many2many(_RelationalMulti):
         # disabled on the comodel
         if not model.env.su:
             try:
-                comodel.browse(
-                    co_id
-                    for rec_id, new_co_ids in new_relation.items()
-                    for co_id in new_co_ids - old_relation[rec_id]
-                ).check_access('read')
+                comodel.browse(added_ids).check_access('read')
             except AccessError as e:
                 raise AccessError(model.env._("Failed to write field %s", self) + "\n" + str(e))
 
         # update the cache of self
         for record in records:
-            self._update_cache(record, tuple(new_relation[record.id]))
+            new_ids = tuple(new_relation[record.id])
+            if old_inactive_relation is not None:
+                new_ids += tuple(old_inactive_relation[record.id])
+            self._update_cache(record, new_ids)
 
         # determine the corecords for which the relation has changed
         modified_corecord_ids = set()
@@ -1660,6 +1678,14 @@ class Many2many(_RelationalMulti):
         # determine old and new relation {x: ys}
         set = OrderedSet
         old_relation = {record.id: set(record[self.name]._ids) for records, _ in records_commands_list for record in records}
+        if model.env.context.get('active_test', True):
+            old_inactive_relation = {
+                record.id: set(record[self.name]._ids) - old_relation[record.id]
+                for records, _ in records_commands_list
+                for record in records.with_context(active_test=False)
+            }
+        else:
+            old_inactive_relation = None
         new_relation = {x: set(ys) for x, ys in old_relation.items()}
 
         for recs, commands in records_commands_list:
@@ -1699,7 +1725,10 @@ class Many2many(_RelationalMulti):
 
         # update the cache of self
         for record in records:
-            self._update_cache(record, tuple(new_relation[record.id]))
+            new_ids = tuple(new_relation[record.id])
+            if old_inactive_relation is not None:
+                new_ids += tuple(old_inactive_relation[record.id])
+            self._update_cache(record, new_ids)
 
         # determine the corecords for which the relation has changed
         modified_corecord_ids = set()

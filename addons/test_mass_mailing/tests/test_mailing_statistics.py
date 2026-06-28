@@ -109,3 +109,42 @@ class TestMailingStatistics(TestMassMailCommon):
         self.assertEqual(mail.email_to, self.user_marketing.email_formatted)
         self.assertEqual(mail.reply_to, self.company_admin.partner_id.email_formatted)
         self.assertEqual(mail.state, 'outgoing')
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mass_mailing.models.mailing', 'odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
+    def test_mailing_contact_statistics(self):
+        mailing_contacts = self._create_mailing_contact_test_records(count=5)
+        mailing_contacts[3]['email'] = False  # void email should lead to a 'cancel' trace_status
+        mailing_contacts[4]['email'] = 'raoul@example¢¡.com'  # wrong email should lead to a 'exception' trace_status
+        mailings = self.env['mailing.mailing'].browse(self.mailings_mc.ids)
+        mailings[0].write({'mailing_domain': [('id', 'in', mailing_contacts.ids)], 'user_id': self.user_marketing_2.id})
+        mailings[1].write({'mailing_domain': [('id', 'in', mailing_contacts.ids)], 'user_id': self.user_marketing_2.id})
+        mailings[0].action_put_in_queue()
+        mailings[1].action_put_in_queue()
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            mailings[0].action_send_mail()
+            mailings[1].action_send_mail()
+
+        # simulate some replies and clicks
+        self.gateway_mail_reply_wrecord(MAIL_TEMPLATE, mailing_contacts[0], use_in_reply_to=True)
+        self.gateway_mail_reply_wrecord(MAIL_TEMPLATE, mailing_contacts[1], use_in_reply_to=True)
+        self.gateway_mail_trace_click(mailings[0], mailing_contacts[1], 'https://www.odoo.be')
+        self.gateway_mail_trace_click(mailings[0], mailing_contacts[2], 'https://www.odoo.be')
+        self.gateway_mail_trace_click(mailings[1], mailing_contacts[1], 'https://www.odoo.be')
+
+        # check mailing statistics
+        self.assertEqual(mailing_contacts[0].received_ratio, 100)
+        self.assertEqual(mailing_contacts[1].received_ratio, 100)
+        self.assertEqual(mailing_contacts[2].received_ratio, 100)
+
+        self.assertEqual(mailing_contacts[0].clicks_ratio, 0)
+        self.assertEqual(mailing_contacts[1].clicks_ratio, 100)
+        self.assertEqual(mailing_contacts[2].clicks_ratio, 50)
+
+        self.assertEqual(mailing_contacts[0].opened_ratio, 50)
+        self.assertEqual(mailing_contacts[1].opened_ratio, 100)
+        self.assertEqual(mailing_contacts[2].opened_ratio, 50)
+
+        self.assertEqual(mailing_contacts[0].replied_ratio, 50)
+        self.assertEqual(mailing_contacts[1].replied_ratio, 50)
+        self.assertEqual(mailing_contacts[2].replied_ratio, 0)

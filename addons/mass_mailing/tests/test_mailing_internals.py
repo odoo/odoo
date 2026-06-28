@@ -14,6 +14,7 @@ from unittest.mock import patch
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.sql_db import Cursor
 from odoo.tests import Form, HttpCase, users, tagged
 from odoo.tools import mute_logger
@@ -113,14 +114,14 @@ class TestMassMailValues(MassMailCommon):
                             <!--[if mso]>
                                 <img src="data:image/png;base64,{BASE_64_STRING}9">Fake url, in text: img src="data:image/png;base64,{BASE_64_STRING}"
                                 Fake url, in text: img src="data:image/png;base64,{BASE_64_STRING}"
-                                <img src="data:image/jpg;base64,{BASE_64_STRING}10">
-                                <div style='color: red; background-image:url("data:image/jpg;base64,{BASE_64_STRING}11"); display: block;'>Fake url, in text: style="background-image:url('data:image/png;base64,{BASE_64_STRING}');"
+                                <img src="data:image/jpg;base64,{BASE_64_STRING}A">
+                                <div style='color: red; background-image:url("data:image/jpg;base64,{BASE_64_STRING}B"); display: block;'>Fake url, in text: style="background-image:url('data:image/png;base64,{BASE_64_STRING}');"
                                 Fake url, in text: style="background-image:url('data:image/png;base64,{BASE_64_STRING}');"</div>
-                                <div style="color: red; background-image:url('data:image/jpg;base64,{BASE_64_STRING}12'); display: block;"/>
-                                <div style="color: red; background-image:url(&quot;data:image/jpg;base64,{BASE_64_STRING}13&quot;); display: block;"/>
-                                <div style="color: red; background-image:url(&#34;data:image/jpg;base64,{BASE_64_STRING}14&#34;); display: block;"/>
-                                <div style="color: red; background-image:url(data:image/jpg;base64,{BASE_64_STRING}15); display: block;"/>
-                                <div style="color: red; background-image: url(data:image/jpg;base64,{BASE_64_STRING}16); background: url('data:image/jpg;base64,{BASE_64_STRING}17'); display: block;"/>
+                                <div style="color: red; background-image:url('data:image/jpg;base64,{BASE_64_STRING}C'); display: block;"/>
+                                <div style="color: red; background-image:url(&quot;data:image/jpg;base64,{BASE_64_STRING}D&quot;); display: block;"/>
+                                <div style="color: red; background-image:url(&#34;data:image/jpg;base64,{BASE_64_STRING}E&#34;); display: block;"/>
+                                <div style="color: red; background-image:url(data:image/jpg;base64,{BASE_64_STRING}F); display: block;"/>
+                                <div style="color: red; background-image: url(data:image/jpg;base64,{BASE_64_STRING}G); background: url('data:image/jpg;base64,{BASE_64_STRING}H'); display: block;"/>
                             <![endif]-->
                             <img src="data:image/png;base64,{BASE_64_STRING}0">
                         </section>
@@ -268,34 +269,40 @@ class TestMassMailValues(MassMailCommon):
             }
         ])
 
-        # check that adding mailing_filter_id updates domain correctly
-        mailing.mailing_filter_id = filter_2
+        # check that adding mailing_filter_ids updates domain correctly
+        mailing.mailing_filter_ids = filter_2
         self.assertEqual(literal_eval(mailing.mailing_domain), literal_eval(filter_2.mailing_domain))
 
         # cannot set a filter linked to another model
         with self.assertRaises(ValidationError):
-            mailing.mailing_filter_id = filter_1
+            mailing.mailing_filter_ids = filter_1
 
         # resetting model should reset domain, even if filter was chosen previously
         mailing.mailing_model_id = self.env['ir.model']._get('discuss.channel').id
         self.assertEqual(literal_eval(mailing.mailing_domain), [])
 
         # changing the filter should update the mailing domain correctly
-        mailing.mailing_filter_id = filter_1
+        mailing.mailing_filter_ids = filter_1
         self.assertEqual(literal_eval(mailing.mailing_domain), literal_eval(filter_1.mailing_domain))
 
-        # changing the domain should not empty the mailing_filter_id
-        mailing.mailing_domain = "[('email', 'ilike', 'info_be@odoo.com')]"
-        self.assertEqual(mailing.mailing_filter_id, filter_1, "Filter should not be unset even if domain is changed")
+        # can set multiple filters and the mailing_domain should be the union of corresponding domains
+        mailing.mailing_model_id = self.env['ir.model']._get('res.partner').id
+        mailing.mailing_filter_ids = filter_2 | filter_3
+        filters_domain = Domain.OR([literal_eval(filter_2.mailing_domain), literal_eval(filter_3.mailing_domain)])
+        self.assertEqual(mailing.mailing_domain, repr(filters_domain))
+
+        # cannot set filters that are not all linked to the same mailing domain
+        with self.assertRaises(ValidationError):
+            mailing.mailing_filter_ids = filter_1 | filter_3
 
         # deleting the filter record should not delete the domain on mailing
         mailing.mailing_model_id = self.env['ir.model']._get('res.partner').id
-        mailing.mailing_filter_id = filter_3
+        mailing.mailing_filter_ids = filter_3
         filter_3_domain = filter_3.mailing_domain
         self.assertEqual(literal_eval(mailing.mailing_domain), literal_eval(filter_3_domain))
         filter_3.unlink()  # delete the filter record
-        self.assertFalse(mailing.mailing_filter_id, "Should unset filter if it is deleted")
-        self.assertEqual(literal_eval(mailing.mailing_domain), literal_eval(filter_3_domain), "Should still have the same domain")
+        self.assertFalse(mailing.mailing_filter_ids, "Should unset filter if it is deleted")
+        self.assertNotEqual(literal_eval(mailing.mailing_domain), literal_eval(filter_3_domain), "Deleting a dynamic list should unset its domain from the mailing")
 
     @users('user_marketing')
     def test_mailing_computed_fields_default(self):
@@ -523,6 +530,92 @@ class TestMassMailValues(MassMailCommon):
         self.assertEqual(mailing.mailing_model_name, 'res.partner')
 
 
+@tagged("mass_mailing")
+class TestMassMailingMailServer(MassMailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.public_server = cls.env['ir.mail_server'].sudo().create({
+            'from_filter': 'test.mycompany.com',
+            'name': 'public_server',
+            'smtp_host': 'public.example.com',
+            'smtp_user': 'public@test.mycompany.com',
+        })
+
+    def test_owner_allowed_when_server_used_by_done_mailing(self):
+        """A server used only by a finished mailing can still be turned into
+        a personal server."""
+        mailing = self.env['mailing.mailing'].create({
+            'body_html': '<p>x</p>',
+            'mail_server_id': self.public_server.id,
+            'mailing_model_id': self.env['ir.model']._get_id('res.partner'),
+            'subject': 'S',
+        })
+        mailing.write({'state': 'done'})
+
+        self.public_server.owner_user_id = self.user_marketing
+        self.assertEqual(self.public_server.owner_user_id, self.user_marketing)
+
+    def test_owner_blocked_when_server_is_dedicated_default(self):
+        """A server set as the Email Marketing dedicated server cannot be
+        turned into a personal server."""
+        self.env['ir.config_parameter'].sudo().set_int(
+            'mass_mailing.mail_server_id', self.public_server.id)
+
+        with self.assertRaises(ValidationError):
+            self.public_server.owner_user_id = self.user_marketing
+
+    def test_owner_blocked_when_server_used_by_mailing(self):
+        """A server already in use by a queued mailing cannot be turned into
+        a personal server."""
+        mailing = self.env['mailing.mailing'].create({
+            'body_html': '<p>x</p>',
+            'mail_server_id': self.public_server.id,
+            'mailing_model_id': self.env['ir.model']._get_id('res.partner'),
+            'subject': 'S',
+        })
+        mailing.action_put_in_queue()
+
+        with self.assertRaises(ValidationError):
+            self.public_server.owner_user_id = self.user_marketing
+
+    def test_fallback_excludes_personal_mail_server(self):
+        """When no dedicated server is configured, the personal server must
+        not be picked even if its from_filter matches the campaign sender."""
+        # Wipe pre-existing servers so _find_mail_server only sees the two we set up.
+        self.env['ir.mail_server'].sudo().search([('id', '!=', self.public_server.id)]).unlink()
+        self.env['ir.mail_server'].sudo().create({
+            'from_filter': 'user_marketing@test.mycompany.com',
+            'name': 'personal_server',
+            'owner_user_id': self.user_marketing.id,
+            'smtp_host': 'personal.example.com',
+            'smtp_user': 'user_marketing@test.mycompany.com',
+        })
+
+        recipient = self.env['res.partner'].create({
+            'email': 'target@test.mycompany.com',
+            'name': 'Target',
+        })
+        mailing = self.env['mailing.mailing'].create({
+            'body_html': '<p>x</p>',
+            'email_from': 'user_marketing@test.mycompany.com',
+            'mailing_domain': [('id', '=', recipient.id)],
+            'mailing_model_id': self.env['ir.model']._get_id('res.partner'),
+            'subject': 'S',
+            'user_id': self.user_marketing.id,
+        })
+
+        with self.mock_smtplib_connection():
+            mailing.with_user(self.user_marketing).action_send_mail()
+
+        self.connect_mocked.assert_called_once()
+        self.assertEqual(
+            self.connect_mocked.call_args.kwargs['mail_server_id'],
+            self.public_server.id,
+        )
+
+
 @tagged('mass_mailing')
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassMailFeatures(MassMailCommon, CronMixinCase):
@@ -580,14 +673,15 @@ class TestMassMailFeatures(MassMailCommon, CronMixinCase):
             'reply_to_mode': 'new',
             'reply_to': self.email_reply_to,
         })
-        self.assertEqual(self.mailing_list_1.contact_ids.message_ids, self.env['mail.message'])
+        initial_msgs = self.mailing_list_1.contact_ids.message_ids
+        self.assertEqual(len(initial_msgs), 3, 'Should contain only creation messages')
 
         with self.mock_mail_gateway(mail_unlink_sent=True):
             mailing.action_send_mail()
 
         self.assertEqual(len(self._mails), 3)
         self.assertEqual(len(self._new_mails.exists()), 3)
-        self.assertEqual(len(self.mailing_list_1.contact_ids.message_ids), 3)
+        self.assertEqual(len(self.mailing_list_1.contact_ids.message_ids), 6, 'Should add one message / record')
 
         # 2- Keep archives and reply-to set to 'answer = update thread'
         self.mailing_list_1.contact_ids.message_ids.unlink()
@@ -602,7 +696,7 @@ class TestMassMailFeatures(MassMailCommon, CronMixinCase):
 
         self.assertEqual(len(self._mails), 3)
         self.assertEqual(len(self._new_mails.exists()), 3)
-        self.assertEqual(len(self.mailing_list_1.contact_ids.message_ids), 3)
+        self.assertEqual(len(self.mailing_list_1.contact_ids.message_ids), 3, 'Should not add any message')
 
         # 3- Remove archives and reply-to set to 'answer = new thread'
         self.mailing_list_1.contact_ids.message_ids.unlink()
@@ -837,5 +931,6 @@ class TestMassMailingActions(MassMailCommon):
             }
         ])
         results = mass_mailings[0].action_view_opened()
-        results_partner = self.env["res.partner"].search(results['domain'])
+        results_trace = self.env["mailing.trace"].search(results['domain'])
+        results_partner = self.env["res.partner"].search([('id', 'in', results_trace.res_id)])
         self.assertEqual(results_partner, self.partner_admin, "Trace leaked from mass_mailing_2 to mass_mailing_1")

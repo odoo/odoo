@@ -1,8 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from markupsafe import Markup
+
+from odoo import models
+from odoo.tools import is_html_empty
 
 from odoo.addons.payment.logging import get_payment_logger
+from odoo.addons.payment_custom import const
 from odoo.addons.payment_custom.controllers.main import CustomController
 
 _logger = get_payment_logger(__name__)
@@ -28,37 +32,24 @@ class PaymentTransaction(models.Model):
             "url_params": {"reference": self.reference},
         }
 
-    def _get_communication(self):
-        """Return the communication the user should use for their transaction.
+    def _apply_updates(self, payment_data):
+        """Override of `payment` to update the transaction based on the payment data."""
+        if self.provider_code != "custom":
+            return super()._apply_updates(payment_data)
 
-        This communication might change according to the settings and the accounting localization.
-
-        Note: self.ensure_one()
-
-        :return: The selected communication.
-        :rtype: str
-        """
-        self.ensure_one()
-        communication = ""
-        if hasattr(self, "invoice_ids") and self.invoice_ids:
-            communication = self.invoice_ids[0].payment_reference
-        elif hasattr(self, "sale_order_ids") and self.sale_order_ids:
-            communication = self.sale_order_ids[0].reference
-        return communication or self.reference
+        if self.payment_method_id._is_postpaid() or payment_data.get(const.CUSTOM_STATE_DONE_KEY):
+            self._set_done()
+        else:
+            self._set_pending()
+        _logger.info(
+            "Validated custom payment for transaction %s: set as %s.", self.reference, self.state
+        )
 
     def _extract_amount_data(self, payment_data):
         """Override of `payment` to skip the amount validation for custom flows."""
         if self.provider_code != "custom":
             return super()._extract_amount_data(payment_data)
         return None
-
-    def _apply_updates(self, payment_data):
-        """Override of `payment` to update the transaction based on the payment data."""
-        if self.provider_code != "custom":
-            return super()._apply_updates(payment_data)
-
-        _logger.info("Validated custom payment for transaction %s: set as pending.", self.reference)
-        self._set_pending()
 
     def _log_received_message(self):
         """Override of `payment` to remove custom providers from the recordset.
@@ -76,8 +67,44 @@ class PaymentTransaction(models.Model):
         """
         message = super()._get_sent_message()
         if self.provider_code == "custom":
-            message = _(
+            message = self.env._(
                 "The customer has selected %(provider_name)s to make the payment.",
                 provider_name=self.provider_id.name,
             )
         return message
+
+    def _get_status_message(self, **kwargs):
+        """Override of `payment` to add a custom message to `payment_custom` if message is empty."""
+        status_message = super()._get_status_message(**kwargs)
+        if (
+            self.provider_id.sudo().code == "custom"
+            and self.state == "pending"
+            and is_html_empty(status_message)
+        ):
+            return Markup("<h4>%s</h4>") % self.env._("Finalize your payment")
+        return status_message
+
+    def _requires_payment_instructions(self):
+        """Override of `payment` to include wire transfer transactions."""
+        self.ensure_one()
+        if self.provider_id.custom_mode != "wire_transfer":
+            return super()._requires_payment_instructions()
+        return True
+
+    def _get_communication(self):
+        """Return the communication the user should use for their transaction.
+
+        This communication might change according to the settings and the accounting localization.
+
+        Note: self.ensure_one()
+
+        :return: The selected communication.
+        :rtype: str
+        """
+        self.ensure_one()
+        communication = ""
+        if hasattr(self, "invoice_ids") and self.invoice_ids:
+            communication = self.invoice_ids[0].payment_reference
+        elif hasattr(self, "sale_order_ids") and self.sale_order_ids:
+            communication = self.sale_order_ids[0].reference
+        return communication or self.reference

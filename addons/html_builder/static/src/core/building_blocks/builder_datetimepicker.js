@@ -1,15 +1,9 @@
-import { useState } from "@web/owl2/utils";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
-import { Component } from "@odoo/owl";
-import { effect } from "@web/core/utils/reactive";
+import { Component, useEffect, proxy, props, t } from "@odoo/owl";
 import { ConversionError, formatDate, formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { pick } from "@web/core/utils/objects";
-import {
-    basicContainerBuilderComponentProps,
-    useBuilderComponent,
-    useInputBuilderComponent,
-} from "../utils";
+import { useBuilderComponent, useInputBuilderComponent } from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { BuilderTextInputBase } from "./builder_text_input_base";
 import { textInputBasePassthroughProps } from "./builder_input_base";
@@ -18,17 +12,35 @@ const { DateTime } = luxon;
 
 export class BuilderDateTimePicker extends Component {
     static template = "html_builder.BuilderDateTimePicker";
-    static props = {
-        ...basicContainerBuilderComponentProps,
-        ...textInputBasePassthroughProps,
-        type: { type: [{ value: "date" }, { value: "datetime" }], optional: true },
-        format: { type: String, optional: true },
-        acceptEmptyDate: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        type: "datetime",
-        acceptEmptyDate: true,
-    };
+    props = props({
+        // basicContainerBuilderComponentProps (converted inline)
+        id: t.string().optional(),
+        applyTo: t.string().optional(),
+        preview: t.boolean().optional(),
+        inheritedActions: t.array(t.string()).optional(),
+        actionParam: t.any().optional(),
+        // Shorthand actions.
+        classAction: t.any().optional(),
+        attributeAction: t.any().optional(),
+        dataAttributeAction: t.any().optional(),
+        styleAction: t.any().optional(),
+
+        // textInputBasePassthroughProps (converted inline)
+        action: t.string().optional(),
+        placeholder: t.string().optional(),
+        title: t.string().optional(),
+        style: t.string().optional(),
+        tooltip: t.string().optional(),
+        classes: t.string().optional(),
+        inputClasses: t.string().optional(),
+        prefix: t.string().optional(),
+        prefixIcon: t.string().optional(),
+        selectTextOnFocus: t.boolean().optional(),
+
+        type: t.selection(["date", "datetime"]).optional("datetime"),
+        format: t.string().optional(),
+        acceptEmptyDate: t.boolean().optional(true),
+    });
     static components = {
         BuilderComponent,
         BuilderTextInputBase,
@@ -44,14 +56,11 @@ export class BuilderDateTimePicker extends Component {
             parseDisplayValue: this.parseDisplayValue.bind(this),
         });
         this.domState = state;
-        this.state = useState({});
-        effect(
-            ({ value }) => {
-                // State to display in the input.
-                this.state.value = value;
-            },
-            [state]
-        );
+        this.state = proxy({});
+        useEffect(() => {
+            // State to display in the input.
+            this.state.value = state.value;
+        });
 
         this.commit = (userInputValue) => {
             this.isPreviewing = false;

@@ -19,27 +19,15 @@
         color: $o-we-fg-light;
         font-size: $o-we-font-size-lg;
 
-        &-actionable:hover {
-            color: $o-we-fg-lighter
+        &-actionable {
+            &:hover, &:focus {
+                color: $o-we-fg-lighter;
+                background-color: unset;
+            }
         }
-    }
-
-    div:has(> input.o_we_large) {
-        width: 100%;
     }
 
     @include o-input-number-no-arrows();
-
-    .o_we_table_wrapper {
-        width: 100%;
-        max-height: 200px;
-        overflow-y: auto;
-
-        table {
-            border-collapse: separate;
-            border-spacing: $o-hb-row-spacing $o-hb-row-spacing;
-        }
-    }
 
     .o-hb-image-size-info {
         background-color: $o-we-bg-darker;
@@ -52,7 +40,14 @@
 
 .o_we_img_animate {
     padding-top: 10px;
-    &:hover img {
+
+    img:last-of-type {
+        display: none;
+    }
+
+    &:hover img:last-of-type {
         content: image-set(var(--animate-src));
+        position: absolute;
+        display: block;
     }
 }

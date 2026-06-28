@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
-import { patch } from "@web/core/utils/patch";
-import { VideoSelector } from "@html_editor/main/media/media_dialog/video_selector";
 import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import { patch } from "@web/core/utils/patch";
+import { Vimeo } from "@html_editor/main/media/video/providers/vimeo";
 
+let unpatchThumbnailUrl;
 registerWebsitePreviewTour(
     "snippet_background_video",
     {
@@ -11,33 +12,13 @@ registerWebsitePreviewTour(
     },
     () => [
         {
+            // Avoid fetch error on the runbot.
+            content: " patch the thumbnail url getter",
             trigger: "body",
-            run: function () {
-                // Patch the VideoDialog so that it does not do external calls
-                // during the test (note that we don't unpatch but as the patch
-                // is only done after the execution of a test_website test, it
-                // is acceptable).
-                // TODO we should investigate to rather mock the external calls,
-                // maybe not using a tour. Probably easier to discuss when the
-                // new OWL editor will have been implemented.
-                patch(VideoSelector.prototype, {
-                    async prepareVimeoPreviews() {
-                        // Ignore the super call and directly push a fake video
-                        this.state.vimeoPreviews.push({
-                            id: 1,
-                            // Those lead to 404 but it's fine for the test
-                            thumbnailSrc: "/hello/world.jpg",
-                            src: "/hello/world.mp4",
-                        });
-                    },
-                    async _getVideoURLData(src, options) {
-                        if (src === "/hello/world.mp4") {
-                            return {
-                                platform: "vimeo",
-                                embed_url: "about:blank",
-                            };
-                        }
-                        return super._getVideoURLData(...arguments);
+            run: () => {
+                unpatchThumbnailUrl = patch(Vimeo, {
+                    getThumbnailUrl(videoId) {
+                        return "/web/image/mock-thumbnail-url-" + videoId;
                     },
                 });
             },
@@ -79,6 +60,10 @@ registerWebsitePreviewTour(
             content: "Check that the video container is not editable.",
             trigger:
                 ":iframe #wrap section.o_background_video > .o_bg_video_container[contenteditable=false]",
+        },
+        {
+            trigger: "body",
+            run: () => unpatchThumbnailUrl(),
         },
     ]
 );

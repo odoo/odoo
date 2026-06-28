@@ -50,6 +50,15 @@ class PosPayment(models.Model):
     def _load_pos_data_domain(self, data, config):
         return [('pos_order_id', 'in', [order['id'] for order in data['pos.order']])]
 
+    @api.model
+    def _get_additional_payment_fields(self):
+        # This method is overridden by payment terminal modules to
+        # indicate additional fields that are safe to process from
+        # the Self Order Kiosk frontend.
+        # It is defined here rather than in `pos_self_order` so that
+        # the payment terminal modules don't need to depend on it.
+        return []
+
     @api.depends('amount', 'currency_id')
     def _compute_display_name(self):
         for payment in self:
@@ -74,7 +83,11 @@ class PosPayment(models.Model):
         result = self.env['account.move']
         change_payment = self.filtered(lambda p: p.is_change and p.payment_method_id.type == 'cash')
         payment_to_change = self.filtered(lambda p: not p.is_change and p.payment_method_id.type == 'cash')[:1]
-        for payment in self - change_payment:
+        payments = self
+        if change_payment and payment_to_change:
+            payments = self - change_payment
+
+        for payment in payments:
             order = payment.pos_order_id
             payment_method = payment.payment_method_id
             if payment_method.type == 'pay_later' or float_is_zero(payment.amount, precision_rounding=order.currency_id.rounding):

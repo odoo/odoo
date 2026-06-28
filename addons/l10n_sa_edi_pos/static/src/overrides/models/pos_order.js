@@ -12,10 +12,14 @@ patch(PosOrder.prototype, {
         }
     },
 
+    isSACompany() {
+        return this.company.country_id?.code === "SA";
+    },
+
     isInvoiceMandatoryForSA() {
         // Zatca enforces invoice, but for settlement due, invoices are not needed
         // Only applicable if enterprise:pos_settle_due module is installed
-        return this.isSACompany() && !this.is_settling_account;
+        return this.isSACompany() && !this.is_settlement() && !this.is_settling_account;
     },
 
     isToInvoice() {
@@ -40,14 +44,18 @@ patch(PosOrder.prototype, {
         is_settling_account is only applicable if enterprise:pos_settle_due module is installed
         */
         super.setPartner(partner);
-        if (this.is_settling_account) {
+        if (this.isSACompany() && !this.isInvoiceMandatoryForSA()) {
             this.setToInvoice(false);
         }
     },
 
     get notLegal() {
-        return !this.l10n_sa_invoice_qr_code_str;
+        return (
+            !this.l10n_sa_invoice_qr_code_str ||
+            !["accepted", "warning"].includes(this.l10n_sa_invoice_edi_state)
+        );
     },
+
     generateQrcode() {
         if (!this.notLegal && this.isSACompany()) {
             return qrCodeSrc(this.l10n_sa_invoice_qr_code_str);

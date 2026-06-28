@@ -1219,7 +1219,6 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         self.assertTotalAmounts(invoice, tax_details)
 
     def test_tax_on_payment(self):
-        self.company_data['default_account_assets'].reconcile = True
         percent_tax = self.env['account.tax'].create({
             'name': "percent_tax",
             'amount_type': 'percent',

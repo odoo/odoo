@@ -18,8 +18,9 @@
                     <field name="date" readonly="state in ['cancel', 'paid']"/>
                     <field name="name"/>
                     <field name="journal_id"/>
+                    <field name="transaction_uuid" optional="hide"/>
                     <field name="company_id" optional="hide" groups="base.group_multi_company"/>
-                    <field name="payment_method_line_id" context="{'hide_payment_journal_id': 1}"/>
+                    <field name="payment_method_line_id" context="{'hide_payment_journal_id': 1}" optional="hide"/>
                     <field name="partner_id" string="Customer"/>
                     <field name="amount_signed" string="Amount in Currency" optional="hide" groups="!base.group_multi_currency"/>
                     <field name="amount_signed" string="Amount in Currency" optional="show" groups="base.group_multi_currency"/>
@@ -288,6 +289,7 @@
                                         required="require_partner_bank_account"/>
 
                                 <field name="partner_bank_id" string="Vendor Bank Account"
+                                        id="partner_bank_id_vendor"
                                         widget="many2one_bank"
                                         context="{'default_partner_id': partner_id}"
                                         invisible="not show_partner_bank_account or partner_type != 'supplier' or payment_type == 'inbound'"
@@ -301,7 +303,7 @@
                                         invisible="not show_partner_bank_account or payment_type == 'outbound'"
                                         required="require_partner_bank_account"/>
                             </group>
-                            <group>
+                            <group class="d-none d-md-block">
                                 <field name="qr_code" invisible="1"/>
                                 <div invisible="not qr_code" colspan="2" class="text-center">
                                     <field name="qr_code" widget="html"/>
@@ -420,6 +422,19 @@
             <field name="code">
 if records:
     action = records.action_validate()
+            </field>
+        </record>
+
+        <record id="action_server_payment_receipt" model="ir.actions.server">
+            <field name="name">Print Payment Receipt</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="binding_model_id" ref="account.model_account_payment" />
+            <field name="state">code</field>
+            <field name="binding_view_types">list,kanban</field>
+            <field name="sequence">1</field>
+            <field name="code">
+if records:
+    action = records.action_print_receipt()
             </field>
         </record>
     </data>

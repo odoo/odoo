@@ -107,6 +107,11 @@ class TestDigest(TestDigestCommon):
         self.assertEqual(self.digest_3.kpi_res_users_connected_value, 2,
             msg='This KPI has no company, should take the current one')
 
+        self.user_employee.company_ids |= self.company_2
+
+        self.assertEqual(self.digest_2.kpi_res_users_connected_value, 1,
+            msg='The employee user should be counted in the other company if in allowed companies')
+
     @users('admin')
     def test_digest_numbers(self):
         digest = self.env['digest.digest'].browse(self.digest_1.ids)
@@ -312,7 +317,7 @@ class TestUnsubscribe(MailCommon, HttpCaseWithUserDemo):
             'user_ids': self.user_demo.ids,
         })
         self.test_digest._action_subscribe_users(self.user_demo)
-        self.base_url = self.test_digest.get_base_url()
+        self._base_url = self.test_digest.get_base_url()
         self.user_demo_unsubscribe_token = self.test_digest._get_unsubscribe_token(self.user_demo.id)
 
     def test_mail_mail_headers(self):
@@ -389,5 +394,5 @@ class TestUnsubscribe(MailCommon, HttpCaseWithUserDemo):
         else:
             unsubscribe_route = "unsubscribe"
 
-        url = urls.urljoin(self.base_url, f'digest/{self.test_digest.id}/{unsubscribe_route}?{url_encode(url_params)}')
+        url = urls.urljoin(self._base_url, f'digest/{self.test_digest.id}/{unsubscribe_route}?{url_encode(url_params)}')
         return self.url_open(url, timeout=10, allow_redirects=True, method=method)

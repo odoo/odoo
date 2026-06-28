@@ -12,6 +12,7 @@ export class MediaUrlPastePlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         paste_url_overrides: this.openPowerboxOnUrlPaste.bind(this),
+        on_history_commit_undone_handlers: this.closePowerBox.bind(this),
     };
 
     /**
@@ -28,9 +29,20 @@ export class MediaUrlPastePlugin extends Plugin {
             // Open powerbox with commands to embed media or paste as link.
             // Insert URL as text, revert it later if a command is triggered.
             this.dependencies.dom.insert(text);
-            this.dependencies.history.addStep();
-            this.dependencies.powerbox.openPowerbox({ commands, onApplyCommand: restoreSavepoint });
+            this.dependencies.history.commit();
+            this.dependencies.powerbox.openPowerbox({
+                commands,
+                onApplyCommand: restoreSavepoint,
+                onClose: () => (this.isEmbedPowerBoxVisible = false),
+            });
+            this.isEmbedPowerBoxVisible = true;
             return true;
+        }
+    }
+
+    closePowerBox() {
+        if (this.isEmbedPowerBoxVisible) {
+            this.dependencies.powerbox.closePowerbox();
         }
     }
 }

@@ -238,7 +238,7 @@ class DeliveryCarrier(models.Model):
         return commodities
 
     def _product_price_to_company_currency(self, quantity, product, company):
-        return company.currency_id._convert(quantity * product.standard_price, product.currency_id, company, fields.Date.today())
+        return company.currency_id._convert(quantity * product.standard_price, product.currency_id, company)
 
     # ------------------------------------------------ #
     # Fixed price shipping, aka a very simple provider #

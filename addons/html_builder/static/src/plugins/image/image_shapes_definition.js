@@ -476,6 +476,7 @@ export const imageShapeDefinitions = {
                     "html_builder/solid/solid_blob_5": {
                         selectLabel: _t("Blob 5"),
                         transform: false,
+                        animated: true,
                     },
                     "html_builder/solid/solid_blob_shadow_1": {
                         selectLabel: _t("Blob Shadow 1"),

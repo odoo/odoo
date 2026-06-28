@@ -40,7 +40,10 @@
                 <field
                     name="product_id"
                     domain="[('reinvoice_policy', '!=', 'no')]"
-                    context="{'default_reinvoice_policy' : 'sales_price'}"
+                    context="{
+                        'default_reinvoice_policy': 'sales_price',
+                        'default_invoice_policy': 'delivery'
+                    }"
                     required="True"
                     width="350px"
                 />

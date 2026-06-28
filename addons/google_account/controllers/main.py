@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from urllib.parse import urlencode
 from werkzeug.exceptions import BadRequest
 
 from odoo import http
@@ -31,7 +32,7 @@ class GoogleAuth(http.Controller):
                 request.env.user[service_field]._set_google_auth_tokens(access_token, refresh_token, ttl)
             else:
                 raise Warning('No callback field for service <%s>' % service)
-            return request.redirect(url_return)
+            return request.redirect("%s?%s" % (url_return, urlencode({"auth_success": "True"})))
         elif kw.get('error'):
             return request.redirect("%s%s%s" % (url_return, "?error=", kw['error']))
         else:

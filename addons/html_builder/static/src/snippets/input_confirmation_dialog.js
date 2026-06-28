@@ -1,18 +1,21 @@
-import { useState } from "@web/owl2/utils";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { props, proxy, t } from "@odoo/owl";
+import {
+    ConfirmationDialog,
+    confirmationDialogProps,
+} from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class InputConfirmationDialog extends ConfirmationDialog {
     static template = "html_builder.InputConfirmationDialog";
 
-    static props = {
-        ...ConfirmationDialog.props,
-        inputLabel: { type: String, optional: true },
-        defaultValue: { type: String, optional: true },
-    };
+    props = props({
+        ...confirmationDialogProps,
+        inputLabel: t.string().optional(),
+        defaultValue: t.string().optional(),
+    });
 
     setup() {
         super.setup();
-        this.inputState = useState({
+        this.inputState = proxy({
             value: this.props.defaultValue,
         });
     }

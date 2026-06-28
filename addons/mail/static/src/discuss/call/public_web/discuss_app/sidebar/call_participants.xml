@@ -6,9 +6,7 @@
                 <t t-call="mail.DiscussSidebarCallParticipants.main"/>
                 <t t-set-slot="content">
                     <div class="p-2" t-custom-ref="floating">
-                        <t t-call="mail.DiscussSidebarCallParticipants.list">
-                            <t t-set="isCompact" t-value="false"/>
-                        </t>
+                        <t t-call="mail.DiscussSidebarCallParticipants.list" isCompact="false"/>
                     </div>
                 </t>
             </Dropdown>
@@ -24,11 +22,11 @@
             'rounded-3': this.props.compact === undefined,
             'opacity-75': this.props.channel.notEq(this.rtc.channel) and this.compact,
         }">
-            <button class="o-mail-DiscussSidebarCallParticipants-expandBtn btn btn-link p-1 my-n1 ms-n1 me-0 align-self-start d-flex rounded-circle" t-if="!this.compact" t-on-click="() => this.state.expanded = !this.state.expanded">
-                <i class="oi o-xxsmaller text-muted text-dark" t-att-class="{'oi-chevron-right': !this.state.expanded, 'oi-chevron-down': this.state.expanded}" t-att-title="this.title"/>
+            <button class="o-mail-DiscussSidebarCallParticipants-expandBtn btn btn-link p-1 my-n1 ms-n1 me-0 align-self-start d-flex rounded-circle" t-if="!this.compact" t-on-click="this.toggleFn(this.expanded)">
+                <i class="oi o-xxsmaller text-muted text-dark" t-att-class="{'oi-chevron-right': !this.expanded(), 'oi-chevron-down': this.expanded()}" t-att-title="this.title"/>
             </button>
             <AvatarStack
-                t-if="!this.state.expanded"
+                t-if="!this.expanded()"
                 direction="this.compact ? 'v' : 'h'"
                 containerClass="this.compact ? '' : 'cursor-pointer o-mail-DiscussSidebarCallParticipants-avatarStack'"
                 avatarClass="(p) => this.avatarClass(p)"
@@ -42,24 +40,19 @@
                         'position-absolute bg-inherit p-0 rounded-circle o-compact d-flex o-xsmaller text-start': this.compact,
                         'ms-1 d-flex align-items-center justify-content-center': !this.compact,
                     }">
-                        <t t-call="mail.DiscussSidebarCallParticipants.participantShortStatus">
-                            <t t-set="session" t-value="scope.persona.currentRtcSession"/>
-                        </t>
+                        <t t-call="mail.DiscussSidebarCallParticipants.participantShortStatus"
+                            session="scope.persona.currentRtcSession"/>
                     </div>
                 </t>
             </AvatarStack>
-            <t t-else="" t-call="mail.DiscussSidebarCallParticipants.list">
-                <t t-set="isCompact" t-value="this.compact"/>
-            </t>
+            <t t-else="" t-call="mail.DiscussSidebarCallParticipants.list" isCompact="this.compact"/>
         </div>
     </t>
 
     <t t-name="mail.DiscussSidebarCallParticipants.list">
         <div class="d-flex flex-column gap-1 flex-grow-1 overflow-hidden" style="padding: 1.5px;">
             <t t-foreach="this.sessions" t-as="session" t-key="session.localId">
-                <t t-call="mail.DiscussSidebarCallParticipants.participant">
-                    <t t-set="session" t-value="session"/>
-                </t>
+                <t t-call="mail.DiscussSidebarCallParticipants.participant" session="session"/>
             </t>
         </div>
     </t>
@@ -74,9 +67,8 @@
             </span>
             <div t-if="!this.isCompact" class="flex-grow-1"/>
             <div class="o-mail-DiscussSidebarCallParticipants-status small opacity-75" t-att-class="{ 'position-absolute bottom-0 end-0 bg-inherit p-0 rounded-circle o-compact d-flex o-xsmaller text-start': this.isCompact, 'ms-1 d-flex align-items-center justify-content-center': !this.isCompact }">
-                <t t-if="this.isCompact" t-call="mail.DiscussSidebarCallParticipants.participantShortStatus">
-                    <t t-set="session" t-value="session"/>
-                </t>
+                <t t-if="this.isCompact" t-call="mail.DiscussSidebarCallParticipants.participantShortStatus"
+                    session="session"/>
                 <t t-else="">
                     <span t-if="session.is_deaf" class="p-1 fa opacity-75" t-att-class="this.CALL_ICON_DEAFEN"/>
                     <span t-elif="session.is_muted" class="p-1 fa opacity-75" t-att-class="this.CALL_ICON_MUTED"/>

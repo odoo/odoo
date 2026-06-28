@@ -73,19 +73,15 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
             "trigger": "with_code",
             "program_type": "promotion",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {"mode": "with_code", "code": "test_10pc"})],
+            "rule_ids": [Command.create({"mode": "with_code", "code": "test_10pc"})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount_mode": "percent",
-                        "discount": 10,
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "percent",
+                    "discount": 10,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
         self.assertEqual(order.amount_total, 100)
@@ -118,19 +114,15 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
             "trigger": "with_code",
             "program_type": "promotion",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {"mode": "with_code", "code": "test_10pc"})],
+            "rule_ids": [Command.create({"mode": "with_code", "code": "test_10pc"})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount_mode": "percent",
-                        "discount": 10,
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "percent",
+                    "discount": 10,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
         self.assertEqual(order.amount_total, 100)

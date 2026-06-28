@@ -1,4 +1,4 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
@@ -7,7 +7,7 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
-import { isMacOS, isMobileOS } from "@web/core/browser/feature_detection";
+import { isMacOS, hasTouch } from "@web/core/browser/feature_detection";
 import { highlightText } from "@web/core/utils/html";
 
 import {
@@ -16,6 +16,8 @@ import {
     onWillDestroy,
     EventBus,
     markRaw,
+    proxy,
+    useListener,
 } from "@odoo/owl";
 
 const DEFAULT_PLACEHOLDER = _t("Search...");
@@ -125,7 +127,7 @@ export class CommandPalette extends Component {
             bypassEditableProtection: true,
             allowRepeat: true,
         });
-        useExternalListener(window, "mousedown", this.onWindowMouseDown);
+        useListener(window, "mousedown", this.onWindowMouseDown.bind(this));
 
         /**
          * @type {{ commands: CommandItem[],
@@ -136,7 +138,7 @@ export class CommandPalette extends Component {
          *          searchValue: string,
          *          selectedCommand: CommandItem }}
          */
-        this.state = useState({});
+        this.state = proxy({});
 
         this.root = useRef("root");
         this.listboxRef = useRef("listbox");
@@ -380,7 +382,7 @@ export class CommandPalette extends Component {
     get isMacOS() {
         return isMacOS();
     }
-    get isMobileOS() {
-        return isMobileOS();
+    get hasTouch() {
+        return hasTouch();
     }
 }

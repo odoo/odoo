@@ -18,6 +18,9 @@ class LDAPWrapper:
     def passwd_s(self, *args, **kwargs):
         self.__obj__.passwd_s(*args, **kwargs)
 
+    def modify_s(self, *args, **kwargs):
+        self.__obj__.modify_s(*args, **kwargs)
+
     def search_st(self, *args, **kwargs):
         return self.__obj__.search_st(*args, **kwargs)
 
@@ -245,15 +248,17 @@ class ResCompanyLdap(models.Model):
 
         raise AccessDenied(_("No local user found for LDAP login and not configured to create one"))
 
-    def _change_password(self, conf, login, old_passwd, new_passwd):
+    def _change_password(self, conf, login, new_passwd):
         changed = False
         dn, entry = self._get_entry(conf, login)
         if not dn:
             return False
+        ldap_password = conf["ldap_password"] or ""
+        ldap_binddn = conf["ldap_binddn"] or ""
         try:
             conn = self._connect(conf)
-            conn.simple_bind_s(dn, old_passwd)
-            conn.passwd_s(dn, old_passwd, new_passwd)
+            conn.simple_bind_s(ldap_binddn, ldap_password)
+            conn.modify_s(dn, [(ldap.MOD_REPLACE, "userPassword", new_passwd.encode())])
             changed = True
             conn.unbind()
         except ldap.INVALID_CREDENTIALS:

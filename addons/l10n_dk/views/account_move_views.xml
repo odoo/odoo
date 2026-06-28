@@ -27,6 +27,19 @@
                     </span>
                 </div>
             </xpath>
+            <page name="other_info" position="inside">
+                <group string="Nemhandel info"
+                        name="accounting_info_group"
+                        invisible="not nemhandel_message_uuid"
+                        groups="base.group_no_one">
+                    <label for="nemhandel_move_state"/>
+                    <div>
+                        <a class="oe_link fw-bold" type="object" name="action_open_nemhandel_reponses">
+                            <field name="nemhandel_move_state"/>
+                        </a>
+                    </div>
+                </group>
+            </page>
         </field>
     </record>
 

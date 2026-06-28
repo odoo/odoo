@@ -1,11 +1,11 @@
 /** @odoo-module */
 
-//-----------------------------------------------------------------------------
-// Internal
-//-----------------------------------------------------------------------------
+/**
+ * @typedef {import("./core/runner").Runner} Runner
+ */
 
-/** @type {import("./core/runner").Runner} */
-let runner;
+/** @type {Runner | null} */
+let currentMainRunner = null;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -15,15 +15,18 @@ let runner;
  * @param {string} funcName
  */
 export function ensureTest(funcName) {
-    if (!runner?.getCurrent().test) {
+    if (!mainRunner()?.getCurrent().test) {
         throw new Error(`Cannot call '${funcName}' from outside a test`);
     }
 }
 
-export function getRunner() {
-    return runner;
+export function mainRunner() {
+    return currentMainRunner;
 }
 
-export function setRunner(mainRunner) {
-    runner = mainRunner;
+/**
+ * @param {Runner} runner
+ */
+export function setMainRunner(runner) {
+    currentMainRunner = runner;
 }

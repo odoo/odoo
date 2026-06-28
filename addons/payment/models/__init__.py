@@ -2,6 +2,8 @@
 
 from . import (
     ir_http,
+    ir_websocket,
+    payment_data,
     payment_method,
     payment_provider,
     payment_token,

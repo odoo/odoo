@@ -73,31 +73,72 @@ test("Step Tour validity", async () => {
         },
         {
             trigger: "button.bar",
-            run() {},
         },
     ];
     tourRegistry.add("tour1", {
         steps: () => steps,
     });
     await makeMockEnv({});
-    const waited_error1 = `Error in schema for TourStep ${JSON.stringify(
-        steps[0],
-        null,
-        4
-    )}\nInvalid object: unknown key 'Belgium', unknown key 'wins', unknown key 'EURO2024'`;
-    const waited_error2 = `Error in schema for TourStep ${JSON.stringify(
-        steps[1],
-        null,
-        4
-    )}\nInvalid object: unknown key 'my_title', unknown key 'doku'`;
-    const waited_error3 = `Error in schema for TourStep ${JSON.stringify(
-        steps[2],
-        null,
-        4
-    )}\nInvalid object: 'run' is not a string or function or boolean`;
     await getService("tour_service").startTour("tour1");
     await animationFrame();
-    expect.verifySteps([waited_error1, waited_error2, waited_error3]);
+    expect.verifySteps([
+        `Error in schema for TourStep
+[
+  {
+    "received": {
+      "Belgium": true,
+      "wins": "of course",
+      "EURO2024": true,
+      "trigger": "button.foo"
+    },
+    "path": "",
+    "message": "object value has unknown keys",
+    "unknownKeys": [
+      "Belgium",
+      "wins",
+      "EURO2024"
+    ]
+  }
+]`,
+        `Error in schema for TourStep
+[
+  {
+    "received": {
+      "my_title": "EURO2024",
+      "trigger": "button.bar",
+      "doku": "Lukaku 10"
+    },
+    "path": "",
+    "message": "object value has unknown keys",
+    "unknownKeys": [
+      "my_title",
+      "doku"
+    ]
+  }
+]`,
+        `Error in schema for TourStep
+[
+  {
+    "received": [
+      "Enjoy euro 2024"
+    ],
+    "path": "run",
+    "message": "value does not match union type",
+    "subIssues": [
+      {
+        "received": "[Known object]",
+        "path": "run",
+        "message": "value is not a string"
+      },
+      {
+        "received": "[Known object]",
+        "path": "run",
+        "message": "value is not a function"
+      }
+    ]
+  }
+]`,
+    ]);
 });
 
 test("a tour with invalid step trigger", async () => {
@@ -179,6 +220,34 @@ test("a failing tour logs the step that failed in run", async () => {
         ].join("\n"),
     ];
     expect.verifySteps(expectedError);
+});
+
+test("empty run function is rejected", async () => {
+    patchWithCleanup(console, {
+        error: (msg) => expect.step(msg),
+    });
+    tourRegistry.add("tour_reject_empty_run", {
+        steps: () => [
+            { trigger: "button", run: () => {} },
+            { trigger: "button", run: function () {} },
+            { trigger: "button", run() {} },
+        ],
+    });
+    const expectedError = `Error in schema for TourStep\n${JSON.stringify(
+        [
+            {
+                received: "run",
+                path: "run",
+                message: "run must be a string or a non-empty function",
+            },
+        ],
+        null,
+        2
+    )}`;
+    await makeMockEnv({});
+    await getService("tour_service").startTour("tour_reject_empty_run");
+    await animationFrame();
+    expect.verifySteps([expectedError, expectedError, expectedError]);
 });
 
 test("a failing tour with disabled element", async () => {
@@ -545,7 +614,7 @@ test("check not possible to click below modal", async () => {
         static template = xml/*html*/ `
             <t>
                 <div class="container">
-                    <div class="p-3"><button class="button0" t-on-click="openDialog">Button 0</button></div>
+                    <div class="p-3"><button class="button0" t-on-click="this.openDialog">Button 0</button></div>
                     <div class="p-3"><button class="button1">Button 1</button></div>
                     <div class="p-3"><button class="button2">Button 2</button></div>
                     <div class="p-3"><button class="button3">Button 3</button></div>

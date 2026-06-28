@@ -13,6 +13,7 @@ import {
 } from "@spreadsheet/../tests/helpers/getters";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
+import { createSheet } from "../../helpers/commands";
 
 let model;
 
@@ -29,7 +30,7 @@ beforeEach(async () => {
                 <field name="probability" type="measure"/>
             </pivot>`,
     }));
-    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    createSheet(model, { sheetId: "42" });
 });
 
 test("full PIVOT() values", async function () {
@@ -108,7 +109,7 @@ test("PIVOT(include_total=FALSE) with no groupbys applied", async function () {
             <field name="probability" type="measure"/>
         </pivot>`,
     });
-    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    createSheet(model, { sheetId: "42" });
     setCellContent(model, "A1", `=PIVOT("1",,FALSE)`, "42");
     // prettier-ignore
     expect(getEvaluatedGrid(model, "A1:B3", "42")).toEqual([
@@ -126,7 +127,7 @@ test("PIVOT(include_total=FALSE) with multiple measures and no groupbys applied"
             <field name="foo" type="measure"/>
         </pivot>`,
     });
-    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    createSheet(model, { sheetId: "42" });
     setCellContent(model, "A1", `=PIVOT("1",,FALSE)`, "42");
     // prettier-ignore
     expect(getEvaluatedGrid(model, "A1:C3", "42")).toEqual([
@@ -144,7 +145,7 @@ test("PIVOT(include_total=FALSE) with only row groupby applied", async function 
                 <field name="probability" type="measure"/>
             </pivot>`,
     });
-    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    createSheet(model, { sheetId: "42" });
     setCellContent(model, "A1", `=PIVOT("1",,FALSE)`, "42");
     // prettier-ignore
     expect(getEvaluatedGrid(model, "A1:C7", "42")).toEqual([
@@ -174,7 +175,7 @@ test("sorted PIVOT(include_total=FALSE) with only row groupby applied", async fu
             measure: "probability:avg",
         },
     });
-    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    createSheet(model, { sheetId: "42" });
     setCellContent(model, "A1", `=PIVOT("1",,FALSE)`, "42");
     // prettier-ignore
     expect(getEvaluatedGrid(model, "A1:C7", "42")).toEqual([
@@ -197,7 +198,7 @@ test("PIVOT(include_total=FALSE) with multiple measures and only row groupby app
                 <field name="foo" type="measure"/>
             </pivot>`,
     });
-    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    createSheet(model, { sheetId: "42" });
     setCellContent(model, "A1", `=PIVOT("1",,FALSE)`, "42");
     // prettier-ignore
     expect(getEvaluatedGrid(model, "A1:D5", "42")).toEqual([
@@ -217,7 +218,7 @@ test("PIVOT(include_total=FALSE) with only col groupby applied", async function 
             <field name="probability" type="measure"/>
         </pivot>`,
     });
-    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    createSheet(model, { sheetId: "42" });
     setCellContent(model, "A1", `=PIVOT("1",,FALSE)`, "42");
     // prettier-ignore
     expect(getEvaluatedGrid(model, "A1:D4", "42")).toEqual([
@@ -341,7 +342,7 @@ test("PIVOT with multiple row groups", async function () {
         ["Taylor",              "",             95,             95],
         ["Total",               10,             121,            131],
     ]);
-    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    createSheet(model, { sheetId: "42" });
     setCellContent(model, "A1", `=PIVOT("1")`, "42");
     // values from the PIVOT function
     // prettier-ignore

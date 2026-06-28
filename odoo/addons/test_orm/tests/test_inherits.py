@@ -131,11 +131,12 @@ class test_inherits(common.TransactionCase):
             box.write({'another_unit_id': unit5.id, 'val1': 8, 'val2': 7})
 
     def test_access_rights_on_parent(self):
-        # introduce an ir.rule on the parent model of 'test.box'
-        self.env['ir.rule'].create({
+        # introduce an ir.access on the parent model of 'test.box'
+        self.env['ir.access'].create({
             'name': "Only access to state a",
             'model_id': self.env['ir.model']._get('test.unit').id,
-            'domain_force': [('state', '=', 'a')],
+            'operation': 'crud',
+            'domain': [('state', '=', 'a')],
         })
         user = self.env['res.users'].create({
             'name': 'test',
@@ -148,7 +149,7 @@ class test_inherits(common.TransactionCase):
             {'name': 'b', 'state': 'b'},
         ]).ids
 
-        # search with an order on the parent model: the ir.rule above should
+        # search with an order on the parent model: the ir.access above should
         # appear in the WHERE clause, but not in the JOIN clause used to reach
         # the inherited field(s)
         model.search([('id', 'in', box_ids)], order='readonly_name')  # warmup
@@ -202,6 +203,21 @@ class test_inherits(common.TransactionCase):
             parent.write({'test_unstored_inherits_shared_line_ids': [(0, 0, {'name': 'Coucou'})]})
             self.assertTrue(parent.child_id)
             self.assertEqual(len(parent.child_id.test_unstored_inherits_shared_line_ids), 1)
+
+    def test_default_on_inaccessible_inherited_field(self):
+        model = self.env['test.another_box'].with_user(self.ref('base.user_admin'))
+        parent_model = model.another_unit_id
+
+        # the field is inaccessible in both models
+        self.assertFalse(parent_model._has_field_access(parent_model._fields['ro_with_default'], 'write'))
+        self.assertFalse(model._has_field_access(model._fields['ro_with_default'], 'write'))
+
+        # its default value is only accessible in the parent model
+        self.assertIn('ro_with_default', parent_model.default_get(['ro_with_default']))
+        self.assertNotIn('ro_with_default', model.default_get(['ro_with_default']))
+
+        record = model.create({f'val{i}': 2 for i in (1, 2)})
+        self.assertEqual(record.sudo().ro_with_default, 'roro')
 
 
 @tagged('at_install', '-post_install')

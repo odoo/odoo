@@ -1,6 +1,11 @@
 /** @odoo-module **/
 
-import { DateTimeField, dateField } from "@web/views/fields/datetime/datetime_field";
+import { props, t } from "@odoo/owl";
+import {
+    DateTimeField,
+    dateField,
+    dateTimeFieldProps,
+} from "@web/views/fields/datetime/datetime_field";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 /**
@@ -9,10 +14,10 @@ import { _t } from "@web/core/l10n/translation";
  * @extends DateTimeField
  */
 export class DynamicMinDateTimeField extends DateTimeField {
-    static props = {
-        ...DateTimeField.props,
-        minDateField: { type: String, optional: true },
-    };
+    props = props({
+        ...dateTimeFieldProps,
+        minDateField: t.string().optional(),
+    });
 
     /**
      * @override

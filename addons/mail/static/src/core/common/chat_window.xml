@@ -18,12 +18,12 @@
                             t-if="this.props.chatWindow.exists()"
                             class="o-mail-ChatWindow-moreActions btn rounded-0 d-flex align-items-center o-ps-1_5 pe-0 py-1 my-0 w-100 rounded-end-0 bg-inherit"
                             t-att-class="{ 'rounded-top-3': !this.ui.isSmall, 'o-active': this.state.actionsMenuOpened, 'o-hover': this.actionsMenuButtonHover.isHover and !this.parentChannelHover.isHover }"
-                            t-att-disabled="this.state.editingName or this.props.chatWindow.actionsDisabled"
+                            t-att-disabled="this.editingName() or this.props.chatWindow.actionsDisabled"
                             t-att-title="this.actionsMenuTitleText"
                             t-custom-ref="actionsMenuButton"
                         >
                             <t t-call="mail.ChatWindow.headerContent"/>
-                            <i t-if="!this.state.editingName" class="fa fa-fw fa-caret-down"/>
+                            <i t-if="!this.editingName()" class="fa fa-fw fa-caret-down"/>
                         </button>
                         <t t-set-slot="content">
                             <t t-if="this.props.chatWindow.exists()">
@@ -34,14 +34,14 @@
                     </Dropdown>
                 </div>
                 <AutoresizeInput
-                    t-if="this.state.editingName"
+                    t-if="this.editingName()"
                     className="'text-truncate fw-bold flex-shrink-1 me-1 py-0 ' + (this.ui.isSmall ? 'fs-4' : 'fs-5')"
                     enabled="true"
                     autofocus="true"
                     onValidate.bind="this.renameChannel"
-                    value="this.props.chatWindow.channel.displayName"
+                    value="this.channelDisplayName"
                 />
-                <i t-if="this.state.editingName" class="fa fa-fw fa-caret-down opacity-50"/>
+                <i t-if="this.editingName()" class="fa fa-fw fa-caret-down opacity-50"/>
             </t>
             <t t-else="">
                 <t t-call="mail.ChatWindow.headerContent"/>
@@ -62,19 +62,19 @@
                     className="'py-1 me-2'"
                     autofocus="true"
                     onValidate.bind="this.renameGuest"
-                    value="this.store.self_guest.name"
+                    value="this.selfGuestName"
                 />
             </t>
         </div>
-        <div t-if="!this.props.chatWindow.folded or this.ui.isSmall" class="d-flex flex-column h-100 overflow-auto o-scrollbar-thin position-relative bg-inherit" t-att-class="{ 'opacity-50': this.state.editingName }" t-custom-ref="content">
+        <div t-if="!this.props.chatWindow.folded or this.ui.isSmall" class="d-flex flex-column h-100 overflow-auto o-scrollbar-thin position-relative bg-inherit" t-att-class="{ 'opacity-50': this.editingName() }" t-ref="this.chatWindowContentRef">
             <t name="thread content">
                 <div t-if="this.threadActions.activeAction?.actionPanelComponentCondition" class="h-100 bg-inherit" t-attf-class="{{ this.threadActions.activeAction.actionPanelOuterClass }}">
                     <t t-component="this.threadActions.activeAction.actionPanelComponent" t-props="this.threadActions.activeAction.actionPanelComponentProps"/>
                 </div>
                 <t t-else="">
-                    <Thread autofocus="this.isMobileOS ? this.props.chatWindow.autofocus : undefined" thread="this.channel.thread" t-key="this.channel.thread.localId" jumpPresent="this.state.jumpThreadPresent" jumpToNewMessage="this.props.chatWindow.jumpToNewMessage"/>
+                    <Thread autofocus="this.autofocusThread" thread="this.channel.thread" t-key="this.channel.thread.localId" jumpPresent="this.state.jumpThreadPresent" jumpToNewMessage="this.props.chatWindow.jumpToNewMessage"/>
                     <t t-call="mail.ChatWindow.memberTyping"/>
-                    <Composer t-if="!this.channel.composerHidden" composer="this.channel.composer" autofocus="this.isMobileOS ? undefined : this.props.chatWindow.autofocus" mode="'compact'" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="this.contentRef" type="this.composerType" disabled="this.channel.composerDisabled"/>
+                    <Composer t-if="!this.channel.composerHidden" composer="this.channel.composer" autofocus="this.autofocusComposer" mode="'compact'" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="this.chatWindowContentRef" disabled="this.channel.composerDisabled"/>
                     <div t-else="" class="bg-200 py-1 text-center d-flex fst-italic fw-bold text-muted" t-custom-ref="composerHiddenContainer">
                         <span t-if="this.showBlankBeforeComposerHiddenText" class="flex-grow-1"/>
                         <span t-out="this.channel.composerHiddenText"/>
@@ -92,14 +92,14 @@
         'py-2': this.threadActions.actions.length lte 3,
         'ps-2': !this.hasActionsMenu,
     }" name="threadAvatar">
-        <DiscussAvatar channel="this.channel" size="24" typing="false"/>
+        <DiscussAvatar record="this.channel" size="24" typing="false"/>
     </div>
     <t t-if="this.channel.parent_channel_id">
         <span class="fw-bold small o-mx-0_5 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded fs-6" t-out="this.channel.parent_channel_id.displayName" title="Open Channel" t-custom-ref="parentChannel" t-on-click.stop="() => this.channel.parent_channel_id.open({ focus: true })"/>
         <i class="fa fa-chevron-right o-xsmaller ms-1 mt-1 text-muted opacity-75"/>
     </t>
     <CountryFlag t-if="this.channel.showCorrespondentCountry" country="this.channel.correspondentCountry" class="'o-mail-ChatWindow-country border shadow-sm'"/>
-    <div t-if="!this.state.editingName" class="o-mail-ChatWindow-displayName text-truncate fw-bold border border-transparent o-mx-0_5 my-0 py-1" t-att-title="this.props.chatWindow.channel.displayName" t-out="this.props.chatWindow.channel.displayName" t-att-class="{ 'fs-4': this.ui.isSmall, 'fs-5': !this.ui.isSmall }"/>
+    <div t-if="!this.editingName()" class="o-mail-ChatWindow-displayName text-truncate fw-bold border border-transparent o-mx-0_5 my-0 py-1" t-att-title="this.props.chatWindow.channel.displayName" t-out="this.props.chatWindow.channel.displayName" t-att-class="{ 'fs-4': this.ui.isSmall, 'fs-5': !this.ui.isSmall }"/>
 </t>
 
 <t t-name="mail.ChatWindow.memberTyping">

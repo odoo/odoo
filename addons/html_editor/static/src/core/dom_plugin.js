@@ -23,7 +23,6 @@ import {
     isShrunkBlock,
     isTangible,
     isUnprotecting,
-    listElementSelector,
     isEditorTab,
     isPhrasingContent,
     isVisible,
@@ -79,7 +78,7 @@ function getConnectedParents(nodes) {
  * @typedef {((container: Element, block: Element) => container)[]} before_insert_processors
  * @typedef {((nodeToInsert: Node, container: HTMLElement) => nodeToInsert)[]} node_to_insert_processors
  *
- * @typedef {((el: HTMLElement) => Promise<boolean>)[]} are_inlines_allowed_at_root_predicates
+ * @typedef {((el: HTMLElement) => boolean)[]} are_inlines_allowed_at_root_predicates
  *
  * @typedef {string[]} system_attributes
  * @typedef {string[]} system_classes
@@ -102,11 +101,6 @@ export class DomPlugin extends Plugin {
     resources = {
         user_commands: [
             {
-                id: "insertFontAwesome",
-                run: this.insertFontAwesome.bind(this),
-                isAvailable: isHtmlContentSupported,
-            },
-            {
                 id: "setTag",
                 run: this.setBlock.bind(this),
                 isAvailable: isHtmlContentSupported,
@@ -115,6 +109,7 @@ export class DomPlugin extends Plugin {
         /** Handlers */
         clean_for_save_processors: (root) => {
             this.removeEmptyClassAndStyleAttributes(root);
+            return root;
         },
         clipboard_content_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
         is_functional_empty_node_predicates: (node) => {
@@ -151,21 +146,19 @@ export class DomPlugin extends Plugin {
     ) {
         // Helpers to manipulate preserving selection.
         const wrapInBlock = (node, cursors) => {
-            const block = isPhrasingContent(node)
-                ? createBaseContainer(baseContainerNodeName, node.ownerDocument)
-                : node.ownerDocument.createElement("DIV");
+            const nextSibling = node.nextSibling;
+            const parent = node.parentElement;
+            let block;
+            if (isPhrasingContent(node)) {
+                block = createBaseContainer(baseContainerNodeName, node.ownerDocument, [node]);
+            } else {
+                block = node.ownerDocument.createElement("DIV");
+                node.remove();
+                block.append(node);
+            }
             cursors.update(callbacksForCursorUpdate.append(block, node));
             cursors.update(callbacksForCursorUpdate.before(node, block));
-            if (node.nextSibling) {
-                const sibling = node.nextSibling;
-                node.remove();
-                sibling.before(block);
-            } else {
-                const parent = node.parentElement;
-                node.remove();
-                parent.append(block);
-            }
-            block.append(node);
+            nextSibling ? nextSibling.before(block) : parent.append(block);
             return block;
         };
         const appendToCurrentBlock = (currentBlock, node, cursors) => {
@@ -200,9 +193,7 @@ export class DomPlugin extends Plugin {
                 shouldBreakLine = true;
             } else if (
                 !visibleNodes.has(node) &&
-                !this.getResource("unremovable_node_predicates").some((predicate) =>
-                    predicate(node)
-                )
+                (this.checkPredicates("is_node_removable_predicates", node) ?? true)
             ) {
                 removeNode(node, cursors);
             } else if (node.nodeName === "BR") {
@@ -254,6 +245,7 @@ export class DomPlugin extends Plugin {
 
         const block = closestBlock(selection.anchorNode);
         container = this.processThrough("before_insert_processors", container, block);
+        this.trigger("before_insert_handlers");
         if (!container.hasChildNodes()) {
             return [];
         }
@@ -276,15 +268,19 @@ export class DomPlugin extends Plugin {
         // In case the html inserted starts with a list and will be inserted within
         // a list, unwrap the list elements from the list.
         const hasSingleChild = nodeSize(container) === 1;
-        if (
-            closestElement(selection.anchorNode, listElementSelector) &&
-            isListElement(container.firstChild)
-        ) {
+        const closestList = (node) => {
+            if (isBlock(node)) {
+                return node && isListItemElement(node);
+            }
+            return closestList(node.parentElement);
+        };
+
+        if (closestList(selection.anchorNode) && isListElement(container.firstChild)) {
             unwrapContents(container.firstChild);
         }
         // Similarly if the html inserted ends with a list.
         if (
-            closestElement(selection.focusNode, listElementSelector) &&
+            closestList(selection.focusNode) &&
             isListElement(container.lastChild) &&
             !hasSingleChild
         ) {
@@ -487,7 +483,7 @@ export class DomPlugin extends Plugin {
                     isBlock(nodeToInsert) &&
                     this.dependencies.split.isUnsplittable(nodeToInsert)
                 ) {
-                    const br = document.createElement("br");
+                    const br = this.document.createElement("br");
                     currentNode[
                         isEmptyBlock(currentNode) || !isTangible(currentNode) ? "before" : "after"
                     ](br);
@@ -667,19 +663,6 @@ export class DomPlugin extends Plugin {
         }
     }
 
-    // --------------------------------------------------------------------------
-    // commands
-    // --------------------------------------------------------------------------
-
-    insertFontAwesome({ faClass = "fa fa-star" } = {}) {
-        const fontAwesomeNode = document.createElement("i");
-        fontAwesomeNode.className = faClass;
-        this.insert(fontAwesomeNode);
-        this.dependencies.history.addStep();
-        const [anchorNode, anchorOffset] = rightPos(fontAwesomeNode);
-        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
-    }
-
     /**
      * Determines if a block element can be safely retagged.
      *
@@ -731,9 +714,9 @@ export class DomPlugin extends Plugin {
                 newCandidate.classList.add(extraClass);
             }
             if (this.dependencies.baseContainer.isCandidateForBaseContainer(newCandidate)) {
-                const baseContainer = this.dependencies.baseContainer.createBaseContainer(
-                    newCandidate.nodeName
-                );
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer({
+                    nodeName: newCandidate.nodeName,
+                });
                 this.copyAttributes(newCandidate, baseContainer);
                 newCandidate = baseContainer;
             }
@@ -742,7 +725,7 @@ export class DomPlugin extends Plugin {
         let newCandidate = createNewCandidate();
         this.dependencies.split.splitBlockSegments();
         const cursors = this.dependencies.selection.preserveSelection();
-        const newEls = [];
+        let newEl;
         for (const block of this.getBlocksToSet()) {
             if (
                 isParagraphRelatedElement(block) ||
@@ -753,9 +736,13 @@ export class DomPlugin extends Plugin {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;
                 }
-                this.trigger("on_will_set_tag_handlers", block, tagName, cursors);
-                const newEl = this.setTagName(block, tagName);
-                cursors.remapNode(block, newEl);
+                const params = { block, newEl, tagName, cursors };
+                this.trigger("on_will_set_tag_handlers", params);
+                if (this.delegateTo("set_block_overrides", params)) {
+                    continue;
+                }
+                newEl = this.setTagName(params.block, tagName);
+                cursors.remapNode(params.block, newEl);
                 // We want to be able to edit the case `<h2 class="h3">`
                 // but in that case, we want to display "Header 2" and
                 // not "Header 3" as it is more important to display
@@ -767,18 +754,17 @@ export class DomPlugin extends Plugin {
                 if (extraClass) {
                     newEl.classList.add(extraClass);
                 }
-                newEls.push(newEl);
             } else {
                 // eg do not change a <div> into a h1: insert the h1
                 // into it instead.
-                newCandidate.append(...childNodes(block));
+                newCandidate.replaceChildren(...childNodes(block));
                 block.append(newCandidate);
                 cursors.remapNode(block, newCandidate);
                 newCandidate = createNewCandidate();
             }
         }
         cursors.restore();
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     removeEmptyClassAndStyleAttributes(root) {
@@ -790,5 +776,6 @@ export class DomPlugin extends Plugin {
                 node.removeAttribute("style");
             }
         }
+        return root;
     }
 }

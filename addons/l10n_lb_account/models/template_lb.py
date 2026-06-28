@@ -10,14 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template("lb")
     def _get_lb_template_data(self):
         return {
-            "property_account_receivable_id": "lb_account_413004",
-            "property_account_payable_id": "lb_account_403501",
-            "property_account_expense_id": "lb_account_601101",
-            "property_account_income_id": "lb_account_701000",
-            "property_stock_valuation_account_id": "lb_account_370001",
-            "property_stock_account_production_cost_id": "lb_account_370004",
-            "tax_payable_account_id": "lb_account_442001",
-            "tax_receivable_account_id": "lb_account_442201",
             "code_digits": "6",
         }
 
@@ -41,5 +33,9 @@ class AccountChartTemplate(models.AbstractModel):
                 "deferred_revenue_account_id": "lb_account_473001",
                 'expense_account_id': 'lb_account_601101',
                 'income_account_id': 'lb_account_701000',
+                "receivable_account_id": "lb_account_413004",
+                "payable_account_id": "lb_account_403501",
+                "account_stock_valuation_id": "lb_account_370001",
+                "stock_account_production_cost_id": "lb_account_370004",
             },
         }

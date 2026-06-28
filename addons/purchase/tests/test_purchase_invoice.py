@@ -4,7 +4,9 @@ from datetime import timedelta
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.tests import Form, tagged
+from odoo.tools import mute_logger
 from odoo import Command, fields
 
 
@@ -82,8 +84,7 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
     def init_purchase(cls, partner=None, confirm=False, products=None, taxes=None, company=False):
         date_planned = fields.Datetime.now() - timedelta(days=1)
         po_form = Form(cls.env['purchase.order'] \
-                    .with_company(company or cls.env.company) \
-                    .with_context(tracking_disable=True))
+                    .with_company(company or cls.env.company))
         po_form.partner_id = partner or cls.partner_a
         po_form.partner_ref = 'my_match_reference'
 
@@ -105,6 +106,22 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
 
         return rslt
 
+    def get_unmatched_domain(cls):
+        """ Get the domain to only get non-matched purchase.bill.line.match """
+        return Domain.OR([
+            Domain.AND([
+                Domain('aml_id', '!=', False),
+                Domain('matching_id', '=', 0),
+            ]),
+            Domain.AND([
+                Domain('pol_id', '!=', False),
+                Domain.OR([
+                    Domain('pol_id.invoice_lines', '=', False),
+                    Domain('pol_id.qty_to_invoice', '!=', 0),
+                ]),
+            ]),
+        ])
+
 
 @tagged('post_install', '-at_install')
 class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
@@ -112,10 +129,10 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
     def test_vendor_bill_delivered(self):
         """Test if a order of product invoiced by delivered quantity can be
         correctly invoiced."""
-        purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
         })
-        PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
+        PurchaseOrderLine = self.env['purchase.order.line']
         pol_prod_deliver = PurchaseOrderLine.create({
             'name': self.product_deliver.name,
             'product_id': self.product_deliver.id,
@@ -162,10 +179,10 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
     def test_vendor_bill_ordered(self):
         """Test if a order of product invoiced by ordered quantity can be
         correctly invoiced."""
-        purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
         })
-        PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
+        PurchaseOrderLine = self.env['purchase.order.line']
         pol_prod_order = PurchaseOrderLine.create({
             'name': self.product_order.name,
             'product_id': self.product_order.id,
@@ -206,10 +223,10 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
     def test_vendor_bill_delivered_return(self):
         """Test when return product, a order of product invoiced by delivered
         quantity can be correctly invoiced."""
-        purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
         })
-        PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
+        PurchaseOrderLine = self.env['purchase.order.line']
         pol_prod_deliver = PurchaseOrderLine.create({
             'name': self.product_deliver.name,
             'product_id': self.product_deliver.id,
@@ -251,10 +268,10 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
     def test_vendor_bill_ordered_return(self):
         """Test when return product, a order of product invoiced by ordered
         quantity can be correctly invoiced."""
-        purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
         })
-        PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
+        PurchaseOrderLine = self.env['purchase.order.line']
         pol_prod_order = PurchaseOrderLine.create({
             'name': self.product_order.name,
             'product_id': self.product_order.id,
@@ -294,6 +311,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         currency, the amount of each AML is converted to the bill's currency
         """
         PurchaseOrderLine = self.env['purchase.order.line']
+        PurchaseBillUnion = self.env['purchase.bill.union']
         ResCurrencyRate = self.env['res.currency.rate']
         usd = self.env.ref('base.USD')
         eur = self.env.ref('base.EUR')
@@ -303,7 +321,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         ResCurrencyRate.create({'currency_id': eur.id, 'rate': 2})
 
         for currency in [usd, eur]:
-            po = self.env['purchase.order'].with_context(tracking_disable=True).create({
+            po = self.env['purchase.order'].create({
                 'partner_id': self.partner_a.id,
                 'currency_id': currency.id,
             })
@@ -321,9 +339,9 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             purchase_orders.append(po)
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        move_form.partner_id = self.partner_a
-        move_form.purchase_id = purchase_orders[0]
-        move_form.purchase_id = purchase_orders[1]
+        with mute_logger('odoo.tests.form.onchange'):  # Mute "x PO lines added to the bill" notification
+            move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[0].id)
+            move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[1].id)
         move = move_form.save()
 
         self.assertInvoiceValues(move, [
@@ -349,7 +367,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.env.ref('product.decimal_price').digits = 3
         self.env.company.currency_id.rounding = 0.01
 
-        po = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [(0, 0, {
                 'name': self.product_a.name,
@@ -364,8 +382,8 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         po.order_line.qty_received = 12
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        move_form.partner_id = self.partner_a
-        move_form.purchase_id = po
+        with mute_logger('odoo.tests.form.onchange'):  # Mute "x PO lines added to the bill" notification
+            move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
         move = move_form.save()
 
         self.assertEqual(move.amount_total, 0.01)
@@ -386,7 +404,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         })
         analytic_distribution_manual = {str(analytic_account_manual.id): 100}
 
-        po_form = Form(self.env['purchase.order'].with_context(tracking_disable=True))
+        po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_a
         with po_form.order_line.new() as po_line_form:
             po_line_form.name = self.product_order.name
@@ -422,7 +440,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
                 'product_id': great_product.id,
             },
         ])
-        po_form = Form(self.env['purchase.order'].with_context(tracking_disable=True))
+        po_form = Form(self.env['purchase.order'])
         partner = self.env['res.partner'].create({'name': 'Test Partner'})
         po_form.partner_id = partner
         with po_form.order_line.new() as po_line_form:
@@ -506,7 +524,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
                     'tax_ids': False,
                     'sequence': sequence_number,
                 }) for sequence_number in range(10, 13)]
-            purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+            purchase_order = self.env['purchase.order'].create({
                 'partner_id': self.partner_a.id,
                 'order_line': pol_vals,
             })
@@ -540,7 +558,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
                     'tax_ids': False,
                     'sequence': sequence_number,
                 }) for sequence_number in range(10, 13)]
-            purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+            purchase_order = self.env['purchase.order'].create({
                 'partner_id': self.partner_a.id,
                 'order_line': pol_vals,
             })
@@ -548,10 +566,11 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             purchase_orders |= purchase_order
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        move_form.partner_id = self.partner_a
-        move_form.purchase_id = purchase_orders[0]
-        move_form.purchase_id = purchase_orders[1]
-        move_form.purchase_id = purchase_orders[2]
+        PurchaseBillUnion = self.env['purchase.bill.union']
+        with mute_logger('odoo.tests.form.onchange'):  # Mute "x PO lines added to the bill" notification
+            move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[0].id)
+            move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[1].id)
+            move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[2].id)
         invoice = move_form.save()
 
         expected_purchase = [
@@ -570,7 +589,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         if not self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')]):
             self.skipTest("This test requires the installation of the account_account module")
 
-        purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 Command.create({
@@ -718,10 +737,10 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
     def test_invoice_line_name_has_product_name(self):
         """ Testing that when invoicing a sales order, the invoice line name ALWAYS contains the product name. """
         # Create a purchase order with different descriptions
-        po = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
         })
-        PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
+        PurchaseOrderLine = self.env['purchase.order.line']
         pol_prod_no_redundancy = PurchaseOrderLine.create({
             'name': "just a description",
             'product_id': self.product_deliver.id,
@@ -770,6 +789,67 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.assertEqual(inv.invoice_line_ids[1].name, f"{pol_prod_same.name}", "When the description is the product name, the invoice line name should only be the description")
         self.assertEqual(inv.invoice_line_ids[2].name, f"{pol_prod_product_in_name.name}", "When description contains the product name, the invoice line name should only be the description")
         self.assertEqual(inv.invoice_line_ids[3].name, f"{pol_prod_name_in_product.product_id.display_name}\n{pol_prod_name_in_product.name}", "When the product name contains the description, the invoice line name should be the product name and the description")
+
+    def test_keep_distribution_on_analytic_account_change(self):
+        """
+        Checks that when we create a vendor bill from a PO on which we set an analytic distribution manually,
+        that analytic distribution doesn't change when we change the analytic account of the product on the bill.
+        """
+        analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'default',
+            'applicability_ids': [Command.create({
+                'business_domain': 'bill',
+                'applicability': 'optional',
+            })]
+        })
+        analytic_account = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan.id})
+        distribution_model_product = self.env['account.analytic.distribution.model'].create({
+            'product_id': self.product_order.id,
+            'analytic_distribution': {str(analytic_account.id): 100},
+            'company_id': self.company.id,
+        })
+        analytic_plan_2 = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
+        analytic_account_2 = self.env['account.analytic.account'].create({'name': 'manual', 'plan_id': analytic_plan_2.id})
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_order.id}),
+            ],
+        })
+        self.assertEqual(purchase_order.order_line.analytic_distribution, distribution_model_product.analytic_distribution)
+        analytic_distribution_manual = {str(analytic_account.id) + "," + str(analytic_account_2.id): 100}
+        purchase_order.order_line.write({'analytic_distribution': analytic_distribution_manual})
+        purchase_order.button_confirm()
+        purchase_order.order_line.qty_received = 12
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        with mute_logger('odoo.tests.form.onchange'):  # Mute "x PO lines added to the bill" notification
+            move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_order.id)
+        invoice = move_form.save()
+
+        invoice.line_ids[0].account_id = self.cash_rounding_a.profit_account_id
+        # The analytic distribution of the line shouldn't change if its account changes.
+        self.assertEqual(invoice.line_ids[0].analytic_distribution, analytic_distribution_manual)
+
+    def test_compute_po_count_with_different_plan(self):
+        analytic_plan_1, analytic_plan_2 = self.env['account.analytic.plan'].create([
+            {'name': 'Plan 1'}, {'name': 'Plan 2'}
+        ])
+        analytic_account = self.env['account.analytic.account'].create({'name': 'Account', 'plan_id': analytic_plan_1.id})
+        purchase_order = self.init_purchase(partner=self.partner_a, products=[self.product_a])
+        purchase_order.order_line[0].analytic_distribution = {analytic_account.id: 100}
+        purchase_order.button_confirm()
+        purchase_order.order_line.qty_received = 1
+
+        bill = self.env['account.move'].browse(purchase_order.action_create_invoice()['res_id'])
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+
+        self.assertEqual(analytic_account.purchase_order_count, 1)
+        analytic_account.plan_id = analytic_plan_2.id
+        analytic_account.invalidate_recordset(['purchase_order_count'])
+        self.assertEqual(analytic_account.purchase_order_count, 1)
+        self.assertEqual(analytic_account.action_view_purchase_orders()['domain'], [['id', 'in', purchase_order.ids]])
 
 
 @tagged('post_install', '-at_install')
@@ -942,7 +1022,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.env['account.move.line'].flush_model()  # necessary to get the bill lines
         match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
 
-        expected_ids = po.order_line.ids + [-lid for lid in bill.invoice_line_ids.ids]
+        expected_ids = [-lid for lid in bill.invoice_line_ids.ids] + po.order_line.ids
         self.assertListEqual(match_lines.ids, expected_ids)
 
         match_lines.action_match_lines()
@@ -980,19 +1060,21 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertFalse(bill_2.invoice_line_ids[1].purchase_line_id)
         self.assertFalse(self.env['account.move.line'].search([('purchase_line_id', '=', po.order_line[2].id)]))
         self.env['purchase.order.line'].flush_model()
-        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        match_lines = self.env['purchase.bill.line.match'].search(Domain.AND([self.get_unmatched_domain(), Domain('partner_id', '=', self.partner_a.id)]))
         self.assertEqual(len(match_lines), 2)
 
         match_lines.action_match_lines()  # Can't match by product but delete residual bill line and create new bill line for residual po line as only one bill
         self.assertEqual(po.order_line[2], bill_2.invoice_line_ids[1].purchase_line_id)
         self.env['purchase.order.line'].flush_model()
-        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        match_lines = self.env['purchase.bill.line.match'].search(Domain.AND([self.get_unmatched_domain(), Domain('partner_id', '=', self.partner_a.id)]))
         self.assertEqual(len(match_lines), 0)
 
     def test_manual_matching_create_bill(self):
-        """ Selecting POL without AML will create bill with the selected POL as the lines """
+        """ Selecting POL without AML will create bill with the selected POL as the lines (and same currency as the POLs)
+        """
         prev_moves = self.env['account.move'].search([])
-        self.init_purchase(confirm=True, products=[self.product_order, self.product_order_var_name])
+        po = self.init_purchase(confirm=True, products=[self.product_order, self.product_order_var_name])
+        po.currency_id = self.other_currency
         self.env['purchase.order.line'].flush_model()
         self.env['purchase.order'].flush_model()
 
@@ -1000,10 +1082,11 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         match_lines.action_match_lines()
 
         new_move = self.env['account.move'].search([]) - prev_moves
+        self.assertEqual(new_move.currency_id, self.other_currency)
         self.assertEqual(new_move.partner_id, self.partner_a)
         self.assertRecordValues(new_move.invoice_line_ids, [
-            {'product_id': self.product_order.id},
             {'product_id': self.product_order_var_name.id},
+            {'product_id': self.product_order.id},
         ])
 
     def test_manual_matching_multi_po(self):
@@ -1023,8 +1106,8 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertRecordValues(bill.invoice_line_ids, [
             {'product_id': self.product_order.id},
             {'product_id': self.service_order.id},
-            {'product_id': self.product_order_var_name.id},
             {'product_id': self.service_deliver.id},
+            {'product_id': self.product_order_var_name.id},
         ])
 
     def test_add_bill_to_po(self):
@@ -1170,7 +1253,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             'email': 'pu@odoo.com',
             'group_ids': [Command.set([group_purchase_user.id, group_employee.id, group_partner_manager.id])],
         })
-        po1 = self.env['purchase.order'].with_context(tracking_disable=True).create({
+        po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'user_id': purchase_user.id,
             'order_line': [
@@ -1192,8 +1275,8 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertFalse(invoice1.invoice_user_id)
         # creating bill with Auto_complete feature
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        move_form.partner_id = self.partner_a
-        move_form.purchase_id = po2
+        with mute_logger('odoo.tests.form.onchange'):  # Mute "x PO lines added to the bill" notification
+            move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po2.id)
         invoice2 = move_form.save()
         self.assertFalse(invoice2.invoice_user_id)
 
@@ -1201,7 +1284,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         """ Test that invoices can be created from purchase orders with different
         vendors without raising errors and with correct vendor mapping per invoice.
         """
-        purchase_orders = self.env['purchase.order'].with_context(tracking_disable=True).create([
+        purchase_orders = self.env['purchase.order'].create([
             {
                 'partner_id': self.partner_a.id,
                 'order_line': [
@@ -1251,6 +1334,15 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertTrue(bill.id in po_2.invoice_ids.ids)
         self.assertEqual(bill.amount_total, po.amount_total + po_2.amount_total)
 
+    def test_link_bill_origin_to_purchase_orders_trailing_comma(self):
+        """Trailing comma in bill reference does not match a PO with an empty reference"""
+        po = self.init_purchase(confirm=True, products=[self.product_order])
+        po.partner_ref = False
+        bill = self.init_invoice('in_invoice', partner=self.partner_b, products=[self.product_order])
+        bill.invoice_origin = "OTHER PO, "
+        bill._link_bill_origin_to_purchase_orders()
+        self.assertNotIn(bill, po.invoice_ids)
+
     def test_po_matching_credit_note(self):
         po = self.init_purchase(partner=self.partner_a, products=[self.product_deliver])
         pol = po.order_line
@@ -1269,7 +1361,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         credit_note = self.init_invoice(move_type='in_refund', partner=self.partner_a, amounts=[0])
 
         self.env['purchase.order.line'].flush_model()
-        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        match_lines = self.env['purchase.bill.line.match'].search(Domain.AND([self.get_unmatched_domain(), Domain('partner_id', '=', self.partner_a.id)]))
         self.assertEqual(match_lines.pol_id, pol)
         self.assertEqual(match_lines.aml_id, credit_note.invoice_line_ids)
 
@@ -1278,3 +1370,71 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             'quantity': 1,
             'product_id': pol.product_id.id,
         }])
+
+    def test_bill_description_only_line_purchase_matching(self):
+        """Test the purchase matching with description-only account line (without a set product)."""
+        self.product_a.uom_id = self.uom_pack_6
+        bill_1, bill_2 = self.env['account.move'].create([{
+            'move_type': 'in_invoice',
+            'partner_id': self.partner.id,
+            'invoice_date': '2020-06-15',
+            'invoice_line_ids': [Command.create({
+                'product_id': product_id,
+                'product_uom_id': self.uom_dozen.id,
+                'quantity': 2,
+                'price_unit': 100,
+            })],
+        } for product_id in (False, self.product_a.id)])
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_qty': 2.0,
+                'uom_id': self.uom_dozen.id,
+                'price_unit': 100,
+            })],
+        })
+        po.button_confirm()
+        self.env['purchase.order.line'].flush_model()
+        self.env['purchase.order'].flush_model()
+
+        bill_matches = self.env['purchase.bill.line.match'].search(bill_1.action_purchase_matching()['domain'])
+        self.assertRecordValues(bill_matches, [
+            {
+                'product_uom_qty': 2.0,
+                'product_uom_price': 100,
+                'billed_amount_untaxed': 200.0,
+                'aml_id': bill_1.invoice_line_ids.id,
+            },
+            {
+                'product_uom_qty': 4.0,
+                'product_uom_price': 100,
+                'billed_amount_untaxed': 0.0,
+                'aml_id': False,
+            },
+        ])
+        po_matches = self.env['purchase.bill.line.match'].search(po.action_bill_matching()['domain'])
+        self.assertRecordValues(po_matches, [
+            {
+                'product_uom_qty': 4.0,
+                'product_uom_price': 100,
+                'billed_amount_untaxed': 200.0,
+                'aml_id': bill_2.invoice_line_ids.id,
+            },
+            {
+                'product_uom_qty': 2.0,
+                'product_uom_price': 100,
+                'billed_amount_untaxed': 200.0,
+                'aml_id': bill_1.invoice_line_ids.id,
+            },
+            {
+                'product_uom_qty': 4.0,
+                'product_uom_price': 100,
+                'billed_amount_untaxed': 0.0,
+                'aml_id': False,
+            },
+        ])
+        bill_matches.action_match_lines()
+        self.assertEqual(po.invoice_ids, bill_1)
+        self.assertEqual(po.order_line.product_id, bill_1.invoice_line_ids.product_id)

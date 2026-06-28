@@ -59,7 +59,7 @@ class TestCompanyLeave(TransactionCase):
         # Add a company leave on the second day.
         # Check that leave is split into 2.
 
-        self.env['hr.leave'].create({
+        self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
             'work_entry_type_id': self.paid_time_off.id,
@@ -101,7 +101,7 @@ class TestCompanyLeave(TransactionCase):
         self.paid_time_off.request_unit = 'half_day'
         self.paid_time_off.unit_of_measure = 'day'
 
-        leave = self.env['hr.leave'].create({
+        leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
             'work_entry_type_id': self.paid_time_off.id,
@@ -145,7 +145,7 @@ class TestCompanyLeave(TransactionCase):
         self.paid_time_off.request_unit = 'half_day'
         self.paid_time_off.unit_of_measure = 'day'
 
-        leave = self.env['hr.leave'].create({
+        leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
             'work_entry_type_id': self.paid_time_off.id,
@@ -182,7 +182,7 @@ class TestCompanyLeave(TransactionCase):
         self.paid_time_off.request_unit = 'day'
         self.paid_time_off.unit_of_measure = 'day'
 
-        leave = self.env['hr.leave'].create({
+        leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
             'work_entry_type_id': self.paid_time_off.id,
@@ -227,7 +227,7 @@ class TestCompanyLeave(TransactionCase):
             (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17})
         ]})
 
-        leave = self.env['hr.leave'].create({
+        leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
             'work_entry_type_id': self.paid_time_off.id,
@@ -269,7 +269,7 @@ class TestCompanyLeave(TransactionCase):
             'company_id': self.company.id
         } for i in range(100)])
 
-        leaves = self.env['hr.leave'].create([{
+        leaves = self.env['hr.leave'].with_context(leave_fast_create=True).create([{
             'name': 'Holiday - %s' % employee.name,
             'employee_id': employee.id,
             'work_entry_type_id': self.paid_time_off.id,

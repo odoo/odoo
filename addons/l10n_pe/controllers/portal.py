@@ -20,12 +20,6 @@ class L10nPEPortalAccount(L10nLatamBasePortalAccount):
             })
         return rendering_values
 
-    def _get_mandatory_address_fields(self, country_sudo):
-        mandatory_fields = super()._get_mandatory_address_fields(country_sudo)
-        if self._is_peru_company() and country_sudo.code == 'PE':
-            mandatory_fields.add('l10n_pe_district')
-        return mandatory_fields
-
     def _l10n_get_default_identification_type_id(self):
         return (
             (self.env.company.country_code == 'PE' and request.env.ref('l10n_pe.it_DNI'))

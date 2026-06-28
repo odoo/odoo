@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from lxml.etree import LIBXML_VERSION
 from markupsafe import Markup
 from unittest.mock import patch
 
@@ -290,13 +291,13 @@ class TestMailTemplate(MailCommon):
             self.assertTrue(unsafe_eval.called)
 
         employee_template.email_to = 'Test {{ object.name }}'
-        with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+        with patch('odoo.tools.safe_eval.evaluation.unsafe_eval', side_effect=eval) as unsafe_eval:
             employee_template._render_field('email_to', record.ids)
             self.assertFalse(unsafe_eval.called)
 
         # double check that we can detect the eval call
         mail_template.email_to = 'Test {{ 1+1 }}'
-        with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+        with patch('odoo.tools.safe_eval.evaluation.unsafe_eval', side_effect=eval) as unsafe_eval:
             mail_template._render_field('email_to', record.ids)
             self.assertTrue(unsafe_eval.called)
 
@@ -304,7 +305,11 @@ class TestMailTemplate(MailCommon):
         templates = (
             # here sanitizer adds an 'equals void' after object.name as properties
             # should have values
-            ('''<p ou="<p t-out="object.name">"</p>''', '<p ou="&lt;p t-out=" object.name="">"</p>'),
+            (
+                # Note: lxml build against libxml2 2.14.0+ interprets slightly differently malformed HTMl snippets
+                """<p ou="<p t-out="object.name">"</p>""",
+                '<p ou="&lt;p t-out=" object.name"="">"</p>' if LIBXML_VERSION >= (2, 14, 0) else '<p ou="&lt;p t-out=" object.name="">"</p>',
+            ),
             ('''<p title="'<p t-out='object.name'/>">''', '''<p title="'&lt;p t-out='object.name'/&gt;"></p>'''),
         )
         o_render = self.env['mail.render.mixin']._render_template_qweb_regex
@@ -448,8 +453,8 @@ class TestMailTemplate(MailCommon):
         self.assertEqual(original_attachments.mapped('res_id'), self.mail_template.ids * 2)
         self.assertEqual(original_attachments.mapped('res_model'), [self.mail_template._name] * 2)
 
-    def test_mail_template_parse_partner_to(self):
-        for partner_to, expected in [
+    def test_mail_template_parse_partner_list_ids(self):
+        for partner_list_ids, expected in [
             ('1', [1]),
             ('1,2,3', [1, 2, 3]),
             ('1, 2,  3', [1, 2, 3]),  # remove spaces
@@ -459,8 +464,8 @@ class TestMailTemplate(MailCommon):
             ('(1, "wrong", 2, "partner_name", "3")', [1, 2, 3]),  # fault tolerant
             ('res.partner(1, 2, 3)', [2]),  # invalid input but avoid crash
         ]:
-            with self.subTest(partner_to=partner_to):
-                parsed = self.mail_template._parse_partner_to(partner_to)
+            with self.subTest(partner_to=partner_list_ids):
+                parsed = self.mail_template._parse_partner_list_ids(partner_list_ids)
                 self.assertListEqual(parsed, expected)
 
     def test_server_archived_usage_protection(self):

@@ -257,7 +257,6 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour')
         self.start_pos_tour('FloorScreenTour', login="pos_admin")
-        self.start_pos_tour('TableMergeUnmergeTour', login="pos_admin")
 
     def test_02_others_bis(self):
         # disable kitchen printer to avoid printing errors
@@ -317,6 +316,24 @@ class TestFrontend(TestFrontendCommon):
     def test_07_split_bill_screen(self):
         # disable kitchen printer to avoid printing errors
         self.pos_config.use_order_printer = False
+        attribute = self.env['product.attribute'].create({
+            'name': 'Attribute',
+            'create_variant': 'always',
+        })
+        attribute_normal = self.env['product.attribute.value'].create({
+            'name': 'Normal',
+            'attribute_id': attribute.id,
+        })
+        attribute_zero = self.env['product.attribute.value'].create({
+            'name': 'Zero',
+            'attribute_id': attribute.id,
+        })
+
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.coca_cola_test.product_tmpl_id.id,
+            'attribute_id': attribute.id,
+            'value_ids': [Command.set([attribute_normal.id, attribute_zero.id])],
+        })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour3')
         self.start_pos_tour('SplitBillScreenTourPay')
@@ -340,8 +357,8 @@ class TestFrontend(TestFrontendCommon):
     def test_10_save_last_preparation_changes(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SaveLastPreparationChangesTour')
-        self.assertTrue(self.pos_config.current_session_id.order_ids.last_order_preparation_change, "There should be a last order preparation change")
-        self.assertTrue("Coca" in self.pos_config.current_session_id.order_ids.last_order_preparation_change, "The last order preparation change should contain 'Coca'")
+        self.assertTrue(self.pos_config.current_session_id.order_ids.prep_order_ids, "There should be a last order preparation change")
+        self.assertTrue(self.coca_cola_test.id == self.pos_config.current_session_id.order_ids.prep_order_ids.prep_line_ids.product_id.id, "The last order preparation change should contain 'Coca'")
 
     def test_12_order_tracking(self):
         self.pos_config.write({'order_edit_tracking': True})
@@ -754,6 +771,11 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui/{self.pos_config.id}", 'test_combo_preparation_receipt_layout', login="pos_user")
 
+    def test_combo_apply_after_preparation(self):
+        setup_product_combo_items(self)
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_combo_apply_after_preparation', login="pos_user")
+
     def test_tip_after_payment(self):
         self.pos_config.write({'iface_tipproduct': True, 'tip_product_id': self.tip.id})
         self.pos_config.with_user(self.pos_user).open_ui()
@@ -785,6 +807,20 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_open_default_register_screen_config')
 
+    def test_show_default_with_register_screen(self):
+        """
+        Test that showDefault() correctly updates the selected order when
+        default_screen is 'register' (ProductScreen mode, not floor/tables).
+        Regression test: navigating via showDefault() must sync selectedOrderUuid
+        so that ProductScreen displays the correct order.
+        """
+        self.pos_config.write({
+            'default_screen': 'register',
+            'preparation_printer_ids': False,
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_show_default_with_register_screen')
+
     def test_fast_payment_validation_from_restaurant_product_screen_with_automatic_receipt_printing(self):
         preparation_printer = self.env['pos.printer'].create({
                 'name': 'Prep Printer',
@@ -806,10 +842,8 @@ class TestFrontend(TestFrontendCommon):
             'preparation_printer_ids': [Command.set([preparation_printer.id])],
             'receipt_printer_ids': [Command.set([receipt_printer.id])],
             'iface_print_auto': True,
-            'iface_print_skip_screen': True,
             'other_devices': True,
             'preparation_devices': True,
-            'default_receipt_printer_id': receipt_printer.id,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_fast_payment_validation_from_restaurant_product_screen_with_automatic_receipt_printing')
@@ -908,8 +942,11 @@ class TestFrontend(TestFrontendCommon):
     def test_delete_line_release_table(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_delete_line_release_table')
-        order = self.pos_config.current_session_id.order_ids[0]
+        order = self.pos_config.current_session_id.order_ids[1]
+        # opening a table at end of tour created a draft order
+        last_order = self.pos_config.current_session_id.order_ids[0]
         self.assertEqual(order.state, "cancel")
+        self.assertEqual(len(last_order.lines), 0)
 
     def test_combo_synchronisation(self):
         """This test checks that when a combo line is set as dirty, the parent combo line is also set as dirty.
@@ -1010,3 +1047,62 @@ class TestFrontend(TestFrontendCommon):
     def test_add_new_table_number_with_multi_floor(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_add_new_table_number_with_multi_floor', login="pos_admin")
+
+    def test_floating_order_name_change_partner(self):
+        # Create partners
+        self.env['res.partner'].create([
+            {'name': 'Abigael', 'street': '123 Fake St'},
+            {'name': 'Deco Addict', 'street': '456 Real St'},
+        ])
+
+        # Create presets
+        self.preset_eat_in = self.env['pos.preset'].create({
+            'name': 'Eat in',
+        })
+        self.preset_delivery = self.env['pos.preset'].create({
+            'name': 'Delivery',
+            'identification': 'address',
+        })
+
+        self.main_pos_config.write({
+            'use_presets': True,
+            'default_preset_id': self.preset_eat_in.id,
+            'available_preset_ids': [(6, 0, [
+                self.preset_eat_in.id,
+                self.preset_delivery.id,
+            ])],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_floating_order_name_change_partner', login="pos_user")
+
+    def test_service_fee(self):
+        self.preset_fixed_service_fee = self.env['pos.preset'].create({
+            'name': 'Fixed',
+            'service_fee': True,
+            'service_fee_type': 'fixed',
+            'service_fee_amount': 10,
+        })
+        self.preset_percentage_service_fee_before_discount = self.env['pos.preset'].create({
+            'name': 'Percentage before discount',
+            'service_fee': True,
+            'service_fee_type': 'percent',
+            'service_fee_amount': 0.1,
+            'service_fee_based_on': 'pre_discount',
+        })
+        self.preset_percentage_service_fee_after_discount = self.env['pos.preset'].create({
+            'name': 'Percentage after discount',
+            'service_fee': True,
+            'service_fee_type': 'percent',
+            'service_fee_amount': 0.1,
+            'service_fee_based_on': 'post_discount',
+        })
+
+        self.main_pos_config.write({
+            'use_presets': True,
+            'default_preset_id': self.preset_fixed_service_fee.id,
+            'available_preset_ids': [(6, 0, [self.preset_percentage_service_fee_before_discount.id, self.preset_percentage_service_fee_after_discount.id])],
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('ServiceFeeTour', login="pos_admin")

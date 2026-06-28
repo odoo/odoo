@@ -1,23 +1,20 @@
+import { registry } from "@web/core/registry";
 import {
     clickOnEditAndWaitEditMode,
     clickOnElement,
     clickOnSave,
     insertSnippet,
-    registerWebsitePreviewTour,
     openLinkPopup,
     unfoldOptionsGroup,
+    waitForEditMode,
 } from "@website/js/tours/tour_utils";
 import { browser } from "@web/core/browser/browser";
 
 const oldWriteText = browser.navigator.clipboard.writeText;
 
-registerWebsitePreviewTour(
-    "snippet_popup_display_on_click",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("snippet_popup_display_on_click", {
+    steps: () => [
+        waitForEditMode,
         ...insertSnippet({ id: "s_text_image", name: "Image - Text", groupName: "Content" }),
         ...insertSnippet({ id: "s_popup", name: "Popup", groupName: "Content" }),
         {
@@ -60,7 +57,11 @@ registerWebsitePreviewTour(
             },
         },
         clickOnElement("button to close the popup", ":iframe .s_popup_close"),
-        ...openLinkPopup(":iframe .s_text_image a.btn-secondary", "Button", 1),
+        ...openLinkPopup({
+            trigger: ":iframe .s_text_image a.btn-secondary",
+            label: "Home",
+            url: "#",
+        }),
         clickOnElement("text image snippet button", ".o-we-linkpopover .o_we_edit_link"),
         {
             content: "Add a link to the popup in the URL input",
@@ -95,7 +96,11 @@ registerWebsitePreviewTour(
             trigger: ":iframe .s_text_image",
             run: "click",
         },
-        ...openLinkPopup(":iframe .s_text_image a.btn-secondary", "Button", 1),
+        ...openLinkPopup({
+            trigger: ":iframe .s_text_image a.btn-secondary",
+            label: "Contact Us",
+            url: "#",
+        }),
         clickOnElement("text image snippet button", ".o-we-linkpopover .o_we_edit_link"),
         {
             content: "Add a link to the homepage in the URL input",
@@ -119,5 +124,5 @@ registerWebsitePreviewTour(
             content: "Verify that the popup opens when the homepage page loads.",
             trigger: ":iframe .s_popup .modal[id='Win-%2420'].show",
         },
-    ]
-);
+    ],
+});

@@ -1,16 +1,11 @@
+import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
+    postLivechatMessage,
 } from "@im_livechat/../tests/livechat_test_helpers";
-import {
-    click,
-    contains,
-    insertText,
-    onRpcBefore,
-    start,
-    startServer,
-    triggerHotkey,
-} from "@mail/../tests/mail_test_helpers";
+import { click, contains, onRpcBefore, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { onRpc } from "@web/../tests/web_test_helpers";
 
@@ -23,10 +18,11 @@ test("send", async () => {
     onRpcBefore("/im_livechat/email_livechat_transcript", () => expect.step(`send_transcript`));
     const partnerId = pyEnv["res.partner"].create({ email: "paul@example.com", name: "Paul" });
     pyEnv["res.users"].create({ partner_id: partnerId, login: "paul", password: "paul" });
-    await start({ authenticateAs: { login: "paul", password: "paul" } });
+    await start({ authenticateAs: { login: "paul", password: "paul" }, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
-    await insertText(".o-mail-Composer-input", "Hello World!");
-    triggerHotkey("Enter");
+    const subscribed = waitUntilSubscribe();
+    await postLivechatMessage("Hello World!");
+    await subscribed;
     await contains(".o-mail-Thread:not([data-transient])");
     await click(".o-mail-ChatWindow-header [title*='Close']");
     await click(".o-livechat-CloseConfirmation-leave");
@@ -45,10 +41,11 @@ test("send failed", async () => {
     });
     const partnerId = pyEnv["res.partner"].create({ email: "paul@example.com", name: "Paul" });
     pyEnv["res.users"].create({ partner_id: partnerId, login: "paul", password: "paul" });
-    await start({ authenticateAs: { login: "paul", password: "paul" } });
+    await start({ authenticateAs: { login: "paul", password: "paul" }, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
-    await insertText(".o-mail-Composer-input", "Hello World!");
-    triggerHotkey("Enter");
+    const subscribed = waitUntilSubscribe();
+    await postLivechatMessage("Hello World!");
+    await subscribed;
     await contains(".o-mail-Thread:not([data-transient])");
     await click(".o-mail-ChatWindow-header [title*='Close']");
     await click(".o-livechat-CloseConfirmation-leave");

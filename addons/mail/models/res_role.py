@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class ResRole(models.Model):
@@ -12,6 +13,7 @@ class ResRole(models.Model):
     )
 
     name = fields.Char(required=True)
+    active = fields.Boolean(default=True)
     user_ids = fields.Many2many("res.users", relation="res_role_res_users_rel", string="Users")
     user_ids_count = fields.Integer(compute="_compute_user_ids_count")
 
@@ -26,3 +28,27 @@ class ResRole(models.Model):
         )
         for role in self:
             role.user_ids_count = user_count_by_role.get(role, 0)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_linked_activities(self):
+        """ Prevent deletion of roles that are still in use as defaults or on unassigned activities. """
+        blocking_items = []
+        if unassigned := self.env['mail.activity'].sudo().search_count(
+            [('role_id', 'in', self.ids), ('user_id', '=', False)]
+        ):
+            blocking_items.append(self.env._("%(count)s unassigned activity(ies)", count=unassigned))
+        if act_types := self.env['mail.activity.type'].sudo().search([('default_role_id', 'in', self.ids)]):
+            blocking_items.append(self.env._("Activity Types: %(types)s", types=act_types.mapped('name')))
+        if plans := self.env['mail.activity.plan.template'].sudo().search([('role_id', 'in', self.ids)]):
+            blocking_items.append(self.env._("Activity Plans: %(plans)s", plans=plans.mapped('display_name')))
+        if server_actions := self.env['ir.actions.server'].sudo().search_count([('activity_role_id', 'in', self.ids)]):
+            blocking_items.append(self.env._("%(count)s Server Action(s)", count=server_actions))
+        if blocking_items:
+            raise UserError(
+                self.env._(
+                    "You cannot delete these roles because they are still in use in:\n"
+                    "- %(blocking_list)s\n\n"
+                    "Please archive the role(s) instead, or reassign these items.",
+                    blocking_list="\n- ".join(blocking_items)
+                )
+            )

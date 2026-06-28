@@ -15,7 +15,10 @@
 </t>
 
 <t t-name="website.PageDependencies">
-    <t t-if="!!Object.keys(this.state.dependencies).length">
+    <t t-if="this.state.dependencies === null">
+        <span class="text-muted"><i class="fa fa-spinner fa-spin me-1"/>Checking links...</span>
+    </t>
+    <t t-elif="this.state.dependencyCount > 0">
         <t t-if="this.props.mode === 'popover'">
             <t t-set="depTemplate">
                 <t t-call="{{ this.constructor.popoverTemplate }}"/>
@@ -25,7 +28,7 @@
             </div>
         </t>
         <t t-else="">
-            <p class="text-warning">We found these links:</p>
+            <p class="text-warning">We found <t t-out="this.state.dependencyCount" /> occurrences linking to the selected page(s); before proceeding with deletion, make sure you update or remove all those links so your customers don't run into a 404 error page.</p>
             <div t-foreach="this.state.dependencies" t-as="dependency" t-key="dependency" class="ml16 mb16">
                 <a class="collapsed" data-bs-toggle="collapse"
                 t-attf-aria-controls="collapseDependencies{{ dependency_index }}"
@@ -38,15 +41,18 @@
                 <div t-attf-id="collapseDependencies{{ dependency_index }}" class="collapse" aria-expanded="false">
                     <ul>
                         <li t-foreach="dependency_value" t-as="item" t-key="item_index">
-                            <t t-set="link_text">This URL is contained in the “%(field)s” of the following “%(model)s”</t>
+                            <t t-set="link_text">The URL “%(url)s“ is contained in the “%(field)s” of the following “%(model)s”</t>
                             <a t-att-href="item.link" target="_blank">
-                                <t t-out="this.sprintf(link_text, { field: item.field_name, model: item.model_name })"/>: <b t-out="item.record_name"/>
+                                <t t-out="this.sprintf(link_text, { url: item.url, field: item.field_name, model: item.model_name })"/>: <b t-out="item.record_name"/>
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
         </t>
+    </t>
+    <t t-elif="this.props.mode !== 'popover'">
+        <span class="text-success">No links found, you are safe to delete.</span>
     </t>
 </t>
 
@@ -65,19 +71,16 @@
 
 <t t-name="website.DeletePageDialog">
     <WebsiteDialog title.translate="Delete Page" close="this.props.close">
-        <p t-if="this.props.resIds.length > 1">Ready to make these web pages disappear into thin air? Are you sure?<br/> They will be gone forever!<br/><br/>
-            <span class="text-warning">But before deleting, make sure you update all links referring to them. That way, your customers won't bump into the not-so-famous 404 error page.</span>
-        </p>
-        <p t-else="">Ready to make this web page disappear into thin air? Are you sure?<br/> It will be gone forever!<br/><br/>
-            <span class="text-warning">But before deleting, make sure you update all links referring to it. That way, your customers won't bump into the not-so-famous 404 error page.</span>
-        </p>  
-        <PageDependencies resIds="this.props.resIds" resModel="this.props.resModel" mode="'collapse'"/>
-        <CheckBox value="this.state.confirm" onChange.bind="this.onConfirmCheckboxChange">
-            <p class="text-warning">I am sure about this.</p>
-        </CheckBox>
+        <p>Ready to make these web page(s) disappear into thin air? Are you sure?<br/> They will be gone forever!</p>
+        <PageDependencies resIds="this.props.resIds" resModel="this.props.resModel" mode="'collapse'" onDependenciesLoaded="this.onDependenciesLoaded"/>
+        <t t-if="this.state.hasDependencies">
+            <CheckBox value="this.state.confirm" onChange.bind="this.onConfirmCheckboxChange">
+                <span class="text-warning">I am sure about this.</span>
+            </CheckBox>
+        </t>
 
         <t t-set-slot="footer">
-            <button class="btn btn-danger" t-on-click="() => this.onClickDelete()"  t-att-disabled="!this.state.confirm">
+            <button class="btn btn-danger" t-on-click="() => this.onClickDelete()" t-att-disabled="!this.state.confirm">
                 Delete
             </button>
             <button class="btn btn-secondary" t-on-click="() => this.props.close()">

@@ -3,6 +3,14 @@ import { _t } from "@web/core/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { closestBlock } from "@html_editor/utils/blocks";
+
+function canInsertBlockSnippet(selection) {
+    return (
+        isHtmlContentSupported(selection) &&
+        closestBlock(selection.anchorNode)?.parentElement?.isContentEditable
+    );
+}
 
 export class SnippetsPowerboxPlugin extends Plugin {
     static id = "alert";
@@ -16,7 +24,7 @@ export class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert an alert snippet"),
                 icon: "fa-info",
                 run: this.insertSnippet.bind(this, "s_alert"),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: canInsertBlockSnippet,
             },
             {
                 id: "s_rating",
@@ -24,7 +32,7 @@ export class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a rating snippet"),
                 icon: "fa-star-half-o",
                 run: this.insertSnippet.bind(this, "s_rating"),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: canInsertBlockSnippet,
             },
             {
                 id: "s_card",
@@ -32,7 +40,7 @@ export class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a card snippet"),
                 icon: "fa-sticky-note",
                 run: this.insertSnippet.bind(this, "s_card"),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: canInsertBlockSnippet,
             },
             {
                 id: "s_share",
@@ -40,7 +48,7 @@ export class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a share snippet"),
                 icon: "fa-share-square-o",
                 run: this.insertSnippet.bind(this, "s_share"),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: canInsertBlockSnippet,
             },
             {
                 id: "s_text_highlight",
@@ -48,7 +56,7 @@ export class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a text highlight snippet"),
                 icon: "fa-sticky-note",
                 run: this.insertSnippet.bind(this, "s_text_highlight"),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: canInsertBlockSnippet,
             },
             {
                 id: "s_chart",
@@ -56,7 +64,7 @@ export class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a chart snippet"),
                 icon: "fa-bar-chart",
                 run: this.insertSnippet.bind(this, "s_chart"),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: canInsertBlockSnippet,
             },
             {
                 id: "s_progress_bar",
@@ -64,7 +72,7 @@ export class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a progress bar snippet"),
                 icon: "fa-spinner",
                 run: this.insertSnippet.bind(this, "s_progress_bar"),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: canInsertBlockSnippet,
             },
             {
                 id: "s_badge",
@@ -80,7 +88,7 @@ export class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a blockquote snippet"),
                 icon: "fa-quote-left",
                 run: this.insertSnippet.bind(this, "s_blockquote"),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: canInsertBlockSnippet,
             },
             {
                 id: "s_hr",
@@ -88,7 +96,7 @@ export class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a horizontal separator snippet"),
                 icon: "fa-minus",
                 run: this.insertSnippet.bind(this, "s_hr"),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: canInsertBlockSnippet,
             },
         ],
         powerbox_categories: withSequence(110, {
@@ -137,13 +145,18 @@ export class SnippetsPowerboxPlugin extends Plugin {
                 commandId: "s_hr",
             },
         ],
+        is_node_splittable_predicates: (node) => {
+            if (node.classList?.contains("s_blockquote")) {
+                return false;
+            }
+        },
     };
 
     insertSnippet(name) {
         const snippet = this.config.snippetModel.getSnippetByName("snippet_content", name);
         const content = snippet.content.cloneNode(true);
         this.dependencies.dom.insert(content);
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 }
 

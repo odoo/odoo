@@ -622,3 +622,51 @@ class L10nMyEDITestConsolidatedFileGeneration(L10nMyEDITestFileGenerationCommon)
 
         myinvois_document.myinvois_issuance_date = fields.Date.context_today(myinvois_document)
         self.assertEqual(myinvois_document.name, 'CINV/2025/00002')
+
+    @freeze_time('2025-07-15')
+    def test_consolidating_broken_sequence(self):
+        """
+        Create 14 invoices and simulate individually sending some of them to produce a broken sequence where the
+        last batch is a single isolated invoice.
+
+        Eligible invoices after excluding individually-sent ones: 1-5, 10-12, 14.
+        Expected: 3 line items in the XML, with the isolated invoice rendered without hyphen.
+        """
+        base_invoice_data = {
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)],
+                }),
+            ],
+        }
+        all_invoices = self.env['account.move'].create([base_invoice_data] * 14)
+        all_invoices.action_post()
+
+        # 00006-00009 and 00013 sent individually, 00001-00005 , 00010-00012 and 00014 remain for consolidation.
+        invoices_sent_individually = all_invoices[5:9] | all_invoices[12:13]
+        invoices_sent_individually._create_myinvois_document()
+
+        myinvois_document_action = self.env['myinvois.consolidate.invoice.wizard'].create({
+            'date_from': '2025-07-01',
+            'date_to': '2025-07-31',
+            'consolidation_type': 'invoice',
+        }).button_consolidate()
+
+        myinvois_document = self.env['myinvois.document'].browse(myinvois_document_action['res_id'])
+        self.assertEqual(len(myinvois_document.invoice_ids), 9)
+
+        myinvois_document.myinvois_issuance_date = fields.Date.context_today(myinvois_document)
+        file, errors = myinvois_document._myinvois_generate_xml_file()
+        self.assertFalse(errors)
+        root = etree.fromstring(file)
+
+        invoice_lines = root.xpath('cac:InvoiceLine', namespaces=NS_MAP)
+        self.assertEqual(len(invoice_lines), 3, "Expected 3 line items for 1-5, 10-12 and 14")
+
+        self._assert_node_values(invoice_lines[0], 'cac:Item/cbc:Name', 'INV/2025/00001-INV/2025/00005')
+        self._assert_node_values(invoice_lines[1], 'cac:Item/cbc:Name', 'INV/2025/00010-INV/2025/00012')
+        self._assert_node_values(invoice_lines[2], 'cac:Item/cbc:Name', 'INV/2025/00014')

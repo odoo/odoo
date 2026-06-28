@@ -5,10 +5,73 @@ import datetime
 import os.path
 from zoneinfo import ZoneInfo
 
-from odoo.tests.common import tagged, BaseCase, TransactionCase, freeze_time
+from odoo.tests.common import BaseCase, TransactionCase, freeze_time, tagged
 from odoo.tools import config, misc, urls
 from odoo.tools.mail import validate_url
-from odoo.tools.misc import file_open, file_path, merge_sequences, remove_accents
+from odoo.tools.misc import (
+    file_open,
+    file_path,
+    find_circular_dependency,
+    merge_sequences,
+    remove_accents,
+)
+
+
+@tagged('at_install', '-post_install')
+class TestFindCircularDependency(BaseCase):
+
+    def test_empty_graph(self):
+        self.assertEqual(find_circular_dependency({}), [])
+
+    def test_no_dependencies(self):
+        elems = {'a': [], 'b': [], 'c': []}
+        self.assertEqual(find_circular_dependency(elems), [])
+
+    def test_linear_chain_no_cycle(self):
+        elems = {'a': ['b'], 'b': ['c'], 'c': []}
+        self.assertEqual(find_circular_dependency(elems), [])
+
+    def test_diamond_no_cycle(self):
+        elems = {'a': ['b', 'c'], 'b': ['d'], 'c': ['d'], 'd': []}
+        self.assertEqual(find_circular_dependency(elems), [])
+
+    def test_disconnected_acyclic_components(self):
+        elems = {'a': ['b'], 'b': [], 'c': ['d'], 'd': []}
+        self.assertEqual(find_circular_dependency(elems), [])
+
+    def test_dependency_not_in_keys(self):
+        elems = {'a': ['b'], 'b': ['c']}
+        self.assertEqual(find_circular_dependency(elems), [])
+
+    def test_self_cycle(self):
+        elems = {'a': ['a']}
+        self.assertEqual(find_circular_dependency(elems), ['a', 'a'])
+
+    def test_simple_two_node_cycle(self):
+        elems = {'a': ['b'], 'b': ['a']}
+        result = find_circular_dependency(elems)
+        self.assertEqual(result[0], result[-1])
+        self.assertEqual(len(result), 3)
+
+    def test_three_node_cycle(self):
+        elems = {'a': ['b'], 'b': ['c'], 'c': ['a']}
+        result = find_circular_dependency(elems)
+        self.assertEqual(result[0], result[-1])
+        self.assertEqual(len(result), 4)
+
+    def test_cycle_in_subgraph(self):
+        elems = {'a': ['b'], 'b': ['c'], 'c': ['d'], 'd': ['b']}
+        result = find_circular_dependency(elems)
+        self.assertEqual(result[0], result[-1])
+        self.assertNotIn('a', result)
+
+    def test_multiple_independent_cycles(self):
+        elems = {'a': ['b'], 'b': ['a'], 'c': ['d'], 'd': ['c']}
+        result = find_circular_dependency(elems)
+        self.assertEqual(result[0], result[-1])
+        self.assertTrue(
+            set(result).issubset({'a', 'b'}) or set(result).issubset({'c', 'd'})
+        )
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -110,6 +173,9 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_datetime(lang.env, datetime_str, tz='Europe/Brussels', dt_format=fmt_fr, lang_code='fr_FR'), '31 janvier 2017 à 11:33:00 +0100')
         self.assertEqual(misc.format_datetime(lang.with_context(lang='zh_CN').env, datetime_str, tz='Europe/Brussels', dt_format=fmt_us, lang_code='en_US'), 'January 31, 2017 at 11:33:00 AM +0100')
 
+        # Check given 'short' format
+        self.assertEqual(misc.format_datetime(lang.with_context(lang='fr_FR').env, datetime_str, tz='America/New_York', dt_format='short'), '31/01/2017 05:33')
+
         # -- test `time`
         time_part = datetime.time(16, 30, 22)
         time_part_tz = datetime.time(16, 30, 22, tzinfo=ZoneInfo('America/New_York'))  # 4:30 PM timezoned
@@ -132,6 +198,9 @@ class TestFormatLangDate(TransactionCase):
         # Check given `lang_code` overwites context lang
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='ah:mm', lang_code='zh_CN'), '\u4e0b\u53484:30')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='ah:mm', lang_code='fr_FR'), 'PM4:30')
+
+        # Check given 'short' format
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='short'), '16:30')
 
     def test_02_tz(self):
         self.env.user.tz = 'Europe/Brussels'

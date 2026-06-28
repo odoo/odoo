@@ -5,6 +5,7 @@ from . import test_departure
 from . import test_calendar_sync
 from . import test_hr_employee
 from . import test_hr_employee_public
+from . import test_hr_employee_rights
 from . import test_channel
 from . import test_self_user_access
 from . import test_mail_activity_plan
@@ -17,7 +18,9 @@ from . import test_scenario
 from . import test_hr_department
 from . import test_hr_version
 from . import test_hr_contract_versions
+from . import test_hr_version_contract_overlap
 from . import test_flexible_resource_calendar
+from . import test_get_employee_working_periods
 from . import test_multiple_bank_accounts
 from . import test_hr_org_chart
 from . import test_utils

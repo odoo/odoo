@@ -1,22 +1,21 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
-from datetime import datetime, date
+from datetime import date, datetime
+
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 from psycopg2 import IntegrityError
 
-from odoo.tools import date_utils, mute_logger, test_reports
-
-from odoo.tests import tagged
+from odoo.tests import reports as test_reports
+from odoo.tools import date_utils, mute_logger
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
 class TestHolidaysFlow(TestHrHolidaysCommon):
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.models')
     def test_00_leave_request_flow_unlimited(self):
         """ Testing leave request flow: unlimited type of leave request """
         Requests = self.env['hr.leave']
@@ -84,7 +83,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         hol12_manager_group.action_approve()
         self.assertEqual(hol1_user_group.state, 'validate', 'hr_holidays: validates leave request should be in validate state')
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.models')
     def test_01_leave_request_flow_limited(self):
         """ Testing leave request flow: limited type of leave request """
         with freeze_time('2022-01-15'):
@@ -228,6 +227,41 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             self.assertEqual(hol3.state, 'validate', 'hr_holidays: validation should lead to validate state')
             # Check left days for casual leave: 19 days left
             _check_holidays_status(hol3_status, self.env['hr.employee'].browse(employee_id), 20.0, 1.0, 19.0, 19.0)
+
+    @freeze_time("2026-04-27")  # Monday
+    def test_change_request_unit(self):
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Request Unit Change Test',
+            'code': 'Request Unit Change Test',
+            'requires_allocation': False,
+            'request_unit': 'hour',
+        })
+        work_entry_type.request_unit = 'hour'
+        leave1, leave2 = self.env['hr.leave'].create([{
+            'name': 'Hour leave 1',
+            'work_entry_type_id': work_entry_type.id,
+            'employee_id': self.employee_emp.id,
+            'request_date_from': date.today(),
+            'request_date_to': date.today(),
+            'request_hour_from': 13,
+            'request_hour_to': 15,
+        }, {
+            'name': 'Hour leave 2',
+            'work_entry_type_id': work_entry_type.id,
+            'employee_id': self.employee_emp.id,
+            'request_date_from': date.today() + relativedelta(days=1),
+            'request_date_to': date.today() + relativedelta(days=1),
+            'request_hour_from': 13,
+            'request_hour_to': 15,
+        }])
+        leave2.action_back_to_approval()
+        self.assertEqual(leave1.state, 'validate')
+        self.assertEqual(leave2.state, 'confirm')
+        self.assertEqual(leave1.number_of_hours, 2)
+        self.assertEqual(leave2.number_of_hours, 2)
+        work_entry_type.write({'request_unit': 'day'})
+        self.assertEqual(leave1.number_of_hours, 2, 'Validated leaves should not be recomputed')
+        self.assertEqual(leave2.number_of_hours, 2, 'Confirmed leaves should not be recomputed')
 
     def test_10_leave_summary_reports(self):
         # Print the HR Holidays(Summary Employee) Report through the wizard

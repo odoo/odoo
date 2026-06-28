@@ -1,26 +1,15 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { registry } from "@web/core/registry";
-import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
-import { isCSSColor } from "@web/core/utils/colors";
-
-export const DATASET_KEY_PREFIX = "chart_dataset_";
-
-export function getColor(color, win, doc) {
-    if (!color) {
-        return "";
-    }
-    return isCSSColor(color)
-        ? color
-        : getCSSVariableValue(color, win.getComputedStyle(doc.documentElement));
-}
+import { DATASET_KEY_PREFIX, addChartColumn, addChartRow, getColor } from "./chart_option_utils";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 export class ChartOption extends BaseOptionComponent {
     static id = "chart_option";
     static template = "website.ChartOption";
-    static dependencies = ["chartOptionPlugin"];
+    static dependencies = ["chartOptionPlugin", "operation", "history"];
 
     setup() {
         super.setup();
@@ -30,7 +19,7 @@ export class ChartOption extends BaseOptionComponent {
             this.prepareData(this.env.getEditingElement())
         );
 
-        this.state = useState({ currentCell: {} });
+        this.state = proxy({ currentCell: {} });
 
         this.domState = useDomState((editingElement) => ({
             data: this.getData(editingElement),
@@ -96,6 +85,7 @@ export class ChartOption extends BaseOptionComponent {
     getColor(color) {
         return getColor(color, this.window, this.document);
     }
+
     /**
      * Retrieve the colors already in use in the chart.
      *
@@ -193,6 +183,8 @@ export class ChartOption extends BaseOptionComponent {
         // click on a table inner cell
         else if (datasetIndex !== -1 && datasetIndex !== cellRowEl.children.length - 2) {
             this.updateCurrentCell({ datasetIndex, dataIndex });
+        } else if (datasetIndex === -1) {
+            this.updateCurrentCell({ datasetIndex: null, dataIndex: null });
         }
     }
     /**
@@ -293,6 +285,112 @@ export class ChartOption extends BaseOptionComponent {
                 .querySelector(".o_builder_matrix_remove_row")
                 .classList.remove("visually-hidden-focusable");
         }
+    }
+
+    onCellKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (hotkey === "control+z") {
+            this.dependencies.operation.next(() => this.dependencies.history.undo());
+        } else if (hotkey === "control+shift+z" || hotkey === "control+y") {
+            this.dependencies.operation.next(() => this.dependencies.history.redo());
+        }
+    }
+
+    /**
+     * Handles paste events for a table of inputs.
+     *
+     * Reads tab-separated clipboard data (e.g. copied from Excel), then
+     * distributes the values into the table starting from the targeted cell.
+     * Label cells use raw text (same behavior as BuilderTextInput), while
+     * dataset value cells parse numbers.
+     *
+     * @param {ClipboardEvent} ev
+     */
+    onPasteValues(ev) {
+        ev.preventDefault();
+
+        const clipText = ev.clipboardData.getData("text/plain");
+        if (!clipText) {
+            return;
+        }
+        const clipRows = clipText
+            .replace(/\r/g, "")
+            .split("\n")
+            .map((row) => row.split("\t"));
+        if (!clipRows.length) {
+            return;
+        }
+
+        const { cellEl, cellSectionEl, datasetIndex, dataIndex } = this.getCellInfo(ev);
+        if (!cellEl) {
+            return;
+        }
+
+        const isDatasetLabelCell = cellSectionEl.tagName === "THEAD" && datasetIndex >= 0;
+
+        const startRow = isDatasetLabelCell ? 0 : dataIndex + 1;
+        const startCol = datasetIndex + 1;
+
+        const maxPastedColumnCount = Math.max(...clipRows.map((row) => row.length));
+        if (!maxPastedColumnCount) {
+            return;
+        }
+
+        this.dependencies.operation.next(async () => {
+            const editingElement = this.env.getEditingElement();
+            const data = this.prepareData(editingElement);
+            const isPieChart = this.isPieChart(editingElement);
+
+            const maxTargetRow = startRow + clipRows.length - 1;
+            const maxTargetCol = startCol + maxPastedColumnCount - 1;
+            const rowsToAdd = Math.max(maxTargetRow - data.labels.length, 0);
+            const colsToAdd = Math.max(maxTargetCol - data.datasets.length, 0);
+            const timestamp = Date.now();
+
+            for (let i = 0; i < rowsToAdd; i++) {
+                addChartRow(data, isPieChart);
+            }
+            for (let i = 0; i < colsToAdd; i++) {
+                addChartColumn(data, isPieChart, `${DATASET_KEY_PREFIX}${timestamp}${i}`);
+            }
+
+            let hasChanged = !!(rowsToAdd || colsToAdd);
+            for (let i = 0; i < clipRows.length; i++) {
+                for (let j = 0; j < clipRows[i].length; j++) {
+                    const targetRow = startRow + i;
+                    const targetCol = startCol + j;
+                    const pastedValue = clipRows[i][j];
+
+                    if (targetRow === 0 && targetCol > 0) {
+                        const currentValue = data.datasets[targetCol - 1].label || "";
+                        if (currentValue !== pastedValue) {
+                            data.datasets[targetCol - 1].label = pastedValue;
+                            hasChanged = true;
+                        }
+                    } else if (targetCol === 0 && targetRow > 0) {
+                        const currentValue = data.labels[targetRow - 1] || "";
+                        if (currentValue !== pastedValue) {
+                            data.labels[targetRow - 1] = pastedValue;
+                            hasChanged = true;
+                        }
+                    } else if (targetRow > 0 && targetCol > 0) {
+                        const parsedValue = Number.parseFloat(pastedValue);
+                        const value = Number.isNaN(parsedValue) ? 0 : parsedValue;
+                        const currentValue = data.datasets[targetCol - 1].data[targetRow - 1];
+                        if (currentValue !== value) {
+                            data.datasets[targetCol - 1].data[targetRow - 1] = value;
+                            hasChanged = true;
+                        }
+                    }
+                }
+            }
+
+            if (!hasChanged) {
+                return;
+            }
+            editingElement.dataset.data = JSON.stringify(data);
+            this.dependencies.history.commit({ batchable: true });
+        });
     }
 }
 

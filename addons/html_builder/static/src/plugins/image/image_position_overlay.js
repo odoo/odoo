@@ -1,30 +1,24 @@
 import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
-import {
-    Component,
-    onMounted,
-    onWillStart,
-    onWillUnmount,
-} from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, props, t, useListener } from "@odoo/owl";
 
 export class ImagePositionOverlay extends Component {
     static template = "html_builder.ImagePositionOverlay";
-    static props = {
-        targetEl: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
-        close: { type: Function },
-        onDrag: { type: Function },
-        getPosition: { type: Function },
+    props = props({
+        targetEl: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE),
+        close: t.function(),
+        onDrag: t.function(),
+        getPosition: t.function(),
         /**
          * `getDelta` should return the difference between the image container
          * dimensions and the image rendered dimensions. Effectively giving the
          * room the image has to move around in each x and y directions.
          */
-        getDelta: { type: Function },
-        editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
-        history: { type: Object, optional: true },
-        scrollToElement: { type: Boolean, optional: true },
-    };
-    static defaultProps = { scrollToElement: true };
+        getDelta: t.function(),
+        editable: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE),
+        history: t.object().optional(),
+        scrollToElement: t.boolean().optional(true),
+    });
 
     setup() {
         this.overlayRef = useRef("overlay");
@@ -42,9 +36,9 @@ export class ImagePositionOverlay extends Component {
         // Discard when clicking anywhere on the page
         const editableDocument = this.props.editable.ownerDocument;
         useExternalListener(editableDocument, "pointerdown", this.discard.bind(this));
-        useExternalListener(document, "pointerdown", this.discard.bind(this));
+        useListener(document, "pointerdown", this.discard.bind(this));
 
-        useExternalListener(window, "resize", this._dimensionOverlay);
+        useListener(window, "resize", this._dimensionOverlay.bind(this));
         useExternalListener(this.iframeEl.contentWindow, "resize", this._dimensionOverlay);
         useExternalListener(this.iframeEl.contentWindow, "scroll", this._dimensionOverlay);
 
@@ -76,8 +70,7 @@ export class ImagePositionOverlay extends Component {
         });
 
         onMounted(() => {
-            const makeSavePoint = this.props.history?.makeSavePoint;
-            this.reloadSavePoint = makeSavePoint ? makeSavePoint() : () => {};
+            this.reloadSavePoint = this.props.history?.makeSavePoint() ?? (() => {});
             this.dimensionOverlay();
             this.props.targetEl.classList.add("o_we_image_positioning");
         });

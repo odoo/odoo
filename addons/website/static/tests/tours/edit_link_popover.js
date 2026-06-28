@@ -1,8 +1,9 @@
+import { registry } from "@web/core/registry";
 import {
     insertSnippet,
-    registerWebsitePreviewTour,
     openLinkPopup,
     clickToolbarButton,
+    waitForEditMode,
 } from "@website/js/tours/tour_utils";
 import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
@@ -10,32 +11,9 @@ import { patch } from "@web/core/utils/patch";
 const FIRST_PARAGRAPH =
     ":iframe #wrap .s_text_image p:not([data-selection-placeholder]):nth-child(2)";
 
-const clickEditLink = {
-    content: "Click on Edit Link in Popover",
-    trigger: ".o-we-linkpopover .o_we_edit_link",
-    run: "click",
-};
-
-const editLinkAndApply = (url) => [
-    {
-        content: `Type the link URL ${url}`,
-        trigger: ".o-we-linkpopover .o_we_href_input_link",
-        run: `edit ${url}`,
-    },
-    {
-        content: "Save the link by clicking on Apply button",
-        trigger: ".o-we-linkpopover .o_we_apply_link",
-        run: "click",
-    },
-];
-
-registerWebsitePreviewTour(
-    "edit_link_popover",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("edit_link_popover", {
+    steps: () => [
+        waitForEditMode,
         // 1. Test links in page content (web_editor)
         ...insertSnippet({
             id: "s_text_image",
@@ -53,14 +31,22 @@ registerWebsitePreviewTour(
             "Insert link (Ctrl + K)",
             false
         ),
-        ...editLinkAndApply("/contactus"),
-        ...openLinkPopup(`${FIRST_PARAGRAPH} a`, "/contactus", 1, true),
         {
-            content: "Popover should be shown for contact us",
-            trigger: ".o-we-linkpopover .o_we_url_link:contains('Contact Us')",
+            content: `Type the link URL /contactus`,
+            trigger: ".o-we-linkpopover .o_we_href_input_link",
+            run: `edit /contactus`,
         },
-        clickEditLink,
-        ...editLinkAndApply("/"),
+        {
+            content: "Save the link by clicking on Apply button",
+            trigger: ".o-we-linkpopover .o_we_apply_link",
+            run: "click",
+        },
+        ...openLinkPopup({
+            trigger: `${FIRST_PARAGRAPH} a`,
+            url: "/contactus",
+            label: "Contact Us",
+            edit: "/",
+        }),
         {
             content: "Remove paragraph selection",
             trigger: ":iframe body",
@@ -70,53 +56,25 @@ registerWebsitePreviewTour(
                 sel.removeAllRanges();
             },
         },
-        ...openLinkPopup(`${FIRST_PARAGRAPH} a`, "/", 1, true),
-        {
-            content: "Popover should be shown for home",
-            trigger: ".o-we-linkpopover .o_we_url_link:contains('Home')",
-        },
-        clickEditLink,
-        {
-            content: "Click on Remove Link in Popover",
-            trigger: ".o-we-linkpopover .o_we_remove_link",
-            run: "click",
-        },
-        {
-            content: "Link should be removed",
-            trigger: `${FIRST_PARAGRAPH}:not(:has(a))`,
-        },
-        {
-            content: "Ensure popover is closed",
-            trigger: ".o-overlay-container:not(:visible:has(.o-we-linkpopover))", // popover should be closed
-        },
+        ...openLinkPopup({
+            trigger: `${FIRST_PARAGRAPH} a`,
+            url: "/",
+            label: "Home",
+            remove: true,
+        }),
         // 2. Test links in navbar (website)
-        {
-            content: "Click navbar menu Home",
-            trigger: ':iframe .top_menu a:contains("Home")',
-            run: "click",
-        },
-        ...openLinkPopup(":iframe #o_main_nav a.nav-link:contains('Home')", "/contactus", 1, false),
-        {
-            content: "Popover should be shown (2)",
-            trigger: ".o-we-linkpopover .o_we_url_link:contains('Home')",
-        },
-        clickEditLink,
-        {
-            content: "Change the URL",
-            trigger: ".modal-dialog #url_input",
-            run: "edit /contactus",
-        },
-        {
-            content: "Save the Edit Menu modal",
-            trigger: ".modal-footer .btn-primary",
-            run: "click",
-        },
-        ...openLinkPopup(
-            ":iframe .top_menu a:contains('Home')[href='/contactus']",
-            "/contactus",
-            0,
-            true
-        ),
+        ...openLinkPopup({
+            trigger: ":iframe .top_menu a:contains(Home)[href='/']",
+            url: "/",
+            label: "Home",
+            runClick: false,
+            edit: "/contactus",
+        }),
+        ...openLinkPopup({
+            trigger: ":iframe .top_menu a:contains(Home)[href='/contactus']",
+            url: "/contactus",
+            label: "Contact Us",
+        }),
         {
             content: "Popover should be shown with updated preview data (2)",
             trigger: ".o-we-linkpopover .o_we_url_link:contains('Contact Us')",
@@ -140,16 +98,16 @@ registerWebsitePreviewTour(
             trigger: ":iframe html:not(.modal-body)",
         },
         // 3. Test other links (CTA in navbar & links in footer)
-        ...openLinkPopup(":iframe #o_main_nav a.btn-primary[href='/contactus']", "CTA", 1, true),
-        {
-            content: "Popover should be shown (3)",
-            trigger: ".o-we-linkpopover .o_we_url_link:contains('Contact Us')",
-        },
-        ...openLinkPopup(":iframe footer a[href='/']", "Footer Home", 1, true),
-        {
-            content: "Popover should be shown (4)",
-            trigger: ".o-we-linkpopover .o_we_url_link:contains('Home')",
-        },
+        ...openLinkPopup({
+            trigger: ":iframe #o_main_nav a.btn-primary:contains(Contact Us)",
+            label: "Contact Us",
+            url: "/contactus",
+        }),
+        ...openLinkPopup({
+            trigger: ":iframe footer a:contains(Home)",
+            label: "Home",
+            url: "/",
+        }),
         // 4. Popover should close when clicking non-link element
         {
             content: "Click outside the link popover",
@@ -183,11 +141,15 @@ registerWebsitePreviewTour(
             run: "click",
         },
         // 6. Test link popover link opens a new window in edit mode
-        ...openLinkPopup(":iframe footer a[href='/']", "Footer Home", 1, true),
+        ...openLinkPopup({
+            trigger: ":iframe footer a:contains(Home)",
+            label: "Home",
+            url: "/",
+        }),
         {
             content: "Ensure that a click on the link popover link opens a new window in edit mode",
             trigger: ".o-we-linkpopover a.o_we_url_link[target='_blank']",
-            run(actions) {
+            async run({ click }) {
                 // We do not want to open a link in a tour
                 patch(
                     browser,
@@ -205,12 +167,12 @@ registerWebsitePreviewTour(
                     },
                     { pure: true }
                 );
-                actions.click();
+                await click();
             },
         },
         {
             content: "Ensure that link is opened correctly in edit mode",
             trigger: ".new_backend_window_opened",
         },
-    ]
-);
+    ],
+});

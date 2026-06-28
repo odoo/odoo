@@ -1,55 +1,6 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from collections import defaultdict
-
-from odoo import _, models
-from odoo.exceptions import UserError
-
 import markupsafe
 
-
-class ReportStockLabel_Product_Product_View(models.AbstractModel):
-    _name = 'report.stock.label_product_product_view'
-    _description = 'Product Label Report'
-
-    def _get_report_values(self, docids, data):
-        if data.get('active_model') == 'product.template':
-            Product = self.env['product.template']
-        elif data.get('active_model') == 'product.product':
-            Product = self.env['product.product']
-        else:
-            raise UserError(_('Product model not defined, Please contact your administrator.'))
-
-        quantity_by_product = defaultdict(list)
-        for p, q in data.get('quantity_by_product').items():
-            product = Product.browse(int(p))
-            default_code_markup = markupsafe.Markup(product.default_code) if product.default_code else ''
-            product_info = {
-                'barcode': markupsafe.Markup(product.barcode) if product.barcode else '',
-                'quantity': q,
-                'display_name_markup': markupsafe.Markup(product.display_name),
-                'default_code': (default_code_markup[:15], default_code_markup[15:30])
-            }
-            quantity_by_product[product].append(product_info)
-        if data.get('custom_barcodes'):
-            # we expect custom barcodes to be: {product: [(barcode, qty_of_barcode)]}
-            for product, barcodes_qtys in data.get('custom_barcodes').items():
-                product = Product.browse(int(product))
-                default_code_markup = markupsafe.Markup(product.default_code) if product.default_code else ''
-                for barcode_qty in barcodes_qtys:
-                    quantity_by_product[product].append({
-                        'barcode': markupsafe.Markup(barcode_qty[0]),
-                        'quantity': barcode_qty[1],
-                        'display_name_markup': markupsafe.Markup(product.display_name),
-                        'default_code': (default_code_markup[:15], default_code_markup[15:30])
-                    }
-                    )
-        data['quantity'] = quantity_by_product
-        layout_wizard = self.env['product.label.layout'].browse(data.get('layout_wizard'))
-        data['pricelist'] = layout_wizard.pricelist_id
-
-        return data
+from odoo import models
 
 
 class ReportStockLabel_Lot_Template_View(models.AbstractModel):
@@ -68,3 +19,45 @@ class ReportStockLabel_Lot_Template_View(models.AbstractModel):
         return {
             'docs': lot_list,
         }
+
+
+class ReportStockLotLabel(models.AbstractModel):
+    _name = 'report.stock.report_lot_label'
+    _inherit = 'report.product.label.base'
+    _description = 'Lot Label Report'
+
+    def _prepare_lot_label(self, lot):
+        product = lot.product_id.with_context(display_default_code=False)
+        return {
+            'barcode': lot.name,
+            'identifier_text': lot.name,
+            'base_unit_name': '',
+            'base_unit_price': 0,
+            'product_code': lot.product_id.default_code or '',
+            'currency_id': False,
+            'extra_html': False,
+            'invisible': False,
+            'label_class': 'o_label_without_meta_block',
+            'price': 0,
+            'price_included': False,
+            'title': product.display_name,
+            'use_date': False,
+            'expiration_date': False,
+        }
+
+    def _prepare_labels(self, lots, pricelist=None, extra_html=False, price_included=False):
+        return [self._prepare_lot_label(lot) for lot in lots]
+
+    def _prepare_data(self, docids, data):
+        docs = self.env['stock.lot'].browse(docids)
+        label_pages = self._organize_labels(self._prepare_labels(docs), rows=12, columns=4)
+        return {
+            'doc_ids': docids,
+            'doc_model': 'stock.lot',
+            'docs': docs,
+            'label_pages': label_pages,
+            'page_numbers': len(label_pages),
+        }
+
+    def _get_report_values(self, docids, data):
+        return self._prepare_data(docids, data)

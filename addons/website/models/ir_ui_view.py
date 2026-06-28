@@ -27,15 +27,20 @@ class IrUiView(models.Model):
     track = fields.Boolean(string='Track', default=False, help="Allow to specify for one page of the website to be trackable or not")
     visibility = fields.Selection(
         [
-            ('', 'Public'),
+            ('public', 'Public'),
             ('connected', 'Signed In'),
             ('restricted_group', 'Restricted Group'),
             ('password', 'With Password')
         ],
-        default='',
+        default='public',
+        required=True,
     )
     visibility_password = fields.Char(groups='base.group_system', copy=False)
     visibility_password_display = fields.Char(compute='_get_pwd', inverse='_set_pwd', groups='website.group_website_designer')
+
+    @api.depends_context('website_id')
+    def _compute_arch(self):
+        super()._compute_arch()
 
     @api.depends('visibility_password')
     def _get_pwd(self):
@@ -234,8 +239,11 @@ class IrUiView(models.Model):
                 specific_views += view._get_specific_views()
 
         result = super(IrUiView, self + specific_views).unlink()
-        self.env.registry.clear_cache('templates')
+        self.env.transaction.invalidate_ormcache('templates')
         return result
+
+    def _get_extra_tracking_values(self, **kwargs):
+        return {}
 
     def _create_website_specific_pages_for_view(self, new_view, website):
         for page in self.page_ids:
@@ -281,11 +289,10 @@ class IrUiView(models.Model):
         # website_id. (It will then always fallback on a website, this
         # method should never be called in a generic context, even for
         # tests)
-        current_website = self.env['website'].get_current_website()
         return super(IrUiView, self.with_context(
-            website_id=current_website.id
+            website_id=self.env.website.id
         )).get_related_views(key, bundles=bundles).with_context(
-            lang=current_website.default_lang_id.code,
+            lang=self.env.website.default_lang_id.code,
         )
 
     def filter_duplicate(self):
@@ -415,11 +422,11 @@ class IrUiView(models.Model):
 
         visibility = self._get_cached_visibility()
 
-        if visibility and not request.env.user.has_group('website.group_website_designer'):
-            if (visibility == 'connected' and request.website.is_public_user()):
+        if visibility != 'public' and not request.env.user.has_group('website.group_website_designer'):
+            if (visibility == 'connected' and self.env.website.is_public_user()):
                 error = werkzeug.exceptions.Forbidden()
             elif visibility == 'password' and \
-                    (request.website.is_public_user() or self.id not in request.session.get('views_unlock', [])):
+                    (self.env.website.is_public_user() or self.id not in request.session.get('views_unlock', [])):
                 pwd = request.params.get('visibility_password')
                 if pwd and self.env.user._crypt_context().verify(
                         pwd, self.visibility_password):
@@ -440,22 +447,9 @@ class IrUiView(models.Model):
                 return False
         return True
 
-    @api.readonly
-    @api.model
-    def render_public_asset(self, template, values=None):
-        # to get the specific asset for access checking
-        if request and hasattr(request, 'website'):
-            return super(IrUiView, self.with_context(website_id=request.website.id)).render_public_asset(template, values=values)
-        return super().render_public_asset(template, values=values)
-
     def _render_template(self, template, values=None):
-        """ Render the template. If website is enabled on request, then extend rendering context with website values. """
-        view = self._get_template_view(template).sudo()
-        view._handle_visibility(do_raise=True)
-        if values is None:
-            values = {}
-        if 'main_object' not in values:
-            values['main_object'] = view
+        if website_id := self.env.context.get('website_id'):
+            return self.env['website'].browse(website_id)._render_template(template, values)
         return super()._render_template(template, values=values)
 
     @api.model
@@ -547,7 +541,7 @@ class IrUiView(models.Model):
         usage of a custom snippet and copy its translations.
         """
         lang_value = record[html_field]
-        if not lang_value:
+        if not lang_value or not lang_value.strip():
             return
 
         try:
@@ -628,7 +622,7 @@ class IrUiView(models.Model):
     @api.model
     def _save_oe_structure_hook(self):
         res = {}
-        res['website_id'] = self.env['website'].get_current_website().id
+        res['website_id'] = self.env.website.id
         return res
 
     @api.model
@@ -648,48 +642,58 @@ class IrUiView(models.Model):
         :param str xpath: valid xpath to the tag to replace
         """
         self.ensure_one()
-        current_website = self.env['website'].get_current_website()
+        current_website = self.env['website'].get_current_website(fallback=False)
+
+        view = self
+        if current_website:
+            view = view.with_context(website_id=current_website.id)
+
         # xpath condition is important to be sure we are editing a view and not
         # a field as in that case `self` might not exist (check commit message)
-        if xpath and self.key and current_website:
+        if xpath and view.key and current_website:
             # The first time a generic view is edited, if multiple editable parts
             # were edited at the same time, multiple call to this method will be
             # done but the first one may create a website specific view. So if there
             # already is a website specific view, we need to divert the super to it.
-            website_specific_view = self.env['ir.ui.view'].search([
-                ('key', '=', self.key),
+            website_specific_view = view.search([
+                ('key', '=', view.key),
                 ('website_id', '=', current_website.id)
             ], limit=1)
             if website_specific_view:
-                self = website_specific_view
+                view = website_specific_view
+        if self.env.context.get('delay_translations'):
+            disable_delay_translations = self.env['ir.config_parameter'].sudo().get_bool(
+                'website.disable_delay_translations'
+            )
+            self.env = self.with_context(delay_translations=not disable_delay_translations).env
         arch_section = html.fromstring(value)
 
         if xpath is None:
             # value is an embedded field on its own, not a view section
-            self.save_embedded_field(arch_section)
+            view.save_embedded_field(arch_section)
             return
 
-        for el in self.extract_embedded_fields(arch_section):
-            self.save_embedded_field(el)
+        for el in view.extract_embedded_fields(arch_section):
+            view.save_embedded_field(el)
 
             # transform embedded field back to t-field
-            el.getparent().replace(el, self.to_field_ref(el))
+            el.getparent().replace(el, view.to_field_ref(el))
 
-        for el in self.extract_oe_structures(arch_section):
-            if self.save_oe_structure(el):
+        for el in view.extract_oe_structures(arch_section):
+            if view.save_oe_structure(el):
                 # empty oe_structure in parent view
-                empty = self.to_empty_oe_structure(el)
+                empty = view.to_empty_oe_structure(el)
                 if el == arch_section:
                     arch_section = empty
                 else:
                     el.getparent().replace(el, empty)
 
-        new_arch = self.replace_arch_section(xpath, arch_section)
-        old_arch = etree.fromstring(self.arch.encode('utf-8'))
-        if not self._are_archs_equal(old_arch, new_arch):
-            self._set_noupdate()
-            self.write({'arch': etree.tostring(new_arch, encoding='unicode')})
-            self._copy_custom_snippet_translations(self, 'arch_db')
+        new_arch = view.replace_arch_section(xpath, arch_section)
+        old_arch = etree.fromstring(view.arch.encode('utf-8'))
+        if not view._are_archs_equal(old_arch, new_arch):
+            view._set_noupdate()
+            view.write({'arch': etree.tostring(new_arch, encoding='unicode')})
+            view._copy_custom_snippet_translations(view, 'arch_db')
 
     @api.model
     def _get_allowed_root_attrs(self):

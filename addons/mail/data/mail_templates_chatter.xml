@@ -11,17 +11,15 @@
 
         <template id="message_activity_done">
 <div>
-    <p>
-        <span t-attf-class="fa #{activity.activity_type_id.icon} fa-fw"/><span t-field="activity.activity_type_id.name"/> done
+    <p class="o_mail_activity_title mb-1">
+        <span t-attf-class="fa #{activity.activity_type_id.icon} fa-fw"/>
+        <span t-if="activity.summary" t-field="activity.summary"/>
         <t t-if="display_assignee"> (originally assigned to <span t-field="activity.user_id.name"/>)</t>
-        <span t-if="activity.summary">: </span><span t-if="activity.summary" t-field="activity.summary"/>
     </p>
-    <t t-if="activity.note and activity.note != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'"><!-- <p></br></p> -->
-        <div class="o_mail_note_title fw-bold">Original note:</div>
-        <div t-field="activity.note"/>
-    </t>
+    <div t-if="activity.note and not is_html_empty(activity.note)" class="o_mail_activity_note pb-2">
+        <div t-field="activity.note" class="fst-italic"/>
+    </div>
     <div t-if="feedback">
-        <div class="fw-bold">Feedback:</div>
         <t t-foreach="feedback.split('\n')" t-as="feedback_line">
             <t t-out="feedback_line"/>
             <br t-if="not feedback_line_last"/>
@@ -73,5 +71,13 @@
                 </div>
             </div>
         </template>
+
+        <!-- Format tracking values in a minimal blob. No left indent is intended. -->
+        <template id="mail_tracking_template">
+<div t-if="trackingValues">
+    <t t-foreach="trackingValues" t-as="val">
+        <em t-if="val.get('company_name')" t-out="val['company_name'] + ': '"/><t t-out="val['old_value']" t-if="val['old_value']"/><b t-out="val['new_value']"/><i t-out="val['field_label']"/><br/>
+    </t>
+</div></template>
     </data>
 </odoo>

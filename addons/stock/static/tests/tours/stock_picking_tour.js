@@ -295,8 +295,32 @@ registry.category('web_tour.tours').add('test_inventory_adjustment_apply_all', {
     ],
 });
 
+const checkTableStructure = (lines = [], total, options = {}) => {
+    let trigger = ".modal-content .o_list_table";
+    lines.forEach((line, i) => {
+        trigger += `:has(.o_data_row:eq(${i}):has([name=quant_id]:contains(${line.quant_id})):has([name=quantity]:contains(${line.quantity})))`
+    });
+    trigger += `:has(.o_list_number:contains(${total}))`;
+    return [
+        {
+            content: "Click on list number to blur before to check table structure",
+            trigger: `.modal-content .o_list_footer .o_list_number:contains(${total})`,
+            async run({ click }) {
+                // Need to wait that the onchange rpc is done. If we click too fast elsewhere,
+                // that triggers a "search_read" which restores the previous values in table ...
+                await new Promise((r) => setTimeout(r, 500));
+                await click();
+            },
+        },
+        {
+            content: "Check table structure",
+            trigger,
+            ...options,
+        },
+    ];
+};
+
 registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             trigger: ".o_list_view.o_field_x2many .o_data_row button[name='action_show_details']",
@@ -331,20 +355,14 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         {
             content: "LOT001 should not appear as it is not available",
             trigger: ".modal-header .modal-title:contains(Add line: Product Lot)",
-            run: () => {
-                const lines = document.querySelectorAll(".o_data_row .o_data_cell[name=lot_id]");
-                if (lines.length !== 2) {
-                    console.error(
-                        "Wrong number of available quants: " + lines.length + " instead of 2."
-                    );
-                }
-                const lineLOT001 = Array.from(lines).filter((line) =>
-                    line.textContent.includes("LOT001")
-                );
-                if (lineLOT001.length) {
-                    console.error("LOT001 shoudld not be displayed as unavailable.");
-                }
-            },
+        },
+        {
+            content: "Check the count of available quants",
+            trigger: ".modal:has(.o_data_row .o_data_cell[name=lot_id]:count(2))",
+        },
+        {
+            content: "LOT001 shoudld not be displayed as unavailable.",
+            trigger: ".modal:not(:has(.o_data_row .o_data_cell[name=lot_id]:contains(LOT001)))",
         },
         {
             content: "Cancel the move line creation",
@@ -392,37 +410,30 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         },
         {
             trigger: ".modal-content .o_data_row:nth-child(1) .o_field_widget[name=quantity] input",
-            run: "edit 8",
+            run: "edit 8 && press Tab",
         },
+        ...checkTableStructure(
+            [
+                { quant_id: "WH/Stock - LOT001", quantity: "8.00" },
+                { quant_id: "WH/Stock - LOT003", quantity: "10.00" },
+            ],
+            18
+        ),
         {
-            content: "Click on the header to update the total amount",
-            trigger: ".modal-header .modal-title:contains(Detailed Operations)",
+            trigger: ".modal-content .o_field_x2many_list_row_add > button:contains(add a line)",
             run: "click",
         },
         {
-            trigger: ".modal-content .o_list_number:contains(18.00)",
-        },
-        {
-            trigger: ".modal-content .o_field_x2many_list_row_add > button",
-            run: "click",
-        },
-        {
-            content: "LOT003 should not appear as it is not available",
+            content: "Check the 'Add line' modal is opened",
             trigger: ".modal-header .modal-title:contains(Add line: Product Lot)",
-            run: () => {
-                const lines = document.querySelectorAll(".o_data_row .o_data_cell[name=lot_id]");
-                if (lines.length !== 2) {
-                    console.error(
-                        "Wrong number of available quants: " + lines.length + " instead of 2."
-                    );
-                }
-                const lineLOT003 = Array.from(lines).filter((line) =>
-                    line.textContent.includes("LOT003")
-                );
-                if (lineLOT003.length) {
-                    console.error("LOT003 shoudld not be displayed as unavailable.");
-                }
-            },
+        },
+        {
+            content: "Check the count of available quants",
+            trigger: ".modal:has(.o_data_row .o_data_cell[name=lot_id]:count(2))",
+        },
+        {
+            content: "LOT003 shoudld not be displayed as unavailable.",
+            trigger: ".modal:not(:has(.o_data_row .o_data_cell[name=lot_id]:contains(LOT003)))",
         },
         {
             content: "Pick LOT001 to create a move line with a quantity of 2.00",
@@ -430,77 +441,87 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
             run: "click",
         },
         {
-            trigger: ".modal-content .o_list_number:contains(20.00)",
+            content: "Verify the modal is closed",
+            trigger: "body:not(:has(.modal-title:contains(Add line: Product Lot)))",
         },
         {
-            content: "Check that 2 units of LOT001 were added",
+            content: "Check the new line is in table",
             trigger:
-                ".o_data_row:has(.o_field_pick_from input:value(WH/Stock - LOT001)) .o_field_widget[name=quantity] input:value(2.00)",
+                ".modal .o_list_table:has([name=quant_id] input:value(WH/Stock - LOT001)):has([name=quantity] input:value(2.00))",
         },
-        {
-            content: "Check that the third line is associated with LOT003",
-            trigger:
-                ".modal-content .o_data_row:nth-child(3) .o_field_pick_from:contains(WH/Stock - LOT003)",
-        },
+        ...checkTableStructure(
+            [
+                { quant_id: "WH/Stock - LOT001", quantity: "2.00" },
+                { quant_id: "WH/Stock - LOT001", quantity: "8.00" },
+                { quant_id: "WH/Stock - LOT003", quantity: "10.00" },
+            ],
+            20
+        ),
         {
             content: "Modify the quant associated to the third line to use LOT002",
-            trigger: ".modal-content .o_data_row:nth-child(3) .o_field_pick_from",
+            trigger:
+                ".modal-content .o_data_row:has(.o_field_pick_from:contains(WH/Stock - LOT003)) .o_field_pick_from",
             run: "click",
         },
         {
-            trigger: ".modal-content .o_data_row:nth-child(3) .o_field_pick_from input",
+            trigger: ".modal-content .o_data_row .o_field_pick_from input:value(WH/Stock - LOT003)",
             run: "edit LOT002",
         },
         {
             trigger: ".dropdown-item:contains(LOT002)",
             run: "click",
         },
+        ...checkTableStructure(
+            [
+                { quant_id: "WH/Stock - LOT001", quantity: "2.00" },
+                { quant_id: "WH/Stock - LOT001", quantity: "8.00" },
+                { quant_id: "WH/Stock - LOT002", quantity: "10.00" },
+            ],
+            20
+        ),
         {
-            trigger: ".modal-header .modal-title:contains(Detailed Operations)",
+            content: "Modify the quantity of the LOT002 line to 15",
+            trigger:
+                ".modal-content .o_data_row:has(.o_field_pick_from:contains(LOT002)) .o_data_cell[name=quantity]",
             run: "click",
         },
         {
-            trigger: ".modal-content .o_data_row:nth-child(3) .o_field_pick_from:contains(LOT002)",
+            trigger:
+                ".modal-content .o_data_row:has(.o_field_pick_from input:value(WH/Stock - LOT002)) .o_data_cell[name=quantity] input",
+            run: "edit 15 && press Tab",
         },
-        {
-            content: "Modify the quantity of the first line from 10 to 15 to change the demand",
-            trigger: ".modal-content .o_data_row:nth-child(3) .o_data_cell[name=quantity]",
-            run: "click",
-        },
-        {
-            trigger: ".modal-content .o_data_row:nth-child(3) .o_field_widget[name=quantity] input",
-            run: "edit 15",
-        },
+        ...checkTableStructure(
+            [
+                { quant_id: "WH/Stock - LOT001", quantity: "2.00" },
+                { quant_id: "WH/Stock - LOT001", quantity: "8.00" },
+                { quant_id: "WH/Stock - LOT002", quantity: "15.00" },
+            ],
+            25
+        ),
         {
             content: "Remove the LOT001 line with a quantity of 8.00",
             trigger:
                 ".o_data_row:has(.o_data_cell[name=quantity]:contains(8.00)) .o_list_record_remove",
             run: "click",
         },
+        ...checkTableStructure(
+            [
+                { quant_id: "WH/Stock - LOT001", quantity: "2.00" },
+                { quant_id: "WH/Stock - LOT002", quantity: "15.00" },
+            ],
+            17
+        ),
         {
-            trigger: ".modal-content .o_list_number:contains(17.00)",
-        },
-        {
-            trigger: ".modal-content .o_field_x2many_list_row_add > button",
+            trigger: ".modal-content .o_field_x2many_list_row_add > button:contains(add a line)",
             run: "click",
         },
         {
-            content: "LOT002 should not appear as it is not available",
-            trigger: ".modal-header .modal-title:contains(Add line: Product Lot)",
-            run: () => {
-                const lines = document.querySelectorAll(".o_data_row .o_data_cell[name=lot_id]");
-                if (lines.length !== 2) {
-                    console.error(
-                        "Wrong number of available quants: " + lines.length + " instead of 2."
-                    );
-                }
-                const lineLOT002 = Array.from(lines).filter((line) =>
-                    line.textContent.includes("LOT002")
-                );
-                if (lineLOT002.length) {
-                    console.error("LOT002 shoudld not be displayed as unavailable.");
-                }
-            },
+            content: "Check the count of available quants",
+            trigger: ".modal:has(.o_data_row .o_data_cell[name=lot_id]:count(2))",
+        },
+        {
+            content: "LOT002 shoudld not be displayed as unavailable.",
+            trigger: ".modal:not(:has(.o_data_row .o_data_cell[name=lot_id]:contains(LOT002)))",
         },
         {
             content: "Pick LOT001 to create move line to fullfill the demand of 3",
@@ -508,13 +529,20 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
             run: "click",
         },
         {
-            trigger: ".modal-content .o_list_number:contains(20.00)",
+            trigger:
+                ".modal .o_list_table:has([name=quant_id] input:value(WH/Stock - LOT001)):has([name=quantity] input:value(3.00))",
         },
         {
-            content: "Check that 3 units of LOT001 were added",
-            trigger:
-                ".modal-content .o_data_row:has(.o_field_pick_from input:value(WH/Stock - LOT001)):has(.o_field_float[name=quantity] input:value(3.00))",
+            trigger: ".modal-content .o_list_number:contains(20.00)",
         },
+        ...checkTableStructure(
+            [
+                { quant_id: "WH/Stock - LOT001", quantity: "2.00" },
+                { quant_id: "WH/Stock - LOT001", quantity: "3.00" },
+                { quant_id: "WH/Stock - LOT002", quantity: "15.00" },
+            ],
+            20
+        ),
         {
             trigger: ".modal-content .o_form_button_save",
             run: "click",
@@ -522,6 +550,21 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         {
             trigger: ".o_list_view.o_field_x2many .o_data_row button[name='action_show_details']",
             run: "click",
+        },
+        {
+            content: "Check final state: LOT001 2.00 is present",
+            trigger:
+                ".modal-content .o_data_row:has(.o_field_pick_from:contains(LOT001)) .o_data_cell[name=quantity]:contains(2.00)",
+        },
+        {
+            content: "Check final state: LOT001 3.00 is present",
+            trigger:
+                ".modal-content .o_data_row:has(.o_field_pick_from:contains(LOT001)) .o_data_cell[name=quantity]:contains(3.00)",
+        },
+        {
+            content: "Check final state: LOT002 15.00 is present",
+            trigger:
+                ".modal-content .o_data_row:has(.o_field_pick_from:contains(LOT002)) .o_data_cell[name=quantity]:contains(15.00)",
         },
     ],
 });

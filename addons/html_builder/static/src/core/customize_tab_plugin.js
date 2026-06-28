@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
@@ -14,13 +14,13 @@ export class CustomizeTabPlugin extends Plugin {
     static shared = ["getCustomizeComponent", "openCustomizeComponent", "closeCustomizeComponent"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_redone_handlers: () => this.closeCustomizeComponent(),
-        on_undone_handlers: () => this.closeCustomizeComponent(),
+        on_history_commit_redone_handlers: () => this.closeCustomizeComponent(),
+        on_history_commit_undone_handlers: () => this.closeCustomizeComponent(),
         on_current_options_containers_changed_handlers: () => this.closeCustomizeComponent(),
     };
 
     setup() {
-        this.customizeComponent = reactive({
+        this.customizeComponent = proxy({
             component: null,
             props: {},
             editingEls: null,

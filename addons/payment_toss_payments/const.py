@@ -12,13 +12,8 @@ WEBHOOK_ROUTE = "/payment/toss-payments/webhook"
 # The currency supported by Toss Payments, in ISO 4217 format.
 SUPPORTED_CURRENCY = "KRW"
 
-# The codes of the payment methods to activate when Toss Payments is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
-    "bank_transfer",
-    "card",
-    "mobile",
-}
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card"}
 
 # Mapping of payment method codes to Toss Payments codes.
 PAYMENT_METHODS_MAPPING = {"card": "CARD", "bank_transfer": "TRANSFER", "mobile": "MOBILE_PHONE"}

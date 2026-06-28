@@ -11,6 +11,7 @@ import {
     isMarkdownIrMenuIdUrl,
     isIrMenuXmlUrl,
 } from "@spreadsheet/ir_ui_menu/odoo_menu_link_cell";
+import { getNeutralizedLink } from "./neutralized_link";
 
 /**
  * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
@@ -130,13 +131,13 @@ export async function freezeOdooData(model) {
                 }
             }
             if (containsLinkToOdoo(evaluatedCell.link)) {
-                sheet.cells[xc] = evaluatedCell.link.label;
+                sheet.cells[xc] = `[${evaluatedCell.link.label}](${getNeutralizedLink()})`;
             }
         }
         for (const figure of sheet.figures) {
             if (
                 figure.tag === "chart" &&
-                (figure.data.type.startsWith("odoo_") || figure.data.type === "geo")
+                (figure.data.dataSource?.type === "odoo" || figure.data.type === "geo")
             ) {
                 const img = odooChartToImage(model, figure, figure.data.chartId);
                 figure.tag = "image";
@@ -151,7 +152,8 @@ export async function freezeOdooData(model) {
                     }
                     const chartDefinition = model.getters.getChartDefinition(item.chartId);
                     return (
-                        chartDefinition.type.startsWith("odoo_") || chartDefinition.type === "geo"
+                        chartDefinition.dataSource?.type === "odoo" ||
+                        chartDefinition.type === "geo"
                     );
                 });
                 if (hasImageChart) {

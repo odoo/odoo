@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, queryRect, test } from "@odoo/hoot";
 import { click, hover, leave, waitFor } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
@@ -346,4 +346,85 @@ test("no spam markup'd notifications", async () => {
     await waitFor(".o_notification");
 
     expect(".o_notification").toHaveCount(1);
+});
+
+test.tags("mobile");
+test("notification must be on the bottom of the screen in mobile", async () => {
+    await makeMockEnv();
+    const { Component: NotificationContainer, props } = registry
+        .category("main_components")
+        .get("NotificationContainer");
+    await mountWithCleanup(NotificationContainer, { props, noMainContainer: true });
+    getService("notification").add("I'm a basic notification");
+    await animationFrame();
+
+    const notificationManagerRect = queryRect(".o_notification_manager");
+    const viewportHeight = Math.max(
+        document.documentElement.clientHeight || 0,
+        window.innerHeight || 0
+    );
+
+    // $o-navbar-height (46px) x 0.25 = 11.5
+    // we use 15 to have a buffer in case of inconsistent browser computation
+    expect(viewportHeight - notificationManagerRect.bottom).toBeLessThan(15);
+});
+
+test.tags("mobile");
+test("notification with multilines must be limited to 2 lines in mobile", async () => {
+    await makeMockEnv();
+    const { Component: NotificationContainer, props } = registry
+        .category("main_components")
+        .get("NotificationContainer");
+    await mountWithCleanup(NotificationContainer, { props, noMainContainer: true });
+
+    getService("notification").add("I'm a basic notification");
+    await animationFrame();
+    const contentOneLineHeight = queryRect(".o_notification_content").height;
+    await click(".o_notification .o_notification_close");
+    await animationFrame();
+
+    getService("notification").add("I'm a basic notification".repeat(3));
+    await animationFrame();
+    const contentTwoLineHeight = queryRect(".o_notification_content").height;
+    await click(".o_notification .o_notification_close");
+    await animationFrame();
+
+    expect(contentTwoLineHeight).toBeGreaterThan(contentOneLineHeight);
+    expect(contentTwoLineHeight).toBeLessThan(contentOneLineHeight * 3);
+
+    getService("notification").add("I'm a basic notification".repeat(10));
+    await animationFrame();
+    const contentOverflowHeight = queryRect(".o_notification_content").height;
+    expect(Math.abs(contentOverflowHeight - contentTwoLineHeight)).toBeWithin(0, 1);
+});
+
+test.tags("mobile");
+test("notification with button on mobile", async () => {
+    await makeMockEnv();
+    const { Component: NotificationContainer, props } = registry
+        .category("main_components")
+        .get("NotificationContainer");
+    await mountWithCleanup(NotificationContainer, { props, noMainContainer: true });
+
+    getService("notification").add("I'm a basic notification", {
+        buttons: [{ name: "I'm a button", onClick: () => {} }],
+    });
+    await animationFrame();
+    // Check if both the text and the button are on the same line
+    expect(
+        Math.abs(queryRect(".o_notification_content").bottom - queryRect(".o_notification_buttons").bottom)
+    ).toBeWithin(0, 1);
+    await click(".o_notification .o_notification_close");
+    await animationFrame();
+
+    getService("notification").add("I'm a basic notification", {
+        buttons: [{ name: "I'm a button with a longer text", onClick: () => {} }],
+    });
+    await animationFrame();
+    const notificationBodyRect = queryRect(".o_notification_body");
+    const contentRect = queryRect(".o_notification_content");
+    const buttonsRect = queryRect(".o_notification_buttons");
+    // Check if the button is below the text and aligned on the right
+    expect(buttonsRect.top - contentRect.bottom).toBeWithin(0, 1);
+    expect(Math.abs(notificationBodyRect.right - buttonsRect.right)).toBeLessThan(1);
 });

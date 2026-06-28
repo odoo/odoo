@@ -17,15 +17,14 @@
                     </Dropdown>
                 </div>
                 <SelectMenu t-props="this.selectMenuProps" class="'o_resource_editor_resource_list'">
-                    <t t-call="website.ResourceEditor.ResourceLabel">
-                        <t t-set="resource" t-value="this.state.currentResource"/>
-                        <t t-set="label" t-value="this.state.type === 'xml' ? resource.name : resource.label"/>
-                    </t>
+                    <t t-set="resource" t-value="this.state.currentResource"/>
+                    <t t-call="website.ResourceEditor.ResourceLabel"
+                        resource="resource"
+                        label="this.state.type === 'xml' ? resource.name : resource.label"/>
                     <t t-set-slot="choice" t-slot-scope="scope">
-                        <t t-call="website.ResourceEditor.ResourceLabel">
-                            <t t-set="resource" t-value="this.state.resources[this.state.type][scope.data.value]"/>
-                            <t t-set="label" t-value="scope.data.label"/>
-                        </t>
+                        <t t-call="website.ResourceEditor.ResourceLabel"
+                            resource="this.state.resources[this.state.type][scope.data.value]"
+                            label="scope.data.label"/>
                     </t>
                 </SelectMenu>
                 <label t-if="this.state.type === 'xml' and this.debug" class="o_resource_editor_filter">

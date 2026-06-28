@@ -1,30 +1,38 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { MessageCardList } from "./message_card_list";
+import { MessageSearchState } from "@mail/core/common/message_search_hook";
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
-/**
- * @typedef {Object} Props
- * @property {import("@mail/core/common/thread_model").Thread} thread
- * @property {Object} [messaageSearch]
- * @property {function} [onClickJump]
- * @property {function} [loadMore]
- */
 export class SearchMessageResult extends Component {
     static template = "mail.SearchMessageResult";
     static components = { MessageCardList };
-    static props = ["thread", "messageSearch", "onClickJump?"];
+
+    setup() {
+        super.setup(...arguments);
+        this.store = useService("mail.store");
+        this.props = props({
+            messageSearch: t.instanceOf(MessageSearchState),
+            onClickJump: t.function([]).optional(),
+            thread: t.instanceOf(this.store["mail.thread"].Class),
+        });
+    }
 
     get MESSAGE_FOUND() {
         if (this.props.messageSearch.messages.length === 0) {
             return false;
         }
+        if (this.props.messageSearch.count === 1) {
+            return _t("1 message found");
+        }
         return _t("%s messages found", this.props.messageSearch.count);
     }
 
     onLoadMoreVisible() {
-        const before = this.props.messageSearch?.messages
-            ? Math.min(...this.props.messageSearch.messages.map((message) => message.id))
-            : false;
-        this.props.messageSearch.search(before);
+        const msgs = this.props.messageSearch.messages;
+        if (!msgs?.length) {
+            return;
+        }
+        this.props.messageSearch.loadMore(Math.min(...msgs.map((m) => m.id)));
     }
 }

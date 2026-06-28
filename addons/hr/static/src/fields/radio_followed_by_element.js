@@ -1,24 +1,28 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { RadioField, radioField } from "@web/views/fields/radio/radio_field";
-import {onMounted,onWillUnmount} from "@odoo/owl";
+import { RadioField, radioField, radioFieldProps } from "@web/views/fields/radio/radio_field";
+import { onMounted, onWillUnmount, props, t } from "@odoo/owl";
 
 export class RadioFollowedByElement extends RadioField {
-    static props = {
-        ...RadioField.props,
-        links: { type: Object },
-        observe: { type: String },
-    };
+    props = props({
+        ...radioFieldProps,
+        links: t.object(),
+        observe: t.string(),
+    });
     setup() {
         super.setup(...arguments);
 
         onMounted(() => {
             this.moveElement();
             this.observer = new MutationObserver((mutations) => {
-                if ([...mutations].map(mutation =>
-                    [...mutation.addedNodes].map(node => node.id))
-                    .flat()
-                    .filter(id => Object.values(this.props.links).includes(id))) this.moveElement();
+                if (
+                    [...mutations]
+                        .map((mutation) => [...mutation.addedNodes].map((node) => node.id))
+                        .flat()
+                        .filter((id) => Object.values(this.props.links).includes(id))
+                ) {
+                    this.moveElement();
+                }
             });
 
             this.observer.observe(document.getElementsByName(this.props.observe).item(0), {
@@ -36,10 +40,15 @@ export class RadioFollowedByElement extends RadioField {
 
     moveElement() {
         for (const [key, value] of Object.entries(this.props.links)) {
-            const option = document.querySelectorAll("[data-value="+key+"]")[0];
+            const option = document.querySelectorAll("[data-value=" + key + "]")[0];
             const elementToAppend = document.getElementById(value);
-            if (option === null || elementToAppend === null || elementToAppend.parentElement === option.parentElement)
+            if (
+                option === null ||
+                elementToAppend === null ||
+                elementToAppend.parentElement === option.parentElement
+            ) {
                 continue;
+            }
             option.parentElement.appendChild(elementToAppend);
         }
     }
@@ -61,7 +70,7 @@ export const radioFollowedByElement = {
             name: "observe",
             type: "String",
             help: _t("An element name parent of the radio to observe updates"),
-        }
+        },
     ],
     extractProps({ options }, dynamicInfo) {
         return {

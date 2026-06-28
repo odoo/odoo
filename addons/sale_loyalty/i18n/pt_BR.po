@@ -3,22 +3,22 @@
 # * sale_loyalty
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
+# "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2025-12-12 15:40+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"PO-Revision-Date: 2026-05-08 12:51+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
-"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
-"odoo-19/sale_loyalty/pt_BR/>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
+"s19-3/sale_loyalty/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -120,6 +120,11 @@ msgid "Created on"
 msgstr "Criado em"
 
 #. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Discard"
+msgstr "Descartar"
+
+#. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "Discount %(desc)s%(tax_str)s"
@@ -131,6 +136,7 @@ msgid "Discount & Loyalty"
 msgstr "Desconto e fidelidade"
 
 #. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_history__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__display_name
@@ -191,6 +197,7 @@ msgid "How much point this reward costs on the loyalty card."
 msgstr "Quantos pontos essa recompensa custa no cartão de fidelidade."
 
 #. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_history__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__id
@@ -230,6 +237,11 @@ msgstr "Emitido"
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Issued :"
 msgstr "Emitido:"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_account_move_line
+msgid "Journal Item"
+msgstr "Item do diário"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
@@ -306,7 +318,7 @@ msgstr "Nenhuma recompensa selecionada."
 #. odoo-python
 #: code:addons/sale_loyalty/tests/common.py:0
 msgid "No reward to claim with this coupon"
-msgstr ""
+msgstr "Não há recompensa a ser resgatada com este cupom"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
@@ -581,6 +593,8 @@ msgid ""
 "You don't have enough coupon points to proceed. Please check your applied "
 "rewards and coupon balance. "
 msgstr ""
+"Você não tem pontos de cupom suficientes para continuar. Verifique suas "
+"recompensas aplicadas e o saldo de cupons. "
 
 #. module: sale_loyalty
 #. odoo-python

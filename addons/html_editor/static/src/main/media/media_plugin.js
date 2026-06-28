@@ -10,13 +10,16 @@ import {
     paragraphRelatedElementsSelector,
 } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
-import { MediaDialog, TABS } from "./media_dialog/media_dialog";
+import { MediaDialog } from "./media_dialog/media_dialog";
+import { TABS } from "./media_dialog/media_dialog_utils";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
+
+export const ATTACHMENT_PENDING_RECORD_ID = "o_attachment_pending_record_id";
 
 /**
  * @typedef { Object } MediaShared
@@ -40,7 +43,7 @@ import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
 export class MediaPlugin extends Plugin {
     static id = "media";
     static dependencies = ["selection", "history", "dom", "dialog"];
-    static shared = ["openMediaDialog"];
+    static shared = ["openMediaDialog", "extractUnmappedAttachmentsIds"];
     static defaultConfig = {
         allowImage: true,
         allowMediaDocuments: true,
@@ -51,7 +54,7 @@ export class MediaPlugin extends Plugin {
             {
                 id: "replaceImage",
                 description: _t("Replace media"),
-                icon: "fa-exchange",
+                icon: "fa-file-image-o",
                 run: this.replaceImage.bind(this),
                 isAvailable: isHtmlContentSupported,
             },
@@ -69,13 +72,13 @@ export class MediaPlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
-        toolbar_groups: withSequence(31, { id: "replace_image", namespaces: ["image"] }),
+        toolbar_groups: withSequence(31, { id: "image_actions", namespaces: ["image"] }),
         toolbar_items: [
-            {
+            withSequence(40, {
                 id: "replace_image",
-                groupId: "replace_image",
+                groupId: "image_actions",
                 commandId: "replaceImage",
-            },
+            }),
         ],
         powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),
         ...(this.config.allowImage && {
@@ -147,7 +150,6 @@ export class MediaPlugin extends Plugin {
         const node = targetedNodes.find((node) => node.tagName === "IMG");
         if (node) {
             this.openMediaDialog({ node });
-            this.dependencies.history.addStep();
         }
     }
 
@@ -170,6 +172,7 @@ export class MediaPlugin extends Plugin {
                 el.textContent = "\u200B";
             }
         }
+        return node;
     }
 
     clean(root) {
@@ -178,6 +181,7 @@ export class MediaPlugin extends Plugin {
                 el.textContent = "";
             }
         }
+        return root;
     }
 
     cleanForSave(root) {
@@ -187,6 +191,7 @@ export class MediaPlugin extends Plugin {
             }
             el.removeAttribute("contenteditable");
         }
+        return root;
     }
 
     async onSaveMediaDialog(element, { node }) {
@@ -194,6 +199,9 @@ export class MediaPlugin extends Plugin {
             // @todo @phoenix to remove
             throw new Error("Element is required: onSaveMediaDialog");
             // return;
+        }
+        if (element.dataset?.attachmentId) {
+            element.classList.add(ATTACHMENT_PENDING_RECORD_ID);
         }
         if (node) {
             const changedIcon = isIconElement(node) && isIconElement(element);
@@ -209,19 +217,39 @@ export class MediaPlugin extends Plugin {
             }
             this.trigger("on_media_replaced_handlers", { newMediaEl: element });
         } else {
-            this.dependencies.dom.insert(element);
-            this.trigger("on_media_added_handlers", { newMediaEl: element });
+            await this.addMedia(element);
         }
         // Collapse selection after the inserted/replaced element.
         const [anchorNode, anchorOffset] = rightPos(element);
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         this.trigger("on_media_dialog_saved_handlers", element);
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
+    }
+
+    async addMedia(element) {
+        this.dependencies.dom.insert(element);
+        this.trigger("on_media_added_handlers", { newMediaEl: element });
+    }
+
+    extractUnmappedAttachmentsIds(content = this.editable) {
+        return [...content.getElementsByClassName(ATTACHMENT_PENDING_RECORD_ID)]
+            .map((attachment) => {
+                attachment.classList.remove(ATTACHMENT_PENDING_RECORD_ID);
+                return attachment.dataset?.attachmentId;
+            })
+            .filter(Boolean)
+            .map((id) => parseInt(id));
     }
 
     openMediaDialog(params = {}, editableEl = null) {
         const oldSave =
-            params.save || ((element) => this.onSaveMediaDialog(element, { node: params.node }));
+            params.save ||
+            ((...args) => {
+                // The media dialog calls the save function with 4 params: this.props.save(elements, selectedMedia, this.activeTab(), this.props.media)
+                const [elements, , , oldMediaNode] = args;
+                const node = oldMediaNode || params.node;
+                this.onSaveMediaDialog(elements, { node });
+            });
         params.save = async (...args) => {
             const selection = args[0];
             const elements = selection
@@ -229,17 +257,17 @@ export class MediaPlugin extends Plugin {
                     ? selection
                     : [selection]
                 : [];
-            await Promise.all(
-                this.trigger("on_will_save_media_dialog_handlers", elements, {
-                    node: params.node,
-                })
-            );
+            await this.triggerAsync("on_will_save_media_dialog_handlers", elements, {
+                node: args[3] || params.node,
+            });
             return oldSave(...args);
         };
         const { resModel, resId, field, type } = this.getRecordInfo(editableEl);
         const mediaDialogClosedPromise = this.dependencies.dialog.addDialog(MediaDialog, {
             resModel,
             resId,
+            field,
+            document: this.document,
             useMediaLibrary: !!(
                 field &&
                 ((resModel === "ir.ui.view" && field === "arch") || type === "html")
@@ -248,6 +276,9 @@ export class MediaPlugin extends Plugin {
             onAttachmentChange: this.config.onAttachmentChange || (() => {}),
             noImages: !this.config.allowImage,
             extraTabs: this.getResource("media_dialog_extra_tabs"),
+            pendingAttachments: this.config.getPendingAttachmentsIds
+                ? this.config.getPendingAttachmentsIds()
+                : [],
             ...this.config.mediaModalParams,
             ...params,
         });

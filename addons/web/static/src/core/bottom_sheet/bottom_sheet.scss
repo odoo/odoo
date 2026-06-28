@@ -95,6 +95,7 @@
         --offcanvas-box-shadow: #{$box-shadow};
 
         margin: 0 auto;
+        max-width: 640px;
         min-height: var(--sheet-height);
         max-height: var(--sheet-max-height);
         border-radius: $border-radius-xl $border-radius-xl 0 0;
@@ -240,6 +241,7 @@
         font-size: $h5-font-size;
         font-weight: $o-font-weight-medium;
         text-align: start !important;
+        white-space: normal;
     }
 
     .dropdown-item .o_stat_value {
@@ -247,8 +249,13 @@
     }
 
     .o_bottom_sheet_body:not(.o_custom_bottom_sheet) {
+        // Leave space for the active checkmark icon
+        &:has(.dropdown-item.active, .dropdown-item.selected) .dropdown-item {
+            padding-right: $spacer * 2.5;
+        }
+
         // Dropdown
-        .dropdown-item {
+        .dropdown-item:not(.dropdown-item_active_noarrow) {
             &.active, &.selected {
                 @extend %BottomSheet-Entry-active;
             }
@@ -276,21 +283,23 @@
     }
 
     .o_kanban_card_manage_settings:has(.o_colorlist) {
+        &.row .o_colorlist {
+            --ColorListField-columns: 6;
+        }
+
         &, > div:last-child {
             padding: 0;
         }
     }
     .row.o_kanban_card_manage_settings:last-child {
         &:has(:not(.o_field_boolean_favorite)) {
-            flex-direction: column-reverse;
+            @include media-breakpoint-down(md) {
+                flex-direction: column-reverse;
+            }
 
             .o_field_kanban_color_picker {
                 padding: map-get($spacers, 3);
             }
-        }
-
-        div[class*="col-"] + div[class*="col-"] {
-            border-left: none;
         }
 
         > div[class*="col-"] {

@@ -6,18 +6,20 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <group name="payment_followup" position="attributes">
-                <attribute name="invisible">
-                    0
-                </attribute>
-            </group>
-            <group name="payment_followup" position="inside">
-                <field name="journal_id"
-                    context="{'default_type': 'bank'}"
-                    required="state != 'disabled' and code not in ['none', 'custom']"/>
+            <group name="provider_options" position="inside">
                 <field name="support_refund" groups="base.group_no_one"/>
             </group>
-            <field name="available_country_ids" position="after">
+            <group name="provider_config_others" position="attributes">
+                <attribute name="invisible">False</attribute>
+            </group>
+            <group name="provider_config_others" position="inside">
+                <field
+                    name="journal_id"
+                    context="{'default_type': 'bank'}"
+                    required="code not in ['none', 'custom']"
+                />
+            </group>
+            <field name="minimum_amount" position="before">
                 <field
                     name="available_pricelist_ids"
                     widget="many2many_tags"

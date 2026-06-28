@@ -121,6 +121,7 @@ class AccountEdiXmlCii(models.AbstractModel):
             'type_code': '380' if invoice.move_type == 'out_invoice' else '381',
             'issue_date_time': invoice.invoice_date,
             'included_note': html2plaintext(invoice.narration) if invoice.narration else "",
+            'included_note_list': [],
         }
 
     def _export_invoice_vals(self, invoice):
@@ -177,8 +178,10 @@ class AccountEdiXmlCii(models.AbstractModel):
             'scheduled_delivery_time': self._get_scheduled_delivery_time(invoice),
             'intracom_delivery': False,
             'ExchangedDocument_vals': self._get_exchanged_document_vals(invoice),
-            'seller_specified_legal_organization': invoice.company_id.company_registry,
-            'buyer_specified_legal_organization': invoice.commercial_partner_id.company_registry,
+            # FIXME cii_22_templates hard-codes SpecifiedLegalOrganization/ID with schemeID="0002"
+            # (FR SIRENE), so only emit it when the party is French and has a SIREN/SIRET.
+            'seller_specified_legal_organization': invoice.company_id.partner_id._get_all_identifiers(enrich=True).get('FR_SIREN'),  # will retrieve SIREN from SIRET if available
+            'buyer_specified_legal_organization': invoice.commercial_partner_id._get_all_identifiers(enrich=True).get('FR_SIREN'),  # will retrieve SIREN from SIRET if available
             'ship_to_trade_party': invoice.partner_shipping_id if 'partner_shipping_id' in invoice._fields and invoice.partner_shipping_id
                 else invoice.commercial_partner_id,
             # Chorus Pro fields
@@ -193,7 +196,7 @@ class AccountEdiXmlCii(models.AbstractModel):
         # data used for IncludedSupplyChainTradeLineItem / SpecifiedLineTradeSettlement
         for line_vals in template_values['invoice_line_vals_list']:
             line = line_vals['line']
-            line_vals['unece_uom_code'] = self._get_uom_unece_code(line.product_uom_id)
+            line_vals['unece_uom_code'] = line.product_uom_id._get_unece_code()
 
             if line._fields.get('deferred_start_date') and (line.deferred_start_date or line.deferred_end_date):
                 line_vals['billing_start'] = line.deferred_start_date

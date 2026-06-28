@@ -1,12 +1,19 @@
-import { VideoPlugin } from "@html_editor/main/media/video_plugin";
+import { VideoPlugin } from "@html_editor/main/media/video/video_plugin";
 import { EmbeddedVideoSelector } from "./video_selector_dialog/embedded_video_selector";
 
 /**
  * This plugin is meant to replace the Video plugin.
  */
 export class EmbeddedVideoPlugin extends VideoPlugin {
-    static id = "embeddedVideo";
-    static dependencies = ["embeddedComponents", "selection", "history", "overlay", "media"];
+    static dependencies = [
+        "embeddedComponents",
+        "selection",
+        "history",
+        "overlay",
+        "media",
+        "history",
+        "dom",
+    ];
 
     // Extends the base class resources
     /** @type {import("plugins").EditorResources} */
@@ -29,10 +36,8 @@ export class EmbeddedVideoPlugin extends VideoPlugin {
                 createOverlay: (Component, props = {}, options) =>
                     this.dependencies.overlay.createOverlay(Component, props, options),
                 focusEditable: () => this.dependencies.selection.focusEditable(),
-                addStep: () => this.dependencies.history.addStep(),
-                openVideoSelectorDialog: (save, media) => {
-                    this.openVideoSelectorDialog(save, media);
-                },
+                commit: () => this.dependencies.history.commit(),
+                openVideoSelectorDialog: this.openVideoSelectorDialog.bind(this),
             });
         }
     }
@@ -46,7 +51,10 @@ export class EmbeddedVideoPlugin extends VideoPlugin {
         this.dependencies.media.openMediaDialog({
             node: iframe,
             save: (elements, [media]) => {
-                if (media.src) {
+                if (media.embedUrl) {
+                    // we need to replace embedUrl by src in order to stay retro compatible with the existing embed video component
+                    media.src = media.embedUrl;
+                    delete media.embedUrl;
                     save(media);
                 }
             },

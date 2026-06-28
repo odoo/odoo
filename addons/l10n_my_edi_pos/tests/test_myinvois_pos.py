@@ -220,6 +220,49 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                 self.assertEqual(len(consolidated_invoice), 2)  # Two consolidated invoices of a single line due to the MAX_LINE_COUNT_PER_INVOICE
 
     @mute_logger('odoo.addons.point_of_sale.models.pos_order')
+    def test_consolidate_invoices_prepayment_unlink(self):
+        """Ensure that consolidated invoices have a PaidAmount of 0.00 and the correct PayableAmount."""
+        with freeze_time("2025-01-01"):
+            with self.with_pos_session():
+                first_order = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})
+                second_order = self._create_order({'pos_order_lines_ui_args': [(self.product_two, 1.0)]})
+
+            wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
+                'date_from': '2025-01-01',
+                'date_to': '2025-01-31',
+                'consolidation_type': 'pos',
+            })
+            wizard.button_consolidate()
+
+            consolidated_invoice = (first_order | second_order).consolidated_invoice_ids
+            self.assertEqual(len(consolidated_invoice), 1)
+
+            consolidated_invoice.action_generate_xml_file()
+            xml_tree = etree.fromstring(consolidated_invoice.myinvois_file_id.raw.content)
+            tax_inclusive_node = xml_tree.xpath("cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount", namespaces=NS_MAP)
+            self.assertTrue(tax_inclusive_node, "TaxInclusiveAmount node is missing from the XML.")
+            expected_total = tax_inclusive_node[0].text
+
+            self._assert_node_values(xml_tree, "cac:PrepaidPayment/cbc:PaidAmount", '0.00')
+            self._assert_node_values(xml_tree, "cac:LegalMonetaryTotal/cbc:PayableAmount", expected_total)
+
+    @mute_logger('odoo.addons.point_of_sale.models.pos_order')
+    def test_individual_invoice_prepayment_unlink(self):
+        """Ensure that individual POS e-invoices have a PaidAmount of 0.00 and the correct PayableAmount."""
+        with freeze_time("2025-01-01"):
+            with self.with_pos_session(), patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
+                order = self._create_order({'pos_order_lines_ui_args': [(self.product_two, 1.0)], 'customer': self.invoicing_customer, 'is_invoiced': True})
+
+            invoice = order.account_move
+            xml_tree = etree.fromstring(invoice._get_active_myinvois_document().myinvois_file_id.raw.content)
+            tax_inclusive_node = xml_tree.xpath("cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount", namespaces=NS_MAP)
+            self.assertTrue(tax_inclusive_node, "TaxInclusiveAmount node is missing from the XML.")
+            expected_total = tax_inclusive_node[0].text
+
+            self._assert_node_values(xml_tree, "cac:PrepaidPayment/cbc:PaidAmount", '0.00')
+            self._assert_node_values(xml_tree, "cac:LegalMonetaryTotal/cbc:PayableAmount", expected_total)
+
+    @mute_logger('odoo.addons.point_of_sale.models.pos_order')
     def test_send_consolidated_invoice(self):
         with freeze_time("2025-01-01"):
             # Create the orders
@@ -912,6 +955,24 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             ("in_progress", "submitted", "valid"),
             f"Unexpected MyInvois state: {myinvois_document.myinvois_state}",
         )
+
+    def test_consolidate_invoices_with_year_range_sequence(self):
+        with freeze_time("2026-01-01"):
+            # Create the orders
+            with self.with_pos_session():
+                first_order = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})
+            # Consolidate them
+            wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
+                'date_from': '2026-01-01',
+                'date_to': '2026-01-31',
+                'consolidation_type': 'pos',
+            })
+            wizard.button_consolidate()
+            consolidated_invoice = first_order.consolidated_invoice_ids
+            consolidated_invoice.name = "POS/2025-2026/000001"
+            with patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
+                consolidated_invoice.action_submit_to_myinvois()
+            self.assertTrue(consolidated_invoice.myinvois_file_id)
 
     #################
     # Patched methods

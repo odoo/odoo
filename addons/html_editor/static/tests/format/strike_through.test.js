@@ -12,6 +12,8 @@ import {
     undo,
 } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 test("should make a few characters strikeThrough", async () => {
     await testEditor({
@@ -107,7 +109,8 @@ test("should make qweb tag strikeThrough", async () => {
     await testEditor({
         contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: strikeThrough,
-        contentAfter: `<div>[<p t-out="'Test'" contenteditable="false" style="text-decoration-line: line-through;">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-out="'Test'" style="text-decoration-line: line-through;">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 
@@ -153,24 +156,6 @@ test("should make a selection ending with strikeThrough text fully strikeThrough
         contentBefore: `<p>[ab</p><p><s>c]d</s></p>`,
         stepFunction: strikeThrough,
         contentAfter: `<p><s>[ab</s></p><p><s>c]d</s></p>`,
-    });
-});
-
-test("should get ready to type in strikeThrough", async () => {
-    await testEditor({
-        contentBefore: `<p>ab[]cd</p>`,
-        stepFunction: strikeThrough,
-        contentAfterEdit: `<p>ab<s data-oe-zws-empty-inline="">[]\u200B</s>cd</p>`,
-        contentAfter: `<p>ab[]cd</p>`,
-    });
-});
-
-test("should get ready to type in not underline", async () => {
-    await testEditor({
-        contentBefore: `<p><s>ab[]cd</s></p>`,
-        stepFunction: strikeThrough,
-        contentAfterEdit: `<p><s>ab</s><span data-oe-zws-empty-inline="">[]\u200B</span><s>cd</s></p>`,
-        contentAfter: `<p><s>ab[]cd</s></p>`,
     });
 });
 
@@ -257,28 +242,30 @@ test("should make a few characters strikeThrough inside table (strikeThrough)", 
     });
 });
 
-test("should remove empty strikeThrough when changing selection", async () => {
+test("should change strikethrough active state when changing selection", async () => {
     const { editor, el } = await setupEditor("<p>ab[]cd</p>");
 
     strikeThrough(editor);
     await tick();
-    expect(getContent(el)).toBe(`<p>ab<s data-oe-zws-empty-inline="">[]\u200B</s>cd</p>`);
+    expect(getContent(el)).toBe(`<p>ab[]cd</p>`);
 
     await simulateArrowKeyPress(editor, "ArrowLeft");
     await tick(); // await selectionchange
     expect(getContent(el)).toBe(`<p>a[]bcd</p>`);
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(`<p>ax[]bcd</p>`);
 });
 
-test("should not add history step for strikethrough on collapsed selection", async () => {
+test("should not add history commit for strikethrough on collapsed selection", async () => {
     const { editor, el } = await setupEditor("<p>abcd[]</p>");
 
     patchWithCleanup(console, { warn: () => {} });
 
     // Collapsed formatting shortcuts (e.g. Ctrl+5) shouldn’t create a history
-    // step. The empty inline tag is temporary: auto-cleaned if unused. We want
-    // to avoid having a phantom step in the history.
+    // commit. The empty inline tag is temporary: auto-cleaned if unused. We want
+    // to avoid having a phantom commit in the history.
     await press(["ctrl", "5"]);
-    expect(getContent(el)).toBe(`<p>abcd<s data-oe-zws-empty-inline="">[]\u200B</s></p>`);
+    expect(getContent(el)).toBe(`<p>abcd[]</p>`);
 
     await insertText(editor, "A");
     expect(getContent(el)).toBe(`<p>abcd<s>A[]</s></p>`);

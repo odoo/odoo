@@ -2,6 +2,7 @@
 
 import logging
 from os.path import join as opj
+from pathlib import Path
 
 from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
 from odoo.tests import BaseCase, HttpCase, tagged
@@ -16,19 +17,58 @@ MANIFEST_KEYS = {
     *_DEFAULT_MANIFEST,
     # unused "informative" keys
     'contributors', 'maintainer', 'url',
+    # for odoo apps store
+    'price', 'currency', 'support', 'live_test_url',
 }
+
+MANIFEST_DATA_KEYS = {
+    'data',
+    'demo',
+    'other_files',
+    *[k for k in _DEFAULT_MANIFEST if k.endswith('_xml')],
+}
+
+DATA_DIRS = {
+    'data',
+    'demo',
+    'report',
+    'reports',
+    'security',
+    'template',
+    'templates',
+    'views',
+    'wizard',
+    'wizards',
+}
+# fix: addons/l10n_mt_pos/reports
+
+DATA_EXTS = ('.csv', '.xml')
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class ManifestLinter(BaseCase):
-
     def test_manifests(self):
-        for manifest in Manifest.all_addon_manifests():
+        module_logger = logging.getLogger('odoo.modules.module')
+        assert_no_logs = self.assertNoLogs(module_logger, logging.DEBUG)
+        try:
+            with assert_no_logs:
+                all_manifests = Manifest.all_addon_manifests()
+        except AssertionError:
+            for record in assert_no_logs.watcher.records:
+                if "Failed to parse" in record.msg:
+                    # requalify the verbosity from DEBUG to WARNING
+                    record.levelno = logging.WARNING
+                    record.levelname = "WARNING"
+                if module_logger.isEnabledFor(record.levelno):
+                    _logger.handle(record)
+
+        for manifest in all_manifests:
             with self.subTest(module=manifest.name):
                 # we want to check the content of the manifest directly without
                 # parsed values
                 self._test_manifest_keys(manifest)
                 self._test_manifest_values(manifest)
+                self._test_data_files(manifest)
 
     def _test_manifest_keys(self, manifest_data: Manifest):
         manifest_keys = manifest_data._Manifest__manifest_content.keys()
@@ -157,6 +197,61 @@ class ManifestLinter(BaseCase):
                 value,
                 f"Module {module!r} is opensource and should be licensed under the LGPL license.",
             )
+
+    def _test_data_files(self, manifest):
+        """
+        Check that the data files present in a module are referenced in
+        the manifest file.
+        """
+        # Kudos @moylop260 "file-not-used check" from the OCA pre-commit hooks
+        # https://github.com/OCA/odoo-pre-commit-hooks
+        modulepath = Path(manifest.path)
+        module_files = {
+            datafile
+            for datadir in DATA_DIRS.intersection(d.name for d in modulepath.iterdir())
+            for datafile in modulepath.joinpath(datadir).rglob('*.*')
+            if datafile.suffix in DATA_EXTS
+            # account @template files, not loaded via the manifest
+            if datafile.relative_to(modulepath).parts[:2] != ('data', 'template')
+        }
+        manifest_files = {
+            modulepath.joinpath(datafile)
+            for data_key in MANIFEST_DATA_KEYS
+            for datafile in manifest.get(data_key) or ()
+            if datafile.partition('/')[0] in DATA_DIRS
+            if datafile.endswith(DATA_EXTS)
+        }
+
+        with self.subTest(subtest="missing"):
+            if unknown_files := module_files - manifest_files:
+                self.fail((
+                    "{count} files exist on disk but are absent from the manifest.\n\n"
+                    "{module}:\n{unknown_files}\n"
+                    "Delete them from disk or list them in one of {manifest_keys}."
+                ).format(
+                    count=len(unknown_files),
+                    module=manifest.name,
+                    unknown_files="".join(
+                        f"- {file_not_used.relative_to(modulepath)}\n"
+                        for file_not_used in unknown_files
+                    ),
+                    manifest_keys=sorted(MANIFEST_DATA_KEYS),
+                ))
+
+        with self.subTest(subtest="deadlink"):
+            if unknown_manifest_files := manifest_files - module_files:
+                self.fail((
+                    "{count} missing files from disk but listed in the manifest.\n\n"
+                    "{module}:\n{unknown_manifest_files}\n"
+                    "Find where they actually are or delete them from the manifest."
+                ).format(
+                    count=len(unknown_manifest_files),
+                    module=manifest.name,
+                    unknown_manifest_files="".join(
+                        f"- {unknown_manifest_file.relative_to(modulepath)}\n"
+                        for unknown_manifest_file in unknown_manifest_files
+                    )
+                ))
 
 
 @tagged('-standard', 'external', 'at_install', '-post_install')

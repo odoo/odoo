@@ -1,19 +1,18 @@
 import { useEnv, useRef } from "@web/owl2/utils";
 import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
 
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { Record } from "@web/model/relational_model/record";
 
 export class ActivityButton extends Component {
-    static props = {
-        record: { type: Object },
-    };
     static template = "mail.ActivityButton";
 
     setup() {
         super.setup();
+        this.props = props({ record: types.instanceOf(Record) });
         this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
         this.buttonRef = useRef("button");
         this.env = useEnv();

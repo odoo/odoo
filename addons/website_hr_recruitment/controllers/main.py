@@ -1,18 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import warnings
-
 from collections import defaultdict, OrderedDict
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 from functools import partial
-from operator import itemgetter
 
 from odoo import http, _
 from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import email_normalize, escape_psql
 from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -111,7 +105,6 @@ class WebsiteHrRecruitment(WebsiteForm):
             return int(query_arg) if query_arg and query_arg.isdigit() else False
 
         env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
-        website = request.website
         department = env['hr.department'].browse(to_int(department_id)).exists().sudo()
         country = env['res.country'].browse(to_int(country_id)).exists()
         office = env['res.partner'].browse(to_int(office_id)).exists()
@@ -122,19 +115,19 @@ class WebsiteHrRecruitment(WebsiteForm):
             and (code := request.geoip.country_code) \
                 and (country := env['res.country'].search([('code', '=', code)], limit=1)):
             country_count = env['hr.job'].sudo().search_count(
-                website.website_domain()
+                self.env.website.website_domain()
                 & Domain('address_id.country_id', '=', country.id)
                 & Domain('is_published', '=', True)
             )
             if not country_count:
                 country = False
 
-        _total_not_used, details, fuzzy_search_term = website._search_with_fuzzy(
+        _total_not_used, details, fuzzy_search_term = self.env.website._search_with_fuzzy(
             "jobs", search,
+            offset=0,
             limit=self._jobs_per_page * 50,
             order="is_published desc, sequence, no_of_recruitment desc",
             options={
-                'displayDescription': True,
                 'allowFuzzy': not noFuzzy,
             }
         )
@@ -142,7 +135,7 @@ class WebsiteHrRecruitment(WebsiteForm):
         job_filter_values = get_filter_snippets_display_values(searched_jobs)
         found_jobs = searched_jobs.filtered(job_filtering_condition)
         total = len(found_jobs)
-        pager = website.pager(
+        pager = self.env.website.pager(
             url=request.httprequest.path.partition('/page/')[0],
             url_args=request.httprequest.args,
             total=total,
@@ -153,6 +146,7 @@ class WebsiteHrRecruitment(WebsiteForm):
         jobs_to_display = found_jobs[offset:offset + self._jobs_per_page]
         return request.render("website_hr_recruitment.index", {
             'jobs': jobs_to_display,
+            'structured_data': jobs_to_display._render_jsonld(),
             'country_id': country,
             'department_id': department,
             'office_id': office,
@@ -190,6 +184,7 @@ class WebsiteHrRecruitment(WebsiteForm):
     @http.route('''/jobs/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
     def job(self, job, **kwargs):
         return request.render("website_hr_recruitment.detail", {
+            'structured_data': job._render_jsonld(is_detail_page=True),
             'job': job,
             'main_object': job,
         })

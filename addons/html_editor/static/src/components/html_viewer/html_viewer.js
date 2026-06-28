@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import {
     Component,
     markup,
@@ -6,30 +6,35 @@ import {
     onWillStart,
     onWillUnmount,
     onWillUpdateProps,
+    props,
+    proxy,
+    t,
+    useApp,
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { fillHtmlTransferData } from "@html_editor/utils/clipboard";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
+import { mountComponent } from "@html_editor/others/embedded_component_utils";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
+import { browser } from "@web/core/browser/browser";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
-    static props = {
-        config: { type: Object },
-        migrateHTML: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        migrateHTML: true,
-    };
+
+    app = useApp();
+    props = props({
+        config: t.object(),
+        migrateHTML: t.boolean().optional(true),
+    });
 
     setup() {
         this._cleanups = [];
         this.htmlUpgradeManager = new HtmlUpgradeManager();
         this.iframeRef = useRef("iframe");
 
-        this.state = useState({
+        this.state = proxy({
             iframeVisible: false,
             value: this.formatValue(this.props.config.value),
         });
@@ -164,10 +169,17 @@ export class HtmlViewer extends Component {
     }
 
     /**
-     * Ensure all links are opened in a new tab.
+     * Retarget links to open in a new tab.
+     * When inside an iframe, all links are retargeted.
+     * Otherwise, only external links (different origin) are retargeted.
      */
     retargetLinks(container) {
-        for (const link of container.querySelectorAll("a")) {
+        const isInsideIframe = container.ownerDocument !== document;
+        const retargetSelector = isInsideIframe
+            ? "a"
+            : `a:not([href^="${browser.location.origin}"]):not([href^="/"])`;
+
+        for (const link of container.querySelectorAll(retargetSelector)) {
             this.retargetLink(link);
         }
     }
@@ -281,23 +293,10 @@ export class HtmlViewer extends Component {
             env,
             props,
         });
-        const root = this.__owl__.app.createRoot(Component, {
-            props,
-            env,
-        });
-        const promise = root.mount(host);
+        const { root, mountPromise } = mountComponent(this.app, Component, host, props, env);
         // Don't show mounting errors as they will happen often when the host
         // is disconnected from the DOM because of a patch
-        promise.catch();
-        // Patch mount fiber to hook into the exact call stack where root is
-        // mounted (but before). This will remove host children synchronously
-        // just before adding the root rendered html.
-        const fiber = root.node.fiber;
-        const fiberComplete = fiber.complete;
-        fiber.complete = function () {
-            host.replaceChildren();
-            fiberComplete.call(this);
-        };
+        mountPromise.catch();
         const info = {
             root,
             host,

@@ -16,7 +16,7 @@ class GamificationChallengeLine(models.Model):
     _order = "sequence, id"
 
     challenge_id = fields.Many2one('gamification.challenge', string='Challenge', required=True, index=True, ondelete="cascade")
-    definition_id = fields.Many2one('gamification.goal.definition', string='Goal Definition', required=True, ondelete="cascade")
+    definition_id = fields.Many2one('gamification.goal.definition', string='Goal Definition', required=True, index=True, ondelete="cascade")
 
     sequence = fields.Integer('Sequence', default=1)
     target_goal = fields.Float('Target Value to Reach', required=True)

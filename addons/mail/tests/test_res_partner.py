@@ -14,7 +14,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('res_partner', 'mail_tools', 'mail_thread_api')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestPartner(MailCommon):
 
     @classmethod
@@ -112,10 +112,8 @@ class TestPartner(MailCommon):
             change_messages = partner.message_ids - original_messages
             self.assertEqual(len(change_messages), 1)
             self.assertMessageFields(change_messages, {
-                'tracking_values': [expected_address_log],
+                'tracking_values': [expected_address_log],  # only tracked field for address
             })
-            # none of the address fields are logged at the same time
-            self.assertEqual(set(), set(partner._address_fields()) & set(change_messages.sudo().tracking_value_ids.field_id.mapped('name')))
 
     def test_discuss_mention_suggestions_priority(self):
         name = uuid4()  # unique name to avoid conflict with already existing users
@@ -125,14 +123,19 @@ class TestPartner(MailCommon):
             mail_new_test_user(self.env, login=f'{name}-{i}-internal-user', groups='base.group_user')
 
         # suggest portal user of this company in another company
-        suggested_partners = self.env["res.partner"].with_user(self.user_employee_c2).get_mention_suggestions("portal-user")
+        suggested_partners = (
+            self.env["res.partner"]
+            .with_user(self.user_employee_c2)
+            .get_mention_suggestions("portal-user")
+            ._build_result()
+        )
 
         porter_user_suggested = [
             p for p in suggested_partners['res.partner']
             if p["name"] == f'{name}-1-portal-user (base.group_portal)'
         ]
         self.assertEqual(len(porter_user_suggested), 1, "porter_user_suggested should contain one user")
-        store_data = self.env["res.partner"].get_mention_suggestions(name, limit=5)
+        store_data = self.env["res.partner"].get_mention_suggestions(name, limit=5)._build_result()
         partners_format = store_data["res.partner"]
         self.assertEqual(len(partners_format), 5, "should have found limit (5) partners")
         # return format for user is either a dict (there is a user and the dict is data) or a list of command (clear)
@@ -490,6 +493,7 @@ class TestPartner(MailCommon):
                     'email': partner.email_normalized,
                     'name': partner.name,
                     'partner_id': partner.id,
+                    'recipient_type': 'to',
                 }])
 
     def test_log_portal_group(self):
@@ -503,15 +507,25 @@ class TestPartner(MailCommon):
             'login': 'michmich',
             'name': 'Micheline Employee',
         })
-        self.assertEqual(len(new_user.message_ids), 1, 'Should contain Contact created log message')
+        self.flush_tracking()
+        self.assertEqual(len(new_user.message_ids), 1, 'Should contain User created log message')
         new_msg = new_user.message_ids
         self.assertNotIn('Portal Access Granted', new_msg.body)
-        self.assertIn('Contact created', new_msg.body)
+        self.assertMessageFields(new_msg, {
+            'author_id': self.env.user.partner_id,
+            'body': '<p>User created</p>',
+            'message_type': 'notification',
+            'subtype_id': subtype_note,
+        })
 
         new_user.write({'group_ids': [(4, group_portal.id), (3, group_user.id)]})
         new_msg = new_user.message_ids[0]
-        self.assertIn('Portal Access Granted', new_msg.body)
-        self.assertEqual(new_msg.subtype_id, subtype_note)
+        self.assertMessageFields(new_msg, {
+            'author_id': self.env.user.partner_id,
+            'body': '<p>Portal Access Granted (micheline@test.example.com)</p>',
+            'message_type': 'tracking',
+            'subtype_id': subtype_note,
+        })
 
         # check at create
         new_user = Users.create({
@@ -520,10 +534,14 @@ class TestPartner(MailCommon):
             'login': 'michmich.2',
             'name': 'Micheline Portal',
         })
-        self.assertEqual(len(new_user.message_ids), 2, 'Should contain Contact created + Portal access log messages')
+        self.assertEqual(len(new_user.message_ids), 2, 'Should contain User created + Portal access log messages')
         new_msg = new_user.message_ids[0]
-        self.assertIn('Portal Access Granted', new_msg.body)
-        self.assertEqual(new_msg.subtype_id, subtype_note)
+        self.assertMessageFields(new_msg, {
+            'author_id': self.env.user.partner_id,
+            'body': '<p>Portal Access Granted (micheline.2@test.example.com)</p>',
+            'message_type': 'tracking',
+            'subtype_id': subtype_note,
+        })
 
     @users('admin')
     def test_name_create_corner_cases(self):
@@ -580,7 +598,7 @@ class TestPartner(MailCommon):
         self.assertEqual(p1.message_follower_ids.partner_id, self.partner_admin + p3)
         self.assertEqual(p1.message_ids, p1_msg_ids_init + p1_msg1)
         self.assertEqual(p2.activity_ids, self.env['mail.activity'])
-        self.assertEqual(p2.message_follower_ids.partner_id, self.partner_admin)
+        self.assertFalse(p2.message_follower_ids.partner_id)
         self.assertEqual(p2.message_ids, p2_msg_ids_init)
 
         MergeForm = Form(self.env['base.partner.merge.automatic.wizard'].with_context(

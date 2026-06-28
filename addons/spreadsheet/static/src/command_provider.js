@@ -25,7 +25,6 @@ export function useSpreadsheetCommandPalette() {
 
 function setupSpreadsheetCategories(spreadsheetEnv) {
     let sequence = 5;
-    commandCategoryRegistry.add("spreadsheet_insert_link", {}, { sequence: 0, force: true });
     for (const menu of topbarMenuRegistry.getMenuItems()) {
         const category = `spreadsheet_${menu.name(spreadsheetEnv)}`;
         commandCategoryRegistry.add(category, {}, { sequence, force: true });
@@ -64,7 +63,7 @@ function registerCommand(spreadsheetEnv, menu, parentName, category) {
                     action() {
                         subMenu.execute(spreadsheetEnv);
                     },
-                    category: subMenu.id === "insert_link" ? "spreadsheet_insert_link" : category,
+                    category,
                     name: `${parentName} / ${subMenuName}`,
                     props: {
                         hotkey: hotkey.replace("Ctrl", "control"),

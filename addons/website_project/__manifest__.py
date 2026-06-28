@@ -18,6 +18,9 @@ Generate tasks in Project app from a form published on your website. This module
         'website.website_builder_assets': [
             'website_project/static/src/js/website_project_editor.js',
         ],
+        "website.assets_inside_builder_iframe": [
+            'website_project/static/src/js/*.edit.*',
+        ],
         'project.webclient': [
             # In website, there is a patch of the LinkDialog (see
             # website/static/src/js/editor/editor.js) that require the utils.js.

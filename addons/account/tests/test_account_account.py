@@ -238,105 +238,6 @@ class TestAccountAccount(TestAccountMergeCommon):
         with self.assertRaises(UserError):
             self.company_data['default_account_revenue'].company_ids = self.company_data_2['company']
 
-    def test_toggle_reconcile(self):
-        ''' Test the feature when the user sets an account as reconcile/not reconcile with existing journal entries. '''
-        account = self.company_data['default_account_revenue']
-
-        move = self.env['account.move'].create({
-            'move_type': 'entry',
-            'date': '2019-01-01',
-            'line_ids': [
-                (0, 0, {
-                    'account_id': account.id,
-                    'currency_id': self.other_currency.id,
-                    'debit': 100.0,
-                    'credit': 0.0,
-                    'amount_currency': 200.0,
-                }),
-                (0, 0, {
-                    'account_id': account.id,
-                    'currency_id': self.other_currency.id,
-                    'debit': 0.0,
-                    'credit': 100.0,
-                    'amount_currency': -200.0,
-                }),
-            ],
-        })
-        move.action_post()
-        self.env['account.move.line'].flush_model()
-
-        self.assertRecordValues(move.line_ids, [
-            {'reconciled': False, 'amount_residual': 0.0, 'amount_residual_currency': 0.0},
-            {'reconciled': False, 'amount_residual': 0.0, 'amount_residual_currency': 0.0},
-        ])
-
-        # Set the account as reconcile and fully reconcile something.
-        account.reconcile = True
-        self.env.invalidate_all()
-
-        self.assertRecordValues(move.line_ids, [
-            {'reconciled': False, 'amount_residual': 100.0, 'amount_residual_currency': 200.0},
-            {'reconciled': False, 'amount_residual': -100.0, 'amount_residual_currency': -200.0},
-        ])
-
-        move.line_ids.reconcile()
-        self.assertRecordValues(move.line_ids, [
-            {'reconciled': True, 'amount_residual': 0.0, 'amount_residual_currency': 0.0},
-            {'reconciled': True, 'amount_residual': 0.0, 'amount_residual_currency': 0.0},
-        ])
-
-        # Set back to a not reconcile account and check the journal items.
-        move.line_ids.remove_move_reconcile()
-        account.reconcile = False
-        self.env.invalidate_all()
-
-        self.assertRecordValues(move.line_ids, [
-            {'reconciled': False, 'amount_residual': 0.0, 'amount_residual_currency': 0.0},
-            {'reconciled': False, 'amount_residual': 0.0, 'amount_residual_currency': 0.0},
-        ])
-
-    def test_toggle_reconcile_with_partials(self):
-        ''' Test the feature when the user sets an account as reconcile/not reconcile with partial reconciliation. '''
-        account = self.company_data['default_account_revenue']
-
-        move = self.env['account.move'].create({
-            'move_type': 'entry',
-            'date': '2019-01-01',
-            'line_ids': [
-                (0, 0, {
-                    'account_id': account.id,
-                    'currency_id': self.other_currency.id,
-                    'debit': 100.0,
-                    'credit': 0.0,
-                    'amount_currency': 200.0,
-                }),
-                (0, 0, {
-                    'account_id': account.id,
-                    'currency_id': self.other_currency.id,
-                    'debit': 0.0,
-                    'credit': 50.0,
-                    'amount_currency': -100.0,
-                }),
-                (0, 0, {
-                    'account_id': self.company_data['default_account_expense'].id,
-                    'currency_id': self.other_currency.id,
-                    'debit': 0.0,
-                    'credit': 50.0,
-                    'amount_currency': -100.0,
-                }),
-            ],
-        })
-        move.action_post()
-
-        # Set the account as reconcile and partially reconcile something.
-        account.reconcile = True
-
-        move.line_ids.filtered(lambda line: line.account_id == account).reconcile()
-
-        # Try to set the account as a not-reconcile one.
-        with self.assertRaises(UserError):
-            account.reconcile = False
-
     def test_name_create(self):
         """name_create should only be possible when importing
            Code and Name should be split
@@ -569,12 +470,13 @@ class TestAccountAccount(TestAccountMergeCommon):
         """
         partner = self.env['res.partner'].create({'name': 'partner_test_generate_account_suggestions'})
         account = self.company_data['default_account_revenue']
-        self.env['account.move'].create({
+        move = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': partner.id,
             'invoice_date': '2023-09-30',
             'line_ids': [Command.create({'price_unit': 100, 'account_id': account.id})]
         })
+        move.action_post()
 
         results_1 = self.env['account.account']._get_most_frequent_accounts_for_partner(
             company_id=self.env.company.id,
@@ -729,6 +631,8 @@ class TestAccountAccount(TestAccountMergeCommon):
             {'account_id': account.id,              'balance': 1000.0,  'amount_currency': 2000.0},
             {'account_id': account.id,              'balance': -1000.0, 'amount_currency': -2000.0},
         ])
+        account.action_validate_opening_move()
+        self.assertTrue(company.account_opening_move_id.posted_before)
 
     def test_unmerge(self):
         company_1 = self.company_data['company']
@@ -1029,3 +933,15 @@ class TestAccountAccount(TestAccountMergeCommon):
                 {'name': 'Account 02', 'code': False, 'account_type': 'asset_current', 'parent_id': a0.id, 'active': False},
             ],
         )
+
+    def test_search_account_with_existing_code(self):
+        """ Ensure that we can properly search records by code, even if they are inactive """
+        example_account = self.env["account.account"].search([], limit=1)
+        found = self.env["account.account"].search([("code", "=ilike", example_account.code)])
+        self.assertEqual(found, example_account)
+
+        example_account.active = False
+        found = self.env["account.account"].search([("code", "=ilike", example_account.code), ("active", "=", False)])
+        not_found = self.env["account.account"].search([("code", "=ilike", example_account.code)])
+        self.assertEqual(found, example_account)
+        self.assertFalse(not_found)

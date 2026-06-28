@@ -346,7 +346,7 @@ test("Local sidebar category state is shared between tabs", async () => {
         ],
     });
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(undefined, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
     await contains(`${env1.selector} .o-mail-DiscussSidebarCategory-livechat .oi-chevron-down`);
@@ -470,7 +470,7 @@ test("show looking for help duration in the sidebar", async () => {
         { guest_id: guestId, channel_id: channelId, livechat_member_type: "visitor" },
     ]);
     await start();
-    await openDiscuss();
+    await openDiscuss(channelId);
     await waitFor(
         ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(< 1m)"
     );
@@ -493,6 +493,38 @@ test("show looking for help duration in the sidebar", async () => {
     await advanceTime(60_000 * 60 * 24);
     await waitFor(
         ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(2d)"
+    );
+    await click("button[name='join-channel']");
+    await contains(".o-livechat-LivechatStatusSelection .active:text('In Progress')");
+    await waitForNone(
+        ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer"
+    );
+});
+
+test("show looking for help duration when the agent is a member of the chat", async () => {
+    mockDate("2023-01-03 14:00:00");
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "livechat",
+        livechat_looking_for_help_since_dt: "2023-01-03 14:00:00",
+        livechat_status: "need_help",
+    });
+    pyEnv["discuss.channel.member"].create([
+        {
+            guest_id: pyEnv["mail.guest"].create({ name: "Visitor #1" }),
+            channel_id: channelId,
+            livechat_member_type: "visitor",
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(
+        ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(< 1m)"
     );
 });
 

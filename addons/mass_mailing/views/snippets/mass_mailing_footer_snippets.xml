@@ -6,11 +6,7 @@
                 <div class="col-md-12 col-12">
                     <div class="o_not_editable">
                         <a t-att-href="company_id.website or '#'" target="_blank">
-                            <img t-if="company_id.logo or user_id.company_id.logo"
-                                class="img img-fluid o_editable_media mx-auto"
-                                style="width: 25% !important;"
-                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
-                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"/>
+                            <t t-call="mass_mailing.s_mail_company_logo" class="'img img-fluid o_editable_media mx-auto'" style="'width: 25% !important;'"/>
                         </a>
                     </div>
                     <t t-call="mass_mailing.s_social_media_template" optionalTextPosition.f="text-center" optionalSnippetClass.f="o_mail_footer_social pb16"/>
@@ -28,7 +24,7 @@
             <div class="row">
                 <div class="col-md-6 col-12">
                     <p t-if="company_id"><strong>© <t t-out="company_id.partner_id.name"/></strong><br/><t t-out="company_id.partner_id._display_address()"/></p>
-                    <t t-call="mass_mailing.s_social_media_template" optionalTextPosition.f="text-end" optionalSnippetClass.f="o_mail_footer_social pb16"/>
+                    <t t-call="mass_mailing.s_social_media_template" optionalTextPosition.f="text-start" optionalSnippetClass.f="o_mail_footer_social pb16"/>
                 </div>
                 <div class="col-md-6 col-12">
                     <p class="text-muted">You're seeing this because you've shopped with us or joined our mailing list.</p>
@@ -67,11 +63,7 @@
                 <div class="col-md-4 col-12">
                     <div class="o_not_editable">
                         <a t-att-href="company_id.website or '#'" target="_blank">
-                            <img t-if="company_id.logo or user_id.company_id.logo"
-                                class="img img-fluid o_editable_media"
-                                style="width: 80% !important"
-                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
-                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"/>
+                            <t t-call="mass_mailing.s_mail_company_logo" class="'img img-fluid o_editable_media'" style="'width: 80% !important;'"/>
                         </a>
                     </div>
                 </div>

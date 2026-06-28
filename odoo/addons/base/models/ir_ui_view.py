@@ -28,6 +28,8 @@ from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 from odoo.tools.view_validation import valid_view, get_domain_value_names, get_expression_field_names, get_dict_asts
 
+from . import ir_access
+
 _logger = logging.getLogger(__name__)
 
 MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath', 'data-oe-source-id']
@@ -154,6 +156,7 @@ class IrUiView(models.Model):
                              ('calendar', 'Calendar'),
                              ('kanban', 'Kanban'),
                              ('search', 'Search'),
+                             ('card', "Card"),
                              ('qweb', 'QWeb')], string='View Type')
     arch = fields.Text(compute='_compute_arch', inverse='_inverse_arch', string='View Architecture',
                        help="""This field should be used when accessing view arch. It will use translation.
@@ -479,7 +482,8 @@ actual arch.
 
                 if view.type == 'qweb':
                     continue
-            except (etree.ParseError, ValueError) as e:
+            except (etree.ParseError, ValueError, TypeError) as e:
+                # Note: lxml < 5.0 raises ValueError; lxml 5.0+ / libxml2 2.12+ raises TypeError
                 err = ValidationError(_(
                     "Error while parsing or validating view:\n\n%(error)s",
                     error=e,
@@ -543,7 +547,7 @@ actual arch.
             if (view.group_ids and
                 view.inherit_id and
                 view.mode != 'primary'):
-                raise ValidationError(_("Inherited view cannot have 'Groups' define on the record. Use 'groups' attributes inside the view definition"))
+                raise ValidationError(_("Inherited view cannot have '%(attr)s' defined on the record. Use '%(attr)s' attributes inside the view definition", attr='groups'))
 
     @api.constrains('inherit_id')
     def _check_000_inheritance(self):
@@ -581,7 +585,8 @@ actual arch.
                 combined_arch = view._get_combined_arch()
                 if view.type != 'qweb':
                     view._postprocess_view(combined_arch, view.model, is_compute_warning_info=True)
-            except (etree.ParseError, ValueError) as e:
+            except (etree.ParseError, ValueError, TypeError) as e:
+                # Note: lxml < 5.0 raises ValueError; lxml 5.0+ / libxml2 2.12+ raises TypeError
                 view.warning_info = str(e)
 
     def _validate_xml_encoding(self, text):
@@ -615,7 +620,8 @@ actual arch.
                                 "Allowed types are: %(valid_types)s",
                                 view_type=values['type'], valid_types=', '.join(valid_types)
                             ))
-                    except (etree.ParseError, ValueError):
+                    except (etree.ParseError, ValueError, TypeError):
+                        # Note: lxml < 5.0 raises ValueError; lxml 5.0+ / libxml2 2.12+ raises TypeError
                         # don't raise here, the constraint that runs `self._check_xml` will
                         # do the job properly.
                         pass
@@ -1119,17 +1125,26 @@ actual arch.
 
     @api.model
     def _get_cached_template_prefetched_keys(self):
-        return ['id', 'key', 'active']
+        return ['id', 'key', 'active', 'type']
 
     def _get_template_minimal_cache_keys(self):
         return (bool(self.env.context.get('active_test', True)),)
 
     @api.model
-    @tools.ormcache('id_or_xmlid', 'isinstance(id_or_xmlid, str) and self._get_template_minimal_cache_keys()', cache='templates')
-    def _get_cached_template_info(self, id_or_xmlid, _view=None):
-        """ Return the ir.ui.view id from the xml id, use `_preload_views`.
+    @api.ormcache('id_or_xmlid', 'isinstance(id_or_xmlid, str) and self._get_template_minimal_cache_keys()', cache='templates')
+    def _get_cached_template_info(self, id_or_xmlid: int | str, *, _view: models.BaseModel | None = None):
+        """Return cached template data for ``id_or_xmlid``.
+
+        ``_view`` may be provided as a shortcut to avoid resolving
+        ``id_or_xmlid`` again. Passing an empty recordset means the template is
+        known to be missing and results in ``info['error']`` being a
+        :class:`odoo.exceptions.MissingError`.
+
+        ``_view`` is intentionally not part of the cache key: when provided and
+        correct, it is equivalent to the view resolved from ``id_or_xmlid`` and
+        does not change the result.
         """
-        view = None
+        view = self.browse()
         error = False
         if _view is not None:
             view = _view
@@ -1138,11 +1153,7 @@ actual arch.
             try:
                 view.key
             except MissingError:
-                view = None
-                error = MissingError(self.env._("Template not found: '%s'", id_or_xmlid))
-            except UserError as e:
-                view = None
-                error = e
+                view = self.browse()
         else:
             preload = self.sudo()._preload_views([id_or_xmlid])
             if id_or_xmlid in preload:
@@ -1153,7 +1164,10 @@ actual arch.
                 error = SyntaxError('Error compiling template')
         info = {
             f: view[f] if view else None
-            for f in self._get_cached_template_prefetched_keys()}
+            for f in self._get_cached_template_prefetched_keys()
+        }
+        if not view and not error:
+            error = MissingError(self.env._("Template not found: '%s'", id_or_xmlid))
         info['error'] = error
         return info
 
@@ -1225,19 +1239,14 @@ actual arch.
             self._get_cached_template_info(key, _view=view)
 
         # create data and errors
-        for view_id in ids:
-            if view_id not in view_by_id:
-                # push information in cache
-                self._get_cached_template_info(view_id, _view=False)
-                view_by_id[view_id] = MissingError(self.env._("Template does not exist or has been deleted: %s", view_id))
-        for xmlid in xmlids:
-            if xmlid not in view_by_id:
-                # push information in cache
-                self._get_cached_template_info(xmlid, _view=False)
-                view_by_id[xmlid] = MissingError(self.env._("Template not found: '%s'", xmlid))
+        for id_or_xmlid in ids_or_xmlids:
+            if id_or_xmlid not in view_by_id:
+                # push information in cache for missing records
+                info = self._get_cached_template_info(id_or_xmlid, _view=self.browse())
+                view_by_id[id_or_xmlid] = info['error']
         return view_by_id
 
-    @tools.ormcache(cache='templates')
+    @api.ormcache(cache='templates')
     def _clear_preload_views_cache_if_needed(self):
         """ Invalidate the local cache when the orm cache is cleared
         """
@@ -1450,7 +1459,7 @@ actual arch.
         parent_name_manager = node_info['name_manager'] if node_info else None
 
         # combine model access groups with this model's access groups
-        model_groups &= self.env['ir.model.access']._get_access_groups(model_name)
+        model_groups &= self._get_access_groups(group_definitions, model_name)
 
         name_manager = NameManager(model, parent=parent_name_manager, model_groups=model_groups)
 
@@ -1521,6 +1530,28 @@ actual arch.
             self._postprocess_on_change(root, model)
 
         return name_manager
+
+    def _get_access_groups(self, group_definitions, model_name):
+        """ Return the group expression object that represents the users who
+        can perform ``operation`` on model ``model_name``.
+        """
+        if not self.env.registry.ready:
+            access_domain = [
+                ('model_id.model', '=', model_name),
+                ('group_id', '!=', False),
+                ('operation', 'in', sorted(ir_access.IN_SELECTION['read'])),
+                ('active', '=', True),
+            ]
+            accesses = self.env['ir.access'].sudo().search_fetch(access_domain, ['group_id'], order='id')
+            return group_definitions.from_ids(accesses.group_id.ids)
+
+        accesses = self.env['ir.access']._get_all_access().get(model_name, ())
+        operations = ir_access.IN_SELECTION['read']
+        return group_definitions.from_ids(
+            access.group_id
+            for access in accesses
+            if access.group_id and access.operation in operations
+        )
 
     def _add_missing_fields(self, node, name_manager):
         """ Add the fields required for evaluating expressions in the view given by ``node``. """
@@ -1716,6 +1747,18 @@ actual arch.
         self._postprocess_view(node, field.comodel_name, editable=False, node_info=node_info)
         name_manager.has_field(node, name, node_info)
 
+    def _postprocess_tag_card(self, node, name_manager, node_info):
+        # When this is called as the root of the recursive sub-view call below,
+        # view_type is 'card' and children should be processed normally by the
+        # inner stack — returning here lets that happen without re-entering.
+        if node_info.get('view_type') == 'card':
+            return
+        # card nodes are processed as nested sub-views on the same model so that
+        # fields auto-added for expression evaluation land inside <card> rather
+        # than being appended to the parent view root.
+        node_info['children'] = []
+        self._postprocess_view(node, name_manager.model._name, editable=False, node_info=node_info)
+
     def _postprocess_tag_label(self, node, name_manager, node_info):
         if not node.get('for'):
             return
@@ -1813,7 +1856,7 @@ actual arch.
         parent_name_manager = node_info['name_manager'] if node_info else None
 
         # combine model access groups with this model's access groups
-        model_groups &= self.env['ir.model.access']._get_access_groups(model_name)
+        model_groups &= self._get_access_groups(group_definitions, model_name)
 
         # fields_get() optimization: validation does not require translations
         model = self.env[model_name].with_context(lang=None)
@@ -1877,7 +1920,7 @@ actual arch.
                 value=editable_attr,
             )
             self._raise_view_error(msg, node)
-        allowed_tags = ('field', 'button', 'control', 'groupby', 'widget', 'header')
+        allowed_tags = ('field', 'button', 'control', 'groupby', 'widget', 'header', 'column')
         for child in node.iterchildren(tag=etree.Element):
             if child.tag not in allowed_tags and not isinstance(child, etree._Comment):
                 msg = _(
@@ -2142,7 +2185,7 @@ actual arch.
                 self._log_view_warning(msg, node)
 
     def _is_qweb_based_view(self, view_type):
-        return view_type == 'kanban'
+        return view_type == 'kanban' or view_type == 'card'
 
     def _validate_attributes(self, node, name_manager, node_info):
         """ Generic validation of node attributes. """
@@ -2735,7 +2778,7 @@ class Base(models.AbstractModel):
             on self. Used in overrides, notably with portal / website addons.
         """
         self.ensure_one()
-        return self.get_formview_action(access_uid=access_uid)
+        return self.get_record_default_action(access_uid=access_uid)
 
     @api.model
     def get_empty_list_help(self, help_message: str) -> str:
@@ -3073,7 +3116,7 @@ class Base(models.AbstractModel):
     @api.model
     @tools.conditional(
         'xml' not in config['dev_mode'],
-        tools.ormcache('self._get_view_cache_key(view_id, view_type, **options)', cache='templates'),
+        api.ormcache('self._get_view_cache_key(view_id, view_type, **options)', cache='templates'),
     )
     def _get_view_cache(self, view_id=None, view_type='form', **options):
         """ Get the view information ready to be cached
@@ -3104,6 +3147,14 @@ class Base(models.AbstractModel):
         """
         # Get the view arch and all other attributes describing the composition of the view
         arch, view = self._get_view(view_id, view_type, **options)
+
+        # Inline the card view if the root element references one via the 'card_id' attribute.
+        # The card arch is appended as a <card> child so that _postprocess_tag_card can
+        # process it as a nested sub-view, ensuring that fields auto-added for expression
+        # evaluation land inside <card> rather than at the parent view root.
+        if card_id := arch.get('card_id'):
+            card_arch, _card_view = self._get_view(view_id=int(card_id), view_type='card')
+            arch.append(card_arch)
 
         # Apply post processing, groups and modifiers etc...
         arch, models = self._get_view_postprocessed(view, arch, **options)
@@ -3215,7 +3266,7 @@ class Base(models.AbstractModel):
         return False
 
     @api.readonly
-    def get_formview_action(self, access_uid=None):
+    def get_record_default_action(self, access_uid=None):
         """ Return an action to open the document ``self``. This method is meant
             to be overridden in addons that want to give specific view ids for
             example.

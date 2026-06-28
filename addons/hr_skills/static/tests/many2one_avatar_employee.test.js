@@ -1,3 +1,5 @@
+import { createPublicEmployee } from "@hr/../tests/hr_test_helpers";
+
 import { click, contains, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { mountView, onRpc } from "@web/../tests/web_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
@@ -22,7 +24,7 @@ test("many2one_avatar_employee widget in kanban view with skills on avatar card"
         { employee_id: pierreEid, skill_id: java },
         { employee_id: pierreEid, skill_id: tigrinya },
     ]);
-    pyEnv["hr.employee.public"].create({
+    createPublicEmployee(pyEnv, {
         name: "Pierre",
         employee_skill_ids: [javaForPierre, tigrinyaForPierre],
     });

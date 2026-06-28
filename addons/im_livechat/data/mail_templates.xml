@@ -6,14 +6,21 @@
 <t t-set="header_background_color" t-value="channel.livechat_channel_id.sudo().header_background_color or '#875A7B'" />
 <!-- sudo: visitor can access title color -->
 <t t-set="title_color" t-value="channel.livechat_channel_id.sudo().title_color or '#FFFFFF'" />
-<div style="font-size: 13px; max-width: 600px; margin: 10px; padding: 24px 32px 0px 32px; background-color: #ffffff; border-radius: 0 0 8px 8px; border: thin solid #dee2e6;">
-<div style="font-size: 13px; padding: 5px 0; white-space:nowrap;">
+<div style="font-size: 13px; margin: 10px; padding: 24px 32px 0px 32px; background-color: #ffffff; border: thin solid #dee2e6;">
+<div style="font-size: 13px; padding: 5px 0;">
     Here's a copy of your conversation with
     <span t-attf-style="color: {{header_background_color}};" t-out="correspondent_names"/> on
     <span t-out="channel.create_date.astimezone(tz).strftime('%m/%d/%y')"/> at
     <span t-out="channel.create_date.astimezone(tz).strftime('%I:%M %p')"/>.
 </div>
+<style>
+    .o-LivechatReport-bodyContent &gt; p {
+        margin: 0;
+        padding: 0;
+    }
+</style>
 <table cellspacing="0" cellpadding="0" class="table-borderless" style="width:100%; margin: 16px 0;">
+    <t t-set="deleted_messages" t-value="channel.message_ids._filter_empty()"/>
     <t t-foreach="channel.message_ids.sorted(lambda m: (m.date, m.id))" t-as="message">
         <t t-if="message.message_type != 'notification'">
             <t t-set="author_name"><t t-if="message.author_id" t-out="message.author_id.sudo().user_livechat_username or message.author_id.sudo().name"/><t t-else="">You</t></t>
@@ -22,21 +29,39 @@
                     <table cellspacing="0" cellpadding="0" class="table-borderless" style="width: 100%;">
                         <tr>
                             <td style="width: 50px; vertical-align: top; padding-right: 12px;">
-                                <t t-if="message.author_avatar">
-                                    <img style="width:40px; height:40px; border-radius:0.5rem; display:block;" t-attf-src="data:image/png;base64,{{message.author_avatar.to_base64()}}" t-attf-alt="{{author_name}}"/>
-                                </t>
-                                <t t-else="">
-                                    <img style="width:40px; height:40px; border-radius:0.5rem; display:block;" src="/mail/static/src/img/smiley/avatar.jpg" t-attf-alt="{{author_name}}"/>
-                                </t>
+                                <t t-set="author" t-value="message.author_id or message.author_guest_id"/>
+                                <t t-set="avatar_cls">width:40px; height:40px; border-radius:0.5rem; display:block;</t>
+                                <img t-if="author.avatar_128" t-att-style="avatar_cls" t-attf-src="data:{{author.avatar_128.mimetype}};base64,{{author.avatar_128.to_base64()}}" t-attf-alt="{{author_name}}"/>
+                                <img t-else="" t-att-style="avatar_cls" src="/mail/static/src/img/smiley/avatar.jpg" t-attf-alt="{{author_name}}"/>
                             </td>
                             <td style="vertical-align: top;">
                                 <div style="margin-bottom:4px;">
                                     <strong t-attf-style="color:{{header_background_color}}; font-size: 13px; margin-right: 2px;" t-out="author_name"/>
                                     <span style="font-size:10px; color:#666666;" t-out="message.date.astimezone(tz).strftime('%I:%M %p')"/>
                                 </div>
-                                <div style="display: flex;">
-                                    <div style="background-color: #E2F3F6; padding: 16px 12px 0; border-radius: 0 0.46875rem 0.46875rem 0.46875rem; display: inline-block; max-width: 100%;">
-                                        <span style="font-size: 13px; word-break: break-word;" t-out="message.body"/>
+                                <t t-set="is_deleted_message" t-value="message in deleted_messages"/>
+                                <div t-if="not is_html_empty(message.body) or is_deleted_message" style="background-color: #E2F3F6; padding: 12px; border-radius: 0 0.46875rem 0.46875rem 0.46875rem; display: inline-block; max-width: 100%;">
+                                    <span class="o-LivechatReport-bodyContent" style="font-size: 13px; word-break: break-word;">
+                                        <p t-if="is_deleted_message" style="color: #6c757d; font-style: italic;">This message has been removed</p>
+                                        <t t-else="" t-out="message.body"/>
+                                    </span>
+                                </div>
+                                <t t-set="img_attachments" t-value="message.attachment_ids.filtered(lambda a: a.mimetype.startswith('image/'))"/>
+                                <t t-set="other_attachments" t-value="message.attachment_ids - img_attachments"/>
+                                <div t-if="img_attachments" style="display: flex; flex-wrap: wrap; margin-top: 8px;">
+                                    <img t-foreach="img_attachments"
+                                        t-as="attachment"
+                                        t-attf-src="data:{{attachment.mimetype}};base64,{{attachment.raw.to_base64()}}"
+                                        style="max-height: 300px; object-fit: contain; border-radius: 0.75rem; margin-bottom: 4px; margin-right: 4px;"/>
+                                </div>
+                                <div t-if="other_attachments" style="display: flex; flex-wrap: wrap; margin-top: 8px;">
+                                    <div
+                                        t-foreach="other_attachments"
+                                        t-as="attachment"
+                                        style="display: inline-block; padding: 2px 4px; padding-bottom: 4px; border: 1px solid #d2d2d2; border-radius: 6px; margin-right: 8px; background-color: #f9f9f9; margin-bottom: 4px;"
+                                    >
+                                        <strong style="background-color: #875A7B; color: white; padding: 2px 5px; border-radius: 3px; text-transform: uppercase; font-size: 10px; margin-right: 4px;" t-out="attachment.mimetype"/>
+                                        <span style="color: #495057; font-size: 12px;" t-out="attachment.display_name"/>
                                     </div>
                                 </div>
                             </td>

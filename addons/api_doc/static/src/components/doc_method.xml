@@ -47,11 +47,7 @@
                 </t>
             </div>
             <div t-att-class="{ 'w-100 pt-2 mt-2 border-top': this.isVertical, 'w-50 ps-3 border-start': !this.isVertical }">
-                <DocRequest
-                    url="this.method.url"
-                    request="this.request"
-                    method="this.method"
-                />
+                <DocRequest url="this.method.url" request="this.request"/>
             </div>
         </div>
     </article>

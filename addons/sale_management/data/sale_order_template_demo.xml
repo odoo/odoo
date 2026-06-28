@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <!-- We want to activate SO template by default for easier demoing. -->
-        <record id="base.group_user" model="res.groups">
-            <field name="implied_ids" eval="[(4, ref('sale_management.group_sale_order_template'))]"/>
-        </record>
 
         <record id="sale_order_template_1" model="sale.order.template">
             <field name="name">Office Furnitures</field>

@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Command
 
 
 class SaleOrderTemplateLine(models.Model):
@@ -10,8 +11,8 @@ class SaleOrderTemplateLine(models.Model):
     _order = "sale_order_template_id, sequence, id"
 
     _accountable_product_id_required = models.Constraint(
-        "CHECK(display_type IS NOT NULL OR (product_id IS NOT NULL AND product_uom_id IS NOT NULL))",  # noqa: E501
-        "Missing required product and UoM on accountable sale quote line.",
+        "CHECK(display_type IS NOT NULL OR product_uom_id IS NOT NULL)",
+        "Missing required UoM on accountable sale quote line.",
     )
     _non_accountable_fields_null = models.Constraint(
         "CHECK(display_type IS NULL OR (product_id IS NULL AND product_uom_qty = 0 AND product_uom_id IS NULL))",  # noqa: E501
@@ -47,7 +48,7 @@ class SaleOrderTemplateLine(models.Model):
     product_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Unit",
-        domain="[('id', 'in', allowed_uom_ids)]",
+        domain="[('id', 'in', allowed_uom_ids)] if allowed_uom_ids or mandatory_product else []",
         compute="_compute_product_uom_id",
         store=True,
         readonly=False,
@@ -72,17 +73,34 @@ class SaleOrderTemplateLine(models.Model):
     collapse_composition = fields.Boolean()
     collapse_prices = fields.Boolean()
 
+    # Technical fields which stores values for product SO line without product_id
+    discount = fields.Float(string="Discount (%)", digits="Discount")
+    price_unit = fields.Float(
+        string="Unit Price", digits="Product Price", min_display_digits="Product Price"
+    )
+    tax_ids = fields.Many2many(string="Taxes", comodel_name="account.tax", check_company=True)
+
+    mandatory_product = fields.Boolean(
+        string="Is Product Mandatory", compute="_compute_mandatory_product"
+    )
+
     # === COMPUTE METHODS ===#
 
-    @api.depends("product_id", "product_id.uom_id", "product_id.uom_ids")
+    @api.depends("product_id")
     def _compute_allowed_uom_ids(self):
         for option in self:
-            option.allowed_uom_ids = option.product_id.uom_id | option.product_id.uom_ids
+            option.allowed_uom_ids = option.product_id._get_available_uoms()
 
-    @api.depends("product_id")
+    @api.depends("product_id", "display_type")
     def _compute_product_uom_id(self):
+        unit_uom = self.env["product.template"]._default_uom_id()
         for option in self:
-            option.product_uom_id = option.product_id.uom_id
+            if option.display_type:
+                option.product_uom_id = False
+            elif not option.product_id:
+                option.product_uom_id = unit_uom
+            else:
+                option.product_uom_id = option.product_id.uom_id
 
     def _compute_parent_id(self):
         option_lines = set(self)
@@ -105,6 +123,11 @@ class SaleOrderTemplateLine(models.Model):
                 elif line in option_lines:
                     line.parent_id = last_sub or last_section
 
+    def _compute_mandatory_product(self):
+        self.mandatory_product = (
+            self.env["ir.config_parameter"].sudo().get_bool("sale.mandatory_product")
+        )
+
     # === CRUD METHODS ===#
 
     @api.model_create_multi
@@ -119,7 +142,7 @@ class SaleOrderTemplateLine(models.Model):
             lambda line: line.display_type != vals.get("display_type")
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot change the type of a sale quote line. Instead you should delete the"
                     " current line and create a new line of the proper type."
                 )
@@ -133,8 +156,14 @@ class SaleOrderTemplateLine(models.Model):
         """Return the domain of the products that can be added to the template."""
         return [("sale_ok", "=", True), ("type", "!=", "combo")]
 
-    def _prepare_order_line_values(self):
-        """Give the values to create the corresponding order line.
+    def _prepare_order_line_values(self, fiscal_position, currency):
+        """Prepare values to create a sale order line from a template line.
+
+        Line without products take price, discount, taxes from itself otherwise compute it based on
+        product and related values.
+
+        :param account.fiscal.position fiscal_position_id: fiscal position to use
+        :param res.currency currency: target currency (of the order)
 
         :return: `sale.order.line` create values
         :rtype: dict
@@ -152,4 +181,21 @@ class SaleOrderTemplateLine(models.Model):
         }
         if self.name:
             vals["name"] = self.name
+            if self.product_id:
+                vals["name"] = f"{self.product_id.display_name}\n{self.name}"
+
+        if not self.product_id:
+            taxes = self.tax_ids._filter_taxes_by_company()
+
+            if fiscal_position:
+                taxes = fiscal_position.map_tax(taxes)
+
+            vals.update({
+                "tax_ids": [Command.set(taxes.ids)],
+                "discount": self.discount,
+                "price_unit": self.sale_order_template_id.currency_id._convert(
+                    from_amount=self.price_unit, to_currency=currency
+                ),
+            })
+
         return vals

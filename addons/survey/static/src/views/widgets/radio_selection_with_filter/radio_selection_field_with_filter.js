@@ -1,12 +1,13 @@
-import { RadioField, radioField } from "@web/views/fields/radio/radio_field";
+import { props, t } from "@odoo/owl";
+import { RadioField, radioField, radioFieldProps } from "@web/views/fields/radio/radio_field";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 export class RadioSelectionFieldWithFilter extends RadioField {
-    static props = {
-        ...RadioField.props,
-        allowedSelectionField: { type: String },
-    };
+    props = props({
+        ...radioFieldProps,
+        allowedSelectionField: t.string(),
+    });
 
     get items() {
         const allowedItems = this.props.record.data[this.props.allowedSelectionField];

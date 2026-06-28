@@ -47,11 +47,11 @@ class StockMoveLine(models.Model):
         domain="[('location_id', '=', location_id)]")
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial Number',
-        domain="[('product_id', '=', product_id)]", check_company=True)
+        domain="[('product_id', '=', product_id)]", check_company=True, index=True)
     lot_name = fields.Char('Lot/Serial Number Name')
     result_package_id = fields.Many2one(
         'stock.package', 'Destination Package',
-        ondelete='restrict', required=False, check_company=True,
+        ondelete='restrict', required=False, check_company=True, index='btree_not_null',
         domain="['|', '|', ('location_id', '=', location_dest_id), ('id', '=', package_id), '&', ('location_id', '=', False), '|', ('move_line_ids', '=', False), ('move_line_ids.location_dest_id', '=', location_dest_id)]",
         help="If set, the operations are packed into this package")
     result_package_dest_name = fields.Char('Destination Package Name', related='result_package_id.dest_complete_name')
@@ -69,7 +69,7 @@ class StockMoveLine(models.Model):
         'stock.location', 'From', domain="[('usage', '!=', 'view')]", check_company=True, required=True,
         compute="_compute_location_id", store=True, readonly=False, precompute=True, index=True,
     )
-    location_dest_id = fields.Many2one('stock.location', 'To', domain="[('usage', '!=', 'view')]", check_company=True, required=True, compute="_compute_location_id", store=True, index=True, readonly=False, precompute=True)
+    location_dest_id = fields.Many2one('stock.location', 'To', domain="[('usage', '!=', 'view')]", check_company=True, required=True, compute="_compute_location_dest_id", store=True, index=True, readonly=False, precompute=True)
     location_usage = fields.Selection(string="Source Location Type", related='location_id.usage')
     location_dest_usage = fields.Selection(string="Destination Location Type", related='location_dest_id.usage')
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
@@ -86,7 +86,7 @@ class StockMoveLine(models.Model):
     is_scrap = fields.Boolean(related='move_id.is_scrap', readonly=True)
     consume_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'consume_line_id', 'produce_line_id')
     produce_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'produce_line_id', 'consume_line_id')
-    reference = fields.Char(related='move_id.reference', readonly=False)
+    reference = fields.Char(related='move_id.reference')
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     origin = fields.Char(related='move_id.origin', string='Source')
     description_picking = fields.Text(related='move_id.description_picking')
@@ -97,10 +97,10 @@ class StockMoveLine(models.Model):
     _free_reservation_index = models.Index("""(id, company_id, product_id, lot_id, location_id, owner_id, package_id)
         WHERE (state IS NULL OR state NOT IN ('cancel', 'done')) AND quantity_product_uom > 0 AND picked IS NOT TRUE""")
 
-    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.extra_uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
     def _compute_allowed_uom_ids(self):
         for line in self:
-            line.allowed_uom_ids = line.product_id.uom_id | line.product_id.uom_ids | line.sudo().product_id.seller_ids.uom_id
+            line.allowed_uom_ids = line.product_id._get_available_uoms() | line.sudo().product_id.seller_ids.uom_id
 
     @api.depends('move_id.uom_id', 'product_id.uom_id')
     def _compute_uom_id(self):
@@ -123,7 +123,7 @@ class StockMoveLine(models.Model):
     @api.depends('state')
     def _compute_picked(self):
         for line in self:
-            if line.move_id.state == 'done' or (self.env.context.get('allow_parent_move_picked_reset') and line.move_id.picked):
+            if line.move_id.state == 'done' or self.env.context.get('auto_pick_move_lines'):
                 line.picked = True
 
     @api.depends('picking_id')
@@ -133,11 +133,15 @@ class StockMoveLine(models.Model):
             if line.picking_id:
                 line.picking_type_id = line.picking_id.picking_type_id
 
-    @api.depends('move_id', 'move_id.location_id', 'move_id.location_dest_id', 'picking_id')
+    @api.depends('move_id', 'move_id.location_id', 'picking_id')
     def _compute_location_id(self):
         for line in self:
             if not line.location_id or line._origin.picking_id.location_id != line.picking_id.location_id:
                 line.location_id = line.move_id.location_id or line.picking_id.location_id
+
+    @api.depends('move_id', 'move_id.location_dest_id', 'picking_id')
+    def _compute_location_dest_id(self):
+        for line in self:
             if not line.location_dest_id or line._origin.picking_id.location_dest_id != line.picking_id.location_dest_id:
                 line.location_dest_id = line.move_id.location_dest_id or line.picking_id.location_dest_id
 
@@ -270,7 +274,9 @@ class StockMoveLine(models.Model):
                 for sml in smls:
                     if len(used_locations) > 1:
                         break
-                    sml.location_dest_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls, locations=locations)._get_putaway_strategy(sml.product_id, quantity=sml.quantity)
+                    putaway_loc_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls, locations=locations)._get_putaway_strategy(sml.product_id, quantity=sml.quantity)
+                    if putaway_loc_id != sml.location_dest_id:
+                        sml.location_dest_id = putaway_loc_id
                     excluded_smls.discard(sml.id)
                     used_locations.add(sml.location_dest_id)
                 if len(used_locations) > 1:
@@ -692,7 +698,7 @@ class StockMoveLine(models.Model):
             available_qty, in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id)
             ml._synchronize_quant(ml.quantity_product_uom, ml.location_dest_id, package=ml.result_package_id, in_date=in_date)
             if available_qty < 0:
-                ml.with_context(quants_cache=None)._free_reservation(
+                ml.with_context(quants_cache=None, bypass_entire_pack=True)._free_reservation(
                     ml.product_id, ml.location_id,
                     abs(available_qty), lot_id=ml.lot_id, package_id=ml.package_id,
                     owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore)
@@ -702,6 +708,9 @@ class StockMoveLine(models.Model):
             mls_todo.result_package_id._apply_dest_to_package()
 
         # Reset the reserved quantity as we just moved it to the destination location.
+        affected_pickings = mls_todo.mapped('picking_id')
+        if affected_pickings:
+            affected_pickings._check_entire_pack()
         mls_todo.write({
             'date': fields.Datetime.now(),
         })
@@ -847,7 +856,7 @@ class StockMoveLine(models.Model):
                 'move_orig_ids': [Command.clear()]
             })
         move_line_to_unlink.unlink()
-        move_to_reassign._action_assign()
+        move_to_reassign[::-1]._action_assign()
 
     def _get_aggregated_properties(self, move_line=False, move=False):
         move = move or move_line.move_id
@@ -900,30 +909,31 @@ class StockMoveLine(models.Model):
             aggregated_properties = self._get_aggregated_properties(move_line=move_line)
             line_key, uom = aggregated_properties['line_key'], aggregated_properties['uom_id']
             quantity = move_line.uom_id._compute_quantity(move_line.quantity, uom)
-            packaging_quantity = move_line.uom_id._compute_quantity(quantity, move_line.move_id.packaging_uom_id)
+            packaging_quantity = uom._compute_quantity(quantity, move_line.move_id.packaging_uom_id)
             if line_key not in aggregated_move_lines:
                 qty_ordered = None
                 packaging_qty_ordered = None
-                if backorders and not kwargs.get('strict'):
+                if not kwargs.get('strict'):
                     qty_ordered = move_line.move_id.product_uom_qty
-                    # Filters on the aggregation key (product, description and uom) to add the
-                    # quantities delayed to backorders to retrieve the original ordered qty.
-                    following_move_lines = backorders.move_line_ids.filtered(
-                        lambda ml: line_key.startswith(self._get_aggregated_properties(move=ml.move_id)['line_key'])
-                    )
-                    qty_ordered += sum(following_move_lines.move_id.mapped('product_uom_qty'))
+                    if backorders:
+                        # Filters on the aggregation key (product, description and uom) to add the
+                        # quantities delayed to backorders to retrieve the original ordered qty.
+                        following_move_lines = backorders.move_line_ids.filtered(
+                            lambda ml: line_key.startswith(self._get_aggregated_properties(move=ml.move_id)['line_key'])
+                        )
+                        qty_ordered += sum(following_move_lines.move_id.mapped('product_uom_qty'))
                     # Remove the done quantities of the other move lines of the stock move
                     previous_move_lines = move_line.move_id.move_line_ids.filtered(
                         lambda ml: line_key.startswith(self._get_aggregated_properties(move=ml.move_id)['line_key']) and ml.id != move_line.id
                     )
                     qty_ordered -= sum(m.uom_id._compute_quantity(m.quantity, uom) for m in previous_move_lines)
-                    packaging_qty_ordered = move_line.uom_id._compute_quantity(qty_ordered, move_line.move_id.packaging_uom_id)
+                    packaging_qty_ordered = uom._compute_quantity(qty_ordered, move_line.move_id.packaging_uom_id)
                 aggregated_move_lines[line_key] = {
                     **aggregated_properties,
                     'quantity': quantity,
                     'packaging_quantity': packaging_quantity,
-                    'qty_ordered': qty_ordered or quantity,
-                    'packaging_qty_ordered': packaging_qty_ordered or packaging_quantity,
+                    'qty_ordered': qty_ordered if qty_ordered is not None else quantity,
+                    'packaging_qty_ordered': packaging_qty_ordered if packaging_qty_ordered is not None else packaging_quantity,
                     'product': move_line.product_id,
                 }
             else:
@@ -1200,7 +1210,7 @@ class StockMoveLine(models.Model):
         self = self.with_context(inventory_mode=False)
         processed_move_line = self.env['stock.move.line']
         for move_line in self:
-            if move_line.is_inventory and not move_line.uom_id.is_zero(move_line.quantity):
+            if (move_line.is_inventory or move_line.is_scrap) and not move_line.uom_id.is_zero(move_line.quantity):
                 processed_move_line += move_line
                 move_vals.append(move_line._get_revert_inventory_move_values())
         if not processed_move_line:

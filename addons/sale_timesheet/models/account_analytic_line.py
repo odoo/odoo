@@ -6,18 +6,13 @@ from odoo import api, fields, models, _
 from odoo.fields import Domain
 from odoo.tools.misc import unquote
 
-from odoo.addons.sale_project.models.account_analytic_line import BILLABLE_TYPES
-
 TIMESHEET_BILLABLE_TYPES = [
-    ('02_billable_fixed', 'Billed at a Fixed price'),
-    ('03_timesheet_revenues', 'Revenues Timesheets'),
-    ('04_billable_time', 'Billed on Timesheets'),
-    ('06_billable_milestones', 'Billed on Milestones'),
-    ('08_billable_manual', 'Billed Manually'),
-    ('09_non_billable', 'Non-Billable'),
+    ('02_billable_fixed', 'Timesheets (Fixed Price)'),
+    ('04_billable_time', 'Timesheets (Time & Materials)'),
+    ('06_billable_milestones', 'Timesheets (Milestones)'),
+    ('08_billable_manual', 'Timesheets (Manual) '),
+    ('09_non_billable', 'Timesheets (Non-Billable)'),
 ]
-
-BILLABLE_TYPES += TIMESHEET_BILLABLE_TYPES
 
 
 class AccountAnalyticLine(models.Model):
@@ -50,7 +45,7 @@ class AccountAnalyticLine(models.Model):
         for timesheet in self:
             timesheet.commercial_partner_id = timesheet.task_id.sudo().partner_id.commercial_partner_id or timesheet.project_id.sudo().partner_id.commercial_partner_id
 
-    @api.depends('so_line.product_id', 'project_id.billing_type', 'amount')
+    @api.depends('so_line.product_id', 'project_id.billing_type', 'amount', 'category')
     def _compute_project_billable_type(self):
         timesheets_with_project = self.filtered(lambda t: t.project_id)
         for timesheet in timesheets_with_project:
@@ -60,7 +55,7 @@ class AccountAnalyticLine(models.Model):
             elif timesheet.so_line.product_id.type == 'service':
                 if timesheet.so_line.product_id.invoice_policy == 'delivery':
                     if timesheet.so_line.product_id.service_type == 'timesheet':
-                        invoice_type = '03_timesheet_revenues' if timesheet.amount > 0 and timesheet.unit_amount > 0 else '04_billable_time'
+                        invoice_type = '04_billable_time'
                     else:
                         service_type = timesheet.so_line.product_id.service_type
                         if service_type == 'milestones':
@@ -73,6 +68,13 @@ class AccountAnalyticLine(models.Model):
                     invoice_type = '02_billable_fixed'
             timesheet.billable_type = invoice_type
         super(AccountAnalyticLine, self - timesheets_with_project)._compute_project_billable_type()
+
+    @api.depends('billable_type')
+    def _compute_category_report(self):
+        timesheets = self.filtered(lambda t: t.project_id)
+        for timesheet in timesheets:
+            timesheet.category_report = 'costs'
+        super(AccountAnalyticLine, self - timesheets)._compute_category_report()
 
     @api.depends('task_id.sale_line_id', 'project_id.sale_line_id', 'employee_id', 'project_id.allow_billable')
     def _compute_so_line(self):
@@ -180,11 +182,6 @@ class AccountAnalyticLine(models.Model):
 
     def _get_employee_mapping_entry(self):
         self.ensure_one()
-        if len(self.env.companies) == 1 or self.employee_id:
-            return self.env['project.sale.line.employee.map'].search([
-                ('project_id', '=', self.project_id.id),
-                ('employee_id', '=', self.employee_id.id or self.env.user.employee_id.id)
-            ], limit=1)
         employees = self.env['project.sale.line.employee.map'].search([
             ('project_id', '=', self.project_id.id),
             ('employee_id', 'in', self.env.user.employee_ids.ids),

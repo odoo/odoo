@@ -98,3 +98,33 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             u.create_date = datetime.now() - timedelta(days=5, minutes=10)
         with self.registry.cursor() as cr:
             users.with_env(users.env(cr=cr)).send_unregistered_user_reminder(after_days=5, batch_size=100)
+
+    def test_email_is_validated_signup(self):
+        """
+        Check that the signup form rejects invalid email addresses
+        """
+
+        # Activate free signup
+        self._activate_free_signup()
+
+        # Get csrf_token
+        self.authenticate(None, None)
+        csrf_token = self.csrf_token()
+
+        # Sign up with invalid email
+        name = 'mario'
+        payload = {
+            'login': 'mario@example',
+            'name': name,
+            'password': 'mypassword',
+            'confirm_password': 'mypassword',
+            'csrf_token': csrf_token,
+        }
+
+        # Signup attempt
+        url_free_signup = self._get_free_signup_url()
+        self.url_open(url_free_signup, data=payload)
+
+        # Expect user not to be registered because of invalid email
+        new_user = self.env['res.users'].search([('name', '=', name)])
+        self.assertFalse(new_user)

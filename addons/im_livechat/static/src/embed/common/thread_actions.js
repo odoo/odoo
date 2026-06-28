@@ -10,6 +10,7 @@ registerThreadAction("restart", {
     icon: "fa fa-fw fa-refresh",
     name: _t("Restart Conversation"),
     onSelected: ({ channel, owner }) => {
+        owner.props.chatWindow.feedbackDoneResolver?.resolve(false);
         channel.chatbot.restart();
         owner.props.chatWindow.open({ focus: true });
     },

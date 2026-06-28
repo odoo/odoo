@@ -21,6 +21,9 @@
                                 <span class="fst-italic" invisible="subject">Unspecified</span>
                                 <label for="recipient_names" string="To"/>
                                 <field name="recipient_names" invisible="not recipient_names" nolabel="1"/>
+                                <div invisible="recipient_names"/> <!-- To align Cc if recipient_names is not displayed-->
+                                <label for="recipient_cc_names" string="Cc" invisible="not recipient_cc_names"/>
+                                <field name="recipient_cc_names" invisible="not recipient_cc_names" nolabel="1"/>
                                 <span class="fst-italic" invisible="recipient_names">Unspecified</span>
                                 <field name="reply_to" invisible="not reply_to"/>
                                 <field name="scheduled_date" invisible="not scheduled_date"/>
@@ -33,6 +36,7 @@
                                     <field name="resource_ref" nolabel="1"
                                         options="{'hide_model': True, 'no_create': True, 'no_open': True, 'model_field': 'model_id'}"
                                         readonly="False"
+                                        placeholder="Select a record"
                                         invisible="no_record" widget="mail_preview_record_field"/>
                                 </div>
                             </div>

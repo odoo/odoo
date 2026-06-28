@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+<!-- Job Card -->
+<template id="job_card" name="Job Card">
+    <div class="card" t-att-data-publish="job.website_published and 'on' or 'off'">
+        <t t-if="not job.website_published" t-call="website.unpublished_badge" badge_offset="'4'"/>
+        <a t-attf-href="/jobs/#{ slug(job) }"
+                class="text-decoration-none text-reset"
+                draggable="false">
+            <div class="card-body p-4">
+                <div class="mt0 d-flex justify-content-between align-items-center">
+                    <h3 t-field="job.name"/>
+                    <span t-if="job.publish_on" class="badge pagination text-bg-warning mb8">scheduled</span>
+                </div>
+                <h5 t-if="job.no_of_recruitment &gt;= 1" class="text-reset">
+                    <span t-field="job.no_of_recruitment"/>
+                    <t t-if="job.no_of_recruitment == 1">
+                        open position
+                    </t>
+                    <t t-else="">
+                        open positions
+                    </t>
+                </h5>
+                <t t-set="job_desc_edition_placeholder">Insert a Job Description...</t>
+                <div class="o_job_card_description oe_empty text-muted mb16"
+                        t-field="job.description"
+                        t-att-data-editor-message="job_desc_edition_placeholder"/>
+                <div class="o_job_infos d-flex flex-column">
+                    <span t-field="job.address_id" class="fw-light" t-options='{"widget": "contact", "fields": ["city"], "no_tag_br": True, "null_text": "Remote"}'/>
+                    <div t-if="job.department_id"
+                            class="d-inline-flex align-items-center">
+                        <i class="fa fa-sitemap fa-fw"/><span t-field="job.department_id" class="fw-light" t-options='{"fields": ["name"], "no_tag_br": True}'/>
+                    </div>
+                    <div t-if="job.employee_type_id"
+                            class="d-inline-flex align-items-center">
+                        <i class="fa fa-suitcase fa-fw" title="Employment type" role="img" aria-label="Employment type"/><span t-field="job.employee_type_id" class="fw-light"/>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</template>
+
 <template id="index" name="Jobs">
     <t t-call="website.layout">
         <div id="wrap" class="o_website_hr_recruitment_jobs_list">
@@ -10,8 +51,10 @@
             <!-- Content -->
             <div class="container oe_website_jobs">
                 <!-- Topbar -->
-                <section class="o_wevent_index_topbar_filters d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
-                    <h1 class="me-auto mb-0 h4">Our Job Opportunities</h1>
+                <section class="o_wevent_index_topbar_filters row d-flex d-print-none align-items-center justify-content-lg-end flex-wrap mt-4 mb-3">
+                    <div class="flex-grow-1 col-12 col-lg-8">
+                        <h1 class="mb-0 h4">Our Job Opportunities</h1>
+                    </div>
                     <!-- Customizations -->
                     <t t-call="website_hr_recruitment.topbar_customizations"/>
                 </section>
@@ -45,43 +88,7 @@
                                 </div>
                             </t>
                             <div t-foreach="jobs" t-as="job" class="col-lg mb32">
-                                <div class="card" t-att-data-publish="job.website_published and 'on' or 'off'">
-                                    <t t-if="not job.website_published" t-call="website.unpublished_badge" badge_offset="'4'"/>
-                                    <a t-attf-href="/jobs/#{ slug(job) }"
-                                            class="text-decoration-none text-reset"
-                                            draggable="false">
-                                        <div class="card-body p-4">
-                                            <div class="mt0 d-flex justify-content-between align-items-center">
-                                                <h3 t-field="job.name"/>
-                                                <span t-if="job.publish_on" class="badge pagination text-bg-warning mb8">scheduled</span>
-                                            </div>
-                                            <h5 t-if="job.no_of_recruitment >= 1" class="text-reset">
-                                                <span t-field="job.no_of_recruitment"/>
-                                                <t t-if="job.no_of_recruitment == 1">
-                                                    open position
-                                                </t>
-                                                <t t-else="">
-                                                    open positions
-                                                </t>
-                                            </h5>
-                                            <t t-set="job_desc_edition_placeholder">Insert a Job Description...</t>
-                                            <div class="oe_empty text-muted mb16"
-                                                 t-field="job.description"
-                                                 t-att-data-editor-message="job_desc_edition_placeholder"/>
-                                            <div class="o_job_infos d-flex flex-column">
-                                                <span t-field="job.address_id" class="fw-light" t-options='{"widget": "contact", "fields": ["city"], "no_tag_br": True, "null_text": "Remote"}'/>
-                                                <div t-if="job.department_id"
-                                                        class="d-inline-flex align-items-center">
-                                                    <i class="fa fa-sitemap fa-fw"/><span t-field="job.department_id" class="fw-light" t-options='{"fields": ["name"], "no_tag_br": True}'/>
-                                                </div>
-                                                <div t-if="job.employee_type_id"
-                                                        class="d-inline-flex align-items-center">
-                                                    <i class="fa fa-suitcase fa-fw" title="Employment type" role="img" aria-label="Employment type"/><span t-field="job.employee_type_id" class="fw-light"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
+                                <t t-call="website_hr_recruitment.job_card"/>
                             </div>
                         </div>
                     </div>
@@ -99,9 +106,11 @@
 </template>
 
 <!-- Job Detail -->
-<template id="detail" name="Job Detail" track="1">
+<template id="detail" name="Job Detail">
     <t t-call="website.layout">
         <!-- Topbar -->
+        <t t-set="editor_message">Drag blocks here to add them on all jobs</t>
+        <div class="oe_structure oe_empty" id="oe_structure_hr_recruitment_index_0" t-att-data-editor-message="editor_message"/>
         <nav class="navbar navbar-light border-top shadow-sm d-print-none">
             <div class="container">
                 <div class="d-flex flex-column flex-md-row flex-md-wrap flex-lg-nowrap justify-content-between w-100">
@@ -114,76 +123,57 @@
                 </div>
             </div>
         </nav>
+        <div class="oe_structure oe_empty" id="oe_structure_hr_recruitment_index_1" t-att-data-editor-message="editor_message"/>
         <!-- Content -->
         <div id="wrap" class="js_hr_recruitment">
-            <div itemscope="itemscope" itemtype="https://schema.org/JobPosting">
-                <meta t-if="job.employee_type_id" itemprop="employmentType" t-att-content="job.employee_type_id.sudo().name"/>
-                <meta t-if="job.published_date" itemprop="datePosted" t-att-content="job.published_date and job.published_date.isoformat()"/>
-                <meta itemprop="title" t-att-content="job.name"/>
-                <meta itemprop="directApply" content="true"/>
-                <span itemprop="hiringOrganization" itemscope="itemscope" itemtype="https://schema.org/Organization">
-                    <meta itemprop="name" t-att-content="job.company_id.name"/>
-                    <meta itemprop="logo" t-attf-content="/logo.png?company=#{job.company_id.id}"/>
-                </span>
-                <span t-if="job.address_id.sudo().contact_address" itemprop="jobLocation" itemscope="itemscope" itemtype="https://schema.org/Place">
-                    <meta itemprop="address" t-att-content="job.address_id.sudo().contact_address"/>
-                </span>
-                <t t-else="">
-                    <meta itemprop="jobLocationType" content="TELECOMMUTE"/>
-                    <span itemprop="applicantLocationRequirements" itemscope="itemscope" itemtype="https://schema.org/Country">
-                        <meta itemprop="name" t-att-content="job.company_id.country_id.name"/>
-                    </span>
-                </t>
-                <!-- Job name -->
-                <section class="pb32">
-                    <div class="container">
-                        <div class="mt32">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <h1 t-field="job.name"/>
-                                    <h5 class="fw-light o_not_editable" t-field="job.address_id" t-options='{
-                                        "widget": "contact",
-                                        "fields": ["city"],
-                                        "no_tag_br": True,
-                                        "null_text": "Remote"
-                                    }'/>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="text-center">
-                                        <br/>
-                                        <a role="button" t-attf-href="/jobs/apply/#{slug(job)}" class="btn btn-primary btn-lg">Apply Now!</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <!-- Job Description -->
-                <section class="pt32">
-                    <div class="container">
+            <!-- Job name -->
+            <section class="pb32">
+                <div class="container">
+                    <div class="mt32">
                         <div class="row">
-                            <div class="col-lg-8 pb32" itemprop="description">
-                                <t t-set="job_desc_edition_placeholder">Insert a Job Description...</t>
-                                <div class="lead"
-                                    t-field="job.description"
-                                    t-att-data-editor-message="job_desc_edition_placeholder"/>
+                            <div class="col-md-9">
+                                <h1 t-field="job.name"/>
+                                <h5 class="fw-light o_not_editable" t-field="job.address_id" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["city"],
+                                    "no_tag_br": True,
+                                    "null_text": "Remote"
+                                }'/>
                             </div>
-                            <div class="col-lg-3 offset-lg-1 pb32">
-                                <div t-field="job.website_rating"/>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <br/>
+                                    <a role="button" t-attf-href="/jobs/apply/#{slug(job)}" class="btn btn-primary btn-lg">Apply Now!</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </section>
-                <div t-field="job.website_description"/>
-                <div class="oe_structure">
-                    <section class="o_job_bottom_bar mt24 mb48">
-                        <div class="text-center">
-                            <a role="button" t-attf-href="/jobs/apply/#{slug(job)}" class="btn btn-primary btn-lg">Apply Now!</a>
-                        </div>
-                    </section>
                 </div>
+            </section>
+            <!-- Job Description -->
+            <section class="pt32">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8 pb32">
+                            <div class="lead"
+                                t-field="job.description"/>
+                        </div>
+                        <div class="col-lg-3 offset-lg-1 pb32">
+                            <div t-field="job.website_rating"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div t-field="job.website_description"/>
+            <div class="oe_structure">
+                <section class="o_job_bottom_bar mt24 mb48">
+                    <div class="text-center">
+                        <a role="button" t-attf-href="/jobs/apply/#{slug(job)}" class="btn btn-primary btn-lg">Apply Now!</a>
+                    </div>
+                </section>
             </div>
         </div>
+        <div class="oe_structure oe_empty" id="oe_structure_hr_recruitment_index_2" t-att-data-editor-message="editor_message"/>
     </t>
 </template>
 
@@ -382,7 +372,7 @@
 <template id="default_website_rating">
     <!-- ratings -->
     <div>
-        <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
+        <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating" data-name="Rating">
             <strong class="s_rating_title">Customer Relationship</strong>
             <div class="s_rating_icons o_not_editable">
                 <span class="s_rating_active_icons text-primary">
@@ -396,7 +386,7 @@
                 </span>
             </div>
         </div>
-        <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
+        <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating" data-name="Rating">
             <strong class="s_rating_title">Personal Evolution</strong>
             <div class="s_rating_icons o_not_editable">
                 <span class="s_rating_active_icons text-primary">
@@ -410,7 +400,7 @@
                 </span>
             </div>
         </div>
-        <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
+        <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating" data-name="Rating">
             <strong class="s_rating_title">Autonomy</strong>
             <div class="s_rating_icons o_not_editable">
                 <span class="s_rating_active_icons text-primary">
@@ -424,7 +414,7 @@
                 </span>
             </div>
         </div>
-        <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
+        <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating" data-name="Rating">
             <strong class="s_rating_title">Administrative Work</strong>
             <div class="s_rating_icons o_not_editable">
                 <span class="s_rating_active_icons text-primary">
@@ -438,7 +428,7 @@
                 </span>
             </div>
         </div>
-        <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
+        <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating" data-name="Rating">
             <strong class="s_rating_title">Technical Expertise</strong>
             <div class="s_rating_icons o_not_editable">
                 <span class="s_rating_active_icons text-primary">
@@ -460,10 +450,10 @@
     <section class="s_comparisons pt24 pb24 bg-200" data-snippet="s_comparisons">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
+                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Plan">
                     <div class="card text-bg-primary">
                         <h4 class="card-header">Responsibilities</h4>
-                        <ul class="list-group list-group-flush" itemprop="responsibilities">
+                        <ul class="list-group list-group-flush">
                             <li class="list-group-item">Lead the entire sales cycle</li>
                             <li class="list-group-item">Achieve monthly sales objectives</li>
                             <li class="list-group-item">Qualify the customer needs</li>
@@ -472,10 +462,10 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
+                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Plan">
                     <div class="card text-bg-primary">
                         <h4 class="card-header">Must Have</h4>
-                        <ul class="list-group list-group-flush" itemprop="skills">
+                        <ul class="list-group list-group-flush">
                             <li class="list-group-item">Bachelor Degree or Higher</li>
                             <li class="list-group-item">Passion for software products</li>
                             <li class="list-group-item">Perfect written English</li>
@@ -484,7 +474,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
+                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Plan">
                     <div class="card text-bg-primary">
                         <h4 class="card-header">Nice to have</h4>
                         <ul class="list-group list-group-flush">
@@ -514,7 +504,7 @@
                         <li>Real responsibilities and challenges in a fast evolving company</li>
                     </ul>
                 </div>
-                <div data-name="Box" class="col-sm-4 offset-sm-1 pt16 pb16">
+                <div class="col-sm-4 offset-sm-1 pt16 pb16">
                     <div class="card shadow text-center">
                         <h5 class="card-header o_colored_level text-bg-primary">Our Product</h5>
                         <div class="card-body p-0 pt-3">
@@ -529,7 +519,7 @@
     </section>
     <!-- What we offer -->
     <section class="s_features pt64 pb64" data-name="Features" data-snippet="s_features">
-        <div class="container" itemprop="employerOverview">
+        <div class="container">
             <div class="col-lg-12">
                 <h3>What We Offer</h3>
                 <p class="lead">
@@ -542,7 +532,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-3">
-                    <div class="s_hr pt-4 pb32">
+                    <div class="s_hr pt-4 pb32" data-snippet="s_hr" data-name="Separator">
                         <hr class="w-100 mx-auto"/>
                     </div>
                     <i class="fa fa-gift mb-3 rounded fs-5 bg-o-color-3" role="img"/>
@@ -550,7 +540,7 @@
                     <p>A full-time position <br/>Attractive salary package.</p>
                 </div>
                 <div class="col-lg-3">
-                    <div class="s_hr pt-4 pb32">
+                    <div class="s_hr pt-4 pb32" data-snippet="s_hr" data-name="Separator">
                         <hr class="w-100 mx-auto"/>
                     </div>
                     <i class="fa fa-bar-chart mb-3 rounded fs-5 bg-o-color-3" role="img"/>
@@ -558,7 +548,7 @@
                     <p>12 days / year, including <br/>6 of your choice.</p>
                 </div>
                 <div class="col-lg-3">
-                    <div class="s_hr pt-4 pb32">
+                    <div class="s_hr pt-4 pb32" data-snippet="s_hr" data-name="Separator">
                         <hr class="w-100 mx-auto"/>
                     </div>
                     <i class="fa fa-futbol-o mb-3 rounded fs-5 bg-o-color-3" role="img"/>
@@ -566,7 +556,7 @@
                     <p>Play any sport with colleagues, <br/>the bill is covered.</p>
                 </div>
                 <div class="col-lg-3">
-                    <div class="s_hr pt-4 pb32">
+                    <div class="s_hr pt-4 pb32" data-snippet="s_hr" data-name="Separator">
                         <hr class="w-100 mx-auto"/>
                     </div>
                     <i class="fa fa-coffee mb-3 rounded fs-5 bg-o-color-3" role="img"/>
@@ -613,7 +603,7 @@
     <field name="arch" type="xml">
         <t name="Thank you (Recruitment)" t-name="website_hr_recruitment.thankyou">
             <t t-if="request.session.get('form_builder_model_model', '') == 'hr.applicant'">
-                <t t-set="job_sudo" t-value="request.website._website_form_last_record().sudo().job_id"/>
+                <t t-set="job_sudo" t-value="website._website_form_last_record().sudo().job_id"/>
             </t>
             <t t-call="website.layout">
                 <div id="wrap">
@@ -711,7 +701,7 @@
     <t t-set="opt_jobs_filter_count" t-value="sum([opt_jobs_filter_countries, opt_jobs_filter_departments, opt_jobs_filter_offices, opt_jobs_filter_employment_type, opt_jobs_filter_industry])"/>
     <t t-set="opt_jobs_is_filter_applied" t-value="country_id or industry_id or office_id or department_id or employee_type_id or is_remote or is_industry_untyped or is_other_department or is_untyped"/>
     <!-- Search bar -->
-    <div t-if="opt_jobs_search_bar" class="o_jobs_topbar_search_bar d-flex w-100 w-lg-25">
+    <div t-if="opt_jobs_search_bar" class="o_jobs_topbar_search_bar d-flex col-12 col-lg-4">
         <button
             t-if="opt_jobs_filter_count &gt;= 1"
             class="o_not_editable btn btn-light d-lg-none ms-2"
@@ -933,7 +923,7 @@
             id_selected_arg.f="office_id"
             all_arg.f="all_offices=1"
             unset_arg.f="is_remote=1"
-            non_filter_params.f="#{current_department_param}#{current_employment_type_param}#{current_industry_param}"
+            non_filter_params.f="#{current_department_param}#{current_employment_type_param}#{current_industry_param}#{current_country_param}"
             count_per_filter="count_per_office"
             dropdown_id.f="officesDropdown"
             untype_label.translate="Remote"/>
@@ -946,7 +936,7 @@
             id_selected_arg.f="office_id"
             all_arg.f="all_offices=1"
             unset_arg.f="is_remote=1"
-            non_filter_params.f="#{current_department_param}#{current_employment_type_param}#{current_industry_param}"
+            non_filter_params.f="#{current_department_param}#{current_employment_type_param}#{current_industry_param}#{current_country_param}"
             count_per_filter="count_per_office"
             dropdown_id.f="officesDropdown"
             untype_label.translate="Remote"/>
@@ -1041,8 +1031,7 @@
     <xpath expr="//div[hasclass('o_jobs_topbar_search_bar')]/button" position="before">
         <t t-call="website.website_search_box_input"
             _form_classes.f="flex-grow-1"
-            search_type.f="jobs"
-            display_description.f="true">
+            search_type.f="jobs">
             <input t-if="country_id" type="hidden" name="country_id" t-att-value="country_id.id"/>
             <input t-if="office_id" type="hidden" name="office_id" t-att-value="office_id.id"/>
             <input t-if="department_id" type="hidden" name="department_id" t-att-value="department_id.id"/>

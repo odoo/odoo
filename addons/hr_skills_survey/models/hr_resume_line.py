@@ -18,11 +18,12 @@ class HrResumeLine(models.Model):
     @api.depends('date_end')
     def _compute_expiration_status(self):
         self.expiration_status = 'valid'
+        today = fields.Date.context_today(self)
         for line in self:
             if line.date_end:
-                if line.date_end <= fields.Date.today():
+                if line.date_end <= today:
                     line.expiration_status = 'expired'
-                elif line.date_end + relativedelta(months=-3) <= fields.Date.today():
+                elif line.date_end + relativedelta(months=-3) <= today:
                     line.expiration_status = 'expiring'
 
     def copy_data(self, default=None):

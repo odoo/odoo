@@ -22,7 +22,9 @@ class ProductFeed(models.Model):
     _description = "Product Feed"
 
     name = fields.Char(required=True)
-    website_id = fields.Many2one("website", required=True)
+    website_id = fields.Many2one(
+        "website", required=True, index=True, default=lambda self: self.env.company.website_id
+    )
     pricelist_id = fields.Many2one(
         "product.pricelist",
         help="Specify a pricelist to localize the feed with a specific currency."
@@ -132,7 +134,7 @@ class ProductFeed(models.Model):
             self.cache_expiry = fields.Datetime.today() + relativedelta(days=1)
             return compressed_gmc_xml  # Avoid encoding and directly decoding
 
-        return self.feed_cache
+        return self.feed_cache.content
 
     def _render_gmc_feed(self):
         """Render the Google Merchant Center feed.
@@ -167,7 +169,7 @@ class ProductFeed(models.Model):
             "items": self._prepare_gmc_items(),
         }
 
-        return self.env["ir.ui.view"].sudo()._render_template("website_sale.gmc_xml", gmc_data)
+        return self.website_id.sudo()._render_template("website_sale.gmc_xml", gmc_data)
 
     def _prepare_gmc_items(self):
         """Prepare Google Merchant Center items' fields.
@@ -200,6 +202,7 @@ class ProductFeed(models.Model):
                 **self._prepare_gmc_identifier(product),
                 **self._prepare_gmc_image_links(product, base_url),
                 **price_info,
+                **self._prepare_gmc_weight_info(product),
                 **self._prepare_gmc_stock_info(product),
                 **self._prepare_gmc_additional_info(product),
             }
@@ -225,7 +228,7 @@ class ProductFeed(models.Model):
         # Send an early warning to the website manager if the number of products exceeds the
         # midpoint between the soft and hard limit.
         if len(products) > (const.PRODUCT_FEED_SOFT_LIMIT + const.PRODUCT_FEED_HARD_LIMIT) / 2:
-            today = fields.Date.today()
+            today = fields.Date.context_today(self)
             if (
                 not self.last_notification_date
                 or relativedelta(today, self.last_notification_date).weeks > 0
@@ -244,7 +247,7 @@ class ProductFeed(models.Model):
 
         return products
 
-    def _prepare_gmc_identifier(self, product):  # noqa: PLR6301
+    def _prepare_gmc_identifier(self, product):
         """Prepare the product identifiers for Google Merchant Center.
 
         :return: The barcode of the product as GTIN
@@ -254,7 +257,7 @@ class ProductFeed(models.Model):
             return {"gtin": product.barcode, "identifier_exists": "yes"}
         return {"identifier_exists": "no"}
 
-    def _prepare_gmc_image_links(self, product, base_url):  # noqa: PLR6301
+    def _prepare_gmc_image_links(self, product, base_url):
         """Prepare the product image links for Google Merchant Center.
 
         :return: The main product image link, and the extra images. No videos.
@@ -289,12 +292,13 @@ class ProductFeed(models.Model):
         )
         combination_info = product.with_context(
             **price_context
-        ).product_tmpl_id._get_additionnal_combination_info(
+        ).product_tmpl_id._get_additional_combination_info(
             product,
             quantity=1.0,
             uom=product.uom_id,
-            date=fields.Date.context_today(self),
             website=self.website_id,
+            pricelist=request.pricelist,
+            fiscal_position=request.fiscal_position,
         )
         if combination_info["prevent_sale"]:
             return {}
@@ -346,16 +350,29 @@ class ProductFeed(models.Model):
 
         return price_info
 
-    def _prepare_gmc_stock_info(self, _product):  # noqa: PLR6301
-        """Intended to be overridden in stock."""
-        return {"availability": "in_stock"}
+    def _prepare_gmc_weight_info(self, product):
+        """Prepare weight-related information for Google Merchant Center.
 
-    def _prepare_gmc_additional_info(self, product):  # noqa: PLR6301
+        :return: A dictionary containing:
+            - Weight + Weight UoM
+        :rtype: dict
+        """
+        weight, uom = product.weight, product.weight_uom_name
+        if weight:
+            return {"product_weight": f"{weight} {uom}"}
+
+        return {}
+
+    def _prepare_gmc_stock_info(self, product):
+        """Prepare availability info for Google Merchant Center."""
+        return {"availability": "out_of_stock" if product._is_sold_out() else "in_stock"}
+
+    def _prepare_gmc_additional_info(self, product):
+        direct, others = product._split_standard_from_custom_attributes()
+
         additional_info = {
-            "product_detail": [
-                (attr.attribute_id.name, attr.name)
-                for attr in product.product_template_attribute_value_ids
-            ],
+            "gmc_direct_attributes": list(direct.items()),
+            "product_detail": list(others.items()),
             "is_bundle": "yes" if product.type == "combo" else "no",
             "product_type": [
                 category.replace("/", ">")  # Google uses a different format

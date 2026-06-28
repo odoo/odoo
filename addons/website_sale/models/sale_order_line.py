@@ -5,10 +5,16 @@ from odoo.exceptions import UserError
 
 
 class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
+    _name = "sale.order.line"
+    _inherit = [
+        "sale.order.line",
+        # Add global alert to the order lines, rendered on the checkout page.
+        # Note: alerts are transient, they are cleared after being rendered.
+        "website.checkout.alert.mixin",
+    ]
 
     name_short = fields.Char(compute="_compute_name_short")
-    shop_warning = fields.Char(string="Warning")
+    is_donation = fields.Boolean(compute="_compute_is_donation")
 
     # === COMPUTE METHODS ===#
 
@@ -26,7 +32,7 @@ class SaleOrderLine(models.Model):
     # === BUSINESS METHODS ===#
 
     def get_description_following_lines(self):
-        return reversed(self.name.splitlines()[1:])
+        return self.name.splitlines()[1:]
 
     def _get_combination_name(self):
         return self.product_id.product_template_attribute_value_ids._get_combination_name()
@@ -44,13 +50,6 @@ class SaleOrderLine(models.Model):
             # creation date.
             return fields.Datetime.now()
         return super()._get_order_date()
-
-    def _get_shop_warning(self, clear=True):
-        self.ensure_one()
-        warn = self.shop_warning
-        if clear:
-            self.shop_warning = ""
-        return warn
 
     def _get_displayed_unit_price(self):
         show_tax = self.order_id.website_id.show_line_subtotals_tax_selection
@@ -87,17 +86,13 @@ class SaleOrderLine(models.Model):
         )
         return (int(rounded_uom_qty) == rounded_uom_qty and int(rounded_uom_qty)) or rounded_uom_qty
 
-    def _show_in_cart(self):
-        self.ensure_one()
-        # Exclude delivery & section/note lines from showing up in the cart
-        return not self.is_delivery and not bool(self.display_type) and not bool(self.combo_item_id)
-
     def _is_reorder_allowed(self):
         self.ensure_one()
         return (
             bool(self.product_id)
             and self.product_id._is_add_to_cart_allowed()
-            and self._show_in_cart()
+            and self._is_product_line()
+            and not self.combo_item_id
         )
 
     def _get_cart_display_price(self):
@@ -151,3 +146,73 @@ class SaleOrderLine(models.Model):
         :rtype: bool
         """
         return self.product_id.is_published and not self.is_delivery
+
+    @api.depends("product_id")
+    def _compute_is_donation(self):
+        for line in self:
+            line.is_donation = bool(line.product_id and line.product_id._is_donation())
+
+    def _compute_price_unit(self):
+        """Override of `sale` to prevent recomputing the price of donation lines.
+
+        Donation lines have a user-selected price that must never be overwritten by pricelist rules.
+        """
+        donation_lines = self.filtered("is_donation")
+        super(SaleOrderLine, self - donation_lines)._compute_price_unit()
+
+    def _compute_discount(self):
+        donation_lines = self.filtered("is_donation")
+        donation_lines.discount = 0.0
+        super(SaleOrderLine, self - donation_lines)._compute_discount()
+
+    def _get_max_line_qty(self):
+        max_quantity = self._get_max_available_qty()
+        return self.product_uom_qty + max_quantity if (max_quantity is not None) else None
+
+    def _get_max_available_qty(self):
+        """Return the max quantity of a combo product.
+
+        It is the max quantity of its selected combo item with the lowest max quantity. If none of
+        the combo items has a max quantity, then the combo product also has no max quantity.
+        """
+        self.ensure_one()
+        cart_and_free_quantities = [
+            line.order_id._get_cart_and_free_qty(line.product_id)
+            for line in self._get_lines_with_price()
+            if line.product_id.is_storable and not line.product_id.allow_out_of_stock_order
+        ]
+        max_quantities = [free_qty - cart_qty for cart_qty, free_qty in cart_and_free_quantities]
+        return min(max_quantities, default=None)
+
+    def _get_shop_warning_stock(self, desired_quantity, available_quantity):
+        self.ensure_one()
+        if available_quantity <= 0.0:
+            return self.env._("This product is no longer available.")
+        return self.env._(
+            "You requested %(desired)g %(product_name)s, but only %(available)g are available in"
+            " stock.",
+            desired=desired_quantity,
+            product_name=self.product_id.display_name,
+            available=available_quantity,
+        )
+
+    def _check_availability(self):
+        """Check there is sufficient stock to fulfill the cart quantity for the product in the
+        current line.
+
+        Note: `self.ensure_one()`.
+
+        :return: True if the product is available, False otherwise.
+        :rtype: bool
+        """
+        self.ensure_one()
+        if self.product_id.is_storable and not self.product_id.allow_out_of_stock_order:
+            cart_qty, avl_qty = self.order_id._get_cart_and_free_qty(self.product_id)
+            if cart_qty > avl_qty:
+                self._add_warning_alert(self._get_shop_warning_stock(cart_qty, max(avl_qty, 0)))
+                return False
+        return True
+
+    def _show_line_in_cart(self):
+        self.ensure_one()
+        return self._is_product_line() and not self.combo_item_id

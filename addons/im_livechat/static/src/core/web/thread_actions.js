@@ -58,6 +58,9 @@ registerThreadAction("livechat-status", {
 });
 
 patch(joinChannelAction, {
+    condition({ channel }) {
+        return super.condition(...arguments) && !channel?.livechat_end_dt;
+    },
     async onSelected({ channel, store }) {
         if (channel.livechat_status === "need_help") {
             const hasJoined = await store.env.services.orm.call(

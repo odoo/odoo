@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, Portal, signal, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { getLastConnectedUsers, setLastConnectedUsers } from "@web/core/user";
 import { imageUrl } from "@web/core/utils/urls";
@@ -7,11 +7,13 @@ import { imageUrl } from "@web/core/utils/urls";
 export class UserSwitch extends Component {
     static template = "web.login_user_switch";
     static props = {};
+    static components = { Portal };
+
+    rootRef = signal(null);
 
     setup() {
         const users = getLastConnectedUsers();
-        this.root = useRef("root");
-        this.state = useState({
+        this.state = proxy({
             users,
             displayUserChoice: users.length > 1,
         });
@@ -20,7 +22,7 @@ export class UserSwitch extends Component {
         this.form.querySelector(":placeholder-shown")?.focus();
         useLayoutEffect(
             (el) => el?.querySelector("button.list-group-item-action")?.focus(),
-            () => [this.root.el]
+            () => [this.rootRef()]
         );
     }
 

@@ -2,8 +2,8 @@ import { after, beforeEach, expect, runAllTimers, test } from "@odoo/hoot";
 import {
     animationFrame,
     click,
-    Deferred,
     edit,
+    pointerDown,
     press,
     queryAll,
     queryAllProperties,
@@ -12,6 +12,7 @@ import {
     queryFirst,
     queryValue,
     resize,
+    waitFor,
 } from "@odoo/hoot-dom";
 import { disableAnimations, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import { editTime } from "@web/../tests/core/datetime/datetime_test_helpers";
@@ -1173,6 +1174,52 @@ test("list daterange: start date input width matches its span counterpart", asyn
     expect(".o_field_daterange input").toHaveProperty("offsetWidth", initialWidth + 1);
 });
 
+test(`list daterange in x2many: open/close picker`, async () => {
+    Partner._fields.foo_o2m = fields.One2many({ relation: "partner" });
+    Partner._fields.date_end = fields.Date();
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="foo_o2m">
+                        <list editable="bottom">
+                            <field name="date" widget="daterange" options="{'end_date_field': 'date_end', 'always_range': True}"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        `,
+        resId: 1,
+    });
+
+    await contains(`.o_field_x2many_list_row_add button`).click();
+    await contains(`.o_data_row .o_field_widget[name=date] input`).click();
+    await waitFor(".o_datetime_picker");
+    expect(".o_datetime_picker").toBeDisplayed();
+    expect("input[data-field=date]").toBeFocused();
+
+    await contains(getPickerCell("15")).click();
+    await contains(getPickerCell("20")).click();
+
+    if (getMockEnv().isSmall) {
+        // Close the bottom sheet
+        await click(".o_bottom_sheet_backdrop");
+    } else {
+        // Close picker
+        await pointerDown(`.o_view_controller`);
+    }
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(0);
+
+    // Wait to check if the picker is still closed
+    await animationFrame();
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(0);
+});
+
 test("always range: related end date, both start date and end date empty", async () => {
     Partner._records[0].datetime = false;
 
@@ -1199,8 +1246,9 @@ test("always range: related end date, both start date and end date empty", async
     expect(".o_field_daterange input:eq(1)").toHaveAttribute("data-field", "datetime_end");
     expect(".o_field_daterange input:eq(1)").toHaveValue("");
     expect(".o_toggle_range").toHaveCount(0);
-    await contains(".o_field_daterange input:eq(1)").edit("07/07/2023 13:00:00");
-    await animationFrame();
+    await contains(".o_field_daterange input:eq(1)").edit("07/07/2023 13:00:00", {
+        confirm: "blur",
+    });
 
     expect(".o_field_daterange button").toHaveCount(2);
     expect(".o_field_daterange button:eq(0)").toHaveAttribute("data-field", "datetime");
@@ -1210,7 +1258,6 @@ test("always range: related end date, both start date and end date empty", async
     expect(".o_toggle_range").toHaveCount(0);
     await contains(".o_field_daterange button:eq(0)").click();
     await contains(".o_field_daterange input").clear();
-    await animationFrame();
 
     expect(".o_field_daterange input").toHaveCount(1);
     expect(".o_field_daterange input").toHaveAttribute("data-field", "datetime");
@@ -1289,9 +1336,9 @@ test.tags("desktop");
 test("date values are selected eagerly and do not flicker", async () => {
     Partner._onChanges.datetime = () => {};
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("onchange", async () => {
-        await def;
+        await def.promise;
         expect.step("onchange");
     });
 
@@ -1489,29 +1536,4 @@ test("DateRangeField contains a calendar icon on touch devices", async () => {
     expect(".o_field_daterange .o_input").toHaveCount(2);
     expect(".fa-calendar").toHaveCount(1);
     expect(".fa-calendar").toBeVisible();
-});
-
-test("DateRangeField has the right padding on touch devices with overlay suffix", async () => {
-    Partner._records[0].datetime_end = "2017-02-01 00:00:00";
-    // The icon is only visible on touch devices, using css rules
-    document.body.classList.add("o_touch_device");
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `
-            <form>
-                <div class="o_input_box">
-                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}"/>
-                    <i class="fa fa-close btn btn-link o_input_box_overlay_end"/>
-                </div>
-            </form>`,
-        resId: 1,
-    });
-    const gap = parseInt(
-        getComputedStyle(queryFirst(".o_input_box")).getPropertyValue("--inputbox-spacing-unit")
-    );
-    const targetPaddingStart = 1.5 * gap + (queryFirst(".o_input_box_overlay_start").clientWidth + gap)
-    const targetPaddingEnd = queryFirst(".o_input_box_overlay_end").clientWidth + 2 * gap;
-    expect(getComputedStyle(queryFirst(".o_daterange_start")).paddingInline).toBe(`${targetPaddingStart}px 0px`);
-    expect(getComputedStyle(queryFirst(".o_daterange_end")).paddingInline).toBe(`0px ${targetPaddingEnd}px`);
 });

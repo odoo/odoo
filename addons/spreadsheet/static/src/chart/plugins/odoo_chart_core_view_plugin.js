@@ -12,6 +12,7 @@ export class OdooChartCoreViewPlugin extends OdooUIPlugin {
         super(config);
 
         this.custom = config.custom;
+        this._pendingAddDomains = false;
 
         /** @type {Record<string, ChartDataSource>} */
         this.charts = {};
@@ -23,13 +24,9 @@ export class OdooChartCoreViewPlugin extends OdooUIPlugin {
                 for (const chartId of this.getters.getOdooChartIds()) {
                     this._setupChartDataSource(chartId);
                 }
-
-                // make sure the domains are correctly set before
-                // any evaluation
-                this._addDomains();
                 break;
             case "UPDATE_CHART": {
-                if (cmd.definition.type.startsWith("odoo_")) {
+                if (cmd.definition.dataSource?.type === "odoo") {
                     const chart = this.getters.getChart(cmd.chartId);
                     if (this._shouldReloadDataSource(cmd.chartId, cmd.definition)) {
                         this.shouldChartUpdateReloadDataSource = true;
@@ -51,18 +48,17 @@ export class OdooChartCoreViewPlugin extends OdooUIPlugin {
     handle(cmd) {
         switch (cmd.type) {
             case "CREATE_CHART": {
-                if (cmd.definition.type.startsWith("odoo_")) {
+                if (cmd.definition.dataSource?.type === "odoo") {
                     this._setupChartDataSource(cmd.chartId);
                 }
                 break;
             }
             case "UPDATE_CHART": {
-                if (cmd.definition.type.startsWith("odoo_")) {
+                if (cmd.definition.dataSource?.type === "odoo") {
                     if (this.shouldChartUpdateReloadDataSource) {
                         this._resetChartDataSource(cmd.chartId);
                         this.shouldChartUpdateReloadDataSource = false;
                     }
-                    this._setChartDataSource(cmd.chartId);
                 }
                 break;
             }
@@ -70,7 +66,7 @@ export class OdooChartCoreViewPlugin extends OdooUIPlugin {
             case "EDIT_GLOBAL_FILTER":
             case "REMOVE_GLOBAL_FILTER":
             case "SET_GLOBAL_FILTER_VALUE":
-                this._addDomains();
+                this._pendingAddDomains = true;
                 break;
             case "UNDO":
             case "REDO": {
@@ -102,6 +98,13 @@ export class OdooChartCoreViewPlugin extends OdooUIPlugin {
             case "REFRESH_ALL_DATA_SOURCES":
                 this._refreshOdooCharts();
                 break;
+        }
+    }
+
+    finalize() {
+        if (this._pendingAddDomains) {
+            this._addDomains();
+            this._pendingAddDomains = false;
         }
     }
 
@@ -170,20 +173,10 @@ export class OdooChartCoreViewPlugin extends OdooUIPlugin {
      * @param {string} chartId
      */
     _resetChartDataSource(chartId) {
-        const definition = this.getters.getChart(chartId).getDefinitionForDataSource();
+        const definition = this.getters.getChartDefinition(chartId);
         const dataSourceId = this._getOdooChartDataSourceId(chartId);
         this.charts[dataSourceId] = new ChartDataSource(this.custom, definition);
         this._addDomain(chartId);
-        this._setChartDataSource(chartId);
-    }
-
-    /**
-     * Sets the datasource on the corresponding chart
-     * @param {string} chartId
-     */
-    _setChartDataSource(chartId) {
-        const chart = this.getters.getChart(chartId);
-        chart.setDataSource(this.getChartDataSource(chartId));
     }
 
     _getOdooChartDataSourceId(chartId) {
@@ -208,14 +201,19 @@ export class OdooChartCoreViewPlugin extends OdooUIPlugin {
     }
 
     _shouldReloadDataSource(chartId, definition) {
-        const chart = this.getters.getChart(chartId);
-        const dataSource = this.getChartDataSource(chartId);
+        const newDataSource = definition.dataSource;
+        const currentDefinition = this.getters.getChartDefinition(chartId);
+        const currentDataSource = currentDefinition.dataSource;
+        const dataSourceInstance = this.getChartDataSource(chartId);
         return (
-            !deepEqual(chart.searchParams.groupBy, definition.searchParams.groupBy) ||
-            chart.metaData.cumulated !== definition.cumulative ||
-            chart.cumulatedStart !== definition.cumulatedStart ||
-            dataSource.getInitialDomainString() !==
-                new Domain(definition.searchParams.domain).toString()
+            !deepEqual(
+                currentDataSource.searchParams.groupBy,
+                newDataSource.searchParams.groupBy
+            ) ||
+            currentDataSource.metaData.cumulated !== newDataSource.cumulative ||
+            currentDataSource.cumulatedStart !== newDataSource.cumulatedStart ||
+            dataSourceInstance.getInitialDomainString() !==
+                new Domain(newDataSource.searchParams.domain).toString()
         );
     }
 }

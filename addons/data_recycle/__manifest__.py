@@ -13,13 +13,14 @@
         'views/data_recycle_record_views.xml',
         'views/data_cleaning_menu.xml',
         'views/data_recycle_templates.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'application': True,
     'assets': {
         'web.assets_backend': [
+            'data_recycle/static/src/cog_menu/data_refresh_cog_menu.js',
+            'data_recycle/static/src/cog_menu/data_refresh_cog_menu.xml',
             'data_recycle/static/src/views/*.js',
-            'data_recycle/static/src/views/*.xml',
         ],
     },
     'author': 'Odoo S.A.',

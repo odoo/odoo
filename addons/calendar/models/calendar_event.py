@@ -3,9 +3,10 @@
 import itertools
 import logging
 import math
+import re
 import uuid
+from babel.dates import parse_time
 from datetime import datetime, timedelta, UTC
-from itertools import repeat
 from zoneinfo import ZoneInfo
 
 from markupsafe import Markup
@@ -25,9 +26,10 @@ from odoo.addons.calendar.models.calendar_recurrence import (
     BYDAY_SELECTION
 )
 from odoo.addons.calendar.models.utils import interval_from_events
+from odoo.addons.mail.tools.discuss import Store
 from odoo.tools.intervals import intervals_overlap
 from odoo.tools.translate import _
-from odoo.tools.misc import get_lang
+from odoo.tools.misc import get_lang, babel_locale_parse
 from odoo.tools import html2plaintext, html_sanitize, is_html_empty, single_email_re
 from odoo.exceptions import UserError, ValidationError
 
@@ -51,6 +53,29 @@ RRULE_TYPE_SELECTION_UI = [
     ('yearly', 'Yearly'),
     ('custom', 'Custom')
 ]
+
+# regex to match common ways to represent time
+# (9h, 9H, 9:00, 09:00, 9 am, 9am, 9a.m. 21h, 21:30, 9-10, 9-11h...)
+HOUR = r'(?:[01]?\d|2[0-3])'  # 0-23
+MINUTES = r'(?:[0-5]\d)'  # :00-:59
+SUFFIX = r'(?:h|hr|am|pm|a\.m\.?|p\.m\.?)'
+RANGE_DELIM = r'(?:-|–|to)'
+HOUR_WITH_MINUTES = rf'{HOUR}:{MINUTES}\s*{SUFFIX}?'
+HOUR_WITH_SUFFIX = rf'{HOUR}\s*{SUFFIX}'
+LOOSE_TIME = rf'(?:{HOUR_WITH_MINUTES}|{HOUR_WITH_SUFFIX}|{HOUR})'
+# Hour range uses lookahead, to make sure that a delimiter and a time follow.
+# Needed to disallow single hours 'meeting 5', but match ranges like '5-7pm'
+HOUR_RANGE = rf'{HOUR}(?=\s*{RANGE_DELIM}\s*{LOOSE_TIME})'
+TIME_REGEX = re.compile(
+    rf'''
+    (?:^|\s) # start of string or space
+    ({HOUR_WITH_MINUTES}|{HOUR_WITH_SUFFIX}|{HOUR_RANGE})  # Valid start times, with an optional range lookahead
+    (?:\s*{RANGE_DELIM}\s*({LOOSE_TIME}))? # Optional end time
+    (?:$|\s) # end of string or space
+    ''',
+    re.IGNORECASE | re.VERBOSE,
+)
+
 
 def get_weekday_occurence(date):
     """
@@ -129,6 +154,14 @@ class CalendarEvent(models.Model):
         start = now + (datetime.min - now) % timedelta(minutes=30)
         return start + timedelta(hours=duration_hours)
 
+    @api.model
+    def _get_model_selection(self):
+        return [
+            (model.model, model.name)
+            for model in self.env['ir.model'].sudo().search(
+                [('is_mail_thread', '=', True), ('abstract', '=', False), ('transient', '=', False)])
+        ]
+
     # description
     name = fields.Char('Meeting Subject', required=True)
     description = fields.Html('Description',
@@ -194,10 +227,12 @@ class CalendarEvent(models.Model):
     duration = fields.Float('Duration', compute='_compute_duration', store=True, readonly=False)
     # linked document
     res_id = fields.Many2oneReference('Document ID', model_field='res_model')
-    res_model_id = fields.Many2one('ir.model', 'Document Model', ondelete='cascade')
+    res_model_id = fields.Many2one('ir.model', 'Document Model', ondelete='cascade', index=True)
     res_model = fields.Char(
         'Document Model Name', related='res_model_id.model', readonly=True, store=True)
     res_model_name = fields.Char(related='res_model_id.name')
+    res_record = fields.Reference(string="Linked to", selection='_get_model_selection',
+         compute='_compute_res_record', inverse='_inverse_res_record')
     # messaging
     meeting_activity_ids = fields.One2many('mail.activity', 'calendar_event_id', string='Meeting Activities')
     # attendees
@@ -214,8 +249,8 @@ class CalendarEvent(models.Model):
     # alarms
     alarm_ids = fields.Many2many(
         'calendar.alarm', 'calendar_alarm_calendar_event_rel',
+        compute="_compute_alarm_ids", store=True, readonly=False,
         string='Reminders', ondelete="restrict",
-        default=lambda self: self.env.ref('calendar.alarm_notif_1', raise_if_not_found=False),
         help="Notifications sent to all attendees to remind of the meeting.")
     # RECURRENCE FIELD
     recurrency = fields.Boolean('Recurrent')
@@ -296,6 +331,15 @@ class CalendarEvent(models.Model):
                 ('id', operator, value)
             ])
         ]
+
+    @api.depends('allday')
+    def _compute_alarm_ids(self):
+        """ Set a default alarm on the event if it's not all day. No default alarm if all day."""
+        default_alarm_id = self.env.ref('calendar.alarm_notif_1', raise_if_not_found=False)
+        for event in self:
+            if event.alarm_ids and event.alarm_ids._origin != default_alarm_id:
+                continue
+            event.alarm_ids = False if event.allday else default_alarm_id
 
     @api.depends('attendee_ids', 'attendee_ids.state', 'partner_ids')
     def _compute_attendees_count(self):
@@ -397,6 +441,23 @@ class CalendarEvent(models.Model):
     def _compute_duration(self):
         for event in self:
             event.duration = self._get_duration(event.start, event.stop)
+
+    @api.depends('res_model', 'res_id')
+    def _compute_res_record(self):
+        for event in self:
+            event.res_record = (
+                f"{event.res_model},{event.res_id}"
+                if event.res_model and event.res_id else False
+            )
+
+    def _inverse_res_record(self):
+        for event in self:
+            if not event.res_record:
+                event.res_model_id = False
+                event.res_id = False
+                continue
+            event.res_model_id = self.env['ir.model']._get_id(event.res_record._name)
+            event.res_id = event.res_record.id
 
     @api.depends('start', 'duration')
     def _compute_stop(self):
@@ -591,6 +652,58 @@ class CalendarEvent(models.Model):
         access_token = uuid.uuid4().hex
         return f"{self.get_base_url()}/{self.DISCUSS_ROUTE}/{access_token}"
 
+    @api.onchange('name')
+    def _onchange_name_extract_time(self):
+        for event in self:
+            if not event.env.context.get("is_quick_create_form") or not event.name or not event.allday:
+                continue
+
+            parsed_time = event._parse_time_from_title()
+            if not parsed_time:
+                continue
+
+            event.update({
+                'allday': False,
+                'start': parsed_time[0],
+                'stop': parsed_time[1],
+            })
+
+    def _parse_time_from_title(self):
+        """Extract datetime information from an event title.
+        Returns a tuple of (start_datetime_utc, end_datetime_utc) or None if no time is found."""
+        match = TIME_REGEX.search(self.name)
+        if not match:
+            return None
+
+        start_raw, end_raw = match.groups()
+
+        locale = babel_locale_parse(get_lang(self.env).code)
+        start_time = parse_time(start_raw, locale=locale)
+        end_time = parse_time(end_raw, locale=locale) if end_raw else None
+
+        # The user enters the meeting time in their own timezone, but we store it as UTC
+        tz_name = self.env.context.get('tz') or self.env.user.tz or 'UTC'
+        tz = ZoneInfo(tz_name)
+
+        # Combine event date and parsed time, using the user's timezone
+        start_local_dt = datetime.combine(self.start.date(), start_time, tzinfo=tz)
+        if end_time:
+            end_local_dt = datetime.combine(self.start.date(), end_time, tzinfo=tz)
+        else:
+            end_local_dt = start_local_dt + timedelta(hours=1)
+
+        # 9 to 5 should assume 9am to 5pm
+        if start_local_dt > end_local_dt and start_local_dt.hour <= 12:
+            end_local_dt += timedelta(hours=12)
+
+        # Handle overnight events edge case (e.g. 23:00 - 01:00)
+        if end_local_dt <= start_local_dt:
+            end_local_dt += timedelta(days=1)
+
+        start_utc = start_local_dt.astimezone(UTC).replace(tzinfo=None)
+        end_utc = end_local_dt.astimezone(UTC).replace(tzinfo=None)
+        return start_utc, end_utc
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
@@ -726,7 +839,7 @@ class CalendarEvent(models.Model):
                 detached_events = event.with_context(skip_contact_description=True)._apply_recurrence_values(recurrence_values)
                 detached_events.active = False
 
-        events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_invitation_emails()
+        events.attendee_ids._send_invitation_emails()
 
         # update activities based on calendar event data, unless already prepared
         # above manually. Heuristic: a new command (0, 0, vals) is considered as
@@ -806,7 +919,7 @@ class CalendarEvent(models.Model):
                         new_partner_ids.append(command[1])
                     elif command[0] == Command.SET:
                         new_partner_ids.extend(command[2])
-                self.videocall_channel_id.add_members(new_partner_ids)
+                self.videocall_channel_id._add_members(partners=self.env["res.partner"].browse(new_partner_ids))
 
         time_fields = self.env['calendar.event']._get_time_fields()
         if any([values.get(key) for key in time_fields]):
@@ -864,12 +977,9 @@ class CalendarEvent(models.Model):
 
         current_attendees = self.filtered('active').attendee_ids
         skip_attendee_notification = self.env.context.get('skip_attendee_notification')
-        if not skip_attendee_notification and 'partner_ids' in values:
-            # we send to all partners and not only the new ones
-            (current_attendees - previous_attendees)._notify_attendees(
-                self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False),
-                force_send=True,
-            )
+        invited_attendees = self._get_new_invited_attendees(current_attendees, previous_attendees, vals)
+        if not skip_attendee_notification and invited_attendees:
+            invited_attendees._send_invitation_emails()
         if not skip_attendee_notification and not self.env.context.get('is_calendar_event_new') and 'start' in values:
             start_date = fields.Datetime.to_datetime(values.get('start'))
             # Only notify on future events
@@ -901,7 +1011,7 @@ class CalendarEvent(models.Model):
         if not self.env.su:
             for event in self:
                 if event._check_private_event_conditions():
-                    raise self.env['ir.rule']._make_access_error("write", event)
+                    raise event._make_access_error_message('write', Domain.TRUE)  # noqa: EM101
 
     def _check_private_event_conditions(self):
         """ Checks if the event is private, returning True if the conditions match and False otherwise. """
@@ -1084,11 +1194,17 @@ class CalendarEvent(models.Model):
             if event_with_channel:
                 self.videocall_channel_id = event_with_channel.videocall_channel_id
                 return
-        self.videocall_channel_id = self._create_videocall_channel_id(self.name, self.partner_ids.ids)
+        self.videocall_channel_id = self._create_videocall_channel_id(
+            self.name, self.partner_ids.user_ids,
+        )
         self.videocall_channel_id.channel_change_description(self.recurrence_id.name if self.recurrency else self.display_time)
 
-    def _create_videocall_channel_id(self, name, partner_ids):
-        videocall_channel = self.env['discuss.channel']._create_group(partner_ids, default_display_mode='video_full_screen', name=name)
+    def _create_videocall_channel_id(self, name, users):
+        videocall_channel = self.env["discuss.channel"]._create_group(
+            users,
+            default_display_mode="video_full_screen",
+            name=name,
+        )
         # if recurrent event, set channel to all other records of the same recurrency
         if self.recurrency:
             recurrent_events_without_channel = self.env['calendar.event'].search([
@@ -1117,7 +1233,7 @@ class CalendarEvent(models.Model):
         """
         self.ensure_one()
         now = fields.Datetime.now()
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
 
         # For all-day events
         if self.allday:
@@ -1140,7 +1256,7 @@ class CalendarEvent(models.Model):
 
     def action_open_calendar_event(self):
         if self.res_model and self.res_id:
-            return self.env[self.res_model].browse(self.res_id).get_formview_action()
+            return self.env[self.res_model].browse(self.res_id).get_record_default_action()
         return False
 
     def action_sendmail(self):
@@ -1247,7 +1363,7 @@ class CalendarEvent(models.Model):
                 if 'user_id' in fields:
                     activity_values['user_id'] = event.user_id.id
                 if activity_values.keys():
-                    event.meeting_activity_ids.write(activity_values)
+                    event.meeting_activity_ids.with_context(calendar_event_meeting_update=True).write(activity_values)
 
     @api.model
     def _get_activity_deadline_from_start(self, start, allday):
@@ -1581,7 +1697,7 @@ class CalendarEvent(models.Model):
         :return: date
         """
         if not self.start:
-            return fields.Date.today()
+            return fields.Date.context_today(self)
         if self.recurrency and self.event_tz:
             # Ensure that all day events date are not calculated around midnight. TZ shift would potentially return bad date
             start = self.start if not self.allday else self.start.replace(hour=12)
@@ -1666,7 +1782,7 @@ class CalendarEvent(models.Model):
     @api.model
     def _get_contact_details_description(self, organizer, partners):
         """Build sanitized HTML with the organizer details and the details
-        of the contact partner (the first partner which is not the organizer).
+        of the contact partner (only when there is a single non-organizer attendee).
         """
         odoobot = self.env.ref('base.user_root')
         contact_description = []
@@ -1674,12 +1790,18 @@ class CalendarEvent(models.Model):
         if organizer and organizer != odoobot:
             contact_description.extend(self._prepare_partner_contact_details_html(_("Organized by"), organizer.partner_id))
         # First contact partner
-        first_partner = partners.filtered(lambda partner: partner not in (odoobot.partner_id + organizer.partner_id))[:1]
-        if first_partner:
+        contact_partners = partners.filtered(lambda partner: partner not in (odoobot.partner_id + organizer.partner_id))
+        if len(contact_partners) == 1:
             if contact_description:
                 contact_description.append("")  # To add a blank line between the organizer and partner details
-            contact_description.extend(self._prepare_partner_contact_details_html(_("Contact Details"), first_partner))
+            contact_description.extend(self._prepare_partner_contact_details_html(_("Contact Details"), contact_partners))
         return Markup("<br/>").join(contact_description)
+
+    @api.model
+    def _get_new_invited_attendees(self, current_attendees, previous_attendees, update_vals):
+        """Get the attendees who must receive an invitation for a modified calendar event. This method is meant
+        to be overridden."""
+        return current_attendees - previous_attendees
 
     @api.model
     def _prepare_partner_contact_details_html(self, section_title, partner):
@@ -1796,3 +1918,11 @@ class CalendarEvent(models.Model):
         res = res or ir_default_get('calendar.event', 'duration', company_id=True)
         res = res or ir_default_get('calendar.event', 'duration')
         return res or 1
+
+    # ------------------------------------------------------------
+    # DISCUSS
+    # ------------------------------------------------------------
+
+    def _store_calendar_event_fields(self, res: Store.FieldList):
+        res.extend(["name", "start", "stop", "location"])
+        res.many("partner_ids", ["name"])

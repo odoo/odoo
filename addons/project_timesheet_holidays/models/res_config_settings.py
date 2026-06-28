@@ -11,12 +11,12 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.internal_project_id', required=True, string="Internal Project",
         domain="[('company_id', '=', company_id), ('is_template', '=', False)]", readonly=False,
         help="The default project used when automatically generating timesheets via time off requests."
-             " You can specify another project on each time off type individually.")
+             " You can specify another project on each time type individually.")
     leave_timesheet_task_id = fields.Many2one(
         related='company_id.leave_timesheet_task_id', string="Time Off Task", readonly=False,
         domain="[('company_id', '=', company_id), ('project_id', '=?', internal_project_id), ('has_template_ancestor', '=', False)]",
         help="The default task used when automatically generating timesheets via time off requests."
-             " You can specify another task on each time off type individually.")
+             " You can specify another task on each time type individually.")
 
     @api.onchange('internal_project_id')
     def _onchange_timesheet_project_id(self):

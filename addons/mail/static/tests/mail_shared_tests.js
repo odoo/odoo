@@ -1,5 +1,14 @@
-import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
+import {
+    click,
+    contains,
+    hover,
+    openDiscuss,
+    openFormView,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
 import { expect, mockTouch, mockUserAgent, queryFirst } from "@odoo/hoot";
+import { serverState } from "@web/../tests/web_test_helpers";
 
 export async function mailCanAddMessageReactionMobile() {
     mockTouch(true);
@@ -68,4 +77,31 @@ export async function mailCanCopyTextToClipboardMobile() {
     await contains(".o-mail-Message:contains('Hello world')");
     await click(".o-mail-Message:contains('Hello world') [title='Expand']");
     await contains(".o-dropdown-item:contains('Copy Text')");
+}
+
+export async function mailChatterMessageActionsInvisibleWhenNotHovered() {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Hello world",
+        model: "res.partner",
+        res_id: partnerId,
+        message_type: "comment",
+    });
+    const isNodeVisible = (selector) => {
+        const { visibility } = getComputedStyle(queryFirst(selector));
+        return visibility === "visible";
+    };
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Message-actions.invisible");
+    await contains(".o-mail-Message-actions button", { count: 2 });
+    expect(isNodeVisible(".o-mail-Message-actions button:eq(0)")).toBe(false);
+    expect(isNodeVisible(".o-mail-Message-actions button:eq(1)")).toBe(false);
+    await hover(".o-mail-Message");
+    await contains(".o-mail-Message-actions:not(.invisible)");
+    await contains(".o-mail-Message-actions button", { count: 2 });
+    expect(isNodeVisible(".o-mail-Message-actions button:eq(0)")).toBe(true);
+    expect(isNodeVisible(".o-mail-Message-actions button:eq(1)")).toBe(true);
 }

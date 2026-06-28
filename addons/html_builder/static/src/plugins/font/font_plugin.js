@@ -33,7 +33,7 @@ export class BuilderFontPlugin extends Plugin {
             "display-4-font",
             "buttons-font",
         ],
-        font_items: [
+        font_type_items: [
             ...[
                 { name: _t("Header 1 Display 2"), tagName: "h1", extraClass: "display-2" },
                 { name: _t("Header 1 Display 3"), tagName: "h1", extraClass: "display-3" },
@@ -96,7 +96,10 @@ export class BuilderFontPlugin extends Plugin {
         for (const font of googleFonts) {
             const fontURL = `https://fonts.googleapis.com/css?family=${encodeURIComponent(
                 font
-            ).replace(/%20/g, "+")}:300,300i,400,400i,700,700i`;
+            ).replace(
+                /%20/g,
+                "+"
+            )}:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i`;
             fontsToLoad.push(fontURL);
         }
         for (const font of googleLocalFonts) {

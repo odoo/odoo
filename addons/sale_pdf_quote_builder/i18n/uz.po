@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2025-10-08 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -33,12 +33,6 @@ msgid ""
 msgstr ""
 "(object.state ('loyiha', 'yuborildi') holatida bo‘lsa 'Taklif - %s' % "
 "(object.name)) yoki 'Buyurtma - %s' % (object.name)"
-
-#. module: sale_pdf_quote_builder
-#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
-#, fuzzy
-msgid "<i class=\"fa fa-arrow-right\"/> Link to the demo video"
-msgstr "<i class=\"fa fa-arrow-right\"/> Namoyish videosiga havola"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -277,12 +271,6 @@ msgstr "Hujjat turi"
 #, fuzzy
 msgid "Download"
 msgstr "Yuklab olish"
-
-#. module: sale_pdf_quote_builder
-#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
-#, fuzzy
-msgid "Download examples"
-msgstr "Misollarni yuklab olish"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -562,6 +550,11 @@ msgstr ""
 "Sarlavha yoki kolontitul sifatida faqat PDF hujjatlardan foydalanish mumkin."
 
 #. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
+msgid "Order Templates"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__original_id
 #, fuzzy
 msgid "Original (unoptimized, unresized) attachment"
@@ -613,28 +606,6 @@ msgid "Product Documents"
 msgstr "Mahsulot hujjatlari"
 
 #. module: sale_pdf_quote_builder
-#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
-#, fuzzy
-msgid ""
-"Provide header pages and footer pages to compose an attractive quotation "
-"with more information\n"
-"                        about your company, your products and you services. "
-"<br/>\n"
-"                        The pdf of your quotes will be built by putting "
-"together header pages, product descriptions,\n"
-"                        details of the quote and then the footer pages. <br/"
-">\n"
-"                        If empty, it will use those define in the company "
-"settings. <br/>"
-msgstr ""
-"Kompaniyangiz, mahsulotlaringiz va xizmatlaringiz haqida ko‘proq ma'lumot "
-"beruvchi jozibali iqtibos yaratish uchun sarlavha va kolontitul sahifalarini "
-"taqdim eting. <br/> Iqtiboslaringizning PDF shakli sarlavha sahifalari, "
-"mahsulot tavsiflari, iqtibos tafsilotlari va keyin kolontitul sahifalarini "
-"birlashtirish orqali tuziladi. <br/> Agar bo‘sh bo‘lsa, kompaniya "
-"sozlamalarida belgilangan ma'lumotlardan foydalaniladi. <br/>"
-
-#. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
 #, fuzzy
 msgid "Quotation / Order"
@@ -653,7 +624,6 @@ msgid "Quotation Documents"
 msgstr "Narx taklifi hujjatlari"
 
 #. module: sale_pdf_quote_builder
-#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 #, fuzzy
 msgid "Quotation Template"
@@ -679,12 +649,6 @@ msgid "Quote Builder"
 msgstr "Narx taklifi tuzuvchisi"
 
 #. module: sale_pdf_quote_builder
-#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
-#, fuzzy
-msgid "Quote Builder Demo Video"
-msgstr "Narx taklifi tuzuvchisi namoyish videosi"
-
-#. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__ir_attachment_id
 #, fuzzy
 msgid "Related attachment"
@@ -695,6 +659,16 @@ msgstr "Tegishli ilova"
 #, fuzzy
 msgid "Report Action"
 msgstr "Hisobot harakati"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_access_read
+msgid "Res Access Read"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_access_write
+msgid "Res Access Write"
+msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_field

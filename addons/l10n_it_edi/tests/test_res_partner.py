@@ -125,6 +125,25 @@ class TestResPartner(TransactionCase):
     def test_normalized_country_and_vat(self):
         self._test_normalized_data([
             {
+                # Spanish VAT starting with a letter+digit (e.g. 'A9...'):
+                # the first two chars are NOT a country-code prefix, so the
+                # full VAT must be preserved as-is.
+                'country_id': self.env.ref('base.es'),
+                'vat': 'A95758389',
+                'l10n_it_codice_fiscale': False,
+                'normalized_country_code': 'ES',
+                'normalized_vat': 'A95758389',
+            },
+            {
+                # Same VAT already carrying the 'ES' prefix must also be
+                # stripped correctly to the bare number.
+                'country_id': self.env.ref('base.es'),
+                'vat': 'ESA95758389',
+                'l10n_it_codice_fiscale': False,
+                'normalized_country_code': 'ES',
+                'normalized_vat': 'A95758389',
+            },
+            {
                 'country_id': self.usa,
                 'vat': '911-92-3333',
                 'l10n_it_codice_fiscale': False,
@@ -176,6 +195,22 @@ class TestResPartner(TransactionCase):
                 'normalized_vat': False,
             },
         ])
+
+    def test_is_company_from_codice_fiscale(self):
+        """Test that the is_company field is correctly computed from the l10n_it_codice_fiscale"""
+        partner = self.env['res.partner'].create({
+            'name': 'test',
+            'country_id': self.italy.id,
+            'vat': 'IT14475210960',
+        })
+        for cf, expected in [
+            ('MRTMTT91D08F205J', False),
+            ('12345670546', True),
+            ('IT12345670546', True),
+            ('', False),
+        ]:
+            partner.l10n_it_codice_fiscale = cf
+            self.assertEqual(partner.is_company, expected, f"CF={cf!r}")
 
     def test_create_company(self):
         """Test that when creating a company from an individual, l10n_it values are propagated"""

@@ -1,32 +1,22 @@
+import { registry } from "@web/core/registry";
 import {
     changeOptionInPopover,
     clickOnSnippet,
     insertSnippet,
-    registerWebsitePreviewTour,
+    waitForEditMode,
 } from "@website/js/tours/tour_utils";
 
-registerWebsitePreviewTour(
-    "snippet_rating",
-    {
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("snippet_rating", {
+    steps: () => [
+        waitForEditMode,
         ...insertSnippet({ id: "s_rating", name: "Rating" }),
         ...clickOnSnippet({ id: "s_rating", name: "Rating" }),
-        ...changeOptionInPopover(
-            "Rating",
-            "Title Position",
-            "[data-class-action='s_rating_inline']"
-        ),
+        ...changeOptionInPopover("Rating", "Title Position", "Left"),
         {
             content: "Check whether s_rating_inline class applied or not",
             trigger: ":iframe .s_rating_inline",
         },
-        ...changeOptionInPopover(
-            "Rating",
-            "Title Position",
-            "[data-class-action='s_rating_no_title']"
-        ),
+        ...changeOptionInPopover("Rating", "Title Position", "None"),
         {
             content: "Check whether s_rating_no_title class applied or not",
             trigger: ":iframe .s_rating_no_title",
@@ -36,5 +26,5 @@ registerWebsitePreviewTour(
             content: "Check whether s_rating_no_title class removed or not",
             trigger: ":iframe .s_rating:not(.s_rating_no_title)",
         },
-    ]
-);
+    ],
+});

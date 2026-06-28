@@ -25,6 +25,9 @@
         <record id="product.pa_shoe_size" model="product.attribute">
             <field name="visibility">hidden</field>
         </record>
+        <record id="product.pa_sides" model="product.attribute">
+            <field name="visibility">hidden</field>
+        </record>
 
         <record id="product.product_product_24" model="product.product">
             <field name="is_published" eval="True"/>
@@ -521,7 +524,7 @@
         <record id="list_christmas" model="product.pricelist">
             <field name="name">Christmas</field>
             <field name="selectable" eval="False" />
-            <field name="website_id" ref="website.default_website" />
+            <field name="website_id" ref="base.default_website" />
             <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
             <field name="sequence">20</field>
         </record>
@@ -535,7 +538,7 @@
         <record id="list_benelux" model="product.pricelist">
             <field name="name">Benelux</field>
             <field name="selectable" eval="False" />
-            <field name="website_id" ref="website.default_website" />
+            <field name="website_id" ref="base.default_website" />
             <field name="country_group_ids" eval="[(6,0,[ref('benelux')])]" />
             <field name="sequence">2</field>
         </record>
@@ -551,7 +554,7 @@
         <record id="list_europe" model="product.pricelist">
             <field name="name">EUR</field>
             <field name="selectable" eval="True" />
-            <field name="website_id" ref="website.default_website" />
+            <field name="website_id" ref="base.default_website" />
             <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
             <field name="sequence">3</field>
             <field name="currency_id" ref="base.EUR"/>
@@ -673,7 +676,7 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="website_id" ref="website.default_website"/>
+            <field name="website_id" ref="base.default_website"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
@@ -690,7 +693,7 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="website_id" ref="website.default_website"/>
+            <field name="website_id" ref="base.default_website"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()"/>
             <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor1'))]"/>
@@ -708,7 +711,7 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="website_id" ref="website.default_website"/>
+            <field name="website_id" ref="base.default_website"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(hours=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
@@ -731,7 +734,7 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="website_id" ref="website.default_website"/>
+            <field name="website_id" ref="base.default_website"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()"/>
             <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor5'))]"/>
@@ -750,7 +753,7 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="website_id" ref="website.default_website"/>
+            <field name="website_id" ref="base.default_website"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
@@ -767,7 +770,7 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="website_id" ref="website.default_website"/>
+            <field name="website_id" ref="base.default_website"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="payment_term_id" ref="account.account_payment_term_immediate"/>
             <field name="date_order" eval="(datetime.now()-timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
@@ -786,7 +789,7 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="website_id" ref="website.default_website"/>
+            <field name="website_id" ref="base.default_website"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
         </record>
 
@@ -802,7 +805,7 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="website_id" ref="website.default_website"/>
+            <field name="website_id" ref="base.default_website"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()-relativedelta(months=1)"/>
             <field name="state">sale</field>
@@ -821,7 +824,7 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="website_id" ref="website.default_website"/>
+            <field name="website_id" ref="base.default_website"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()-relativedelta(months=1, days=2)"/>
         </record>
@@ -840,7 +843,7 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="website_id" ref="website.default_website"/>
+            <field name="website_id" ref="base.default_website"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()-relativedelta(months=2)"/>
         </record>
@@ -926,6 +929,132 @@
         <record id="product_product_1b" model="product.product">
             <field name="default_code">SERV_125890</field>
         </record>
+
+        <!-- Optional products automatic suggestion -->
+        <record id="website_sale_order_19" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="website_id" ref="base.default_website"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="datetime.now()"/>
+            <field name="state">sale</field>
+        </record>
+
+        <record id="website_sale_order_line_19" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_19"/>
+            <field name="product_id" ref="product.product_product_4e"/>  <!--Customizable Desk-->
+        </record>
+
+        <record id="website_sale_order_line_20" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_19"/>
+            <field name="product_id" ref="product.product_product_11b"/>  <!--Conference Chair-->
+        </record>
+
+        <record id="website_sale_order_line_21" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_19"/>
+            <field name="product_id" ref="sale.product_product_1_product_product"/>  <!--Chair floor protection-->
+        </record>
+
+        <record id="website_sale_order_line_22" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_19"/>
+            <field name="product_id" ref="website_sale.product_product_1"/>  <!--Warranty-->
+        </record>
+
+        <record id="website_sale_order_20" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="website_id" ref="base.default_website"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="datetime.now()"/>
+            <field name="state">sale</field>
+        </record>
+
+        <record id="website_sale_order_line_23" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_20"/>
+            <field name="product_id" ref="product.product_product_4e"/>  <!--Customizable Desk-->
+        </record>
+
+        <record id="website_sale_order_line_24" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_20"/>
+            <field name="product_id" ref="product.product_product_11b"/>  <!--Conference Chair-->
+        </record>
+
+        <record id="website_sale_order_line_25" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_20"/>
+            <field name="product_id" ref="sale.product_product_1_product_product"/>  <!--Chair floor protection-->
+        </record>
+
+        <record id="website_sale_order_line_26" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_20"/>
+            <field name="product_id" ref="website_sale.product_product_1"/>  <!--Warranty-->
+        </record>
+
+        <record id="website_sale_order_21" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="website_id" ref="base.default_website"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="datetime.now()"/>
+            <field name="state">sale</field>
+        </record>
+
+        <record id="website_sale_order_line_27" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_21"/>
+            <field name="product_id" ref="product.product_product_27"/>  <!--Drawer-->
+        </record>
+
+        <record id="website_sale_order_line_28" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_21"/>
+            <field name="product_id" ref="product.product_delivery_02"/>  <!--Office Lamp-->
+        </record>
+
+        <record id="website_sale_order_line_29" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_21"/>
+            <field name="product_id" ref="product.product_product_7"/>  <!--Storage Box-->
+        </record>
+
+        <record id="website_sale_order_line_30" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_21"/>
+            <field name="product_id" ref="product.desk_organizer"/>  <!--Desk Organizer-->
+        </record>
+
+        <record id="website_sale_order_22" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="website_id" ref="base.default_website"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="datetime.now()"/>
+            <field name="state">sale</field>
+        </record>
+
+        <record id="website_sale_order_line_31" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_22"/>
+            <field name="product_id" ref="product.product_product_27"/>  <!--Drawer-->
+        </record>
+
+        <record id="website_sale_order_line_32" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_22"/>
+            <field name="product_id" ref="product.product_delivery_02"/>  <!--Office Lamp-->
+        </record>
+
+        <record id="website_sale_order_line_33" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_22"/>
+            <field name="product_id" ref="product.product_product_7"/>  <!--Storage Box-->
+        </record>
+
+        <record id="website_sale_order_line_34" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_22"/>
+            <field name="product_id" ref="product.desk_organizer"/>  <!--Desk Organizer-->
+        </record>
+
 
         <record id="website_sale.product_1_attribute_3_value_2" model="product.template.attribute.value">
             <field name="price_extra">18.00</field>

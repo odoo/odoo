@@ -9,12 +9,13 @@ class TestTimeOffOverviewMyDepartmentTour(HttpCaseWithUserDemo):
     def test_time_off_overview_my_department_tour(self):
         self.user_demo.group_ids |= self.env.ref("hr_holidays.group_hr_holidays_employee")
 
-        demo_employee = self.env["hr.employee"].create(
-            {
-                "name": "Demo Employee",
-                "user_id": self.user_demo.id,
-            },
-        )
+        if not self.user_demo.employee_id:
+            self.env["hr.employee"].create(
+                {
+                    "name": "Demo Employee",
+                    "user_id": self.user_demo.id,
+                },
+            )
 
         leave_type = self.env["hr.work.entry.type"].create(
             {
@@ -27,7 +28,7 @@ class TestTimeOffOverviewMyDepartmentTour(HttpCaseWithUserDemo):
         self.env["hr.leave"].create(
             {
                 "name": "Test Leave",
-                "employee_id": demo_employee.id,
+                "employee_id": self.user_demo.employee_id.id,
                 "work_entry_type_id": leave_type.id,
             },
         )

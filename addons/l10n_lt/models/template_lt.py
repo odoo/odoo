@@ -9,9 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('lt')
     def _get_lt_template_data(self):
         return {
-            'property_account_receivable_id': 'account_account_template_2410',
-            'property_account_payable_id': 'account_account_template_4430',
-            'property_stock_valuation_account_id': 'account_account_template_2040',
             'code_digits': '6',
         }
 
@@ -33,6 +30,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'account_tax_template_purchase_21',
                 'expense_account_id': 'account_account_template_6000',
                 'income_account_id': 'account_account_template_5000',
+                'receivable_account_id': 'account_account_template_2410',
+                'payable_account_id': 'account_account_template_4430',
                 'account_stock_valuation_id': 'account_account_template_2010',
             },
         }

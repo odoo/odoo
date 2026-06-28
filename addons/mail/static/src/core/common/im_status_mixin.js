@@ -1,17 +1,18 @@
+import { effect } from "@odoo/owl";
+
 import { AWAY_DELAY } from "@mail/core/common/im_status_service";
 import { fields } from "@mail/model/misc";
 import { Record } from "@mail/model/record";
+
+import { debounce } from "@web/core/utils/timing";
 import { effectWithCleanup } from "@mail/utils/common/misc";
 
-import { effect } from "@web/core/utils/reactive";
-import { debounce } from "@web/core/utils/timing";
-
-/** @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus */
+/** @typedef {'offline' | 'bot' | 'online' | 'away' | undefined} ImStatus */
 
 const { DateTime } = luxon;
 
 /**
- * Both ResPartner and MailGuest models need to react to `presence_status` updates and
+ * Both ResUsers and MailGuest models need to react to `presence_status` updates and
  * debounce updates to their `im_status` field to avoid flickering. This common class
  * groups the logic used by both models.
  */
@@ -27,8 +28,11 @@ export class ImStatusMixin extends Record {
         );
         record.setImStatusDebounced = setImStatusDebounced;
         record.cancelSetImStatusDebounced = setImStatusDebounced.cancel;
-        effect(
-            (record, store, presenceService, statusService) => {
+        record._registerDisposeFn(
+            effect(() => {
+                const store = record.store;
+                const presenceService = record.store.env.services.presence;
+                const statusService = record.store.env.services.im_status;
                 if (record.notEq(store.self)) {
                     return;
                 }
@@ -39,27 +43,18 @@ export class ImStatusMixin extends Record {
                 ) {
                     statusService.updateBusPresence();
                 }
-            },
-            [
-                record,
-                record.store,
-                record.store.env.services.presence,
-                record.store.env.services.im_status,
-            ]
+            })
         );
-        effectWithCleanup({
-            effect: (busService, presenceChannel) => {
+        record._registerDisposeFn(
+            effectWithCleanup(() => {
+                const busService = record.store.env.services.bus_service;
+                const presenceChannel = record.monitorPresence && record.presenceChannel;
                 if (presenceChannel) {
                     busService.addChannel(presenceChannel);
                     return () => busService.deleteChannel(presenceChannel);
                 }
-            },
-            dependencies: (record) => [
-                record.store.env.services.bus_service,
-                record.monitorPresence && record.presenceChannel,
-            ],
-            reactiveTargets: [record],
-        });
+            })
+        );
         return record;
     }
     /** @type {(status) => void} */

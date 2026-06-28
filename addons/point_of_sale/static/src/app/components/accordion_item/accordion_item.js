@@ -1,21 +1,17 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, onMounted, props, proxy, t } from "@odoo/owl";
 
 export class AccordionItem extends Component {
     static template = "pos_hr.AccordionItem";
 
-    static props = {
-        disabled: { type: Boolean, optional: true },
-        slots: Object,
-    };
-
-    static defaultProps = {
-        disabled: false,
-    };
+    props = props({
+        disabled: t.boolean().optional(false),
+        slots: t.object(),
+    });
 
     setup() {
         this.content = useRef("content_container");
-        this.state = useState({
+        this.state = proxy({
             open: false,
         });
         onMounted(() => {

@@ -79,7 +79,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         with self.assertRaisesRegex(UserError, "remove parts of a restricted audit trail"):
             audit_trail.res_id = 0
 
-    def test_cant_unlink_tracking_value(self):
+    def test_cant_update_tracking_value(self):
         self.env.company.restrictive_audit_trail = True
         self.move.action_post()
         self.env.cr.precommit.run()
@@ -95,7 +95,11 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
                 ],
             }
         )
-        with self.assertRaisesRegex(UserError, "remove parts of a restricted audit trail"):
+        with self.assertRaisesRegex(UserError, "Messages with tracking values cannot be modified"):
+            self.move._message_update_content(audit_trail, body="")
+        with self.assertRaisesRegex(UserError, "You cannot remove parts of a restricted audit trail. Archive the record instead."):
+            audit_trail.write({'body': 'Remove tracking'})
+        with self.assertRaisesRegex(UserError, "You cannot remove parts of a restricted audit trail. Archive the record instead."):
             audit_trail.unlink()
 
     def test_content(self):
@@ -115,9 +119,8 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             self.flush_tracking()
         self.assertMessageFields(
             self._new_msgs, {
-                'account_audit_log_preview': 'Updated\nFalse ⇨ MISC/2021/04/0001 (Number)\nDraft ⇨ Posted (Status)',
                 'body': '',
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'tracking_values': [
                     ('name', 'char', False, 'MISC/2021/04/0001'),
                     ('state', 'selection', 'Draft', 'Posted'),
@@ -130,9 +133,8 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             self.flush_tracking()
         self.assertMessageFields(
             self._new_msgs, {
-                'account_audit_log_preview': 'Updated\nPosted ⇨ Draft (Status)',
                 'body': '',
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'tracking_values': [
                     ('state', 'selection', 'Posted', 'Draft'),
                 ],
@@ -144,9 +146,8 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             self.flush_tracking()
         self.assertMessageFields(
             self._new_msgs, {
-                'account_audit_log_preview': 'Updated\nMISC/2021/04/0001 ⇨ nawak (Number)',
                 'body': '',
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'tracking_values': [
                     ('name', 'char', 'MISC/2021/04/0001', 'nawak'),
                 ],
@@ -163,32 +164,39 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
                 }),
             ]
             self.flush_tracking()
+        # be independent of message creation ordering
         for msg, check_values in zip(self._new_msgs, [
             # update 1
             {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[0].id} updated\n100.0 ⇨ 300.0 (Balance)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> updated</p>',
-                'tracking_values': [('balance', 'monetary', 100, (300, self.env.ref('base.USD')))],
+                'model': 'account.move',
+                'res_id': move.id,
+                'subtype_id': self.env.ref('mail.mt_note'),
+                'tracking_values': [('balance', 'monetary', 100, 300, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'})],
             },
             # update 2
             {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[1].id} updated\n-100.0 ⇨ -200.0 (Balance)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[1].id}">#{move.line_ids[1].id}</a> updated</p>',
-                'tracking_values': [('balance', 'monetary', -100, (-200, self.env.ref('base.USD')))],
+                'model': 'account.move',
+                'res_id': move.id,
+                'subtype_id': self.env.ref('mail.mt_note'),
+                'tracking_values': [('balance', 'monetary', -100, -200, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'})],
             },
             # new line
             {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[2].id} created\n ⇨ 400000 Product Sales (Account)\n0.0 ⇨ -100.0 (Balance)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[2].id}">#{move.line_ids[2].id}</a> created</p>',
+                'model': 'account.move',
+                'res_id': move.id,
+                'subtype_id': self.env.ref('mail.mt_note'),
                 'tracking_values': [
-                    ('balance', 'monetary', 0, (-100, self.env.ref('base.USD'))),
-                    ('account_id', 'many2one', False, self.company_data['default_account_revenue']),
+                    ('balance', 'monetary', 0, -100, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
+                    ('account_id', 'many2one', False, self.company_data['default_account_revenue'], {'html_string': 'Account'}),
                 ],
             },
         ], strict=True):
             self.assertMessageFields(
                 msg, {
-                    'message_type': 'notification',
+                    'message_type': 'tracking',
                     **check_values,
                 }
             )
@@ -197,89 +205,83 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             move.line_ids[0].tax_ids = self.env.company.account_purchase_tax_id
             self.flush_tracking()
         suspense_account = self.env.company.account_journal_suspense_account_id
+        # be independent of message creation ordering
         for msg, check_values in zip(self._new_msgs, [
             # update 1
             {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[0].id} updated\n ⇨ 15% (Taxes)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> updated</p>',
-                'tracking_values': [('tax_ids', 'many2many', '', '15%')],
+                'tracking_values': [('tax_ids', 'many2many', '', '15%', {'html_string': 'Taxes'})],
             },
             # new line
             {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[3].id} created\n ⇨ 131000 Tax Paid (Account)\n0.0 ⇨ 45.0 (Balance)\nFalse ⇨ 15% (Label)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[3].id}">#{move.line_ids[3].id}</a> created</p>',
                 'tracking_values': [
-                    ('name', 'char', False, '15%'),
-                    ('balance', 'monetary', 0, (45, self.env.ref('base.USD'))),
-                    ('account_id', 'many2one', False, self.company_data['default_account_tax_purchase']),
+                    ('name', 'char', False, '15%', {'html_string': 'Label'}),
+                    ('balance', 'monetary', 0, 45, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
+                    ('account_id', 'many2one', False, self.company_data['default_account_tax_purchase'], {'html_string': 'Account'}),
                 ],
             },
             # new line
             {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[4].id} created\n ⇨ {suspense_account.code} Bank Suspense Account (Account)\n0.0 ⇨ -45.0 (Balance)\nFalse ⇨ Automatic Balancing Line (Label)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[4].id}">#{move.line_ids[4].id}</a> created</p>',
                 'tracking_values': [
-                    ('name', 'char', False, "Automatic Balancing Line"),
-                    ('balance', 'monetary', 0, (-45, self.env.ref('base.USD'))),
-                    ('account_id', 'many2one', False, suspense_account),
+                    ('name', 'char', False, "Automatic Balancing Line", {'html_string': 'Label'}),
+                    ('balance', 'monetary', 0, -45, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
+                    ('account_id', 'many2one', False, suspense_account, {'html_string': 'Account'}),
                 ],
             },
         ], strict=True):
             self.assertMessageFields(
                 msg, {
-                    'message_type': 'notification',
+                    'message_type': 'tracking',
                     **check_values,
                 }
             )
 
         exp_results = [
             {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[0].id} deleted\n400000 Product Sales ⇨  (Account)\n300.0 ⇨ 0.0 (Balance)\n15% ⇨  (Taxes)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> deleted</p>',
                 'tracking_values': [
-                    ('account_id', 'many2one', self.company_data['default_account_revenue'], False),
-                    ('balance', 'monetary', 300, (0, self.env['res.currency'])),
-                    ('tax_ids', 'many2many', '15%', ''),
+                    ('account_id', 'many2one', self.company_data['default_account_revenue'], False, {'html_string': 'Account'}),
+                    ('balance', 'monetary', 300, 0, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
+                    ('tax_ids', 'many2many', '15%', '', {'html_string': 'Taxes'}),
                 ],
             }, {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[1].id} deleted\n400000 Product Sales ⇨  (Account)\n-200.0 ⇨ 0.0 (Balance)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[1].id}">#{move.line_ids[1].id}</a> deleted</p>',
                 'tracking_values': [
-                    ('account_id', 'many2one', self.company_data['default_account_revenue'], False),
-                    ('balance', 'monetary', -200, (0, self.env['res.currency'])),
+                    ('account_id', 'many2one', self.company_data['default_account_revenue'], False, {'html_string': 'Account'}),
+                    ('balance', 'monetary', -200, 0, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
                 ],
             }, {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[2].id} deleted\n400000 Product Sales ⇨  (Account)\n-100.0 ⇨ 0.0 (Balance)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[2].id}">#{move.line_ids[2].id}</a> deleted</p>',
                 'tracking_values': [
-                    ('account_id', 'many2one', self.company_data['default_account_revenue'], False),
-                    ('balance', 'monetary', -100, (0, self.env['res.currency'])),
+                    ('account_id', 'many2one', self.company_data['default_account_revenue'], False, {'html_string': 'Account'}),
+                    ('balance', 'monetary', -100, 0, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
                 ],
             }, {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[3].id} deleted\n131000 Tax Paid ⇨  (Account)\n45.0 ⇨ 0.0 (Balance)\n15% ⇨ False (Label)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[3].id}">#{move.line_ids[3].id}</a> deleted</p>',
                 'tracking_values': [
-                    ('account_id', 'many2one', self.company_data['default_account_tax_purchase'], False),
-                    ('balance', 'monetary', 45, (0, self.env['res.currency'])),
-                    ('name', 'char', '15%', False),
+                    ('account_id', 'many2one', self.company_data['default_account_tax_purchase'], False, {'html_string': 'Account'}),
+                    ('balance', 'monetary', 45, 0, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
+                    ('name', 'char', '15%', False, {'html_string': 'Label'}),
                 ],
             }, {
-                'account_audit_log_preview': f'Journal Item #{move.line_ids[4].id} deleted\n{suspense_account.code} Bank Suspense Account ⇨  (Account)\n-45.0 ⇨ 0.0 (Balance)\nAutomatic Balancing Line ⇨ False (Label)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[4].id}">#{move.line_ids[4].id}</a> deleted</p>',
                 'tracking_values': [
-                    ('account_id', 'many2one', suspense_account, False),
-                    ('balance', 'monetary', -45, (-0, self.env['res.currency'])),
-                    ('name', 'char', "Automatic Balancing Line", False),
+                    ('account_id', 'many2one', suspense_account, False, {'html_string': 'Account'}),
+                    ('balance', 'monetary', -45, -0, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
+                    ('name', 'char', "Automatic Balancing Line", False, {'html_string': 'Label'}),
                 ],
             },
         ]
         with self.mock_mail_gateway(), self.mock_mail_app():
             move.with_context(dynamic_unlink=True).line_ids.unlink()
             self.flush_tracking()
+        # be independent of message creation ordering
         for msg, check_values in zip(self._new_msgs, exp_results, strict=True):
             self.assertMessageFields(
                 msg, {
-                    'message_type': 'notification',
+                    'message_type': 'tracking',
                     **check_values,
                 }
             )
@@ -289,9 +291,8 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             self.flush_tracking()
         self.assertMessageFields(
             self._new_msgs, {
-                'account_audit_log_preview': 'Updated\nFalse ⇨ True (Restrictive Audit Trail)',
                 'body': '',
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'tracking_values': [('restrictive_audit_trail', 'boolean', False, True)],
             }
         )
@@ -332,6 +333,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         })
         # similar to domain in action_account_audit_trail_report
         # should raise no error when the user access it
+        # TDE checkme
         self.env['mail.message'].search([
             ('message_type', '=', 'notification'),
             ('model', '=', 'account.account'),

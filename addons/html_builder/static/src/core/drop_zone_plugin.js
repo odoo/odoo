@@ -1,4 +1,5 @@
 import { isVisible } from "@html_builder/utils/utils";
+import { NATIVE_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { isElement } from "@html_editor/utils/dom_info";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
@@ -41,11 +42,19 @@ export class DropZonePlugin extends Plugin {
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        is_mutation_record_savable_predicates: (record) => {
-            if (record.type === "childList") {
-                const addedOrRemovedNode = (record.addedTrees[0] || record.removedTrees[0]).node;
+        /**
+         * @param {import("@html_editor/core/dom_observer_plugin").NativeMutation} mutation
+         * @returns {boolean | undefined}
+         */
+        is_mutation_savable_predicates: (mutation) => {
+            if (mutation.type === NATIVE_MUTATION_TYPES.CHILD_LIST) {
+                const addedOrRemovedNode = mutation.addedNodes[0] || mutation.removedNodes[0];
                 // Do not record the addition/removal of the dropzones.
-                if (isElement(addedOrRemovedNode) && addedOrRemovedNode.matches(".oe_drop_zone")) {
+                if (
+                    addedOrRemovedNode &&
+                    isElement(addedOrRemovedNode) &&
+                    addedOrRemovedNode.matches(".oe_drop_zone")
+                ) {
                     return false;
                 }
             }
@@ -362,12 +371,11 @@ export class DropZonePlugin extends Plugin {
             "oe_drop_zone",
             "oe_insert",
             "oe_sanitized_drop_zone",
-            "text-center",
-            "text-uppercase"
+            "text-center"
         );
-        const messageEl = this.document.createElement("p");
-        messageEl.textContent = _t("For technical reasons, this block cannot be dropped here");
-        dropzoneEl.prepend(messageEl);
+        dropzoneEl.dataset.editorMessage = _t(
+            "For technical reasons, this block cannot be dropped here"
+        );
         return dropzoneEl;
     }
 
@@ -435,7 +443,10 @@ export class DropZonePlugin extends Plugin {
             if (parseInt(parentContentWidth) !== parseInt(hookOuterWidth)) {
                 vertical = true;
                 const hookOuterHeight = hookEl.getBoundingClientRect().height;
-                style.height = Math.max(hookOuterHeight, 30) + "px";
+                // Combined with the 1px top margin added by the CSS, removing
+                // 2px from the height here prevents two vertical dropzones from
+                // touching when one is placed below the other.
+                style.height = Math.max(hookOuterHeight - 2, 30) + "px";
                 if (toInsertInline) {
                     style.display = "inline-block";
                     style.verticalAlign = "middle";
@@ -517,10 +528,8 @@ export class DropZonePlugin extends Plugin {
 
         // Inserting a sanitized dropzone for each sanitized area.
         for (const sanitizedZoneEl of selectorSanitized) {
-            sanitizedZoneEl.style.position = "relative";
             sanitizedZoneEl.prepend(this.createSanitizedDropzone());
         }
-        this.sanitizedZoneEls = selectorSanitized;
 
         // Inserting a grid dropzone for each row in grid mode.
         for (const rowEl of selectorGrids) {
@@ -556,9 +565,5 @@ export class DropZonePlugin extends Plugin {
         this.editable.querySelectorAll(".oe_drop_zone").forEach((dropzoneEl) => {
             dropzoneEl.remove();
         });
-        this.sanitizedZoneEls.forEach((sanitizedZoneEl) =>
-            sanitizedZoneEl.style.removeProperty("position")
-        );
-        this.sanitizedZoneEls = [];
     }
 }

@@ -22,7 +22,13 @@
             <field name="active" eval="True"/>
         </record>
 
-        <record model="website" id="website.default_website">
+        <!--
+            Note that the default website may change and the fields listed below
+            will not automatically move to the new default website. Add fields
+            to _get_settings_to_copy_onto_new_default_website() to copy
+            them when the default website changes.
+        -->
+        <record model="website" id="base.default_website">
             <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
             <field name="salesperson_id" ref="base.user_admin"/>
             <field name="rating_email_template_id" ref="website_sale.mail_template_sale_order_rating"/>
@@ -51,7 +57,7 @@
         <value eval="[
             'name', 'phone', 'email',
             'city', 'zip', 'street', 'street2', 'state_id', 'country_id',
-            'vat', 'parent_name', 'properties'
+            'vat', 'properties'
         ]"/>
     </function>
 

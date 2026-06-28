@@ -3,17 +3,16 @@ import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
+    postLivechatMessage,
 } from "@im_livechat/../tests/livechat_test_helpers";
 import {
     click,
     contains,
     focus,
-    insertText,
     listenStoreFetch,
     setupChatHub,
     start,
     startServer,
-    triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
@@ -79,14 +78,14 @@ test("focus on unread livechat marks it as read", async () => {
     await loadDefaultEmbedConfig();
     const userId = serverState.userId;
     listenStoreFetch(["init_messaging", "init_livechat"]);
-    await start({ authenticateAs: false });
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
     await waitStoreFetch(["init_messaging", "init_livechat"]);
     await click(".o-livechat-LivechatButton");
-    await insertText(".o-mail-Composer-input", "Hello World!");
-    await triggerHotkey("Enter");
     // Wait for bus subscription to be done after persisting the thread:
     // presence of the message is not enough (temporary message).
-    await waitUntilSubscribe();
+    const subscribed = waitUntilSubscribe();
+    await postLivechatMessage("Hello World!");
+    await subscribed;
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     const [channelId] = pyEnv["discuss.channel"].search([
         ["channel_type", "=", "livechat"],
@@ -96,7 +95,6 @@ test("focus on unread livechat marks it as read", async () => {
             pyEnv["discuss.channel.member"].search([["guest_id", "=", pyEnv.cookie.get("dgid")]]),
         ],
     ]);
-    await waitStoreFetch("init_messaging");
     queryFirst(".o-mail-Composer-input").blur();
     // send after init_messaging because bus subscription is done after init_messaging
     await withUser(userId, () =>

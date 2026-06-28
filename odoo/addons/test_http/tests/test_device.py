@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import contextmanager
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
@@ -441,12 +442,19 @@ class TestDevice(TestHttpBase):
 
     def test_filesystem_reflexion_gc(self):
 
-        def now(days=0):
-            return datetime.now() + timedelta(days=days)
+        @contextmanager
+        def freeze_relative_cursor(days=0):
+            # before freezing, flush and invalidate the main environment
+            self.env.invalidate_all()
+            with (
+                freeze_time(datetime.now() + timedelta(days=days)),
+                self.registry.cursor() as cr,
+            ):
+                yield cr
 
         session = self.authenticate(self.user_admin.login, self.user_admin.login)
 
-        with freeze_time(now()):
+        with freeze_relative_cursor():
             for i in range(10):
                 self.DeviceLog.create({
                     'session_identifier': session.sid,
@@ -462,9 +470,8 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(logs), 10)
 
         # Apply Soft GC
-        with freeze_time(now()), self.registry.cursor() as cr:
+        with freeze_relative_cursor() as cr:
             self.DeviceLog.with_env(self.env(cr=cr))._gc_device_log()
-        self.env.invalidate_all()
         *_, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(logs), 1)
 
@@ -472,20 +479,17 @@ class TestDevice(TestHttpBase):
         ICP = self.env['ir.config_parameter']
         ICP.set_int('base.res_device_log_retention_days', 10)
 
-        with freeze_time(now(days=11)), self.registry.cursor() as cr:
+        with freeze_relative_cursor(days=11) as cr:
             self.DeviceLog.with_env(self.env(cr=cr))._gc_device_log()
-        self.env.invalidate_all()
         *_, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(logs), 1, 'Because the session still exists on the filesystem')
 
         # Revoke the session and mark it revoked in database
-        with freeze_time(now(days=(SESSION_LIFETIME / 86400) + 1)), self.registry.cursor() as cr:
+        with freeze_relative_cursor(days=(SESSION_LIFETIME / 86400) + 1) as cr:
             self.DeviceLog.with_env(self.env(cr=cr))._ResDeviceLog__update_revoked()
-        self.env.invalidate_all()
 
-        with freeze_time(now(days=11)), self.registry.cursor() as cr:
+        with freeze_relative_cursor(days=11) as cr:
             self.DeviceLog.with_env(self.env(cr=cr))._gc_device_log()
-        self.env.invalidate_all()
         *_, logs = self.get_devices(self.user_admin)
         self.assertEqual(len(logs), 0,
             'Because the session is not present on the filesystem '

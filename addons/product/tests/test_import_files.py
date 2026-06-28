@@ -159,11 +159,11 @@ class TestImportFiles(TransactionCase):
         self.assertEqual(products.mapped('display_name'), ['[JUICE-1] Apple juice', '[JUICE-2] Ananas juice', '[JUICE-3] Orange juice (Orange)', '[JUICE-4] Orange juice (Red)', '[JUICE-5] Lemon juice (Orange)', '[JUICE-6] Lemon juice (Red)'])
 
         attributes = self.env['product.attribute'].search([('id', 'not in', attr_ids)])
-        self.assertEqual(attributes.mapped('name'), ['Color'])
+        self.assertEqual(attributes.mapped('name'), ['ColorTest'])
 
         values = self.env['product.attribute.value'].search([('id', 'not in', val_ids)])
         self.assertEqual(values.mapped('name'), ['Orange', 'Red'])
-        self.assertEqual(values.mapped('display_name'), ['Color: Orange', 'Color: Red'])
+        self.assertEqual(values.mapped('display_name'), ['ColorTest: Orange', 'ColorTest: Red'])
 
         if 'stock' in addons:
             self.assertEqual(self.env.ref('__import__.product_template_1').qty_available, 3.0)
@@ -177,3 +177,19 @@ class TestImportFiles(TransactionCase):
         product = self.env['product.product'].search([('default_code', '=', 'CERT20')])
         self.assertEqual(product.list_price, 200)
         self.assertEqual(product.standard_price, 5)
+
+    def test_import_product_reuses_existing_attribute(self):
+        """Importing a product referencing an existing attribute with no values
+        should reuse it, not crash or duplicate."""
+        attr_name = 'TestImportFabric'
+        attribute = self.env['product.attribute'].create({'name': attr_name})
+        self.assertFalse(attribute.value_ids)
+
+        self.env['product.product']._load_records_create([{
+            'name': 'Test Product',
+            'import_attribute_values': f'{attr_name}:Cotton',
+        }])
+
+        found = self.env['product.attribute'].search([('name', '=', attr_name)])
+        self.assertEqual(found, attribute)
+        self.assertIn('Cotton', found.value_ids.mapped('name'))

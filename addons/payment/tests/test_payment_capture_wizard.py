@@ -17,14 +17,14 @@ class TestPaymentCaptureWizard(PaymentCommon):
 
         child_tx_1 = source_tx.child_transaction_ids
         self.assertEqual(child_tx_1.state, "draft")
-        child_tx_1._set_done()
+        self._update_transaction(child_tx_1, state="done")
 
         self.env["payment.capture.wizard"].create({
             "transaction_ids": source_tx.ids
         }).action_capture()
 
         child_tx_2 = (source_tx.child_transaction_ids - child_tx_1).ensure_one()
-        child_tx_2._set_done()
+        child_tx_2.with_context(payment_safe_write=True)._set_done()
         self.assertAlmostEqual(
             sum(source_tx.child_transaction_ids.mapped("amount")), source_tx.amount
         )
@@ -36,7 +36,7 @@ class TestPaymentCaptureWizard(PaymentCommon):
             "name": "Dummy Brand",
             "code": "dumbrand",
             "primary_payment_method_id": self.payment_method.id,
-            "provider_ids": self.provider.ids,
+            "provider_id": self.provider.id,
         })
         source_tx = self._create_transaction(
             "direct", state="authorized", payment_method_id=dummy_brand.id

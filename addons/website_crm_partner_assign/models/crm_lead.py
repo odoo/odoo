@@ -356,7 +356,7 @@ class CrmLead(models.Model):
         operations = super()._mail_get_operation_for_mail_message_operation(message_operation)
         if message_operation == 'create':
             return (
-                (Domain('partner_assigned_id', '=', self.env.user.partner_id.id), 'read'),
+                (Domain('partner_assigned_id', 'child_of', self.env.user.commercial_partner_id.id), 'read'),
                 *operations,
             )
         return operations

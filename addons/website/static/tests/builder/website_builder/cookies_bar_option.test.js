@@ -22,7 +22,7 @@ const cookiesBarTemplate = `
                                 <div class="col-lg-8 pt16">
                                     <p>
                                         <span class="pe-1">We use cookies to provide you a better user experience on this website.</span>
-                                        <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm px-0">Cookie Policy</a>
+                                        <a href="/website/cookie-policy" class="o_cookies_bar_text_policy small">Cookie Policy</a>
                                     </p>
                                 </div>
                                 <div class="col-lg-4 text-end pt16 pb16">

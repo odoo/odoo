@@ -1,10 +1,11 @@
+import { registry } from "@web/core/registry";
 import {
     clickOnSnippet,
     insertSnippet,
-    registerWebsitePreviewTour,
     toggleMobilePreview,
     changeOptionInPopover,
     unfoldOptionsGroup,
+    waitForEditMode,
 } from "@website/js/tours/tour_utils";
 
 const columnCountOptSelector = "div[data-label='Layout'] .dropdown-toggle";
@@ -45,12 +46,9 @@ const checkIfNoMobileOrder = (snippetRowSelector) => ({
     trigger: `${snippetRowSelector}:not(:has(.order-lg-0[style*='order: ']))`,
 });
 
-registerWebsitePreviewTour(
-    "website_update_column_count",
-    {
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("website_update_column_count", {
+    steps: () => [
+        waitForEditMode,
         ...insertSnippet({
             id: "s_three_columns",
             name: "Columns",
@@ -60,7 +58,7 @@ registerWebsitePreviewTour(
             id: "s_three_columns",
             name: "Columns",
         }),
-        ...changeOptionInPopover("Columns", "Layout", "[data-action-value='5']"),
+        ...changeOptionInPopover("Columns", "Layout", "5"),
         {
             content:
                 "Check that there are now 5 items on 5 columns, and that it didn't change the mobile layout",
@@ -71,7 +69,7 @@ registerWebsitePreviewTour(
                 "Check that there is an offset on the 1st item to center the row on desktop, but not on mobile",
             trigger: `${columnsSnippetRow} > .offset-lg-1:not(.offset-1):first-child`,
         },
-        ...changeOptionInPopover("Columns", "Layout", "[data-action-value='2']"),
+        ...changeOptionInPopover("Columns", "Layout", "2"),
         {
             content: "Check that there are still 5 items in the row and click on the last one",
             trigger: `${columnsSnippetRow} > :nth-child(5)`,
@@ -114,6 +112,10 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
+            content: `Wait for "Columns" group update`,
+            trigger: `.options-container[data-container-title="Columns"]:has(.options-container-label i.fa-caret-right)`,
+        },
+        {
             content: "Add a fake resized class on mobile to the 2nd item",
             trigger: `${columnsSnippetRow} > :nth-child(2)`,
             async run() {
@@ -128,7 +130,7 @@ registerWebsitePreviewTour(
                         clientY: y,
                         pointerType: "mouse",
                     });
-                    (type === "pointermove" ? window : overlayEl).dispatchEvent(event);
+                    (type === "pointermove" ? document : overlayEl).dispatchEvent(event);
                 };
 
                 // Trigger pointer down
@@ -170,7 +172,7 @@ registerWebsitePreviewTour(
             trigger: ".o-snippets-top-actions button[data-action='mobile']",
             run: "click",
         },
-        ...changeOptionInPopover("Columns", "Layout", "[data-action-value='6']"),
+        ...changeOptionInPopover("Columns", "Layout", "6"),
         {
             content: "Check that each item has a different mobile order from 0 to 5",
             trigger: `${columnsSnippetRow}${[0, 1, 2, 3, 4, 5]
@@ -191,16 +193,12 @@ registerWebsitePreviewTour(
             content: "Check that there are no orders anymore",
             trigger: `${columnsSnippetRow}:not(:has([style*='order: 0;'])):not(:has(.order-lg-0))`,
         },
-    ]
-);
+    ],
+});
 
-registerWebsitePreviewTour(
-    "website_mobile_order_with_drag_and_drop",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("website_mobile_order_with_drag_and_drop", {
+    steps: () => [
+        waitForEditMode,
         ...insertSnippet({ id: "s_three_columns", name: "Columns", groupName: "Columns" }),
         ...insertSnippet({ id: "s_text_image", name: "Text - Image", groupName: "Content" }),
         ...toggleMobilePreview(true),
@@ -251,5 +249,5 @@ registerWebsitePreviewTour(
                 `${columnsSnippetRow}:has(.order-lg-0[style*='order: 0;']:nth-child(1))` +
                 ":has(.order-lg-0[style*='order: 1;']:nth-child(2))",
         },
-    ]
-);
+    ],
+});

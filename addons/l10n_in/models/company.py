@@ -1,5 +1,4 @@
-from odoo import Command, _, api, fields, models
-from odoo.exceptions import RedirectWarning
+from odoo import Command, api, fields, models
 
 
 class ResCompany(models.Model):
@@ -83,11 +82,11 @@ class ResCompany(models.Model):
 
     def _inverse_l10n_in_tds_feature(self):
         for company in self:
-            self._activate_l10n_in_taxes(['tds_group'], company, company.l10n_in_tds_feature)
+            self._activate_l10n_in_taxes(['tds_it_act_25_group'], company, company.l10n_in_tds_feature)
 
     def _inverse_l10n_in_tcs_feature(self):
         for company in self:
-            self._activate_l10n_in_taxes(['tcs_group'], company, company.l10n_in_tcs_feature)
+            self._activate_l10n_in_taxes(['tcs_it_act_25_group'], company, company.l10n_in_tcs_feature)
 
     def _inverse_l10n_in_is_gst_registered(self):
         for company in self:
@@ -110,6 +109,13 @@ class ResCompany(models.Model):
                 self._activate_l10n_in_taxes(gst_group_refs, company, False)
                 company.account_sale_tax_id = False
                 company.account_purchase_tax_id = False
+
+    @api.depends('country_code', 'root_id')
+    def _compute_force_restrictive_audit_trail(self):
+        super()._compute_force_restrictive_audit_trail()
+        for company in self:
+            if company.country_code == 'IN':
+                company.force_restrictive_audit_trail = company.root_id._existing_accounting()
 
     @api.depends('parent_id.l10n_in_tds_feature', 'parent_id.l10n_in_tcs_feature', 'parent_id.l10n_in_is_gst_registered')
     def _compute_l10n_in_parent_based_features(self):
@@ -183,18 +189,3 @@ class ResCompany(models.Model):
     def action_update_state_as_per_gstin(self):
         self.ensure_one()
         self.partner_id.action_update_state_as_per_gstin()
-
-    def _check_tax_return_configuration(self):
-        """
-        Check if the company is properly configured for tax returns.
-        :raises RedirectWarning: if something is wrong configured.
-        """
-
-        if self.country_code != 'IN':
-            return super()._check_tax_return_configuration()
-
-        is_l10n_in_reports_installed = 'l10n_in_reports' in self.env['ir.module.module']._installed()
-        if not is_l10n_in_reports_installed:
-            msg = _("First enable GST e-Filing feature from configuration for company %s.", (self.name))
-            action = self.env.ref("account.action_account_config")
-            raise RedirectWarning(msg, action.id, _('Go to configuration'))

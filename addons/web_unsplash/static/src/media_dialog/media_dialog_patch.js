@@ -1,4 +1,5 @@
-import { MediaDialog, TABS } from "@html_editor/main/media/media_dialog/media_dialog";
+import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
+import { TABS } from "@html_editor/main/media/media_dialog/media_dialog_utils"
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 

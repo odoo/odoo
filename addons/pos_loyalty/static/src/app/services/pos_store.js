@@ -183,14 +183,14 @@ patch(PosStore.prototype, {
             } else if (pointsAdded.length > oldChanges.length) {
                 const pointsCount = pointsAdded.reduce((acc, pointObj) => {
                     const { points, barcode = "" } = pointObj;
-                    const key = barcode ? `${points}-${barcode}` : `${points}`;
+                    const key = barcode ? `${points}_${barcode}` : `${points}`;
                     acc[key] = (acc[key] || 0) + 1;
                     return acc;
                 }, {});
 
                 oldChanges.forEach((pointObj) => {
                     const { points, barcode = "" } = pointObj;
-                    const key = barcode ? `${points}-${barcode}` : `${points}`;
+                    const key = barcode ? `${points}_${barcode}` : `${points}`;
                     if (pointsCount[key] && pointsCount[key] > 0) {
                         pointsCount[key]--;
                     }
@@ -199,7 +199,7 @@ patch(PosStore.prototype, {
                 // Get new points added which are not in oldChanges
                 const newPointsAdded = [];
                 Object.keys(pointsCount).forEach((key) => {
-                    const [points, barcode = ""] = key.split("-");
+                    const [points, barcode = ""] = key.split("_");
                     while (pointsCount[key] > 0) {
                         newPointsAdded.push({ points: Number(points), barcode });
                         pointsCount[key]--;
@@ -361,6 +361,10 @@ patch(PosStore.prototype, {
                 )
             );
         });
+    },
+    async applyDiscount(percent, type = "percent", order = this.getOrder()) {
+        await super.applyDiscount(...arguments);
+        await this.updatePrograms();
     },
     async addLineToCurrentOrder(vals, opt = {}, configure = true) {
         if (!vals.product_tmpl_id && vals.product_id) {
@@ -587,7 +591,7 @@ patch(PosStore.prototype, {
     computePartnerCouponIds(loyaltyCards = null) {
         const cards = loyaltyCards || this.models["loyalty.card"].getAll();
         for (const card of cards) {
-            if (!card.partner_id || card.id < 0) {
+            if (!card.partner_id || card.id < 0 || !card.program_id) {
                 continue;
             }
 
@@ -753,8 +757,12 @@ patch(PosStore.prototype, {
         const rewardLines = order._get_reward_lines();
         const partner = order.getPartner();
         let couponData = Object.values(order.uiState.couponPointChanges).reduce((agg, pe) => {
+            const netPoints =
+                pe.points - order._getPointsCorrection(ProgramModel.get(pe.program_id));
             agg[pe.coupon_id] = Object.assign({}, pe, {
-                points: pe.points - order._getPointsCorrection(ProgramModel.get(pe.program_id)),
+                points: netPoints,
+                won: netPoints,
+                spent: 0,
             });
             const program = ProgramModel.get(pe.program_id);
             if (
@@ -774,6 +782,8 @@ patch(PosStore.prototype, {
             if (!couponData[couponId]) {
                 couponData[couponId] = {
                     points: 0,
+                    spent: 0,
+                    won: 0,
                     program_id: reward.program_id.id,
                     coupon_id: couponId,
                     barcode: false,
@@ -789,6 +799,7 @@ patch(PosStore.prototype, {
                 !couponData[couponId].line_codes.push(line.reward_identifier_code);
             }
             couponData[couponId].points -= line.points_cost;
+            couponData[couponId].spent += line.points_cost;
         }
         // We actually do not care about coupons for 'current' programs that did not claim any reward, they will be lost if not validated
         couponData = Object.fromEntries(

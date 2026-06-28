@@ -1,11 +1,10 @@
-import { reactive, useExternalListener, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useRef, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { parseXML } from "@web/core/utils/xml";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
-import { hasTouch } from "@web/core/browser/feature_detection";
 
-import { Component, EventBus, onMounted, onWillStart } from "@odoo/owl";
+import { Component, EventBus, onMounted, onWillStart, proxy, useListener } from "@odoo/owl";
 import { RPCError } from "@web/core/network/rpc";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { useSetupAction } from "@web/search/action_hook";
@@ -30,7 +29,7 @@ export class QuickCreateState {
         this.isOpen = false;
         this.id = null;
         this.bus = new EventBus();
-        return reactive(this);
+        return proxy(this);
     }
 
     async openQuickCreate(id) {
@@ -76,7 +75,7 @@ export class KanbanQuickCreateController extends Component {
         this.uiService = useService("ui");
         this.offlineService = useService("offline");
         this.rootRef = useRef("root");
-        this.state = useState({ disabled: false, paddingTop: "8px" });
+        this.state = proxy({ disabled: false });
         this.addDialog = useOwnedDialogs();
 
         const { activeFields, fields } = extractFieldsFromArchInfo(
@@ -102,7 +101,7 @@ export class KanbanQuickCreateController extends Component {
             config,
             useSendBeaconToSaveUrgently: true,
         };
-        this.model = useState(new this.props.Model(this.env, modelParams, modelServices));
+        this.model = proxy(new this.props.Model(this.env, modelParams, modelServices));
 
         onWillStart(async () => {
             await this.model.load();
@@ -111,23 +110,14 @@ export class KanbanQuickCreateController extends Component {
 
         onMounted(() => {
             this.uiActiveElement = this.uiService.activeElement;
-            if (hasTouch()) {
-                const label = this.rootRef.el.querySelector(".o_form_label:first-of-type");
-                if (label) {
-                    const computedStyle = getComputedStyle(label);
-                    const height = computedStyle.getPropertyValue("--fieldWidget-label-height");
-                    const width = computedStyle.getPropertyValue("--border-width");
-                    this.state.paddingTop = `calc((0.5 * ${height} - ${width}) + 8px)`;
-                }
-            }
         });
         // Close on outside click
-        useExternalListener(window, "mousedown", (/** @type {MouseEvent} */ ev) => {
+        useListener(window, "mousedown", (/** @type {MouseEvent} */ ev) => {
             // This target is kept in order to impeach close on outside click behavior if the click
             // has been initiated from the quickcreate root element (mouse selection in an input...)
             this.mousedownTarget = ev.target;
         });
-        useExternalListener(
+        useListener(
             window,
             "click",
             async (/** @type {MouseEvent} */ ev) => {
@@ -311,7 +301,7 @@ export class KanbanRecordQuickCreate extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             isLoaded: false,
         });
         this.viewService = useService("view");
@@ -325,7 +315,7 @@ export class KanbanRecordQuickCreate extends Component {
                 ...getDefaultConfig(),
                 actionId: this.env.config.actionId,
                 actionName: this.env.config.actionName,
-                viewType: "kanban_quick_create",
+                viewType: "kanban",
                 resId: false,
             },
         });

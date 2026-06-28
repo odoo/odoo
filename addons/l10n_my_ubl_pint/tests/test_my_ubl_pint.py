@@ -25,8 +25,7 @@ class TestMyUBLPint(AccountTestInvoicingCommon):
             'street': 'that one street, 5',
             'city': 'Main city',
             'phone': '+60123456789',
-            'peppol_eas': '0230',
-            'peppol_endpoint': 'C2584563200',
+            'routing_identifier': '0230:C2584563200',
         })
         cls.partner_a.write({
             'vat': 'C2584563201',
@@ -35,8 +34,7 @@ class TestMyUBLPint(AccountTestInvoicingCommon):
             'street': 'that other street, 3',
             'city': 'Main city',
             'phone': '+60123456786',
-            'peppol_eas': '0230',
-            'peppol_endpoint': 'C2584563201',
+            'routing_identifier': '0230:C2584563201',
         })
 
         cls.fakenow = datetime(2024, 7, 15, 10, 00, 00)
@@ -55,6 +53,34 @@ class TestMyUBLPint(AccountTestInvoicingCommon):
         self.assertXmlTreeEqual(
             self.get_xml_tree_from_string(actual_xml),
             self.get_xml_tree_from_string(expected_xml),
+        )
+
+    def test_invoice_import(self):
+        with file_open('l10n_my_ubl_pint/tests/expected_xmls/invoice_no_taxes.xml', 'rb') as f:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': f.read(),
+            })
+
+        imported_invoice = self.env['account.move'] \
+            .with_context(default_move_type='out_invoice') \
+            ._create_records_from_attachments(xml_attachment)
+
+        self.assertEqual(imported_invoice.move_type, 'out_invoice')
+        self.assertEqual(imported_invoice.partner_id, self.partner_a)
+        self.assertEqual(imported_invoice.currency_id, self.company_data['currency'])
+        self.assertEqual(
+            imported_invoice.invoice_date.strftime("%Y-%m-%d"),
+            "2019-01-01",
+        )
+        self.assertRecordValues(
+            imported_invoice,
+            [{
+                'amount_untaxed': 1000.0,
+                'amount_tax': 0.0,
+                'amount_total': 1000.0,
+            }],
         )
 
     def test_invoice_with_sst(self):

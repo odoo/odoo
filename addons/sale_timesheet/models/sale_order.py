@@ -69,7 +69,7 @@ class SaleOrder(models.Model):
 
     def _compute_show_hours_recorded_button(self):
         show_button_ids = self._get_order_with_valid_service_product()
-        for order in self:
+        for order in self.sudo():
             order.show_hours_recorded_button = order.timesheet_count or order.project_count and order.id in show_button_ids
 
     @api.model_create_multi

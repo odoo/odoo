@@ -13,7 +13,7 @@ from odoo.addons.mail.tools.discuss import Store
 from .hr_employee_location import DAYS
 
 
-def field_employee(field_type: type[fields.Field], name: str, *, field_name='', user_writeable=False, **kw):
+def related_employee_field(name: str, *, field_name: str | None = None, string: str = '__default__'):
     """Simulating a related field "employee_id.{name}".
 
     Current user is read and updated with `sudo()`. Otherwise, behaves as a
@@ -21,10 +21,10 @@ def field_employee(field_type: type[fields.Field], name: str, *, field_name='', 
 
     :param field_name: provide if you name your field in some other way than
         on the employee model
+    :param string: field label override
     """
     # simulating a related field which bypasses access only for the current user
-    assert 'related' not in kw and 'store' not in kw, "Unsupported parameters found"
-    if not field_name:
+    if field_name is None:
         field_name = name
 
     @api.depends(f'employee_id.{name}')
@@ -40,6 +40,7 @@ def field_employee(field_type: type[fields.Field], name: str, *, field_name='', 
 
     def inverse_employee_field(self):
         current_user = self.env.user
+        user_writeable = getattr(self._fields[field_name], 'user_writeable', False)
         for user in self:
             if user_writeable and user == current_user:
                 employee = user.sudo().employee_id.with_prefetch()
@@ -60,13 +61,14 @@ def field_employee(field_type: type[fields.Field], name: str, *, field_name='', 
 
     # mark the compute function for identification later
     compute_employee_field.employee_field_name = name
-    return field_type(
-        **kw,
-        compute=compute_employee_field,
-        inverse=inverse_employee_field,
-        search=search_employee_field,
-        user_writeable=user_writeable,
-    )
+    return {
+        'string': string,
+        'compute': compute_employee_field,
+        'inverse': inverse_employee_field,
+        'search': search_employee_field,
+         # make it not shareable since we update the field in _post_model_setup__
+        '_shareable': False,
+    }
 
 
 class ResUsers(models.Model):
@@ -81,65 +83,83 @@ class ResUsers(models.Model):
         for field in self._fields.values():
             if callable(field.compute) and hasattr(field.compute, 'employee_field_name'):
                 related_field = self.env.registry['hr.employee']._fields[field.compute.employee_field_name]
-                if 'string' not in field._args__:
+                if field.string == '__default__':
                     field.string = related_field.string
-                if 'help' not in field._args__:
+                if field.help is None:
                     field.help = related_field.help
 
         return super()._post_model_setup__()
 
     # note: a user can only be linked to one employee per company (see sql constraint in `hr.employee`)
     employee_ids = fields.One2many('hr.employee', 'user_id', string='Related employee', domain=_employee_ids_domain)
+    all_employee_ids = fields.One2many("hr.employee", "user_id", string="Related employees from all companies")
     employee_public_ids = fields.One2many('hr.employee.public', 'user_id', string='Related employee (public)', domain=_employee_ids_domain, readonly=True)
     employee_id = fields.Many2one('hr.employee', string="Company employee",
         compute='_compute_company_employee', search='_search_company_employee', readonly=True)
+    department_id = fields.Many2one(related='employee_id.department_id', string='Department')
 
-    job_title = field_employee(fields.Char, 'job_title', user_writeable=True)
-    work_phone = field_employee(fields.Char, 'work_phone', user_writeable=True)
-    mobile_phone = field_employee(fields.Char, 'mobile_phone', user_writeable=True)
-    work_email = field_employee(fields.Char, 'work_email', user_writeable=True)
-    category_ids = field_employee(fields.Many2many, 'category_ids', comodel_name='hr.employee.category', string="Employee Tags", user_writeable=True)
-    work_contact_id = field_employee(fields.Many2one, 'work_contact_id', comodel_name='res.partner')
-    work_location_id = field_employee(fields.Many2one, 'work_location_id', comodel_name='hr.work.location', user_writeable=True)
+    job_title = fields.Char(**related_employee_field('job_title'), user_writeable=True)
+    work_phone = fields.Char(**related_employee_field('work_phone'), user_writeable=True)
+    mobile_phone = fields.Char(**related_employee_field('mobile_phone'), user_writeable=True)
+    work_email = fields.Char(**related_employee_field('work_email'), user_writeable=True)
+    category_ids = fields.Many2many('hr.employee.category', **related_employee_field('category_ids', string="Employee Tags"), user_writeable=True)
+    work_contact_id = fields.Many2one('res.partner', **related_employee_field('work_contact_id'))
+    work_location_id = fields.Many2one('hr.work.location', **related_employee_field('work_location_id'), user_writeable=True)
     work_location_name = fields.Char(related="employee_id.work_location_name")
     work_location_type = fields.Selection(related="employee_id.work_location_type")
-    private_street = field_employee(fields.Char, 'private_street', string="Private Street", user_writeable=True)
-    private_street2 = field_employee(fields.Char, 'private_street2', string="Private Street2", user_writeable=True)
-    private_city = field_employee(fields.Char, 'private_city', string="Private City", user_writeable=True)
-    private_state_id = field_employee(fields.Many2one, 'private_state_id', string="Private State", user_writeable=True,
-        comodel_name='res.country.state',
-        domain="[('country_id', '=?', private_country_id)]")
-    private_zip = field_employee(fields.Char, 'private_zip', string="Private Zip", user_writeable=True)
-    private_country_id = field_employee(fields.Many2one, 'private_country_id', comodel_name='res.country', string="Private Country", user_writeable=True)
-    private_phone = field_employee(fields.Char, 'private_phone', user_writeable=True)
-    private_email = field_employee(fields.Char, 'private_email', user_writeable=True)
-    km_home_work = field_employee(fields.Integer, 'km_home_work', user_writeable=True)
+    private_street = fields.Char(**related_employee_field('private_street'), user_writeable=True)
+    private_street2 = fields.Char(**related_employee_field('private_street2'), user_writeable=True)
+    private_city = fields.Char(**related_employee_field('private_city'), user_writeable=True)
+    private_state_id = fields.Many2one(
+        'res.country.state',
+        domain="[('country_id', '=?', private_country_id)]",
+        **related_employee_field('private_state_id'),
+        user_writeable=True,
+    )
+    private_zip = fields.Char(**related_employee_field('private_zip'), user_writeable=True)
+    private_country_id = fields.Many2one('res.country', **related_employee_field('private_country_id'), user_writeable=True)
+    private_phone = fields.Char(**related_employee_field('private_phone'), user_writeable=True)
+    private_email = fields.Char(**related_employee_field('private_email'), user_writeable=True)
+    km_home_work = fields.Integer(**related_employee_field('km_home_work'), user_writeable=True)
     # res.users already have a field bank_account_id and country_id from the res.partner inheritance: don't redefine them
     # This field no longer appears to be in use. To avoid breaking anything it must only be removed after the freeze of v19.
-    employee_bank_account_ids = field_employee(fields.Many2many, 'bank_account_ids', comodel_name='res.partner.bank', string="Employee's Bank Accounts", user_writeable=True, field_name='employee_bank_account_ids')
-    emergency_contact = field_employee(fields.Char, 'emergency_contact', user_writeable=True)
-    emergency_phone = field_employee(fields.Char, 'emergency_phone', user_writeable=True)
-    visa_expire = field_employee(fields.Date, 'visa_expire', user_writeable=True)
-    additional_note = field_employee(fields.Text, 'additional_note', user_writeable=True)
-    barcode = field_employee(fields.Char, 'barcode', user_writeable=True)
-    pin = field_employee(fields.Char, 'pin', user_writeable=True)
+    employee_bank_account_ids = fields.Many2many(
+        'res.partner.bank',
+        **related_employee_field('bank_account_ids', field_name='employee_bank_account_ids', string="Employee's Bank Accounts"),
+        user_writeable=True,
+    )
+    emergency_contact = fields.Char(**related_employee_field('emergency_contact'), user_writeable=True)
+    emergency_phone = fields.Char(**related_employee_field('emergency_phone'), user_writeable=True)
+    visa_expire = fields.Date(**related_employee_field('visa_expire'), user_writeable=True)
+    additional_note = fields.Text(**related_employee_field('additional_note'), user_writeable=True)
+    barcode = fields.Char(**related_employee_field('barcode'), user_writeable=True)
+    pin = fields.Char(**related_employee_field('pin'), user_writeable=True)
     employee_count = fields.Integer(compute='_compute_employee_count')
     employee_resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Employee's Working Hours", readonly=True)
-    bank_account_ids = field_employee(fields.Many2many, 'bank_account_ids', comodel_name='res.partner.bank')
-    marital = field_employee(fields.Selection, 'marital', string="Marital Status", user_writeable=True,
-        selection=lambda self: self.env["hr.employee"]._fields["marital"]._description_selection(self.env))
-    spouse_complete_name = field_employee(fields.Char, 'spouse_complete_name', string="Spouse Legal Name", user_writeable=True)
-    spouse_birthdate = field_employee(fields.Date, 'spouse_birthdate', user_writeable=True)
-    children = field_employee(fields.Integer, 'children', string="Dependent Children", user_writeable=True)
-    legal_name = field_employee(fields.Char, 'legal_name', user_writeable=True,
-        help="The employee's official name as per government-issued or legal documents.")
-    birthday = field_employee(fields.Date, 'birthday', user_writeable=True)
-    birthday_public_display = field_employee(fields.Boolean, 'birthday_public_display', string="Show Birthday To Employees", user_writeable=True)
-    place_of_birth = field_employee(fields.Char, 'place_of_birth', user_writeable=True)
-    country_of_birth = field_employee(fields.Many2one, 'country_of_birth', comodel_name='res.country', user_writeable=True)
-    sex = field_employee(fields.Selection, 'sex', user_writeable=True,
+    bank_account_ids = fields.Many2many('res.partner.bank', **related_employee_field('bank_account_ids'))
+    marital = fields.Selection(
+        selection=lambda self: self.env["hr.employee"]._fields["marital"]._description_selection(self.env),
+        **related_employee_field('marital'),
+        user_writeable=True,
+    )
+    spouse_complete_name = fields.Char(**related_employee_field('spouse_complete_name'), user_writeable=True)
+    spouse_birthdate = fields.Date(**related_employee_field('spouse_birthdate'), user_writeable=True)
+    children = fields.Integer(**related_employee_field('children'), user_writeable=True)
+    legal_name = fields.Char(
+        help="The employee's official name as per government-issued or legal documents.",
+        **related_employee_field('legal_name'),
+        user_writeable=True,
+    )
+    birthday = fields.Date(**related_employee_field('birthday'), user_writeable=True)
+    birthday_public_display = fields.Boolean(**related_employee_field('birthday_public_display'), user_writeable=True)
+    place_of_birth = fields.Char(**related_employee_field('place_of_birth'), user_writeable=True)
+    country_of_birth = fields.Many2one('res.country', **related_employee_field('country_of_birth'), user_writeable=True)
+    sex = fields.Selection(
         selection=lambda self: self.env["hr.employee"]._fields["sex"]._description_selection(self.env),
-        help="This is the legal sex as recognized by the state, used for official and statutory purposes.")
+        help="This is the legal sex as recognized by the state, used for official and statutory purposes.",
+        **related_employee_field('sex'),
+        user_writeable=True,
+    )
 
     create_employee = fields.Boolean(store=False, default=False, copy=False, string="Technical field, whether to create an employee")
     create_employee_id = fields.Many2one('hr.employee', store=False, copy=False, string="Technical field, bind user to this employee on create")
@@ -147,13 +167,13 @@ class ResUsers(models.Model):
     is_system = fields.Boolean(compute="_compute_is_system")
     is_hr_user = fields.Boolean(compute='_compute_is_hr_user')
 
-    monday_location_id = fields.Many2one("hr.work.location", related="employee_id.monday_location_id", readonly=False, string='Mondays', user_writeable=True)
-    tuesday_location_id = fields.Many2one("hr.work.location", related="employee_id.tuesday_location_id", readonly=False, string='Tuesdays', user_writeable=True)
-    wednesday_location_id = fields.Many2one("hr.work.location", related="employee_id.wednesday_location_id", readonly=False, string='Wednesdays', user_writeable=True)
-    thursday_location_id = fields.Many2one("hr.work.location", related="employee_id.thursday_location_id", readonly=False, string='Thursdays', user_writeable=True)
-    friday_location_id = fields.Many2one("hr.work.location", related="employee_id.friday_location_id", readonly=False, string='Fridays', user_writeable=True)
-    saturday_location_id = fields.Many2one("hr.work.location", related="employee_id.saturday_location_id", readonly=False, string='Saturdays', user_writeable=True)
-    sunday_location_id = fields.Many2one("hr.work.location", related="employee_id.sunday_location_id", readonly=False, string='Sundays', user_writeable=True)
+    monday_location_id = fields.Many2one('hr.work.location', **related_employee_field('monday_location_id', string='Mondays'), user_writeable=True)
+    tuesday_location_id = fields.Many2one('hr.work.location', **related_employee_field('tuesday_location_id', string='Tuesdays'), user_writeable=True)
+    wednesday_location_id = fields.Many2one('hr.work.location', **related_employee_field('wednesday_location_id', string='Wednesdays'), user_writeable=True)
+    thursday_location_id = fields.Many2one('hr.work.location', **related_employee_field('thursday_location_id', string='Thursdays'), user_writeable=True)
+    friday_location_id = fields.Many2one('hr.work.location', **related_employee_field('friday_location_id', string='Fridays'), user_writeable=True)
+    saturday_location_id = fields.Many2one('hr.work.location', **related_employee_field('saturday_location_id', string='Saturdays'), user_writeable=True)
+    sunday_location_id = fields.Many2one('hr.work.location', **related_employee_field('sunday_location_id', string='Sundays'), user_writeable=True)
 
     @api.depends_context('uid')
     def _compute_is_system(self):
@@ -279,15 +299,18 @@ class ResUsers(models.Model):
     @api.depends('employee_ids')
     @api.depends_context('company', 'uid')
     def _compute_company_employee(self):
-        Employee = self.env['hr.employee']
-        if self == self.env.user:
-            Employee = Employee.sudo()
-        employee_per_user = {
-            employee.user_id: employee
-            for employee in Employee.search([('user_id', 'in', self.ids), ('company_id', '=', self.env.company.id)])
-        }
+        employee_per_user = dict(self.env['hr.employee'].sudo()._read_group(
+            domain=[('user_id', 'in', self.ids), ('company_id', '=', self.env.company.id)],
+            groupby=['user_id'],
+            aggregates=['id:recordset'],
+        ))
+
         for user in self:
-            user.employee_id = employee_per_user.get(user)
+            employee = employee_per_user.get(user, self.env['hr.employee'])
+            if user != self.env.user and not self.env.su:
+                # since the search is done in sudo to avoid cache issues, apply access rules
+                employee = employee.filtered(lambda e: e.has_access('read'))
+            user.employee_id = employee
 
     def _search_company_employee(self, operator, value):
         # Equivalent to `[('employee_ids', operator, value)]`,
@@ -345,11 +368,11 @@ class ResUsers(models.Model):
             'view_mode': 'form',
         }
 
-    def get_formview_action(self, access_uid=None):
+    def get_record_default_action(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the full user form view
         incase the user is ERP manager and the request coming from employee form."""
 
-        res = super().get_formview_action(access_uid=access_uid)
+        res = super().get_record_default_action(access_uid=access_uid)
         user = self.env.user
         if access_uid:
             user = self.env['res.users'].browse(access_uid).sudo()
@@ -359,8 +382,13 @@ class ResUsers(models.Model):
 
         return res
 
+    def _store_avatar_card_fields(self, res: Store.FieldList):
+        super()._store_avatar_card_fields(res)
+        if res.is_for_internal_users():
+            # sudo: res.users - internal users can access employee information of accessible user
+            res.many("employee_ids", "_store_avatar_card_fields", sudo=True)
+
     def _store_im_status_fields(self, res: Store.FieldList):
         super()._store_im_status_fields(res)
-        if res.is_for_internal_users():
-            # sudo: res.users - internal users can access employee information for the IM status
-            res.many("employee_ids", "_store_im_status_fields", sudo=True)
+        # sudo: res.users - internal users can access employee information for the IM status
+        res.many("all_employee_ids", "_store_im_status_fields", sudo=True)

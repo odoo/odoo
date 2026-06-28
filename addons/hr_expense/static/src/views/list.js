@@ -8,7 +8,7 @@ import { user } from "@web/core/user";
 import { listView } from "@web/views/list/list_view";
 
 import { ListController } from "@web/views/list/list_controller";
-import { ListRenderer } from "@web/views/list/list_renderer";
+import { ListRenderer, listRendererProps } from "@web/views/list/list_renderer";
 import { onWillStart } from "@odoo/owl";
 
 export class ExpenseListController extends ExpenseDocumentUpload(ListController) {
@@ -64,7 +64,7 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
     }
 }
 
-export class ExpenseListRenderer extends ExpenseDocumentDropZone(ListRenderer) {
+export class ExpenseListRenderer extends ExpenseDocumentDropZone(ListRenderer, listRendererProps) {
     static template = "hr_expense.ListRenderer";
 }
 

@@ -80,14 +80,14 @@ patch(PaymentForm.prototype, {
                     },
                 ));
                 // Create the Adyen Checkout SDK.
-                const providerState = this._getProviderState(radio);
+                const providerIsLive = this._getProviderIsLive(radio);
                 const configuration = {
                     paymentMethodsResponse: response,
                     clientKey: inlineFormValues['client_key'],
                     amount: formattedAmount,
                     locale: pyToJsLocale(document.documentElement.getAttribute('lang')) || 'en-US',
                     countryCode: response['country_code'],
-                    environment: providerState === 'enabled' ? 'live' : 'test',
+                    environment: providerIsLive === true ? 'live' : 'test',
                     onAdditionalDetails: this._adyenOnSubmitAdditionalDetails.bind(this),
                     onPaymentCompleted: this._adyenOnPaymentResolved.bind(this),
                     onPaymentFailed: this._adyenOnPaymentResolved.bind(this),

@@ -47,8 +47,8 @@ export class ModalRegistration extends Interaction {
 
         formModal.show();
         this.registerCleanup(() => {
+            this.el.addEventListener("hidden.bs.modal", () => formModal.dispose(), { once: true });
             formModal.hide();
-            formModal.dispose();
         });
     }
 

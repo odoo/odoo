@@ -1,7 +1,7 @@
-import { useExternalListener } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { FormController } from '@web/views/form/form_controller';
 import { useService } from '@web/core/utils/hooks';
+import { useListener } from "@odoo/owl";
 
 export class ProjectSharingFormController extends FormController {
     static components = {
@@ -11,8 +11,8 @@ export class ProjectSharingFormController extends FormController {
     setup() {
         super.setup();
         this.notification = useService('notification');
-        useExternalListener(window, "paste", this.onGlobalPaste, { capture: true });
-        useExternalListener(window, "drop", this.onGlobalDrop, { capture: true });
+        useListener(window, "paste", this.onGlobalPaste.bind(this), { capture: true });
+        useListener(window, "drop", this.onGlobalDrop.bind(this), { capture: true });
     }
 
     get actionMenuItems() {

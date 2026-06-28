@@ -3,12 +3,20 @@ import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { ICON_SELECTOR, isElement } from "@html_editor/utils/dom_info";
-import { isIconElement, isZwnbsp } from "../../utils/dom_info";
+import {
+    ICON_SELECTOR,
+    ICON_SIZE_CLASS_REGEX,
+    getIconType,
+    isElement,
+    isIconElement,
+    isTextNode,
+    isZwnbsp,
+} from "@html_editor/utils/dom_info";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
-    static dependencies = ["history", "selection", "dialog"];
+    static dependencies = ["history", "selection", "color", "dialog"];
     toolbarNamespace = "icon";
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -62,27 +70,8 @@ export class IconPlugin extends Plugin {
                 if (!targetedNodes.length) {
                     return;
                 }
-                const isIconInTargetedNodes = targetedNodes.some(isIconElement);
-                // All nodes should be icons or their ZWS children.
-                // FEFF nodes are only considered valid if an icon is selected and the
-                // FEFF is directly adjacent to it.
-                const isIconRelatedNode = (node) => {
-                    if (
-                        node.classList?.contains("fa") ||
-                        node.parentElement?.classList.contains("fa")
-                    ) {
-                        return true;
-                    }
-                    if (isZwnbsp(node) && isIconInTargetedNodes) {
-                        return (
-                            node.nextElementSibling?.classList?.contains("fa") ||
-                            node.previousElementSibling?.classList?.contains("fa")
-                        );
-                    }
-                    return false;
-                };
-
-                if (targetedNodes.every(isIconRelatedNode)) {
+                const textNodes = targetedNodes.filter(isTextNode);
+                if (textNodes.every(isZwnbsp) && targetedNodes.some(isIconElement)) {
                     return this.toolbarNamespace;
                 }
             },
@@ -138,10 +127,37 @@ export class IconPlugin extends Plugin {
                 id: "icon_replace",
                 groupId: "icon_replace",
                 commandId: "replaceIcon",
-                text: _t("Replace"),
+                icon: "fa-file-image-o",
             },
         ],
+        click_overrides: this.onClickIcon.bind(this),
+        would_feff_be_legit_predicates: (node) => {
+            if (
+                (node.previousSibling && isIconElement(closestElement(node.previousSibling))) ||
+                (node.nextSibling && isIconElement(closestElement(node.nextSibling)))
+            ) {
+                return true;
+            }
+        },
+        /** Providers */
+        selected_background_color_providers: withSequence(
+            5,
+            this.computeBackgroundColorForIcon.bind(this)
+        ),
     };
+
+    onClickIcon(ev) {
+        const node = ev.target;
+        if (
+            isIconElement(closestElement(node)) &&
+            !this.dependencies.selection.isNodeEditable(node)
+        ) {
+            // We select around an icon inside non editable.
+            // This might, in case icon inside link, show the link
+            // popover to be able to open link.
+            this.dependencies.selection.selectElement(node);
+        }
+    }
 
     getTargetedIcon() {
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
@@ -153,15 +169,16 @@ export class IconPlugin extends Plugin {
         if (!targetedIcon) {
             return;
         }
-        for (const classString of targetedIcon.classList) {
-            if (classString.match(/^fa-[2-5]x$/)) {
+        for (const classString of [...targetedIcon.classList]) {
+            if (ICON_SIZE_CLASS_REGEX.test(classString)) {
                 targetedIcon.classList.remove(classString);
             }
         }
-        if (size !== "1") {
-            targetedIcon.classList.add(`fa-${size}x`);
+        const iconType = getIconType(targetedIcon);
+        if (size !== "1" && iconType) {
+            targetedIcon.classList.add(`${iconType}-${size}x`);
         }
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     toggleSpinIcon() {
@@ -170,20 +187,21 @@ export class IconPlugin extends Plugin {
             return;
         }
         selectedIcon.classList.toggle("fa-spin");
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     hasIconSize(size) {
         const selectedIcon = this.getTargetedIcon();
         if (!selectedIcon) {
-            return;
+            return false;
         }
         if (size === "1") {
             return ![...selectedIcon.classList].some((classString) =>
-                classString.match(/^fa-[2-5]x$/)
+                ICON_SIZE_CLASS_REGEX.test(classString)
             );
         }
-        return selectedIcon.classList.contains(`fa-${size}x`);
+        const iconType = getIconType(selectedIcon);
+        return !!(iconType && selectedIcon.classList.contains(`${iconType}-${size}x`));
     }
 
     hasSpinIcon() {
@@ -203,6 +221,7 @@ export class IconPlugin extends Plugin {
             visibleTabs: ["ICONS"],
             media: selectedIcon,
             save: (el) => this.onSaveIcon(el, selectedIcon),
+            document: this.document,
         });
     }
 
@@ -210,6 +229,20 @@ export class IconPlugin extends Plugin {
         for (const attribute of icon.attributes) {
             prevIcon.setAttribute(attribute.nodeName, attribute.nodeValue);
         }
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
+    }
+
+    computeBackgroundColorForIcon() {
+        const nodes = this.dependencies.selection
+            .getTargetedNodes()
+            .filter((node) => node.classList?.contains("fa"));
+        if (nodes.length === 0) {
+            return;
+        }
+        const el = closestElement(nodes[0], "font");
+        if (!el) {
+            return;
+        }
+        return this.dependencies.color.getElementColors(el).backgroundColor;
     }
 }

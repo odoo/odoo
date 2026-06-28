@@ -2,32 +2,45 @@
 <templates xml:space="preserve">
     <t t-name="website.s_dynamic_snippet.carousel.arrows">
         <div class="o_carousel_arrow_wrap align-items-center pe-none">
-            <a t-attf-href="##{unique_id}" class="carousel-control-prev position-relative pe-auto" data-bs-slide="prev" role="button" aria-label="Previous" title="Previous">
+            <a t-attf-href="##{this.unique_id}" class="carousel-control-prev position-relative pe-auto" data-bs-slide="prev" role="button" t-attf-aria-controls="#{this.unique_id}_inner" aria-label="Previous" title="Previous">
                 <span class="o_carousel_arrow oi oi-chevron-left p-3"/>
                 <span class="visually-hidden">Previous</span>
             </a>
         </div>
         <div class="o_carousel_arrow_wrap align-items-center justify-content-end pe-none">
-            <a t-attf-href="##{unique_id}" class="carousel-control-next position-relative pe-auto" data-bs-slide="next" role="button" aria-label="Next" title="Next">
+            <a t-attf-href="##{this.unique_id}" class="carousel-control-next position-relative pe-auto" data-bs-slide="next" role="button" t-attf-aria-controls="#{this.unique_id}_inner" aria-label="Next" title="Next">
                 <span class="o_carousel_arrow oi oi-chevron-right p-3"/>
                 <span class="visually-hidden">Next</span>
             </a>
         </div>
     </t>
     <t t-name="website.s_dynamic_snippet.carousel.base">
-        <div t-att-id="unique_id" t-attf-class="carousel slide #{extraCarouselClass || ''}"
+        <t t-set="slideSize" t-value="rowSize * this.rowPerSlide" />
+        <t t-set="slideIndexGenerator" t-value="Array(Math.ceil(this.data.length/slideSize))"/>
+        <div t-att-id="this.unique_id" t-attf-class="carousel slide d-flex flex-column-reverse #{extraCarouselClass || ''}"
              t-att-style="extraCarouselStyle"
-             t-att-data-bs-interval="this.interval" data-bs-ride="carousel">
+             t-att-data-bs-interval="slideIndexGenerator.length > minControlValue ? this.interval : 0"
+             t-att-data-bs-ride="slideIndexGenerator.length > minControlValue and 'carousel'"
+             role="region"
+             aria-roledescription="carousel">
+            <!-- Controls and indicators are set before the content so that they
+                 are focused in priority when navigating the page with tab. -->
+            <!-- Controls -->
+            <t t-if='slideIndexGenerator.length > minControlValue'>
+                <div class="s_dynamic_snippet_arrows d-flex gap-2 w-100 pe-none z-2">
+                    <t t-call="website.s_dynamic_snippet.carousel.arrows" unique_id="this.unique_id"/>
+                </div>
+            </t>
             <!-- Content -->
-            <t t-set="slideSize" t-value="rowSize * this.rowPerSlide" />
-            <t t-set="slideIndexGenerator" t-value="Array(Math.ceil(this.data.length/slideSize))"/>
             <t t-set="rowIndexGenerator" t-value="Array(this.rowPerSlide)"/>
             <t t-set="colIndexGenerator" t-value="Array(rowSize)"/>
-            <div class="carousel-inner w-100 mx-auto" role="listbox"
-                 aria-label="Carousel">
+            <div class="carousel-inner w-100 mx-auto"
+                 t-attf-id="#{this.unique_id}_inner"
+                 aria-label="Carousel"
+                 aria-live="off">
                 <t t-foreach="slideIndexGenerator" t-as="slideIndex" t-key="slideIndex_index">
                     <t t-set="slideOffset" t-value="slideIndex_index * slideSize"/>
-                    <div t-attf-class="carousel-item #{this.extraClasses || ''} #{slideIndex_first ? 'active' : ''}" role="option">
+                    <div t-attf-class="carousel-item #{this.extraClasses || ''} #{slideIndex_first ? 'active' : ''}" role="group" aria-roledescription="slide">
                         <t t-foreach="rowIndexGenerator" t-as="rowIndex" t-key="rowIndex_index">
                             <t t-set="rowOffset" t-value="slideOffset + (rowIndex_index * rowSize)"/>
                             <t t-if="rowOffset &lt; this.data.length">
@@ -46,36 +59,24 @@
                     </div>
                 </t>
             </div>
-            <!-- Controls -->
-            <t t-if='slideIndexGenerator.length > minControlValue'>
-                <div class="s_dynamic_snippet_arrows d-flex gap-2 w-100 pe-none z-1">
-                    <t t-call="website.s_dynamic_snippet.carousel.arrows">
-                        <t t-set="unique_id" t-value="unique_id" />
-                    </t>
-                </div>
-            </t>
         </div>
     </t>
     <t t-name="website.s_dynamic_snippet.carousel.page_scroll">
-        <t t-call="website.s_dynamic_snippet.carousel.base">
-            <t t-set="rowSize" t-value="this.chunkSize"/>
-            <t t-set="extraCarouselStyle"
-               t-value="'--o-carousel-chunk-size: ' + this.chunkSize"/>
-            <t t-set="colClass"
-               t-value="'d-flex flex-grow-0 flex-shrink-0 col-' + Math.trunc(12 / rowSize).toString()"/>
-            <t t-set="minControlValue" t-value="1"/>
-        </t>
+        <t t-set="rowSize" t-value="this.chunkSize"/>
+        <t t-call="website.s_dynamic_snippet.carousel.base"
+            rowSize="rowSize"
+            extraCarouselStyle="'--o-carousel-chunk-size: ' + this.chunkSize"
+            colClass="'d-flex flex-grow-0 flex-shrink-0 col-' + Math.trunc(12 / rowSize).toString()"
+            minControlValue="1"/>
     </t>
     <t t-name="website.s_dynamic_snippet.carousel.single_scroll">
-        <t t-call="website.s_dynamic_snippet.carousel.base">
-            <t t-set="rowSize" t-value="1"/>
-            <t t-set="extraCarouselClass" t-value="'o_carousel_multi_items'"/>
-            <t t-set="extraCarouselStyle"
-               t-value="'--o-carousel-chunk-size: ' + this.chunkSize"/>
-            <t t-set="extraRowClass" t-value="'h-100 mx-0 mt-0'"/>
-            <t t-set="colClass" t-value="'d-flex flex-grow-1 flex-shrink-0 mt-0 px-0'"/>
-            <t t-set="minControlValue" t-value="this.chunkSize"/>
-        </t>
+        <t t-call="website.s_dynamic_snippet.carousel.base"
+            rowSize="1"
+            extraCarouselClass="'o_carousel_multi_items'"
+            extraCarouselStyle="'--o-carousel-chunk-size: ' + this.chunkSize"
+            extraRowClass="'h-100 mx-0 mt-0'"
+            colClass="'d-flex flex-grow-1 flex-shrink-0 mt-0 px-0'"
+            minControlValue="this.chunkSize"/>
     </t>
     <t t-name="website.s_dynamic_snippet.carousel">
         <t t-if="scrollMode === 'single'"

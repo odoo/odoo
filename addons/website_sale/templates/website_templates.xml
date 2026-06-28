@@ -65,13 +65,6 @@
                 t-value="product_image_ratio_classes + (' ' + body_classname if body_classname else '')"
             />
         </body>
-        <head position="inside">
-            <!-- Insert JSON-LD markup data for SEO. -->
-            <script
-                type="application/ld+json"
-                t-out="markup_data_json or website and website._get_ecommerce_store_markup_json()"
-            />
-        </head>
     </template>
 
     <template
@@ -150,6 +143,7 @@
                                     data-name="Supported Payment Methods"
                                     data-limit="8"
                                     data-height="32px"
+                                    data-alignment="start"
                                     data-oe-protected="true"
                                 />
                                 <div class="s_hr pt8 pb24" data-snippet="s_hr" data-name="Separator">
@@ -189,7 +183,7 @@
                                         Follow us
                                     </h5>
                                     <a
-                                        href="/website/social/instagram"
+                                        href="#"
                                         class="s_social_media_instagram"
                                         target="_blank"
                                         aria-label="Instagram"
@@ -197,7 +191,7 @@
                                         <i class="fa fa-instagram o_editable_media rounded shadow-sm"/>
                                     </a>
                                     <a
-                                        href="/website/social/youtube"
+                                        href="#"
                                         class="s_social_media_youtube"
                                         target="_blank"
                                         aria-label="YouTube"
@@ -205,7 +199,7 @@
                                         <i class="fa fa-youtube-play o_editable_media rounded shadow-sm"/>
                                     </a>
                                     <a
-                                        href="/website/social/tiktok"
+                                        href="#"
                                         class="s_social_media_tiktok"
                                         target="_blank"
                                         aria-label="TikTok"
@@ -213,7 +207,7 @@
                                         <i class="fa fa-tiktok o_editable_media rounded shadow-sm"/>
                                     </a>
                                     <a
-                                        href="/website/social/twitter"
+                                        href="#"
                                         class="s_social_media_twitter"
                                         aria-label="Twitter"
                                     >
@@ -415,6 +409,17 @@
                     The #1 <a target="_blank" href="http://www.odoo.com/app/ecommerce?utm_source=db&amp;utm_medium=website">Open Source eCommerce</a>
             </t>
             <t t-call="web.brand_promotion_message" _message="_message" _utm_medium.f="website"/>
+        </xpath>
+    </template>
+
+    <template id="website_sale.search_result_items" inherit_id="website.search_result_items">
+        <xpath expr="//div[hasclass('o_search_result_description')]" position="inside">
+            <div t-if="result.get('attribute_value_ids')"
+                class="o_line_clamp o_line_clamp_1 mb-0"
+                t-out="result['attribute_value_ids']"/>
+            <p t-elif="result.get('description_sale')"
+                class="o_line_clamp o_line_clamp_1 mb-0 small"
+                t-out="result['description_sale']"/>
         </xpath>
     </template>
 

@@ -162,7 +162,7 @@ const discussChannelPatch = {
         if (
             (!this.self_member_id?.mute_until_dt ||
                 message.partner_ids?.includes(this.store.self)) &&
-            this.store.self.im_status !== "busy" &&
+            this.store.self_user?.im_status !== "busy" &&
             (this.channel_type !== "channel" ||
                 (this.channel_type === "channel" &&
                     (this.channelNotifications === "all" ||

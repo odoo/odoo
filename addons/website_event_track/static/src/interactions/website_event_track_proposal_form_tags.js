@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
@@ -15,7 +14,7 @@ class WebsiteEventTrackProposalFormTagsWrapper extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             ...this.props,
             value: [],
         });

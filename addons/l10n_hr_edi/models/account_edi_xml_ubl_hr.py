@@ -77,8 +77,10 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         # Corresponds to Croatian eRacun format constrains
         constraints = {}
         if vals['document_type'] in ['invoice', 'credit_note']:
-            if any(c.isspace() for c in vals['document_node']['cac:PaymentMeans']['cac:PayeeFinancialAccount']['cbc:ID'].get('_text')):
-                constraints.update({'ubl_hr_br_1': self.env._("HR-BR-1: The account number must not contain whitespace characters.")})
+            for node in vals['document_node']['cac:PaymentMeans']:
+                payee_account = node.get('cac:PayeeFinancialAccount')
+                if payee_account and any(char.isspace() for char in payee_account['cbc:ID']['_text']):
+                    constraints['ubl_hr_br_1'] = self.env._("HR-BR-1: The account number must not contain whitespace characters.")
             if invoice.amount_residual > 0 and not invoice.invoice_date_due:
                 constraints.update({'ubl_hr_br_4': self.env._("HR-BT-4: In the case of a positive amount due for payment (BT-115), the payment due date (BT-9) must be specified.")})
             constraints.update({
@@ -106,70 +108,104 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         self._add_hr_extension_node(document_node)
         return document_node
 
-    def _add_invoice_header_nodes(self, document_node, vals):
-        super()._add_invoice_header_nodes(document_node, vals)
-        invoice = vals['invoice']
-        document_node.update({
-            # For Croatia, ID should be the Croatian-format fiscalization number
-            'cbc:ID': {
-                '_text': invoice.l10n_hr_fiscalization_number
-            },
-            # HR-BT-1: Copy indicator - is the invoice the original or already sent
-            #   This doesn't appear to be currently supported in Odoo, and is set to 'false' in TR localization using a similar format
-            'cbc:CopyIndicator': {
-                    '_text': 'false'
-            },
-            # HR-BT-2: The invoice must have an invoice issuance time.
-            #   (in addition to BT-2: Date of issue)
-            'cbc:IssueDate': {
-                '_text': fields.Datetime.to_string(invoice.l10n_hr_invoice_sending_time).split()[0]
-            },
-            'cbc:IssueTime': {
-                '_text': fields.Datetime.to_string(invoice.l10n_hr_invoice_sending_time).split()[1]
-            },
-            # HR-BR-34: The process label MUST be specified. Values P1-P12 or P99:Customer ID from Table 4 Business Process Types are used.
-            'cbc:ProfileID': {
-                '_text': f"P99:{invoice.l10n_hr_customer_defined_process_name}" if invoice.l10n_hr_process_type == 'P99' else invoice.l10n_hr_process_type
-            },
-            # HR-BR-5: The specification identifier must have the value
-            # 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.hr:cius-2025:1.0#conformant#urn:mfin.gov.hr:ext-2025:1.0'
-            'cbc:CustomizationID': {
-                '_text': 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.hr:cius-2025:1.0#conformant#urn:mfin.gov.hr:ext-2025:1.0'
-            },
-        })
-        # HR-BT-4: In the case of a positive amount due for payment (BT-115), the payment due date (BT-9) must be specified.
-        if invoice.amount_residual > 0 and not document_node['cbc:DueDate'] and vals['document_type'] == 'invoice':
-            if invoice.invoice_date_due:
-                document_node.update({
-                    'cbc:DueDate': {
-                        '_text': invoice.invoice_date_due
-                    }
-                })
+    def _ubl_add_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_id_node(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return
+
+        # For Croatia, ID should be the Croatian-format fiscalization number
+        vals['document_node']['cbc:ID']['_text'] = invoice.l10n_hr_fiscalization_number
+
+    def _ubl_add_customization_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.hr:cius-2025:1.0#conformant#urn:mfin.gov.hr:ext-2025:1.0'
+
+    def _ubl_add_profile_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_profile_id_node(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return
+
+        # HR-BR-34: The process label MUST be specified. Values P1-P12 or P99:Customer ID from Table 4 Business Process Types are used.
+        if invoice.l10n_hr_process_type == 'P99':
+            vals['document_node']['cbc:ProfileID']['_text'] = f"P99:{invoice.l10n_hr_customer_defined_process_name}"
+        else:
+            vals['document_node']['cbc:ProfileID']['_text'] = invoice.l10n_hr_process_type
+
+    def _ubl_add_copy_indicator_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_copy_indicator_node(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return
+
+        # HR-BT-1: Copy indicator - is the invoice the original or already sent
+        #   This doesn't appear to be currently supported in Odoo, and is set to 'false' in TR localization using a similar format
+        vals['document_node']['cbc:CopyIndicator']['_text'] = 'false'
+
+    def _ubl_add_issue_date_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_issue_date_node(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return
+
+        # HR-BT-2: The invoice must have an invoice issuance time.
+        #   (in addition to BT-2: Date of issue)
+        issue_date_str, issue_time_str = fields.Datetime.to_string(invoice.l10n_hr_invoice_sending_time).split()
+        vals['document_node']['cbc:IssueDate']['_text'] = issue_date_str
+        vals['document_node']['cbc:IssueTime']['_text'] = issue_time_str
+
+    def _ubl_add_invoice_type_code_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_invoice_type_code_node(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return
+
+        if (
+            invoice.l10n_hr_process_type in ('P4', 'P6')
+            and invoice.move_type == 'out_invoice'
+        ):
+            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = '386'
+
+    def _ubl_add_credit_note_type_code_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_credit_note_type_code_node(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return
+
+        if (
+            invoice.l10n_hr_process_type in ('P4', 'P6')
+            and invoice.move_type == 'out_refund'
+        ):
+            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = '386'
+        elif invoice.l10n_hr_process_type == 'P9':
+            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = '381'
+        elif invoice.l10n_hr_process_type == 'P10':
+            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = '384'
+
+    def _ubl_add_billing_reference_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_billing_reference_nodes(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return
+
         # HR-BT-3: Note on previous invoice
         # HR-BR-6: Each previous invoice reference (BG-3) must have the date of issue of the previous invoice (BT-26).
         if 'refund' in invoice.move_type and invoice.reversed_entry_id:
-            document_node['cac:BillingReference'] = {
+            vals['document_node']['cac:BillingReference'] = [{
                 'cac:InvoiceDocumentReference': {
                     'cbc:ID': {'_text': invoice.ref},
+                    'cbc:IssueDate': {'_text': invoice.reversed_entry_id.invoice_date},
                 },
-                'cbc:IssueDate': {
-                    '_text': invoice.reversed_entry_id.invoice_date
-                }
-            }
-        # Document Type Codes and Process Type Logic
-        if invoice.l10n_hr_process_type in ('P4', 'P6'):
-            if invoice.move_type == 'out_invoice':
-                document_node['cbc:InvoiceTypeCode'].update({
-                    '_text': '386'
-                })
-            elif invoice.move_type == 'out_refund':
-                document_node['cbc:CreditNoteTypeCode'].update({
-                    '_text': '386'
-                })
-        elif invoice.l10n_hr_process_type == 'P9':
-            document_node['cbc:CreditNoteTypeCode'].update({
-                '_text': '381'
-            })
+            }]
 
     def _add_hr_extension_node(self, document_node):
         """
@@ -232,36 +268,22 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
             }
         })
 
-    def _add_invoice_line_item_nodes(self, line_node, vals):
-        super()._add_invoice_line_item_nodes(line_node, vals)
-        # HR-BR-25: Each item MUST have an item classification identifier from the Classification of Products
-        # by Activities scheme: KPD (CPA) - listID "CG", except in the case of advance payment invoices.
-        line = vals['base_line']['record']
-        line_node['cac:Item'].update({
-            'cac:CommodityClassification': {
-                'cbc:ItemClassificationCode': {
-                    'listID': 'CG',
-                    '_text': line.l10n_hr_kpd_category_id.name
-                }
-            }
-        })
-
     def _ubl_add_party_endpoint_id_node(self, vals):
         # EXTENDS account.edi.ubl_bis3
         super()._ubl_add_party_endpoint_id_node(vals)
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
         if commercial_partner.l10n_hr_personal_oib:
-            ident = commercial_partner.l10n_hr_personal_oib
-            scheme = '9934'
-        elif commercial_partner.company_registry:
-            ident = commercial_partner.company_registry
-            scheme = '0088'
+            endpoint = commercial_partner.l10n_hr_personal_oib
+            scheme_id = '9934'
+        elif hr_en := commercial_partner._get_additional_identifier('HR_EN'):
+            endpoint = hr_en
+            scheme_id = '0088'
         else:
-            ident = commercial_partner.vat.strip('HR')
-            scheme = '9934'
-        vals['party_node']['cbc:EndpointID']['_text'] = ident
-        vals['party_node']['cbc:EndpointID']['schemeID'] = scheme
+            endpoint = commercial_partner.vat.strip('HR')
+            scheme_id = '9934'
+        vals['party_node']['cbc:EndpointID']['_text'] = endpoint
+        vals['party_node']['cbc:EndpointID']['schemeID'] = scheme_id
 
     def _ubl_add_party_identification_nodes(self, vals):
         # EXTENDS account.edi.ubl_bis3
@@ -269,15 +291,15 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
         if commercial_partner.l10n_hr_business_unit_code:
-            bu_code = '::HR99:' + commercial_partner.l10n_hr_business_unit_code
+            bu_code = f'::HR99:{commercial_partner.l10n_hr_business_unit_code}'
         else:
             bu_code = ''
         if commercial_partner.l10n_hr_personal_oib:
-            ident = '9934:' + commercial_partner.l10n_hr_personal_oib + bu_code
-        elif commercial_partner.company_registry:
-            ident = '0088:' + commercial_partner.company_registry
+            ident = f'9934:{commercial_partner.l10n_hr_personal_oib}{bu_code}'
+        elif hr_en := commercial_partner._get_additional_identifier('HR_EN'):
+            ident = f'0088:{hr_en}'
         else:
-            ident = '9934:' + commercial_partner.vat.strip('HR') + bu_code
+            ident = f'9934:{commercial_partner.vat.strip("HR")}{bu_code}'
         vals['party_node']['cac:PartyIdentification'] = [{
             'cbc:ID': {
                 '_text': ident,
@@ -353,47 +375,37 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         node['cbc:TaxExemptionReason']['_text'] = tax_category.get('tax_exemption_reason')
         return node
 
-    def _import_fill_invoice(self, invoice, tree, qty_factor):
-        logs = super()._import_fill_invoice(invoice, tree, qty_factor)
+    def _setup_base_lines(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._setup_base_lines(vals)
+        for base_line in vals['base_lines']:
+            if base_line.get('record') and 'l10n_hr_kpd_category_id' in base_line['record']._fields:
+                base_line['cg_item_classification_code'] = base_line['record'].l10n_hr_kpd_category_id
+
+    def _import_ubl_invoice_write_collected_values(self, collected_values):
+        # EXTENDS account.edi.xml.ubl_bis3
+        tree = collected_values['tree']
         profile_id = tree.findtext('./{*}ProfileID')
-        invoice_values = {
-            'l10n_hr_process_type': profile_id[:3] if profile_id[:3] == 'P99' else profile_id,
-            'l10n_hr_customer_defined_process_name': profile_id[4:] if profile_id[:3] == 'P99' else False,
-        }
-        invoice.write(invoice_values)
+        to_write = collected_values['to_write']
+        if profile_id:
+            if (l10n_hr_process_type := profile_id[:3]) == 'P99':
+                to_write['l10n_hr_process_type'] = l10n_hr_process_type
+                to_write['l10n_hr_customer_defined_process_name'] = profile_id[4:]
+            else:
+                to_write['l10n_hr_process_type'] = profile_id
+                to_write['l10n_hr_customer_defined_process_name'] = None
+
+        super()._import_ubl_invoice_write_collected_values(collected_values)
+
+        invoice = collected_values['invoice']
         invoice.l10n_hr_edi_addendum_id.write({'fiscalization_number': tree.findtext('./{*}ID')})
-        return logs
 
-    def _import_invoice_lines(self, invoice, tree, xpath, qty_factor):
-        # Override to work with Croatian tax exigibility flag
-        tax_exigibility = 'on_payment' if tree.find('.//{*}HRObracunPDVPoNaplati') is not None else 'on_invoice'
-        logs = []
-        lines_values = []
-        for line_tree in tree.iterfind(xpath):
-            line_values = self.with_company(invoice.company_id)._retrieve_invoice_line_vals(line_tree, invoice.move_type, qty_factor)
-            if line_values is None:
-                continue
-
-            line_values['tax_ids'], tax_logs = self._retrieve_taxes(
-                invoice, line_values, invoice.journal_id.type, tax_exigibility,
-            )
-            logs += tax_logs
-            if not line_values['product_uom_id']:
-                line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
-            lines_values.append(line_values)
-            lines_values += self._retrieve_line_charges(invoice, line_values, line_values['tax_ids'])
-        return lines_values, logs
-
-    def _retrieve_line_vals(self, record, tree, document_type=False, qty_factor=1):
-        line_values = super()._retrieve_line_vals(record, tree, document_type, qty_factor)
-        kpd_category_code = tree.findtext('./{*}Item/{*}CommodityClassification/{*}ItemClassificationCode')
-        if kpd_category_code:
-            line_kpd_category = self.env['l10n_hr.kpd.category'].search([('name', '=', kpd_category_code)], limit=1)
-            if line_kpd_category:
-                line_values.update({
-                    'l10n_hr_kpd_category_id': line_kpd_category.id,
-                })
-        return line_values
+    def _import_ubl_invoice_line_prepare_classified_tax_category_tax_values(self, collected_values, tax_category_tree):
+        # EXTENDS account.edi.xml.ubl_bis3
+        tax_values = super()._import_ubl_invoice_line_prepare_classified_tax_category_tax_values(collected_values, tax_category_tree)
+        if tax_values:
+            tax_values['tax_exigibility'] = 'on_payment' if tax_category_tree.find('.//{*}HRObracunPDVPoNaplati') is not None else 'on_invoice'
+        return tax_values
 
     def _retrieve_rejection_reference(self, attachment):
         string_to_find = b'Rejected</cbc:StatusReasonCode>'

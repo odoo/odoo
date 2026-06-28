@@ -25,7 +25,7 @@ class EventEvent(models.Model):
             event.lead_count = mapped_data.get(event.id, 0)
 
     def action_view_leads(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
+        action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_all_leads')
         action['domain'] = [('event_id', '=', self.id)]
         context = self.env['crm.lead']._evaluate_context_from_action(action)
         action['context'] = context | {'active_test': False}

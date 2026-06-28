@@ -538,7 +538,7 @@ class AssetsBundle(object):
                 previous_css, """
 body::before {
   font-weight: bold;
-  content: "A css error occured, using an old style to render this page";
+  content: "A css error occurred, using an old style to render this page";
   position: fixed;
   left: 0;
   bottom: 0;

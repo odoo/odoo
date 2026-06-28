@@ -48,10 +48,10 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
-            <field name="vat" position="after">
+            <div name="identifiers" position="after">
                 <field name="l10n_cl_sii_taxpayer_type" placeholder="Taxpayer Type" invisible="'CL' not in fiscal_country_codes" readonly="parent_id"/>
                 <field name="l10n_cl_activity_description" placeholder="Activity Description" invisible="'CL' not in fiscal_country_codes"/>
-            </field>
+            </div>
         </field>
     </record>
 </odoo>

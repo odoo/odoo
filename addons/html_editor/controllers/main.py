@@ -4,7 +4,7 @@ import uuid
 from base64 import b64decode
 from datetime import datetime
 from os.path import join as opj
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse, urlsplit, urljoin
 
 import requests
 import werkzeug.exceptions
@@ -13,6 +13,7 @@ from lxml import etree, html
 
 from odoo import SUPERUSER_ID, _, tools
 from odoo.exceptions import AccessError, MissingError, UserError
+from odoo.fields import Domain
 from odoo.http import Controller, request, route
 from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tools.image import (
@@ -25,12 +26,13 @@ from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
-from odoo.addons.html_editor.tools import get_video_url_data
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import link_preview
 
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
+DEFAULT_OTS_ENDPOINT = 'https://ots.api.odoo.com'
+API_WEBSITE_IMAGES_URL = 'https://website-image.api.odoo.com/images/'
 
 # Regex definitions to apply speed modification in SVG files
 # Note : These regex patterns are duplicated on the server side for
@@ -84,6 +86,78 @@ def get_existing_attachment(IrAttachment, vals):
             return None
         domain.append(('checksum', '=', IrAttachment._compute_checksum(raw)))
     return IrAttachment.search(domain, limit=1) or None
+
+
+def attachment_create(IrAttachment, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
+    """Create and return a new attachment."""
+    if name.lower().endswith('.bmp'):
+        # Avoid mismatch between content type and mimetype, see commit msg
+        name = name[:-4]
+
+    if not name and url:
+        name = url.split("/").pop()
+
+    if res_model != 'ir.ui.view' and res_id:
+        res_id = int(res_id)
+    else:
+        res_id = False
+
+    attachment_data = {
+        'name': name,
+        'public': res_model == 'ir.ui.view',
+        'res_id': res_id,
+        'res_model': res_model,
+    }
+
+    if data:
+        attachment_data['raw'] = data
+        if url:
+            attachment_data['url'] = url
+    elif url:
+        attachment_data.update({
+            'type': 'url',
+            'url': url,
+        })
+        # The code issues a HEAD request to retrieve headers from the URL.
+        # This approach is beneficial when the URL doesn't conclude with an
+        # image extension. By verifying the MIME type, the code ensures that
+        # only supported image types are incorporated into the data.
+        response = requests.head(url, timeout=10)
+        if response.status_code == 200:
+            mime_type = response.headers.get('content-type')
+            if mime_type in SUPPORTED_IMAGE_MIMETYPES:
+                attachment_data['mimetype'] = mime_type
+    else:
+        raise UserError(_("You need to specify either data or url to create an attachment."))
+
+    # Despite the user having no right to create an attachment, he can still
+    # create an image attachment through some flows
+    if (
+        not IrAttachment.env.is_admin()
+        and IrAttachment._can_bypass_rights_on_media_dialog(**attachment_data)
+    ):
+        attachment = IrAttachment.sudo().create(attachment_data)
+        # When portal users upload an attachment with the wysiwyg widget,
+        # the access token is needed to use the image in the editor. If
+        # the attachment is not public, the user won't be able to generate
+        # the token, so we need to generate it using sudo
+        if not attachment_data['public']:
+            attachment.sudo().generate_access_token()
+
+        if IrAttachment.env.user.share:
+            max_portal_file_size = int(IrAttachment.env["ir.config_parameter"].sudo().get_int(
+                "html_editor.max_portal_file_size",
+                100_000_000,
+            ))
+            if not (attachment.mimetype or '').startswith('image/'):
+                raise AccessError(IrAttachment.env._("Non-internal users can only upload image."))
+            if attachment.file_size >= max_portal_file_size:
+                raise AccessError(IrAttachment.env._("Non-internal users can't upload large files."))
+    else:
+        attachment = get_existing_attachment(IrAttachment, attachment_data) \
+            or IrAttachment.create(attachment_data)
+
+    return attachment
 
 
 class HTML_Editor(Controller):
@@ -257,79 +331,6 @@ class HTML_Editor(Controller):
         context.pop('allowed_company_ids', None)
         request.update_env(context=context)
 
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
-        """Create and return a new attachment."""
-        IrAttachment = request.env['ir.attachment']
-
-        if name.lower().endswith('.bmp'):
-            # Avoid mismatch between content type and mimetype, see commit msg
-            name = name[:-4]
-
-        if not name and url:
-            name = url.split("/").pop()
-
-        if res_model != 'ir.ui.view' and res_id:
-            res_id = int(res_id)
-        else:
-            res_id = False
-
-        attachment_data = {
-            'name': name,
-            'public': res_model == 'ir.ui.view',
-            'res_id': res_id,
-            'res_model': res_model,
-        }
-
-        if data:
-            attachment_data['raw'] = data
-            if url:
-                attachment_data['url'] = url
-        elif url:
-            attachment_data.update({
-                'type': 'url',
-                'url': url,
-            })
-            # The code issues a HEAD request to retrieve headers from the URL.
-            # This approach is beneficial when the URL doesn't conclude with an
-            # image extension. By verifying the MIME type, the code ensures that
-            # only supported image types are incorporated into the data.
-            response = requests.head(url, timeout=10)
-            if response.status_code == 200:
-                mime_type = response.headers.get('content-type')
-                if mime_type in SUPPORTED_IMAGE_MIMETYPES:
-                    attachment_data['mimetype'] = mime_type
-        else:
-            raise UserError(_("You need to specify either data or url to create an attachment."))
-
-        # Despite the user having no right to create an attachment, he can still
-        # create an image attachment through some flows
-        if (
-            not request.env.is_admin()
-            and IrAttachment._can_bypass_rights_on_media_dialog(**attachment_data)
-        ):
-            attachment = IrAttachment.sudo().create(attachment_data)
-            # When portal users upload an attachment with the wysiwyg widget,
-            # the access token is needed to use the image in the editor. If
-            # the attachment is not public, the user won't be able to generate
-            # the token, so we need to generate it using sudo
-            if not attachment_data['public']:
-                attachment.sudo().generate_access_token()
-
-            if request.env.user.share:
-                max_portal_file_size = int(request.env["ir.config_parameter"].sudo().get_int(
-                    "html_editor.max_portal_file_size",
-                    100_000_000,
-                ))
-                if not (attachment.mimetype or '').startswith('image/'):
-                    raise AccessError(request.env._("Non-internal users can only upload image."))
-                if attachment.file_size >= max_portal_file_size:
-                    raise AccessError(request.env._("Non-internal users can't upload large files."))
-        else:
-            attachment = get_existing_attachment(IrAttachment, attachment_data) \
-                or IrAttachment.create(attachment_data)
-
-        return attachment
-
     @route(['/web_editor/get_image_info', '/html_editor/get_image_info'], type='jsonrpc', auth='user', website=True)
     def get_image_info(self, src='', href_base=''):
         """This route is used to determine the information of an attachment so that
@@ -345,10 +346,22 @@ class HTML_Editor(Controller):
             default snippet images referencing the same image in /static/, so we
             limit to 1.
             """
-            return request.env['ir.attachment'].search([
-                '|', ('url', '=like', src), ('url', '=like', '%s?%%' % src),
-                ('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
-            ], limit=1)
+            return request.env['ir.attachment'].search(
+                Domain.AND([
+                    Domain.OR([
+                        Domain('url', '=like', src),
+                        Domain('url', '=like', '%s?%%' % src),
+                    ]),
+                    Domain.OR([
+                        Domain('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
+                        # Add mimetype with optional parameters:
+                        # e.g: `image/svg+xml; charset=utf-8`
+                        *[
+                            Domain('mimetype', '=like', image_mimetype + ';%')
+                            for image_mimetype in SUPPORTED_IMAGE_MIMETYPES
+                        ],
+                    ]),
+                ]), limit=1)
 
         def _extract_attachment_info(attachment):
             original = (attachment.original_id or attachment)
@@ -414,18 +427,6 @@ class HTML_Editor(Controller):
             'original': False,
         }
 
-    @route(['/web_editor/video_url/data', '/html_editor/video_url/data'], type='jsonrpc', auth='user', website=True)
-    def video_url_data(self, video_url, autoplay=False, loop=False,
-                       hide_controls=False, hide_fullscreen=False,
-                       hide_dm_logo=False, hide_dm_share=False,
-                       start_from=False, **kwargs):
-        return get_video_url_data(
-            video_url, autoplay=autoplay, loop=loop,
-            hide_controls=hide_controls, hide_fullscreen=hide_fullscreen,
-            hide_dm_logo=hide_dm_logo, hide_dm_share=hide_dm_share,
-            start_from=start_from
-        )
-
     @route(['/web_editor/attachment/add_data', '/html_editor/attachment/add_data'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
         data = b64decode(data)
@@ -448,13 +449,13 @@ class HTML_Editor(Controller):
                 return {'error': e.args[0]}
 
         self._clean_context()
-        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
+        attachment = attachment_create(request.env['ir.attachment'], name=name, data=data, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
     @route(['/web_editor/attachment/add_url', '/html_editor/attachment/add_url'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def add_url(self, url, res_id=False, res_model='ir.ui.view', **kwargs):
         self._clean_context()
-        attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model)
+        attachment = attachment_create(request.env['ir.attachment'], url=url, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
     @route(['/web_editor/modify_image/<model("ir.attachment"):attachment>', '/html_editor/modify_image/<model("ir.attachment"):attachment>'], type="jsonrpc", auth="user", website=True)
@@ -644,6 +645,13 @@ class HTML_Editor(Controller):
                 ], limit=1)
                 if not attachment:
                     raise werkzeug.exceptions.NotFound()
+
+            if not re.match(r'^image\/svg\+xml(;.*)?$', attachment.mimetype):
+                return request.make_response(attachment.raw, [
+                    ('Content-type', attachment.mimetype),
+                    ('Cache-control', 'max-age=%s' % STATIC_CACHE_LONG),
+                ])
+
             svg = attachment.raw.decode('utf-8')
         else:
             # Used for compatibility
@@ -671,20 +679,8 @@ class HTML_Editor(Controller):
             ('Cache-control', 'max-age=%s' % STATIC_CACHE_LONG),
         ])
 
-    @route(['/web_editor/image_shape/<string:img_key>/<module>/<path:filename>', '/html_editor/image_shape/<string:img_key>/<module>/<path:filename>'], type='http', auth="public", website=True)
-    def image_shape(self, module, filename, img_key, **kwargs):
-        # Used for compatibility
-        if module == 'web_editor':
-            module = 'html_builder'
-        svg = self._get_shape_svg(module, 'image_shapes', filename)
-
-        record = request.env['ir.binary']._find_record(img_key)
-        stream = request.env['ir.binary']._get_image_stream_from(record)
-        if stream.type == 'url':
-            return stream.get_response()
-
-        image = stream.read()
-        if record.mimetype == "image/webp":
+    def _make_shaped_image(self, svg, image, mimetype, options):
+        if mimetype == "image/webp":
             width, height = (str(size) for size in get_webp_size(image))
         else:
             img = binary_to_image(image)
@@ -708,14 +704,14 @@ class HTML_Editor(Controller):
             # Adjusts the SVG height to ensure the image fits properly within
             # the SVG (e.g. for "devices" shapes and shapes that need to keep
             # their aspect ratio).
-            svgHeight = float(root.attrib.get("height"))
-            svgWidth = float(root.attrib.get("width"))
-            svgAspectRatio = svgWidth / svgHeight
-            height = str(float(width) / svgAspectRatio)
+            svg_height = float(root.attrib.get("height"))
+            svg_width = float(root.attrib.get("width"))
+            svg_aspect_ratio = svg_width / svg_height
+            height = str(float(width) / svg_aspect_ratio)
 
         root.attrib.update({'width': width, 'height': height})
         # Update default color palette on shape SVG.
-        svg, _ = self._update_svg_colors(kwargs, etree.tostring(root, pretty_print=True).decode('utf-8'))
+        svg, _ = self._update_svg_colors(options, etree.tostring(root, pretty_print=True).decode('utf-8'))
         # Add image in base64 inside the shape.
         uri = image_data_uri(image)
         svg = svg.replace('<image xlink:href="', '<image xlink:href="%s' % uri)
@@ -724,6 +720,57 @@ class HTML_Editor(Controller):
             ('Content-type', 'image/svg+xml'),
             ('Cache-control', 'max-age=%s' % STATIC_CACHE_LONG),
         ])
+
+    @route(['/web_editor/image_shape/<string:img_key>/<module>/<path:filename>', '/html_editor/image_shape/<string:img_key>/<module>/<path:filename>'], type='http', auth="public", website=True)
+    def image_shape(self, module, filename, img_key, **kwargs):
+        # Used for compatibility
+        if module == 'web_editor':
+            module = 'html_builder'
+        svg = self._get_shape_svg(module, 'image_shapes', filename)
+
+        record = request.env['ir.binary']._find_record(img_key)
+        stream = request.env['ir.binary']._get_image_stream_from(record)
+        if stream.type == 'url':
+            return stream.get_response()
+
+        image = stream.read()
+        return self._make_shaped_image(svg, image, record.mimetype, kwargs)
+
+    def _is_allowed_shape_image_url(self, image_url):
+        if image_url.startswith(API_WEBSITE_IMAGES_URL):
+            return True
+        splited_url = urlsplit(image_url)
+        splited_base_url = urlsplit(request.httprequest.host_url)
+        return (
+            splited_url.scheme in ('http', 'https')
+            and splited_url.netloc == splited_base_url.netloc
+            and re.match(r'^/[^/]+/static/', splited_url.path) is not None
+        )
+
+    @route('/html_editor/image_shape_url/<module>/<path:filename>', type='http', auth="user", website=True)
+    def image_shape_url(self, module, filename, image_url=None, **kwargs):
+        """Return a shape SVG filled with the image found at ``image_url``.
+
+        :param str module: module containing the shape SVG
+        :param str filename: shape SVG path inside the module image shapes
+        :param str image_url: absolute URL of the image to insert in the shape
+        :return: HTTP response containing the generated SVG
+        :rtype: :class:`werkzeug.wrappers.Response`
+        """
+        if not image_url or not self._is_allowed_shape_image_url(image_url):
+            raise werkzeug.exceptions.BadRequest()
+        svg = self._get_shape_svg(module, 'image_shapes', filename)
+
+        try:
+            response = requests.get(image_url, timeout=10)
+            response.raise_for_status()
+        except requests.RequestException as exc:
+            raise werkzeug.exceptions.NotFound() from exc
+        mimetype = response.headers.get('Content-Type', '')
+        if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
+            raise werkzeug.exceptions.BadRequest()
+        image = response.content
+        return self._make_shaped_image(svg, image, mimetype, kwargs)
 
     @route(["/web_editor/generate_text", "/html_editor/generate_text"], type="jsonrpc", auth="user")
     def generate_text(self, prompt, conversation_history):
@@ -744,8 +791,30 @@ class HTML_Editor(Controller):
                 raise UserError(_("You have reached the maximum number of requests for this service. Try again later."))
             else:
                 raise UserError(_("Sorry, we could not generate a response. Please try again later."))
-        except AccessError:
-            raise AccessError(_("Oops, it looks like our AI is unreachable!"))
+        except requests.RequestException:
+            raise UserError(_("Oops, it looks like our AI is unreachable!"))
+
+    @route(["/web_editor/google_translate", "/html_editor/google_translate"], type="jsonrpc", auth="user")
+    def google_translate(self, originalText, targetLang):
+        try:
+            IrConfigParameter = request.env['ir.config_parameter'].sudo()
+            gtl_api_endpoint = DEFAULT_OTS_ENDPOINT
+            db_uuid = IrConfigParameter.get_str('database.uuid')
+            response = iap_tools.iap_jsonrpc(gtl_api_endpoint + "/api/html_editor_translate/1/google_translate", params={
+                'original_text': originalText,
+                'target_lang': targetLang,
+                'db_uuid': db_uuid,
+            }, timeout=30)
+
+            if response['status'] == 'success':
+                return {'translated_text': response['translated_text'], 'isError': False}
+            if response['status'] == 'limit_call_reached':
+                raise UserError(_("You have reached the maximum number of requests for this service. Try again later."))
+            if response['status'] == 'text_too_long':
+                raise UserError(_("The text you are trying to translate is too long. Please select less text and try it again."))
+            raise UserError(_("Sorry, we could not translate the text. Please try again later."))
+        except requests.RequestException:
+            raise UserError(_("Oops, it looks like google translation service is unreachable!"))
 
     @route(["/web_editor/get_ice_servers", "/html_editor/get_ice_servers"], type='jsonrpc', auth="user")
     def get_ice_servers(self):

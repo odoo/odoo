@@ -1,3 +1,3 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import sale_order, sale_order_line
+from . import sale_order, sale_order_line, sale_order_template_line

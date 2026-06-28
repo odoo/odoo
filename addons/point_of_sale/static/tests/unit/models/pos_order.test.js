@@ -1,4 +1,4 @@
-import { test, expect } from "@odoo/hoot";
+import { describe, test, expect } from "@odoo/hoot";
 import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 
@@ -9,8 +9,6 @@ test("uiState", async () => {
     const order = store.addNewOrder();
 
     expect(order.uiState).toEqual({
-        unmerge: {},
-        lastPrints: [],
         lineToRefund: {},
         displayed: true,
         booked: false,
@@ -22,6 +20,8 @@ test("uiState", async () => {
         },
         requiredPartnerDetails: {},
         tip: { type: false, value: false },
+        last_general_customer_note: "",
+        last_internal_note: "",
     });
 });
 
@@ -56,9 +56,122 @@ test("updateLastOrderChange", async () => {
     const order = await getFilledOrder(store);
     order.setGeneralCustomerNote("Customer note");
     order.setInternalNote("Internal note");
+    const firstLine = order.lines[0];
+    firstLine.setNote("Internal line note");
+    firstLine.setCustomerNote("Customer line note");
     order.updateLastOrderChange();
-    expect(order.last_order_preparation_change.general_customer_note).toBe("Customer note");
-    expect(order.last_order_preparation_change.internal_note).toBe("Internal note");
+    expect(order.uiState.last_general_customer_note).toBe("Customer note");
+    expect(order.uiState.last_internal_note).toBe("Internal note");
+    expect(firstLine.uiState.last_internal_note).toBe("Internal line note");
+    expect(firstLine.uiState.last_customer_note).toBe("Customer line note");
+
+    const originalQty = firstLine.getQuantity();
+    firstLine.setQuantity(originalQty + 2);
+
+    order.updateLastOrderChange();
+
+    expect(order.prep_order_ids.length).toBe(2);
+    const prepLines = firstLine.prep_line_ids || [];
+    const totalPrepQty = prepLines.reduce((sum, l) => sum + l.quantity - l.cancelled, 0);
+    expect(totalPrepQty).toBe(originalQty + 2);
+
+    expect(order.hasChange).toBe(false);
+    expect(firstLine.uiState.savedQuantity).toBe(originalQty + 2);
+
+    firstLine.setQuantity(1);
+
+    order.updateLastOrderChange();
+    expect(order.prep_order_ids.length).toBe(2);
+    const totalPrepQtyAfterCancelled = prepLines.reduce(
+        (sum, l) => sum + l.quantity - l.cancelled,
+        0
+    );
+    expect(totalPrepQtyAfterCancelled).toBe(1);
+    expect(prepLines[0].cancelled).toBe(originalQty - 1);
+    expect(prepLines[1].cancelled).toBe(2);
+
+    order.updateLastOrderChange({ cancelled: true });
+    expect(prepLines[0].cancelled).toBe(originalQty);
+    expect(prepLines[1].cancelled).toBe(2);
+});
+
+test("getPreparationChanges", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+
+    order.setGeneralCustomerNote("Customer note");
+    order.setInternalNote("Internal note");
+    const firstLine = order.lines[0];
+    const secondLine = order.lines[1];
+
+    const firstLineOriginalQty = firstLine.getQuantity();
+    const secondLineOriginalQty = secondLine.getQuantity();
+
+    //Check order notes and return
+    const changes = order.getChanges();
+
+    expect(changes.general_customer_note).toBe("Customer note");
+    expect(changes.internal_note).toBe("Internal note");
+    expect(changes.quantity).toBe(firstLineOriginalQty + secondLineOriginalQty);
+    const firstOrderlineChange = changes.addedQuantity[0];
+    expect(firstOrderlineChange).toEqual({
+        basic_name: firstLine.getProduct().name,
+        product_id: firstLine.getProduct().id,
+        attribute_value_names: firstLine.attribute_value_ids.map((a) => a.name),
+        quantity: firstLineOriginalQty,
+        note: firstLine.getNote() || "",
+        customer_note: firstLine.getCustomerNote() || "",
+        pos_categ_id: firstLine.getProduct().pos_categ_ids[0]?.id ?? 0,
+        pos_categ_sequence: firstLine.getProduct().pos_categ_ids[0]?.sequence ?? 0,
+        group: firstLine.getCourse() || false,
+        combo_line_ids: firstLine?.combo_line_ids,
+        combo_parent_uuid: firstLine?.combo_parent_id?.uuid,
+    });
+
+    //Check note update and change line quantity
+    order.updateLastOrderChange();
+    secondLine.setQuantity(secondLineOriginalQty + 2);
+    firstLine.setNote("Internal line note");
+    firstLine.setCustomerNote("Customer line note");
+    const secondChanges = order.getChanges();
+    const noteUpdate = secondChanges.noteUpdate[0];
+    expect(noteUpdate.customer_note).toBe("Customer line note");
+    expect(noteUpdate.note).toBe("Internal line note");
+    const secondOrderlineChange = secondChanges.addedQuantity[0];
+    expect(secondOrderlineChange).toEqual({
+        basic_name: secondLine.getProduct().name,
+        product_id: secondLine.getProduct().id,
+        attribute_value_names: secondLine.attribute_value_ids.map((a) => a.name),
+        quantity: 2,
+        note: secondLine.getNote() || "",
+        customer_note: secondLine.getCustomerNote() || "",
+        pos_categ_id: secondLine.getProduct().pos_categ_ids[0]?.id ?? 0,
+        pos_categ_sequence: secondLine.getProduct().pos_categ_ids[0]?.sequence ?? 0,
+        group: secondLine.getCourse() || false,
+        combo_line_ids: secondLine?.combo_line_ids,
+        combo_parent_uuid: secondLine?.combo_parent_id?.uuid,
+    });
+
+    //Check line delete
+    order.updateLastOrderChange();
+    const firstLineProduct = firstLine.getProduct();
+    const firstLineAttributes = firstLine.attribute_value_ids.map((a) => a.name);
+    order.removeOrderline(firstLine);
+    const deleteLineChanges = order.getChanges();
+    const deleteOrderlineChange = deleteLineChanges.removedQuantity[0];
+    expect(deleteOrderlineChange).toEqual({
+        basic_name: firstLineProduct.name,
+        product_id: firstLineProduct.id,
+        attribute_value_names: firstLineAttributes,
+        quantity: -firstLineOriginalQty,
+        group: false,
+        note: "",
+        customer_note: "",
+        pos_categ_id: firstLineProduct.pos_categ_ids[0]?.id ?? 0,
+        pos_categ_sequence: firstLineProduct.pos_categ_ids[0]?.sequence ?? 0,
+        combo_line_ids: firstLine?.combo_line_ids,
+        combo_parent_uuid: firstLine?.combo_parent_id?.uuid,
+    });
 });
 
 test("removeOrderline", async () => {
@@ -300,18 +413,6 @@ test("isCustomerRequired", async () => {
     expect(order.isCustomerRequired).toBe(false);
 });
 
-test("setShippingDate and getShippingDate with Luxon", async () => {
-    const store = await setupPosEnv();
-    const order = store.addNewOrder();
-
-    const testDate = "2019-03-11";
-    order.shipping_date = testDate;
-
-    expect(order.shipping_date.toISODate()).toBe(testDate);
-    order.shipping_date = null;
-    expect(order.shipping_date).toBeEmpty();
-});
-
 test("[get prices] check prices and taxes", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
@@ -463,4 +564,106 @@ test("priceDoesntChangeWhenChangingPreset", async () => {
     order4.setPreset(otherPreset);
     order4.setOrderPrices();
     expect(order4.amount_total).toBe(total);
+});
+
+test("finalized", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+
+    order.state = "draft";
+    expect(order.finalized).toBe(false);
+
+    order.state = "paid";
+    expect(order.finalized).toBe(true);
+
+    order.state = "done";
+    expect(order.finalized).toBe(true);
+
+    order.state = "cancel";
+    expect(order.finalized).toBe(true);
+});
+
+describe("print history", () => {
+    test("lastPrints", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+
+        order.print_history = false;
+        expect(order.lastPrints).toEqual([]);
+
+        order.print_history = [
+            {
+                addedQuantity: [{ product_id: 1, quantity: 2 }],
+                noteChange: [{ product_id: 1, note: "New note" }],
+                noteUpdate: [{ product_id: 1, note: "Updated note" }],
+                removedQuantity: [{ product_id: 1, quantity: -1 }],
+            },
+        ];
+        expect(order.lastPrints).toEqual([
+            {
+                addedQuantity: [{ product_id: 1, quantity: 2 }],
+                noteChange: [{ product_id: 1, note: "New note" }],
+                noteUpdate: [{ product_id: 1, note: "Updated note" }],
+                removedQuantity: [{ product_id: 1, quantity: -1 }],
+            },
+        ]);
+    });
+
+    test("pushLastPrints", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const printData = {
+            addedQuantity: [{ product_id: 1, quantity: 2 }],
+            noteChange: [{ product_id: 1, note: "New note" }],
+            noteUpdate: [{ product_id: 1, note: "Updated note" }],
+            removedQuantity: [{ product_id: 1, quantity: -1 }],
+            quanity: 5,
+            categoryCount: 3,
+        };
+
+        order.pushLastPrints(printData);
+        expect(order.lastPrints).toEqual([
+            {
+                addedQuantity: [{ product_id: 1, quantity: 2 }],
+                noteChange: [{ product_id: 1, note: "New note" }],
+                noteUpdate: [{ product_id: 1, note: "Updated note" }],
+                removedQuantity: [{ product_id: 1, quantity: -1 }],
+                internal_note: undefined,
+                general_customer_note: undefined,
+            },
+        ]);
+    });
+});
+
+test("Ignore attribute always extra price with combo", async () => {
+    const store = await setupPosEnv();
+    store.models["pos.preset"].get(1).pricelist_id = false;
+    const combo = store.models["product.combo"].get(1);
+    const comboItem = store.models["product.combo.item"].get(1);
+    comboItem.product_id = store.models["product.product"].get(52);
+    const comboTemplate = store.models["product.template"].get(7);
+    const comboProduct = store.models["product.product"].get(7);
+    comboTemplate.combo_ids = [combo.id];
+
+    const order = store.addNewOrder();
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: comboTemplate,
+            payload: [
+                [
+                    {
+                        combo_item_id: comboItem,
+                        configuration: {
+                            attribute_value_ids: [6],
+                        },
+                        qty: 1,
+                    },
+                ],
+            ],
+            qty: 1,
+        },
+        order
+    );
+    order.setOrderPrices();
+    expect(order.amount_total).toBe(comboProduct.lst_price);
 });

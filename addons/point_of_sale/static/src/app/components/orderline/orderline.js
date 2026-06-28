@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { useTimedPress } from "@point_of_sale/app/utils/use_timed_press";
 import { formatCurrency } from "@web/core/currency";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -7,25 +7,18 @@ import { BadgeTag } from "@web/core/tags_list/badge_tag";
 export class Orderline extends Component {
     static components = { BadgeTag };
     static template = "point_of_sale.Orderline";
-    static props = {
-        line: Object,
-        class: { type: Object, optional: true },
-        slots: { type: Object, optional: true },
-        showTaxGroupLabels: { type: Boolean, optional: true },
-        showTaxGroup: { type: Boolean, optional: true },
-        mode: { type: String, optional: true }, // display, split
-        onClick: { type: Function, optional: true },
-        onLongPress: { type: Function, optional: true },
-        toRefund: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        showImage: false,
-        showTaxGroupLabels: false,
-        showTaxGroup: false,
-        mode: "display",
-        onClick: () => {},
-        onLongPress: () => {},
-    };
+    props = props({
+        line: t.object(),
+        class: t.object().optional(),
+        slots: t.object().optional(),
+        showImage: t.boolean().optional(false),
+        showTaxGroupLabels: t.boolean().optional(false),
+        showTaxGroup: t.boolean().optional(false),
+        mode: t.string().optional("display"), // display, split
+        onClick: t.function().optional(() => () => {}),
+        onLongPress: t.function().optional(() => () => {}),
+        toRefund: t.number().optional(),
+    });
 
     setup() {
         this.root = useRef("root");
@@ -70,7 +63,7 @@ export class Orderline extends Component {
 
     get infoListClasses() {
         const line = this.line;
-        if (line.customer_note || line.note || line.discount || line.packLotLines?.length) {
+        if (line.customer_note || line.note || line.discount) {
             return "gap-2 mt-1";
         }
         return "";
@@ -98,13 +91,17 @@ export class Orderline extends Component {
         const attributeStr = line.orderDisplayProductName.attributeString;
         const taxGroup = this.line.taxGroupLabels;
         const showPrice =
-            line.getQuantityStr() != 1 && line.price_type !== "original" && !line.combo_parent_id;
+            line.getQuantityStr() != 1 &&
+            line.price_type !== "original" &&
+            !line.combo_parent_id &&
+            !line.isServiceFeeLine();
         const priceUnit = `${line.currencyDisplayPriceUnit} / ${
             line.product_id?.uom_id?.name || ""
         }`;
         return {
             name: line.orderDisplayProductName.name,
-            attributeString: mode === "display" && attributeStr && `- ${attributeStr}`,
+            attributeString:
+                ["display", "split"].includes(mode) && attributeStr && `- ${attributeStr}`,
             internalNote: mode === "display" && line.note && JSON.parse(this.line.note || "[]"),
             isDisplay: mode === "display",
             discount: discount && discount !== "0" && !line.combo_parent_id && discount,
@@ -115,8 +112,8 @@ export class Orderline extends Component {
             productImage: this.props.showImage && imageUrl,
             taxGroup: this.props.showTaxGroup && taxGroup,
             price: this.line.currencyDisplayPrice,
-            lotLines:
-                ["lot", "serial"].includes(line.product_id.tracking) && (line.packLotLines || []),
+            isServiceFeeLine: line.isServiceFeeLine(),
+            serviceFeeDisplayInfo: line.getServiceFeeDisplayInfo(),
         };
     }
 }

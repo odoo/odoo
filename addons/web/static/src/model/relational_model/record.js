@@ -1,19 +1,21 @@
 import { markRaw, markup, toRaw } from "@odoo/owl";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { pick } from "@web/core/utils/objects";
 import { DataPoint } from "./datapoint";
-import { Operation } from "./operation";
 import { FetchRecordError } from "./errors";
+import { Operation } from "./operation";
 import {
     createPropertyActiveField,
     getBasicEvalContext,
     getFieldContext,
     getFieldsSpec,
+    getOfflineDisplayName,
+    getScheduleORMExtras,
     parseServerValue,
 } from "./utils";
-import { ConnectionLostError } from "@web/core/network/rpc";
-import { pick } from "@web/core/utils/objects";
 
 /**
  * Redefine default 'Record' type
@@ -57,9 +59,10 @@ export class Record extends DataPoint {
         // be false even though there are changes in a field. Consider calling "isDirty()" instead.
         this.dirty = false;
         this.selected = false;
-
-        /** @type {Set<string>} */
+        this.evalContext = {};
+        this.evalContextWithVirtualIds = {};
         this._invalidFields = new Set();
+
         /** @type {Set<string>} */
         this._unsetRequiredFields = markRaw(new Set());
         this._closeInvalidFieldsNotification = () => {};
@@ -76,9 +79,6 @@ export class Record extends DataPoint {
                     return parentRecord.evalContextWithVirtualIds;
                 },
             };
-        } else {
-            this.evalContext = {};
-            this.evalContextWithVirtualIds = {};
         }
         const missingFields = this.fieldNames.filter((fieldName) => !(fieldName in data));
         data = { ...this._getDefaultValues(missingFields), ...data };
@@ -188,9 +188,25 @@ export class Record extends DataPoint {
 
     delete() {
         return this.model.mutex.exec(async () => {
-            const unlinked = await this.model.orm.unlink(this.resModel, [this.resId], {
-                context: this.context,
-            });
+            let unlinked = false;
+            try {
+                unlinked = await this.model.orm.unlink(this.resModel, [this.resId], {
+                    context: this.context,
+                });
+            } catch (e) {
+                if (e instanceof ConnectionLostError) {
+                    return this.model.offline.scheduleORM(
+                        this.resModel,
+                        "unlink",
+                        [[this.resId]],
+                        { context: this.context },
+                        {
+                            extras: getScheduleORMExtras(this.model, [this]),
+                        }
+                    );
+                }
+                throw e;
+            }
             if (!unlinked) {
                 return false;
             }
@@ -304,13 +320,14 @@ export class Record extends DataPoint {
         return this.model.mutex.exec(() => this._toggleArchive(false));
     }
 
-    update(changes, { save } = {}) {
+    update(changes) {
         if (this.model._urgentSave) {
             return this._update(changes);
         }
         return this.model.mutex.exec(async () => {
+            const save = !this.isInEdition && this.canSaveOnUpdate;
             await this._update(changes, { withoutOnchange: save });
-            if (save && this.canSaveOnUpdate) {
+            if (save) {
                 return this._save();
             }
         });
@@ -335,12 +352,16 @@ export class Record extends DataPoint {
             scheduledORM = Object.values(this.model.offline.scheduledORM).find(
                 (s) =>
                     s.value.extras?.actionId === this.model.env.config.actionId &&
+                    s.value.method === "web_save" && // Only web_save changes are applied
+                    s.value.extras.viewType === "form" && // Only changes made on a view form are applied
                     s.value.args[0]?.[0] === this.resId
             );
         }
         if (scheduledORM) {
             this._offlineId = scheduledORM.key;
-            this._offlineChanges = this._parseServerValues(scheduledORM.value.extras.changes);
+            this._offlineChanges = markRaw(
+                this._parseOfflineValues(scheduledORM.value.extras.changes)
+            );
             this._offlineTimeStamp = scheduledORM.value.extras.timeStamp;
             return this.update(this._offlineChanges);
         }
@@ -575,7 +596,17 @@ export class Record extends DataPoint {
                 context,
                 specification: fieldSpec,
             };
-            const records = await this.model.orm.webRead(resModel, [resId], kwargs);
+            let records;
+            try {
+                records = await this.model.orm.webRead(resModel, [resId], kwargs);
+            } catch (e) {
+                if (e instanceof ConnectionLostError) {
+                    // In the case of display_name is not in valie, `Unamed` will be shown, but it will work. (search create dialog case)
+                    records = [value];
+                } else {
+                    throw e;
+                }
+            }
             for (const fieldName in records[0]) {
                 const field = activeField.related?.fields[fieldName];
                 if (field) {
@@ -682,6 +713,7 @@ export class Record extends DataPoint {
         this._closeInvalidFieldsNotification();
         this._closeInvalidFieldsNotification = () => {};
         this._restoreActiveFields();
+        this.model.hooks.onRecordDiscarded(this);
     }
 
     _displayInvalidFieldNotification() {
@@ -729,6 +761,37 @@ export class Record extends DataPoint {
         return value;
     }
 
+    _formatOfflineValues(values, { changes } = { changes: true }) {
+        const result = {};
+        for (const [fieldName, value] of Object.entries(values)) {
+            const field = this.fields[fieldName];
+            switch (field.type) {
+                case "many2many": {
+                    if (value) {
+                        result[fieldName] = {};
+                        if (changes) {
+                            result[fieldName].commands = value._getCommands();
+                        }
+                        result[fieldName].display_name = value._currentIds
+                            .map((id) => value._cache[id])
+                            .map((r) => getOfflineDisplayName(r))
+                            .join(", ");
+                    } else {
+                        result[fieldName] = false;
+                    }
+                    break;
+                }
+                case "many2one": {
+                    result[fieldName] = value;
+                    break;
+                }
+                default:
+                    result[fieldName] = this._formatServerValue(field.type, value);
+            }
+        }
+        return result;
+    }
+
     /**
      * @param {RecordType<string, unknown>} [changes]
      * @param {FieldSpecifications} [params]
@@ -738,10 +801,7 @@ export class Record extends DataPoint {
             // Apply the initial changes when the record is new
             changes = { ...this._values, ...changes };
         }
-        return this._formatServerValues(changes, { withReadonly });
-    }
 
-    _formatServerValues(changes, { withReadonly } = {}) {
         const result = {};
         for (const [fieldName, value] of Object.entries(changes)) {
             const field = this.fields[fieldName];
@@ -970,6 +1030,21 @@ export class Record extends DataPoint {
         return parsedValues;
     }
 
+    _parseOfflineValues(changes) {
+        const result = {};
+        for (const [fieldName, value] of Object.entries(changes)) {
+            const field = this.fields[fieldName];
+            switch (field.type) {
+                case "many2many":
+                    result[fieldName] = value ? value.commands : false;
+                    break;
+                default:
+                    result[fieldName] = parseServerValue(field.type, value);
+            }
+        }
+        return result;
+    }
+
     async _preprocessMany2oneChanges(changes) {
         const proms = Object.entries(changes)
             .filter(([fieldName]) => this.fields[fieldName].type === "many2one")
@@ -1135,6 +1210,7 @@ export class Record extends DataPoint {
             if (nextId) {
                 return this.model.load({ resId: nextId });
             }
+            // toRaw to prevent effect
             this._changes = markRaw({});
             this.data = { ...this._values };
             this.dirty = false;
@@ -1226,7 +1302,7 @@ export class Record extends DataPoint {
             if (e instanceof ConnectionLostError) {
                 return this._offlineSave();
             }
-            if (onError) {
+            if (onError && e instanceof RPCError) {
                 return onError(e, {
                     discard: () => this._discard(),
                     retry: () => this._save(...arguments),
@@ -1279,7 +1355,7 @@ export class Record extends DataPoint {
         this.dirty = false;
     }
 
-    async _offlineSave() {
+    _offlineSave() {
         this._offlineChanges = markRaw({ ...(this._offlineChanges || {}), ...this._changes });
         const offlineChanges = this._getChanges(this._offlineChanges);
         delete offlineChanges.id; // id never changes, and should not be written
@@ -1293,20 +1369,12 @@ export class Record extends DataPoint {
             {
                 id: this._offlineId,
                 extras: {
-                    actionId: this.model.env.config.actionId,
-                    actionName: this.model.env.config.actionName,
-                    viewType: this.model.env.config.viewType,
-                    changes: this._formatServerValues(this._offlineChanges),
-                    originalValues: this._formatServerValues(
-                        pick(this._values, ...Object.keys(this._offlineChanges))
+                    ...getScheduleORMExtras(this.model, [this]),
+                    changes: this._formatOfflineValues(this._offlineChanges),
+                    originalValues: this._formatOfflineValues(
+                        pick(this._values, ...Object.keys(this._offlineChanges)),
+                        { changes: false }
                     ),
-                    displayName:
-                        this.data.complete_name ||
-                        this.data.name ||
-                        this.data.display_name ||
-                        this.data.x_name ||
-                        this.data.x_studio_name ||
-                        _t("Record"),
                     timeStamp: this._offlineTimeStamp,
                 },
             }
@@ -1376,9 +1444,25 @@ export class Record extends DataPoint {
      */
     async _toggleArchive(state) {
         const method = state ? "action_archive" : "action_unarchive";
-        const action = await this.model.orm.call(this.resModel, method, [[this.resId]], {
-            context: this.context,
-        });
+        let action;
+        try {
+            action = await this.model.orm.call(this.resModel, method, [[this.resId]], {
+                context: this.context,
+            });
+        } catch (e) {
+            if (e instanceof ConnectionLostError) {
+                return this.model.offline.scheduleORM(
+                    this.resModel,
+                    method,
+                    [[this.resId]],
+                    { context: this.context },
+                    {
+                        extras: getScheduleORMExtras(this.model, [this]),
+                    }
+                );
+            }
+            throw e;
+        }
         if (action && Object.keys(action).length) {
             this.model.action.doAction(action, { onClose: () => this._load() });
         } else {

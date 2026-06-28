@@ -33,16 +33,11 @@ class ProductDocumentController(Controller):
                     'company_id': record.company_id.id,
                     'mimetype': mimetype,
                     'raw': ufile.read(),
-                    **self.get_additional_create_params(**kwargs)
                 })
             except Exception as e:
                 logger.exception("Failed to upload document %s", ufile.filename)
                 result = {'error': str(e)}
         return json.dumps(result)
-
-    # mrp hook
-    def get_additional_create_params(self, **kwargs):
-        return {}
 
     # eco hook
     def is_model_valid(self, res_model):

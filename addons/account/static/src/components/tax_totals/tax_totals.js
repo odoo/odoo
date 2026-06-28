@@ -1,4 +1,4 @@
-import { onWillRender, useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { formatFloat } from "@web/core/utils/numbers";
 import { parseFloat } from "@web/views/fields/parsers";
@@ -6,9 +6,11 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { registry } from "@web/core/registry";
 import {
     Component,
+    computed,
     onPatched,
-    onWillUpdateProps,
     toRaw,
+    proxy,
+    useEffect,
 } from "@odoo/owl";
 import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
 
@@ -28,7 +30,7 @@ class TaxGroupComponent extends Component {
 
     setup() {
         this.inputTax = useRef("taxValueInput");
-        this.state = useState({ value: "readonly" });
+        this.state = proxy({ value: "readonly" });
         onPatched(() => {
             if (this.state.value === "edit") {
                 const { taxGroup } = this.props;
@@ -37,7 +39,8 @@ class TaxGroupComponent extends Component {
                 this.inputTax.el.focus(); // Focus the input
             }
         });
-        onWillUpdateProps(() => {
+        useEffect(() => {
+            this.props.taxGroup;
             this.setState("readonly");
         });
         useNumpadDecimal();
@@ -125,11 +128,7 @@ export class TaxTotalsComponent extends Component {
         ...standardFieldProps,
     };
 
-    setup() {
-        this.totals = {};
-        this.formatData(this.props);
-        onWillRender(() => this.formatData(this.props));
-    }
+    totals = computed(() => this.formatData(this.props));
 
     get readonly() {
         return this.props.readonly;
@@ -140,7 +139,7 @@ export class TaxTotalsComponent extends Component {
     }
 
     formatMonetary(value) {
-        return formatMonetary(value, {currencyId: this.totals.currency_id});
+        return formatMonetary(value, {currencyId: this.totals().currency_id});
     }
 
     /**
@@ -151,8 +150,9 @@ export class TaxTotalsComponent extends Component {
      */
     _onChangeTaxValueByTaxGroup({ oldValue, newValue }) {
         if (oldValue === newValue) return;
-        this.props.record.update({ [this.props.name]: this.totals });
-        delete this.totals.cash_rounding_base_amount_currency;
+        const totals = this.totals();
+        this.props.record.update({ [this.props.name]: totals });
+        delete totals.cash_rounding_base_amount_currency;
     }
 
     formatData(props) {
@@ -160,7 +160,7 @@ export class TaxTotalsComponent extends Component {
         if (!totals) {
             return;
         }
-        this.totals = totals;
+        return totals;
     }
 }
 

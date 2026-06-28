@@ -9,7 +9,7 @@ class ResPartner(models.Model):
     @api.depends('vat')
     def _compute_l10n_hu_eu_vat(self):
         for partner in self:
-            if partner.country_code == 'HU' and partner.vat:
+            if partner.vat and partner.vat != '/':
                 partner.l10n_hu_eu_vat = partner._convert_hu_local_to_eu_vat(partner.vat)
             else:
                 partner.l10n_hu_eu_vat = False

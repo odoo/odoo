@@ -4,6 +4,7 @@ import contextlib
 import hashlib
 import io
 import os
+import re
 import tracemalloc
 from unittest.mock import patch
 
@@ -19,6 +20,17 @@ from odoo.addons.base.models.ir_attachment import IrAttachment
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 HASH_SPLIT = 2      # FIXME: testing implementations detail is not a good idea
+
+
+def measure_peak_memory(func):
+    tracemalloc.start()
+    try:
+        tracemalloc.reset_peak()
+        res = func()
+        _, peak = tracemalloc.get_traced_memory()
+        return res, peak
+    finally:
+        tracemalloc.stop()
 
 
 @tagged('at_install', '-post_install')
@@ -249,26 +261,30 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         # only 1.3MiB. We use tracemalloc to make sure _upload_file uses
         # little memory when compared to create({'raw': file.read()}).
 
-        # warmup outside of tracemalloc
-        self.env['ir.attachment'].create({'name': 'empty', 'raw': b''})
-
-        tracemalloc.start()
-        try:
+        def file_read():
             with file_open('base/i18n/base.pot', 'rb') as file:
-                attach1 = self.env['ir.attachment'].create({
+                return self.env['ir.attachment'].create({
                     'name': 'base.pot',
                     'raw': file.read(),
                 })
-            _, file_read_peak_memory_usage = tracemalloc.get_traced_memory()
-            tracemalloc.reset_peak()
 
-            with file_open('base/i18n/base.pot', 'rb') as file:
-                attach2 = self.env['ir.attachment']._upload_file(file, {
-                    'name': 'base.pot',
-                })
-            _, from_file_peak_memory_usage = tracemalloc.get_traced_memory()
-        finally:
-            tracemalloc.stop()
+        def file_stream():
+            with file_open('base/i18n/base.pot', 'rb') as f:
+                return self.env['ir.attachment']._upload_file(
+                    f,
+                    {'name': 'base.pot'},
+                )
+
+        # Only try the attachment creation without the indexation
+        with patch(
+            "odoo.addons.base.models.ir_attachment.IrAttachment._index",
+            new=lambda *args, **kwargs: None,
+        ):
+            # warmup outside of tracemalloc
+            self.env['ir.attachment'].create({'name': 'empty', 'raw': b''})
+
+            attach1, file_read_peak_memory_usage = measure_peak_memory(file_read)
+            attach2, from_file_peak_memory_usage = measure_peak_memory(file_stream)
 
         base_pot = self.file_read('base/i18n/base.pot').content
         actual_size = os.stat(file_path('base/i18n/base.pot')).st_size
@@ -276,8 +292,31 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
                        (attach1.file_size, attach2.file_size, actual_size))
         self.assertEqual(attach1.checksum, attach2.checksum)
         self.assertTrue(attach1.raw.content == attach2.raw.content == base_pot)
+        self.assertEqual(attach1.index_content, attach2.index_content)
         self.assertLess(from_file_peak_memory_usage, file_read_peak_memory_usage // 2,
             "_from_path(file.name) must be much more memory efficient than create({'raw': file.read()})")
+
+    def test_17_text_file_index_memory_optimization(self):
+        with file_open('base/i18n/base.pot', 'rb') as f:
+            attach = self.env['ir.attachment']._upload_file(
+                f,
+                {'name': 'base.pot'},
+            )
+        self.assertTrue(attach.mimetype.startswith('text/'))
+
+        def old_index(bin_data):
+            words = re.findall(rb"[\x20-\x7E]{4,}", bin_data)
+            return b"\n".join(words).decode("ascii")
+
+        old_index_content, old_index_peak_memory_usage = measure_peak_memory(
+            lambda: old_index(attach.raw)
+        )
+        new_index_content, new_index_peak_memory_usage = measure_peak_memory(
+            lambda: attach._index(attach.raw, attach.mimetype, attach.checksum)
+        )
+        self.assertEqual(old_index_content, new_index_content)
+        self.assertLess(new_index_peak_memory_usage, old_index_peak_memory_usage // 1.5,
+            "new text index must be more memory efficient")
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -295,11 +334,11 @@ class TestPermissions(TransactionCaseWithUserDemo):
         a = self.attachment = self.Attachments.create(self.vals)
 
         # prevent create, write and unlink accesses on record
-        self.rule = self.env['ir.rule'].sudo().create({
+        self.rule = self.env['ir.access'].sudo().create({
             'name': 'remove access to record %d' % record.id,
             'model_id': self.env['ir.model']._get_id(record._name),
-            'domain_force': "[('id', '!=', %s)]" % record.id,
-            'perm_read': False
+            'operation': 'cud',
+            'domain': "[('id', '!=', %s)]" % record.id,
         })
         self.env.flush_all()
         a.invalidate_recordset()
@@ -312,7 +351,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
         # check that the information can be read out of the box
         self.attachment.raw
         # prevent read access on record
-        self.rule.perm_read = True
+        self.rule.operation = 'crud'
         self.attachment.invalidate_recordset()
         with self.assertRaises(AccessError):
             self.attachment.raw
@@ -342,7 +381,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
         self.assertNotEqual(SUPERUSER_ID, admin_user.id)
         attachment_admin.with_user(admin_user).raw
 
-    @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
+    @mute_logger("odoo.addons.base.models.ir_access", "odoo.models")
     def test_field_read_permission(self):
         """If the record field can't be read,
         e.g. `groups="base.group_system"` on the field,
@@ -363,7 +402,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
             """
             SELECT "ir_attachment"."id"
             FROM "ir_attachment"
-            WHERE ("ir_attachment"."res_field" IN %s AND "ir_attachment"."res_id" IN %s AND "ir_attachment"."res_model" IN %s AND (
+            WHERE ("ir_attachment"."res_field" IN %s AND "ir_attachment"."res_id" IN %s AND "ir_attachment"."res_model" IN %s) AND (
                 "ir_attachment"."public" IS TRUE
                 OR (
                     ("ir_attachment"."res_field" IN %s OR "ir_attachment"."res_field" IS NULL)
@@ -377,7 +416,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
                     )
                     AND "ir_attachment"."res_model" IN %s
                 )
-            ))
+            )
             ORDER BY "ir_attachment"."id" DESC
             """
         ]):
@@ -389,7 +428,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
 
         # Patch the field `res.partner.image_128` to make it unreadable by the demo user
         self.patch(self.env.registry['res.partner']._fields['image_128'], 'groups', 'base.group_system')
-        self.env.transaction.reset()
+        self.env.transaction.clear()
 
         # Assert the field can't be read
         with self.assertRaises(AccessError):
@@ -403,7 +442,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
         created, updated, or deleted (or copied).
         """
         # enable write permission on linked record
-        self.rule.perm_write = False
+        self.rule.operation = 'cd'
         attachment = self.Attachments.create(self.vals)
         attachment.copy()
         attachment.write({'raw': b'test'})
@@ -452,7 +491,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
     def test_write_error(self):
         # try to write a file in a place where we have no access
         # /proc is not writeable, check if we have an error raised
-        self.patch(IrAttachment, '_get_path', lambda self, binary, _checksum: (binary, '/proc/dummy_test'))
+        self.patch(IrAttachment, '_get_path', lambda self, binary, _checksum: ('dummy_test', '/proc/dummy_test'))
         with self.assertRaises(OSError):
             self.env['ir.attachment']._file_write(b'test', 'test')
 
@@ -472,3 +511,16 @@ class TestPermissions(TransactionCaseWithUserDemo):
 
         with self.assertRaisesRegex(ValidationError, r"Sorry, you are not allowed to write on this document"):
             existing_attachment.type = 'binary'
+
+    def test_circular_attachment(self):
+        """An ir.attachment should not be attached to itself with
+        its res_id. Upon write a UserError should be thrown.
+        """
+
+        Attachment = self.env['ir.attachment']
+        document = Attachment.create({'name': 'document'})
+        with self.assertRaises(ValidationError):
+            document.write({
+                'res_model': 'ir.attachment',
+                'res_id': document.id
+            })

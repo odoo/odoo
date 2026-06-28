@@ -47,16 +47,18 @@
         </div>
     </BuilderContext>
 
-    <BuilderRow label.translate="Size" level="1">
+    <BuilderRow label.translate="Display" level="1">
         <BuilderNumberInput action="'setPpg'" step="1"/>
         <t t-if="this.isActiveItem('grid_view_opt')">
-            <span class="mx-2">by</span>
-            <BuilderSelect action="'setPpr'">
-                <BuilderSelectItem actionValue="2">2</BuilderSelectItem>
-                <BuilderSelectItem actionValue="3">3</BuilderSelectItem>
-                <BuilderSelectItem actionValue="4">4</BuilderSelectItem>
-                <BuilderSelectItem actionValue="5">5</BuilderSelectItem>
-            </BuilderSelect>
+            <span class="mx-1">in</span>
+            <div class="w-75">
+                <BuilderSelect action="'setPpr'">
+                    <BuilderSelectItem actionValue="2">2 columns</BuilderSelectItem>
+                    <BuilderSelectItem actionValue="3">3 columns</BuilderSelectItem>
+                    <BuilderSelectItem actionValue="4">4 columns</BuilderSelectItem>
+                    <BuilderSelectItem actionValue="5">5 columns</BuilderSelectItem>
+                </BuilderSelect>
+            </div>
         </t>
     </BuilderRow>
 

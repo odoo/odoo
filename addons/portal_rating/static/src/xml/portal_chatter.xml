@@ -9,9 +9,7 @@
             <attribute name="t-attf-data-action">#{widget.options['force_submit_url'] || '/mail/message/post'}</attribute>
         </xpath>
         <xpath expr="//*[hasclass('o_portal_chatter_composer_input')]/div[hasclass('o_portal_chatter_composer_body')]" position="before">
-            <t t-call="portal_rating.rating_star_input">
-                <t t-set="default_rating" t-value="widget.options['default_rating_value']"/>
-            </t>
+            <t t-call="portal_rating.rating_star_input" default_rating="widget.options['default_rating_value']"/>
         </xpath>
     </t>
 

@@ -18,6 +18,7 @@ class MailLinkPreview(models.Model):
     _name = 'mail.link.preview'
     _inherit = ["bus.listener.mixin"]
     _description = "Store link preview data"
+    _rec_name = 'source_url'
 
     source_url = fields.Char('URL', required=True)
     og_type = fields.Char('Type')
@@ -97,7 +98,7 @@ class MailLinkPreview(models.Model):
             ]
         )
         (message.sudo().message_link_preview_ids - message_link_previews_ok)._unlink_and_notify()
-        Store(bus_channel=message).add(message, "_store_message_link_previews_fields").bus_send()
+        Store(bus_channel=message).add(message, "_store_message_link_previews_fields")
 
     @api.model
     def _is_link_preview_enabled(self):

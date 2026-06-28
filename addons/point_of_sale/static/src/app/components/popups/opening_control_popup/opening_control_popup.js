@@ -1,13 +1,13 @@
-import { useState } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
-import { Component } from "@odoo/owl";
+import { Component, proxy, onMounted } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
 import { Dialog } from "@web/core/dialog/dialog";
 import { RPCError } from "@web/core/network/rpc";
 import { CashInput } from "@point_of_sale/app/components/inputs/input/cash_input/cash_input";
+import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 
 class CustomDialog extends Dialog {
     onEscape() {}
@@ -24,18 +24,30 @@ export class OpeningControlPopup extends Component {
         this.moneyDetails = null;
         this.pos = usePos();
         this.dialog = useService("dialog");
-        this.state = useState({
+        this.state = proxy({
             notes: "",
             openingCash: this.env.utils.formatCurrency(
                 this.pos.session.cash_register_balance_start || 0,
                 false
             ),
+            ordersByPreset: [],
         });
         this.ui = useService("ui");
+        this.getOrderCountByPreset = useTrackedAsync(
+            async () =>
+                (this.state.ordersByPreset = await this.pos.data.call(
+                    "pos.session",
+                    "get_order_count_by_preset",
+                    [this.pos.session.id]
+                ))
+        );
+
+        onMounted(() => {
+            this.getOrderCountByPreset.call();
+        });
     }
     get orderCount() {
-        return this.pos.models["pos.order"].filter((o) => o.lines.length > 0 && o.state === "draft")
-            .length;
+        return this.state.ordersByPreset.reduce((total, preset) => total + preset.count, 0);
     }
     async confirm() {
         try {

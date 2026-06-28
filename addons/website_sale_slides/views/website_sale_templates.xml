@@ -26,7 +26,7 @@
                 <t t-set="invitation_link" t-value="course_memberships[course].invitation_link if course in course_memberships else ''"/>
                 <div class="col-7">
                     <a t-att-href="invitation_link"><h3 t-out="course.name" class="m-2"/></a>
-                    <div t-out="course.description_short" class="fw-light o_wslides_desc_truncate_2 ms-2"/>
+                    <div t-out="course.description_short" class="fw-light o_line_clamp ms-2"/>
                     <div class="fw-light ms-2 mt-2">
                         <t t-out="course.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/>
                         <t t-if="course.total_slides">

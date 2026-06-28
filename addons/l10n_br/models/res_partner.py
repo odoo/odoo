@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ResPartner(models.Model):
@@ -16,13 +16,13 @@ class ResPartner(models.Model):
 
         return frontend_writable_fields
 
-    @api.depends('l10n_latam_identification_type_id')
-    def _compute_is_company(self):
-        cnpj = self.env.ref('l10n_br.cnpj', raise_if_not_found=False)
-        l10n_br_partners = self.filtered(lambda p: p.country_code == 'BR')
+    def _is_brazilean_fiscal_country(self):
+        return self.env.company.account_fiscal_country_id.code == 'BR'
 
-        # Partners with CNPJ are legal entities => companies
-        for partner in l10n_br_partners:
-            partner.is_company = bool(cnpj and partner.l10n_latam_identification_type_id == cnpj)
+    def _get_mandatory_address_fields(self, country_sudo, **kwargs):
+        mandatory_fields = super()._get_mandatory_address_fields(country_sudo, **kwargs)
+        if country_sudo.code == "BR" and self._is_brazilean_fiscal_country():
+            mandatory_fields.update({'street_name', 'street2', 'street_number'})
+            mandatory_fields.remove('street')
 
-        super(ResPartner, self - l10n_br_partners)._compute_is_company()
+        return mandatory_fields

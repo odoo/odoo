@@ -1,31 +1,28 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, props, t, xml } from "@odoo/owl";
 
 const NO_OP = () => {};
 
 export class Switch extends Component {
-    static props = {
-        value: { type: Boolean, optional: true },
-        extraClasses: String,
-        disabled: { type: Boolean, optional: true },
-        label: { type: String, optional: true },
-        description: { type: String, optional: true },
-        onChange: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        onChange: NO_OP,
-    };
+    props = props({
+        value: t.boolean().optional(),
+        extraClasses: t.string(),
+        disabled: t.boolean().optional(),
+        label: t.string().optional(),
+        description: t.string().optional(),
+        onChange: t.function().optional(() => NO_OP),
+    });
     static template = xml`
-    <label t-att-class="'o_switch' + extraClasses">
+    <label t-att-class="'o_switch' + this.extraClasses">
         <input type="checkbox"
                 name="switch"
                 class="visually-hidden"
-                t-att-checked="props.value"
-                t-att-disabled="props.disabled"
-                t-on-change="(ev) => props.onChange(ev.target.checked)"
-                t-on-keyup="onKeyup"/>
+                t-att-checked="this.props.value"
+                t-att-disabled="this.props.disabled"
+                t-on-change="(ev) => this.props.onChange(ev.target.checked)"
+                t-on-keyup="this.onKeyup"/>
         <span/>
-        <span t-if="props.label" t-out="props.label" class="ms-2"/>
-        <span t-if="props.description" class="text-muted ms-2" t-out="props.description"/>
+        <span t-if="this.props.label" t-out="this.props.label" class="ms-2"/>
+        <span t-if="this.props.description" class="text-muted ms-2" t-out="this.props.description"/>
     </label>
     `;
 

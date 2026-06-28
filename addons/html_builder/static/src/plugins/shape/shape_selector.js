@@ -1,4 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
 import { ImgGroup } from "@html_builder/core/img_group";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -23,7 +24,7 @@ export class ShapeSelector extends BaseOptionComponent {
         super.setup();
         this.rootRef = useRef("root");
         this.tabsRef = useRef("tabs");
-        this.state = useState({ activeGroup: "basic" });
+        this.state = proxy({ activeGroup: "basic" });
         this.onScroll = useThrottleForAnimation(this._onScroll);
         useAutofocus({ refName: "backButton" });
     }

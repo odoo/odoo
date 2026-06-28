@@ -7,14 +7,13 @@ const debugRegistry = registry.category("debug");
 const getAccessRights = async () => {
     const rightsToCheck = {
         "ir.ui.view": "write",
-        "ir.rule": "read",
-        "ir.model.access": "read",
+        "ir.access": "read",
     };
     const proms = Object.entries(rightsToCheck).map(([model, operation]) =>
         user.checkAccessRight(model, operation)
     );
-    const [canEditView, canSeeRecordRules, canSeeModelAccess] = await Promise.all(proms);
-    const accessRights = { canEditView, canSeeRecordRules, canSeeModelAccess };
+    const [canEditView, canSeeAccess] = await Promise.all(proms);
+    const accessRights = { canEditView, canSeeAccess };
     return accessRights;
 };
 

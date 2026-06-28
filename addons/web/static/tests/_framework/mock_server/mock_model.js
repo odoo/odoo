@@ -20,8 +20,7 @@ import {
     safeSplit,
 } from "./mock_server_utils";
 
-const { DEFAULT_FIELD_VALUES, DEFAULT_RELATIONAL_FIELD_VALUES, S_FIELD, copyFields, isComputed } =
-    fields;
+const { DEFAULT_FIELD_VALUES, DEFAULT_RELATIONAL_FIELD_VALUES, S_FIELD, copyFields } = fields;
 
 /**
  * @typedef {import("fields").INumerical["aggregator"]} Aggregator
@@ -404,7 +403,15 @@ function getView(model, args, kwargs) {
         }
     }
     const [arch, viewId] = findView(model, viewType, requestViewId);
-    const view = parseView(model, { arch });
+    // Inline the card view if the root element references one via the 'card_id' attribute
+    const doc = domParser.parseFromString(arch, "text/xml").documentElement;
+    const cardId = doc.getAttribute("card_id");
+    if (cardId) {
+        const [cardArch] = findView(model, "card", Number.parseInt(cardId, 10));
+        doc.removeAttribute("card");
+        doc.appendChild(domParser.parseFromString(cardArch, "text/xml").documentElement);
+    }
+    const view = parseView(model, { arch: doc });
     if (kwargs.options?.toolbar) {
         view.toolbar = model._toolbar;
     }
@@ -2361,7 +2368,7 @@ export class Model extends Array {
                 model_domain: modelDomain,
                 extra_domain: extraDomain,
                 only_counters: expand,
-                set_limit: limit && !(expand || hierarchize || comodelDomain),
+                set_limit: limit && !(expand || hierarchize || comodelDomain.length),
             });
         }
         if (!expand && !hierarchize && !comodelDomain.length) {
@@ -2567,7 +2574,7 @@ export class Model extends Array {
                     model_domain: modelDomain,
                     extra_domain: extraDomain,
                     only_counters: expand,
-                    set_limit: limit && !(expand || groupBy || comodelDomain),
+                    set_limit: limit && !(expand || groupBy || comodelDomain.length),
                 });
             }
             if (!expand && !groupBy && !comodelDomain.length) {
@@ -3239,16 +3246,16 @@ export class Model extends Array {
             // in by the 'in' operator (with the ids of children)
             if (criterion[1] === "child_of") {
                 let oldLength = 0;
-                const childIds = [criterion[2]];
-                while (childIds.length > oldLength) {
-                    oldLength = childIds.length;
+                const childIds = new Set([criterion[2]]);
+                while (childIds.size > oldLength) {
+                    oldLength = childIds.size;
                     for (const record of this) {
-                        if (childIds.indexOf(record[this._parent_name]) >= 0) {
-                            childIds.push(record.id);
+                        if (childIds.has(record[this._parent_name])) {
+                            childIds.add(record.id);
                         }
                     }
                 }
-                criterion = [criterion[0], "in", childIds];
+                criterion = [criterion[0], "in", Array.from(childIds)];
             }
             // In case of many2many field, if domain operator is '=' generally change it to 'in' operator
             const splitCriterion0 = safeSplit(criterion[0], ".");
@@ -3695,7 +3702,7 @@ export class Model extends Array {
                         record[fieldName][property.name] = value;
                     }
                 }
-            } else if (!isComputed(field)) {
+            } else {
                 record[fieldName] = value;
             }
             i++;

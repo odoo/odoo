@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
+from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -28,9 +29,18 @@ class SaleOrder(models.Model):
             for line in self.order_line.filtered(lambda line: line.product_id.type != "service")
         )  # Whether Gelato and non-Gelato products that require delivery are mixed.
         if mixing_products:
-            return 0, _(
+            return 0, self.env._(
                 "The product %(product_name)s cannot be added to the cart as it requires separate"
                 " shipping. Please place your order for the current cart first.",
                 product_name=product.name,
             )
         return super()._verify_updated_quantity(order_line, product_id, new_qty, uom_id, **kwargs)
+
+    def _allow_express_checkout(self):
+        res = super()._allow_express_checkout()
+        if res and any(self.order_line.product_id.mapped("gelato_product_uid")):
+            try:
+                self.partner_shipping_id._gelato_validate_address()
+            except ValidationError:
+                return False
+        return res

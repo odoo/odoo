@@ -1,10 +1,10 @@
 import { beforeEach, expect, onError, test } from "@odoo/hoot";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { clearRegistry, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
 
-import { Component, onWillStart, useState, xml } from "@odoo/owl";
+import { Component, onWillStart, xml, proxy } from "@odoo/owl";
 
 const mainComponentsRegistry = registry.category("main_components");
 
@@ -41,15 +41,14 @@ test("unmounts erroring main component", async () => {
     expect.errors(1);
     onError((error) => {
         expect.step(error.reason.message);
-        expect.step(error.reason.cause.message);
     });
     let compA;
     class MainComponentA extends Component {
-        static template = xml`<span><t t-if="state.shouldThrow" t-out="error"/>MainComponentA</span>`;
+        static template = xml`<span><t t-if="this.state.shouldThrow" t-out="this.error"/>MainComponentA</span>`;
         static props = ["*"];
         setup() {
             compA = this;
-            this.state = useState({ shouldThrow: false });
+            this.state = proxy({ shouldThrow: false });
         }
         get error() {
             throw new Error("BOOM");
@@ -73,10 +72,7 @@ test("unmounts erroring main component", async () => {
     `);
     compA.state.shouldThrow = true;
     await animationFrame();
-    expect.verifySteps([
-        'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
-        "BOOM",
-    ]);
+    expect.verifySteps(["BOOM"]);
     expect.verifyErrors(["BOOM"]);
 
     expect(".o-main-components-container > span").toHaveCount(1);
@@ -88,7 +84,6 @@ test("unmounts erroring main component: variation", async () => {
     expect.errors(1);
     onError((error) => {
         expect.step(error.reason.message);
-        expect.step(error.reason.cause.message);
     });
     class MainComponentA extends Component {
         static template = xml`<span>MainComponentA</span>`;
@@ -97,11 +92,11 @@ test("unmounts erroring main component: variation", async () => {
 
     let compB;
     class MainComponentB extends Component {
-        static template = xml`<span><t t-if="state.shouldThrow" t-out="error"/>MainComponentB</span>`;
+        static template = xml`<span><t t-if="this.state.shouldThrow" t-out="this.error"/>MainComponentB</span>`;
         static props = ["*"];
         setup() {
             compB = this;
-            this.state = useState({ shouldThrow: false });
+            this.state = proxy({ shouldThrow: false });
         }
         get error() {
             throw new Error("BOOM");
@@ -120,10 +115,7 @@ test("unmounts erroring main component: variation", async () => {
     `);
     compB.state.shouldThrow = true;
     await animationFrame();
-    expect.verifySteps([
-        'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
-        "BOOM",
-    ]);
+    expect.verifySteps(["BOOM"]);
     expect.verifyErrors(["BOOM"]);
     expect(".o-main-components-container > span").toHaveCount(1);
     expect(".o-main-components-container > span").toHaveInnerHTML("MainComponentA");
@@ -143,12 +135,12 @@ test("MainComponentsContainer re-renders when the registry changes", async () =>
 });
 
 test("Should be possible to add a new component when MainComponentContainer is not mounted yet", async () => {
-    const defer = new Deferred();
+    const defer = Promise.withResolvers();
     patchWithCleanup(MainComponentsContainer.prototype, {
         setup() {
             super.setup();
             onWillStart(async () => {
-                await defer;
+                await defer.promise;
             });
         },
     });

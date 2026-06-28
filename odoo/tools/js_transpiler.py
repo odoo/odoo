@@ -46,7 +46,6 @@ def transpile_javascript(url, content):
         convert_variable_export,
         convert_object_export,
         convert_default_export,
-        partial(wrap_with_qunit_module, url),
         partial(wrap_with_odoo_define, module_path, dependencies),
         partial(convert_t, url)
     ]
@@ -95,16 +94,6 @@ def url_to_module_path(url):
             return "@%s/../tests%s" % (match['module'], url)
     else:
         raise ValueError("The js file %r must be in the folder '/static/src' or '/static/lib' or '/static/test'" % url)
-
-def wrap_with_qunit_module(url, content):
-    """
-    Wraps the test file content (source code) with the QUnit.module('module_name', function() {...}).
-    """
-    if "tests" in url and re.search(r'QUnit\.(test|debug|only)\(', content):
-        match = URL_RE.match(url)
-        return f"""QUnit.module("{match["module"]}", function() {{{content}}});"""
-    else:
-        return content
 
 def wrap_with_odoo_define(module_path, dependencies, content):
     """

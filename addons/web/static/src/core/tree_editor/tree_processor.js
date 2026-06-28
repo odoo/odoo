@@ -2,7 +2,7 @@ import {
     deserializeDate,
     deserializeDateTime,
     formatDate,
-    formatDateTime,
+    toLocaleDateTimeString,
 } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -40,7 +40,7 @@ function formatValue(val, disambiguate, fieldDef, displayNames) {
     }
     if (typeof val === "string") {
         if (fieldDef?.type === "datetime") {
-            return formatDateTime(deserializeDateTime(val));
+            return toLocaleDateTimeString(deserializeDateTime(val));
         }
         if (fieldDef?.type === "date") {
             return formatDate(deserializeDate(val));
@@ -219,7 +219,7 @@ export const treeProcessorService = {
             limit = 5
         ) {
             let { operator, negate, value, path } = node;
-            if (operator === "in range" && value[1] === "custom range") {
+            if (operator === "in range" && value[1] === "dateRange") {
                 operator = "between";
                 value = value.slice(2);
             }
@@ -255,13 +255,18 @@ export const treeProcessorService = {
             if (["set", "not set"].includes(operator)) {
                 return description;
             }
-
             const coModeldisplayNames = displayNames[getResModel(fieldDef)];
             const dis = disambiguate(value, coModeldisplayNames);
             let values;
             if (operator === "in range") {
                 const valueType = value[1];
-                values = [InRange.options.find(([t]) => t === valueType)[1].toString()];
+                if (valueType === "relativeRange") {
+                    let [, , range, unit] = value;
+                    unit = Math.abs(range) > 1 ? unit + "s" : unit;
+                    values = [Number(range) > 0 ? "next" : "last", Math.abs(range), unit]; // eg. last 7 months
+                } else {
+                    values = [InRange.options.find(([t]) => t === valueType)[1].toString()];
+                }
             } else {
                 values = (Array.isArray(value) ? value : [value])
                     .slice(0, limit)
@@ -280,7 +285,7 @@ export const treeProcessorService = {
                     addParenthesis = false;
                     break;
                 case "in range":
-                    join = _t(" ");
+                    join = " ";
                     addParenthesis = false;
                     break;
                 case "in":
@@ -330,7 +335,8 @@ export const treeProcessorService = {
             const stringDescription = [pathDescription, operatorDescription];
             if (valueDescription) {
                 const { values, join, addParenthesis } = valueDescription;
-                const jointedValues = values.join(` ${join} `);
+                const joint = ["", " "].includes(join) ? `${join}` : ` ${join} `;
+                const jointedValues = values.join(joint);
                 stringDescription.push(addParenthesis ? `( ${jointedValues} )` : jointedValues);
             } else if (isTree(tree.value)) {
                 const _fieldDef = getFieldDef(tree.path);
@@ -365,7 +371,8 @@ export const treeProcessorService = {
             const stringDescriptions = [pathDescription, operatorDescription];
             if (valueDescription) {
                 const { values, join, addParenthesis } = valueDescription;
-                const jointedValues = values.join(` ${join} `);
+                const joint = ["", " "].includes(join) ? `${join}` : ` ${join} `;
+                const jointedValues = values.join(joint);
                 stringDescriptions.push(addParenthesis ? `( ${jointedValues} )` : jointedValues);
             }
             descr.push(`${tabs}${stringDescriptions.join(" ")}`);

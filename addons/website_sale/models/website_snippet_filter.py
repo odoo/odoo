@@ -2,10 +2,10 @@
 
 from functools import partial
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import BinaryBytes, file_open
+from odoo.tools import BinaryBytes
 
 
 class WebsiteSnippetFilter(models.Model):
@@ -18,11 +18,10 @@ class WebsiteSnippetFilter(models.Model):
     )
 
     def _prepare_values(self, limit=None, search_domain=None, **kwargs):
-        website = self.env["website"].get_current_website()
         if (self.model_name or kwargs.get("res_model")) in {
             "product.product",
             "product.public.category",
-        } and not website.has_ecommerce_access():
+        } and not self.env.website.has_ecommerce_access():
             return []
         hide_variants = False
         if search_domain and "hide_variants" in search_domain:
@@ -47,8 +46,7 @@ class WebsiteSnippetFilter(models.Model):
 
     @api.model
     def _get_website_currency(self):
-        website = self.env["website"].get_current_website()
-        return website.currency_id
+        return self.env.website.currency_id
 
     def _get_hardcoded_sample(self, model):
         samples = super()._get_hardcoded_sample(model)
@@ -59,41 +57,37 @@ class WebsiteSnippetFilter(models.Model):
                 for i in range(max(len(samples), len(data_)))
             ]
 
-        def read_file(path):
-            with file_open(path, "rb") as file:
-                return BinaryBytes(file.read())
-
         if model._name == "product.product":
             data = [
                 {
-                    "image_512": read_file("product/static/img/product_chair.jpg"),
-                    "display_name": _("Chair"),
-                    "description_sale": _("Sit comfortably"),
+                    "image_512": BinaryBytes(b"/product/static/img/product_chair.jpg"),
+                    "display_name": self.env._("Chair"),
+                    "description_sale": self.env._("Sit comfortably"),
                 },
                 {
-                    "image_512": read_file("product/static/img/product_lamp.png"),
-                    "display_name": _("Lamp"),
-                    "description_sale": _("Lightbulb sold separately"),
+                    "image_512": BinaryBytes(b"/product/static/img/product_lamp.png"),
+                    "display_name": self.env._("Lamp"),
+                    "description_sale": self.env._("Lightbulb sold separately"),
                 },
                 {
-                    "image_512": read_file("product/static/img/product_product_20-image.png"),
-                    "display_name": _("Whiteboard"),
-                    "description_sale": _("With three feet"),
+                    "image_512": BinaryBytes(b"/product/static/img/product_product_20-image.png"),
+                    "display_name": self.env._("Whiteboard"),
+                    "description_sale": self.env._("With three feet"),
                 },
                 {
-                    "image_512": read_file("product/static/img/product_product_27-image.jpg"),
-                    "display_name": _("Drawer"),
-                    "description_sale": _("On wheels"),
+                    "image_512": BinaryBytes(b"/product/static/img/product_product_27-image.jpg"),
+                    "display_name": self.env._("Drawer"),
+                    "description_sale": self.env._("On wheels"),
                 },
                 {
-                    "image_512": read_file("product/static/img/product_product_7-image.png"),
-                    "display_name": _("Box"),
-                    "description_sale": _("Reinforced for heavy loads"),
+                    "image_512": BinaryBytes(b"/product/static/img/product_product_7-image.png"),
+                    "display_name": self.env._("Box"),
+                    "description_sale": self.env._("Reinforced for heavy loads"),
                 },
                 {
-                    "image_512": read_file("product/static/img/product_product_9-image.jpg"),
-                    "display_name": _("Bin"),
-                    "description_sale": _("Pedal-based opening system"),
+                    "image_512": BinaryBytes(b"/product/static/img/product_product_9-image.jpg"),
+                    "display_name": self.env._("Bin"),
+                    "description_sale": self.env._("Pedal-based opening system"),
                 },
             ]
             samples = merge_samples_with_data(data)
@@ -101,25 +95,31 @@ class WebsiteSnippetFilter(models.Model):
             data = [
                 {
                     "id": 1,
-                    "cover_image": read_file("website_sale/static/src/img/categories/desks.jpg"),
-                    "name": _("Desks"),
+                    "cover_image": BinaryBytes(
+                        b"/website_sale/static/src/img/categories/desks.jpg"
+                    ),
+                    "name": self.env._("Desks"),
                 },
                 {
                     "id": 2,
-                    "cover_image": read_file(
-                        "website_sale/static/src/img/categories/furnitures.jpg"
+                    "cover_image": BinaryBytes(
+                        b"/website_sale/static/src/img/categories/furnitures.jpg"
                     ),
-                    "name": _("Furnitures"),
+                    "name": self.env._("Furnitures"),
                 },
                 {
                     "id": 3,
-                    "cover_image": read_file("website_sale/static/src/img/categories/boxes.jpg"),
-                    "name": _("Boxes"),
+                    "cover_image": BinaryBytes(
+                        b"/website_sale/static/src/img/categories/boxes.jpg"
+                    ),
+                    "name": self.env._("Boxes"),
                 },
                 {
                     "id": 4,
-                    "cover_image": read_file("website_sale/static/src/img/categories/drawers.jpg"),
-                    "name": _("Drawers"),
+                    "cover_image": BinaryBytes(
+                        b"/website_sale/static/src/img/categories/drawers.jpg"
+                    ),
+                    "name": self.env._("Drawers"),
                 },
             ]
             samples = merge_samples_with_data(data)
@@ -149,6 +149,7 @@ class WebsiteSnippetFilter(models.Model):
                         res_product["product_id"] = product.product_variant_id.id
                     else:
                         res_product.update(product._get_combination_info())
+                    res_product["hide_variants"] = hide_variants
 
                     if records.env.context.get("add2cart_rerender"):
                         res_product["_add2cart_rerender"] = True
@@ -165,8 +166,8 @@ class WebsiteSnippetFilter(models.Model):
         :return: List of dictionaries containing category ID, name, and cover image URL.
         :rtype: list[dict]
         """
-        CategorySudo = request.env["product.public.category"].sudo()
-        domain = CategorySudo._get_available_category_domain(request.website.id)
+        CategorySudo = self.env["product.public.category"].sudo()
+        domain = CategorySudo._get_available_category_domain(self.env.website.id)
         if parent_id:
             parent_category = CategorySudo.browse(parent_id)
             # Parent category should be first.
@@ -174,18 +175,15 @@ class WebsiteSnippetFilter(models.Model):
         else:  # Only top-level categories
             categories = CategorySudo.search(domain & Domain("parent_id", "=", False))
 
-        base_url = CategorySudo.get_base_url()
-        default_img_path = request.env["product.template"]._get_product_placeholder_filename()
-        default_img_url = f"{base_url}/{default_img_path}"
+        default_img_path = self.env["product.template"]._get_product_placeholder_filename()
+        default_img_url = f"/{default_img_path}"
         return [
             {
                 "id": cat.id,
                 "name": cat.name,
                 "unpublished": not cat.has_published_products,
                 "cover_image": (
-                    f"{base_url}{request.website.image_url(cat, 'cover_image')}"
-                    if cat.cover_image
-                    else default_img_url
+                    self.env.website.image_url(cat, "cover_image") if cat.cover_image else default_img_url
                 ),
             }
             for cat in categories
@@ -194,8 +192,8 @@ class WebsiteSnippetFilter(models.Model):
     @api.model
     def _get_products(self, mode, **kwargs):
         dynamic_filter = self.env.context.get("dynamic_filter")
-        handler = getattr(self, "_get_products_%s" % mode, self._get_products_latest_sold)
-        website = self.env["website"].get_current_website()
+        handler = getattr(self.sudo(False), "_get_products_%s" % mode, self.sudo(False)._get_products_latest_sold)
+        website = self.env.website
         search_domain = self.env.context.get("search_domain")
         limit = self.env.context.get("limit")
         hide_variants = self.env.context.get("hide_variants")
@@ -234,12 +232,12 @@ class WebsiteSnippetFilter(models.Model):
             if self.env.context.get("hide_variants"):
                 sold_products = sold_products.product_tmpl_id.product_variant_id
             if sold_products:
-                products = sold_products.filtered_domain(domain)[:limit]
+                products = sold_products.sudo(False).filtered_domain(domain)[:limit]
         return products.with_context(display_default_code=False)
 
     def _get_products_latest_viewed(self, _website, limit, domain, **_kwargs):
         products = self.env["product.product"]
-        visitor = self.env["website.visitor"]._get_visitor_from_request()
+        visitor = self.env["ir.http"]._get_visitor_from_request()
         if visitor:
             excluded_products = request.cart.order_line.product_id.ids
             tracked_products = (
@@ -255,7 +253,7 @@ class WebsiteSnippetFilter(models.Model):
                     ],
                     ["product_id"],
                     limit=limit,
-                    order="visit_datetime:max DESC",
+                    order="visit_datetime:max DESC, id:max DESC",
                 )
             )
             if self.env.context.get("hide_variants"):

@@ -1,26 +1,25 @@
-import { render } from "@web/owl2/utils";
-import { after, before, expect, test } from "@odoo/hoot";
 import {
+    after,
+    animationFrame,
+    before,
     clear,
     click,
+    expect,
     hover,
     manuallyDispatchProgrammaticEvent,
     middleClick,
+    mockTimeZone,
+    mockTouch,
     press,
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
-    setInputFiles,
-    waitFor,
-} from "@odoo/hoot-dom";
-import {
-    animationFrame,
-    Deferred,
-    mockTimeZone,
-    mockTouch,
     runAllTimers,
+    setInputFiles,
+    test,
     tick,
-} from "@odoo/hoot-mock";
+    waitFor,
+} from "@odoo/hoot";
 import {
     Component,
     EventBus,
@@ -28,9 +27,8 @@ import {
     onPatched,
     onWillStart,
     onWillUpdateProps,
+    proxy,
     useEffect,
-    useRef,
-    useState,
     xml,
 } from "@odoo/owl";
 import {
@@ -39,6 +37,7 @@ import {
     defineActions,
     defineMenus,
     defineModels,
+    destroyApp,
     fields,
     findComponent,
     getPagerLimit,
@@ -61,6 +60,7 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
+import { render, useRef } from "@web/owl2/utils";
 
 import { browser } from "@web/core/browser/browser";
 import { makeErrorFromResponse } from "@web/core/network/rpc";
@@ -72,6 +72,7 @@ import { redirect } from "@web/core/utils/urls";
 import { CharField } from "@web/views/fields/char/char_field";
 import { DateTimeField } from "@web/views/fields/datetime/datetime_field";
 import { Field } from "@web/views/fields/field";
+import { FileUploader } from "@web/views/fields/file_handler";
 import { IntegerField } from "@web/views/fields/integer/integer_field";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { useSpecialData } from "@web/views/fields/relational_utils";
@@ -80,7 +81,6 @@ import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field"
 import { FormController } from "@web/views/form/form_controller";
 import { AttachDocumentWidget } from "@web/views/widgets/attach_document/attach_document";
 import { WebClient } from "@web/webclient/webclient";
-import { FileUploader } from "@web/views/fields/file_handler";
 
 const fieldsRegistry = registry.category("fields");
 const widgetsRegistry = registry.category("view_widgets");
@@ -438,46 +438,6 @@ test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
     await expect.waitForSteps(["web_save"]);
 });
 
-test(`[Offline] open form with offline changes`, async () => {
-    Partner._views = {
-        form: `<form><field name="foo"/></form>`,
-    };
-    defineActions([
-        {
-            id: 1,
-            name: "Partner",
-            res_model: "partner",
-            views: [[false, "form"]],
-        },
-    ]);
-
-    await mountWithCleanup(WebClient);
-    // Open record 2, blip is the value stored
-    await getService("action").doAction(1, { props: { resId: 2 } });
-    expect(`.o_field_widget[name=foo] input`).toHaveValue("blip");
-
-    // Open record 2, with the offline modifications (blip is change to Harlod Bohy)
-    getService("offline").scheduleORM(
-        "lead",
-        "web_save",
-        [[]],
-        {},
-        {
-            id: "881ba65a",
-            extras: {
-                actionId: 33,
-                actionName: "CRM",
-                viewType: "form",
-                changes: { foo: "Harold Bohy" },
-                displayName: "Display Name",
-                timeStamp: 30,
-            },
-        }
-    );
-    await getService("action").doAction(1, { props: { offlineId: "881ba65a", resId: 2 } });
-    expect(`.o_field_widget[name=foo] input`).toHaveValue("Harold Bohy");
-});
-
 test(`form rendering with class and style attributes`, async () => {
     await mountView({
         resModel: "partner",
@@ -719,10 +679,10 @@ test(`duplicate fields rendered properly (one2many)`, async () => {
 });
 
 test(`attributes are transferred on async widgets`, async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     class AsyncField extends CharField {
         willStart() {
-            return def;
+            return def?.promise;
         }
     }
     fieldsRegistry.add("asyncwidget", { component: AsyncField });
@@ -1206,8 +1166,8 @@ test(`Form and subview with _view_ref contexts`, async () => {
         expect(context.list_view_ref).toBe("some_other_tree_view");
         // "The correct _view_ref should have been sent to the server for the subview"
     });
-    onRpc("get_formview_action", ({ model, kwargs }) => {
-        expect.step("get_formview_action");
+    onRpc("get_record_default_action", ({ model, kwargs }) => {
+        expect.step("get_record_default_action");
         return {
             res_id: 1,
             type: "ir.actions.act_window",
@@ -1231,7 +1191,11 @@ test(`Form and subview with _view_ref contexts`, async () => {
     await contains(`.o_field_widget[name="product_id"] .o_external_button`, {
         visible: false,
     }).click();
-    expect.verifySteps(["get_formview_action", "product get_views", "partner.type get_views"]);
+    expect.verifySteps([
+        "get_record_default_action",
+        "product get_views",
+        "partner.type get_views",
+    ]);
 });
 
 test(`Form and subsubview with only _view_ref contexts`, async () => {
@@ -3674,7 +3638,7 @@ test(`disable buttons until reload data from server`, async () => {
     let def = null;
     onRpc("web_save", async ({ args }) => {
         args[1].foo = "apple";
-        await def;
+        await def?.promise;
     });
     await mountView({
         resModel: "partner",
@@ -3683,7 +3647,7 @@ test(`disable buttons until reload data from server`, async () => {
         resId: 2,
     });
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(`.o_field_widget[name=foo] input`).edit("tralala");
     await contains(`.o_form_button_save`).click();
 
@@ -4255,6 +4219,106 @@ test(`archive/unarchive a record`, async () => {
         "action_unarchive",
         "web_read",
     ]);
+});
+
+test(`[Offline] archiving a record`, async () => {
+    onRpc("action_archive", () => expect.step(`action_archive`));
+    // add active field on partner model to have archive option
+    Partner._fields.active = fields.Boolean();
+    Partner._views = {
+        "form,false": `<form><field name="active"/><field name="foo"/></form>`,
+        "search,false": `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Action 1",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    expect(`.o_breadcrumb`).toHaveText("first record");
+    await setOffline(true);
+    expect(getService("offline").offline).toBe(true);
+
+    // open action menu and delete
+    await toggleActionMenu();
+    await toggleMenuItem("Archive");
+    expect(`.modal`).toHaveCount(1);
+
+    await contains(`.modal-footer .btn-primary`).click();
+
+    // The edited record will be saved the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "ACTION 1",
+        "first record",
+        "Archived",
+        "",
+    ]);
+
+    expect.verifySteps([]);
+
+    await setOffline(false);
+
+    expect(getService("offline").offline).toBe(false);
+    await expect.waitForSteps(["action_archive"]);
+});
+
+test(`[Offline] Unarchiving a record`, async () => {
+    onRpc("action_unarchive", () => expect.step(`action_unarchive`));
+    // add active field on partner model to have archive option
+    Partner._fields.active = fields.Boolean();
+    Partner._records[0].active = false;
+    Partner._views = {
+        "form,false": `<form><field name="active"/><field name="foo"/></form>`,
+        "search,false": `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Action 1",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    expect(`.o_breadcrumb`).toHaveText("first record");
+    await setOffline(true);
+    expect(getService("offline").offline).toBe(true);
+
+    // open action menu and delete
+    await toggleActionMenu();
+    await toggleMenuItem("Unarchive");
+
+    // The edited record will be saved the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "ACTION 1",
+        "first record",
+        "Unarchived",
+        "",
+    ]);
+
+    expect.verifySteps([]);
+
+    await setOffline(false);
+
+    expect(getService("offline").offline).toBe(false);
+    await expect.waitForSteps(["action_unarchive"]);
 });
 
 test(`apply custom standard action menu (archive)`, async () => {
@@ -5234,9 +5298,9 @@ test(`discard changes on a new (dirty) form view`, async () => {
 });
 
 test(`discard has to wait for changes in each field`, async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     class CustomField extends Component {
-        static template = xml`<input t-ref="input" t-att-value="value" t-on-blur="onBlur" t-on-input="onInput" />`;
+        static template = xml`<input t-custom-ref="input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput" />`;
         static props = {
             ...standardFieldProps,
         };
@@ -5254,7 +5318,7 @@ test(`discard has to wait for changes in each field`, async () => {
 
         async updateValue() {
             const value = this.input.el.value;
-            await def;
+            await def?.promise;
             await this.props.record.update({ [this.props.name]: `update value: ${value}` });
         }
 
@@ -6250,6 +6314,55 @@ test(`deleting a record`, async () => {
     expect(`.o_field_widget[name=foo] input`).toHaveValue("blip");
 });
 
+test(`[Offline] deleting a record`, async () => {
+    onRpc("unlink", () => expect.step(`unlink`));
+    Partner._views = {
+        "form,false": `<form><field name="foo"/></form>`,
+        "search,false": `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Action 1",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    expect(`.o_breadcrumb`).toHaveText("first record");
+    await setOffline(true);
+    expect(getService("offline").offline).toBe(true);
+
+    // open action menu and delete
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+    expect(`.modal`).toHaveCount(1);
+
+    await contains(`.modal-footer button.btn-danger`).click();
+
+    // The edited record will be saved the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "ACTION 1",
+        "first record",
+        "Deleted",
+        "",
+    ]);
+
+    expect.verifySteps([]);
+
+    await setOffline(false);
+
+    expect(getService("offline").offline).toBe(false);
+    await expect.waitForSteps(["unlink"]);
+});
+
 test.tags("desktop");
 test(`deleting a record on desktop`, async () => {
     await mountView({
@@ -6581,8 +6694,8 @@ test(`properly apply onchange on one2many fields direct click`, async () => {
         `,
     };
 
-    const deferred = new Deferred();
-    onRpc("onchange", () => deferred);
+    const deferred = Promise.withResolvers();
+    onRpc("onchange", () => deferred?.promise);
     await mountView({
         resModel: "partner",
         type: "form",
@@ -6912,9 +7025,9 @@ test(`rpc complete after destroying parent`, async () => {
         },
     ]);
 
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     onRpc("update_module", async () => {
-        await deferred;
+        await deferred?.promise;
         return { type: "ir.actions.act_window_close" };
     });
     await mountWithCleanup(WebClient);
@@ -6941,9 +7054,9 @@ test(`onchanges that complete after discarding`, async () => {
         },
     };
 
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     onRpc("onchange", async () => {
-        await deferred;
+        await deferred?.promise;
         expect.step("onchange is done");
     });
     await mountView({
@@ -6969,9 +7082,9 @@ test(`onchanges that complete after discarding`, async () => {
 });
 
 test(`discarding before save returns`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     onRpc("web_save", async () => {
-        await deferred;
+        await deferred?.promise;
     });
     const view = await mountView({
         resModel: "partner",
@@ -8885,8 +8998,7 @@ test(`inner group with invisible cells`, async () => {
     expect(`.cell2`).toHaveCount(1);
 });
 
-test.tags("desktop");
-test(`form group with newline tag inside on desktop`, async () => {
+test(`form group with newline tag inside`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -8937,61 +9049,6 @@ test(`form group with newline tag inside on desktop`, async () => {
     const topGroupRect = queryFirst(`.top_group`).getBoundingClientRect();
     expect(bottomGroupRect.top - topGroupRect.top).toBeGreaterThan(200, {
         message: "outergroup children should not be on the same line",
-    });
-});
-
-test.tags("mobile");
-test(`form group with newline tag inside on mobile`, async () => {
-    await mountView({
-        resModel: "partner",
-        type: "form",
-        arch: `
-            <form>
-                <sheet>
-                    <group col="5" class="main_inner_group">
-                        <!-- col=5 otherwise the test is ok even without the
-                        newline code as this will render a <newline/> DOM
-                        element in the third column, leaving no place for
-                        the next field and its label on the same line. -->
-                        <field name="foo"/>
-                        <newline/>
-                        <field name="bar"/>
-                        <field name="float_field"/>
-                    </group>
-                    <group col="3">
-                        <!-- col=3 otherwise the test is ok even without the
-                        newline code as this will render a <newline/> DOM
-                        element with the g-col-2 class, leaving no
-                        place for the next group on the same line. -->
-                        <group class="top_group">
-                            <div style="height: 200px;"/>
-                        </group>
-                        <newline/>
-                        <group class="bottom_group">
-                            <div/>
-                        </group>
-                    </group>
-                </sheet>
-            </form>
-        `,
-        resId: 1,
-    });
-
-    // Inner group
-    expect(`.main_inner_group .o_cell`).toHaveCount(6);
-    expect(`.main_inner_group > .o_cell.o_wrap_label:first-child`).toHaveCount(1);
-    expect(`.main_inner_group > .o_cell.o_wrap_input:nth-child(2)`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field_inline:nth-child(3)`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field_inline:nth-child(3) > .o_wrap_label`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field_inline:nth-child(3) > .o_wrap_input`).toHaveCount(1);
-    expect(`.main_inner_group > .o_cell.o_wrap_label:nth-child(4)`).toHaveCount(1);
-    expect(`.main_inner_group > .o_cell.o_wrap_input:nth-child(5)`).toHaveCount(1);
-
-    // Outer group
-    const bottomGroupRect = queryFirst(`.bottom_group`).getBoundingClientRect();
-    const topGroupRect = queryFirst(`.top_group`).getBoundingClientRect();
-    expect(bottomGroupRect.top - topGroupRect.top).toEqual(200, {
-        message: "no space is present between multiple groups, they should be joint",
     });
 });
 
@@ -9157,10 +9214,10 @@ test(`translate event correctly handled with multiple controllers`, async () => 
 
 test.tags("desktop");
 test(`buttons are disabled until status bar action is resolved`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     mockService("action", {
         async doActionButton() {
-            await deferred;
+            await deferred?.promise;
         },
     });
 
@@ -9300,9 +9357,9 @@ test(`buttons with "confirm" attribute: click twice on "Ok"`, async () => {
 });
 
 test(`multiple clicks on save should reload only once`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
 
-    onRpc("web_save", () => deferred);
+    onRpc("web_save", () => deferred?.promise);
     onRpc(({ method }) => expect.step(method));
     await mountView({
         resModel: "partner",
@@ -9687,12 +9744,6 @@ test(`display tooltips for buttons (debug = true)`, async () => {
 });
 
 test(`reload event is handled only once`, async () => {
-    // In this test, several form controllers are nested (all of them are
-    // opened in dialogs). When the users clicks on save in the last
-    // opened dialog, a 'reload' event is triggered up to reload the (direct)
-    // parent view. If this event isn't stopPropagated by the first controller
-    // catching it, it will crash when the other one will try to handle it,
-    // as this one doesn't know at all the dataPointID to reload.
     Partner._views = {
         form: `<form><field name="name"/><field name="parent_id"/></form>`,
     };
@@ -9727,7 +9778,7 @@ test(`reload event is handled only once`, async () => {
     await contains(`.o_dialog:eq(2) footer .o_form_button_save`).click();
     expect.verifySteps([
         "web_save",
-        "read", // reload the name (first dialog)
+        "web_read", // reload the first dialog
     ]);
     expect(`.o_dialog:eq(1) .o_field_widget[name="parent_id"] input`).toHaveValue("new name");
 });
@@ -9905,7 +9956,7 @@ test(`rainbowman attributes correctly passed on button click`, async () => {
 test(`basic support for widgets`, async () => {
     class MyComponent extends Component {
         static props = ["*"];
-        static template = xml`<div t-esc="value"/>`;
+        static template = xml`<div t-out="this.value"/>`;
         get value() {
             return JSON.stringify(this.props.record.data);
         }
@@ -9944,7 +9995,7 @@ test(`widget with class attribute`, async () => {
 test(`widget with readonly attribute`, async () => {
     class MyComponent extends Component {
         static props = ["*"];
-        static template = xml`<span t-esc="value"/>`;
+        static template = xml`<span t-out="this.value"/>`;
         get value() {
             return this.props.readonly ? "readonly" : "not readonly";
         }
@@ -10004,7 +10055,7 @@ test("support header button as widgets in submenu on form statusbar on mobile", 
                 <t t-set-slot="toggler">
                     <button>Upload Test</button>
                 </t>
-            </FileUploader>`
+            </FileUploader>`;
         static components = { FileUploader };
 
         onUploaded(ev) {
@@ -10037,9 +10088,9 @@ test("support header button as widgets in submenu on form statusbar on mobile", 
 test(`basic support for widgets: onchange update`, async () => {
     class MyWidget extends Component {
         static props = ["*"];
-        static template = xml`<t t-esc="state.dataToDisplay" />`;
+        static template = xml`<t t-out="this.state.dataToDisplay" />`;
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 dataToDisplay: this.props.record.data.foo,
             });
             useEffect(() => {
@@ -10341,7 +10392,7 @@ test(`save record with onchange on one2many with required field`, async () => {
     };
 
     let onchangeDeferred = undefined;
-    onRpc("onchange", () => onchangeDeferred);
+    onRpc("onchange", () => onchangeDeferred?.promise);
     onRpc("web_save", ({ args }) => {
         expect.step("web_save");
         expect(args[1].child_ids[0][2].foo).toBe("foo value");
@@ -10366,7 +10417,7 @@ test(`save record with onchange on one2many with required field`, async () => {
     expect(`.o_field_widget[name=name] input`).toHaveValue("");
     expect(`.o_field_widget[name=foo] input`).toHaveValue("");
 
-    onchangeDeferred = new Deferred();
+    onchangeDeferred = Promise.withResolvers();
     await contains(`.o_field_widget[name=name] input`).edit("some value");
     await contains(`.o_form_button_save`).click();
     expect.verifySteps([]);
@@ -10406,17 +10457,17 @@ test(`leave the form view while saving`, async () => {
     ]);
 
     let onchangeDeferred = undefined;
-    onRpc("onchange", () => onchangeDeferred);
+    onRpc("onchange", () => onchangeDeferred?.promise);
 
-    const createDeferred = new Deferred();
-    onRpc("web_save", () => createDeferred);
+    const createDeferred = Promise.withResolvers();
+    onRpc("web_save", () => createDeferred?.promise);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     await contains(`.o_control_panel_main_buttons button.o_list_button_add`).click();
 
     // edit foo to trigger a delayed onchange
-    onchangeDeferred = new Deferred();
+    onchangeDeferred = Promise.withResolvers();
     await contains(`.o_field_widget[name=foo] input`).edit("trigger onchange");
     expect(`.o_field_widget[name=name] input`).toHaveValue("default");
 
@@ -10468,9 +10519,9 @@ test(`leave the form twice (clicking on the breadcrumb) should save only once`, 
             `,
     };
 
-    const writeDeferred = new Deferred();
+    const writeDeferred = Promise.withResolvers();
     onRpc("web_save", async () => {
-        await writeDeferred;
+        await writeDeferred?.promise;
         expect.step("web_save");
     });
 
@@ -11128,7 +11179,7 @@ test(`fieldDependencies support for fields`, async () => {
     fieldsRegistry.add("custom_field", {
         component: class CustomField extends Component {
             static props = ["*"];
-            static template = xml`<span t-esc="props.record.data.int_field"/>`;
+            static template = xml`<span t-out="this.props.record.data.int_field"/>`;
         },
         fieldDependencies: [{ name: "int_field", type: "integer" }],
     });
@@ -11148,7 +11199,7 @@ test(`fieldDependencies support for fields: dependence on a relational field`, a
     registry.category("fields").add("custom_field", {
         component: class CustomField extends Component {
             static props = ["*"];
-            static template = xml`<span t-esc="props.record.data.product_id.display_name"/>`;
+            static template = xml`<span t-out="this.props.record.data.product_id.display_name"/>`;
         },
         fieldDependencies: [{ name: "product_id", type: "many2one", relation: "product" }],
     });
@@ -11696,7 +11747,7 @@ test(`don't exec a valid save with onWillSaveRecord in a form view`, async () =>
 });
 
 test(`Can't use FormRenderer implementation details in arch`, async () => {
-    // using t-esc in form view archs isn't accepted, so it displays a warning
+    // using t-out in form view archs isn't accepted, so it displays a warning
     // in the console
     patchWithCleanup(console, {
         warn: () => expect.step("warn"),
@@ -11708,10 +11759,10 @@ test(`Can't use FormRenderer implementation details in arch`, async () => {
         arch: `
             <form>
                 <div>
-                    <t t-esc="__owl__"/>
-                    <t t-esc="props"/>
-                    <t t-esc="env"/>
-                    <t t-esc="render"/>
+                    <t t-out="__owl__"/>
+                    <t t-out="props"/>
+                    <t t-out="env"/>
+                    <t t-out="render"/>
                 </div>
             </form>
         `,
@@ -12001,7 +12052,7 @@ test(`coming to an action with an error from a form view with a dirty x2m`, asyn
         static props = ["*"];
         static template = xml`
             <div class="test_widget">
-                <button t-on-click="onClick">MyButton</button>
+                <button t-on-click="this.onClick">MyButton</button>
             </div>
         `;
         setup() {
@@ -12083,7 +12134,7 @@ test(`coming to an action with an error from a form view with a record in creati
         static props = ["*"];
         static template = xml`
                 <div class="test_widget">
-                    <button t-on-click="onClick">MyButton</button>
+                    <button t-on-click="this.onClick">MyButton</button>
                 </div>`;
         setup() {
             this.actionService = useService("action");
@@ -12263,7 +12314,7 @@ test(`widget update several fields including an x2m`, async () => {
     };
     class TestWidget extends Component {
         static props = ["*"];
-        static template = xml`<div><button t-on-click="onClick">Click</button></div>`;
+        static template = xml`<div><button t-on-click="this.onClick">Click</button></div>`;
 
         onClick() {
             this.props.record.update({
@@ -12318,8 +12369,8 @@ test(`commitChanges with a field input removed during an update`, async () => {
         foo() {},
     };
 
-    const onchangeDeferred = new Deferred();
-    onRpc("onchange", () => onchangeDeferred);
+    const onchangeDeferred = Promise.withResolvers();
+    onRpc("onchange", () => onchangeDeferred?.promise);
     onRpc("web_save", ({ args }) => {
         expect(args[1]).toEqual({ child_ids: [[1, 1, { foo: "new foo" }]] });
     });
@@ -12564,12 +12615,12 @@ test(`custom x2many with relatedFields and list view not inline`, async () => {
 test(`custom many2one with relatedFields`, async () => {
     class CustomMany2One extends Component {
         static template = xml`
-            <t t-set="value" t-value="props.record.data[props.name]"/>
+            <t t-set="value" t-value="this.props.record.data[this.props.name]"/>
             <div class="content">
-                <div t-esc="value.id"/>
-                <div t-esc="value.display_name"/>
-                <div t-esc="value.foo"/>
-                <div t-esc="value.int_field"/>
+                <div t-out="value.id"/>
+                <div t-out="value.display_name"/>
+                <div t-out="value.foo"/>
+                <div t-out="value.int_field"/>
             </div>
             <button id="update-m2o" t-on-click="() => this.update()">Update</button>
         `;
@@ -12675,7 +12726,7 @@ test(`field with special data`, async () => {
 test(`field with special data (with persistent Cache)`, async () => {
     class MyWidget extends Component {
         static props = ["*"];
-        static template = xml`<div class="my_widget">MyWidget <t t-esc="specialData.data.test"/></div>`;
+        static template = xml`<div class="my_widget">MyWidget <t t-out="this.specialData.data.test"/></div>`;
         setup() {
             this.specialData = useSpecialData((orm, props) => {
                 const { record } = props;
@@ -12685,10 +12736,10 @@ test(`field with special data (with persistent Cache)`, async () => {
     }
     widgetsRegistry.add("my_widget", { component: MyWidget });
 
-    let def = new Deferred();
+    let def = Promise.withResolvers();
     onRpc("get_special_data", ({ args }) => {
         expect.step(`get_special_data ${args[0]}`);
-        return def;
+        return def?.promise;
     });
 
     defineActions([
@@ -12729,7 +12780,7 @@ test(`field with special data (with persistent Cache)`, async () => {
     expect(`.o_last_breadcrumb_item`).toHaveText("Christine");
 
     //Came back to the model with the special data
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").doAction(1);
     expect(`.o_last_breadcrumb_item`).toHaveText("second record");
     expect(`.my_widget`).toHaveText("MyWidget 1");
@@ -12852,7 +12903,7 @@ test(`an empty json object does not pass the required check`, async () => {
     class JsonField extends Component {
         static props = ["*"];
         static supportedTypes = ["json"];
-        static template = xml`<span><input t-on-change="onChange"/></span>`;
+        static template = xml`<span><input t-on-change="this.onChange"/></span>`;
 
         onChange(ev) {
             this.props.record.update({ [this.props.name]: JSON.parse(ev.target.value) });
@@ -13044,10 +13095,10 @@ test(`CogMenu dropdown's open/close state shouldn't be modified after 'onchange'
     Partner._onChanges = {
         name() {},
     };
-    const onchangeDef = new Deferred();
+    const onchangeDef = Promise.withResolvers();
     onRpc("partner", "onchange", ({ args }) => {
         if (args[2][0] === "name") {
-            return onchangeDef;
+            return onchangeDef?.promise;
         }
     });
 
@@ -13098,7 +13149,7 @@ test(`cog menu action is executed with up to date context`, async () => {
     });
 
     class MyField extends CharField {
-        static template = xml`<button class="my_btn" t-on-click="onClick">Reload</button>`;
+        static template = xml`<button class="my_btn" t-on-click="this.onClick">Reload</button>`;
         onClick() {
             this.props.record.model.load({ context: { x: "z" } });
         }
@@ -13139,7 +13190,7 @@ test(`cog menu action is executed with up to date context`, async () => {
 test("CogMenu receives the model in env", async () => {
     class CogItem extends Component {
         static props = ["*"];
-        static template = xml`<button class="test-cog" t-on-click="onClick">Test</button>`;
+        static template = xml`<button class="test-cog" t-on-click="this.onClick">Test</button>`;
         onClick() {
             expect.step([`cog clicked`, this.env.model.root.resModel, this.env.model.root.resId]);
         }
@@ -13327,10 +13378,10 @@ test(`open x2many with non inline form view, delayed get_views, form destroyed`,
     let def;
     onRpc("get_views", async () => {
         expect.step("get_views");
-        await def;
+        await def?.promise;
     });
 
-    const form = await mountView({
+    await mountView({
         resModel: "partner",
         type: "form",
         arch: `
@@ -13345,12 +13396,12 @@ test(`open x2many with non inline form view, delayed get_views, form destroyed`,
     });
 
     // click on an x2many record to open it in dialog (get_views delayed)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o_data_row .o_data_cell").click();
     expect(".o_dialog").toHaveCount(0);
 
     // destroy the form view while get_views is pending
-    form.__owl__.destroy();
+    destroyApp();
     def.resolve();
     await animationFrame();
 
@@ -13448,7 +13499,7 @@ test(`cached web_read`, async () => {
     let def = null;
     onRpc("web_read", async () => {
         expect.step("web_read");
-        return def;
+        return def?.promise;
     });
 
     Partner._views = {
@@ -13484,7 +13535,7 @@ test(`cached web_read`, async () => {
     expect(`.o_field_char input`).toHaveValue("blip");
     expect(`.o_last_breadcrumb_item`).toHaveText("second record");
 
-    def = new Deferred();
+    def = Promise.withResolvers();
 
     // Come back to the first action
     getService("action").doAction(1);
@@ -13501,11 +13552,82 @@ test(`cached web_read`, async () => {
     expect.verifySteps(["web_read", "web_read", "web_read"]);
 });
 
+test("onchange callback arriving after web_save does not crash", async () => {
+    //   1. Open a new-record form (to cache the onchange RPC)
+    //   2. Open a second time the new-record form (It will use the cached onchange RPC to open).
+    //   3. Save the record (web_save) before the onchange RPC returns.
+    //   4. The web_save will change the record id, from false to a real id, without reloading the form.
+    //   5. When the onchange RPC returns, on the callback code of the cache it will be considered as a web_read and not an onchange.
+
+    Partner._views = {
+        form: `<form><field name="foo"/></form>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+        },
+        {
+            id: 99,
+            name: "Partner",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+        },
+    ]);
+
+    let onchangeCallCount = 0;
+    const def = Promise.withResolvers();
+    onRpc("onchange", async () => {
+        onchangeCallCount++;
+        expect.step("onchange");
+        if (onchangeCallCount > 1) {
+            return def.promise;
+        }
+        return { value: { foo: "blap" } };
+    });
+
+    await mountWithCleanup(WebClient);
+
+    // Open the new-record form (to cache the onchange RPC)
+    await getService("action").doAction(99);
+    await animationFrame();
+    expect(".o_form_view").toHaveCount(1);
+    expect(`.o_field_char input`).toHaveValue("blap");
+    expect.verifySteps(["onchange"]);
+
+    // Open another action
+    await getService("action").doAction(1);
+    await animationFrame();
+    expect(".o_form_view").toHaveCount(1);
+    expect(`.o_field_char input`).toHaveValue("yop");
+
+    // Open the new-record form again (to use the cached onchange RPC)
+    await getService("action").doAction(99);
+    await animationFrame();
+    expect(".o_form_view").toHaveCount(1);
+    expect(`.o_field_char input`).toHaveValue("blap");
+    expect.verifySteps(["onchange"]);
+
+    await contains(`.o_form_button_save`).click();
+
+    // Resolve the onchange RPC after the web_save is done.
+    // The config.resId is not false anymore, it's the real id of the record.
+    def.resolve({ value: { foo: "boom" } });
+    await animationFrame();
+    // The record shouldn't be updated.
+    expect(`.o_field_char input`).toHaveValue("blap");
+});
+
 test(`cached web_read: don't cache if action have cache:false`, async () => {
     let def = null;
     onRpc("web_read", async () => {
         expect.step("web_read");
-        return def;
+        return def?.promise;
     });
 
     Partner._views = {
@@ -13542,7 +13664,7 @@ test(`cached web_read: don't cache if action have cache:false`, async () => {
     expect(`.o_field_char input`).toHaveValue("blip");
     expect(`.o_last_breadcrumb_item`).toHaveText("second record");
 
-    def = new Deferred();
+    def = Promise.withResolvers();
 
     // Come back to the first action
     getService("action").doAction(1);
@@ -13563,7 +13685,7 @@ test(`cached web_read - don't loose changes`, async () => {
     let def = null;
     onRpc("web_read", async () => {
         expect.step("web_read");
-        return def;
+        return def?.promise;
     });
 
     Partner._views = {
@@ -13599,7 +13721,7 @@ test(`cached web_read - don't loose changes`, async () => {
     expect(`.o_field_char input`).toHaveValue("blip");
     expect(`.o_last_breadcrumb_item`).toHaveText("second record");
 
-    def = new Deferred();
+    def = Promise.withResolvers();
 
     // Come back to the first action
     getService("action").doAction(1);
@@ -13625,7 +13747,7 @@ test(`cached onchange - don't loose changes`, async () => {
     let def = null;
     onRpc("onchange", async () => {
         expect.step("onchange");
-        return def;
+        return def?.promise;
     });
 
     Partner._views = {
@@ -13660,7 +13782,7 @@ test(`cached onchange - don't loose changes`, async () => {
     expect(`.o_field_char input`).toHaveValue("blip");
     expect(`.o_last_breadcrumb_item`).toHaveText("second record");
 
-    def = new Deferred();
+    def = Promise.withResolvers();
 
     // Come back to the first action
     getService("action").doAction(1);
@@ -13720,4 +13842,106 @@ test("twice same many2one, one invisible, one with widget with related field", a
 
     expect(".o_field_widget[name=product_id] input").toHaveValue("xphone");
     expect(".o_field_widget[name=product_id] .date").toHaveText("13/02/2023");
+});
+
+test(`Do not mix dependencies across multiple widgets in multiple views`, async () => {
+    onRpc("web_save", () => expect.step("web_save"));
+    class MyField extends CharField {}
+    fieldsRegistry.add("my_widget", {
+        component: MyField,
+        fieldDependencies: [{ name: "name", type: "char" }],
+    });
+
+    Partner._records[1].child_ids = [1];
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="foo" widget="my_widget"/>
+                <field name="name" />
+                <field name="child_ids">
+                    <list editable="top">
+                        <field name="foo" widget="my_widget"/>
+                        <field name="name" required="1"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 2,
+    });
+    expect(`.o_field_widget[name=name] input`).toHaveValue("second record");
+
+    await contains(`.o_field_widget[name=name] input`).edit("");
+    await clickSave();
+    expect.verifySteps(["web_save"]);
+
+    await contains(`.o_field_one2many:eq(0) .o_field_x2many_list_row_add button`).click();
+    await contains(".o_selected_row input").edit("Foo value");
+    await clickSave();
+    expect(`.o_notification_content`).toHaveText("Missing required fields");
+});
+
+test("x2many with same m2o in list (plain) and form (widget with relatedFields)", async () => {
+    Product._records[0].write_date = "2023-02-13 10:00:00";
+    Partner._records[0].child_ids = [2];
+    Partner._records[1].product_id = 37;
+
+    class MyM2O extends Component {
+        static props = ["*"];
+        static components = { Many2OneField };
+        static template = xml`
+            <div>
+                <Many2OneField t-props="this.props"/>
+                <span class="date" t-out="this.writeDate"/>
+            </div>`;
+        get writeDate() {
+            return this.props.record.data[this.props.name].write_date.toFormat("dd/MM/y");
+        }
+    }
+    const myM2O = {
+        ...buildM2OFieldDescription(MyM2O),
+        relatedFields: [{ name: "write_date", type: "datetime" }],
+    };
+    registry.category("fields").add("my_m2o", myM2O);
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="child_ids">
+                    <list><field name="product_id"/></list>
+                    <form><field name="product_id" widget="my_m2o"/></form>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_data_row").toHaveCount(1);
+    await contains(".o_data_row .o_data_cell").click();
+    expect(".o_field_widget[name=product_id] .date").toHaveText("13/02/2023");
+});
+
+test.tags("desktop");
+test("related field tooltip in debug mode", async () => {
+    serverState.debug = "1";
+    Partner._fields.related_product_name = fields.Char({ related: "product_id.name" });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="related_product_name"/>
+                </sheet>
+            </form>`,
+    });
+
+    await hover(`[name='related_product_name']`);
+    await runAllTimers();
+    expect(`.o-tooltip--technical > li[data-item="related"]`).toHaveCount(1);
+    expect(`.o-tooltip--technical > li[data-item="related"]`).toHaveText("Related:product_id.name");
 });

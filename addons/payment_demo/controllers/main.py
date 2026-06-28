@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
-from odoo.http import request
 
 
 class PaymentDemoController(http.Controller):
@@ -14,4 +13,5 @@ class PaymentDemoController(http.Controller):
         :param dict data: The simulated payment data.
         :return: None
         """
-        request.env["payment.transaction"].sudo()._process("demo", data)
+        if tx_sudo := self.env["payment.transaction"].sudo()._search_by_reference("demo", data):
+            tx_sudo._record(data)

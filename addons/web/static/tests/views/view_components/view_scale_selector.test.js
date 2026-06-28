@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { ViewScaleSelector } from "@web/views/view_components/view_scale_selector";
@@ -9,10 +9,10 @@ import { ViewScaleSelector } from "@web/views/view_components/view_scale_selecto
 test("basic ViewScaleSelector component usage", async () => {
     class Parent extends Component {
         static components = { ViewScaleSelector };
-        static template = xml`<ViewScaleSelector t-props="compProps" />`;
+        static template = xml`<ViewScaleSelector t-props="this.compProps" />`;
         static props = ["*"];
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 scale: "week",
             });
         }
@@ -72,10 +72,10 @@ test("basic ViewScaleSelector component usage", async () => {
 test("ViewScaleSelector with only one scale available", async () => {
     class Parent extends Component {
         static components = { ViewScaleSelector };
-        static template = xml`<ViewScaleSelector t-props="compProps" />`;
+        static template = xml`<ViewScaleSelector t-props="this.compProps" />`;
         static props = ["*"];
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 scale: "day",
             });
         }
@@ -101,10 +101,10 @@ test("ViewScaleSelector with only one scale available", async () => {
 test("ViewScaleSelector show weekends button is disabled when scale is day", async () => {
     class Parent extends Component {
         static components = { ViewScaleSelector };
-        static template = xml`<ViewScaleSelector t-props="compProps"/>`;
+        static template = xml`<ViewScaleSelector t-props="this.compProps"/>`;
         static props = ["*"];
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 scale: "day",
             });
         }

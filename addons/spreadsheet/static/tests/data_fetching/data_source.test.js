@@ -1,6 +1,5 @@
 import { animationFrame } from "@odoo/hoot-mock";
 import { LoadableDataSource } from "@spreadsheet/data_sources/data_source";
-import { Deferred } from "@web/core/utils/concurrency";
 import { makeServerError } from "@web/../tests/web_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { defineSpreadsheetActions, defineSpreadsheetModels } from "../helpers/data";
@@ -11,8 +10,8 @@ defineSpreadsheetModels();
 defineSpreadsheetActions();
 
 test("data source is ready after all concurrent requests are resolved", async () => {
-    const def1 = new Deferred();
-    const def2 = new Deferred();
+    const def1 = Promise.withResolvers();
+    const def2 = Promise.withResolvers();
     let req = 0;
     class TestDataSource extends LoadableDataSource {
         constructor() {
@@ -23,10 +22,10 @@ test("data source is ready after all concurrent requests are resolved", async ()
             this.data = null;
             switch (++req) {
                 case 1:
-                    await def1;
+                    await def1.promise;
                     break;
                 case 2:
-                    await def2;
+                    await def2.promise;
                     break;
             }
             this.data = "something";

@@ -1,5 +1,7 @@
 import { ChannelMember } from "@mail/discuss/core/common/channel_member";
-import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+
+import { signal } from "@odoo/owl";
 
 import { usePopover } from "@web/core/popover/popover_hook";
 import { patch } from "@web/core/utils/patch";
@@ -7,16 +9,16 @@ import { patch } from "@web/core/utils/patch";
 patch(ChannelMember.prototype, {
     setup() {
         super.setup(...arguments);
-        this.state.isAvatarCardOpen = false;
-        this.avatarCard = usePopover(AvatarCardPopover, {
+        this.isAvatarCardOpen = signal(false);
+        this.avatarCard = usePopover(AvatarCard, {
             arrow: false,
-            onClose: () => (this.state.isAvatarCardOpen = false),
+            onClose: () => this.isAvatarCardOpen.set(false),
             popoverClass: "mx-2",
             position: "right-start",
         });
     },
     get attClass() {
-        return { ...super.attClass, "o-active": this.state.isAvatarCardOpen };
+        return { ...super.attClass, "o-active": this.isAvatarCardOpen() };
     },
     get isClickable() {
         return this.member.partner_id;
@@ -30,8 +32,8 @@ patch(ChannelMember.prototype, {
                 id: this.member.partner_id.id,
                 model: "res.partner",
             });
-            this.state.isAvatarCardOpen = true;
+            this.isAvatarCardOpen.set(true);
         }
     },
 });
-Object.assign(ChannelMember.components, { AvatarCardPopover });
+Object.assign(ChannelMember.components, { AvatarCard });

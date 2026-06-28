@@ -13,7 +13,7 @@ from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 
 
 @odoo.tests.tagged("mail_controller")
-class TestMessageController(HttpCaseWithUserDemo):
+class TestMessageController(HttpCaseWithUserDemo, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -95,10 +95,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         )
         self.assertEqual(res2.status_code, 200)
         data1 = res2.json()["result"]
-        self.assertEqual(
-            data1["store_data"]["ir.attachment"],
-            [
-                {
+        attachments_fields = {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
                     "file_size": 0,
@@ -115,8 +112,20 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "voice_ids": [],
                     'type': 'binary',
                     'url': False,
-                },
-            ],
+                    "access_token": False,
+                    "description": False,
+                    "image_src": False,
+                    "image_height": 0,
+                    "image_width": 0,
+                    "original_id": False,
+                    "public": False,
+                    "res_id": self.attachments[0].res_id,
+                }
+        if "documents.document" in self.env:
+            attachments_fields["linked_document_id"] = self.attachments[0].linked_document_id.id
+        self.assertEqual(
+            data1["store_data"]["ir.attachment"],
+            self._filter_attachments_fields(attachments_fields),
             "guest should be allowed to add attachment with token when posting message",
         )
         # test message update: token error
@@ -163,7 +172,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         data2 = res4.json()["result"]
         self.assertEqual(
             data2["ir.attachment"],
-            [
+            self._filter_attachments_fields(
                 {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
@@ -181,6 +190,14 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "voice_ids": [],
                     'type': 'binary',
                     'url': False,
+                    "access_token": False,
+                    "description": False,
+                    "image_src": False,
+                    "image_height": 0,
+                    "image_width": 0,
+                    "original_id": False,
+                    "public": False,
+                    "res_id": self.attachments[0].res_id,
                 },
                 {
                     "checksum": False,
@@ -199,8 +216,16 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "voice_ids": [],
                     'type': 'binary',
                     'url': False,
+                    "access_token": False,
+                    "description": False,
+                    "image_src": False,
+                    "image_height": 0,
+                    "image_width": 0,
+                    "original_id": False,
+                    "public": False,
+                    "res_id": self.attachments[1].res_id,
                 },
-            ],
+            ),
             "guest should be allowed to add attachment with token when updating message",
         )
 
@@ -324,7 +349,7 @@ class TestMessageLinks(MailCommon, HttpCase):
 
         cls.user_employee_1 = mail_new_test_user(cls.env, login='tao1', groups='base.group_user', name='Tao Lee')
         cls.public_channel = cls.env['discuss.channel']._create_channel(name='Public Channel1', group_id=None)
-        cls.private_group = cls.env['discuss.channel']._create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")
+        cls.private_group = cls.env['discuss.channel']._create_group(users_to=cls.user_employee_1, name="Group")
 
     @users('employee')
     def test_message_link_by_employee(self):

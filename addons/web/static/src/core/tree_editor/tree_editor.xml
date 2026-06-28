@@ -21,7 +21,7 @@
                             <span><span t-if="!this.props.isSubTree">Match </span><strong>no records</strong></span>
                         </t>
                     </div>
-                    <t t-slot="default"/>
+                    <t t-call-slot="default"/>
                 </div>
                 <t t-if="node.children.length" t-call="web.TreeEditor.connector.children" />
                 <t t-if="!this.props.readonly">
@@ -100,11 +100,11 @@
     <t t-name="web.TreeEditor.connector.children">
         <t t-foreach="node.children" t-as="child" t-key="child.type + '_' + child_index">
             <div class="o_tree_editor_node" t-att-class="{ 'ps-4': addPadding || this.props.isSubTree }">
-                <t t-call="web.TreeEditor.{{ child.type }}">
-                    <t t-set="ancestors" t-value="[...ancestors, node]" />
-                    <t t-set="parent" t-value="node" />
-                    <t t-set="node" t-value="child" />
-                </t>
+                <t t-call="web.TreeEditor.{{ child.type }}"
+                    ancestors="[...ancestors, node]"
+                    parent="node"
+                    node="child"
+                />
             </div>
         </t>
     </t>
@@ -119,9 +119,7 @@
                 <t t-call="web.TreeEditor.controls" />
             </t>
         </div>
-        <t t-call="web.TreeEditor.connector.children">
-            <t t-set="addPadding" t-value="true" />
-        </t>
+        <t t-call="web.TreeEditor.connector.children" addPadding="true"/>
     </t>
 
     <t t-name="web.TreeEditor.condition">
@@ -183,24 +181,24 @@
 
     <t t-name="web.TreeEditor.condition:editable">
         <div t-attf-class="o_tree_editor_condition d-flex {{ this.hasTouch ? 'flex-column w-100 gap-1' : 'flex-grow-1 align-items-end gap-2' }}">
-            <t t-call="web.TreeEditor.Editor">
-                <t t-set="_classes" t-value="this.hasTouch ? 'w-100' : 'col col-md-4 pe-0'" />
-                <t t-set="info" t-value="this.getPathEditorInfo()" />
-                <t t-set="value" t-value="node.path" />
-                <t t-set="update" t-value="(path) => this.updatePath(node, path)" />
-            </t>
-            <t t-call="web.TreeEditor.Editor">
-                <t t-set="_classes" t-value="this.hasTouch ? 'w-100' : 'col col-md-2 px-3'" />
-                <t t-set="info" t-value="this.getOperatorEditorInfo(node)" />
-                <t t-set="value" t-value="[node.operator, node.negate]" />
-                <t t-set="update" t-value="(operator, negate) => this.updateLeafOperator(node, operator, negate)" />
-            </t>
-            <t t-call="web.TreeEditor.Editor">
-                <t t-set="_classes" t-value="this.hasTouch ? 'w-100' : 'col ps-0 overflow-hidden'" />
-                <t t-set="info" t-value="this.getValueEditorInfo(node)" />
-                <t t-set="value" t-value="node.value" />
-                <t t-set="update" t-value="(value) => this.updateLeafValue(node, value)" />
-            </t>
+            <t t-call="web.TreeEditor.Editor"
+                _classes="this.hasTouch ? 'w-100' : 'col col-md-4 pe-0'"
+                info="this.getPathEditorInfo()"
+                value="node.path"
+                update="(path) => this.updatePath(node, path)"
+            />
+            <t t-call="web.TreeEditor.Editor"
+                _classes="this.hasTouch ? 'w-100' : 'col col-md-2 px-3'"
+                info="this.getOperatorEditorInfo(node)"
+                value="[node.operator, node.negate]"
+                update="(operator, negate) => this.updateLeafOperator(node, operator, negate)"
+            />
+            <t t-call="web.TreeEditor.Editor"
+                _classes="this.hasTouch ? 'w-100' : 'col ps-0 overflow-hidden'"
+                info="this.getValueEditorInfo(node)"
+                value="node.value"
+                update="(value) => this.updateLeafValue(node, value)"
+            />
         </div>
     </t>
 

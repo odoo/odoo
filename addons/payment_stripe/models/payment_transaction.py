@@ -2,7 +2,7 @@
 
 from werkzeug.urls import url_encode
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.urls import urljoin as url_join
 
@@ -55,7 +55,7 @@ class PaymentTransaction(models.Model):
         # Handle the payment request response
         payment_data = {"reference": self.reference}
         StripeController._include_payment_intent_in_payment_data(payment_intent, payment_data)
-        self._process("stripe", payment_data)
+        self._record(payment_data)
 
     def _stripe_create_intent(self):
         """Create and return a PaymentIntent or a SetupIntent object, depending on the operation.
@@ -79,7 +79,9 @@ class PaymentTransaction(models.Model):
                     ),
                 )
         except ValidationError as error:
-            self._set_error(str(error))
+            self.with_context(
+                payment_safe_write=True  # API request failed; safe to replay
+            )._set_error(str(error))
             intent = None
         else:
             intent = response
@@ -240,7 +242,7 @@ class PaymentTransaction(models.Model):
         # Process the refund request response.
         payment_data = {}
         StripeController._include_refund_in_payment_data(data, payment_data)
-        self._process("stripe", payment_data)
+        self._record(payment_data)
 
     def _send_capture_request(self):
         """Override of `payment` to send a capture request to Stripe."""
@@ -255,7 +257,7 @@ class PaymentTransaction(models.Model):
         # Process the capture request response.
         payment_data = {"reference": self.reference}
         StripeController._include_payment_intent_in_payment_data(payment_intent, payment_data)
-        self._process("stripe", payment_data)
+        self._record(payment_data)
 
     def _send_void_request(self):
         """Override of `payment` to send a void request to Stripe."""
@@ -270,7 +272,7 @@ class PaymentTransaction(models.Model):
         # Process the void request response.
         payment_data = {"reference": self.reference}
         StripeController._include_payment_intent_in_payment_data(payment_intent, payment_data)
-        self._process("stripe", payment_data)
+        self._record(payment_data)
 
     @api.model
     def _search_by_reference(self, provider_code, payment_data):
@@ -305,27 +307,6 @@ class PaymentTransaction(models.Model):
 
         return tx
 
-    def _extract_amount_data(self, payment_data):
-        """Override of payment to extract the amount and currency from the payment data."""
-        if self.provider_code != "stripe":
-            return super()._extract_amount_data(payment_data)
-
-        if self.operation == "refund":
-            payment_data = payment_data["refund"]
-        else:  # 'online_direct', 'online_token', 'offline'
-            payment_data = payment_data["payment_intent"]
-        amount = payment_utils.to_major_currency_units(
-            payment_data.get("amount", 0),
-            self.currency_id,
-            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
-        )
-        currency_code = payment_data.get("currency", "").upper()
-        return {
-            "amount": amount,
-            "currency_code": currency_code,
-            "precision_digits": const.CURRENCY_DECIMALS.get(self.currency_id.name),
-        }
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "stripe":
@@ -337,7 +318,7 @@ class PaymentTransaction(models.Model):
             payment_method_type = payment_method.get("type")
             if self.payment_method_id.code == payment_method_type == "card":
                 payment_method_type = payment_data["payment_method"]["card"]["brand"]
-            payment_method = self.env["payment.method"]._get_from_code(
+            payment_method = self.provider_id._get_pm_from_code(
                 payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
             )
             self.payment_method_id = payment_method or self.payment_method_id
@@ -353,7 +334,7 @@ class PaymentTransaction(models.Model):
             self.provider_reference = payment_data["payment_intent"]["id"]
             status = payment_data["payment_intent"]["status"]
         if not status:
-            self._set_error(_("Received data with missing intent status."))
+            self._set_error(self.env._("Received data with missing intent status."))
         elif status in const.STATUS_MAPPING["draft"]:
             pass
         elif status in const.STATUS_MAPPING["pending"]:
@@ -377,11 +358,11 @@ class PaymentTransaction(models.Model):
                 if last_payment_error:
                     message = last_payment_error.get("message", {})
                 else:
-                    message = _("The customer left the payment page.")
+                    message = self.env._("The customer left the payment page.")
                 self._set_error(message)
             else:
                 self._set_error(
-                    _(
+                    self.env._(
                         "The refund did not go through. Please log into your Stripe Dashboard to"
                         " get more information on that matter, and address any accounting"
                         " discrepancies."
@@ -392,7 +373,28 @@ class PaymentTransaction(models.Model):
             _logger.warning(
                 "Received invalid payment status (%s) for transaction %s.", status, self.reference
             )
-            self._set_error(_("Received data with invalid intent status: %s.", status))
+            self._set_error(self.env._("Received data with invalid intent status: %s.", status))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of payment to extract the amount and currency from the payment data."""
+        if self.provider_code != "stripe":
+            return super()._extract_amount_data(payment_data)
+
+        if self.operation == "refund":
+            payment_data = payment_data["refund"]
+        else:  # 'online_direct', 'online_token', 'offline'
+            payment_data = payment_data["payment_intent"]
+        amount = payment_utils.to_major_currency_units(
+            payment_data.get("amount", 0),
+            self.currency_id,
+            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
+        )
+        currency_code = payment_data.get("currency", "").upper()
+        return {
+            "amount": amount,
+            "currency_code": currency_code,
+            "precision_digits": const.CURRENCY_DECIMALS.get(self.currency_id.name),
+        }
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on Stripe data.

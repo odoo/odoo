@@ -3,10 +3,11 @@ import {
     isParagraphRelatedElement,
     isEmptyBlock,
     isContentEditable,
+    iconClasses,
 } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
-import { unwrapContents, splitTextNode, fillEmpty } from "../utils/dom";
+import { unwrapContents, splitTextNode } from "../utils/dom";
 import { fillHtmlTransferData } from "../utils/clipboard";
 import { childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
@@ -16,6 +17,7 @@ import {
 } from "@html_editor/utils/base_container";
 import { DIRECTIONS } from "../utils/position";
 import { isHtmlContentSupported } from "./selection_plugin";
+import { getRowIndex } from "@html_editor/utils/table";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -62,11 +64,13 @@ export const CLIPBOARD_WHITELISTS = {
         "TBODY",
         "TR",
         "TD",
+        "COLGROUP",
+        "COL",
         // Miscellaneous
         "IMG",
         "BR",
         "A",
-        ".fa",
+        ...iconClasses.map((cls) => `.${cls}`),
     ],
     classes: [
         // Media
@@ -92,10 +96,10 @@ export const CLIPBOARD_WHITELISTS = {
         "oe-nested",
         // Miscellaneous
         /^btn/,
-        /^fa/,
+        ...iconClasses.map((cls) => new RegExp(`^${cls}`)),
     ],
-    attributes: ["class", "href", "src", "target"],
-    styledTags: ["SPAN", "B", "STRONG", "I", "S", "U", "FONT", "TD"],
+    attributes: ["class", "href", "src", "target", "colspan", "rowspan"],
+    styledTags: ["SPAN", "B", "STRONG", "I", "S", "U", "FONT", "TD", "COL", "TR", "TH"],
 };
 
 const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
@@ -115,7 +119,7 @@ const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
  * @typedef {((
  *     clonedContents: DocumentFragment,
  *     selection: EditorSelection
- *   ) => void | clonedContents)[]} clipboard_content_processors
+ *   ) => clonedContents)[]} clipboard_content_processors
  * @typedef {((textContent: string) => string)[]} clipboard_text_processors
  */
 
@@ -145,9 +149,9 @@ export class ClipboardPlugin extends Plugin {
         const selection = this.dependencies.selection.getEditableSelection();
         this.trigger("on_will_cut_handlers", selection);
         this.onCopy(ev);
-        this.dependencies.history.stageSelection();
+        this.dependencies.selection.stageSelection();
         this.dependencies.delete.deleteSelection();
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     /**
@@ -168,10 +172,7 @@ export class ClipboardPlugin extends Plugin {
             return;
         }
         // Prepare text content for clipboard.
-        const textContent = this.processThrough(
-            "clipboard_text_processors",
-            selection.textContent()
-        );
+        const textContent = this.processThrough("clipboard_text_processors", selection.toString());
 
         // Prepare html content for clipboard.
         clonedContents = this.processThrough(
@@ -201,19 +202,21 @@ export class ClipboardPlugin extends Plugin {
         }
         ev.preventDefault();
 
-        this.dependencies.history.stageSelection();
+        this.dependencies.selection.stageSelection();
 
         this.trigger("on_will_paste_handlers", selection, ev);
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
 
-        this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
-            this.handlePasteOdooEditorHtml(selection, ev.clipboardData) ||
-            this.handlePasteHtml(selection, ev.clipboardData) ||
-            this.handlePasteText(selection, ev.clipboardData);
+        if (!this.delegateTo("paste_overrides", selection, ev.clipboardData)) {
+            this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
+                this.handlePasteOdooEditorHtml(selection, ev.clipboardData) ||
+                this.handlePasteHtml(selection, ev.clipboardData) ||
+                this.handlePasteText(selection, ev.clipboardData);
+        }
 
         this.trigger("on_pasted_handlers", selection);
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
     /**
      * @param {EditorSelection} selection
@@ -265,6 +268,11 @@ export class ClipboardPlugin extends Plugin {
         if (ONLY_LINK_REGEX.test(textContent)) {
             return false;
         }
+        const fragment = parseHTML(this.document, clipboardHtml);
+        this.dependencies.sanitize.sanitize(fragment);
+        if (this.delegateTo("paste_odoo_editor_html_overrides", selection, fragment)) {
+            return true;
+        }
         if (files.length || clipboardHtml) {
             const clipboardElem = this.prepareClipboardData(clipboardHtml);
             if (this.delegateTo("paste_html_overrides", selection, clipboardElem)) {
@@ -279,7 +287,7 @@ export class ClipboardPlugin extends Plugin {
                 // @phoenix @todo: should it be handled in image plugin?
                 return this.addImagesFiles(files).then((html) => {
                     this.dependencies.dom.insert(html);
-                    this.dependencies.history.addStep();
+                    this.dependencies.history.commit();
                 });
             } else if (clipboardElem.hasChildNodes()) {
                 if (closestElement(selection.anchorNode, "a")) {
@@ -347,11 +355,12 @@ export class ClipboardPlugin extends Plugin {
                     ) {
                         // Do something only if blockBefore is not a DIV (which is the no-margin option)
                         // replace blockBefore by a DIV.
-                        const div = this.dependencies.baseContainer.createBaseContainer("DIV");
+                        const div = this.dependencies.baseContainer.createBaseContainer({
+                            nodeName: "DIV",
+                            children: [...childNodes(blockBefore)],
+                        });
                         const cursors = this.dependencies.selection.preserveSelection();
-                        blockBefore.before(div);
-                        div.replaceChildren(...childNodes(blockBefore));
-                        blockBefore.remove();
+                        blockBefore.replaceWith(div);
                         cursors.remapNode(blockBefore, div).restore();
                     }
                 }
@@ -475,13 +484,13 @@ export class ClipboardPlugin extends Plugin {
                         if (whiteSpace && !["normal", "nowrap"].includes(whiteSpace)) {
                             node.innerHTML = node.innerHTML.replace(/\n/g, "<br>");
                         }
-                        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                        const baseContainer = this.dependencies.baseContainer.createBaseContainer({
+                            children: [...node.childNodes],
+                        });
                         const dir = node.getAttribute("dir");
                         if (dir) {
                             baseContainer.setAttribute("dir", dir);
                         }
-                        baseContainer.append(...node.childNodes);
-
                         node.replaceWith(baseContainer);
                         childrenNodes = childNodes(baseContainer);
                     } else {
@@ -496,16 +505,19 @@ export class ClipboardPlugin extends Plugin {
                 }
             }
         } else if (node.nodeType !== Node.TEXT_NODE) {
-            if (["TD", "TH"].includes(node.nodeName)) {
+            if (["TD", "TH", "COL"].includes(node.nodeName)) {
                 // Insert base container into empty TD.
                 if (isEmptyBlock(node)) {
                     const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                    fillEmpty(baseContainer);
                     node.replaceChildren(baseContainer);
                 }
 
                 if (node.hasAttribute("bgcolor") && !node.style["background-color"]) {
                     node.style["background-color"] = node.getAttribute("bgcolor");
+                }
+
+                if (node.hasAttribute("width")) {
+                    node.style["width"] = node.getAttribute("width") + "px";
                 }
             } else if (node.nodeName === "FONT") {
                 // FONT tags have some style information in custom attributes,
@@ -552,7 +564,25 @@ export class ClipboardPlugin extends Plugin {
                     CLIPBOARD_WHITELISTS.styledTags.includes(node.nodeName) &&
                     attribute.name === "style"
                 ) {
+                    const width = node.style.width;
+                    const height = node.style.height;
                     node.removeAttribute(attribute.name);
+                    if (["TD", "TH"].includes(node.nodeName) && getRowIndex(node) === 0 && width) {
+                        const table = closestElement(node, "table");
+                        let colgroup = table.querySelector("colgroup");
+                        if (!colgroup) {
+                            colgroup = this.document.createElement("colgroup");
+                            table.prepend(colgroup);
+                        }
+                        const col = this.document.createElement("col");
+                        colgroup.append(col);
+                        col.style.width = width;
+                    } else if (node.nodeName === "COL" && width) {
+                        node.style.width = width;
+                    }
+                    if (node.nodeName === "TR" && height) {
+                        node.style.height = height;
+                    }
                     if (["SPAN", "FONT"].includes(node.tagName)) {
                         for (const unwrappedNode of unwrapContents(node)) {
                             this.cleanForPaste(unwrappedNode);
@@ -679,16 +709,16 @@ export class ClipboardPlugin extends Plugin {
             this.dependencies.sanitize.sanitize(fragment);
             if (fragment.hasChildNodes()) {
                 this.dependencies.dom.insert(fragment);
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
             }
         } else if (fileTransferItems.length) {
             const html = await this.addImagesFiles(fileTransferItems);
             this.dependencies.dom.insert(html);
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
         } else if (htmlTransferItem) {
             htmlTransferItem.getAsString((pastedText) => {
                 this.dependencies.dom.insert(this.prepareClipboardData(pastedText));
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
             });
         }
     }

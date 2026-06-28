@@ -42,8 +42,3 @@ class TestPricelistAutoCreation(ProductCommon):
                 ('company_id', '=', self.env.company.id),
             ])
         )
-        # self.env.user.clear_caches()
-        # self.group_user.invalidate_recordset()
-        # self.assertTrue(
-        #     self.group_product_pricelist in self.group_user.implied_ids
-        # )

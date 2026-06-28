@@ -1,7 +1,8 @@
-import { useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useCrossDocumentListener } from "../../utils/hooks";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { cleanZWChars, deduceURLfromText } from "./utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
@@ -17,41 +18,40 @@ import {
     getButtonSize,
     getButtonType,
 } from "@html_editor/utils/button_style";
+import { trapFocus } from "@html_editor/utils/dom_traversal";
+
+export const linkPopoverProps = {
+    document: t.customValidator(t.any(), (p) => p.nodeType === Node.DOCUMENT_NODE),
+    linkElement: t.customValidator(t.any(), (el) => el.nodeType === Node.ELEMENT_NODE),
+    containerElement: t.customValidator(t.any(), (el) => el.nodeType === Node.ELEMENT_NODE),
+    onApply: t.function(),
+    onChange: t.function(),
+    onDiscard: t.function(),
+    onRemove: t.function(),
+    onCopy: t.function(),
+    onEdit: t.function(),
+    getInternalMetaData: t.function(),
+    getExternalMetaData: t.function(),
+    getAttachmentMetadata: t.function(),
+    isImage: t.boolean(),
+    showReplaceTitleBanner: t.boolean(),
+    type: t.string(),
+    LinkPopoverState: t.object(),
+    recordInfo: t.object(),
+    canEdit: t.boolean().optional(true),
+    canRemove: t.boolean().optional(true),
+    canUpload: t.boolean().optional(),
+    onUpload: t.function().optional(),
+    includeStyling: t.boolean().optional(true),
+    allowTargetBlank: t.boolean().optional(),
+    allowStripDomain: t.boolean().optional(),
+    publicAttachments: t.boolean().optional(),
+    advancedAttributeOptions: t.array().optional(),
+};
 
 export class LinkPopover extends Component {
     static template = "html_editor.linkPopover";
-    static props = {
-        document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
-        linkElement: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
-        containerElement: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
-        ignoreDOMMutations: Function,
-        onApply: Function,
-        onChange: Function,
-        onDiscard: Function,
-        onRemove: Function,
-        onCopy: Function,
-        onEdit: Function,
-        getInternalMetaData: Function,
-        getExternalMetaData: Function,
-        getAttachmentMetadata: Function,
-        isImage: Boolean,
-        showReplaceTitleBanner: Boolean,
-        type: String,
-        LinkPopoverState: Object,
-        recordInfo: Object,
-        canEdit: { type: Boolean, optional: true },
-        canRemove: { type: Boolean, optional: true },
-        canUpload: { type: Boolean, optional: true },
-        onUpload: { type: Function, optional: true },
-        includeStyling: { type: Boolean, optional: true },
-        allowTargetBlank: { type: Boolean, optional: true },
-        allowStripDomain: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        canEdit: true,
-        canRemove: true,
-        includeStyling: true,
-    };
+    props = props(linkPopoverProps);
     static components = { CheckBox, Dropdown, DropdownItem };
     buttonSizesData = BUTTON_SIZES;
     buttonShapesData = BUTTON_SHAPES;
@@ -68,12 +68,22 @@ export class LinkPopover extends Component {
             textContent === linkElement.getAttribute("href") ||
             textContent + "/" === linkElement.getAttribute("href");
 
-        const currentRelValues = linkElement.rel.split(" ");
         this.linkPreviewTarget =
             linkElement.hash?.length && this.isAbsoluteURLInCurrentDomain(linkElement.href)
                 ? "_self"
                 : "_blank";
-        this.state = useState({
+        const advancedAttributeOptions = this.props.advancedAttributeOptions.reduce(
+            (result, option) => {
+                const attrValue = linkElement.getAttribute(option.attribute);
+                const isChecked = option.isMultiValueAttr
+                    ? attrValue?.includes(option.value)
+                    : attrValue === option.value;
+                result[option.id] = { ...option, isChecked };
+                return result;
+            },
+            {}
+        );
+        this.state = proxy({
             editing: this.props.LinkPopoverState.editing,
             // `.getAttribute("href")` instead of `.href` to keep relative url
             url: linkElement.getAttribute("href") || this.deduceUrl(textContent),
@@ -88,7 +98,6 @@ export class LinkPopover extends Component {
             linkPreviewName: "",
             imgSrc: "",
             type: this.props.type || getButtonType(linkElement),
-            linkTarget: linkElement.target === "_blank" ? "_blank" : "",
             directDownload: true,
             isDocument: false,
             buttonSize: getButtonSize(linkElement),
@@ -98,30 +107,7 @@ export class LinkPopover extends Component {
             showLabel: !linkElement.childElementCount,
             stripDomain: true,
             showAdvancedOptions: false,
-            relAttributeOptions: {
-                nofollow: {
-                    label: "nofollow",
-                    description: _t("Tells search engines not to follow this link"),
-                    isChecked: currentRelValues.includes("nofollow"),
-                },
-                noreferrer: {
-                    label: "noreferrer",
-                    description: _t("Removes referrer information sent to the target site"),
-                    isChecked: currentRelValues.includes("noreferrer"),
-                },
-                sponsored: {
-                    label: "sponsored",
-                    description: _t("Indicates the link is sponsored or paid content"),
-                    isChecked: currentRelValues.includes("sponsored"),
-                },
-                noopener: {
-                    label: "noopener",
-                    description: _t(
-                        "Prevents the new page from accessing the original window (security)"
-                    ),
-                    isChecked: currentRelValues.includes("noopener"),
-                },
-            },
+            advancedAttributeOptions,
         });
 
         this.updateDocumentState();
@@ -149,48 +135,66 @@ export class LinkPopover extends Component {
                 this.onClickApply();
             }
         };
-        useExternalListener(this.props.document, "pointerdown", onPointerDown);
-        if (this.props.document !== document) {
-            // Listen to pointerdown outside the iframe
-            useExternalListener(document, "pointerdown", onPointerDown);
-        }
+        useCrossDocumentListener(this.props.document, "pointerdown", onPointerDown);
     }
 
     toggleAdvancedOptions() {
         this.state.showAdvancedOptions = !this.state.showAdvancedOptions;
     }
 
-    toggleRelAttr(attr) {
-        const option = this.state.relAttributeOptions[attr];
+    toggleAdvancedAttr(attr) {
+        const option = this.state.advancedAttributeOptions[attr];
         option.isChecked = !option.isChecked;
+        if (!option.isChecked) {
+            for (const opt of Object.values(this.state.advancedAttributeOptions)) {
+                if (opt.requires === attr) {
+                    opt.isChecked = false;
+                }
+            }
+        }
+    }
+
+    prepareLinkParams() {
+        const attributes = {
+            href: this.state.url,
+            class: this.classes,
+        };
+        for (const opt of Object.values(this.state.advancedAttributeOptions)) {
+            const { attribute, isChecked, value, isMultiValueAttr } = opt;
+            attributes[attribute] ??= "";
+            if (!isChecked) {
+                continue;
+            }
+            if (isMultiValueAttr) {
+                const currentAttribute = attributes[attribute];
+                attributes[attribute] = currentAttribute ? `${currentAttribute} ${value}` : value;
+            } else {
+                attributes[attribute] = value;
+            }
+        }
+        return {
+            label: this.state.label,
+            attachmentId: this.state.attachmentId,
+            attributes,
+        };
+    }
+
+    discard() {
+        this.props.onDiscard();
+        this.cancelUpload?.();
     }
 
     onChange() {
         // Apply changes to update the link preview.
-        this.props.onChange(
-            this.state.url,
-            this.state.label,
-            this.classes,
-            this.state.linkTarget,
-            this.state.attachmentId
-        );
+        const params = this.prepareLinkParams();
+        this.props.onChange(params);
         this.updateDocumentState();
     }
     onClickApply() {
-        const relOptions = this.state.relAttributeOptions;
-        const relValue = Object.keys(relOptions)
-            .filter((key) => relOptions[key].isChecked)
-            .join(" ");
         this.state.editing = false;
         this.applyDeducedUrl();
-        this.props.onApply(
-            this.state.url,
-            this.state.label,
-            this.classes,
-            this.state.linkTarget,
-            this.state.attachmentId,
-            relValue
-        );
+        const params = this.prepareLinkParams();
+        this.props.onApply(params);
     }
     applyDeducedUrl() {
         if (this.state.label === "") {
@@ -244,14 +248,10 @@ export class LinkPopover extends Component {
             this.onClickApply();
         } else if (ev.key == "Tab") {
             ev.preventDefault();
-            const focusableElements = [
-                ...this.editingWrapper.el.querySelectorAll("input, select, button:not([disabled])"),
-            ];
-            const currentIndex = focusableElements.indexOf(document.activeElement);
-            const nextIndex =
-                (currentIndex + (ev.shiftKey ? -1 : 1) + focusableElements.length) %
-                focusableElements.length;
-            focusableElements[nextIndex].focus();
+            const focusableElements = this.editingWrapper.el.querySelectorAll(
+                "input, select, button:not([disabled])"
+            );
+            trapFocus(focusableElements, ev.shiftKey);
         }
     }
 
@@ -269,13 +269,6 @@ export class LinkPopover extends Component {
         this.state.url = this.state.url.replace("&download=true", "");
         if (this.state.directDownload) {
             this.state.url += "&download=true";
-        }
-    }
-
-    onClickNewWindow(checked) {
-        this.state.linkTarget = checked ? "_blank" : "";
-        if (!checked) {
-            this.state.relAttributeOptions.noopener.isChecked = false;
         }
     }
 
@@ -491,7 +484,14 @@ export class LinkPopover extends Component {
     async uploadFile() {
         const { upload, getURL } = this.uploadService;
         const { resModel, resId } = this.props.recordInfo;
-        const [attachment] = await upload({ resModel, resId, accessToken: true });
+        const setAbortCallback = (abortFn) => {
+            this.cancelUpload = abortFn;
+        };
+        const [attachment] = await upload(
+            { resModel, resId },
+            { accessToken: true, setAbortCallback }
+        );
+        delete this.cancelUpload;
         if (!attachment) {
             // No file selected or upload failed
             return;

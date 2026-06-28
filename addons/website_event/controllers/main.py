@@ -29,11 +29,6 @@ class WebsiteEventController(http.Controller):
 
     def _get_events_search_options(self, slug_tags, **post):
         return {
-            'displayDescription': True,
-            'displayDetail': False,
-            'displayExtraDetail': False,
-            'displayExtraLink': False,
-            'displayImage': False,
             'allowFuzzy': not post.get('noFuzzy'),
             'date': post.get('date'),
             'tags': slug_tags or post.get('tags'),
@@ -73,8 +68,6 @@ class WebsiteEventController(http.Controller):
         if searches['date'] == 'upcoming':
             searches['date'] = 'scheduled'
 
-        website = request.website
-
         step = 12  # Number of events per page
 
         options = self._get_events_search_options(slug_tags, **searches)
@@ -83,22 +76,22 @@ class WebsiteEventController(http.Controller):
             order = 'date_begin desc'
         order = 'is_published desc, ' + order + ', id desc'
         search = searches.get('search')
-        event_count, details, fuzzy_search_term = website._search_with_fuzzy("events", search,
-            limit=page * step, order=order, options=options)
+        event_count, details, fuzzy_search_term = self.env.website._search_with_fuzzy("events", search,
+            offset=0, limit=page * step, order=order, options=options)
         event_details = details[0]
         events = event_details.get('results', Event)
         events = events[(page - 1) * step:page * step]
 
         default_country = None
-        event_location = website.is_view_active('website_event.event_location')
+        event_location = self.env.website.is_view_active('website_event.event_location')
         include_online_events = (
-            event_location and website.is_view_active('website_event.event_location_include_online')
+            event_location and self.env.website.is_view_active('website_event.event_location_include_online')
         )
         if event_location:
             country = request.env["res.country"]
             if not request.env.user._is_public() and request.env.user.country_id:
                 country = request.env.user.country_id
-            elif (visitor := request.env['website.visitor']._get_visitor_from_request()) and visitor.country_id:
+            elif (visitor := request.env['ir.http']._get_visitor_from_request()) and visitor.country_id:
                 country = visitor.country_id
             elif request.geoip.country_code:
                 country = request.env['res.country'].search([('code', '=', request.geoip.country_code)])
@@ -154,7 +147,7 @@ class WebsiteEventController(http.Controller):
         if searches["country"] != 'all' and searches["country"] != 'online':
             current_country = request.env['res.country'].browse(int(searches['country']))
 
-        pager = website.pager(
+        pager = self.env.website.pager(
             url=f"/event/tags/{slug_tags}" if slug_tags else "/event",
             url_args=searches,
             total=event_count,
@@ -180,9 +173,7 @@ class WebsiteEventController(http.Controller):
             'current_type': current_type,
             'event_ids': events,  # event_ids used in website_event_track so we keep name as it is
             'dates': dates,
-            'categories': request.env['event.tag.category'].search([
-                ('is_published', '=', True), '|', ('website_id', '=', website.id), ('website_id', '=', False)
-            ]),
+            'categories': request.env['event.tag.category'].search(Domain('is_published', '=', True) & self.env.website.website_domain()),
             'countries': countries,
             'include_online_events': include_online_events,
             'pager': pager,
@@ -192,7 +183,8 @@ class WebsiteEventController(http.Controller):
             'slugify_tags': self._slugify_tags,
             'search_count': event_count,
             'original_search': fuzzy_search_term and search,
-            'website': website
+            'website': self.env.website,
+            'structured_data': events._render_jsonld(),
         }
 
         return request.render("website_event.index", values)
@@ -222,8 +214,9 @@ class WebsiteEventController(http.Controller):
         try:
             # Every event page view should have its own SEO.
             page = view.key if view else page
-            values['seo_object'] = request.website.get_template(page)
+            values['seo_object'] = self.env['ir.ui.view'].with_context(website_id=self.env.website.id)._get_template_view(page).sudo()
             values['main_object'] = event
+            values['structured_data'] = event._render_jsonld(is_detail_page=True)
         except ValueError:
             # page not found
             page = 'website.page_404'
@@ -269,6 +262,7 @@ class WebsiteEventController(http.Controller):
         return {
             'event': event,
             'main_object': event,
+            'structured_data': event._render_jsonld(is_detail_page=True),
             'range': range,
             'google_url': lazy(lambda: urls.get('google_url')),
             'iCal_url': lazy(lambda: urls.get('iCal_url')),
@@ -323,7 +317,7 @@ class WebsiteEventController(http.Controller):
             (slot, ticket)
             for ticket in event.event_ticket_ids
         ]
-        return request.env['ir.ui.view']._render_template("website_event.modal_ticket_registration", {
+        return self.env.website._render_template("website_event.modal_ticket_registration", {
             'event': event,
             'event_slot': slot,
             'seats_available_slot_tickets': {
@@ -332,10 +326,7 @@ class WebsiteEventController(http.Controller):
             }
         })
 
-    @http.route(['/event/<model("event.event"):event>/registration/new'], type='jsonrpc', auth="public", methods=['POST'], website=True)
-    def registration_new(self, event, **post):
-        """ After (slot and) tickets selection, render attendee(s) registration form.
-        Slot and tickets availability check already performed in the template. """
+    def _prepare_registration_new_values(self, event, **post):
         tickets = self._process_tickets_form(event, post)
         slot_id = post.get('event_slot_id', False)
         # Availability check needed as the total number of tickets can exceed the event/slot available tickets
@@ -361,21 +352,31 @@ class WebsiteEventController(http.Controller):
                 "phone": request.env.user.phone,
             }
         else:
-            visitor = request.env['website.visitor']._get_visitor_from_request()
+            visitor = request.env['ir.http']._get_visitor_from_request()
             if visitor.email:
                 default_first_attendee = {
                     "name": visitor.display_name,
                     "email": visitor.email,
                     "phone": visitor.mobile,
                 }
-        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", {
+
+        return {
             'tickets': tickets,
             'event_slot_id': slot_id,
             'event': event,
             'availability_check': availability_check,
             'default_first_attendee': default_first_attendee,
             'limit_check': limit_check,
-        })
+        }
+
+    @http.route(['/event/<model("event.event"):event>/registration/new'], type='jsonrpc', auth="public", methods=['POST'], website=True)
+    def registration_new(self, event, **post):
+        """ After (slot and) tickets selection, render attendee(s) registration form.
+        Slot and tickets availability check already performed in the template. """
+        values = self._prepare_registration_new_values(event, **post)
+        if not values:
+            return values
+        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", values)
 
     def _process_attendees_form(self, event, form_details):
         """ Process data posted from the attendee details form.
@@ -465,7 +466,7 @@ class WebsiteEventController(http.Controller):
         a partner (if visitor linked to a user for example). Purpose is to gather
         as much informations as possible, notably to ease future communications.
         Also try to update visitor informations based on registration info. """
-        visitor_sudo = request.env['website.visitor']._get_visitor_from_request(force_create=True)
+        visitor_sudo = request.env['ir.http']._get_visitor_from_request(force_create=True)
 
         registrations_to_create = []
         for registration_values in registration_data:
@@ -512,7 +513,7 @@ class WebsiteEventController(http.Controller):
     @http.route(['/event/<model("event.event"):event>/registration/success'], type='http', auth="public", methods=['GET'], website=True, sitemap=False)
     def event_registration_success(self, event, registration_ids):
         # fetch the related registrations, make sure they belong to the correct visitor / event pair
-        visitor = request.env['website.visitor']._get_visitor_from_request()
+        visitor = request.env['ir.http']._get_visitor_from_request()
         if not visitor:
             raise NotFound()
         attendees_sudo = request.env['event.registration'].sudo().search([

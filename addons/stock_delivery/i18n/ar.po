@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
 "PO-Revision-Date: 2025-10-13 12:17+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
@@ -149,10 +149,20 @@ msgid "Carrier name"
 msgstr "اسم الناقل"
 
 #. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Cost: %(price).2f %(currency)s"
 msgstr "التكلفة: %(price).2f %(currency)s"
+
+#. module: stock_delivery
+#: model:ir.model,website_form_label:stock_delivery.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_delivery_carrier
@@ -185,6 +195,7 @@ msgstr "الدولة الوجهة"
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_res_partner__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__display_name
@@ -193,7 +204,6 @@ msgstr "الدولة الوجهة"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__display_name
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_return_picking__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__display_name
 msgid "Display Name"
 msgstr "اسم العرض"
@@ -239,6 +249,7 @@ msgstr "بند التعرفة الجمركية"
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__id
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__id
+#: model:ir.model.fields,field_description:stock_delivery.field_res_partner__id
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order__id
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order_line__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__id
@@ -247,7 +258,6 @@ msgstr "بند التعرفة الجمركية"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__id
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_return_picking__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__id
 msgid "ID"
 msgstr "المُعرف"
@@ -306,6 +316,12 @@ msgid "Package too heavy!"
 msgstr "الطرد ثقيل جداً!"
 
 #. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_res_partner__pickup_location_data
+#: model:ir.model.fields,field_description:stock_delivery.field_res_users__pickup_location_data
+msgid "Pickup Location Data"
+msgstr ""
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Print Return Label"
@@ -340,11 +356,6 @@ msgstr "التكلفة الفعلية"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
 msgid "Return Label"
 msgstr "بطاقة عنوان المنتج المُرجع"
-
-#. module: stock_delivery
-#: model:ir.model,name:stock_delivery.model_stock_return_picking
-msgid "Return Picking"
-msgstr "إرجاع الشحنة المنتقاة"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__route_ids
@@ -389,11 +400,11 @@ msgstr "أرسل الى الشاحن"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
-"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
-"%(ref)s"
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
+"(ref)s"
 msgstr ""
-"تم إرسال الشحنة إلى شركة الشحن %(carrier_name)s ليتم شحنها مع رقم التتبع "
-"%(ref)s"
+"تم إرسال الشحنة إلى شركة الشحن %(carrier_name)s ليتم شحنها مع رقم التتبع %"
+"(ref)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -441,6 +452,14 @@ msgstr "حقل تقني يشير إلى عدد الخانات العشرية ل�
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
 msgstr ""
 "حقل تقني يشير إلى ما إذا كانت وحدة قياس الوزن بالكيلوجرام أم لا (كالرطل)"
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_res_partner__pickup_location_data
+#: model:ir.model.fields,help:stock_delivery.field_res_users__pickup_location_data
+msgid ""
+"Technical field: information needed by delivery providers in case of pickup "
+"point addresses."
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code

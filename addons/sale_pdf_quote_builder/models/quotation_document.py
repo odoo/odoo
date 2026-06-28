@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 
@@ -13,7 +13,11 @@ class QuotationDocument(models.Model):
     _check_company_auto = True
 
     ir_attachment_id = fields.Many2one(
-        string="Related attachment", comodel_name="ir.attachment", ondelete="cascade", required=True
+        string="Related attachment",
+        comodel_name="ir.attachment",
+        ondelete="cascade",
+        required=True,
+        index=True,
     )
     document_type = fields.Selection(
         string="Document Type",
@@ -32,6 +36,7 @@ class QuotationDocument(models.Model):
         relation="header_footer_quotation_template_rel",
         groups="sales_team.group_sale_salesman",
         check_company=True,
+        domain="[('template_type', '=', 'quotation')]",
     )
     form_field_ids = fields.Many2many(
         string="Form Fields Included",
@@ -46,13 +51,23 @@ class QuotationDocument(models.Model):
         default=False,
     )
 
+    def _access_domain(self, operation):
+        # this override gets the record rules only from the current model and
+        # ignores record rules on ir.attachment (inherits)
+        domain = super()._access_domain(operation)
+        if domain.is_false():
+            return domain
+        return self.env['ir.access']._get_domain_for(self._name, operation, include_inherits=False)
+
     # === CONSTRAINT METHODS ===#
 
     @api.constrains("raw")
     def _check_pdf_validity(self):
         for doc in self:
             if doc.raw and not doc.mimetype.endswith("pdf"):
-                raise ValidationError(_("Only PDF documents can be used as header or footer."))
+                raise ValidationError(
+                    self.env._("Only PDF documents can be used as header or footer.")
+                )
             if doc.raw:
                 self.env["sale.pdf.form.field"]._ensure_document_not_encrypted(doc.raw)
 
@@ -74,7 +89,7 @@ class QuotationDocument(models.Model):
     def action_open_pdf_form_fields(self):
         self.ensure_one()
         return {
-            "name": _("Form Fields"),
+            "name": self.env._("Form Fields"),
             "type": "ir.actions.act_window",
             "res_model": "sale.pdf.form.field",
             "view_mode": "list",

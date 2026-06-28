@@ -44,14 +44,8 @@ export class QtyAtDateWidget extends Component {
     async initCalcData() {
         // Computes the color of the chart icon representing the widget
         const { data } = this.props.record;
-        const leftToDeliver = data.product_uom_qty - data.qty_delivered;
-
-        this.calcData.forecasted_issue = "";
-        if (data.qty_available_today < leftToDeliver) {
-            this.calcData.forecasted_issue = "text-danger";
-        } else if (data.virtual_available_at_date < 0) {
-            this.calcData.forecasted_issue = "text-warning"; // Enough on hand NOW to fullfill not at delivery date
-        }
+        this.calcData.leftToDeliver = data.product_uom_qty - data.qty_delivered;
+        this.calcData.forecasted_issue = data.virtual_available_at_date < this.calcData.leftToDeliver ? "text-danger" : "";
     }
 
     updateCalcData() {

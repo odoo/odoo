@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.selfOrderIndex">
-        <div t-if="!this.selfOrder.session" class="o-self-closed w-100 m-0 text-center bg-black text-white py-2">
+        <div t-if="!this.selfOrder.ordering and !this.selfOrder.session" class="o-self-closed w-100 m-0 text-center bg-black text-white py-2">
             We're currently closed.
         </div>
         <div t-if="this.selfOrder.rpcLoading">
             <LoadingOverlay />
         </div>
         <Router t-if="this.selfIsReady" pos_config_id="this.selfOrder.config.id">
-            <t t-set-slot="default" route="`/pos-self/${selfOrder.config.id}`">
+            <t t-set-slot="default" route="`/pos-self/${this.selfOrder.config.id}`">
                 <LandingPage />
             </t>
-            <t t-set-slot="product_list" route="`/pos-self/${selfOrder.config.id}/products`">
+            <t t-set-slot="product_list" route="`/pos-self/${this.selfOrder.config.id}/products`">
                 <ProductListPage />
             </t>
-            <t t-set-slot="product" route="`/pos-self/${selfOrder.config.id}/product/{int:id}`" t-slot-scope="url">
+            <t t-set-slot="product" route="`/pos-self/${this.selfOrder.config.id}/product/{int:id}`" t-slot-scope="url">
                 <ProductPage  productTemplate="this.selfOrder.models['product.template'].get(url.id)" />
             </t>
-            <t t-set-slot="combo_selection" route="`/pos-self/${selfOrder.config.id}/combo-selection/{int:id}`" t-slot-scope="url">
+            <t t-set-slot="combo_selection" route="`/pos-self/${this.selfOrder.config.id}/combo-selection/{int:id}`" t-slot-scope="url">
                 <ComboPage productTemplate="this.selfOrder.models['product.template'].get(url.id)" />
             </t>
-            <t t-set-slot="cart" route="`/pos-self/${selfOrder.config.id}/cart`">
+            <t t-set-slot="cart" route="`/pos-self/${this.selfOrder.config.id}/cart`">
                 <CartPage/>
             </t>
-            <t t-set-slot="payment" route="`/pos-self/${selfOrder.config.id}/payment`">
+            <t t-set-slot="payment" route="`/pos-self/${this.selfOrder.config.id}/payment`">
                 <PaymentPage />
             </t>
-            <t t-set-slot="confirmation" route="`/pos-self/${selfOrder.config.id}/confirmation/{string:orderAccessToken}/{string:screenMode}`" t-slot-scope="url">
+            <t t-set-slot="confirmation" route="`/pos-self/${this.selfOrder.config.id}/confirmation/{string:orderAccessToken}/{string:screenMode}`" t-slot-scope="url">
                 <ConfirmationPage orderAccessToken="url.orderAccessToken" screenMode="url.screenMode" />
             </t>
-            <t t-set-slot="location" route="`/pos-self/${selfOrder.config.id}/location`">
+            <t t-set-slot="location" route="`/pos-self/${this.selfOrder.config.id}/location`">
                 <EatingLocationPage />
             </t>
-            <t t-set-slot="stand_number" route="`/pos-self/${selfOrder.config.id}/stand_number`">
+            <t t-set-slot="stand_number" route="`/pos-self/${this.selfOrder.config.id}/stand_number`">
                 <StandNumberPage />
             </t>
-            <t t-set-slot="orderHistory" route="`/pos-self/${selfOrder.config.id}/orders`">
+            <t t-set-slot="orderHistory" route="`/pos-self/${this.selfOrder.config.id}/orders`">
                 <OrdersHistoryPage />
             </t>
         </Router>

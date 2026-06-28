@@ -4,15 +4,17 @@
         <record id="hr_contract_type_view_tree" model="ir.ui.view">
             <field name="model">hr.employee.type</field>
             <field name="arch" type="xml">
-                <list string="Employee Types" editable="bottom" default_order="name">
+                <list string="Employee Types" editable="bottom">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="country_id"/>
                     <field name="employees_count" string="Employees"/>
                     <button name="action_open_employees" 
                         type="object" 
-                        string="Open Employees"
+                        string="View Employees"
                         invisible="not employees_count"
                         class="btn-link"/>
+                    <field name="company_id" groups="hr.group_hr_user" optional="hide"/>
                     <field name="code" column_invisible="1"/>
                 </list>
             </field>

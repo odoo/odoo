@@ -1,13 +1,8 @@
-import { reactive, render, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { render, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useBus } from "@web/core/utils/hooks";
 
-import {
-    Component,
-    onMounted,
-    onWillStart,
-    onWillUpdateProps,
-} from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { useSetupAction } from "@web/search/action_hook";
@@ -56,7 +51,7 @@ export class SearchPanel extends Component {
 
     setup() {
         this.keyExpandSidebar = `search_panel_expanded,${this.env.config.viewId},${this.env.config.actionId}`;
-        this.state = useState({
+        this.state = proxy({
             active: {},
             expanded: {},
             sidebarExpanded: true,
@@ -106,10 +101,6 @@ export class SearchPanel extends Component {
             await this.env.searchModel.sectionsPromise;
             this.updateActiveValues();
         });
-
-        onMounted(() => {
-            this.updateGroupHeadersChecked();
-        });
     }
 
     //---------------------------------------------------------------------
@@ -150,12 +141,12 @@ export class SearchPanel extends Component {
 
     getDropdownState(sectionId) {
         if (!this.dropdownStates[sectionId]) {
-            const state = reactive({
+            const state = proxy({
                 isOpen: false,
                 open: () => (state.isOpen = true),
                 close: () => (state.isOpen = false),
             });
-            this.dropdownStates[sectionId] = reactive(state);
+            this.dropdownStates[sectionId] = proxy(state);
         }
         return this.dropdownStates[sectionId];
     }
@@ -313,6 +304,13 @@ export class SearchPanel extends Component {
         }
     }
 
+    onCategoryKeydown(ev, category, value) {
+        if (ev.key === "Enter" || ev.key === " ") {
+            ev.preventDefault();
+            this.toggleCategory(category, value);
+        }
+    }
+
     toggleSidebar() {
         this.state.sidebarExpanded = !this.state.sidebarExpanded;
         browser.localStorage.setItem(this.keyExpandSidebar, this.state.sidebarExpanded);
@@ -342,8 +340,15 @@ export class SearchPanel extends Component {
      */
     toggleFilterValue(filterId, valueId, { currentTarget }) {
         this.state.active[filterId][valueId] = currentTarget.checked;
-        this.updateGroupHeadersChecked();
         this.env.searchModel.toggleFilterValues(filterId, [valueId]);
+    }
+
+    onFilterValueKeydown(ev, filterId, valueId) {
+        if (ev.key === "Enter" || ev.key === " ") {
+            ev.preventDefault();
+            this.state.active[filterId][valueId] = !this.state.active[filterId][valueId];
+            this.env.searchModel.toggleFilterValues(filterId, [valueId]);
+        }
     }
 
     updateActiveValues() {
@@ -367,25 +372,6 @@ export class SearchPanel extends Component {
                         this.state.active[section.id][value.id] = value.checked;
                     }
                 }
-            }
-        }
-    }
-
-    /**
-     * Updates the "checked" or "indeterminate" state of each of the group
-     * headers according to the state of their values.
-     */
-    updateGroupHeadersChecked() {
-        const groups = document.querySelectorAll(".o_search_panel_filter_group");
-        for (const group of groups) {
-            const header = group.querySelector(":scope .o_search_panel_group_header input");
-            const vals = [...group.querySelectorAll(":scope .o_search_panel_filter_value input")];
-            header.checked = false;
-            header.indeterminate = false;
-            if (vals.every((v) => v.checked)) {
-                header.checked = true;
-            } else if (vals.some((v) => v.checked)) {
-                header.indeterminate = true;
             }
         }
     }

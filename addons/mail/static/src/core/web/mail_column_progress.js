@@ -1,9 +1,11 @@
-import { ColumnProgress } from "@web/views/view_components/column_progress";
+import { props, t } from "@odoo/owl";
+
+import { ColumnProgress, columnProgressProps } from "@web/views/view_components/column_progress";
 
 export class MailColumnProgress extends ColumnProgress {
-    static props = {
-        ...ColumnProgress.props,
-        aggregateOn: { type: Object, optional: true },
-    };
+    props = props({
+        ...columnProgressProps,
+        aggregateOn: t.object().optional(),
+    });
     static template = "mail.ColumnProgress";
 }

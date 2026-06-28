@@ -62,8 +62,8 @@ class PosConfig(models.Model):
     )
     self_ordering_image_home_ids = fields.Many2many(
         'ir.attachment',
-        string="Add images",
-        help="Image to display on the self order screen",
+        string="Add Media",
+        help="Media items to display on the self order screen",
         bypass_search_access=True,
     )
     self_ordering_image_background_ids = fields.Many2many(
@@ -106,13 +106,13 @@ class PosConfig(models.Model):
             'self_ordering_service_mode', 'self_ordering_default_language_id', 'self_ordering_available_language_ids',
             'self_ordering_image_home_ids', 'self_ordering_default_user_id', 'self_ordering_pay_after',
             'self_ordering_image_brand', 'self_ordering_image_brand_name', 'currency_id', 'has_paper',
-            'floor_ids', 'fiscal_position_ids', 'is_order_printer', 'iface_print_via_proxy', 'receipt_header',
-            'receipt_footer', 'proxy_ip', 'current_session_id', 'pricelist_id', 'available_pricelist_ids',
-            'default_fiscal_position_id', 'use_pricelist', 'module_pos_restaurant', 'is_header_or_footer',
-            'rounding_method', 'cash_rounding', 'only_round_cash_method', 'has_active_session',
+            'floor_ids', 'fiscal_position_ids', 'receipt_header', 'receipt_footer', 'current_session_id',
+            'pricelist_id', 'available_pricelist_ids', 'default_fiscal_position_id', 'use_pricelist', 'module_pos_restaurant',
+            'rounding_method', 'cash_rounding', 'only_round_cash_method',
             'available_preset_ids', 'default_preset_id', 'use_presets', 'iface_tax_included',
-            'status', 'self_ordering_image_background_ids', 'preparation_printer_ids', 'default_receipt_printer_id',
-            'receipt_printer_ids', 'use_order_printer', 'other_devices', 'pos_snooze_ids',
+            'status', 'self_ordering_image_background_ids', 'preparation_printer_ids',
+            'receipt_printer_ids', 'use_order_printer', 'other_devices', 'pos_snooze_ids', 'self_ordering_primary_color',
+            'logo', 'receipt_address', 'phone', 'email', 'website',
         ]
 
     def _update_access_token(self):
@@ -221,7 +221,7 @@ class PosConfig(models.Model):
 
     @api.constrains("payment_method_ids", "self_ordering_mode")
     def _onchange_payment_method_ids(self):
-        if any(record.self_ordering_mode == 'kiosk' and any(pm.is_cash_count for pm in record.payment_method_ids) for record in self):
+        if any(record.self_ordering_mode == 'kiosk' and any(pm.is_cash_count and not pm.payment_provider for pm in record.payment_method_ids) for record in self):
             raise ValidationError(_("You cannot add cash payment methods in kiosk mode."))
 
     def _get_qr_code_data(self):
@@ -294,11 +294,11 @@ class PosConfig(models.Model):
 
     def _load_self_data_models(self):
         return ['pos.session', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.partner',
-            'res.currency', 'pos.printer', 'pos.category', 'product.template', 'product.product', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
-            'account.tax.group', 'res.country', 'product.category', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position',
+            'pos.printer', 'pos.category', 'product.template', 'product.product', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
+            'account.tax.group', 'res.country', 'product.category', 'product.pricelist', 'product.pricelist.item', 'res.currency', 'account.fiscal.position',
             'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value', 'product.tag',
             'decimal.precision', 'uom.uom', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
-            'res.country', 'res.country.state', 'mail.template', 'pos.product.template.snooze']
+            'res.country', 'res.country.state', 'mail.template', 'pos.product.template.snooze', 'pos.prep.order', 'pos.prep.line']
 
     @api.model
     def _load_pos_self_data_domain(self, data, config):
@@ -306,14 +306,17 @@ class PosConfig(models.Model):
 
     @api.model
     def _load_pos_self_data_read(self, records, config):
-        read_records = super()._load_pos_data_read(records, config)
+        read_records = super()._load_pos_self_data_read(records, config)
         if not read_records:
             return read_records
         record = read_records[0]
-        record['_self_ordering_image_home_ids'] = config.self_ordering_image_home_ids.ids
+        record['_self_ordering_image_home_ids'] = config.self_ordering_image_home_ids.read(['mimetype'])
         record['_self_ordering_image_background_ids'] = config.self_ordering_image_background_ids.ids
         record['_pos_special_products_ids'] = config._get_special_products().ids
         record['_self_order_pos'] = True
+        google_places_api_key = self.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key')
+        record['_has_google_places_api_key'] = bool(google_places_api_key)
+        record['_base_url'] = config.get_base_url()
         return read_records
 
     def load_self_data(self):
@@ -363,7 +366,7 @@ class PosConfig(models.Model):
 
     def _compute_status(self):
         for record in self:
-            record.status = 'active' if record.has_active_session else 'inactive'
+            record.status = 'active' if record.current_session_id else 'inactive'
 
     def action_open_wizard(self):
         self.ensure_one()

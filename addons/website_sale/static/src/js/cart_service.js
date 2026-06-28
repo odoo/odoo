@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import {
     ComboConfiguratorDialog
 } from '@sale/js/combo_configurator_dialog/combo_configurator_dialog';
@@ -12,7 +12,6 @@ import { serializeDateTime } from '@web/core/l10n/dates';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { redirect } from '@web/core/utils/urls';
-import { session } from '@web/session';
 import {
     CartNotificationContainer
 } from '@website_sale/js/cart_notification/cart_notification_container/cart_notification_container';
@@ -68,7 +67,7 @@ export class CartService {
     setup(_env, services) {
         this.dialog = services.dialog;
         this.rpc = rpc;  // To be overridable in tests.
-        this.notifications = reactive(new Set());
+        this.notifications = proxy(new Set());
 
         // Register the notification container
         registry.category('main_components').add('CartNotificationContainer',
@@ -247,6 +246,7 @@ export class CartService {
      * @returns {void}
      */
     showWarning(warningMessage) {
+        if (!warningMessage) return;
         this._showCartNotification({
             type: 'warning',
             data: { 'warning_message': warningMessage },
@@ -487,7 +487,7 @@ export class CartService {
         if (!data) {
             return 0;
         }
-        if (shouldRedirectToCart || session.add_to_cart_action === 'go_to_cart') {
+        if (shouldRedirectToCart) {
             redirect('/shop/cart');
             return data.quantity;
         }
@@ -552,9 +552,12 @@ export class CartService {
      * @returns {void}
      */
     _trackProducts(trackingInfo) {
-        document.querySelector('.oe_website_sale').dispatchEvent(
-            new CustomEvent('add_to_cart_event', {'detail': trackingInfo})
-        );
+        const wrapperEl = document.querySelector('.oe_website_sale');
+        if (wrapperEl) {
+            wrapperEl.dispatchEvent(
+                new CustomEvent('add_to_cart_event', {'detail': trackingInfo})
+            );
+        }
     }
 }
 

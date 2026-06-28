@@ -27,14 +27,13 @@ You need to configure your certificate and the tax agency.
     'depends': [
         'certificate',
         'l10n_es',
-        'account_edi',
     ],
     'data': [
-        'data/account_edi_data.xml',
-
         'views/account_move_views.xml',
         'views/l10n_es_edi_sii_certificate_views.xml',
         'views/res_config_settings_views.xml',
+        'security/ir.access.csv',
+        'wizard/account_move_reversal_views.xml',
     ],
     'demo': [
         'demo/demo_certificate.xml',

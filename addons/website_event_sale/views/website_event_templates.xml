@@ -15,7 +15,7 @@
     <!-- Add price information on tickets (multi tickets, aka in collapse) -->
     <xpath expr="//div[contains(@t-attf-class, 'o_wevent_registration_multi_select')]" position="inside">
         <t t-if="ticket.total_price">
-            <t t-if="(ticket.total_price - ticket.total_price_reduce) &gt; 0">
+            <t t-if="ticket._show_discount()">
                 <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
                      class="text-danger me-1"
                      t-field="ticket.total_price"
@@ -33,8 +33,6 @@
                   t-field="ticket.total_price_reduce_taxinc"
                   class="fs-6"
                   t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
-            <span itemprop="price" class="d-none" t-out="ticket.total_price"/>
-            <span itemprop="priceCurrency" class="d-none" t-out="website.currency_id.name"/>
         </t>
         <span t-else="" class="badge text-bg-success p-2 px-3">Free</span>
     </xpath>
@@ -58,7 +56,7 @@
     <xpath expr="//div[hasclass('o_wevent_registration_single_select')]" position="before">
         <div class="flex-md-grow-1 mt-1 me-2 text-end">
             <t t-if="tickets.total_price">
-                <t t-if="(tickets.total_price - tickets.total_price_reduce) &gt;0">
+                <t t-if="tickets._show_discount()">
                     <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
                          class="text-danger me-1"
                          t-field="tickets.total_price"
@@ -76,8 +74,6 @@
                       class="badge text-bg-secondary fs-6"
                       t-field="tickets.total_price_reduce_taxinc"
                       t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
-                <span itemprop="price" class="d-none" t-out="tickets.total_price"/>
-                <span itemprop="priceCurrency" class="d-none" t-out="website.currency_id.name"/>
             </t>
             <span t-else="" class="badge text-bg-secondary fs-6 text-uppercase">Free</span>
         </div>

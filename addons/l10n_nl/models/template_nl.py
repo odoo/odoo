@@ -10,9 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_nl_template_data(self):
         return {
             'code_digits': '6',
-            'property_account_receivable_id': 'recv',
-            'property_account_payable_id': 'pay',
-            'property_stock_valuation_account_id': '3200',
         }
 
     @template('nl', 'res.company')
@@ -35,6 +32,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'btw_21_buy',
                 'expense_account_id': '7001',
                 'income_account_id': '8001',
+                'receivable_account_id': 'recv',
+                'payable_account_id': 'pay',
                 'deferred_expense_account_id': '1205',
                 'deferred_revenue_account_id': '1405',
                 'account_stock_valuation_id': '3001',

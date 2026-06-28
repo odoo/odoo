@@ -15,7 +15,7 @@ from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import convert, format_datetime, format_duration, format_time
-from odoo.tools.date_utils import sum_intervals
+from odoo.tools.date_utils import float_to_time, sum_intervals
 from odoo.tools.intervals import Intervals
 
 
@@ -65,6 +65,7 @@ class HrAttendance(models.Model):
                                           ('technical', 'Technical')],
                                readonly=True,
                                default='manual')
+    in_image = fields.Binary(string="Check-In Image")
     out_latitude = fields.Float(digits=(10, 7), readonly=True, aggregator=None)
     out_longitude = fields.Float(digits=(10, 7), readonly=True, aggregator=None)
     out_location = fields.Char(help="Based on GPS-Coordinates if available or on IP Address")
@@ -77,9 +78,25 @@ class HrAttendance(models.Model):
                                            ('auto_check_out', 'Automatic Check-Out')],
                                 readonly=True,
                                 default='manual')
-    expected_hours = fields.Float(compute="_compute_expected_hours", store=True, aggregator="sum")
+    expected_hours = fields.Float(string="Regular Hours", compute="_compute_expected_hours", store=True, aggregator="sum")
     device_tracking_enabled = fields.Boolean(related="employee_id.company_id.attendance_device_tracking")
-    linked_overtime_ids = fields.Many2many('hr.attendance.overtime.line', compute='_compute_linked_overtime_ids', readonly=False)
+    linked_overtime_ids = fields.One2many('hr.attendance.overtime.line', 'attendance_id', readonly=False)
+    day_of_date = fields.Selection(
+        compute='_compute_day_of_date',
+        store=True,
+        string="Day",
+        index=True,
+        selection=[('0', "Monday"), ('1', "Tuesday"), ('2', "Wednesday"), ('3', "Thursday"), ('4', "Friday"), ('5', "Saturday"), ('6', "Sunday")],
+    )
+    resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Working Schedule")
+
+    @api.depends('date')
+    def _compute_day_of_date(self):
+        for record in self:
+            if record.date:
+                record.day_of_date = str(record.date.weekday())
+            else:
+                record.day_of_date = False
 
     @api.depends("check_in", "employee_id")
     def _compute_date(self):
@@ -102,7 +119,7 @@ class HrAttendance(models.Model):
             else:
                 attendance.color = 1 if attendance.check_in < (datetime.today() - timedelta(days=1)) else 10
 
-    @api.depends('check_in', 'check_out', 'employee_id')
+    @api.depends('linked_overtime_ids.status')
     def _compute_overtime_status(self):
         for attendance in self:
             if not attendance.linked_overtime_ids:
@@ -114,21 +131,15 @@ class HrAttendance(models.Model):
             else:
                 attendance.overtime_status = 'to_approve'
 
-    @api.depends('check_in', 'check_out', 'employee_id')
+    @api.depends('linked_overtime_ids.duration')
     def _compute_overtime_hours(self):
         for attendance in self:
-            attendance.overtime_hours = sum(attendance.linked_overtime_ids.mapped('manual_duration'))
+            attendance.overtime_hours = sum(attendance.linked_overtime_ids.mapped('duration'))
 
-    @api.depends('check_in', 'check_out', 'employee_id')
+    @api.depends('linked_overtime_ids.status', 'linked_overtime_ids.manual_duration')
     def _compute_validated_overtime_hours(self):
         for attendance in self:
             attendance.validated_overtime_hours = sum(attendance.linked_overtime_ids.filtered_domain([('status', '=', 'approved')]).mapped('manual_duration'))
-
-    @api.depends('check_in', 'check_out', 'employee_id')
-    def _compute_linked_overtime_ids(self):
-        overtimes_by_attendance = self._linked_overtimes().grouped(lambda ot: (ot.employee_id, ot.time_start))
-        for attendance in self:
-            attendance.linked_overtime_ids = overtimes_by_attendance.get((attendance.employee_id, attendance.check_in), False)
 
     @api.depends('employee_id', 'check_in', 'check_out')
     def _compute_display_name(self):
@@ -194,8 +205,8 @@ class HrAttendance(models.Model):
         """
         self.ensure_one()
         tz = ZoneInfo(self.employee_id._get_tz(self.check_in))
-        start_dt_tz = max(self.check_in, start_dt).astimezone(tz)
-        end_dt_tz = min(self.check_out, end_dt).astimezone(tz)
+        start_dt_tz = max(self.check_in, start_dt).replace(tzinfo=UTC).astimezone(tz)
+        end_dt_tz = min(self.check_out, end_dt).replace(tzinfo=UTC).astimezone(tz)
 
         if end_dt_tz < start_dt_tz:
             return 0.0
@@ -277,11 +288,25 @@ class HrAttendance(models.Model):
     def _get_overtimes_to_update_domain(self):
         if not self:
             return Domain.FALSE
-        domain_list = [Domain.AND([
-            Domain('employee_id', '=', employee.id),
-            Domain('date', '<=', max(attendances.mapped('check_out')).date() + relativedelta(weekday=SU(1))),
-            Domain('date', '>=', min(attendances.mapped('check_in')).date() + relativedelta(weekday=MO(-1))),
-        ]) for employee, attendances in self.filtered(lambda att: att.check_out).grouped('employee_id').items()]
+        domain_list = []
+        for employee, attendances in self.filtered(lambda att: att.check_out).grouped('employee_id').items():
+            tz = ZoneInfo(employee.sudo()._get_tz())
+            local_check_in = min(attendances.mapped('check_in')).replace(tzinfo=UTC).astimezone(tz)
+            local_check_out = max(attendances.mapped('check_out')).replace(tzinfo=UTC).astimezone(tz)
+            rulesets = attendances.mapped(lambda att: att.employee_id.sudo()._get_version(att.date)).ruleset_id
+            # append this domain only for weekly rules
+            if any(rule.quantity_period == 'week' for rule in rulesets.sudo().rule_ids):
+                date_from = local_check_in.date() + relativedelta(weekday=MO(-1))
+                date_to = local_check_out.date() + relativedelta(weekday=SU)
+            else:
+                date_from = local_check_in.date()
+                date_to = local_check_out.date()
+
+            domain_list.append(Domain.AND([
+                Domain('employee_id', '=', employee.id),
+                Domain('date', '<=', date_to),
+                Domain('date', '>=', date_from),
+            ]))
         if not domain_list:
             return Domain.FALSE
         return Domain.OR(domain_list) if len(domain_list) > 1 else domain_list[0]
@@ -289,14 +314,14 @@ class HrAttendance(models.Model):
     def _update_overtime(self, attendance_domain=None):
         if not attendance_domain:
             attendance_domain = self._get_overtimes_to_update_domain()
-        all_overtime_lines = self.env['hr.attendance.overtime.line'].search(attendance_domain)
-        manual_overtimes = set(all_overtime_lines.filtered(
-            lambda l: l.manual_duration != l.duration or l.status == 'to_approve'
-        ).mapped(lambda l: (l.employee_id.id, l.date)))
-        all_overtime_lines.unlink()
         all_attendances = (self | self.env['hr.attendance'].search(attendance_domain)).filtered_domain([('check_out', '!=', False)])
         if not all_attendances:
             return
+        all_overtime_lines = all_attendances.linked_overtime_ids
+        manual_overtimes = set(all_overtime_lines.filtered(
+            lambda l: l.manual_duration != l.duration or l.status == 'to_approve'
+        ).mapped(lambda l: (l.attendance_id.id, l.date)))
+        all_overtime_lines.unlink()
 
         start_check_in = min(all_attendances.mapped('check_in')).date() - relativedelta(days=1)  # for timezone
         min_check_in = datetime.combine(start_check_in, time.min).replace(tzinfo=UTC)
@@ -341,13 +366,10 @@ class HrAttendance(models.Model):
                 {
                     **val,
                     'status': 'to_approve'
-                } if (val['employee_id'], val['date']) in manual_overtimes else val
+                } if (val['attendance_id'], val['date']) in manual_overtimes else val
                 for val in ruleset.rule_ids._generate_overtime_vals(min(attendances_dates), max(attendances_dates), ruleset_attendances, schedules_intervals_by_employee)
             ])
         self.env['hr.attendance.overtime.line'].create(overtime_vals_list)
-        self.env.add_to_compute(self._fields['overtime_hours'], all_attendances)
-        self.env.add_to_compute(self._fields['validated_overtime_hours'], all_attendances)
-        self.env.add_to_compute(self._fields['overtime_status'], all_attendances)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -550,12 +572,6 @@ class HrAttendance(models.Model):
             'url': self.env.company.attendance_kiosk_url + '?from_trial_mode=True'
         }
 
-    def _linked_overtimes(self):
-        return self.env['hr.attendance.overtime.line'].search([
-            ('time_start', 'in', self.mapped('check_in')),
-            ('employee_id', 'in', self.employee_id.ids),
-        ])
-
     def action_approve_overtime(self):
         self.linked_overtime_ids.action_approve()
 
@@ -563,13 +579,18 @@ class HrAttendance(models.Model):
         self.linked_overtime_ids.action_refuse()
 
     def _cron_auto_check_out(self):
+        self._cron_auto_check_out_tolerance()
+        self._cron_auto_check_out_specific_time()
+
+    def _cron_auto_check_out_tolerance(self):
         def check_in_tz(attendance):
             """Returns check-in time in calendar's timezone."""
-            return attendance.check_in.astimezone(ZoneInfo(attendance.employee_id._get_tz()))
+            return attendance.check_in.astimezone(ZoneInfo(attendance.employee_id._get_tz(attendance.date)))
 
         to_verify = self.env['hr.attendance'].search(
             [('check_out', '=', False),
              ('employee_id.company_id.auto_check_out', '=', True),
+             ('employee_id.company_id.auto_check_out_mode', '=', 'tolerance'),
              ('employee_id.resource_calendar_id', '!=', False)]
         )
 
@@ -595,19 +616,23 @@ class HrAttendance(models.Model):
 
             for att in to_verify_company:
 
-                employee_timezone = ZoneInfo(att.employee_id._get_tz())
+                employee_timezone = ZoneInfo(att.employee_id._get_tz(att.date))
                 check_in_datetime = check_in_tz(att)
                 now_datetime = fields.Datetime.now().astimezone(employee_timezone)
                 current_attendance_duration = (now_datetime - check_in_datetime).total_seconds() / 3600
                 previous_attendances_duration = mapped_previous_duration[att.employee_id][check_in_datetime.date()]
 
-                expected_worked_hours = sum(
-                    att.employee_id.resource_calendar_id.get_attendances(check_in_datetime).mapped("duration_hours")
+                check_in_day_start = check_in_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+                expected_worked_hours = sum_intervals(
+                    att.employee_id._get_expected_attendances(
+                        check_in_day_start,
+                        check_in_day_start + timedelta(days=1),
+                    )
                 )
 
                 # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
                 if (current_attendance_duration + previous_attendances_duration - max_tol) > expected_worked_hours:
-                    att.check_out = att.check_in.replace(hour=23, minute=59, second=59)
+                    att.check_out = check_in_datetime.replace(hour=23, minute=59, second=59).astimezone(UTC).replace(tzinfo=None)
                     excess_hours = att.worked_hours - (expected_worked_hours + max_tol - previous_attendances_duration)
                     att.write({
                         "check_out": max(att.check_out - relativedelta(hours=excess_hours), att.check_in + relativedelta(seconds=1)),
@@ -637,10 +662,11 @@ class HrAttendance(models.Model):
         ])
 
         for emp in absent_employees:
-            local_day_start = yesterday.replace(tzinfo=UTC).astimezone(ZoneInfo(emp._get_tz()))
+            local_day_start = yesterday.replace(tzinfo=ZoneInfo(emp._get_tz()))
+            check_in_utc = local_day_start.astimezone(UTC)
             technical_attendances_vals.append({
-                'check_in': local_day_start.strftime('%Y-%m-%d %H:%M:%S'),
-                'check_out': (local_day_start + relativedelta(seconds=1)).strftime('%Y-%m-%d %H:%M:%S'),
+                'check_in': check_in_utc.strftime('%Y-%m-%d %H:%M:%S'),
+                'check_out': (check_in_utc + relativedelta(seconds=1)).strftime('%Y-%m-%d %H:%M:%S'),
                 'in_mode': 'technical',
                 'out_mode': 'technical',
                 'employee_id': emp.id
@@ -654,6 +680,52 @@ class HrAttendance(models.Model):
             technical_attendance.message_post(body=body)
 
         to_unlink.unlink()
+
+    def _cron_auto_check_out_specific_time(self):
+        """
+        Automatically check-out all employees still checked in
+        when company is in 'specific_time' mode.
+        """
+        current_utc_dt = fields.Datetime.now()
+        utc_tz = ZoneInfo('UTC')
+        all_open_attendances = self.search([
+            ('check_out', '=', False),
+            ('employee_id.company_id', 'any', [
+                ('auto_check_out', '=', True),
+                ('auto_check_out_mode', '=', 'specific_time'),
+            ]),
+        ])
+
+        for company, company_attendances in all_open_attendances.grouped(lambda att: att.employee_id.company_id).items():
+            cutoff_time = float_to_time(company.auto_check_out_specific_time)
+            cutoff_hour, cutoff_minute = cutoff_time.hour, cutoff_time.minute
+            for att in company_attendances:
+                employee_tz = ZoneInfo(att.employee_id._get_tz())
+                current_employee_dt = current_utc_dt.astimezone(employee_tz)
+                check_in_employee_dt = att.check_in.astimezone(employee_tz)
+                same_day_cutoff_dt = check_in_employee_dt.replace(
+                    hour=cutoff_hour, minute=cutoff_minute, second=0, microsecond=0,
+                )
+
+                if check_in_employee_dt.time() < same_day_cutoff_dt.time():
+                    next_cutoff = same_day_cutoff_dt
+                else:
+                    next_cutoff = same_day_cutoff_dt + relativedelta(days=1)
+
+                if current_employee_dt < next_cutoff:
+                    continue
+
+                employee_checkout = next_cutoff.astimezone(utc_tz).replace(tzinfo=None)
+                employee_checkout = max(employee_checkout, att.check_in + relativedelta(seconds=1))
+
+                att.write({
+                    'check_out': employee_checkout,
+                    'out_mode': 'auto_check_out',
+                })
+
+                att.message_post(body=self.env._(
+                    'This attendance was automatically checked out based on company specific time configuration.',
+                ))
 
     def _get_localized_times(self):
         self.ensure_one()
@@ -687,8 +759,12 @@ class HrAttendance(models.Model):
                 week_interval = Intervals([(start_datetime, stop_datetime_for_week, self.env['resource.calendar'])])
 
                 attendance_interval = Intervals([(check_in, check_out, attendance)])
-                attendance_by_employee_by_day[employee][day] |= attendance_interval & day_interval
-                attendance_by_employee_by_week[employee][week_date] |= attendance_interval & week_interval
+                intersected_day_interval = attendance_interval & day_interval
+                intersected_week_interval = attendance_interval & week_interval
+                if intersected_day_interval:
+                    attendance_by_employee_by_day[employee][day] |= intersected_day_interval
+                if intersected_week_interval:
+                    attendance_by_employee_by_week[employee][week_date] |= intersected_week_interval
 
         return {
             'day': attendance_by_employee_by_day,

@@ -88,6 +88,28 @@ test("notification event is broadcasted", async () => {
     await expect.waitForSteps(["broadcast BUS:NOTIFICATION"]);
 });
 
+test("last_id_reset updates worker state", async () => {
+    const worker = await startWebSocketWorker((type, message) => {
+        if (type === "BUS:LAST_ID_RESET") {
+            expect.step(`last_id_reset - ${message}`);
+        }
+    });
+    worker.lastNotificationId = 50;
+    worker.seenNotificationIds.add(5);
+    worker.seenNotificationIds.add(40);
+    worker.seenNotificationIds.add(50);
+    const internalMsg = [{ type: "bus/last_id_reset", internal: true, payload: 10 }];
+    for (const serverWs of MockServer.current._websockets) {
+        serverWs.send(JSON.stringify(internalMsg));
+    }
+    await runAllTimers();
+    await expect.waitForSteps(["last_id_reset - 10"]);
+    expect(worker.lastNotificationId).toBe(10);
+    expect(worker.seenNotificationIds.has(5)).toBe(true);
+    expect(worker.seenNotificationIds.has(40)).toBe(false);
+    expect(worker.seenNotificationIds.has(50)).toBe(false);
+});
+
 test("disconnect event is sent when stopping the worker", async () => {
     const worker = await startWebSocketWorker((type) => {
         if (type !== "BUS:WORKER_STATE_UPDATED") {
@@ -143,4 +165,45 @@ test("check connection health during inactivity", async () => {
     await expect.waitForSteps(["_restartConnectionCheckInterval"]);
     await advanceTime(worker.CONNECTION_CHECK_DELAY + 1000);
     await expect.waitForSteps(["check_connection_health_sent"]);
+});
+
+test("debounced updates respect force and batching", async () => {
+    patchWithCleanup(WebsocketWorker, { OUTGOING_BATCH_DELAY: 120_000 });
+    patchWithCleanup(WebsocketWorker.prototype, {
+        _sendToServer(message) {
+            if (message.event_name === "subscribe") {
+                expect.step(`subscribe - ${JSON.stringify(message.data.channels)}`);
+            }
+            super._sendToServer(message);
+        },
+    });
+    const worker = await startWebSocketWorker((type) => {
+        if (type == "BUS:CONNECT") {
+            expect.step(type);
+        }
+    });
+    const client = new MessagePort();
+    worker.registerClient(client);
+    worker._start();
+    await expect.waitForSteps(["BUS:CONNECT"]);
+    await advanceTime(120_000);
+    await expect.waitForSteps(["subscribe - []"]);
+    worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C1" });
+    await advanceTime(120_000);
+    await expect.waitForSteps(['subscribe - ["C1"]']);
+    // 1 add channel => force => only one forced subscribe
+    worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C1" });
+    worker._onClientMessage(client, { action: "BUS:FORCE_UPDATE_CHANNELS" });
+    await advanceTime(120_000);
+    await expect.waitForSteps(['subscribe - ["C1"]']);
+    // 2 force => add channel => only one forced subscribe
+    worker._onClientMessage(client, { action: "BUS:FORCE_UPDATE_CHANNELS" });
+    worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C1" });
+    await advanceTime(120_000);
+    await expect.waitForSteps(['subscribe - ["C1"]']);
+    // 3 multiple adds => only one subscribe
+    worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C2" });
+    worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C3" });
+    await advanceTime(120_000);
+    await expect.waitForSteps(['subscribe - ["C1","C2","C3"]']);
 });

@@ -7,19 +7,16 @@ export class DiscussCategory extends Record {
     static new() {
         /** @type {import("models").DiscussCategory} */
         const category = super.new(...arguments);
-        effectWithCleanup({
-            effect(busChannel, busService) {
+        category._registerDisposeFn(
+            effectWithCleanup(() => {
+                const busChannel = category.busChannel;
+                const busService = category.store.env.services.bus_service;
                 if (busService && busChannel) {
                     busService.addChannel(busChannel);
                     return () => busService.deleteChannel(busChannel);
                 }
-            },
-            dependencies: (category) => [
-                category.busChannel,
-                category.store.env.services.bus_service,
-            ],
-            reactiveTargets: [category],
-        });
+            })
+        );
         return category;
     }
 
@@ -27,7 +24,9 @@ export class DiscussCategory extends Record {
     bus_channel_access_token;
     get busChannel() {
         const channel = `discuss.category_${this.id}`;
-        return this.bus_channel_access_token ? `${channel}_${this.bus_channel_access_token}` : channel;
+        return this.bus_channel_access_token
+            ? `${channel}_${this.bus_channel_access_token}`
+            : channel;
     }
     channel_ids = fields.Many("discuss.channel");
     /** @type {number} */

@@ -31,7 +31,7 @@ test("Cloning a block with a padding preview should not make the preview appear 
     await click(queryAll("[data-label='Padding'] input")[0]);
     expect(":iframe .s_banner .o_grid_item").toHaveCount(4);
     await edit(20);
-    await click("[data-container-title='Box'] .oe_snippet_clone");
+    await click("[data-container-title='Column'] .oe_snippet_clone");
     await animationFrame();
     expect(":iframe .s_banner .o_grid_item").toHaveCount(5);
     expect(":iframe .s_banner .o_grid_item:nth-child(1)").toHaveClass("o_we_padding_highlight");

@@ -3,7 +3,7 @@
     <t t-name="web.login_user_switch">
         <t t-if="this.state.users.length">
             <t t-if="this.state.displayUserChoice">
-                <div class="oe_login_form o_user_switch user-select-none my-4" t-custom-ref="root">
+                <div class="oe_login_form o_user_switch user-select-none my-4" t-ref="this.rootRef">
                     <p>Choose a user</p>
                     <div class="list-group my-3">
                         <t t-foreach="this.state.users" t-as="user" t-key="user_index">
@@ -21,11 +21,11 @@
                     </button>
                 </div>
             </t>
-            <t t-else="" t-custom-portal="'label.form-label'">
+            <Portal t-else="" target="'label.form-label'">
                 <button type="button" class="o_user_switch_btn btn btn-sm btn-link m-0 p-0" tabindex="1" t-on-click="() => this.toggleFormDisplay()">
                     Choose a user
                 </button>
-            </t>
+            </Portal>
         </t>
     </t>
 </templates>

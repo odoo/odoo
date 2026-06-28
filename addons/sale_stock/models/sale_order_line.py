@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_is_zero
 from odoo.exceptions import UserError
 
 
@@ -21,9 +21,7 @@ class SaleOrderLine(models.Model):
     qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver', digits='Product Unit')
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
-    customer_lead = fields.Integer(
-        compute='_compute_customer_lead', store=True, readonly=False, precompute=True,
-        inverse='_inverse_customer_lead')
+    customer_lead = fields.Integer(store=True, readonly=False, inverse='_inverse_customer_lead')
 
     @api.depends('route_ids', 'order_id.warehouse_id', 'product_id')
     def _compute_warehouse_id(self):
@@ -194,7 +192,7 @@ class SaleOrderLine(models.Model):
                         continue
                     qty += move.uom_id._compute_quantity(move.quantity, line.product_uom_id, rounding_method='HALF-UP')
                 for move in incoming_moves:
-                    if move.state != 'done':
+                    if move.state != 'done' or (not move.origin_returned_move_id and line.product_uom_qty > 0 and not move.picking_id.return_id):
                         continue
                     qty -= move.uom_id._compute_quantity(move.quantity, line.product_uom_id, rounding_method='HALF-UP')
 
@@ -211,6 +209,7 @@ class SaleOrderLine(models.Model):
                 at_least_one_done = at_least_one_done or move.state == 'done'
             return at_least_one_done
         super()._compute_invoice_status()
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
         for line in self:
             # We handle the following specific situation: a physical product is partially delivered,
             # but we would like to set its invoice status to 'Fully Invoiced'. The use case is for
@@ -223,13 +222,16 @@ class SaleOrderLine(models.Model):
                 and line.product_id.invoice_policy == 'delivery'
                 and line.move_ids
                 and check_moves_state(line.move_ids)
+                and not float_is_zero(line.qty_delivered, precision_digits=precision)
             ):
                 line.invoice_status = 'invoiced'
 
     @api.model_create_multi
     def create(self, vals_list):
         lines = super().create(vals_list)
-        lines.filtered(lambda line: line.state == 'sale')._action_launch_stock_rule()
+        lines.filtered(
+            lambda line: line.state == 'sale' and line.product_id.type == 'consu'
+        )._action_launch_stock_rule()
         return lines
 
     def write(self, vals):
@@ -249,12 +251,6 @@ class SaleOrderLine(models.Model):
         for line in self:
             if line.move_ids.filtered(lambda m: m.state != 'cancel'):
                 line.product_updatable = False
-
-    @api.depends('product_id', 'company_id')
-    def _compute_customer_lead(self):
-        super()._compute_customer_lead() # Reset customer_lead when the product is modified
-        for line in self:
-            line.customer_lead = line.product_id.with_company(line.company_id).sale_delay
 
     def _inverse_customer_lead(self):
         for line in self:
@@ -281,7 +277,7 @@ class SaleOrderLine(models.Model):
             'route_ids': self.route_ids,
             'warehouse_id': self.warehouse_id,
             'partner_id': self.order_id.partner_shipping_id.id,
-            'location_final_id': self._get_location_final(),
+            'forecasted_location_id': self._get_location_final(),
             'product_description_variants': self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants().strip(),
             'company_id': self.order_id.company_id,
             'sequence': self.sequence,
@@ -323,7 +319,7 @@ class SaleOrderLine(models.Model):
             triggering_rule_ids = []
             seen_wh_ids = set()
             for move in sorted_moves:
-                if move.warehouse_id.id not in seen_wh_ids:
+                if move.warehouse_id.id not in seen_wh_ids and move.rule_id:
                     triggering_rule_ids.append(move.rule_id.id)
                     seen_wh_ids.add(move.warehouse_id.id)
         if self.env.context.get('accrual_entry_date'):
@@ -334,14 +330,14 @@ class SaleOrderLine(models.Model):
             if not move._is_dropshipped_returned() and (
                 (strict and move.location_dest_id._is_outgoing()) or (
                 not strict and move.rule_id.id in triggering_rule_ids and
-                (move.location_final_id or move.location_dest_id)._is_outgoing()
+                (move.forecasted_location_id or move.location_dest_id)._is_outgoing()
             )):
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
                     outgoing_moves_ids.add(move.id)
             elif move.to_refund and (
                 (strict and move._is_incoming() or move.location_id._is_outgoing()) or (
                 not strict and move.rule_id.id in triggering_rule_ids and
-                (move.location_final_id or move.location_dest_id).usage == 'internal'
+                (move.forecasted_location_id or move.location_dest_id).usage == 'internal'
             )):
                 incoming_moves_ids.add(move.id)
 
@@ -437,6 +433,16 @@ class SaleOrderLine(models.Model):
             )
         )
         return res
+
+    def _is_returnable(self):
+        """Return whether this line contains a product eligible for return."""
+        self.ensure_one()
+        return (
+            self.product_type == "consu"
+            and self._is_product_line()
+            and self.has_valued_move_ids()
+            and not self.combo_item_id
+        )
 
     def has_valued_move_ids(self):
         return any(move.state not in ('cancel', 'draft') for move in self.move_ids)

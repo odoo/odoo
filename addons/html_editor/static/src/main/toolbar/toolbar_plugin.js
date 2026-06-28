@@ -1,8 +1,8 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { isEmptyTextNode, isZWS } from "@html_editor/utils/dom_info";
 import { composeToolbarButton, Toolbar } from "./toolbar";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { hasTouch, isMacOS, isIOS } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { ToolbarMobile } from "./mobile_toolbar";
 import { debounce } from "@web/core/utils/timing";
@@ -11,6 +11,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { memoize } from "@web/core/utils/functions";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { utils } from "@web/core/ui/ui_service";
 
 /** @typedef { import("@html_editor/core/selection_plugin").EditorSelection } EditorSelection */
 /** @typedef {import("@html_editor/core/selection_plugin").SelectionData} SelectionData */
@@ -161,7 +162,9 @@ export class ToolbarPlugin extends Plugin {
         on_selectionchange_handlers: this.handleSelectionChange.bind(this),
         on_selection_leave_handlers: () => this.closeToolbar(),
         on_selection_enter_handlers: () => this.updateToolbar(),
-        on_step_added_handlers: () => this.updateToolbar(),
+        on_committed_to_history_handlers: () => this.updateToolbar(),
+        on_format_requested_handlers: () => this.updateToolbar(),
+        on_collapsed_formats_removed_handlers: () => this.updateToolbar(),
         user_commands: {
             id: "expandToolbar",
             run: () => {
@@ -198,7 +201,9 @@ export class ToolbarPlugin extends Plugin {
         this.buttonGroups = this.getButtonGroups();
         this.buttonsByNamespace = { DISABLED_NAMESPACE: [] };
 
-        this.isMobileToolbar = hasTouch() && window.visualViewport;
+        // For IOS devices, they usually shows a native toolbar on top of the selection so
+        // we show the editor toolbar at the bottom to avoid they overlap.
+        this.isMobileToolbar = (utils.isSmall() && hasTouch() && window.visualViewport) || isIOS();
 
         if (this.isMobileToolbar) {
             this.overlay = new MobileToolbarOverlay(this.editable);
@@ -210,7 +215,7 @@ export class ToolbarPlugin extends Plugin {
                 closeOnPointerdown: false,
             });
         }
-        this.state = reactive({ buttonGroups: [], namespace: undefined });
+        this.state = proxy({ buttonGroups: [], namespace: undefined });
 
         this.onSelectionChangeActive = true;
         this.debouncedUpdateToolbar = debounce(this._updateToolbar, DELAY_TOOLBAR_OPEN);
@@ -247,6 +252,8 @@ export class ToolbarPlugin extends Plugin {
             // Close toolbar on keydown Arrows and prevent it from opening until
             // keyup. Opening is debounced to avoid open/close between
             // sequential keystrokes.
+            // On macOS, keyup is not triggered when Cmd is held down (e.g. Cmd+Shift+Arrow),
+            // so we use selectionchange as a fallback to re-enable the toolbar.
             this.addDomListener(this.editable, "keydown", (ev) => {
                 // reason for "key?":
                 // On Chrome, if there is a password saved for a login page,
@@ -254,14 +261,29 @@ export class ToolbarPlugin extends Plugin {
                 if (ev.key?.startsWith("Arrow")) {
                     this.closeToolbar(this.dependencies.selection.getSelectionData());
                     this.onSelectionChangeActive = false;
+                    if (isMacOS() && ev.metaKey) {
+                        this.pendingArrowKey = true;
+                    }
                 }
             });
             this.addDomListener(this.editable, "keyup", (ev) => {
                 if (ev.key?.startsWith("Arrow")) {
+                    this.pendingArrowKey = false;
                     this.onSelectionChangeActive = true;
                     this.debouncedUpdateToolbar();
                 }
             });
+            if (isMacOS()) {
+                this.addDomListener(this.document, "selectionchange", () => {
+                    if (this.pendingArrowKey && !this.isMouseDown) {
+                        this.pendingArrowKey = false;
+                        this.onSelectionChangeActive = true;
+                        this.debouncedUpdateToolbar();
+                    }
+                });
+                this.addDomListener(this.editable, "mousedown", () => (this.isMouseDown = true));
+                this.addDomListener(this.document, "mouseup", () => (this.isMouseDown = false));
+            }
         }
         this.isToolbarExpanded = false;
         this.toolbarProps = {
@@ -293,7 +315,12 @@ export class ToolbarPlugin extends Plugin {
         };
         /** @type {(item: ToolbarComponentItem) => ToolbarComponentButton} */
         const componentItemToButton = (item) => ({
-            isAvailable: () => true,
+            isAvailable: (selection) => {
+                const command = item.commandId
+                    ? this.dependencies.userCommand.getCommand(item.commandId)
+                    : null;
+                return command?.isAvailable ? command.isAvailable(selection) : true;
+            },
             ...item,
             description:
                 item.description instanceof Function ? item.description : () => item.description,
@@ -351,7 +378,7 @@ export class ToolbarPlugin extends Plugin {
     }
 
     /**
-     * Different handlers might call updateToolbar (e.g. step added and
+     * Different handlers might call updateToolbar (e.g. commit added and
      * selection change) in the same tick. To avoid unnecessary updates, we
      * batch the calls.
      */
@@ -432,7 +459,7 @@ export class ToolbarPlugin extends Plugin {
             return false;
         }
         // Only allow the toolbar to open if the selection contains visible selected characters.
-        const selectionText = editableSelection.textContent();
+        const selectionText = editableSelection.toString();
         const textCleaned = selectionText.replace(/(\r\n|\n|\r|\u200B|\uFEFF)/gm, "");
         if (textCleaned.length) {
             return true;
@@ -539,6 +566,7 @@ class MobileToolbarOverlay {
 
     open({ props }) {
         props.class = "shadow";
+        props.editable = this.editable;
         if (!this.isOpen) {
             const modal = this.editable.closest(".o_modal_full");
             if (modal) {

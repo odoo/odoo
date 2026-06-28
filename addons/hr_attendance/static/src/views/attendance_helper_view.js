@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 
 export class AttendanceActionHelper extends Component {
     static template = "hr_attendance.AttendanceActionHelper";
@@ -10,13 +9,15 @@ export class AttendanceActionHelper extends Component {
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
-        this.state = useState({
+        this.state = proxy({
             hasDemoData: false,
         });
         onWillStart(async () => {
-            this.isHrUser = await user.hasGroup("hr.group_hr_user");
-            this.hasAttendanceRight = await user.hasGroup("hr_attendance.group_hr_attendance_user");
-            if (this.hasAttendanceRight && this.isHrUser){
+            [this.isHrUser, this.hasAttendanceRight] = await Promise.all([
+                user.hasGroup("hr.group_hr_user"),
+                user.hasGroup("hr_attendance.group_hr_attendance_user"),
+            ]);
+            if (this.hasAttendanceRight && this.isHrUser) {
                 this.state.hasDemoData = await this.orm.call("hr.attendance", "has_demo_data", []);
             }
         });
@@ -29,4 +30,4 @@ export class AttendanceActionHelper extends Component {
     LoadTryKiosk() {
         this.actionService.doAction("hr_attendance.action_try_kiosk");
     }
-};
+}

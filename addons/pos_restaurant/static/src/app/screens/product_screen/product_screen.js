@@ -24,13 +24,13 @@ patch(ProductScreen.prototype, {
         });
     },
     get nbrOfChanges() {
-        return this.pos.getOrderChanges().nbrOfChanges;
+        return this.pos.getOrder().preparationChanges.quantity;
     },
     get swapButton() {
         return this.pos.config.module_pos_restaurant && this.pos.config.preparationCategories.size;
     },
     get displayCategoryCount() {
-        return this.pos.categoryCount.slice(0, 3);
+        return this.pos.getOrder().preparationChanges.categoryCount.slice(0, 3);
     },
     get primaryReviewButton() {
         return (
@@ -40,9 +40,7 @@ patch(ProductScreen.prototype, {
         );
     },
     get primaryOrderButton() {
-        return (
-            this.pos.getOrderChanges().nbrOfChanges !== 0 && this.pos.config.module_pos_restaurant
-        );
+        return this.nbrOfChanges !== 0 && this.pos.config.module_pos_restaurant;
     },
     getNumpadButtons() {
         let buttons = super.getNumpadButtons();
@@ -85,7 +83,12 @@ patch(ProductScreen.prototype, {
             return await super.addProductToOrder(product);
         }
 
-        const courseCandidate = product.pos_categ_ids
+        const categories = product.pos_categ_ids
+            .map((c) => c.id)
+            .includes(this.pos.selectedCategory?.id)
+            ? [this.pos.selectedCategory]
+            : product.pos_categ_ids;
+        const courseCandidate = categories
             .map((c) => c.course_id)
             .filter(Boolean)
             .sort((a, b) => a.sequence - b.sequence);

@@ -510,3 +510,46 @@ class TestRecruitment(MailCase, TransactionCase):
         applicant_get_refuse_reason._prepare_send_refusal_mails()
         mail = self.env['mail.mail'].search([('subject', '=', 'Application refused: Mario')], limit=1)
         self.assertEqual(mail.partner_ids, app_1.partner_id)
+
+    def test_create_and_get_alias_for_source(self):
+        """Test that create and get alias on a recruitment source."""
+        job = self.env['hr.job'].create({'name': 'Test Job'})
+        source = self.env['hr.recruitment.source'].create({
+            'job_id': job.id,
+        })
+
+        source.create_and_get_alias()
+        self.assertTrue(source.alias_id)
+        expected_alias_name = self.env['mail.alias']._sanitize_alias_name(
+            f"{source.job_id.name}+{source.source_id.name}"
+        )
+        self.assertEqual(source.alias_id.alias_name, expected_alias_name)
+
+    def test_default_template_applicant_refuse_reason_when_archived(self):
+        """
+        Ensure that an archived email template linked to a refuse reason
+        is not automatically set on the refuse wizard
+        """
+        email_template = self.env['mail.template'].create({
+            'model_id': self.env['ir.model']._get('hr.applicant').id,
+            'name': 'template1',
+        })
+        application = self.env['hr.applicant'].create({'partner_name': 'Test'})
+        refuse_reason = self.env['hr.applicant.refuse.reason'].create({
+            'name': 'Fired',
+            'template_id': email_template.id,
+        })
+        wizard = self.env['applicant.get.refuse.reason'].create({
+            'refuse_reason_id': refuse_reason.id,
+            'applicant_ids': [application.id],
+        })
+
+        self.assertEqual(wizard.template_id, email_template)
+
+        email_template.active = False
+        wizard = self.env['applicant.get.refuse.reason'].create({
+            'refuse_reason_id': refuse_reason.id,
+            'applicant_ids': [application.id],
+        })
+
+        self.assertFalse(wizard.template_id)

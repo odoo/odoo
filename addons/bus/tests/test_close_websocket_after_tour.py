@@ -1,8 +1,10 @@
 import gc
+import threading
 from unittest.mock import patch
 from weakref import WeakSet
 
 from odoo.tests import tagged
+
 from .. import websocket as websocket_module
 from .common import WebsocketCase
 
@@ -29,9 +31,20 @@ class TestCloseWebsocketAfterTour(WebsocketCase):
         # Open a socket that won't be closed when calling browser.close()
         mocked_brower_class.return_value.navigate_to.side_effect = navigate_to_side_effect
 
-        with patch.object(websocket_module, "_websocket_instances", WeakSet()):
+        og_disconnect = websocket_module.Websocket._disconnect
+        disconnect_called_ev = threading.Event()
+
+        def _disconnect(ws, code, reason):
+            og_disconnect(ws, code, reason)
+            disconnect_called_ev.set()
+
+        with (
+            patch.object(websocket_module, "_websocket_instances", WeakSet()),
+            patch.object(websocket_module.Websocket, "_disconnect", _disconnect),
+        ):
             self.browser_js("/odoo", "")
             self.assertTrue(websocket_created)
+            disconnect_called_ev.wait()
             # serve_forever_patch prevent websocket instances from being collected. Stop it now.
             self._serve_forever_patch.stop()
             gc.collect()

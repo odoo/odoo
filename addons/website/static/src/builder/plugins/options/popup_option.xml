@@ -43,14 +43,13 @@
     </BuilderRow>
     <BuilderRow label.translate="Hide For" t-if="!this.isActiveItem('onclick_opt')">
         <BuilderNumberInput tooltip.translate="Once the user closes the popup, it won't be shown again for that period of time."
-                inputClasses="'o_we_large'"
                 dataAttributeAction="'consentsDuration'"
                 default="7"
                 unit.translate="days"
                 saveUnit="''"/>
     </BuilderRow>
     <BuilderRow label.translate="Show on">
-        <BuilderSelect action="'moveBlock'" preview="false">
+        <BuilderSelect action="'moveBlock'" actionParam="'.s_popup'">
             <BuilderSelectItem actionValue="'currentPage'">This page</BuilderSelectItem>
             <BuilderSelectItem actionValue="'allPages'">All pages</BuilderSelectItem>
         </BuilderSelect>
@@ -58,9 +57,7 @@
 </t>
 
 <t t-name="website.PopupCookiesOption">
-    <t t-call="website.base_popup_options">
-        <t t-set="isCookiesOption" t-value="true"/>
-    </t>
+    <t t-call="website.base_popup_options" isCookiesOption="true"/>
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
@@ -68,7 +65,7 @@
         <popup_option
             template="website.PopupOption"
             selector=".s_popup"
-            exclude="#website_cookies_bar"
+            exclude="#website_cookies_bar, .s_age_verification_popup"
             applyTo=".modal"/>
         <popup_cookies_option
             template="website.PopupCookiesOption"

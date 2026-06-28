@@ -5,27 +5,37 @@
         <field name="name">Custom Provider Form</field>
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
-        <!-- Load after account_payment for the invisible attr. of the payment_followup group. -->
+        <!-- Load after account_payment for the invisible attr. of the provider_config_others
+        group. -->
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <field name="code" invisible="1" position="after">
                 <field name="custom_mode" invisible="1"/>
             </field>
-            <page name="credentials" position="attributes">
+            <field name="is_live" position="attributes">
+                <attribute name="invisible" separator="or" add="code == 'custom'"/>
+            </field>
+            <page name="payment_methods" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>
             </page>
-            <field name="payment_method_ids" position="attributes">
+            <page name="configuration" position="attributes">
+                <attribute name="invisible" separator="or" add="custom_mode == 'pay_on_invoice'"/>
+            </page>
+            <group name="provider_credentials" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>
-            </field>
-            <a name="action_view_payment_methods" position="attributes">
-                <attribute name="invisible" separator="or" add="code == 'custom'"/>
-            </a>
-            <field name="capture_manually" position="after">
-                <field name="qr_code" invisible="code != 'custom'" />
-            </field>
-            <group name="payment_followup" position="attributes">
-                <attribute name="invisible">code == 'custom'</attribute>
             </group>
+            <group name="provider_options" position="attributes">
+                <attribute name="invisible" separator="and" add="code != 'custom'"/>
+            </group>
+            <field name="capture_manually" position="after">
+                <field name="qr_code" invisible="custom_mode != 'wire_transfer'"/>
+            </field>
+            <group name="provider_config_others" position="attributes">
+                <attribute name="invisible" separator="or" add="code == 'custom'"/>
+            </group>
+            <page name="messages" position="attributes">
+                <attribute name="invisible" separator="or" add="custom_mode == 'pay_on_invoice'"/>
+            </page>
             <field name="pre_msg" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>
             </field>
@@ -38,7 +48,7 @@
                             class="oe_link ms-0 ps-0"
                             icon="fa-refresh"
                             />
-              </div>
+                </div>
             </field>
             <field name="done_msg" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>
@@ -46,6 +56,17 @@
             <field name="cancel_msg" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>
             </field>
+        </field>
+    </record>
+
+    <record id="payment_provider_kanban" model="ir.ui.view">
+        <field name="name">payment.provider.kanban.custom</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_kanban"/>
+        <field name="arch" type="xml">
+            <div name="live_mode_badges" position="attributes">
+                <attribute name="invisible" add="code == 'custom'" separator="or"/>
+            </div>
         </field>
     </record>
 

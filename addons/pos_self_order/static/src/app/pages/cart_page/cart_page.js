@@ -1,11 +1,12 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
 import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popup/preset_info_popup";
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
+import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
 import { _t } from "@web/core/l10n/translation";
 import { formatProductName } from "../../utils";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
@@ -22,12 +23,33 @@ export class CartPage extends Component {
         this.selfOrder = useSelfOrder();
         this.dialog = useService("dialog");
         this.router = useService("router");
-        this.state = useState({
-            showOrderNote: this.orderNote,
+        this.state = proxy({
             orderNoteValue: "",
         });
 
         this.scrollShadow = useScrollShadow(useRef("scrollContainer"));
+        useLayoutEffect(
+            () => this.selfOrder.ensureDeliveryLine(),
+            () => {
+                const order = this.selfOrder.currentOrder;
+                const nonDeliveryId = order.preset_id?.delivery_product_id?.id;
+                const nonDeliveryTotal = order.lines
+                    .filter((l) => l.product_id?.id !== nonDeliveryId)
+                    .reduce((sum, l) => sum + (l.qty || 0) * (l.price_unit || 0), 0);
+                return [order.preset_id?.id, nonDeliveryTotal];
+            }
+        );
+        useLayoutEffect(
+            () => this.selfOrder.currentOrder.recomputeServiceFees(),
+            () => {
+                const order = this.selfOrder.currentOrder;
+                const serviceFeeProductId = order.preset_id?.service_fee_product_id?.id;
+                const applicableTotal = order.lines
+                    .filter((l) => l.product_id?.id !== serviceFeeProductId)
+                    .reduce((sum, l) => sum + (l.qty || 0) * (l.price_unit || 0), 0);
+                return [order.preset_id?.id, applicableTotal];
+            }
+        );
     }
 
     get showCancelButton() {
@@ -51,7 +73,13 @@ export class CartPage extends Component {
                 ? order.unsentLines
                 : this.selfOrder.currentOrder.lines) || [];
 
-        return lines.filter((line) => !line.combo_parent_id);
+        const regularLines = [];
+        const serviceFeeLines = [];
+        for (const line of lines.filter((line) => !line.combo_parent_id)) {
+            (line.isServiceFeeLine() ? serviceFeeLines : regularLines).push(line);
+        }
+
+        return [...regularLines, ...serviceFeeLines];
     }
 
     get totalPriceAndTax() {
@@ -73,6 +101,20 @@ export class CartPage extends Component {
 
     getAttributes(line) {
         return [...(line.attribute_value_ids || [])];
+    }
+
+    async openNotePopup() {
+        const note = await makeAwaitable(this.dialog, TextInputPopup, {
+            title: _t("Add an order note"),
+            startingValue: this.orderNote,
+            placeholder: _t(
+                "Specify which utensils, napkins, straws, and condiments you want to be included or any special instructions that you want the restaurant to be aware of"
+            ),
+            rows: 4,
+        });
+        if (note !== undefined) {
+            this.state.orderNoteValue = note;
+        }
     }
 
     async cancelOrder() {
@@ -146,7 +188,9 @@ export class CartPage extends Component {
             }
 
             const email = this.selfOrder.currentOrder.partner_id?.email || infos.email;
+            const mobile = this.selfOrder.currentOrder.mobile || infos.phone;
             this.selfOrder.currentOrder.email = email;
+            this.selfOrder.currentOrder.mobile = mobile;
         }
 
         if (
@@ -181,61 +225,7 @@ export class CartPage extends Component {
     }
 
     get presetTimingOptions() {
-        const availabilities = this.selfOrder.currentOrder.preset_id.availabilities;
-        const options = {
-            categories: {},
-        };
-
-        for (const [date, slots] of Object.entries(availabilities)) {
-            options.categories[date] = {
-                id: date,
-                name: DateTime.fromISO(date).toLocaleString(DateTime.DATE_SHORT),
-                subCategories: {},
-            };
-
-            for (const slot of Object.values(slots)) {
-                if (!options.categories[date].subCategories[slot.periode]) {
-                    let periodeName = _t("Full Day");
-
-                    switch (slot.periode) {
-                        case "morning":
-                            periodeName = _t("Morning");
-                            break;
-                        case "afternoon":
-                            periodeName = _t("Afternoon");
-                            break;
-                        case "evening":
-                            periodeName = _t("Evening");
-                            break;
-                    }
-
-                    options.categories[date].subCategories[slot.periode] = {
-                        id: slot.periode,
-                        name: periodeName,
-                        options: [],
-                    };
-                }
-
-                options.categories[date].subCategories[slot.periode].options.push({
-                    id: slot.datetime.toFormat("yyyy-MM-dd HH:mm:ss"),
-                    name: this.selfOrder.getTime(slot.datetime),
-                });
-            }
-        }
-
-        // Remove empty categories
-        for (const dateId of Object.keys(options.categories)) {
-            if (
-                Object.keys(options.categories[dateId].subCategories).length === 0 ||
-                Object.values(options.categories[dateId].subCategories).every(
-                    (subCateg) => subCateg.options.length === 0
-                )
-            ) {
-                delete options.categories[dateId];
-            }
-        }
-
-        return options;
+        return this.selfOrder.getTimingOptions(this.selfOrder.currentOrder.preset_id);
     }
 
     get tableOptions() {
@@ -373,6 +363,11 @@ export class CartPage extends Component {
     }
     get displayTaxes() {
         return !this.selfOrder.isTaxesIncludedInPrice();
+    }
+
+    isDeliveryLine(line) {
+        const deliveryProductId = this.selfOrder.currentOrder.preset_id?.delivery_product_id?.id;
+        return deliveryProductId && line.product_id?.id === deliveryProductId;
     }
 
     formatProductName(product) {

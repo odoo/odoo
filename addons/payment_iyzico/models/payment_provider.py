@@ -7,7 +7,7 @@ import json
 import random
 import string
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.urls import urljoin
 
@@ -55,11 +55,10 @@ class PaymentProvider(models.Model):
         if self.code != "iyzico":
             return super()._build_request_url(endpoint, **kwargs)
 
-        if self.state == "enabled":
+        if self.is_live:
             api_url = "https://api.iyzipay.com"
         else:
             api_url = "https://sandbox-api.iyzipay.com"
-
         return urljoin(api_url, endpoint)
 
     def _build_request_headers(self, method, endpoint, payload, **kwargs):
@@ -114,6 +113,8 @@ class PaymentProvider(models.Model):
 
         if response_content.get("status") != "success":
             error_msg = response_content.get("errorMessage")
-            raise ValidationError(_("The payment provider rejected the request.\n%s", error_msg))
+            raise ValidationError(
+                self.env._("The payment provider rejected the request.\n%s", error_msg)
+            )
 
         return response_content

@@ -5,13 +5,16 @@
         id="payment_confirmation_status"
         inherit_id="website_sale.payment_confirmation_status"
     >
+        <t t-set="alert_class" position="after">
+            <t
+                t-if="tx_sudo.state == 'pending' and tx_sudo.provider_id.custom_mode == 'on_site'"
+                t-set="alert_class"
+                t-value="'alert-success'"
+            />
+        </t>
         <div id="order_reference" position="replace">
             <t t-if="tx_sudo.provider_id.custom_mode == 'on_site'">
-                <div class="mt-2">
-                    <div class="o_header_carrier_message">
-                        <b t-out="order.carrier_id.name"/>
-                        <span class="text-muted"> (In-store pickup)</span>
-                    </div>
+                <div class="mt-2 mb-3">
                     <div class="o_body_carrier_message">
                         <t t-out="order.carrier_id.website_description"/>
                     </div>

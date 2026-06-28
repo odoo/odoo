@@ -18,7 +18,7 @@ export function amountIs(method, amount) {
 
 export function addProduct(product, description = "") {
     return {
-        trigger: "div:contains('Welcome.')",
+        trigger: "div:contains('Welcome')",
         run: async () => {
             window.customerDisplayChannel = new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY");
             postMessage(product, description).run();
@@ -27,10 +27,10 @@ export function addProduct(product, description = "") {
 }
 
 export const ADD_PRODUCT =
-    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":false,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[],"change":0,"onlinePaymentData":{}}';
+    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":false,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"$ 2,972.75", "paymentLines":[],"change":0,"onlinePaymentData":{}}';
 
 export const ADD_PRODUCT_SELECTED =
-    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":true,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[],"change":0,"onlinePaymentData":{}}';
+    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":true,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"$ 2,972.75","paymentLines":[],"change":0,"onlinePaymentData":{}}';
 
 export const ADD_MULTI_PRODUCTS = (() => {
     const count = 20;
@@ -65,13 +65,13 @@ export const ADD_MULTI_PRODUCTS = (() => {
 })();
 
 export const PAY_WITH_CASH =
-    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":true,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[{"name":"Cash","amount":"2,972.75"}],"change":0,"onlinePaymentData":{}}';
+    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":true,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"$ 2,972.75", "paymentLines":[{"name":"Cash","amount":"2,972.75"}],"change":0,"onlinePaymentData":{}}';
 
 export const ORDER_IS_FINALIZED =
-    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":false,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":true,"amount":"2,972.75","paymentLines":[{"name":"Cash","amount":"2,972.75"}],"change":0,"onlinePaymentData":{}}';
+    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":false,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":true,"amount":"$ 2,972.75", "paymentLines":[{"name":"Cash","amount":"2,972.75"}],"change":0,"onlinePaymentData":{}}';
 
 export const NEW_ORDER =
-    '{"lines":[],"finalized":false,"amount":"0.00","paymentLines":[],"change":0,"onlinePaymentData":{}}';
+    '{"lines":[],"finalized":false,"amount":"$ 0.00", "paymentLines":[],"change":0,"onlinePaymentData":{}}';
 
 export const QR_URL =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -95,7 +95,7 @@ export const PAY_WITH_CARD = {
         },
     ],
     finalized: false,
-    amount: "2,972.75",
+    amount: "$ 2,972.75",
     paymentLines: [{ name: "CARD", amount: "2,972.75" }],
     change: 0,
     onlinePaymentData: {},
@@ -121,7 +121,7 @@ export const SEND_QR = {
         },
     ],
     finalized: false,
-    amount: "2,972.75",
+    amount: "$ 2,972.75",
     paymentLines: [{ name: "CARD", amount: "2,972.75" }],
     change: 0,
     onlinePaymentData: {},
@@ -150,7 +150,7 @@ export const PAY_ONLINE = {
         },
     ],
     finalized: false,
-    amount: "2,972.75",
+    amount: "$ 2,972.75",
     paymentLines: [{ name: "ONLINE", amount: "2,972.75" }],
     change: 0,
     onlinePaymentData: {
@@ -179,7 +179,7 @@ export const PAID = {
         },
     ],
     finalized: false,
-    amount: "2,972.75",
+    amount: "$ 2,972.75",
     paymentLines: [{ name: "ONLINE", amount: "2,972.75" }],
     change: 0,
     onlinePaymentData: {},

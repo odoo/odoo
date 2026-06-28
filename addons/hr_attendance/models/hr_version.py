@@ -1,27 +1,36 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields
+from odoo.fields import Domain
 
 
 class HrVersion(models.Model):
     _name = 'hr.version'
     _inherit = 'hr.version'
 
-    @api.model
-    def _domain_current_countries(self):
-        return ['|',
-            ('country_id', '=', False),
-            ('country_id', 'in', self.env.companies.country_id.ids),
-        ]
+    def _default_ruleset_id(self):
+        company_ruleset = self.env['hr.attendance.overtime.ruleset'].sudo().search([
+            ('company_id', '=', self.env.company.id),
+        ], limit=1).sudo(False)
+        if company_ruleset:
+            return company_ruleset
+        default_ruleset = self.env.ref('hr_attendance.hr_attendance_default_ruleset', raise_if_not_found=False)
+        return default_ruleset if default_ruleset and default_ruleset.sudo().active else False
 
     ruleset_id = fields.Many2one(
          "hr.attendance.overtime.ruleset",
-         domain=_domain_current_countries,
          groups="hr.group_hr_manager",
          tracking=True,
          index='btree_not_null',
-         default=lambda self: self.env.ref('hr_attendance.hr_attendance_default_ruleset', raise_if_not_found=False),
+         default=_default_ruleset_id,
     )
+
+    has_ruleset_id = fields.Boolean(compute="_compute_has_ruleset_id", groups="hr.group_hr_user")
+
+    @api.depends("ruleset_id")
+    def _compute_has_ruleset_id(self):
+        for version in self:
+            version.has_ruleset_id = version.ruleset_id
 
     @api.model
     def _get_versions_by_employee_and_date(self, employee_dates):
@@ -52,21 +61,17 @@ class HrVersion(models.Model):
 
     def action_open_version_selector(self):
         action = self.env['ir.actions.act_window']._for_xml_id('hr_attendance.hr_version_list_view_add')
-        today = fields.Date.today()
-        action['domain'] = [
-            ("ruleset_id", "=", False),
-            ("contract_date_start", "<=", today),
-            "|",
-            ("contract_date_end", "=", False),
-            ("contract_date_end", ">=", today),
-            ("employee_id", "!=", False),
-        ]
-        action['context'] = {'default_ruleset_id': self.env.context.get('default_ruleset_id', False)}
+        ruleset_id = self.env.context.get('default_ruleset_id', False)
+        action['domain'] = Domain.AND([[("ruleset_id", "!=", ruleset_id)], self.env["hr.version"]._get_current_versions_domain()])
+        action['context'] = {'default_ruleset_id': ruleset_id}
         return action
 
     def action_unassign_ruleset(self):
         self.ruleset_id = False
 
     def action_assign_ruleset(self):
-        if ruleset_id := self.env.context.get('default_ruleset_id', False):
-            self.ruleset_id = ruleset_id
+        ruleset_id = self.env.context.get('default_ruleset_id', False)
+        if not ruleset_id:
+            return
+
+        self.ruleset_id = ruleset_id

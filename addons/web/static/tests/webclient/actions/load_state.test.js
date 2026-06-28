@@ -187,7 +187,7 @@ defineModels([Partner]);
 class TestClientAction extends Component {
     static template = xml`
         <div class="test_client_action">
-            ClientAction_<t t-out="props.action.params?.description"/>
+            ClientAction_<t t-out="this.props.action.params?.description"/>
         </div>
     `;
     static props = ["*"];
@@ -1526,6 +1526,121 @@ describe(`new urls`, () => {
         ]);
     });
 
+    test("properly reload dynamic actions from sessionStorage (form view)", async () => {
+        patchWithCleanup(browser.sessionStorage, {
+            setItem(key, value) {
+                expect.step(`set ${key}-${value}`);
+                super.setItem(key, value);
+            },
+            getItem(key) {
+                const res = super.getItem(key);
+                expect.step(`get ${key}-${res}`);
+                return res;
+            },
+        });
+
+        await mountWebClient();
+
+        await getService("action").doAction(
+            {
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                views: [
+                    [false, "list"],
+                    [666, "form"],
+                ],
+            },
+            { props: { resId: 1 }, viewType: "form" }
+        );
+        await animationFrame();
+
+        expect(`.o_form_view`).toHaveCount(1);
+
+        expect.verifySteps([
+            "get menu_id-null",
+            "get current_lang-null",
+            "get current_state-null",
+            "get current_action-null",
+            'set current_state-{"actionStack":[{"displayName":"First record","model":"partner","view_type":"form","resId":1}],"resId":1,"model":"partner"}',
+            'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[false,"list"],[666,"form"]]}',
+            "set current_lang-en",
+        ]);
+
+        expect(browser.location.href).toBe("http://example.com/odoo/m-partner/1");
+
+        // Emulate a Reload
+        routerBus.trigger("ROUTE_CHANGE");
+        await animationFrame();
+        await animationFrame();
+        expect(`.o_form_view`).toHaveCount(1);
+        expect.verifySteps([
+            "get menu_id-null",
+            "get current_lang-en",
+            'get current_state-{"actionStack":[{"displayName":"First record","model":"partner","view_type":"form","resId":1}],"resId":1,"model":"partner"}',
+            'get current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[false,"list"],[666,"form"]]}',
+            'set current_state-{"actionStack":[{"displayName":"First record","model":"partner","view_type":"form","resId":1}],"resId":1,"model":"partner"}',
+            'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[false,"list"],[666,"form"]]}',
+            "set current_lang-en",
+        ]);
+    });
+
+    test("don't reload actions from sessionStorage (form view)", async () => {
+        patchWithCleanup(browser.sessionStorage, {
+            setItem(key, value) {
+                expect.step(`set ${key}-${value}`);
+                super.setItem(key, value);
+            },
+            getItem(key) {
+                const res = super.getItem(key);
+                expect.step(`get ${key}-${res}`);
+                return res;
+            },
+        });
+
+        // Prepare a stored action
+        browser.sessionStorage.setItem(
+            "current_action",
+            JSON.stringify({
+                id: 9001,
+                name: "Partners",
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                views: [
+                    [false, "list"],
+                    [666, "form"],
+                ],
+                context: {},
+            })
+        );
+
+        defineActions([
+            {
+                id: 9001,
+                name: "Partners",
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                views: [
+                    [false, "list"],
+                    [666, "form"],
+                ],
+            },
+        ]);
+
+        redirect("/odoo/m-partner/1");
+        await mountWebClient();
+        expect(`.o_form_view`).toHaveCount(1);
+        expect.verifySteps([
+            'set current_action-{"id":9001,"name":"Partners","type":"ir.actions.act_window","res_model":"partner","views":[[false,"list"],[666,"form"]],"context":{}}',
+            "get menu_id-null",
+            "get current_lang-null",
+            "get current_state-null",
+            'get current_action-{"id":9001,"name":"Partners","type":"ir.actions.act_window","res_model":"partner","views":[[false,"list"],[666,"form"]],"context":{}}',
+            'set current_state-{"actionStack":[{"displayName":"First record","model":"partner","view_type":"form","resId":1}],"resId":1,"model":"partner"}',
+            'set current_action-{"res_model":"partner","res_id":1,"type":"ir.actions.act_window","views":[[false,"form"]]}',
+            "set current_lang-en",
+        ]);
+    });
+
     test("menu jumping fix: multiple menus sharing same action", async () => {
         // Test case for menu jumping issue when multiple menus share the same action
         // Scenario: User navigates to Sale->Customers, then F5 reload should stay in Sale, not jump to Account
@@ -1883,6 +1998,24 @@ describe(`new urls`, () => {
         await runAllTimers();
         // assert that we properly reload action and breacrumbs as lang changed
         expect.verifySteps(["/web/action/load_breadcrumbs", "/web/action/load"]);
+    });
+
+    test(`switch to form view after reload`, async () => {
+        redirect("/odoo/action-3/2");
+
+        await mountWebClient();
+        expect(`.o_form_view`).toHaveCount(1);
+        expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+            "Partners",
+            "Second record",
+        ]);
+
+        await getService("action").switchView("form", { resId: 5 });
+        expect(`.o_form_view`).toHaveCount(1);
+        expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+            "Partners",
+            "Fifth record",
+        ]);
     });
 });
 

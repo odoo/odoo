@@ -10,6 +10,7 @@
         'views/fleet_vehicle_views.xml',
         'views/fleet_vehicle_log_services_views.xml',
         'views/account_account_views.xml',
+        'views/report_invoice.xml',
     ],
     'auto_install': True,
     'author': 'Odoo S.A.',

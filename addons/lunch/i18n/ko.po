@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-03 17:36+0000\n"
 "PO-Revision-Date: 2026-01-15 21:49+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/lunch/"
@@ -126,13 +126,13 @@ msgid ""
 "<t>\n"
 "<t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
 "<t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
-"<t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order."
-"get('currency_id'))\"/>\n"
+"<t t-set=\"currency\" t-"
+"value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "<p>\n"
 "Dear <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "</p><p>\n"
-"Here is, today orders for <t t-out=\"order.get('company_name', "
-"'')\">LunchCompany</t>:\n"
+"Here is, today orders for <t t-out=\"order.get('company_name', '')"
+"\">LunchCompany</t>:\n"
 "</p>\n"
 "\n"
 "<t t-if=\"sites\">\n"
@@ -206,8 +206,8 @@ msgstr ""
 "<t>\n"
 "<t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
 "<t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
-"<t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order."
-"get('currency_id'))\"/>\n"
+"<t t-set=\"currency\" t-"
+"value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "<p>\n"
 "안녕하세요 <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>님,\n"
 "</p><p>\n"
@@ -380,7 +380,7 @@ msgstr "주의"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Already Paid"
-msgstr "이미 결제가 완료되었습니다"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__amount
@@ -582,7 +582,7 @@ msgstr "시/군/구"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Clear Order"
-msgstr "주문서 내용 삭제"
+msgstr ""
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
@@ -1249,32 +1249,32 @@ msgid "Lunch: Supplier Order"
 msgstr "점심: 공급업체 주문"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_236
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_237
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "점심: 채팅 알림 (오피스 3)"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr "점심: Coin gourmand으로 자동 이메일 발송"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_232
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_233
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "점심: 공급업체로 자동 이메일 발송"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr "점심: Pizza Inn으로 자동 이메일 발송"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_240
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_241
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr "점심: 초밥 전문점으로 자동 이메일 발송"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_240
 msgid "Lunch: send automatic email to The Corner"
 msgstr "점심: The Corner로 자동 이메일 발송"
 
@@ -1431,7 +1431,7 @@ msgstr "아직 이체 없음"
 #. odoo-javascript
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
 msgid "No location found"
-msgstr "위치를 찾을 수 없음"
+msgstr ""
 
 #. module: lunch
 #. odoo-javascript
@@ -1557,7 +1557,7 @@ msgstr "주문 마감일이 경과함"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Order Now"
-msgstr "지금 주문하기"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__automatic_email_time
@@ -1598,7 +1598,7 @@ msgstr "초과"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Passed orders"
-msgstr "승인 완료 주문서"
+msgstr ""
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_pasta
@@ -1655,7 +1655,7 @@ msgstr "베지테리언 피자"
 #. odoo-javascript
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
 msgid "Please create a location to start ordering."
-msgstr "주문을 시작할 위치를 생성하세요."
+msgstr ""
 
 #. module: lunch
 #: model_terms:lunch.alert,message:lunch.alert_office_3
@@ -1727,6 +1727,11 @@ msgstr "품목 검색"
 #: code:addons/lunch/models/lunch_order.py:0
 msgid "Product is no longer available."
 msgstr "해당 품목은 더 이상 제공되지 않습니다."
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
+msgid "Product's Name"
+msgstr ""
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action
@@ -2087,7 +2092,7 @@ msgstr "주문 대기 중"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "To Pay"
-msgstr "결제 대기 중"
+msgstr ""
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_payment_dialog
@@ -2290,7 +2295,7 @@ msgstr "적어도 하나 이상 %s을 주문해야 합니다."
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Your Cart ("
-msgstr "장바구니 보기 ("
+msgstr ""
 
 #. module: lunch
 #. odoo-python
@@ -2371,3 +2376,9 @@ msgstr "있음"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_kanban
 msgid "to"
 msgstr "종료"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+msgid "x"
+msgstr ""

@@ -1,6 +1,8 @@
 export const scrollToSelected = (containerRef, callback, padding = 8) => {
     const scrollToSelected = (itemEl) => {
-        const containerEl = containerRef.el;
+        // Transitional: Owl 3 native refs are signals (call to read the element);
+        // legacy refs expose `.el`. Resolve the element once, supporting both.
+        const containerEl = typeof containerRef === "function" ? containerRef() : containerRef?.el;
         const itemRect = itemEl.getBoundingClientRect();
         const containerRect = containerEl.getBoundingClientRect();
         const leftOverflow = itemRect.left - containerRect.left;

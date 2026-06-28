@@ -12,11 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'name': _('Common'),
             'visible': 0,
             'code_digits': 4,
-            'use_storno_accounting': True,
-            'property_account_receivable_id': 'l10n_cn_common_account_1122',
-            'property_account_payable_id': 'l10n_cn_common_account_2202',
-            'property_stock_valuation_account_id': 'l10n_cn_common_account_1405',
-            'property_stock_account_production_cost_id': 'l10n_cn_common_account_1411',
         }
 
     @template('cn_common', 'res.company')
@@ -24,11 +19,15 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.cn',
-                'bank_account_code_prefix': '1002',
+                'bank_account_code_prefix': '1002.01',
                 'cash_account_code_prefix': '1001',
                 'deferred_expense_account_id': 'l10n_cn_common_account_1801',
                 'deferred_revenue_account_id': 'l10n_cn_common_account_2401',
+                'receivable_account_id': 'l10n_cn_common_account_1122',
+                'payable_account_id': 'l10n_cn_common_account_2202',
                 'account_default_pos_receivable_account_id': 'l10n_cn_common_account_112201',
+                'account_stock_valuation_id': 'l10n_cn_common_account_1405',
+                'stock_account_production_cost_id': 'l10n_cn_common_account_1411',
             },
         }
 
@@ -40,5 +39,5 @@ class AccountChartTemplate(models.AbstractModel):
                 'type': 'cash',
                 'default_account_id': 'l10n_cn_common_account_1001',
             },
-            'bank': {'default_account_id': 'l10n_cn_common_account_1002'},
+            'bank': {'default_account_id': 'l10n_cn_common_account_100201'},
         }

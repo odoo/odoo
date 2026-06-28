@@ -56,7 +56,7 @@
     height: calc(100dvh - var(--kiosk-searchBar-height));
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     grid-template-rows: max-content;
-    
+
     img {
         width:4rem;
     }
@@ -104,10 +104,14 @@
 .o_hr_attendance_kiosk_body {
     height: 100vh;
     overflow: hidden;
+    .modal-dialog.modal-sm {
+        max-width: #{$o-modal-sm};
+    }
 }
 
 .o_select_employee{
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 0.5rem;
     @include media-breakpoint-down(sm){
@@ -121,6 +125,7 @@
     align-items: center;
     width: 100%;
     cursor: pointer;
+    position: relative;
 
     &:focus-within {
         border-color: $input-focus-border-color;
@@ -138,7 +143,9 @@
 
 .o_select_employee_option {
     width: 100%;
-    position: relative;
+    .o-autocomplete {
+        position: static;
+    }
     .o-autocomplete--input {
         width: 100%;
         font-family: $input-font-family;
@@ -157,9 +164,10 @@
 
     .o-autocomplete--dropdown-menu {
         position: absolute !important;
-        width:110%;
-        left:-5% !important;
-        top:42px !important;
+        width:100%;
+        left:0% !important;
+        max-width: 100%;
+        top: calc( 100% + 4px ) !important;
         max-height: 300px!important;
         overflow-y: auto;
         .dropdown-item {

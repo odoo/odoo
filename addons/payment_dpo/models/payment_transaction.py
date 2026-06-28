@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
 
@@ -43,6 +43,7 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
+        pm_code = const.PAYMENT_METHODS_MAPPING.get(self.payment_method_id.code)
         return_url = urls.urljoin(self.provider_id.get_base_url(), DPOController._return_url)
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         create_date = self.create_date.strftime("%Y/%m/%d %H:%M")
@@ -52,6 +53,7 @@ class PaymentTransaction(models.Model):
             f"<CompanyToken>{self.provider_id.dpo_company_token}</CompanyToken>"
             f"<Request>createToken</Request>"
             f"<Transaction>"
+            f"<DefaultPayment>{pm_code}</DefaultPayment>"
             f"<PaymentAmount>{self.amount}</PaymentAmount>"
             f"<PaymentCurrency>{self.currency_id.name}</PaymentCurrency>"
             f"<CompanyRef>{self.reference}</CompanyRef>"
@@ -88,15 +90,6 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("CompanyRef")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "dpo":
-            return super()._extract_amount_data(payment_data)
-
-        amount = payment_data.get("TransactionAmount")
-        currency_code = payment_data.get("TransactionCurrency")
-        return {"amount": float(amount), "currency_code": currency_code}
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "dpo":
@@ -117,7 +110,7 @@ class PaymentTransaction(models.Model):
             self._set_canceled()
         elif status_code in const.PAYMENT_STATUS_MAPPING["error"]:
             self._set_error(
-                _(
+                self.env._(
                     "An error occurred during processing of your payment (code %(code)s:"
                     " %(explanation)s). Please try again.",
                     code=status_code,
@@ -130,4 +123,13 @@ class PaymentTransaction(models.Model):
                 status_code,
                 self.reference,
             )
-            self._set_error(_("Unknown status code: %s", status_code))
+            self._set_error(self.env._("Unknown status code: %s", status_code))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "dpo":
+            return super()._extract_amount_data(payment_data)
+
+        amount = payment_data.get("TransactionAmount")
+        currency_code = payment_data.get("TransactionCurrency")
+        return {"amount": float(amount), "currency_code": currency_code}

@@ -1,6 +1,6 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, edit, queryOne, queryText } from "@odoo/hoot-dom";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Macro } from "@web/core/macro";
@@ -34,12 +34,12 @@ class TestComponent extends Component {
             <p><button class="btn inc" t-on-click="() => this.state.value++">increment</button></p>
             <p><button class="btn dec" t-on-click="() => this.state.value--">decrement</button></p>
             <p><button class="btn double" t-on-click="() => this.state.value = 2*this.state.value">double</button></p>
-            <span class="value"><t t-out="state.value"/></span>
+            <span class="value"><t t-out="this.state.value"/></span>
             <input />
         </div>`;
     static props = ["*"];
     setup() {
-        this.state = useState({ value: 0 });
+        this.state = proxy({ value: 0 });
     }
 }
 

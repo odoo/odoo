@@ -5,6 +5,7 @@ import functools
 
 from odoo.tests.common import tagged, BaseCase
 from odoo.tools import frozendict, lazy
+from odoo.tools.func import classproperty, lazy_classproperty, reset_lazy_classproperties
 from odoo import Command
 
 
@@ -76,3 +77,116 @@ class TestLazy(BaseCase):
         self.assertEqual(lazy(lambda: Obj(1)) == lazy(lambda: Obj(42)), False)
         self.assertEqual(lazy(lambda: Obj(42)) != lazy(lambda: Obj(42)), False)
         self.assertEqual(lazy(lambda: Obj(1)) != lazy(lambda: Obj(42)), True)
+
+
+class TestClassproperty(BaseCase):
+    def test_classproperty(self):
+        count = 0
+
+        class Foo:
+            @classproperty
+            def value(cls):
+                nonlocal count
+                count += 1
+                return count
+
+        self.assertEqual(Foo.value, 1)
+        self.assertEqual(Foo.value, 2)
+        self.assertEqual(Foo().value, 3)
+        self.assertEqual(Foo.value, 4)
+
+    def test_classproperty_inheritance(self):
+        count = 0
+
+        class Parent:
+            @classproperty
+            def data(cls):
+                nonlocal count
+                count += 1
+                return f"{count}-{cls.__name__}"
+
+        class ChildA(Parent):
+            pass
+
+        class ChildB(Parent):
+            pass
+
+        class GrandChildA(ChildA):
+            pass
+
+        self.assertEqual(Parent.data, '1-Parent')
+        self.assertEqual(Parent.data, '2-Parent')
+        self.assertEqual(Parent().data, '3-Parent')
+
+        self.assertEqual(GrandChildA.data, '4-GrandChildA')
+        self.assertEqual(GrandChildA.data, '5-GrandChildA')
+        self.assertEqual(GrandChildA().data, '6-GrandChildA')
+
+        self.assertEqual(ChildA.data, '7-ChildA')
+        self.assertEqual(ChildA.data, '8-ChildA')
+        self.assertEqual(ChildA().data, '9-ChildA')
+
+        self.assertEqual(ChildB.data, '10-ChildB')
+        self.assertEqual(ChildB.data, '11-ChildB')
+        self.assertEqual(ChildB().data, '12-ChildB')
+
+    def test_reset_lazy_classproperty(self):
+        class Foo:
+            count = 0
+
+            @lazy_classproperty
+            def value(cls):
+                cls.count += 1
+                return cls.count
+
+        self.assertEqual(Foo.value, 1)
+        self.assertEqual(Foo.value, 1)
+        self.assertEqual(Foo().count, 1)
+        self.assertEqual(Foo.value, 1)
+
+        reset_lazy_classproperties(Foo)
+        self.assertEqual(Foo.value, 2)
+        self.assertEqual(Foo.value, 2)
+        self.assertEqual(Foo().count, 2)
+        self.assertEqual(Foo.value, 2)
+
+    def test_lazy_classproperty_inheritance(self):
+        count = 0
+
+        class Parent:
+            @lazy_classproperty
+            def data(cls):
+                nonlocal count
+                count += 1
+                return f"{count}-{cls.__name__}"
+
+        class ChildA(Parent):
+            pass
+
+        class ChildB(Parent):
+            pass
+
+        class GrandChildA(ChildA):
+            pass
+
+        self.assertEqual(Parent.data, '1-Parent')
+        self.assertEqual(Parent.data, '1-Parent')
+        self.assertEqual(Parent().data, '1-Parent')
+
+        self.assertEqual(GrandChildA.data, '2-GrandChildA')
+        self.assertEqual(GrandChildA.data, '2-GrandChildA')
+        self.assertEqual(GrandChildA().data, '2-GrandChildA')
+
+        self.assertEqual(ChildA.data, '3-ChildA')
+        self.assertEqual(ChildA.data, '3-ChildA')
+        self.assertEqual(ChildA().data, '3-ChildA')
+
+        self.assertEqual(ChildB.data, '4-ChildB')
+        self.assertEqual(ChildB.data, '4-ChildB')
+        self.assertEqual(ChildB().data, '4-ChildB')
+
+        reset_lazy_classproperties(ChildA)
+        self.assertEqual(ChildA.data, '5-ChildA')
+        self.assertEqual(Parent.data, '1-Parent')
+        self.assertEqual(ChildB.data, '4-ChildB')
+        self.assertEqual(GrandChildA().data, '6-GrandChildA')

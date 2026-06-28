@@ -10,7 +10,7 @@ class TestLivechatUI(HttpCaseWithUserDemo, TestLivechatCommon):
         super().setUp()
         self.visitor_tour = self.env['website.visitor'].create({
             'access_token': 'f9d2e784d3d96a904fca2f5e2a559a19',
-            'website_id': self.env.ref('website.default_website').id,
+            'website_id': self.env.ref('base.default_website').id,
         })
         self.target_visitor = self.visitor_tour
 

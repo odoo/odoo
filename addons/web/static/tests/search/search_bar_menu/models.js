@@ -10,6 +10,13 @@ export class Foo extends models.Model {
         definition_record: "parent_id",
         definition_record_field: "properties_definition",
     });
+    selection = fields.Selection({
+        selection: [
+            ["abc", "ABC"],
+            ["def", "DEF"],
+            ["ghi", "GHI"],
+        ],
+    });
 
     _views = {
         search: `

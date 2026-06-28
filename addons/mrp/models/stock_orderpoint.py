@@ -22,9 +22,8 @@ class StockWarehouseOrderpoint(models.Model):
     )
 
     def _inverse_route_id(self):
-        for orderpoint in self:
-            if not orderpoint.route_id:
-                orderpoint.bom_id = False
+        orderpoints_to_update = self.filtered(lambda o: o.bom_id and not o.route_id)
+        orderpoints_to_update.bom_id = False
         super()._inverse_route_id()
 
     def _get_replenishment_order_notification(self):
@@ -90,7 +89,7 @@ class StockWarehouseOrderpoint(models.Model):
     def _inverse_bom_id(self):
         for orderpoint in self:
             if not orderpoint.route_id and orderpoint.bom_id:
-                orderpoint.route_id = self.env['stock.rule'].search([('action', '=', 'manufacture')])[0].route_id
+                orderpoint.route_id = orderpoint._get_default_route(force_action="manufacture")
 
     @api.depends('effective_route_id', 'bom_id', 'rule_ids', 'product_id.bom_ids')
     def _compute_bom_id_placeholder(self):
@@ -105,7 +104,11 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _search_effective_bom_id(self, operator, value):
         boms = self.env['mrp.bom'].search([('id', operator, value)])
-        orderpoints = self.env['stock.warehouse.orderpoint'].search([]).filtered(
+        orderpoints = self.env['stock.warehouse.orderpoint'].search([
+            '|',
+            ('product_id.variant_bom_ids', 'in', boms.ids),
+            ('product_id.bom_ids', 'in', boms.ids),
+        ]).filtered(
             lambda orderpoint: orderpoint.effective_bom_id in boms
         )
         return [('id', 'in', orderpoints.ids)]
@@ -123,14 +126,16 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.days_to_order = boms and boms[0].days_to_prepare_mo or 0
         return res
 
-    def _get_default_route(self):
-        route_ids = self.env['stock.rule'].search([
-            ('action', '=', 'manufacture')
-        ]).route_id
-        route_id = self.rule_ids.route_id & route_ids
-        if self.product_id.bom_ids and route_id:
-            return route_id[0]
-        return super()._get_default_route()
+    def _get_default_route(self, force_action=False):
+        self.ensure_one()
+        if not force_action or force_action == 'manufacture':
+            if self.product_id.bom_ids:
+                route_id = self.rule_ids.filtered(lambda r: r.action == 'manufacture').route_id
+                if route_id:
+                    return route_id[0]
+            if force_action:
+                return self.env['stock.route']
+        return super()._get_default_route(force_action=force_action)
 
     def _get_default_bom(self):
         self.ensure_one()
@@ -181,26 +186,25 @@ class StockWarehouseOrderpoint(models.Model):
             product_qty = min(ratios_total or [0]) - min(ratios_qty_available or [0])
             res[orderpoint.id] = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.uom_id, round=False)
 
-        bom_manufacture = self.env['mrp.bom']._bom_find(orderpoints_without_kit.product_id, bom_type='normal')
-        bom_manufacture = self.env['mrp.bom'].concat(bom_manufacture.values())
         # add quantities coming from draft MOs
         productions_group = self.env['mrp.production']._read_group(
             [
-                ('bom_id', 'in', bom_manufacture.ids),
                 ('state', '=', 'draft'),
-                ('orderpoint_id', 'in', orderpoints_without_kit.ids),
+                ('product_id', 'in', orderpoints_without_kit.product_id.ids),
+                ('forecasted_location_id', 'in', orderpoints_without_kit.location_id.ids),
                 ('id', 'not in', self.env.context.get('ignore_mo_ids', [])),
             ],
-            ['orderpoint_id', 'uom_id'],
-            ['product_qty:sum'])
-        for orderpoint, uom, product_qty_sum in productions_group:
-            res[orderpoint.id] += uom._compute_quantity(
-                product_qty_sum, orderpoint.uom_id, round=False)
+            ['product_id', 'forecasted_location_id'],
+            ['product_uom_qty:sum'],
+        )
+        orderpoint_map = {(op.product_id.id, op.location_id.id): op for op in orderpoints_without_kit}
+        for product, location, qty in productions_group:
+            if orderpoint := orderpoint_map.get((product.id, location.id)):
+                res[orderpoint.id] += qty
 
         # add quantities coming from confirmed MO to be started but not finished
         # by the end of the stock forecast
         in_progress_productions = self.env['mrp.production'].search([
-            ('bom_id', 'in', bom_manufacture.ids),
             ('state', '=', 'confirmed'),
             ('orderpoint_id', 'in', orderpoints_without_kit.ids),
             ('id', 'not in', self.env.context.get('ignore_mo_ids', [])),
@@ -220,11 +224,12 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _post_process_scheduler(self):
         """ Confirm the productions only after all the orderpoints have run their
-        procurement to avoid the new procurement created from the production conflict
-        with them. """
+        procurement and when auto_confirm_production is enabled,
+        to avoid the new procurement created from the production conflict with them.
+        """
         self.env['mrp.production'].sudo().search([
             ('orderpoint_id', 'in', self.ids),
-            ('move_raw_ids', '!=', False),
+            ('picking_type_id.auto_confirm_production', '=', True),
             ('state', '=', 'draft'),
         ]).action_confirm()
         return super()._post_process_scheduler()

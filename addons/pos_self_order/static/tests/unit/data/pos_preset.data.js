@@ -3,12 +3,21 @@ import { PosPreset } from "@point_of_sale/../tests/unit/data/pos_preset.data";
 
 patch(PosPreset.prototype, {
     _load_pos_data_fields() {
-        return [...super._load_pos_data_fields(), "mail_template_id"];
+        return [
+            ...super._load_pos_data_fields(),
+            "mail_template_id",
+            "available_in_self",
+            "service_at",
+        ];
     },
 });
 
 PosPreset._records = [
-    ...PosPreset._records,
+    ...PosPreset._records.map((preset) => ({
+        ...preset,
+        available_in_self: true,
+        service_at: "counter",
+    })),
     {
         id: 10,
         name: "Self-Takeout",

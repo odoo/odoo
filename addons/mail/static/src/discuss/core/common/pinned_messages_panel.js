@@ -1,33 +1,29 @@
 import { MessageCardList } from "@mail/core/common/message_card_list";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
+import { useOnChange } from "@mail/utils/common/hooks";
 
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
-/**
- * @typedef {Object} Props
- * @property {import("@mail/core/common/thread_model").Thread} thread
- * @property {string} [className]
- * @extends {Component<Props, Env>}
- */
 export class PinnedMessagesPanel extends Component {
     static components = {
         MessageCardList,
         ActionPanel,
     };
-    static props = ["close?", "channel", "className?"];
     static template = "discuss.PinnedMessagesPanel";
 
     setup() {
         super.setup();
-        onWillStart(() => {
-            this.props.channel.fetchPinnedMessages();
+        this.store = useService("mail.store");
+        this.props = props({
+            channel: t.instanceOf(this.store["discuss.channel"].Class),
+            close: t.function([t.instanceOf(MouseEvent)]).optional(),
         });
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.channel.notEq(this.props.channel)) {
-                nextProps.channel.fetchPinnedMessages();
-            }
-        });
+        useOnChange(
+            () => [this.props.channel],
+            (channel) => channel.fetchPinnedMessages()
+        );
     }
 
     /**

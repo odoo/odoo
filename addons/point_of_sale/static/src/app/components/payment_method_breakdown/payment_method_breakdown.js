@@ -1,17 +1,13 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { AccordionItem } from "@point_of_sale/app/components/accordion_item/accordion_item";
 
 export class PaymentMethodBreakdown extends Component {
     static components = { AccordionItem };
     static template = "point_of_sale.PaymentMethodBreakdown";
 
-    static props = {
-        title: String,
-        total_amount: Number,
-        transactions: { type: Array, optional: true },
-    };
-
-    static defaultProps = {
-        transactions: [],
-    };
+    props = props({
+        title: t.string(),
+        total_amount: t.number(),
+        transactions: t.array().optional([]),
+    });
 }

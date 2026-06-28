@@ -1,5 +1,5 @@
 import { useComponent } from "@web/owl2/utils";
-import { markup, onWillDestroy, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { effect, markup, onWillDestroy, onWillStart, onWillUpdateProps, untrack } from "@odoo/owl";
 import { evalPartialContext, makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import {
@@ -8,15 +8,12 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
-import { x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { omit } from "@web/core/utils/objects";
-import { effect } from "@web/core/utils/reactive";
-import { batched } from "@web/core/utils/timing";
 import { orderByToString } from "@web/search/utils/order_by";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { uniqueId } from "@web/core/utils/functions";
 import { unique } from "@web/core/utils/arrays";
 
 const granularityToInterval = {
@@ -62,7 +59,8 @@ export function makeActiveField({
 export const AGGREGATABLE_FIELD_TYPES = ["float", "integer", "monetary"]; // types that can be aggregated in grouped views
 
 export function addFieldDependencies(activeFields, fields, fieldDependencies = []) {
-    for (const field of fieldDependencies) {
+    for (let field of fieldDependencies) {
+        field = { ...field };
         if (!("readonly" in field)) {
             field.readonly = true;
         }
@@ -99,6 +97,7 @@ export function addFieldDependencies(activeFields, fields, fieldDependencies = [
 
 function completeActiveField(activeField, extra) {
     if (extra.related) {
+        activeField.related = activeField.related || { activeFields: {}, fields: {} };
         for (const fieldName in extra.related.activeFields) {
             if (fieldName in activeField.related.activeFields) {
                 completeActiveField(
@@ -506,8 +505,7 @@ export function parseServerValue(field, value) {
             };
         }
         case "many2one_reference": {
-            if (value === 0) {
-                // unset many2one_reference fields' value is 0
+            if (!value) {
                 return false;
             }
             if (typeof value === "number") {
@@ -766,49 +764,32 @@ export function isRelational(field) {
  */
 export function useRecordObserver(callback) {
     const component = useComponent();
-    let currentId;
-    const observeRecord = (props) => {
-        currentId = uniqueId();
-        if (!props.record) {
-            return;
-        }
-        const { promise, resolve, reject } = Promise.withResolvers();
-        const effectId = currentId;
-        let firstCall = true;
-        effect(
-            (record) => {
-                if (firstCall) {
-                    firstCall = false;
-                    return Promise.resolve(callback(record, props)).then(resolve).catch(reject);
-                } else {
-                    return batched(
-                        (record) => {
-                            if (effectId !== currentId) {
-                                // effect doesn't clean up when the component is unmounted.
-                                // We must do it manually.
-                                return;
-                            }
-                            return Promise.resolve(callback(record, props))
-                                .then(resolve)
-                                .catch(reject);
-                        },
-                        () => new Promise((res) => window.requestAnimationFrame(res))
-                    )(record);
-                }
-            },
-            [props.record]
+    let prom;
+    let props = component.props;
+    const observeRecord = () => {
+        // Read props inside untrack: with reactive props, reading them here would
+        // subscribe the effect to every prop signal, so any parent re-render
+        // producing a non-identical prop value (e.g. a fresh `context` object)
+        // would re-run the callback. Only reactive reads made by the callback
+        // itself (record values) should re-trigger it; prop updates are handled
+        // by onWillUpdateProps below.
+        const currentProps = untrack(() => ({ ...props }));
+        prom = Promise.resolve(callback(currentProps.record, currentProps)).then(() =>
+            component.render()
         );
-        return promise;
+        return prom;
     };
-    onWillDestroy(() => {
-        currentId = uniqueId();
-    });
-    onWillStart(() => observeRecord(component.props));
+    let cleanup = effect(() => observeRecord());
+    onWillStart(() => prom);
     onWillUpdateProps((nextProps) => {
         if (nextProps.record !== component.props.record) {
-            return observeRecord(nextProps);
+            props = nextProps;
+            cleanup();
+            cleanup = effect(() => observeRecord());
+            return prom;
         }
     });
+    onWillDestroy(cleanup);
 }
 
 /**
@@ -905,4 +886,31 @@ export async function resequence({
         records.splice(0, records.length, ...originalOrder);
         throw error;
     }
+}
+
+export function getScheduleORMExtras(model, records) {
+    const extras = {
+        actionId: model.env.config.actionId,
+        actionName: model.env.config.actionName,
+        viewType: model.env.config.viewType,
+        timeStamp: Date.now(),
+    };
+    if (records.length > 1) {
+        extras.displayNames = records.map((r) => getOfflineDisplayName(r));
+        extras.displayName = _t("%s Records", records.length);
+    } else {
+        extras.displayName = getOfflineDisplayName(records[0]);
+    }
+    return extras;
+}
+
+export function getOfflineDisplayName(record) {
+    return (
+        record.data.complete_name ||
+        record.data.name ||
+        record.data.display_name ||
+        record.data.x_name ||
+        record.data.x_studio_name ||
+        _t("Record")
+    );
 }

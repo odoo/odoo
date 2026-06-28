@@ -1,5 +1,5 @@
-import { useComponent, useExternalListener, useLayoutEffect } from "@web/owl2/utils";
-import { onMounted } from "@odoo/owl";
+import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { onMounted, useListener } from "@odoo/owl";
 
 export const scrollSymbol = Symbol("scroll");
 
@@ -71,11 +71,11 @@ export function useSetupAction(params = {}) {
     } = params;
 
     if (beforeVisibilityChange) {
-        useExternalListener(document, "visibilitychange", beforeVisibilityChange);
+        useListener(document, "visibilitychange", beforeVisibilityChange);
     }
 
     if (beforeUnload) {
-        useExternalListener(window, "beforeunload", beforeUnload);
+        useListener(window, "beforeunload", beforeUnload);
     }
     if (__beforeLeave__ && beforeLeave) {
         useCallbackRecorder(__beforeLeave__, beforeLeave);
@@ -90,17 +90,23 @@ export function useSetupAction(params = {}) {
         });
     }
 
+    // Transitional check: Owl 3 native refs are signals (element obtained by
+    // calling the ref), while legacy refs expose `.el`. Resolve the element
+    // lazily at read time, mirroring the timing of the legacy `.el` getter.
+    const getRootEl = () => (typeof rootRef === "function" ? rootRef() : rootRef?.el);
+
     function setScrollFromState() {
         const { state } = component.props;
         const scrolling = state && state[scrollSymbol];
         if (scrolling) {
+            const rootEl = getRootEl();
             if (component.env.isSmall) {
-                rootRef.el.scrollTop = (scrolling.root && scrolling.root.top) || 0;
-                rootRef.el.scrollLeft = (scrolling.root && scrolling.root.left) || 0;
+                rootEl.scrollTop = (scrolling.root && scrolling.root.top) || 0;
+                rootEl.scrollLeft = (scrolling.root && scrolling.root.left) || 0;
             } else if (scrolling.content) {
                 const contentEl =
-                    rootRef.el.querySelector(".o_component_with_search_panel > .o_renderer") ||
-                    rootRef.el.querySelector(".o_content");
+                    rootEl.querySelector(".o_component_with_search_panel > .o_renderer") ||
+                    rootEl.querySelector(".o_content");
                 if (contentEl) {
                     contentEl.scrollTop = scrolling.content.top || 0;
                     contentEl.scrollLeft = scrolling.content.left || 0;
@@ -115,14 +121,15 @@ export function useSetupAction(params = {}) {
                 Object.assign(state, getLocalState());
             }
             if (rootRef) {
+                const rootEl = getRootEl();
                 if (component.env.isSmall) {
                     state[scrollSymbol] = {
-                        root: { left: rootRef.el.scrollLeft, top: rootRef.el.scrollTop },
+                        root: { left: rootEl.scrollLeft, top: rootEl.scrollTop },
                     };
                 } else {
                     const contentEl =
-                        rootRef.el.querySelector(".o_component_with_search_panel > .o_renderer") ||
-                        rootRef.el.querySelector(".o_content");
+                        rootEl.querySelector(".o_component_with_search_panel > .o_renderer") ||
+                        rootEl.querySelector(".o_content");
                     if (contentEl) {
                         state[scrollSymbol] = {
                             content: { left: contentEl.scrollLeft, top: contentEl.scrollTop },

@@ -4,7 +4,6 @@ import { CallSettings } from "@mail/discuss/call/common/call_settings";
 
 export class DiscussCallSettingsClientAction extends Component {
     static components = { CallSettings };
-    static props = ["*"];
     static template = "mail.DiscussCallSettingsClientAction";
 }
 

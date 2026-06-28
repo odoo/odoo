@@ -1,5 +1,5 @@
-import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 /**
@@ -13,8 +13,8 @@ import { KeepLast } from "@web/core/utils/concurrency";
  *
  *      e.g.:
  *          PageTemplate.template = xml`
-                    <h1 t-out="props.heading" />
-                    <p t-out="props.text" />`;
+                    <h1 t-out="this.props.heading" />
+                    <p t-out="this.props.text" />`;
 
  *      `pages` could be:
  *      [
@@ -51,31 +51,27 @@ import { KeepLast } from "@web/core/utils/concurrency";
  * @extends Component
  */
 
+export const notebookProps = {
+    slots: t.object().optional(),
+    pages: t.array().optional(),
+    class: t.any().optional(),
+    className: t.string().optional(""),
+    defaultPage: t.string().optional(),
+    orientation: t.string().optional("horizontal"),
+    icons: t.object().optional(),
+    onPageUpdate: t.function().optional(() => () => {}),
+    onWillActivatePage: t.function().optional(() => () => {}),
+};
+
 export class Notebook extends Component {
     static template = "web.Notebook";
-    static defaultProps = {
-        className: "",
-        orientation: "horizontal",
-        onPageUpdate: () => {},
-        onWillActivatePage: () => {},
-    };
-    static props = {
-        slots: { type: Object, optional: true },
-        pages: { type: Object, optional: true },
-        class: { optional: true },
-        className: { type: String, optional: true },
-        defaultPage: { type: String, optional: true },
-        orientation: { type: String, optional: true },
-        icons: { type: Object, optional: true },
-        onPageUpdate: { type: Function, optional: true },
-        onWillActivatePage: { type: Function, optional: true },
-    };
+    props = props(notebookProps);
 
     setup() {
         this.activePane = useRef("activePane");
         this.pages = this.computePages(this.props);
         this.invalidPages = new Set();
-        this.state = useState({ currentPage: null });
+        this.state = proxy({ currentPage: null });
         this.state.currentPage = this.computeActivePage(this.props.defaultPage, true);
         this.keepLastPageTransition = new KeepLast();
         useLayoutEffect(

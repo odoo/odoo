@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
@@ -38,10 +37,11 @@ export class KanbanHeader extends Component {
         progressBarState: { type: true, optional: true },
     };
 
+    rootRef = signal(null);
+
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
-        this.rootRef = useRef("root");
         this.popover = usePopover(KanbanHeaderTooltip);
         this.onTitleMouseEnter = useDebounced(this.onTitleMouseEnter, 400);
         this.odoomark = odoomark;

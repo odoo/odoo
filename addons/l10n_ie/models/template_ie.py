@@ -9,10 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('ie')
     def _get_ie_template_data(self):
         return {
-            'property_account_receivable_id': 'l10n_ie_account_2100',
-            'property_account_payable_id': 'l10n_ie_account_34',
-            'property_stock_valuation_account_id': 'l10n_ie_account_630',
-            'property_advance_tax_payment_account_id': 'l10n_ie_account_2132',
             'code_digits': '6',
         }
 
@@ -35,6 +31,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'ie_tax_purchase_goods_23',
                 'expense_account_id': 'l10n_ie_account_60',
                 'income_account_id': 'l10n_ie_account_70',
+                'receivable_account_id': 'l10n_ie_account_2100',
+                'payable_account_id': 'l10n_ie_account_34',
                 'account_stock_valuation_id': 'l10n_ie_account_2000',
             },
         }

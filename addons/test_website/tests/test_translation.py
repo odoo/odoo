@@ -15,6 +15,8 @@ class TestTranslation(HttpCase):
     def _single_language_fr_user_en_site(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'translation_single_language_fr_user_en_site', login='admin')
 
+    # FIXME: race condition for this following tests
+
     def _multi_language_fr_user_fr_en_site(self):
         self.start_tour(self.env['website'].get_client_action_url('/fr'), 'translation_multi_language_fr_user_fr_en_site', login='admin', timeout=250)
 

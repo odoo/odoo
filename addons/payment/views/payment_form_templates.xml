@@ -18,8 +18,8 @@
             - amount: The amount to pay.
             - currency: The currency of the payment, as a `res.currency` record.
             - partner_id: The id of the partner on behalf of whom the payment should be made.
-            - providers_sudo: The compatible providers, as a sudoed `payment.provider` recordset.
-            - payment_methods_sudo: The compatible payment methods, as a sudoed `payment.method`
+            - providers_sudo: The available providers, as a sudoed `payment.provider` recordset.
+            - payment_methods_sudo: The available payment methods, as a sudoed `payment.method`
                                     recordset.
             - tokens_sudo: The available payment tokens, as a sudoed `payment.token` recordset.
             - transaction_route: The route to call to create the transaction.
@@ -133,7 +133,7 @@
             - is_selected: Whether the radio button of the token should be checked.
         -->
         <t t-set="provider_sudo" t-value="token_sudo.provider_id"/>
-        <t t-set="is_test" t-value="provider_sudo.state == 'test'"/>
+        <t t-set="is_test" t-value="not provider_sudo.is_live"/>
         <t t-set="is_unpublished" t-value="not provider_sudo.is_published"/>
         <t t-set="inline_form_xml_id" t-value="provider_sudo.token_inline_form_view_id.xml_id"/>
         <div class="d-flex gap-3 align-items-start align-items-md-center">
@@ -169,6 +169,7 @@
                                t-att-data-payment-option-id="token_sudo.id"
                                t-att-data-provider-code="token_sudo.provider_id._get_code()"
                                t-att-data-provider-id="token_sudo.provider_id.id"
+                               t-att-data-provider-is-live="provider_sudo.is_live"
                         />
                         <div class="d-flex align-items-center flex-wrap gap-2">
                             <!-- === Token label === -->
@@ -245,10 +246,8 @@
             - pm_sudo: The payment method to display, as a sudoed `payment.method` recordset.
             - is_selected: Whether the radio button of the payment method should be checked.
         -->
-        <t t-set="provider_sudo"
-           t-value="pm_sudo.provider_ids.filtered(lambda p: p in providers_sudo)[:1]"
-        />
-        <t t-set="is_test" t-value="provider_sudo.state == 'test'"/>
+        <t t-set="provider_sudo" t-value="pm_sudo.provider_id"/>
+        <t t-set="is_test" t-value="not provider_sudo.is_live"/>
         <t t-set="is_unpublished" t-value="not provider_sudo.is_published"/>
         <t t-set="pms_to_display_sudo" t-value="pm_sudo.brand_ids or pm_sudo"/>
         <t t-set="inline_form_xml_id" t-value="provider_sudo.inline_form_view_id.xml_id"/>
@@ -268,7 +267,7 @@
                            t-att-data-payment-method-code="pm_sudo.code"
                            t-att-data-provider-id="provider_sudo.id"
                            t-att-data-provider-code="provider_sudo._get_code()"
-                           t-att-data-provider-state="provider_sudo.state"
+                           t-att-data-provider-is-live="provider_sudo.is_live"
                     />
                     <div class="d-flex gap-2 flex-grow-1 me-auto">
                         <!-- === Method label === -->
@@ -364,8 +363,9 @@
                             record.
         -->
         <span t-field="logo_pm_sudo.image_payment_form"
-              t-options="{'widget': 'image', 'alt-field': 'name'}"
+              t-options="{'widget': 'image', 'alt-field': 'name', 'qweb_img_raw_data': True}"
               class="position-relative d-block rounded overflow-hidden z-1 shadow-sm"
+              style="max-height: 30px; max-width: 45px"
               t-att-title="logo_pm_sudo.name"
               data-bs-toggle="tooltip"
               data-bs-placement="top"
@@ -486,56 +486,71 @@
         <div
             t-if="env.user._is_system() and availability_report"
             id="payment_availability_report"
-            class="collapse"
+            class="collapse mt-3"
         >
-            <h5> Availability report </h5>
-            <h6 class="mt-3"> Payment providers </h6>
-            <t t-call="payment.availability_report_records"
-                records="availability_report.get('providers')"/>
-            <h6 class="mt-3"> Payment methods </h6>
-            <t t-call="payment.availability_report_records"
-                records="availability_report.get('payment_methods')"/>
+            <h5>Availability report</h5>
+            <ul class="nav nav-tabs mt-3" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button
+                        type="button"
+                        role="tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#report_tab_providers"
+                        class="nav-link active"
+                    >
+                        Payment providers
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button
+                        type="button"
+                        role="tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#report_tab_methods"
+                        class="nav-link"
+                    >
+                        Payment methods
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content border border-top-0 rounded-bottom">
+                <div id="report_tab_providers" class="tab-pane fade show active" role="tabpanel">
+                    <t
+                        t-call="payment.availability_report_records"
+                        records="availability_report.get('providers')"
+                    />
+                </div>
+                <div id="report_tab_methods" class="tab-pane fade" role="tabpanel">
+                    <t
+                        t-call="payment.availability_report_records"
+                        records="availability_report.get('payment_methods')"
+                    />
+                </div>
+            </div>
         </div>
     </template>
 
     <template id="availability_report_records">
         <!-- Parameters description:
             - records: The records to list in the availability report, as a dict with the structure
-                       {record: {'available': bool, 'reason': str, supported_providers: list}}.
+                       {record: {'available': bool, 'reason': str}}.
         -->
-        <ul class="list-group">
+        <ul class="list-group list-group-flush">
             <t t-foreach="records" t-as="r">
                 <t t-set="available" t-value="records[r]['available']"/>
-                <li class="list-group-item ps-0">
-                    <div class="d-flex gap-2">
-                        <div class="ms-2">
-                            <i
-                                t-attf-class="fa fa-fw fa-{{'check-circle' if available else 'times-circle'}}"
-                                t-attf-style="color: {{'green' if available else 'red'}};"
-                            />
-                        </div>
-                        <div>
-                            <p class="lead mb-0">
-                                <span class="fw-normal"><t t-out="r.name"/></span>
-                                <span class="text-muted">(ID: <t t-out="r.id"/>)</span>
-                            </p>
-                            <t t-if="not available">
-                                <p class="mb-0 fw-light">
-                                    Reason: <t t-out="records[r]['reason']"/>
-                                </p>
-                            </t>
-                            <t t-if="r._name == 'payment.method' and 'supported_providers' in records[r]">
-                                <p class="mb-0 fw-light">
-                                    Supported providers:
-                                     <t t-foreach="records[r]['supported_providers']" t-as="p">
-                                        <span t-attf-class="text-{{'success' if p[1] else 'danger'}}">
-                                            <t t-out="p[0].name"/>
-                                        </span>
-                                        <t t-if="records[r]['supported_providers'][-1] != p">,</t>
-                                    </t>
-                                </p>
-                            </t>
-                        </div>
+                <li t-attf-class="list-group-item">
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <i
+                            t-attf-class="fa fa-fw fa-{{'check-circle text-success' if available else 'times-circle text-danger'}}"
+                        />
+                        <span class="fw-semibold"><t t-out="r.name"/></span>
+                        <span class="badge rounded-pill bg-white border text-body-secondary fw-normal">
+                            <t t-if="r._name == 'payment.method'" t-out="r.provider_id.name"/>
+                            <t t-else="">#<t t-out="r.id"/></t>
+                        </span>
+                        <span t-if="not available" class="ms-auto small text-danger">
+                            <t t-out="records[r]['reason']"/>
+                        </span>
                     </div>
                 </li>
             </t>

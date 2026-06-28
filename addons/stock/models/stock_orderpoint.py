@@ -149,7 +149,7 @@ class StockWarehouseOrderpoint(models.Model):
                 [('date', '<=', horizon_date)],
             ])
             domain_move_out = Domain.AND([
-                [('product_id', '=', company_orderpoints.product_id.ids)],
+                [('product_id', 'in', company_orderpoints.product_id.ids)],
                 [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))],
                 domain_move_out,
                 [('date', '<=', horizon_date)],
@@ -196,8 +196,17 @@ class StockWarehouseOrderpoint(models.Model):
         # Small cache mapping (location_id, route_id, {all product routes}) -> stock.rule.
         # This reduces calls to _get_rules_from_location for products without routes and products with the same routes.
         rules_cache = {}
+        routes_cache = {}
         for orderpoint in orderpoints_to_compute:
-            all_product_routes = orderpoint.product_id.route_ids | orderpoint.product_id.categ_id.total_route_ids | orderpoint.product_id.get_total_routes()
+            # Get routes from cache
+            actions = orderpoint.product_id.get_routes_actions()
+            total_routes = self.env['stock.route']
+            for action in actions:
+                if action not in routes_cache:
+                    routes_cache[action] = self.env['stock.rule'].search([('action', '=', action)]).route_id
+                total_routes |= routes_cache[action]
+
+            all_product_routes = orderpoint.product_id.route_ids | orderpoint.product_id.categ_id.total_route_ids | total_routes
             cache_key = (orderpoint.location_id, orderpoint.route_id, all_product_routes)
             rule_ids = rules_cache.get(cache_key) or orderpoint.product_id._get_rules_from_location(
                 orderpoint.location_id, route_ids=orderpoint.route_id
@@ -212,10 +221,10 @@ class StockWarehouseOrderpoint(models.Model):
             if orderpoint.product_max_qty < orderpoint.product_min_qty or not orderpoint.product_max_qty:
                 orderpoint.product_max_qty = orderpoint.product_min_qty
 
-    @api.depends('route_id', 'product_id', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
+    @api.depends('route_id', 'product_id', 'product_id.uom_ids', 'product_id.extra_uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
     def _compute_allowed_replenishment_uom_ids(self):
         for orderpoint in self:
-            orderpoint.allowed_replenishment_uom_ids = orderpoint.product_id.uom_ids
+            orderpoint.allowed_replenishment_uom_ids = orderpoint.product_id.uom_ids | orderpoint.product_id.extra_uom_ids
             if 'buy' in orderpoint.rule_ids.mapped('action'):
                 orderpoint.allowed_replenishment_uom_ids += orderpoint.product_id.seller_ids.uom_id
 
@@ -346,7 +355,7 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint in self:
             orderpoint.qty_to_order = orderpoint.qty_to_order_manual or orderpoint.qty_to_order_to_max
         try:
-            self._procure_orderpoint_confirm(company_id=self.env.company)
+            self.with_context(manual_replenishment=True)._procure_orderpoint_confirm(company_id=self.env.company)
         except UserError as e:
             if len(self) != 1:
                 raise e
@@ -442,19 +451,16 @@ class StockWarehouseOrderpoint(models.Model):
             'warehouse_id': self.warehouse_id,
         })
 
-    def _get_default_route(self):
+    def _get_default_route(self, force_action=False):
         self.ensure_one()
-        rules_groups = self.env['stock.rule']._read_group([
-            '|', ('route_id.product_selectable', '!=', False),
-            ('route_id.product_categ_selectable', '!=', False),
-            ('location_dest_id', 'in', self.location_id.ids),
-            ('action', 'in', ['pull_push', 'pull']),
-            ('route_id.active', '!=', False)
-        ], ['location_dest_id', 'route_id'])
-        for location_dest, route in rules_groups:
-            if route in (self.product_id.route_ids | self.product_id.categ_id.route_ids) and self.location_id == location_dest:
-                return route
-        return self.env['stock.route']
+        applicable_routes = self.product_id.route_ids | self.product_id.categ_id.total_route_ids
+        matching_route = applicable_routes.filtered(lambda r: r.rule_ids.filtered(
+            lambda rule: rule.location_dest_id == self.location_id
+            and rule.action in ['pull_push', 'pull']
+            and r.active
+        ))
+
+        return matching_route[0] if matching_route else self.env['stock.route']
 
     def _get_replenishment_multiple_alternative(self, qty_to_order):
         """
@@ -536,7 +542,7 @@ class StockWarehouseOrderpoint(models.Model):
         domain_move_out = Domain.AND((domain_product, domain_state, domain_move_out_loc))
 
         moves_in = defaultdict(list)
-        for item in Move._read_group(domain_move_in, ['product_id', 'location_dest_id', 'location_final_id'], ['product_qty:sum']):
+        for item in Move._read_group(domain_move_in, ['product_id', 'location_dest_id', 'forecasted_location_id'], ['product_qty:sum']):
             moves_in[item[0]].append((item[1], item[2], item[3]))
 
         moves_out = defaultdict(list)
@@ -701,7 +707,7 @@ class StockWarehouseOrderpoint(models.Model):
             'date_order': dates_info['date_order'],
             'date_deadline': date or False,
             'warehouse_id': self.warehouse_id,
-            'orderpoint_id': self,
+            'orderpoint_id': self.trigger == 'auto' and self,
         }
         reference = self.env.context.get('origins')
         if reference:
@@ -805,7 +811,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_multiple_rounded_qty(self, qty_to_order):
         replenishment_multiple = self.replenishment_uom_id or self._get_replenishment_multiple_alternative(qty_to_order)
-        if replenishment_multiple and replenishment_multiple != self.product_id.uom_id:
+        if replenishment_multiple:
             # Replace the UP by DOWN if we don't want to order more quantity than product_max_qty
             qty_to_order = self.product_id.uom_id._compute_quantity(qty_to_order, replenishment_multiple)
             qty_to_order = fields.Float.round(qty_to_order, precision_digits=0, rounding_method="UP")

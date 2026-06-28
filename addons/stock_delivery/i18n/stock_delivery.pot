@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.3a1\n"
+"Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-19 17:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,6 +24,18 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_package_view_form
 msgid "(computed:"
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-javascript
+#: code:addons/stock_delivery/static/src/return_order_dialog/return_label_info.xml:0
+msgid "1. Download and print the Return label and place it in your package."
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-javascript
+#: code:addons/stock_delivery/static/src/return_order_dialog/return_label_info.xml:0
+msgid "2. Download and print the Shipping label and place it on your package."
 msgstr ""
 
 #. module: stock_delivery
@@ -138,9 +150,19 @@ msgid "Carrier name"
 msgstr ""
 
 #. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Cost: %(price).2f %(currency)s"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model,website_form_label:stock_delivery.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: stock_delivery
@@ -173,7 +195,9 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_res_partner__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__display_name
@@ -182,7 +206,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__display_name
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_return_picking__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__display_name
 msgid "Display Name"
 msgstr ""
@@ -190,6 +213,12 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.actions.act_window,name:stock_delivery.act_delivery_trackers_url
 msgid "Display tracking links"
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-javascript
+#: code:addons/stock_delivery/static/src/return_order_dialog/return_order_dialog.js:0
+msgid "Download Shipping Label"
 msgstr ""
 
 #. module: stock_delivery
@@ -214,7 +243,6 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__hs_code
-#: model_terms:ir.ui.view,arch_db:stock_delivery.product_template_hs_code
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "HS Code"
 msgstr ""
@@ -222,7 +250,9 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__id
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:stock_delivery.field_product_product__id
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__id
+#: model:ir.model.fields,field_description:stock_delivery.field_res_partner__id
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order__id
 #: model:ir.model.fields,field_description:stock_delivery.field_sale_order_line__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__id
@@ -231,7 +261,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__id
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_return_picking__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__id
 msgid "ID"
 msgstr ""
@@ -290,7 +319,12 @@ msgid "Package too heavy!"
 msgstr ""
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
+#: model:ir.model.fields,field_description:stock_delivery.field_res_partner__pickup_location_data
+#: model:ir.model.fields,field_description:stock_delivery.field_res_users__pickup_location_data
+msgid "Pickup Location Data"
+msgstr ""
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Print Return Label"
 msgstr ""
@@ -303,6 +337,11 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_product_product
+msgid "Product Variant"
 msgstr ""
 
 #. module: stock_delivery
@@ -323,11 +362,6 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
 msgid "Return Label"
-msgstr ""
-
-#. module: stock_delivery
-#: model:ir.model,name:stock_delivery.model_stock_return_picking
-msgid "Return Picking"
 msgstr ""
 
 #. module: stock_delivery
@@ -416,6 +450,14 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_res_partner__pickup_location_data
+#: model:ir.model.fields,help:stock_delivery.field_res_users__pickup_location_data
+msgid ""
+"Technical field: information needed by delivery providers in case of pickup "
+"point addresses."
 msgstr ""
 
 #. module: stock_delivery

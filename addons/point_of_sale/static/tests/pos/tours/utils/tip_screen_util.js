@@ -9,7 +9,7 @@ export function clickPercentTip(percent) {
 export function clickNoTip() {
     return [
         {
-            trigger: `.tip-screen .no-tip button`,
+            trigger: `.tip-screen button.no-tip`,
             run: "click",
         },
     ];

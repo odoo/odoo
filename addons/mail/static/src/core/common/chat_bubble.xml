@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ChatBubble">
-        <div t-if="this.props.chatWindow?.channel" class="o-mail-ChatBubble position-relative" t-att-name="this.props.chatWindow.channel.displayName" t-att-class="{ 'o-bouncing': this.state.bouncing, 'o-active': this.state.isPopoverOpen, 'o-mobile': this.isMobileOS }" t-on-click="() => this.props.chatWindow.open({ focus: true })" t-on-animationend="() => this.state.bouncing = false" t-custom-ref="root">
+        <div t-if="this.props.chatWindow?.channel" class="o-mail-ChatBubble position-relative" t-att-name="this.props.chatWindow.channel.displayName" t-att-class="{ 'o-bouncing': this.bouncing(), 'o-active': this.isPopoverOpen(), 'o-mobile': this.isMobileOS }" t-on-click="() => this.props.chatWindow.open({ focus: true })" t-on-animationend="() => this.bouncing.set(false)" t-custom-ref="root">
             <span class="o-mail-ChatBubble-unreadIndicator position-absolute" t-att-class="{ 'opacity-0': !this.channel.isUnread or this.channel.importantCounter }"><i class="fa fa-circle"/></span>
             <div t-if="this.channel.importantCounter > 0" class="o-mail-ChatBubble-counter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow" t-out="this.channel.importantCounter"/>
             <button t-if="!this.env.embedLivechat and !this.isMobileOS" class="o-mail-ChatBubble-close position-absolute shadow rounded-circle fw-bold bg-view" title="Close Chat Bubble" t-on-click.stop="() => this.props.chatWindow.requestClose()"><i class="oi oi-close"/></button>
             <CountryFlag t-if="this.channel.showCorrespondentCountry" country="this.channel.correspondentCountry" class="'o-mail-ChatBubble-country position-absolute bottom-0 border shadow-sm'"/>
             <button class="o-mail-ChatHub-bubbleBtn btn shadow">
-                <DiscussAvatar channel="this.channel" size="42" imgRoundedClass="'rounded-circle'"/>
+                <DiscussAvatar record="this.channel" size="42" imgRoundedClass="'rounded-circle'" iconExtraTransform="'scale(.75) translate(3, 3)'"/>
             </button>
         </div>
     </t>
@@ -16,9 +16,9 @@
         <div t-if="this.props.chatWindow?.channel" class="o-mail-ChatBubble-preview o-mail-ChatBubble-menu px-0 py-1 shadow-sm border border-secondary bg-100 o-rounded-bubble">
             <div class="text-truncate base-fs o-fw-600 mb-0 mx-2 px-1" t-out="this.props.chatWindow.channel.displayName"/>
             <t t-set="message" t-value="this.channel.newestPersistentOfAllMessage" />
-            <div t-if="this.previewText" class="text-truncate small mx-2 px-1 text-muted">
-                <MessageSeenIndicator t-if="message.showSeenIndicator(this.channel.thread)" message="message"/>
-                <t t-out="message.previewText" />
+            <div class="text-truncate small mx-2 px-1 text-muted">
+                <MessageSeenIndicator t-if="message?.showSeenIndicator(this.channel.thread)" message="message"/>
+                <t t-out="this.previewText" />
             </div>
         </div>
     </t>

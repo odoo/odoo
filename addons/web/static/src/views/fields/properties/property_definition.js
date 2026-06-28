@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Domain } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
@@ -131,7 +131,7 @@ export class PropertyDefinition extends Component {
             ...this.props.propertyDefinition,
         };
 
-        this.state = useState({
+        this.state = proxy({
             propertyDefinition: propertyDefinition,
             typeLabel: PROPERTIES_INFO[propertyDefinition.type].label,
             resModel: "",

@@ -1,3 +1,3 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import common, test_worldline
+from . import common, test_processing_flows, test_worldline

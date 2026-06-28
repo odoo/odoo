@@ -9,13 +9,16 @@ patch(Composer, {
 patch(Composer.prototype, {
     setup() {
         super.setup();
-        this.voiceRecorder = useVoiceRecorder();
+        this.voiceRecorder = useVoiceRecorder(
+            { onRecordReady: (file) => this.attachmentUploader.uploadFile(file, { voice: true }) },
+            { rootRef: this.rootRef }
+        );
     },
     get isSendButtonDisabled() {
-        return this.voiceRecording?.recording || super.isSendButtonDisabled;
+        return this.voiceRecorder?.recording || super.isSendButtonDisabled;
     },
     onKeydown(ev) {
-        if (ev.key === "Enter" && this.voiceRecording?.recording) {
+        if (ev.key === "Enter" && this.voiceRecorder?.recording) {
             ev.preventDefault();
             return;
         }

@@ -1,9 +1,8 @@
+import { useApp } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { appTranslateFn } from "@web/core/l10n/translation";
-import { Interaction } from "./interaction";
-import { getTemplate } from "@web/core/templates";
-import { PairSet } from "./utils";
 import { Colibri } from "./colibri";
+import { Interaction } from "./interaction";
+import { PairSet } from "./utils";
 
 /**
  * Website Core
@@ -18,7 +17,11 @@ import { Colibri } from "./colibri";
  * The Interaction class is designed to be a simple class that provides access
  * to the framework (env and services), and a minimalist declarative framework
  * that allows manipulating dom, attaching event handlers and updating it
- * properly. It does not depend on owl.
+ * properly. ~~It does not depend on owl~~.
+ *                     ^^^
+ * Edit: this commit added the explicit dependency to Owl, because it already depended
+ * on it through @web/core/registry. Furthermore, 'prepareRoot' does NOT work without
+ * an Owl App instance.
  *
  * The Component kind of interaction is used for more complicated interface needs.
  * It provides full access to Owl features, but is rendered browser side.
@@ -40,7 +43,7 @@ class InteractionService {
         this.env = env;
         this.interactions = [];
         this.roots = [];
-        this.owlApp = null;
+        this.owlApp = useApp();
         this.proms = [];
         this.registry = null;
     }
@@ -58,19 +61,6 @@ class InteractionService {
     }
 
     prepareRoot(el, C, props, position = "beforeend") {
-        if (!this.owlApp) {
-            const { App } = odoo.loader.modules.get("@odoo/owl");
-            const appConfig = {
-                name: "Odoo Website",
-                getTemplate,
-                env: this.env,
-                dev: this.env.debug,
-                translateFn: appTranslateFn,
-                warnIfNoStaticProps: this.env.debug,
-                translatableAttributes: ["data-tooltip"],
-            };
-            this.owlApp = new App(null, appConfig);
-        }
         const root = this.owlApp.createRoot(C, { props, env: this.env });
         const rootEl = document.createElement("owl-root");
         rootEl.setAttribute("contenteditable", "false");
@@ -179,9 +169,14 @@ class InteractionService {
 
     stopInteractions(el = this.el) {
         const interactions = [];
+        const errors = [];
         for (const interaction of this.interactions.slice().reverse()) {
             if (this.shouldStop(el, interaction)) {
-                interaction.destroy();
+                try {
+                    interaction.destroy();
+                } catch (error) {
+                    errors.push([interaction.interaction.constructor.name, error]);
+                }
                 this.activeInteractions.delete(interaction.el, interaction.interaction.constructor);
             } else {
                 interactions.push(interaction);
@@ -201,6 +196,9 @@ class InteractionService {
         if (el === this.el) {
             this.isActive = false;
         }
+        for (const [interaction, error] of errors) {
+            throw new Error(`Could not destroy interaction ${interaction}`, error);
+        }
     }
 
     /**
@@ -215,7 +213,6 @@ class InteractionService {
 }
 
 export const publicInteractionService = {
-    dependencies: ["localization"],
     async start(env) {
         // fallback if #wrapwrap is not present in the dom
         const el = document.querySelector("#wrapwrap") || document.querySelector("body");

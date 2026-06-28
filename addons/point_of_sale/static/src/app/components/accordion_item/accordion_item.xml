@@ -7,11 +7,11 @@
                     t-att-aria-expanded="this.state.open ? 'true' : 'false'"
                     t-on-click="this.toggle"
             >
-                <t t-slot="header"/>
+                <t t-call-slot="header"/>
             </button>
             <div t-custom-ref="content_container" class="accordion-content-container" t-attf-style="max-height: {{this.state.open ? this.contentHeight : 0}}px;">
                 <div class="accordion-content" >
-                    <t t-slot="content"/>
+                    <t t-call-slot="content"/>
                 </div>
             </div>
         </div>

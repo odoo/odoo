@@ -66,7 +66,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
     @api.depends('date')
     def _compute_reversal_date(self):
         for record in self:
-            if not record.reversal_date or record.reversal_date <= record.date:
+            if record.date and (not record.reversal_date or record.reversal_date <= record.date):
                 record.reversal_date = record.date + relativedelta(days=1)
             else:
                 record.reversal_date = record.reversal_date
@@ -163,7 +163,8 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                 values = _get_aml_vals(order, self.amount, 0, account.id, label=_('Manual entry'), analytic_distribution=distribution)
                 move_lines.append(Command.create(values))
             else:
-                accrual_entry_date = self.env.context.get('accrual_entry_date', self.date)
+                accrual_entry_date = self.env.context.get('accrual_entry_date')
+                accrual_entry_date = fields.Date.from_string(accrual_entry_date) if accrual_entry_date else self.date
                 precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
                 order_lines = lines.with_context(accrual_entry_date=accrual_entry_date).filtered(
                     # We only want non-comment lines (no sections, notes, ...) and include all lines
@@ -181,14 +182,14 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                     if is_purchase:
                         # Compute the price unit from the amount to invoice if there is one,
                         # otherwise use the PO line price unit.
-                        price_unit = order_line.price_unit
+                        price_unit = order_line.price_unit_discounted
                         quantity_to_invoice = order_line.qty_invoiced_at_date - order_line.qty_received_at_date
                         if quantity_to_invoice >= 1:
                             posted_invoice_lines = order_line.invoice_lines.filtered(lambda ivl:
                                 ivl.move_id.state == 'posted' and ivl.date <= accrual_entry_date
                             )
                             invoiced_values = sum(ivl.price_subtotal for ivl in posted_invoice_lines)
-                            received_values = order_line.qty_received_at_date * order_line.price_unit
+                            received_values = order_line.qty_received_at_date * order_line.price_unit_discounted
                             value_to_invoice = invoiced_values - received_values
                             price_unit = value_to_invoice / quantity_to_invoice
 

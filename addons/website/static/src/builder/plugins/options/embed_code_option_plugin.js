@@ -28,6 +28,7 @@ export class EmbedCodeOptionPlugin extends Plugin {
                     .replaceChildren(cloneContentEls(embedTemplateEl.content, true));
             }
         }
+        return root;
     }
 }
 

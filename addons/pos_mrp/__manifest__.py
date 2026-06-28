@@ -9,9 +9,9 @@
     'description': """
 This is a link module between Point of Sale and Mrp.
 """,
-    'depends': ['point_of_sale', 'mrp'],
+    'depends': ['pos_stock', 'mrp'],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_tests': [

@@ -1,7 +1,7 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export class HierarchyNavbar extends Component {
     static template = "website.hierarchy_navbar";
@@ -18,7 +18,7 @@ export class HierarchyNavbar extends Component {
 
     setup() {
         this.searchInput = useRef("search");
-        this.websiteNamesState = useState(Array.from(this.props.websites.names));
+        this.websiteNamesState = proxy(Array.from(this.props.websites.names));
     }
 
     get websiteNames() {

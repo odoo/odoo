@@ -17,7 +17,6 @@ This module adds several features to the Point of Sale that are specific to rest
     'depends': ['point_of_sale'],
     'website': 'https://www.odoo.com/app/point-of-sale-restaurant',
     'data': [
-        'security/ir.model.access.csv',
         'data/scenarios/restaurant_preset.xml',
         'views/pos_category_view.xml',
         'views/pos_course_views.xml',
@@ -27,9 +26,18 @@ This module adds several features to the Point of Sale that are specific to rest
         'views/res_config_settings_views.xml',
         'receipt/pos_order_receipt.xml',
         'receipt/pos_order_change_receipt.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/demo_data.xml',
+    ],
+    'other_files': [
+        'data/scenarios/bar_category_data.xml',
+        'data/scenarios/bar_demo_data.xml',
+        'data/scenarios/restaurant_category_data.xml',
+        'data/scenarios/restaurant_demo_data.xml',
+        'data/scenarios/restaurant_demo_session.xml',
+        'data/scenarios/restaurant_floor.xml',
     ],
     'application': True,
     'post_init_hook': '_auto_install_pos_urban_piper_with_demo',
@@ -53,4 +61,5 @@ This module adds several features to the Point of Sale that are specific to rest
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'uninstall_hook': 'uninstall_hook',
 }

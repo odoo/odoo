@@ -65,7 +65,10 @@ class TestRecruitmentTalentPool(TransactionCase):
         self.assertEqual(talent.talent_pool_ids, self.t_talent_pool_1)
         self.assertEqual(talent.pool_applicant_id, talent)
 
-        job_wizard = Form(self.env["job.add.applicants"].with_context({"default_applicant_ids": talent.ids}))
+        job_wizard = Form(self.env["job.add.applicants"].with_context({
+            "default_applicant_ids": talent.ids,
+            "form_view_ref": "hr_recruitment.job_add_applicants_view_form"
+        }))
         job_wizard.job_ids = self.t_job_1
         job_1_applicant = job_wizard.save()._add_applicants_to_job()
 
@@ -244,7 +247,10 @@ class TestRecruitmentTalentPool(TransactionCase):
         )
 
         job_wizard = Form(
-            self.env["job.add.applicants"].with_context({"default_applicant_ids": talent_pool_applicant.ids})
+            self.env["job.add.applicants"].with_context({
+                "default_applicant_ids": talent_pool_applicant.ids,
+                "form_view_ref": "hr_recruitment.job_add_applicants_view_form"
+            })
         )
         job_wizard.job_ids = self.t_job_2
         job_2_applicant = job_wizard.save()._add_applicants_to_job()
@@ -285,7 +291,10 @@ class TestRecruitmentTalentPool(TransactionCase):
         )
 
         job_wizard = Form(
-            self.env["job.add.applicants"].with_context({"default_applicant_ids": talent_pool_applicant.ids})
+            self.env["job.add.applicants"].with_context({
+                "default_applicant_ids": talent_pool_applicant.ids,
+                "form_view_ref": "hr_recruitment.job_add_applicants_view_form"
+            })
         )
         job_wizard.job_ids.add(self.t_job_2)
         job_wizard.job_ids.add(self.t_job_3)
@@ -317,7 +326,10 @@ class TestRecruitmentTalentPool(TransactionCase):
         )
 
         job_wizard = Form(
-            self.env["job.add.applicants"].with_context({"default_applicant_ids": talent_pool_applicants.ids})
+            self.env["job.add.applicants"].with_context({
+                "default_applicant_ids": talent_pool_applicants.ids,
+                "form_view_ref": "hr_recruitment.job_add_applicants_view_form"
+            })
         )
         job_wizard.job_ids.add(self.t_job_2)
         job_wizard.job_ids.add(self.t_job_3)
@@ -383,7 +395,10 @@ class TestRecruitmentTalentPool(TransactionCase):
             'res_id': self.t_applicant_1.id
         } for i in range(2)]).ids]
         job_wizard = Form(
-            self.env["job.add.applicants"].with_context({"default_applicant_ids": self.t_applicant_1.ids})
+            self.env["job.add.applicants"].with_context({
+                "default_applicant_ids": self.t_applicant_1.ids,
+                "form_view_ref": "hr_recruitment.job_add_applicants_view_form"
+            })
         )
         job_wizard.job_ids = self.t_job_2
         job_2_applicant = job_wizard.save()._add_applicants_to_job()

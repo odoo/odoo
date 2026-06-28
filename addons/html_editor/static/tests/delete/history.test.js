@@ -5,7 +5,7 @@ import { getContent } from "../_helpers/selection";
 import { execCommand } from "../_helpers/userCommands";
 
 describe("delete backward", () => {
-    test("should register a history step (collapsed selection)", async () => {
+    test("should register a history commit (collapsed selection)", async () => {
         const { el, editor } = await setupEditor("<p>ab[]cd</p>");
 
         await press("Backspace");
@@ -18,7 +18,7 @@ describe("delete backward", () => {
         expect(getContent(el)).toBe("<p>a[]cd</p>");
     });
 
-    test("should register a history step (non-collapsed selection)", async () => {
+    test("should register a history commit (non-collapsed selection)", async () => {
         const { el, editor } = await setupEditor("<p>ab[cd]ef</p>");
 
         await press("Backspace");
@@ -33,7 +33,7 @@ describe("delete backward", () => {
 });
 
 describe("delete forward", () => {
-    test("should register a history step (collapsed selection)", async () => {
+    test("should register a history commit (collapsed selection)", async () => {
         const { el, editor } = await setupEditor("<p>ab[]cd</p>");
 
         await press("Delete");
@@ -46,7 +46,7 @@ describe("delete forward", () => {
         expect(getContent(el)).toBe("<p>ab[]d</p>");
     });
 
-    test("should register a history step (non-collapsed selection)", async () => {
+    test("should register a history commit (non-collapsed selection)", async () => {
         const { el, editor } = await setupEditor("<p>ab[cd]ef</p>");
 
         await press("Delete");

@@ -1,3 +1,4 @@
+import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
@@ -23,14 +24,13 @@ export class AttendeeCalendarModel extends CalendarModel {
     async load() {
         const res = await super.load(...arguments);
         if (!this._loaded) {
-            const [credentialStatus, syncStatus, defaultDuration] = await Promise.all([
-                rpc("/calendar/check_credentials"),
-                this.orm.call("res.users", "check_synchronization_status", [[user.userId]]),
-                this.orm.call("calendar.event", "get_default_duration"),
-            ]);
-            this.syncStatus = syncStatus;
-            this.credentialStatus = credentialStatus;
-            this.defaultDuration = defaultDuration;
+            const { credential_status, sync_status, sync_email, default_duration } = await this.orm.call(
+                "res.users", "get_calendar_model_data",
+            );
+            this.syncStatus = sync_status;
+            this.credentialStatus = credential_status;
+            this.syncEmail = sync_email;
+            this.defaultDuration = default_duration;
             this._loaded = true;
         }
         return res;
@@ -38,6 +38,17 @@ export class AttendeeCalendarModel extends CalendarModel {
 
     get attendees() {
         return this.data.attendees;
+    }
+
+    /**
+     * @override
+     */
+    getBaseDomain() {
+        const baseDomain = super.getBaseDomain();
+        if (!this.meta.context?.calendar_include_user_events || !baseDomain.length) {
+            return baseDomain;
+        }
+        return Domain.or([baseDomain, [["partner_ids", "in", [user.partnerId]]]]).toList();
     }
 
     /**

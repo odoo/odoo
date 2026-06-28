@@ -9,8 +9,8 @@ export class EmbeddedFileDocumentsSelector extends DocumentSelector {
     static mediaSpecificClasses = [];
 
     /** @override */
-    static async renderFileElement(attachment) {
-        return renderEmbeddedFileBox(attachment);
+    static async renderFileElement(attachment, _, document) {
+        return renderEmbeddedFileBox(attachment, document);
     }
 }
 
@@ -18,7 +18,7 @@ export class EmbeddedFileDocumentsSelector extends DocumentSelector {
  * @param {Object} attachment
  * @returns {Element}
  */
-export function renderEmbeddedFileBox(attachment) {
+export function renderEmbeddedFileBox(attachment, document = window.document) {
     const dotSplit = attachment.name.split(".");
     const extension = dotSplit.length > 1 ? dotSplit.pop() : undefined;
     const fileData = {
@@ -32,7 +32,8 @@ export function renderEmbeddedFileBox(attachment) {
         type: attachment.type,
         url: attachment.url || "",
     };
-    return renderToElement("html_editor.EmbeddedFileBlueprint", {
+    const fileEl = renderToElement("html_editor.EmbeddedFileBlueprint", {
         embeddedProps: JSON.stringify({ fileData }),
     });
+    return document.importNode(fileEl, true);
 }

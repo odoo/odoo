@@ -332,14 +332,14 @@ test("activity view: Activity rendering with done activities", async () => {
     await contains(".o-mail-ActivityListPopover .badge.text-bg-success", { text: "3" }); // 3 planned
     for (const actIdx of [0, 1, 2]) {
         await contains(".o-mail-ActivityListPopoverItem", {
-            text: uploadPlannedActs[actIdx].user_id[1],
+            text: `${uploadPlannedActs[actIdx].user_id[1]}-`,
         });
     }
     await contains(".o-mail-ActivityListPopoverItem", { text: "Due in 4 days" });
     await contains(".o-mail-ActivityListPopoverItem", { text: "Due in 5 days" });
     await contains(".o-mail-ActivityListPopoverItem", { text: "Due in 6 days" });
     await contains(".o-mail-ActivityListPopover .badge.text-bg-secondary", { text: "1" }); // 1 done
-    await contains(".o-mail-ActivityListPopoverItem", { text: uploadDoneActs[0].user_id[1] });
+    await contains(".o-mail-ActivityListPopoverItem", { text: `${uploadDoneActs[0].user_id[1]}-` });
     await contains(".o-mail-ActivityListPopoverItem", {
         text: formatDate(luxon.DateTime.fromISO(uploadDoneActs[0].date_done)),
     });
@@ -352,7 +352,7 @@ test("activity view: Activity rendering with done activities", async () => {
             text: formatDate(luxon.DateTime.fromISO(uploadDoneActs[actIdx].date_done)),
         });
         await contains(".o-mail-ActivityListPopoverItem", {
-            text: uploadDoneActs[actIdx].user_id[1],
+            text: `${uploadDoneActs[actIdx].user_id[1]}-`,
         });
     }
 });
@@ -547,10 +547,19 @@ test("activity view: activity widget", async () => {
 test("activity widget: delete an activity from the widget", async () => {
     const [mailActivityId] = pyEnv["mail.activity"].search([["state", "=", "planned"]]);
     const [mailActivityTypeId] = pyEnv["mail.activity.type"].search([["name", "=", "Email"]]);
-    pyEnv["res.users"].write([serverState.userId], {
+    const testRecordId =
+        pyEnv["mail.test.activity"].search([])[0] || pyEnv["mail.test.activity"].create({});
+    pyEnv["mail.activity"].write([mailActivityId], {
+        res_model: "mail.test.activity",
+        res_id: testRecordId,
+    });
+    pyEnv["mail.test.activity"].write([testRecordId], {
         activity_ids: [mailActivityId],
         activity_type_id: mailActivityTypeId,
+        activity_state: "planned",
     });
+    pyEnv["mail.test.activity"]._applyComputesAndValidate();
+
     onRpc("mail.activity", "unlink", ({ args, route }) => {
         expect(args).toEqual([[mailActivityId]]);
         expect(route).toInclude("mail.activity");
@@ -566,7 +575,7 @@ test("activity widget: delete an activity from the widget", async () => {
 
     // Check if activity is scheduled
     await click(".planned .o-mail-ActivityCell-deadline");
-    await contains(".o-mail-ActivityListPopover");
+    await contains(".o-mail-ActivityListPopoverItem");
 
     const activityListPopoverButtons = document.querySelectorAll(
         ".overflow-auto.d-flex.align-items-baseline button"

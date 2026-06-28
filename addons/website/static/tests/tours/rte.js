@@ -78,8 +78,8 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "click on Use this template",
-            trigger: ".o_page_template .o_button_area:not(:visible)",
+            content: "click on 'Blank Page'",
+            trigger: "button[data-name='add_blank_page']",
             run: "click",
         },
         {
@@ -119,8 +119,8 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "click on Use this template",
-            trigger: ".o_page_template .o_button_area:not(:visible)",
+            content: "click on 'Blank Page'",
+            trigger: "button[data-name='add_blank_page']",
             run: "click",
         },
         {
@@ -155,7 +155,7 @@ registerWebsitePreviewTour(
             <p>&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty</p>';
                 this.anchor.querySelector(".oe_img_bg").title = "test translate image title";
                 const editor = editorsWeakMap.get(this.anchor.ownerDocument);
-                editor.shared.history.addStep();
+                editor.shared.history.commit();
             },
         },
         {
@@ -231,7 +231,7 @@ registerWebsitePreviewTour(
                 await actionHelper.click();
                 this.anchor.textContent = "<{translated}>" + this.anchor.textContent;
                 const editor = editorsWeakMap.get(this.anchor.ownerDocument);
-                editor.shared.history.addStep();
+                editor.shared.history.commit();
                 setSelection({ anchorNode: this.anchor.childNodes[0], anchorOffset: 0 });
                 this.anchor.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: "_" }));
                 this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
@@ -247,21 +247,13 @@ registerWebsitePreviewTour(
         },
         {
             content: "translate placeholder",
-            trigger: ".modal-dialog input:first",
+            trigger: `.options-container [data-action-id='translateAttribute'][data-action-param='placeholder'] input`,
             run: "edit test Parseltongue placeholder",
         },
         {
             content: "translate default value",
-            trigger: ".modal-dialog input:last",
+            trigger: `.options-container [data-action-id='translateAttribute'][data-action-param='value'] input`,
             run: "edit test Parseltongue default value",
-        },
-        {
-            trigger: '.modal input:value("test Parseltongue placeholder")',
-        },
-        {
-            content: "close modal",
-            trigger: ".modal-footer .btn-primary",
-            run: "click",
         },
         {
             content: "check: input marked as translated",
@@ -432,7 +424,7 @@ registerWebsitePreviewTour(
                         .querySelector("iframe:not(.o_ignore_in_tour)")
                         .contentDocument.body.classList.add("rte_translator_error");
                     const editor = editorsWeakMap.get(this.anchor.ownerDocument);
-                    editor.shared.history.addStep();
+                    editor.shared.history.commit();
                 }
             },
         },

@@ -6,7 +6,7 @@
             <t t-if="this.env.isSmall">
                 <t t-set="firstSlot" t-value="this.visibleSlotNames[0]" />
                 <t t-set="otherSlots" t-value="this.visibleSlotNames.slice(1)" />
-                <t t-if="firstSlot" t-slot="{{ firstSlot }}" />
+                <t t-if="firstSlot" t-call-slot="{{ firstSlot }}" />
                 <Dropdown t-if="otherSlots.length">
                     <button class="btn btn-secondary" title="More">
                         <i class="oi oi-fw oi-ellipsis-v" />
@@ -14,7 +14,7 @@
                     <t t-set-slot="content">
                         <t t-foreach="otherSlots" t-as="slot" t-key="slot">
                             <DropdownItem class="'o-dropdown-item-unstyled-button'">
-                                <t t-slot="{{ slot }}" />
+                                <t t-call-slot="{{ slot }}" />
                             </DropdownItem>
                         </t>
                     </t>
@@ -22,7 +22,7 @@
             </t>
             <t t-else="">
                 <t t-foreach="this.visibleSlotNames" t-as="slot" t-key="slot">
-                    <t t-slot="{{ slot }}" />
+                    <t t-call-slot="{{ slot }}" />
                 </t>
             </t>
         </div>

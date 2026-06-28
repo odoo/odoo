@@ -6,11 +6,9 @@
     'category': 'Sales/Point of Sale',
     'sequence': 40,
     'summary': 'Handle checkouts and payments for shops and restaurants.',
-    'depends': ['resource', 'stock_account', 'barcodes', 'html_editor', 'digest', 'phone_validation', 'google_address_autocomplete'],
-    'uninstall_hook': 'uninstall_hook',
+    'depends': ['resource', 'product', 'account', 'barcodes_gs1_nomenclature', 'html_editor', 'digest', 'phone_validation', 'google_address_autocomplete', 'base_report_wkhtmltox'],
     'data': [
         'security/point_of_sale_security.xml',
-        'security/ir.model.access.csv',
         'data/default_barcode_patterns.xml',
         'data/digest_data.xml',
         'data/pos_note_data.xml',
@@ -30,6 +28,7 @@
         'views/pos_order_view.xml',
         'views/pos_category_view.xml',
         'views/product_combo_views.xml',
+        'views/product_pricelist_view.xml',
         'views/product_view.xml',
         'views/account_journal_view.xml',
         'views/pos_payment_method_views.xml',
@@ -54,17 +53,27 @@
         'views/account_move_views.xml',
         'views/pos_session_sales_details.xml',
         'views/product_tag_views.xml',
-        'views/stock_reference_views.xml',
         'receipt/pos_receipt_common.xml',  # needed in the backend and frontend
         'receipt/pos_order_receipt.xml',  # needed in the backend and frontend
         'receipt/pos_order_change_receipt.xml',  # needed in the backend and frontend
+        'receipt/pos_order_change_receipt_zpl.xml',  # needed in the backend and frontend
         'receipt/pos_tip_receipt.xml',  # needed in the backend and frontend
         'receipt/pos_cash_move_receipt.xml',  # needed in the backend and frontend
         'receipt/pos_sale_details_receipt.xml',  # needed in the backend and frontend
         'data/ir_cron_data.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/demo_data.xml',
+    ],
+    'other_files': [
+        'data/orders_demo.xml',
+        'data/scenarios/bakery_category_data.xml',
+        'data/scenarios/bakery_data.xml',
+        'data/scenarios/clothes_category_data.xml',
+        'data/scenarios/clothes_data.xml',
+        'data/scenarios/furniture_category_data.xml',
+        'data/scenarios/furniture_data.xml',
     ],
     'application': True,
     'website': 'https://www.odoo.com/app/point-of-sale-shop',
@@ -85,6 +94,7 @@
             'point_of_sale/static/src/scss/pos_dashboard.scss',
             'point_of_sale/static/src/backend/tours/point_of_sale.js',
             'point_of_sale/static/src/backend/pos_kanban_view/*',
+            'point_of_sale/static/src/backend/lna_checklist/*',
             'point_of_sale/static/src/backend/pos_payment_provider_cards/*',
             'point_of_sale/static/src/app/hooks/hooks.js',
             'point_of_sale/static/src/backend/many2many_placeholder_list_view/*',
@@ -92,7 +102,9 @@
             ('remove', 'point_of_sale/static/src/backend/views/pivot/*'),
             ('remove', 'point_of_sale/static/src/backend/views/graph/*'),
             'point_of_sale/static/src/backend/test_epos/*',
+            'point_of_sale/static/src/backend/connect_web_serial_scale/*',
             'point_of_sale/static/src/app/utils/init_lna.js',
+            'point_of_sale/static/src/app/utils/scale/*.js',
             'point_of_sale/static/src/backend/pos_open_ui_button/*',
         ],
         'web.assets_backend_lazy': [
@@ -104,7 +116,6 @@
             'point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.dark.scss',
         ],
         'web.assets_tests': [
-            'barcodes/static/tests/legacy/helpers.js',
             'point_of_sale/static/tests/pos/tours/**/*',
             'point_of_sale/static/tests/generic_helpers/**/*',
             'point_of_sale/static/tests/customer_display/**/*',
@@ -167,6 +178,7 @@
             'web/static/lib/luxon/luxon.js',
             'web/static/src/libs/luxon.js',
             'web/static/lib/owl/owl.js',
+            'web/static/src/owl2/owl3_compatibility_layer.js',
             'web/static/src/owl2/utils.js',
             'web/static/lib/owl/odoo_module.js',
             'web/static/lib/zxing-library/zxing-library.js',
@@ -226,9 +238,6 @@
             "web/static/lib/hoot-dom/**/*",
             "web_tour/static/src/js/**/*",
             'web_tour/static/src/tour_utils.js',
-            "barcodes/static/tests/legacy/helpers.js",
-            "web/static/tests/legacy/helpers/utils.js",
-            "web/static/tests/legacy/helpers/cleanup.js",
         ],
         # Bundle that starts the pos, loaded on /pos/ui
         'point_of_sale.assets_prod': [
@@ -251,6 +260,12 @@
             "point_of_sale/static/src/app/hooks/time_hook.js",
             "point_of_sale/static/src/app/pos_app.scss",
             "point_of_sale/static/src/app/screens/login_screen/login_screen.scss",
+            "point_of_sale/static/src/app/components/price_formatter/**/*",
+            "point_of_sale/static/src/app/components/validation_animation/**/*",
+            "point_of_sale/static/src/app/components/feedback_payment_summary/**/*",
+        ],
+        'point_of_sale.customer_display_assets_dark': [
+            ('include', 'point_of_sale.customer_display_assets'),
         ],
         'point_of_sale.customer_display_assets_test': [
             ('include', 'point_of_sale.base_tests'),
@@ -262,7 +277,6 @@
         ],
         'point_of_sale.assets_debug': [
             ('include', 'point_of_sale.base_tests'),
-            'barcodes/static/tests/legacy/helpers.js',
             'point_of_sale/static/tests/generic_helpers/**/*',
             'point_of_sale/static/tests/pos/tours/**/*',
         ],

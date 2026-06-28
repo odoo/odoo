@@ -4,8 +4,8 @@ import json
 import logging
 from contextlib import ExitStack
 from http import HTTPStatus
-from werkzeug.exceptions import Forbidden
 
+from werkzeug.exceptions import Forbidden
 from werkzeug.urls import url_encode
 
 import odoo
@@ -14,7 +14,13 @@ from odoo.exceptions import AccessError
 from odoo.http import Controller, request, route
 from odoo.http.response import Response
 from odoo.http.router import db_filter
-from odoo.http.session import authenticate, logout, touch, update_device_fingerprint
+from odoo.http.session import (
+    authenticate,
+    logout,
+    save_session,
+    touch,
+    update_device_fingerprint,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -50,7 +56,7 @@ class Session(Controller):
                 return {'uid': None}
 
             request.session.db = db
-            request._save_session(env)
+            save_session(request, env)
 
             return env['ir.http'].with_user(request.session.uid).session_info()
 

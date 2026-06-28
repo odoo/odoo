@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Payment methods must be fetched from the API -->
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_bank_transfer" model="payment.method">
+        <field name="name">Bank Transfer</field>
+        <field name="code">bank_transfer</field>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="support_tokenization">False</field>
+    </record>
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="sequence">10</field>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="support_tokenization">True</field>
+    </record>
+
+    <record id="payment_method_mercado_pago_wallet" model="payment.method">
+        <field name="name">Mercado Pago Wallet</field>
+        <field name="code">mercado_pago_wallet</field>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/mercado_livre.png"/>
+        <field name="support_tokenization">False</field>
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS === -->
+
+    <record id="payment_method_amex" model="payment.method">
+        <field name="name">American Express</field>
+        <field name="code">amex</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/amex.png"/>
+    </record>
+
+    <record id="payment_method_argencard" model="payment.method">
+        <field name="name">Argencard</field>
+        <field name="code">argencard</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/argencard.png"/>
+    </record>
+
+    <record id="payment_method_cabal" model="payment.method">
+        <field name="name">Cabal</field>
+        <field name="code">cabal</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/cabal.png"/>
+    </record>
+
+    <record id="payment_method_caixa" model="payment.method">
+        <field name="name">Caixa</field>
+        <field name="code">caixa</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/caixa.png"/>
+    </record>
+
+    <record id="payment_method_cencosud" model="payment.method">
+        <field name="name">Cencosud</field>
+        <field name="code">cencosud</field>
+        <field
+            name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"
+        />
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/cencosud.png"/>
+    </record>
+
+    <record id="payment_method_codensa" model="payment.method">
+        <field name="name">Codensa</field>
+        <field name="code">codensa</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/codensa.png"/>
+    </record>
+
+    <record id="payment_method_cordial" model="payment.method">
+        <field name="name">Cordial</field>
+        <field name="code">cordial</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/cordial.png"/>
+    </record>
+
+    <record id="payment_method_cordobesa" model="payment.method">
+        <field name="name">Cordobesa</field>
+        <field name="code">cordobesa</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/cordobesa.png"/>
+    </record>
+
+    <record id="payment_method_elo" model="payment.method">
+        <field name="name">Elo</field>
+        <field name="code">elo</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/elo.png"/>
+    </record>
+
+    <record id="payment_method_hipercard" model="payment.method">
+        <field name="name">Hipercard</field>
+        <field name="code">hipercard</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/hipercard.png"/>
+    </record>
+
+    <record id="payment_method_lider" model="payment.method">
+        <field name="name">Lider</field>
+        <field name="code">lider</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/lider.png"/>
+    </record>
+
+    <record id="payment_method_magna" model="payment.method">
+        <field name="name">Magna</field>
+        <field name="code">magna</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/magna.png"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_mercado_livre" model="payment.method">
+        <field name="name">Mercado Livre</field>
+        <field name="code">mercado_livre</field>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_mercado_pago.payment_method_card')"
+        />
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/mercado_livre.png"/>
+    </record>
+
+    <record id="payment_method_naranja" model="payment.method">
+        <field name="name">Naranja</field>
+        <field name="code">naranja</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/naranja.png"/>
+    </record>
+
+    <record id="payment_method_nativa" model="payment.method">
+        <field name="name">Nativa</field>
+        <field name="code">nativa</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/nativa.png"/>
+    </record>
+
+    <record id="payment_method_oca" model="payment.method">
+        <field name="name">OCA</field>
+        <field name="code">oca</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+    </record>
+
+    <record id="payment_method_presto" model="payment.method">
+        <field name="name">Presto</field>
+        <field name="code">presto</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/presto.png"/>
+    </record>
+
+    <record id="payment_method_shopping" model="payment.method">
+        <field name="name">Shopping</field>
+        <field name="code">shopping</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/shopping.png"/>
+    </record>
+
+    <record id="payment_method_tarjeta_mercadopago" model="payment.method">
+        <field name="name">Tarjeta MercadoPago</field>
+        <field name="code">tarjeta_mercadopago</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/tarjeta_mercadopago.png"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mercado_pago.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+</odoo>

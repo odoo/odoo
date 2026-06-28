@@ -28,6 +28,7 @@ from . import test_performance
 from . import test_qweb
 from . import test_redirect
 from . import test_res_users
+from . import test_save_xml
 from . import test_sitemap
 from . import test_skip_website_configurator
 from . import test_snippets
@@ -36,6 +37,7 @@ from . import test_ui
 from . import test_unsplash_beacon
 from . import test_views
 from . import test_views_inherit_module_update
+from . import test_website_default_website
 from . import test_website_favicon
 from . import test_website_form_editor
 from . import test_website_reset_password

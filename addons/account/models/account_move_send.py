@@ -89,6 +89,7 @@ class AccountMoveSend(models.AbstractModel):
                 'mail_body': get_setting('mail_body', default_value=self._get_default_mail_body(move, mail_template, mail_lang)),
                 'mail_subject': get_setting('mail_subject', default_value=self._get_default_mail_subject(move, mail_template, mail_lang)),
                 'mail_partner_ids': get_setting('mail_partner_ids', default_value=self._get_default_mail_partner_ids(move, mail_template, mail_lang).ids),
+                'reply_to': get_setting('reply_to') or self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'reply_to'),
             })
         # Add mail attachments if sending methods support them
         if self._display_attachments_widget(vals['invoice_edi_format'], vals['sending_methods']):
@@ -195,7 +196,7 @@ class AccountMoveSend(models.AbstractModel):
         partners = self.env['res.partner'].with_company(move.company_id)
         if mail_template.use_default_to:
             defaults = move._message_get_default_recipients()[move.id]
-            email_cc = defaults['email_to']
+            email_cc = defaults['email_cc']
             email_to = defaults['email_to']
             partners |= partners.browse(defaults['partner_ids'])
         else:
@@ -213,10 +214,11 @@ class AccountMoveSend(models.AbstractModel):
             no_create=False,
         )
 
-        if not mail_template.use_default_to and mail_template.partner_to:
-            partner_to = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'partner_to')
-            partner_ids = mail_template._parse_partner_to(partner_to)
-            partners |= self.env['res.partner'].sudo().browse(partner_ids).exists()
+        if not mail_template.use_default_to and (mail_template.partner_to or mail_template.partner_cc):
+            for field in ('partner_to', 'partner_cc'):
+                field_partners = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, field)
+                partner_ids = mail_template._parse_partner_list_ids(field_partners)
+                partners |= self.env['res.partner'].sudo().browse(partner_ids).exists()
         return partners if self.env.context.get('allow_partners_without_mail') else partners.filtered('email')
 
     # -------------------------------------------------------------------------
@@ -269,16 +271,20 @@ class AccountMoveSend(models.AbstractModel):
         pdf_report = pdf_report or self._get_default_pdf_report_id(move)
         invoice_template = pdf_report | self.env.ref('account.account_invoices')
         extra_mail_templates = mail_template.report_template_ids - invoice_template
-        filename = move._get_invoice_report_filename(report=pdf_report)
-        return [
-            {
+        attachments = []
+        for extra_mail_template in extra_mail_templates:
+            if extra_mail_template.print_report_name:
+                filename = move._get_invoice_mail_template_dynamic_report_filename(report=extra_mail_template)
+            else:
+                filename = f'{extra_mail_template.name.lower()}_{move.name}.pdf'
+            attachments.append({
                 'id': f'placeholder_{extra_mail_template.name.lower()}_{filename}',
-                'name': f'{extra_mail_template.name.lower()}_{filename}',
+                'name': filename,
                 'mimetype': 'application/pdf',
                 'placeholder': True,
                 'dynamic_report': extra_mail_template.report_name,
-            } for extra_mail_template in extra_mail_templates
-        ]
+            })
+        return attachments
 
     @api.model
     def _get_invoice_extra_attachments(self, move):
@@ -334,7 +340,7 @@ class AccountMoveSend(models.AbstractModel):
         if move.state != 'posted':
             constraints['not_posted'] = _("You can't generate invoices that are not posted.")
         if not move.is_sale_document(include_receipts=True):
-            constraints['not_sale_document'] = _("You can only generate sales documents.")
+            constraints['not_sale_document'] = _("You can only generate sales documents or purchase documents for self-billing.")
         return constraints
 
     @api.model
@@ -601,13 +607,16 @@ class AccountMoveSend(models.AbstractModel):
             for attachment in self.env['ir.attachment'].browse(list(seen_attachment_ids)).exists()
         ]
 
-        return {
+        params = {
             'author_id': move_data['author_partner_id'],
             'body': move_data['mail_body'],
             'subject': move_data['mail_subject'],
             'partner_ids': move_data['mail_partner_ids'],
             'attachments': mail_attachments,
         }
+        if move_data.get('reply_to'):
+            params['reply_to'] = move_data['reply_to']
+        return params
 
     @api.model
     def _generate_dynamic_reports(self, moves_data):
@@ -849,6 +858,7 @@ class AccountMoveSend(models.AbstractModel):
         # Return generated attachments.
         attachments = self.env['ir.attachment']
         for move, move_data in success.items():
-            attachments += self._get_invoice_extra_attachments(move) or move_data['proforma_pdf_attachment']
+            extra_attachments = self._get_invoice_extra_attachments(move)
+            attachments += extra_attachments or move_data.get('proforma_pdf_attachment', self.env['ir.attachment'])
 
         return attachments

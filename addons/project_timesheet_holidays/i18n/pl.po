@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2026-02-14 12:15+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -116,22 +116,15 @@ msgstr "Zadanie"
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid ""
 "The default project used when automatically generating timesheets via time "
-"off requests. You can specify another project on each time off type "
-"individually."
+"off requests. You can specify another project on each time type individually."
 msgstr ""
-"Domyślny projekt używany podczas automatycznego generowania karty czasu "
-"pracy poprzez wnioski o czas wolny. Możesz określić inny projekt dla każdego "
-"typu czasu wolnego indywidualnie."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid ""
 "The default task used when automatically generating timesheets via time off "
-"requests. You can specify another task on each time off type individually."
+"requests. You can specify another task on each time type individually."
 msgstr ""
-"Domyślne zadanie używane podczas automatycznego generowania ewidencji czasu "
-"poprzez wnioski o czas wolny. Możesz określić inne zadanie dla każdego typu "
-"czasu wolnego indywidualnie."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -157,8 +150,28 @@ msgstr "Zadanie w czasie wolnym"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
-msgid "Time Off Types Count"
-msgstr "Liczba typów urlopów"
+msgid "Time Types Count"
+msgstr ""
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid "Timesheets linked to public holidays cannot be deleted."
+msgstr ""
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid "Timesheets linked to public holidays cannot be modified."
+msgstr ""
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid ""
+"Timesheets related to time off cannot be created or modified. Please manage "
+"your requests in the Time Off app instead."
+msgstr ""
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_project_task__display_name
@@ -197,40 +210,11 @@ msgstr "Zobacz urlopy"
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid ""
-"You cannot create timesheets for a task that is linked to a time off type. "
-"Please use the Time Off application to request new time off instead."
-msgstr ""
-"Nie można tworzyć arkuszy czasu dla zadania, które jest powiązane z typem "
-"czasu wolnego. Zamiast tego należy użyć aplikacji Czas wolny, aby złożyć "
-"wniosek o nowy czas wolny."
-
-#. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
-msgid "You cannot delete timesheets that are linked to global time off."
-msgstr ""
-"Nie możesz usuwać ewidencji czasu, która jest połączona z globalnym urlopem."
-
-#. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
-msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
 "Nie można usunąć arkuszy czasu, które są powiązane z wnioskami o czas wolny. "
 "Zamiast tego proszę anulować wniosek o czas wolny z aplikacji Czas wolny."
-
-#. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
-msgid ""
-"You cannot modify timesheets that are linked to time off requests. Please "
-"use the Time Off application to modify your time off requests instead."
-msgstr ""
-"Nie można modyfikować arkuszy czasu, które są powiązane z wnioskami o wolne. "
-"Zamiast tego należy użyć aplikacji Czas wolny do modyfikacji wniosków o "
-"wolne."
 
 #. module: project_timesheet_holidays
 #. odoo-python

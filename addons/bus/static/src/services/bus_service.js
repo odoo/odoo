@@ -1,16 +1,13 @@
-import { reactive } from "@web/owl2/utils";
+import { EventBus, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { _t } from "@web/core/l10n/translation";
-import { Deferred } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
-import { EventBus } from "@odoo/owl";
 import { user } from "@web/core/user";
+import { session } from "@web/session";
 
 // List of worker events that should not be broadcasted.
 const INTERNAL_EVENTS = new Set([
     "BUS:INITIALIZED",
-    "BUS:OUTDATED",
+    "BUS:LAST_ID_RESET",
     "BUS:NOTIFICATION",
     "BUS:PROVIDE_LOGS",
 ]);
@@ -26,25 +23,21 @@ export const BACK_ONLINE_RECONNECT_DELAY = 5000;
  *  @emits BUS:RECONNECT
  *  @emits BUS:RECONNECTING
  *  @emits BUS:WORKER_STATE_UPDATED
+ *  @emits BUS:OUTDATED
  */
 export const busService = {
-    dependencies: ["bus.parameters", "localization", "multi_tab", "notification", "worker_service"],
+    dependencies: ["bus.parameters", "localization", "multi_tab", "worker_service"],
 
-    start(
-        env,
-        {
-            multi_tab: multiTab,
-            notification,
-            "bus.parameters": params,
-            worker_service: workerService,
-        }
-    ) {
+    start(env, { multi_tab: multiTab, "bus.parameters": params, worker_service: workerService }) {
         const bus = new EventBus();
         const notificationBus = new EventBus();
         const subscribeFnToWrapper = new Map();
         let backOnlineTimeout;
         const startedAt = luxon.DateTime.now().set({ milliseconds: 0 });
-        let connectionInitializedDeferred;
+        /** @type {?Promise<void>} */
+        let workerInitPromise = null;
+        /** @type {(value?: void) => void | null} */
+        let resolveWorkerInit = null;
 
         /**
          * Handle messages received from the shared worker and fires an
@@ -72,8 +65,13 @@ export const busService = {
                 }
                 case "BUS:NOTIFICATION": {
                     const notifications = data.map(({ id, message }) => ({ id, ...message }));
-                    state.lastNotificationId = notifications.at(-1).id;
-                    localStorage.setItem("bus.last_notification_id", state.lastNotificationId);
+                    const receivedLastId = notifications.at(-1).id;
+                    const lsLastId = parseInt(
+                        localStorage.getItem("bus.last_notification_id") ?? 0
+                    );
+                    if (receivedLastId > lsLastId) {
+                        localStorage.setItem("bus.last_notification_id", receivedLastId);
+                    }
                     for (const { id, type, payload } of notifications) {
                         notificationBus.trigger(type, { id, payload });
                         busService._onMessage(env, id, type, payload);
@@ -81,35 +79,21 @@ export const busService = {
                     break;
                 }
                 case "BUS:INITIALIZED": {
-                    connectionInitializedDeferred.resolve();
+                    resolveWorkerInit();
                     break;
                 }
                 case "BUS:WORKER_STATE_UPDATED":
                     state.workerState = data;
                     break;
                 case "BUS:OUTDATED": {
-                    multiTab.unregister();
-                    notification.add(
-                        _t(
-                            "Save your work and refresh to get the latest updates and avoid potential issues."
-                        ),
-                        {
-                            title: _t("The page is out of date"),
-                            type: "warning",
-                            sticky: true,
-                            buttons: [
-                                {
-                                    name: _t("Refresh"),
-                                    primary: true,
-                                    onClick: () => {
-                                        browser.location.reload();
-                                    },
-                                },
-                            ],
-                        }
-                    );
+                    if (data.unregisterMultiTab) {
+                        multiTab.unregister();
+                    }
                     break;
                 }
+                case "BUS:LAST_ID_RESET":
+                    localStorage.setItem("bus.last_notification_id", data);
+                    break;
             }
             if (!INTERNAL_EVENTS.has(type)) {
                 bus.trigger(type, data);
@@ -120,27 +104,26 @@ export const busService = {
          * Start the "bus_service" workerService.
          */
         async function ensureWorkerStarted() {
-            if (!connectionInitializedDeferred) {
-                connectionInitializedDeferred = new Deferred();
-                let uid = Array.isArray(session.user_id) ? session.user_id[0] : user.userId;
-                if (!uid && uid !== undefined) {
-                    uid = false;
-                }
-                await workerService.ensureWorkerStarted();
-                await workerService.registerHandler(handleMessage);
-                workerService.send("BUS:INITIALIZE_CONNECTION", {
-                    websocketURL: `${params.serverURL.replace("http", "ws")}/websocket?version=${
-                        session.websocket_worker_version
-                    }`,
-                    db: session.db,
-                    lastNotificationId: parseInt(
-                        localStorage.getItem("bus.last_notification_id") ?? 0
-                    ),
-                    uid,
-                    startTs: startedAt.valueOf(),
-                });
+            if (workerInitPromise) {
+                return workerInitPromise;
             }
-            await connectionInitializedDeferred;
+            ({ promise: workerInitPromise, resolve: resolveWorkerInit } = Promise.withResolvers());
+            let uid = Array.isArray(session.user_id) ? session.user_id[0] : user.userId;
+            if (!uid && uid !== undefined) {
+                uid = false;
+            }
+            await workerService.ensureWorkerStarted();
+            await workerService.registerHandler(handleMessage);
+            workerService.send("BUS:INITIALIZE_CONNECTION", {
+                websocketURL: `${params.serverURL.replace("http", "ws")}/websocket?version=${
+                    session.websocket_worker_version
+                }`,
+                db: session.db,
+                lastNotificationId: parseInt(localStorage.getItem("bus.last_notification_id") ?? 0),
+                uid,
+                startTs: startedAt.valueOf(),
+            });
+            return workerInitPromise;
         }
 
         browser.addEventListener("pagehide", ({ persisted }) => {
@@ -171,7 +154,7 @@ export const busService = {
                 capture: true,
             }
         );
-        const state = reactive({
+        const state = proxy({
             addEventListener: bus.addEventListener.bind(bus),
             addChannel: async (channel) => {
                 await ensureWorkerStarted();
@@ -229,8 +212,6 @@ export const busService = {
             },
             startedAt,
             workerState: null,
-            /** The id of the last notification received by this tab. */
-            lastNotificationId: null,
         });
         return state;
     },

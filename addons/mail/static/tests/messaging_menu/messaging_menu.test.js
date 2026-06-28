@@ -15,17 +15,16 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { Store } from "@mail/../tests/mock_server/store";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
-import { Store } from "@mail/model/store";
+import { Store as StoreModel } from "@mail/model/store";
 import { toRawValue } from "@mail/utils/common/local_storage";
 
 import { describe, expect, mockPermission, test } from "@odoo/hoot";
-import { Deferred, mockUserAgent } from "@odoo/hoot-mock";
+import { mockUserAgent } from "@odoo/hoot-mock";
 import {
     Command,
     getService,
-    makeKwArgs,
     mockService,
     patchWithCleanup,
     serverState,
@@ -103,7 +102,7 @@ test("rendering with chat push notification default permissions", async () => {
 test("can quickly dismiss 'Turn on notification' suggestion", async () => {
     mockPermission("notifications", "prompt");
     const IS_NOTIFICATION_PERMISSION_LS = makeRecordFieldLocalId(
-        Store.localId(),
+        StoreModel.localId(),
         "isNotificationPermissionDismissed"
     );
     await start();
@@ -761,22 +760,6 @@ test("filtered previews", async () => {
     await contains(".o-mail-NotificationItem-name:text('channel1')");
 });
 
-test("no code injection in message body preview", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({});
-    pyEnv["mail.message"].create({
-        body: "<p><em>&shoulnotberaised</em><script>throw new Error('CodeInjectionError');</script></p>",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    await start();
-    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await contains(
-        ".o-mail-NotificationItem-text:text('You: &shoulnotberaisedthrow new Error('CodeInjectionError');')"
-    );
-    await contains(".o-mail-NotificationItem-text script", { count: 0 });
-});
-
 test("no code injection in message body preview from sanitized message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
@@ -1213,10 +1196,11 @@ test("messaging menu should show new needaction messages from chatter", async ()
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
         message_id: messageId,
-        store_data: new mailDataHelpers.Store(
-            pyEnv["mail.message"].browse(messageId),
-            makeKwArgs({ for_current_user: true, inbox_fields: true })
-        ).get_result(),
+        store_data: new Store()
+            .add(pyEnv["mail.message"].browse(messageId), "_store_message_fields", {
+                fields_params: { inbox_fields: true },
+            })
+            .as_dict(),
     });
     await contains(".o-mail-NotificationItem-text:text('Frodo Baggins: @Mitchel Admin')");
 });
@@ -1224,18 +1208,18 @@ test("messaging menu should show new needaction messages from chatter", async ()
 test("can open messaging menu even if messaging is not initialized", async () => {
     mockPermission("notifications", "prompt");
     await startServer();
-    const def = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     listenStoreFetch("init_messaging", {
         async onRpc() {
             expect.step("before init_messaging");
-            await def;
+            await promise;
         },
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem-name:text('Turn on notifications')");
     await expect.waitForSteps(["before init_messaging"]);
-    def.resolve();
+    resolve();
     await waitStoreFetch("init_messaging");
 });
 
@@ -1243,18 +1227,18 @@ test("can open messaging menu even if channels are not fetched", async () => {
     mockPermission("notifications", "denied");
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
-    const def = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     listenStoreFetch("channels_as_member", {
         async onRpc() {
             expect.step("before channels_as_member");
-            await def;
+            await promise;
         },
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-DiscussSystray:has(:text('Loading…'))");
     await expect.waitForSteps(["before channels_as_member"]);
-    def.resolve();
+    resolve();
     await waitStoreFetch("channels_as_member");
     await contains(".o-mail-NotificationItem-name:text('General')");
 });
@@ -1442,4 +1426,18 @@ test("user notification from inbox redirect to discuss inbox", async () => {
     await click(".o-mail-NotificationItem .o-mail-NotificationItem-text:text('You: Hello world!')");
     await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
     await contains(".o-mail-Message.o-highlighted .o-mail-Message-body:text('Hello world!')");
+});
+
+test("preserve message link formatting in messaging menu", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        model: "discuss.channel",
+        body: `<a href="https://odoo.com/">https://odoo.com/</a>`,
+        author_id: serverState.partnerId,
+        res_id: channelId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(`.o-mail-NotificationItem-text a[href="https://odoo.com/"]`);
 });

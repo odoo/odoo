@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import datetime
+from unittest.mock import patch
 
 from odoo import fields, Command
-from odoo.exceptions import AccessError
+from odoo.addons.google_account.models.google_service import GoogleService
 from odoo.tests.common import tagged, TransactionCase
 
 
@@ -38,7 +40,8 @@ class TestTokenAccess(TransactionCase):
         user = self.users[0]
         old_validity = user.res_users_settings_id.google_calendar_token_validity
 
-        user.with_user(user).res_users_settings_id._set_google_auth_tokens('my_new_token', 'my_new_rtoken', 3600)
+        with patch.object(GoogleService, '_do_request', return_value=(200, {}, datetime.now())):
+            user.with_user(user).res_users_settings_id._set_google_auth_tokens('my_new_token', 'my_new_rtoken', 3600)
 
         self.assertEqual(user.res_users_settings_id.google_calendar_rtoken, 'my_new_rtoken')
         self.assertEqual(user.res_users_settings_id.google_calendar_token, 'my_new_token')
@@ -57,9 +60,10 @@ class TestTokenAccess(TransactionCase):
         user = self.users[0]
         old_validity = user.res_users_settings_id.google_calendar_token_validity
 
-        user.with_user(self.system_user).res_users_settings_id._set_google_auth_tokens(
-            'my_new_token', 'my_new_rtoken', 3600
-        )
+        with patch.object(GoogleService, '_do_request', return_value=(200, {}, datetime.now())):
+            user.with_user(self.system_user).res_users_settings_id._set_google_auth_tokens(
+                'my_new_token', 'my_new_rtoken', 3600
+            )
 
         self.assertEqual(user.res_users_settings_id.google_calendar_rtoken, 'my_new_rtoken')
         self.assertEqual(user.res_users_settings_id.google_calendar_token, 'my_new_token')

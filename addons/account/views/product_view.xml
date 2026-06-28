@@ -68,23 +68,26 @@
                 </xpath>
                 <page name="inventory" position="after">
                     <page string="Accounting" name="invoicing" groups="account.group_account_readonly">
-                        <group name="properties" groups="account.group_account_readonly">
-                            <group string="Cost and Revenue">
+                        <group name="accounting" groups="account.group_account_readonly,account.group_account_invoice">
+                            <group string="Cost and Revenue" groups="account.group_account_readonly">
                                 <field name="property_account_income_id" placeholder="From Category"
-                                    groups="account.group_account_readonly"/>
+                                    groups="account.group_account_readonly" decoration-muted="not property_account_income_active"/>
                                 <field name="property_account_expense_id" placeholder="From Category"
-                                    groups="account.group_account_readonly"/>
+                                    groups="account.group_account_readonly" decoration-muted="not property_account_expense_active"/>
+                            </group>
+                            <group string="Reporting" name="reporting" invisible="1">
+                                <field name="account_tag_ids" widget="many2many_tags" options="{'no_create': True}"/>
                             </group>
                         </group>
-                        <group name="accounting" groups="account.group_account_readonly,account.group_account_invoice"/>
                     </page>
                 </page>
                 <div name="list_price_per_uom_id" position="after">
                     <label for="taxes_id" invisible="type == 'combo'"/>
-                    <div name="taxes_div" class="o_input_box" invisible="type == 'combo'">
+                    <div name="taxes_div" class="o_row" invisible="type == 'combo'">
                         <field
                             name="taxes_id"
                             widget="many2many_tax_tags"
+                            class="oe_inline"
                             context="{
                                 'default_type_tax_use': 'sale',
                                 'search_default_sale': 1,
@@ -94,7 +97,7 @@
                                 'append_fields': ['company_id'],
                             }"
                         />
-                        <field name="tax_string" class="o_input_box_overlay_end o_input_box_overlay_inline"/>
+                        <field name="tax_string" class="oe_inline"/>
                     </div>
                 </div>
                 <div name="standard_price_uom" position="after">
@@ -119,14 +122,16 @@
             <field name="model">product.category</field>
             <field name="inherit_id" ref="product.product_category_form_view"/>
             <field name="arch" type="xml">
-                <group name="first" position="after">
-                    <group name="account_property" >
-                        <group string="Account Properties" groups="account.group_account_readonly">
-                            <field name="property_account_income_categ_id"/>
-                            <field name="property_account_expense_categ_id"/>
+                <notebook position="inside">
+                    <page name="accounting" string="Accounting" groups="account.group_account_readonly">
+                        <group>
+                            <group name="properties">
+                                <field name="property_account_income_categ_id"/>
+                                <field name="property_account_expense_categ_id"/>
+                            </group>
                         </group>
-                    </group>
-                </group>
+                    </page>
+                </notebook>
             </field>
         </record>
     </data>

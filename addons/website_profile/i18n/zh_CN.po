@@ -12,17 +12,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2026-01-24 12:41+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"PO-Revision-Date: 2026-04-04 13:07+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-1/website_profile/zh_Hans/>\n"
+"projects/odoo-s19-2/website_profile/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -162,6 +162,23 @@ msgid ""
 "                            Thanks for your participation!\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"                            您好 <t t-out=\"object.name or ''\">Marc Demo</"
+"t>，<br/><br/>\n"
+"                            现邀请您完成邮箱验证以正常访问 \"<t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>\" 官网。\n"
+"                            请点击下方按钮完成验证操作：\n"
+"                            <div style=\"margin: 32px 0px 32px 0px;\">\n"
+"                                <a t-att-href=\"ctx.get('token_url')\" t-"
+"attf-style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                                    验证账户\n"
+"                                </a>\n"
+"                            </div>\n"
+"                            感谢您的配合！\n"
+"            </t>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -581,6 +598,12 @@ msgid "XP"
 msgstr "经验值"
 
 #. module: website_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+msgid "You are not allowed to edit this user"
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid ""
 "You can score more points by answering quizzes at the end of each course "
@@ -619,6 +642,11 @@ msgstr "或"
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "point"
 msgstr "积分"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
+msgid "s"
+msgstr ""
 
 #. module: website_profile
 #. odoo-python

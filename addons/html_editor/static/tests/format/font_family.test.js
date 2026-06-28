@@ -6,6 +6,7 @@ import { setFontFamily, undo, redo } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
 import { animationFrame } from "@odoo/hoot-mock";
 import { expandToolbar } from "../_helpers/toolbar";
+import { expectElementCount } from "../_helpers/ui_expectations";
 
 test("should give a few characters a fontFamily", async () => {
     await testEditor({
@@ -91,7 +92,7 @@ test("should remove font family on the selected content using remove format", as
     );
     await expandToolbar();
     expect(queryOne(".btn[name='font_family']").textContent).toBe("Arial");
-    await click(".btn[title='Remove Format']");
+    await click(".btn[title='Remove Format (Ctrl + Space)']");
     await waitFor(".btn[name='font_family']:contains('Default font')");
     expect(queryOne(".btn[name='font_family']").textContent).toBe("Default font");
     expect(getContent(el)).toBe("<p>ab[cde]fg</p>");
@@ -129,6 +130,26 @@ test("should contain the 5 available font + default", async () => {
                 "Tahoma (sans-serif)",
                 "Trebuchet MS (sans-serif)",
                 "Courier New (monospace)",
+            ][i]
+        );
+    }
+});
+
+test("font-family dropdown item should have corresponding font-family applied", async () => {
+    await setupEditor("<p>ab[cde]fg</p>");
+    await expandToolbar();
+    await click(".btn[name='font_family']");
+    await expectElementCount(".o_font_family_selector_menu", 1);
+    const items = document.querySelectorAll(".o_font_family_selector_menu .o-dropdown-item");
+    for (let i = 0; i < items.length; i++) {
+        expect(items[i].style.fontFamily).toBe(
+            [
+                "", // Default system font
+                "Arial, sans-serif",
+                "Verdana, sans-serif",
+                "Tahoma, sans-serif",
+                '"Trebuchet MS", sans-serif',
+                '"Courier New", monospace',
             ][i]
         );
     }

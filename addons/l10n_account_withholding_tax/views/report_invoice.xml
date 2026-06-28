@@ -1,0 +1,7 @@
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//t[@t-if=&quot;payment_vals['is_refund']&quot;]" position="after">
+            <t t-elif="payment_vals['is_withhold']">Deducted on </t>
+        </xpath>
+    </template>
+</odoo>

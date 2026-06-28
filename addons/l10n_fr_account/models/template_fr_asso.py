@@ -11,11 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
             'name': self.env._("Associations accounting plan"),
             'parent': 'fr',
             'code_digits': 6,
-            'property_account_expense_categ_id': 'pca_6071',
-            'property_account_income_categ_id': 'pca_7071',
-            'property_account_receivable_id': 'pcg_411_account',
-            'property_account_payable_id': 'pcg_401_account',
-            'downpayment_account_id': 'pcg_4191',
         }
 
     @template('fr_asso', 'res.company')
@@ -39,6 +34,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tva_acq_normale',
                 'expense_account_id': 'pcg_607_account',
                 'income_account_id': 'pcg_707_account',
+                'receivable_account_id': 'pcg_411_account',
+                'payable_account_id': 'pcg_401_account',
                 'downpayment_account_id': 'pcg_4191',
                 'account_stock_valuation_id': 'pcg_31_account',
             },

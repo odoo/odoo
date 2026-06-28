@@ -9,6 +9,7 @@ import time
 
 from odoo.addons.iot_drivers.connection_manager import connection_manager
 from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
+from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_L import PrinterInterface
 from odoo.addons.iot_drivers.tools import helpers, system, wifi
 from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
 
@@ -16,20 +17,24 @@ _logger = logging.getLogger(__name__)
 
 
 class PrinterDriver(PrinterDriverBase):
+    interface = PrinterInterface
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device)
         self.conn = Connection()
         self.cups_lock = Lock()
-        self.receipt_protocol = 'star' if 'STR_T' in device['device-id'] else 'escpos'
         self.connected_by_usb = device.get("is_usb", False)
-        self.device_connection = "direct" if self.connected_by_usb else "network"
-        self.device_name = device['device-make-and-model']
+        if not self.connected_by_usb:
+            self.device_connection = "network"
+        self.device_name = device.get('device-make-and-model', identifier)
         self.ip = device.get('ip')
 
-        if any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']) or "tm-m30" in self.device_name.lower():
+        device_id = device.get('device-id', '')
+        self.receipt_protocol = 'star' if 'STR_T' in self.device_name else 'escpos'
+
+        if any(cmd in device_id for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']) or "tm-m30" in self.device_name.lower():
             self.device_subtype = "receipt_printer"
-        elif any(cmd in device['device-id'] for cmd in ['COMMAND SET:ZPL;', 'CMD:ESCLABEL;']) or "zpl" in self.device_name.lower():
+        elif any(cmd in device_id for cmd in ['COMMAND SET:ZPL;', 'CMD:ESCLABEL;']) or "zpl" in self.device_name.lower():
             self.device_subtype = "label_printer"
         else:
             self.device_subtype = "office_printer"
@@ -44,15 +49,19 @@ class PrinterDriver(PrinterDriverBase):
         self.send_status('disconnected', 'Printer was disconnected')
         super().disconnect()
 
-    def print_raw(self, data, action_unique_id=None):
+    def print_raw(self, data, action_unique_id=None, duplex=True):
         """Print raw data to the printer
 
         :param data: The data to print
         :param action_unique_id: The unique identifier of the action triggering the print
+        :param duplex: Whether to print on both sides of the paper (if supported by the printer)
         """
         try:
             with self.cups_lock:
-                job_id = self.conn.createJob(self.device_identifier, 'Odoo print job', {'document-format': CUPS_FORMAT_AUTO})
+                options = {'document-format': CUPS_FORMAT_AUTO}
+                if not duplex:
+                    options["sides"] = "one-sided"
+                job_id = self.conn.createJob(self.device_identifier, 'Odoo print job', options)
                 self.conn.startDocument(self.device_identifier, job_id, 'Odoo print job', CUPS_FORMAT_AUTO, 1)
                 self.conn.writeRequestData(data, len(data))
                 self.conn.finishDocument(self.device_identifier)
@@ -203,7 +212,11 @@ class PrinterDriver(PrinterDriverBase):
 
     def _action_default(self, data):
         _logger.debug("_action_default called for printer %s", self.device_name)
-        self.print_raw(b64decode(data['document']), action_unique_id=data.get('action_unique_id'))
+        self.print_raw(
+            b64decode(data['document']),
+            action_unique_id=data.get('action_unique_id'),
+            duplex=data.get("duplex", True),
+        )
         return {'print_id': data['print_id']} if 'print_id' in data else {}
 
     def _cancel_job_with_error(self, job_id, error_message):

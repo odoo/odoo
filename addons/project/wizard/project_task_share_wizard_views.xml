@@ -11,13 +11,13 @@
                 <button class="btn-secondary" special="cancel" data-hotkey="x" />
             </xpath>
             <xpath expr="//button[hasclass('btn-primary')]" position="attributes">
-                <attribute name="invisible">project_privacy_visibility in ['invited_users', 'followers']</attribute>
+                <attribute name="invisible">project_privacy_visibility == 'invited_users'</attribute>
             </xpath>
             <xpath expr="//field[@name='note']" position="attributes">
-                <attribute name="invisible">project_privacy_visibility in ['invited_users', 'followers']</attribute>
+                <attribute name="invisible">project_privacy_visibility == 'invited_users'</attribute>
             </xpath>
             <xpath expr="//field[@name='partner_ids']" position="attributes">
-                <attribute name="invisible">project_privacy_visibility in ['invited_users', 'followers']</attribute>
+                <attribute name="invisible">project_privacy_visibility == 'invited_users'</attribute>
             </xpath>
         </field>
     </record>

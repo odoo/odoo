@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
@@ -8,9 +7,9 @@ from lxml import etree
 from unittest.mock import patch
 
 from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import BaseCase, TransactionCase
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.addons.base.models.ir_qweb import QWebError
+from odoo.addons.base.models.ir_qweb import QWebError, render as mock_render
 from odoo.tools import file_open, misc, mute_logger
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.exceptions import UserError, MissingError
@@ -892,6 +891,18 @@ class TestQWebBasic(TransactionCase):
         rendered = self.env['ir.qweb']._render(t.id)
         self.assertEqual(rendered.strip(), result.strip())
 
+    def test_empty_foreach(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="empty-for">
+                <t t-foreach="[1, 2]" t-as="v">
+                </t>
+            </t>'''
+        })
+        rendered = self.env['ir.qweb']._render(t.id)
+        self.assertEqual(rendered.strip(), "")
+
     def test_att_escaping_1(self):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
@@ -1601,7 +1612,7 @@ class TestQWebBasic(TransactionCase):
         try:
             self.env['ir.qweb']._render(-999)
         except MissingError as e:
-            self.assertIn('Template does not exist or has been deleted', str(e))
+            self.assertIn('Template not found', str(e))
 
         with self.assertRaises(MissingError):
             self.env['ir.qweb']._render('not.wrong_template_xmlid')
@@ -1778,7 +1789,7 @@ class TestQWebBasic(TransactionCase):
             )
 
         # an error triggered on first render
-        self.env.registry.clear_cache('templates')
+        self.env.transaction.invalidate_ormcache('templates')
 
         try:
             self.env['ir.qweb']._render(t.id, {'div': 0})
@@ -1831,7 +1842,7 @@ class TestQWebBasic(TransactionCase):
             self.assertIn("""'/section/t[2]', '<t t-call="base.view_test_error_9_callee" b="a"/>'""", error)
 
         # an error triggered on first render
-        self.env.registry.clear_cache('templates')
+        self.env.transaction.invalidate_ormcache('templates')
 
         with self.assertRaises(QWebError):
             self.env['ir.qweb']._render(t.id, {'div': 0})
@@ -2048,6 +2059,35 @@ class TestQWebBasic(TransactionCase):
         result = self.env['ir.qweb']._render(view1.id)
         self.assertEqual(str(result), "<div><wrap><section><article>test</article></section></wrap></div>")
 
+    def test_call_percent_in_parametric_attr(self):
+        self.env['ir.ui.view'].create({
+            'name': 'child',
+            'type': 'qweb',
+            'key': 'base.child',
+            'arch_db': '<p t-out="msg"/>',
+        })
+        view = self.env['ir.ui.view'].create({
+            'name': "other",
+            'type': 'qweb',
+            'arch': '<div>'
+                    '<t t-call="base.child" msg.f="94% of percentage statistics are completely made up."/>'
+                    '<t t-call="base.child" msg.f="#{n}% of percentage statistics are completely made up."/>'
+                    '<t t-call="base.child" msg.f="94% of percentage statistics are #{n}% made up."/>'
+                    '</div>',
+        })
+
+        result = self.env['ir.qweb']._render(view.id, {'n': 100})
+        self.assertEqual(
+            str(result),
+            "<div>"
+            "<p>94% of percentage statistics are completely made up.</p>"
+            "<p>100% of percentage statistics are completely made up.</p>"
+            "<p>94% of percentage statistics are 100% made up.</p>"
+            "</div>",
+            "literal '%' in a parametric t-call attribute must always render "
+            "as a single '%', whether or not the value has #{...} placeholders",
+        )
+
     def test_call_foreach_call(self):
         self.env['ir.ui.view'].create({
             'name': 'child',
@@ -2170,7 +2210,7 @@ class TestQWebBasic(TransactionCase):
             QWeb.with_context(preserve_comments=False)._render(view.id),
             markupsafe.Markup('<p></p>'),
             "Should not have the comment")
-        self.env.registry.clear_cache('templates')
+        self.env.transaction.invalidate_ormcache('templates')
         self.assertEqual(
             QWeb.with_context(preserve_comments=True)._render(view.id),
             markupsafe.Markup(f'<p>{comment}</p>'),
@@ -2191,7 +2231,7 @@ class TestQWebBasic(TransactionCase):
             QWeb.with_context(preserve_comments=False)._render(view.id),
             markupsafe.Markup('<p></p>'),
             "Should not have the processing instruction")
-        self.env.registry.clear_cache('templates')
+        self.env.transaction.invalidate_ormcache('templates')
         self.assertEqual(
             QWeb.with_context(preserve_comments=True)._render(view.id),
             markupsafe.Markup(f'<p>{p_instruction}</p>'),
@@ -2549,7 +2589,7 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
         OTHER_SEARCH_FETCH = 3  # "SELECT id + fields from xmlid"
         ARCH_COMBINE = 4  # SELECT RECURSIVE arch combine
 
-        self.env.registry.clear_cache('templates')
+        self.env.transaction.invalidate_ormcache('templates')
         view.invalidate_model()
 
         check('base.testing_content', 'test-cold-0', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
@@ -2561,20 +2601,20 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
         check(view.id, 'test-hot-id', 0)
 
         # like 'test-cold-0'
-        self.env.registry.clear_cache('templates')
+        self.env.transaction.invalidate_ormcache('templates')
         check(view.id, 'test-cold-id-1', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
 
         # like 'test-cold-0' the first search query is replaced by a fetching
-        self.env.registry.clear_cache('templates')
+        self.env.transaction.invalidate_ormcache('templates')
         view.invalidate_model()
         check(view.id, 'test-cold-id-2', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
 
         # like 'test-cold-0'
-        self.env.registry.clear_cache('templates')
+        self.env.transaction.invalidate_ormcache('templates')
         check('base.testing_content', 'test-cold-1', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
 
         # like 'test-cold-0'
-        self.env.registry.clear_cache('templates')
+        self.env.transaction.invalidate_ormcache('templates')
         check(view.id, 'test-cold-id-3', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE - 1)  # 7
 
     def test_render_query_count_after_write(self):
@@ -2628,7 +2668,7 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
             self.assertEqual(next(counter) - counter_init, cachemiss, 'The template compilation function has been called too many times.')
             self.assertEqual(env.cr.sql_log_count - init, queries, f'Maximum queries: {queries}')
 
-        View.env.registry.clear_cache('templates')
+        View.env.transaction.invalidate_ormcache('templates')
         View.invalidate_model()
 
         # do not count those fetching queries
@@ -2676,3 +2716,12 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
         self.env.invalidate_all()
 
         check(extend_view_2.id, "<div><div>Hello3</div><article></article><section></section></div>", queries=5, cachemiss=1)
+
+
+class TestQwebMocked(BaseCase):
+    def test_qweb_render_with_mock(self):
+        def loader(template_name):
+            self.assertEqual(template_name, 'abc')
+            return etree.fromstring("""<p>Ok: <t t-out="vv"/></p>"""), template_name
+        content = mock_render('abc', {'vv': 42}, loader)
+        self.assertEqual(str(content).strip(), """<p>Ok: 42</p>""")

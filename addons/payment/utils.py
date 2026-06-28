@@ -3,12 +3,19 @@
 from hashlib import sha1
 from urllib.parse import parse_qsl, urlparse
 
+from werkzeug.exceptions import Forbidden
+
 from odoo import api, fields
 from odoo.http import request
 from odoo.tools import consteq, float_round
 from odoo.tools.misc import hmac as hmac_tool
 
-from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
+from odoo.addons.payment.const import CURRENCY_MINOR_UNITS, SENSITIVE_KEYS
+from odoo.addons.payment.logging import get_payment_logger
+
+# Pass the possibly empty set of sensitive keys to the logger in case a provider module extends it.
+_logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
+
 
 # Access token management
 
@@ -65,7 +72,6 @@ def add_to_report(report, records, available=True, reason=""):
                 pm_record : {
                     'available': true|false,
                     'reason': "",
-                    'supported_providers': [(provider_record, report['providers'][p]['available'])],
                 },
             },
         }
@@ -83,12 +89,6 @@ def add_to_report(report, records, available=True, reason=""):
     report.setdefault(category, {})
     for r in records:
         report[category][r] = {"available": available, "reason": reason}
-        if category == "payment_methods" and "providers" in report:
-            report[category][r]["supported_providers"] = [
-                (p, report["providers"][p]["available"])
-                for p in r.provider_ids
-                if p in report["providers"]
-            ]
 
 
 # URL parsing
@@ -191,6 +191,27 @@ def to_minor_currency_units(major_amount, currency, arbitrary_decimal_number=Non
     )
 
 
+def get_language_code(lang, mapping, fallback="en"):
+    """Return the language code corresponding to the provided lang.
+
+    If the lang is not mapped to any language code, the country code is used instead. In
+    case the country code has no match either, we fall back to the provided fallback.
+
+    :param str lang: The lang, in IETF language tag format.
+    :param dict mapping: The dictionary mapping the lang or country code to the language code.
+    :param str fallback: The fallback language code key to use if no match is found.
+    :return: The corresponding language code.
+    :rtype: str
+    """
+    language_code = mapping.get(lang)
+    if not language_code:
+        country_code = lang.split("_")[0]
+        language_code = mapping.get(country_code)
+    if not language_code:
+        language_code = mapping.get(fallback)
+    return language_code
+
+
 # Partner values formatting
 
 
@@ -219,6 +240,27 @@ def split_partner_name(partner_name):
         return parts[0], ""
 
     return " ".join(parts[:-1]), parts[-1]
+
+
+# Transaction signature verification
+
+
+def verify_signature(received_signature, expected_signature):
+    """Check that the received signature matches the expected one.
+
+    :param str|None received_signature: The received signature
+    :param str expected_signature: The expected signature
+    :rtype: None
+    :raise Forbidden: If the signatures don't match.
+    """
+    if not received_signature:
+        _logger.warning("Received payment data with missing signature.")
+        raise Forbidden
+
+    # Compare the received signature with the expected signature.
+    if not expected_signature or not consteq(received_signature, expected_signature):
+        _logger.warning("Received payment data with invalid signature.")
+        raise Forbidden
 
 
 # Security

@@ -19,18 +19,15 @@
             <t t-else="">Preview</t>
         </label>
     </div>
-    <t t-call="website.dialog.addFont.singlePreview">
-        <t t-set="previewLabel">Light</t>
-        <t t-set="previewWeight">300</t>
-    </t>
-    <t t-call="website.dialog.addFont.singlePreview">
-        <t t-set="previewLabel">Regular</t>
-        <t t-set="previewWeight">400</t>
-    </t>
-    <t t-call="website.dialog.addFont.singlePreview">
-        <t t-set="previewLabel">Bold</t>
-        <t t-set="previewWeight">700</t>
-    </t>
+    <t t-call="website.dialog.addFont.singlePreview"
+        previewLabel.translate="Light"
+        previewWeight="300"/>
+    <t t-call="website.dialog.addFont.singlePreview"
+        previewLabel.translate="Regular"
+        previewWeight="400"/>
+    <t t-call="website.dialog.addFont.singlePreview"
+        previewLabel.translate="Bold"
+        previewWeight="700"/>
 </t>
 <t t-name="website.dialog.addFont">
     <Dialog title.translate="Add a Google font or upload a custom font" size="'xl'">
@@ -65,6 +62,7 @@
                     <div class="col-form-label col-md-4">
                         <label for="upload_font">Custom Font</label>
                         <div class="text-muted">zip, ttf, woff, woff2, otf</div>
+                        <div class="form-text text-muted">Upload a zip with multiple weights for best results.</div>
                     </div>
                     <div class="col-md-8">
                         <input t-custom-ref="fileInput" type="file" class="form-control s_website_form_input" name="Custom Font"
@@ -76,14 +74,13 @@
             </div>
             <div class="col-lg-5" style="border-left: var(--gray-300) solid 1px;">
                 <!-- Preview -->
-                <t t-call="website.dialog.addFont.preview">
-                    <t t-if="this.state.googleFontFamily">
-                        <t t-set="previewFontName" t-value="this.state.googleFontFamily"/>
-                    </t>
-                    <t t-elif="this.state.uploadedFonts.length">
-                        <t t-set="previewFontName" t-value="this.state.uploadedFontName"/>
-                    </t>
+                <t t-if="this.state.googleFontFamily">
+                    <t t-set="previewFontName" t-value="this.state.googleFontFamily"/>
                 </t>
+                <t t-elif="this.state.uploadedFonts.length">
+                    <t t-set="previewFontName" t-value="this.state.uploadedFontName"/>
+                </t>
+                <t t-call="website.dialog.addFont.preview"/>
             </div>
         </div>
         <t t-set-slot="footer">

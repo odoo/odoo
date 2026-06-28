@@ -20,11 +20,11 @@ models which only purpose is to run tests.""",
     ],
     'data': [
         'security/test_website_security.xml',
-        'security/ir.model.access.csv',
         'views/templates.xml',
         'views/test_model_multi_website_views.xml',
         'views/test_model_views.xml',
         'data/test_website_data.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'test_website.test_bundle': [

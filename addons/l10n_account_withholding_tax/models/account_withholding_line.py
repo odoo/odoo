@@ -48,7 +48,8 @@ class AccountWithholdingLine(models.AbstractModel):
         comodel_name='account.tax',
         check_company=True,
         required=True,
-        domain="[('type_tax_use', '=', type_tax_use), ('is_withholding_tax_on_payment', '=', True)]",
+        index=True,
+        domain="[('type_tax_use', '=', type_tax_use), ('is_withholding_tax', '=', True)]",
     )
     withholding_sequence_id = fields.Many2one(related='tax_id.withholding_sequence_id')
     source_base_amount_currency = fields.Monetary(currency_field='source_currency_id')
@@ -107,6 +108,7 @@ class AccountWithholdingLine(models.AbstractModel):
         compute='_compute_company_id',
         precompute=True,
         required=True,
+        index=True,
         store=True,
     )
     comodel_company_currency_id = fields.Many2one(
@@ -363,7 +365,7 @@ class AccountWithholdingLine(models.AbstractModel):
         # Check names first to not consume sequences if any is missing
         for line in self:
             if not line.name and not line.withholding_sequence_id:
-                raise UserError(self.env._('Please enter the withholding number for the tax %(tax_name)s', tax_name=line.tax_id.name))
+                raise UserError(self.env._('Please enter the sequence number for the tax %(tax_name)s', tax_name=line.tax_id.name))
 
         # Convert them to base lines to compute the taxes.
         base_lines = []
@@ -432,7 +434,7 @@ class AccountWithholdingLine(models.AbstractModel):
         """ Construct and return a domain that will filter withholding taxes available for this company and payment type. """
         filter_domain = models.check_company_domain_parent_of(self, company)
         payment_type = 'purchase' if payment_type == 'outbound' else 'sale'
-        return Domain.AND([filter_domain, Domain('type_tax_use', '=', payment_type), Domain('is_withholding_tax_on_payment', '=', True)])
+        return Domain.AND([filter_domain, Domain('type_tax_use', '=', payment_type), Domain('is_withholding_tax', '=', True)])
 
     def _need_update_withholding_lines_placeholder(self):
         """ Determines if the lines' placeholders needs update or not. """
@@ -488,7 +490,7 @@ class AccountWithholdingLine(models.AbstractModel):
                 'analytic_distribution': base_line_data['analytic_distribution'],
                 'account': account.id,
                 'tax_id': tax_data['tax'].id,
-                'skip': not tax_data['tax'].is_withholding_tax_on_payment,
+                'skip': not tax_data['tax'].is_withholding_tax,
                 'currency_id': base_line_data['currency_id'].id,
             }
 

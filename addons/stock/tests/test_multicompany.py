@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import Command
 
+from odoo.fields import Domain
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged, Form, TransactionCase
 
@@ -696,3 +698,36 @@ class TestMultiCompany(TransactionCase):
                     'picking_type_id': self.warehouse_b.in_type_id.id,
                 })
             ]})
+
+    def test_quants_visibility_with_multi_company_receipt(self):
+        """Tests that validating a receipt with both companies selected
+        doesn't leak the negative vendor quant to Company B's reports.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Test Storable Product',
+            'type': 'consu',
+            'is_storable': True,
+            'company_id': self.company_a.id,
+        })
+
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        receipt = self.env['stock.picking'].with_company(self.company_a).create({
+            'picking_type_id': self.warehouse_a.in_type_id.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': self.stock_location_a.id,
+            'move_ids': [Command.create({
+                'product_id': product.id,
+                'location_id': supplier_location.id,
+                'location_dest_id': self.stock_location_a.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        receipt.button_validate()
+
+        base_domain = [('product_id', '=', product.id)]
+        domain_a = Domain.AND([base_domain, self.env['stock.quant'].with_context(allowed_company_ids=self.company_a.ids)._get_quants_action().get('domain') or []])
+        domain_b = Domain.AND([base_domain, self.env['stock.quant'].with_context(allowed_company_ids=self.company_b.ids)._get_quants_action().get('domain') or []])
+        quants_company_a = self.env['stock.quant'].with_company(self.company_a).search(domain_a)
+        quants_company_b = self.env['stock.quant'].with_company(self.company_b).search(domain_b)
+        self.assertTrue(quants_company_a)
+        self.assertFalse(quants_company_b)

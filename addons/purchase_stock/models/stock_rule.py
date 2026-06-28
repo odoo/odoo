@@ -108,9 +108,10 @@ class StockRule(models.Model):
                     vals = rules[0]._prepare_purchase_order(company_id, origins, positive_values)
                     # The company_id is the same for all procurements since
                     # _make_po_get_domain add the company in the domain.
-                    # We use SUPERUSER_ID since we don't want the current user to be follower of the PO.
-                    # Indeed, the current user may be a user without access to Purchase, or even be a portal user.
-                    po = self.env['purchase.order'].with_company(company_id).with_user(SUPERUSER_ID).create(vals)
+                    # Create the PO using the current logged-in user if the replenishment is triggered manually.
+                    # Otherwise, fallback to SUPERUSER_ID (e.g., PO generated from sales orders).
+                    user_id = (self.env.context.get('manual_replenishment') and self.env.uid) or SUPERUSER_ID
+                    po = self.env['purchase.order'].with_company(company_id).with_user(user_id).sudo().create(vals)
             else:
                 reference_ids = set()
                 for procurement in procurements:
@@ -272,17 +273,17 @@ class StockRule(models.Model):
             uom_id=line.uom_id,
             params={'force_uom': values.get('force_uom')})
 
-        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.sudo().tax_ids, company_id) if seller else 0.0
+        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.sudo().tax_ids, company_id) if seller else line.price_unit
         if price_unit and seller and line.order_id.currency_id and seller.currency_id != line.order_id.currency_id:
             price_unit = seller.currency_id._convert(
-                price_unit, line.order_id.currency_id, line.order_id.company_id, fields.Date.today())
+                price_unit, line.order_id.currency_id, line.order_id.company_id)
 
         res = {
             'product_qty': line.product_qty + procurement_uom_po_qty,
             'price_unit': price_unit,
             'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
         }
-        if seller.uom_id != line.uom_id and not values.get('force_uom'):
+        if seller and seller.uom_id != line.uom_id and not values.get('force_uom'):
             res['product_qty'] = line.uom_id._compute_quantity(res['product_qty'], seller.uom_id, rounding_method='HALF-UP')
             res['uom_id'] = seller.uom_id
         orderpoint_id = values.get('orderpoint_id')
@@ -337,6 +338,8 @@ class StockRule(models.Model):
         if partner.group_rfq == 'default' or self.picking_type_id.code == 'dropship':
             if values.get('reference_ids'):
                 domain += (('reference_ids', 'in', tuple(values['reference_ids'].ids)),)
+            elif partner.group_rfq == 'default':
+                domain += (('reference_ids', '=', False),)
         date_planned = fields.Datetime.from_string(values['date_planned'])
         if partner.group_rfq == 'day':
             start_dt = datetime.combine(date_planned, datetime.min.time())
@@ -415,3 +418,8 @@ class StockRoute(models.Model):
         if any(rule.action == 'buy' for rule in self.rule_ids):
             return bool(product.seller_ids)
         return super()._is_valid_resupply_route_for_product(product)
+
+    def _get_non_push_pull_rule_actions(self):
+        rule_actions = super()._get_non_push_pull_rule_actions()
+        rule_actions.append('buy')
+        return rule_actions

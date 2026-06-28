@@ -4,10 +4,6 @@ import { DocClient } from "@api_doc/doc_client";
 
 export async function startDocClient() {
     await whenReady();
-    const app = new App(DocClient, {
-        getTemplate,
-    });
-    app.mount(document.body);
+    const app = new App({ getTemplate });
+    app.createRoot(DocClient).mount(document.body);
 }
-
-startDocClient();

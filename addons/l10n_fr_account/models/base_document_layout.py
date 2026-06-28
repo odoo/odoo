@@ -7,9 +7,10 @@ class BaseDocumentLayout(models.TransientModel):
 
     @api.model
     def _default_report_footer(self):
-        # Override to add the company.registry for FR companies
-        if not (self.env.company.company_registry and self.env.company.country_code == 'FR'):
+        # Override to add the FR SIRET to the footer for French companies.
+        siret = self.env.company.partner_id._get_additional_identifier('FR_SIRET') if self.env.company.country_code == 'FR' else None
+        if not siret:
             return super()._default_report_footer()
-        return super()._default_report_footer() + Markup('<br/>%s') % _('SIRET: %s', self.env.company.company_registry)
+        return super()._default_report_footer() + Markup('<br/>%s') % _('SIRET: %s', siret)
 
     report_footer = fields.Html(default=_default_report_footer)

@@ -80,7 +80,7 @@ class EventTrack(models.Model):
     kanban_state_label = fields.Char(
         string='Kanban State Label', compute='_compute_kanban_state_label', store=True,
         tracking=True)
-    partner_id = fields.Many2one('res.partner', 'Contact')
+    partner_id = fields.Many2one('res.partner', 'Contact', index='btree_not_null')
     # speaker information
     partner_name = fields.Char(
         string='Name', compute='_compute_partner_name',
@@ -328,7 +328,7 @@ class EventTrack(models.Model):
                  'event_track_visitor_ids.is_blacklisted')
     @api.depends_context('uid')
     def _compute_is_reminder_on(self):
-        current_visitor = self.env['website.visitor']._get_visitor_from_request()
+        current_visitor = self.env['ir.http']._get_visitor_from_request()
         if self.env.user._is_public() and not current_visitor:
             for track in self:
                 track.is_reminder_on = track.wishlisted_by_default
@@ -507,10 +507,10 @@ class EventTrack(models.Model):
             ('stage_id.is_visible_in_agenda', '=', True),
         ]
         mapping = {
-            'description': {'name': 'description', 'type': 'text', 'truncate': True, 'html': True},
             'name': {'name': 'name', 'type': 'text', 'match': True},
-            'partner_name': {'name': 'partner_name', 'type': 'text', 'match': True, 'html': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'search_item_metadata': {'name': 'partner_name', 'type': 'text', 'html': True, 'match': True},
+            'description': {'name': 'description', 'type': 'text', 'truncate': True, 'html': True, 'match': True},
         }
         return {
             'model': 'event.track',
@@ -520,6 +520,7 @@ class EventTrack(models.Model):
             'mapping': mapping,
             'icon': 'fa-microphone',
             'order': order,
+            'group_name': self.env._("Talks"),
         }
 
     # ------------------------------------------------------------
@@ -536,11 +537,11 @@ class EventTrack(models.Model):
             info['email_to_lst'] = tools.mail.email_split_and_format_normalize(track.partner_email) or [track.partner_email]
         return recipients
 
-    def _message_post_after_hook(self, message, msg_vals):
+    def _message_post_after_hook(self, message):
         #  OVERRIDE
         #  If no partner is set on track when sending a message, then we create one from suggested contact selected.
         #  If one or more have been created from chatter (Suggested Recipients) we search for the expected one and write the partner_id on track.
-        if msg_vals.get('partner_ids') and not self.partner_id:
+        if message.partner_ids and not self.partner_id:
             #  Contact(s) created from chatter set on track : we verify if at least one is the expected contact
             #  linked to the track. (created from contact_email if any, then partner_email if any)
             main_email = self.contact_email or self.partner_email
@@ -557,12 +558,12 @@ class EventTrack(models.Model):
                 self.search([
                     ('partner_id', '=', False), email_domain, ('stage_id.is_cancel', '=', False),
                 ]).write({'partner_id': new_partner[0].id})
-        return super()._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message)
 
-    def _track_template(self, changes):
-        res = super()._track_template(changes)
+    def _track_template_parameters(self, tracked_fields):
+        res = super()._track_template_parameters(tracked_fields)
         track = self[0]
-        if 'stage_id' in changes and track.stage_id.mail_template_id:
+        if 'stage_id' in tracked_fields and track.stage_id.mail_template_id:
             res['stage_id'] = (track.stage_id.mail_template_id, {
                 'auto_delete_keep_log': False,
                 'composition_mode': 'comment',
@@ -570,13 +571,13 @@ class EventTrack(models.Model):
             })
         return res
 
-    def _track_subtype(self, init_values):
+    def _track_log_get_default_subtype(self, track_init_values):
         self.ensure_one()
-        if 'kanban_state' in init_values and self.kanban_state == 'blocked':
+        if 'kanban_state' in track_init_values and self.kanban_state == 'blocked':
             return self.env.ref('website_event_track.mt_track_blocked')
-        elif 'kanban_state' in init_values and self.kanban_state == 'done':
+        elif 'kanban_state' in track_init_values and self.kanban_state == 'done':
             return self.env.ref('website_event_track.mt_track_ready')
-        return super()._track_subtype(init_values)
+        return super()._track_log_get_default_subtype(track_init_values)
 
     # ------------------------------------------------------------
     # ACTION
@@ -603,7 +604,7 @@ class EventTrack(models.Model):
         self.ensure_one()
 
         force_visitor_create = self.env.user._is_public()
-        visitor_sudo = self.env['website.visitor']._get_visitor_from_request(force_create=force_visitor_create)
+        visitor_sudo = self.env['ir.http']._get_visitor_from_request(force_create=force_visitor_create)
         if visitor_sudo:
             visitor_sudo._update_visitor_last_visit()
 
@@ -650,7 +651,7 @@ class EventTrack(models.Model):
             cal_track.add('summary').value = track.name
             cal_track.add('description').value = track._get_track_calendar_description()
             if track.event_id.contact_address_inline or track.location_id:
-                cal_track.add('location').value = ', '.join([track.event_id.contact_address_inline, track.location_id.sudo().name or ''])
+                cal_track.add('location').value = ', '.join([track.event_id.contact_address_inline or '', track.location_id.sudo().name or ''])
 
             result[track.id] = cal.serialize().encode('utf-8')
         return result
@@ -743,7 +744,7 @@ class EventTrack(models.Model):
         url_date_end = reminder_dates['date_end'].astimezone(ZoneInfo(date_tz)).strftime('%Y%m%dT%H%M%S')
 
         if self.event_id.contact_address_inline or self.location_id:
-            location = ', '.join([self.event_id.sudo().contact_address_inline, self.location_id.sudo().name or ''])
+            location = ', '.join([self.event_id.sudo().contact_address_inline or '', self.location_id.sudo().name or ''])
         else:
             location = ''
 

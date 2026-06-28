@@ -7,23 +7,30 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     l10n_sa_edi_building_number = fields.Char("Building Number")
-    l10n_sa_edi_plot_identification = fields.Char("Plot Identification")
+    l10n_sa_edi_plot_identification = fields.Char("Secondary Number")
 
-    l10n_sa_edi_additional_identification_scheme = fields.Selection([
-        ('TIN', 'Tax Identification Number'),
-        ('CRN', 'Commercial Registration Number'),
-        ('MOM', 'MOMRAH License'),
-        ('MLS', 'MHRSD License'),
-        ('700', '700 Number'),
-        ('SAG', 'MISA License'),
-        ('NAT', 'National ID'),
-        ('GCC', 'GCC ID'),
-        ('IQA', 'Iqama Number'),
-        ('PAS', 'Passport ID'),
-        ('OTH', 'Other ID')
-    ], default="OTH", string="Identification Scheme", help="Additional Identification Scheme for the Seller/Buyer")
+    l10n_sa_edi_additional_identification_scheme = fields.Char(
+        compute='_compute_l10n_sa_edi_additional_identification_fields',
+        inverse='_inverse_l10n_sa_edi_additional_identification_fields',
+        string="Identification Scheme",
+        help="Additional Identification Scheme for the Seller/Buyer",
+    )
 
-    l10n_sa_edi_additional_identification_number = fields.Char("Identification Number (SA)", help="Additional Identification Number for the Seller/Buyer")
+    l10n_sa_edi_additional_identification_number = fields.Char(
+        string="Identification Number (SA)",
+        compute='_compute_l10n_sa_edi_additional_identification_fields',
+        inverse='_inverse_l10n_sa_edi_additional_identification_fields',
+        help="Additional Identification Number for the Seller/Buyer",
+    )
+
+    _check_l10n_sa_edi_building_number = models.Constraint(
+        "CHECK (l10n_sa_edi_building_number IS NULL OR l10n_sa_edi_building_number ~ '^[0-9]{4}$')",
+        "Building Number must contain 4 numeric digits.",
+        )
+    _check_l10n_sa_edi_plot_number = models.Constraint(
+        "CHECK (l10n_sa_edi_plot_identification IS NULL OR l10n_sa_edi_plot_identification ~ '^[0-9]{4}$')",
+        "Secondary Number must contain 4 numeric digits.",
+        )
 
     @api.depends('l10n_sa_edi_additional_identification_scheme', 'l10n_sa_edi_additional_identification_number')
     def _compute_is_company(self):
@@ -41,6 +48,26 @@ class ResPartner(models.Model):
         )
         l10n_sa_commercial_partners.is_company = True
         super(ResPartner, self - l10n_sa_commercial_partners)._compute_is_company()
+
+    @api.depends('additional_identifiers')
+    def _compute_l10n_sa_edi_additional_identification_fields(self):
+        for partner in self:
+            scheme = False
+            number = False
+            for identifier_type, identifier_value in (partner.additional_identifiers or {}).items():
+                if identifier_type.startswith('SA_'):
+                    scheme = identifier_type.removeprefix('SA_')
+                    number = identifier_value
+                    break
+            partner.l10n_sa_edi_additional_identification_scheme = scheme
+            partner.l10n_sa_edi_additional_identification_number = number
+
+    def _inverse_l10n_sa_edi_additional_identification_fields(self):
+        for partner in self:
+            scheme = partner.l10n_sa_edi_additional_identification_scheme
+            number = partner.l10n_sa_edi_additional_identification_number
+            if scheme:
+                partner._set_additional_identifier(f'SA_{scheme}', number or False)
 
     @api.model
     def _commercial_fields(self):

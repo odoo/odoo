@@ -1,5 +1,4 @@
 import json
-import uuid
 from contextlib import contextmanager
 from unittest.mock import patch
 
@@ -34,17 +33,17 @@ class TestFrontend(TestBancontactPay):
 
     def test_bancontact_show_qr_code(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        with self.mock_bancontact_call():
+        with self.mock_bancontact_call(prefix="bancontact_show_qr_code_"):
             self.start_pos_tour("bancontact_pay_show_qr_code")
 
     def test_bancontact_success_payment(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        with self.mock_bancontact_call():
+        with self.mock_bancontact_call(prefix="bancontact_success_"):
             self.start_pos_tour("bancontact_pay_success_payment")
 
     def test_bancontact_failed_payment(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        with self.mock_bancontact_call():
+        with self.mock_bancontact_call(prefix="bancontact_failed_"):
             self.start_pos_tour("bancontact_pay_failed_payment")
 
     @mute_logger("odoo.http")
@@ -61,20 +60,21 @@ class TestFrontend(TestBancontactPay):
             self.start_pos_tour("bancontact_pay_failed_to_cancel_payment_error_429")
 
     @contextmanager
-    def mock_bancontact_call(self, is_sticker=False, post_status_code=200, delete_status_code=200):
+    def mock_bancontact_call(self, prefix="bancontact_", post_status_code=200, delete_status_code=200):
+        counter = {"post": -1}
+
         def mock_post(url, **kwargs):
+            counter["post"] += 1
             response = Response()
 
-            if (not is_sticker and "merchant.api.preprod.bancontact.net/v3/payments" not in url) or \
-               (is_sticker and "merchant.api.preprod.bancontact.net/v3/payments/pos" not in url):
+            if "merchant.api.preprod.bancontact.net/v3/payments" not in url:
                 response.status_code = 404
                 return response
 
             if 200 <= post_status_code < 300:
-                payment_id = "bancontact_" + str(uuid.uuid4())
                 response._content = json.dumps(
                     {
-                        "paymentId": payment_id,
+                        "paymentId": prefix + str(counter["post"]),
                         "_links": {"qrcode": {"href": "https://example.com/bancontact_qrcode"}},
                     },
                 ).encode()
@@ -84,7 +84,7 @@ class TestFrontend(TestBancontactPay):
 
         def mock_delete(url, **kwargs):
             response = Response()
-            if "merchant.api.preprod.bancontact.net/v3/payments/" not in url:
+            if "merchant.api.preprod.bancontact.net/v3/payments" not in url:
                 response.status_code = 404
                 return response
 

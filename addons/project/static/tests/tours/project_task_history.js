@@ -26,6 +26,15 @@ function changeDescriptionContentAndSave(newContent) {
         {
             trigger: `div.note-editable.odoo-editor-editable .o-paragraph:contains(${newText})`,
         },
+        {
+            content: "focus out to force blur on the html_field",
+            trigger: '.o_form_renderer',
+            run: "click",
+        },
+        {
+            content: "wait for record to be flagged dirty",
+            trigger: ".o_form_dirty",
+        },
         ...stepUtils.saveForm(),
     ];
 }
@@ -209,7 +218,6 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
 });
 
 registry.category("web_tour.tours").add("project_task_last_history_steps_tour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [stepUtils.showAppsMenuItem(), {
         content: "Open the project app",
         trigger: ".o_app[data-menu-xmlid='project.menu_main_pm']",
@@ -255,15 +263,21 @@ registry.category("web_tour.tours").add("project_task_last_history_steps_tour", 
         trigger: '.modal button.btn-primary:text(Restore)',
         run: "click",
     },
+    {
+        trigger: `.note-editable:empty`
+    },
         ...insertEditorContent("2"),
         ...stepUtils.saveForm(),
         ...insertEditorContent("4"),
     {
-        trigger: ".o_notebook_headers li:nth-of-type(2) button",
+        trigger: ".o_notebook_headers button[name=sub_tasks_page]",
         run: "click",
     },
     {
-        trigger: ".o_notebook_headers li:nth-of-type(1) button",
+        trigger: "[name=child_ids]",
+    },
+    {
+        trigger: ".o_notebook_headers button[name=description_page]",
         run: "click",
     },
         ...insertEditorContent("5"),

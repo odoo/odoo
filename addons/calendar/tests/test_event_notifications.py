@@ -9,6 +9,7 @@ from odoo import fields
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCase
 
 
@@ -104,16 +105,19 @@ class TestCalendarMail(CalendarMailCommon):
                 'email': self.customers[0].email_normalized,
                 'name': self.customers[0].name,
                 'partner_id': self.customers[0].id,
+                'recipient_type': 'to',
             }, {  # wrong email suggested, can be corrected ?
                 'create_values': {},
                 'email': self.customers[1].email_normalized,
                 'name': self.customers[1].name,
                 'partner_id': self.customers[1].id,
+                'recipient_type': 'to',
             }, {
                 'create_values': {},
                 'email': self.user_employee_2.partner_id.email_normalized,
                 'name': self.user_employee_2.partner_id.name,
                 'partner_id': self.user_employee_2.partner_id.id,
+                'recipient_type': 'to',
             },
         ], 'Correctly filters out robodoo and aliases')
 
@@ -141,6 +145,7 @@ class TestEventNotifications(CalendarMailCommon):
     def test_assert_initial_values(self):
         self.assertFalse(self.event.partner_ids)
 
+    @freeze_time('2018')  # class event has hardcoded dates
     def test_message_invite(self):
         self.env['ir.config_parameter'].sudo().set_int('mail.mail_force_send_limit', 100)
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
@@ -168,6 +173,7 @@ class TestEventNotifications(CalendarMailCommon):
                 'partner_ids': [(4, self.partner.id)],
             }])
 
+    @freeze_time('2018')  # class event has hardcoded dates
     def test_message_invite_email_notif_mass_queued(self):
         """Check that more than 20 notified attendees means mails are queued."""
         self.env['ir.config_parameter'].sudo().set_int('mail.mail_force_send_limit', 100)
@@ -206,6 +212,22 @@ class TestEventNotifications(CalendarMailCommon):
     def test_message_datetime_changed(self):
         self.event.partner_ids = self.partner
         "Invitation to Presentation of the new Calendar"
+        with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
+            'message_type': 'user_notification',
+            'subtype': 'mail.mt_note',
+        }):
+            self.event.start = fields.Datetime.now() + relativedelta(days=1)
+
+    @freeze_time('2018')  # class event has hardcoded dates
+    def test_message_datetime_changed_with_activity(self):
+        self.env['mail.activity'].create({
+            'activity_type_id': self.env.ref('mail.mail_activity_data_meeting').id,
+            'calendar_event_id': self.event.id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': self.customers[0].id,
+        })
+        self.event.partner_ids = self.partner
+
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
             'subtype': 'mail.mt_note',
@@ -259,6 +281,7 @@ class TestEventNotifications(CalendarMailCommon):
         with self.assertNoNotifications():
             self.event.start_date += relativedelta(days=-1)
 
+    @freeze_time('2018')  # class event has hardcoded dates
     def test_message_add_and_date_changed(self):
         self.event.partner_ids -= self.partner
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
@@ -279,33 +302,74 @@ class TestEventNotifications(CalendarMailCommon):
         })
         now = fields.Datetime.now()
 
-        def get_bus_params():
-            return (
-                [self.user],
-                [
-                    {
-                        "type": "calendar.alarm",
-                        "payload": [
-                            {
-                                "alarm_id": alarm.id,
-                                "event_id": self.event.id,
-                                "title": "Doom's day",
-                                "message": self.event.display_time,
-                                "timer": 20 * 60,
-                                "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
-                            },
-                        ],
-                    },
-                ],
-            )
+        def notifications():
+            return [
+                BusResult(
+                    self.user,
+                    "calendar.alarm",
+                    [
+                        {
+                            "alarm_id": alarm.id,
+                            "event_id": self.event.id,
+                            "title": "Doom's day",
+                            "message": self.event.display_time,
+                            "timer": 20 * 60,
+                            "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
+                        },
+                    ],
+                ),
+            ]
 
         with patch.object(fields.Datetime, 'now', lambda: now):
-            with self.assertBus(get_params=get_bus_params):
+            with self.assertBus(notifications):
                 self.event.with_context(no_mail_to_attendees=True).write({
                     'start': now + relativedelta(minutes=50),
                     'stop': now + relativedelta(minutes=55),
                     'partner_ids': [(4, self.partner.id)],
                     'alarm_ids': [(6, 0, alarm.ids)]
+                })
+
+    def test_bus_notif_organizer(self):
+        """Test that Admin user receives bus alarm notifications."""
+        alarm = self.env['calendar.alarm'].create({
+            'name': "Alarm",
+            'alarm_type': "notification",
+            'interval': "minutes",
+            'duration': 30,
+        })
+        now = fields.Datetime.now()
+        admin_partner = self.user_admin.partner_id
+        event = self.env['calendar.event'].with_user(self.user_admin).with_context(no_mail_to_attendees=True).create({
+            'name': "Admin Meeting",
+            'start': now + relativedelta(minutes=50),
+            'stop': now + relativedelta(minutes=55),
+            'user_id': self.user_admin.id,
+            'partner_ids': [fields.Command.set(admin_partner.ids)],
+            'alarm_ids': [fields.Command.set([alarm.id])],
+        })
+
+        def notifications():
+            return [
+                BusResult(
+                    self.user_admin,
+                    "calendar.alarm",
+                    [
+                        {
+                            "alarm_id": alarm.id,
+                            "event_id": event.id,
+                            "title": "Admin Meeting",
+                            "message": event.display_time,
+                            "timer": 20 * 60,
+                            "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
+                        },
+                    ],
+                ),
+            ]
+
+        with freeze_time(now):
+            with self.assertBus(notifications):
+                event.with_context(no_mail_to_attendees=True).write({
+                    'alarm_ids': [fields.Command.set([alarm.id])],
                 })
 
     def test_email_alarm(self):
@@ -355,7 +419,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'start': now + relativedelta(minutes=15),
                     'stop': now + relativedelta(minutes=20),
                     'alarm_ids': [fields.Command.link(alarm.id)],
-                }).with_context(mail_notrack=True)
+                })
                 self.env.flush_all()
                 self.assertEqual(len(capt.records), 1)
         with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt:
@@ -370,7 +434,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'day': 13,
                     'count': 5,
                     'alarm_ids': [fields.Command.link(alarm.id)],
-                }).with_context(mail_notrack=True)
+                })
                 self.env.flush_all()
                 self.assertEqual(len(capt.records), 1, "1 trigger should have been created for the whole recurrence")
                 self.assertEqual(capt.records.call_at, datetime(2022, 4, 13, 10, 14))
@@ -393,7 +457,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'stop_date': now.date() + relativedelta(days=1),
                     'allday': True,
                     'alarm_ids': [fields.Command.link(alarm.id)],
-                }).with_context(mail_notrack=True)
+                })
                 self.env.flush_all()
                 self.assertEqual(len(capt.records), 1)
 
@@ -411,7 +475,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'day': 13,
                     'count': 5,
                     'alarm_ids': [fields.Command.link(alarm.id)],
-                }).with_context(mail_notrack=True)
+                })
                 self.env.flush_all()
                 self.assertEqual(len(capt.records), 1)
 
@@ -436,7 +500,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'count': 2,
                     'day': 16,
                     'alarm_ids': [fields.Command.link(alarm_hour.id)],
-                }).with_context(mail_notrack=True)
+                })
                 self.env.flush_all()
                 # Ensure that there is only one alarm set, exactly for one hour previous the event.
                 self.assertEqual(len(capt.records), 1, "Only one trigger must be created for the entire recurrence.")
@@ -472,7 +536,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'rrule_type': 'daily',
                     'count': 3,
                     'alarm_ids': [fields.Command.link(alarm.id)],
-                }).with_context(mail_notrack=True)
+                })
                 self.env.flush_all()
                 self.assertEqual(len(capt.records), 1, "1 trigger should have been created for the whole recurrence (1)")
                 self.assertEqual(capt.records.call_at, datetime(2022, 4, 13, 10, 10))
@@ -506,7 +570,7 @@ class TestEventNotifications(CalendarMailCommon):
             'start': datetime(2023, 11, 15, 23, 0),  # 00:00 next day
             'stop': datetime(2023, 11, 16, 0, 0),  # 01:00 next day
         }
-        ]).with_context(mail_notrack=True)
+        ])
         with freeze_time('2023-11-15 17:30:00'):    # 18:30 before event
             self.assertEqual(search_event(), events[0])
         with freeze_time('2023-11-15 18:00:00'):    # 19:00 during event
@@ -524,7 +588,7 @@ class TestEventNotifications(CalendarMailCommon):
             'name': "Meeting",
             'start': datetime(2023, 11, 16, 0, 0), # 19:00 15th November
             'stop': datetime(2023, 11, 16, 1, 0),  # 20:00 15th November
-        }).with_context(mail_notrack=True)
+        })
         with freeze_time('2023-11-15 23:30:00'):    # 18:30 before event
             self.assertEqual(search_event(), event)
         with freeze_time('2023-11-16 00:00:00'):    # 19:00 during event
@@ -541,7 +605,7 @@ class TestEventNotifications(CalendarMailCommon):
             'name': "Meeting",
             'start': datetime(2023, 11, 16, 21, 0), # 16:00 16th November
             'stop': datetime(2023, 11, 16, 22, 0),  # 27:00 16th November
-        }).with_context(mail_notrack=True)
+        })
         with freeze_time('2023-11-15 19:00:00'):    # 14:00 the day before event
             self.assertEqual(len(search_event()), 0)
         event.unlink()
@@ -567,9 +631,10 @@ class TestEventNotifications(CalendarMailCommon):
             'allday': True,
             'start': "2023-11-15",
         }
-        ]).with_context(mail_notrack=True)
+        ])
         with freeze_time('2023-11-15 16:00:00'):
-            self.assertEqual(len(search_event()), 3)
+            # Not the all day event nor the event ended yesterday
+            self.assertEqual(len(search_event()), 2)
         events.unlink()
 
     def test_recurring_meeting_reminder_notification(self):
@@ -589,28 +654,26 @@ class TestEventNotifications(CalendarMailCommon):
 
         now = fields.Datetime.now()
 
-        def get_bus_params():
-            return (
-                [self.user],
-                [
-                    {
-                        "type": "calendar.alarm",
-                        "payload": [
-                            {
-                                "alarm_id": alarm.id,
-                                "event_id": self.event.id,
-                                "title": "Doom's day",
-                                "message": self.event.display_time,
-                                "timer": 20 * 60,
-                                "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
-                            },
-                        ],
-                    },
-                ],
-            )
+        def notifications():
+            return [
+                BusResult(
+                    self.user,
+                    "calendar.alarm",
+                    [
+                        {
+                            "alarm_id": alarm.id,
+                            "event_id": self.event.id,
+                            "title": "Doom's day",
+                            "message": self.event.display_time,
+                            "timer": 20 * 60,
+                            "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
+                        },
+                    ],
+                ),
+            ]
 
         with patch.object(fields.Datetime, 'now', lambda: now):
-            with self.assertBus(get_params=get_bus_params):
+            with self.assertBus(notifications):
                 self.event.with_context(no_mail_to_attendees=True).write({
                     'start': now + relativedelta(minutes=50),
                     'stop': now + relativedelta(minutes=55),

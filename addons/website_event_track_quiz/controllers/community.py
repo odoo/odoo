@@ -44,7 +44,7 @@ class WebsiteEventTrackQuizCommunityController(EventCommunityController):
                 page = math.ceil(values['current_visitor_position'] / self._visitors_per_page)
             elif not page:
                 page = 1
-            pager = request.website.pager(url=url, total=user_count, page=page, step=self._visitors_per_page,
+            pager = self.env.website.pager(url=url, total=user_count, page=page, step=self._visitors_per_page,
                                           scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages,
                                           url_args={'search': search_term})
             values['visitors'] = values['visitors'][(page - 1) * self._visitors_per_page: (page) * self._visitors_per_page]
@@ -54,7 +54,7 @@ class WebsiteEventTrackQuizCommunityController(EventCommunityController):
         return values
 
     def _get_leaderboard(self, event, searched_name=None):
-        current_visitor = request.env['website.visitor']._get_visitor_from_request()
+        current_visitor = request.env['ir.http']._get_visitor_from_request()
         track_visitor_data = request.env['event.track.visitor'].sudo()._read_group(
             [('track_id', 'in', event.track_ids.ids),
              ('visitor_id', '!=', False),

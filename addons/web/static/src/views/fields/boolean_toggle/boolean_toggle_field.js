@@ -3,16 +3,18 @@ import { registry } from "@web/core/registry";
 import { booleanField, BooleanField } from "../boolean/boolean_field";
 
 export class BooleanToggleField extends BooleanField {
-    static template = "web.BooleanToggleField";
     static props = {
         ...BooleanField.props,
-        autosave: { type: Boolean, optional: true },
     };
 
     async onChange(newValue) {
         this.state.value = newValue;
         const changes = { [this.props.name]: newValue };
-        await this.props.record.update(changes, { save: this.props.autosave });
+        await this.props.record.update(changes);
+    }
+
+    get displayAsToggle() {
+        return true;
     }
 }
 
@@ -20,20 +22,9 @@ export const booleanToggleField = {
     ...booleanField,
     component: BooleanToggleField,
     displayName: _t("Toggle"),
-    supportedOptions: [
-        {
-            label: _t("Autosave"),
-            name: "autosave",
-            type: "boolean",
-            default: true,
-            help: _t(
-                "If checked, the record will be saved immediately when the field is modified."
-            ),
-        },
-    ],
-    extractProps({ options }, dynamicInfo) {
+    additionalClasses: ["o_boolean_interactive"],
+    extractProps(_, dynamicInfo) {
         return {
-            autosave: "autosave" in options ? Boolean(options.autosave) : true,
             readonly: dynamicInfo.readonly,
         };
     },

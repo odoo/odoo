@@ -4,7 +4,7 @@ from datetime import timedelta
 from odoo import api, fields, models, _
 from odoo.tools import BinaryBytes
 
-from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES, PEPPOL_LIST
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.exceptions import get_peppol_error_message
 
@@ -19,7 +19,10 @@ class AccountMoveSend(models.AbstractModel):
         """ By default, we use the sending method set on the partner or email and peppol. """
         # EXTENDS 'account'
         default_sending_methods = super()._get_default_sending_methods(move)
-        if self._is_applicable_to_move('peppol', move):
+        if (
+            self._is_applicable_to_move('peppol', move)
+            and any(country in PEPPOL_DEFAULT_COUNTRIES for country in move.commercial_partner_id.mapped('country_id.code'))
+        ):
             default_sending_methods.add('peppol')
         return default_sending_methods
 
@@ -34,7 +37,7 @@ class AccountMoveSend(models.AbstractModel):
 
         def filter_peppol_state(moves, states):
             return peppol_partner(
-                moves.filtered(lambda m: peppol_partner(m).peppol_verification_state in states)
+                moves.filtered(lambda m: peppol_partner(m).with_company(m.company_id).peppol_verification_state in states)
             )
 
         alerts = super()._get_alerts(moves, moves_data)
@@ -64,7 +67,7 @@ class AccountMoveSend(models.AbstractModel):
             },
         }
         info_always_on_countries = {'BE', 'FI', 'LU', 'LV', 'NL', 'NO', 'SE'}
-        any_moves_not_sent_peppol = any(move.peppol_move_state not in ('processing', 'done') for move in moves)
+        any_moves_not_sent_peppol = any(not move.peppol_is_sent for move in moves)
         always_on_companies = moves.company_id.filtered(
             lambda c: c.country_code in info_always_on_countries and not c.peppol_can_send
         )
@@ -81,6 +84,7 @@ class AccountMoveSend(models.AbstractModel):
         elif all((
             (peppol_not_selected_partners := filter_peppol_state(not_peppol_moves, ['valid'])),
             any_moves_not_sent_peppol,
+            any(code in PEPPOL_DEFAULT_COUNTRIES for code in peppol_partner(moves).mapped('country_id.code')),
             len(peppol_not_selected_partners) == 1,  # Check for not peppol partners that are on the network
         )):
             alerts['account_peppol_partner_want_peppol'] = {
@@ -95,6 +99,44 @@ class AccountMoveSend(models.AbstractModel):
     # -------------------------------------------------------------------------
     # SENDING METHODS
     # -------------------------------------------------------------------------
+
+    def _get_peppol_document_params(self, partner, invoice, invoice_data):
+        edi_user = invoice.company_id.account_peppol_edi_user
+        if not edi_user:
+            return None, None
+
+        if invoice_data.get('ubl_cii_xml_attachment_values'):
+            xml_file = BinaryBytes(invoice_data['ubl_cii_xml_attachment_values']['raw'])
+            filename = invoice_data['ubl_cii_xml_attachment_values']['name']
+        elif invoice.ubl_cii_xml_id and not invoice.peppol_is_sent:
+            xml_file = invoice.ubl_cii_xml_id.raw
+            filename = invoice.ubl_cii_xml_id.name
+        else:
+            invoice.peppol_move_state = 'error'
+            builder = invoice.partner_id.commercial_partner_id._get_edi_builder(invoice_data['invoice_edi_format'])
+            invoice_data['error'] = self.env._(
+                "Errors occurred while creating the EDI document (format: %s):",
+                builder._description
+            )
+            return None, None
+
+        if invoice.invoice_pdf_report_id and self._needs_ubl_postprocessing(invoice_data):
+            self._postprocess_invoice_ubl_xml(invoice, invoice_data)
+            xml_file = BinaryBytes(invoice_data['ubl_cii_xml_attachment_values']['raw'])
+            filename = invoice_data['ubl_cii_xml_attachment_values']['name']
+
+        if xml_file.size > 64000000:
+            invoice_data['error'] = self.env._("Invoice %s exceeds the size limit of 64 MB to be sent via Peppol.", invoice.name)
+            return None, None
+
+        receiver_identification = partner.routing_identifier
+        document = {
+            'filename': filename,
+            'receiver': receiver_identification,
+            'ubl': xml_file.to_base64(),
+        }
+
+        return edi_user, document
 
     def _get_default_invoice_edi_format(self, move, **kwargs) -> str:
         # EXTENDS 'account' - default on bis3 if Peppol is set but no format on the partner
@@ -119,7 +161,7 @@ class AccountMoveSend(models.AbstractModel):
     def _is_applicable_to_company(self, method, company):
         # EXTENDS 'account'
         if method == 'peppol':
-            return company.country_code in PEPPOL_LIST and company.account_peppol_proxy_state != 'rejected'
+            return company.country_code in PEPPOL_LIST and company.account_peppol_proxy_state not in ('not_registered', 'in_verification', 'rejected')
         else:
             return super()._is_applicable_to_company(method, company)
 
@@ -135,8 +177,7 @@ class AccountMoveSend(models.AbstractModel):
                 self._is_applicable_to_company(method, move.company_id),
                 partner.peppol_verification_state == 'valid',
                 move.company_id.account_peppol_proxy_state != 'rejected',
-                move._need_ubl_cii_xml(invoice_edi_format)
-                or move.ubl_cii_xml_id and move.peppol_move_state not in ('processing', 'done'),
+                move._need_ubl_cii_xml(invoice_edi_format) or move.ubl_cii_xml_id and not move.peppol_is_sent,
             ])
         else:
             return super()._is_applicable_to_move(method, move, **move_data)
@@ -158,58 +199,42 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         super()._call_web_service_after_invoice_pdf_render(invoices_data)
 
-        params = {'documents': []}
-        invoices_data_peppol = {}
+        params_per_edi_user = {}
+        invoices_data_peppol_per_edi_user = {}
         to_lock_peppol_invoices = self.env['account.move']
         for invoice, invoice_data in invoices_data.items():
             partner = invoice.partner_id.commercial_partner_id.with_company(invoice.company_id)
             if 'peppol' in invoice_data['sending_methods'] and self._is_applicable_to_move('peppol', invoice, **invoice_data):
 
-                if invoice_data.get('ubl_cii_xml_attachment_values'):
-                    xml_file = BinaryBytes(invoice_data['ubl_cii_xml_attachment_values']['raw'])
-                    filename = invoice_data['ubl_cii_xml_attachment_values']['name']
-                elif invoice.ubl_cii_xml_id and invoice.peppol_move_state not in ('processing', 'done'):
-                    xml_file = invoice.ubl_cii_xml_id.raw
-                    filename = invoice.ubl_cii_xml_id.name
-                else:
-                    invoice.peppol_move_state = 'error'
-                    builder = invoice.partner_id.commercial_partner_id._get_edi_builder(invoice_data['invoice_edi_format'])
-                    invoice_data['error'] = _(
-                        "Errors occurred while creating the EDI document (format: %s):",
-                        builder._description
-                    )
+                edi_user, document = self._get_peppol_document_params(partner, invoice, invoice_data)
+                if not edi_user or not document:
                     continue
 
-                if invoice.invoice_pdf_report_id and self._needs_ubl_postprocessing(invoice_data):
-                    self._postprocess_invoice_ubl_xml(invoice, invoice_data)
-                    xml_file = BinaryBytes(invoice_data['ubl_cii_xml_attachment_values']['raw'])
-                    filename = invoice_data['ubl_cii_xml_attachment_values']['name']
+                params = params_per_edi_user.setdefault(edi_user, {'documents': []})
+                params['documents'].append(document)
 
-                if xml_file.size > 64000000:
-                    invoice_data['error'] = _("Invoice %s is too big to send via peppol (64MB limit)", invoice.name)
-                    continue
-
-                receiver_identification = f"{partner.peppol_eas}:{partner.peppol_endpoint}"
-                params['documents'].append({
-                    'filename': filename,
-                    'receiver': receiver_identification,
-                    'ubl': xml_file.to_base64(),
-                })
+                invoices_data_peppol = invoices_data_peppol_per_edi_user.setdefault(edi_user, {})
                 invoices_data_peppol[invoice] = invoice_data
                 to_lock_peppol_invoices |= invoice
 
-        if not params['documents']:
+        if not params_per_edi_user:
             return
-
-        edi_user = next(iter(invoices_data)).company_id.account_peppol_edi_user
 
         if not self.env['res.company']._with_locked_records(to_lock_peppol_invoices, allow_raising=False):
             _logger.error('Failed to lock invoices for Peppol sending')
             return
 
+        for edi_user, params in params_per_edi_user.items():
+            invoices_data_peppol = invoices_data_peppol_per_edi_user[edi_user]
+            self._send_peppol_documents(invoices_data_peppol, edi_user, params)
+
+        if self._can_commit():
+            self.env.cr.commit()
+
+    def _send_peppol_documents(self, invoices_data_peppol, edi_user, params):
         try:
             response = edi_user._call_peppol_proxy(
-                "/api/peppol/1/send_document",
+                endpoint=edi_user._get_peppol_proxy_endpoint('1/send_document'),
                 params=params,
             )
         except AccountEdiProxyError as e:
@@ -250,7 +275,7 @@ class AccountMoveSend(models.AbstractModel):
                         for attachment in attachments_linked
                     ] + base_attachments
 
-                    new_message = invoice.message_post(
+                    new_message = invoice.with_context(no_document=True).message_post(
                         body=attachments_linked_message,
                         attachments=attachments_embedded
                     )
@@ -265,9 +290,6 @@ class AccountMoveSend(models.AbstractModel):
                             'res_id': new_message.id,
                         })
                 self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=5))
-
-        if self._can_commit():
-            self.env.cr.commit()
 
     def action_what_is_peppol_activate(self, moves):
         companies = moves.company_id

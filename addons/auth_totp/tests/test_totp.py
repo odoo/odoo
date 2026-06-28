@@ -6,7 +6,7 @@ from xmlrpc.client import Fault
 from passlib.totp import TOTP
 
 from odoo import http
-from odoo.tests import tagged, get_db_name, new_test_user, HttpCase
+from odoo.tests import TransactionCase, tagged, get_db_name, new_test_user, HttpCase
 from odoo.tools import mute_logger
 
 from odoo.addons.auth_totp.models.totp import TOTP as auth_TOTP
@@ -50,7 +50,7 @@ class TestTOTPMixin:
             return token
         # because not preprocessed by ControllerType metaclass
         totp_hook.routing_type = 'json'
-        self.env.registry.clear_cache('routing')
+        self.env.transaction.invalidate_ormcache('routing')
         # patch Home to add test endpoint
         Home.totp_hook = http.route('/totphook', type='jsonrpc', auth='none')(totp_hook)
 
@@ -66,7 +66,7 @@ class TestTOTPMixin:
         def _cleanup():
             del Home.totp_hook
             auth_TOTP.match = origin_match
-            self.env.registry.clear_cache('routing')
+            self.env.transaction.invalidate_ormcache('routing')
 
 
 @tagged('post_install', '-at_install')
@@ -120,11 +120,6 @@ class TestTOTP(TestTOTPMixin, HttpCase):
 
     def test_totp_administration(self):
         self.start_tour('/odoo', 'totp_tour_setup', login='test_user')
-        # If not enabled (like in demo data), landing on res.config will try
-        # to disable module_sale_quotation_builder and raise an issue
-        group_order_template = self.env.ref('sale_management.group_sale_order_template', raise_if_not_found=False)
-        if group_order_template:
-            self.env.ref('base.group_user').write({"implied_ids": [(4, group_order_template.id)]})
         self.start_tour('/odoo', 'totp_admin_disables', login='admin')
         self.start_tour('/', 'totp_login_disabled', login=None)
 
@@ -160,3 +155,41 @@ class TestTOTP(TestTOTPMixin, HttpCase):
         response = self.url_open("/web/session/authenticate", data=json.dumps(payload), headers=headers)
         data = response.json()
         self.assertEqual(data['result']['uid'], None)
+
+
+@tagged('post_install', '-at_install')
+class TestTOTPEnableSearch(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_no_totp = new_test_user(cls.env, login='NO_TOTP', groups="base.group_user")
+        cls.user_with_totp = new_test_user(cls.env, login='WITH_TOTP', groups="base.group_user")
+        cls.user_with_totp.totp_secret = 'IRXWM5LT'
+
+    def _search_consistent(self, domain):
+        records_python = self.env['res.users'].search([]).filtered_domain(domain)
+        records_sql = self.env['res.users'].search(domain)
+        self.assertEqual(records_sql, records_python, "Filter domain should be consistent with search method")
+        return records_sql
+
+    def test_search_true_matches_users_with_totp(self):
+        matched = self._search_consistent([('totp_enabled', '=', True)])
+        self.assertIn(self.user_with_totp, matched)
+        self.assertNotIn(self.user_no_totp, matched)
+        matched = self._search_consistent([('totp_enabled', '!=', False)])
+        self.assertIn(self.user_with_totp, matched)
+        self.assertNotIn(self.user_no_totp, matched)
+
+    def test_search_false_matches_users_without_totp(self):
+        matched = self._search_consistent([('totp_enabled', '=', False)])
+        self.assertIn(self.user_no_totp, matched)
+        self.assertNotIn(self.user_with_totp, matched)
+        matched = self._search_consistent([('totp_enabled', '!=', True)])
+        self.assertIn(self.user_no_totp, matched)
+        self.assertNotIn(self.user_with_totp, matched)
+
+    def test_search_in_both_states_matches_all(self):
+        matched = self._search_consistent([('totp_enabled', 'in', [True, False])])
+        self.assertIn(self.user_no_totp, matched)
+        self.assertIn(self.user_with_totp, matched)

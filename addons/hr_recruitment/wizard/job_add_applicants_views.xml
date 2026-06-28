@@ -4,14 +4,66 @@
         <field name="name">job.add.applicants.view.form</field>
         <field name="model">job.add.applicants</field>
         <field name="arch" type="xml">
-            <form string="Add Applicants to Pool">
+            <form string="Add Applicants to Pool" class="o_job_add_applicants">
                 <group>
-                    <field name="job_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" placeholder="Move to..."/>
+                    <p class="text-muted">
+                        Duplicates this Applicant/Talent profile for the selected Job Position(s) 
+                    </p>
+                </group>
+                <div class="my-3"/>
+                <group>
+                    <field
+                        name="job_ids"
+                        widget="many2many_tags"
+                        options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
+                        placeholder="Add to New Job"
+                        domain="[('id', 'not in', context.get('active_applicant_job_ids', []))]"
+                        context="{'show_matching_score_in_name': True}"
+                    />
                 </group>
                 <footer>
                     <button
                         name="action_add_applicants_to_job"
-                        string="Create Applications"
+                        string="Apply"
+                        type="object"
+                        class="btn-primary"
+                        data-hotkey="q"
+                    />
+                    <button class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="job_add_applicants_from_job_view_form" model="ir.ui.view">
+        <field name="name">job.add.applicants.from.job.view.form</field>
+        <field name="model">job.add.applicants</field>
+        <field name="arch" type="xml">
+            <form class="o_job_add_applicants">
+                <group>
+                    <p class="text-muted">
+                        Duplicates the selected Talent profile(s) for the selected Job Position
+                    </p>
+                </group>
+                <div class="my-3"/>
+                <group>
+                    <field
+                        name="applicant_ids"
+                        string="Talents"
+                        widget="many2many_tags"
+                        options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create': True}"
+                        placeholder="Add to this Job"
+                        domain="[
+                            ('talent_pool_ids', '!=', False),
+                            ('linked_applicant_ids', 'not in', context.get('active_job_applicant_ids', [])),
+                        ]"
+                        context="{'show_matching_score_in_name': True, 'search_default_non_linked_talents': True, 'matching_job_id': job_ids, 'active_job_applicant_ids': context.get('active_job_applicant_ids', [])}"
+                    />
+                </group>
+                <footer>
+                    <button
+                        name="action_add_applicants_to_job"
+                        string="Apply"
                         type="object"
                         class="btn-primary"
                         data-hotkey="q"

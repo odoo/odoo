@@ -11,12 +11,17 @@ This addon provides an extensible, maintainable editor.
     'category': 'Hidden',
     'depends': ['base', 'bus', 'web'],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'auto_install': True,
     'assets': {
         'web._assets_primary_variables': [
             ('after', 'web/static/src/scss/primary_variables.scss', 'html_editor/static/src/scss/html_editor.variables.scss'),
+        ],
+        "web.assets_frontend_minimal": [
+            "html_editor/static/src/main/media/video/abstract_third_party_video.js",
+            "html_editor/static/src/main/media/video/providers/**/*",
+            "html_editor/static/src/main/media/video/utils.js",
         ],
         'web.assets_frontend': [
             ('include', 'html_editor.assets_media_dialog'),
@@ -41,7 +46,9 @@ This addon provides an extensible, maintainable editor.
             ('include', 'html_editor.assets_media_dialog'),
             ('include', 'html_editor.assets_readonly'),
             'html_editor/static/src/*',
+            'html_editor/static/src/components/color_picker/**/*',
             'html_editor/static/src/components/history_dialog/**/*',
+            'html_editor/static/src/components/iframe_input/**/*',
             'html_editor/static/src/components/suggestion/**/*',
             'html_editor/static/src/core/**/*',
             'html_editor/static/src/main/**/*',
@@ -50,6 +57,7 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/others/embedded_component*',
             'html_editor/static/src/others/qweb_picker*',
             'html_editor/static/src/others/qweb_plugin*',
+            'html_editor/static/src/others/autofocus_plugin*',
             'html_editor/static/src/services/**/*',
             ('remove', 'html_editor/static/src/**/*.dark.scss'),
         ],

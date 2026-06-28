@@ -36,6 +36,7 @@ export class ButtonStyleOption extends BaseOptionComponent {
         BuilderNumberInput,
         BorderConfigurator,
     };
+    static dependencies = ["domObserver"];
 
     buttonSizesData = BUTTON_SIZES;
     buttonShapesData = BUTTON_SHAPES;
@@ -43,16 +44,122 @@ export class ButtonStyleOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
+        this.state = useDomState(async (el) => {
+            const currentButtonType = getButtonType(el);
+            const buttonStyles = await this.getButtonStyles(el);
+            const hasAlpha = this.getHasAlpha(buttonStyles);
+            const state = {
+                buttonStyles,
+                buttonCombinationClass: this.findColorCombination(el),
+                currentButtonType,
+                currentButtonTypeData: this.buttonTypesData.find(
+                    (btn) => btn.type == currentButtonType
+                ),
+                hasAlpha,
+            };
+            return state;
+        });
+    }
 
-        const editingElement = this.env.getEditingElement();
-        const computedStyle =
-            editingElement.ownerDocument.defaultView.getComputedStyle(editingElement);
-        this.state = useDomState((el) => ({
-            type: getButtonType(el),
-            textColor: computedStyle.color,
-            fillColor: computedStyle.backgroundColor,
-            border: computedStyle.border,
-        }));
+    goToThemeTab() {
+        this.env.editColorCombination(
+            parseInt(this.state.buttonCombinationClass.replace("o_cc", ""))
+        );
+    }
+
+    async getButtonStyles(el) {
+        // Button variant styles depend on user-customized theme settings
+        // and on where the builder is running (website or mass mailing). The
+        // cleanest approach to generate a preview is to add a temporary button
+        // to the DOM and copy its computed styles. See commit message for more.
+        const buttonVariants = {
+            primary: "btn-primary",
+            secondary: "btn-secondary",
+        };
+        const propertiesToCopy = [
+            "background-color",
+            "background-image",
+            "border",
+            "color",
+            "font-family",
+            "font-weight",
+            "text-transform",
+        ];
+        const styles = {
+            primary: "",
+            secondary: "",
+            custom: "",
+        };
+
+        function copyStyle(styleFrom, styleTo) {
+            const hasBorder = parseFloat(styleFrom.getPropertyValue("border-width")) > 0;
+            for (const style of propertiesToCopy) {
+                if (style === "border" && !hasBorder) {
+                    // We do not copy the "border" property if border-width is 0
+                    continue;
+                }
+                const value = styleFrom.getPropertyValue(style);
+                if (value) {
+                    styles[styleTo] += `${style}: ${value};`;
+                }
+            }
+        }
+
+        const iframeDocument = el.ownerDocument;
+        for (const [variantName, variantClass] of Object.entries(buttonVariants)) {
+            const tempButtonEl = iframeDocument.createElement("a");
+            tempButtonEl.className = `btn ${variantClass}`;
+            this.dependencies.domObserver.ignore(() =>
+                el.insertAdjacentElement("afterend", tempButtonEl)
+            );
+            const computedStyle = getComputedStyle(tempButtonEl);
+            copyStyle(computedStyle, variantName);
+            this.dependencies.domObserver.ignore(() => tempButtonEl.remove());
+        }
+
+        // The style for btn-custom is always a copy of the current button style.
+        // This way, if a custom button is currently in use, the customization is
+        // correctly represented in the button preview. Otherwise, the custom
+        // button style represents the style that the button would adopt once
+        // the customization begins. The button is cloned to prevent copying its
+        // hovered style.
+        const tempButtonEl = el.cloneNode(true);
+        this.dependencies.domObserver.ignore(() =>
+            el.insertAdjacentElement("afterend", tempButtonEl)
+        );
+        const computedStyle = getComputedStyle(tempButtonEl);
+        copyStyle(computedStyle, "custom");
+        this.dependencies.domObserver.ignore(() => tempButtonEl.remove());
+
+        return styles;
+    }
+
+    getHasAlpha(styles) {
+        // Check for rgba or hsla with alpha < 1
+        const hasAlpha = {};
+        for (const [variant, styleStr] of Object.entries(styles)) {
+            const rgbaMatch = styleStr.match(/background-color: rgba\([^)]+,\s*([0-9.]+)\)/);
+            const hslaMatch = styleStr.match(/background-color: hsla\([^)]+,\s*([0-9.]+)\)/);
+            const alpha = rgbaMatch
+                ? parseFloat(rgbaMatch[1])
+                : hslaMatch
+                ? parseFloat(hslaMatch[1])
+                : 1;
+            hasAlpha[variant] = alpha < 1;
+        }
+        return hasAlpha;
+    }
+
+    findColorCombination(el) {
+        // Crawl the DOM upwards until a cc class is found, otherwise return cc1
+        const ccClasses = ["o_cc1", "o_cc2", "o_cc3", "o_cc4", "o_cc5"];
+        const ccSelector = ccClasses.map((cls) => `.${cls}`).join(",");
+        const ccElement = el.closest(ccSelector);
+        if (!ccElement) {
+            return ccClasses[0];
+        }
+        const matchedClass = ccClasses.find((cls) => ccElement.classList?.contains(cls));
+        return matchedClass;
     }
 }
 
@@ -118,7 +225,7 @@ export class ButtonFillColorAction extends StyleAction {
         // This override is needed because when the button is in outline mode,
         // the color is not shown unless we hover the button
         const { editingElement: el } = context;
-        return el.style.backgroundColor || el.style.backgroundImage || super.getValue(context);
+        return el.style.backgroundImage || el.style.backgroundColor || super.getValue(context);
     }
 }
 

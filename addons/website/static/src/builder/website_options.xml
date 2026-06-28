@@ -4,14 +4,14 @@
 <t t-name="website.BuilderOptions">
     <t t-set="socialMediaElementsSelector" t-value="'.s_social_media i.fa, .s_share i.fa, .social_media_img'"/>
     <t t-set="replaceMediaOptionSelector" t-value="'img, .media_iframe_video, span.fa, i.fa'"/>
-    <t t-set="replaceMediaOptionExclude" t-value="'[data-oe-xpath], ' + socialMediaElementsSelector"/>
+    <t t-set="replaceMediaOptionExclude" t-value="'[data-oe-xpath], .s_share i.fa, .s_share .social_media_img'"/>
     <!-- Hook to extend the builder context (extra t-set values, selectors, ...). -->
     <t id="context_hook"/>
 
     <!-- Hook order guideline (option placement):
         1) top_options_hook
-        2) background_options
-        3) Layout / Vertical Alignment (when relevant)
+        2) Layout / Vertical Alignment (when relevant)
+        3) background_options
         4) key_snippet_specific_options (for options above snippet_specific_options)
         5) snippet_specific_options (default area, most options go here)
         6) trailing bottom options (Animation / Visibility)
@@ -24,6 +24,31 @@
 
         <!-- Hook for high-priority options that must appear at the top of the builder panel. -->
         <t id="top_options_hook"/>
+
+        <text_alignment_option
+            template="html_builder.TextAlignmentOption"
+            selector=".s_share, .s_text_highlight, .s_social_media"/>
+        <layout_option
+            selector="section, section.s_carousel_wrapper .carousel-item, .s_carousel_intro_item"
+            exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_framed_intro, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame, .s_card_offset, .s_contact_info, .s_tabs, .s_tabs_images, .s_floating_blocks .s_floating_blocks_block, .s_banner_categories, .s_splash_intro, .s_age_verification_popup section, .s_services_pack, .s_references_tiles"
+            applyTo=":scope > *:has(> .row), :scope > .s_allow_columns"/>
+        <layout_grid_option
+            selector="section.s_masonry_block, section.s_quadrant, section.s_image_frame, section.s_card_offset, section.s_contact_info, section.s_framed_intro, section.s_banner_categories, section.s_references_tiles"
+            applyTo=":scope > *:has(> .row)"/>
+        <layout_column_option
+            selector="section.s_features_grid, section.s_process_steps, section.s_splash_intro"
+            applyTo=":scope > *:has(> .row), :scope > .s_allow_columns"/>
+        <vertical_alignment_option
+            selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_references_lite, .s_accordion_image, .s_shape_image, .s_reviews_wall, .s_key_images, .s_cards_soft, .s_cards_grid, .s_features_image, .s_image_features, .s_hero_minimalist, .s_features_cards"
+            applyTo=".row"/>
+        <vertical_alignment_option
+            selector=".s_pricelist_cafe"
+            applyTo=".row:has(.s_pricelist_cafe_col)"
+            props='{ "level": 0 }'/>
+        <vertical_alignment_option
+            selector=".s_attributes_vertical_col"
+            applyTo=":scope > .row"
+            props='{ "level": 0, "justify": false }'/>
 
         <t id="background_options">
             <website_background_option
@@ -54,39 +79,14 @@
                 props='{ "withColors": false, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": false }'/>
         </t>
 
-        <text_alignment_option
-            template="html_builder.TextAlignmentOption"
-            selector=".s_share, .s_text_highlight, .s_social_media"/>
-        <layout_option
-            selector="section, section.s_carousel_wrapper .carousel-item, .s_carousel_intro_item"
-            exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_framed_intro, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame, .s_card_offset, .s_contact_info, .s_tabs, .s_tabs_images, .s_floating_blocks .s_floating_blocks_block, .s_banner_categories, .s_splash_intro"
-            applyTo=":scope > *:has(> .row), :scope > .s_allow_columns"/>
-        <layout_grid_option
-            selector="section.s_masonry_block, section.s_quadrant, section.s_image_frame, section.s_card_offset, section.s_contact_info, section.s_framed_intro, section.s_banner_categories"
-            applyTo=":scope > *:has(> .row)"/>
-        <layout_column_option
-            selector="section.s_features_grid, section.s_process_steps, section.s_splash_intro"
-            applyTo=":scope > *:has(> .row), :scope > .s_allow_columns"/>
-        <vertical_alignment_option
-            selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image, .s_reviews_wall, .s_key_images, .s_cards_soft, .s_cards_grid"
-            applyTo=".row"/>
-        <vertical_alignment_option
-            selector=".s_pricelist_cafe"
-            applyTo=".row:has(.s_pricelist_cafe_col)"
-            props='{ "level": 0 }'/>
-        <vertical_alignment_option
-            selector=".s_attributes_vertical_col"
-            applyTo=":scope > .row"
-            props='{ "level": 0, "justify": false }'/>
-
         <t id="image_options">
             <replace_media_option
                 t-att-selector="replaceMediaOptionSelector"
                 t-attf-exclude="{{replaceMediaOptionExclude}}"/>
             <font_awesome_option selector="span.fa, i.fa, .social_media_img" exclude="[data-oe-xpath]"/>
             <video_size_option selector=".media_iframe_video"/>
-            <image_tool_option selector="img" exclude="[data-oe-type='image'] > img"/>
-            <image_pop_up_option template="website.ImagePopUpOption" selector="img" exclude="a img, header img, footer img, .s_image_gallery img, .o_product_detail_img_wrapper img"/>
+            <image_tool_option selector="img" exclude="[data-oe-type='image'] > img:not([data-attachment-id])"/>
+            <image_pop_up_option template="website.ImagePopUpOption" selector="img" exclude="a img, header img, footer img, .s_image_gallery img, *:has(> a.stretched-link) img, .o_product_detail_img_wrapper img"/>
             <image_and_fa_option
                 template="html_builder.ImageAndFaOption"
                 selector="span.fa, i.fa, img"
@@ -112,12 +112,12 @@
             applyTo=":scope > .container, :scope > .container-fluid, :scope > .o_container_small"/>
         <vertical_justify_option
             template="html_builder.VerticalJustifyOption"
-            selector=".s_masonry_block .o_grid_item, .s_quadrant .o_grid_item, .s_banner_categories .o_grid_item"
+            selector=".s_masonry_block .o_grid_item, .s_quadrant .o_grid_item, .s_banner_categories .o_grid_item, .s_references_tiles .o_grid_item, .s_bento_grid .row > div, .s_bento_grid_avatars .row > div, .s_bento_features .row > div"
             exclude=".o_grid_item_image"/>
 
         <animate_option
-            selector=".o_animable, section .row > div, img, .fa, .btn"
-            t-attf-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.fa, .s_share i.fa, .s_website_form_submit, {{socialMediaElementsSelector}}, {{this.specialBlockquoteSelector}}"/>
+            selector=".o_animable, section .row > div, img, .fa, .btn, .s_card"
+            t-attf-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.fa, .s_share i.fa, .s_website_form_submit, {{socialMediaElementsSelector}}, {{this.specialBlockquoteSelector}}, div:is({{this.cardParentHandlers}}) > .s_card"/>
         <animate_option selector=".s_social_media, .s_share" t-att-applyTo="socialMediaElementsSelector"/>
         <visibility_option selector="section, .s_hr"/>
         <device_visibility_option

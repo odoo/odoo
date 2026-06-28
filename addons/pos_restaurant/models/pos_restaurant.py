@@ -33,7 +33,7 @@ class RestaurantFloor(models.Model):
     table_ids = fields.One2many('restaurant.table', 'floor_id', string='Tables')
     sequence = fields.Integer('Sequence', default=1)
     active = fields.Boolean(default=True)
-    floor_plan_layout = fields.Json(string='Floor Plan Layout')
+    floor_plan_layout = fields.Json(string='Floor Plan Layout', copy=False)
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -58,7 +58,7 @@ class RestaurantFloor(models.Model):
     def write(self, vals):
         for floor in self:
             for config in floor.pos_config_ids:
-                if config.has_active_session and (vals.get('pos_config_ids') or vals.get('active')):
+                if config.current_session_id and (vals.get('pos_config_ids') or vals.get('active')):
                     raise UserError(
                         self.env._(
                             "Please close and validate the following open PoS Session before modifying this floor.\n"
@@ -166,3 +166,18 @@ class RestaurantTable(models.Model):
             error_msg = _("You cannot remove a table that is used in a PoS session, close the session(s) first.")
             if confs:
                 raise UserError(error_msg)
+
+    def set_parent_id(self, parent_id, parent_side, config_id):
+        parent = self.env['restaurant.table'].browse(parent_id).exists()
+        config = self.env['pos.config'].browse(config_id).exists()
+        if parent or parent_id is None:
+            old_parent = self.parent_id
+            old_side = self.parent_side
+            self.parent_id = parent
+            self.parent_side = parent_side
+            if self._has_cycle('parent_id'):
+                self.parent_id = old_parent
+                self.parent_side = old_side
+        return {
+            'restaurant.table': self._load_pos_data_read(self, config) if config else [],
+        }

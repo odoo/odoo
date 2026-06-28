@@ -13,6 +13,7 @@ export class AlertOptionPlugin extends Plugin {
             quote.dataset.oMailQuoteNode = "1";
             quote.dataset.oMailQuote = "1";
         }
+        return root;
     }
 }
 

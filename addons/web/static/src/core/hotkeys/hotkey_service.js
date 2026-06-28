@@ -2,6 +2,7 @@ import { isMacOS } from "../browser/feature_detection";
 import { registry } from "../registry";
 import { browser } from "../browser/browser";
 import { getVisibleElements } from "../utils/ui";
+import { range } from "../utils/numbers";
 
 /**
  * @typedef {(context: { area: HTMLElement, target: EventTarget }) => void} HotkeyCallback
@@ -46,8 +47,9 @@ const NAV_KEYS = [
     "delete",
     "space",
 ];
+const F_KEYS = range(1, 13).map((n) => `f${n}`);
 const MODIFIERS = ["alt", "control", "shift"];
-const AUTHORIZED_KEYS = [...ALPHANUM_KEYS, ...NAV_KEYS, "escape", "<", ">"];
+const AUTHORIZED_KEYS = [...ALPHANUM_KEYS, ...NAV_KEYS, ...F_KEYS, "escape", "<", ">", ".", "?"];
 
 /**
  * Get the actual hotkey being pressed.
@@ -472,6 +474,12 @@ export const hotkeyService = {
              */
             registerIframe(iframe) {
                 addListeners(iframe.contentWindow);
+            },
+            /**
+             * @param {Window} window
+             */
+            registerWindow(window) {
+                addListeners(window);
             },
         };
     },

@@ -95,6 +95,12 @@ export class ChannelMember extends Record {
             }
         },
     });
+    get isTypingUi() {
+        if (this.channel_id.self_member_id?.mute_until_dt) {
+            return false;
+        }
+        return this.isTyping;
+    }
     is_typing_dt = fields.Datetime({
         onUpdate() {
             browser.clearTimeout(this.typingTimeoutId);
@@ -113,7 +119,7 @@ export class ChannelMember extends Record {
     registerTypingTimeout() {
         this.typingTimeoutId = browser.setTimeout(
             () => (this.isTyping = false),
-            Store.OTHER_LONG_TYPING
+            this.typingTimeoutDuration
         );
     }
     channelAsTyping = fields.One("discuss.channel", {
@@ -128,6 +134,10 @@ export class ChannelMember extends Record {
     /** @type {number} */
     typingTimeoutId;
     unpin_dt = fields.Datetime();
+
+    get typingTimeoutDuration() {
+        return Store.OTHER_LONG_TYPING;
+    }
 
     get canRemoveAdmin() {
         return (
@@ -154,8 +164,8 @@ export class ChannelMember extends Record {
             this.partner_id?.main_user_id?.active &&
             this.channel_role !== "admin" &&
             (this.store.self_user?.is_admin ||
-                (this.channel_role === "owner" && this.channel_role !== "owner") ||
-                (this.channel_role === "owner" && this.channelAsSelf))
+                (this.selfChannelRole === "owner" && this.channel_role !== "owner") ||
+                (this.selfChannelRole === "owner" && this.channelAsSelf))
         );
     }
 
@@ -169,7 +179,7 @@ export class ChannelMember extends Record {
 
     get name() {
         if (this.guest_id) {
-            return this.guest_id.name;
+            return this.guest_id.name || _t("Guest");
         }
         return this.channel_id.getPersonaName(this.partner_id);
     }
@@ -180,10 +190,6 @@ export class ChannelMember extends Record {
 
     get imStatusUI() {
         return this.partner_id?.imStatusUI || this.guest_id?.imStatusUI;
-    }
-
-    get isOnline() {
-        return this.store.onlineMemberStatuses.includes(this.imStatusUI);
     }
 
     /**

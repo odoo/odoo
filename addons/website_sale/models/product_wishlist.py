@@ -24,22 +24,26 @@ class ProductWishlist(models.Model):
         string="Price",
         help="Price of the product when it has been added in the wishlist",
     )
-    website_id = fields.Many2one("website", ondelete="cascade", required=True)
+    website_id = fields.Many2one("website", ondelete="cascade", required=True, index=True)
     active = fields.Boolean(default=True, required=True)
+    stock_notification = fields.Boolean(
+        compute="_compute_stock_notification", default=False, required=True
+    )
 
     @api.model
     def current(self):
         """Get all wishlist items that belong to current user or session,
         filter products that are unpublished."""
-        if not request:
+        website = self.env.website
+        if not request or not website:
             return self
 
-        if request.website.is_public_user():
+        if website.is_public_user():
             wish = self.sudo().search([("id", "in", request.session.get("wishlist_ids", []))])
         else:
             wish = self.search([
                 ("partner_id", "=", self.env.user.partner_id.id),
-                ("website_id", "=", request.website.id),
+                ("website_id", "=", website.id),
             ])
 
         # TODO for /shop page, no need to check _is_add_to_cart_possible as it's only used to see
@@ -96,3 +100,13 @@ class ProductWishlist(models.Model):
             ),
             ("partner_id", "=", False),
         ]).unlink()
+
+    @api.depends("product_id", "partner_id")
+    def _compute_stock_notification(self):
+        for record in self:
+            record.stock_notification = record.product_id._has_stock_notification(record.partner_id)
+
+    def _inverse_stock_notification(self):
+        for record in self:
+            if record.stock_notification:
+                record.product_id.stock_notification_partner_ids += record.partner_id

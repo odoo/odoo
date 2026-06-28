@@ -80,16 +80,10 @@ class TestValuationReconciliationCommon(TestStockValuationCommon, TestSaleStockC
         ])
 
         #return the goods and refund the invoice
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=sale_order.picking_ids.ids, active_id=sale_order.picking_ids.ids[0],
-            active_model='stock.picking'))
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking.product_return_moves.quantity = 1.0
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick = sale_order.picking_ids._create_return()
+        return_pick.move_ids.product_uom_qty = 1.0
         return_pick.action_assign()
-        return_pick.move_ids.write({'quantity': 1, 'picked': True})
-        return_pick._action_done()
+        return_pick.button_validate()
         refund_invoice_wiz = self.env['account.move.reversal'].with_context(active_model='account.move', active_ids=[invoice.id]).create({
             'reason': 'test_invoice_shipment_refund',
             'journal_id': invoice.journal_id.id,

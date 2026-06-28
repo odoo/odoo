@@ -1,5 +1,5 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, props, t, useListener } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useBackButton, useService } from "@web/core/utils/hooks";
@@ -8,12 +8,16 @@ import { browser } from "@web/core/browser/browser";
 class MessageSeenIndicatorDialog extends Component {
     static components = { Dialog };
     static template = "mail.MessageSeenIndicatorDialog";
-    static props = ["message", "close?"];
 
     setup() {
         super.setup();
+        this.store = useService("mail.store");
+        this.props = props({
+            close: t.function([]).optional(),
+            message: t.instanceOf(this.store["mail.message"].Class),
+        });
         this.contentRef = useRef("content");
-        useExternalListener(
+        useListener(
             browser,
             "click",
             (ev) => {
@@ -27,18 +31,16 @@ class MessageSeenIndicatorDialog extends Component {
     }
 }
 
-/**
- * @typedef {Object} Props
- * @property {import("models").Message} message
- * @property {import("models").Thread} thread
- * @extends {Component<Props, Env>}
- */
 export class MessageSeenIndicator extends Component {
     static template = "mail.MessageSeenIndicator";
-    static props = ["message", "className?"];
 
     setup() {
         super.setup();
+        this.store = useService("mail.store");
+        this.props = props({
+            className: t.string().optional(),
+            message: t.instanceOf(this.store["mail.message"].Class),
+        });
         this.dialog = useService("dialog");
     }
 

@@ -1,20 +1,17 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { BarcodeDialog } from "@web/core/barcode/barcode_dialog";
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, props, proxy, t } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 
 export class BarcodeInput extends Component {
     static template = "barcodes.BarcodeInput";
-    static props = {
-        onSubmit: Function,
-        placeholder: { type: String, optional: true },
-    };
-    static defaultProps = {
-        placeholder: _t("Enter a barcode..."),
-    };
+    props = props({
+        onSubmit: t.function(),
+        placeholder: t.string().optional(_t("Enter a barcode...")),
+    });
     setup() {
-        this.state = useState({
+        this.state = proxy({
             barcode: false,
         });
         this.barcodeManual = useRef("manualBarcode");

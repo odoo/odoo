@@ -128,6 +128,17 @@ $-seen-urls: ();
     @include print-variable('display-4-margin-bottom', $display-4-margin-bottom);
 
     @include print-variable('set-buttons-font', o-get-font-info('buttons'));
+
+    @include print-variable('font-weight-normal', o-website-value('font-weight-normal'));
+    @include print-variable('lead-font-weight', o-website-value('lead-font-weight'));
+    @include print-variable('font-weight-bolder', o-website-value('font-weight-bolder'));
+    @include print-variable('headings-font-weight', o-website-value('headings-font-weight'));
+    @include print-variable('headings-font-weight-bold', o-website-value('headings-font-weight-bold'));
+    @include print-variable('display-font-weight', o-website-value('display-font-weight'));
+    @include print-variable('display-font-weight-bold', o-website-value('display-font-weight-bold'));
+    @include print-variable('btn-font-weight', o-website-value('btn-font-weight'));
+    @include print-variable('btn-font-weight-bold', o-website-value('btn-font-weight-bold'));
+
     @include print-variable('btn-padding-y', $btn-padding-y);
     @include print-variable('btn-padding-x', $btn-padding-x);
     @include print-variable('btn-font-size', $btn-font-size);
@@ -168,6 +179,10 @@ $-seen-urls: ();
     @include print-variable('input-padding-x-lg', $input-padding-x-lg);
     @include print-variable('input-font-size-lg', $input-font-size-lg);
     @include print-variable('input-border-width', $input-border-width);
+    @include print-variable('input-border-top-width', $input-border-top-width or $input-border-width);
+    @include print-variable('input-border-right-width', $input-border-right-width or $input-border-width);
+    @include print-variable('input-border-bottom-width', $input-border-bottom-width or $input-border-width);
+    @include print-variable('input-border-left-width', $input-border-left-width or $input-border-width);
     @include print-variable('input-border-radius', $input-border-radius);
     @include print-variable('input-border-radius-sm', $input-border-radius-sm);
     @include print-variable('input-border-radius-lg', $input-border-radius-lg);
@@ -243,6 +258,27 @@ body {
         // as it would impact other Bootstrap components that could take profit
         // of the transparency.
         @include force-opaque-bg-color($body-bg, $if-necessary: true);
+    }
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    b, strong {
+        font-weight: o-website-value('headings-font-weight-bold') !important;
+    }
+}
+
+// Keep display-5/6 covered for Bootstrap/custom markup, even though the editor
+// only exposes display-1 through display-4.
+.display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+    b, strong {
+        font-weight: o-website-value('display-font-weight-bold') !important;
+    }
+}
+
+.btn {
+    b, strong {
+        font-weight: o-website-value('btn-font-weight-bold') !important;
     }
 }
 
@@ -327,13 +363,28 @@ body {
                 max-width: 100% !important;
             }
 
-            // Vertical alignment when top-menu has visually "no background"
+            // Remove the left/right padding of the header navbar when the
+            // header has no visible separation from the body:
+            // - The header has no background color (transparent)
+            // - The header background color matches the body
+            // - The header has no shadow defined
             $-menu-color: o-color('menu-custom') or o-color('menu');
-            @if (not $-menu-color or $-menu-color == o-color('body')) {
-                > header {
-                    .navbar, .container {
-                        padding-left: 0;
-                        padding-right: 0;
+            $-header-template: o-website-value('header-template');
+            @if (
+                (not $-menu-color or ($-menu-color == o-color('body') and o-website-value('body-image') == null))
+                and (o-website-value('menu-box-shadow') == none)
+                and (index(("default", "hamburger", "stretch", "vertical", "search"), $-header-template) != null)
+            ) {
+                > header #o_main_nav {
+                    padding-left: 0;
+                    padding-right: 0;
+
+                    @if ($-header-template == "search") {
+                        & > div,
+                        & > .o_header_hide_on_scroll > .container {
+                            padding-left: 0;
+                            padding-right: 0;
+                        }
                     }
                 }
             }
@@ -539,6 +590,22 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
             }
         }
     }
+
+    .top_menu {
+        &.text-end > .accordion .accordion-button {
+            flex-direction: row-reverse;
+
+            &::after {
+                margin-left: 0;
+                margin-right: auto;
+            }
+        }
+
+        &.text-center > .accordion .accordion-button > span {
+            text-align: center;
+            flex-grow: 1;
+        }
+    }
 }
 
 // Apply background color to the offcanvas menu
@@ -557,6 +624,9 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
 @if o-website-value('header-template') == 'sidebar' {
     @include media-breakpoint-up(lg) {
         @include accordion-style-vertical-menu;
+    }
+    .o_header_sidebar > nav:not(.o_header_mobile) {
+        overflow-y: auto;
     }
 }
 
@@ -766,13 +836,6 @@ font[class*='bg-'] {
         box-sizing: content-box;
     }
 }
-// Smaller container
-.o_container_small {
-    @extend .container;
-    @include media-breakpoint-up(lg) {
-        max-width: map-get($container-max-widths, md);
-    }
-}
 
 // Buttons
 .btn {
@@ -878,6 +941,30 @@ font[class*='bg-'] {
     }
 }
 
+// Prevent nested snippets from inheriting the blur values of their parents.
+@property --o-bg-blur {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 0;
+}
+
+@property --o-bg-blur-enhance {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 1.25;
+}
+
+// Background blur option
+.o_bg_blur_option {
+    backdrop-filter: contrast(MIN(calc(1 + var(--o-bg-blur) * .05), var(--o-bg-blur-enhance, 1.25)))
+                     brightness(MIN(calc(1 + var(--o-bg-blur) * .05), var(--o-bg-blur-enhance, 1.25)))
+                     blur(calc(var(--o-bg-blur, 0) * 1px));
+
+    &.o_bg_blur_no_enhance {
+        --o-bg-blur-enhance: 1;
+    }
+}
+
 // Background videos
 .o_bg_video_container {
     @extend %o-we-background-layer;
@@ -942,25 +1029,15 @@ table.table_desc tr td {
 }
 
 .o_full_screen_height {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    min-height: 100vh !important;
+    @include o_full_screen_height;
     // See JS: this is overridden for multiple reasons, including the fact that
     // Arc browser does not support this correctly at the moment.
     min-height: 100svh !important;
 }
-.o_half_screen_height {
-    @extend .o_full_screen_height;
-    min-height: 55vh !important;
-}
 
-// TODO remove cover_full and cover_mid classes (kept for compatibility for now)
-.cover_full {
-    @extend .o_full_screen_height;
-}
-.cover_mid {
-    @extend .o_half_screen_height;
+.o_three_quarter_height {
+    @include o_full_screen_height;
+    min-height: 75vh !important;
 }
 
 // Allows custom border radius without contents overflowing.
@@ -1225,6 +1302,14 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         position: absolute;
     }
 
+    .carousel-control-prev, .carousel-control-next {
+        &:focus-visible {
+            .carousel-control-prev-icon, .carousel-control-next-icon {
+                box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+            }
+        }
+    }
+
     // Allow clicks to pass through the carousel control's wrapper, while
     // keeping the control indicators clickable.
     .carousel-indicators {
@@ -1449,7 +1534,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             button {
                 color: inherit;
             }
-            
+
             &.s_carousel_indicators_numbers {
                 // For large screen, use the same size as the margin-bottom of
                 // the prev/next buttons (like other indicators; instead of
@@ -1467,6 +1552,18 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
                 }
             }
         }
+    }
+}
+
+// Defines shared height behavior for carousels in full and three-quarter screen
+// sections. This placeholder is also applied to `s_carousel_intro` and
+// `s_quotes_carousel`.
+%carousel_screen_height {
+    .carousel, .carousel-inner, .carousel-item {
+        min-height: inherit;
+    }
+    .carousel-item {
+        align-content: center;
     }
 }
 
@@ -1762,19 +1859,24 @@ header {
     }
 
     nav.navbar {
-        @if o-website-value('menu-border-width') {
+        $-menu-border-width: o-website-value('menu-border-width');
+        @if $-menu-border-width {
+            // When the header should only have a bottom border, only take the
+            // first value of the variable 'menu-border-width' to behave as if
+            // the input only accepted one number.
+            $-menu-border-bottom-width: nth($-menu-border-width, 1);
             border: o-website-value('menu-border-style') o-color('menu-border-color') !important;
-            border-width: 0 0 o-website-value('menu-border-width') 0 !important;
+            border-width: 0 0 $-menu-border-bottom-width 0 !important;
 
             &.o_border_right_only {
-                border-width: 0 o-website-value('menu-border-width') 0 0 !important;
+                border-width: 0 $-menu-border-bottom-width 0 0 !important;
             }
             &.o_full_border {
-                border-width: o-website-value('menu-border-width') !important;
+                border-width: $-menu-border-width !important;
             }
         }
         border-radius: o-website-value('menu-border-radius') !important;
-        
+
         @if o-website-value('menu-shadow-class') == 'shadow' {
             box-shadow: var(--box-shadow) !important;
         } @else if o-website-value('menu-shadow-class') == 'shadow-sm' {
@@ -1784,7 +1886,7 @@ header {
         } @else if o-website-value('menu-shadow-class') == 'o-shadow-custom' {
             box-shadow: o-website-value('menu-box-shadow-style') !important;
         }
-        
+
 
         &.o_header_force_no_radius {
             border-radius: 0 !important;
@@ -1874,6 +1976,10 @@ header {
                 }
             }
         }
+    }
+    #wrapwrap > header .s_headline {
+        // Hide header disclaimer since it is not compatible with sidebar layout
+        display: none;
     }
 } @else if o-website-value('header-template') == 'stretch' {
     #wrapwrap > header input::placeholder {
@@ -2345,7 +2451,7 @@ span.list-inline-item.o_add_language:last-child {
     &:focus {
         outline: none;
     }
-    
+
 }
 
 .anim-heartbeat {
@@ -2408,14 +2514,132 @@ $ribbon-padding: 100px;
 #website_cookies_bar {
     min-height: 0px;
     height: 0px;
+
+    .modal-sm {
+        .row {
+            @include row-cols(1);
+        }
+    }
 }
 
-// Search results
-.o_search_result_item_detail {
-    flex: 1;
+.modal[id^='o_search_modal'] {
+    .modal-content:where(:has(.s_searchbar_input.show, .o_dropdown_menu.show)) {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+}
 
-    button:disabled {
-        color: inherit;
+
+.o_searchbar_form {
+    $o-searchbar-muted-color: color-mix(in srgb, color-contrast($light) 60%, transparent);
+
+    .form-control {
+        &::placeholder {
+            color: $o-searchbar-muted-color;
+        }
+    }
+
+    .oe_search_button {
+        padding-right: $input-padding-x;
+        padding-left: $input-padding-x;
+
+        &:where(:not(:hover, :disabled)) {
+            text-decoration: underline;
+            text-decoration-color: var(--btn-color);
+        }
+
+        &:disabled {
+            --btn-disabled-opacity: 1;
+            --btn-disabled-bg: var(--btn-bg);
+            --btn-disabled-color:#{$o-searchbar-muted-color};
+        }
+    }
+
+    .oe_search_box:focus, .oe_search_button:focus {
+        z-index: 1;
+        box-shadow: none !important;
+    }
+
+    &.o_keyboard_navigation {
+        .oe_search_box:focus, .oe_search_button:focus {
+            outline: $border-width * 2 solid $primary;
+            outline-offset: -(map-get($spacers, 2));
+        }
+    }
+
+    &:where(:has(.o_dropdown_menu.show):not(.o_search_radius_pill)) {
+        .oe_search_box, .oe_search_button {
+            border-bottom-right-radius: 0 !important; // !important for input-group
+            border-bottom-left-radius: 0;
+        }
+    }
+
+    &.o_search_radius_pill .o_dropdown_menu {
+        margin-top: map-get($spacers, 1);
+    }
+
+    &:not(.o_search_radius_pill) .o_dropdown_menu {
+        border-top-right-radius: 0;
+        border-top-left-radius: 0;
+    }
+}
+
+
+// Search results
+.o_searchbar_form .o_dropdown_menu, .o_searchbar_result {
+    container-type: inline-size;
+    container-name: search-results;
+}
+
+.o_search_result_item {
+    .o_search_result_image {
+        width: 32px;
+        height: 32px;
+        object-fit: cover;
+        background-color: color-mix(in srgb, $text-muted 12%, transparent);
+    }
+
+    .o_search_result_content {
+        flex-direction: var(--o-search-result-content-flex-direction, column);
+        justify-content: var(--o-search-result-content-justify-content, center);
+    }
+
+    .o_search_tags_highlight {
+        margin-top: var(--o-search-tags-highlight-margin-top, map-get($spacers, 1));
+    }
+
+    &:not(.o_search_result_item_placeholder):hover,
+    & .o_search_result_link:focus-visible {
+        background-color: $dropdown-link-hover-bg;
+    }
+
+    .o_search_result_link:focus-visible {
+        outline: $border-width * 2 solid $primary;
+        outline-offset: -($border-width * 2);
+    }
+
+    @container search-results (min-width: #{map-get($grid-breakpoints, md)}) {
+        --o-search-result-content-flex-direction: row;
+        --o-search-result-content-justify-content: space-between;
+        --o-search-tags-highlight-margin-top: 0;
+
+        .o_search_result_link {
+            align-items: center;
+        }
+
+        .o_search_tags_highlight {
+            justify-content: flex-end;
+        }
+
+        .o_search_result_content {
+            justify-content: space-between;
+            gap: map-get($spacers, 2);
+        }
+
+        .o_search_result_description {
+            max-width: 50%;
+            text-align: end;
+        }
     }
 }
 
@@ -3377,4 +3601,31 @@ input[value*="data-oe-translation-source-sha"] {
 // Cursor pointer for image's that open in lightbox popup
 img.o_image_popup {
     cursor: pointer;
+}
+
+.slide:not(.carousel-instant) {
+    --transition-duration: 600ms;
+    .carousel-item {
+        transition-duration: var(--transition-duration);
+    }
+}
+
+.carousel-instant {
+    .carousel-item {
+        transition: none;
+    }
+}
+
+/*
+The modal title has the fs-3 class, which results
+in a huge font size since it isn’t redefined for the frontend.
+*/
+.modal .modal-content .modal-header .modal-title.fs-3 {
+    font-size: 1.35rem !important;
+}
+
+*:has(> .stretched-link:focus-visible) {
+    outline: auto;
+    outline-color: black;
+    outline-offset: 2px;
 }

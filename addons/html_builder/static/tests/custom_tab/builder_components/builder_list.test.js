@@ -263,7 +263,7 @@ test("do not lose id when adjusting 'selected'", async () => {
                 addItemTitle="'Add'"
                 itemShape="{ display_name: 'text', selected: 'boolean' }"
                 default="{ display_name: 'Extra', selected: false }"
-                records="availableRecords" />`;
+                records="this.availableRecords" />`;
         static props = ["*"];
         setup() {
             this.availableRecords = JSON.stringify([
@@ -344,7 +344,7 @@ test("can add item with string and integer ids", async () => {
                 addItemTitle="'Add'"
                 itemShape="{ display_name: 'text', selected: 'boolean' }"
                 default="{ display_name: 'Extra', selected: false }"
-                records="availableRecords" />`;
+                records="this.availableRecords" />`;
         static props = ["*"];
         setup() {
             this.availableRecords = JSON.stringify([
@@ -462,4 +462,49 @@ test("drops blank textual entries", async () => {
     await contains(".we-bg-options-container input").clear();
     await press("enter");
     expect(".we-bg-options-container input").toHaveCount(1);
+});
+
+test("loads more items when the last row intersects", async () => {
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement: fieldEl }) {
+                const list = [];
+                for (let i = 0; i < 150; i++) {
+                    list.push({ value: `item ${i + 1}` });
+                }
+                return JSON.stringify(list);
+            }
+        },
+    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderList action="'customAction'" itemShape="{ value: 'text' }"/>`;
+        }
+    );
+    await setupHTMLBuilder(`<div class="test-options-target">content</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(".we-bg-options-container .o_row_draggable").toHaveCount(50);
+    await contains(".we-bg-options-container .o_we_table_wrapper").scroll({ top: 9999 });
+    expect(".we-bg-options-container .o_row_draggable").toHaveCount(100);
+    await contains(".we-bg-options-container .o_we_table_wrapper").scroll({ top: 9999 });
+    expect(".we-bg-options-container .o_row_draggable").toHaveCount(150);
+});
+
+test("should disable last checked checkbox", async () => {
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderList
+                dataAttributeAction="'list'"
+                itemShape="{ value: 'boolean' }"
+                default="{'value':'true'}"
+                disableLastCheckedCheckbox="true"
+            />`,
+    });
+    await setupHTMLBuilder(`<div class="test-options-target">a</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains(".we-bg-options-container .builder_list_add_item").click();
+    expect(".we-bg-options-container tr .o-checkbox input").toHaveAttribute("disabled");
 });

@@ -1,9 +1,9 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import {
     CustomFieldCard
 } from "@sale_pdf_quote_builder/js/custom_content_kanban_like_widget/custom_field_card/custom_field_card";
-import { x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from '@web/core/registry';
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
@@ -17,10 +17,11 @@ export class CustomContentKanbanLikeWidget extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.state = useState({
+        this.state = proxy({
             headers: {},
             lines: {},
             footers: {},
+            readonly: this.props.readonly,
         });
 
         // Initialize the state and update available documents when updating the quotation template.
@@ -31,7 +32,7 @@ export class CustomContentKanbanLikeWidget extends Component {
         // Make quotation tab readonly on confirmation
         useLayoutEffect((saleOrderState) => {
             if (saleOrderState === 'sale') {
-                this.props.readonly = true;
+                this.state.readonly = true;
                 this.props.record.save(); // trigger refresh to update form
             }
         }, () => [this.props.record.data.state]);
@@ -89,7 +90,7 @@ export class CustomContentKanbanLikeWidget extends Component {
     }
 
     async saveProductDocument(lineId, docId, isSelected) {
-        if (this.props.readonly) {
+        if (this.state.readonly) {
             return;
         }
         const sol = this.props.record.data.order_line.records.find(
@@ -108,7 +109,7 @@ export class CustomContentKanbanLikeWidget extends Component {
     };
 
     async saveQuotationDocument(docId, isSelected) {
-        if (this.props.readonly) {
+        if (this.state.readonly) {
             return;
         }
         if (isSelected) {

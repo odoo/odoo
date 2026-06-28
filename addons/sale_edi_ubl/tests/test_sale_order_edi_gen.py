@@ -6,14 +6,16 @@ from odoo.tests import tagged
 from odoo.tools import file_open
 
 from lxml import etree
-from datetime import datetime
 
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderEDIGen(TestSaleCommon):
     def test_sale_order_download_edi(self):
+        self.env.company.country_id = self.env.ref('base.be').id
         self.env.company.vat = 'BE0477472701'
+        self.partner_a.country_id = self.env.ref('base.nl')
         self.partner_a.vat = 'NL123456782B90'
+        tax = self.company_data['default_tax_sale']
 
         so = self.env['sale.order'].create({
             'name': 'My SO',
@@ -26,12 +28,14 @@ class TestSaleOrderEDIGen(TestSaleCommon):
                     'product_uom_qty': 10.0,
                     'price_unit': 50.0,
                     'discount': 10.0,
+                    'tax_ids': [Command.set(tax.ids)],
                 }),
                 Command.create({
                     'product_id': self.product_a.id,
                     'name': 'Product A description',
                     'product_uom_qty': 1.0,
                     'price_unit': 10.0,
+                    'tax_ids': [Command.set(tax.ids)],
                 })
             ]
         })
@@ -42,7 +46,7 @@ class TestSaleOrderEDIGen(TestSaleCommon):
         generated_xml = etree.fromstring(file_content)
 
         with file_open('sale_edi_ubl/tests/data/test_so_edi.xml', 'r') as f:
-            current_date = f'{datetime.today().date()}'
+            current_date = f'{so.create_date.date()}'
             validity_date = f'{so.validity_date}'
             xml_template = f.read().encode().replace(b'create_date_placeholder', current_date.encode()).replace(b'validity_date_placeholder', validity_date.encode())
             expected_xml = etree.fromstring(xml_template)

@@ -117,5 +117,5 @@ class TestPaymentTransaction(AsiaPayCommon, PaymentHttpCommon):
         """Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment."""
         tx = self._create_transaction(flow="redirect")
-        tx._apply_updates(self.webhook_payment_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.webhook_payment_data)
         self.assertEqual(tx.state, "done")

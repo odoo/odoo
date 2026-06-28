@@ -1,6 +1,7 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { expect, getFixture, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, useSubEnv, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { getService, makeMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -38,10 +39,16 @@ test("shadow DOM overlays are visible when registered before main component is m
     root.attachShadow({ mode: "open" });
     getFixture().appendChild(root);
 
-    await makeMockEnv();
+    const env = await makeMockEnv();
     getService("overlay").add(MyComp, {}, { rootId: "my-root-id" });
-
-    await mountWithCleanup(MainComponentsContainer, { target: root.shadowRoot });
+    const componentEnv = Object.assign(Object.create(env), {
+        rootId: "my-root-id",
+    });
+    await mountWithCleanup(MainComponentsContainer, {
+        componentEnv,
+        containerEnv: componentEnv,
+        target: root.shadowRoot,
+    });
     await animationFrame();
 
     expect("#my-root-id:shadow .o-overlay-container .overlayed").toHaveCount(1);
@@ -66,7 +73,7 @@ test("multiple overlays", async () => {
     await mountWithCleanup(MainComponentsContainer);
     class MyComp extends Component {
         static template = xml`
-            <div class="overlayed" t-att-class="props.className"></div>
+            <div class="overlayed" t-att-class="this.props.className"></div>
         `;
         static props = ["*"];
     }
@@ -100,7 +107,7 @@ test("sequence", async () => {
     await mountWithCleanup(MainComponentsContainer);
     class MyComp extends Component {
         static template = xml`
-            <div class="overlayed" t-att-class="props.className"></div>
+            <div class="overlayed" t-att-class="this.props.className"></div>
         `;
         static props = ["*"];
     }
@@ -137,8 +144,8 @@ test("allow env as option", async () => {
         static props = ["*"];
         static template = xml`
             <ul class="outer">
-                <li>A=<t t-out="env.A"/></li>
-                <li>B=<t t-out="env.B"/></li>
+                <li>A=<t t-out="this.env.A"/></li>
+                <li>B=<t t-out="this.env.B"/></li>
             </ul>
         `;
         setup() {

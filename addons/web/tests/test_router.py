@@ -1,5 +1,5 @@
 from odoo.tests.common import tagged, TransactionCase
-from odoo.addons.web.controllers.utils import get_action_triples, get_action
+from odoo.addons.web.controllers.utils import get_action, get_action_triples, og_title_from_path
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -57,10 +57,10 @@ class TestWebRouter(TransactionCase):
                 (user.id, self.env.ref('base.action_partner_form'), user.partner_id.id)],
 
             # Settings > Users & Companies > Users > Marc Demo > Access Right > TOTP
-            f'users/{user.id}/ir.model.access/ir.model.access/146': [
+            f'users/{user.id}/ir.access/ir.access/146': [
                 (None, self.env.ref('base.action_res_users'), user.id),
-                (user.id, self.env.ref('base.ir_access_act'), None),
-                (user.id, self.env.ref('base.ir_access_act'), 146),
+                (user.id, self.env.ref('base.ir_access_action'), None),
+                (user.id, self.env.ref('base.ir_access_action'), 146),
             ]
         }
         for path, triples in matrix.items():
@@ -83,3 +83,34 @@ class TestWebRouter(TransactionCase):
                     all(get_action_triples(self.env, action))
                 self.assertEqual(capture.exception.args[0],
                     f"expected action at word 0 but found “{action}”")
+
+
+class TestOgTitleFromPath(TransactionCase):
+    def test_empty(self):
+        self.assertEqual(og_title_from_path(self.env, ''), 'Odoo')
+        self.assertEqual(og_title_from_path(self.env, None), 'Odoo')
+
+    def test_unknown_path(self):
+        self.assertEqual(og_title_from_path(self.env, '/42'), 'Odoo')
+        self.assertEqual(og_title_from_path(self.env, '/odoo/42'), 'Odoo')
+        self.assertEqual(og_title_from_path(self.env, '/odoo/action-999999999'), 'Odoo')
+        self.assertEqual(og_title_from_path(self.env, '/odoo/idontexist'), 'Odoo')
+
+    def test_known_action_by_path(self):
+        self.assertEqual(og_title_from_path(self.env, '/odoo/crons'), 'Scheduled Actions')
+        self.assertEqual(og_title_from_path(self.env, '/odoo/users'), 'Users')
+
+    def test_known_action_by_xmlid(self):
+        self.assertEqual(og_title_from_path(self.env, '/odoo/action-base.ir_cron_act'), 'Scheduled Actions')
+
+    def test_known_action_by_model(self):
+        ir_cron_act = self.env['ir.actions.act_window'].sudo().search(
+            [('res_model', '=', 'ir.cron')], limit=1)
+        self.assertEqual(og_title_from_path(self.env, '/odoo/ir.cron'), ir_cron_act.name)
+        partner_action = self.env['ir.actions.act_window'].sudo().search(
+            [('res_model', '=', 'res.partner')], limit=1)
+        self.assertEqual(og_title_from_path(self.env, '/odoo/res.partner'), partner_action.name)
+
+    def test_record_id_stripped(self):
+        self.assertEqual(og_title_from_path(self.env, '/odoo/crons/42'), 'Scheduled Actions')
+        self.assertEqual(og_title_from_path(self.env, '/odoo/users/42'), 'Users')

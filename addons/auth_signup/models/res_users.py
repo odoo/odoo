@@ -22,7 +22,7 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     state = fields.Selection(compute='_compute_state', search='_search_state', string='Status',
-                 selection=[('new', 'Invited'), ('active', 'Confirmed')])
+                 selection=[('new', 'Invited'), ('active', 'Confirmed')], tracking=4)
 
     def _search_state(self, operator, value):
         if operator != 'in':
@@ -225,7 +225,7 @@ class ResUsers(models.Model):
                         model='res.users', res_ids=user.ids,
                         engine='qweb_view', options={'post_process': True})[user.id]
                     body_html = self.env['mail.render.mixin'].with_context(lang=user_lang)._render_encapsulate(
-                        'mail.mail_notification_layout', body, context_record=self,
+                        'mail.mail_notification_layout', body, context_record=user,
                         add_context={
                             'email_add_signature': True,
                             'email_notification_force_header': True,

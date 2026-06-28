@@ -172,7 +172,6 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         stock_price_diff_acc_id = self.env['account.account'].create({
             'name': 'default_account_stock_price_diff',
             'code': 'STOCKDIFF',
-            'reconcile': True,
             'account_type': 'asset_current',
         })
         # `product_a` standard price: $ 800.00, vendor price: $ 1,000.00

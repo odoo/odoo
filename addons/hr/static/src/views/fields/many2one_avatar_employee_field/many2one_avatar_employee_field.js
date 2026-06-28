@@ -1,4 +1,5 @@
-import { AvatarEmployee } from "@hr/components/avatar_employee/avatar_employee";
+import { Avatar } from "@mail/views/web/fields/avatar/avatar";
+
 import { Component, onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
@@ -11,7 +12,7 @@ import {
 
 export class Many2OneAvatarEmployeeField extends Component {
     static template = "hr.Many2OneAvatarEmployeeField";
-    static components = { AvatarEmployee, Many2One };
+    static components = { Avatar, Many2One };
     static props = {
         ...Many2OneField.props,
         relation: { type: String, optional: true },
@@ -36,17 +37,14 @@ export class Many2OneAvatarEmployeeField extends Component {
     }
 
     get uniqueId() {
-        return this.props.record.data[this.props.name].write_date.toMillis();
+        return this.value?.write_date ? this.value.write_date.toMillis() : undefined;
     }
 }
 
 registry.category("fields").add("many2one_avatar_employee", {
     ...buildM2OFieldDescription(Many2OneAvatarEmployeeField),
     relatedFields: [{ name: "write_date", type: "datetime" }],
-    additionalClasses: [
-        "o_field_many2one_avatar",
-        "o_field_many2one_avatar_user",
-    ],
+    additionalClasses: ["o_field_many2one_avatar", "o_field_many2one_avatar_user"],
     extractProps(staticInfo, dynamicInfo) {
         return {
             ...extractM2OFieldProps(staticInfo, dynamicInfo),

@@ -2,16 +2,12 @@
 <templates xml:space="preserve">
 
 <t t-name="website.TimelineOption">
-    <BuilderRow label.translate="Date">
-        <BuilderButton
-            type="'success'"
-            action="'addItem'"
-            actionParam="'.s_timeline_row'"
-            actionValue="'beforebegin'"
-            preview="false"
-            applyTo="':scope > :has(.s_timeline_row)'">
-            Add Date
-        </BuilderButton>
+    <BuilderRow label.translate="Add Milestones">
+        <BuilderButtonGroup action="'addMilestone'" applyTo="':scope > :has(.s_timeline_row)'" preview="false">
+            <BuilderButton ltrRtlMapping="'left-right'" type="'success'" actionValue="'left'">Left</BuilderButton>
+            <BuilderButton type="'success'" actionValue="'both'">Both</BuilderButton>
+            <BuilderButton ltrRtlMapping="'left-right'" type="'success'" actionValue="'right'">Right</BuilderButton>
+        </BuilderButtonGroup>
     </BuilderRow>
 </t>
 
@@ -19,6 +15,41 @@
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <timeline_option template="website.TimelineOption" selector=".s_timeline"/>
     </xpath>
+</t>
+
+<t t-name="website.s_timeline_row_additional">
+    <div class="s_timeline_row position-relative d-flex gap-md-5 flex-column flex-md-row pb-4" data-name="Milestone">
+        <!-- Left Milestone Event  -->
+        <t t-if="this.position != 'right'">
+            <div class="s_timeline_content w-100 ps-4 ps-md-0">
+                <div class="s_timeline_card s_card card my-0 ms-auto text-md-end" style="border-width: 0px !important;" data-vxml="001" data-snippet="s_card" data-name="Milestone Event">
+                    <div class="card-body">
+                        <small class="text-muted">07/04/2026</small>
+                        <h3 class="h4-fs card-title">Next Feature</h3>
+                        <p class="card-text">A timeline is a graphical representation on which important events are marked.</p>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="s_timeline_content w-0 w-md-100 h-0"/>
+        </t>
+        <!-- Right Milestone Event  -->
+        <t t-if="this.position != 'left'">
+            <div class="s_timeline_content w-100 ps-4 ps-md-0">
+                <div class="s_timeline_card s_card card my-0 ms-auto" style="border-width: 0px !important;" data-vxml="001" data-snippet="s_card" data-name="Milestone Event">
+                    <div class="card-body">
+                        <small class="text-muted">07/04/2026</small>
+                        <h3 class="h4-fs card-title">Latest Feature</h3>
+                        <p class="card-text">A timeline is a graphical representation on which important events are marked.</p>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="s_timeline_content w-0 w-md-100 h-0"/>
+        </t>
+    </div>
 </t>
 
 </templates>

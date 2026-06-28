@@ -64,7 +64,7 @@ defineActions([
 test("error in a client action (at rendering)", async () => {
     expect.assertions(9);
     class Boom extends Component {
-        static template = xml`<div><t t-out="a.b.c"/></div>`;
+        static template = xml`<div><t t-out="this.a.b.c"/></div>`;
         static props = ["*"];
     }
     actionRegistry.add("Boom", Boom);
@@ -82,7 +82,7 @@ test("error in a client action (at rendering)", async () => {
     try {
         await getService("action").doAction("Boom");
     } catch (e) {
-        expect(e.cause).toBeInstanceOf(TypeError);
+        expect(e).toBeInstanceOf(TypeError);
     }
     await animationFrame();
     expect(".o_kanban_view").toHaveCount(1);
@@ -97,8 +97,8 @@ test("error in a client action (after the first rendering)", async () => {
     class Boom extends Component {
         static template = xml`
             <div>
-                <t t-if="boom" t-out="a.b.c"/>
-                <button t-else="" class="my_button" t-on-click="onClick">Click Me</button>
+                <t t-if="this.boom" t-out="this.a.b.c"/>
+                <button t-else="" class="my_button" t-on-click="this.onClick">Click Me</button>
             </div>`;
         static props = ["*"];
         setup() {

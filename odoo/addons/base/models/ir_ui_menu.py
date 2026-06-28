@@ -4,7 +4,7 @@ from collections import defaultdict
 from os.path import join as opj
 import re
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 from odoo.http import request
 from odoo.tools import BinaryBytes, file_open
 
@@ -66,7 +66,7 @@ class IrUiMenu(models.Model):
             return False
 
     @api.model
-    @tools.ormcache('frozenset(self.env.user._get_group_ids())', 'debug')
+    @api.ormcache('frozenset(self.env.user._get_group_ids())', 'debug')
     def _visible_menu_ids(self, debug=False):
         """ Return the ids of the menu items visible to the user. """
         group_ids = set(self.env.user._get_group_ids())
@@ -111,7 +111,6 @@ class IrUiMenu(models.Model):
         }
         menu_ids = set(menus._ids)
         visible_ids = set()
-        access = self.env['ir.model.access']
         # process action menus, check whether their action is allowed
         for menu in menus:
             action = menu.action
@@ -119,7 +118,7 @@ class IrUiMenu(models.Model):
                 continue
             model_fname = MODEL_BY_TYPE.get(action._name)
             # action[model_fname] has been fetched in batch in `exists_actions`
-            if model_fname and not access.check(action[model_fname], 'read', False):
+            if model_fname and not ((model := self.env.get(action[model_fname])) is not None and model.has_access('read')):
                 continue
             # make menu visible, and its folder ancestors, too
             menu_id = menu.id
@@ -204,7 +203,7 @@ class IrUiMenu(models.Model):
         return []
 
     @api.model
-    @tools.ormcache('self.env.uid', 'self.env.lang')
+    @api.ormcache('self.env.uid', 'self.env.lang')
     def load_menus_root(self):
         fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon_data']
         menu_roots = self.get_user_roots()
@@ -225,7 +224,7 @@ class IrUiMenu(models.Model):
         return menu_root
 
     @api.model
-    @tools.ormcache('self.env.uid', 'debug', 'self.env.lang')
+    @api.ormcache('self.env.uid', 'debug', 'self.env.lang')
     def load_menus(self, debug):
         blacklisted_menu_ids = self._load_menus_blacklist()
         visible_menus = self.search_fetch(

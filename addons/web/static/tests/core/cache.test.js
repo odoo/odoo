@@ -1,5 +1,4 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred } from "@odoo/hoot-mock";
 
 import { Cache } from "@web/core/utils/cache";
 
@@ -43,12 +42,12 @@ test("compute key", async () => {
 test("cache promise", async () => {
     const cache = new Cache((key) => {
         expect.step(`read ${key}`);
-        return new Deferred();
+        return Promise.withResolvers();
     });
 
-    cache.read("a").then((k) => expect.step(`then ${k}`));
-    cache.read("b").then((k) => expect.step(`then ${k}`));
-    cache.read("a").then((k) => expect.step(`then ${k}`));
+    cache.read("a").promise.then((k) => expect.step(`then ${k}`));
+    cache.read("b").promise.then((k) => expect.step(`then ${k}`));
+    cache.read("a").promise.then((k) => expect.step(`then ${k}`));
     cache.read("a").resolve("a");
     cache.read("b").resolve("b");
 

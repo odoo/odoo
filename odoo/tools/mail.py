@@ -25,7 +25,6 @@ from lxml.html import (
     _looks_like_full_html_unicode,
     clean,
     defs,
-    document_fromstring,
     html_parser,
 )
 from werkzeug import urls
@@ -70,7 +69,7 @@ safe_attrs = defs.safe_attrs | frozenset(
     ['style',
      'data-o-mail-quote', 'data-o-mail-quote-node',  # quote detection
      'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translation-source-sha', 'data-oe-nodeid',
-     'data-last-history-steps', 'data-oe-protected', 'data-embedded', 'data-embedded-editable', 'data-embedded-props', 'data-oe-version',
+     'data-last-history-commits', 'data-oe-protected', 'data-embedded', 'data-embedded-editable', 'data-embedded-props', 'data-oe-version',
      'data-oe-transient-content', 'data-behavior-props', 'data-prop-name', 'data-width', 'data-height', 'data-scale-x', 'data-scale-y', 'data-x', 'data-y',  # legacy editor
      'data-oe-role', 'data-oe-aria-label', 'data-o-datetime',
      'data-publish', 'data-id', 'data-res_id', 'data-interval', 'data-member_id', 'data-scroll-background-ratio', 'data-view-id',
@@ -83,6 +82,9 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-language-id',
      'data-bs-toggle',  # support nav-tabs
      ])
+
+defs.link_attrs |= {'xlink:href'}
+
 SANITIZE_TAGS = {
     # allow new semantic HTML5 tags
     'allow_tags': defs.tags | frozenset('article bdi section header footer hgroup nav aside figure main'.split() + [etree.Comment]),
@@ -99,7 +101,7 @@ class _Cleaner(clean.Cleaner):
     _style_whitelist = [
         'font-size', 'font-family', 'font-weight', 'font-style', 'background-color', 'color', 'text-align',
         'line-height', 'letter-spacing', 'text-transform', 'text-decoration', 'text-decoration', 'opacity',
-        'float', 'vertical-align', 'display', 'object-fit',
+        'float', 'vertical-align', 'display', 'object-fit', 'direction',
         'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right',
         'white-space',
@@ -222,7 +224,11 @@ def tag_quote(el):
             sibling.set('data-o-mail-quote', '1')
 
     # odoo, gmail and outlook automatic signature wrapper
-    is_signature_wrapper = 'odoo_signature_wrapper' in el_class or 'gmail_signature' in el_class or el_id == "Signature"
+    is_signature_wrapper = (
+        'odoo_signature_wrapper' in el_class or
+        # gmail
+        'gmail_signature' in el_class or el_id == "Signature" or el.get('data-smartmail')
+    )
     is_outlook_auto_message = 'appendonsend' in el_id
     # gmail and outlook reply quote
     is_outlook_reply_quote = 'divRplyFwdMsg' in el_id
@@ -297,7 +303,7 @@ def fromstring(html_, base_url=None, parser=None, **kw):
         is_full_html = _looks_like_full_html_bytes(bytes(html_))
     else:
         is_full_html = _looks_like_full_html_unicode(html_)
-    doc = document_fromstring(html_, parser=parser, base_url=base_url, **kw)
+    doc = html.document_fromstring(html_, parser=parser, base_url=base_url, **kw)
     if is_full_html:
         return doc, False
     # otherwise, lets parse it out...
@@ -700,7 +706,8 @@ def plaintext2html(text: str, container_tag: str | None = None, with_paragraph: 
         final = '<%s>%s</%s>' % (container_tag, final, container_tag)
     return markupsafe.Markup(final)
 
-def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=None):
+
+def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=None, add_line_breaks=True):
     """ Append extra content at the end of an HTML snippet, trying
         to locate the end of the HTML document (</body>, </html>, or
         EOF), and converting the provided content in html unless ``plaintext``
@@ -723,14 +730,17 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
         :param bool preserve: if content is plaintext, wrap it into a <pre>
             instead of converting it into html
         :param str container_tag: tag to wrap the content into, defaults to `div`.
+        :param bool add_line_breaks: content is surrounded by \n, one before and
+            one after
         :rtype: markupsafe.Markup
     """
     if plaintext and preserve:
-        content = '\n<pre>%s</pre>\n' % misc.html_escape(content)
+        content = '<pre>%s</pre>' % misc.html_escape(content)
     elif plaintext:
-        content = '\n%s\n' % plaintext2html(content, container_tag)
+        content = '%s' % plaintext2html(content, container_tag)
     else:
         content = re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', content)
+    if add_line_breaks:
         content = '\n%s\n' % content
     # Force all tags to lowercase
     html = re.sub(r'(</?)(\w+)([ >])',

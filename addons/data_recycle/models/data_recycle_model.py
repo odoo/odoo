@@ -80,6 +80,17 @@ class Data_RecycleModel(models.Model):
             if model.recycle_action == 'archive' and 'active' not in self.env[model.res_model_name]:
                 raise UserError(_("This model doesn't manage archived records. Only deletion is possible."))
 
+    @api.onchange('recycle_mode')
+    def _onchange_recycle_mode(self):
+        if self.recycle_mode == 'automatic':
+            return {
+                'warning': {
+                    'title': "Automatic Mode",
+                    'message': "When enabling automatic mode your rules will run periodically without manual validation. "
+                               "Please note that these changes are permanent and cannot be reversed."
+                }
+            }
+
     @api.depends('res_model_id')
     def _compute_domain(self):
         self.domain = '[]'
@@ -128,12 +139,34 @@ class Data_RecycleModel(models.Model):
             if recycle_model.include_archived:
                 model = model.with_context(active_test=False)
             records_to_recycle = model.search(rule_domain)
+
+            # Get IDs of records currently matching the recycle rule (current_ids)
+            # and IDs of records already in the recycle records (existing_ids).
+            current_ids = set(records_to_recycle.ids)
+            existing_ids = set(mapped_existing_records[recycle_model])
+            # Remove recycle records for records that no longer match the recycle rule.
+            ids_to_remove = existing_ids - current_ids
+
+            if ids_to_remove:
+                self.env['data_recycle.record'].search([
+                    ('recycle_model_id', '=', recycle_model.id),
+                    ('res_id', 'in', ids_to_remove)
+                ]).unlink()
+
             records_to_create = [{
                 'res_id': record.id,
                 'recycle_model_id': recycle_model.id,
-            } for record in records_to_recycle if record.id not in mapped_existing_records[recycle_model]]
+            } for record in records_to_recycle if record.id not in existing_ids]
 
             if recycle_model.recycle_mode == 'automatic':
+                existing_records = self.env['data_recycle.record'].search([
+                    ('recycle_model_id', '=', recycle_model.id)
+                ])
+                for idx in range(0, len(existing_records), DR_CREATE_STEP_AUTO):
+                    existing_batch = existing_records[idx:idx + DR_CREATE_STEP_AUTO]
+                    existing_batch.action_validate()
+                    if batch_commits and not is_test:
+                        self.env.cr.commit()
                 for records_to_create_batch in split_every(DR_CREATE_STEP_AUTO, records_to_create):
                     self.env['data_recycle.record'].create(records_to_create_batch).action_validate()
                     if batch_commits and not is_test:
@@ -207,3 +240,21 @@ class Data_RecycleModel(models.Model):
         if self.recycle_mode == 'manual':
             return self.open_records()
         return
+
+    def refresh_recycle_records(self):
+        """
+        Refresh recycled records and reopen the Data Recycle view.
+        Preserves the selected search panel filter by passing
+        `recycle_model_id` into the action context.
+        """
+        self.search([])._recycle_records(batch_commits=True)
+        recycle_model_id = self.env.context.get('recycle_model_id')
+        action = self.env["ir.actions.actions"]._for_xml_id("data_recycle.action_data_recycle_record")
+        context = action.get('context', {})
+        if isinstance(context, str):
+            context = ast.literal_eval(context)
+        if recycle_model_id:
+            context['searchpanel_default_recycle_model_id'] = recycle_model_id
+        action['context'] = context
+        action['target'] = 'main'
+        return action

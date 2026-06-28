@@ -152,12 +152,9 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
                 with kit_form.bom_line_ids.edit(1) as line:
                     line.cost_share = 70
 
-        wizard_form = Form(self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking'))
-        wizard = wizard_form.save()
-        wizard.product_return_moves.quantity = 1
-        action = wizard.action_create_returns()
-        return_picking = self.env["stock.picking"].browse(action["res_id"])
-        return_picking.move_ids.move_line_ids.quantity = 1
+        return_picking = delivery._create_return()
+        return_picking.move_ids.product_uom_qty = 1
+        return_picking.action_assign()
         return_picking.button_validate()
 
         self.assertEqual(component01.stock_valuation_layer_ids.mapped('value'), [25, -25, 25])
@@ -337,7 +334,6 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             mo_form = Form(production)
             mo_form.qty_producing = 1
             production = mo_form.save()
-            production._post_inventory()
             production.button_mark_done()
             return production
 
@@ -416,7 +412,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         component01, component02, component03, component04, component05 = self.env['product.product'].create([{
             'name': 'Component %s' % name,
             'categ_id': avco_category.id,
-        } for name in ('01', '02 ', '03', '04', '05')])
+        } for name in ('01', '02', '03', '04', '05')])
 
         giga_kit, super_kit, kit, sub_kit, phantom_kit, triple_kit = self.env['product.product'].create([{
             'name': name,
@@ -470,13 +466,16 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             ],
         }])
         vendor = self.env['res.partner'].create({'name': 'Super vendor'})
-        purchase_order = self.env['purchase.order'].create({
-            'partner_id': vendor.id,
-            'order_line': [
-                Command.create({'product_id': super_kit.id, 'product_qty': 1, 'price_unit': 1000})
-            ],
-        })
-        purchase_order.button_confirm()
+        purchase_orders = self.env['purchase.order'].create([
+            {
+                'partner_id': vendor.id,
+                'order_line': [
+                    Command.create({'product_id': super_kit.id, 'product_qty': qty, 'price_unit': 1000}),
+                ],
+            }
+            for qty in [1, 3]
+        ])
+        purchase_orders.button_confirm()
 
         # Actual cost shares:
         # Component01:
@@ -496,22 +495,66 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         #   1.0 * 0.6 * 0.5 * 0.5 (0%) = 0.15 -> 15%
         #   1.0 * 0.2 * 0.5 (0%) = 0.1 -> 10%
         #   1.0 * 0.0 * 1.0 = 0.0 -> 0%
-        self.assertEqual(sum(purchase_order.order_line.move_ids.mapped('cost_share')), 100.0)
-        receipt = purchase_order.picking_ids
-        receipt.button_validate()
-        self.assertRecordValues(receipt.move_ids.sorted(lambda m: (m.product_id.id, m.cost_share)), [
-            {'product_id': component01.id, 'cost_share': 3.33, 'value': 33.3},
-            {'product_id': component02.id, 'cost_share': 3.33, 'value': 33.3},
-            {'product_id': component02.id, 'cost_share': 10.0, 'value': 100.0},
-            {'product_id': component02.id, 'cost_share': 15.0, 'value': 150.0},
-            {'product_id': component03.id, 'cost_share': 3.34, 'value': 33.4},
-            {'product_id': component03.id, 'cost_share': 15.0, 'value': 150.0},
-            {'product_id': component04.id, 'cost_share': 10.0, 'value': 100.0},
-            {'product_id': component04.id, 'cost_share': 15.0, 'value': 150.0},
-            {'product_id': component05.id, 'cost_share': 0.0, 'value': 0.0},
-            {'product_id': component05.id, 'cost_share': 10.0, 'value': 100.0},
-            {'product_id': component05.id, 'cost_share': 15.0, 'value': 150.0},
-        ])
+        self.assertEqual(
+            [
+                sum(moves.mapped('cost_share'))
+                for moves in purchase_orders.order_line.move_ids.grouped('picking_id').values()
+            ], [100, 100])
+        receipts = purchase_orders.picking_ids
+        # Create a backorder by receiving only the half of component01
+        receipts[1].move_line_ids.filtered(lambda ml: ml.product_id.id == component01.id).quantity = 3
+        res = receipts.button_validate()
+        self.env[res["res_model"]].with_context(res["context"]).create({}).process()
+        receipts = purchase_orders.picking_ids
+        receipts[2].button_validate()
+
+        self.assertEqual(sum(purchase_orders[0].order_line.move_ids.mapped('cost_share')), 100.0)
+        moves = purchase_orders.order_line.move_ids.sorted(lambda m: (m.picking_id.id, m.cost_share))
+        cost_share_values = moves.mapped('cost_share')
+        expected_cost_share = [
+            0.0, 3.3333333333333, 3.3333333333333, 3.3333333333333, 10.0, 10.0, 10.0, 15.0, 15.0, 15.0, 15.0,  # receipt 1
+            0.0, 3.3333333333333, 3.3333333333333, 3.3333333333333, 10.0, 10.0, 10.0, 15.0, 15.0, 15.0, 15.0,  # receipt 2
+            3.3333333333333,  # receipt 2 backorder
+        ]
+        for actual, expected in zip(cost_share_values, expected_cost_share):
+            self.assertAlmostEqual(actual, expected)
+
+        expected_values = [
+            {'product_id': component01.id, 'value': 33.33},
+            {'product_id': component02.id, 'value': 33.33},
+            {'product_id': component02.id, 'value': 100.0},
+            {'product_id': component02.id, 'value': 150.0},
+            {'product_id': component03.id, 'value': 33.33},
+            {'product_id': component03.id, 'value': 150.0},
+            {'product_id': component04.id, 'value': 100.0},
+            {'product_id': component04.id, 'value': 150.0},
+            {'product_id': component05.id, 'value': 0.0},
+            {'product_id': component05.id, 'value': 100.0},
+            {'product_id': component05.id, 'value': 150.0},
+            {'product_id': component01.id, 'value': 50.0},
+            {'product_id': component02.id, 'value': 100.0},
+            {'product_id': component02.id, 'value': 300.0},
+            {'product_id': component02.id, 'value': 450.0},
+            {'product_id': component03.id, 'value': 100.0},
+            {'product_id': component03.id, 'value': 450.0},
+            {'product_id': component04.id, 'value': 300.0},
+            {'product_id': component04.id, 'value': 450.0},
+            {'product_id': component05.id, 'value': 0.0},
+            {'product_id': component05.id, 'value': 300.0},
+            {'product_id': component05.id, 'value': 450.0},
+            {'product_id': component01.id, 'value': 50.0}
+        ]
+
+        self.assertRecordValues(receipts.move_ids.sorted(lambda m: (m.picking_id, m.product_id.id, m.cost_share)), expected_values)
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.partner_id = purchase_orders[0].partner_id
+        with mute_logger('odoo.tests.form.onchange'):  # Mute "x PO lines added to the bill" notification
+            move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_orders[0].id)
+        move_form.invoice_date = Date.today()
+        move = move_form.save()
+        move.action_post()
+        self.assertRecordValues(receipts.move_ids.sorted(lambda m: (m.picking_id, m.product_id.id, m.cost_share)), expected_values)
 
     def test_kit_bom_cost_share_constraint_with_variants(self):
         """
@@ -721,4 +764,52 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             {'product_id': c4.id, 'value': 500.0},
             {'product_id': c5.id, 'value': 500.0},
             {'product_id': c6.id, 'value': 0.0},
+        ])
+
+    def test_kit_components_cost_distribution(self):
+        """
+        Test that the cost of a kit without set cost_share is equidistributed among component moves
+        and that the associated rounding error introduced by this process is handled at closing.
+        """
+        kit, *components = self.env['product.product'].create([{
+            'name': 'Product %s' % i,
+            'is_storable': True,
+            'categ_id': self.category_avco_auto.id,
+        } for i in range(7)])
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                *[Command.create({'product_id': p.id}) for p in components],
+            ],
+        }])
+
+        kit_price = 100
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.vendor.id,
+            'order_line': [Command.create({
+                'product_id': kit.id,
+                'product_qty': 1,
+                'price_unit': kit_price,
+            })],
+        })
+        purchase_order.button_confirm()
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+        # Check that the monetary value of each component move is set to 16.67 ~ 100/6
+        # Even if the total value is therefore of 100.02 rather than 100
+        self.assertRecordValues(receipt.move_ids, [
+            {'value': val} for val in (16.67, 16.67, 16.67, 16.67, 16.67, 16.67)
+        ])
+
+        # Upload the associated bill and process the valuation closing
+        self._create_bill(kit, 1, 100)
+        correction_data = receipt.move_ids.company_id.action_close_stock_valuation()
+        # Check that correction data's counter balance the move values rounding issue
+        closing_move = self.env['account.move'].browse(correction_data['res_id'])
+        valuation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_valuation)
+        variation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_variation)
+        self.assertRecordValues(valuation_aml | variation_aml, [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.02, 'credit': 0},
+            {'account_id': self.account_stock_variation.id, 'debit': 0, 'credit': 0.02},
         ])

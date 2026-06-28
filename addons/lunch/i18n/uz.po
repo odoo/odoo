@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-03 17:36+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -139,13 +139,13 @@ msgid ""
 "<t>\n"
 "<t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
 "<t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
-"<t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order."
-"get('currency_id'))\"/>\n"
+"<t t-set=\"currency\" t-"
+"value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "<p>\n"
 "Dear <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "</p><p>\n"
-"Here is, today orders for <t t-out=\"order.get('company_name', "
-"'')\">LunchCompany</t>:\n"
+"Here is, today orders for <t t-out=\"order.get('company_name', '')"
+"\">LunchCompany</t>:\n"
 "</p>\n"
 "\n"
 "<t t-if=\"sites\">\n"
@@ -329,9 +329,8 @@ msgstr "Ogohlantirishlar"
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
-#, fuzzy
 msgid "Already Paid"
-msgstr "Allaqachon to‘langan"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__amount
@@ -568,9 +567,8 @@ msgstr "Shahar"
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
-#, fuzzy
 msgid "Clear Order"
-msgstr "Buyurtmani tozalash"
+msgstr ""
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
@@ -1348,37 +1346,37 @@ msgid "Lunch: Supplier Order"
 msgstr "Tushlik: Yetkazib beruvchiga buyurtma"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_236
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_237
 #, fuzzy
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "Tushlik: chat xabarnomasi (3-ofis uchun ogohlantirish)"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
 #, fuzzy
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr "Tushlik: Coin gourmand'ga avtomatik xat yuborish"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_232
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_233
 #, fuzzy
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "Tushlik: Tushlik yetkazib beruvchiga avtomatik xat yuborish"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
 #, fuzzy
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr "Tushlik: Pizza Inn'ga avtomatik xat yuborish"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_240
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_241
 #, fuzzy
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr "Tushlik: Sushi Shop'ga avtomatik xat yuborish"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_240
 #, fuzzy
 msgid "Lunch: send automatic email to The Corner"
 msgstr "Tushlik: The Corner'ga avtomatik xat yuborish"
@@ -1564,9 +1562,8 @@ msgstr "Hali pul harakati yo‘q"
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
-#, fuzzy
 msgid "No location found"
-msgstr "Joylashuv topilmadi"
+msgstr ""
 
 #. module: lunch
 #. odoo-javascript
@@ -1616,10 +1613,8 @@ msgstr "Bugun buyurtma qilish uchun hech narsa yo‘q"
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
-#, fuzzy
 msgid "Nothing to order, add some meals to begin."
 msgstr ""
-"Buyurtma qilish uchun hech narsa yo‘q, boshlash uchun biror taom qo‘shing"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_time
@@ -1709,9 +1704,8 @@ msgstr "Buyurtma muddati o‘tib ketdi"
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
-#, fuzzy
 msgid "Order Now"
-msgstr "Hozir buyurtma qiling"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__automatic_email_time
@@ -1758,9 +1752,8 @@ msgstr "Overdraft"
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
-#, fuzzy
 msgid "Passed orders"
-msgstr "O‘tgan buyurtmalar"
+msgstr ""
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_pasta
@@ -1826,9 +1819,8 @@ msgstr "Vegetarian pitsa"
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
-#, fuzzy
 msgid "Please create a location to start ordering."
-msgstr "Buyurtma qilishni boshlash uchun joylashuv yarating"
+msgstr ""
 
 #. module: lunch
 #: model_terms:lunch.alert,message:lunch.alert_office_3
@@ -1912,6 +1904,11 @@ msgstr "Mahsulot qidirish"
 #, fuzzy
 msgid "Product is no longer available."
 msgstr "Mahsulot endi mavjud emas."
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
+msgid "Product's Name"
+msgstr ""
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action
@@ -2331,9 +2328,8 @@ msgstr "Buyurtma berish"
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
-#, fuzzy
 msgid "To Pay"
-msgstr "To‘lash"
+msgstr ""
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_payment_dialog
@@ -2573,9 +2569,8 @@ msgstr "Siz kamida bitta %s buyurtma qilishingiz kerak"
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
-#, fuzzy
 msgid "Your Cart ("
-msgstr "Savatingiz ("
+msgstr ""
 
 #. module: lunch
 #. odoo-python
@@ -2670,3 +2665,9 @@ msgstr "yoqilgan"
 #, fuzzy
 msgid "to"
 msgstr "ga"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+msgid "x"
+msgstr ""

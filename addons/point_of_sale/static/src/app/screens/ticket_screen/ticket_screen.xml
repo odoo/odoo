@@ -15,11 +15,27 @@
                             onSearch.bind="this.onSearch"
                             onFilterSelected.bind="this.onFilterSelected" />
                         <div class="filter-buttons buttons d-flex gap-1 overflow-auto" t-if="usePreset" t-att-class="{'mt-2 mt-sm-0': this.ui.isSmall}">
-                            <button t-foreach="this.pos.models['pos.preset'].getAll()" t-as="preset" t-key="preset.id"
+                            <t t-set="presets" t-value="this.pos.models['pos.preset'].getAll()"/>
+                            <t t-set="dropdownPresets" t-value="presets.slice(3)"/>
+                            <button t-foreach="presets.slice(0, 3)" t-as="preset" t-key="preset.id"
                                 class="btn btn-lg btn-secondary text-nowrap" t-on-click="() => this.onPresetSelected(preset)"
                                 t-att-class="{'active': this.state.selectedPreset === preset}">
                                 <t t-out="preset.name"/>
                             </button>
+                            <Dropdown t-if="dropdownPresets.length > 0">
+                                <button class="btn btn-lg btn-secondary text-nowrap d-flex align-items-center gap-1"
+                                    t-att-class="{'active': dropdownPresets.includes(this.state.selectedPreset)}">
+                                    <span>More</span>
+                                    <i class="fa fa-caret-down"/>
+                                </button>
+                                <t t-set-slot="content">
+                                    <DropdownItem t-foreach="dropdownPresets" t-as="preset" t-key="preset.id"
+                                        class="this.state.selectedPreset === preset ? 'active' : ''"
+                                        onSelected="() => this.onPresetSelected(preset)">
+                                        <t t-out="preset.name"/>
+                                    </DropdownItem>
+                                </t>
+                            </Dropdown>
                         </div>
                         <div class="item d-none d-xl-flex align-items-center justify-content-end">
                             <span class="page me-2" role="button" t-on-click="this.onClickPageNbr"><t t-out="this.getPageNumber()" /></span>
@@ -54,11 +70,19 @@
                                                     <t t-out="order.preset_id?.name"></t>
                                                 </div>
                                             </td>
+                                            <td class="align-middle address-cell">
+                                                <span t-if="order.preset_id?.identification === 'address'"
+                                                    class="o_line_clamp"
+                                                    t-out="order.partner_id?.address"/>
+                                            </td>
                                             <td class="align-middle">
                                                 <t t-if="order.presetTime">
                                                     <div t-if="order.isFutureDate" class="fw-bolder" t-out="order.presetDate" />
-                                                    <div t-attf-class="fs-6 badge rounded {{ this.getPresetTimeColor(order) }}" t-out="order.presetTime"/>
+                                                    <div t-attf-class="fw-bolder fs-6 {{ !order.finalized ? 'badge rounded ' + this.getPresetTimeColor(order) : '' }}" t-out="order.presetTime"/>
                                                 </t>
+                                            </td>
+                                            <td class="align-middle">
+                                                <ProgressBar t-if="order.preset_id?.use_timing" currentValue="this.getCurrentTimePreset(order)" maxValue="this.getMaxTimePreset(order)" addressNeeded="order.preset_id?.identification === 'address'"/>
                                             </td>
                                             <td t-if="this.showCardholderName()">
                                                 <div><t t-out="this.getCardholderName(order)"></t></div>
@@ -71,17 +95,17 @@
                                             </td>
                                             <td class="align-middle text-end">
                                                 <t t-set="status" t-value="this.getStatus(order)" />
-                                                <div t-attf-class="badge rounded fs-6 text-bg-{{
-                                                    status === 'Ongoing' || status === 'Payment'
-                                                    ? 'info'
-                                                    : status === 'Receipt' || status === 'Paid'
-                                                    ? 'success'
-                                                    : 'secondary'
-                                                }}">
+                                                <t t-set="decoration" t-value="this.getStatusDecoration(status)" />
+                                                <div t-attf-class="badge rounded fs-6 text-bg-{{decoration}}">
                                                     <t t-out="status"></t>
                                                 </div>
                                             </td>
-                                            <td class="text-end delete-column" name="delete-column">
+                                            <td class="align-middle text-end" name="info-column">
+                                                <button t-on-click.stop="() => this._onInfoOrder(order)" class="btn btn-link p-0 lh-1 text-info">
+                                                    <i class="fa fa-info-circle fa-lg align-middle" aria-hidden="true"/>
+                                                </button>
+                                            </td>
+                                            <td class="align-middle text-end delete-column" name="delete-column">
                                                 <button t-if="!this.shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" t-on-click.stop="() => this.onDeleteOrder(order)" class="btn btn-link btn-lg text-danger">
                                                     <i class="fa fa-trash" aria-hidden="true"/>
                                                 </button>
@@ -109,13 +133,8 @@
                                     <div class="p-2 d-flex flex-column flex-grow-1 justify-content-center align-items-end">
                                         <div class="fw-bolder"><t t-out="this.getTotal(order)"></t></div>
                                                 <t t-set="status" t-value="this.getStatus(order)" />
-                                                <div t-attf-class="badge rounded fs-6 text-bg-{{
-                                                    status === 'Ongoing' || status === 'Payment'
-                                                    ? 'info'
-                                                    : status === 'Receipt' || status === 'Paid'
-                                                    ? 'success'
-                                                    : 'secondary'
-                                                }}">
+                                                <t t-set="decoration" t-value="this.getStatusDecoration(status)" />
+                                                <div t-attf-class="badge rounded fs-6 text-bg-{{decoration}}">
                                                     <t t-out="status"></t>
                                                 </div>
                                     </div>
@@ -143,13 +162,15 @@
                     </div>
                     <div class="switchpane d-flex gap-2 m-2" t-if="this.ui.isSmall">
                         <t t-set="_selectedSyncedOrder" t-value="this.getSelectedOrder()" />
+                        <t t-set="_showLoadButton" t-value="!_selectedSyncedOrder or (!this.isOrderSynced and !this.isOrderCancelled(_selectedSyncedOrder))" />
                         <button class="btn-switchpane load-order-button primary btn btn-primary btn-lg lh-lg w-50 py-3"
                             t-att-disabled="!_selectedSyncedOrder"
-                            t-if="!this.isOrderSynced"
+                            t-if="_showLoadButton"
+                            t-att-class="{'syncing': _selectedSyncedOrder and this.pos.isOrderSyncing(_selectedSyncedOrder, false)}"
                             t-on-click="() => this.setOrder(_selectedSyncedOrder)">
                             <span class="d-block">Load Order</span>
                         </button>
-                        <button class="btn-switchpane btn btn-lg lh-lg py-3 btn-secondary review-button" t-att-class="this.isOrderSynced ? 'w-100 btn-primary' : 'w-50 btn-secondary'" t-on-click="this.switchPane">
+                        <button class="btn-switchpane btn btn-lg lh-lg py-3 btn-secondary review-button" t-att-class="_showLoadButton ? 'w-50 btn-secondary' : 'w-100 btn-primary'" t-on-click="this.switchPane">
                             <span class="d-block">Review</span>
                         </button>
                     </div>
@@ -162,7 +183,7 @@
                         <div t-if="this.isOrderSynced" t-att-class="{ 'highlight text-danger': !this.getHasItemsToRefund() }" class="py-2 px-3 rounded-3 bg-view text-center">
                             Select the product(s) to refund and set the quantity
                         </div>
-                        <OrderDisplay order="_selectedSyncedOrder" t-if="_selectedSyncedOrder" t-slot-scope="scope">
+                        <OrderDisplay order="_selectedSyncedOrder" t-slot-scope="scope">
                             <t t-set="line" t-value="scope.line" />
                             <t t-set="qty" t-value="line.order_id?.uiState?.lineToRefund?.[line.uuid]?.qty" />
                             <Orderline line="line" t-on-click="() => this.onClickOrderline(line)" toRefund="qty" class="{'selected': line.id === _selectedOrderlineId}">
@@ -174,7 +195,7 @@
                                 </li>
                             </Orderline>
                         </OrderDisplay>
-                        <div class="pads">
+                        <div class="pads" t-if="!this.isOrderCancelled(_selectedSyncedOrder)">
                             <t t-if="this.isOrderSynced">
                                 <div class="control-buttons d-flex gap-2 pb-2">
                                     <button class="edit-order-payment control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.pos.showOrderDetails(_selectedSyncedOrder)">
@@ -184,13 +205,16 @@
                                         onInvoiceOrder.bind="this.onInvoiceOrder"
                                         order="_selectedSyncedOrder" />
                                     <button class="control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.doPrint.call(_selectedSyncedOrder)">
-                                        <i t-attf-class="fa {{this.doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Receipt
+                                        <i t-attf-class="fa {{this.doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Receipt
+                                    </button>
+                                    <button t-if="this.pos.canSendReceipt" class="control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="this.onClickSend">
+                                        <i class="fa fa-send me-1" />Send
                                     </button>
                                 </div>
                                 <div class="subpads d-flex flex-column">
                                     <Numpad class="'pb-2'" buttons="this.getNumpadButtons()"/>
                                         <ActionpadWidget
-                                            partner="this.getSelectedOrder()?.getPartner()"
+                                            order="this.getSelectedOrder()"
                                             buttonClasses="this.buttonClasses"
                                             actionName.translate="Refund"
                                             actionToTrigger.bind="this.onDoRefund"
@@ -201,11 +225,12 @@
                                 <BackButton t-if="this.ui.isSmall" onClick="() => this.pos.onClickBackButton()"/>
                                 <button class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                                     t-on-click="() => this.onClickReprintAll(_selectedSyncedOrder)"
-                                    t-if="this.pos.ticketPrinter.hasPreparationPrinters and _selectedSyncedOrder.uiState.lastPrints.length">
+                                    t-if="this.pos.ticketPrinter.hasPreparationPrinters and _selectedSyncedOrder.lastPrints.length">
                                     <i class="fa fa-cutlery" aria-hidden="true"/>
                                 </button>
                                 <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3"
                                     t-att-disabled="!_selectedSyncedOrder"
+                                    t-att-class="{'syncing': _selectedSyncedOrder and this.pos.isOrderSyncing(_selectedSyncedOrder, false)}"
                                     t-on-click="() => this.setOrder(_selectedSyncedOrder)">
                                     <span class="d-block">Load Order</span>
                                 </button>

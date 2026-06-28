@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
             <group name="bank_details" position="inside">
-                <field name="intermediary_bank_bic" invisible="country_code != 'US'"/>
+                <field name="intermediary_bank_bic" invisible="not show_intermediary_bank_bic"/>
             </group>
         </field>
     </record>

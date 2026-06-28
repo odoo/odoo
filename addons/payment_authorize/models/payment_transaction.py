@@ -2,7 +2,7 @@
 
 import pprint
 
-from odoo import _, api, models
+from odoo import api, models
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -69,7 +69,7 @@ class PaymentTransaction(models.Model):
                 self.reference,
                 pprint.pformat(res_content),
             )
-        self._process("authorize", {"response": res_content})
+        self._record({"response": res_content})
 
     def _send_refund_request(self):
         """Override of `payment` to send a refund request to Authorize."""
@@ -81,8 +81,10 @@ class PaymentTransaction(models.Model):
             self.source_transaction_id.provider_reference
         )
         if "err_code" in tx_details:  # Could not retrieve the transaction details.
-            self._set_error(
-                _(
+            self.with_context(
+                payment_safe_write=True  # The API call is idempotent
+            )._set_error(
+                self.env._(
                     "Could not retrieve the transaction details. (error code: %(error_code)s;"
                     " error_details: %(error_message)s)",
                     error_code=tx_details["err_code"],
@@ -94,11 +96,15 @@ class PaymentTransaction(models.Model):
         tx_status = tx_details.get("transaction", {}).get("transactionStatus")
         if tx_status in const.TRANSACTION_STATUS_MAPPING["voided"]:
             # The payment has been voided from Authorize.net side before we could refund it.
-            self._set_canceled(extra_allowed_states=("done",))
+            self.with_context(
+                payment_safe_write=True  # The API call is idempotent
+            )._set_canceled(extra_allowed_states=("done",))
         elif tx_status in const.TRANSACTION_STATUS_MAPPING["refunded"]:
             # The payment has been refunded from Authorize.net side before we could refund it. We
             # create a refund tx on Odoo to reflect the move of the funds.
-            self._set_done()
+            self.with_context(
+                payment_safe_write=True  # The API call is idempotent
+            )._set_done()
             # Immediately post-process the transaction as the post-processing will not be
             # triggered by a customer browsing the transaction from the portal.
             self.env.ref("payment.cron_post_process_payment_tx")._trigger()
@@ -121,16 +127,18 @@ class PaymentTransaction(models.Model):
                 pprint.pformat(res_content),
             )
             data = {"reference": self.reference, "response": res_content}
-            self._process("authorize", data)
+            self._record(data)
         else:
-            err_msg = _(
+            err_msg = self.env._(
                 "The transaction is not in a status to be refunded."
                 " (status: %(status)s, details: %(message)s)",
                 status=tx_status,
                 message=tx_details.get("messages", {}).get("message"),
             )
             _logger.warning(err_msg)
-            self._set_error(err_msg)
+            self.with_context(
+                payment_safe_write=True  # The API call is idempotent
+            )._set_error(err_msg)
 
     def _send_capture_request(self):
         """Override of `payment` to send a capture request to Authorize."""
@@ -147,7 +155,7 @@ class PaymentTransaction(models.Model):
             self.reference,
             pprint.pformat(res_content),
         )
-        self._process("authorize", {"response": res_content})
+        self._record({"response": res_content})
 
     def _send_void_request(self):
         """Override of `payment` to send a void request to Authorize."""
@@ -161,23 +169,7 @@ class PaymentTransaction(models.Model):
             self.reference,
             pprint.pformat(res_content),
         )
-        self._process("authorize", {"response": res_content})
-
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "authorize":
-            return super()._extract_amount_data(payment_data)
-
-        tx_details = AuthorizeAPI(self.provider_id).get_transaction_details(
-            payment_data.get("response", {}).get("x_trans_id")
-        )
-        if "err_code" in tx_details:  # Transaction details are missing when an API error occurs.
-            return None  # Skip the validation
-
-        amount = tx_details.get("transaction", {}).get("authAmount")
-        # Authorize supports only one currency per account.
-        currency = self.provider_id.available_currency_ids  # The currency is still linked.
-        return {"amount": float(amount), "currency_code": currency.name}
+        self._record({"response": res_content})
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
@@ -202,7 +194,7 @@ class PaymentTransaction(models.Model):
 
         # Update the payment method.
         payment_method_code = response_content.get("payment_method_code", "").lower()
-        payment_method = self.env["payment.method"]._get_from_code(
+        payment_method = self.provider_id._get_pm_from_code(
             payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id
@@ -245,12 +237,28 @@ class PaymentTransaction(models.Model):
                 {"status": status_code, "err": error_code, "ref": self.reference},
             )
             self._set_error(
-                _(
+                self.env._(
                     'Received data with status code "%(status)s" and error code "%(error)s".',
                     status=status_code,
                     error=error_code,
                 )
             )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "authorize":
+            return super()._extract_amount_data(payment_data)
+
+        tx_details = AuthorizeAPI(self.provider_id).get_transaction_details(
+            payment_data.get("response", {}).get("x_trans_id")
+        )
+        if "err_code" in tx_details:  # Transaction details are missing when an API error occurs.
+            return None  # Skip the validation
+
+        amount = tx_details.get("transaction", {}).get("authAmount")
+        # Authorize supports only one currency per account.
+        currency = self.provider_id.available_currency_ids  # The currency is still linked.
+        return {"amount": float(amount), "currency_code": currency.name}
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""

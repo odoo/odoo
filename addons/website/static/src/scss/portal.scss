@@ -1,11 +1,30 @@
+.o_portal_cards {
+    gap: var(--portal-card-gap, #{o-website-value('portal-card-gap')});
+    grid-template-columns: 1fr;
+
+    @include media-breakpoint-up(lg) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 .o_portal_index_card > a:not(.alert) {
     @include o-apply-colors('portal-card');
     @include o-apply-colors('portal-card-custom');
     @include o-add-gradient('portal-gradient');
+    @include transition(background-color 150ms linear);
 
     @if o-website-value('portal-card-border-width') {
         border: o-website-value('portal-card-border-style') o-color('portal-card-border-color') !important;
         border-width: o-website-value('portal-card-border-width') !important;
     }
     border-radius: o-website-value('portal-card-border-radius') !important;
+
+    &:hover {
+        $-bg: o-color('portal-card-custom');
+        $-bg: if($-bg, $-bg, o-color('portal-card'));
+        $-bg: if($-bg, $-bg, $body-bg);
+        $-weight: if(lightness($-bg) < 35%, -15%, 15%);
+
+        background-color: shift-color($-bg, $-weight);
+    }
 }

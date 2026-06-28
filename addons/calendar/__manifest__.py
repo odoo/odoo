@@ -22,9 +22,8 @@ If you need to manage your meetings, you should install the CRM module.
         'data/calendar_demo.xml'
     ],
     'data': [
-        'security/ir.model.access.csv',
-        'security/calendar_security.xml',
         'data/calendar_cron.xml',
+        'data/mail_templates_chatter.xml',
         'data/mail_template_data.xml',
         'data/calendar_data.xml',
         'data/mail_activity_type_data.xml',
@@ -38,10 +37,12 @@ If you need to manage your meetings, you should install the CRM module.
         'wizard/calendar_provider_config.xml',
         'wizard/calendar_popover_delete_wizard.xml',
         'wizard/mail_activity_schedule_views.xml',
+        'security/ir.access.csv',
     ],
     'application': True,
     'assets': {
         'web.assets_backend': [
+            'calendar/static/src/core/common/**/*',
             'calendar/static/src/**/*',
         ],
         # Unit test files
@@ -51,6 +52,15 @@ If you need to manage your meetings, you should install the CRM module.
         ],
         'web.assets_tests': [
             'calendar/static/tests/tours/**/*',
+        ],
+        'mail.assets_public': [
+            'calendar/static/src/core/common/**/*',
+        ],
+        'im_livechat.assets_embed_core': [
+            'calendar/static/src/core/common/**/*',
+        ],
+        'portal.assets_chatter_helpers': [
+            'calendar/static/src/core/common/**/*',
         ],
     },
     'author': 'Odoo S.A.',

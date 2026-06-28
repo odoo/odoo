@@ -74,5 +74,5 @@ const _assertContainsPopoverWithIcon = async (iconClassName) => {
     await contains(".o-mail-MessageNotificationPopover");
     await contains(".o-mail-MessageNotificationPopover i");
     await contains(`.o-mail-MessageNotificationPopover i.${iconClassName}`);
-    await contains(".o-mail-MessageNotificationPopover", { text: "Someone" });
+    await contains(".o-mail-MessageNotificationPopover", { text: "ToSomeone" });
 };

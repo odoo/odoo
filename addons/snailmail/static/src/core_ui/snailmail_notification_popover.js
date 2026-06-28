@@ -1,6 +1,5 @@
-import { Component } from "@odoo/owl";
+import { MessageNotificationPopover } from "@mail/core/common/message_notification_popover";
 
-export class SnailmailNotificationPopover extends Component {
+export class SnailmailNotificationPopover extends MessageNotificationPopover {
     static template = "snailmail.SnailmailNotificationPopover";
-    static props = ["message", "close?"];
 }

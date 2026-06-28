@@ -3,7 +3,6 @@ import { AttendeeCalendarRenderer } from "@calendar/views/attendee_calendar/atte
 import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
 import { onWillUpdateProps, onPatched } from "@odoo/owl";
-import { renderToString } from "@web/core/utils/render";
 
 const { DateTime } = luxon;
 
@@ -17,35 +16,12 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             // Force to rerender the FC.
             // As it doesn't redraw the header when the event's data changes
             this.fc.api.render();
-            /*The fc.api.render() only re-renders content handled by its internal virtual DOM
-            and content added using methods like dayCellContent or eventContent
-            (https://fullcalendar.io/docs/content-injection)
-
-            Since the dayCell content is injected into the DOM using standard js,
-            the lib doesn't know about it and won't rerender it
-
-            From the docs (https://fullcalendar.io/docs/Calendar-render):
-            'This method will not completely wipe the DOM clean and rebuild. It will use its
-            internal virtual DOM representation to only commit needed changes.'*/
-            this.renderMonthDayCellsWorklocations();
         });
 	},
 	get options() {
 		return {
             ...super.options,
 			businessHours: this.props.model.workingHours,
-            eventOrder: function(event1, event2){
-                if (event1.extendedProps.worklocation){
-                    return -1;
-                } else {
-                    if(event2.extendedProps.worklocation){
-                        return 1;
-                    } else {
-                        return event1.start < event2.start ? -1 : 1;
-                    }
-                }
-            },
-            dayCellDidMount: this.onDayCellDidMount,
         };
 	},
 	handleWorkLocationClick(target, date) {
@@ -68,41 +44,6 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         }
         return this.props.openWorkLocationWizard(date);
     },
-    onDayCellDidMount(info){
-        if (this.props.model.scale === 'month'){
-            const box = info.el.querySelector(`.fc-daygrid-day-top`);
-            if (!box)
-                return;
-            const content = renderToString(this.constructor.ButtonWorklocationTemplate, this.headerTemplateProps(info.date));
-            box.insertAdjacentHTML("beforeend", content);
-        }
-    },
-    // Manually rerender injected worklocation html content (see onPatched in setup)
-    renderMonthDayCellsWorklocations() {
-        if (this.props.model.scale === 'month') {
-            const dayCells = document.querySelectorAll('.fc-daygrid-day');
-            dayCells.forEach(dayCell => {
-                const wlButtonEl = dayCell.querySelector('.o_worklocation_btn');
-                if (wlButtonEl) {
-                    wlButtonEl.remove();
-
-                    const dayTopEl = dayCell.querySelector('.fc-daygrid-day-top');
-                    if (!dayTopEl) {
-                        return;
-                    }
-
-                    const dateStr = dayCell.getAttribute('data-date');
-                    if (!dateStr) {
-                        return;
-                    }
-
-                    const date = new Date(dateStr);
-                    const wlContent = renderToString(this.constructor.ButtonWorklocationTemplate, this.headerTemplateProps(date));
-                    dayTopEl.insertAdjacentHTML("beforeend", wlContent);
-                }
-            });
-        }
-    },
     onDateClick(info){
         if (info.jsEvent && info.jsEvent.target.closest(".o_worklocation_btn")) {
             const date = DateTime.fromJSDate(info.date);
@@ -113,7 +54,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
     },
     headerTemplateProps(date) {
         const parsedDate = DateTime.fromJSDate(date).toISODate();
-        let showLine = ["week", "month"].includes(this.props.model.scale);
+        let showLine = this.props.model.scale === "week";
         let worklocation = this.props.model.worklocations[parsedDate];
         if (!worklocation) {
             return {...super.headerTemplateProps(date), showLine, userFilterActive: this.props.model.data.userFilterActive};

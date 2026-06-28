@@ -158,12 +158,15 @@ class AuthSignupHome(Home):
                 qcontext['invalid_token'] = True
         return qcontext
 
-    def _prepare_signup_values(self, qcontext):
+    def _prepare_signup_values(self, qcontext, *, validate_email=False):
         values = { key: qcontext.get(key) for key in ('login', 'name', 'password') }
         if not values:
             raise UserError(_("The form was not properly filled in."))
         if values.get('password') != qcontext.get('confirm_password'):
             raise UserError(_("Passwords do not match; please retype them."))
+        login = values.get('login')
+        if validate_email and not (login and tools.single_email_re.match(login)):
+            raise UserError(_("Invalid email; please enter a valid email address."))
         supported_lang_codes = [code for code, _ in request.env['res.lang'].get_installed()]
         lang = request.env.context.get('lang', '')
         if lang in supported_lang_codes:
@@ -172,7 +175,9 @@ class AuthSignupHome(Home):
 
     def do_signup(self, qcontext, do_login=True):
         """ Shared helper that creates a res.partner out of a token """
-        values = self._prepare_signup_values(qcontext)
+        # do_login = True only when calling from the signup page, that is when
+        # we want to validate the email address entered by the user
+        values = self._prepare_signup_values(qcontext, validate_email=do_login)
         self._signup_with_values(qcontext.get('token'), values, do_login)
         request.env.cr.commit()
 

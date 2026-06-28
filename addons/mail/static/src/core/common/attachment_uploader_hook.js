@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -20,8 +20,16 @@ export class AttachmentUploader {
         return this.uploadFile(file, options);
     }
 
+    /**
+     * @param {File} file
+     * @param {Object} [options]
+     * @param {import("models").Activity} [options.activity]
+     * @param {import("models").Thread} [options.thread]
+     * @param {boolean} [options.voice]
+     */
     async uploadFile(file, options) {
-        return this.attachmentUploadService.upload(this.thread, this.composer, file, options);
+        const thread = options?.thread || this.thread;
+        return this.attachmentUploadService.upload(thread, this.composer, file, options);
     }
 
     async unlink(attachment) {
@@ -36,5 +44,5 @@ export class AttachmentUploader {
  * @param {function} [param1.onFileUploaded]
  */
 export function useAttachmentUploader(thread, { composer, onFileUploaded } = {}) {
-    return useState(new AttachmentUploader(...arguments));
+    return proxy(new AttachmentUploader(...arguments));
 }

@@ -105,6 +105,7 @@ class ExhibitorController(WebsiteEventController):
             # event information
             'event': event,
             'main_object': event,
+            'structured_data': sorted_sponsors._render_jsonld(),
             'sponsor_categories': sponsor_categories,
             'hide_sponsors': True,
             # search information
@@ -162,6 +163,7 @@ class ExhibitorController(WebsiteEventController):
             'event': event,
             'main_object': sponsor,
             'sponsor': sponsor,
+            'structured_data': sponsor._render_jsonld(is_detail_page=True),
             'hide_sponsors': True,
             # sidebar
             'sponsors_other': sponsors_other[:30],

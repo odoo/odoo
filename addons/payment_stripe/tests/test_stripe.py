@@ -40,6 +40,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
 
     @mute_logger("odoo.addons.payment_stripe.models.payment_transaction")
     def test_tx_state_after_send_capture_request(self):
+        self.provider.payment_method_ids.active = False  # TODO VCHU: remove in master
         self.provider.capture_manually = True
         tx = self._create_transaction("direct", state="authorized")
 
@@ -52,12 +53,14 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             },
         ):
             tx._capture()
+        self._run_processing()
         self.assertEqual(
             tx.state, "done", msg="The state should be 'done' after a successful capture."
         )
 
     @mute_logger("odoo.addons.payment_stripe.models.payment_transaction")
     def test_tx_state_after_send_void_request(self):
+        self.provider.payment_method_ids.active = False  # TODO VCHU: remove in master
         self.provider.capture_manually = True
         tx = self._create_transaction("redirect", state="authorized")
 
@@ -70,6 +73,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             },
         ):
             child_tx = tx._void()
+        self._run_processing()
         self.assertEqual(
             child_tx.state,
             "cancel",
@@ -85,6 +89,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             "odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature"
         ):
             self._make_json_request(url, data=self.payment_data)
+        self._run_processing()
         self.assertEqual(tx.state, "done")
 
     def test_validate_amount_succeeds_for_special_currencies(self):
@@ -150,36 +155,8 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             self._make_json_request(
                 url, data=dict(self.payment_data, type="setup_intent.succeeded")
             )
+            self._run_processing()
         self.assertEqual(tokenize_check_mock.call_count, 1)
-
-    @mute_logger("odoo.addons.payment_stripe.controllers.main")
-    def test_webhook_notification_triggers_signature_check(self):
-        """Test that receiving a webhook notification triggers a signature check."""
-        self._create_transaction("redirect")
-        url = self._build_url(StripeController._webhook_url)
-        with (
-            patch(
-                "odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature"
-            ) as signature_check_mock,
-            patch("odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"),
-        ):
-            self._make_json_request(url, data=self.payment_data)
-            self.assertEqual(signature_check_mock.call_count, 1)
-
-    @mute_logger("odoo.addons.payment_stripe.controllers.main")
-    @mute_logger("odoo.addons.payment_stripe.models.payment_transaction")
-    def test_webhook_notification_skips_signature_verification_for_missing_transactions(self):
-        """Test that the webhook ignores signature verification for unknown transactions (e.g.
-        POS)."""
-        url = self._build_url(StripeController._webhook_url)
-        payload = dict(self.payment_data)
-        payload["data"]["object"]["description"] = None
-
-        with patch(
-            "odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature"
-        ) as signature_check_mock:
-            self._make_json_request(url, data=payload)
-            self.assertEqual(signature_check_mock.call_count, 0)
 
     @mute_logger("odoo.addons.payment_stripe.controllers.main")
     def test_return_from_tokenization_request(self):
@@ -261,6 +238,6 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         ) as mock:
             self.stripe._stripe_create_account_link("dummy", "dummy")
             mock.assert_called_once()
-            call_args = mock.call_args.kwargs["json"]["params"]["payload"].keys()
+            call_args = mock.call_args.kwargs["json"]["payload"].keys()
             for payload_param in ("account", "return_url", "refresh_url", "type"):
                 self.assertIn(payload_param, call_args)

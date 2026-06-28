@@ -104,10 +104,6 @@ class WebClient(http.Controller):
             },
         })
 
-    @http.route('/web/tests/legacy', type='http', auth='user', readonly=True)
-    def test_suite(self, mod=None, **kwargs):
-        return request.render('web.qunit_suite', {'session_info': {'view_info': request.env['ir.ui.view'].get_view_info()}})
-
     @http.route('/web/bundle/<string:bundle_name>', auth='public', methods=['GET'], readonly=True)
     def bundle(self, bundle_name, **bundle_params):
         """

@@ -1,3 +1,4 @@
+from . import res_currency_rate_consolidation_mixin
 from . import sequence_mixin
 from . import account_document_import_mixin
 from . import partner
@@ -44,7 +45,6 @@ from . import ir_http
 from . import ir_module
 from . import mail_message
 from . import mail_template
-from . import mail_tracking_value
 from . import merge_partner_automatic
 from . import res_currency
 from . import account_report

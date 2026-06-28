@@ -1,4 +1,5 @@
 from . import models
+from . import report
 
 
 def _enable_dispatch_management(env):

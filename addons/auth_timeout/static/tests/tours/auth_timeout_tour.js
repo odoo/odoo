@@ -74,7 +74,6 @@ const assertNoRPC = {
 };
 
 registry.category("web_tour.tours").add("auth_timeout_tour_lock_timeout_inactivity", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             trigger: "body",
@@ -140,13 +139,15 @@ registry.category("web_tour.tours").add("auth_timeout_tour_lock_timeout_inactivi
             trigger: "form#webauthn button",
             run: "click",
         },
+        {
+            trigger: "body:not(:has(form.o_check_identity_form))",
+        },
         unpatchPasskey,
         assertRPC,
     ],
 });
 
 registry.category("web_tour.tours").add("auth_timeout_tour_lock_timeout_inactivity_2fa", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         // Check identity using a passkey, which is 2FA by itself, and check an RPC call works
         assertCheckIdentityForm,
@@ -156,6 +157,9 @@ registry.category("web_tour.tours").add("auth_timeout_tour_lock_timeout_inactivi
             content: "Click Use passkey",
             trigger: "form#webauthn button",
             run: "click",
+        },
+        {
+            trigger: "body:not(:has(form.o_check_identity_form))",
         },
         unpatchPasskey,
         assertRPC,

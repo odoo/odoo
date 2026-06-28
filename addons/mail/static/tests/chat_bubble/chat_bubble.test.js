@@ -48,9 +48,13 @@ test("No duplicated chat bubbles", async () => {
     // Make bubble of "John" chat
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button:text('New Message')");
-    await contains(".o_command_name", { count: 5 });
-    await insertText("input[placeholder='Search a conversation']", "John");
-    await contains(".o_command_name", { count: 3 });
+    await contains(".o_command_name", { count: 2 });
+    await contains(".o_command:eq(0):text(John)");
+    await contains(".o_command:eq(1):text(Mitchell Admin)");
+    await insertText(".o_command_palette_search input[placeholder='Search conversations']", "John");
+    await contains(".o_command_name", { count: 2 });
+    await contains(".o_command:eq(0):text(John)");
+    await contains(".o_command:eq(1):has(:text(Create Channel))");
     await click(".o_command_name:text('John')");
     await contains(".o-mail-ChatWindow:text('John')");
     await contains(
@@ -61,9 +65,11 @@ test("No duplicated chat bubbles", async () => {
     // Make bubble of "John" chat again
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button:text('New Message')");
-    await contains(".o_command_name", { count: 5 });
-    await insertText("input[placeholder='Search a conversation']", "John");
-    await contains(".o_command_name", { count: 3 });
+    await contains(".o_command_name", { count: 2 });
+    await insertText(".o_command_palette_search input[placeholder='Search conversations']", "John");
+    await contains(".o_command_name", { count: 2 });
+    await contains(".o_command:eq(0):text(John)");
+    await contains(".o_command:eq(1):has(:text(Create Channel))");
     await click(".o_command_name:text('John')");
     await contains(".o-mail-ChatBubble[name='John']", { count: 0 });
     await contains(".o-mail-ChatWindow .o-mail-ChatWindow-header:has(:text('John'))");
@@ -180,7 +186,9 @@ test("Hover on chat bubble shows chat name + last message preview", async () => 
     await contains(".o-mail-ChatBubble-preview", { count: 0 });
     await contains(".o-mail-ChatBubble[name='Marc']:not(.o-active)");
     await hover(".o-mail-ChatBubble[name='Demo']");
-    await contains(".o-mail-ChatBubble-preview:text('Demo')");
+    await contains(
+        ".o-mail-ChatBubble-preview:text('Demo This is the start of your conversation')"
+    );
     await leave();
     rpc("/mail/message/post", {
         post_data: { body: "Hi", message_type: "comment" },
@@ -261,7 +269,7 @@ test("chat bubbles are synced between tabs", async () => {
     });
     setupChatHub({ folded: [channelId] });
     const tab1 = await start({ asTab: true });
-    const tab2 = await start({ asTab: true });
+    const tab2 = await start({ asTab: true, waitUntilSubscribe: false });
     await contains(`${tab1.selector} .o-mail-ChatBubble`);
     await contains(`${tab2.selector} .o-mail-ChatBubble`);
     await runAllTimers(); // Wait for bus service to fully load
@@ -323,7 +331,7 @@ test("More than 7 actually folded chat windows shows a 'hidden' chat bubble menu
     await click(".o-mail-ChatWindow-header [title='Fold']");
     // Can open hidden chat from messaging menu
     await click("i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:text('2')");
+    await click(".o-mail-NotificationItem-name:text('2')");
     await contains(".o-mail-ChatHub-hiddenItem", { count: 0 });
     await contains(".o-mail-ChatHub-hiddenBtn", { count: 0 });
     await contains(".o-mail-ChatWindow");
@@ -393,7 +401,7 @@ test("Compact chat hub is crosstab synced", async () => {
     const channelIds = pyEnv["discuss.channel"].create([{ name: "ch-1" }, { name: "ch-2" }]);
     setupChatHub({ folded: channelIds });
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await contains(`${env1.selector} .o-mail-ChatBubble`, { count: 2 });
     await contains(`${env2.selector} .o-mail-ChatBubble`, { count: 2 });
     await hover(`${env1.selector} .o-mail-ChatBubble:eq(0)`);
@@ -437,7 +445,8 @@ test("Compacted chat hub shows badge with amount of hidden chats with important 
 
 test("Show IM status", async () => {
     const pyEnv = await startServer();
-    const demoId = pyEnv["res.partner"].create({ name: "Demo User", im_status: "online" });
+    const demoId = pyEnv["res.partner"].create({ name: "Demo User" });
+    pyEnv["res.users"].create({ partner_id: demoId, im_status: "online" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -574,7 +583,7 @@ test("Open chat window from messaging menu with chat hub compact", async () => {
     await click(".o-dropdown-item:text('Hide all conversations')");
     await contains(".o-mail-ChatHub-compact");
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:text('John')");
+    await click(".o-mail-NotificationItem-name:text('John')");
     await waitStoreFetch("/discuss/channel/messages"); // ensure messages are loaded before doing message post
     await contains(".o-mail-ChatWindow:text('John')");
     await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]); // FIXME: click fold doesn't focusout/blur the composer, thus marks as read

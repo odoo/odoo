@@ -3,7 +3,7 @@
     <record id="base.partner_demo_company_nz" model="res.partner" forcecreate="1">
         <field name="name">NZ Company</field>
         <field name="vat">49098576</field>
-        <field name="company_registry">9429047488083</field>
+        <field name="additional_identifiers" eval="{'NZ_EN': '9429047488083'}"/>
         <field name="street">Victoria Street</field>
         <field name="city">Hamilton</field>
         <field name="country_id" ref="base.nz"/>

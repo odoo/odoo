@@ -51,7 +51,7 @@ class StockPackage(models.Model):
     picking_ids = fields.Many2many('stock.picking', string='Transfers', compute='_compute_picking_ids', search="_search_picking_ids", help="Transfers in which the Package is set as Destination Package")
     shipping_weight = fields.Float(string='Shipping Weight', help="Total weight of the package.")
     valid_sscc = fields.Boolean('Package name is valid SSCC', compute='_compute_valid_sscc')
-    pack_date = fields.Date('Pack Date', default=fields.Date.today)
+    pack_date = fields.Date('Pack Date', default=fields.Date.context_today)
     parent_path = fields.Char(index=True)
     json_popover = fields.Char('JSON data for popover widget', compute='_compute_json_popover')
 
@@ -432,9 +432,9 @@ class StockPackage(models.Model):
         return all(float_is_zero(grouped_quants.get(key, 0) - grouped_ops.get(key, 0), precision_digits=precision_digits) for key in grouped_quants) \
            and all(float_is_zero(grouped_ops.get(key, 0) - grouped_quants.get(key, 0), precision_digits=precision_digits) for key in grouped_ops)
 
-    def _get_weight(self, picking_id=False):
+    def _get_weight(self, picking_ids=False):
         res = {}
-        if picking_id:
+        if picking_ids:
             package_weights = defaultdict(float)
             # If we check the weight of an ongoing package, we may need to check its current child dest as well to known their own weight.
             children_by_dest_pack, all_pack_ids = self._get_all_children_package_dest_ids()
@@ -445,7 +445,7 @@ class StockPackage(models.Model):
             base_weight_per_package = {pack.id: weight for pack, weight in base_weight_per_package_group}
 
             res_groups = self.env['stock.move.line']._read_group(
-                [('result_package_id', 'in', all_pack_ids), ('product_id', '!=', False), ('picking_id', '=', picking_id)],
+                [('result_package_id', 'in', all_pack_ids), ('product_id', '!=', False), ('picking_id', 'in', picking_ids)],
                 ['result_package_id', 'product_id', 'uom_id', 'quantity'],
                 ['__count'],
             )
@@ -457,7 +457,7 @@ class StockPackage(models.Model):
                 )
         for package in self:
             weight = package.package_type_id.base_weight or 0.0
-            if picking_id:
+            if picking_ids:
                 res[package] = weight + package_weights[package.id]
                 for child_id in children_by_dest_pack.get(package, []):
                     res[package] += base_weight_per_package.get(child_id, 0) + package_weights.get(child_id, 0)

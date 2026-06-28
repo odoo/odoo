@@ -48,7 +48,7 @@
             <sheet>
                 <div class="oe_button_box" name="button_box">
                     <button name="%(action_purchase_requisition_list)d" type="action" class="oe_stat_button" icon="fa-list-alt"
-                        invisible="state == 'draft'" context="{'default_currency_id': currency_id}">
+                        invisible="state == 'draft'" context="{'default_currency_id': currency_id, 'create': state not in ('done', 'cancel')}">
                         <field name="order_count" widget="statinfo" string="RFQs/Orders"/>
                     </button>
                 </div>
@@ -79,31 +79,53 @@
                 </group>
                 <notebook>
                     <page string="Products" name="products">
-                        <field name="line_ids" readonly="state == 'done'">
+                        <field name="line_ids" widget="product_label_section_and_note_field_o2m" readonly="state == 'done'" aggregated_fields="price_subtotal" options="{'subsections': True}">
                             <list string="Products" editable="bottom">
+                                <control>
+                                    <create name="add_product_control" string="Add a product"/>
+                                    <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                    <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                </control>
+                                <field name="display_type" column_invisible="True"/>
+                                <field name="currency_id" column_invisible="True"/>
+                                <field name="sequence" widget="handle"/>
                                 <field name="product_id"
+                                       widget="product_label_section_and_note_field"
+                                       required="not display_type"
                                        domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                <field name="name" widget="section_and_note_text" optional="show"/>
                                 <field name="product_description_variants" invisible="product_description_variants == ''"/>
-                                <field name="product_qty"/>
+                                <field name="product_qty" required="not display_type"/>
                                 <field name="qty_ordered" optional="show" column_invisible="parent.requisition_type == 'purchase_template'"/>
-                                <field name="uom_id" groups="uom.group_uom" optional="show" required="product_id" widget="many2one_uom"/>
+                                <field name="uom_id" groups="uom.group_uom" optional="show" required="not display_type" widget="many2one_uom"/>
                                 <field name="analytic_distribution" widget="analytic_distribution"
                                        optional="hide"
                                        groups="analytic.group_analytic_accounting"
-                                       options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
+                                       options="{'product_field': 'product_id', 'business_domain': 'purchase_order', 'amount_field': 'price_subtotal'}"/>
                                 <field name="price_unit"/>
+                                <field name="price_subtotal" string="Amount"/>
                             </list>
                             <form string="Products">
                                 <group>
-                                    <field name="product_id"
-                                           domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
-                                    <field name="product_qty"/>
-                                    <field name="qty_ordered"/>
-                                    <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
-                                    <field name="analytic_distribution" widget="analytic_distribution"
-                                           groups="analytic.group_analytic_accounting"
-                                           options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                    <field name="display_type" invisible="1"/>
+                                    <group invisible="display_type">
+                                        <field name="product_id"
+                                               required="not display_type"
+                                               domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
+                                        <field name="product_qty"/>
+                                        <field name="qty_ordered"/>
+                                        <field name="uom_id" groups="uom.group_uom" widget="many2one_uom" required="not display_type"/>
+                                        <field name="analytic_distribution" widget="analytic_distribution"
+                                               groups="analytic.group_analytic_accounting"
+                                               options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
+                                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                    </group>
+                                    <group invisible="not display_type">
+                                        <label for="name" string="Section Name" invisible="display_type != 'line_section'"/>
+                                        <label for="name" string="Subsection Name" invisible="display_type != 'line_subsection'"/>
+                                        <label for="name" string="Note" invisible="display_type != 'line_note'"/>
+                                        <field name="name"/>
+                                    </group>
                                 </group>
                             </form>
                         </field>
@@ -128,7 +150,7 @@
                 <field name="user_id" optional="show" widget='many2one_avatar_user'/>
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                 <field name="date_start" optional="show"/>
-                <field name="date_end" optional="show" widget='remaining_days' decoration-danger="date_end and date_end&lt;current_date" invisible="state in ('done', 'cancel')"/>
+                <field name="date_end" optional="show" widget='relative_date' decoration-danger="date_end and date_end&lt;current_date" invisible="state in ('done', 'cancel')"/>
                 <field name="reference" optional="show"/>
                 <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>

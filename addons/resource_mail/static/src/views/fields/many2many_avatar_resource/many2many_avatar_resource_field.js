@@ -1,48 +1,20 @@
+import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+
+import { Component } from "@odoo/owl";
+
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { _t } from "@web/core/l10n/translation";
 import {
-    KanbanMany2ManyTagsAvatarUserField,
+    CardMany2ManyTagsAvatarUserField,
     ListMany2ManyTagsAvatarUserField,
     Many2ManyTagsAvatarUserField,
-    kanbanMany2ManyTagsAvatarUserField,
+    cardMany2ManyTagsAvatarUserField,
     listMany2ManyTagsAvatarUserField,
     many2ManyTagsAvatarUserField,
 } from "@mail/views/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
-import { Domain } from "@web/core/domain";
 import { AvatarTag } from "@web/core/tags_list/avatar_tag";
-import { Component } from "@odoo/owl";
-
-export class AvatarResourceMany2XAutocomplete extends Many2XAutocomplete {
-    /**
-     * @override
-     */
-    search(request) {
-        return this.orm.call(
-            this.props.resModel,
-            "search_read",
-            [this.getDomain(request), ["id", "display_name", "resource_type", "color"]],
-            {
-                context: {
-                    ...this.props.context,
-                    formatted_display_name: true,
-                },
-                limit: this.props.searchLimit + 1,
-            }
-        );
-    }
-
-    /**
-     * @override
-     */
-    getDomain(request) {
-        return Domain.and([[["name", "ilike", request]], this.props.getDomain()]).toList(
-            this.props.context
-        );
-    }
-}
+import { Many2ManyTagsAvatarFieldPopover } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
 
 class ResourceTag extends Component {
     static template = "resource_mail.ResourceTag";
@@ -62,16 +34,23 @@ const WithResourceFieldMixin = (T) => class ResourceFieldMixin extends T {
     setup() {
         super.setup(...arguments);
         if (this.relation == "resource.resource") {
-            this.avatarCard = usePopover(AvatarCardResourcePopover);
+            this.avatarCard = usePopover(AvatarCard);
         }
     }
 
     static components = {
         ...super.components,
-        Many2XAutocomplete: AvatarResourceMany2XAutocomplete,
         Tag: ResourceTag,
     };
     static optionTemplate = "resource_mail.Many2ManyAvatarResourceField.option";
+
+    get specification() {
+        return {
+            ...super.specification,
+            resource_type: {},
+            color: {},
+        }
+    }
 
     displayAvatarCard(record) {
         return !this.env.isSmall && this.relation === "resource.resource" && record.data.resource_type === "user";
@@ -125,15 +104,19 @@ export const listMany2ManyAvatarResourceField = {
 };
 registry.category("fields").add("list.many2many_avatar_resource", listMany2ManyAvatarResourceField);
 
-export class KanbanMany2ManyAvatarResourceField extends WithResourceFieldMixin(KanbanMany2ManyTagsAvatarUserField) {
-    get tags() {
-        return super.tags.reverse();
+export class Many2ManyTagsAvatarResourceFieldPopover extends WithResourceFieldMixin(Many2ManyTagsAvatarFieldPopover) {}
+
+export class CardMany2ManyAvatarResourceField extends WithResourceFieldMixin(CardMany2ManyTagsAvatarUserField) {
+    static PopoverClass = Many2ManyTagsAvatarResourceFieldPopover;
+
+    get placeholder() {
+        return _t("Search resources...");
     }
 }
-export const kanbanMany2ManyAvatarResourceField = {
-    ...kanbanMany2ManyTagsAvatarUserField,
+export const cardMany2ManyAvatarResourceField = {
+    ...cardMany2ManyTagsAvatarUserField,
     ...resourceFieldMixin,
-    component: KanbanMany2ManyAvatarResourceField,
+    component: CardMany2ManyAvatarResourceField,
 };
-registry.category("fields").add("kanban.many2many_avatar_resource", kanbanMany2ManyAvatarResourceField);
-registry.category("fields").add("activity.many2many_avatar_resource", kanbanMany2ManyAvatarResourceField);
+registry.category("fields").add("card.many2many_avatar_resource", cardMany2ManyAvatarResourceField);
+registry.category("fields").add("activity.many2many_avatar_resource", cardMany2ManyAvatarResourceField);

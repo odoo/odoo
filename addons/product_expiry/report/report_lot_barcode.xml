@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<template id="report_lot_label_expiry" inherit_id="stock.report_lot_label">
-    <xpath expr="//div[@name='lot_name']" position="after">
-        <t t-if="o.use_expiration_date">
-            <div class="o_label_4x12" t-if="o.use_date">
-                B.b. <t t-out="o.use_date" t-options='{"widget": "date"}'/>
+    <template id="report_lot_label_expiry" inherit_id="stock.report_lot_label_meta_block">
+        <xpath expr="//div[hasclass('o_label_meta_block')]" position="replace">
+            <div class="o_label_meta_block">
+                <div t-if="label.get('use_date')" class="o_label_meta_line">
+                    B.b. <t t-out="label['use_date']" t-options='{"widget": "date"}'/>
+                </div>
+                <div t-if="label.get('expiration_date')" class="o_label_meta_line">
+                    Exp. <t t-out="label['expiration_date']" t-options='{"widget": "date"}'/>
+                </div>
             </div>
-            <div class="o_label_4x12" t-if="o.expiration_date">
-                Exp. <t t-out="o.expiration_date" t-options='{"widget": "date"}'/>
-            </div>
-        </t>
-    </xpath>
-    <xpath expr="//t[@name='gs1_datamatrix_lot']" position="before">
-        <t t-if="o.use_expiration_date">
-            <t t-if="o.use_date" t-set="final_barcode" t-value="(final_barcode or '') + '15' + o.use_date.strftime('%y%m%d')"/>
-            <t t-if="o.expiration_date" t-set="final_barcode" t-value="(final_barcode or '') + '17' + o.expiration_date.strftime('%y%m%d')"/>
-        </t>
-    </xpath>
-</template>
+        </xpath>
+    </template>
 
 <template id="label_lot_template_view_expiry" inherit_id="stock.label_lot_template_view">
     <xpath expr="//t[@name='datamatrix_lot']" position="before">

@@ -41,7 +41,7 @@ class TestAccountEdiProxyUser(AccountTestInvoicingCommon):
 
         # Overcome the abstract selection field `proxy_type` that has no selection
         # We actually dont need it, so we put a placeholder
-        with patch.object(Selection, 'convert_to_cache', side_effect=lambda value, record: value):
+        with patch.object(Selection, 'convert_to_cache', side_effect=lambda value, record, validate=True: value):
             cls.base_proxy_user = cls.env['account_edi_proxy_client.user'].create({
                 'id_client': 'id_client_test',
                 'company_id': cls.company.id,

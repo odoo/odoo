@@ -85,10 +85,8 @@ class MailTestLang(models.Model):
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals
-        )
+    def _notify_get_recipients_groups(self, message, model_description):
+        groups = super()._notify_get_recipients_groups(message, model_description)
         for group in [g for g in groups if g[0] in('follower', 'customer')]:
             group_options = group[2]
             group_options['has_button_access'] = True
@@ -115,16 +113,12 @@ class MailTestTrack(models.Model):
     track_enable_default_log = fields.Boolean(default=False)
     parent_id = fields.Many2one('mail.test.track', string='Parent')
 
-    def _track_filter_for_display(self, tracking_values):
-        values = super()._track_filter_for_display(tracking_values)
+    def _track_log_get_default_body(self, track_init_values):
+        tracked_fields = set(track_init_values.keys())
         filtered_fields = set(self.track_fields_tofilter.split(',') if self.track_fields_tofilter else '')
-        return values.filtered(lambda val: val.field_id.name not in filtered_fields)
-
-    def _track_get_default_log_message(self, changes):
-        filtered_fields = set(self.track_fields_tofilter.split(',') if self.track_fields_tofilter else '')
-        if self.track_enable_default_log and not all(change in filtered_fields for change in changes):
-            return f'There was a change on {self.name} for fields "{",".join(changes)}"'
-        return super()._track_get_default_log_message(changes)
+        if self.track_enable_default_log and not all(change in filtered_fields for change in tracked_fields):
+            return f'There was a change on {self.name} for fields "{",".join(tracked_fields)}"'
+        return super()._track_log_get_default_body(track_init_values)
 
 
 class MailTestTrackAllM2m(models.Model):
@@ -171,18 +165,19 @@ class MailTestTrackAll(models.Model):
         'mail.test.track.all.m2m', string='Many2Many',
         tracking=8)
     many2one_field_id = fields.Many2one('res.partner', string='Many2one', tracking=9)
-    monetary_field = fields.Monetary('Monetary', tracking=10)
+    many2one_cd_field_id = fields.Many2one('res.partner', string='Many2one CD', tracking=10, company_dependent=True)
+    monetary_field = fields.Monetary('Monetary', tracking=11)
     one2many_field = fields.One2many(
         'mail.test.track.all.o2m', 'mail_track_all_id',
         string='One2Many',
-        tracking=11)
-    properties_parent_id = fields.Many2one('mail.test.track.all.properties.parent', tracking=True)
+        tracking=12)
+    properties_parent_id = fields.Many2one('mail.test.track.all.properties.parent', tracking=13)
     properties = fields.Properties('Properties', definition='properties_parent_id.definition_properties')
     selection_field = fields.Selection(
         string='Selection',
         selection=[('first', 'FIRST'), ('second', 'SECOND')],
-        tracking=12)
-    text_field = fields.Text('Text', tracking=13)
+        tracking=14)
+    text_field = fields.Text('Text', tracking=15)
 
     name = fields.Char('Name')
 
@@ -237,6 +232,36 @@ class MailTestTrackGroups(models.Model):
     name = fields.Char(tracking=1)
     partner_id = fields.Many2one('res.partner', tracking=2, groups="base.group_user")
     secret = fields.Char(tracking=3, groups="base.group_user")
+
+
+class MailTestTrackMixin(models.Model):
+    _description = 'Test tracking with base mixin'
+    _name = "mail.test.track.mixin"
+    _inherit = ['mail.track.mixin']
+
+    boolean_field = fields.Boolean('Boolean', tracking=1)
+    char_field = fields.Char('Char', tracking=2)
+    company_id = fields.Many2one('res.company')
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
+    date_field = fields.Date('Date', tracking=3)
+    datetime_field = fields.Datetime('Datetime', tracking=4)
+    float_field = fields.Float('Float', tracking=5)
+    float_field_with_digits = fields.Float('Precise Float', digits=(10, 8), tracking=5)
+    html_field = fields.Html('Html', tracking=False)
+    integer_field = fields.Integer('Integer', tracking=7)
+    many2many_field = fields.Many2many(
+        'mail.test.track.all.m2m', string='Many2Many',
+        tracking=8)
+    many2one_field_id = fields.Many2one('res.partner', string='Many2one', tracking=9)
+    many2one_cd_field_id = fields.Many2one('res.partner', string='Many2one CD', tracking=10, company_dependent=True)
+    monetary_field = fields.Monetary('Monetary', tracking=11)
+    selection_field = fields.Selection(
+        string='Selection',
+        selection=[('first', 'FIRST'), ('second', 'SECOND')],
+        tracking=11)
+    text_field = fields.Text('Text', tracking=12)
+
+    name = fields.Char('Name')
 
 
 class MailTestTrackMonetary(models.Model):

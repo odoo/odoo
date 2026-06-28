@@ -77,8 +77,8 @@ class WebsiteForm(http.Controller):
                         'email_cc' in kwargs["website_form_signature"]
                     # remove the email_cc information from the signature
                     kwargs["website_form_signature"] = kwargs["website_form_signature"].split(':')[0]
-                    if kwargs.get("email_to"):
-                        value = kwargs['email_to'] + (':email_cc' if form_has_email_cc else '')
+                    if kwargs.get("email_to") or form_has_email_cc:
+                        value = kwargs.get('email_to', '') + (':email_cc' if form_has_email_cc else '')
                         hash_value = hmac(model_record.env, 'website_form_signature', value)
                         if not consteq(kwargs["website_form_signature"], hash_value):
                             raise AccessDenied(self.env._('invalid website_form_signature'))
@@ -183,7 +183,7 @@ class WebsiteForm(http.Controller):
                 if field_name in authorized_fields and authorized_fields[field_name]['type'] == 'binary':
                     data['record'][field_name] = BinaryBytes(field_value.read())
                     field_value.stream.seek(0)  # do not consume value forever
-                    if authorized_fields[field_name]['manual'] and field_name + "_filename" in dest_model:
+                    if field_name + "_filename" in dest_model:
                         data['record'][field_name + "_filename"] = field_value.filename
                 else:
                     field_value.field_name = field_name

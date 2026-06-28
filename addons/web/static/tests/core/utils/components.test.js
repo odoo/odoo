@@ -13,7 +13,7 @@ test("ErrorHandler component", async () => {
     class Parent extends Component {
         static template = xml`
             <div>
-                <t t-if="flag">
+                <t t-if="this.flag">
                     <ErrorHandler onError="() => this.handleError()">
                         <Boom/>
                     </ErrorHandler>

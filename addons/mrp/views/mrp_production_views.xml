@@ -44,7 +44,7 @@
                 <list string="Manufacturing Orders" multi_edit="1" sample="1" decoration-info="state == 'draft'">
                     <header>
                         <button name="button_plan" type="object" string="Plan"/>
-                        <button name="action_assign"  type="object" string="Check availability"/>
+                        <button name="action_assign" type="object" string="Reserve"/>
                         <button name="action_cancel" type="object" string="Cancel"
                             confirm="Are you sure you want to cancel these manufacturing orders?&#10;This action cannot be undone."
                             confirm-title="Cancel Manufacturing Orders" confirm-label="Cancel these Orders"/>
@@ -53,9 +53,9 @@
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
                     <field name="message_needaction" column_invisible="True"/>
                     <field name="name" decoration-bf="1"/>
-                    <field name="date_start" optional="show" widget="remaining_days"/>
-                    <field name="date_finished" optional="hide" widget="remaining_days"/>
-                    <field name="date_deadline" widget="mrp_remaining_days_unformatted" invisible="state in ['done', 'cancel']" optional="hide"
+                    <field name="date_start" optional="show" widget="relative_date"/>
+                    <field name="date_finished" optional="hide" widget="relative_date"/>
+                    <field name="date_deadline" widget="mrp_relative_date_unformatted" invisible="state in ['done', 'cancel']" optional="hide"
                         decoration-danger="is_delayed"
                         decoration-bf="is_delayed"/>
                     <field name="product_id" readonly="1" optional="show"/>
@@ -74,8 +74,8 @@
                     <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
                     <field name="uom_id" readonly="1" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" widget="many2one_uom" optional="show"/>
-                    <field name="duration_expected" invisible="duration_expected == 0" groups="mrp.group_mrp_routings" widget="float_time" options="{'unit': 'minutes'}" sum="Total expected duration" optional="hide"/>
-                    <field name="duration" invisible="duration == 0" groups="mrp.group_mrp_routings" widget="float_time" options="{'unit': 'minutes'}" sum="Total real duration" optional="hide"/>
+                    <field name="duration_expected" invisible="duration_expected == 0" groups="mrp.group_mrp_routings" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" sum="Total expected duration" optional="hide"/>
+                    <field name="duration" invisible="duration == 0" groups="mrp.group_mrp_routings" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" sum="Total real duration" optional="hide"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
                     <field name="state"
                            decoration-success="state in ('done', 'to_close')"
@@ -103,9 +103,15 @@
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
                     <field name="name" decoration-bf="1"/>
-                    <field name="date_start" optional="show" widget="remaining_days"/>
-                    <field name="date_finished" optional="hide" widget="remaining_days"/>
+                    <field name="date_start" optional="show" widget="relative_date"/>
+                    <field name="date_finished" optional="hide" widget="relative_date"/>
+                    <field name="date_deadline" widget="mrp_relative_date_unformatted" invisible="state in ['done', 'cancel']" optional="hide" decoration-danger="is_delayed" decoration-bf="is_delayed"/>
                     <field name="product_id" readonly="1" optional="show"/>
+                    <field name="lot_producing_ids" optional="hide" widget="many2many_tags"/>
+                    <field name="bom_id" readonly="1" optional="hide"/>
+                    <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
+                    <field name="origin" optional="show" readonly="state in ['cancel', 'done']"/>
+                    <field name="user_id" optional="hide" widget="many2one_avatar_user" readonly="state in ['cancel', 'done']"/>
                     <field name="components_availability_state" column_invisible="True" options='{"lazy": true}'/>
                     <field name="components_availability" options='{"lazy": true}'
                         invisible="state not in ['confirmed', 'progress']"
@@ -116,6 +122,9 @@
                     <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
                     <field name="uom_id" readonly="1" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" widget="many2one_uom" optional="show"/>
+                    <field name="duration_expected" invisible="duration_expected == 0" groups="mrp.group_mrp_routings" widget="float_time" options="{'unit': 'minutes'}" sum="Total expected duration" optional="hide"/>
+                    <field name="duration" invisible="duration == 0" groups="mrp.group_mrp_routings" widget="float_time" options="{'unit': 'minutes'}" sum="Total real duration" optional="hide"/>
+                    <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
                     <field name="state"
                         decoration-success="state in ('done', 'to_close')"
                         decoration-warning="state == 'progress'"
@@ -123,6 +132,8 @@
                         decoration-danger="state == 'cancel'"
                         decoration-muted="state == 'draft'"
                         optional="show" widget="badge" class="text-dark"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
+                    <field name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover" nolabel="1"/>
                 </list>
             </field>
         </record>
@@ -221,20 +232,15 @@
                 <form string="Manufacturing Orders">
                 <header>
                     <field name="show_lock" invisible="1"/>
-                    <field name="show_produce" invisible="1"/>
-                    <field name="show_produce_all" invisible="1"/>
-                    <button name="button_mark_done" invisible="not move_raw_ids or not show_produce" string="Produce" type="object" class="oe_highlight" data-hotkey="g"/>
-                    <button name="button_mark_done" invisible="not move_raw_ids or not show_produce_all" string="Produce All" type="object" class="oe_highlight" data-hotkey="g"/>
-                    <button name="button_mark_done" invisible="move_raw_ids or not show_produce" string="Produce" type="object" class="oe_highlight" data-hotkey="g"
-                            confirm="There are no components to consume. Are you still sure you want to continue?"/>
-                    <button name="button_mark_done" invisible="move_raw_ids or not show_produce_all" string="Produce All" type="object" class="oe_highlight" data-hotkey="g"
-                            confirm="There are no components to consume. Are you still sure you want to continue?"/>
+                    <button name="button_mark_done" type="object" string="Produce" class="oe_highlight"
+                            invisible="not move_raw_ids or state not in ('confirmed', 'progress', 'to_close')" data-hotkey="g"/>
+                    <button name="button_mark_done" type="object" string="Produce" class="oe_highlight"
+                            invisible="move_raw_ids or state not in ('confirmed', 'progress', 'to_close')"
+                            confirm="There are no components to consume. Are you still sure you want to continue?" data-hotkey="g"/>
                     <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="oe_highlight" data-hotkey="q"/>
-                    <button name="button_plan" invisible="state not in ('confirmed', 'progress', 'to_close') or is_planned" type="object" string="Plan" class="oe_highlight" data-hotkey="z"/>
+                    <button name="button_plan" type="object" string="Plan" class="oe_highlight" invisible="state not in ('confirmed', 'progress', 'to_close') or is_planned" data-hotkey="z"/>
                     <button name="button_unplan" type="object" string="Unplan" invisible="not is_planned or state in ['cancel', 'done']" data-hotkey="z"/>
                     <button name="action_start"  type="object" string="Start" invisible="state != 'confirmed'"/>
-                    <button name="action_assign" invisible="state in ('draft', 'done', 'cancel') or not reserve_visible" string="Check availability" type="object" data-hotkey="c"/>
-                    <button name="do_unreserve" type="object" string="Unreserve" invisible="not unreserve_visible" data-hotkey="w"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="x"
                             invisible="not id or state in ('done', 'cancel')"
@@ -253,13 +259,12 @@
                     <field name="show_allocation" invisible="1"/>
                     <field name="workorder_ids" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_view_reception_report" string="Allocation" type="object"
+                        <button name="action_view_allocation_report" string="Allocation" type="object"
                             class="oe_stat_button" icon="fa-list"
-                            invisible="not show_allocation"
-                            groups="mrp.group_mrp_reception_report"/>
-                        <button class="oe_stat_button" name="action_view_mrp_production_childs" type="object" icon="fa-wrench" invisible="mrp_production_child_count == 0">
+                            invisible="not show_allocation"/>
+                        <button class="oe_stat_button" name="action_view_mrp_production_all_childs" type="object" icon="fa-wrench" invisible="mrp_production_all_child_count == 0">
                             <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value"><field name="mrp_production_child_count"/></span>
+                                <span class="o_stat_value"><field name="mrp_production_all_child_count"/></span>
                                 <span class="o_stat_text">Child MO</span>
                             </div>
                         </button>
@@ -313,9 +318,9 @@
                         </button>
                     </div>
                     <div class="oe_title">
-                        <h1 class="d-flex">
-                            <field name="priority" widget="priority" class="me-3"/>
-                            <field name="name" placeholder="Manufacturing Reference" nolabel="1"/>
+                        <h1 class="o_outlined d-flex align-items-center gap-2">
+                            <field name="priority" widget="priority"/>
+                            <field name="name" placeholder="Manufacturing Reference"/>
                         </h1>
                     </div>
                     <group>
@@ -334,10 +339,12 @@
                             <div class="o_row g-0 d-flex" name="qty">
                                 <div invisible="state == 'draft'" class="o_row flex-grow-1">
                                     <label for="qty_producing" string="Quantity" class="d-none d-touch-block"/>
-                                    <field name="qty_producing" class="text-start text-truncate" readonly="state == 'cancel' or (state == 'done' and is_locked) or product_tracking=='serial'" force_save="1"/>
+                                    <field name="qty_producing" widget="external_placeholder_float_field" placeholder="product_qty" class="text-start text-truncate"
+                                           readonly="state == 'cancel' or (state == 'done' and is_locked) or product_tracking=='serial'" force_save="1"/>
                                     /
                                 </div>
-                                <field name="product_qty" class="oe_inline text-start text-truncate" invisible="state not in ('draft', 'done')" readonly="state != 'draft'" style="width:auto!important"/>
+                                <field name="product_qty" class="oe_inline text-start text-truncate"
+                                       invisible="state not in ('draft', 'done')" readonly="state != 'draft'" style="width:auto!important"/>
                                 <button type="action" name="%(mrp.action_change_production_qty)d"
                                     context="{'default_mo_id': id}" class="oe_link oe_inline" style="margin: 0px; padding: 0px;" invisible="state in ('draft', 'done', 'cancel') or not id">
                                     <field name="product_qty" class="oe_inline" readonly="state != 'draft'"/>
@@ -453,6 +460,7 @@
                                         <create string="Add a line"/>
                                         <button name="action_add_from_catalog_raw" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
                                     </control>
+                                    <field name="sequence" widget="handle"/>
                                     <field name="product_id" force_save="1" context="{'default_is_storable': True}" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)" domain="[('type', '=', 'consu')]"/>
                                     <field name="forecast_availability" column_invisible="parent.state in ['done', 'cancel']" string="" widget="forecast_widget"/>
                                     <field name="location_id" string="From" readonly="1" force_save="1" groups="stock.group_stock_multi_locations" optional="hide"/>
@@ -478,21 +486,26 @@
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" column_invisible="True"/>
                                     <field name="state" column_invisible="True" force_save="1"/>
                                     <field name="should_consume_qty" column_invisible="True"/>
-                                    <field name="product_uom_qty" force_save="1" string="To Consume" column_invisible="not parent.show_produce_all" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or (parent.is_locked and state != 'draft'))"/>
-                                    <field name="product_uom_qty" widget="mrp_should_consume" force_save="1" string="To Consume" column_invisible="parent.show_produce_all" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or (parent.is_locked and state != 'draft'))"/>
+                                    <field name="product_uom_qty" widget="mrp_should_consume" force_save="1" string="To Consume"
+                                           column_invisible="parent.qty_producing in (0, parent.product_qty)"
+                                           readonly="parent.state != 'draft'
+                                                     and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned)
+                                                          or (parent.is_locked and state != 'draft'))"/>
+                                    <field name="product_uom_qty" force_save="1" string="To Consume"
+                                           column_invisible="parent.qty_producing not in (0, parent.product_qty)"
+                                           readonly="parent.state != 'draft'
+                                                     and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned)
+                                                          or (parent.is_locked and state != 'draft'))"/>
                                     <field name="product_qty" readonly="1" column_invisible="True"/>
                                     <field name="forecast_expected_date" column_invisible="True"/>
                                     <field name="quantity" string="Consumed"
                                         decoration-success="(state not in ['done', 'cancel']) and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) == 0)"
-                                        decoration-warning="(state not in ['done', 'cancel']) and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) &gt; 0.0001)"
+                                        decoration-danger="(state not in ['done', 'cancel']) and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) &gt; 0)"
+                                        decoration-warning="(state not in ['done', 'cancel']) and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) &lt; 0)"
                                         column_invisible="parent.state == 'draft'"
-                                        decoration-info="manual_consumption"
-                                        decoration-muted="not manual_consumption"
-                                        decoration-bf="manual_consumption"
                                         force_save="1"/>
                                     <field name="uom_id" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
-                                    <field name="picked" column_invisible="True"/>
-                                    <field name="manual_consumption" column_invisible="True" force_save="1"/>
+                                    <field name="picked" optional="hide"/>
                                     <field name="show_details_visible" column_invisible="True"/>
                                     <field name="lot_ids" widget="many2many_tags"
                                         optional="hide"
@@ -519,12 +532,13 @@
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
                             <field name="move_byproduct_ids"
                                 context="{'default_date': date_finished, 'default_date_deadline': date_deadline, 'default_warehouse_id': warehouse_id, 'default_location_id': production_location_id, 'default_location_dest_id': location_dest_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'mrp.view_mrp_stock_move_operations'}"
-                                readonly="state == 'cancel' or (state == 'done' and is_locked)" delete="state == 'draft'">
+                                readonly="state == 'cancel' or (state == 'done' and is_locked)">
                                 <list default_order="sequence, id" decoration-muted="state in ['done', 'cancel']" editable="bottom">
                                     <control>
                                         <create string="Add a line"/>
                                         <button name="action_add_from_catalog_byproduct" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
                                     </control>
+                                    <field name="sequence" widget="handle"/>
                                     <field name="product_id" context="{'default_is_storable': True}" domain="[('type', '=', 'consu')]" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)"/>
                                     <field name="location_dest_id" string="To" readonly="1" force_save="1" groups="stock.group_stock_multi_locations"/>
                                     <field name="company_id" column_invisible="True"/>
@@ -569,7 +583,7 @@
                         <page string="Miscellaneous" name="miscellaneous">
                             <group>
                                 <group>
-                                    <field name="picking_type_id" readonly="state not in ('draft', 'confirmed')"/>
+                                    <field name="picking_type_id" options="{'no_quick_create': True}" readonly="state not in ('draft', 'confirmed')"/>
                                     <field name="location_src_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" readonly="state != 'draft'"/>
                                     <field name="location_src_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
                                     <field name="warehouse_id" invisible="1"/>
@@ -592,33 +606,70 @@
             </field>
         </record>
 
+        <record id="mrp_production_card_view" model="ir.ui.view">
+            <field name="name">mrp.production.card</field>
+            <field name="model">mrp.production</field>
+            <field name="arch" type="xml">
+                <card>
+                    <field name="reservation_state"/>
+                    <field name="components_availability_state"/>
+                    <field name="workorder_ids"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="d-flex mb-1">
+                                <field name="name" class="fw-bolder fs-6 ms-1"/>
+                                <field name="product_default_code" class="fs-6 ms-1"/>
+                                <span t-attf-class="ms-auto badge rounded-pill #{['text-bg-light', 'text-bg-info', 'text-bg-warning', 'text-bg-success', 'text-bg-success', 'text-bg-danger'][['draft', 'confirmed', 'progress', 'to_close', 'done', 'cancel'].indexOf(record.state.raw_value)]}"><field name="state"/></span>
+                            </div>
+                            <div class="d-flex mb-1">
+                                <field name="product_name" class="ms-1"/>
+                                <field name="product_qty" widget="float_without_trailing_zeros" class="ms-auto flex-shrink-0"/>
+                                <field name="uom_id" class="ms-1 flex-shrink-0"/>
+                            </div>
+                            <div t-if="record.active_workcenter_ids.raw_value.length" class="d-flex mb-1">
+                                <field name="active_workcenter_ids" class="ms-1"/>
+                            </div>
+                            <footer class="text-muted">
+                                <div class="d-flex w-100 align-items-center gap-1" style="height:26px;" >
+                                    <field name="priority" widget="priority"/>
+                                    <field name="activity_ids" widget="kanban_activity"/>
+                                    <field name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover"/>
+                                    <div t-if="record.date_deadline.raw_value" class="d-flex">
+                                        <i class="fa fa-calendar-o mx-1 mt-1" role="img" title="Deadline"/>
+                                        <field name="date_deadline" widget="datetime" options="{'show_time': false}" decoration-danger="is_delayed" decoration-warning="is_due_today"/>
+                                    </div>
+                                    <div t-if="record.workorder_ids.raw_value.length" class="d-flex text-nowrap overflow-hidden text-overflow-ellipsis">
+                                        <i class="fa fa-hourglass-half mx-1 mt-1" role="img" title="Remaining Time"/>
+                                        <field name="remaining_time" widget="float_time" options="{'unit': 'minutes'}"/>
+                                    </div>
+                                    <div t-if="['confirmed', 'progress'].includes(record.state.raw_value)" class="d-flex text-nowrap overflow-hidden text-overflow-ellipsis"
+                                        t-att-class="{'text-success': record.reservation_state.raw_value == 'assigned' || record.components_availability_state.raw_value == 'available', 'text-warning': record.reservation_state.raw_value != 'assigned' &amp;&amp; ['expected', 'available'].includes(record.components_availability_state.raw_value), 'text-danger': record.reservation_state.raw_value != 'assigned' &amp;&amp; ['late', 'unavailable'].includes(record.components_availability_state.raw_value)}">
+                                        <i class="fa fa-cubes mx-1 mt-1" role="img" title="Components Availability"/>
+                                        <field name="components_availability"/>
+                                    </div>
+                                    <div t-if="record.mrp_production_all_child_count.raw_value &gt; 0" class="d-flex text-nowrap overflow-hidden text-overflow-ellipsis">
+                                        <i class="fa fa-wrench mx-1 mt-1" role="img" title="Child MO's"/>
+                                        <a name="action_view_mrp_production_all_childs" type="object" role="button">
+                                            <field name="mrp_production_all_child_done_count"/>
+                                            /
+                                            <field name="mrp_production_all_child_count"/>
+                                        </a>
+                                    </div>
+                                    <field name="user_id" widget="many2one_avatar_user" readonly="state in ['cancel', 'done']" class="ms-auto"/>
+                                </div>
+                            </footer>
+                        </t>
+                    </templates>
+                </card>
+            </field>
+        </record>
+
         <record id="mrp_production_kanban_view" model="ir.ui.view">
             <field name="name">mrp.production.kanban</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" sample="1">
-                    <field name="date_start"/>
-                    <field name="state"/>
-                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
-                    <templates>
-                        <t t-name="card">
-                            <div class="d-flex mb-1">
-                                <field name="priority" widget="priority"/>
-                                <field name="product_id" class="fw-bolder fs-6 ms-1"/>
-                                <field name="product_qty" class="ms-auto flex-shrink-0"/>
-                                <field name="uom_id" class="small ms-1 flex-shrink-0" groups="uom.group_uom"/>
-                            </div>
-                            <footer class="text-muted">
-                                <div class="d-flex">
-                                    <field name="name" class="me-1"/>
-                                    <field name="date_start" widget="datetime" options="{'show_time': false}"/>
-                                    <field name="activity_ids" widget="kanban_activity"/>
-                                </div>
-                                <field name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover"/>
-                                <span t-attf-class="ms-auto badge #{['cancel'].indexOf(record.state.raw_value) > -1 ? 'text-bg-danger' : ['draft'].indexOf(record.state.raw_value) > -1 ? 'bg-200' : ['progress'].indexOf(record.state.raw_value) > -1 ? 'text-bg-warning' : ['done', 'to_close'].indexOf(record.state.raw_value) > -1 ? 'text-bg-success' : 'text-bg-primary'}"><field name="state"/></span>
-                            </footer>
-                        </t>
-                    </templates>
+                <kanban class="o_kanban_mobile" card_id="%(mrp.mrp_production_card_view)d" sample="1" default_group_by="date_start:week" js_class="mrp_production_kanban">
+                    <progressbar field="state" colors='{"draft": "light", "confirmed": "info", "progress": "warning", "to_close": "success", "done": "success", "cancel": "danger"}'/>
                 </kanban>
             </field>
         </record>
@@ -679,6 +730,7 @@
                 <search string="Search Production">
                     <field name="name" string="Manufacturing Order" filter_domain="['|', ('name', 'ilike', self), ('origin', 'ilike', self)]"/>
                     <field name="product_id"/>
+                    <field name="lot_producing_ids"/>
                     <field name="product_variant_attributes"/>
                     <field name="move_raw_ids" string="Component" filter_domain="[('move_raw_ids.product_id', 'ilike', self)]"/>
                     <field name="workcenter_id" string="Work Center" filter_domain="[('workorder_ids.workcenter_id', 'ilike', self)]"/>
@@ -735,7 +787,8 @@
                         <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                         <filter string="Material Availability" name="groupby_reservation_state" domain="[]" context="{'group_by': 'reservation_state'}"/>
-                        <filter string="Date" name="date" domain="[]" context="{'group_by': 'date_start'}" help="Date by Month"/>
+                        <filter string="Date" name="date" domain="[]" context="{'group_by': 'date_start:week'}" help="Date by Month"/>
+                        <filter string="Deadline" name="deadline_week" domain="[]" context="{'group_by': 'date_deadline:week'}" help="Deadline by Week"/>
                     </group>
                </search>
             </field>
@@ -769,11 +822,23 @@
             <field name="context">{'default_picking_type_id': active_id}</field>
         </record>
 
+
+        <record id="mrp_production_action_reserve" model="ir.actions.server">
+            <field name="name">Reserve</field>
+            <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                records.action_assign()
+            </field>
+        </record>
+
         <record id="mrp_production_action_unreserve_tree" model="ir.actions.server">
             <field name="name">Unreserve</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">list,kanban</field>
             <field name="state">code</field>
             <field name="code">
             if records:

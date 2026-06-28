@@ -85,7 +85,8 @@ class IrActionsServer(models.Model):
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
         domain="['|', ('res_model', '=', False), ('res_model', '=', model_name)]",
-        compute='_compute_activity_type_id', readonly=False, store=True,
+        related=False, compute='_compute_activity_type_id', search=False,
+        readonly=False, store=True,
         ondelete='restrict')
     activity_summary = fields.Char('Summary', readonly=False, store=True)
     activity_note = fields.Html('Note', readonly=False, store=True)
@@ -101,6 +102,7 @@ class IrActionsServer(models.Model):
         compute='_compute_activity_date_deadline_range_type', readonly=False, store=True)
     activity_user_type = fields.Selection(
         [('specific', 'Specific User'),
+         ('role', 'Specific Role'),
          ('generic', 'Dynamic User')],
          string='User Type',
         compute='_compute_activity_user_type', readonly=False, store=True,
@@ -111,6 +113,9 @@ class IrActionsServer(models.Model):
     activity_user_field_name = fields.Char(
         'User Field',
         compute='_compute_activity_user_field_name', readonly=False, store=True)
+    activity_role_id = fields.Many2one(
+        'res.role', string='Responsible Role', ondelete='restrict',
+        compute='_compute_activity_role_id', readonly=False, store=True)
 
     def _name_depends(self):
         return [*super()._name_depends(), "template_id", "activity_type_id", "activity_plan_id"]
@@ -252,6 +257,11 @@ class IrActionsServer(models.Model):
         to_reset = self.filtered(lambda act: act.activity_user_type != 'specific')
         to_reset.activity_user_id = False
 
+    @api.depends('activity_user_type')
+    def _compute_activity_role_id(self):
+        to_reset = self.filtered(lambda act: act.activity_user_type != 'role')
+        to_reset.activity_role_id = False
+
     @api.depends('model_id', 'activity_user_type')
     def _compute_activity_user_field_name(self):
         to_compute = self.filtered(lambda act: act.activity_user_type == 'generic')
@@ -300,7 +310,7 @@ class IrActionsServer(models.Model):
             warnings.append(_("A next activity can only be planned on models that use activities."))
 
         if self.state in ('followers', 'remove_followers') and self.followers_type == 'generic' and self.followers_partner_field_name:
-            fields, field_chain_str = self._get_relation_chain("followers_partner_field_name")
+            fields, field_chain_str, _property = self._get_relation_chain("followers_partner_field_name")
             if fields and fields[-1].comodel_name != "res.partner":
                 warnings.append(_(
                     "The field '%(field_chain_str)s' is not a partner field.",
@@ -308,7 +318,7 @@ class IrActionsServer(models.Model):
                 ))
 
         if self.state == 'next_activity' and self.activity_user_type == 'generic' and self.activity_user_field_name:
-            fields, field_chain_str = self._get_relation_chain("activity_user_field_name")
+            fields, field_chain_str, _property = self._get_relation_chain("activity_user_field_name")
             if fields and fields[-1].comodel_name != "res.users":
                 warnings.append(_(
                     "The field '%(field_chain_str)s' is not a user field.",
@@ -412,12 +422,14 @@ class IrActionsServer(models.Model):
                 "plan_date": base_date,
                 "plan_id": self.activity_plan_id.id,
                 "plan_on_demand_user_id": self.activity_user_id.id,
+                "plan_on_demand_role_id": self.activity_role_id.id,
                 "activity_user_id_fname": self.activity_user_field_name,
             }).action_schedule_plan()
         elif self.activity_type_id:
             self.env['mail.activity.schedule'].create({
                 "activity_type_id": self.activity_type_id.id,
                 "activity_user_id": self.activity_user_id.id,
+                "activity_role_id": self.activity_role_id.id,
                 "date_deadline": base_date,
                 "note": self.activity_note,
                 "summary": self.activity_summary,

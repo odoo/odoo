@@ -3,7 +3,7 @@
     <record id="partner_demo_company_ng" model="res.partner">
         <field name="name">NG Company</field>
         <field name="vat">12345678-1234</field>
-        <field name="company_registry">RC123456</field>
+        <field name="additional_identifiers" eval="{'NG_EN': 'RC123456'}"/>
         <field name="street">Adeola Odeku St 1</field>
         <field name="city">Lagos</field>
         <field name="country_id" ref="base.ng"/>

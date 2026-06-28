@@ -1,41 +1,32 @@
-import { useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, onWillDestroy, onWillUnmount, status } from "@odoo/owl";
-import { LazyComponent } from "@web/core/assets";
-import { uniqueId } from "@web/core/utils/functions";
-import { useChildRef, useForwardRefToParent } from "@web/core/utils/hooks";
-import { renderToFragment } from "@web/core/utils/render";
-import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { Editor } from "@html_editor/editor";
-import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { closestScrollableY } from "@web/core/utils/scrolling";
-import { _t } from "@web/core/l10n/translation";
-import { localization } from "@web/core/l10n/localization";
-import { isBrowserSafari } from "@web/core/browser/feature_detection";
+import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
+import { isVisible } from "@html_editor/utils/dom_info";
 import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
+import {
+    Component,
+    onMounted,
+    onWillDestroy,
+    onWillUnmount,
+    props,
+    status,
+    proxy,
+    t,
+    useEffect,
+} from "@odoo/owl";
+import { LazyComponent } from "@web/core/lazy_component";
+import { isBrowserSafari } from "@web/core/browser/feature_detection";
+import { localization } from "@web/core/l10n/localization";
+import { _t } from "@web/core/l10n/translation";
+import { uniqueId } from "@web/core/utils/functions";
+import { useBus, useChildRef, useForwardRefToParent, useService } from "@web/core/utils/hooks";
+import { renderToFragment } from "@web/core/utils/render";
+import { closestScrollableY } from "@web/core/utils/scrolling";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
+import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { loadGoogleFonts } from "./mass_mailing_iframe_utils";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
 const IFRAME_VALUE_SELECTOR = ".o_mass_mailing_value";
-
-/**
- * The MassMailingIframe will use this modified overlay service that will guarantee:
- * 1. Internal ordering of its different overlays
- * 2. To not mess up with owl's reconciliation of foreach when adding/removing overlays
- * This is a sub-optimal fix to the more general issue of owl displacing nodes that contain
- * an iframe, in which the iframe effectively unloads.
- */
-export function useOverlayServiceOffset() {
-    const comp = useComponent();
-    const originalOverlay = comp.env.services.overlay;
-    const subServices = Object.create(comp.env.services);
-    subServices.overlay = Object.create(originalOverlay);
-    subServices.overlay.add = (C, props, opts = {}) => {
-        opts = {
-            ...opts,
-            sequence: (opts.sequence ?? 50) + 1000,
-        };
-        return originalOverlay.add(C, props, opts);
-    };
-    useSubEnv({ services: subServices });
-}
 
 export class MassMailingIframe extends Component {
     static template = "mass_mailing.MassMailingIframe";
@@ -43,26 +34,25 @@ export class MassMailingIframe extends Component {
         LazyComponent,
         LocalOverlayContainer,
     };
-    static props = {
-        config: { type: Object },
-        iframeRef: { type: Function },
-        iframeWrapperRef: { type: Function },
-        showThemeSelector: { type: Boolean, optional: true },
-        showCodeView: { type: Boolean, optional: true },
-        toggleCodeView: { type: Function, optional: true },
-        readonly: { type: Boolean, optional: true },
-        onEditorLoad: { type: Function, optional: true },
-        onFocus: { type: Function, optional: true },
-        extraClass: { type: String, optional: true },
-        withBuilder: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        onEditorLoad: () => {},
-        onFocus: () => {},
-    };
+    props = props({
+        config: t.object(),
+        iframeRef: t.function(),
+        iframeWrapperRef: t.function(),
+        saveRecord: t.function(),
+        discardRecord: t.function(),
+        showFullscreen: t.boolean().optional(),
+        showThemeSelector: t.boolean().optional(),
+        showCodeView: t.boolean().optional(),
+        toggleCodeView: t.function().optional(),
+        readonly: t.boolean().optional(),
+        onEditorLoad: t.function().optional(() => () => {}),
+        onFocus: t.function().optional(() => () => {}),
+        extraClass: t.string().optional(),
+        withBuilder: t.boolean().optional(),
+    });
 
     setup() {
-        useOverlayServiceOffset();
+        this.ui = useService("ui");
         this.overlayRef = useChildRef();
         this.iframeRef = useForwardRefToParent("iframeRef");
         this.iframeWrapperRef = useForwardRefToParent("iframeWrapperRef");
@@ -71,12 +61,28 @@ export class MassMailingIframe extends Component {
         useSubEnv({
             localOverlayContainerKey: uniqueId("mass_mailing_iframe"),
         });
-        this.state = useState({
-            showFullscreen: false,
+        this.state = proxy({
+            showFullscreen: this.props.showFullscreen && !this.ui.isSmall,
             isMobile: false,
+            isSmall: this.ui.isSmall,
             ready: false,
+            editorReady: false,
+            emptyBody: false,
+            fullscreenButtonLabel: "",
+        });
+        useBus(this.ui.bus, "resize", () => {
+            if (this.state.isSmall !== this.ui.isSmall) {
+                this.state.isSmall = this.ui.isSmall;
+                this.toggleFullScreen(false);
+            }
+        });
+        useEffect(() => {
+            this.state.fullscreenButtonLabel = this.state.emptyBody
+                ? _t("Start Designing")
+                : _t("Edit Design");
         });
         this.iframeLoaded = Promise.withResolvers();
+        useHotkey("escape", () => this.toggleFullScreen(false));
         onMounted(() => {
             this.setupIframe();
         });
@@ -306,7 +312,10 @@ export class MassMailingIframe extends Component {
         } else {
             iframeBundles = ["mass_mailing.assets_inside_basic_editor_iframe"];
         }
-        return loadIframeBundles(this.iframeRef.el, iframeBundles);
+        return Promise.all([
+            loadIframeBundles(this.iframeRef.el, iframeBundles),
+            loadGoogleFonts(this.iframeRef.el.contentDocument),
+        ]);
     }
 
     renderHeadContent() {
@@ -318,11 +327,21 @@ export class MassMailingIframe extends Component {
     }
 
     getBuilderProps() {
+        const onEditorReady = this.props.config.onEditorReady;
         return {
             overlayRef: this.overlayRef,
             iframeLoaded: this.iframeLoaded.promise,
             snippetsName: "mass_mailing.email_designer_snippets",
-            config: this.props.config,
+            config: {
+                ...this.props.config,
+                onEditorReady: () =>
+                    onEditorReady().then(() => {
+                        if (this.editor?.editable) {
+                            this.state.editorReady = true;
+                            this.state.emptyBody = !isVisible(this.editor.editable);
+                        }
+                    }),
+            },
             isMobile: this.state.isMobile,
             toggleMobile: () => {
                 this.iframeRef.el.contentDocument.body.scrollTop = 0;
@@ -356,7 +375,32 @@ export class MassMailingIframe extends Component {
         link.setAttribute("rel", "noreferrer");
     }
 
-    toggleFullScreen() {
-        this.state.showFullscreen = !this.state.showFullscreen;
+    async saveAndClose() {
+        this.toggleFullScreen(false);
+        await this.props.saveRecord();
+    }
+
+    async discardAndClose() {
+        await this.props.discardRecord();
+        this.toggleFullScreen(false);
+    }
+
+    toggleFullScreen(force = false) {
+        if (this.state.showFullscreen === force) {
+            return;
+        }
+        this.state.showFullscreen = force;
+        if (!this.state.showFullscreen) {
+            this.state.isMobile = false;
+            if (this.editor?.editable) {
+                this.state.emptyBody = !isVisible(this.editor.editable);
+                this.iframeRef.el.contentDocument.getSelection().removeAllRanges();
+                this.editor.shared.builderOptions.deactivateContainers();
+            }
+        }
+        this.iframeRef.el.contentDocument.body.classList.toggle(
+            "pe-none",
+            this.state.isSmall ? false : !this.state.showFullscreen
+        );
     }
 }

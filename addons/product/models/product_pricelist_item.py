@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round, format_amount, format_datetime, formatLang
 
@@ -69,11 +69,15 @@ class ProductPricelistItem(models.Model):
         required=True,
         help="Pricelist Item applicable on selected option")
 
+    # Product Related Fields
     categ_id = fields.Many2one(
-        comodel_name='product.category',
         string="Category",
+        help="Specify a product category if this rule only applies to products belonging to this"
+        " category or its children categories. Keep empty otherwise.",
+        comodel_name='product.category',
         ondelete='cascade',
-        help="Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise.")
+        check_company=True,
+    )
     product_tmpl_id = fields.Many2one(
         comodel_name='product.template',
         string="Product",
@@ -87,7 +91,10 @@ class ProductPricelistItem(models.Model):
         help="Specify a product if this rule only applies to one product. Keep empty otherwise.")
     product_uom_name = fields.Char(related='product_tmpl_id.uom_name')
     product_variant_count = fields.Integer(related='product_tmpl_id.product_variant_count')
+    uom_id = fields.Many2one(string="Packaging", comodel_name='uom.uom')
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
 
+    # Price Related Fields
     base = fields.Selection(
         selection=[
             ('list_price', 'Sales Price'),
@@ -157,7 +164,7 @@ class ProductPricelistItem(models.Model):
         compute='_compute_name',
         help="Explicit rule name for this pricelist line.")
     price = fields.Char(
-        string="Price",
+        string="Unit Price",
         compute='_compute_price_label',
         help="Explicit rule name for this pricelist line.")
     rule_tip = fields.Char(compute='_compute_rule_tip')
@@ -181,6 +188,11 @@ class ProductPricelistItem(models.Model):
                 or item.env.company.currency_id
             )
 
+    @api.depends('product_tmpl_id', 'product_tmpl_id.uom_id', 'product_tmpl_id.uom_ids')
+    def _compute_allowed_uom_ids(self):
+        for item in self:
+            item.allowed_uom_ids = item.product_tmpl_id.uom_id | item.product_tmpl_id.uom_ids
+
     @api.depends('applied_on', 'categ_id', 'product_tmpl_id', 'product_id')
     def _compute_name(self):
         for item in self:
@@ -191,9 +203,9 @@ class ProductPricelistItem(models.Model):
             elif item.product_id and item.applied_on == '0_product_variant':
                 item.name = item.product_id.display_name
             elif item.display_applied_on == '2_product_category':
-                item.name = _("All Categories")
+                item.name = item.env._("All Categories")
             else:
-                item.name = _("All Products")
+                item.name = item.env._("All Products")
 
     def _get_price_label_base_str(self):
         """This method allows you to extend it to other modules with other
@@ -204,9 +216,9 @@ class ProductPricelistItem(models.Model):
         if self.base == 'pricelist' and self.base_pricelist_id:
             base_str = self.base_pricelist_id.display_name
         elif self.base == 'standard_price':
-            base_str = _("product cost")
+            base_str = self.env._("product cost")
         else:
-            base_str = _("sales price")
+            base_str = self.env._("sales price")
         return base_str
 
     @api.depends(
@@ -221,13 +233,13 @@ class ProductPricelistItem(models.Model):
             elif item.compute_price == 'percentage':
                 percentage = self._get_integer(item.percent_price)
                 if item.base_pricelist_id:
-                    item.price = _(
+                    item.price = item.env._(
                         "%(percentage)s %% discount on %(pricelist)s",
                         percentage=percentage,
                         pricelist=item.base_pricelist_id.display_name
                     )
                 else:
-                    item.price = _(
+                    item.price = item.env._(
                         "%(percentage)s %% discount on sales price",
                         percentage=percentage
                     )
@@ -236,7 +248,7 @@ class ProductPricelistItem(models.Model):
 
                 extra_fee_str = ""
                 if item.price_surcharge > 0:
-                    extra_fee_str = _(
+                    extra_fee_str = item.env._(
                         "+ %(amount)s extra fee",
                         amount=format_amount(
                             item.env,
@@ -245,7 +257,7 @@ class ProductPricelistItem(models.Model):
                         ),
                     )
                 elif item.price_surcharge < 0:
-                    extra_fee_str = _(
+                    extra_fee_str = item.env._(
                         "- %(amount)s rebate",
                         amount=format_amount(
                             item.env,
@@ -254,7 +266,7 @@ class ProductPricelistItem(models.Model):
                         ),
                     )
                 discount_type, percentage = self._get_displayed_discount(item)
-                item.price = _("%(percentage)s %% %(discount_type)s on %(base)s %(extra)s",
+                item.price = item.env._("%(percentage)s %% %(discount_type)s on %(base)s %(extra)s",
                     percentage=percentage,
                     discount_type=discount_type,
                     base=base_str,
@@ -289,7 +301,7 @@ class ProductPricelistItem(models.Model):
             surcharge = format_amount(item.env, item.price_surcharge, item.currency_id)
             discount_type, discount = self._get_displayed_discount(item)
 
-            item.rule_tip = _(
+            item.rule_tip = item.env._(
                 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra fee\n"
                 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s",
                 base=base_selection_vals[item.base],
@@ -308,41 +320,54 @@ class ProductPricelistItem(models.Model):
 
     def _get_displayed_discount(self, item):
         if item.base == 'standard_price':
-            return _("markup"), self._get_integer(item.price_markup)
-        return _("discount"), self._get_integer(item.price_discount)
+            return self.env._("markup"), self._get_integer(item.price_markup)
+        return self.env._("discount"), self._get_integer(item.price_discount)
 
     #=== CONSTRAINT METHODS ===#
 
     @api.constrains('base_pricelist_id', 'base')
     def _check_base_pricelist_id(self):
         if any(item.base == 'pricelist' and not item.base_pricelist_id for item in self):
-            raise ValidationError(_('A pricelist item with "Other Pricelist" as base must have a base_pricelist_id.'))
+            raise ValidationError(self.env._('A pricelist item with "Other Pricelist" as base must have a base_pricelist_id.'))
 
     @api.constrains('base_pricelist_id', 'pricelist_id', 'base')
     def _check_pricelist_recursion(self):
-        def dfs_path(from_item, path, seen=set()):
-            if from_item.base_pricelist_id in path:
-                return path + from_item.base_pricelist_id
-            for to_item in from_item.base_pricelist_id.item_ids:
-                if to_item.base != 'pricelist' or to_item.id in seen:
-                    continue
-                seen.add(to_item.id)
-                if res := dfs_path(to_item, path + from_item.base_pricelist_id):
+        def dfs_path(from_pl, to_pl, path, seen):
+            if (from_pl, to_pl) in seen:
+                # If another pricelist rule from the same pricelist has the same target,
+                # there is no need to test that path again.
+                return path.browse()
+
+            if to_pl in path:
+                return path + to_pl
+
+            seen.add((from_pl, to_pl))
+            pricelist_based_items = self.env["product.pricelist.item"]._read_group(
+                domain=[("pricelist_id", "=", to_pl.id), ("base", "=", "pricelist")],
+                groupby=["base_pricelist_id"],
+                aggregates=["id:recordset"],
+            )
+            new_path = path + to_pl
+            for pricelist, _to_items in pricelist_based_items:
+                if res := dfs_path(to_pl, pricelist, new_path, seen):
                     return res
             return path.browse()
 
+        seen = set()
         for item in self:
-            if path := dfs_path(item, item.pricelist_id):
-                raise ValidationError(_(
-                    "Recursive pricelist rules detected: %s",
-                    " ⇒ ".join(path.mapped('name')),
-                ))
+            # Skip validation for rules not based on other pricelists.
+            if item.base != "pricelist" or not item.base_pricelist_id or not item.pricelist_id:
+                continue
+            if path := dfs_path(item.pricelist_id, item.base_pricelist_id, item.pricelist_id, seen):
+                raise ValidationError(
+                    item.env._("Recursive pricelist rules detected: %s", " ⇒ ".join(path.mapped("name")))
+                )
 
     @api.constrains('date_start', 'date_end')
     def _check_date_range(self):
         for item in self:
             if item.date_start and item.date_end and item.date_start >= item.date_end:
-                raise ValidationError(_(
+                raise ValidationError(item.env._(
                     '%(item_name)s: end date (%(end_date)s) should be after start date (%(start_date)s)',
                     item_name=item.display_name,
                     end_date=format_datetime(self.env, item.date_end),
@@ -353,17 +378,17 @@ class ProductPricelistItem(models.Model):
     @api.constrains('price_min_margin', 'price_max_margin')
     def _check_margin(self):
         if any(item.price_min_margin > item.price_max_margin for item in self):
-            raise ValidationError(_('The minimum margin should be lower than the maximum margin.'))
+            raise ValidationError(self.env._('The minimum margin should be lower than the maximum margin.'))
 
     @api.constrains('product_id', 'product_tmpl_id', 'categ_id')
     def _check_product_consistency(self):
         for item in self:
             if item.applied_on == "2_product_category" and not item.categ_id:
-                raise ValidationError(_("Please specify the category for which this rule should be applied"))
+                raise ValidationError(item.env._("Please specify the category for which this rule should be applied"))
             if item.applied_on == "1_product" and not item.product_tmpl_id:
-                raise ValidationError(_("Please specify the product for which this rule should be applied"))
+                raise ValidationError(item.env._("Please specify the product for which this rule should be applied"))
             if item.applied_on == "0_product_variant" and not item.product_id:
-                raise ValidationError(_("Please specify the product variant for which this rule should be applied"))
+                raise ValidationError(item.env._("Please specify the product variant for which this rule should be applied"))
 
     #=== ONCHANGE METHODS ===#
 
@@ -455,7 +480,7 @@ class ProductPricelistItem(models.Model):
     @api.onchange('price_round')
     def _onchange_price_round(self):
         if any(item.price_round and item.price_round < 0.0 for item in self):
-            raise ValidationError(_("The rounding method must be strictly positive."))
+            raise ValidationError(self.env._("The rounding method must be strictly positive."))
 
     @api.onchange('date_start', 'date_end')
     def _onchange_validity_period(self):
@@ -487,7 +512,7 @@ class ProductPricelistItem(models.Model):
             if applied_on == '3_global':
                 values.update({'product_id': None, 'product_tmpl_id': None, 'categ_id': None})
             elif applied_on == '2_product_category':
-                values.update({'product_id': None, 'product_tmpl_id': None})
+                values.update({'product_id': None, 'product_tmpl_id': None, 'uom_id': False})
             elif applied_on == '1_product':
                 values.update({'product_id': None, 'categ_id': None})
             elif applied_on == '0_product_variant':
@@ -501,7 +526,7 @@ class ProductPricelistItem(models.Model):
             if applied_on == '3_global':
                 vals.update({'product_id': None, 'product_tmpl_id': None, 'categ_id': None})
             elif applied_on == '2_product_category':
-                vals.update({'product_id': None, 'product_tmpl_id': None})
+                vals.update({'product_id': None, 'product_tmpl_id': None, 'uom_id': False})
             elif applied_on == '1_product':
                 vals.update({'product_id': None, 'categ_id': None})
             elif applied_on == '0_product_variant':
@@ -510,13 +535,15 @@ class ProductPricelistItem(models.Model):
 
     #=== BUSINESS METHODS ===#
 
-    def _is_applicable_for(self, product, qty_in_product_uom):
-        """Check whether the current rule is valid for the given product & qty.
+    def _is_applicable_for(self, product, quantity, *, uom=None, qty_in_product_uom=False, **kwargs):
+        """Check whether the current rule is valid for the given product, qty and uom.
 
         Note: self.ensure_one()
 
         :param product: product record (product.product/product.template)
-        :param float qty_in_product_uom: quantity, expressed in product UoM
+        :param float quantity: quantity of products requested (in given uom)
+        :param float qty_in_product_uom: quantity of products requested (in product's base uom)
+        :param uom: Selected unit of measure (uom.uom record)
         :returns: Whether rules is valid or not
         :rtype: bool
         """
@@ -525,9 +552,21 @@ class ProductPricelistItem(models.Model):
         res = True
 
         is_product_template = product._name == 'product.template'
-        if self.min_quantity and qty_in_product_uom < self.min_quantity:
-            res = False
+        product_uom = product.uom_id
+        uom = uom or product_uom
 
+        # Filter the rules restricted to specific units of measure.
+        if self.uom_id and uom != self.uom_id:
+            return False
+
+        qty_to_consider = quantity
+        if uom not in product_uom + self.uom_id:
+            # Convert the quantity to consider to the product base uom if the requested uom is not
+            # in the rule allowed unit of measures.
+            qty_to_consider = uom._compute_quantity(quantity, product_uom)
+
+        if self.min_quantity and qty_to_consider < self.min_quantity:
+            res = False
         elif self.applied_on == "2_product_category":
             if not product.categ_id or (
                 product.categ_id != self.categ_id
@@ -554,7 +593,7 @@ class ProductPricelistItem(models.Model):
 
         return res
 
-    def _compute_price(self, product, quantity, uom, date, currency=None, **kwargs):
+    def _compute_price(self, product, quantity, uom, *, currency=None, **kwargs):
         """Compute the unit price of a product in the context of a pricelist application.
 
         Note: self and self.ensure_one()
@@ -588,10 +627,10 @@ class ProductPricelistItem(models.Model):
         if self.compute_price == 'fixed':
             price = convert(self.fixed_price)
         elif self.compute_price == 'percentage':
-            base_price = self._compute_base_price(product, quantity, uom, date, currency, **kwargs)
+            base_price = self._compute_base_price(product, quantity, uom, currency, **kwargs)
             price = (base_price - (base_price * (self.percent_price / 100))) or 0.0
         elif self.compute_price == 'formula':
-            base_price = self._compute_base_price(product, quantity, uom, date, currency, **kwargs)
+            base_price = self._compute_base_price(product, quantity, uom, currency, **kwargs)
             # complete formula
             price_limit = base_price
             discount = self.price_discount if self.base != 'standard_price' else -self.price_markup
@@ -608,11 +647,13 @@ class ProductPricelistItem(models.Model):
             if self.price_max_margin:
                 price = min(price, price_limit + convert(self.price_max_margin))
         else:  # empty self, or extended pricelist price computation logic
-            price = self._compute_base_price(product, quantity, uom, date, currency, **kwargs)
+            price = self._compute_base_price(product, quantity, uom, currency, **kwargs)
 
         return price
 
-    def _compute_base_price(self, product, quantity, uom, date, currency, **kwargs):
+    def _compute_base_price(
+        self, product, quantity, uom, currency, *, date=False, depth=0, **kwargs
+    ):
         """Compute the base price for a given rule.
 
         :param product: recordset of product (product.product/product.template)
@@ -620,6 +661,7 @@ class ProductPricelistItem(models.Model):
         :param uom: unit of measure (uom.uom record)
         :param datetime date: date to use for price computation and currency conversions
         :param currency: currency in which the returned price must be expressed
+        :param int depth: Technical flag tracking the current recursion depth
 
         :returns: base price, expressed in provided pricelist currency
         :rtype: float
@@ -629,19 +671,24 @@ class ProductPricelistItem(models.Model):
         rule_base = self.base or 'list_price'
         if rule_base == 'pricelist' and self.base_pricelist_id:
             price = self.base_pricelist_id._get_product_price(
-                product, quantity, currency=self.base_pricelist_id.currency_id, uom=uom, date=date,
-                **kwargs
+                product,
+                quantity,
+                currency=self.base_pricelist_id.currency_id,
+                uom=uom,
+                date=date,
+                depth=depth + 1,
+                **kwargs,
             )
             src_currency = self.base_pricelist_id.currency_id
         elif rule_base == "standard_price":
             src_currency = product.cost_currency_id
-            price = product._price_compute(rule_base, uom=uom, date=date)[product.id]
+            price = product._price_compute(rule_base, uom=uom)[product.id]
         else: # list_price
             src_currency = product.currency_id
-            price = product._price_compute(rule_base, uom=uom, date=date)[product.id]
+            price = product._price_compute(rule_base, uom=uom)[product.id]
 
         if src_currency != currency:
-            price = src_currency._convert(price, currency, self.env.company, date, round=False)
+            price = src_currency._convert(price, currency, date=date, round=False)
 
         return price
 

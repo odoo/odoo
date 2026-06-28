@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { provideEnv, useChildSubEnv, useRef } from "@web/owl2/utils";
 import { Component, onWillDestroy } from "@odoo/owl";
 import { sortBy } from "@web/core/utils/arrays";
 import { ErrorHandler } from "@web/core/utils/components";
@@ -25,7 +25,7 @@ class OverlayItem extends Component {
         });
 
         if (this.props.env) {
-            this.__owl__.childEnv = this.props.env;
+            provideEnv(this.props.env);
         }
 
         useChildSubEnv({
@@ -54,13 +54,6 @@ export class OverlayContainer extends Component {
 
     setup() {
         this.root = useRef("root");
-        this.state = useState({ rootEl: null });
-        useLayoutEffect(
-            () => {
-                this.state.rootEl = this.root.el;
-            },
-            () => [this.root.el]
-        );
     }
 
     get sortedOverlays() {
@@ -68,7 +61,7 @@ export class OverlayContainer extends Component {
     }
 
     isVisible(overlay) {
-        return overlay.rootId === this.state.rootEl?.getRootNode()?.host?.id;
+        return overlay.rootId === this.env?.rootId;
     }
 
     handleError(overlay, error) {

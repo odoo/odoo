@@ -4,10 +4,6 @@ $o-discuss-talkingColor: lighten($success, 10%);
     background-color: $white !important;
 }
 
-.o-mail-brighter {
-    filter: brightness(1.2);
-}
-
 .o-mail-emoji {
     font-size: 121%;
     line-height: $display-line-height;
@@ -21,20 +17,8 @@ $o-discuss-talkingColor: lighten($success, 10%);
     background-color: $body-bg !important;
 }
 
-.o-border-opacity-10 {
-    --border-opacity: 0.10;
-}
-
 .o-border-opacity-15 {
     --border-opacity: 0.15;
-}
-
-.o-border-opacity-25 {
-    --border-opacity: 0.25;
-}
-
-.o-border-opacity-50 {
-    --border-opacity: 0.5;
 }
 
 .o-discuss-badge {
@@ -113,7 +97,7 @@ $o-discuss-talkingColor: lighten($success, 10%);
 }
 
 .o-discuss-text-body {
-    color: $gray-700;
+    color: $gray-700 !important;
 }
 
 .o-discuss-badge, .o-discuss-badgeShape {
@@ -133,20 +117,12 @@ $o-discuss-talkingColor: lighten($success, 10%);
     min-height: 0;
 }
 
-.o-min-width-0 {
-    min-width: 0;
-}
-
 .o-opacity-35 {
     opacity: 35%;
 }
 
 .o-opacity-65 {
     opacity: 65%;
-}
-
-.o-outline-secondary {
-    outline: 1px solid $o-gray-300;
 }
 
 .o-hover-text-underline:hover {
@@ -306,24 +282,8 @@ $o-mail-utilities: map-merge(
     font-size: 0.5rem;
 }
 
-.o-xxxs {
-    font-size: 0.35rem;
-}
-
 .o-yellow {
     color: $yellow;
-}
-
-.o-info {
-    color: $o-info;
-}
-
-.o-secondary {
-    color: var(--o-secondary, mix($o-gray-200, $o-gray-300));
-}
-
-.o-warning {
-    color: $o-warning;
 }
 
 @mixin o-mail-call-bordered($opacity) {
@@ -390,7 +350,13 @@ a.o-discuss-mention {
 }
 
 .o-discuss-inCallIconColor {
+    @include o-mail-call-bordered(.35);
     color: $o-action;
+
+    &.o-muted {
+        border-color: $gray-400 !important;
+        color: $gray-700;
+    }
 }
 
 .o-mail-DiscussSystray {
@@ -401,10 +367,6 @@ a.o-discuss-mention {
     top: $o-navbar-height !important;
     height: calc(100% - #{$o-navbar-height}); // no bottom-0 otherwise performance issue
     border-radius: 0 !important;
-}
-
-.o-pointer-events-none {
-    pointer-events: none;
 }
 
 .o-visible-short-delay {

@@ -155,29 +155,21 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "promotion",
             "applies_on": "current",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_point_mode": "order",
-                        "minimum_amount_tax_mode": "excl",
-                        "minimum_amount": 320.00,
-                    },
-                )
+                Command.create({
+                    "reward_point_mode": "order",
+                    "minimum_amount_tax_mode": "excl",
+                    "minimum_amount": 320.00,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 20,
-                        "discount_mode": "percent",
-                        "discount_applicability": "specific",
-                        "discount_product_ids": self.largeCabinet,
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 20,
+                    "discount_mode": "percent",
+                    "discount_applicability": "specific",
+                    "discount_product_ids": self.largeCabinet,
+                    "required_points": 1,
+                })
             ],
         })
         self.all_programs |= p_specific_product
@@ -329,7 +321,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             + self.drawerBlack
         ).write({"list_price": 100})
         (self.largeCabinet + self.drawerBlack).write({
-            "taxes_id": [(4, self.tax_15pc_excl.id, False)]
+            "taxes_id": [Command.link(self.tax_15pc_excl.id)]
         })
         self.conferenceChair.taxes_id = self.tax_10pc_incl
         self.pedalBin.taxes_id = None
@@ -380,28 +372,20 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "promotion",
             "applies_on": "current",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "product_ids": self.largeCabinet,
-                        "reward_point_mode": "unit",
-                        "minimum_qty": 1,
-                        "reward_point_amount": 0.752,
-                    },
-                )
+                Command.create({
+                    "product_ids": self.largeCabinet,
+                    "reward_point_mode": "unit",
+                    "minimum_qty": 1,
+                    "reward_point_amount": 0.752,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "product",
-                        "reward_product_id": self.largeCabinet.id,
-                        "reward_product_qty": 1,
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "product",
+                    "reward_product_id": self.largeCabinet.id,
+                    "reward_product_qty": 1,
+                    "required_points": 1,
+                })
             ],
         })
         self.p_conference_chair = self.env["loyalty.program"].create({
@@ -410,28 +394,20 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "promotion",
             "applies_on": "current",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "product_ids": self.conferenceChair,
-                        "reward_point_mode": "unit",
-                        "minimum_qty": 1,
-                        "reward_point_amount": 0.4,
-                    },
-                )
+                Command.create({
+                    "product_ids": self.conferenceChair,
+                    "reward_point_mode": "unit",
+                    "minimum_qty": 1,
+                    "reward_point_amount": 0.4,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "product",
-                        "reward_product_id": self.conferenceChair.id,
-                        "reward_product_qty": 1,
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "product",
+                    "reward_product_id": self.conferenceChair.id,
+                    "reward_product_qty": 1,
+                    "required_points": 1,
+                })
             ],
         })
         self.p_pedal_bin = self.env["loyalty.program"].create({
@@ -440,23 +416,19 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "promotion",
             "applies_on": "current",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {"product_ids": self.pedalBin, "reward_point_mode": "unit", "minimum_qty": 1},
-                )
+                Command.create({
+                    "product_ids": self.pedalBin,
+                    "reward_point_mode": "unit",
+                    "minimum_qty": 1,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "product",
-                        "reward_product_id": self.pedalBin.id,
-                        "reward_product_qty": 1,
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "product",
+                    "reward_product_id": self.pedalBin.id,
+                    "reward_product_qty": 1,
+                    "required_points": 1,
+                })
             ],
         })
         self.all_programs |= self.p_large_cabinet | self.p_conference_chair | self.p_pedal_bin
@@ -538,20 +510,16 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "trigger": "auto",
             "program_type": "promotion",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 20,
-                        "discount_applicability": "specific",
-                        "discount_product_ids": self.largeCabinet,
-                        "required_points": 1,
-                        "clear_wallet": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 20,
+                    "discount_applicability": "specific",
+                    "discount_product_ids": self.largeCabinet,
+                    "required_points": 1,
+                    "clear_wallet": 1,
+                })
             ],
         })
         self._auto_rewards(order, self.all_programs)
@@ -653,7 +621,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         p1_copy = self.p1.copy({
             "trigger": "auto",
             "name": "Auto applied 10% global discount",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
         })
         self.all_programs |= p1_copy
         order = self.empty_order
@@ -683,19 +651,15 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "trigger": "auto",
             "program_type": "promotion",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {"reward_point_mode": "order", "reward_point_amount": 1})],
+            "rule_ids": [Command.create({"reward_point_mode": "order", "reward_point_amount": 1})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 249,
-                        "discount_mode": "per_point",
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 249,
+                    "discount_mode": "per_point",
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
         self.all_programs |= fixed_amount_program
@@ -705,7 +669,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "amount": 0,
         })
         fixed_amount_program.reward_ids.discount_line_product_id.write({
-            "taxes_id": [(4, self.tax_0pc_excl.id, False)]
+            "taxes_id": [Command.link(self.tax_0pc_excl.id)]
         })
         sol1 = self.env["sale.order.line"].create({
             "product_id": self.drawerBlack.id,
@@ -748,18 +712,14 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "trigger": "auto",
             "applies_on": "future",
             "program_type": "promotion",
-            "rule_ids": [(0, 0, {"minimum_qty": 2})],
+            "rule_ids": [Command.create({"minimum_qty": 2})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "product",
-                        "reward_product_id": self.pedalBin.id,
-                        "reward_product_qty": 1,
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "product",
+                    "reward_product_id": self.pedalBin.id,
+                    "reward_product_qty": 1,
+                    "required_points": 1,
+                })
             ],
         })
         sol1 = self.env["sale.order.line"].create({
@@ -855,18 +815,16 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "name": "$100 promotion program",
             "program_type": "promotion",
             "trigger": "with_code",
-            "rule_ids": [(0, 0, {"mode": "with_code", "code": "testpromo", "minimum_amount": 100})],
+            "rule_ids": [
+                Command.create({"mode": "with_code", "code": "testpromo", "minimum_amount": 100})
+            ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 100,
-                        "discount_mode": "per_point",
-                        "discount_applicability": "order",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 100,
+                    "discount_mode": "per_point",
+                    "discount_applicability": "order",
+                })
             ],
         })
 
@@ -918,17 +876,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "trigger": "with_code",
             "applies_on": "current",
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount_mode": "per_point",
-                        "discount": 288.5,
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "per_point",
+                    "discount": 288.5,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
 
@@ -940,7 +894,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 "product_uom_qty": 1.0,
                 "price_unit": 100.0,
                 "order_id": order.id,
-                "tax_ids": [(6, 0, (self.tax_15pc_excl.id,))],
+                "tax_ids": [Command.set((self.tax_15pc_excl.id,))],
             },
             {
                 "product_id": self.pedalBin.id,
@@ -948,7 +902,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 "product_uom_qty": 1.0,
                 "price_unit": 100.0,
                 "order_id": order.id,
-                "tax_ids": [(6, 0, [])],
+                "tax_ids": False,
             },
             {
                 "product_id": self.product_A.id,
@@ -956,7 +910,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 "product_uom_qty": 1.0,
                 "price_unit": 100.0,
                 "order_id": order.id,
-                "tax_ids": [(6, 0, [])],
+                "tax_ids": False,
             },
         ])
 
@@ -1028,17 +982,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "trigger": "with_code",
             "applies_on": "current",
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount_mode": "per_point",
-                        "discount": 290,
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "per_point",
+                    "discount": 290,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
 
@@ -1050,7 +1000,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 "product_uom_qty": 1.0,
                 "price_unit": 100.0,
                 "order_id": order.id,
-                "tax_ids": [(6, 0, (self.tax_10pc_incl.id,))],
+                "tax_ids": [Command.set((self.tax_10pc_incl.id,))],
             },
             {
                 "product_id": self.pedalBin.id,
@@ -1058,7 +1008,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 "product_uom_qty": 1.0,
                 "price_unit": 100.0,
                 "order_id": order.id,
-                "tax_ids": [(6, 0, [])],
+                "tax_ids": False,
             },
             {
                 "product_id": self.product_A.id,
@@ -1066,7 +1016,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 "product_uom_qty": 1.0,
                 "price_unit": 100.0,
                 "order_id": order.id,
-                "tax_ids": [(6, 0, [])],
+                "tax_ids": False,
             },
         ])
 
@@ -1135,22 +1085,18 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "promotion",
             "trigger": "auto",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount_mode": "percent",
-                        "discount": 25,
-                        "discount_applicability": "specific",
-                        "discount_product_ids": [
-                            (6, 0, [self.conferenceChair.id, self.drawerBlack.id])
-                        ],
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "percent",
+                    "discount": 25,
+                    "discount_applicability": "specific",
+                    "discount_product_ids": [
+                        Command.set([self.conferenceChair.id, self.drawerBlack.id])
+                    ],
+                    "required_points": 1,
+                })
             ],
         })
         self.all_programs |= p_specific_products
@@ -1182,7 +1128,9 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.assertEqual(order.amount_total, 87.00, "Total should be 87.00, see above comment")
 
         # remove Drawer Black case from promotion
-        p_specific_products.reward_ids.discount_product_ids = [(6, 0, [self.conferenceChair.id])]
+        p_specific_products.reward_ids.discount_product_ids = [
+            Command.set(self.conferenceChair.ids)
+        ]
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
             len(order.order_line.ids),
@@ -1204,7 +1152,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # PART 2: Same flow but with different taxes on products to ensure discount is split per VAT
         # Add back Drawer Black in promotion
         p_specific_products.reward_ids.discount_product_ids = [
-            (6, 0, [self.conferenceChair.id, self.drawerBlack.id])
+            Command.set([self.conferenceChair.id, self.drawerBlack.id])
         ]
 
         percent_tax = self.env["account.tax"].create({
@@ -1248,28 +1196,20 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "promotion",
             "applies_on": "current",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "product_ids": self.conferenceChair,
-                        "reward_point_mode": "order",
-                        "minimum_qty": 2,
-                        "minimum_amount": self.conferenceChair.lst_price * 2,
-                    },
-                )
+                Command.create({
+                    "product_ids": self.conferenceChair,
+                    "reward_point_mode": "order",
+                    "minimum_qty": 2,
+                    "minimum_amount": self.conferenceChair.lst_price * 2,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "product",
-                        "reward_product_id": self.conferenceChair.id,
-                        "reward_product_qty": 1,
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "product",
+                    "reward_product_id": self.conferenceChair.id,
+                    "reward_product_qty": 1,
+                    "required_points": 1,
+                })
             ],
         })
         sol1 = self.env["sale.order.line"].create({
@@ -1322,28 +1262,20 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "promotion",
             "applies_on": "current",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_point_mode": "order",
-                        "minimum_amount": 1500.00,
-                        "minimum_amount_tax_mode": "incl",
-                    },
-                )
+                Command.create({
+                    "reward_point_mode": "order",
+                    "minimum_amount": 1500.00,
+                    "minimum_amount_tax_mode": "incl",
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 10,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
         self.all_programs |= self.env["loyalty.program"].create({
@@ -1352,28 +1284,20 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "promotion",
             "applies_on": "current",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_point_mode": "order",
-                        "minimum_amount": 1750.00,
-                        "minimum_amount_tax_mode": "incl",
-                    },
-                )
+                Command.create({
+                    "reward_point_mode": "order",
+                    "minimum_amount": 1750.00,
+                    "minimum_amount_tax_mode": "incl",
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 15,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 15,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
         self.all_programs |= self.env["loyalty.program"].create({
@@ -1382,28 +1306,20 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "promotion",
             "applies_on": "current",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_point_mode": "order",
-                        "minimum_amount": 2000.00,
-                        "minimum_amount_tax_mode": "incl",
-                    },
-                )
+                Command.create({
+                    "reward_point_mode": "order",
+                    "minimum_amount": 2000.00,
+                    "minimum_amount_tax_mode": "incl",
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 20,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 20,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
         self.all_programs |= self.env["loyalty.program"].create({
@@ -1412,28 +1328,20 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "promotion",
             "applies_on": "current",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_point_mode": "order",
-                        "minimum_amount": 2500.00,
-                        "minimum_amount_tax_mode": "incl",
-                    },
-                )
+                Command.create({
+                    "reward_point_mode": "order",
+                    "minimum_amount": 2500.00,
+                    "minimum_amount_tax_mode": "incl",
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 25,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 25,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
 
@@ -1482,30 +1390,22 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "coupons",
             "applies_on": "current",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "product_ids": self.largeCabinet,
-                        "reward_point_mode": "order",
-                        "minimum_qty": 1,
-                    },
-                )
+                Command.create({
+                    "product_ids": self.largeCabinet,
+                    "reward_point_mode": "order",
+                    "minimum_qty": 1,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 100,
-                        "discount_mode": "percent",
-                        "discount_applicability": "specific",
-                        "discount_product_ids": self.conferenceChair,
-                        "discount_max_amount": 200,
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 100,
+                    "discount_mode": "percent",
+                    "discount_applicability": "specific",
+                    "discount_product_ids": self.conferenceChair,
+                    "discount_max_amount": 200,
+                    "required_points": 1,
+                })
             ],
         })
         # set large cabinet and conference chair prices
@@ -1617,29 +1517,21 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "promotion",
             "applies_on": "current",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "product_ids": self.drawerBlack,
-                        "reward_point_mode": "order",
-                        "minimum_qty": 1,
-                    },
-                )
+                Command.create({
+                    "product_ids": self.drawerBlack,
+                    "reward_point_mode": "order",
+                    "minimum_qty": 1,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 100,
-                        "discount_mode": "percent",
-                        "discount_applicability": "specific",
-                        "discount_product_ids": self.largeMeetingTable,
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 100,
+                    "discount_mode": "percent",
+                    "discount_applicability": "specific",
+                    "discount_product_ids": self.largeMeetingTable,
+                    "required_points": 1,
+                })
             ],
         })
 
@@ -1692,7 +1584,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "name": "Product F",
             "list_price": 100,
             "sale_ok": True,
-            "taxes_id": [(6, 0, [])],
+            "taxes_id": False,
         })
         self.all_programs |= self.env["loyalty.program"].create({
             "name": "1 Product F = 5$ discount",
@@ -1700,19 +1592,19 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "promotion",
             "applies_on": "current",
             "rule_ids": [
-                (0, 0, {"product_ids": product_F, "reward_point_mode": "order", "minimum_qty": 1})
+                Command.create({
+                    "product_ids": product_F,
+                    "reward_point_mode": "order",
+                    "minimum_qty": 1,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 5,
-                        "discount_mode": "per_point",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 5,
+                    "discount_mode": "per_point",
+                    "required_points": 1,
+                })
             ],
         })
 
@@ -1766,17 +1658,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "trigger": "with_code",
             "program_type": "coupons",
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 50,
-                        "discount_mode": "percent",
-                        "discount_applicability": "cheapest",
-                        "discount_max_amount": 30,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 50,
+                    "discount_mode": "percent",
+                    "discount_applicability": "cheapest",
+                    "discount_max_amount": 30,
+                })
             ],
         })
 
@@ -1810,9 +1698,9 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # Apply a 10% discount -> order total should be 9$
         # Redo the same process but discount first
         product_a, product_b, product_c = self.env["product.product"].create([
-            {"name": "Product A", "list_price": 6, "sale_ok": True, "taxes_id": [(6, 0, [])]},
-            {"name": "Product B", "list_price": 4, "sale_ok": True, "taxes_id": [(6, 0, [])]},
-            {"name": "Product C", "list_price": 10, "sale_ok": True, "taxes_id": [(6, 0, [])]},
+            {"name": "Product A", "list_price": 6, "sale_ok": True, "taxes_id": False},
+            {"name": "Product B", "list_price": 4, "sale_ok": True, "taxes_id": False},
+            {"name": "Product C", "list_price": 10, "sale_ok": True, "taxes_id": False},
         ])
         programs = self.env["loyalty.program"].create([
             {
@@ -1820,20 +1708,16 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 "trigger": "auto",
                 "program_type": "promotion",
                 "applies_on": "current",
-                "rule_ids": [(0, 0, {})],
+                "rule_ids": [Command.create({})],
                 "reward_ids": [
-                    (
-                        0,
-                        0,
-                        {
-                            "reward_type": "discount",
-                            "discount": 5,
-                            "discount_mode": "per_point",
-                            "discount_applicability": "specific",
-                            "discount_product_ids": product_a | product_b,
-                            "required_points": 1,
-                        },
-                    )
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount": 5,
+                        "discount_mode": "per_point",
+                        "discount_applicability": "specific",
+                        "discount_product_ids": product_a | product_b,
+                        "required_points": 1,
+                    })
                 ],
             },
             {
@@ -1841,20 +1725,16 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 "trigger": "auto",
                 "program_type": "promotion",
                 "applies_on": "current",
-                "rule_ids": [(0, 0, {})],
+                "rule_ids": [Command.create({})],
                 "reward_ids": [
-                    (
-                        0,
-                        0,
-                        {
-                            "reward_type": "discount",
-                            "discount": 10,
-                            "discount_mode": "per_point",
-                            "discount_applicability": "specific",
-                            "discount_product_ids": product_a,
-                            "required_points": 1,
-                        },
-                    )
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount": 10,
+                        "discount_mode": "per_point",
+                        "discount_applicability": "specific",
+                        "discount_product_ids": product_a,
+                        "required_points": 1,
+                    })
                 ],
             },
         ])
@@ -1905,13 +1785,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 "name": "Product A",
                 "list_price": 10,
                 "sale_ok": True,
-                "taxes_id": [(6, 0, [self.tax_10pc_excl.id])],
+                "taxes_id": [Command.set(self.tax_10pc_excl.ids)],
             },
             {
                 "name": "Product B",
                 "list_price": 10,
                 "sale_ok": True,
-                "taxes_id": [(6, 0, [self.tax_20pc_excl.id])],
+                "taxes_id": [Command.set(self.tax_20pc_excl.ids)],
             },
         ])
         program_a, program_b = self.env["loyalty.program"].create([
@@ -1920,20 +1800,16 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 "trigger": "auto",
                 "program_type": "promotion",
                 "applies_on": "current",
-                "rule_ids": [(0, 0, {})],
+                "rule_ids": [Command.create({})],
                 "reward_ids": [
-                    (
-                        0,
-                        0,
-                        {
-                            "reward_type": "discount",
-                            "discount": 100,
-                            "discount_mode": "percent",
-                            "discount_applicability": "specific",
-                            "discount_product_ids": product_a,
-                            "required_points": 1,
-                        },
-                    )
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount": 100,
+                        "discount_mode": "percent",
+                        "discount_applicability": "specific",
+                        "discount_product_ids": product_a,
+                        "required_points": 1,
+                    })
                 ],
             },
             {
@@ -1941,20 +1817,16 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 "trigger": "auto",
                 "program_type": "promotion",
                 "applies_on": "current",
-                "rule_ids": [(0, 0, {})],
+                "rule_ids": [Command.create({})],
                 "reward_ids": [
-                    (
-                        0,
-                        0,
-                        {
-                            "reward_type": "discount",
-                            "discount": 5,
-                            "discount_mode": "per_point",
-                            "discount_applicability": "specific",
-                            "discount_product_ids": product_a | product_b,
-                            "required_points": 1,
-                        },
-                    )
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount": 5,
+                        "discount_mode": "per_point",
+                        "discount_applicability": "specific",
+                        "discount_product_ids": product_a | product_b,
+                        "required_points": 1,
+                    })
                 ],
             },
         ])
@@ -1993,19 +1865,15 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "trigger": "auto",
             "program_type": "promotion",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 5,
-                        "discount_mode": "per_point",
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 5,
+                    "discount_mode": "per_point",
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
 
@@ -2075,19 +1943,15 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "trigger": "auto",
             "program_type": "promotion",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 5,
-                        "discount_mode": "per_point",
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 5,
+                    "discount_mode": "per_point",
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
 
@@ -2170,19 +2034,15 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "trigger": "auto",
             "program_type": "promotion",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 10,
-                        "discount_mode": "per_point",
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "per_point",
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
 
@@ -2222,19 +2082,15 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "trigger": "auto",
             "program_type": "promotion",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 10,
-                        "discount_mode": "per_point",
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "per_point",
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
 
@@ -2264,19 +2120,15 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "promotion",
             "trigger": "auto",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount_mode": "percent",
-                        "discount": 50,
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "percent",
+                    "discount": 50,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
 
@@ -2293,7 +2145,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "amount": 10,
         })
 
-        # Set tax and prices on products as neeed for the test
+        # Set tax and prices on products as need for the test
         self.product_A.write({"list_price": 100})
         self.product_A.taxes_id = self.tax_15pc_excl + self.tax_10_fixed
 
@@ -2321,19 +2173,15 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "promotion",
             "trigger": "auto",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount_mode": "per_order",
-                        "discount": 50,
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "per_order",
+                    "discount": 50,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
 
@@ -2350,7 +2198,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "amount": 10,
         })
 
-        # Set tax and prices on products as neeed for the test
+        # Set tax and prices on products as need for the test
         self.product_A.write({"list_price": 100})
         self.product_A.taxes_id = self.tax_15pc_excl + self.tax_10_fixed
 
@@ -2400,7 +2248,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "amount": 15,
         })
 
-        # Set tax and prices on products as neeed for the test
+        # Set tax and prices on products as need for the test
         self.product_A.write({"list_price": 140.0, "taxes_id": [Command.set(tax_15pc_excl.ids)]})
 
         order.order_line = [Command.create({"product_id": self.product_A.id})]
@@ -2419,7 +2267,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "program_type": "loyalty",
             "trigger": "auto",
             "applies_on": "both",
-            "rule_ids": [Command.set([])],
+            "rule_ids": False,
             "reward_ids": [
                 Command.create({
                     "reward_type": "discount",
@@ -2434,9 +2282,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.env["loyalty.card"].create([
             {"program_id": loyalty_program.id, "partner_id": order.partner_id.id, "points": 3030}
         ])
-        product_a = self._create_product(
-            name="product_a", lst_price=3000.0, taxes_id=[Command.set([])]
-        )
+        product_a = self._create_product(name="product_a", lst_price=3000.0, taxes_id=False)
         order.order_line = [Command.create({"product_id": product_a.id})]
 
         coupon = loyalty_program.coupon_ids[0]
@@ -2445,6 +2291,57 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.assertEqual(len(order.order_line), 2, "Promotion should add 1 line")
         used_points = coupon.history_ids[0].used
         self.assertEqual(used_points, coupon.currency_id.round(used_points))
+
+    def test_non_monetary_points_not_rounded_by_currency(self):
+        """Check that points from non-monetary programs are not rounded using the currency rounding
+        factor.
+
+        When a loyalty program uses reward_point_mode='order' (dimensionless points, not money),
+        its currency's rounding factor must not be applied to point values. A currency with a
+        large rounding factor (e.g. 250) would otherwise collapse 1 point to 0, making rewards
+        with required_points=1 permanently unclaimable.
+        """
+        large_rounding_currency = self.env["res.currency"].create({
+            "name": "TST",
+            "symbol": "T",
+            "rounding": 250.0,
+            "active": True,
+        })
+        loyalty_program = self.env["loyalty.program"].create({
+            "name": "Test 1 point per order",
+            "program_type": "loyalty",
+            "trigger": "auto",
+            "applies_on": "both",
+            "currency_id": large_rounding_currency.id,
+            "rule_ids": [Command.create({"reward_point_mode": "order", "reward_point_amount": 1})],
+            "reward_ids": [
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "per_order",
+                    "discount": 10,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
+            ],
+        })
+        order = self.empty_order
+        order.order_line = [Command.create({"product_id": self.largeCabinet.id})]
+        coupon = self.env["loyalty.card"].create({
+            "program_id": loyalty_program.id,
+            "partner_id": order.partner_id.id,
+            "points": 1,
+        })
+
+        points = order._get_real_points_for_coupon(coupon)
+        self.assertEqual(
+            points,
+            1,
+            "1 point from an order-based program must not be rounded to 0 by the currency's"
+            " rounding factor",
+        )
+
+        claimable = order._get_claimable_rewards(forced_coupons=coupon)
+        self.assertIn(coupon, claimable, "The reward must be claimable with 1 point")
 
     def test_rounding_program_application(self):
         """Check that the loyalty program is applied with the currency settings of the order."""
@@ -2461,9 +2358,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "company_id": JPY_company.id,
             "property_product_pricelist": USD_pricelist,
         })
-        product_a = self._create_product(
-            name="product_a", lst_price=0.4, taxes_id=[Command.set([])]
-        )
+        product_a = self._create_product(name="product_a", lst_price=0.4, taxes_id=False)
         loyalty_program = self.env["loyalty.program"].create({
             "name": "10% promotion",
             "program_type": "promotion",

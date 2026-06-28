@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
-"PO-Revision-Date: 2026-02-28 13:44+0000\n"
+"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"PO-Revision-Date: 2026-04-14 13:45+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/lunch/"
 "fr/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_temaki
@@ -128,13 +128,13 @@ msgid ""
 "<t>\n"
 "<t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
 "<t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
-"<t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order."
-"get('currency_id'))\"/>\n"
+"<t t-set=\"currency\" t-"
+"value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "<p>\n"
 "Dear <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "</p><p>\n"
-"Here is, today orders for <t t-out=\"order.get('company_name', "
-"'')\">LunchCompany</t>:\n"
+"Here is, today orders for <t t-out=\"order.get('company_name', '')"
+"\">LunchCompany</t>:\n"
 "</p>\n"
 "\n"
 "<t t-if=\"sites\">\n"
@@ -208,13 +208,13 @@ msgstr ""
 "<t>\n"
 "<t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
 "<t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
-"<t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order."
-"get('currency_id'))\"/>\n"
+"<t t-set=\"currency\" t-"
+"value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "<p>\n"
 "Bonjour <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "</p><p>\n"
-"Voici les commandes du jour pour <t t-out=\"order.get('company_name', "
-"'')\">LunchCompany</t>:\n"
+"Voici les commandes du jour pour <t t-out=\"order.get('company_name', '')"
+"\">LunchCompany</t>:\n"
 "</p>\n"
 "\n"
 "<t t-if=\"sites\">\n"
@@ -328,7 +328,7 @@ msgstr "Activités"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité exception décoration"
+msgstr "Indicateur d’exception d’activité"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_plans_ids
@@ -385,7 +385,7 @@ msgstr "Alertes"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Already Paid"
-msgstr "Déjà payé"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__amount
@@ -590,7 +590,7 @@ msgstr "Ville"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Clear Order"
-msgstr "Effacer la commande"
+msgstr ""
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
@@ -1268,32 +1268,32 @@ msgid "Lunch: Supplier Order"
 msgstr "Déjeuner : Commande du fournisseur"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_236
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_237
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "Déjeuner : Alerte notification via Chat (Alerte pour le bureau 3)"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr "Déjeuner : Envoyer un e-mail automatique à Coin gourmand"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_232
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_233
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "Déjeuner : Envoyer un e-mail automatique au fournisseur de déjeuner"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr "Déjeuner : Envoyer un e-mail automatique à Pizza Inn"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_240
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_241
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr "Déjeuner : Envoyer un e-mail automatique à Sushi Shop"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_240
 msgid "Lunch: send automatic email to The Corner"
 msgstr "Déjeuner : Envoyer un e-mail automatique à The Corner"
 
@@ -1450,7 +1450,7 @@ msgstr "Pas encore de mouvements de trésorerie"
 #. odoo-javascript
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
 msgid "No location found"
-msgstr "Aucun emplacement trouvé"
+msgstr ""
 
 #. module: lunch
 #. odoo-javascript
@@ -1494,7 +1494,7 @@ msgstr "Rien à commander aujourd'hui"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Nothing to order, add some meals to begin."
-msgstr "Rien à commander, ajoutez des plats pour commencer."
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_time
@@ -1577,7 +1577,7 @@ msgstr "Échéance de commande dépassée"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Order Now"
-msgstr "Commander maintenant"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__automatic_email_time
@@ -1618,7 +1618,7 @@ msgstr "Découvert"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Passed orders"
-msgstr "Commandes passées"
+msgstr ""
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_pasta
@@ -1676,7 +1676,7 @@ msgstr "Pizza végétarienne"
 #. odoo-javascript
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
 msgid "Please create a location to start ordering."
-msgstr "Veuillez créer un emplacement pour pouvoir commander."
+msgstr ""
 
 #. module: lunch
 #: model_terms:lunch.alert,message:lunch.alert_office_3
@@ -1748,6 +1748,11 @@ msgstr "Recherche de produit"
 #: code:addons/lunch/models/lunch_order.py:0
 msgid "Product is no longer available."
 msgstr "Le produit n'est plus disponible."
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
+msgid "Product's Name"
+msgstr ""
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action
@@ -1931,9 +1936,9 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Statut basé sur les activités\n"
-"En retard : la date d'échéance est déjà dépassée\n"
+"En retard : l'échéance est déjà dépassée\n"
 "Aujourd'hui : la date d'activité est aujourd'hui\n"
-"Planifiée : activités futures"
+"Planifié : activités futures."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__street
@@ -2113,7 +2118,7 @@ msgstr "À commander"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "To Pay"
-msgstr "À payer"
+msgstr ""
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_payment_dialog
@@ -2321,7 +2326,7 @@ msgstr "Vous devez commander au moins un %s"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Your Cart ("
-msgstr "Votre panier ("
+msgstr ""
 
 #. module: lunch
 #. odoo-python
@@ -2403,3 +2408,9 @@ msgstr "le"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_kanban
 msgid "to"
 msgstr "au"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+msgid "x"
+msgstr ""

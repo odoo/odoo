@@ -37,6 +37,18 @@ class StockPicking(models.Model):
     def _search_delay_pass(self, operator, value):
         return [('purchase_id.date_order', operator, value)]
 
+    def _create_return(self):
+        picking = super()._create_return()
+        if len(picking.move_ids.partner_id) == 1 and picking.partner_id != picking.move_ids.partner_id:
+            picking.partner_id = picking.move_ids.partner_id
+        return picking
+
+    def _prepare_return_move_default_values(self, move_id):
+        vals = super()._prepare_return_move_default_values(move_id)
+        if self.location_id.usage == "supplier":
+            vals['purchase_line_id'], vals['partner_id'] = move_id._get_purchase_line_and_partner_from_chain()
+        return vals
+
     def _action_done(self):
         self.purchase_id.sudo().action_acknowledge()
         return super()._action_done()
@@ -69,7 +81,7 @@ class StockWarehouse(models.Model):
     def _compute_buy_to_resupply(self):
         for warehouse in self:
             buy_route = warehouse.buy_pull_id.route_id
-            warehouse.buy_to_resupply = bool(buy_route.product_selectable or buy_route.warehouse_ids.filtered(lambda w: w.id == warehouse.id))
+            warehouse.buy_to_resupply = warehouse.id in buy_route.warehouse_ids.ids or (buy_route.warehouse_selectable and not buy_route.warehouse_ids)
 
     def _inverse_buy_to_resupply(self):
         for warehouse in self:
@@ -77,6 +89,7 @@ class StockWarehouse(models.Model):
             if not buy_route:
                 buy_route = self.env['stock.rule'].search([
                     ('action', '=', 'buy'), ('warehouse_id', '=', warehouse.id)]).route_id
+            buy_route = buy_route.sudo()
             if warehouse.buy_to_resupply:
                 buy_route.warehouse_ids = [Command.link(warehouse.id)]
             else:
@@ -86,7 +99,7 @@ class StockWarehouse(models.Model):
         purchase_route = self._find_or_create_global_route('purchase_stock.route_warehouse0_buy', _('Buy'))
         for warehouse in self:
             if warehouse.buy_to_resupply:
-                purchase_route.warehouse_ids = [Command.link(warehouse.id)]
+                purchase_route.sudo().warehouse_ids = [Command.link(warehouse.id)]
         return super()._create_or_update_route()
 
     def _generate_global_route_rules_values(self):
@@ -135,22 +148,6 @@ class StockWarehouse(models.Model):
         if warehouse.buy_pull_id and name:
             warehouse.buy_pull_id.write({'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)})
         return res
-
-
-class StockReturnPicking(models.TransientModel):
-    _inherit = "stock.return.picking"
-
-    def _prepare_move_default_values(self, return_line, new_picking):
-        vals = super()._prepare_move_default_values(return_line, new_picking)
-        if self.location_id.usage == "supplier":
-            vals['purchase_line_id'], vals['partner_id'] = return_line.move_id._get_purchase_line_and_partner_from_chain()
-        return vals
-
-    def _create_return(self):
-        picking = super()._create_return()
-        if len(picking.move_ids.partner_id) == 1 and picking.partner_id != picking.move_ids.partner_id:
-            picking.partner_id = picking.move_ids.partner_id
-        return picking
 
 
 class StockWarehouseOrderpoint(models.Model):
@@ -215,7 +212,7 @@ class StockWarehouseOrderpoint(models.Model):
     def _inverse_supplier_id(self):
         for orderpoint in self:
             if not orderpoint.route_id and orderpoint.supplier_id:
-                orderpoint.route_id = self.env['stock.rule'].search([('action', '=', 'buy')])[0].route_id
+                orderpoint.route_id = orderpoint._get_default_route(force_action="buy")
 
     @api.depends('effective_route_id', 'supplier_id', 'rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_supplier_id_placeholder(self):
@@ -229,10 +226,14 @@ class StockWarehouseOrderpoint(models.Model):
             orderpoint.effective_vendor_id = (orderpoint.supplier_id if orderpoint.supplier_id else orderpoint._get_default_supplier()).partner_id
 
     def _search_effective_vendor_id(self, operator, value):
-        vendors = self.env['res.partner'].search([('id', operator, value)])
-        orderpoints = self.env['stock.warehouse.orderpoint'].search([]).filtered(
-            lambda orderpoint: orderpoint.effective_vendor_id in vendors
+        target_partners = self.env['res.partner'].search([('id', operator, value)])
+
+        orderpoints = self.env['stock.warehouse.orderpoint'].search([
+            ('vendor_ids.partner_id', 'in', target_partners.ids)
+        ]).filtered(
+            lambda op: op.effective_vendor_id in target_partners
         )
+
         return [('id', 'in', orderpoints.ids)]
 
     def _search_available_vendor(self, operator, value):
@@ -264,19 +265,21 @@ class StockWarehouseOrderpoint(models.Model):
 
         return result
 
-    def _get_default_route(self):
-        route_ids = self.env['stock.rule'].search([
-            ('action', '=', 'buy')
-        ]).route_id
-        route_id = self.rule_ids.route_id & route_ids
-        if self.product_id.seller_ids and route_id:
-            return route_id[0]
-        return super()._get_default_route()
+    def _get_default_route(self, force_action=False):
+        self.ensure_one()
+        if not force_action or force_action == 'buy':
+            if self.product_id.seller_ids:
+                route_id = self.rule_ids.filtered(lambda r: r.action == 'buy').route_id
+                if route_id:
+                    return route_id[0]
+            if force_action:
+                return self.env['stock.route']
+        return super()._get_default_route(force_action=force_action)
 
     def _get_default_supplier(self):
         self.ensure_one()
         if self.show_supplier and self.product_id:
-            return self._get_default_rule()._pick_supplier(
+            return self.env['stock.rule']._pick_supplier(
                 self.company_id, self.product_id, qty=self.qty_to_order, uom=self.uom_id
             )
         else:

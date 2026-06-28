@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
@@ -16,7 +15,7 @@ class Website(models.Model):
         return websites
 
     def get_suggested_controllers(self):
-        suggested_controllers = super(Website, self).get_suggested_controllers()
+        suggested_controllers = super().get_suggested_controllers()
         suggested_controllers.append((_('Forum'), self.env['ir.http']._url_for('/forum'), 'website_forum'))
         return suggested_controllers
 
@@ -33,11 +32,9 @@ class Website(models.Model):
 
     def _search_get_details(self, search_type, order, options):
         result = super()._search_get_details(search_type, order, options)
-        if search_type in ['forums', 'forums_only', 'all']:
-            result.append(self.env['forum.forum']._search_get_detail(self, order, options))
-        if search_type in ['forums', 'forum_posts_only', 'all']:
+        if search_type in ['forums', 'forum_post', 'all']:
             result.append(self.env['forum.post']._search_get_detail(self, order, options))
-        if search_type in ['forums', 'forum_tags_only', 'all']:
+        if search_type in ['forums', 'forum_tag']:
             result.append(self.env['forum.tag']._search_get_detail(self, order, options))
         return result
 

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-10 17:37+0000\n"
 "PO-Revision-Date: 2025-11-27 09:04+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
@@ -204,15 +204,6 @@ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data
-msgid ""
-"<i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/><span>Marc "
-"Demo</span> • <span>Mar 13, 2025</span> •"
-msgstr ""
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
 msgid "<small class=\"text-muted\">Mar 13, 2025</small>"
 msgstr ""
@@ -253,12 +244,17 @@ msgstr "<span class=\"nav-link disabled ps-0\">Blogs:</span>"
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_badge_preview_data
 msgid ""
 "<span class=\"o_cc o_cc1 d-inline-flex align-items-center justify-content-"
-"center gap-3 border rounded py-2 px-3 rounded-pill\">\n"
-"                    <span class=\"badge text-bg-primary\">NEW</span>\n"
-"                    <strong>Sierra Tarahumara</strong>\n"
-"                    <span class=\"text-muted\">Marc Demo in Travel</span>\n"
-"                    <span class=\"text-primary\">Read Now <i class=\"fa fa-"
-"long-arrow-right\" role=\"presentation\"/></span>\n"
+"center flex-wrap gap-3 my-3 border rounded py-2 rounded-pill\">\n"
+"                    <span class=\"d-flex align-items-center gap-2\">\n"
+"                        <span class=\"badge text-bg-primary\">NEW</span>\n"
+"                        <strong>Sierra Tarahumara</strong>\n"
+"                    </span>\n"
+"                    <span class=\"d-flex align-items-center gap-2\">\n"
+"                        <span class=\"text-muted\">Marc Demo in Travel</"
+"span>\n"
+"                        <span class=\"text-primary\">Read Now <i class=\"fa "
+"fa-long-arrow-right\" role=\"presentation\"/></span>\n"
+"                    </span>\n"
 "                </span>"
 msgstr ""
 
@@ -275,6 +271,53 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid ""
+"<span class=\"w-100 w-md-auto\"><i class=\"fa fa-user-circle-o me-2\" "
+"role=\"presentation\"/>Marc Demo</span>\n"
+"                    <span class=\"d-none d-sm-inline mx-sm-2\">•</span>\n"
+"                    <span class=\"text-muted\">Mar 13, 2025</span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data
+msgid ""
+"<span class=\"w-100 w-sm-auto\">\n"
+"                                <span><i class=\"fa fa-user-circle-o me-2\" "
+"role=\"presentation\"/> Marc Demo</span>\n"
+"                            </span>\n"
+"                            <span class=\"d-none d-sm-inline text-muted\">•</"
+"span>\n"
+"                            <span class=\"text-muted \">Mar 13, 2025 • </"
+"span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data
+msgid ""
+"<span class=\"w-100 w-sm-auto\">\n"
+"                        <span><i class=\"fa fa-user-circle-o me-2\"/> Marc "
+"Demo</span>\n"
+"                    </span>\n"
+"                    <span class=\"d-none d-sm-inline text-muted\">•</span>\n"
+"                    <span class=\"text-muted\">Mar 13, 2025</span>\n"
+"                    <span class=\"text-muted mx-2\">•</span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data
+msgid ""
+"<span class=\"w-100 w-sm-auto\">\n"
+"                    <span><i class=\"fa fa-user-circle-o me-2\" "
+"role=\"presentation\"/> Marc Demo</span>\n"
+"                </span>\n"
+"                <span class=\"d-none d-sm-inline text-muted mx-sm-2\">•</"
+"span>\n"
+"                <span class=\"text-muted\">Mar 13, 2025</span>\n"
+"                <span class=\"text-muted mx-2\">•</span>"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:web_tour.tour,rainbow_man_message:website_blog.blog
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
@@ -287,14 +330,6 @@ msgstr ""
 msgid ""
 "<span><i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/> Marc "
 "Demo</span>"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
-msgid ""
-"<span><i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/>Marc "
-"Demo</span>\n"
-"                    <span class=\"text-muted\"> • Mar 13, 2025</span>"
 msgstr ""
 
 #. module: website_blog
@@ -385,12 +420,6 @@ msgstr "Todos"
 #: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 #: model_terms:ir.ui.view,arch_db:website_blog.post_breadcrumbs
 msgid "All Blogs"
-msgstr "Todos los blogs"
-
-#. module: website_blog
-#. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
-msgid "All blogs"
 msgstr "Todos los blogs"
 
 #. module: website_blog
@@ -530,6 +559,12 @@ msgid "Author Name"
 msgstr "Nombre del autor"
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+msgid "Authors"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__publish_on
 msgid "Auto publish on"
 msgstr ""
@@ -616,10 +651,8 @@ msgid "Beyond The Eye"
 msgstr "Más allá del ojo"
 
 #. module: website_blog
-#. odoo-javascript
 #. odoo-python
 #: code:addons/website_blog/models/website.py:0
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model,name:website_blog.model_blog_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__blog_id
 #: model:ir.ui.menu,name:website_blog.menu_website_blog_root_global
@@ -633,6 +666,12 @@ msgid "Blog"
 msgstr "Blog"
 
 #. module: website_blog
+#. odoo-python
+#: code:addons/website_blog/models/website_blog.py:0
+msgid "Blog Articles"
+msgstr ""
+
+#. module: website_blog
 #: model:res.groups,name:website_blog.group_website_blog_manager
 msgid "Blog Manager"
 msgstr ""
@@ -644,7 +683,7 @@ msgstr "Nombre del blog"
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_page_option_plugin.js:0
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 msgid "Blog Page"
 msgstr "Página del blog"
 
@@ -678,6 +717,8 @@ msgstr "Título de la publicación del blog"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_ids
+#: model:ir.model.fields,field_description:website_blog.field_res_partner__blog_post_ids
+#: model:ir.model.fields,field_description:website_blog.field_res_users__blog_post_ids
 #: model:ir.ui.menu,name:website_blog.menu_blog_post_pages
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Blog Posts"
@@ -725,6 +766,7 @@ msgstr "Título del blog"
 #. odoo-python
 #: code:addons/website_blog/controllers/main.py:0
 #: code:addons/website_blog/static/src/website_builder/blog_searchbar_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.actions.act_window,name:website_blog.action_blog_blog
 #: model:ir.ui.menu,name:website_blog.menu_blog_global
 #: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
@@ -741,7 +783,7 @@ msgstr "Lista de blogs"
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_post_page_option_plugin.js:0
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Blogs Page"
 msgstr "Página de blogs"
 
@@ -888,6 +930,11 @@ msgid "Comments/Views Stats"
 msgstr "Estadísticas de comentarios/vistas"
 
 #. module: website_blog
+#: model:ir.model,name:website_blog.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__content
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__content
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -931,6 +978,11 @@ msgid "Cover Properties"
 msgstr "Propiedades de la portada"
 
 #. module: website_blog
+#: model:ir.model,website_form_label:website_blog.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__create_uid
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__create_uid
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__create_uid
@@ -966,12 +1018,6 @@ msgstr "Fecha (de más antiguos a más recientes)"
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_searchbar_option_plugin.js:0
-msgid "Description"
-msgstr "Descripción"
-
-#. module: website_blog
-#. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Dexter"
 msgstr "Dexter"
@@ -981,10 +1027,16 @@ msgstr "Dexter"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
+#: model:ir.model.fields,field_description:website_blog.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_blog.field_website__display_name
 #: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__display_name
 msgid "Display Name"
 msgstr "Nombre para mostrar"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.index
+msgid "Drag blocks here to add them on all blogs"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
@@ -1228,6 +1280,7 @@ msgstr "Cómo elegir el hotel adecuado"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__id
+#: model:ir.model.fields,field_description:website_blog.field_res_partner__id
 #: model:ir.model.fields,field_description:website_blog.field_website__id
 #: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__id
 msgid "ID"
@@ -1898,12 +1951,6 @@ msgid "Promote a post"
 msgstr ""
 
 #. module: website_blog
-#. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_searchbar_option_plugin.js:0
-msgid "Publication Date"
-msgstr "Fecha de publicación"
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Publish on"
 msgstr ""
@@ -1958,6 +2005,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_single_full
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data
 msgid "Read Now <i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data
+msgid "Read Now <i class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
 
 #. module: website_blog
@@ -2110,6 +2162,11 @@ msgstr ""
 "Varios pájaros migratorios y nativos, mamíferos y reptiles llaman a las "
 "Barrancas del Cobre su hogar. También vale la pena echarle un vistazo a la "
 "exquisita fauna de esta tierra casi virgen."
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
+msgid "Share"
+msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
@@ -2285,6 +2342,11 @@ msgstr ""
 "un hotel."
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
+msgid "Social Media"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_1
 #: model_terms:blog.post,content:website_blog.blog_post_3
 #: model_terms:blog.post,content:website_blog.blog_post_4
@@ -2365,6 +2427,7 @@ msgstr "¡El nombre de la etiqueta ya existe!"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/blog_post_tags_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__tag_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__tag_ids
 #: model:ir.ui.menu,name:website_blog.menu_blog_tag_global
@@ -2795,19 +2858,9 @@ msgid "Views"
 msgstr "Vistas"
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.index
-msgid "Visible in all blogs' pages"
-msgstr "Visible en todas las páginas de los blogs"
-
-#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_published
 msgid "Visible on current website"
 msgstr "Visible en el sitio web actual"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
-msgid "WRITE HERE OR DRAG BUILDING BLOCKS"
-msgstr "ESCRIBA AQUÍ O ARRASTRE BLOQUES DE CREACIÓN"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website
@@ -3021,3 +3074,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info
 msgid "| No comments yet"
 msgstr "| Sin comentarios aún"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid "• Astronomy"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid "• Travel"
+msgstr ""

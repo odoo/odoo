@@ -164,9 +164,7 @@ function selectAndSetCustomAttribute(
 function assertPriceTotal(total) {
     return {
         content: `Assert that the total is ${total}`,
-        trigger: `
-            .o_sale_product_configurator_dialog .o_configurator_price_total:contains("${total}"),
-        `,
+        trigger: `.o_sale_product_configurator_dialog .o_configurator_price_total:contains("${total}")`,
     };
 }
 

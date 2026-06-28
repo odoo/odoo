@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
+
 from odoo import api, fields, models
 from odoo.fields import Domain
 
@@ -31,19 +33,28 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
     name = fields.Char("Description", compute="_compute_name", store=True, readonly=False)
     duration = fields.Float(string="Allocation")
     work_entry_type_id = fields.Many2one(
-        "hr.work.entry.type", string="Time Off Type", required=True,
+        "hr.work.entry.type", string="Time Type", required=True,
         domain=_domain_work_entry_type_id)
+    allowed_work_entry_type_ids = fields.Many2many(
+        'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
     unit_of_measure = fields.Selection(related="work_entry_type_id.unit_of_measure")
     employee_ids = fields.Many2many('hr.employee', string='Employees', domain=lambda self: self._get_employee_domain())
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
-    allocation_type = fields.Selection([
-        ('regular', 'Regular Allocation'),
-        ('accrual', 'Based on Accrual Plan')
-    ], string="Allocation Type", default="regular", required=True)
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan')
     date_from = fields.Date('Start Date', default=fields.Date.context_today, required=True)
     date_to = fields.Date('End Date')
     notes = fields.Text('Reasons')
+
+    @api.depends('company_id')
+    def _compute_allowed_work_entry_type_ids(self):
+        for wizard in self:
+            country = wizard.company_id.country_id or self.env.company.country_id
+            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
+                domain = [('country_id', '=', False)]
+            else:
+                domain = [('country_id', '=', country.id)]
+            domain = Domain.AND([wizard._domain_work_entry_type_id(), domain])
+            wizard.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
 
     @api.depends('work_entry_type_id', 'duration')
     def _compute_name(self):
@@ -73,7 +84,6 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
             'number_of_days': self.duration if self.unit_of_measure != "hour" else self.duration / hours_per_day[employee.id],
             'employee_id': employee.id,
             'state': 'confirm',
-            'allocation_type': self.allocation_type,
             'date_from': self.date_from,
             'date_to': self.date_to,
             'accrual_plan_id': self.accrual_plan_id.id,
@@ -89,6 +99,13 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
                 mail_notify_force_send=False,
                 mail_activity_automation_skip=True,
             ).create(vals_list)
+            accrual_allocations = allocations.filtered('accrual_plan_id')
+            if not self.duration:
+                for date_to, allocation in accrual_allocations.grouped('date_to').items():
+                    date_to = min(date_to, date.today()) if date_to else False
+                    update_vals = allocation._get_initialize_accrual_plan_values(self.date_from)
+                    allocation.update(update_vals)
+                    allocation._process_accrual_plans(date_to)
             allocations.filtered(lambda c: c.validation_type not in ('no_validation', 'hr')).action_approve()
             if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
                 allocations.filtered(lambda c: c.validation_type == 'hr').action_approve()

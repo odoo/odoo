@@ -2,14 +2,14 @@ import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { Navbar } from "@point_of_sale/app/components/navbar/navbar";
 import { usePos, usePosRouter } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, useEffect } from "@odoo/owl";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { CustomerDisplayPosAdapter } from "@point_of_sale/app/customer_display/customer_display_adapter";
 import { useIdleTimer } from "./utils/use_idle_timer";
 import useTours from "./hooks/use_tours";
 import { init as initDebugFormatters } from "./utils/debug-formatter";
-import { effect } from "@web/core/utils/reactive";
 import { debounce } from "@web/core/utils/timing";
+import { getColorScheme } from "@point_of_sale/utils";
 /**
  * Chrome is the root component of the PoS App.
  */
@@ -48,27 +48,29 @@ export class Chrome extends Component {
         }
 
         onMounted(this.props.disableLoader);
-        effect(
-            debounce((pos, routerState) => {
-                this.sendOrderToCustomerDisplay(pos, routerState);
-            }),
-            [this.pos, this.router.state]
-        );
+
+        this.adapter = new CustomerDisplayPosAdapter();
+        this.dispatchDebounced = debounce(() => this.adapter.dispatch(this.pos));
+
+        useEffect(() => {
+            this.sendOrderToCustomerDisplay(this.pos, this.router.state);
+        });
     }
 
     sendOrderToCustomerDisplay({ selectedOrder }, routerState) {
-        const adapter = new CustomerDisplayPosAdapter();
         if (routerState.current === "SaverScreen" || routerState.current === "LoginScreen") {
-            adapter.displayScreenSaver();
+            this.adapter.displayScreenSaver();
         } else if (selectedOrder) {
-            adapter.formatOrderData(selectedOrder);
+            this.adapter.formatOrderData(selectedOrder);
         }
-        adapter.setExtraData(this.getCustomerDisplayExtraData(...arguments));
-        adapter.dispatch(this.pos);
+        this.adapter.setExtraData(this.getCustomerDisplayExtraData(...arguments));
+        this.dispatchDebounced();
     }
 
     getCustomerDisplayExtraData(pos, routerState) {
-        return {};
+        return {
+            displayTheme: getColorScheme(),
+        };
     }
 
     // GETTERS //

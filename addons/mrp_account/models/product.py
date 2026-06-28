@@ -98,6 +98,19 @@ class ProductProduct(models.Model):
             return bom.uom_id._compute_price(total / bom.product_qty, self.uom_id)
         return 0.0
 
+    def _compute_value(self):
+        """
+        Exclude kit products from inventory valuation to avoid double counting.
+        Only non-kit products are valuated; kits are set to zero value.
+        """
+        non_kit_products = self.filtered(lambda product: not product.is_kits)
+        super(ProductProduct, non_kit_products)._compute_value()
+        kit_products = self - non_kit_products
+        for kit_product in kit_products:
+            kit_product.company_currency_id = kit_product.company_id.currency_id or self.env.company.currency_id
+            kit_product.total_value = 0.0
+            kit_product.avg_cost = 0.0
+
 
 class ProductCategory(models.Model):
     _inherit = 'product.category'

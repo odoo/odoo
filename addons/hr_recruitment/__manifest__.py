@@ -17,7 +17,6 @@
     ],
     'data': [
         'security/hr_recruitment_security.xml',
-        'security/ir.model.access.csv',
         'data/digest_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
@@ -40,15 +39,19 @@
         'views/mail_activity_plan_views.xml',
         'views/digest_views.xml',
         'wizard/applicant_refuse_reason_views.xml',
-        'wizard/applicant_send_mail_views.xml',
         'wizard/talent_pool_add_applicants_views.xml',
         'wizard/job_add_applicants_views.xml',
         'views/menuitems.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/hr_recruitment_demo.xml',
     ],
+    'other_files': [
+        'data/scenarios/hr_recruitment_scenario.xml',
+    ],
     'application': True,
+    "uninstall_hook": "uninstall_hook",
     'assets': {
         'web.assets_backend': [
             'hr_recruitment/static/src/**/*.js',

@@ -1,13 +1,26 @@
 import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
 import { addBuilderOption } from "@html_builder/../tests/helpers";
 import { Plugin } from "@html_editor/plugin";
-import { expect, test } from "@odoo/hoot";
+import { t } from "@odoo/owl";
+import {
+    advanceTime,
+    click,
+    edit,
+    expect,
+    mockFetch,
+    queryAttribute,
+    test,
+    waitForNone,
+} from "@odoo/hoot";
 import { animationFrame, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
+import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
 import {
     addPlugin,
     defineWebsiteModels,
     setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
+    toggleMobilePreview,
 } from "@website/../tests/builder/website_helpers";
 import { patchDragImage } from "@website/../tests/builder/image_test_helpers";
 
@@ -24,18 +37,12 @@ test("change the background shape of elements", async () => {
         selector: ".selector",
         applyTo: ".applyTo",
         Component: class TestBackgroundOption extends BackgroundOption {
-            static props = {
-                ...BackgroundOption.props,
-                withColors: { type: Boolean, optional: true },
-                withImages: { type: Boolean, optional: true },
-                withColorCombinations: { type: Boolean, optional: true },
-            };
-            static defaultProps = {
-                withColors: true,
-                withImages: true,
+            static propShape = {
+                withColors: t.boolean().optional(true),
+                withImages: t.boolean().optional(true),
                 // todo: handle with_videos
-                withShapes: true,
-                withColorCombinations: false,
+                withShapes: t.boolean().optional(true),
+                withColorCombinations: t.boolean().optional(false),
             };
         },
     });
@@ -185,7 +192,7 @@ test("Background position overlay layout", async () => {
     };
 
     await testLayout(false);
-    await contains("button[data-action=mobile]").click();
+    await toggleMobilePreview();
     await testLayout(true);
 });
 
@@ -292,6 +299,35 @@ test("Background position overlay behavior", async () => {
                 "Background Y position should be dragged correctly with Scroll Effect set to Fixed ",
         }
     );
+});
+
+test("Color filter doesn't disappear when video background is set", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <section class="color-target o_background_video" data-snippet="s_banner" data-name="Banner" data-bg-video-src="/test_route">
+            <div class="o_bg_video_container" contenteditable="false">
+                <div class="o_bg_video_loading d-flex justify-content-center align-items-center text-primary"></div>
+            </div>
+            <div>First section</div>
+            <div class="o_we_bg_filter" style="background-color: rgba(100, 100, 100, 0.5);" />
+        </section>
+        <section class="gradient-target o_background_video" data-snippet="s_banner" data-name="Banner" data-bg-video-src="/test_route">
+            <div class="o_bg_video_container" contenteditable="false">
+                <div class="o_bg_video_loading d-flex justify-content-center align-items-center text-primary"></div>
+            </div>
+            <div>Second section</div>
+            <div class="o_we_bg_filter" style="background-image: linear-gradient(135deg, rgba(255, 204, 51, 0.5) 0%, rgba(226, 51, 255, 0.5) 100%)" />
+        </section>`);
+    expect(":iframe .o_we_bg_filter").toHaveCount(2);
+
+    await contains(":iframe .color-target").click();
+    await waitSidebarUpdated();
+    expect(":iframe .color-target .o_we_bg_filter").toHaveCount(1);
+    expect(":iframe .gradient-target .o_we_bg_filter").toHaveCount(1);
+
+    await contains(":iframe .gradient-target").click();
+    await waitSidebarUpdated();
+    expect(":iframe .color-target .o_we_bg_filter").toHaveCount(1);
+    expect(":iframe .gradient-target .o_we_bg_filter").toHaveCount(1);
 });
 
 async function openBgPositionOverlay(editingElement, waitSidebarUpdated) {
@@ -409,6 +445,18 @@ test("remove background image removes color filter", async () => {
         </section>`);
     await contains(":iframe section").click();
     expect(":iframe section .o_we_bg_filter").toHaveCount();
+    await contains("[data-action-id='toggleBgImage']").click();
+    expect(":iframe section .o_we_bg_filter").not.toHaveCount();
+});
+
+test("remove background image removes gradient color filter", async () => {
+    await setupWebsiteBuilder(`
+        <section style="background-image: url('/web/image/123/transparent.png');">
+            <div class="o_we_bg_filter"
+                style="background-image: linear-gradient(135deg, red, blue);"></div>
+            AAAA
+        </section>`);
+    await contains(":iframe section").click();
     await contains("[data-action-id='toggleBgImage']").click();
     expect(":iframe section .o_we_bg_filter").not.toHaveCount();
 });
@@ -687,3 +735,37 @@ test("Change the background position when multiple background layer is applied",
     expect(section).toHaveStyle("background-size: 100px, cover");
     expect("[data-action-value='repeat-pattern']").toHaveClass("active");
 });
+
+for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
+    if ("hideControls" in platformClass.optionsConfig) {
+        test(`background video applies hideControls & hideFullscreen options to video selector ${platform}`, async () => {
+            await setupWebsiteBuilderWithSnippet("s_cover");
+            const videoUrl = platformClass.exampleUrls.base;
+
+            mockFetch(() => '{"data": "mockFetch api result data"}');
+
+            await contains(":iframe .s_cover").click();
+            await contains('[data-container-title="Cover"]').click();
+            await contains('[data-action-id="toggleBgVideo"]').click();
+
+            await click("#o_video_text");
+            await edit(videoUrl);
+
+            await advanceTime(100);
+
+            await contains("div.modal .modal-footer button.btn-primary").click();
+            await waitForNone(`div.modal`);
+
+            const videoSrc = queryAttribute(":iframe .o_background_video", "data-bg-video-src");
+            for (const paramName of platformClass.optionsConfig.hideControls.params) {
+                expect(videoSrc).toMatch(`${paramName}=0`);
+            }
+
+            if (platformClass.optionsConfig.hideControls?.linkedParams?.length) {
+                for (const paramName of platformClass.optionsConfig.hideControls.linkedParams) {
+                    expect(videoSrc).toMatch(`${paramName}=0`);
+                }
+            }
+        });
+    }
+}

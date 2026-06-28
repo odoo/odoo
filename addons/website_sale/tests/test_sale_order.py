@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
@@ -44,3 +45,9 @@ class TestSaleOrder(WebsiteSaleCommon):
         invoice = self.cart._create_invoices()
         self.assertTrue(self.cart.website_id)
         self.assertEqual(self.cart.website_id, invoice.website_id)
+
+    def test_change_company_on_sale_order(self):
+        company = self.env["res.company"].create({"name": "Test Company"})
+        self.cart.action_confirm()
+        with self.assertRaises(UserError):
+            self.cart.write({"company_id": company.id})

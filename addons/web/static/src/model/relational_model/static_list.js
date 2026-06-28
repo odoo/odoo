@@ -1,11 +1,11 @@
-import { x2ManyCommands } from "@web/core/orm_service";
+import { markRaw } from "@odoo/owl";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 import { intersection } from "@web/core/utils/arrays";
 import { omit, pick } from "@web/core/utils/objects";
 import { completeActiveFields } from "@web/model/relational_model/utils";
 import { DataPoint } from "./datapoint";
 import { fromUnityToServerValues, getBasicEvalContext, getId, patchActiveFields } from "./utils";
-
-import { markRaw } from "@odoo/owl";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 /**
  * @typedef {import("./record").Record} RelationalRecord
@@ -87,7 +87,6 @@ export class StaticList extends DataPoint {
     setup(_config, data, options = {}) {
         this._parent = options.parent;
         this._onUpdate = options.onUpdate;
-
         this._cache = markRaw({});
         this._commands = [];
         this._initialCommands = [];
@@ -103,14 +102,15 @@ export class StaticList extends DataPoint {
         // config to add the form view's fields in activeFields.
         this._extendedRecords = new Set();
 
-        /** @type {RelationalRecord[]} */
-        this.records = data
-            .slice(this.offset, this.limit)
-            .map((r) => this._createRecordDatapoint(r));
         this.count = this.resIds.length;
         this.handleField = Object.keys(this.activeFields).find(
             (fieldName) => this.activeFields[fieldName].isHandle
         );
+
+        /** @type {RelationalRecord[]} */
+        this.records = data
+            .slice(this.offset, this.limit)
+            .map((r) => this._createRecordDatapoint(r));
     }
 
     // -------------------------------------------------------------------------
@@ -296,6 +296,7 @@ export class StaticList extends DataPoint {
                     ...record.config,
                     ...params,
                     activeFields,
+                    fields: this.fields,
                 };
 
                 // case 1: the record already exists
@@ -600,6 +601,7 @@ export class StaticList extends DataPoint {
         // the end, we filter once this.records and this._currentIds to remove them.
         let removedIds = {};
         let recordsToLoad = [];
+        const currentIdsSet = new Set(this._currentIds);
         let nextRecords = [...this.records];
         let nextCurrentIds = [...this.currentIds];
         const initialTmpIncreaseLimit = this._tmpIncreaseLimit;
@@ -700,7 +702,7 @@ export class StaticList extends DataPoint {
                     } else {
                         record = this._createRecordDatapoint({ ...command[2], id: command[1] });
                     }
-                    if (nextCurrentIds.includes(record.resId) && !removedIds[record.resId]) {
+                    if (currentIdsSet.has(record.resId) && !removedIds[record.resId]) {
                         break;
                     }
                     if (!this.limit || nextRecords.length < this.limit || canAddOverLimit) {
@@ -713,6 +715,7 @@ export class StaticList extends DataPoint {
                         }
                     }
                     nextCurrentIds.push(record.resId);
+                    currentIdsSet.add(record.resId);
                     addOwnCommand([command[0], command[1]]);
                     break;
                 }
@@ -789,7 +792,19 @@ export class StaticList extends DataPoint {
         // Load records and apply changes on the loaded records
         const resIds = recordsToLoad.map((r) => r.resId);
         if (resIds.length) {
-            const recordValues = await this.model._loadRecords({ ...this.config, resIds });
+            let recordValues;
+            try {
+                recordValues = await this.model._loadRecords({ ...this.config, resIds });
+            } catch (e) {
+                if (e instanceof ConnectionLostError) {
+                    recordValues = await this.model.offline.readMany2XRecords(
+                        this.resModel,
+                        resIds
+                    );
+                } else {
+                    throw e;
+                }
+            }
             const proms = [];
             for (let i = 0; i < recordsToLoad.length; i++) {
                 const record = recordsToLoad[i];

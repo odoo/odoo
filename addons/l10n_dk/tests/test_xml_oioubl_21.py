@@ -31,11 +31,12 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         })
 
         cls.company_data['company'].partner_id.update({
-            'peppol_endpoint': False,
+            'routing_identifier': False,
         })
 
         cls.partner_a.write({
             'name': 'SUPER DANISH PARTNER',
+            'is_company': True,
             'city': 'Aalborg',
             'zip': '9430',
             'vat': 'DK12345674',
@@ -66,7 +67,7 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.fr').id,
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
-            'company_registry': '123 568 941 00056',
+            'additional_identifiers': {'FR_SIRET': '40678483500521'},
             'invoice_edi_format': 'oioubl_21',
             'nemhandel_identifier_type': '0088',
             'nemhandel_identifier_value': '5798009811639',
@@ -119,10 +120,13 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
 
     @classmethod
     def _send_patched(cls, invoice):
-        with patch('odoo.addons.l10n_dk.models.res_partner.ResPartner._get_nemhandel_verification_state', return_value='not_valid'):
-            wizard = cls.env['account.move.send.wizard'] \
+
+        wizard = cls.env['account.move.send.wizard'] \
                 .with_context(active_model=invoice._name, active_ids=invoice.ids) \
                 .create({})
+
+        with patch('odoo.addons.l10n_dk.models.res_partner.ResPartner._get_nemhandel_verification_state', return_value='valid'), \
+             patch.object(cls.env.registry['account_edi_proxy_client.user'], '_call_nemhandel_proxy', return_value={}):
             wizard.action_send_and_print()
 
     @classmethod
@@ -159,8 +163,8 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
 
     @freeze_time('2017-01-01')
     def test_export_invoice_foreign_partner_be(self):
-        # Set peppol endpoint to have schemeID of 'GLN'
-        self.company_data['company'].partner_id.peppol_endpoint = '0239843188'
+        # Set routing endpoint to have schemeID of 'GLN' (ISO 6523 ICD 0088)
+        self.company_data['company'].partner_id.routing_identifier = '0088:5798009811639'
         invoice = self.create_post_and_send_invoice(partner=self.partner_b)
         self.assertTrue(invoice.ubl_cii_xml_id)
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_foreign_partner_be.xml")
@@ -195,6 +199,19 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         invoice = self.create_post_and_send_invoice()
         self.assertTrue(invoice.ubl_cii_xml_id)
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_partner_dk.xml")
+
+    @freeze_time('2017-01-01')
+    def test_oioubl_export_with_partner_child(self):
+        """ This test verifies that when creating a OIOUBL file for a individual partner,
+            linked to a company partner, that we use the GLN from the company partner.
+        """
+        individual_partner = self.env['res.partner'].create({
+                'name': 'Jean-Michel',
+                'parent_id': self.partner_b.id,
+        })
+        invoice = self.create_post_and_send_invoice(partner=individual_partner)
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_child_partner.xml")
 
     @freeze_time('2017-01-01')
     def test_oioubl_export_import_with_discount(self):
@@ -237,9 +254,9 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
 
     @freeze_time('2017-01-01')
     def test_export_partner_fr_without_siret_should_raise_an_error(self):
-        self.partner_c.company_registry = False
+        self.partner_c.additional_identifiers = False
         self.partner_c.invoice_edi_format = 'oioubl_21'
-        with self.assertRaisesRegex(UserError, "The company registry is required for french partner:"):
+        with self.assertRaisesRegex(UserError, "A SIRET is required for the french partner:"):
             self.create_post_and_send_invoice(partner=self.partner_c)
 
     @freeze_time('2017-01-01')
@@ -250,6 +267,7 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         """
         self.partner_b.vat = None
         self.partner_b.invoice_edi_format = 'oioubl_21'  # default format recomputes when vat is changed
-        with self.assertRaises(UserError) as exception:
-            self.create_post_and_send_invoice(partner=self.partner_b)
-        self.assertIn(f"The field '{self.partner_b._fields['vat'].string}' is required", exception.exception.args[0])
+        invoice = self.create_post_and_send_invoice(partner=self.partner_b)
+        self.assertFalse(invoice.ubl_cii_xml_id)
+        self.assertEqual(len(invoice.attachment_ids), 1)
+        self.assertEqual(invoice.attachment_ids[0].res_name, 'INV/2017/00001 (ref_move)')

@@ -14,7 +14,7 @@
                     </span>
                 </t>
                 <t t-elif="this.props.record.data.resource_type === 'user'">
-                    <AvatarResource cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id"/>
+                    <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id"/>
                 </t>
             </t>
             <Many2One t-props="this.m2oProps" cssClass="'w-100'">
@@ -28,7 +28,7 @@
                         <t t-elif="autoCompleteItemScope.record.resource_type === 'user'">
                             <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.record.id}}/avatar_128"/>
                         </t>
-                        <span t-out="autoCompleteItemScope.label"/>
+                        <span class="text-truncate" t-out="autoCompleteItemScope.label"/>
                     </span>
                 </t>
             </Many2One>

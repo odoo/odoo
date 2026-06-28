@@ -1,8 +1,8 @@
-import { useExternalListener, useLayoutEffect, useState } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { useAutofocus } from "../utils/hooks";
 import { clamp } from "../utils/numbers";
 
-import { Component, EventBus } from "@odoo/owl";
+import { Component, EventBus, props, proxy, t, useListener } from "@odoo/owl";
 
 export const PAGER_UPDATED_EVENT = "PAGER:UPDATED";
 export const pagerBus = new EventBus();
@@ -22,27 +22,23 @@ export const pagerBus = new EventBus();
  */
 export class Pager extends Component {
     static template = "web.Pager";
-    static defaultProps = {
-        isEditable: true,
-        withAccessKey: true,
-    };
-    static props = {
-        offset: Number,
-        limit: Number,
-        total: Number,
-        onUpdate: Function,
-        isEditable: { type: Boolean, optional: true },
-        withAccessKey: { type: Boolean, optional: true },
-        updateTotal: { type: Function, optional: true },
-    };
+    props = props({
+        offset: t.number(),
+        limit: t.number(),
+        total: t.number(),
+        onUpdate: t.function(),
+        isEditable: t.boolean().optional(true),
+        withAccessKey: t.boolean().optional(true),
+        updateTotal: t.function().optional(),
+    });
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             isEditing: false,
             isDisabled: false,
         });
         this.inputRef = useAutofocus();
-        useExternalListener(document, "mousedown", this.onClickAway, { capture: true });
+        useListener(document, "mousedown", this.onClickAway.bind(this), { capture: true });
         let firstMount = true;
         useLayoutEffect(
             () => {

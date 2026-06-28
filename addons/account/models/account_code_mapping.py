@@ -20,9 +20,7 @@ class AccountCodeMapping(models.Model):
         comodel_name='account.account',
         string="Account",
         compute='_compute_account_id',
-        # suppress warning about field not being searchable (due to being used in depends);
-        # searching is actually implemented in the `_search` override.
-        search=True,
+        search='_search_account_id',
     )
     company_id = fields.Many2one(
         comodel_name='res.company',
@@ -45,6 +43,11 @@ class AccountCodeMapping(models.Model):
         for mapping, vals in zip(mappings, vals_list):
             mapping.code = vals['code']
         return mappings
+
+    def _search_account_id(self, operator, value):
+        # suppress warning about field not being searchable (due to being used in depends);
+        # searching is actually implemented in the `_search` override.
+        return NotImplemented
 
     def _search(self, domain, offset=0, limit=None, order=None, **kw) -> Query:
         account_ids = []

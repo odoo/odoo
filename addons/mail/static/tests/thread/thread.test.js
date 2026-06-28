@@ -14,19 +14,12 @@ import {
     triggerEvents,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { Store } from "@mail/../tests/mock_server/store";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { press, queryFirst, queryValue } from "@odoo/hoot-dom";
+import { press, queryFirst } from "@odoo/hoot-dom";
 import { mockDate, tick } from "@odoo/hoot-mock";
-import {
-    Command,
-    getService,
-    makeKwArgs,
-    onRpc,
-    serverState,
-    withUser,
-} from "@web/../tests/web_test_helpers";
+import { Command, getService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 import { range } from "@web/core/utils/numbers";
@@ -245,30 +238,6 @@ test("thread is still scrolling after scrolling up then to bottom", async () => 
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
-test("mention a channel with space in the name", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General good boy" });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#General good boy " });
-    await press("Enter");
-    await contains(".o-mail-Message-body .o_channel_redirect:text('General good boy')");
-});
-
-test('mention a channel with "&" in the name', async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General & good" });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#General & good " });
-    await press("Enter");
-    await contains(".o-mail-Message-body .o_channel_redirect:text('General & good')");
-});
-
 test("should scroll to bottom on receiving new message if the list is initially scrolled to bottom (asc order)", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
@@ -425,63 +394,6 @@ test("mention 2 different partners that have the same name", async () => {
     );
 });
 
-test("mention a channel on a second line when the first line contains #", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General good" });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "#blabla\n#");
-    await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#blabla\n#General good " });
-    await press("Enter");
-    await contains(".o-mail-Message-body .o_channel_redirect:text('General good')");
-});
-
-test("mention a channel when replacing the space after the mention by another char", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General good" });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#General good " });
-    const text = queryValue(".o-mail-Composer-input:first");
-    queryFirst(".o-mail-Composer-input").value = text.slice(0, -1);
-    await insertText(".o-mail-Composer-input", ", test");
-    await press("Enter");
-    await contains(".o-mail-Message-body .o_channel_redirect:text('General good')");
-});
-
-test("mention 2 different channels that have the same name", async () => {
-    const pyEnv = await startServer();
-    const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
-        {
-            channel_type: "channel",
-            group_public_id: false,
-            name: "my channel",
-        },
-        {
-            channel_type: "channel",
-            name: "my channel",
-        },
-    ]);
-    await start();
-    await openDiscuss(channelId_1);
-    await insertText(".o-mail-Composer-input", "#m");
-    await click(":nth-child(1 of .o-mail-Composer-suggestion)");
-    await contains(".o-mail-Composer-input", { value: "#my channel " });
-    await insertText(".o-mail-Composer-input", "#m");
-    await click(":nth-child(2 of .o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#my channel #my channel " });
-    await press("Enter");
-    await contains(
-        `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_1}"][data-oe-model="discuss.channel"]:text("my channel")`
-    );
-    await contains(
-        `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_2}"][data-oe-model="discuss.channel"]:text("my channel")`
-    );
-});
-
 test("Post a message containing an email address followed by a mention on another line", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
@@ -529,7 +441,7 @@ test("basic rendering of canceled notification", async () => {
     await click(".o-mail-Message-notification");
     await contains(".o-mail-MessageNotificationPopover");
     await contains(".o-mail-MessageNotificationPopover .fa-trash-o");
-    await contains(".o-mail-MessageNotificationPopover:text('Someone (test@test.be)')");
+    await contains(".o-mail-MessageNotificationPopover:text('ToSomeone(test@test.be)')");
 });
 
 test("first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused", async () => {
@@ -692,10 +604,11 @@ test("[text composer] Opening thread with needaction messages should mark all me
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
         message_id: messageId,
-        store_data: new mailDataHelpers.Store(
-            pyEnv["mail.message"].browse(messageId),
-            makeKwArgs({ for_current_user: true, inbox_fields: true })
-        ).get_result(),
+        store_data: new Store()
+            .add(pyEnv["mail.message"].browse(messageId), "_store_message_fields", {
+                fields_params: { inbox_fields: true },
+            })
+            .as_dict(),
     });
     await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });
     await click("button:has(:text('General'))");
@@ -749,10 +662,11 @@ test("Opening thread with needaction messages should mark all messages of thread
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
         message_id: messageId,
-        store_data: new mailDataHelpers.Store(
-            pyEnv["mail.message"].browse(messageId),
-            makeKwArgs({ for_current_user: true, inbox_fields: true })
-        ).get_result(),
+        store_data: new Store()
+            .add(pyEnv["mail.message"].browse(messageId), "_store_message_fields", {
+                fields_params: { inbox_fields: true },
+            })
+            .as_dict(),
     });
     await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });
     await click("button:has(:text('General'))");

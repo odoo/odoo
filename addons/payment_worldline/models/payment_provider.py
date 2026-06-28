@@ -27,13 +27,19 @@ class PaymentProvider(models.Model):
         string="Worldline API Key", required_if_provider="worldline", copy=False
     )
     worldline_api_secret = fields.Char(
-        string="Worldline API Secret", required_if_provider="worldline", copy=False
+        string="Worldline API Secret",
+        required_if_provider="worldline",
+        copy=False,
+        groups="base.group_system",
     )
     worldline_webhook_key = fields.Char(
         string="Worldline Webhook Key", required_if_provider="worldline", copy=False
     )
     worldline_webhook_secret = fields.Char(
-        string="Worldline Webhook Secret", required_if_provider="worldline", copy=False
+        string="Worldline Webhook Secret",
+        required_if_provider="worldline",
+        copy=False,
+        groups="base.group_system",
     )
 
     # === COMPUTE METHODS === #
@@ -67,11 +73,9 @@ class PaymentProvider(models.Model):
         :return: The API URL.
         :rtype: str
         """
-        if self.state == "enabled":
-            api_url = "https://payment.direct.worldline-solutions.com"
-        else:  # 'test'
-            api_url = "https://payment.preprod.direct.worldline-solutions.com"
-        return api_url
+        if self.is_live:
+            return "https://payment.direct.worldline-solutions.com"
+        return "https://payment.preprod.direct.worldline-solutions.com"
 
     def _build_request_headers(self, method, endpoint, *args, idempotency_key=None, **kwargs):
         """Override of `payment` to build the request headers."""

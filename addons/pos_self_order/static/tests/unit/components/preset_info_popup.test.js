@@ -9,6 +9,7 @@ definePosSelfModels();
 test("validSelection", async () => {
     const store = await setupSelfPosEnv();
     store.config.company_id.country_id.state_ids = [];
+    store.config.company_id.country_id.phone_code = 1;
     const models = store.models;
 
     const order = await getFilledSelfOrder(store);
@@ -33,7 +34,7 @@ test("validSelection", async () => {
     // Partner
     preset.identification = "address";
     expect(comp.validSelection).toBeEmpty();
-    comp.state.phone = "+1987-654-3210";
+    comp.state.phoneLocal = "2025551234";
     comp.state.street = "21, Wonderfull Street";
     comp.state.city = "Vice City";
     comp.state.zip = "000021";

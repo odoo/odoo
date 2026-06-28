@@ -2,24 +2,22 @@ import { TabHeader, TabPanel, Tabs } from "@mail/core/common/tabs";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { onExternalClick } from "@mail/utils/common/hooks";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 
-/**
- * @typedef {Object} Props
- * @property {import("models").MailPollModel} poll
- * @extends {Component<Props, Env>}
- */
 export class PollVotesPanel extends Component {
-    static template = "mail.PollVotesPanel";
-    static props = ["poll", "close?"];
     static components = { Dialog, Tabs, TabHeader, TabPanel };
+    static template = "mail.PollVotesPanel";
 
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
+        this.props = props({
+            close: t.function([]).optional(),
+            poll: t.instanceOf(this.store["mail.poll"].Class),
+        });
         this.ui = useService("ui");
         this.tabsRef = useChildRef();
         onExternalClick(this.tabsRef, (ev) => {

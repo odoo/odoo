@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
 from odoo.tools import is_html_empty
+from odoo.tools.translate import adapt_translated_field_value
 
 
 class ProductTag(models.Model):
@@ -20,6 +21,9 @@ class ProductTag(models.Model):
             record.has_image = bool(record.image)
 
     def write(self, vals):
-        if vals.get('pos_description') and is_html_empty(vals['pos_description']):
-            vals['pos_description'] = ''
+        if vals.get('pos_description'):
+            vals['pos_description'] = adapt_translated_field_value(
+                self.env, vals['pos_description'],
+                lambda lang, v: '' if is_html_empty(v) else v
+            )
         return super().write(vals)

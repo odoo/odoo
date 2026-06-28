@@ -11,7 +11,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class InstagramOptionPlugin extends Plugin {
     static id = "instagramOption";
-    static dependencies = ["history"];
+    static dependencies = ["domObserver"];
     static shared = ["instagramPageNameFromUrl"];
 
     /** @type {import("plugins").WebsiteResources} */
@@ -32,6 +32,7 @@ export class InstagramOptionPlugin extends Plugin {
         if (nodes.length) {
             this.loadAndSetPage(nodes);
         }
+        return root;
     }
 
     async loadAndSetPage(nodes) {
@@ -40,20 +41,18 @@ export class InstagramOptionPlugin extends Plugin {
             this.setPage(nodes);
             return;
         }
-        // Fetches the default url for instagram page from website config
+        // Fetches the default url for instagram page from company config
         const res = await this.services.orm.read(
-            "website",
-            [this.services.website.currentWebsite.id],
+            "res.company",
+            [this.services.website.currentWebsite.company_id],
             ["social_instagram"]
         );
         if (res && res[0].social_instagram) {
             this.instagramUrl = this.instagramPageNameFromUrl(res[0].social_instagram);
 
-            // WARNING: the call to ignoreDOMMutations is very dangerous,
+            // WARNING: the call to ignore is very dangerous,
             // and should be avoided in most cases (if you think you need those, ask html_editor team)
-            const hasChanged = this.dependencies.history.ignoreDOMMutations(() =>
-                this.setPage(nodes)
-            );
+            const hasChanged = this.dependencies.domObserver.ignore(() => this.setPage(nodes));
 
             if (hasChanged) {
                 const commonAncestor = getCommonAncestor(nodes, this.editable);

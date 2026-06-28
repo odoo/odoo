@@ -420,7 +420,7 @@ export class GraphModel extends Model {
                 cumulatedStart: cumulatedStartValue[groupId] || 0,
             };
             // There is a currency aggregate
-            if (monetaryAggregates) {
+            if (monetaryAggregates && __count) {
                 const currencies = group[monetaryAggregates[0]];
                 dataPoint.currencyId = currencies[0];
                 dataPoint.convertedValue = group[monetaryAggregates[1]];

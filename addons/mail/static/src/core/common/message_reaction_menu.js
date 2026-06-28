@@ -1,15 +1,14 @@
-import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { onExternalClick } from "@mail/utils/common/hooks";
-import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, props, t, useListener } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
+import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { TabHeader, TabPanel, Tabs } from "./tabs";
 
 export class MessageReactionMenu extends Component {
-    static props = ["close", "message", "initialReaction?"];
     static components = { Dialog, Tabs, TabHeader, TabPanel };
     static template = "mail.MessageReactionMenu";
 
@@ -17,6 +16,11 @@ export class MessageReactionMenu extends Component {
         super.setup();
         this.tabsRef = useChildRef();
         this.store = useService("mail.store");
+        this.props = props({
+            close: t.function([]),
+            initialReaction: t.instanceOf(this.store.MessageReactions.Class).optional(),
+            message: t.instanceOf(this.store["mail.message"].Class),
+        });
         this.ui = useService("ui");
         useLayoutEffect(
             (closeFn) => {
@@ -24,13 +28,9 @@ export class MessageReactionMenu extends Component {
             },
             () => [this.props.message.reactions.length === 0 ? this.props.close : null]
         );
-        useExternalListener(document, "keydown", this.onKeydown);
+        useListener(document, "keydown", (ev) => this.onKeydown(ev));
         onExternalClick(this.tabsRef, () => this.props.close());
-        onMounted(() => {
-            if (!this.store.emojiLoader.loaded) {
-                loadEmoji();
-            }
-        });
+        onMounted(useLoadEmoji());
     }
 
     onKeydown(ev) {
@@ -47,9 +47,7 @@ export class MessageReactionMenu extends Component {
     }
 
     getEmojiShortcode(reaction) {
-        return (
-            this.store.emojiLoader.loaded?.emojiValueToShortcodes?.[reaction.content]?.[0] ?? "?"
-        );
+        return emojiLoader.getShortCode(reaction.content);
     }
 
     get contentClass() {

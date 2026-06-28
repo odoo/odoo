@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-22 17:46+0000\n"
 "PO-Revision-Date: 2026-02-14 12:07+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -211,25 +211,6 @@ msgid "Cash on Delivery"
 msgstr "Thanh toán khi nhận hàng"
 
 #. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-msgid "Choose a pick-up point"
-msgstr "Chọn điểm nhận hàng"
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
-msgid "Choose this location"
-msgstr "Chọn vị trí này"
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_schedule/location_schedule.js:0
-msgid "Closed"
-msgstr "Đã chốt"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__company_id
 msgid "Company"
@@ -239,6 +220,16 @@ msgstr "Công ty"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Condition"
 msgstr "Điều kiện"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
+msgid "Configure Methods"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -346,7 +337,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_provider_module_kanban
-#: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Delivery Methods"
 msgstr "Phương thức giao hàng"
 
@@ -429,6 +419,7 @@ msgstr "Xác định thứ tự hiển thị"
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:delivery.field_product_category__display_name
+#: model:ir.model.fields,field_description:delivery.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__display_name
 #: model:ir.model.fields,field_description:delivery.field_sale_order__display_name
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__display_name
@@ -500,6 +491,11 @@ msgid ""
 msgstr ""
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
+msgid "Find a Delivery Provider"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
 msgid "Fixed Margin"
 msgstr "Phí cố định"
@@ -545,6 +541,7 @@ msgstr "Định tuyến HTTP"
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__id
 #: model:ir.model.fields,field_description:delivery.field_payment_transaction__id
 #: model:ir.model.fields,field_description:delivery.field_product_category__id
+#: model:ir.model.fields,field_description:delivery.field_res_config_settings__id
 #: model:ir.model.fields,field_description:delivery.field_res_partner__id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__id
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__id
@@ -608,12 +605,6 @@ msgid "Invoicing Policy"
 msgstr "Chính sách xuất hóa đơn"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_res_partner__is_pickup_location
-#: model:ir.model.fields,field_description:delivery.field_res_users__is_pickup_location
-msgid "Is Pickup Location"
-msgstr "Là vị trí nhận hàng"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
 msgid "Is a Delivery"
 msgstr "Là kiểu giao hàng"
@@ -635,18 +626,6 @@ msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
 
 #. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-msgid "List view"
-msgstr "Xem danh sách"
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-msgid "Loading..."
-msgstr "Đang tải..."
-
-#. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
 msgid "Local Delivery"
 msgstr "Giao hàng trong nước"
@@ -660,12 +639,6 @@ msgstr "Ghi nhận yêu cầu để dễ dàng tìm kiếm"
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
 msgstr "Quản lý tiền tố zip giao hàng"
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-msgid "Map view"
-msgstr "Chế độ xem bản đồ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -720,28 +693,9 @@ msgstr "Nhà cung cấp mới"
 
 #. module: delivery
 #. odoo-python
-#: code:addons/delivery/models/sale_order.py:0
-msgid "No pick-up points are available for this delivery address."
-msgstr "Không có điểm nhận hàng khả dụng cho địa chỉ giao hàng này."
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-msgid "No result"
-msgstr "Không kết quả"
-
-#. module: delivery
-#. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Not available for current order"
 msgstr "Không khả dụng cho đơn hàng hiện tại"
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location/location.js:0
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
-msgid "Opening hours"
-msgstr "Giờ mở cửa"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -762,17 +716,6 @@ msgstr "Nhà cung cấp dịch vụ thanh toán"
 #: model:ir.model,name:delivery.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Giao dịch thanh toán"
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-msgid "Pickup Location"
-msgstr "Vị trí nhận hàng"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_sale_order__pickup_location_data
-msgid "Pickup Location Data"
-msgstr "Dữ liệu vị trí nhận hàng"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -874,12 +817,6 @@ msgid "Sales Order Line"
 msgstr "Dòng đơn bán hàng"
 
 #. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
-msgid "Search"
-msgstr "Tìm kiếm"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__sequence
 msgid "Sequence"
@@ -920,6 +857,11 @@ msgstr "Giao hàng tiêu chuẩn"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
 msgid "States"
 msgstr "Tỉnh/TP"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_cash_on_delivery
+msgid "Supports Cash On Delivery"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
@@ -976,12 +918,6 @@ msgstr "Bảo hiểm vận chuyển phải là tỷ lệ phần trăm từ 0 đ�
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "The shipping is free since the order amount exceeds %.2f."
 msgstr "Giao hàng miễn phí vì giá trị đơn hàng trên %.2f."
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
-msgid "There was an error loading the map"
-msgstr "Đã xảy ra lỗi khi tải bản đồ"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -1051,6 +987,11 @@ msgstr "Biến"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable_factor
 msgid "Variable Factor"
 msgstr "Hệ số biến thiên"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable_unit
+msgid "Variable Unit"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1125,12 +1066,6 @@ msgstr "Thanh toán của bạn đã bị hủy."
 #: model_terms:payment.provider,done_msg:delivery.payment_provider_cod
 msgid "Your payment has been processed."
 msgstr "Thanh toán của bạn đã được xử lý."
-
-#. module: delivery
-#. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-msgid "Your postal code"
-msgstr "Mã bưu điện của bạn"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

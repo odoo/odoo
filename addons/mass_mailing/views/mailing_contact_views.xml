@@ -4,10 +4,11 @@
         <field name="name">mailing.contact.view.search</field>
         <field name="model">mailing.contact</field>
         <field name="arch" type="xml">
-           <search string="Mailing List Contacts">
+           <search string="Mailing Contacts">
                 <field name="name"
                     filter_domain="['|', '|', ('name','ilike',self), ('company_name','ilike',self), ('email_normalized','ilike',self)]"
                     string="Name / Email"/>
+                <field name="partner_id"/>
                 <field name="tag_ids"/>
                 <field name="list_ids"/>
                 <field name="properties"/>
@@ -44,7 +45,7 @@
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <list string="Mailing List Contacts" sample="1" multi_edit="1">
+            <list string="Mailing Contacts" sample="1" multi_edit="1">
                 <header>
                     <button name="action_import" string="Paste" type="object" display="always"
                         context="{'from_mailing_list_ids': context.get('active_ids') if context.get('active_model') == 'mailing.list' else False}"/>
@@ -52,6 +53,7 @@
                     <button name="action_add_to_mailing_list" string="Add to List" type="object"/>
                 </header>
                 <field name="create_date" string="Create Date" optional="show"/>
+                <field name="partner_id" optional="hide"/>
                 <field name="name" optional="show" readonly="1"/>
                 <field name="company_name" optional="hide"/>
                 <field name="email" readonly="1"/>
@@ -63,6 +65,18 @@
                 <field name="list_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                 <field name="properties" optional="hide"/>
             </list>
+        </field>
+    </record>
+
+    <record id="mailing_contact_view_list_from_filter" model="ir.ui.view">
+        <field name="name">mailing.contact.view.list.from.filter</field>
+        <field name="model">mailing.contact</field>
+        <field name="mode">primary</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="mailing_contact_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_import']" position="replace"/>
+            <xpath expr="//header/button[@name='action_open_base_import']" position="replace"/>
         </field>
     </record>
 
@@ -96,9 +110,37 @@
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <form string="Mailing List Contacts">
+            <form string="Mailing Contacts">
                 <field name="id" invisible="1"/>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_mailings"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-envelope-o">
+                            <field name="mailing_count" string="Mailings" widget="statinfo"/>
+                        </button>
+                         <button name="action_view_received"
+                            type="object"
+                            class="oe_stat_button">
+                            <field name="received_ratio" string="Received" widget="percentpie"/>
+                        </button>
+                        <button name="action_view_opened"
+                            type="object"
+                            class="oe_stat_button">
+                            <field name="opened_ratio" string="Opened" widget="percentpie"/>
+                        </button>
+                        <button name="action_view_clicked"
+                            type="object"
+                            class="oe_stat_button">
+                            <field name="clicks_ratio" string="Clicked" widget="percentpie"/>
+                        </button>
+                        <button name="action_view_replied"
+                            type="object"
+                            class="oe_stat_button">
+                            <field name="replied_ratio" string="Replied" widget="percentpie"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <label for="name" string="Contact Name"/>
                         <h1>
@@ -107,6 +149,7 @@
                     </div>
                     <group>
                         <group>
+                            <field name="partner_id"/>
                             <label for="email" class="oe_inline"/>
                             <div class="o_row o_row_readonly" name="email_details">
                                  <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
@@ -153,7 +196,7 @@
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <pivot string="Mailing List Contacts" stacked="1" sample="1">
+            <pivot string="Mailing Contacts" stacked="1" sample="1">
                 <field name="create_date" type="row"/>
             </pivot>
         </field>
@@ -164,14 +207,14 @@
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <graph string="Mailing List Contacts" sample="1">
+            <graph string="Mailing Contacts" sample="1">
                 <field name="create_date"/>
             </graph>
         </field>
     </record>
 
     <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts">
-        <field name="name">Mailing List Contacts</field>
+        <field name="name">Mailing Contacts</field>
         <field name="res_model">mailing.contact</field>
         <field name="view_mode">list,kanban,form,graph,pivot</field>
         <field name="context">{'search_default_filter_not_email_bl': 1}</field>
@@ -217,7 +260,7 @@
             <xpath expr="//group/label[@for='email']" position="before">
                 <field name="first_name" placeholder="e.g. &quot;John&quot;"/>
             </xpath>
-            <xpath expr="//group/field[@name='create_date']" position="before">
+            <xpath expr="//group/field[@name='country_id']" position="before">
                 <field name="last_name" placeholder="e.g. &quot;Smith&quot;"/>
             </xpath>
         </field>

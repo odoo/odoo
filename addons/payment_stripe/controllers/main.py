@@ -3,7 +3,7 @@
 import hashlib
 import hmac
 import pprint
-from datetime import datetime
+from datetime import UTC, datetime
 
 from werkzeug.exceptions import Forbidden
 
@@ -37,7 +37,7 @@ class StripeController(http.Controller):
                           `_get_specific_processing_values`.
         """
         # Retrieve the transaction based on the reference included in the return url.
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("stripe", data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("stripe", data)
         endpoint = (
             f"payment_intents/{data.get('payment_intent')}"  # Fetch the PaymentIntent.
             if tx_sudo.operation != "validation"
@@ -57,7 +57,7 @@ class StripeController(http.Controller):
             else:
                 self._include_setup_intent_in_payment_data(response_content, data)
             # Process the payment data crafted with Stripe API's objects.
-            tx_sudo._process("stripe", data)
+            tx_sudo._record(data)
 
         # Redirect the user to the status page.
         with mute_logger("werkzeug"):  # avoid logging secret URL params
@@ -83,7 +83,7 @@ class StripeController(http.Controller):
                     "object_id": stripe_object["id"],
                 }
                 tx_sudo = (
-                    request.env["payment.transaction"].sudo()._search_by_reference("stripe", data)
+                    self.env["payment.transaction"].sudo()._search_by_reference("stripe", data)
                 )
 
                 if not tx_sudo:
@@ -107,7 +107,10 @@ class StripeController(http.Controller):
                     self._include_setup_intent_in_payment_data(stripe_object, data)
                 elif event["type"] == "charge.refunded":  # Refund operation (refund creation).
                     refunds = stripe_object["refunds"]["data"]
+                    if not stripe_object["captured"]:  # The charge was authorized and then voided
+                        return request.make_json_response("")  # Don't process void-related events
 
+                    refunds = stripe_object["refunds"]["data"]
                     # The refunds linked to this charge are paginated, fetch the remaining refunds.
                     has_more = stripe_object["refunds"]["has_more"]
                     while has_more:
@@ -129,7 +132,7 @@ class StripeController(http.Controller):
                     for refund in filter(lambda r: r["id"] not in processed_refund_ids, refunds):
                         refund_tx_sudo = self._create_refund_tx_from_refund(tx_sudo, refund)
                         self._include_refund_in_payment_data(refund, data)
-                        refund_tx_sudo._process("stripe", data)
+                        refund_tx_sudo._record(data)
                     # Don't process the payment data for the source transaction.
                     return request.make_json_response("")
                 elif event["type"] == "charge.refund.updated":  # Refund operation (with update).
@@ -140,7 +143,7 @@ class StripeController(http.Controller):
                     self._include_refund_in_payment_data(stripe_object, data)
 
                 # Process the payment data crafted with Stripe API objects
-                tx_sudo._process("stripe", data)
+                tx_sudo._record(data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
             _logger.exception("Unable to process the payment data; skipping to acknowledge")
         return request.make_json_response("")
@@ -206,7 +209,7 @@ class StripeController(http.Controller):
             raise Forbidden
 
         # Check if the timestamp is not too old
-        if datetime.utcnow().timestamp() - event_timestamp > self.WEBHOOK_AGE_TOLERANCE:
+        if datetime.now(UTC).timestamp() - event_timestamp > self.WEBHOOK_AGE_TOLERANCE:
             _logger.warning("Received payment data with outdated timestamp: %s", event_timestamp)
             raise Forbidden
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2025-09-16 15:35+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
@@ -49,6 +49,21 @@ msgstr "Aktiivinen"
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_action__archive
 msgid "Archive"
 msgstr "Arkistoi"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Archive Suggestion"
+msgstr ""
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Archive Suggestions"
+msgstr ""
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Archived"
+msgstr ""
 
 #. module: data_recycle
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_mode__automatic
@@ -119,16 +134,6 @@ msgstr "Delta"
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_delta_unit
 msgid "Delta Unit"
 msgstr "Delta-yksikkö"
-
-#. module: data_recycle
-#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
-msgid "Discard"
-msgstr "Hylkää"
-
-#. module: data_recycle
-#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
-msgid "Discarded"
-msgstr "Käytöstä poistetut"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__display_name
@@ -304,6 +309,12 @@ msgid "Recyle Records Rules"
 msgstr "Kierrätystietueiden säännöt"
 
 #. module: data_recycle
+#. odoo-javascript
+#: code:addons/data_recycle/static/src/cog_menu/data_refresh_cog_menu.xml:0
+msgid "Refresh"
+msgstr ""
+
+#. module: data_recycle
 #: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules
 msgid "Rules"
 msgstr "Säännöt"
@@ -337,20 +348,22 @@ msgid "Time Field"
 msgstr "Aikakenttä"
 
 #. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Unarchive Suggestion"
+msgstr ""
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Unarchive Suggestions"
+msgstr ""
+
+#. module: data_recycle
 #. odoo-python
 #: code:addons/data_recycle/models/data_recycle_record.py:0
 msgid "Undefined Name"
 msgstr "Määrittelemätön nimi"
 
 #. module: data_recycle
-#. odoo-javascript
-#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
-msgid "Unselect"
-msgstr "Poista valinta"
-
-#. module: data_recycle
-#. odoo-javascript
-#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
 msgid "Validate"
 msgstr "Vahvista"
@@ -380,3 +393,9 @@ msgstr "tänne"
 #: model_terms:ir.ui.view,arch_db:data_recycle.notification
 msgid "records to clean with the '"
 msgstr "tietueet, jotka suodatetaan käytämällä '"
+
+#~ msgid "Discard"
+#~ msgstr "Hylkää"
+
+#~ msgid "Discarded"
+#~ msgstr "Käytöstä poistetut"

@@ -290,15 +290,18 @@
             <field name="name">account.analytic.line.kanban</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" sample="1">
+                <kanban class="o_kanban_mobile" highlight_color="color" on_create="quick_create" quick_create_view="hr_timesheet.quick_create_account_analytic_line_form" default_order="date desc, sequence, id desc">
+                    <progressbar field="id" colors="{}" sum_field="unit_amount" widget="timesheet_uom"/>
                     <field name="company_id" invisible="1"/>
                     <templates>
                         <t t-name="card">
-                            <div class="d-flex gap-1">
-                                <span t-att-title="record.employee_id.value">
-                                    <field name="employee_id" widget="image" options="{'preview_image': 'avatar_128'}" class="o_image_64_cover me-2 float-start"/>
-                                </span>
-                                <div class="d-flex flex-column min-w-0 lh-sm">
+                            <div class="d-flex gap-1 flex-row">
+                                <div class="align-self-center me-2" invisible="context.get('default_date')">
+                                    <field name="date" invisible="1"/>
+                                    <div t-out="luxon.DateTime.fromISO(record.date.raw_value).toFormat('MMM d')"/>
+                                    <div t-out="luxon.DateTime.fromISO(record.date.raw_value).toFormat('yyyy')"/>
+                                </div>
+                                <div class="text-truncate d-flex flex-column min-w-1 max-w-10 lh-sm">
                                     <span class="text-truncate" invisible="context.get('default_project_id')" t-att-title="record.project_id.value">
                                         <field name="project_id" class="p-0 fw-bold fs-5"/>
                                     </span>
@@ -306,21 +309,34 @@
                                         <field name="task_id" invisible="context.get('default_project_id')"/>
                                         <field name="task_id" invisible="not context.get('default_project_id')" class="p-0 fw-bold fs-5"/>
                                     </span>
-                                    <span>
-                                        <i class="fa fa-calendar me-1" role="img" aria-label="Date" title="Date"></i>
-                                        <field name="date"/><span invisible="context.get('is_my_timesheets')"> - <field name="employee_id"/></span>
-                                    </span>
-                                    <span class="text-truncate" t-att-title="record.name.value"><field name="name" class="fst-italic"/></span>
+                                    <span class="text-truncate" t-att-title="record.name.value" invisible="name == '/'"><field name="name" class="fst-italic"/></span>
+                                </div>
+                                <div class="o_ts_kanban_card_amount d-flex ms-auto align-self-end" name="ts_footer">
+                                    <field name="employee_id" widget="many2one_avatar_employee" class="align-self-end"/>
+                                    <strong class="align-self-end"><field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0" decoration-muted="unit_amount == 0" class="min-w-fit"/></strong>
                                 </div>
                             </div>
-                            <footer class="mt-0 pt-0">
-                                <div class="d-flex ms-auto">
-                                    <strong><field name="unit_amount" widget="timesheet_duration_uom" decoration-danger="unit_amount &gt; 24" decoration-muted="unit_amount == 0" class="ms-1"/></strong>
-                                </div>
-                            </footer>
                         </t>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+
+        <record id="quick_create_account_analytic_line_form" model="ir.ui.view">
+            <field name="name">account.analytic.line.kanban.quick_create</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group class="mb-3">
+                        <field name="project_id" required="1"/>
+                        <field name="task_id"/>
+                        <field name="name" string="Description" placeholder="Describe your activity... "/>
+                        <field name="employee_id" widget="many2one_avatar_employee" required="1" readonly="readonly_timesheet" context="{'active_test': True}"/>
+                        <field name="user_id" invisible="1"/>
+                        <field name="date"/>
+                        <field name="unit_amount" string="Time Spent" widget="timesheet_duration_uom" class="o_field_timesheet_duration_uom ms-1 "/>
+                    </group>
+                </form>
             </field>
         </record>
 

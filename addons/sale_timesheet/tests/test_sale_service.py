@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
+from odoo.tests import Form
 
 
 @tagged('-at_install', 'post_install')
@@ -736,7 +738,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.assertFalse(sale_order_1.show_project_button, "There is no project on the sale order, the button should be hidden")
         line_1.project_id = self.project_global.id
         sale_order_1._compute_show_project_and_task_button()
-        self.assertFalse(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be hidden")
+        self.assertTrue(sale_order_1.show_create_project_button, "The 'create Project Button' should be displayed reguardless of the service product type")
         self.assertTrue(sale_order_1.show_project_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be displayed")
 
     def test_compute_show_timesheet_button(self):
@@ -804,6 +806,44 @@ class TestSaleService(TestCommonSaleTimesheet):
         sale_order_2._compute_timesheet_count()
         sale_order_2._compute_show_hours_recorded_button()
         self.assertTrue(sale_order_2.show_hours_recorded_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be displayed")
+
+    def test_compute_show_timesheet_button_salesperson_user_timesheet(self):
+        """
+        Test Case:
+        ==========
+        1) Create a salesperson user with only User access to timesheet and no access to project
+        2) Create a SO with a timesheet product and confirm it as the salesperson
+        3) Record hours with another user
+        4) read show_hours_recorded_button as the salesperson should not raise an AccessError
+        """
+        salesperson = mail_new_test_user(
+            self.env,
+            name='Salesperson',
+            login='salesperson',
+            email='salesperson_no_ts@example.com',
+            groups='base.group_user,sales_team.group_sale_salesman,hr_timesheet.group_hr_timesheet_user',
+        )
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'user_id': salesperson.id,
+        })
+        so_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_delivery_timesheet2.id,
+            'product_uom_qty': 5,
+        })
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': so_line.task_id.project_id.id,
+            'task_id': so_line.task_id.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_manager.id,
+        })
+        sale_order.action_confirm()
+        # Computing show_hours_recorded_button as the restricted salesperson
+        # should not raise an AccessError when reading timesheet_count and
+        # project_count.
+        self.assertTrue(sale_order.with_user(salesperson).show_hours_recorded_button, "The salesperson should be able to see the hours recorded button even without access to other's timesheet and project.")
 
     def test_timesheet_hours_delivered_rounding(self):
         """
@@ -879,3 +919,79 @@ class TestSaleService(TestCommonSaleTimesheet):
         sol.invalidate_recordset()
         self.assertAlmostEqual(sol.remaining_hours, -2.0, places=6)
         self.assertIn('-02:00', sol.with_context(with_remaining_hours=True).display_name)
+
+    def test_service_product_uom_default(self):
+        """
+        Test that user-defined UoM default is respected when creating a product or product variant.
+        """
+        uom_cm = self.env.ref('uom.product_uom_cm')
+        uom_day = self.env.ref('uom.product_uom_day')
+        uom_hour = self.env.ref('uom.product_uom_hour')
+        self.user_manager_company_B.group_ids += (
+            self.env.ref('product.group_product_manager') |
+            self.env.ref('sales_team.group_sale_salesman')
+        )
+        self.env['ir.default'].set(
+            'product.template',
+            'uom_id',
+            uom_cm.id,
+            user_id=self.user_manager_company_B.id,
+            company_id=self.user_manager_company_B.company_id.id)
+        self.env['ir.default'].set(
+            'product.product',
+            'uom_id',
+            uom_cm.id,
+            user_id=self.user_manager_company_B.id,
+            company_id=self.user_manager_company_B.company_id.id)
+
+        # - product.template
+        product_form = Form(self.env['product.template'].with_user(self.user_manager_company_B))
+        product_form.name = 'product test'
+        product = product_form.save()
+        self.assertEqual(product.uom_id, uom_cm, "UoM default was not respected")
+
+        product_form = Form(self.env['product.template'].with_user(self.user_manager_company_B))
+        product_form.name = 'timesheet service'
+        product_form.type = 'service'
+        product_form.service_policy = 'delivered_timesheet'
+        product = product_form.save()
+        self.assertEqual(product.uom_id, uom_hour, "UoM should be hours for timesheet service when default is not a time unit")
+
+        self.env['ir.default'].set(
+            'product.template',
+            'uom_id',
+            uom_day.id,
+            user_id=self.user_manager_company_B.id,
+            company_id=self.user_manager_company_B.company_id.id)
+        product_form = Form(self.env['product.template'].with_user(self.user_manager_company_B))
+        product_form.name = 'timesheet service'
+        product_form.type = 'service'
+        product_form.service_policy = 'delivered_timesheet'
+        product = product_form.save()
+        self.assertEqual(product.uom_id, uom_day, "time UoM default was not respected")
+
+        # - product.product
+        product_form = Form(self.env['product.product'].with_user(self.user_manager_company_B))
+        product_form.name = 'product variant test'
+        product = product_form.save()
+        self.assertEqual(product.uom_id, uom_cm, "UoM default was not respected")
+
+        product_form = Form(self.env['product.product'].with_user(self.user_manager_company_B))
+        product_form.name = 'timesheet service'
+        product_form.type = 'service'
+        product_form.service_policy = 'delivered_timesheet'
+        product = product_form.save()
+        self.assertEqual(product.uom_id, uom_hour, "UoM should be hours for timesheet service when default is not a time unit")
+
+        self.env['ir.default'].set(
+            'product.product',
+            'uom_id',
+            uom_day.id,
+            user_id=self.user_manager_company_B.id,
+            company_id=self.user_manager_company_B.company_id.id)
+        product_form = Form(self.env['product.product'].with_user(self.user_manager_company_B))
+        product_form.name = 'timesheet service'
+        product_form.type = 'service'
+        product_form.service_policy = 'delivered_timesheet'
+        product = product_form.save()
+        self.assertEqual(product.uom_id, uom_day, "time UoM default was not respected")

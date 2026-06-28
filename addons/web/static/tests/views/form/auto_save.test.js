@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { press, unload, waitFor } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, mockSendBeacon } from "@odoo/hoot-mock";
+import { animationFrame, mockSendBeacon } from "@odoo/hoot-mock";
 import {
     contains,
     defineActions,
@@ -516,7 +516,7 @@ test(`save when action changed`, async () => {
 });
 
 test("save on closing tab/browser", async () => {
-    const sendBeaconDeferred = new Deferred();
+    const sendBeaconDeferred = Promise.withResolvers();
     mockSendBeacon((_, blob) => {
         expect.step("sendBeacon");
         blob.text().then((r) => {
@@ -546,7 +546,7 @@ test("save on closing tab/browser", async () => {
     await contains(`.o_field_widget[name="name"] input`).edit("test");
 
     const [event] = await unload();
-    await sendBeaconDeferred;
+    await sendBeaconDeferred?.promise;
     expect.verifySteps(["sendBeacon"]);
     expect(event.defaultPrevented).toBe(false);
 
@@ -753,7 +753,7 @@ test("save on closing tab/browser (onchanges)", async () => {
         },
     };
 
-    const sendBeaconDeferred = new Deferred();
+    const sendBeaconDeferred = Promise.withResolvers();
     mockSendBeacon((_, blob) => {
         expect.step("sendBeacon");
         blob.text().then((r) => {
@@ -766,8 +766,8 @@ test("save on closing tab/browser (onchanges)", async () => {
         return true;
     });
 
-    const onchangeDeferred = new Deferred();
-    onRpc("partner", "onchange", () => onchangeDeferred);
+    const onchangeDeferred = Promise.withResolvers();
+    onRpc("partner", "onchange", () => onchangeDeferred?.promise);
 
     await mountView({
         resModel: "partner",
@@ -786,7 +786,7 @@ test("save on closing tab/browser (onchanges)", async () => {
     await contains(`.o_field_widget[name="expertise"] input`).edit("test", { confirm: "blur" });
     await unload();
     await animationFrame();
-    await sendBeaconDeferred;
+    await sendBeaconDeferred?.promise;
     expect.verifySteps(["sendBeacon"]);
 });
 
@@ -795,7 +795,7 @@ test("save on closing tab/browser (onchanges 2)", async () => {
         expertise() {},
     };
 
-    const sendBeaconDeferred = new Deferred();
+    const sendBeaconDeferred = Promise.withResolvers();
     mockSendBeacon((_, blob) => {
         expect.step("sendBeacon");
         blob.text().then((r) => {
@@ -808,8 +808,8 @@ test("save on closing tab/browser (onchanges 2)", async () => {
         return true;
     });
 
-    const onchangeDeferred = new Deferred();
-    onRpc("partner", "onchange", () => onchangeDeferred);
+    const onchangeDeferred = Promise.withResolvers();
+    onRpc("partner", "onchange", () => onchangeDeferred?.promise);
 
     await mountView({
         resModel: "partner",
@@ -830,12 +830,12 @@ test("save on closing tab/browser (onchanges 2)", async () => {
 
     await unload();
     await animationFrame();
-    await sendBeaconDeferred;
+    await sendBeaconDeferred?.promise;
     expect.verifySteps(["sendBeacon"]);
 });
 
 test("save on closing tab/browser (pending change)", async () => {
-    const sendBeaconDeferred = new Deferred();
+    const sendBeaconDeferred = Promise.withResolvers();
     mockSendBeacon((_, blob) => {
         expect.step("sendBeacon");
         blob.text().then((r) => {
@@ -862,7 +862,7 @@ test("save on closing tab/browser (pending change)", async () => {
     await contains(`.o_field_widget[name="expertise"] input`).edit("test", { confirm: false });
     await unload();
     await animationFrame();
-    await sendBeaconDeferred;
+    await sendBeaconDeferred?.promise;
     expect.verifySteps(["sendBeacon"]);
 });
 
@@ -874,7 +874,7 @@ test("save on closing tab/browser (onchanges + pending change)", async () => {
         },
     };
 
-    const sendBeaconDeferred = new Deferred();
+    const sendBeaconDeferred = Promise.withResolvers();
     mockSendBeacon((_, blob) => {
         expect.step("sendBeacon");
         blob.text().then((r) => {
@@ -890,8 +890,8 @@ test("save on closing tab/browser (onchanges + pending change)", async () => {
         return true;
     });
 
-    const onchangeDeferred = new Deferred();
-    onRpc("partner", "onchange", () => onchangeDeferred);
+    const onchangeDeferred = Promise.withResolvers();
+    onRpc("partner", "onchange", () => onchangeDeferred?.promise);
     onRpc(({ method }) => expect.step(method));
 
     await mountView({
@@ -924,7 +924,7 @@ test("save on closing tab/browser (onchanges + pending change)", async () => {
     // trigger the 'beforeunload' event -> notifies the model directly and saves
     await unload();
     await animationFrame();
-    await sendBeaconDeferred;
+    await sendBeaconDeferred?.promise;
     expect.verifySteps(["sendBeacon"]);
 });
 
@@ -958,8 +958,8 @@ test("save on closing tab/browser (onchanges + invalid field)", async () => {
     };
 
     mockSendBeacon(() => expect.step("sendBeacon"));
-    const onchangeDeferred = new Deferred();
-    onRpc("partner", "onchange", () => onchangeDeferred);
+    const onchangeDeferred = Promise.withResolvers();
+    onRpc("partner", "onchange", () => onchangeDeferred?.promise);
     onRpc(({ method }) => expect.step(method));
 
     await mountView({

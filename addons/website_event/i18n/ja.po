@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
-"PO-Revision-Date: 2026-01-31 12:47+0000\n"
+"POT-Creation-Date: 2026-05-10 17:36+0000\n"
+"PO-Revision-Date: 2026-04-30 07:27+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "website_event/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_count
@@ -138,6 +138,14 @@ msgid "<i class=\"fa fa-map-marker me-2 text-muted\" title=\"Location\"/>"
 msgstr "<i class=\"fa fa-map-marker me-2 text-muted\" title=\"場所\"/>"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
+msgid ""
+"<i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>\n"
+"                                    <span> Los Angeles, CA, United States</"
+"span>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
 msgid ""
 "<i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los Los Angeles, "
@@ -206,8 +214,8 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_badge_preview_data
 msgid ""
-"<span class=\"o_cc o_cc1 d-inline-flex align-items-center justify-content-"
-"center gap-3 border rounded py-2 px-3 rounded-pill\">\n"
+"<span class=\"o_cc o_cc1 d-inline-flex justify-content-center flex-wrap "
+"gap-3 my-3 border py-2 px-3 rounded-pill\">\n"
 "                    <i class=\"fa fa-calendar\" role=\"presentation\"/>\n"
 "                    <strong>Harmony Under the Stars</strong>\n"
 "                    <span class=\"text-muted\">August 23, 2025 - 8:15 PM</"
@@ -216,15 +224,6 @@ msgid ""
 "long-arrow-right\" role=\"presentation\"/></span>\n"
 "                </span>"
 msgstr ""
-"<span class=\"o_cc o_cc1 d-inline-flex align-items-center justify-content-"
-"center gap-3 border rounded py-2 px-3 rounded-pill\">\n"
-"                    <i class=\"fa fa-calendar\" role=\"presentation\"/>\n"
-"                    <strong>星空の下のハーモニー</strong>\n"
-"                    <span class=\"text-muted\">2025年8月23日 - 8:15 PM</"
-"span>\n"
-"                    <span class=\"text-primary\">登録<i class=\"fa fa-long-"
-"arrow-right\" role=\"presentation\"/></span>\n"
-"                </span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
@@ -302,7 +301,6 @@ msgstr ""
 "<span><i class=\"fa fa-clock-o me-2\" role=\"presentation\"/>8:15 PM</span>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_offset_preview_data
 msgid ""
 "<span><i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los Angeles, "
@@ -696,16 +694,10 @@ msgstr ""
 "            なお、イベントはリンクからいつでもご覧頂けます。"
 
 #. module: website_event
-#. odoo-javascript
-#: code:addons/website_event/static/src/website_builder/event_searchbar_option_plugin.js:0
-msgid "Description"
-msgstr "説明"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Discard"
-msgstr ""
+msgstr "破棄"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__display_name
@@ -734,6 +726,13 @@ msgid "Display community tab on website"
 msgstr "ウェブサイトでコミュニティタブを表示"
 
 #. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event__subtitle
+msgid ""
+"Displayed on website and used as description when the event is added to a "
+"third-party calendar."
+msgstr ""
+
+#. module: website_event
 #. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 msgid "Don't forget to click <b>save</b> when you're done."
@@ -748,6 +747,11 @@ msgstr "すべてのチケットをダウンロード"
 #: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
 msgid "Download Tickets"
 msgstr "チケットをダウンロード"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.layout
+msgid "Drag blocks here to add them on all events"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_card_preview_data
@@ -765,12 +769,6 @@ msgstr "イベント"
 #: model:ir.model.fields,field_description:website_event.field_event_event__community_menu_ids
 msgid "Event Community Menus"
 msgstr "イベント コミュニティメニュー"
-
-#. module: website_event
-#. odoo-javascript
-#: code:addons/website_event/static/src/website_builder/event_searchbar_option_plugin.js:0
-msgid "Event Date"
-msgstr "イベント日"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -794,7 +792,7 @@ msgstr "イベントメニュー"
 
 #. module: website_event
 #. odoo-javascript
-#: code:addons/website_event/static/src/website_builder/event_page_option_plugin.js:0
+#: code:addons/website_event/static/src/website_builder/event_page_option.xml:0
 msgid "Event Page"
 msgstr "イベントページ"
 
@@ -826,6 +824,7 @@ msgstr "イベントスロット"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Event Subtitle"
 msgstr "イベント副題"
 
@@ -883,6 +882,7 @@ msgstr "イベントのスケジュールが取り消されました"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/website_event/controllers/main.py:0
+#: code:addons/website_event/models/event_event.py:0
 #: code:addons/website_event/models/website.py:0
 #: code:addons/website_event/static/src/website_builder/dynamic_snippet_events_option.xml:0
 #: code:addons/website_event/static/src/website_builder/event_searchbar_option.xml:0
@@ -936,7 +936,7 @@ msgid "Filters"
 msgstr "フィルタ"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+#: model_terms:ir.ui.view,arch_db:website_event.opt_event_share_block
 msgid ""
 "Find out what people see and say about this event, and join the conversation."
 msgstr "このイベントに関する人々の意見や感想を聞いて、会話に参加しましょう。"
@@ -953,11 +953,6 @@ msgstr "固定サイドバー"
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "Follow Us"
 msgstr "フォローする"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.layout
-msgid "Following content will appear on all events."
-msgstr "以下のコンテンツはイベント一覧に表示されます。"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__footer_visible
@@ -1297,7 +1292,7 @@ msgstr "OpenWoodコレクションオンライン公開"
 #: code:addons/website_event/static/src/website_builder/event_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Organizer"
-msgstr "オーガナイザ"
+msgstr "主催者"
 
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__other
@@ -1402,12 +1397,6 @@ msgid "Register"
 msgstr "登録"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
-msgid ""
-"Register <i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
-msgstr "登録 <i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
-
-#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__register_menu
 msgid "Register Menu"
 msgstr "メニュー登録"
@@ -1439,6 +1428,11 @@ msgstr "登録<i class=\"fa fa-long-arrow-right ms-2\" role=\"img\"/>"
 msgid ""
 "Register<i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
 msgstr "登録<i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
+msgid "Register<i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registered_ids
@@ -1577,8 +1571,8 @@ msgstr "予定日"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "Search an event.."
-msgstr "イベントを検索..."
+msgid "Search an event..."
+msgstr ""
 
 #. module: website_event
 #. odoo-javascript
@@ -1615,9 +1609,14 @@ msgstr "今日の暮らしを変えるアイデアで、明日を形づくる。
 #. module: website_event
 #. odoo-javascript
 #: code:addons/website_event/static/src/website_builder/event_page_option.xml:0
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+#: model_terms:ir.ui.view,arch_db:website_event.opt_event_share_block
 msgid "Share"
 msgstr "共有"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+msgid "Short description for website and calendars."
+msgstr ""
 
 #. module: website_event
 #. odoo-javascript
@@ -1657,6 +1656,7 @@ msgstr "スロット"
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_question_about_0_answer_0
 #: model:event.question.answer,name:website_event.event_question_about_2_answer_0
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "Social Media"
 msgstr "ソーシャルメディア"
 

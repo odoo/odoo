@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 
 export class EmbeddedTableOfContentComponent extends Component {
@@ -10,7 +9,7 @@ export class EmbeddedTableOfContentComponent extends Component {
     };
 
     setup() {
-        this.state = useState({ toc: this.props.manager.structure, folded: false });
+        this.state = proxy({ toc: this.props.manager.structure, folded: false });
         onWillStart(async () => {
             await this.props.manager.batchedUpdateStructure();
         });

@@ -19,7 +19,6 @@
     ],
     'data': [
         'security/hr_security.xml',
-        'security/ir.model.access.csv',
         'data/digest_data.xml',
         'data/report_paperformat.xml',
         'wizard/mail_activity_schedule_views.xml',
@@ -47,12 +46,15 @@
         'views/hr_templates.xml',
         'views/resource_resource_views.xml',
         'data/hr_data.xml',
-        'views/hr_export_mixin_views.xml',
         'data/ir_cron_data.xml',
         'data/hr_employee_type_data.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/hr_demo.xml',
+    ],
+    'other_files': [
+        'data/scenarios/hr_scenario.xml',
     ],
     'application': True,
     'assets': {
@@ -60,6 +62,8 @@
             'hr/static/src/scss/variables.scss',
         ],
         'web.assets_backend': [
+            "hr/static/src/core/common/**/*",
+            "hr/static/src/core/web/**/*",
             'hr/static/src/**/*',
             ('remove', 'hr/static/src/views/hr_employee_hierarchy/*'),
         ],
@@ -68,6 +72,10 @@
         ],
         'im_livechat.assets_embed_core': [
             'hr/static/src/core/common/**/*',
+        ],
+        'im_livechat.embed_assets_unit_tests_setup': [
+            "hr/static/tests/hr_test_helpers.js",
+            "hr/static/tests/mock_server/**/*",
         ],
         'mail.assets_public': [
             'hr/static/src/core/common/**/*',
@@ -86,4 +94,5 @@
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'uninstall_hook': 'uninstall_hook',
 }

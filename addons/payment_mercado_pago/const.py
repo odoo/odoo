@@ -4,7 +4,7 @@ from odoo.tools import LazyTranslate
 
 _lt = LazyTranslate(__name__)
 
-PROXY_URL = "https://mercadopago.api.odoo.com/api/mercado_pago/1"
+PROXY_URL = "https://mercadopago.api.odoo.com/api/mercado_pago/"
 
 PAYMENT_RETURN_ROUTE = "/payment/mercado_pago/return"
 OAUTH_RETURN_ROUTE = "/payment/mercado_pago/oauth/return"
@@ -12,47 +12,31 @@ WEBHOOK_ROUTE = "/payment/mercado_pago/webhook"
 
 
 # The countries supported by Mercado Pago.
-SUPPORTED_COUNTRIES = {
-    "AR",
-    "BO",
-    "BR",
-    "CL",
-    "CO",
-    "CR",
-    "DO",
-    "EC",
-    "GT",
-    "HN",
-    "MX",
-    "NI",
-    "PA",
-    "PY",
-    "PE",
-    "SV",
-    "UY",
-    "VE",
+SUPPORTED_COUNTRIES = {"AR", "BR", "CL", "CO", "MX", "PE", "UY"}
+
+# Mapping of country codes to the locales supported by the Mercado Pago Bricks SDK. The locale is
+# bound to the country rather than the language (each supported country has a single locale, e.g.
+# Brazil is always pt-BR), so the website language's country part is enough to resolve it.
+# See https://www.mercadopago.com/developers/en/docs/checkout-bricks/additional-content/localization.
+COUNTRY_LOCALES = {
+    "AR": "es-AR",
+    "BR": "pt-BR",
+    "CL": "es-CL",
+    "CO": "es-CO",
+    "MX": "es-MX",
+    "PE": "es-PE",
+    "UY": "es-UY",
 }
 
 # Mapping of country codes to corresponding currency codes.
 CURRENCY_MAPPING = {
     "AR": "ARS",  # Argentina - Argentine Peso
-    "BO": "BOB",  # Bolivia - Boliviano
     "BR": "BRL",  # Brazil - Brazilian Real
     "CL": "CLP",  # Chile - Chilean Peso
     "CO": "COP",  # Colombia - Colombian Peso
-    "CR": "CRC",  # Costa Rica - Costa Rican Colón
-    "DO": "DOP",  # Dominican Republic - Dominican Peso
-    "EC": "USD",  # Ecuador - United States Dollar
-    "GT": "GTQ",  # Guatemala - Guatemalan Quetzal
-    "HN": "HNL",  # Honduras - Honduran Lempira
     "MX": "MXN",  # Mexico - Mexican Peso
-    "NI": "NIO",  # Nicaragua - Nicaraguan Córdoba
-    "PA": "PAB",  # Panama - Panamanian Balboa (also uses USD)
-    "PY": "PYG",  # Paraguay - Paraguayan Guaraní
     "PE": "PEN",  # Peru - Peruvian Sol
-    "SV": "USD",  # El Salvador - United States Dollar
     "UY": "UYU",  # Uruguay - Uruguayan Peso
-    "VE": "VES",  # Venezuela - Venezuelan Bolívar
 }
 
 # Set of currencies where Mercado Pago's minor units deviates from the ISO 4217 standard.
@@ -60,29 +44,8 @@ CURRENCY_MAPPING = {
 # vs. https://api.mercadopago.com/currencies. Last seen online: 2024-10-29.
 CURRENCY_DECIMALS = {"COP": 0, "HNL": 0, "NIO": 0}
 
-# The codes of the payment methods to activate when Mercado Pago is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
-    "card",
-    # Brand payment methods.
-    "amex",
-    "visa",
-    "mastercard",
-    "argencard",
-    "ceconsud",
-    "cordobesa",
-    "codensa",
-    "lider",
-    "magna",
-    "naranja",
-    "nativa",
-    "oca",
-    "presto",
-    "tarjeta_mercadopago",
-    "shopping",
-    "elo",
-    "hipercard",
-}
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card"}
 
 # Mapping of payment method codes to Mercado Pago codes.
 PAYMENT_METHODS_MAPPING = {

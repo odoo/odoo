@@ -1,0 +1,58 @@
+.o-CallDebriefTimeline-container {
+    .o-CallDebriefTimeline {
+        height: var(--CallDebriefTimeline-height, #{map-get($spacers, 3) * 2});
+        cursor: grab;
+        touch-action: none;
+
+        &:active, &:hover {
+            .o-CallDebriefTimeline-timestamp {
+                opacity: 1;
+                transform: translate(-50%, -25%);
+            }
+
+            .o-CallDebriefTimeline-playhead:before {
+                transform: scale(1);
+            }
+        }
+    }
+
+    .o-CallDebriefTimeline-track {
+        height: var(--CallDebriefTimeline__mediaSegment-height, #{map-get($spacers, 2)});
+        background: rgba($black, .015);
+    }
+
+    .o-CallDebriefTimeline-media-segment {
+        height: var(--CallDebriefTimeline__mediaSegment-height, #{map-get($spacers, 2)});
+    }
+
+    .o-CallDebriefTimeline-playhead {
+        left: 0;
+        height: var(--CallDebriefTimeline__playhead-size, #{map-get($spacers, 3)});
+        width: var(--CallDebriefTimeline__playhead-size, #{map-get($spacers, 3)});
+
+        &:before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            display: block;
+            background: $primary;
+            transform: scale(.1, 1);
+            transition: transform .15s ease;
+        }
+    }
+
+    .o-CallDebriefTimeline-timestamp {
+        left: 0;
+        opacity: 0;
+        transition: opacity .2s ease-in-out, transform .2s ease-in-out;
+        user-select: none;
+    }
+}
+
+.o-CallDebrief-mediaPlayer {
+    touch-action: manipulation;
+
+    .o-CallDebriefControls-volumeSlider {
+        touch-action: none;
+    }
+}

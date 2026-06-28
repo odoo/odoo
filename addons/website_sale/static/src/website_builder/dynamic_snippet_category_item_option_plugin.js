@@ -31,7 +31,7 @@ export class SetCategoryImageAction extends BuilderAction {
                     category_id: parseInt(categoryId),
                     attachment_id: selectedMedia[0]['id'],
                 });
-                if (!(selectedImageEl instanceof HTMLImageElement)) return;
+                if (selectedImageEl.tagName !== 'IMG') return;
                 categoryImage.replaceWith(selectedImageEl);
                 this.dependencies['builderOptions'].updateContainers(selectedImageEl);
             },

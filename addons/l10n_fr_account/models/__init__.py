@@ -4,5 +4,6 @@ from . import template_fr
 from . import template_fr_asso
 from . import template_fr_comp
 from . import template_mc
+from . import res_partner
 from . import res_company
 from . import base_document_layout

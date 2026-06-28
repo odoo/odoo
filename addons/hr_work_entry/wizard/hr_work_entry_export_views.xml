@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_open_export_wizard" model="ir.actions.act_window">
+        <field name="name">Export Time Entries</field>
+        <field name="res_model">hr.export.work.entries</field>
+        <field name="view_mode">form</field>
+        <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+        <field name="target">new</field>
+        <field name="context">{'dialog_size': 'medium'}</field>
+    </record>
+
+    <record id="hr_export_work_entries_wizard" model="ir.ui.view">
+        <field name="name">hr.export.work.entries.wizard</field>
+        <field name="model">hr.export.work.entries</field>
+        <field name="arch" type="xml">
+            <form string="Export Time Entries">
+                <group name="export_group">
+                    <field name="reference_month"/>
+                    <field name="reference_year" widget="integer" options="{'type': 'number'}"/>
+                </group>
+                <footer class="modal-footer">
+                    <button name="download_export" type="object" class="btn btn-primary">Export</button>
+                    <button type="button" data-bs-dismiss="modal" class="btn">Discard</button>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

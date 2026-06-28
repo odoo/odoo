@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('pt')
     def _get_pt_template_data(self):
         return {
-            'property_account_receivable_id': 'chart_2111',
-            'property_account_payable_id': 'chart_2211',
         }
 
     @template('pt', 'res.company')
@@ -31,6 +29,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'iva_pt_purchase_normal',
                 'income_account_id': 'chart_711',
                 'expense_account_id': 'chart_311',
+                'receivable_account_id': 'chart_2111',
+                'payable_account_id': 'chart_2211',
                 'account_stock_valuation_id': 'chart_331',
             },
         }

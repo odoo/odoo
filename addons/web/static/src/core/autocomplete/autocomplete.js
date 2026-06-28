@@ -1,66 +1,47 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { onWillRender, useRef } from "@web/owl2/utils";
 import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, proxy, t, useListener } from "@odoo/owl";
 import { mergeClasses } from "@web/core/utils/classname";
+
+export const autoCompleteProps = {
+    value: t.string().optional(""),
+    id: t.string().optional(),
+    sources: t.array(
+        t.object({
+            placeholder: t.string().optional(),
+            options: t.or([t.array(), t.function()]),
+            optionSlot: t.string().optional(),
+        })
+    ),
+    placeholder: t.string().optional(""),
+    title: t.string().optional(""),
+    autocomplete: t.string().optional("new-password"),
+    autoSelect: t.boolean().optional(false),
+    resetOnSelect: t.boolean().optional(),
+    onInput: t.function().optional(() => () => {}),
+    onCancel: t.function().optional(() => () => {}),
+    onChange: t.function().optional(() => () => {}),
+    onBlur: t.function().optional(() => () => {}),
+    onFocus: t.function().optional(() => () => {}),
+    searchOnInputClick: t.boolean().optional(true),
+    input: t.function().optional(),
+    inputDebounceDelay: t.number().optional(250),
+    dropdown: t.boolean().optional(true),
+    autofocus: t.boolean().optional(),
+    class: t.string().optional(),
+    slots: t.object().optional(),
+    menuPositionOptions: t.object().optional({}),
+    menuCssClass: t.or([t.string(), t.array(), t.object()]).optional({}),
+    selectOnBlur: t.boolean().optional(),
+};
 
 export class AutoComplete extends Component {
     static template = "web.AutoComplete";
-    static props = {
-        value: { type: String, optional: true },
-        id: { type: String, optional: true },
-        sources: {
-            type: Array,
-            element: {
-                type: Object,
-                shape: {
-                    placeholder: { type: String, optional: true },
-                    options: [Array, Function],
-                    optionSlot: { type: String, optional: true },
-                },
-            },
-        },
-        placeholder: { type: String, optional: true },
-        title: { type: String, optional: true },
-        autocomplete: { type: String, optional: true },
-        autoSelect: { type: Boolean, optional: true },
-        resetOnSelect: { type: Boolean, optional: true },
-        onInput: { type: Function, optional: true },
-        onCancel: { type: Function, optional: true },
-        onChange: { type: Function, optional: true },
-        onBlur: { type: Function, optional: true },
-        onFocus: { type: Function, optional: true },
-        searchOnInputClick: { type: Boolean, optional: true },
-        input: { type: Function, optional: true },
-        inputDebounceDelay: { type: Number, optional: true },
-        dropdown: { type: Boolean, optional: true },
-        autofocus: { type: Boolean, optional: true },
-        class: { type: String, optional: true },
-        slots: { type: Object, optional: true },
-        menuPositionOptions: { type: Object, optional: true },
-        menuCssClass: { type: [String, Array, Object], optional: true },
-        selectOnBlur: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        value: "",
-        placeholder: "",
-        title: "",
-        autocomplete: "new-password",
-        autoSelect: false,
-        dropdown: true,
-        onInput: () => {},
-        onCancel: () => {},
-        onChange: () => {},
-        onBlur: () => {},
-        onFocus: () => {},
-        searchOnInputClick: true,
-        inputDebounceDelay: 250,
-        menuPositionOptions: {},
-        menuCssClass: {},
-    };
+    props = props(autoCompleteProps);
 
     get timeout() {
         return this.props.inputDebounceDelay;
@@ -74,12 +55,18 @@ export class AutoComplete extends Component {
         this.mouseSelectionActive = false;
         this.isOptionSelected = false;
 
-        this.state = useState({
+        this.state = proxy({
             navigationRev: 0,
             optionsRev: 0,
             open: false,
             activeSourceOption: null,
             value: this.props.value,
+        });
+        onWillRender(() => {
+            // FIXME : We should read every part of the state
+            // to actually subscribe the component
+            // this is roughly equivalent to what owl2 did
+            [...Object.entries(this.state)];
         });
 
         this.inputRef = useForwardRefToParent("input");
@@ -107,9 +94,9 @@ export class AutoComplete extends Component {
             }
         }, this.timeout);
 
-        useExternalListener(window, "scroll", this.externalClose, true);
-        useExternalListener(window, "pointerdown", this.externalClose, true);
-        useExternalListener(window, "mousemove", () => (this.mouseSelectionActive = true), true);
+        useListener(window, "scroll", this.externalClose.bind(this), true);
+        useListener(window, "pointerdown", this.externalClose.bind(this), true);
+        useListener(window, "mousemove", () => (this.mouseSelectionActive = true), true);
 
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
@@ -121,7 +108,6 @@ export class AutoComplete extends Component {
                     this.state.value = nextProps.value;
                     this.inputRef.el.value = nextProps.value;
                 }
-                this.close();
             }
         });
 
@@ -151,6 +137,11 @@ export class AutoComplete extends Component {
     get dropdownOptions() {
         return {
             position: "bottom-start",
+            onPositioned: (popperEl, solution) => {
+                if (["bottom", "top"].includes(solution.direction)) {
+                    popperEl.style.width = getComputedStyle(this.targetDropdown).width;
+                }
+            },
             ...this.props.menuPositionOptions,
         };
     }
@@ -279,52 +270,57 @@ export class AutoComplete extends Component {
     }
 
     navigate(direction) {
-        let step = Math.sign(direction);
-        if (!step) {
-            this.state.activeSourceOption = null;
-            step = 1;
-        } else {
+        const step = Math.sign(direction);
+        if (step) {
             this.state.navigationRev++;
         }
 
-        do {
-            if (this.state.activeSourceOption) {
-                let [sourceIndex, optionIndex] = this.state.activeSourceOption;
-                let source = this.sources[sourceIndex];
+        const navigableOptions = [];
+        for (let sourceIndex = 0; sourceIndex < this.sources.length; sourceIndex++) {
+            const source = this.sources[sourceIndex];
+            if (source.isLoading) {
+                continue;
+            }
 
-                optionIndex += step;
-                if (0 > optionIndex || optionIndex >= source.options.length) {
-                    sourceIndex += step;
-                    source = this.sources[sourceIndex];
-
-                    while (source && source.isLoading) {
-                        sourceIndex += step;
-                        source = this.sources[sourceIndex];
-                    }
-
-                    if (source) {
-                        optionIndex = step < 0 ? source.options.length - 1 : 0;
-                    }
-                }
-
-                this.state.activeSourceOption = source ? [sourceIndex, optionIndex] : null;
-            } else {
-                let sourceIndex = step < 0 ? this.sources.length - 1 : 0;
-                let source = this.sources[sourceIndex];
-
-                while (source && source.isLoading) {
-                    sourceIndex += step;
-                    source = this.sources[sourceIndex];
-                }
-
-                if (source) {
-                    const optionIndex = step < 0 ? source.options.length - 1 : 0;
-                    if (optionIndex < source.options.length) {
-                        this.state.activeSourceOption = [sourceIndex, optionIndex];
-                    }
+            for (let optionIndex = 0; optionIndex < source.options.length; optionIndex++) {
+                if (!source.options[optionIndex].unselectable) {
+                    navigableOptions.push([sourceIndex, optionIndex]);
                 }
             }
-        } while (this.activeOption?.unselectable);
+        }
+
+        if (!navigableOptions.length) {
+            this.state.activeSourceOption = null;
+            return;
+        }
+
+        const defaultSourceOption =
+            step < 0 ? navigableOptions[navigableOptions.length - 1] : navigableOptions[0];
+
+        if (!step || !this.state.activeSourceOption) {
+            this.state.activeSourceOption = defaultSourceOption;
+            return;
+        }
+
+        const [currentSourceIndex, currentOptionIndex] = this.state.activeSourceOption;
+        const currentIndex = navigableOptions.findIndex(
+            ([sI, oI]) => sI === currentSourceIndex && oI === currentOptionIndex
+        );
+
+        if (currentIndex === -1) {
+            this.state.activeSourceOption = defaultSourceOption;
+            return;
+        }
+
+        let nextIndex = currentIndex + step;
+
+        if (nextIndex < 0) {
+            nextIndex = navigableOptions.length - 1;
+        } else if (nextIndex >= navigableOptions.length) {
+            nextIndex = 0;
+        }
+
+        this.state.activeSourceOption = navigableOptions[nextIndex];
     }
 
     onInputBlur() {
@@ -408,6 +404,8 @@ export class AutoComplete extends Component {
 
         switch (hotkey) {
             case "enter":
+            case "tab":
+            case "shift+tab":
                 if (!this.isOpened || !this.state.activeSourceOption) {
                     return;
                 }
@@ -419,20 +417,6 @@ export class AutoComplete extends Component {
                 }
                 this.cancel();
                 break;
-            case "tab":
-            case "shift+tab":
-                if (!this.isOpened) {
-                    return;
-                }
-                if (
-                    this.props.autoSelect &&
-                    this.state.activeSourceOption &&
-                    (this.state.navigationRev > 0 || this.inputRef.el.value.length > 0)
-                ) {
-                    this.selectOption(this.activeOption);
-                }
-                this.close();
-                return;
             case "arrowup":
                 this.navigate(-1);
                 if (!this.isOpened) {

@@ -14,9 +14,10 @@ HIERARCHY_VALID_ATTRIBUTES = {
     'delete',
     'parent_field',
     'child_field',
-    'icon',
     'draggable',
-    'default_order'
+    'default_order',
+    'avatar_field',
+    'label',
 }
 
 

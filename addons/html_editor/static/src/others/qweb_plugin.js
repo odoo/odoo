@@ -1,8 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
+import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { QWebPicker } from "./qweb_picker";
-import { isElement } from "@html_editor/utils/dom_info";
+import { QWEB_STYLE_ATTRS, isElement } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
 
 const isUnsplittableQWebElement = (node) =>
@@ -20,7 +20,6 @@ const isUnsplittableQWebElement = (node) =>
             "t-raw",
         ].some((attr) => node.getAttribute(attr)));
 
-const PROTECTED_QWEB_SELECTOR = "[t-esc], [t-raw], [t-out], [t-field]";
 const QWEB_DATA_ATTRIBUTES = [
     "data-oe-t-group",
     "data-oe-t-inline",
@@ -29,16 +28,22 @@ const QWEB_DATA_ATTRIBUTES = [
 ];
 const dataAttributesSelector = QWEB_DATA_ATTRIBUTES.map((attr) => `[${attr}]`).join(", ");
 
+// Selector for QWeb-specific attributes
+const PROTECTED_QWEB_SELECTOR = "[t-esc], [t-raw], [t-out], [t-field]";
+
 export const isUnremovableQWebElement = (node) =>
     node.getAttribute?.("t-set") || node.getAttribute?.("t-call");
 
 export class QWebPlugin extends Plugin {
     static id = "qweb";
-    static dependencies = ["overlay", "protectedNode", "selection"];
+    static dependencies = ["color", "overlay", "protectedNode", "selection"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
         on_selectionchange_handlers: withSequence(8, this.onSelectionChange.bind(this)),
+
+        /** Overrides */
+        apply_color_overrides: this.applyColorToFieldNodes.bind(this),
 
         /** Processors */
         clean_for_save_processors: (root) => {
@@ -47,6 +52,7 @@ export class QWebPlugin extends Plugin {
                 element.removeAttribute("contenteditable");
                 delete element.dataset.oeProtected;
             }
+            return root;
         },
         normalize_processors: withSequence(0, this.normalize.bind(this)),
         clipboard_content_processors: this.clearDataAttributes.bind(this),
@@ -67,6 +73,31 @@ export class QWebPlugin extends Plugin {
                 return true;
             }
         },
+        is_formattable_node_predicates: (node) => {
+            if (node.matches?.(PROTECTED_QWEB_SELECTOR)) {
+                return true;
+            }
+        },
+        can_format_content_predicates: (selection) => {
+            const targetedNodes = new Set(
+                this.dependencies.selection.getTargetedNodes().map((n) => closestElement(n))
+            );
+            if (
+                QWEB_STYLE_ATTRS.some((att) =>
+                    [...targetedNodes].some((node) => node.hasAttribute(att))
+                )
+            ) {
+                return false;
+            }
+            const { anchorNode, focusNode } = selection;
+            if (anchorNode === focusNode && closestElement(anchorNode, PROTECTED_QWEB_SELECTOR)) {
+                return true;
+            }
+        },
+
+        /** Providers */
+        color_target_providers: (node) => closestElement(node, PROTECTED_QWEB_SELECTOR),
+        formattable_node_providers: (node) => closestElement(node, PROTECTED_QWEB_SELECTOR),
 
         system_attributes: QWEB_DATA_ATTRIBUTES,
     };
@@ -78,6 +109,19 @@ export class QWebPlugin extends Plugin {
         });
         this.addDomListener(this.editable, "click", this.onClick);
         this.groupIndex = 0;
+    }
+
+    applyColorToFieldNodes(color, mode, coloredNodes) {
+        const fieldNodes = new Set(
+            this.dependencies.selection
+                .getTargetedNodes()
+                .map((n) => closestElement(n, PROTECTED_QWEB_SELECTOR))
+                .filter(Boolean)
+        );
+        for (const fieldNode of fieldNodes) {
+            this.dependencies.color.colorElement(fieldNode, color, mode);
+            [fieldNode, ...descendants(fieldNode)].forEach((n) => coloredNodes.add(n));
+        }
     }
 
     isValidTargetForDomListener(ev) {
@@ -108,6 +152,7 @@ export class QWebPlugin extends Plugin {
             this.dependencies.protectedNode.setProtectingNode(element, true);
         }
         this.applyGroupQwebBranching(root);
+        return root;
     }
 
     checkAllInline(el) {
@@ -124,10 +169,12 @@ export class QWebPlugin extends Plugin {
     }
 
     normalizeInline(root) {
-        for (const el of selectElements(root, "t")) {
-            if (this.checkAllInline(el)) {
-                el.setAttribute("data-oe-t-inline", "true");
-            }
+        const targets = [...root.querySelectorAll("t")];
+        if (root.matches("t")) {
+            targets.unshift(root);
+        }
+        for (const el of targets.filter((el) => this.checkAllInline(el))) {
+            el.setAttribute("data-oe-t-inline", "true");
         }
     }
 
@@ -169,7 +216,7 @@ export class QWebPlugin extends Plugin {
             const qwebNode =
                 selection &&
                 selection.anchorNode &&
-                closestElement(selection.anchorNode, "[t-field],[t-esc],[t-out]");
+                closestElement(selection.anchorNode, PROTECTED_QWEB_SELECTOR);
             if (qwebNode && this.editable.contains(qwebNode)) {
                 // select the whole qweb node
                 const [anchorNode, anchorOffset] = leftPos(qwebNode);
@@ -183,7 +230,7 @@ export class QWebPlugin extends Plugin {
             }
         }
         const targetNode = ev.target;
-        if (targetNode.closest("[data-oe-t-group]")) {
+        if (targetNode.closest("[data-oe-t-group], [t-out], [t-field]")) {
             this.selectNode(targetNode);
         }
     }
@@ -194,11 +241,15 @@ export class QWebPlugin extends Plugin {
             return;
         }
         this.selectedNode = node;
+        const attr = ["t-out", "t-field"].find((a) => node.hasAttribute(a));
         this.picker.open({
             target: node,
             props: {
                 groups: this.getNodeGroups(node),
                 select: this.select.bind(this),
+                ...(attr && {
+                    expression: `${attr}: ${node.getAttribute(attr)}`,
+                }),
             },
         });
     }
@@ -262,5 +313,6 @@ export class QWebPlugin extends Plugin {
         for (const node of root.querySelectorAll(dataAttributesSelector)) {
             QWEB_DATA_ATTRIBUTES.forEach((attr) => node.removeAttribute(attr));
         }
+        return root;
     }
 }

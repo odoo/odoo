@@ -3,6 +3,7 @@
 
 from . import models
 from . import report
+from . import wizard
 
 
 def _create_warehouse_data(env):

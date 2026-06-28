@@ -1,7 +1,7 @@
-import { useComponent, useExternalListener } from "@web/owl2/utils";
+import { useComponent } from "@web/owl2/utils";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-
+import { useListener } from "@odoo/owl";
 
 export function useCalendarPopover(component) {
     const owner = useComponent();
@@ -12,7 +12,7 @@ export function useCalendarPopover(component) {
     const dialog = useService("dialog");
     let removeDialog = null;
     let fcPopover;
-    useExternalListener(
+    useListener(
         window,
         "mousedown",
         (ev) => {
@@ -43,6 +43,9 @@ export function useCalendarPopover(component) {
                 popoverClass = popoverClassToUse;
                 popover.open(target, props);
             }
+        },
+        get isOpen() {
+            return owner.env.isSmall ? Boolean(removeDialog) : popover.isOpen;
         },
     };
 }

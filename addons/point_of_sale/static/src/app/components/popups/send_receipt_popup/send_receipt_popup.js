@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -22,7 +21,7 @@ export class SendReceiptPopup extends Component {
         this.dialog = useService("dialog");
         const partner = this.order.getPartner();
         const email = partner?.invoice_emails || partner?.email || "";
-        this.state = useState({
+        this.state = proxy({
             email: email,
             phone: partner?.phone || "",
         });

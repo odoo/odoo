@@ -1,5 +1,4 @@
-import { useOpenChat } from "@mail/core/web/open_chat_hook";
-
+import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { PropertyValue } from "@web/views/fields/properties/property_value";
 
@@ -10,10 +9,8 @@ import { PropertyValue } from "@web/views/fields/properties/property_value";
 patch(PropertyValue.prototype, {
     setup() {
         super.setup();
-
         if (this.env.services["mail.store"]) {
-            // work only for the res.users model
-            this.openChat = useOpenChat("res.users");
+            this.store = useService("mail.store");
         }
     },
 
@@ -21,9 +18,9 @@ patch(PropertyValue.prototype, {
         const value = super.propertyValue;
         if (this.props.type === "many2many") {
             return value.map((tag) => {
-                if (this.openChat && this.props.comodel === "res.users") {
+                if (this.store && this.props.comodel === "res.users") {
                     tag.props.onAvatarClick = () => {
-                        this.openChat(tag.id);
+                        this.store.openChat({ userId: tag.id });
                     };
                 }
                 return tag;
@@ -33,8 +30,8 @@ patch(PropertyValue.prototype, {
     },
 
     _onAvatarClicked() {
-        if (this.openChat && this.showAvatar && this.props.comodel === "res.users") {
-            this.openChat(this.props.value.id);
+        if (this.store && this.showAvatar && this.props.comodel === "res.users") {
+            this.store.openChat({ userId: this.props.value.id });
         }
     },
 });

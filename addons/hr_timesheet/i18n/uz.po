@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -37,13 +37,6 @@ msgstr "%(effective)s %(uom_name)s"
 #, fuzzy
 msgid "%(effective)s / %(allocated)s %(uom_name)s"
 msgstr "%(effective)s / %(allocated)s %(uom_name)s"
-
-#. module: hr_timesheet
-#. odoo-python
-#: code:addons/hr_timesheet/models/project_project.py:0
-#, fuzzy
-msgid "%(effective)s / %(allocated)s %(uom_name)s (%(success_rate)s%%)"
-msgstr "%(effective)s / %(allocated)s %(uom_name)s (%(success_rate)s%%)"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -75,35 +68,35 @@ msgstr "%(name)sning vaqt jadvallari"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 #, fuzzy
 msgid "%(project_name)s (%(days)sd)"
 msgstr "%(project_name)s (%(days)s kun)"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 #, fuzzy
-msgid "%(project_name)s (%(hours)sh%(minutes)s)"
+msgid "%(project_name)s (%(sign)s%(hours)sh%(minutes)s)"
 msgstr "%(project_name)s (%(hours)s soat %(minutes)s daqiqa)"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 #, fuzzy
-msgid "%(project_name)s (%(hours)sh)"
+msgid "%(project_name)s (%(sign)s%(hours)sh)"
 msgstr "%(project_name)s (%(hours)s soat)"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 #, fuzzy
 msgid ""
-"'%(missing_plan_names)s' analytic plan(s) required on the project "
-"'%(project_name)s' linked to the timesheet."
+"'%(missing_plan_names)s' analytic plan(s) required on the project '%"
+"(project_name)s' linked to the timesheet."
 msgstr ""
-"Vaqt jadvaliga bog‘langan '%(project_name)s' loyihasida "
-"'%(missing_plan_names)s' tahliliy reja(lar) talab qilinadi."
+"Vaqt jadvaliga bog‘langan '%(project_name)s' loyihasida '%"
+"(missing_plan_names)s' tahliliy reja(lar) talab qilinadi."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -132,33 +125,18 @@ msgid "2 hours"
 msgstr "2 soat"
 
 #. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
-msgid "2021-09-01"
-msgstr ""
-
-#. module: hr_timesheet
-#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
-#, fuzzy
-msgid ""
-"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
-"title=\"Date\"/>"
-msgstr ""
-"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Sana\" "
-"title=\"Sana\"/>"
-
-#. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-clock-o\" title=\"Timesheets\" "
 "invisible=\"stat_success_rate\"/>\n"
-"                        <i class=\"fa fa-fw o_button_icon fa-clock-o text-"
-"success\" title=\"On Due\" invisible=\"not stat_success_rate or "
+"                            <i class=\"fa fa-fw o_button_icon fa-clock-o "
+"text-success\" title=\"On Due\" invisible=\"not stat_success_rate or "
 "stat_success_rate &gt;= 80\"/>\n"
-"                        <i class=\"fa fa-fw o_button_icon fa-clock-o text-"
-"warning\" title=\"Warning\" invisible=\"not stat_success_rate or "
+"                            <i class=\"fa fa-fw o_button_icon fa-clock-o "
+"text-warning\" title=\"Warning\" invisible=\"not stat_success_rate or "
 "stat_success_rate &gt; 100 or stat_success_rate &lt; 80\"/>\n"
-"                        <i class=\"fa fa-fw o_button_icon fa-clock-o text-"
-"danger\" title=\"Over Due\" invisible=\"not stat_success_rate or "
+"                            <i class=\"fa fa-fw o_button_icon fa-clock-o "
+"text-danger\" title=\"Over Due\" invisible=\"not stat_success_rate or "
 "stat_success_rate &lt;= 100\"/>"
 msgstr ""
 
@@ -169,8 +147,14 @@ msgid "<i class=\"fa fa-print\"/> View Details"
 msgstr "<i class=\"fa fa-print\"/> Tafsilotlarni ko‘rish"
 
 #. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_kanban_inherit
+msgid "<span class=\"fa fa-fw fa-clock-o me-1\" title=\"Time\"/>"
+msgstr ""
+
+#. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 #, fuzzy
 msgid "<span class=\"o_stat_text\">Timesheets</span>"
 msgstr "<span class=\"o_stat_text\">Vaqt jadvallari</span>"
@@ -376,6 +360,11 @@ msgid "Collaborators in project shared"
 msgstr "Loyihadagi hamkorlar ulashildi"
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__color
+msgid "Color Index"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_company
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__company_id
 #, fuzzy
@@ -450,10 +439,8 @@ msgstr "Hisobni faolsizlantirish."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
-#, fuzzy
-msgid "Default project value for timesheet generated from time off type."
+msgid "Default project value for timesheet generated from time type."
 msgstr ""
-"Dam olish turidan yaratilgan vaqt jadvali uchun standart loyiha qiymati."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
@@ -490,11 +477,17 @@ msgid "Describe your activity"
 msgstr "Faoliyatingizni tavsiflang"
 
 #. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.quick_create_account_analytic_line_form
+msgid "Describe your activity..."
+msgstr ""
+
+#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__name
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.quick_create_account_analytic_line_form
 #, fuzzy
 msgid "Description"
 msgstr "Tavsif"
@@ -772,7 +765,7 @@ msgstr "Hali ma'lumot yo‘q!"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 msgid "No timesheets created: employees aren’t working on the selected days"
 msgstr ""
 
@@ -1008,7 +1001,7 @@ msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 msgid ""
 "Some timesheets were not created: employees aren’t working on the selected "
 "days"
@@ -1054,7 +1047,7 @@ msgstr "Vazifalar tahlili"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 msgid "Template for Timesheets"
 msgstr ""
 
@@ -1068,7 +1061,7 @@ msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 #, fuzzy
 msgid ""
 "The project, the task and the analytic accounts of the timesheet must belong "
@@ -1214,6 +1207,7 @@ msgstr "Sotish buyurtmasida qolgan vaqt"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_tasks_list_inherit
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.quick_create_account_analytic_line_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_calendar_account_analytic_line_multi_create
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph
@@ -1320,7 +1314,7 @@ msgstr "Tabel vaqti"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 #: code:addons/hr_timesheet/models/project_task.py:0
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_by_project
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_from_employee
@@ -1359,7 +1353,7 @@ msgstr "Vaqt jadvallari"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 #, fuzzy
 msgid "Timesheets - %s"
 msgstr "Vaqt jadvallari - %s"
@@ -1418,14 +1412,14 @@ msgstr "Vazifalar bo‘yicha vaqt jadvallari"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 #, fuzzy
 msgid "Timesheets cannot be created on a private task."
 msgstr "Shaxsiy vazifa uchun vaqt jadvallari yaratib bo‘lmaydi."
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 #, fuzzy
 msgid ""
 "Timesheets must be created with an active employee in the selected companies."
@@ -1435,7 +1429,7 @@ msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 #, fuzzy
 msgid ""
 "Timesheets must be created with at least an active analytic account defined "
@@ -1446,7 +1440,7 @@ msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 #, fuzzy
 msgid "Timesheets successfully created"
 msgstr "Vaqt jadvallari muvaffaqiyatli yaratildi"
@@ -1599,7 +1593,7 @@ msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 #, fuzzy
 msgid "You cannot access timesheets that are not yours."
 msgstr "O‘zingizniki bo‘lmagan vaqt jadvallariga kira olmaysiz."
@@ -1631,7 +1625,7 @@ msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/account_analytic_line.py:0
 #, fuzzy
 msgid "You cannot set an archived employee on existing timesheets."
 msgstr "Mavjud vaqt jadvallariga arxivlangan xodimni belgilab bo‘lmaydi."

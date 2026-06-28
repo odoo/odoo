@@ -45,5 +45,4 @@ class BusSyncMixin(models.AbstractModel):
                 if field_list:
                     record._store_sync_extra_fields(field_list)
                     store.add(record, field_list)
-        stores.bus_send()
         return result

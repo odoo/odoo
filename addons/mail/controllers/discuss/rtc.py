@@ -76,7 +76,7 @@ class RtcController(Controller):
         store = Store()
         # sudo: discuss.channel.rtc.session - member of current user can join call
         member.sudo()._rtc_join_call(store, check_rtc_session_ids=check_rtc_session_ids, camera=camera)
-        return store.get_result()
+        return store
 
     @mail_route("/mail/rtc/channel/leave_call", methods=["POST"], type="jsonrpc", auth="public")
     def channel_call_leave(self, channel_id, session_id=None):
@@ -89,6 +89,27 @@ class RtcController(Controller):
             raise NotFound()
         # sudo: discuss.channel.rtc.session - member of current user can leave call
         member.sudo()._rtc_leave_call(session_id)
+
+    @mail_route("/mail/rtc/channel/remove_member_from_call", methods=["POST"], type="jsonrpc", auth="public")
+    def channel_call_remove_member(self, channel_id, member_id):
+        """Disconnects another member from the channel's RTC call.
+
+        Only the channel owner/admin (or a system administrator) may remove other participants.
+        :param int channel_id: id of the channel hosting the call
+        :param int member_id: id of the member to disconnect from the call
+        """
+        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        if not channel:
+            raise NotFound()
+        # sudo: discuss.channel.member - reading channel_role for an access check is allowed.
+        self_member = channel.self_member_id.sudo()
+        if not (request.env.user._is_admin() or self_member.channel_role in ("owner", "admin")):
+            raise NotFound()
+        # sudo: discuss.channel.member - a moderator may disconnect another member from the call.
+        target_member = channel.sudo().channel_member_ids.filtered(lambda m: m.id == member_id)
+        if not target_member:
+            raise NotFound()
+        target_member._rtc_leave_call()
 
     @route("/mail/rtc/channel/upgrade_connection", methods=["POST"], type="jsonrpc", auth="user")
     def channel_upgrade(self, channel_id):
@@ -139,9 +160,8 @@ class RtcController(Controller):
             ]
             channel_member_sudo.channel_id.rtc_session_ids.filtered_domain(domain).write({})  # update write_date
         rtc_updates = channel_member_sudo._rtc_sync_sessions(check_rtc_session_ids)
-        store = Store().add(
+        return Store().add(
             member.channel_id,
             "_store_rtc_update_fields",
             fields_params={"added": rtc_updates[0], "removed": rtc_updates[1]},
         )
-        return store.get_result()

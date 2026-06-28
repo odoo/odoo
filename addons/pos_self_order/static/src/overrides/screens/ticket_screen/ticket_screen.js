@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(TicketScreen.prototype, {
     getStatus(order) {
-        if (!(order.pos_reference || "").includes("Self")) {
+        if (order.source !== "kiosk" && order.source !== "mobile") {
             return super.getStatus(order);
         }
 
@@ -22,19 +22,5 @@ patch(TicketScreen.prototype, {
     },
     getTableTag(order) {
         return super.getTableTag(order) || order?.self_ordering_table_id?.table_number;
-    },
-    //  Todo: remove in master -->
-    getFilteredOrderList() {
-        const orders = super.getFilteredOrderList();
-        orders.forEach((order) => {
-            if (
-                ["kiosk", "mobile"].includes(order.source) &&
-                !order.online_payment_method_id &&
-                !Object.keys(order.last_order_preparation_change.lines).length
-            ) {
-                order.updateLastOrderChange();
-            }
-        });
-        return orders;
     },
 });

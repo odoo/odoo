@@ -468,7 +468,7 @@ class EventTrackController(http.Controller):
 
     @http.route(['''/event/<model("event.event"):event>/track_proposal/post'''], type='http', auth="public", methods=['POST'], website=True)
     def event_track_proposal_post(self, event, **post):
-        if not event.can_access_from_current_website():
+        if event.website_id and event.website_id.id != self.env.context['website_id']:
             return json.dumps({'error': 'forbidden'})
 
         # Only accept existing tag indices. Use search instead of browse + exists:
@@ -477,7 +477,7 @@ class EventTrackController(http.Controller):
         valid_tag_indices = request.env['event.track.tag'].search([('id', 'in', input_tag_indices)]).ids
 
         contact = request.env['res.partner']
-        visitor_partner = request.env['website.visitor']._get_visitor_from_request().partner_id
+        visitor_partner = request.env['ir.http']._get_visitor_from_request().partner_id
         # Contact name is required. Therefore, empty contacts are not considered here. At least one of contact_phone
         # and contact_email must be filled. Email is verified. If the post tries to create contact with no valid entry,
         # raise exception. If normalized email is the same as logged partner, use its partner_id on track instead.
@@ -521,7 +521,7 @@ class EventTrackController(http.Controller):
             'image': base64.b64encode(post['image'].read()) if post.get('image') else False,
         })
 
-        if request.env.user != request.website.user_id:
+        if request.env.user != self.env.website.user_id:
             track.sudo().message_subscribe(partner_ids=request.env.user.partner_id.ids)
 
         return json.dumps({'success': True})
@@ -566,7 +566,7 @@ class EventTrackController(http.Controller):
 
         event = track.event_id
         # JSON RPC have no website in requests
-        if hasattr(request, 'website_id') and not event.can_access_from_current_website():
+        if (website_id := self.env.context.get('website_id')) and event.website_id and event.website_id.id != website_id:
             raise NotFound()
         if not event.has_access('read'):
             raise Forbidden()

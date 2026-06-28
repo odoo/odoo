@@ -1,9 +1,10 @@
-import { useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
+import { optionType } from "@mail/core/common/suggestion_hook";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
-import { Component } from "@odoo/owl";
+import { Component, props, proxy, t, useListener } from "@odoo/owl";
 
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
@@ -12,34 +13,30 @@ import { useService } from "@web/core/utils/hooks";
 export class NavigableList extends Component {
     static components = { DiscussAvatar };
     static template = "mail.NavigableList";
-    static props = {
-        anchorRef: { optional: true },
-        class: { type: String, optional: true },
-        onSelect: { type: Function },
-        options: { type: Array },
-        optionTemplate: { type: String, optional: true },
-        position: { type: String, optional: true },
-        closeOnSelect: { type: Boolean, optional: true },
-        isLoading: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        position: "bottom",
-        closeOnSelect: true,
-        isLoading: false,
-    };
-
     setup() {
         super.setup();
+        this.store = useService("mail.store");
+        const option = optionType(this.store);
+        this.props = props({
+            anchorRef: t.signal(t.instanceOf(HTMLElement)).optional(),
+            class: t.string().optional(),
+            closeOnSelect: t.boolean().optional(true),
+            isLoading: t.boolean().optional(false),
+            onSelect: t.function([t.instanceOf(Event), option, t.record()]),
+            options: t.array(option),
+            optionTemplate: t.string().optional(),
+            position: t.string().optional("bottom"),
+            rememberPosition: t.boolean().optional(),
+        });
         this.rootRef = useRef("root");
-        this.state = useState({
+        this.state = proxy({
             activeIndex: null,
             open: false,
             showLoading: false,
         });
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
-
-        useExternalListener(window, "keydown", this.onKeydown, true);
+        useListener(this.env.pipWindow || window, "keydown", (ev) => this.onKeydown(ev), true);
         onExternalClick("root", async (ev) => {
             // Let event be handled by bubbling handlers first.
             await new Promise(setTimeout);
@@ -49,12 +46,15 @@ export class NavigableList extends Component {
             this.close();
         });
         // position and size
-        usePosition("root", () => this.props.anchorRef, { position: this.props.position });
+        usePosition("root", () => this.props.anchorRef?.(), {
+            position: this.props.position,
+            rememberPosition: this.props.rememberPosition,
+        });
         useLayoutEffect(
             () => {
                 this.open();
             },
-            () => [this.props]
+            () => [this.props?.options]
         );
         useLayoutEffect(
             () => {
@@ -145,11 +145,14 @@ export class NavigableList extends Component {
         const hotkey = getActiveHotkey(ev);
         switch (hotkey) {
             case "enter":
-                markEventHandled(ev, "NavigableList.select");
                 if (this.state.activeIndex === null) {
+                    // Nothing is selectable (e.g. list is open but still loading
+                    // with no options yet). Let Enter propagate so the composer
+                    // can send the message instead of being swallowed.
                     this.close();
                     return;
                 }
+                markEventHandled(ev, "NavigableList.select");
                 this.selectOption(ev, this.state.activeIndex);
                 break;
             case "escape":

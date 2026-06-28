@@ -97,7 +97,7 @@ export class TabulationPlugin extends Plugin {
             const targetedBlocks = this.dependencies.selection.getTargetedBlocks();
             this.indentBlocks(targetedBlocks);
         }
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     handleShiftTab() {
@@ -106,7 +106,7 @@ export class TabulationPlugin extends Plugin {
         }
         const targetedBlocks = this.dependencies.selection.getTargetedBlocks();
         this.outdentBlocks(targetedBlocks);
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     insertTab() {
@@ -297,5 +297,6 @@ export class TabulationPlugin extends Plugin {
     }
     normalize(el) {
         this.alignTabs(el);
+        return el;
     }
 }

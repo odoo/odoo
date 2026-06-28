@@ -17,7 +17,7 @@ class TestQweb(TransactionCaseWithUserDemo):
         cls.user_demo.group_ids = cls.env.ref('base.group_user')
 
     def test_qweb_post_processing_att(self):
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
@@ -52,13 +52,13 @@ class TestQweb(TransactionCaseWithUserDemo):
         rendered = self.env['ir.qweb']._render(template.id)
         self.assertEqual(rendered.strip(), result.strip(), 'First rendering (without website_id)')
 
-        rendered = self.env['ir.qweb'].with_context(website_id=self.ref('website.default_website'))._render(template.id)
+        rendered = self.env['ir.qweb'].with_context(website_id=self.ref('base.default_website'))._render(template.id)
         self.assertEqual(rendered.strip(), result.strip(), 'Second rendering (with website_id=default)')
 
         rendered = self.env['ir.qweb'].with_context(website_id=None)._render(template.id)
         self.assertEqual(rendered.strip(), result.strip(), 'Third rendering (with website_id=None)')
 
-        rendered = self.env['ir.qweb'].with_context(website_id=self.ref('website.default_website'))._render(template.id)
+        rendered = self.env['ir.qweb'].with_context(website_id=self.ref('base.default_website'))._render(template.id)
         self.assertEqual(rendered.strip(), result.strip(), 'Fourth rendering (with website_id=default)')
 
     def test_render_query_count(self):
@@ -81,7 +81,7 @@ class TestQweb(TransactionCaseWithUserDemo):
         IrUiView.create([{  # website_id=default
             'name': 'test',
             'type': 'qweb',
-            'website_id': self.ref('website.default_website'),
+            'website_id': self.ref('base.default_website'),
             'key': 'base.testing_header_1',
             'arch_db': '''<span>WITH WEBSITE</span>''',
         }, {  # same key but website_id=False
@@ -121,7 +121,7 @@ class TestQweb(TransactionCaseWithUserDemo):
         }, {  # website_id=default
             'name': 'test',
             'type': 'qweb',
-            'website_id': self.ref('website.default_website'),
+            'website_id': self.ref('base.default_website'),
             'key': 'base.testing_footer',
             'arch_db': '''<t t-name="base.testing_footer">
                 <t t-call="base.testing_footer_0"/>
@@ -146,7 +146,7 @@ class TestQweb(TransactionCaseWithUserDemo):
             'key': 'base.testing_content',
             'arch_db': '''<t t-call="base.testing_layout"><div><t t-call="base.testing_header_0"/><t t-out="doc"/></div></t>''',
         })
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         other_website = self.env['website'].create({'name': 'testing'})
 
         expected = """
@@ -190,7 +190,7 @@ class TestQweb(TransactionCaseWithUserDemo):
 
         def invalidate(*args):
             if 'templates' in args:
-                env.registry.clear_cache('templates')
+                env.transaction.invalidate_ormcache('templates')
             if 'view' in args:
                 IrUiView.invalidate_model()
 
@@ -201,7 +201,6 @@ class TestQweb(TransactionCaseWithUserDemo):
             self.assertEqual(env.cr.sql_log_count - init, queries, f'Maximum queries: {queries}')
 
         def check_website(template, name, queries):
-            queries += 1
             init = env.cr.sql_log_count
             with MockRequest(env, website=website) as request:
                 value = str(request.env['ir.qweb']._render(template, {'doc': name}))
@@ -302,86 +301,87 @@ class TestQweb(TransactionCaseWithUserDemo):
 
 
 class TestQwebProcessAtt(TransactionCase):
-    def setUp(self):
-        super(TestQwebProcessAtt, self).setUp()
-        self.website = self.env.ref('website.default_website')
-        self.env['res.lang']._activate_lang('fr_FR')
-        self.website.language_ids = self.env.ref('base.lang_en') + self.env.ref('base.lang_fr')
-        self.website.default_lang_id = self.env.ref('base.lang_en')
-        self.website.cdn_activated = True
-        self.website.cdn_url = "http://test.cdn"
-        self.website.cdn_filters = "\n".join(["^(/[a-z]{2}_[A-Z]{2})?/a$", "^(/[a-z]{2})?/a$", "^/b$"])
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env.ref('base.default_website')
+        cls.env['res.lang']._activate_lang('fr_FR')
+        cls.website.language_ids = cls.env.ref('base.lang_en') + cls.env.ref('base.lang_fr')
+        cls.website.default_lang_id = cls.env.ref('base.lang_en')
+        cls.website.cdn_activated = True
+        cls.website.cdn_url = "http://test.cdn"
+        cls.website.cdn_filters = "^(/[a-z]{2}_[A-Z]{2})?/a$\n^(/[a-z]{2})?/a$\n^/b$"
 
-    def _test_att(self, url, expect, tag='a', attribute='href'):
+    def _test_att(self, env, url, expect, tag='a', attribute='href'):
         self.assertEqual(
-            self.env['ir.qweb']._post_processing_att(tag, {attribute: url}),
+            env['ir.qweb']._post_processing_att(tag, {attribute: url}),
             expect
         )
 
     def test_process_att_no_request(self):
         # no request so no URL rewriting
-        self._test_att('/', {'href': '/'})
-        self._test_att('/en', {'href': '/en'})
-        self._test_att('/fr', {'href': '/fr'})
+        self._test_att(self.env, '/', {'href': '/'})
+        self._test_att(self.env, '/en', {'href': '/en'})
+        self._test_att(self.env, '/fr', {'href': '/fr'})
         # no URL rewritting for CDN
-        self._test_att('/a', {'href': '/a'})
+        self._test_att(self.env, '/a', {'href': '/a'})
 
     def test_process_att_no_website(self):
-        with MockRequest(self.env):
+        with MockRequest(self.env) as request:
             # no website so URL rewriting
-            self._test_att('/', {'href': '/'})
-            self._test_att('/en', {'href': '/en'})
-            self._test_att('/fr', {'href': '/fr'})
+            self._test_att(request.env, '/', {'href': '/'})
+            self._test_att(request.env, '/en', {'href': '/en'})
+            self._test_att(request.env, '/fr', {'href': '/fr'})
             # no URL rewritting for CDN
-            self._test_att('/a', {'href': '/a'})
+            self._test_att(request.env, '/a', {'href': '/a'})
 
     def test_process_att_monolang_route(self):
-        with MockRequest(self.env, website=self.website, multilang=False):
+        with MockRequest(self.env, website=self.website, multilang=False) as request:
             # lang not changed in URL but CDN enabled
-            self._test_att('/a', {'href': 'http://test.cdn/a'})
-            self._test_att('/en/a', {'href': 'http://test.cdn/en/a'})
-            self._test_att('/b', {'href': 'http://test.cdn/b'})
-            self._test_att('/en/b', {'href': '/en/b'})
+            self._test_att(request.env, '/a', {'href': 'http://test.cdn/a'})
+            self._test_att(request.env, '/en/a', {'href': 'http://test.cdn/en/a'})
+            self._test_att(request.env, '/b', {'href': 'http://test.cdn/b'})
+            self._test_att(request.env, '/en/b', {'href': '/en/b'})
 
     def test_process_att_no_request_lang(self):
-        with MockRequest(self.env, website=self.website):
-            self._test_att('/', {'href': '/'})
-            self._test_att('/en/', {'href': '/'})
-            self._test_att('/fr/', {'href': '/fr/'})
-            self._test_att('/fr', {'href': '/fr'})
+        with MockRequest(self.env, website=self.website) as request:
+            self._test_att(request.env, '/', {'href': '/'})
+            self._test_att(request.env, '/en/', {'href': '/'})
+            self._test_att(request.env, '/fr/', {'href': '/fr/'})
+            self._test_att(request.env, '/fr', {'href': '/fr'})
 
     def test_process_att_with_request_lang(self):
-        with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}):
-            self._test_att('/', {'href': '/fr'})
-            self._test_att('/en/', {'href': '/'})
-            self._test_att('/fr/', {'href': '/fr/'})
-            self._test_att('/fr', {'href': '/fr'})
+        with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}) as request:
+            self._test_att(request.env, '/', {'href': '/fr'})
+            self._test_att(request.env, '/en/', {'href': '/'})
+            self._test_att(request.env, '/fr/', {'href': '/fr/'})
+            self._test_att(request.env, '/fr', {'href': '/fr'})
 
     def test_process_att_matching_cdn_and_lang(self):
-        with MockRequest(self.env, website=self.website):
+        with MockRequest(self.env, website=self.website) as request:
             # lang prefix is added before CDN
-            self._test_att('/a', {'href': 'http://test.cdn/a'})
-            self._test_att('/en/a', {'href': 'http://test.cdn/a'})
-            self._test_att('/fr/a', {'href': 'http://test.cdn/fr/a'})
-            self._test_att('/b', {'href': 'http://test.cdn/b'})
-            self._test_att('/en/b', {'href': 'http://test.cdn/b'})
-            self._test_att('/fr/b', {'href': '/fr/b'})
+            self._test_att(request.env, '/a', {'href': 'http://test.cdn/a'})
+            self._test_att(request.env, '/en/a', {'href': 'http://test.cdn/a'})
+            self._test_att(request.env, '/fr/a', {'href': 'http://test.cdn/fr/a'})
+            self._test_att(request.env, '/b', {'href': 'http://test.cdn/b'})
+            self._test_att(request.env, '/en/b', {'href': 'http://test.cdn/b'})
+            self._test_att(request.env, '/fr/b', {'href': '/fr/b'})
 
     def test_process_att_no_route(self):
-        with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}, routing=False):
+        with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}, routing=False) as request:
             # default on multilang=True if route is not /{module}/static/
-            self._test_att('/web/static/hi', {'href': '/web/static/hi'})
-            self._test_att('/my-page', {'href': '/fr/my-page'})
+            self._test_att(request.env, '/web/static/hi', {'href': '/web/static/hi'})
+            self._test_att(request.env, '/my-page', {'href': '/fr/my-page'})
 
     def test_process_att_url_crap(self):
-        with MockRequest(self.env, website=self.website):
+        with MockRequest(self.env, website=self.website) as request:
             match = root.get_db_router.return_value.bind.return_value.match
             # #{fragment} is stripped from URL when testing route
-            self._test_att('/x#y?z', {'href': '/x#y?z'})
+            self._test_att(request.env, '/x#y?z', {'href': '/x#y?z'})
             match.assert_called_with('/x', method='POST', query_args=None)
 
             match.reset_calls()
-            self._test_att('/x?y#z', {'href': '/x?y#z'})
+            self._test_att(request.env, '/x?y#z', {'href': '/x?y#z'})
             match.assert_called_with('/x', method='POST', query_args='y')
 
 
@@ -552,8 +552,8 @@ class TestQwebDataSnippet(TransactionCase):
     def test_call_query_count_snippets_template(self):
         actual_queries = []
         with contextmanager(lambda: self._patchExecute(actual_queries))():
-            with MockRequest(self.env, website=self.env.ref('website.default_website')):
-                render = self.env['ir.ui.view'].render_public_asset('website.snippets')
+            with MockRequest(self.env, website=self.env.ref('base.default_website')) as request:
+                render = request.env['ir.ui.view'].render_public_asset('website.snippets')
                 self.assertTrue('name="Blockquote"' in render)
 
         re_sql = re.compile(r'\bir_ui_view\b', re.IGNORECASE)

@@ -12,13 +12,25 @@ export class PosOrderAccounting extends Base {
         super.setup();
 
         this._prices = {};
-        this.triggerRecomputeAllPrices();
+        this._pricesDirty = false;
+        this._doRecomputeAllPrices();
     }
 
+    /**
+     * Mark prices as dirty so they are recomputed lazily on the next read of
+     * `prices` or `unitPrices`. Multiple mutations in the same synchronous
+     * operation (e.g. line create → merge → delete during addLineToOrder) all
+     * collapse into a single recomputation instead of running it three times.
+     */
     triggerRecomputeAllPrices() {
         if (!this._prices) {
             return;
         }
+        this._pricesDirty = true;
+    }
+
+    _doRecomputeAllPrices() {
+        this._pricesDirty = false;
         this._prices.original = this._constructPriceData();
         this._prices.unit = this._constructPriceData({ baseLineOpts: { quantity: 1 } });
     }
@@ -69,7 +81,7 @@ export class PosOrderAccounting extends Base {
      */
     get remainingDue() {
         const isNegative = this.totalDue < 0;
-        const remaining = this.totalDue - this.amountPaid;
+        const remaining = this.currency.round(this.totalDue - this.amountPaid);
 
         // Amount paid covers the total due
         if ((isNegative && remaining >= 0) || (!isNegative && remaining <= 0)) {
@@ -113,7 +125,7 @@ export class PosOrderAccounting extends Base {
     get appliedRounding() {
         const total = this.prices.taxDetails.total_amount_no_rounding;
         const isNegative = this.amountPaid > total;
-        const remaining = total - this.amountPaid;
+        const remaining = this.currency.round(total - this.amountPaid);
         const amount =
             this.orderIsRounded &&
             this.config.rounding_method.asymmetricRound(total < 0 ? -remaining : remaining) == 0
@@ -127,11 +139,21 @@ export class PosOrderAccounting extends Base {
      * These getters must be used each time the order prices are needed.
      *
      * Do not try to make your own price computation outside these getters.
+     *
+     * The dirty-check flush here is intentional: `triggerRecomputeAllPrices()`
+     * only marks the cache as stale rather than recomputing immediately, so
+     * the first read after one or more mutations recomputes exactly once.
      */
     get prices() {
+        if (this._pricesDirty) {
+            this._doRecomputeAllPrices();
+        }
         return this._prices.original;
     }
     get unitPrices() {
+        if (this._pricesDirty) {
+            this._doRecomputeAllPrices();
+        }
         return this._prices.unit;
     }
     get priceIncl() {

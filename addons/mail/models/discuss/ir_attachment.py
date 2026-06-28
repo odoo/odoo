@@ -18,8 +18,8 @@ class IrAttachment(models.Model):
             return guest._bus_channels()
         return super()._bus_channels()
 
-    def _store_attachment_fields(self, res: Store.FieldList):
-        super()._store_attachment_fields(res)
+    def _store_attachment_fields(self, res: Store.FieldList, **kwargs):
+        super()._store_attachment_fields(res, **kwargs)
         # sudo: discuss.voice.metadata - checking the existence of voice metadata for accessible
         # attachments is fine
         res.many("voice_ids", [], sudo=True)

@@ -3,6 +3,7 @@ from datetime import timedelta
 
 from odoo import Command
 from odoo.fields import Date
+from odoo.fields import Domain
 from odoo.tools import float_is_zero
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
@@ -1169,9 +1170,26 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertFalse(timesheet1.reinvoice_move_id, "Timesheet1 should be cleared after partial refund of its task")
         self.assertEqual(timesheet2.reinvoice_move_id, invoice2, "Timesheet2 should still be linked to the original invoice")
 
+        # Make sure only the refunded line is invoiced again
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': sale_order2.ids,
+            'default_journal_id': self.company_data['default_journal_sale'].id
+        }
+        wizard = self.env['sale.advance.payment.inv'].with_context(context).create({})
+        invoice_dict = wizard.create_invoices()
+        new_invoice = self.env['account.move'].browse(invoice_dict.get('res_id', []))
+        self.assertEqual(len(new_invoice.invoice_line_ids), 1, "Only the refunded line should be invoiced again")
+        self.assertEqual(new_invoice.invoice_line_ids.sale_line_ids, so_line1, "The invoiced line should be the refunded line")
+
     def test_invoice_with_already_invoiced_timesheets(self):
         """Checks that when an invoice is created, the hours that have already been invoiced aren't taken into
         account."""
+        if not self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')]):
+            self.skipTest("This test requires the installation of the account_account module")
+
+        self.env['ir.config_parameter'].sudo().set_str('sale.invoiced_timesheet', 'approved')
+
         product = self.env['product.product'].create({
             'name': "Service delivered, create task in global project",
             'standard_price': 30,
@@ -1195,7 +1213,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         })
         sale_order.action_confirm()
         task = sale_order.tasks_ids
-        self.env['account.analytic.line'].create({
+        timesheets = self.env['account.analytic.line'].create([{
             'name': 'Test Line',
             'date': '2026-01-08',
             'project_id': task.project_id.id,
@@ -1203,7 +1221,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'unit_amount': 2,
             'employee_id': self.employee_user.id,
             'company_id': self.company_data['company'].id,
-        })
+        }] * 2)
+        timesheets[0].validated = True
         context = {
             'active_model': 'sale.order',
             'active_ids': [self.so.id],
@@ -1242,6 +1261,122 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         })
         with self.assertRaises(UserError, msg='Should not be able to invoice already invoiced timesheets'):
             wizard_2.create_invoices()
+
+    def test_invoice_timesheet_uom_conversion_with_period(self):
+        """
+        Ensure that invoice quantities are correctly computed when the
+        sale order line UoM differs from the timesheet UoM.
+        """
+        self.env.company.timesheet_encode_uom_id = self.uom_hour.id
+        product = self.env['product.product'].create({
+            'name': "Test service product",
+            'standard_price': 30,
+            'list_price': 90,
+            'type': 'service',
+            'service_policy': 'delivered_timesheet',
+            'invoice_policy': 'delivery',
+            'service_type': 'timesheet',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project_global.id,
+            'taxes_id': False,
+            'uom_id': self.uom_hour.id,
+        })
+        uom_days = self.env.ref('uom.product_uom_day')
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': product.id, 'product_uom_qty': 3, 'product_uom_id': uom_days.id}),
+            ],
+        })
+        sale_order.action_confirm()
+        task = sale_order.tasks_ids
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'date': '2026-03-16',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 16,
+            'employee_id': self.employee_user.id,
+            'company_id': self.company_data['company'].id,
+        })
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id
+        }
+        wizard = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'delivered',
+            'date_start_invoice_timesheet': '2026-03-16',
+            'date_end_invoice_timesheet': '2026-03-20',
+            'sale_order_ids': [(6, 0, sale_order.ids)],
+        })
+        invoice_dict = wizard.create_invoices()
+        invoice = self.env['account.move'].browse(invoice_dict['res_id'])
+        self.assertEqual(invoice.invoice_line_ids.quantity, 2)
+
+    def test_portal_sale_order_timesheet_visibility(self):
+        """
+        Ensure a portal user only sees timesheets of subscribed SO lines.
+        Steps:
+        1. Create a portal user.
+        2. Use one SO line from self.so.
+        3. Create a second SO with product.
+        4. Log timesheets on both SO lines' tasks.
+        5. Subscribe portal user only to the first SO line's task.
+        6. Verify:
+        - User can sees timesheet for subscribed SO line (line 1).
+        - User does not see timesheet for the other SO line (line 2).
+        """
+        portal_user = new_test_user(
+            self.env,
+            name='Portal user',
+            login='portal_user',
+            email='portal_user@example.com',
+            groups='base.group_portal',
+        )
+        so_line_1 = self.so.order_line[1]
+        sale_order_2 = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': self.partner_a.id,
+            'user_id': self.user_employee_company_B.id,
+        })
+        so_line_2 = self.env['sale.order.line'].create({
+            'order_id': sale_order_2.id,
+            'product_id': self.product_order_timesheet3.id,
+        })
+        sale_order_2.action_confirm()
+        AnalyticLine = self.env['account.analytic.line']
+        timesheets_entry = AnalyticLine.create([
+            {
+                'name': 'Timesheet for line 1',
+                'employee_id': self.employee_user.id,
+                'task_id': so_line_1.task_id.id,
+                'so_line': so_line_1.id,
+            },
+            {
+                'name': 'Timesheet for line 2',
+                'employee_id': self.employee_user.id,
+                'task_id': so_line_2.task_id.id,
+                'so_line': so_line_2.id,
+            },
+        ])
+        timesheet_1, timesheet_2 = timesheets_entry[0], timesheets_entry[1]
+        (so_line_1.task_id | so_line_2.task_id).message_subscribe(partner_ids=portal_user.partner_id.ids)
+        domain = AnalyticLine.with_user(portal_user)._timesheet_get_portal_domain()
+        domain = Domain.AND([
+            domain,
+            [('so_line', 'in', so_line_1.ids)]
+        ])
+
+        timesheets = AnalyticLine.search(domain)
+        self.assertIn(
+            timesheet_1.id, timesheets.ids,
+            "Portal user should see the timesheet of the subscribed SO line (line 1)."
+        )
+        self.assertNotIn(
+            timesheet_2.id, timesheets.ids,
+            "Portal user should not see the timesheet of another SO line (line 2)."
+        )
 
 @tagged('-at_install', 'post_install')
 class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):

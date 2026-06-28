@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="ir_access_form_view_inherit_mail" model="ir.ui.view">
+            <field name="name">ir.access.view.form.inherit.mail</field>
+            <field name="model">ir.access</field>
+            <field name="inherit_id" ref="base.ir_access_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="after">
+                    <chatter/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

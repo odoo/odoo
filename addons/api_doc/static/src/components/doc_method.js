@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, markup } from "@odoo/owl";
+import { Component, markup, proxy } from "@odoo/owl";
 import { DocRequest } from "@api_doc/components/doc_request";
 import { DocTable, TABLE_TYPES } from "@api_doc/components/doc_table";
 import { getParameterDefaultValue } from "@api_doc/utils/doc_model_utils";
@@ -18,7 +17,7 @@ export class DocMethod extends Component {
 
     setup() {
         this.ui = useDocUI();
-        this.state = useState({ open: true });
+        this.state = proxy({ open: true });
         this.parametersData = {
             headers: ["Name", "Type", "Default Value", "Description"],
             items: Object.entries(this.method.parameters).map(([name, options]) => [

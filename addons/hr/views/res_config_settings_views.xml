@@ -12,11 +12,11 @@
                         <setting id="presence_control_setting" title="Presence of employees" string="Presence Display">
                             <div class="content-group" name="hr_presence_options">
                                 <div class="d-flex">
-                                    <field name="hr_presence_control_attendance" class="ml16"/>
+                                    <field name="hr_presence_control_attendance" widget="boolean_checkbox" class="ml16"/>
                                     <label for="hr_presence_control_attendance" class="o_light_label"/>
                                 </div>
                                 <div class="d-flex">
-                                    <field name="hr_presence_control_login" class="ml16"/>
+                                    <field name="hr_presence_control_login" widget="boolean_checkbox" class="ml16"/>
                                     <label for="hr_presence_control_login" class="o_light_label"/>
                                 </div>
                             </div>
@@ -24,11 +24,11 @@
                         <setting id="presence_reporting_setting" help="Presence reporting screen, email and IP address control." title="Advanced presence of employees">
                             <field name="module_hr_presence"/>
                             <div class="d-flex mt-1" invisible="not module_hr_presence">
-                                <field name="hr_presence_control_email" class="ml16"/>
+                                <field name="hr_presence_control_email" widget="boolean_checkbox" class="ml16"/>
                                 <label for="hr_presence_control_email" class="o_light_label"/>
                             </div>
                             <div class="d-flex" invisible="not module_hr_presence">
-                                <field name="hr_presence_control_ip" class="ml16"/>
+                                <field name="hr_presence_control_ip" widget="boolean_checkbox"  class="ml16"/>
                                 <label for="hr_presence_control_ip" class="o_light_label"/>
                             </div>
                         </setting>

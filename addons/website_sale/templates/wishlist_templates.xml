@@ -65,6 +65,11 @@
                                                     name="product_list_price"
                                                 />
                                             </small>
+                                            <t
+                                                t-if="combination_info.get('base_unit_price')"
+                                                t-call="website_sale.base_unit_price"
+                                                base_unit_price="combination_info['base_unit_price']"
+                                            />
                                         </div>
                                     </t>
                                     <t t-set="product_actions">
@@ -93,6 +98,7 @@
                                                 t-att-data-product-type="product.type"
                                                 t-att-data-ptav-ids="json.dumps(product_variant.product_template_attribute_value_ids.ids)"
                                                 t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                                                t-att-disabled="wish.product_id._is_sold_out()"
                                             >
                                                 <span class="d-inline-flex align-items-baseline">
                                                     <i
@@ -132,6 +138,15 @@
                                             <i class="oi oi-close" role="presentation"/>
                                         </button>
                                     </t>
+                                    <t t-set="product_extra_information">
+                                        <span
+                                            t-if="wish.product_id._is_sold_out() and not wish.product_id.allow_out_of_stock_order"
+                                            class="o_wsale_stock_badge badge text-bg-danger align-self-start align-top"
+                                        >
+                                            <i class="fa fa-circle text-danger me-1" aria-hidden="true"/>
+                                            Out of stock
+                                        </span>
+                                    </t>
                                     <t t-call="website_sale.products_item"
                                         show_variations="False"
                                         show_ribbons="False"
@@ -139,6 +154,7 @@
                                         product_actions="product_actions"
                                         extra_actions="extra_actions"
                                         show_combination_name="True"
+                                        product_extra_information="product_extra_information"
                                     />
                                 </div>
                             </t>
@@ -147,6 +163,41 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <!-- Wishlist button -->
+    <template id="website_sale.wishlist_button">
+        <t t-if="product_variant">
+            <!-- If the variant is known, check whether that specific variant is in wishlist -->
+            <t
+                t-if="products_in_wishlist is not None"
+                t-set="in_wish"
+                t-value="product_variant in products_in_wishlist"
+            />
+            <t t-else="" t-set="in_wish" t-value="product_variant._is_in_wishlist()"/>
+        </t>
+        <!-- If not, check whether any variant of its template is in wishlist -->
+        <t
+            t-else=""
+            t-set="in_wish" t-value="templates_in_wishlist and product in templates_in_wishlist"
+        />
+        <t t-set="btnTitle">Add to wishlist</t>
+        <t t-set="btnTitleActive">Handle your wishlist from the menu icon.</t>
+
+        <button
+            t-attf-class="btn o_add_wishlist #{in_wish and 'o_in_wishlist'}"
+            t-att-disabled="in_wish"
+            t-att-data-product-id="product_variant.id"
+            t-att-data-product-template-id="product.id"
+            t-att-title="in_wish and btnTitleActive or btnTitle"
+        >
+            <span
+                t-attf-class="fa o_not-animable #{in_wish and 'fa-heart' or 'fa-heart-o'}"
+                role="presentation"
+            />
+            <span t-if="not in_wish" class="o_label small ms-2">Add to wishlist</span>
+            <span t-else="" class="o_label small ms-2">In your wishlist</span>
+        </button>
     </template>
 
 </odoo>

@@ -14,17 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:38+0000\n"
-"PO-Revision-Date: 2026-01-31 12:33+0000\n"
+"POT-Creation-Date: 2026-05-22 17:48+0000\n"
+"PO-Revision-Date: 2026-05-04 13:45+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "portal/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -217,7 +217,7 @@ msgstr "<span class=\"small me-1 navbar-text\">以下でグループ化:</span>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Sort By:</span>"
-msgstr "<span class=\"small me-1 navbar-text\">以下でソート:</span>"
+msgstr "<span class=\"small me-1 navbar-text\">並べ替え:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -400,6 +400,11 @@ msgid "Close"
 msgstr "閉じる"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.message_thread
+msgid "Communication History"
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Company Name"
 msgstr "会社名"
@@ -474,7 +479,7 @@ msgstr "国"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Country..."
-msgstr ""
+msgstr "国..."
 
 #. module: portal
 #: model:ir.model,website_form_label:portal.model_res_partner
@@ -580,7 +585,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Discard"
-msgstr ""
+msgstr "破棄"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_http__display_name
@@ -658,7 +663,7 @@ msgstr "パスワードを忘れましたか？"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Give a duration for the key's validity"
-msgstr "キーの有効期間を指定して下さい"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -693,9 +698,6 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
-"これが新しいAPIキーです。RPCアクセスにはパスワードの代わりにこれを使用して下"
-"さい。\n"
-"　　　　インタラクティブな使用にはログインが必要です。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -802,8 +804,6 @@ msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
 msgstr ""
-"この記述が明確で完全であることが非常に\n"
-"　　　　重要です、"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__write_uid
@@ -856,8 +856,8 @@ msgstr "メッセージ"
 #. odoo-python
 #: code:addons/portal/models/mail_thread.py:0
 msgid ""
-"Model %(model_name)s does not support token signature, as it does not have "
-"%(field_name)s field."
+"Model %(model_name)s does not support token signature, as it does not have %"
+"(field_name)s field."
 msgstr ""
 "モデル%(model_name)s は%(field_name)sフィールドが無いためトークン署名をサポー"
 "トしていません。"
@@ -923,8 +923,6 @@ msgstr "内部かつポータルユーザのみAPIキーを作成することが
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
-"おっと！何かがうまくいきませんでした。ページをリロードしてログインしてみてく"
-"ださい。"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__partner_ids
@@ -1072,7 +1070,7 @@ msgstr "住所を保存"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Scope"
-msgstr "スコープ"
+msgstr "適用範囲"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -1168,7 +1166,7 @@ msgstr "州/都道府県"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "State / Province..."
-msgstr ""
+msgstr "州/都道府県..."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email_state
@@ -1246,13 +1244,13 @@ msgstr "連絡先 \"%s\" は既存のユーザと同じEメールを持ってい
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "The key cannot be retrieved later and provides"
-msgstr "このキーは後で取り出すことはできず、以下を提供します:"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "The key will be deleted once this period has elapsed."
-msgstr "この期間が経過すると、キーは削除されます。"
+msgstr ""
 
 #. module: portal
 #. odoo-python
@@ -1505,7 +1503,7 @@ msgstr "パスワードを空のままにすることはできません。"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "You must be"
-msgstr "すべきです"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1580,15 +1578,13 @@ msgstr "並び順"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "to post a comment."
-msgstr "コメントを投稿"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "to your user account, it is very important to store it securely."
 msgstr ""
-"をユーザアカウントに追加する場合は、それを安全に保管することが非常に重要で"
-"す。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields

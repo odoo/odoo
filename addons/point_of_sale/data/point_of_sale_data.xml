@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <function model="stock.warehouse" name="_create_missing_pos_picking_types"/>
-    </data>
 
     <data noupdate="1">
         <!-- After closing the PoS, open the dashboard menu -->
@@ -31,7 +28,25 @@
             <field name="taxes_id" eval="[(5,)]"/>
         </record>
 
+        <record id="product_product_service_fee" model="product.product">
+            <field name="name">Service Fee</field>
+            <field name="available_in_pos">True</field>
+            <field name="standard_price">0.00</field>
+            <field name="list_price">0.0</field>
+            <field name="weight">0.00</field>
+            <field name="type">service</field>
+            <field name="categ_id" eval="ref('product.product_category_services', raise_if_not_found=False)"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="default_code">FEE</field>
+            <field name="purchase_ok">False</field>
+            <field name="taxes_id" eval="[(5,)]"/>
+        </record>
+
         <record id="uom.product_uom_unit" model="uom.uom">
+            <field name="is_pos_groupable">True</field>
+        </record>
+
+        <record id="uom.product_uom_kgm" model="uom.uom">
             <field name="is_pos_groupable">True</field>
         </record>
 

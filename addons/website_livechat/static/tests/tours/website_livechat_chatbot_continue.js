@@ -1,18 +1,17 @@
-import { registry } from "@web/core/registry";
+import { waitForMessage } from "@im_livechat/../tests/tours/livechat_tour_utils";
 
-const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat.chatbot_continue_tour", {
     steps: () => [
-        {
-            trigger: messagesContain("Hello, what can I do for you?"),
-        },
+        waitForMessage("Hello, what can I do for you?"),
         {
             trigger: ".o-livechat-root:shadow button:contains(No, thank you for your time.)",
             run: "click",
         },
         {
-            trigger: ".o-livechat-root:shadow span:contains(This live chat conversation has ended.)",
+            trigger:
+                ".o-livechat-root:shadow span:contains(This live chat conversation has ended.)",
         },
         {
             trigger: ".o-livechat-root:shadow button[title='Give your feedback']",

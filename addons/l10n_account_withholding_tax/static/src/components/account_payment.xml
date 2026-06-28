@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-inherit="account.AccountPaymentField" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='line.is_refund']" position="after">
+            <t t-elif="line.is_withhold">Deducted on </t>
+        </xpath>
+    </t>
+</templates>

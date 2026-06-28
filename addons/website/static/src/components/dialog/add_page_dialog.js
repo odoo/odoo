@@ -1,21 +1,28 @@
-import { useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useExternalListener, useRef, useSubEnv } from "@web/owl2/utils";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
+import { utils as uiUtils, SIZES } from "@web/core/ui/ui_service";
+import { useDebounced } from "@web/core/utils/timing";
 import { WebsiteDialog } from "@website/components/dialog/dialog";
+import { useMatrixKeyNavigation } from "@html_builder/utils/keyboard_navigation";
 import { Switch } from "@html_editor/components/switch/switch";
 import {
     applyTextHighlight,
     removeTextHighlight,
     getObservedEls,
 } from "@website/js/highlight_utils";
-import { Component, onWillStart, onMounted, status } from "@odoo/owl";
+import { Component, onWillStart, onMounted, props, status, proxy, t } from "@odoo/owl";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
 const NO_OP = () => {};
+
+function isMobileView() {
+    return uiUtils.getSize() < SIZES.MD;
+}
 
 export class AddPageConfirmDialog extends Component {
     static template = "website.AddPageConfirmDialog";
@@ -35,7 +42,7 @@ export class AddPageConfirmDialog extends Component {
         super.setup();
         useAutofocus();
 
-        this.state = useState({
+        this.state = proxy({
             addMenu: true,
             name: this.props.name,
             sectionsArch: this.props.sectionsArch,
@@ -52,29 +59,6 @@ export class AddPageConfirmDialog extends Component {
     }
 }
 
-class AddPageTemplateBlank extends Component {
-    static template = "website.AddPageTemplateBlank";
-    static props = {
-        firstRow: {
-            type: Boolean,
-            optional: true,
-        },
-    };
-
-    setup() {
-        super.setup();
-        this.holderRef = useRef("holder");
-
-        onMounted(async () => {
-            this.holderRef.el.classList.add("o_ready");
-        });
-    }
-
-    select() {
-        this.env.addPage();
-    }
-}
-
 class AddPageTemplatePreview extends Component {
     static template = "website.AddPageTemplatePreview";
     static props = {
@@ -88,6 +72,7 @@ class AddPageTemplatePreview extends Component {
             type: Boolean,
             optional: true,
         },
+        onPageKeydown: { type: Function },
     };
 
     setup() {
@@ -95,6 +80,7 @@ class AddPageTemplatePreview extends Component {
         this.iframeRef = useRef("iframe");
         this.previewRef = useRef("preview");
         this.holderRef = useRef("holder");
+
         this.resizeObserver = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 const targetEl = entry.target.querySelector(".o_text_highlight") || entry.target;
@@ -122,7 +108,11 @@ class AddPageTemplatePreview extends Component {
                 });
             }
             // Apply styles.
-            for (const cssLinkEl of await this.env.getCssLinkEls()) {
+            const cssLinkEls = await this.env.getCssLinkEls();
+            if (status(this) === "destroyed") {
+                return;
+            }
+            for (const cssLinkEl of cssLinkEls) {
                 const preloadLinkEl = document.createElement("link");
                 preloadLinkEl.setAttribute("rel", "preload");
                 preloadLinkEl.setAttribute("href", cssLinkEl.getAttribute("href"));
@@ -132,9 +122,6 @@ class AddPageTemplatePreview extends Component {
             }
             // Adjust styles.
             const styleEl = document.createElement("style");
-            // Prevent successive resizes.
-            const fullHeight = getComputedStyle(document.querySelector(".o_action_manager")).height;
-            const halfHeight = `${Math.round(parseInt(fullHeight) / 2)}px`;
             const css = `
                 html, body {
                     /* Needed to prevent scrollbar to appear on chrome */
@@ -159,11 +146,21 @@ class AddPageTemplatePreview extends Component {
                         height: fit-content !important;
                     }
                 }
-                section.o_half_screen_height {
-                    min-height: ${halfHeight} !important;
+                section.o_full_screen_height,
+                section.o_half_screen_height,
+                section.o_three_quarter_height {
+                    height: unset !important;
+                    min-height: unset !important;
                 }
                 section.o_full_screen_height {
-                    min-height: ${fullHeight} !important;
+                    aspect-ratio: 4 / 3;
+                }
+                section.o_three_quarter_height {
+                    aspect-ratio: 16 / 9;
+                }
+                /* This is kept for compatibility */
+                section.o_half_screen_height {
+                    aspect-ratio: 8 / 3;
                 }
                 section[data-snippet="s_three_columns"] .figure-img[style*="height:50vh"] {
                     /* In Travel theme. */
@@ -176,6 +173,29 @@ class AddPageTemplatePreview extends Component {
                 .o_animate {
                     visibility: visible;
                     animation-name: none;
+                }
+                .s_floating_blocks {
+                    /* Make s_floating_blocks snippet look good. */
+                    .s_floating_blocks_wrapper {
+                        box-shadow: none !important;
+                    }
+                    .s_floating_blocks_block {
+                        position: relative !important;
+                        opacity: 1 !important;
+                    }
+                    .s_floating_blocks_block:nth-child(1) {
+                        z-index: 1;
+                        transform: scale(.96) !important;
+                    }
+                    .s_floating_blocks_block:nth-child(2) {
+                        z-index: 2;
+                        transform: scale(.98) !important;
+                        margin-top: -45% !important;
+                    }
+                    .s_floating_blocks_block:nth-child(3) {
+                        z-index: 3;
+                        margin-top: -45% !important;
+                    } 
                 }
             `;
             const cssText = document.createTextNode(css);
@@ -223,6 +243,7 @@ class AddPageTemplatePreview extends Component {
                 const innerWidth = wrapEl.getBoundingClientRect().width;
                 const ratio = outerWidth / innerWidth;
                 iframeEl.height = Math.round(innerHeight);
+                iframeEl.style.transform = `scale(${ratio})`;
                 previewEl.style.setProperty("height", `${Math.round(innerHeight * ratio)}px`);
                 // Sometimes the final height is not ready yet.
                 setTimeout(adjustHeight, 50);
@@ -294,18 +315,28 @@ class AddPageTemplatePreviews extends Component {
             type: Array,
             element: Object,
         },
+        isSingleColumn: {
+            type: Boolean,
+            optional: true,
+        },
     };
     static components = {
-        AddPageTemplateBlank,
         AddPageTemplatePreview,
     };
 
     setup() {
         super.setup();
+        this.container = useRef("previews-container");
+
+        this.onPageKeydown = useMatrixKeyNavigation(
+            () => [this.container.el],
+            ".o_page_template",
+            ".o_button_area"
+        );
     }
 
     get columns() {
-        const result = [[], [], []];
+        const result = this.props.isSingleColumn ? [[]] : [[], [], []];
         let currentColumnIndex = 0;
         for (const template of this.props.templates) {
             result[currentColumnIndex].push(template);
@@ -332,27 +363,43 @@ class AddPageTemplates extends Component {
         this.panesRef = useRef("panes");
         useAutofocus();
 
-        this.state = useState({
+        const isMobile = isMobileView();
+        this.state = proxy({
             pages: [
                 {
                     Component: AddPageTemplatePreviews,
                     title: _t("Loading..."),
                     isPreloading: true,
-                    props: {
-                        id: "basic",
-                        title: _t("Basic"),
-                        // Blank and 5 preloading boxes.
-                        templates: [{ isBlank: true }, {}, {}, {}, {}, {}],
-                    },
+                    id: "loading",
+                    props: { id: "loading", templates: [{}] },
                 },
             ],
-            activePageId: "basic",
+            activePageId: isMobile ? null : "loading",
+            isMobile: isMobile,
         });
         this.pages = undefined;
+
+        const onResize = () => {
+            const isMobile = isMobileView();
+            if (isMobile !== this.state.isMobile) {
+                this.state.isMobile = isMobile;
+                if (!isMobile && !this.state.activePageId) {
+                    this.state.activePageId = this.state.pages[0]?.props.id;
+                }
+            }
+        };
+        useExternalListener(window, "resize", useDebounced(onResize, 100));
 
         onWillStart(() => {
             this.preparePages().then((pages) => {
                 this.state.pages = pages;
+
+                // Show the menu directly if we open the dialog in mobile view.
+                if (this.state.isMobile) {
+                    this.state.activePageId = null;
+                    return;
+                }
+
                 if (
                     this.props.defaultTemplateId &&
                     this.state.pages.some((page) => page.id === this.props.defaultTemplateId)
@@ -387,9 +434,6 @@ class AddPageTemplates extends Component {
         }
 
         const newPageTemplates = await loadTemplates;
-        newPageTemplates[0].templates.unshift({
-            isBlank: true,
-        });
         const pages = [];
         for (const template of newPageTemplates) {
             pages.push({
@@ -406,7 +450,19 @@ class AddPageTemplates extends Component {
     onTabListBtnClick(id) {
         this.state.activePageId = id;
         const tabEl = this.tabsRef.el.querySelector(`[data-id=${id}]`);
-        this.props.onTemplatePageChanged(tabEl.dataset.id === "basic" ? "" : tabEl.textContent);
+        this.props.onTemplatePageChanged(tabEl.textContent);
+    }
+
+    addBlankPage() {
+        this.env.addPage();
+    }
+
+    get selectedPage() {
+        return this.state.pages.find((p) => p.id === this.state.activePageId);
+    }
+
+    onMobileBackClick() {
+        this.state.activePageId = null;
     }
 
     onTabListBtnKeydown(ev) {
@@ -425,36 +481,15 @@ class AddPageTemplates extends Component {
 
 export class AddPageDialog extends Component {
     static template = "website.AddPageDialog";
-    static props = {
-        close: Function,
-        onAddPage: {
-            type: Function,
-            optional: true,
-        },
-        websiteId: {
-            type: Number,
-        },
-        forcedURL: {
-            type: String,
-            optional: true,
-        },
-        goToPage: {
-            type: Boolean,
-            optional: true,
-        },
-        pageTitle: {
-            type: String,
-            optional: true,
-        },
-        defaultTemplateId: {
-            type: String,
-            optional: true,
-        },
-    };
-    static defaultProps = {
-        onAddPage: NO_OP,
-        goToPage: true,
-    };
+    props = props({
+        close: t.function(),
+        onAddPage: t.function().optional(() => NO_OP),
+        websiteId: t.number(),
+        forcedURL: t.string().optional(),
+        goToPage: t.boolean().optional(true),
+        pageTitle: t.string().optional(),
+        defaultTemplateId: t.string().optional(),
+    });
     static components = {
         WebsiteDialog,
         AddPageTemplates,

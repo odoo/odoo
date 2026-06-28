@@ -12,7 +12,9 @@ class AccountAnalyticLine(models.Model):
         'product.product',
         string='Product',
         check_company=True,
+        index='btree_not_null',
     )
+    product_category = fields.Many2one(related='product_id.categ_id')
     general_account_id = fields.Many2one(
         'account.account',
         string='Financial Account',
@@ -77,7 +79,7 @@ class AccountAnalyticLine(models.Model):
     @api.depends('product_id')
     def _compute_allowed_uom_ids(self):
         for line in self:
-            line.allowed_uom_ids = line.product_id.product_tmpl_id._get_available_uoms()
+            line.allowed_uom_ids = line.product_id._get_available_uoms()
 
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):

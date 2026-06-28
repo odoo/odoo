@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart } from '@odoo/owl';
+import { Component, onWillStart, proxy } from '@odoo/owl';
 import { rpc } from '@web/core/network/rpc';
 import { useBus } from '@web/core/utils/hooks';
 import comparisonUtils from '@website_sale/js/comparison_utils';
@@ -12,7 +11,7 @@ export class ProductComparisonBottomBar extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({ products: new Map() });
+        this.state = proxy({ products: new Map() });
         useBus(this.env.bus, comparisonUtils.COMPARISON_EVENT, (_) => this._loadProducts());
         onWillStart(this._loadProducts);
     }

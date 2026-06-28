@@ -9,9 +9,7 @@
                             <div class="d-flex flex-column justify-content-start h-100"
                                  t-attf-class="{{column_header_first?'align-items-start':'align-items-end'}}">
                                 <span t-out="column_header.name"/>
-                                <t t-call="product_matrix.extra_price">
-                                    <t t-set="cell" t-value="column_header"/>
-                                </t>
+                                <t t-call="product_matrix.extra_price" cell="column_header"/>
                             </div>
                         </th>
                     </t>
@@ -32,13 +30,13 @@
                             class="o_matrix_input_td text-end"
                             t-attf-class="{{cell_last?'o_matrix_pe':''}}">
                             <div t-if="cell.is_possible_combination" class="input-group">
-                                <input  
+                                <input
                                     type="number"
                                     class="o_input o_field_number o_matrix_input border-0 text-end"
                                     onClick="this.select();"
                                     t-att="{'ptav_ids': cell.ptav_ids, 'value': cell.qty}"
                                     t-att-class="{ 'opacity-25': cell.qty === 0 }"
-                                    t-on-input="toggleOpacity"
+                                    t-on-input="this.toggleOpacity"
                                 />
                             </div>
                             <span t-else=""

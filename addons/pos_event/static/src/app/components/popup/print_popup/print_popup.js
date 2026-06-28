@@ -3,6 +3,7 @@ import { patch } from "@web/core/utils/patch";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { PrintPopup } from "@point_of_sale/app/components/popups/print_popup/print_popup";
+import { _t } from "@web/core/l10n/translation";
 
 patch(PrintPopup.prototype, {
     setup() {
@@ -15,14 +16,14 @@ patch(PrintPopup.prototype, {
         const list = super.printList;
         if (this.order.eventRegistrations.length > 0) {
             list.push({
-                label: "Print Full Page Ticket",
+                label: _t("Full Page Ticket"),
                 method: () => this.doPrintEventFull.call(),
                 status: this.doPrintEventFull.status,
                 icon: "fa-ticket",
                 isPrimary: false,
             });
             list.push({
-                label: "Print Badge",
+                label: _t("Badge"),
                 method: () => this.doPrintEventBadge.call(),
                 status: this.doPrintEventBadge.status,
                 icon: "fa-id-badge",

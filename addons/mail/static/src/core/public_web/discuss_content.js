@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, computed, props, proxy, signal, types } from "@odoo/owl";
 
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
@@ -25,36 +25,40 @@ export class DiscussContent extends Component {
         Composer,
         FileUploader,
     };
-    static props = ["thread?"];
     static template = "mail.DiscussContent";
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.props = props({
+            thread: types.instanceOf(this.store["mail.thread"].Class).optional(),
+        });
         this.ui = useService("ui");
         this.notification = useService("notification");
-        this.threadActions = useThreadActions({ thread: () => this.thread });
-        this.root = useRef("root");
-        this.state = useState({ jumpThreadPresent: 0 });
+        this.rootRef = signal.ref(HTMLDivElement);
+        this.threadActions = useThreadActions({ rootRef: this.rootRef, thread: () => this.thread });
+        this.correspondentLocalDateTimeFormatted = signal("");
+        this.state = proxy({ jumpThreadPresent: 0 });
         this.isDiscussContent = true;
         this.attClassObjectToString = attClassObjectToString;
+        this.selfGuestName = computed(() => this.store.self_guest?.name);
+        this.threadDisplayName = computed(() => this.thread?.displayName);
+        this.threadDescription = computed(() => this.thread?.description);
         useLayoutEffect(
             () => this.actionPanelAutoOpenFn(),
             () => [this.thread]
         );
-        useDynamicInterval(
-            (partnerTz, currentUserTz) => {
-                this.state.correspondentLocalDateTimeFormatted = formatLocalDateTime(
-                    partnerTz,
-                    currentUserTz
-                );
-                if (!this.state.correspondentLocalDateTimeFormatted) {
-                    return;
-                }
-                return 60000 - (Date.now() % 60000);
-            },
-            () => [this.thread?.channel?.correspondent?.persona?.tz, this.store.self?.tz]
-        );
+        useDynamicInterval(() => {
+            const formatted = formatLocalDateTime(
+                this.thread?.channel?.correspondent?.persona?.tz,
+                this.store.self?.tz
+            );
+            this.correspondentLocalDateTimeFormatted.set(formatted);
+            if (!formatted) {
+                return;
+            }
+            return 60000 - (Date.now() % 60000);
+        });
     }
 
     actionPanelAutoOpenFn() {
@@ -71,7 +75,7 @@ export class DiscussContent extends Component {
     get showsChatLocalDateTime() {
         return (
             this.thread.channel?.channel_type === "chat" &&
-            this.state.correspondentLocalDateTimeFormatted
+            this.correspondentLocalDateTimeFormatted()
         );
     }
 

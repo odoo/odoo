@@ -342,6 +342,17 @@ class TestWarehouseMrp(common.TestMrpCommon):
         self.assertFalse(self.warehouse_1.pbm_mto_pull_id.location_dest_id.active)
         self.assertNotIn(self.warehouse_1.pbm_mto_pull_id, self.route_mto.rule_ids)
 
+    def test_default_manufacture_route_with_no_warehouse(self):
+        route_domain = [
+            ('warehouse_selectable', '=', True),
+            ('rule_ids.action', '=', 'manufacture'),
+            ('company_id', 'in', [False, self.env.company.id]),
+        ]
+        routes = self.env['stock.route'].search(route_domain)
+        routes.warehouse_ids = False
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({'product_id': self.laptop.id})
+        self.assertEqual(routes[0].name, orderpoint.route_id_placeholder)
+
 
 class TestKitPicking(common.TestMrpCommon):
     @classmethod

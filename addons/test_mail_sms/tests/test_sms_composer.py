@@ -22,13 +22,12 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
         super(TestSMSComposerComment, cls).setUpClass()
         cls._test_body = 'VOID CONTENT'
 
-        cls.test_record = cls.env['mail.test.sms'].with_context(**cls._test_context).create({
+        cls.test_record = cls.env['mail.test.sms'].create({
             'name': 'Test',
             'customer_id': cls.partner_1.id,
             'mobile_nbr': cls.test_numbers[0],
             'phone_nbr': cls.test_numbers[1],
         })
-        cls.test_record = cls._reset_mail_context(cls.test_record)
 
         cls.sms_template = cls.env['sms.template'].create({
             'name': 'Test Template',

@@ -4,6 +4,8 @@
 import datetime
 import random
 import re
+from contextlib import nullcontext
+
 import werkzeug
 
 from unittest.mock import patch
@@ -12,6 +14,7 @@ from odoo.tools import email_normalize, mail
 from odoo.addons.link_tracker.tests.common import MockLinkTracker
 from odoo.addons.mail.tests.common import MailCase, MailCommon, mail_new_test_user
 from odoo.sql_db import Cursor
+from odoo.tests import RecordCapturer
 
 
 class MassMailCase(MailCase, MockLinkTracker):
@@ -281,7 +284,7 @@ class MassMailCase(MailCase, MockLinkTracker):
         self.assertTrue(trace)
         self.assertEqual(trace.email, email_normalize(record_email))
 
-        email = self._find_sent_email_wemail(record_email)
+        email = self._find_sent_email_wemail(record_email, trace.id)
         self.assertTrue(bool(email))
         for (_url_href, link_url, _dummy, label) in re.findall(mail.HTML_TAG_URL_REGEX, email['body']):
             if label == click_label and '/r/' in link_url:  # shortened link, like 'http://localhost:8069/r/LBG/m/53'
@@ -376,7 +379,7 @@ class MassMailCase(MailCase, MockLinkTracker):
     def _create_mailing_list(cls):
         """ Shortcut to create mailing lists. Currently hardcoded, maybe evolve
         in a near future. """
-        cls.mailing_list_1, cls.mailing_list_2, cls.mailing_list_3, cls.mailing_list_4 = cls.env['mailing.list'].with_context(cls._test_context).create([
+        cls.mailing_list_1, cls.mailing_list_2, cls.mailing_list_3, cls.mailing_list_4 = cls.env['mailing.list'].create([
             {
                 'contact_ids': [
                     (0, 0, {'name': 'Déboulonneur', 'email': 'fleurus@example.com'}),
@@ -410,7 +413,7 @@ class MassMailCase(MailCase, MockLinkTracker):
     def _create_mailing_list_of_x_contacts(cls, contacts_nbr):
         """ Shortcut to create a mailing list that contains a defined number
         of contacts. """
-        return cls.env['mailing.list'].with_context(cls._test_context).create({
+        lists = cls.env['mailing.list'].with_context(cls._test_context).create({
             'name': 'Test List',
             'contact_ids': [
                 (0, 0, {
@@ -420,6 +423,7 @@ class MassMailCase(MailCase, MockLinkTracker):
                 for idx in range(contacts_nbr)
             ],
         })
+        return cls._reset_mail_context(lists)
 
 
 class MassMailCommon(MailCommon, MassMailCase):
@@ -439,3 +443,41 @@ class MassMailCommon(MailCommon, MassMailCase):
         cls.email_reply_to = 'MyCompany SomehowAlias <test.alias@test.mycompany.com>'
 
         cls.env.flush_all()
+
+
+class MailingContactToListCommon(MassMailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.MOCK_ORM_BATCH_SIZE = 20
+        cls.MAX_FROM_PARTNERS = 22  # smallest even number > mocked INSERT_BATCH_SIZE/UPDATE_BATCH_SIZE
+        cls._create_mailing_list()
+
+    def _assert_from_partner_creates_contacts(self, partners, query_count=None, msg=None):
+        (result_contacts, _nb_no_details), new_contacts = self._mock_from_partners_with_capture(partners, query_count)
+        self.assertEqual(new_contacts, result_contacts, msg=msg)
+        self.assertEqual(result_contacts.partner_id, partners)
+        return new_contacts
+
+    def _assert_from_partner_uses_contacts(self, partners, contacts, query_count=None, msg=None):
+        if query_count:
+            contacts.subscription_ids.invalidate_recordset()
+            contacts.invalidate_recordset()
+        (result_contacts, _nb_no_details), new_contacts = self._mock_from_partners_with_capture(partners, query_count)
+        self.assertEqual(result_contacts, contacts, msg=msg)
+        self.assertFalse(new_contacts)
+        self.assertEqual(result_contacts.partner_id, partners)
+
+    def _mock_from_partners_with_capture(self, partners, query_count):
+        assert_query = self.assertQueryCount if query_count else lambda _: nullcontext()
+        partners.invalidate_recordset()
+        with (
+            RecordCapturer(self.env['mailing.contact']) as capture,
+            assert_query(query_count),
+            patch('odoo.orm.models.INSERT_BATCH_SIZE', self.MOCK_ORM_BATCH_SIZE),
+            patch('odoo.orm.models.UPDATE_BATCH_SIZE', self.MOCK_ORM_BATCH_SIZE),
+            patch('odoo.addons.mass_mailing.models.mailing_contact.MAX_FROM_PARTNERS', self.MAX_FROM_PARTNERS),
+        ):
+            result = self.env['mailing.contact']._from_partners(partners)
+        return result, capture.records

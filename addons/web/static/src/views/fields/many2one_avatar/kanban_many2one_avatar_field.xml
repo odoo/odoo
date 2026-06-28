@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.KanbanMany2OneAvatarField">
+    <t t-name="web.CardMany2OneAvatarField">
         <t t-set="relation" t-value="this.props.record.fields[this.props.name].relation"/>
         <t t-set="value" t-value="this.props.record.data[this.props.name]"/>
         <KanbanMany2One t-props="this.m2oProps">
@@ -13,7 +13,7 @@
             <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                 <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
                     <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.record.id}}/avatar_128"/>
-                    <span t-out="autoCompleteItemScope.label"/>
+                    <span class="text-truncate" t-out="autoCompleteItemScope.label"/>
                 </span>
             </t>
         </KanbanMany2One>

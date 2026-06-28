@@ -21,19 +21,6 @@ export class ProductTemplate extends ProductTemplateAccounting {
         this.onUpdate();
     }
 
-    isAllowOnlyOneLot() {
-        return this.tracking === "lot" || !this.uom_id || !this.uom_id.is_pos_groupable;
-    }
-
-    isTracked() {
-        const pickingType = this.models["stock.picking.type"].readAll()[0];
-
-        return (
-            ["serial", "lot"].includes(this.tracking) &&
-            (pickingType.use_create_lots || pickingType.use_existing_lots)
-        );
-    }
-
     async _onScaleNotAvailable() {}
 
     isConfigurable() {
@@ -138,6 +125,11 @@ export class ProductTemplate extends ProductTemplateAccounting {
 
     get canBeDisplayed() {
         return this.active && this.available_in_pos;
+    }
+
+    get showProductImageInSelf() {
+        const config = this.models["pos.config"].getFirst();
+        return config.self_ordering_mode === "kiosk" || this.image_128;
     }
 
     get searchString() {

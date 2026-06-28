@@ -4,20 +4,22 @@
     <t t-name="point_of_sale.ProductCard">
         <article tabindex="0"
             role="button"
-            t-attf-class="{{this.props.class}} {{this.props.color ? `o_colorlist_item_color_transparent_${this.props.color}` : ''}} product position-relative btn btn-light d-flex align-items-stretch p-0 rounded-3 text-start cursor-pointer {{ this.props.imgUrl ? 'd-flex align-items-stretch' : ''}} {{ this.props.available ? '' : 'opacity-50' }}"
+            t-attf-class="{{this.props.class}} {{this.props.color ? `o_colorlist_item_color_transparent_${this.props.color}` : ''}} product-sortable product position-relative btn btn-light d-flex align-items-stretch p-0 rounded-3 text-start cursor-pointer {{ this.props.imgUrl ? 'd-flex align-items-stretch' : ''}} {{ this.props.available ? '' : 'opacity-50' }}"
             t-on-keypress="(event) => event.code === 'Space' ? this.props.onClick(event) : ()=>{}"
             t-on-click.stop="this.props.onClick"
             t-att-data-product-id="this.props.productId"
+            t-att-data-pos_sequence="this.props.product.pos_sequence"
             t-attf-aria-labelledby="article_product_{{this.props.productId}}">
             <div t-if="this.props.imageUrl" class="product-img ratio ratio-4x3 rounded-top rounded-3">
                 <img class="w-100 object-fit-cover bg-200 pe-none" t-att-src="this.props.imageUrl" t-att-alt="this.props.name" draggable="false"/>
             </div>
             <div class="product-content h-100 px-2 rounded-bottom-3 flex-shrink-1"
                 t-att-class="{'d-flex' : !this.props.isComboPopup, 'my-1': !(this.props.isComboPopup and !this.props.imageUrl)}">
-                <div class="overflow-hidden lh-sm product-name"
+                <div class="lh-sm product-name o_line_clamp"
                     t-att-class="{
                         'no-image d-flex justify-content-center align-items-center text-center': !this.props.imageUrl,
-                        'mt-1': this.props.isComboPopup and !this.props.imageUrl
+                        'mt-1': this.props.isComboPopup and !this.props.imageUrl,
+                        'o_line_clamp_7': !this.props.imageUrl,
                     }"
                     t-attf-id="article_product_{{this.props.productId}}"
                     t-out="this.props.name" />
@@ -29,7 +31,8 @@
             <span t-if="this.props.comboExtraPrice" style="font-size: 0.65rem;" class="price-extra px-1 py-0 rounded-1 text-bg-info position-absolute top-0 end-0">
                 <t t-out="this.props.comboExtraPrice"/>
             </span>
-            <t t-slot="quantityButtons" />
+            <t t-call-slot="quantityButtons" />
         </article>
     </t>
 </templates>
+

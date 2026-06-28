@@ -1,0 +1,26 @@
+.feedback-summary {
+    .amount-paid {
+        font-size: clamp(2rem, 4vw, 5rem);
+    }
+
+    .amount-container {
+        transform: scale(0.95);
+        opacity: 0;
+        animation: smoothZoomIn 0.6s ease-out forwards;
+    }
+
+    .amount {
+        font-size: clamp(8rem, 25vw, 25rem);
+    }
+
+    @keyframes smoothZoomIn {
+      0% {
+        transform: scale(0.95);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+}

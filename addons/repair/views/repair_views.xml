@@ -30,7 +30,7 @@
                 <field name="company_id" column_invisible="True"/>
                 <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
                 <field name="name"/>
-                <field name="schedule_date" optional="show" widget="remaining_days"/>
+                <field name="schedule_date" optional="show" widget="relative_date"/>
                 <field name="product_id" readonly="1" optional="show"/>
                 <field name="parts_availability_state" column_invisible="True"/>
                 <field name="parts_availability"
@@ -71,15 +71,21 @@
                    <button name="action_validate" invisible="state != 'draft'" type="object" string="Confirm Repair" class="oe_highlight" data-hotkey="v"/>
                    <button name="action_repair_start" invisible="state != 'confirmed'" type="object" string="Start Repair" class="oe_highlight" data-hotkey="q"/>
                    <button name="action_repair_end" invisible="state != 'under_repair'" type="object" string="End Repair" class="oe_highlight" data-hotkey="x"/>
-                   <button name="action_assign" invisible="not reserve_visible" string="Check availability" type="object"/>
+                   <button name="action_assign" invisible="not reserve_visible" string="Reserve" type="object"/>
                    <button name="action_create_sale_order" type="object" string="Quote" invisible="not can_create_sale_or_invoice"/>
-                   <button name="action_create_invoice" type="object" string="Invoice" invisible="not can_create_sale_or_invoice"/>
+                   <button name="action_create_invoice" type="object" string="Invoice" invisible="not (can_create_sale_or_invoice or can_create_extra_invoice)"/>
                    <button name="action_repair_cancel_draft" invisible="state != 'cancel'" string="Set to Draft" type="object" data-hotkey="z"/>
                    <button name="action_repair_cancel" string="Cancel" type="object" invisible="state in ('done', 'cancel')" data-hotkey="l"/>
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,under_repair,done"/>
                </header>
                <sheet string="Repairs order">
                     <div class="oe_button_box" name="button_box">
+                        <button name="%(action_repair_move_lines)d"
+                            type="action"
+                            string="Product Moves"
+                            class="oe_stat_button"
+                            icon="fa-exchange"
+                            invisible="not(move_ids or move_id) or state != 'done'"/>
                         <!-- No groups attribute on the next button as "stock.group_stock_user" is needed for Repair, and as this group is granted 'sale.order' read/write accesses in sale_stock module (forcefully loaded as transitive dependency) -->
                         <button name="action_view_sale_order" type="object" string="Sale Order" icon="fa-dollar" class="oe_stat_button" invisible="not sale_order_id">
                             <div class="o_field_widget o_stat_info">
@@ -89,7 +95,6 @@
                                 <span class="o_stat_text">Sale Order</span>
                             </div>
                         </button>
-                        <button name="%(action_repair_move_lines)d" type="action" string="Product Moves" class="oe_stat_button" icon="fa-exchange" invisible="state not in ['done', 'cancel']"/>
                         <button name="action_view_invoice"
                             type="object"
                             icon="fa-pencil-square-o"
@@ -99,9 +104,9 @@
                         </button>
                     </div>
                     <div class="oe_title">
-                        <label class="o_form_label" for="name"/>
-                        <h1 class="d-flex">
-                            <field name="priority" widget="priority" class="me-3"/>
+                        <label for="name"/>
+                        <h1 class="o_outlined d-flex align-items-center gap-2">
+                            <field name="priority" widget="priority"/>
                             <field name="name"/>
                         </h1>
                     </div>
@@ -148,6 +153,7 @@
                                     <create string="Add a line"/>
                                     <button name="action_add_from_catalog_repair" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
                                 </control>
+                                <field name="sequence" widget="handle"/>
                                 <field name="company_id" column_invisible="True"/>
                                 <field name="state" column_invisible="True"/>
                                 <field name="picking_type_id" column_invisible="True"/>
@@ -171,7 +177,7 @@
                                 <field name="product_uom_qty" string="Demand" readonly="state in ('done', 'cancel')"/>
                                 <field name="forecast_expected_date" column_invisible="True"/>
                                 <field name="product_qty" readonly="1" column_invisible="True"/>
-                                <field name="quantity" string="Reserved" readonly="not product_id" optional="hide"/>
+                                <field name="quantity" string="Quantity" readonly="not product_id" optional="show"/>
                                 <field name="uom_id" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" widget="many2one_uom"/>
                                 <field name="lot_ids" widget="many2many_tags"
                                     groups="stock.group_production_lot"
@@ -187,6 +193,35 @@
                             </list>
                         </field>
                         <div class="clearfix"/>
+                    </page>
+                     <page string="Services" name="services">
+                        <field name="repair_service_line_ids" readonly="state in ['done', 'cancel']">
+                            <list string="text" editable="bottom">
+                                <control>
+                                    <create string="Add a line"/>
+                                    <button
+                                        name="action_add_service_from_repair_catalog"
+                                        class="px-4 btn-link"
+                                        string="Catalog"
+                                        type="object"
+                                        context="{'order_id': parent.id}"/>
+                                </control>
+                                <field name="sequence" widget="handle"/>
+                                <field
+                                    name="product_id"
+                                    required="1"
+                                    readonly="parent.state in ['done', 'cancel']"
+                                    context="{'default_type': 'service'}"/>
+                                <field name="description" optional="hide"/>
+                                <field name="quantity"/>
+                                <field
+                                    name="uom_id"
+                                    groups="uom.group_uom"
+                                    readonly="0"
+                                    options="{'no_open': True, 'no_create': True}"
+                                    widget="many2one_uom"/>
+                            </list>
+                        </field>
                     </page>
                     <page string="Repair Notes" name="repair_notes">
                         <field name="internal_notes" placeholder="Add internal notes."/>
@@ -306,6 +341,7 @@
             <field name="res_model">repair.order</field>
             <field name="view_mode">list,kanban,graph,pivot,form,activity</field>
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
+            <field name="context">{'search_default_partner_id': context.get('partner_id')}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 No repair order found. Let's create one!
@@ -408,8 +444,6 @@
 
         <menuitem id="repair_menu_product_template" name="Products" action="stock.product_template_action_product"
             parent="repair_menu_config" sequence="2"/>
-        <menuitem id="repair_menu_product_product" name="Product Variants" action="stock.stock_product_normal_action"
-            parent="repair_menu_config" sequence="3" groups="product.group_product_variant"/>
         <menuitem id="repair_menu_tag" name="Repair Orders Tags" parent="repair_menu_config"
             action="action_repair_order_tag" sequence="1000" groups="base.group_no_one"/>
     </data>

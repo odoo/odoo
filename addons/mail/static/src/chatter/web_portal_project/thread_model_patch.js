@@ -18,4 +18,8 @@ patch(Thread.prototype, {
             thread_model: this.model,
         });
     },
+
+    get fullComposerCloseRequestList() {
+        return ["messages"];
+    },
 });

@@ -1,3 +1,4 @@
+import { onMounted, onPatched } from "@odoo/owl";
 import {
     click,
     contains,
@@ -13,8 +14,8 @@ import {
 import { Composer } from "@mail/core/common/composer";
 import { Message } from "@mail/core/common/message";
 import { describe, expect, rightClick, test } from "@odoo/hoot";
-import { onMounted, onPatched } from "@odoo/owl";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
@@ -102,12 +103,13 @@ test("replying to message should only render relevant part", async () => {
     await contains(".o-mail-Message", { count: 10 });
     const stopObserve = observeRenders();
     replying = true;
-    await click(".o-mail-Message:last [title='Reply']");
+    await click(".o-mail-Message:last [title='Expand']");
+    await click(".o-dropdown-item:contains('Reply')");
     await contains(".o-mail-Composer:has(:text('Replying to Mitchell Admin'))");
     replying = false;
     const result = stopObserve();
     expect(result.get(Composer)).toBeLessThan(2);
-    expect(result.get(Message)).toBeLessThan(2);
+    expect(result.get(ActionSwiper)).toBeLessThan(3); // Note: ActionSwiper from Message's template
 });
 
 test("right-click message selection should only render relevant part", async () => {
@@ -141,9 +143,10 @@ test("right-click message selection should only render relevant part", async () 
     await contains(".o-mail-Message", { count: 10 });
     const stopObserve = observeRenders();
     rightClicking = true;
+
     await rightClick(".o-mail-Message:last");
     await contains(".dropdown-menu .o-mail-ActionList");
     rightClicking = false;
     const result = stopObserve();
-    expect(result.get(Message)).toBeLessThan(2);
+    expect(result.get(ActionSwiper)).toBeLessThan(2); // Note: ActionSwiper from Message's template
 });

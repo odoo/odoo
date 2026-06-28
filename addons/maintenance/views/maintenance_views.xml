@@ -9,12 +9,12 @@
             <search string="Maintenance Request Search">
                 <field name="name" string="Request"/>
                 <field name="category_id"/>
-                <field name="user_id"/>
+                <field name="user_ids"/>
                 <field name="equipment_id"/>
                 <field name="owner_user_id"/>
                 <field name="stage_id"/>
                 <field name="maintenance_team_id"/>
-                <filter string="My Maintenances" name="my_maintenances" domain="[('user_id', '=', uid)]"/>
+                <filter string="My Maintenances" name="my_maintenances" domain="[('user_ids', 'in', uid)]"/>
                 <separator/>
                 <filter string="Open" name="todo" domain="[('state', 'not in', ['done', 'cancelled'])]"/>
                 <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
@@ -41,7 +41,7 @@
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
                 <group>
-                    <filter string='Assigned to' name="assigned" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string='Assigned to' name="assigned" domain="[]" context="{'group_by': 'user_ids'}"/>
                     <filter string='Category' name="category" domain="[]" context="{'group_by' : 'category_id'}"/>
                     <filter string='Stage' name="stages" domain="[]" context="{'group_by' : 'stage_id'}"/>
                     <filter string='Created By' name='created_by' domain="[]" context="{'group_by': 'owner_user_id'}"/>
@@ -55,10 +55,10 @@
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
             <activity string="Maintenance Request">
-                <field name="user_id"/>
+                <field name="user_ids"/>
                 <templates>
                     <div t-name="activity-box">
-                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                        <field name="user_ids" widget="many2many_avatar_user" readonly="1" class="me-2"/>
                         <div class="flex-grow-1 d-block">
                             <div class="d-flex justify-content-between">
                                 <field name="name" display="full" class="o_text_block o_text_bold"/>
@@ -79,17 +79,21 @@
                 <field name="company_id" invisible="1"/>
                 <field name="category_id" invisible="1"/>
                 <header>
-                    <button string="Cancel" name="cancel_equipment_request" type="object" invisible="state == 'cancelled'"/>
+                    <button string="Cancel" name="cancel_equipment_request" type="object" invisible="state == 'cancelled' or not id"/>
                     <button string="Reopen Request" name="reset_equipment_request" type="object" invisible="state != 'cancelled'"/>
                     <field name="stage_id" widget="statusbar" options="{'clickable': '1'}" invisible="state == 'cancelled'"/>
                 </header>
                 <sheet>
-                    <field name="state" widget="maintenance_request_state_selection" class="float-end"/>
-                    <div class="oe_title">
-                        <label for="name" string="Request"/>
-                        <h1>
-                            <field name="name" placeholder="e.g. Screen not working"/>
-                        </h1>
+                    <div class="d-flex">
+                        <div class="oe_title flex-grow-1">
+                            <h1>
+                                <field name="name" placeholder="e.g. Screen not working"/>
+                            </h1>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center flex-shrink-0 ms-auto">
+                            <field name="priority" widget="priority" class="me-3"/>
+                            <field name="state" widget="maintenance_request_state_selection"/>
+                        </div>
                     </div>
                     <group>
                         <group>
@@ -98,12 +102,12 @@
                             <field name="category_id" groups="maintenance.group_equipment_manager" context="{'default_company_id':company_id}" invisible="not equipment_id"/>
                             <field name="close_date" readonly="True" invisible="state != 'done'"/>
                             <field name="maintenance_type" widget="radio"/>
+                            <field name="equipment_req_properties" widget="properties" nolabel="1" colspan="2"/>
                         </group>
                         <group>
                             <field name="maintenance_team_id" options="{'no_create': True, 'no_open': True}"/>
-                            <field name="user_id" string="Responsible"/>
-                            <field name="schedule_date"/>
-                            <field name="schedule_end"/>
+                            <field name="user_ids" string="Assignees" widget="many2many_avatar_user"/>
+                            <field name="schedule_date" string="Planned Date" widget="daterange" options="{'end_date_field': 'schedule_end', 'always_range': True}"/>
                             <label for="recurring_maintenance" invisible="maintenance_type == 'corrective'"/>
                             <div class="d-inline-flex" invisible="maintenance_type == 'corrective'">
                                 <field name="recurring_maintenance" nolabel="1" class="ms-0" style="width: fit-content;"/>
@@ -115,7 +119,6 @@
                                 <field name="repeat_type" required="recurring_maintenance" class="me-2" style="max-width: 15rem !important;" />
                                 <field name="repeat_until" invisible="repeat_type != 'until'" required="repeat_type == 'until'" class="me-2" />
                             </div>
-                            <field name="priority" widget="priority"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -133,12 +136,11 @@
         </field>
     </record>
 
-    <record id="hr_equipment_request_view_kanban" model="ir.ui.view">
-        <field name="name">equipment.request.kanban</field>
+    <record id="hr_equipment_request_view_card" model="ir.ui.view">
+        <field name="name">equipment.request.card</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <kanban highlight_color="color" default_group_by="stage_id" sample="1">
-                <progressbar field="state" colors='{"done": "success", "cancelled": "danger"}'/>
+            <card>
                 <templates>
                     <t t-name="menu">
                         <t t-if="widget.editable"><a role="menuitem" type="open" class="dropdown-item">Edit...</a></t>
@@ -157,13 +159,23 @@
                                     <field name="activity_ids" widget="kanban_activity" class="ms-3"/>
                                 </div>
                                 <div class="d-flex ms-auto align-items-center">
+                                    <field name="user_ids" widget="many2many_avatar_user" class="me-1"/>
                                     <field name="state" widget="maintenance_request_state_selection"/>
-                                    <field name="user_id" widget="many2one_avatar_user" class="ms-1"/>
                                 </div>
                             </footer>
                         </main>
                     </t>
                 </templates>
+            </card>
+        </field>
+    </record>
+
+    <record id="hr_equipment_request_view_kanban" model="ir.ui.view">
+        <field name="name">equipment.request.kanban</field>
+        <field name="model">maintenance.request</field>
+        <field name="arch" type="xml">
+            <kanban card_id="%(hr_equipment_request_view_card)d" highlight_color="color" default_group_by="stage_id" sample="1">
+                <progressbar field="state" colors='{"done": "success", "cancelled": "danger"}'/>
             </kanban>
         </field>
     </record>
@@ -176,7 +188,7 @@
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="name"/>
                 <field name="owner_user_id"/>
-                <field name="user_id"/>
+                <field name="user_ids" widget="many2many_avatar_user"/>
                 <field name="category_id" readonly="1" groups="maintenance.group_equipment_manager"/>
                 <field name="stage_id"/>
                 <field name="company_id" readonly="1" groups="base.group_multi_company"/>
@@ -190,7 +202,7 @@
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
             <graph string="Maintenance Request" sample="1">
-                <field name="user_id"/>
+                <field name="user_ids"/>
                 <field name="stage_id"/>
                 <field name="duration" type="measure"/>
                 <field name="color" type="measure" invisible="1"/>
@@ -204,7 +216,7 @@
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
             <pivot string="Maintenance Request" sample="1">
-                <field name="user_id"/>
+                <field name="user_ids"/>
                 <field name="stage_id"/>
                 <field name="color" invisible="1"/>
             </pivot>
@@ -216,8 +228,8 @@
         <field name="name">equipment.request.calendar</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <calendar date_start="schedule_date" date_stop="schedule_end" color="user_id" event_limit="5" js_class="calendar_with_recurrence">
-                <field name="user_id" filters="1"/>
+            <calendar date_start="schedule_date" date_stop="schedule_end" color="user_ids" event_limit="5" js_class="calendar_with_recurrence">
+                <field name="user_ids" filters="1"/>
                 <field name="priority"/>
                 <field name="maintenance_type"/>
                 <field name="recurring_maintenance" invisible="1"/>
@@ -240,7 +252,7 @@
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
         <field name="context">{
             'search_default_todo': True,
-            'default_user_id': uid,
+            'default_user_ids': [uid],
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -683,6 +695,7 @@
             <list string="Maintenance Request Stage" editable="top">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
+                <field name="maintenance_team_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" placeholder="All Maintenance Teams"/>
                 <field name="fold"/>
             </list>
         </field>
@@ -698,6 +711,26 @@
                     </t>
                 </templates>
             </kanban>
+        </field>
+    </record>
+
+    <record id="hr_equipment_stage_view_form" model="ir.ui.view">
+        <field name="name">equipment.stage.form</field>
+        <field name="model">maintenance.stage</field>
+        <field name="arch" type="xml">
+            <form string="Maintenance Stage">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="e.g. In Progress"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="fold"/>
+                        <field name="maintenance_team_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" placeholder="All Maintenance Teams"/>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 

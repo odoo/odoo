@@ -17,8 +17,8 @@ class TestDefaultView(common.TransactionCase):
             b'<form><sheet string="Test ORM Creative Work Edition"><group><group><field name="name"/><field name="res_model_id"/></group><group><field name="res_id"/><field name="res_model"/></group></group><group><separator/></group></sheet></form>',
         )
         self.assertEqual(
-            etree.tostring(self.env['test_orm.mixed']._get_default_form_view()),
-            b'<form><sheet string="Test ORM Mixed"><group><group><field name="foo"/></group></group><group><field name="text"/></group><group><group><field name="truth"/><field name="number"/><field name="date"/><field name="now"/><field name="reference"/></group><group><field name="count"/><field name="number2"/><field name="moment"/><field name="lang"/></group></group><group><field name="comment0"/></group><group><field name="comment1"/></group><group><field name="comment2"/></group><group><field name="comment3"/></group><group><field name="comment4"/></group><group><field name="comment5"/></group><group><group><field name="currency_id"/></group><group><field name="amount"/></group></group><group><separator/></group></sheet></form>',
+            etree.tostring(self.env['test_orm.company']._get_default_form_view()),
+            b'<form><sheet string="Test ORM Company"><group><group><field name="foo"/></group></group><group><field name="text"/></group><group><group><field name="date"/><field name="tag_id"/><field name="count"/></group><group><field name="moment"/><field name="truth"/><field name="phi"/></group></group><group><field name="html1"/></group><group><field name="html2"/></group><group><group><field name="company_id"/></group><group><field name="partner_id"/></group></group><group><separator/></group></sheet></form>'
         )
 
     def test_default_view_with_binaries(self):

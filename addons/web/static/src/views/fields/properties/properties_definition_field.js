@@ -6,13 +6,8 @@ import { PropertiesField } from "./properties_field";
 export class PropertiesDefinitionField extends PropertiesField {
     static template = "web.PropertiesDefinitionField";
 
-    setup() {
-        super.setup();
-        this.state.isInEditMode = this.definitionRecordId;
-    }
-
     /*
-    * handle the case when the add property is used even though there are 0 existing ones
+     * handle the case when the add property is used even though there are 0 existing ones
      */
     async onPropertyCreateEmpty() {
         const recordSaved = await this.props.record.save();
@@ -30,14 +25,16 @@ export class PropertiesDefinitionField extends PropertiesField {
         }
         const isInEditMode = canChangeDefinition && !this.props.readonly;
         this.state.canChangeDefinition = !!canChangeDefinition;
-        this.state.isInEditMode = isInEditMode;
+        this.setEditMode(isInEditMode);
         if (isInEditMode && this.propertiesList.length === 0) {
             const newName = this.generatePropertyName("char");
-            const propertiesDefinitions = [{
-                name: newName,
-                string: _t("Property 1"),
-                type: "char",
-            }];
+            const propertiesDefinitions = [
+                {
+                    name: newName,
+                    string: _t("Property 1"),
+                    type: "char",
+                },
+            ];
             this.initialValues[newName] = { name: newName, type: "char" };
             this.openPropertyDefinition = newName;
             await this.props.record.update({ [this.props.name]: propertiesDefinitions });
@@ -45,7 +42,7 @@ export class PropertiesDefinitionField extends PropertiesField {
     }
 
     get displayAddWorksheetPropertyButton() {
-        return this.propertiesList.length == 0 && !this.state.isInEditMode
+        return this.propertiesList.length == 0 && !this.state.isInEditMode;
     }
 
     /*
@@ -66,9 +63,9 @@ export class PropertiesDefinitionField extends PropertiesField {
 
     _getDisplayData() {
         return {
-            'parentName': this.props.record.model.config.resModel,
-            'parentFieldLabel': "model",
-        }
+            parentName: this.props.record.model.config.resModel,
+            parentFieldLabel: "model",
+        };
     }
 
     _onDeleteConfirm(propertiesDefinitions, propertyName) {
@@ -82,22 +79,22 @@ export class PropertiesDefinitionField extends PropertiesField {
             name: newName,
             string: _t("Property %s", count + 1),
             type: "char",
-        }
+        };
     }
 
     _regeneratePropertyName(newDefinition, oldDefinition) {
         super._regeneratePropertyName(newDefinition, oldDefinition);
         for (const key in newDefinition) {
-            if (['value', 'definition_changed'].includes(key)) {
-                delete newDefinition[key]
+            if (["value", "definition_changed"].includes(key)) {
+                delete newDefinition[key];
             }
         }
     }
 
     // In this case, we do not want to add the 'value' parameter, as this is a definition, and not a property
-    _setDefaultPropertyValue(propertyName) { }
+    _setDefaultPropertyValue(propertyName) {}
 
-    _toggleSeparatorValue(property, forceState) { }
+    _toggleSeparatorValue(property, forceState) {}
 
     _isFolded(property) {
         return false;

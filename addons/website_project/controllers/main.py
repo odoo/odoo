@@ -12,7 +12,7 @@ class WebsiteForm(form.WebsiteForm):
     def insert_record(self, request, model_sudo, values, custom, meta=None):
         model_name = model_sudo.model
         if model_name == 'project.task':
-            visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
+            visitor_sudo = request.env['ir.http']._get_visitor_from_request()
             visitor_partner = visitor_sudo.partner_id
             if visitor_partner:
                 values['partner_id'] = visitor_partner.id
@@ -52,13 +52,13 @@ class WebsiteForm(form.WebsiteForm):
             if partner:
                 data['record']['partner_id'] = partner.id
                 custom = [
-                    ('partner_name', data['record'].pop('partner_name', False)),
-                    ('partner_phone', data['record'].pop('partner_phone', False)),
-                    ('partner_company_name', data['record'].pop('partner_company_name', False)),
+                   (field, data['record'].pop(field))
+                   for field in ['partner_name', 'partner_phone', 'partner_company_name']
+                   if data['record'].get(field)
                 ]
                 data['custom'] += "\n" + "\n".join(["%s : %s" % c for c in custom])
             else:
-                data['record']['email_cc'] = values['email_from']
+                data['record']['partner_id'] = False
                 if values.get('partner_phone'):
                     data['record']['partner_phone'] = values['partner_phone']
                 if values.get('partner_name'):

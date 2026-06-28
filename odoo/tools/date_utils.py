@@ -5,6 +5,8 @@ import math
 import re
 import typing
 import zoneinfo
+import contextlib
+import babel
 from datetime import date, datetime, time, timedelta, tzinfo, UTC
 from operator import methodcaller
 
@@ -14,13 +16,21 @@ from .func import lazy
 from .float_utils import float_round
 
 if typing.TYPE_CHECKING:
-    import babel
     from collections.abc import Callable, Iterable, Iterator
     from odoo.orm.types import Environment
     D = typing.TypeVar('D', date, datetime)
 
+
 # cache `available_timezones` as it's recomputed on every call
-all_timezones = lazy(zoneinfo.available_timezones)
+@lazy
+def all_timezones():
+    tzs = []
+    for tz in zoneinfo.available_timezones():
+        with contextlib.suppress(LookupError):
+            babel.dates.get_timezone(tz)
+            tzs.append(tz)
+    return tzs
+
 
 TRUNCATE_TODAY = relativedelta(microsecond=0, second=0, minute=0, hour=0)
 TRUNCATE_UNIT = {
@@ -494,3 +504,20 @@ def weekend(locale: babel.Locale, date: date):
         - weekend of Sat 30 Aug -> Sat 30 Aug
     """
     return weekstart(locale, date) + relativedelta(days=6)
+
+
+def convert_timezone(utc_naive_datetime: datetime, tz_from: tzinfo, tz_to: tzinfo):
+    """
+        Convert a naive date to another timezone that initial timezone
+        used to generate the date.
+        :param utc_naive_datetime: utc date without tzinfo
+        :type utc_naive_datetime: datetime
+        :param tz_from: timezone used to obtained `utc_naive_datetime`
+        :param tz_to: timezone in which we want the date
+        :return: datetime converted into tz_to without tzinfo
+        :rtype: datetime
+    """
+    naive_datetime_from = utc_naive_datetime.astimezone(tz_from).replace(tzinfo=None)
+    aware_datetime_to = naive_datetime_from.replace(tzinfo=tz_to)
+    utc_naive_datetime_to = aware_datetime_to.astimezone(UTC).replace(tzinfo=None)
+    return utc_naive_datetime_to

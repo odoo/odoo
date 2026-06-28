@@ -1,4 +1,4 @@
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { Store } from "@mail/../tests/mock_server/store";
 
 import { fields, getKwArgs, makeKwArgs, models } from "@web/../tests/web_test_helpers";
 
@@ -58,21 +58,20 @@ export class MailCannedResponse extends models.ServerModel {
         const notifications = [];
         const [partner] = this.env["res.partner"].read(this.env.user.partner_id);
         for (const cannedResponse of this.browse(ids)) {
-            notifications.push([
-                partner,
-                "mail.record/insert",
-                new mailDataHelpers.Store(
-                    this.browse(cannedResponse.id),
-                    makeKwArgs({ delete: _delete })
-                ).get_result(),
-            ]);
+            const store = new Store();
+            if (_delete) {
+                store.delete(this.browse(cannedResponse.id));
+            } else {
+                store.add(this.browse(cannedResponse.id), "_store_canned_response_fields");
+            }
+            notifications.push([partner, "mail.record/insert", store.as_dict()]);
         }
         if (notifications.length) {
             this.env["bus.bus"]._sendmany(notifications);
         }
     }
 
-    get _to_store_defaults() {
-        return ["source", "substitution"];
+    _store_canned_response_fields(res) {
+        res.extend(["source", "substitution"]);
     }
 }

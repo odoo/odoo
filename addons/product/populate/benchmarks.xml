@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        ==========================================================
+        BENCHMARK 1: Deep Product Catalog — 1 category with 10,000 products
+        ==========================================================
+        Tests ORM performance under heavy one-to-many load on a
+        single category (price computation, variant handling, etc.).
+    -->
+    <record id="benchmark_deep_catalog" model="populate.blueprint">
+        <field name="name">Benchmark: Deep Product Catalog</field>
+        <field name="definition_xml" type="xml">
+            <model name="product.category" count="1" id="bench_category" scale="False">
+                <field name="name" eval="'Benchmark Deep Category'"/>
+            </model>
+
+            <model name="product.template" count="10000" id="bench_products" context="{'tracking_disable': True}">
+                <field name="name" length="30"/>
+                <field name="categ_id" ref="bench_category"/>
+                <field name="type" values="{'consu': 7, 'service': 3}"/>
+                <field name="list_price" start="10.0" end="1000.0" distribution="exponential(rate=0.003)"/>
+                <field name="standard_price" start="5.0" end="800.0" distribution="exponential(rate=0.004)"/>
+                <field name="sale_ok" eval="True"/>
+                <field name="purchase_ok" values="{True: 7, False: 3}"/>
+                <field name="active" eval="True"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 2: Wide Categories — many categories, few products each
+        ==========================================================
+        Tests category creation throughput and per-category computed
+        field overhead (product counts, hierarchy logic).
+    -->
+    <record id="benchmark_wide_categories" model="populate.blueprint">
+        <field name="name">Benchmark: Wide Categories</field>
+        <field name="definition_xml" type="xml">
+            <model name="product.category" count="1000" id="wide_categories">
+                <field name="name" length="25"/>
+            </model>
+
+            <model name="product.template" count="5000" id="wide_products" context="{'tracking_disable': True}">
+                <field name="name" length="30"/>
+                <field name="categ_id" ref="wide_categories"/>
+                <field name="type" values="{'consu': 7, 'service': 3}"/>
+                <field name="list_price" start="10.0" end="500.0"/>
+                <field name="standard_price" start="5.0" end="400.0"/>
+                <field name="active" eval="True"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 3: Product Variants — products with many variants
+        ==========================================================
+        Stresses variant creation, attribute combination logic, and
+        variant-specific pricing computations.
+    -->
+    <record id="benchmark_variants" model="populate.blueprint">
+        <field name="name">Benchmark: Product Variants</field>
+        <field name="definition_xml" type="xml">
+            <model name="product.category" count="10" id="var_categories" scale="False">
+                <field name="v_sequence" virtual="True" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Category {v_sequence}'"/>
+            </model>
+
+            <model name="product.attribute" count="15" id="var_attributes" scale="False">
+                <field name="v_sequence" virtual="True" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Attribute {v_sequence}'"/>
+                <field name="create_variant" eval="'always'"/>
+                <field name="display_type" values="{'radio': 4, 'pills': 2, 'select': 2}"/>
+                <field name="sequence" start="1" end="100"/>
+            </model>
+
+            <model name="product.attribute.value" count="100" id="var_attribute_values">
+                <field name="attribute_id" ref="var_attributes"/>
+                <field name="name" length="10"/>
+                <field name="sequence" start="1" end="50"/>
+            </model>
+
+            <model name="product.template" count="1000" id="var_templates" context="{'tracking_disable': True, 'create_product_product': False}">
+                <field name="name" length="28"/>
+                <field name="categ_id" ref="var_categories"/>
+                <field name="type" eval="'consu'"/>
+                <field name="list_price" start="20.0" end="800.0"/>
+                <field name="standard_price" start="10.0" end="600.0"/>
+                <field name="active" eval="True"/>
+            </model>
+
+            <model name="product.template.attribute.line" count="3000" id="var_attribute_lines" context="{'create_product_product': False}">
+                <field name="v_product_tmpl_id" virtual="True" generator="relation.one" comodel_name="product.template" ref="var_templates" partition="True"/>
+                <field name="v_attribute_id" virtual="True" generator="relation.one" comodel_name="product.attribute" ref="var_attributes"/>
+                <field name="v_unique_attribute_per_template" virtual="True" eval="(v_product_tmpl_id, v_attribute_id)" unique="True"/>
+                <field name="product_tmpl_id" eval="v_unique_attribute_per_template[0]"/>
+                <field name="attribute_id" eval="v_unique_attribute_per_template[1]"/>
+                <field name="value_ids" domain="[('attribute_id', '=', attribute_id)]" ref="var_attribute_values" count="3" std="1"/>
+                <field name="sequence" start="1" end="50"/>
+            </model>
+
+            <!-- Trigger variant creation that all ptal are assigned -->
+            <model name="product.template" type="write" ref="var_templates">
+                <field name="attribute_line_ids" eval="[]"/>
+            </model>
+
+            <model name="product.product" type="write" id="var_templates.product_variant_ids">
+                <field name="default_code" generator="fake.ean13" unique="True"/>
+                <field name="barcode" eval="default_code"/>
+                <field name="active" values="{True: 95, False: 5}"/>
+                <field name="standard_price" start="10.0" end="600.0"/>
+                <field name="weight" start="0.1" end="50.0" distribution="exponential(rate=0.05)" null_ratio="0.3"/>
+                <field name="volume" start="0.01" end="20.0" distribution="exponential(rate=0.1)" null_ratio="0.4"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 4: Pricelists at scale — many pricelists and rules
+        ==========================================================
+        Tests pricelist computation, rule matching, and
+        price calculation throughput.
+    -->
+    <record id="benchmark_pricelists" model="populate.blueprint">
+        <field name="name">Benchmark: Pricelists</field>
+        <field name="definition_xml" type="xml">
+            <model name="product.category" count="20" id="price_categories" scale="False">
+                <field name="v_sequence" virtual="True" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Category {v_sequence}'"/>
+            </model>
+
+            <model name="product.template" count="1000" id="price_products" context="{'tracking_disable': True}">
+                <field name="name" length="28"/>
+                <field name="categ_id" ref="price_categories"/>
+                <field name="type" values="{'consu': 7, 'service': 3}"/>
+                <field name="list_price" start="10.0" end="1000.0"/>
+                <field name="active" eval="True"/>
+            </model>
+
+            <model name="product.pricelist" count="100" id="price_pricelists">
+                <field name="name" length="20"/>
+                <field name="active" eval="True"/>
+                <field name="sequence" start="1" end="100"/>
+            </model>
+
+            <model name="product.pricelist.item" count="10000" id="price_rules">
+                <field name="pricelist_id" ref="price_pricelists"/>
+                <field name="product_tmpl_id" ref="price_products" null_ratio="0.4"/>
+                <field name="product_id" domain="[('product_tmpl_id', '=?', product_tmpl_id)]" ref="price_products.product_variant_ids" null_ratio="0.5"/>
+                <field name="categ_id" ref="price_categories" null_ratio="0.6"/>
+                <field name="compute_price" values="{'fixed': 4, 'percentage': 3, 'formula': 3}"/>
+                <field name="fixed_price" start="5.0" end="900.0"/>
+                <field name="percent_price" start="-30.0" end="30.0"/>
+                <field name="price_discount" start="0.0" end="40.0"/>
+                <field name="min_quantity" generator="scalar.integer" start="1" end="50" distribution="exponential(rate=0.1)"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 5: Supplier Info — vendor pricing at scale
+        ==========================================================
+        Tests supplier info creation, vendor price lookups, and
+        min quantity matching logic.
+    -->
+    <record id="benchmark_supplier_info" model="populate.blueprint">
+        <field name="name">Benchmark: Supplier Info</field>
+        <field name="definition_xml" type="xml">
+            <model name="res.partner" count="200" id="bench_vendors" scale="False">
+                <field name="v_sequence" virtual="True" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Vendor {v_sequence}'"/>
+                <field name="is_company" eval="True"/>
+                <field name="active" eval="True"/>
+            </model>
+
+            <model name="product.template" count="1000" id="supplier_products" context="{'tracking_disable': True}">
+                <field name="name" length="28"/>
+                <field name="type" values="{'consu': 7, 'service': 3}"/>
+                <field name="list_price" start="20.0" end="1000.0"/>
+                <field name="purchase_ok" eval="True"/>
+                <field name="active" eval="True"/>
+            </model>
+
+            <model name="product.supplierinfo" count="10000" id="supplier_info_items">
+                <field name="partner_id" ref="bench_vendors"/>
+                <field name="product_id" ref="supplier_products.product_variant_ids"/>
+                <field name="price" start="5.0" end="800.0" distribution="exponential(rate=0.004)"/>
+                <field name="min_qty" start="1.0" end="50.0" distribution="exponential(rate=0.08)"/>
+                <field name="delay" start="1" end="60" distribution="normal(mean=14, std=8)"/>
+                <field name="sequence" start="1" end="100"/>
+                <field name="discount" start="0.0" end="25.0" distribution="beta(alpha=2, beta=5)" null_ratio="0.6"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 6: Category Hierarchy — nested category structure
+        ==========================================================
+        Tests parent-child relationships, complete_name computation,
+        and hierarchical searches.
+    -->
+    <record id="benchmark_category_hierarchy" model="populate.blueprint">
+        <field name="name">Benchmark: Category Hierarchy</field>
+        <field name="definition_xml" type="xml">
+            <model name="product.category" count="200" id="parent_categories">
+                <field name="name" length="20"/>
+            </model>
+
+            <model name="product.category" count="1000" id="child_categories">
+                <field name="name" length="22"/>
+                <field name="parent_id" ref="parent_categories"/>
+            </model>
+
+            <model name="product.category" count="3000" id="grandchild_categories">
+                <field name="name" length="20"/>
+                <field name="parent_id" ref="child_categories"/>
+            </model>
+
+            <model name="product.template" count="5000" id="hierarchy_products" context="{'tracking_disable': True}">
+                <field name="name" length="28"/>
+                <field name="categ_id" ref="grandchild_categories"/>
+                <field name="type" values="{'consu': 7, 'service': 3}"/>
+                <field name="list_price" start="10.0" end="500.0"/>
+                <field name="active" eval="True"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 7: Tags at scale — tag fanout
+        ==========================================================
+        Many tags linked to many products via M2M. Stresses relational
+        write throughput and tag lookups.
+    -->
+    <record id="benchmark_tags" model="populate.blueprint">
+        <field name="name">Benchmark: Tags</field>
+        <field name="definition_xml" type="xml">
+            <model name="product.tag" count="1000" id="bench_tags">
+                <field name="name" length="16" unique="True"/>
+                <field name="color" eval="'#3C3C3C'"/>
+                <field name="sequence" start="1" end="100"/>
+                <field name="visible_to_customers" eval="True"/>
+            </model>
+
+            <model name="product.template" count="5000" id="tag_products" context="{'tracking_disable': True}">
+                <field name="name" length="28"/>
+                <field name="type" values="{'consu': 7, 'service': 3}"/>
+                <field name="list_price" start="10.0" end="500.0"/>
+                <field name="product_tag_ids" ref="bench_tags" count="8" std="2"/>
+                <field name="active" eval="True"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 8: Bulk Creation — pure record throughput
+        ==========================================================
+        Measures raw create() performance for each important model
+        with minimal field overhead. Good for ORM/DB baseline.
+    -->
+    <record id="benchmark_bulk_creation" model="populate.blueprint">
+        <field name="name">Benchmark: Bulk Creation</field>
+        <field name="definition_xml" type="xml">
+            <model name="product.category" count="1000" id="bulk_categories">
+                <field name="name" length="20"/>
+            </model>
+
+            <model name="product.tag" count="1000" id="bulk_tags">
+                <field name="name" length="14" unique="True"/>
+                <field name="sequence" start="1" end="100"/>
+            </model>
+
+            <model name="product.template" count="1000" id="bulk_templates" context="{'tracking_disable': True, 'create_product_product': False}">
+                <field name="name" length="28"/>
+                <field name="categ_id" ref="bulk_categories"/>
+                <field name="type" values="{'consu': 7, 'service': 3}"/>
+                <field name="list_price" start="10.0" end="1000.0"/>
+                <field name="standard_price" start="5.0" end="800.0"/>
+                <field name="active" eval="True"/>
+            </model>
+
+            <!-- Trigger variant creation -->
+            <model name="product.template" type="write" ref="bulk_templates">
+                <field name="attribute_line_ids" eval="[]"/>
+            </model>
+
+            <model name="product.pricelist" count="100" id="bulk_pricelists">
+                <field name="name" length="18"/>
+                <field name="active" eval="True"/>
+            </model>
+        </field>
+    </record>
+</odoo>

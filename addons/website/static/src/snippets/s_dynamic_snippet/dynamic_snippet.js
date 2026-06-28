@@ -2,7 +2,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { rpc } from "@web/core/network/rpc";
-import { utils as uiUtils } from "@web/core/ui/ui_service";
+import { listenSizeChange, utils as uiUtils } from "@web/core/ui/ui_service";
 import { uniqueId } from "@web/core/utils/functions";
 import { renderToFragment } from "@web/core/utils/render";
 import { verifyHttpsUrl } from "@website/utils/misc";
@@ -18,7 +18,6 @@ export class DynamicSnippet extends Interaction {
         "[data-url]": {
             "t-on-click": this.callToAction,
         },
-        _window: { "t-on-resize": this.throttled(this.render) },
         _root: {
             "t-att-class": () => ({
                 o_dynamic_snippet_loading: this.loadingData,
@@ -37,13 +36,14 @@ export class DynamicSnippet extends Interaction {
          * Can be accessed when overriding the _render_content() function in order to generate
          * a new renderedContent from the original data.
          *
-         * @type {*|jQuery.fn.init|jQuery|HTMLElement}
+         * @type {*|HTMLElement}
          */
         this.data = [];
         this.renderedContentNode = document.createDocumentFragment();
         this.uniqueId = uniqueId("s_dynamic_snippet_");
         this.templateKey = "website.s_dynamic_snippet.grid";
         this.withSample = false;
+        this.rpc = rpc;
     }
 
     async willStart() {
@@ -53,6 +53,8 @@ export class DynamicSnippet extends Interaction {
     }
 
     start() {
+        // Re-render on media breakpoint change
+        this.registerCleanup(listenSizeChange(this.protectSyncAfterAsync(this.render.bind(this))));
         this.render();
     }
 
@@ -101,7 +103,7 @@ export class DynamicSnippet extends Interaction {
         if (this.isConfigComplete()) {
             const nodeData = this.el.dataset;
             const filterFragments = await this.waitFor(
-                rpc(
+                this.rpc(
                     "/website/snippet/filters",
                     Object.assign(
                         {
@@ -151,11 +153,15 @@ export class DynamicSnippet extends Interaction {
             unique_id: this.uniqueId,
             extraClasses: dataset.extraClasses || "",
             columnClasses: dataset.columnClasses || "",
+            is_single_record: this.isSingleMode,
         };
     }
 
     render() {
         this.loadingData = false;
+        if (this.el.querySelector(".s_dialog_preview")) {
+            return;
+        }
         if (this.data.length > 0 || this.withSample) {
             this.prepareContent();
         } else {
@@ -202,4 +208,17 @@ export class DynamicSnippet extends Interaction {
     }
 }
 
+export const DynamicSnippetCached = (I) =>
+    class extends I {
+        setup() {
+            super.setup();
+            this.rpc = (url, params) => this.services.website_edit.rpcCache({ ...params, url });
+        }
+    };
+
 registry.category("public.interactions").add("website.dynamic_snippet", DynamicSnippet);
+
+registry.category("public.interactions.preview").add("website.dynamic_snippet", {
+    Interaction: DynamicSnippet,
+    mixin: DynamicSnippetCached,
+});

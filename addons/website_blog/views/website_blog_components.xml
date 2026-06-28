@@ -82,11 +82,9 @@
             </div>
             <!-- 'Search Box' -->
             <t t-call="website.website_search_box_input"
-                _form_classes.f="#{not len(blogs) &gt; 1 and 'ms-auto'} flex-grow-1 flex-lg-grow-0"
-                search_type.f="blogs"
-                action="blog_url(tag=tag,search=search)"
-                display_description.f="true"
-                display_detail.f="false">
+                _form_classes.f="#{not len(blogs) &gt; 1 and 'ms-auto'} flex-grow-1 flex-lg-grow-0 w-lg-50 w-xl-25"
+                search_type.f="blog_post"
+                action="blog_url(tag=tag,search=search)">
                 <input type="hidden" name="tag" t-att-value="tag"/>
                 <input type="hidden" name="date_begin" t-att-value="date_begin"/>
                 <input type="hidden" name="date_end" t-att-value="date_end"/>
@@ -227,7 +225,7 @@ Options:
             <div>
                 <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Follow Us</h6>
             </div>
-            <t t-snippet-call="website.s_social_media"/>
+            <t t-snippet-call="website.s_social_media" string="Social Media" _classes.f="oe_unremovable"/>
 
             <t t-call="website_mail.follow" t-if="blog"
                 email="user_id.email"
@@ -306,12 +304,12 @@ Display a sidebar beside the post content.
 <!-- (Option) Post Sidebar: Share Links Display -->
 <template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="True" priority="2">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-5">
+        <div class="o_wblog_sidebar_block pb-5" t-ignore="true">
             <div>
                 <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Share this post</h6>
             </div>
 
-            <t t-snippet-call="website.s_share"/>
+            <t t-snippet-call="website.s_share" string="Share" _classes.f="oe_unremovable"/>
         </div>
 
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_3"/>

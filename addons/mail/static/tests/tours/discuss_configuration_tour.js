@@ -44,34 +44,31 @@ registry.category("web_tour.tours").add("discuss_configuration_tour", {
             trigger: ".o-mail-DeviceSelect-button[data-kind='audioinput']",
         },
         {
-            trigger: "button:contains('Voice Detection')",
+            trigger: "input[title='Voice detection sensitivity']",
+        },
+        {
+            trigger: "label[aria-label='Enable Push-to-talk']",
             run: "click",
         },
         {
-            trigger: "span:contains('Voice detection sensitivity')",
+            trigger: "span:contains('Click the button below to register a new shortcut.')",
         },
         {
-            trigger: "button:contains('Push-to-Talk')",
+            trigger: "input[title='Delay after releasing push-to-talk']",
+        },
+        {
+            trigger: "button[title='Video']",
             run: "click",
-        },
-        {
-            trigger: "label:contains('Push-to-talk key')",
-        },
-        {
-            trigger: "label:contains('Delay after releasing push-to-talk')",
-        },
-        {
-            trigger: "input[aria-label='Show video participants only']",
         },
         {
             trigger: "input[aria-label='Blur video background']",
             run: "click",
         },
         {
-            trigger: "label:contains('Background blur intensity')",
+            trigger: "div[title='Background blur intensity'] span:has(:text('Intensity'))",
         },
         {
-            trigger: "label:contains('Edge blur intensity')",
+            trigger: "div[title='Edge blur intensity'] span:has(:text('Edge Softness'))",
         },
         {
             trigger: ".modal-header button[aria-label='Close']",

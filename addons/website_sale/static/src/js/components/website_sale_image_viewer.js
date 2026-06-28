@@ -1,38 +1,36 @@
-import { onRendered, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { onMounted } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
+import { onRendered, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onMounted, props, proxy, t } from "@odoo/owl";
+import { Dialog, dialogProps } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useDebounced } from "@web/core/utils/timing";
 
 const ZOOM_STEP = 0.1;
 const TOUCHMOVE_STEP = 96;
 
+const productImageViewerProps = {
+    ...dialogProps,
+    images: t.instanceOf(Array),
+    selectedImageIdx: t.number().optional(),
+    imageRatio: t.string().optional('auto'),
+    imageRatioMobile: t.string().optional('auto'),
+    close: t.function(),
+};
+delete productImageViewerProps.slots;
+
 export class ProductImageViewer extends Dialog {
     static template = "website_sale.ProductImageViewer";
-    static props = {
-        ...Dialog.props,
-        images: { type: NodeList },
-        selectedImageIdx: { type: Number, optional: true },
-        imageRatio: { type: String, optional: true },
-        imageRatioMobile: { type: String, optional: true },
-        close: Function,
-    };
-    static defaultProps = {
-        ...Dialog.defaultProps,
-        imageRatio: 'auto',
-        imageRatioMobile: 'auto',
-    }
+    props = props(productImageViewerProps);
 
     setup() {
         super.setup();
         this.imageContainerRef = useRef("imageContainer");
-        this.images = [...this.props.images].map(image => {
+        this.images = this.props.images.map((image) => {
             return {
                 src: image.dataset.zoomImage || image.src,
                 thumbnailSrc: image.src.replace('/image_1024/', '/image_256/'),
             };
         });
-        this.state = useState({
+        this.state = proxy({
             selectedImageIdx: this.props.selectedImageIdx || 0,
             imageScale: 1,
             carouselOffset: 0,
@@ -221,4 +219,3 @@ export class ProductImageViewer extends Dialog {
         }
     }
 }
-delete ProductImageViewer.props.slots;

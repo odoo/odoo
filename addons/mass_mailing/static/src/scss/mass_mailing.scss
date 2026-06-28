@@ -24,8 +24,8 @@
         }
     }
 
-    .o_field_boolean_favorite i {
-        font-size: inherit;
+    .o_field_boolean_favorite {
+        --Favorite-font-size: 1.35em;
     }
 }
 
@@ -124,7 +124,7 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
             }
         }
         article > div {
-            --KanbanRecord-padding-h: #{$o-horizontal-padding};
+            --Card-padding-h: #{$o-horizontal-padding};
 
             .o_mailing_list_kanban_stats > div {
                 min-width: 70px;
@@ -157,7 +157,6 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
             }
         }
         .o_dropdown_kanban {
-            visibility: visible;
             @include media-breakpoint-up(lg) {
                 top: 50% !important;
                 transform: translateY(-50%) !important;
@@ -195,7 +194,7 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
 
     iframe {
         width: 100%;
-        min-height: 55vh;
+        min-height: 65vh;
     }
 }
 
@@ -203,5 +202,17 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
     overflow: unset;
     .o_form_statusbar {
         position: static !important;
+    }
+}
+
+.o_kanban_mailing_filter {
+    .o_dynamic_list_kanban_col {
+        min-width: 0; flex-basis: 0;
+    }
+
+    .o_mailing_filter_kanban_edit_btn {
+        text-decoration: none;
+        padding-left: 2rem !important; 
+        padding-right: 2rem !important;
     }
 }

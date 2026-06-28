@@ -1,6 +1,6 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { useExternalListener, useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { getNextTabableElement, getPreviousTabableElement } from "@web/core/utils/ui";
 import { usePosition } from "@web/core/position/position_hook";
@@ -22,6 +22,8 @@ import {
     Component,
     onWillStart,
     onPatched,
+    proxy,
+    useListener,
 } from "@odoo/owl";
 
 export class AnalyticDistribution extends Component {
@@ -49,7 +51,7 @@ export class AnalyticDistribution extends Component {
         this.orm = useService("orm");
         this.batchedOrm = useService("batchedOrm");
 
-        this.state = useState({
+        this.state = proxy({
             showDropdown: false,
             formattedData: [],
             update_plan: {},
@@ -68,11 +70,13 @@ export class AnalyticDistribution extends Component {
         this.initialFormattedData = [];
 
         onWillStart(this.willStart);
-        useRecordObserver(this.willUpdateRecord.bind(this));
         onPatched(this.patched);
 
-        useExternalListener(window, "click", this.onWindowClick, true);
-        useExternalListener(window, "resize", this.onWindowResized);
+        useExternalListener(window, "click", this.onWindowClick.bind(this), true);
+        useListener(window, "resize", this.onWindowResized.bind(this));
+        useBus(this.props.record.model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
+            detail.proms.push(this.commitChanges())
+        );
 
         this.openTemplate = useOpenMany2XRecord({
             resModel: "account.analytic.distribution.model",
@@ -98,6 +102,7 @@ export class AnalyticDistribution extends Component {
         this.planIdToColumn = {};
         this.lastAccount = this.props.account_field && this.props.record.data[this.props.account_field] || false;
         this.lastProduct = this.props.product_field && this.props.record.data[this.props.product_field] || false;
+        useRecordObserver(this.willUpdateRecord.bind(this));
     }
 
     // Lifecycle
@@ -149,6 +154,7 @@ export class AnalyticDistribution extends Component {
      * @returns {Object}
      */
     accountTotalsByPlan() {
+        this.state.formattedData; // consume signal
         const accountTotals = {};
         const formattedData = this.props.multi_edit ? this.initialFormattedData : this.state.formattedData;
         formattedData.map((line) => {
@@ -493,6 +499,12 @@ export class AnalyticDistribution extends Component {
             this.initialFormattedData = this.state.formattedData;
             this.state.formattedData = [];
             this.state.update_plan = {};
+        }
+    }
+
+    async commitChanges() {
+        if (this.isDropdownOpen) {
+            await this.save();
         }
     }
 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_launch_countdown" name="Launch Countdown">
+    <section class="s_launch_countdown o_full_screen_height oe_img_bg o_bg_img_center o_bg_img_origin_border_box o_cc o_cc5 pt88 pb88" style="background-image: url('/web/image/website.s_launch_countdown_default_image');">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="display-3-fs" style="text-align: center;">We're coming soon!</h1>
+                    <p class="lead" style="text-align: center;">Something exciting is on the horizon, and we can't wait to share it with you.<br/>Sign up now to be the first to know when we launch.</p>
+                    <p style="text-align: center;"><a t-att-href="cta_btn_href" class="btn btn-secondary mb-2 o_translate_inline"><t t-out="cta_btn_text">Join the waitlist</t></a></p>
+                    <t t-snippet-call="website.s_countdown" string="Countdown" color.f="o-color-4" titleClass.f="s_countdown_title_hidden"/>
+                    <p><br/></p>
+                    <p><br/></p>
+                    <p><br/></p>
+                    <div class="s_social_media o_not_editable no_icon_color text-center" contenteditable="false" data-snippet="s_social_media" data-name="Social Media" style="--fa-icon-size: 40px;">
+                        <h4 class="s_social_media_title d-block">Get updates<br/><br/></h4>
+                        <a href="#" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
+                            <i class="fa fa-facebook rounded-empty-circle shadow-sm o_editable_media small_social_icon o_sm_custom_size"/>
+                        </a>
+                        <a href="#" class="s_social_media_twitter" target="_blank" aria-label="X">
+                            <i class="fa fa-twitter rounded-empty-circle shadow-sm o_editable_media small_social_icon o_sm_custom_size"/>
+                        </a>
+                        <a href="#" class="s_social_media_linkedin" target="_blank" aria-label="LinkedIn">
+                            <i class="fa fa-linkedin rounded-empty-circle shadow-sm o_editable_media small_social_icon o_sm_custom_size"/>
+                        </a>
+                        <a href="#" class="s_social_media_youtube" target="_blank" aria-label="YouTube">
+                            <i class="fa fa-youtube-play rounded-empty-circle shadow-sm o_editable_media small_social_icon o_sm_custom_size"/>
+                        </a>
+                        <a href="#" class="s_social_media_instagram" target="_blank" aria-label="Instagram">
+                            <i class="fa fa-instagram rounded-empty-circle shadow-sm o_editable_media small_social_icon o_sm_custom_size"/>
+                        </a>
+                        <a href="#" class="s_social_media_github" target="_blank" aria-label="GitHub">
+                            <i class="fa fa-github rounded-empty-circle shadow-sm o_editable_media small_social_icon o_sm_custom_size"/>
+                        </a>
+                        <a href="#" class="s_social_media_tiktok" target="_blank" aria-label="TikTok">
+                            <i class="fa fa-tiktok rounded-empty-circle shadow-sm o_editable_media small_social_icon o_sm_custom_size"/>
+                        </a>
+                        <a href="#" class="s_social_media_discord" target="_blank" aria-label="Discord">
+                            <i class="fa fa-discord rounded-empty-circle shadow-sm o_editable_media small_social_icon o_sm_custom_size"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

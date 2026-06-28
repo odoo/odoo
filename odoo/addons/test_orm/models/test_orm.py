@@ -9,6 +9,9 @@ from odoo.tools.float_utils import float_round
 from odoo.tools.translate import html_translate
 import itertools
 
+from odoo.addons.base.models.res_company import company_default_for
+
+
 _logger = logging.getLogger('precompute_setter')
 
 
@@ -112,28 +115,6 @@ class TestOrmDiscussion(models.Model):
         """Ensure computed O2M domains work as expected."""
         return [("important", "=", True)]
 
-    @api.onchange('name')
-    def _onchange_name(self):
-        # test onchange modifying one2many field values
-        if self.env.context.get('generate_dummy_message') and self.name == '{generate_dummy_message}':
-            # update body of existings messages and emails
-            for message in self.messages:
-                message.body = 'not last dummy message'
-            for message in self.important_messages:
-                message.body = 'not last dummy message'
-            # add new dummy message
-            message_vals = self.messages._add_missing_default_values({'body': 'dummy message', 'important': True})
-            self.messages |= self.messages.new(message_vals)
-            self.important_messages |= self.messages.new(message_vals)
-
-    @api.onchange('moderator')
-    def _onchange_moderator(self):
-        self.participants |= self.moderator
-
-    @api.onchange('messages')
-    def _onchange_messages(self):
-        self.message_concat = "\n".join(["%s:%s" % (m.name, m.body) for m in self.messages])
-
 
 class TestOrmMessage(models.Model):
     _name = 'test_orm.message'
@@ -154,7 +135,7 @@ class TestOrmMessage(models.Model):
     label = fields.Char(translate=True)
     priority = fields.Integer()
     active = fields.Boolean(default=True)
-    has_important_sibling = fields.Boolean(compute='_compute_has_important_sibling')
+    has_important_sibling = fields.Boolean(compute='_compute_has_important_sibling', search='_search_has_important_sibling')
 
     attributes = fields.Properties(
         string='Discussion Properties',
@@ -166,6 +147,12 @@ class TestOrmMessage(models.Model):
         for record in self:
             siblings = record.discussion.with_context(active_test=False).messages - record
             record.has_important_sibling = any(siblings.mapped('important'))
+
+    def _search_has_important_sibling(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        # not entirely correct, but sufficent for tests
+        return [('discussion.messages.important', '=', True)]
 
     @api.constrains('author', 'discussion')
     def _check_author(self):
@@ -250,18 +237,6 @@ class TestOrmEmailmessage(models.Model):
     active = fields.Boolean('Active Message', related='message.active', store=True, related_sudo=False)
 
 
-class TestOrmPartner(models.Model):
-    """
-    Simplified model for partners. Having a specific model avoids all the
-    overrides from other modules that may change which fields are being read,
-    how many queries it takes to use that model, etc.
-    """
-    _name = 'test_orm.partner'
-    _description = 'Discussion Partner'
-
-    name = fields.Char(string='Name')
-
-
 class TestOrmMulti(models.Model):
     """ Model for testing multiple onchange methods in cascade that modify a
         one2many field several times.
@@ -270,25 +245,10 @@ class TestOrmMulti(models.Model):
     _description = 'Test ORM Multi'
 
     name = fields.Char(related='partner.name', readonly=True)
-    partner = fields.Many2one('res.partner')
+    partner = fields.Many2one('test_orm.partner')
     lines = fields.One2many('test_orm.multi.line', 'multi')
     partners = fields.One2many(related='partner.child_ids')
     tags = fields.Many2many('test_orm.multi.tag', domain=[('name', 'ilike', 'a')])
-
-    @api.onchange('name')
-    def _onchange_name(self):
-        for line in self.lines:
-            line.name = self.name
-
-    @api.onchange('partner')
-    def _onchange_partner(self):
-        for line in self.lines:
-            line.partner = self.partner
-
-    @api.onchange('tags')
-    def _onchange_tags(self):
-        for line in self.lines:
-            line.tags |= self.tags
 
 
 class TestOrmMultiLine(models.Model):
@@ -351,49 +311,6 @@ class TestOrmCreativeworkMovie(models.Model):
     editions = fields.One2many(
         'test_orm.creativework.edition', 'res_id', domain=[('res_model', '=', 'test_orm.creativework.movie')],
     )
-
-
-class TestOrmMixed(models.Model):
-    _name = 'test_orm.mixed'
-    _description = 'Test ORM Mixed'
-
-    foo = fields.Char()
-    text = fields.Text()
-    truth = fields.Boolean()
-    count = fields.Integer()
-    number = fields.Float(digits=(10, 2), default=3.14)
-    number2 = fields.Float(digits='ORM Precision')
-    date = fields.Date()
-    moment = fields.Datetime()
-    now = fields.Datetime(compute='_compute_now')
-    lang = fields.Selection(string='Language', selection='_get_lang')
-    reference = fields.Reference(string='Related Document',
-        selection='_reference_models')
-    comment0 = fields.Html()
-    comment1 = fields.Html(sanitize=False)
-    comment2 = fields.Html(sanitize_attributes=True, strip_classes=False)
-    comment3 = fields.Html(sanitize_attributes=True, strip_classes=True)
-    comment4 = fields.Html(sanitize_attributes=True, strip_style=True)
-    comment5 = fields.Html(sanitize_overridable=True, sanitize_attributes=False)
-
-    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.ref('base.EUR'))
-    amount = fields.Monetary()
-
-    def _compute_now(self):
-        # this is a non-stored computed field without dependencies
-        for message in self:
-            message.now = fields.Datetime.now()
-
-    @api.model
-    def _get_lang(self):
-        return self.env['res.lang'].get_installed()
-
-    @api.model
-    def _reference_models(self):
-        models = self.env['ir.model'].sudo().search([('state', '!=', 'manual')])
-        return [(model.model, model.name)
-                for model in models
-                if not model.model.startswith('ir.')]
 
 
 class DomainBool(models.Model):
@@ -890,10 +807,6 @@ class TestOrmComputeOnchange(models.Model):
         compute='_compute_tag_ids', store=True, readonly=False,
     )
 
-    @api.onchange('foo')
-    def _onchange_foo(self):
-        self.count += 1
-
     @api.depends('foo')
     def _compute_bar(self):
         for record in self:
@@ -1244,15 +1157,6 @@ class TestOrmAttachmentHost(models.Model):
     )
 
 
-class DecimalPrecisionTest(models.Model):
-    _name = 'decimal.precision.test'
-    _description = 'Decimal Precision Test'
-
-    float = fields.Float()
-    float_2 = fields.Float(digits=(16, 2))
-    float_4 = fields.Float(digits=(16, 4))
-
-
 class TestOrmModel_A(models.Model):
     _name = 'test_orm.model_a'
     _description = 'Model A'
@@ -1424,14 +1328,6 @@ class TestOrmModel_Parent_M2o(models.Model):
     def _compute_cost(self):
         for record in self:
             record.cost = sum(child.cost for child in record.child_ids)
-
-
-class TestOrmCountry(models.Model):
-    _name = 'test_orm.country'
-    _description = 'Country, ordered by name'
-    _order = 'name, id'
-
-    name = fields.Char()
 
 
 class TestOrmCity(models.Model):
@@ -1841,10 +1737,6 @@ class TestOrmComputedModifier(models.Model):
         for record in self:
             record.sub_foo = record.foo
 
-    @api.onchange('bar')
-    def _onchange_moderator(self):
-        self.sub_bar = self.bar
-
 
 class TestOrmCompute_Editable(models.Model):
     _name = 'test_orm.compute_editable'
@@ -1852,12 +1744,6 @@ class TestOrmCompute_Editable(models.Model):
 
     precision_rounding = fields.Float(default=0.01, digits=(1, 10))
     line_ids = fields.One2many('test_orm.compute_editable.line', 'parent_id')
-
-    @api.onchange('line_ids')
-    def _onchange_line_ids(self):
-        for line in self.line_ids:
-            # even if 'same' is not in the view, it should be the same as 'value'
-            line.count += line.same
 
 
 class TestOrmCompute_EditableLine(models.Model):
@@ -2070,6 +1956,10 @@ class TestOrmPrecomputeEditable(models.Model):
     baz = fields.Char(compute='_compute_baz', precompute=True, store=True, readonly=False)
     baz2 = fields.Char(compute='_compute_baz2', precompute=True, store=True)
 
+    boo1 = fields.Char(compute='_compute_boos', precompute=True, store=True, readonly=False)
+    boo2 = fields.Char(compute='_compute_boos', precompute=True, store=True, readonly=False)
+    choo = fields.Char(compute='_compute_choo', precompute=True, store=True)
+
     @api.depends('foo')
     def _compute_bar(self):
         self.bar = "COMPUTED"
@@ -2084,6 +1974,16 @@ class TestOrmPrecomputeEditable(models.Model):
         # during the precomputation of bar
         for record in self:
             record.baz2 = record.baz
+
+    @api.depends('foo')
+    def _compute_boos(self):
+        self.boo1 = "COMPUTED"
+        self.boo2 = "COMPUTED"
+
+    @api.depends('boo2')
+    def _compute_choo(self):
+        for record in self:
+            record.choo = record.boo2
 
 
 class TestOrmPrecomputeReadonly(models.Model):
@@ -2226,6 +2126,7 @@ class TestOrmRelated_Translation_2(models.Model):
     name = fields.Char('Name Related', related='related_id.name', readonly=False)
     html = fields.Html('HTML Related', related='related_id.html', readonly=False)
     computed_name = fields.Char('Name Computed', compute='_compute_name')
+    name_en = fields.Char('Name EN', compute='_compute_name_en')
     computed_html = fields.Char('HTML Computed', compute='_compute_html')
 
     @api.depends_context('lang')
@@ -2233,6 +2134,11 @@ class TestOrmRelated_Translation_2(models.Model):
     def _compute_name(self):
         for record in self:
             record.computed_name = record.related_id.name
+
+    @api.depends('name')
+    def _compute_name_en(self):
+        for record in self.with_context(lang='en_US'):
+            record.name_en = record.name
 
     @api.depends_context('lang')
     @api.depends('related_id.html')
@@ -2248,6 +2154,16 @@ class TestOrmRelated_Translation_3(models.Model):
     related_id = fields.Many2one('test_orm.related_translation_2', string='Parent Model')
     name = fields.Char('Name Related', related='related_id.name', readonly=False)
     html = fields.Html('HTML Related', related='related_id.html', readonly=False)
+
+
+class TestOrmRelated_Translation_4(models.Model):
+    _name = 'test_orm.related_translation_4'
+    _description = 'A model to test translation for inherited translated fields'
+    _inherits = {
+        'test_orm.related_translation_1': 'related_id',
+    }
+
+    related_id = fields.Many2one('test_orm.related_translation_1', string='Parent Model', required=True, ondelete='cascade')
 
 
 class TestOrmIndexed_Translation(models.Model):
@@ -2519,3 +2435,25 @@ class CalendarTest(models.Model):
 
     def _compute_date(self):
         self.date_start = self.date_end = fields.Date.today()
+
+
+class ResCompanyDefaultFor(models.Model):
+    _inherit = 'res.company'
+
+    credit_limit = fields.Float(
+        string="Test Credit Limit",
+        **company_default_for('credit_limit', 'test_orm.company_default_for', 'credit_limit'),
+        default=1000,
+    )
+    default_partner_id = fields.Many2one(
+        string="Test Default Partner",
+        comodel_name='res.partner',
+        **company_default_for('default_partner_id', 'test_orm.company_default_for', 'partner_id'),
+    )
+
+
+class TestCompanyDefaultFor(models.Model):
+    _name = _description = 'test_orm.company_default_for'
+
+    credit_limit = fields.Float(company_dependent=True)
+    partner_id = fields.Many2one('res.partner', company_dependent=True)

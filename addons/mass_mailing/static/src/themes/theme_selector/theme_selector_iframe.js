@@ -1,7 +1,16 @@
-import { reactive, useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { ThemeSelector } from "./theme_selector";
 import { assets, AssetsLoadingError, getBundle } from "@web/core/assets";
-import { Component, markup, onMounted, onWillUnmount, onWillUpdateProps, status } from "@odoo/owl";
+import {
+    Component,
+    markup,
+    onMounted,
+    onWillUnmount,
+    onWillUpdateProps,
+    status,
+    proxy,
+    useApp,
+} from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
 import { localization } from "@web/core/l10n/localization";
@@ -16,14 +25,16 @@ export class ThemeSelectorIframe extends Component {
         config: Object,
     };
 
+    app = useApp();
+
     setup() {
         this.themeService = useService("mass_mailing.themes");
         this.orm = useService("orm");
-        this.state = useState({
+        this.state = proxy({
             show: false,
         });
         this.themeSelectorProps = {
-            favoriteThemes: reactive({
+            favoriteThemes: proxy({
                 promise: undefined,
             }),
         };
@@ -91,7 +102,8 @@ export class ThemeSelectorIframe extends Component {
             await loadIframe(this.iframeRef.el, async (iframe) => {
                 iframe.contentDocument.head.appendChild(this.renderHeadContent());
                 iframe.contentDocument.body.style.setProperty("direction", localization.direction);
-                this.themeSelectorRoot = this.__owl__.app.createRoot(ThemeSelector, {
+                this.themeSelectorRoot = this.app.createRoot(ThemeSelector, {
+                    env: this.env,
                     props: this.getThemeSelectorProps(),
                 });
                 return Promise.all([

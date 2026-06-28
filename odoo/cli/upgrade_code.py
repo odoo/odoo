@@ -57,11 +57,12 @@ except ImportError:
     sys.path.insert(0, str(ROOT / 'tools'))
     import release
     from parse_version import parse_version
+    # Avoid shadowing stdlib modules when running upgrade scripts, e.g. json with odoo/tools/json.py
+    del sys.path[:2]
     class Command:
         """ Simplified version of the one in command.py, for standalone execution """
-        @property
-        def parser(self):
-            return argparse.ArgumentParser(
+        def __init__(self):
+            self.parser = argparse.ArgumentParser(
                 prog=Path(sys.argv[0]).name,
                 description=__doc__.replace('/odoo/upgrade_code', str(UPGRADE)),
                 formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -73,19 +74,20 @@ except ImportError:
 class FileAccessor:
     addon: Path
     path: Path
-    content: str
+    content: str | None
 
     def __init__(self, path: Path, addon_path: Path) -> None:
         self.path = path
         self.addon = addon_path / path.relative_to(addon_path).parts[0]
-        self._content = None
         self.dirty = False
 
     @property
     def content(self):
-        if self._content is None:
+        if not hasattr(self, '_content'):
             try:
                 self._content = self.path.read_text()
+            except FileNotFoundError:
+                self._content = None
             except Exception as e:
                 e.add_note(f"File: {self.path}")
                 raise
@@ -93,9 +95,16 @@ class FileAccessor:
 
     @content.setter
     def content(self, value):
-        if self._content != value:
+        if self.content != value:
             self._content = value
             self.dirty = True
+
+    def _save(self):
+        if self.dirty:
+            if self._content is not None:
+                self.path.write_text(self._content)
+            else:
+                self.path.unlink()
 
 
 class FileManager:
@@ -105,6 +114,12 @@ class FileManager:
     def __init__(self, addons_path: list[str], glob: str = '**/*') -> None:
         self.addons_path = addons_path
         self.glob = glob
+        self._modules = {
+            addon.name: addon
+            for addon_path in addons_path
+            for addon in Path(addon_path).iterdir()
+            if addon.is_dir() and (addon / '__manifest__.py').exists()
+        }
         self._files = {
             str(path): FileAccessor(path, Path(addon_path))
             for addon_path in addons_path
@@ -121,8 +136,24 @@ class FileManager:
     def __len__(self):
         return len(self._files)
 
-    def get_file(self, path):
-        return self._files.get(str(path))
+    def get_modules(self) -> list[str]:
+        """ Return the list of all modules in the addons-path. """
+        return list(self._modules)
+
+    def get_file(self, module: str, file_name: str) -> FileAccessor:
+        """ Return the given file. """
+        try:
+            addon = self._modules[module]
+            path = addon / file_name
+
+            file = self._files.get(str(path))
+            if file is None:
+                file = FileAccessor(path, addon.parent)
+                self._files[str(file.path)] = file
+            return file
+
+        except KeyError:
+            raise ValueError(f"You may not access file {module}/{file_name}")
 
     def add_to_summary(self, message: str) -> None:
         if message:
@@ -163,9 +194,13 @@ def migrate(
     dry_run: bool = False,
 ):
     if script:
-        script_path = next(UPGRADE.glob(f'*{script.removesuffix(".py")}*.py'), None)
-        if not script_path:
-            raise FileNotFoundError(script)
+        script_path = Path(script).absolute()
+        if not script_path.is_file():
+            candidate_paths = list(UPGRADE.glob(f'*{script.removesuffix(".py")}*.py'))
+            if len(candidate_paths) == 1:
+                script_path = candidate_paths[0]
+            else:
+                raise FileNotFoundError(script)
         script_path.relative_to(UPGRADE)  # safeguard, prevent going up
         module = SourceFileLoader(script_path.name, str(script_path)).load_module()
         modules = [(script_path.name, module)]
@@ -178,12 +213,12 @@ def migrate(
         module.upgrade(file_manager)
         file_manager.print_progress(len(file_manager))  # 100%
 
-    for file in file_manager:
+    for file in sorted(file_manager, key=lambda file: str(file.path)):
         if file.dirty:
-            print(file.path)  # noqa: T201
+            status = 'deleted' if file.content is None else 'updated'
+            print(f"{status}: {file.path}")  # noqa: T201
             if not dry_run:
-                with file.path.open("w") as f:
-                    f.write(file.content)
+                file._save()
 
     file_manager.print_summary()
     return any(file.dirty for file in file_manager)
@@ -194,6 +229,7 @@ class UpgradeCode(Command):
     name = 'upgrade_code'
 
     def __init__(self):
+        super().__init__()
         group = self.parser.add_mutually_exclusive_group(required=True)
         group.add_argument(
             '--script',
@@ -226,7 +262,7 @@ class UpgradeCode(Command):
                 functools.partial(config.parse, 'addons_path')
                 if config else
                 # the paths must be resolved already
-                functools.partial(str.split, sep=',')
+                lambda addons_path: [p for p in addons_path.split(',') if p]
             ),
             default=config['addons_path'] if config else [],
             metavar='PATH,...',
@@ -239,8 +275,6 @@ class UpgradeCode(Command):
             config['addons_path'] = options.addons_path
             initialize_sys_path()
             options.addons_path = odoo.addons.__path__
-        else:
-            options.addons_path = [p for p in options.addons_path.split(',') if p]
         if not options.addons_path:
             self.parser.error("--addons-path is required when used standalone")
         is_dirty = migrate(**vars(options))

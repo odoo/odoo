@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 import { useGetDefaultLeafDomain } from "@web/core/domain_selector/utils";
@@ -14,26 +13,22 @@ import { useRecordObserver } from "@web/model/relational_model/utils";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { standardFieldProps } from "../standard_field_props";
 
+export const domainFieldProps = {
+    ...standardFieldProps,
+    context: t.object().optional(),
+    editInDialog: t.boolean().optional(false),
+    resModel: t.string().optional(),
+    isFoldable: t.boolean().optional(false),
+    countLimit: t.number().optional(10000),
+    allowExpressions: t.boolean().optional(false),
+};
+
 export class DomainField extends Component {
     static template = "web.DomainField";
     static components = {
         DomainSelector,
     };
-    static props = {
-        ...standardFieldProps,
-        context: { type: Object, optional: true },
-        editInDialog: { type: Boolean, optional: true },
-        resModel: { type: String, optional: true },
-        isFoldable: { type: Boolean, optional: true },
-        countLimit: { type: Number, optional: true },
-        allowExpressions: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        editInDialog: false,
-        isFoldable: false,
-        countLimit: 10000,
-        allowExpressions: false,
-    };
+    props = props(domainFieldProps);
 
     setup() {
         this.orm = useService("orm");
@@ -42,7 +37,7 @@ export class DomainField extends Component {
         this.getDefaultLeafDomain = useGetDefaultLeafDomain();
         this.addDialog = useOwnedDialogs();
 
-        this.state = useState({
+        this.state = proxy({
             isValid: null,
             recordCount: null,
             hasLimitedCount: null,
@@ -260,7 +255,7 @@ export class DomainField extends Component {
         if (domain.isInvalid) {
             return false;
         }
-        return rpc("/web/domain/validate", { model: resModel, domain });
+        return rpc("/web/domain/validate", { model: resModel, domain }, { cache: true });
     }
 
     update(domain, isDebugEdited = false) {

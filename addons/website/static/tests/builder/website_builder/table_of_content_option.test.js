@@ -1,12 +1,13 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import {
     deleteBackward,
-    ensureDistinctHistoryStep,
+    ensureDistinctHistoryCommit,
     insertText,
     undo,
 } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import {
+    advanceTime,
     animationFrame,
     click,
     manuallyDispatchProgrammaticEvent,
@@ -43,9 +44,9 @@ test("edit title in content with table of content", async () => {
     const h2 = queryAll(":iframe .s_table_of_content_main h2:contains('Intuitive system')")[0];
     setSelection({ anchorNode: h2, anchorOffset: 0 });
     await insertText(editor, "New Title");
-    await ensureDistinctHistoryStep();
+    await ensureDistinctHistoryCommit();
     await insertText(editor, ":");
-    await ensureDistinctHistoryStep();
+    await ensureDistinctHistoryCommit();
     expect(
         queryAllTexts(":iframe .s_table_of_content_navbar a.table_of_content_link_depth_0")
     ).toEqual(["New Title:Intuitive system", "Design features"]);
@@ -145,7 +146,7 @@ test("properly sets the level of depth for a new heading", async () => {
         focusOffset: newSubheadingEl.firstChild.length,
     });
     await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar .btn[name=font]");
+    await click(".o-we-toolbar .btn[name='font_type']");
     await animationFrame();
     await click(".o-dropdown-item[name='h4']");
     expect(":iframe .s_table_of_content_navbar a").toHaveCount(7);
@@ -250,4 +251,23 @@ test("update second toc navbar", async () => {
     );
     expect(toc1Anchor1El.getAttribute("href")).not.toEqual(toc2Anchor1El.getAttribute("href"));
     expect(toc1Anchor2El.getAttribute("href")).not.toEqual(toc2Anchor2El.getAttribute("href"));
+});
+
+test("toc headings are excluded from anchor autocomplete", async () => {
+    await setupWebsiteBuilderWithSnippet("s_table_of_content");
+    expect(":iframe .s_table_of_content").toHaveCount(1);
+
+    const headingEl = queryOne(":iframe .s_table_of_content_main h2:first");
+    setSelection({
+        anchorNode: headingEl.firstChild,
+        anchorOffset: 2,
+        focusOffset: headingEl.firstChild.length,
+    });
+
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar .btn[name=link]");
+    await contains(".o-we-linkpopover input.o_we_href_input_link").fill("#", { confirm: false });
+    await advanceTime(250);
+    // default anchors - #top and #bottom
+    expect(".ui-autocomplete-item").toHaveCount(2);
 });

@@ -3,14 +3,12 @@
 import base64
 import codecs
 import collections
-import contextlib
 import csv
 import datetime
 import difflib
 import io
 import itertools
 import logging
-import operator
 import os
 import re
 import unicodedata
@@ -18,7 +16,7 @@ from collections import defaultdict
 from collections.abc import Sequence
 
 import chardet
-import psycopg2
+from markupsafe import Markup, escape
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
@@ -26,6 +24,7 @@ from odoo.tools import (
     DEFAULT_SERVER_DATE_FORMAT,
     DEFAULT_SERVER_DATETIME_FORMAT,
     config,
+    html_sanitize,
 )
 from odoo.tools.image import binary_to_image
 from odoo.tools.mimetypes import guess_mimetype
@@ -48,6 +47,8 @@ MIMETYPE_TO_READER = {
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
     'application/vnd.oasis.opendocument.spreadsheet': 'ods',
 }
+
+LANGUAGE_SEPARATOR = '@'
 
 CONCAT_SEPARATOR_IMPORT = {
     'char': ' ',
@@ -119,12 +120,11 @@ class ResUsers(models.Model):
     def _can_import_remote_urls(self):
         """ Hook to decide whether the current user is allowed to import
         images via URL (as such an import can DOS a worker). By default,
-        allows the administrator group.
+        allows every internal user.
 
         :rtype: bool
         """
-        self.ensure_one()
-        return self._is_admin()
+        return True
 
 
 class Base_ImportImport(models.TransientModel):
@@ -263,12 +263,13 @@ class Base_ImportImport(models.TransientModel):
             'fields': [],
             'type': 'id',
             'model_name': model,
+            'translate': False,
         }]
         if not depth:
             return importable_fields
 
         model_fields = Model.fields_get(attributes=[
-            'string', 'required', 'type', 'readonly', 'relation',
+            'string', 'required', 'type', 'readonly', 'relation', 'translate',
             'definition_record', 'definition_record_field',
         ])
         blacklist = models.MAGIC_COLUMNS
@@ -331,6 +332,7 @@ class Base_ImportImport(models.TransientModel):
                 'fields': [],
                 'type': field['type'],
                 'model_name': model,
+                'translate': bool(field.get('translate')),
             }
 
             if field['type'] in ('many2many', 'many2one'):
@@ -461,7 +463,10 @@ class Base_ImportImport(models.TransientModel):
                         }
                     )
                 else:
-                    values.append(cell.value)
+                    if cell.ctype == xlrd.XL_CELL_TEXT and isinstance(cell.value, str):
+                        values.append(cell.value.replace("\n", "<br/>"))
+                    else:
+                        values.append(cell.value)
             if any(x and (not isinstance(x, str) or x.strip()) for x in values):
                 rows.append(values)
 
@@ -470,22 +475,17 @@ class Base_ImportImport(models.TransientModel):
 
     # use the same method for xlsx and xls files
     def _read_xlsx(self, options):
-        try:
-            from xlrd import xlsx  # noqa: F401, PLC0415
-            if xlsx:
-                return self._read_xls(options)
-        except ImportError:
-            pass
-
         import openpyxl  # noqa: PLC0415
         import openpyxl.cell.cell as types  # noqa: PLC0415
         import openpyxl.styles.numbers as styles  # noqa: PLC0415
+        from openpyxl.cell.rich_text import CellRichText  # noqa: PLC0415
         with self.file.open() as file:
-            book = openpyxl.load_workbook(file, data_only=True)
+            book = openpyxl.load_workbook(file, data_only=True, rich_text=True)
         sheets = options['sheets'] = book.sheetnames
         sheet_name = options['sheet'] = options.get('sheet') or sheets[0]
         sheet = book[sheet_name]
         rows = []
+        html_columns = options.get('_html_columns', set())
         for rowx, row in enumerate(sheet.rows, 1):
             values = []
             for colx, cell in enumerate(row, 1):
@@ -512,11 +512,86 @@ class Base_ImportImport(models.TransientModel):
                         _("Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with format: %(cell_format)s, as (%(format_type)s) formats are not supported.", row=rowx, col=colx, cell_value=cell.value, cell_format=cell.number_format, format_type=d_fmt)
                         )
                 else:
-                    values.append(str(cell.value))
+                    # A cell always has its own font object. If the entire cell content uses the same
+                    # formatting, the style is stored on the cell itself and cell.value is a plain string.
+                    # If different parts of the text use different formatting, cell.value becomes a
+                    # CellRichText instance, where each text segment carries its own font information.
+                    if colx - 1 not in html_columns:
+                        values.append(str(cell.value))
+                    elif isinstance(cell.value, CellRichText):
+                        values.append(Markup().join(
+                            self._text_to_html(value.text, value.font)
+                            for value in cell.value
+                        ))
+                    elif isinstance(cell.value, str):
+                        values.append(self._text_to_html(cell.value, cell.font, preserve_html=True))
+                    else:
+                        values.append(str(cell.value))
 
             if any(x and (not isinstance(x, str) or x.strip()) for x in values):
                 rows.append(values)
         return sheet.max_row, rows
+
+    def _text_to_html(self, text, font, preserve_html=False):
+        # Ignore Default formatting to avoid implying unneccessary styling.
+        DEFAULT_COLORS = ['FF000000', '000000', 'FFFFFFFF', 'FFFFFF']
+        DEFAULT_FONTS = ['calibri', 'arial', 'helvetica', 'liberation sans']
+        DEFAULT_SIZES = [10, 11]
+
+        text = html_sanitize(text) if preserve_html else escape(text)
+        text = Markup("<br/>").join(text.split("\n"))
+
+        if not font:
+            return text
+
+        wrappers = [
+            (font.b, Markup("<b>%s</b>")),
+            (font.i, Markup("<i>%s</i>")),
+            (font.u, Markup("<u>%s</u>")),
+            (font.strike, Markup("<s>%s</s>")),
+        ]
+
+        for enabled, template in wrappers:
+            if enabled:
+                text = template % text
+
+        styles = []
+
+        if font.color and isinstance(font.color.rgb, str) and font.color.rgb.upper() not in DEFAULT_COLORS:
+            rgb = font.color.rgb.removeprefix("FF")
+            styles.append("color:#%s" % escape(rgb))
+
+        if font.sz and font.sz not in DEFAULT_SIZES:
+            styles.append("font-size:%spx" % int(font.sz))
+
+        font_name = font.rFont if hasattr(font, "rFont") else font.name
+        if font_name and font_name.lower() not in DEFAULT_FONTS:
+            styles.append("font-family:%s" % escape(font_name))
+
+        if styles:
+            text = Markup("<span style='%s'>%s</span>") % ("; ".join(styles), text)
+
+        return text
+
+    def _get_html_column_indexes(self, fields):
+        html_columns = set()
+        for index, field in enumerate(fields):
+            if not field:
+                continue
+
+            model = self.env[self.res_model]
+            field_path = field.split(LANGUAGE_SEPARATOR, 1)[0].split("/")
+            for field_name in field_path[:-1]:
+                current_field = model._fields.get(field_name)
+                if not current_field or not current_field.relational:
+                    break
+                model = self.env[current_field.comodel_name]
+            else:
+                current_field = model._fields.get(field_path[-1])
+                if current_field and current_field.type == 'html':
+                    html_columns.add(index)
+
+        return html_columns
 
     def _read_ods(self, options):
         from . import odf_ods_reader  # noqa: PLC0415
@@ -747,9 +822,14 @@ class Base_ImportImport(models.TransientModel):
                 }
         """
         headers_types = {}
+        extract_headers_types_cache = {}
         for column_index, header_name in enumerate(headers):
             preview_values = [record[column_index] for record in preview]
-            type_field = self._extract_header_types(preview_values, options)
+            if header_name in extract_headers_types_cache:
+                type_field = extract_headers_types_cache[header_name]
+            else:
+                type_field = self._extract_header_types(preview_values, options)
+                extract_headers_types_cache[header_name] = type_field
             headers_types[(column_index, header_name)] = type_field
         return headers_types
 
@@ -818,7 +898,6 @@ class Base_ImportImport(models.TransientModel):
         """
         if not fields_tree:
             return {}
-
         # First, check in saved mapped fields
         mapping_field_name = mapping_fields.get(header.lower())
         if mapping_field_name and mapping_field_name:
@@ -1024,15 +1103,22 @@ class Base_ImportImport(models.TransientModel):
             if file_length <= 0:
                 raise ImportValidationError(_("Import file has no content or is corrupt"))
 
+            languages = []
             preview = data_rows[:count]
 
             # Get file headers
             if options.get('has_headers') and preview:
                 # We need the header types before matching columns to fields
-                headers = preview.pop(0)
+                original_headers = preview.pop(0)
+                headers = []
+                for header in original_headers:
+                    split_header = header.split(LANGUAGE_SEPARATOR, 1)
+                    headers.append(split_header[0])
+                    languages.append(split_header[1] if len(split_header) > 1 else None)
+
                 header_types = self._extract_headers_types(headers, preview, options)
             else:
-                header_types, headers = {}, []
+                header_types, headers, original_headers = {}, [], []
 
             # Get matches: the ones already selected by the user or propose a new matching.
             matches = {}
@@ -1051,6 +1137,16 @@ class Base_ImportImport(models.TransientModel):
                     for header_key, suggestion in matches.items()
                     if suggestion
                 }
+
+                # re-pairing matches for missing translation matches
+                for index, header in enumerate(original_headers):
+                    if index in matches or LANGUAGE_SEPARATOR not in header:
+                        continue
+                    lang = header.split(LANGUAGE_SEPARATOR, 1)[0]
+                    for idx, sub_header in enumerate(original_headers):
+                        if idx in matches and index != idx and lang == sub_header.split(LANGUAGE_SEPARATOR, 1)[0]:
+                            matches[index] = matches[idx]
+                            break
 
             # compute if we should activate advanced mode or not:
             # if was already activated of if file contains "relational fields".
@@ -1099,7 +1195,8 @@ class Base_ImportImport(models.TransientModel):
             return {
                 'fields': fields_tree,
                 'matches': matches or False,
-                'headers': headers or False,
+                'languages': languages or False,
+                'headers': original_headers or False,
                 'header_types': list(header_types.values()) or False,
                 'preview': column_example,
                 'options': options,
@@ -1143,20 +1240,31 @@ class Base_ImportImport(models.TransientModel):
             :returns: (data, fields)
             :raises ValueError: in case the import data could not be converted
         """
-        # Get indices for non-empty fields
-        indices = [index for index, field in enumerate(fields) if field]
-        if not indices:
-            raise ImportValidationError(_("You must configure at least one field to import"))
-        # If only one index, itemgetter will return an atom rather
-        # than a 1-tuple
-        if len(indices) == 1:
-            mapper = lambda row: [row[indices[0]]]
-        else:
-            mapper = operator.itemgetter(*indices)
-        # Get only list of actually imported fields
-        import_fields = [f for f in fields if f]
+        # has to support duplicate fields for concatenation
+        import_fields = []
+        basemap = {}
+        translated_fields = set()
 
-        _file_length, rows_to_import = self._read_file(options)
+        for field in fields:
+            if field and LANGUAGE_SEPARATOR in field:
+                translated_fields.add(field.split(LANGUAGE_SEPARATOR, 1)[0])
+
+        for field in filter(None, fields):
+            match field.split(LANGUAGE_SEPARATOR, 1):
+                case [f]:
+                    if f not in translated_fields:
+                        basemap.setdefault(f, len(import_fields))
+                        import_fields.append(f)
+                case [f, _]:
+                    if f not in basemap:
+                        basemap[f] = len(import_fields)
+                        import_fields.append(f)
+
+        if not import_fields:
+            raise ImportValidationError(_("You must configure at least one field to import"))
+
+        read_options = dict(options, _html_columns=self._get_html_column_indexes(fields))
+        _file_length, rows_to_import = self._read_file(read_options)
         if len(rows_to_import[0]) != len(fields):
             raise ImportValidationError(
                 _(
@@ -1168,12 +1276,34 @@ class Base_ImportImport(models.TransientModel):
 
         if options.get('has_headers'):
             rows_to_import = rows_to_import[1:]
-        data = [
-            list(row) for row in map(mapper, rows_to_import)
-            # don't try inserting completely empty rows (e.g. from
-            # filtering out o2m fields)
-            if any(row)
-        ]
+
+        data = []
+        # Extract the value from the data file into import format for the model.load
+        for row in rows_to_import:
+            row_has_data = False
+            row_data = []
+            for index_col, value in enumerate(row):
+                field = fields[index_col]
+                if not field:
+                    continue
+
+                if value:
+                    row_has_data = True
+
+                base, *lang_opt = field.split(LANGUAGE_SEPARATOR, 1)
+                if base not in translated_fields:
+                    row_data.append(value)
+                    continue
+
+                lang = lang_opt[0] if lang_opt else (self.env.lang or "en_US")
+                baseidx = basemap.get(base)
+                if baseidx == len(row_data):
+                    row_data.append({lang: [value]})
+                else:
+                    row_data[baseidx].setdefault(lang, []).append(value)
+            if row_has_data:
+                # don't try inserting completely empty rows (e.g. from filtering out o2m fields)
+                data.append(row_data)
 
         # slicing needs to happen after filtering out empty rows as the
         # data offsets from load are post-filtering
@@ -1292,9 +1422,10 @@ class Base_ImportImport(models.TransientModel):
                 with requests.Session() as session:
                     session.stream = True
 
+                    can_import_urls = self.env.user._can_import_remote_urls()
                     for num, line in enumerate(data):
                         if re.match(config.get("import_url_regex"), line[index]):
-                            if not self.env.user._can_import_remote_urls():
+                            if not can_import_urls:
                                 raise ImportValidationError(
                                     _("You can not import file via URL, check with your administrator or support for the reason."),
                                     field=name, field_type=field['type']
@@ -1438,45 +1569,40 @@ class Base_ImportImport(models.TransientModel):
         :rtype: dict(ids: list(int), messages: list({type, message, record}))
         """
         self.ensure_one()
-        import_savepoint = self.env.cr.savepoint(flush=False)
-
+        import_savepoint = self.env.cr.savepoint()
         try:
-            input_file_data, import_fields = self._convert_import_data(fields, options)
-            # Parse date and float field
-            input_file_data = self._parse_import_data(input_file_data, import_fields, options)
-        except ImportValidationError as error:
-            return {'messages': [error.__dict__]}
+            try:
+                input_file_data, import_fields = self._convert_import_data(fields, options)
+                # Parse date and float field
+                input_file_data = self._parse_import_data(input_file_data, import_fields, options)
+            except ImportValidationError as error:
+                return {'messages': [error.__dict__]}
 
-        _logger.info('importing %d rows...', len(input_file_data))
+            _logger.info('importing %d rows...', len(input_file_data))
 
-        binary_filenames = self._extract_binary_filenames(import_fields, input_file_data)
+            binary_filenames = self._extract_binary_filenames(import_fields, input_file_data)
 
-        import_fields, merged_data = self.with_context(import_options=options)._handle_multi_mapping(import_fields, input_file_data)
+            import_fields, merged_data = self.with_context(import_options=options)._handle_multi_mapping(import_fields, input_file_data)
 
-        if options.get('fallback_values'):
-            merged_data = self._handle_fallback_values(import_fields, merged_data, options['fallback_values'])
+            if options.get('fallback_values'):
+                merged_data = self._handle_fallback_values(import_fields, merged_data, options['fallback_values'])
 
-        name_create_enabled_fields = options.pop('name_create_enabled_fields', {})
-        import_limit = options.pop('limit', None)
-        model = self.env[self.res_model].with_context(
-            import_file=True,
-            name_create_enabled_fields=name_create_enabled_fields,
-            import_set_empty_fields=options.get('import_set_empty_fields', []),
-            import_skip_records=options.get('import_skip_records', []),
-            _import_limit=import_limit)
-        import_result = model.load(import_fields, merged_data)
-        _logger.info('done importing data into model: %s', model._name)
+            name_create_enabled_fields = options.pop('name_create_enabled_fields', {})
+            import_limit = options.pop('limit', None)
+            model = self.env[self.res_model].with_context(
+                import_file=True,
+                name_create_enabled_fields=name_create_enabled_fields,
+                import_set_empty_fields=options.get('import_set_empty_fields', []),
+                import_skip_records=options.get('import_skip_records', []),
+                _import_limit=import_limit)
+            import_result = model.load(import_fields, merged_data)
+            _logger.info('done importing data into model: %s', model._name)
 
-        # If transaction aborted, RELEASE SAVEPOINT is going to raise
-        # an InternalError (ROLLBACK should work, maybe). Ignore that.
-        with contextlib.suppress(psycopg2.InternalError):
             import_savepoint.close(rollback=dryrun)
+        finally:
+            # rollback if not already closed
+            import_savepoint.close(rollback=True)
         if dryrun:
-            # cancel all changes done to the registry/ormcache
-            # we need to clear the cache in case any created id was added to an ormcache and would be missing afterward
-            self.pool.clear_all_caches()
-            # don't propagate to other workers since it was rollbacked
-            self.pool.reset_changes()
             _logger.info('Previous import was a dry/test run, changes were reset')
 
         # Insert/Update mapping columns when import complete successfully
@@ -1484,17 +1610,25 @@ class Base_ImportImport(models.TransientModel):
             BaseImportMapping = self.env['base_import.mapping']
             for index, column_name in enumerate(columns):
                 if column_name:
+                    field = fields[index]
+
+                    # Don't save translation hint into mapping table
+                    if LANGUAGE_SEPARATOR in column_name:
+                        column_name = column_name.split(LANGUAGE_SEPARATOR, 1)[0]
+                    if field and LANGUAGE_SEPARATOR in field:
+                        field = field.split(LANGUAGE_SEPARATOR, 1)[0]
+
                     # Update to latest selected field
                     mapping_domain = [('res_model', '=', self.res_model), ('column_name', '=', column_name)]
                     column_mapping = BaseImportMapping.search(mapping_domain, limit=1)
                     if column_mapping:
-                        if column_mapping.field_name != fields[index]:
-                            column_mapping.field_name = fields[index]
+                        if column_mapping.field_name != field:
+                            column_mapping.field_name = field
                     else:
                         BaseImportMapping.create({
                             'res_model': self.res_model,
                             'column_name': column_name,
-                            'field_name': fields[index]
+                            'field_name': field
                         })
         if 'name' in import_fields:
             index_of_name = import_fields.index('name')
@@ -1610,12 +1744,19 @@ class Base_ImportImport(models.TransientModel):
                     if field_type != 'many2many':
                         # Trim trailing whitespaces before joining
                         trim = field_type == 'char' and field.trim
-                        new_record.append(
-                            separator.join(
-                                self._stringify_date_like_objects(record[idx], import_options, trim)
-                                for idx in indexes if record[idx]
+                        if field.translate and isinstance(record[indexes[0]], dict):
+                            translations = {lang: separator.join(values) for lang, values in record[indexes[0]].items()}
+                            if len(translations) == 1 and next(iter(translations)) == (self.env.lang or "en_US"):
+                                # when only the env language, unwrap the value of the dict to be a normal import
+                                translations = next(iter(translations.values()))
+                            new_record.append(translations)
+                        else:
+                            new_record.append(
+                                separator.join(
+                                    self._stringify_date_like_objects(record[idx], import_options, trim)
+                                    for idx in indexes if record[idx]
+                                )
                             )
-                        )
                     else:
                         new_record.append(separator.join(record[idx] for idx in indexes if record[idx]))
                 elif field_type == 'properties':

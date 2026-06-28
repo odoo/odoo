@@ -249,3 +249,29 @@ class TestDeliveryAvailability(DeliveryCommon):
         self.assertEqual(
             delivery_wizard["context"]["default_carrier_id"], self.non_restricted_carrier.id
         )
+
+    def test_reset_allow_cash_on_delivery_on_carrier_type_change(self):
+        delivery_method = self._prepare_carrier(
+            self._prepare_carrier_product(), delivery_type="fixed", allow_cash_on_delivery=True
+        )
+        delivery_method.delivery_type = "base_on_rule"
+        self.assertFalse(delivery_method.allow_cash_on_delivery)
+
+    def test_action_open_delivery_wizard_ignores_archived_carriers(self):
+        self.partner.property_delivery_carrier_id = self.carrier
+
+        self.carrier.active = False
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 10,
+                    'price_unit': 10.0,
+                }),
+            ],
+        })
+
+        action = sale_order.action_open_delivery_wizard()
+        self.assertEqual(action['context']['default_carrier_id'], False)

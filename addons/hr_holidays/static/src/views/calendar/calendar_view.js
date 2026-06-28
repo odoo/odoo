@@ -3,6 +3,7 @@ import { calendarView } from '@web/views/calendar/calendar_view';
 import { TimeOffCalendarController, TimeOffReportCalendarController } from './calendar_controller';
 import { TimeOffCalendarModel } from './calendar_model';
 import { TimeOffCalendarRenderer, TimeOffDashboardCalendarRenderer } from './calendar_renderer';
+import { TimeOffReportCalendarSearchModel } from "./time_off_search_model";
 
 import { registry } from '@web/core/registry';
 import { user } from "@web/core/user";
@@ -46,4 +47,5 @@ registry.category('views').add('time_off_calendar_dashboard', {
 registry.category('views').add('time_off_report_calendar', {
     ...TimeOffCalendarView,
     Controller: TimeOffReportCalendarController,
+    SearchModel: TimeOffReportCalendarSearchModel,
 })

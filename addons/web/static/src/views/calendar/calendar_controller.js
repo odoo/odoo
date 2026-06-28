@@ -1,4 +1,3 @@
-import { reactive, useState } from "@web/owl2/utils";
 import {
     deleteConfirmationMessage,
     ConfirmationDialog,
@@ -21,7 +20,7 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
 const { DateTime } = luxon;
@@ -78,7 +77,7 @@ export class CalendarController extends Component {
         });
         this.keyExpandSidebar = `calendar_sidepanel_expanded,${this.env.config.viewId},${this.env.config.actionId}`;
         const localSidePanelExpanded = browser.localStorage.getItem(this.keyExpandSidebar);
-        this.state = useState({
+        this.state = proxy({
             isWeekendVisible:
                 browser.localStorage.getItem("calendar.isWeekendVisible") != null
                     ? JSON.parse(browser.localStorage.getItem("calendar.isWeekendVisible"))
@@ -226,7 +225,7 @@ export class CalendarController extends Component {
     }
 
     prepareMultiSelectionButtonsReactive() {
-        return reactive({
+        return proxy({
             onCancel: this.cleanSquareSelection.bind(this),
             onAdd: (multiCreateData) => {
                 this.onMultiCreate(multiCreateData, this.selectedCells);
@@ -283,6 +282,7 @@ export class CalendarController extends Component {
     getQuickCreateFormViewProps(record) {
         const rawRecord = this.model.buildRawRecord(record);
         const context = this.model.makeContextDefaults(rawRecord);
+        context.is_quick_create_form = true;
         return {
             resModel: this.model.resModel,
             viewId: this.model.quickCreateFormViewId,

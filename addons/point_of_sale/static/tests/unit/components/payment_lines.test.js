@@ -1,5 +1,6 @@
 import { test, expect, describe } from "@odoo/hoot";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { animationFrame } from "@odoo/hoot-mock";
+import { findComponent, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     setupPosEnv,
     getFilledOrder,
@@ -8,6 +9,7 @@ import {
 } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
+import { Component, proxy, xml } from "@odoo/owl";
 
 definePosModels();
 
@@ -16,19 +18,33 @@ test("getPaymentActionState", async () => {
     const order = await getFilledOrder(store);
     const card = store.models["pos.payment.method"].get(2);
     const paymentline = createPaymentLine(store, order, card);
-    const comp = await mountWithCleanup(PaymentScreenPaymentLines, {
-        props: {
-            paymentLines: [paymentline],
-            deleteLine: () => {},
-            selectLine: () => {},
-            sendForceDone: () => {},
-            sendForceCancel: () => {},
-            sendPaymentCancel: () => {},
-            sendPaymentRequest: () => {},
-            updateSelectedPaymentline: () => {},
-            isRefundOrder: false,
-        },
+    const childProps = proxy({
+        paymentLines: [paymentline],
+        deleteLine: () => {},
+        selectLine: () => {},
+        sendForceDone: () => {},
+        sendForceCancel: () => {},
+        sendPaymentCancel: () => {},
+        sendPaymentRequest: () => {},
+        updateSelectedPaymentline: () => {},
+        isRefundOrder: false,
     });
+    // Props only update through a parent re-render, so wrap the component in a
+    // parent and mutate the (reactive) props it passes down to test the
+    // isRefundOrder transitions through the real prop-update path.
+    class Wrapper extends Component {
+        static template = xml`<PaymentScreenPaymentLines t-props="this.childProps"/>`;
+        static components = { PaymentScreenPaymentLines };
+        setup() {
+            this.childProps = childProps;
+        }
+    }
+    const wrapper = await mountWithCleanup(Wrapper);
+    const comp = findComponent(wrapper, (c) => c instanceof PaymentScreenPaymentLines);
+    const setIsRefundOrder = async (value) => {
+        childProps.isRefundOrder = value;
+        await animationFrame();
+    };
 
     // Helper
     const normalizeActionState = (state) => {
@@ -96,7 +112,7 @@ test("getPaymentActionState", async () => {
 
     // waitingCard - refund
     paymentline.payment_status = "waitingCard";
-    comp.props.isRefundOrder = true;
+    await setIsRefundOrder(true);
     const stateWaitingCardRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCardRefund)).toEqual({
         id: "waiting_refund",
@@ -121,7 +137,7 @@ test("getPaymentActionState", async () => {
     });
 
     // waitingCard - no refund
-    comp.props.isRefundOrder = false;
+    await setIsRefundOrder(false);
     const stateWaitingCardNoRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCardNoRefund)).toEqual({
         id: "waiting_card",
@@ -247,7 +263,7 @@ test("getPaymentActionState", async () => {
 
     // Done - refund
     paymentline.payment_status = "done";
-    comp.props.isRefundOrder = true;
+    await setIsRefundOrder(true);
     const stateDoneRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateDoneRefund)).toEqual({
         id: "refunded",
@@ -256,7 +272,7 @@ test("getPaymentActionState", async () => {
     });
 
     // Done - no refund
-    comp.props.isRefundOrder = false;
+    await setIsRefundOrder(false);
     const stateDoneNoRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateDoneNoRefund)).toEqual({
         id: "paid",
@@ -266,8 +282,8 @@ test("getPaymentActionState", async () => {
 
     // Refund available
     paymentline.payment_status = null;
-    comp.props.isRefundOrder = true;
     card.payment_interface = true;
+    await setIsRefundOrder(true);
     const stateRefundAvailable = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateRefundAvailable)).toEqual({
         id: "refund_available",

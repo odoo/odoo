@@ -1,8 +1,7 @@
-import { useRef } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 export class CopyButton extends Component {
     static template = "web.CopyButton";
@@ -15,13 +14,14 @@ export class CopyButton extends Component {
         content: { type: [String, Object, Function], optional: true },
     };
 
+    buttonRef = signal(null);
+
     setup() {
-        this.button = useRef("button");
         this.popover = usePopover(Tooltip);
     }
 
     showTooltip() {
-        this.popover.open(this.button.el, { tooltip: this.props.successText });
+        this.popover.open(this.buttonRef(), { tooltip: this.props.successText });
         browser.setTimeout(this.popover.close, 800);
     }
 

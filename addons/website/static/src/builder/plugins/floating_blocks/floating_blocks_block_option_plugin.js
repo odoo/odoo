@@ -6,11 +6,6 @@ export class FloatingBlocksBlockOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         dropzone_selectors: [
-            // Lock grid-items within their grid
-            {
-                selector: ".s_floating_blocks_block_grid .o_grid_item",
-                dropLockWithin: ".s_floating_blocks_block_grid",
-            },
             // Lock block-items within the snippet
             {
                 selector: ".s_floating_blocks .s_floating_blocks_block",

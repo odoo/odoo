@@ -1,0 +1,175 @@
+{
+  "/search/nips/0000000000": {
+    "description": "Single Nip -> Not found",
+    "status_code": 200,
+    "content": {
+      "result": {
+        "entries": [
+          {
+            "identifier": "0000000000",
+            "error": {
+              "code": "WL-115",
+              "message": "Incorrect tax identification number."
+            }
+          }
+        ],
+        "requestDateTime":"31-01-2026 10:00:00",
+		"requestId":"AZERTYUIOP-15"
+      }
+    }
+  },
+  "/search/nips/TEST": {
+    "description": "Single Nip -> Incorrect format",
+    "status_code": 200,
+    "content": {
+      "result":{
+		"entries":[
+          {
+            "identifier":"TEST",
+            "error":{
+              "code":"WL-113",
+              "message":"The ‘NIP’ field is incorrect. 10 characters required."
+            }
+          }
+		],
+		"requestDateTime":"31-01-2026 10:00:00",
+		"requestId":"AZERTYUIOP-13"
+	  }
+    }
+  },
+  "/search/nips/3333333333": {
+    "description": "Single Nip -> subject null",
+    "status_code": 200,
+    "content": {
+      "result": {
+        "entries": [
+          {
+            "identifier": "3333333333",
+            "subjects": []
+          }
+        ],
+        "requestId": "AZERTYUIOP-04",
+        "requestDateTime":"31-01-2026 10:00:00"
+      }
+    }
+  },
+  "/search/nips/1111111111": {
+    "description": "Single Nip -> Correct",
+    "status_code": 200,
+    "content": {
+      "result":{
+        "entries": [
+          {
+            "identifier": "1111111111",
+            "subjects": [
+              {
+                "name": "IKEA RETAIL",
+                "nip": "1111111111",
+                "accountNumbers": [
+                  "61109010140000071219812874"
+                ]
+              }
+            ]
+          }
+        ],
+        "requestId":"AZERTYUIOP-01",
+        "requestDateTime":"31-01-2026 10:00:00"
+      }
+    }
+  },
+  "/search/nips/1111111111,3333333333": {
+    "description": "Multiple Nips -> 1 correct, 1 empty",
+    "status_code": 200,
+    "content": {
+      "result": {
+        "entries": [
+          {
+            "identifier": "3333333333",
+            "subjects":[]
+          },
+          {
+            "identifier":"1111111111",
+            "subjects":[
+              {
+                "name": "IKEA RETAIL",
+                "nip": "1111111111",
+                "accountNumbers": [
+                  "61109010140000071219812874"
+                ]
+              }
+            ]
+          }
+        ],
+        "requestDateTime": "31-01-2026 10:00:00",
+        "requestId": "AZERTYUIOP-05"
+      }
+    }
+  },
+  "/search/nips/0000000000,1111111111": {
+    "description": "Multiple Nips -> 1 Incorrect and others correct",
+    "status_code": 200,
+    "content": {
+      "result":{
+        "entries":[
+          {
+            "identifier":"0000000000",
+            "error":{
+              "code":"WL-115",
+              "message":"Incorrect tax identification number."
+            }
+          },
+          {
+            "identifier":"1111111111",
+            "subjects":[
+              {
+                "name":"IKEA RETAIL",
+                "nip":"1111111111",
+                "accountNumbers":[
+                  "61109010140000071219812874"
+                ]
+              }
+            ]
+          }
+        ],
+        "requestDateTime":"31-01-2026 10:00:00",
+        "requestId":"AZERTYUIOP-02"
+      }
+    }
+  },
+  "/search/nips/1111111111,2222222222": {
+    "description": "Multiple Nips -> all corrects",
+    "status_code": 200,
+    "content": {
+      "result": {
+		"entries":[
+          {
+            "identifier":"2222222222",
+            "subjects":[
+              {
+                "name":"MCDONALDS POLSKA",
+                "nip":"2222222222",
+                "accountNumbers":[
+                  "61109010140000071219812875"
+                ]
+              }
+            ]
+          },
+          {
+            "identifier":"1111111111",
+            "subjects":[
+              {
+                "name":"IKEA RETAIL",
+                "nip":"1111111111",
+                "accountNumbers":[
+                  "61109010140000071219812874"
+                ]
+              }
+            ]
+          }
+		],
+		"requestDateTime":"31-01-2026 10:00:00",
+		"requestId":"AZERTYUIOP-03"
+	  }
+    }
+  }
+}

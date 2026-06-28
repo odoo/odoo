@@ -11,50 +11,6 @@
         </field>
     </record>
 
-    <record id="hr_employee_view_kanban" model="ir.ui.view">
-        <field name="name">hr.employee.view.kanban</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
-        <field name="arch" type="xml">
-            <kanban position="attributes">
-                <attribute name="js_class">hr_employee_kanban</attribute>
-            </kanban>
-        </field>
-    </record>
-
-    <record id="view_employee_tree" model="ir.ui.view">
-        <field name="name">hr.employee.list</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//list" position="attributes">
-                <attribute name="js_class">hr_employee_list</attribute>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="hr_employee_list_view" model="ir.ui.view">
-        <field name="name">hr.employee.list</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.hr_employee_list_view"/>
-        <field name="arch" type="xml">
-            <xpath expr="//list" position="attributes">
-                <attribute name="js_class">hr_employee_list</attribute>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="hr_employee_list_activites_view" model="ir.ui.view">
-        <field name="name">hr.employee.list</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.hr_employee_list_activites_view"/>
-        <field name="arch" type="xml">
-            <xpath expr="//list" position="attributes">
-                <attribute name="js_class">hr_employee_list</attribute>
-            </xpath>
-        </field>
-    </record>
-
     <record id="action_hr_employee_presence_present" model="ir.actions.server">
         <field name="name">Set Present</field>
         <field name="value">presence_group_1</field>
@@ -63,7 +19,10 @@
         <field name="binding_view_types">form,list,kanban</field>
         <field name="state">code</field>
         <field name="code">
-            action = records.action_set_present()
+if not records:
+    active_ids = env.context.get('active_ids') or ([env.context.get('active_id')] if env.context.get('active_id') else [])
+    records = env['hr.employee'].browse(active_ids)
+action = records.action_set_present()
         </field>
     </record>
 
@@ -75,7 +34,10 @@
         <field name="binding_view_types">form,list,kanban</field>
         <field name="state">code</field>
         <field name="code">
-            action = records.action_set_absent()
+if not records:
+    active_ids = env.context.get('active_ids') or ([env.context.get('active_id')] if env.context.get('active_id') else [])
+    records = env['hr.employee'].browse(active_ids)
+action = records.action_set_absent()
         </field>
     </record>
 
@@ -86,7 +48,10 @@
         <field name="binding_view_types">form,list,kanban</field>
         <field name="state">code</field>
         <field name="code">
-            action = records.action_send_sms()
+if not records:
+    active_ids = env.context.get('active_ids') or ([env.context.get('active_id')] if env.context.get('active_id') else [])
+    records = env['hr.employee'].browse(active_ids)
+action = records.action_send_sms()
         </field>
     </record>
 
@@ -98,7 +63,10 @@
         <field name="binding_view_types">form,list,kanban</field>
         <field name="state">code</field>
         <field name="code">
-            action = records.action_open_leave_request()
+if not records:
+    active_ids = env.context.get('active_ids') or ([env.context.get('active_id')] if env.context.get('active_id') else [])
+    records = env['hr.employee'].browse(active_ids)
+action = records.action_open_leave_request()
         </field>
     </record>
 

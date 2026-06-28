@@ -6,6 +6,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields
+from odoo.fields import Domain
 from odoo.addons.base.tests.test_res_partner_addresses import FormatAddressCase
 from odoo.addons.crm.models.crm_lead import PARTNER_FIELDS_TO_SYNC, PARTNER_ADDRESS_FIELDS_TO_SYNC
 from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
@@ -414,8 +415,8 @@ class TestCRMLead(TestCrmCommon):
         # as well as mobile (who does not trigger the reverse sync)
         lead_form.partner_id = partner
         self.assertEqual(lead_form.email_from, partner_email)
-        self.assertEqual(lead_form.phone, partner_phone_formatted,
-                        'Lead: form automatically formats numbers')
+        self.assertEqual(lead_form.phone, partner_phone,
+                        'Lead: form syncs raw partner phone (formatting is display-only)')
         self.assertFalse(lead_form.partner_email_update)
         self.assertFalse(lead_form.partner_phone_update)
 
@@ -426,8 +427,8 @@ class TestCRMLead(TestCrmCommon):
                         'Lead / Partner: partner values sent to lead')
         self.assertEqual(lead.email_normalized, partner_email_normalized,
                         'Lead / Partner: equal emails should lead to equal normalized emails')
-        self.assertEqual(lead.phone, partner_phone_formatted,
-                        'Lead / Partner: partner values (formatted) sent to lead')
+        self.assertEqual(lead.phone, partner_phone,
+                        'Lead / Partner: partner raw values sent to lead')
         self.assertEqual(lead.phone_sanitized, partner_phone_sanitized,
                         'Lead: phone_sanitized computed field on mobile')
 
@@ -451,17 +452,16 @@ class TestCRMLead(TestCrmCommon):
         lead_form.email_from = new_email
         self.assertTrue(lead_form.partner_email_update)
         new_phone = '+1 202 555 7799'
-        new_phone_formatted = phone_format(new_phone, 'US', '1', force_format="INTERNATIONAL")
         new_phone_sanitized = phone_format(new_phone, 'US', '1', force_format="E164")
         lead_form.phone = new_phone
-        self.assertEqual(lead_form.phone, new_phone_formatted)
+        self.assertEqual(lead_form.phone, new_phone)
         self.assertTrue(lead_form.partner_email_update)
         self.assertTrue(lead_form.partner_phone_update)
 
         lead_form.save()
         self.assertEqual(partner.email, new_email)
         self.assertEqual(partner.email_normalized, new_email_normalized)
-        self.assertEqual(partner.phone, new_phone_formatted)
+        self.assertEqual(partner.phone, new_phone)
 
         # LEAD/PARTNER SYNC: resetting lead values should not reset partner
         # # voiding lead info (because of some reasons) should not prevent
@@ -472,7 +472,7 @@ class TestCRMLead(TestCrmCommon):
         lead_form.save()
         self.assertEqual(partner.email, new_email)
         self.assertEqual(partner.email_normalized, new_email_normalized)
-        self.assertEqual(partner.phone, new_phone_formatted)
+        self.assertEqual(partner.phone, new_phone)
         self.assertFalse(lead.phone)
         self.assertFalse(lead.phone_sanitized)
         # if SMS is uninstalled, phone_sanitized is not available on partner
@@ -1168,6 +1168,27 @@ class TestCRMLeadRotting(TestCrmCommon):
 @tagged('lead_internals')
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadFormTools(FormatAddressCase):
+
+    def test_action_open_unassigned_opportunities(self):
+        """The Unassigned button on the team kanban must count both unassigned
+        leads and opportunities, and open a view whose effective filter returns
+        the same set, so the destination matches the counter."""
+        sales_team = self.env['crm.team'].create({'name': 'Test Sales Team'})
+        unassigned_lead, unassigned_opp, _assigned_opp = self.env['crm.lead'].create([
+            {'name': 'unassigned lead', 'type': 'lead', 'team_id': sales_team.id, 'user_id': False},
+            {'name': 'unassigned opp', 'type': 'opportunity', 'team_id': sales_team.id, 'user_id': False},
+            {'name': 'assigned opp', 'type': 'opportunity', 'team_id': sales_team.id, 'user_id': self.env.user.id},
+        ])
+        self.assertEqual(sales_team.lead_unassigned_count, 2)
+        action = sales_team.action_open_unassigned_opportunities()
+        self.assertEqual(action['res_model'], 'crm.lead')
+        action_domain = action.get('domain') or []
+        effective_domain = Domain(action_domain) & Domain([
+            ('team_id', '=', sales_team.id), ('user_id', '=', False),
+        ])
+        found = self.env['crm.lead'].search(effective_domain)
+        self.assertEqual(found, unassigned_opp + unassigned_lead, 'Shows both unassigned lead and opportunity')
+        self.assertEqual(len(found), sales_team.lead_unassigned_count)
 
     def test_address_view(self):
         self.env.company.country_id = self.env.ref('base.us')

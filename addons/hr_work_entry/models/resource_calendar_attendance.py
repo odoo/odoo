@@ -1,35 +1,55 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields
+from odoo import models, fields, api
+from odoo.tools import format_time
+from odoo.tools.date_utils import float_to_time
+from odoo.tools.misc import format_duration
 
 
 class ResourceCalendarAttendance(models.Model):
     _inherit = 'resource.calendar.attendance'
 
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', 'Work Entry Type', store=True,
-        compute='_compute_work_entry_type_id', groups="hr.group_hr_user", readonly=False)
+    work_entry_type_id = fields.Many2one(
+        'hr.work.entry.type', 'Time Type', groups="hr.group_hr_user", index='btree_not_null',
+        domain="[('id', 'in', allowed_work_entry_type_ids)]")
+    allowed_work_entry_type_ids = fields.Many2many(
+        'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
+    display_code = fields.Char(related='work_entry_type_id.display_code')
+    color = fields.Integer(related='work_entry_type_id.color')
 
-    @api.depends('calendar_id.country_id')
-    def _compute_work_entry_type_id(self):
-        types_per_calendar = {}
-        for resource_calendar_attendence in self:
-            if not resource_calendar_attendence.work_entry_type_id and resource_calendar_attendence.calendar_id:
-                calendar = resource_calendar_attendence.calendar_id
-                if calendar in types_per_calendar:
-                    resource_calendar_attendence.work_entry_type_id = types_per_calendar[calendar]
+    @api.depends('calendar_id.company_id')
+    def _compute_allowed_work_entry_type_ids(self):
+        for attendance in self:
+            country = attendance.calendar_id.company_id.country_id or self.env.company.country_id
+            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
+                domain = [('country_id', '=', False)]
+            else:
+                domain = [('country_id', '=', country.id)]
+            attendance.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
+
+    def _compute_display_name(self):
+        for attendance in self:
+            if not attendance.work_entry_type_id:
+                super()._compute_display_name()
+            else:
+                duration = format_duration(attendance.duration_hours)
+                work_entry = attendance.work_entry_type_id.display_code or attendance.work_entry_type_id.display_name
+                if attendance.duration_based:
+                    attendance.display_name = self.env._("%(duration)s hours %(work_entry_type)s",
+                                                        duration=duration,
+                                                        work_entry_type=work_entry)
                 else:
-                    all_types = self.env['hr.work.entry.type'].sudo().search([('code', '=', 'WORK100')])
-                    default_work_entry_type = all_types.filtered(
-                        lambda t: t.country_id == calendar.country_id
-                    ) or all_types.filtered(lambda t: not t.country_id)
-                    if default_work_entry_type:
-                        resource_calendar_attendence.work_entry_type_id = default_work_entry_type[0]
-                        types_per_calendar[calendar] = default_work_entry_type[0]
+                    attendance.display_name = self.env._("%(hour_from)s - %(hour_to)s (%(duration)s) %(work_entry_type)s",
+                                                        hour_from=format_time(self.env, float_to_time(attendance.hour_from), time_format="short"),
+                                                        hour_to=format_time(self.env, float_to_time(attendance.hour_to), time_format="short"),
+                                                        duration=duration,
+                                                        work_entry_type=work_entry)
 
-    def _copy_attendance_vals(self):
-        res = super()._copy_attendance_vals()
-        res['work_entry_type_id'] = self.work_entry_type_id.id
-        return res
+    @classmethod
+    def _to_dict_fields(cls):
+        return super()._to_dict_fields() + ['work_entry_type_id']
 
     def _is_work_period(self):
-        return self.work_entry_type_id.count_as == 'working_time' and super()._is_work_period()
+        self.ensure_one()
+        work_entry_type_sudo = self.sudo().work_entry_type_id
+        return ((not work_entry_type_sudo) or work_entry_type_sudo.count_as == 'working_time') and super()._is_work_period()

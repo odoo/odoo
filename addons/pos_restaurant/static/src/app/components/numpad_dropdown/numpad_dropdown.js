@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { SIZES, utils } from "@web/core/ui/ui_service";
@@ -24,7 +23,7 @@ export class NumpadDropdown extends Component {
             triggerAtEnter: () => this.pos.searchOrder(this.state.buffer),
             triggerAtInput: ({ buffer }) => this.checkIsValid(buffer),
         });
-        this.state = useState({
+        this.state = proxy({
             buffer: "",
             isValidBuffer: true,
         });

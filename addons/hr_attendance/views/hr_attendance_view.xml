@@ -103,6 +103,7 @@
                                     groups="hr_attendance.group_hr_attendance_user"/>
                                 <field name="check_in" options="{'rounding': 0}" readonly="not can_edit"/>
                                 <field name="check_out" options="{'rounding': 0}" placeholder="Currently Working" readonly="not can_edit"/>
+                                <field name="resource_calendar_id" groups="base.group_no_one"/>
                             </group>
                             <group col="2" name="group_worked_hours">
                                 <field name="worked_hours" string="Worked Time" widget="float_time"/>
@@ -198,13 +199,14 @@
                             </group>
                         </group>
                     </group>
-                    <notebook invisible="not overtime_status">
+                    <notebook invisible="not overtime_status"
+                        groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_manager,hr_attendance.group_hr_attendance_own">
                         <page string="Overtime Details">
-                            <field name="linked_overtime_ids">
+                            <field name="linked_overtime_ids" readonly="1">
                                 <list editable="bottom">
                                     <field name="rule_ids" widget="many2many_tags" readonly="1"/>
                                     <field name="duration" widget="float_time" readonly="1"/>
-                                    <field name="manual_duration" widget="float_time" readonly="0"/>
+                                    <field name="manual_duration" widget="float_time" readonly="0" column_invisible="1"/>
                                     <field name="amount_rate" widget="percentage"/>
                                     <field name="status" widget="badge" readonly="1" decoration-warning="status == 'to_approve'" decoration-success="status == 'approved'" decoration-danger="status == 'refused'"/>
                                     <button
@@ -288,6 +290,8 @@
                     string="Archived Employees"
                     name="archivedemployees"
                     domain="[('employee_id.active', '=', False)]"/>
+                <field name="day_of_date"/>
+                <field name="resource_calendar_id"/>
                 <separator invisible="1"/>
                 <filter string="Last 3 Months" invisible="1" name="last_three_months" domain="[('check_in','&gt;=', '-3m')]"/>
                 <group>
@@ -445,6 +449,103 @@
         </field>
     </record>
 
+    <record id="hr_attendance_overtime_analysis_list_view" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.analysis.list</field>
+        <field name="model">hr.attendance.overtime.line</field>
+        <field name="arch" type="xml">
+            <list string="Overtime Analysis" create="0">
+                <field name="employee_id" widget="many2one_avatar_employee" readonly="1"/>
+                <field name="date" readonly="1"/>
+                <field name="manual_duration" string="Overtime" widget="float_time" readonly="1"/>
+                <field name="ruleset_id" string="Ruleset" readonly="1" optional="hide"/>
+                <field name="rule_ids" string="Rule" widget="many2many_tags" readonly="1" optional="hide"/>
+                <field name="amount_rate" string="Pay Rate" widget="percentage" readonly="1"/>
+                <button name="action_open_linked_attendance" type="object" icon="fa-external-link"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_analysis_view_graph" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.analysis.graph</field>
+        <field name="model">hr.attendance.overtime.line</field>
+        <field name="arch" type="xml">
+            <graph string="Overtime Analysis" type="bar" stacked="0" sample="1">
+                <field name="employee_id" type="row"/>
+                <field name="manual_duration"  string="Overtime Encoded" widget="float_time" type="col"/>
+                <field name="duration" string="Overtime" widget="float_time" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_analysis_view_pivot" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.analysis.pivot</field>
+        <field name="model">hr.attendance.overtime.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Overtime Analysis">
+                <field name="employee_id" type="row"/>
+                <field name="date" type="col" interval="month"/>
+                <field name="manual_duration" string="Overtime" type="measure" widget="float_time"/>
+                <field name="rule_ids" string="Rule" type="col"/>
+                <field name="ruleset_id" string="Ruleset" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_analysis_view_filter" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.analysis.view.filter</field>
+        <field name="model">hr.attendance.overtime.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <filter string="My Overtimes" name="myovertimes" domain="[('employee_id.user_id', '=', uid)]" />
+                <filter string="My Team" name="myteam" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Pay Rate &gt; 0" name="pay_rate_gt_0" domain="[('amount_rate', '&gt;', 0)]"/>
+                <separator />
+                <filter string="Date" name="date_filter" date="date"/>
+                <separator/>
+                <filter
+                    string="Active Employees"
+                    name="activeemployees"
+                    domain="[('employee_id.active', '=', True)]"/>
+                <filter
+                    string="Archived Employees"
+                    name="archivedemployees"
+                    domain="[('employee_id.active', '=', False)]"/>
+                <group>
+                    <filter string="Employee" name="groupby_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Date" name="groupby_date" context="{'group_by': 'date:month'}"/>
+                    <filter string="Overtime Ruleset" name="groupby_ruleset" context="{'group_by': 'ruleset_id'}"/>
+                </group>
+                <separator invisible="1"/>
+                <filter string="Last 2 Months" invisible="1" name="last_two_months" domain="[('date','&gt;=', '-2m')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_analysis" model="ir.actions.act_window">
+        <field name="name">Overtime Analysis</field>
+        <field name="res_model">hr.attendance.overtime.line</field>
+        <field name="path">overtime-analysis</field>
+        <field name="view_mode">list,pivot,graph</field>
+        <field name="search_view_id" ref="hr_attendance_overtime_analysis_view_filter"/>
+        <field name="context">
+            {
+                "search_default_activeemployees": 1,
+                "search_default_last_two_months": 1,
+                "search_default_groupby_date": 1,
+                "search_default_employee": 2,
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No overtime records found
+            </p><p>
+                The overtime reporting of your employees will be displayed here.
+            </p>
+        </field>
+    </record>
+
     <record id="hr_attendance_action_greeting_message" model="ir.actions.client">
         <field name="name">Message</field>
         <field name="tag">hr_attendance_greeting_message</field>
@@ -481,6 +582,13 @@
         action="hr_attendance_reporting"
         parent="menu_hr_attendance_reporting"
         sequence="10"/>
+
+    <menuitem
+        id="menu_hr_attendance_overtime_analysis"
+        name="Overtime Analysis"
+        action="hr_attendance_overtime_analysis"
+        parent="menu_hr_attendance_reporting"
+        sequence="20"/>
 
     <menuitem id="menu_hr_attendance_overview" name="Overview" parent="menu_hr_attendance_root" sequence="5" groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer"/>
 

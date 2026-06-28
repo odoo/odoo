@@ -20,7 +20,7 @@
                     <div t-if="this.props.isWeekendVisible !== undefined" class="dropdown-divider" role="separator"/>
                     <DropdownItem
                             t-if="this.props.isWeekendVisible !== undefined"
-                            class="`o_show_weekends ${this.props.isWeekendVisible ? 'active' : ''} ${this.props.currentScale === 'day' ? 'disabled' : ''}`"
+                            class="`o_show_weekends ${this.props.isWeekendVisible ? 'active' : ''} ${this.isWeekendButtonDisabled ? 'disabled' : ''}`"
                             onSelected="this.props.toggleWeekendVisibility"
                         >
                         Show weekends

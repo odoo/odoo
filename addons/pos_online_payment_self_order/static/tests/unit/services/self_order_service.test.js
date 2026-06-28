@@ -12,11 +12,11 @@ test("sendDraftOrderToServer updateLastOrderChange", async () => {
     const product4 = store.models["product.template"].get(11);
     await store.addToCart(product4, 1, "");
     await store.sendDraftOrderToServer();
-    expect(Object.keys(order.last_order_preparation_change.lines)).toHaveLength(0);
+    expect(Object.keys(order.prep_order_ids)).toHaveLength(0);
 
     store.config.self_ordering_pay_after = "meal";
     const product3 = store.models["product.template"].get(10);
     await store.addToCart(product3, 1, "");
     await store.sendDraftOrderToServer();
-    expect(Object.keys(order.last_order_preparation_change.lines)).toHaveLength(4);
+    expect(Object.keys(order.prep_order_ids[0].prep_line_ids)).toHaveLength(4);
 });

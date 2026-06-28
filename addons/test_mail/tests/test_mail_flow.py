@@ -119,6 +119,7 @@ class TestMailFlow(MailCommon, TestRecipients):
             'email': self.customer_zboing.email_normalized,
             'name': self.customer_zboing.name,
             'partner_id': self.customer_zboing.id,
+            'recipient_type': 'to',
         }])
         with self.mock_mail_gateway(), self.mock_mail_app():
             emp_msg = lead.message_post(
@@ -175,8 +176,8 @@ class TestMailFlow(MailCommon, TestRecipients):
             smtp_from=self.mail_server_notification.from_filter,
             smtp_to_list=[self.user_employee.email_normalized],
             # customers in To/Cc of reply added in envelope to keep them in discussions
-            msg_to_lst=[self.user_employee.email_formatted, self.test_emails[0], self.test_emails[1]],
-            msg_cc_lst=[],
+            msg_to_lst=[self.user_employee.email_formatted, self.test_emails[0]],
+            msg_cc_lst=[self.test_emails[1]],
         )
 
         # employee replies from their email reader, adds their colleague
@@ -193,12 +194,12 @@ class TestMailFlow(MailCommon, TestRecipients):
                     'message_values': {
                         'author_id': self.partner_employee,
                         'email_from': self.partner_employee.email_formatted,
-                        'incoming_email_cc': self.partner_employee_2.email_formatted,
+                        'incoming_email_cc': f'{self.partner_employee_2.email_formatted}, {self.test_emails[1]}',
                         # be sure not to have catchall reply-to ! customers are in 'To' due to Reply-All
-                        'incoming_email_to': f'{self.test_emails[0]}, {self.test_emails[1]}',
+                        'incoming_email_to': self.test_emails[0],
                         'notified_partner_ids': self.customer_zboing,
-                        # only recognized partners
-                        'partner_ids': self.partner_employee_2,
+                        'partner_ids': self.customer_zboing,
+                        'partner_cc_ids': self.partner_employee_2,
                         'subject': 'Re: Re: False',
                         'subtype_id': self.env.ref('mail.mt_comment'),
                     },
@@ -215,8 +216,8 @@ class TestMailFlow(MailCommon, TestRecipients):
             smtp_from=self.mail_server_notification.from_filter,
             smtp_to_list=[self.customer_zboing.email_normalized],
             # customers are still in discussion
-            msg_to_lst=[self.customer_zboing.email_formatted, self.partner_employee_2.email_formatted, self.test_emails[0], self.test_emails[1]],
-            msg_cc_lst=[],
+            msg_to_lst=[self.customer_zboing.email_formatted, self.test_emails[0]],
+            msg_cc_lst=[self.partner_employee_2.email_formatted, self.test_emails[1]],
         )
 
     def test_lead_mailgateway(self):
@@ -274,7 +275,8 @@ class TestMailFlow(MailCommon, TestRecipients):
                         'parent_id': self.env['mail.message'],
                         'notified_partner_ids': self.env['res.partner'],
                         # only recognized partners
-                        'partner_ids': self.partner_employee + self.customer_portal_zboing,
+                        'partner_ids': self.partner_employee,
+                        'partner_cc_ids': self.customer_portal_zboing,  # test_mail[5] in cc
                         'subject': 'Inquiry',
                         'subtype_id': self.env.ref('mail.mt_comment'),
                     },
@@ -320,24 +322,28 @@ class TestMailFlow(MailCommon, TestRecipients):
                 'email': 'portal@zboing.com',
                 'name': 'Portal Zboing',
                 'partner_id': self.customer_portal_zboing.id,
+                'recipient_type': 'cc',
             },
             {  # primary email comes first
                 'create_values': {},
                 'email': 'sylvie.lelitre@zboing.com',
                 'name': 'Sylvie Lelitre (Zboing)',
                 'partner_id': partner_sylvie.id,
+                'recipient_type': 'to',
             },
             {  # reply message
                 'create_values': {},
                 'email': 'accounting@zboing.com',
                 'name': 'Josiane Quichopoils',
                 'partner_id': partner_accounting.id,
+                'recipient_type': 'to',
             },
             {  # mail cc
                 'create_values': {},
                 'email': 'pay@zboing.com',
                 'name': 'pay@zboing.com',
                 'partner_id': partner_pay.id,
+                'recipient_type': 'cc',
             },
         ]
         for suggested, expected in zip(suggested_all, expected_all):
@@ -441,7 +447,8 @@ class TestMailFlow(MailCommon, TestRecipients):
                         'notified_partner_ids': internal_partners,
                         'parent_id': responsible_answer,
                         # same reasoning as email_to/cc
-                        'partner_ids': external_partners - partner_sylvie,
+                        'partner_ids': external_partners - partner_sylvie - self.customer_zboing,
+                        'partner_cc_ids': self.customer_zboing,
                         'reply_to': formataddr((
                             partner_sylvie.name, f'{self.alias_catchall}@{self.alias_domain}'
                         )),
@@ -515,7 +522,8 @@ class TestMailFlow(MailCommon, TestRecipients):
                         'parent_id': self.env['mail.message'],
                         'notified_partner_ids': self.env['res.partner'],
                         # only recognized partners
-                        'partner_ids': self.partner_employee + self.customer_portal_zboing,
+                        'partner_ids': self.partner_employee,
+                        'partner_cc_ids': self.customer_portal_zboing,  # test_emails[5] is in Cc
                         'subject': 'Inquiry',
                         # subtype from '_creation_subtype'
                         'subtype_id': self.env.ref('test_mail.st_mail_test_ticket_partner_new'),

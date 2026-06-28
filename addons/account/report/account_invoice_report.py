@@ -1,6 +1,7 @@
-from odoo import models, fields, api
+from odoo import api, fields, models
 from odoo.models import TableSQL
 from odoo.tools import SQL
+
 from odoo.addons.account.models.account_move import PAYMENT_STATE_SELECTION
 
 
@@ -51,107 +52,69 @@ class AccountInvoiceReport(models.Model):
     inventory_value = fields.Float(string='Inventory Value', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
 
-    _depends = {
-        'account.move': [
-            'name', 'state', 'move_type', 'partner_id', 'invoice_user_id', 'fiscal_position_id',
-            'invoice_date', 'invoice_date_due', 'invoice_payment_term_id', 'partner_bank_id', 'invoice_currency_rate',
-        ],
-        'account.move.line': [
-            'quantity', 'price_subtotal', 'price_total', 'amount_residual', 'balance', 'amount_currency',
-            'move_id', 'product_id', 'product_uom_id', 'account_id',
-            'journal_id', 'company_id', 'currency_id', 'partner_id',
-        ],
-        'product.product': ['product_tmpl_id', 'standard_price'],
-        'product.template': ['categ_id'],
-        'uom.uom': ['factor', 'name'],
-        'res.currency.rate': ['currency_id', 'name'],
-        'res.partner': ['country_id'],
-    }
-
     @property
     def _table_query(self) -> SQL:
-        return SQL('%s %s %s', self._select(), self._from(), self._where())
+        today = fields.Date.context_today(self)
+        query = self.env['account.move.line'].with_context(date_to=today)._search([
+            ('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),
+            ('account_id', '!=', False),
+            ('display_type', '=', 'product'),
+        ])
+        return query.subselect(*self._select_list(query.table))
 
-    @api.model
-    def _select(self) -> SQL:
-        return SQL(
-            '''
-            SELECT
-                line.id,
-                line.move_id,
-                line.product_id,
-                line.account_id,
-                line.journal_id,
-                line.company_id,
-                line.company_currency_id,
-                line.partner_id AS commercial_partner_id,
-                account.account_type AS user_type,
-                move.state,
-                move.move_type,
-                move.partner_id,
-                move.invoice_user_id,
-                move.fiscal_position_id,
-                move.payment_state,
-                move.invoice_date,
-                move.invoice_date_due,
-                uom_template.id                                             AS product_uom_id,
-                template.categ_id                                           AS product_categ_id,
-                line.quantity * COALESCE(uom_line.factor, 1) / NULLIF(COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
-                                                                            AS quantity,
-                line.price_subtotal * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
-                                                                            AS price_subtotal_currency,
-                -line.balance * account_currency_table.rate                         AS price_subtotal,
-                line.price_total * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
-                / move.invoice_currency_rate
-                                                                            AS price_total,
-                line.price_total * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
-                                                                            AS price_total_currency,
-                -COALESCE(
-                   -- Average line price
-                   (line.balance / NULLIF(line.quantity, 0.0)) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
-                   -- convert to template uom
-                   / NULLIF(COALESCE(uom_line.factor, 1), 0.0) * COALESCE(uom_template.factor, 1),
-                   0.0) * account_currency_table.rate                               AS price_average,
+    def _select_list(self, table: TableSQL):
+        in_out_sign = SQL("CASE WHEN %s IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END", table.move_id.move_type)
+        uom_ratio = SQL("(COALESCE(%s, 1) / NULLIF(COALESCE(%s, 1), 0.0))", table.product_uom_id.factor, table.product_id.uom_id.factor)
+        quantity = SQL("%s * %s", table.quantity, uom_ratio)
+        table_with_company = table._with_model(table._model.with_context(sql_company_id=table.company_id))
+        return [
+            table.id,
+            table.move_id,
+            table.product_id,
+            table.account_id,
+            table.journal_id,
+            table.company_id,
+            table.currency_id,
+            table.company_currency_id,
+            SQL("%s AS commercial_partner_id", table.partner_id),
+            SQL("%s AS user_type", table.account_id.account_type),
+            table.move_id.state,
+            table.move_id.move_type,
+            table.move_id.partner_id,
+            table.move_id.invoice_user_id,
+            table.move_id.fiscal_position_id,
+            table.move_id.payment_state,
+            table.move_id.invoice_date,
+            table.move_id.invoice_date_due,
+            table.partner_id.country_id,
+            SQL("%s AS product_uom_id", table.product_id.uom_id),
+            SQL("%s AS product_categ_id", table.product_id.categ_id),
+            SQL("%s * %s AS quantity", quantity, in_out_sign),
+            SQL("%s * %s AS price_subtotal_currency", table.price_subtotal, in_out_sign),
+            SQL("-%s AS price_subtotal", table.consolidation_balance),
+            SQL("%s * %s / %s AS price_total", table.price_subtotal, in_out_sign, table.move_id.invoice_currency_rate),
+            SQL("%s * %s AS price_total_currency", table.price_total, in_out_sign),
+            SQL(
+                "-COALESCE((%s / NULLIF(%s, 0.0)) * %s, 0.0) AS price_average",
+                table.consolidation_balance, quantity, in_out_sign,
+            ),
+            SQL(
+                """
                 CASE
-                    WHEN move.move_type NOT IN ('out_invoice', 'out_receipt', 'out_refund') THEN 0.0
-                    WHEN move.move_type = 'out_refund' THEN account_currency_table.rate * (-line.balance + (line.quantity * COALESCE(uom_line.factor, 1) / NULLIF(COALESCE(uom_template.factor, 1), 0.0)) * COALESCE(product.standard_price -> line.company_id::text, to_jsonb(0.0))::float)
-                    ELSE account_currency_table.rate * (-line.balance - (line.quantity * COALESCE(uom_line.factor, 1) / NULLIF(COALESCE(uom_template.factor, 1), 0.0)) * COALESCE(product.standard_price -> line.company_id::text, to_jsonb(0.0))::float)
-                END
-                                                                            AS price_margin,
-                account_currency_table.rate * line.quantity * COALESCE(uom_line.factor, 1) / NULLIF(COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('out_invoice','in_refund','out_receipt') THEN -1 ELSE 1 END)
-                    * COALESCE(product.standard_price -> line.company_id::text, to_jsonb(0.0))::float                    AS inventory_value,
-                COALESCE(partner.country_id, commercial_partner.country_id) AS country_id,
-                line.currency_id                                            AS currency_id
-            ''',
-        )
-
-    @api.model
-    def _from(self) -> SQL:
-        return SQL(
-            '''
-            FROM account_move_line line
-                LEFT JOIN res_partner partner ON partner.id = line.partner_id
-                LEFT JOIN product_product product ON product.id = line.product_id
-                LEFT JOIN account_account account ON account.id = line.account_id
-                LEFT JOIN product_template template ON template.id = product.product_tmpl_id
-                LEFT JOIN uom_uom uom_line ON uom_line.id = line.product_uom_id
-                LEFT JOIN uom_uom uom_template ON uom_template.id = template.uom_id
-                INNER JOIN account_move move ON move.id = line.move_id
-                LEFT JOIN res_partner commercial_partner ON commercial_partner.id = move.commercial_partner_id
-                JOIN %(currency_table)s ON account_currency_table.company_id = line.company_id
-            ''',
-            currency_table=self.env['res.currency']._get_simple_currency_table(self.env.companies),
-        )
-
-    @api.model
-    def _where(self) -> SQL:
-        return SQL(
-            '''
-            WHERE move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
-                AND line.account_id IS NOT NULL
-                AND line.display_type = 'product'
-            ''',
-        )
+                    WHEN %s NOT IN ('out_invoice', 'out_receipt', 'out_refund') THEN 0.0
+                    WHEN %s = 'out_refund' THEN %s * (-%s + %s * COALESCE(%s, 0.0))
+                    ELSE %s * (-%s - %s * COALESCE(%s, 0.0))
+                END AS price_margin
+                """,
+                table.move_type,
+                table.move_type, table.consolidation_rate, table.balance, quantity, table_with_company.product_id.standard_price,
+                table.consolidation_rate, table.balance, quantity, table_with_company.product_id.standard_price,
+            ),
+            SQL(
+                "-%s * %s * %s * COALESCE(%s, 0.0) AS inventory_value",
+                table.consolidation_rate, quantity, in_out_sign, table_with_company.product_id.standard_price,
+            ),
+        ]
 
     def _read_group_select(self, table: TableSQL, aggregate_spec: str) -> SQL:
         """ This override allows us to correctly calculate the average price of products. """

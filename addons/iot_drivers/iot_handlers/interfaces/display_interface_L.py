@@ -11,7 +11,6 @@ _logger = logging.getLogger(__name__)
 
 class DisplayInterface(Interface):
     _loop_delay = 3
-    connection_type = 'display'
 
     def get_devices(self):
         randr_result = subprocess.run(['wlr-randr'], capture_output=True, text=True, check=False)

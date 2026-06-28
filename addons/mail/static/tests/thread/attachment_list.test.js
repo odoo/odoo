@@ -189,7 +189,7 @@ test("can view pdf url", async () => {
     await contains(".o-FileViewer");
     await contains(
         `iframe.o-FileViewer-view[data-src="/web/static/lib/pdfjs/web/viewer.html?file=${encodeURIComponent(
-            `${getOrigin()}/web/content/${attachmentId}?filename=url.pdf.example`
+            `${getOrigin()}/web/content/${attachmentId}?access_token=${attachmentId}&filename=url.pdf.example`
         )}#pagemode=none"]`
     );
 });
@@ -403,7 +403,7 @@ test("img file has proper src in discuss.channel", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(
-        `.o-mail-AttachmentContainer[title='test.png'] img[data-src*='${getOrigin()}/web/image/${attachmentId}?filename=test.png']`
+        `.o-mail-AttachmentContainer[title='test.png'] img[data-src*='${getOrigin()}/web/image/${attachmentId}?access_token=${attachmentId}&filename=test.png']`
     );
 });
 
@@ -432,7 +432,7 @@ test("download url of non-viewable binary file", async () => {
     patchWithCleanup(download, {
         _download: (options) => {
             expect(options.url).toBe(
-                `${getOrigin()}/web/content/${attachmentId}?filename=test.o&download=true`
+                `${getOrigin()}/web/content/${attachmentId}?access_token=${attachmentId}&filename=test.o&download=true`
             );
         },
     });
@@ -463,4 +463,28 @@ test("check actions in mobile view", async () => {
     await click(".o-mail-AttachmentContainer [title='Actions']");
     await contains(".dropdown-item:text('Remove')");
     await contains(".dropdown-item:text('Download')");
+});
+
+test("view and play audio attachment", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        name: "test.ogg",
+        mimetype: "audio/ogg",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        body: "<p>Test</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-AttachmentCard");
+    await click(".o-mail-AttachmentCard");
+    await contains(".o-FileViewer audio");
 });

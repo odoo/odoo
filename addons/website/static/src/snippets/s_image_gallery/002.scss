@@ -158,6 +158,12 @@
 
         .carousel-control-prev, .carousel-control-next {
             border-radius: $btn-border-radius;
+
+            &:focus-visible {
+                .carousel-control-prev-icon, .carousel-control-next-icon {
+                    box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+                }
+            }
         }
 
         .carousel-control-prev-icon, .carousel-control-next-icon {
@@ -214,8 +220,8 @@
         }
 
         // Indicators - Bars
-        &.s_image_gallery_indicators_bars .carousel-indicators > button {
-            background-image: none !important;
+        &.s_image_gallery_indicators_bars .carousel-indicators > button img {
+            display: none;
         }
 
         // Indicators - Squared Miniatures / Rounded Miniatures
@@ -266,9 +272,12 @@
                 height: $-o-carousel-indicators-dots-size;
                 border: 0;
                 border-radius: $border-radius-pill;
-                background-image: none !important;
                 transform: scale(.5);
                 transition: opacity .6s ease, transform .6s ease; // $carousel-indicator-transition values
+
+                img {
+                    display: none;
+                }
 
                 // Increases the click area for easier navigation.
                 &:before {
@@ -325,6 +334,10 @@
                     &.active:after {
                         width: map-get($spacers, 4);
                     }
+                }
+
+                img {
+                    display: none;
                 }
             }
 

@@ -171,7 +171,12 @@ export class ForecastedDetails extends Component {
     _sameLineRule(line, nextLine){
         const OnHand = this.OnHandLinesPerProduct[line.product.id] || [];
         const NotAvailable = this.NotAvailableLinesPerProduct[line.product.id] || [];
-        return  this.sameDocumentIn(line, nextLine) || (OnHand.includes(line) && OnHand.includes(nextLine)) || (NotAvailable.includes(line) && NotAvailable.includes(nextLine));
+        const sameReceiptDate = line.receipt_date === nextLine.receipt_date;
+        return (
+            (this.sameDocumentIn(line, nextLine) && sameReceiptDate) ||
+            (OnHand.includes(line) && OnHand.includes(nextLine)) ||
+            (NotAvailable.includes(line) && NotAvailable.includes(nextLine))
+        );
     }
 
     displayReserve(line){

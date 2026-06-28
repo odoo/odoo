@@ -9,8 +9,8 @@
                 <field name="product_tmpl_id" readonly="1"/>
                 <field name="attribute_id" readonly="1"/>
                 <field name="value_ids"
-                       widget="many2many_tags"
-                       options="{'no_create_edit': True}"
+                       widget="many2many_tags_color_dot"
+                       options="{'no_create_edit': True, 'color_field': 'html_color'}"
                        context="{'default_attribute_id': attribute_id}"/>
             </list>
         </field>

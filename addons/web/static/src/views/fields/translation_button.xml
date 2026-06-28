@@ -3,7 +3,7 @@
 
     <t t-name="web.TranslationButton">
         <t t-if="this.isMultiLang">
-            <button t-attf-class="o_field_translate btn btn-link o_input_box_overlay_end" t-on-click.prevent="this.onClick">
+            <button class="o_field_translate btn btn-link" t-on-click.prevent="this.onClick">
                 <t t-out="this.lang" />
             </button>
         </t>

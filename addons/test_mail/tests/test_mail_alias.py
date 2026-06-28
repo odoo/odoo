@@ -47,15 +47,54 @@ class TestMailAlias(TestMailAliasCommon):
             with self.assertRaises(exceptions.ValidationError):
                 self.env['ir.config_parameter'].set_str('mail.catchall.domain.allowed', value)
 
-        for value, expected in [
+        test_cases = [
             ('', ''),
             ('hello.com', 'hello.com'),
             ('hello.com,,', 'hello.com'),
             ('hello.com,bonjour.com', 'hello.com,bonjour.com'),
             ('hello.COM, BONJOUR.com', 'hello.com,bonjour.com'),
-        ]:
-            self.env['ir.config_parameter'].set_str('mail.catchall.domain.allowed', value)
-            self.assertEqual(self.env['ir.config_parameter'].get_str('mail.catchall.domain.allowed'), expected)
+        ]
+        for value, expected in test_cases:
+            with self.subTest(value=value):
+                self.env['ir.config_parameter'].set_str('mail.catchall.domain.allowed', value)
+                self.assertEqual(self.env['ir.config_parameter'].get_str('mail.catchall.domain.allowed'), expected)
+
+        # test create and write sanitization
+        for value, expected in test_cases:
+            with self.subTest(value=value):
+                self.env["ir.config_parameter"].search([
+                    ("key", "=", "mail.catchall.domain.allowed")
+                ]).unlink()
+                self.env["ir.config_parameter"].create({
+                    "key": "mail.catchall.domain.allowed",
+                    "value": value,
+                })
+                # check after create
+                self.assertEqual(
+                    self.env["ir.config_parameter"].get_str(
+                        "mail.catchall.domain.allowed"
+                    ),
+                    expected,
+                )
+
+                icp_record = self.env["ir.config_parameter"].search([
+                    ("key", "=", "mail.catchall.domain.allowed")
+                ])
+                icp_record.write({
+                        "key": "mail.catchall.domain.allowed",
+                        "value": "randomPlaceHolder",
+                    })
+                icp_record.write({
+                        "key": "mail.catchall.domain.allowed",
+                        "value": value,
+                    })
+                # check after write
+                self.assertEqual(
+                    self.env["ir.config_parameter"].get_str(
+                        "mail.catchall.domain.allowed"
+                    ),
+                    expected,
+                )
 
     @users('erp_manager')
     def test_alias_domain_company_check(self):
@@ -469,7 +508,7 @@ class TestAliasCompany(TestMailAliasCommon):
         self.assertEqual(self.company_2.alias_domain_id, mail_alias_domain_c2)
 
         # cannot unlink alias domain as there are aliases linked to it
-        with self.assertRaises(psycopg2.errors.ForeignKeyViolation), mute_logger('odoo.sql_db'):
+        with self.assertRaises(psycopg2.errors.IntegrityError), mute_logger('odoo.sql_db'):
             mail_alias_domain.unlink()
 
         # eject linked aliases then remove alias domain of first company; should
@@ -656,20 +695,39 @@ class TestMailAliasDomain(TestMailAliasCommon):
         alias_domain = self.mail_alias_domain.with_env(self.env)
 
         # sanitization of name (both create and write)
-        for failing_name in [
-            'outlook.fr, gmail.com',
+        for failing_name, expected_name in [
+            ('outlook.fr, gmail.com', 'outlook.fr-gmail.com'),
             # accents
-            'provaïder',
-            'provaïder.cöm',
-            # fail
-            '', ' ',
+            ('provaïder', 'provaider'),
+            ('provaïder.cöm', 'provaider.com'),
+            # capitalization
+            ('Test.mycompany.com', 'test.mycompany.com'),
+            ('test.mycompany.Com', 'test.mycompany.com'),
         ]:
             with self.subTest(failing_name=failing_name):
-                with self.assertRaises(exceptions.ValidationError):
-                    _new_domain = self.env['mail.alias.domain'].create({'name': failing_name})
+                new_domain = self.env['mail.alias.domain'].create({'name': failing_name})
+                self.assertEqual(new_domain.name, expected_name)
 
-                with self.assertRaises(exceptions.ValidationError):
-                    alias_domain.write({'name': failing_name})
+                new_domain.write({'name': failing_name})
+                self.assertEqual(new_domain.name, expected_name)
+
+                # Cleanup
+                new_domain.unlink()
+
+        # empty domains
+        with self.subTest(failing_name=''):
+            with mute_logger('odoo.sql_db'), self.assertRaises(exceptions.ValidationError):
+                self.env['mail.alias.domain'].create({'name': ''})
+
+            with mute_logger('odoo.sql_db'), self.assertRaises(exceptions.ValidationError):
+                alias_domain.write({'name': ''})
+
+        with self.subTest(failing_name=' '):
+            with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.errors.NotNullViolation):
+                self.env['mail.alias.domain'].create({'name': ' '})
+
+            with mute_logger('odoo.sql_db'), self.assertRaises(exceptions.ValidationError):
+                alias_domain.write({'name': ' '})
 
         # sanitization of bounce / catchall
         for (
@@ -776,7 +834,7 @@ class TestMailAliasMixin(TestMailAliasCommon):
     based on owner records. """
 
     @users('employee')
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_alias_mixin(self):
         """ Various base checks on alias mixin behavior """
         self.assertEqual(self.env.company.alias_domain_id, self.mail_alias_domain)
@@ -850,7 +908,7 @@ class TestMailAliasMixin(TestMailAliasCommon):
             'Search: both part search: search on name + domain')
 
     @users('employee')
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_alias_mixin_alias_id_management(self):
         """ Test alias_id being not mandatory """
         record_wo_alias, record_w_alias = self.env['mail.test.alias.optional'].create([

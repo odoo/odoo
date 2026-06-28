@@ -15,6 +15,9 @@ if typing.TYPE_CHECKING:
 
     type Decorator[C: Callable] = Callable[[C], C]
 
+# re-export here as well
+from .cache import ormcache  # noqa: F401
+
 _logger = logging.getLogger('odoo.api')
 
 

@@ -1,16 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# The codes of the payment methods to activate when Buckaroo is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
-    "card",
-    "ideal",
-    # Brand payment methods.
-    "visa",
-    "mastercard",
-    "amex",
-    "discover",
-}
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card"}
 
 # Mapping of payment method codes to Buckaroo codes.
 # https://docs.buckaroo.io/docs/payment-methods
@@ -34,12 +25,12 @@ PAYMENT_METHODS_MAPPING = {
     "paypal": "paypal",
     "poste_pay": "PostePay",
     "sepa_direct_debit": "SepaDirectDebit",
-    "sofort": "sofortueberweisung",
     "tinka": "Tinka",
     "trustly": "Trustly",
     "wechat_pay": "WeChatPay",
     "klarna": "klarna",
     "afterpay_riverty": "afterpay",
+    "wero": "Wero",
 }
 
 # Mapping of transaction states to Buckaroo status codes.

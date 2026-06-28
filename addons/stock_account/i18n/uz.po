@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-22 17:46+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -48,11 +48,6 @@ msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
-msgid "6.00"
-msgstr ""
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 #, fuzzy
 msgid "<span>Product</span>"
 msgstr "<span>Mahsulot</span>"
@@ -68,6 +63,14 @@ msgstr "<span>Miqdor</span>"
 #, fuzzy
 msgid "<span>SN/LN</span>"
 msgstr "<span>Seriya raqami/Partiya raqami</span>"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid ""
+"A lot/serial number is required for product '%s' as it has lot valuation "
+"enabled."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
@@ -166,9 +169,8 @@ msgstr ""
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_warehouses.xml:0
-#, fuzzy
 msgid "All Warehouses"
-msgstr "Barcha omborxonalar"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
@@ -190,9 +192,8 @@ msgstr ""
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
-#, fuzzy
 msgid "As of"
-msgstr "Holatiga ko‘ra"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_account__account_stock_variation_id
@@ -207,9 +208,8 @@ msgstr ""
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
-#, fuzzy
 msgid "At the date of"
-msgstr "Sanasiga"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -466,7 +466,6 @@ msgstr "Hisob-fakturalarda partiya va seriya raqamlarini ko‘rsatish"
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__display_name
-#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__display_name
 #, fuzzy
 msgid "Display Name"
 msgstr "Ko‘rsatiladigan nom"
@@ -500,6 +499,11 @@ msgid "Expense Account"
 msgstr "Xarajatlar hisobi"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_active
+msgid "Expense Account Active"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
 msgid ""
 "Expense account used to re-qualify products removed from stock and sent to "
@@ -530,9 +534,8 @@ msgstr ""
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml:0
-#, fuzzy
 msgid "Generate Entry"
-msgstr "Yozuv yaratish"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__id
@@ -558,7 +561,6 @@ msgstr "Yozuv yaratish"
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__id
-#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__id
 #, fuzzy
 msgid "ID"
 msgstr "ID"
@@ -794,9 +796,8 @@ msgstr ""
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_options.xml:0
-#, fuzzy
 msgid "Options"
-msgstr "Tanlovlar"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__periodic
@@ -854,6 +855,11 @@ msgstr ""
 #, fuzzy
 msgid "Price Difference Account"
 msgstr "Narx farqi hisobi"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_active
+msgid "Price Difference Account Active"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__price_unit
@@ -962,12 +968,6 @@ msgid "Resource Model Name"
 msgstr "Resurs modeli nomi"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_return_picking_line
-#, fuzzy
-msgid "Return Picking Line"
-msgstr "Qaytarish tanlash qatori"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__should_show_accounting_date
 #, fuzzy
 msgid "Should Show Accounting Date"
@@ -1065,6 +1065,11 @@ msgid "Stock Valuation Account"
 msgstr "Zaxirani baholash hisobi"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_active
+msgid "Stock Valuation Account Active"
+msgstr ""
+
+#. module: stock_account
 #. odoo-javascript
 #. odoo-python
 #: code:addons/stock_account/report/stock_valuation_report.py:0
@@ -1077,6 +1082,11 @@ msgstr "Zaxira o‘zgarishi"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_id
 msgid "Stock Variation Account"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_active
+msgid "Stock Variation Account Active"
 msgstr ""
 
 #. module: stock_account
@@ -1142,7 +1152,6 @@ msgstr "Jami qolgan qiymat"
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__total_value
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__total_value
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.product_product_view_list_at_date
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
 #, fuzzy
 msgid "Total Value"
@@ -1156,7 +1165,6 @@ msgstr "O‘tkazma"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
-#: model:ir.model.fields,help:stock_account.field_stock_return_picking_line__to_refund
 #, fuzzy
 msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale "
@@ -1167,7 +1175,6 @@ msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.product_product_view_list_at_date
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_avco_report_view_list
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
 #, fuzzy
@@ -1181,7 +1188,6 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
-#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 #, fuzzy
 msgid "Update quantities on SO/PO"
 msgstr "Sotish buyurtmasi/Xarid buyurtmasidagi miqdorlarni yangilash"
@@ -1241,9 +1247,8 @@ msgstr ""
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
-#, fuzzy
 msgid "Value On Hand:"
-msgstr "Qo‘ldagi qiymat:"
+msgstr ""
 
 #. module: stock_account
 #. odoo-python
@@ -1267,24 +1272,15 @@ msgstr ""
 "hisoblash uchun qo‘llaniladi."
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_move__standard_price
-#, fuzzy
-msgid ""
-"Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. "
-"inventory adjustment).\n"
-"        Used to compute margins on sale orders."
-msgstr ""
-"Mahsulot qiymati (AVCO usulida avtomatik hisoblanadi).         Xarid narxi "
-"noma'lum bo‘lganda mahsulotni baholash uchun ishlatiladi (masalan, "
-"zaxiralarni tuzatish).         Sotuv buyurtmalari bo‘yicha foyda marjalarini "
-"hisoblash uchun qo‘llaniladi."
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
 #, fuzzy
 msgid "Variation Account"
 msgstr "O‘zgarishlar hisobi"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_active
+msgid "Variation Account Active"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
@@ -1343,6 +1339,15 @@ msgstr ""
 
 #. module: stock_account
 #. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"You cannot enable lot valuation because the following products have on-hand "
+"quantities without a lot/serial number:\n"
+"%s"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_picking.py:0
 msgid ""
 "You cannot modify the scheduled date of operation %s because it falls within "
@@ -1360,3 +1365,15 @@ msgstr "stock_move_id"
 #, fuzzy
 msgid "units"
 msgstr "dona"
+
+#, fuzzy
+#~ msgid ""
+#~ "Value of the product (automatically computed in AVCO).\n"
+#~ "        Used to value the product when the purchase cost is not known "
+#~ "(e.g. inventory adjustment).\n"
+#~ "        Used to compute margins on sale orders."
+#~ msgstr ""
+#~ "Mahsulot qiymati (AVCO usulida avtomatik hisoblanadi).         Xarid "
+#~ "narxi noma'lum bo‘lganda mahsulotni baholash uchun ishlatiladi (masalan, "
+#~ "zaxiralarni tuzatish).         Sotuv buyurtmalari bo‘yicha foyda "
+#~ "marjalarini hisoblash uchun qo‘llaniladi."

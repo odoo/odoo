@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError, UserError
 from datetime import date
 
 from collections import defaultdict
+from unittest.mock import patch
 
 @tagged('post_install', '-at_install')
 class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
@@ -942,6 +943,41 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 1127.95,
         })
 
+    def test_biggest_tax_rounding_with_invoice_address(self):
+        """
+        Test that we can post an invoice with partner_id != commercial_partner_id
+        and a cash rounding with the 'biggest tax' strategy
+        """
+        original_write = self.env.registry['account.move.line'].write
+
+        def _patch_write(self, vals):
+            # Some extension of the write method call the super() before using self
+            # In our case, the rounding line was deleted during the sync_tax_lines process
+            # leading to a MissingError
+            res = original_write(self, vals)
+            self.filtered(lambda line: line.move_id.move_type == 'in_invoice')
+            return res
+
+        self.env['res.config.settings'].write({'group_sale_delivery_address': True})
+
+        invoice_address = self.env['res.partner'].create({
+            'name': 'test invoice address',
+            'type': 'invoice',
+            'parent_id': self.partner_a.id,
+        })
+
+        invoice = self._create_invoice(
+            move_type='in_invoice',
+            partner_id=invoice_address,
+            invoice_cash_rounding_id=self.cash_rounding_b,
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=100.03, tax_ids=self.company_data['default_tax_sale'])
+            ]
+        )
+
+        with patch.object(self.env.registry['account.move.line'], 'write', _patch_write):
+            invoice.action_post()
+
     def test_in_invoice_line_onchange_currency_1(self):
         self.other_currency.rounding = 0.001
 
@@ -1116,6 +1152,29 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_tax': 48.0,
             'amount_total': 208.0,
         })
+
+    def test_in_invoice_onchange_past_invoice_1(self):
+        if self.env.ref('purchase.group_purchase_manager', raise_if_not_found=False):
+            # `purchase` adds a view which makes `invoice_vendor_bill_id` invisible
+            # for purchase users
+            # https://github.com/odoo/odoo/blob/385884afd31f25d61e99d139ecd4c574d99a1863/addons/purchase/views/account_move_views.xml#L26
+            self.env.user.group_ids -= self.env.ref('purchase.group_purchase_manager')
+            self.env.user.group_ids -= self.env.ref('purchase.group_purchase_user')
+        copy_invoice = self.invoice.copy()
+
+        move_form = Form(self.invoice)
+        move_form.invoice_line_ids.remove(0)
+        move_form.invoice_line_ids.remove(0)
+        move_form.invoice_vendor_bill_id = copy_invoice
+        move_form.save()
+
+        self.assertInvoiceValues(self.invoice, [
+            self.product_line_vals_1,
+            self.product_line_vals_2,
+            self.tax_line_vals_1,
+            self.tax_line_vals_2,
+            self.term_line_vals_1,
+        ], self.move_vals)
 
     def test_in_invoice_create_refund(self):
         self.invoice.action_post()
@@ -1944,13 +2003,11 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'name': 'Accrual Expense Account',
                 'code': '234567',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
             'revenue_accrual_account': self.env['account.account'].create({
                 'name': 'Accrual Revenue Account',
                 'code': '765432',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
         })
         wizard_res = wizard.do_action()
@@ -2015,7 +2072,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
@@ -2138,7 +2194,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
@@ -2288,7 +2343,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertFalse(move_form.invoice_date)
 
         # Fiduciary mode enabled, date suggestion
-        self.env.company.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.quick_edit_mode_enabled = True
 
         # We are June 17th. No Lock date. Bill Date of the most recent Vendor Bill : March 15th
         # ==> Default New Vendor Bill date = March 31st (last day of March)
@@ -2881,7 +2936,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         with move_form.line_ids.new() as line_form:
             line_form.account_id = self.company_data['default_account_payable']
 
-        with self.assertRaisesRegex(UserError, 'Any journal item on a payable account must have a due date and vice versa.'):
+        with self.assertRaisesRegex(UserError, r"Any journal item on '.*' \(Payable\) must have a due date."):
             move_form.save()
 
     def test_default_tax_and_default_fiscal_position(self):

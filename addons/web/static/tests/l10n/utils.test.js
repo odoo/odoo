@@ -3,6 +3,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     formatList,
     jsToPyLocale,
+    localeCompare,
     normalize,
     normalizedMatch,
     pyToJsLocale,
@@ -11,6 +12,29 @@ import { user } from "@web/core/user";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("headless");
+
+describe("localeCompare", () => {
+    test("basic comparisons", () => {
+        expect(localeCompare("Agahnim", "Zant")).toBeLessThan(0);
+        expect(localeCompare("Zithromax", "Azithromycin")).toBeGreaterThan(0);
+        expect(localeCompare("identical", "identical")).toBe(0);
+    });
+    test("performs a dictionary sort instead of an ASCII sort", () => {
+        expect(localeCompare("Z (90)", "a (97)")).toBeGreaterThan(0);
+        expect(localeCompare("é", "F")).toBeLessThan(0);
+    });
+    test("compares numbers by value", () => {
+        expect(localeCompare("Guest 9", "Guest 100000")).toBeLessThan(0);
+        expect(localeCompare("Guest 2", "Guest 1")).toBeGreaterThan(0);
+    });
+    test("treats same text with different normalization forms as equal", () => {
+        expect(localeCompare("é".normalize("NFC"), "é".normalize("NFD"))).toBe(0);
+    });
+    test("puts empty strings at the end when emptyLast option is true", () => {
+        expect(localeCompare("", "a", { emptyLast: false })).toBeLessThan(0);
+        expect(localeCompare("", "a", { emptyLast: true })).toBeGreaterThan(0);
+    });
+});
 
 describe("formatList", () => {
     test("defaults to the current user's locale", () => {
@@ -76,13 +100,85 @@ describe("pyToJsLocale", () => {
 describe("normalize", () => {
     test("diacritics", () => expect(normalize("ž̷̲̺̌a̷̮̳͆̎l̵̯̔̆g̷̭̗̊̑o̷͓̊̓ ̵̜̬̂̅ţ̴̖͒ẹ̵̚x̷̭̪̓t̷̥̒")).toBe("zalgo text"));
     test("diacritics-like", () => expect(normalize("ĦøŧØłð")).toBe("hotold"));
+    test("diacritics-like upercase", () => expect(normalize("ØŁÐĦŦ")).toBe("oldht"));
+    test("diacritics-like lowercase", () => expect(normalize("øłðħŧ")).toBe("oldht"));
     test("French", () => expect(normalize("éàïœùûîêü")).toBe("eaioeuuieu"));
     test("normalization forms", () =>
         expect(normalize("éÈäÙ".normalize("NFC"))).toBe(normalize("éÈäÙ".normalize("NFD"))));
     test("compatibility equivalence", () => expect(normalize("㎩㎭𝐞")).toBe("parade"));
     test("case folding", () => expect(normalize("Kevin Großkreutz")).toBe("kevin grosskreutz"));
+    test(`case folding ( Preserve "Turkish I's")`, () =>
+        expect(normalize("Diyarbakır")).toBe("diyarbakir"));
+    test("case folding (3)", () => expect(normalize("և")).toBe("եւ"));
     test("ligatures", () => expect(normalize("ŒÆĲ")).toBe("oeaeij"));
+    test("ligatures lower case", () => expect(normalize("œæĳ")).toBe("oeaeij"));
     test("empty string", () => expect(normalize("")).toBe(""));
+    test("more normalize tests", () => {
+        expect(normalize("Երևան")).toBe("երեւան");
+        expect(normalize("déçûmes")).toBe("decumes");
+        expect(normalize("𝔖𝔥𝔯𝔢𝔨")).toBe("shrek");
+        expect(normalize("Scleßin")).toBe("sclessin");
+        expect(normalize("Œdipe")).toBe("oedipe");
+        // þ (Thorn) is used in Icelandic. It should become "th".
+        expect(normalize("Þingvellir")).toBe("thingvellir");
+        // đ (D with stroke) is very common. It should become "d".
+        expect(normalize("Đà Nẵng")).toBe("da nang");
+        // ŋ (Eng) represents a "ng" sound. It should become "n".
+        expect(normalize("Siidaŋ")).toBe("siidan");
+        expect(normalize("vrĳe")).toBe("vrije"); // using the ĳ ligature
+        expect(normalize("Ĳsselmeer")).toBe("ijsselmeer"); // using the Ĳ ligature
+        // In Catalan, "ŀ" (U+0140) should be searchable as a standard "l"
+        expect(normalize("paral·lel")).toBe("parallel");
+        expect(normalize("INTEL·LIGENT")).toBe("intelligent");
+        // This is THREE characters: 'l', the middle dot '·', and 'l'.
+        expect(normalize("paral·lel")).toBe("parallel");
+        // French accents
+        expect(normalize("Cédric")).toBe("cedric");
+        expect(normalize("Noël")).toBe("noel");
+        // The ñ in spanish
+        expect(normalize("niño")).toBe("nino");
+        // İstanbul (with dot) starts with İ (U+0130)
+        expect(normalize("İstanbul")).toBe("istanbul");
+        // Diyarbakır (without dot) ends with ı (U+0131)
+        expect(normalize("Diyarbakır")).toBe("diyarbakir");
+
+        // Mathematical bold/italic (often from copy-paste)
+        expect(normalize("𝐛𝐨𝐥𝐝")).toBe("bold");
+
+        // Non-breaking spaces (U+00A0) should be treated as normal spaces
+        // Use a literal non-breaking space here or \u00A0
+        expect(normalize("John\u00A0Doe")).toBe("john doe");
+
+        expect(normalize("long-word")).toBe("long-word");
+        // The "Soft Hyphen" (U+00AD) - Invisible in many UI's but breaks 'indexOf'
+        expect(normalize("soft\u00ADhyphen")).toBe("softhyphen");
+
+        // Ensure the shield doesn't accidentally prevent lowercasing
+        // of standard uppercase strings.
+        expect(normalize("ODOO")).toBe("odoo");
+
+        // Ensure it correctly triggers the 'heavy' logic when a symbol appears
+        expect(normalize("Odoo™")).toBe("odootm");
+    });
+    test("Hindi (Devanagari): should preserve vowel marks", () => {
+        // 'नमस्ते' (Namaste) contains 'म' (ma) + 'स' (sa) + '्' (Virama) + 'त' (ta) + 'े' (vowel e)
+        // If we use \p{M} or \p{Diacritic}, it might become 'नमसत' (Nmsat) - which is wrong.
+        const hindi = "नमस्ते";
+        expect(normalize(hindi)).toBe(hindi); // Should remain identical (lowercased if applicable)
+    });
+
+    test("Thai: should preserve tone and vowel marks", () => {
+        // 'สวัสดี' (Sawasdee)
+        // Stripping marks would turn 'ดี' (dee) into 'ด' (d), losing the vowel 'ี'.
+        const thai = "สวัสดี";
+        expect(normalize(thai)).toBe(thai);
+    });
+
+    test("Combined Latin and Hindi", () => {
+        // Tests that the logic can handle mixed strings correctly
+        // 'Café' should be cleaned, 'नमस्ते' should stay intact.
+        expect(normalize("Café नमस्ते")).toBe("cafe नमस्ते");
+    });
 });
 
 describe("normalizedMatch", () => {

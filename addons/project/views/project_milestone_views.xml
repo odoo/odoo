@@ -71,17 +71,22 @@
                 <field name="is_deadline_exceeded"/>
                 <templates>
                     <t t-name="card">
-                        <div class="d-flex">
-                            <field name="is_reached" widget="task_done_checkmark" class="oe_inline"/>
-                            <strong>
-                                <field name="name" class="oe_inline"/>
-                                <t t-set="badge" t-value="'text-success'" t-if="record.can_be_marked_as_done.raw_value"/>
-                                <t t-set="badge" t-value="'text-danger'" t-if="record.is_deadline_exceeded.raw_value"/>
-                                <t t-if="record.deadline.raw_value">
-                                    - <span t-attf-class="{{ badge }}"><field name="deadline"/></span>
-                                </t>
-                            </strong>
-                        </div>
+                        <main>
+                            <div class="card_top">
+                                <div class="d-flex fw-bold gap-1">
+                                    <field name="is_reached" widget="task_done_checkmark"/>
+                                    <field name="name"/>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <div t-if="record.deadline.raw_value" class="d-flex gap-1" name="deadline" title="Deadline">
+                                    <i class="fa fa-calendar px-1 mt-1" role="img" aria-label="Deadline"/>
+                                    <span t-attf-class="{{ record.can_be_marked_as_done.raw_value and 'text-success' or record.is_deadline_exceeded.raw_value and 'text-danger' or '' }}">
+                                        <field name="deadline"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </main>
                     </t>
                 </templates>
            </kanban>
@@ -128,7 +133,8 @@
         <field name="sequence">10</field>
         <field name="name">Milestones</field>
         <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
-        <field name="action_id" ref="project.project_milestone_action"/>
+        <field name="action_id" eval="False"/>
+        <field name="python_method">action_get_list_view</field>
         <field name="domain">[('allow_milestones', '=', True)]</field>
         <field name="groups_ids" eval="[(4, ref('project.group_project_milestone'))]" />
     </record>
@@ -138,7 +144,8 @@
         <field name="sequence">25</field>
         <field name="name">Milestones</field>
         <field name="parent_action_id" ref="project.project_update_all_action"/>
-        <field name="action_id" ref="project.project_milestone_action"/>
+        <field name="action_id" eval="False"/>
+        <field name="python_method">action_get_list_view</field>
         <field name="domain">[('allow_milestones', '=', True)]</field>
         <field name="groups_ids" eval="[(4, ref('project.group_project_milestone'))]" />
     </record>

@@ -1,8 +1,15 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { before, describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { splitBlock, keydownTab, undo, tripleClick } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
+
+before(async () => {
+    const font = new FontFace("Roboto", "url(/web/static/fonts/google/Roboto/Roboto-Regular.ttf)");
+    await font.load();
+    document.fonts.add(font);
+    await document.fonts.ready;
+});
 
 describe("Checklist", () => {
     test("should indent a checklist (1)", async () => {
@@ -51,7 +58,7 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked">
+                        <li class="o_checked o_checked_has_nested_list">
                             <p>abc</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">d[e]f</li>
@@ -71,7 +78,7 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked">
+                        <li class="o_checked o_checked_has_nested_list">
                             <p>abc</p>
                             <ul class="o_checklist">
                                 <li>d[e]f</li>
@@ -198,7 +205,7 @@ describe("Checklist", () => {
             contentBefore: unformat(`
                     <ul class="o_checklist">
                         <li class="o_checked">abc</li>
-                        <li class="o_checked">d[e]f
+                        <li class="o_checked o_checked_has_nested_list">d[e]f
                             <ul class="o_checklist">
                                 <li class="o_checked">ghi</li>
                             </ul>
@@ -207,7 +214,7 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked"><p>abc</p>
+                        <li class="o_checked o_checked_has_nested_list"><p>abc</p>
                             <ul class="o_checklist">
                                 <li class="o_checked"><p>d[e]f</p></li>
                                 <li class="o_checked">ghi</li>
@@ -255,7 +262,7 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked"><p>abc</p>
+                        <li class="o_checked o_checked_has_nested_list"><p>abc</p>
                             <ul class="o_checklist">
                                 <li><p>d[e]f</p></li>
                                 <li>ghi</li>
@@ -1371,7 +1378,7 @@ describe("Mixed: list + paragraph", () => {
         /* eslint-enable */
         expect(getContent(el)).toBe(expectedContent);
 
-        // Check that it was done as single history step.
+        // Check that it was done as single history commit.
         undo(editor);
         expect(getContent(el)).toBe(contentBefore);
     });

@@ -1,21 +1,18 @@
-import { useState } from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { RelativeTime } from "@mail/core/common/relative_time";
-import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+import { toggleFn } from "@mail/utils/common/signal";
+
+import { Component, props, signal, types } from "@odoo/owl";
+
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component } from "@odoo/owl";
-
 export const SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD = 50; // arbitrary, ~ 1 line on large screen
 
 export class ScheduledMessage extends Component {
-    static props = {
-        onScheduledMessageChanged: Function,
-        scheduledMessage: Object,
-    };
     static template = "mail.ScheduledMessage";
     static components = {
         AttachmentList,
@@ -24,10 +21,16 @@ export class ScheduledMessage extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({
-            readMore: false,
+        this.store = useService("mail.store");
+        this.props = props({
+            onScheduledMessageChanged: types.function([
+                types.instanceOf(this.store["mail.thread"].Class),
+            ]),
+            scheduledMessage: types.instanceOf(this.store["mail.scheduled.message"].Class),
         });
-        this.avatarCard = usePopover(AvatarCardPopover);
+        this.readMore = signal(false);
+        this.toggleFn = toggleFn;
+        this.avatarCard = usePopover(AvatarCard);
         this.dialogService = useService("dialog");
     }
 
@@ -69,7 +72,8 @@ export class ScheduledMessage extends Component {
     onClickAuthor(ev) {
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(ev.currentTarget, {
-                id: this.props.scheduledMessage.author_id.main_user_id?.id,
+                id: this.props.scheduledMessage.author_id.id,
+                model: "res.partner",
             });
         }
     }

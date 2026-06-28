@@ -3,12 +3,13 @@
 from unittest.mock import patch
 from odoo.exceptions import UserError
 from odoo.addons.mail.models.mail_mail import MailDeliveryException
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests.common import tagged, HttpCase
 from werkzeug.urls import url_parse
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestResetPassword(HttpCase):
+class TestResetPassword(HttpCase, MailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -81,3 +82,17 @@ class TestResetPassword(HttpCase):
         # To check private method _action_reset_password() raises MailDeliveryException when there is no valid smtp server
         with self.assertRaises(MailDeliveryException):
             self.test_user._action_reset_password()
+
+    def test_send_password_reset_instructions_to_multiple_users(self):
+        """Test that password reset instruction emails are sent to multiple users."""
+        test_user2 = self.env['res.users'].create({
+            'login': 'test2',
+            'name': 'Test 2',
+            'email': 'test@example.com',
+        })
+
+        with self.mock_mail_gateway():
+            self.assertFalse(self._new_mails)
+            (self.test_user | test_user2).action_reset_password()
+
+        self.assertEqual(len(self._new_mails), 2)

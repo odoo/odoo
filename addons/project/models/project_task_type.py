@@ -32,7 +32,6 @@ class ProjectTaskType(models.Model):
         string='Email Template',
         domain=[('model', '=', 'project.task')],
         help="If set, an email will be automatically sent to the customer when the task reaches this stage.")
-    color = fields.Integer(string='Color', export_string_translation=False)
     fold = fields.Boolean(string='Folded')
     rating_template_id = fields.Many2one(
         'mail.template',
@@ -119,7 +118,6 @@ class ProjectTaskType(models.Model):
                 mt_project_task_rating.hidden = not rating_active
                 mt_project_task_rating.default = rating_active
                 self.env.ref('project.mt_task_rating').hidden = not rating_active
-                self.env.ref('project.rating_project_request_email_template').active = rating_active
         return super().write(vals)
 
     def copy_data(self, default=None):

@@ -454,6 +454,14 @@ describe("to heading 1", () => {
             contentAfter: '<h1 style="text-align: center;">[abcde<strong>fg</strong>]</h1>',
         });
     });
+
+    test("should convert h2 to h1 and remove the classes", async () => {
+        await testEditor({
+            contentBefore: '<h2 class="h3-fs">[Enhance] Your <strong>Experience</strong></h2>',
+            stepFunction: setTag("h1"),
+            contentAfter: "<h1>[Enhance] Your <strong>Experience</strong></h1>",
+        });
+    });
 });
 
 describe("to heading 2", () => {
@@ -751,27 +759,27 @@ describe("to pre", () => {
         });
     });
 
-    test("should turn part of a heading 1 into several pres (characters selected)", async () => {
+    test("should turn part of a heading 1 with line breaks into single pre", async () => {
         await testEditor({
             contentBefore: "<h1>a<br>b<br>[c<br><br>d]<br>e<br>f</h1>",
             stepFunction: setTag("pre"),
-            contentAfter: "<h1>a<br>b</h1><pre>[c</pre><pre><br></pre><pre>d]</pre><h1>e<br>f</h1>",
+            contentAfter: "<h1>a<br>b</h1><pre>[c<br><br><br>d]</pre><h1>e<br>f</h1>",
         });
     });
 
-    test("should turn a heading 1, a pre and a paragraph into three pres", async () => {
+    test("should turn a heading 1, a pre and a paragraph into single pre", async () => {
         await testEditor({
             contentBefore: "<h1>a[b</h1><pre>cd</pre><p>e]f</p>",
             stepFunction: setTag("pre"),
-            contentAfter: "<pre>a[b</pre><pre>cd</pre><pre>e]f</pre>",
+            contentAfter: "<pre>a[b<br>cd<br>e]f</pre>",
         });
     });
 
-    test("should turn parts of a heading 1, a pre and parts of a paragraph into pres", async () => {
+    test("should turn parts of a heading 1, a pre and a paragraph into single pre", async () => {
         await testEditor({
             contentBefore: "<h1>a<br>[b</h1><pre>cd</pre><p>e]<br>f</p>",
             stepFunction: setTag("pre"),
-            contentAfter: "<h1>a</h1><pre>[b</pre><pre>cd</pre><pre>e]</pre><p>f</p>",
+            contentAfter: "<h1>a</h1><pre>[b<br>cd<br>e]</pre><p>f</p>",
         });
     });
 
@@ -796,7 +804,7 @@ describe("to pre", () => {
             // every line in them and not just the ones we selected.
             // The custom table selection is removed in cleanForSave and the selection is collapsed.
             contentAfter:
-                "<table><tbody><tr><td><pre>a</pre><pre>b</pre><pre>[c</pre><pre>d</pre></td><td><pre>e</pre><pre>f</pre></td><td><pre>g</pre><pre>h]</pre><pre>i</pre><pre>j</pre></td></tr></tbody></table>",
+                "<table><tbody><tr><td><pre>a<br>b<br>[c<br>d</pre></td><td><pre>e<br>f</pre></td><td><pre>g<br>h]<br>i<br>j</pre></td></tr></tbody></table>",
         });
     });
 
@@ -891,21 +899,19 @@ describe("to blockquote", () => {
         });
     });
 
-    test("should turn part of a heading 1 into several blockquotes (characters selected)", async () => {
+    test("should turn part of a heading 1 with line breaks into single blockquotes (characters selected)", async () => {
         await testEditor({
             contentBefore: "<h1>a<br>b<br>[c<br><br>d]<br>e<br>f</h1>",
             stepFunction: setTag("blockquote"),
-            contentAfter:
-                "<h1>a<br>b</h1><blockquote>[c</blockquote><blockquote><br></blockquote><blockquote>d]</blockquote><h1>e<br>f</h1>",
+            contentAfter: "<h1>a<br>b</h1><blockquote>[c<br><br><br>d]</blockquote><h1>e<br>f</h1>",
         });
     });
 
-    test("should turn a heading 1, a paragraph and a heading 2 into three blockquote", async () => {
+    test("should turn a heading 1, a paragraph and a heading 2 into single blockquote", async () => {
         await testEditor({
             contentBefore: "<h1>a[b</h1><p>cd</p><h2>e]f</h2>",
             stepFunction: setTag("blockquote"),
-            contentAfter:
-                "<blockquote>a[b</blockquote><blockquote>cd</blockquote><blockquote>e]f</blockquote>",
+            contentAfter: "<blockquote>a[b<br>cd<br>e]f</blockquote>",
         });
     });
 
@@ -933,7 +939,7 @@ describe("to blockquote", () => {
         await testEditor({
             contentBefore: "<div>[a<br>b]</div>",
             stepFunction: setTag("blockquote"),
-            contentAfter: "<div><blockquote>[a</blockquote><blockquote>b]</blockquote></div>",
+            contentAfter: "<div><blockquote>[a<br>b]</blockquote></div>",
             config: { baseContainers: ["P"] },
         });
     });
@@ -942,7 +948,7 @@ describe("to blockquote", () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">[a<br>b]</div>`,
             stepFunction: setTag("blockquote"),
-            contentAfter: `<div class="oe_unbreakable"><blockquote>[a</blockquote><blockquote>b]</blockquote></div>`,
+            contentAfter: `<div class="oe_unbreakable"><blockquote>[a<br>b]</blockquote></div>`,
         });
     });
 
@@ -967,7 +973,7 @@ describe("to blockquote", () => {
             // every line in them and not just the ones we selected.
             // The custom table selection is removed in cleanForSave and the selection is collapsed.
             contentAfter:
-                "<table><tbody><tr><td><blockquote>a</blockquote><blockquote>b</blockquote><blockquote>[c</blockquote><blockquote>d</blockquote></td><td><blockquote>e</blockquote><blockquote>f</blockquote></td><td><blockquote>g</blockquote><blockquote>h]</blockquote><blockquote>i</blockquote><blockquote>j</blockquote></td></tr></tbody></table>",
+                "<table><tbody><tr><td><blockquote>a<br>b<br>[c<br>d</blockquote></td><td><blockquote>e<br>f</blockquote></td><td><blockquote>g<br>h]<br>i<br>j</blockquote></td></tr></tbody></table>",
         });
     });
 

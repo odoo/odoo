@@ -10,4 +10,22 @@ action = env.company._start_payment_onboarding()
         </field>
     </record>
 
+    <record id="action_confirm_payment_transaction" model="ir.actions.server">
+        <field name="name">Mark as Confirmed</field>
+        <field name="model_id" ref="payment.model_payment_transaction"/>
+        <field name="binding_model_id" ref="payment.model_payment_transaction"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">records.action_confirm()</field>
+    </record>
+
+    <record id="action_add_payment_method" model="ir.actions.server">
+        <field name="name">Add a Payment Method</field>
+        <field name="model_id" ref="payment.model_payment_provider"/>
+        <field name="binding_model_id" ref="payment.model_payment_provider"/>
+        <field name="state">code</field>
+        <field name="group_ids" eval="[Command.set([ref('base.group_no_one')])]"/>
+        <field name="code">action = record.action_add_payment_method()</field>
+    </record>
+
 </odoo>

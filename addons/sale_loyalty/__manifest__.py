@@ -8,7 +8,6 @@
     "depends": ["sale", "loyalty"],
     "auto_install": True,
     "data": [
-        "security/ir.model.access.csv",
         "data/sale_loyalty_data.xml",
         "wizard/sale_loyalty_coupon_wizard_views.xml",
         "wizard/sale_loyalty_reward_wizard_views.xml",
@@ -18,8 +17,8 @@
         "views/sale_portal_templates.xml",
         "views/res_partner_views.xml",
         "views/sale_loyalty_menus.xml",
+        'security/ir.access.csv',
     ],
-    "assets": {"web.assets_backend": ["sale_loyalty/static/src/**/*"]},
     "uninstall_hook": "uninstall_hook",
     "author": "Odoo S.A.",
     "license": "LGPL-3",

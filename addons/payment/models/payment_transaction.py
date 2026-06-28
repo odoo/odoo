@@ -8,8 +8,8 @@ import psycopg2
 from dateutil import relativedelta
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo import api, fields, models
+from odoo.exceptions import LockError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import email_normalize_all, float_round
 
@@ -22,6 +22,7 @@ _logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
 
 class PaymentTransaction(models.Model):
     _name = "payment.transaction"
+    _inherit = "bus.listener.mixin"
     _description = "Payment Transaction"
     _order = "id desc"
     _rec_name = "reference"
@@ -31,14 +32,18 @@ class PaymentTransaction(models.Model):
         return self.env["res.lang"].get_installed()
 
     provider_id = fields.Many2one(
-        string="Provider", comodel_name="payment.provider", readonly=True, required=True
+        string="Provider", comodel_name="payment.provider", readonly=True, required=True, index=True
     )
     provider_code = fields.Selection(string="Provider Code", related="provider_id.code")
     company_id = fields.Many2one(
         related="provider_id.company_id", store=True, index=True
     )  # Indexed to speed-up ORM searches (from ir_rule or others)
     payment_method_id = fields.Many2one(
-        string="Payment Method", comodel_name="payment.method", readonly=True, required=True
+        string="Payment Method",
+        comodel_name="payment.method",
+        readonly=True,
+        required=True,
+        index=True,
     )
     payment_method_code = fields.Char(
         string="Payment Method Code", related="payment_method_id.code"
@@ -115,6 +120,10 @@ class PaymentTransaction(models.Model):
         help="Whether the transaction happened in a production environment. False for transactions"
         " created before this tracking was implemented.",
     )
+    payment_data_ids = fields.One2many(
+        string="Pending Updates", comodel_name="payment.data", inverse_name="transaction_id"
+    )
+    payment_data_count = fields.Integer(compute="_compute_payment_data_count")
     source_transaction_id = fields.Many2one(
         string="Source Transaction",
         comodel_name="payment.transaction",
@@ -169,6 +178,16 @@ class PaymentTransaction(models.Model):
         for pm, txs in self.grouped("payment_method_id").items():
             txs.primary_payment_method_id = pm.primary_payment_method_id or pm
 
+    def _compute_payment_data_count(self):
+        rg_data = self.env["payment.data"]._read_group(
+            domain=[("transaction_id", "in", self.ids)],
+            groupby=["transaction_id"],
+            aggregates=["__count"],
+        )
+        data = {transaction.id: count for transaction, count in rg_data}
+        for record in self:
+            record.payment_data_count = data.get(record.id, 0)
+
     def _compute_refunds_count(self):
         rg_data = self.env["payment.transaction"]._read_group(
             domain=[("source_transaction_id", "in", self.ids), ("operation", "=", "refund")],
@@ -189,7 +208,7 @@ class PaymentTransaction(models.Model):
         )
         if illegal_authorize_state_txs:
             raise ValidationError(
-                _(
+                self.env._(
                     "Transaction authorization is not supported by the following payment providers:"
                     " %s",
                     ", ".join(set(illegal_authorize_state_txs.mapped("provider_id.name"))),
@@ -200,7 +219,9 @@ class PaymentTransaction(models.Model):
     def _check_token_is_active(self):
         """Check that the token used to create the transaction is active."""
         if self.token_id and not self.token_id.active:
-            raise ValidationError(_("Creating a transaction from an archived token is forbidden."))
+            raise ValidationError(
+                self.env._("Creating a transaction from an archived token is forbidden.")
+            )
 
     # === CRUD METHODS === #
 
@@ -212,7 +233,7 @@ class PaymentTransaction(models.Model):
             if not values.get("reference"):
                 values["reference"] = self._compute_reference(provider.code, **values)
 
-            values["is_live"] = provider.state == "enabled"
+            values["is_live"] = provider.is_live
 
             # Duplicate partner values.
             partner = self.env["res.partner"].browse(values["partner_id"])
@@ -264,6 +285,17 @@ class PaymentTransaction(models.Model):
         """
         return dict()
 
+    def write(self, vals):
+        if not self.env.context.get("payment_safe_write"):
+            raise UserError(
+                self.env._(
+                    "Payment transactions should not be updated directly. Either use _record() to"
+                    " queue payment data for processing, or pass payment_safe_write=True to the"
+                    " context after ensuring that the update can tolerate a rollback."
+                )
+            )
+        return super().write(vals)
+
     # === ACTION METHODS === #
 
     def action_view_refunds(self):
@@ -277,7 +309,7 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
 
         action = {
-            "name": _("Refund"),
+            "name": self.env._("Refund"),
             "res_model": "payment.transaction",
             "type": "ir.actions.act_window",
         }
@@ -292,6 +324,24 @@ class PaymentTransaction(models.Model):
             action["domain"] = [("source_transaction_id", "=", self.id)]
         return action
 
+    def action_view_payment_data(self):
+        """Return a window action to browse the payment data linked to the transaction.
+
+        :return: A window action to browse the payment data.
+        :rtype: dict
+        """
+        self.ensure_one()
+        action = {
+            "name": self.env._("Pending Updates"),
+            "type": "ir.actions.act_window",
+            "domain": [("transaction_id", "=", self.id)],
+            "res_model": "payment.data",
+            "view_mode": "list,form",
+        }
+        if self.payment_data_count == 1:
+            action.update({"view_mode": "form", "res_id": self.payment_data_ids.id})
+        return action
+
     def action_capture(self):
         """Open the partial capture wizard if it is supported by the related providers, otherwise
         capture the transactions immediately.
@@ -303,7 +353,7 @@ class PaymentTransaction(models.Model):
 
         if any(tx.provider_id.sudo().support_manual_capture == "partial" for tx in self):
             return {
-                "name": _("Capture"),
+                "name": self.env._("Capture"),
                 "type": "ir.actions.act_window",
                 "view_mode": "form",
                 "res_model": "payment.capture.wizard",
@@ -326,7 +376,7 @@ class PaymentTransaction(models.Model):
         payment_utils.check_rights_on_recordset(self)
 
         if any(tx.state != "authorized" for tx in self):
-            raise ValidationError(_("Only authorized transactions can be voided."))
+            raise ValidationError(self.env._("Only authorized transactions can be voided."))
 
         voided_txs_sudo = self.env["payment.transaction"].sudo()
         for tx in self:
@@ -354,7 +404,7 @@ class PaymentTransaction(models.Model):
         payment_utils.check_rights_on_recordset(self)
 
         if any(tx.state != "done" for tx in self):
-            raise ValidationError(_("Only confirmed transactions can be refunded."))
+            raise ValidationError(self.env._("Only confirmed transactions can be refunded."))
 
         refunded_txs_sudo = self.env["payment.transaction"].sudo()
         for tx in self:
@@ -392,16 +442,31 @@ class PaymentTransaction(models.Model):
             },
         }
 
+    def action_confirm(self):
+        """Mark the transactions as confirmed, bypassing the normal payment flow.
+
+        This is a workaround for cases where payment data processing fails and the transaction
+        cannot be confirmed automatically.
+
+        :rtype: None
+        """
+        self.with_context(
+            payment_safe_write=True  # No API call was made; safe to replay
+        )._set_done(state_message=self.env._("Manually confirmed by the user."))
+
     def action_post_process(self):
-        """Trigger the post-processing of the transactions.
+        """Run the post-processing of the transactions.
 
         :return: A client action to soft-reload the view.
         :rtype: dict
         """
-        self._post_process()
+        self.with_context(
+            # Post-processing is idempotent and can be rolled back in case of failure
+            payment_safe_write=True
+        )._post_process()
         return {"type": "ir.actions.client", "tag": "soft_reload"}
 
-    # === BUSINESS METHODS - PRE-PROCESSING === #
+    # === LIFECYCLE METHODS - CREATION === #
 
     @api.model
     def _compute_reference(self, provider_code, prefix=None, separator="-", **kwargs):  # noqa: ARG002
@@ -502,6 +567,8 @@ class PaymentTransaction(models.Model):
         """
         return ""
 
+    # === LIFECYCLE METHODS - PAYMENT FORM === #
+
     def _get_processing_values(self):
         """Return the values used to process the transaction.
 
@@ -522,6 +589,11 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         self.ensure_one()
+
+        self = self.with_context(  # noqa: PLW0642
+            # The payment preparation requests made by some providers are safe to replay
+            payment_safe_write=True
+        )
 
         processing_values = {
             "provider_id": self.provider_id.id,
@@ -595,6 +667,8 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         return dict()
 
+    # === LIFECYCLE METHODS - OUTBOUND REQUESTS === #
+
     def _charge_with_token(self):
         """Pay the transaction with the given token.
 
@@ -603,12 +677,14 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         self.ensure_one()
-        self._ensure_provider_is_not_disabled()
+        self._ensure_provider_is_active()
         self._log_sent_message()
         try:
             self._send_payment_request()
         except ValidationError as e:
-            self._set_error(str(e))
+            self.with_context(
+                payment_safe_write=True  # API request failed; safe to replay
+            )._set_error(str(e))
 
     def _send_payment_request(self):
         """Request the provider handling the transaction to send a token payment request.
@@ -635,14 +711,16 @@ class PaymentTransaction(models.Model):
         :rtype: payment.transaction
         """
         self.ensure_one()
-        self._ensure_provider_is_not_disabled()
+        self._ensure_provider_is_active()
 
         capture_tx = self._create_child_transaction(amount_to_capture or self.amount)
         capture_tx._log_sent_message()
         try:
             capture_tx._send_capture_request()
         except ValidationError as e:
-            capture_tx._set_error(str(e))
+            capture_tx.with_context(
+                payment_safe_write=True  # API request failed; safe to replay
+            )._set_error(str(e))
         return capture_tx
 
     def _send_capture_request(self):
@@ -667,14 +745,16 @@ class PaymentTransaction(models.Model):
         :rtype: payment.transaction
         """
         self.ensure_one()
-        self._ensure_provider_is_not_disabled()
+        self._ensure_provider_is_active()
 
         void_tx = self._create_child_transaction(amount_to_void or self.amount)
         void_tx._log_sent_message()
         try:
             void_tx._send_void_request()
         except ValidationError as e:
-            void_tx._set_error(str(e))
+            void_tx.with_context(
+                payment_safe_write=True  # API request failed; safe to replay
+            )._set_error(str(e))
         return void_tx
 
     def _send_void_request(self):
@@ -699,14 +779,16 @@ class PaymentTransaction(models.Model):
         :rtype: payment.transaction
         """
         self.ensure_one()
-        self._ensure_provider_is_not_disabled()
+        self._ensure_provider_is_active()
 
         refund_tx = self._create_child_transaction(amount_to_refund or self.amount, is_refund=True)
         refund_tx._log_sent_message()
         try:
             refund_tx._send_refund_request()
         except ValidationError as e:
-            refund_tx._set_error(str(e))
+            refund_tx.with_context(
+                payment_safe_write=True  # API request failed; safe to replay
+            )._set_error(str(e))
         return refund_tx
 
     def _send_refund_request(self):
@@ -721,20 +803,14 @@ class PaymentTransaction(models.Model):
         """
         return
 
-    def _ensure_provider_is_not_disabled(self):
-        """Ensure that the provider's state is not `disabled` before sending a request to its
-        provider.
+    def _ensure_provider_is_active(self):
+        """Ensure that the provider is active before sending a request.
 
         :return: None
         :raise UserError: If the provider's state is `disabled`.
         """
-        if self.provider_id.state == "disabled":
-            raise UserError(
-                _(
-                    "Making a request to the provider is not possible because the provider is"
-                    " disabled."
-                )
-            )
+        if not self.provider_id.active:
+            raise UserError(self.env._("The provider must not be archived to make a request."))
 
     def _create_child_transaction(self, amount, is_refund=False, **custom_create_values):
         """Create a new transaction with the current transaction as its parent transaction.
@@ -773,27 +849,7 @@ class PaymentTransaction(models.Model):
             **custom_create_values,
         })
 
-    # === BUSINESS METHODS - PROCESSING === #
-
-    def _process(self, provider_code, payment_data):
-        """Process the payment data received from the provider and update the transaction.
-
-        :param str provider_code: The code of the provider handling the transaction.
-        :param dict payment_data: The payment data sent by the provider.
-        :return: The updated transaction.
-        :rtype: payment.transaction
-        """
-        tx = self or self._search_by_reference(provider_code, payment_data)
-        if tx:
-            tx.ensure_one()
-            previous_state = tx.state
-            tx._validate_amount(payment_data)
-            if tx.state == "error" and tx.state != previous_state:
-                return tx
-            tx._apply_updates(payment_data)
-            if tx.tokenize and tx.state in {"authorized", "done"}:
-                tx._tokenize(payment_data)
-        return tx
+    # === LIFECYCLE METHODS - PAYLOAD RECEPTION === #
 
     @api.model
     def _search_by_reference(self, provider_code, payment_data):
@@ -831,6 +887,84 @@ class PaymentTransaction(models.Model):
         """
         return payment_data.get("reference")
 
+    def _record(self, payment_data):
+        """Record the payment data and schedule the transaction for processing.
+
+        This method serves as the unique entry point for processing payment data and updating the
+        transaction. It should always be called upon receiving payment data from the provider.
+
+        When payment data are received, they are recorded in the database and the transaction is
+        scheduled for processing. The processing is done asynchronously to avoid concurrent updates.
+
+        :param dict payment_data: The payment data received from the provider.
+        :rtype: None
+        """
+        self.ensure_one()
+
+        self.env["payment.data"].create({"transaction_id": self.id, "payload": payment_data})
+        self.env.ref("payment.processing_cron")._trigger()
+
+    # === LIFECYCLE METHODS - PROCESSING === #
+
+    @api.model
+    def _run_processing(self):
+        """Run the processing of transactions with pending payment data.
+
+        Delegating the processing to the cron for all transactions at once allows supporting many
+        concurrent immediate processing requests, delegates the lock acquisition and release to the
+        cron, and reduces overheads.
+
+        :rtype: None
+        """
+        processing_cron = self.env.ref("payment.processing_cron")
+        try:
+            processing_cron.lock_for_update(allow_referencing=True)  # Lock first to avoid UserError
+        except LockError:  # The cron is already running
+            return  # Nothing to do; it will notify the client when the transaction is processed
+        processing_cron.sudo().method_direct_trigger()  # In sudo mode to run as superuser
+
+    def _process(self, payment_data):
+        """Process the payment data to update the internal state.
+
+        :param dict payment_data: The payment data to process
+        :rtype: None
+        """
+        self.ensure_one()
+
+        # Update the transaction with the payment data
+        self._apply_updates(payment_data)
+
+        # Notify the client that processing completed
+        self._bus_send("payment.notify_transaction_processed", {})
+
+        if self.state in {"authorized", "done"}:  # The payment was successful
+            # Check that the payment data match the initial payment request
+            self._validate_amount(payment_data)
+            if self.state == "error":
+                return
+
+            # Tokenize the transaction if needed
+            if self.tokenize:
+                self._tokenize(payment_data)
+
+    def _apply_updates(self, payment_data):  # noqa: ARG002
+        """Update the transaction based on the payment data received from the provider.
+
+        The updates typically include the payment's state, the provider reference, and the selected
+        payment method.
+
+        This method should not be called directly; payment data should go through :meth:`_process`.
+
+        This method must be overridden by providers to update the transaction based on the payment
+        data.
+
+        Note: `self.ensure_one()` from :meth:`_process`
+
+        :param dict payment_data: The payment data sent by the provider.
+        :return: None
+        """
+        return
+
     def _validate_amount(self, payment_data):
         """Ensure that the transaction's amount and currency match the ones from the payment data.
 
@@ -854,8 +988,8 @@ class PaymentTransaction(models.Model):
         precision_digits = amount_data.get("precision_digits")
 
         if not amount or not currency_code:
-            error_message = _("The amount or currency is missing from the payment data.")
-            self._set_error(error_message)
+            error_message = self.env._("The amount or currency is missing from the payment data.")
+            self._set_error(error_message, extra_allowed_states=("done",))
             return
 
         # Negate the amount for refunds, as refunds have a negative amount in Odoo, but all
@@ -870,17 +1004,17 @@ class PaymentTransaction(models.Model):
             self.amount, precision_digits=precision_digits, rounding_method="DOWN"
         )
         if self.currency_id.compare_amounts(amount, tx_amount) != 0:
-            error_message = _(
+            error_message = self.env._(
                 "The amount from the payment data doesn't match the one from the transaction."
             )
-            self._set_error(error_message)
+            self._set_error(error_message, extra_allowed_states=("done",))
             return
 
         if currency_code != self.currency_id.name:
-            error_message = _(
+            error_message = self.env._(
                 "The currency from the payment data doesn't match the one from the transaction."
             )
-            self._set_error(error_message)
+            self._set_error(error_message, extra_allowed_states=("done",))
 
     def _extract_amount_data(self, payment_data):  # noqa: ARG002
         """Extract the amount, currency and rounding precision from the payment data.
@@ -894,24 +1028,6 @@ class PaymentTransaction(models.Model):
         :rtype: dict|None
         """
         return {}
-
-    def _apply_updates(self, payment_data):  # noqa: ARG002
-        """Update the transaction based on the payment data received from the provider.
-
-        The updates typically include the payment's state, the provider reference, and the selected
-        payment method.
-
-        This method should not be called directly; payment data should go through :meth:`_process`.
-
-        This method must be overridden by providers to update the transaction based on the payment
-        data.
-
-        Note: `self.ensure_one()` from :meth:`_process`
-
-        :param dict payment_data: The payment data sent by the provider.
-        :return: None
-        """
-        return
 
     def _tokenize(self, payment_data):
         """Create a new token based on the payment data.
@@ -1115,7 +1231,7 @@ class PaymentTransaction(models.Model):
                 child_tx.source_transaction_id._update_state(("authorized",), target_state, "")
                 child_tx.source_transaction_id._log_received_message()
 
-    # === BUSINESS METHODS - POST-PROCESSING === #
+    # === LIFECYCLE METHODS - POST-PROCESSING === #
 
     def _cron_post_process(self):
         """Trigger the post-processing of the transactions that were not handled by the client in
@@ -1135,7 +1251,10 @@ class PaymentTransaction(models.Model):
             ])
         for tx in txs_to_post_process:
             try:
-                tx._post_process()
+                tx.with_context(
+                    # Post-processing is idempotent and can be rolled back in case of failure
+                    payment_safe_write=True
+                )._post_process()
                 self.env.cr.commit()
             except psycopg2.OperationalError:
                 self.env.cr.rollback()  # Rollback and try later.
@@ -1226,8 +1345,6 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-    # === GETTERS === #
-
     def _get_sent_message(self):
         """Return the message to log to state that the transaction has been created.
 
@@ -1240,13 +1357,13 @@ class PaymentTransaction(models.Model):
 
         # Choose the message based on the payment flow.
         if self.operation in {"online_redirect", "online_direct", "online_token", "offline"}:
-            sent_message = _(
+            sent_message = self.env._(
                 "The transaction %(ref)s of %(formatted_amount)s has been initiated.",
                 ref=self._get_html_link(),
                 formatted_amount=self.currency_id.format(self.amount),
             )
         elif self.operation == "refund":
-            sent_message = _(
+            sent_message = self.env._(
                 "The refund %(ref)s of %(formatted_amount)s has been initiated.",
                 ref=self._get_html_link(),
                 formatted_amount=self.currency_id.format(-self.amount),
@@ -1277,26 +1394,26 @@ class PaymentTransaction(models.Model):
         received_message = None
         match self.state:
             case "pending":
-                received_message = _(
+                received_message = self.env._(
                     "The %(tx_label)s %(ref)s of %(formatted_amount)s is pending.", **msg_values
                 )
             case "authorized":
-                received_message = _(
+                received_message = self.env._(
                     "The %(tx_label)s %(ref)s of %(formatted_amount)s has been authorized.",
                     **msg_values,
                 )
             case "done":
-                received_message = _(
+                received_message = self.env._(
                     "The %(tx_label)s %(ref)s of %(formatted_amount)s has been confirmed.",
                     **msg_values,
                 )
             case "cancel":
-                received_message = _(
+                received_message = self.env._(
                     "The %(tx_label)s %(ref)s of %(formatted_amount)s has been canceled.",
                     **msg_values,
                 )
             case "error":
-                received_message = _(
+                received_message = self.env._(
                     "The %(tx_label)s %(ref)s of %(formatted_amount)s encountered an error.",
                     **msg_values,
                 )
@@ -1307,6 +1424,8 @@ class PaymentTransaction(models.Model):
 
         return received_message
 
+    # === GETTERS === #
+
     def _get_last(self):
         """Return the last transaction of the recordset.
 
@@ -1314,3 +1433,56 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         """
         return self.filtered(lambda t: t.state != "draft").sorted()[:1]
+
+    def _get_status_message(self, **_kwargs):
+        """Get the status message relevant to the current transaction's state.
+
+        :return: status message of the transaction.
+        :rtype: Markup
+        """
+        if self.operation == "validation":
+            status_messages = {
+                "draft": (
+                    Markup("<p>%s</p>") % self.env._("Your payment method has not been saved yet.")
+                ),
+                "pending": Markup("<p>%s</p>") % self.env._("Saving your payment method."),
+                "done": Markup("<p>%s</p>") % self.env._("Your payment method has been saved."),
+                "cancel": (
+                    Markup("<p>%s</p>")
+                    % self.env._("The saving of your payment method has been canceled.")
+                ),
+                "error": (
+                    Markup("<p>%s</p><p>%s</p>")
+                    % (
+                        self.env._("An error occurred while saving your payment method."),
+                        self.state_message,
+                    )
+                ),
+            }
+        else:
+            provider_sudo = self.provider_id.sudo()
+            status_messages = {
+                "draft": (
+                    Markup("<p>%s</p>") % self.env._("Your payment has not been processed yet.")
+                ),
+                "pending": provider_sudo.pending_msg,
+                "authorized": provider_sudo.auth_msg,
+                "done": provider_sudo.done_msg,
+                "cancel": provider_sudo.cancel_msg,
+                "error": (
+                    Markup("<p>%s</p><p>%s</p>")
+                    % (
+                        self.env._("An error occurred during the processing of your payment."),
+                        self.state_message,
+                    )
+                ),
+            }
+        return status_messages.get(self.state)
+
+    def _requires_payment_instructions(self):
+        """Return whether payment instructions should be given to the user.
+
+        :return: True if payment instructions are required
+        :rtype: bool
+        """
+        return False

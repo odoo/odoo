@@ -400,6 +400,8 @@ class TestCreateEvents(TestCommon):
         mock_get_events.return_value = ([], None)
 
         # Synchronize local event with Outlook after updating it locally.
+        # Set microsoft_last_sync_date to be datetime.now() using restart_microsoft_synchronization().
+        self.organizer_user.with_user(self.organizer_user).sudo().restart_microsoft_synchronization()
         self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
         self.call_post_commit_hooks()
         event.invalidate_recordset()
@@ -576,7 +578,7 @@ class TestCreateEvents(TestCommon):
 
         self.user_hrmanager = mail_new_test_user(self.env, login='bastien', groups='base.group_user,hr_holidays.group_hr_holidays_manager')
         self.user_employee = mail_new_test_user(self.env, login='enguerran', password='enguerran', groups='base.group_user,hr_holidays.group_hr_holidays_employee')
-        self.rd_dept = self.env['hr.department'].with_context(tracking_disable=True).create({
+        self.rd_dept = self.env['hr.department'].create({
             'name': 'Research and Development',
         })
         self.employee_emp = self.env['hr.employee'].create({
@@ -591,7 +593,7 @@ class TestCreateEvents(TestCommon):
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
-        self.holiday = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True).with_user(self.user_employee).create({
+        self.holiday = self.env['hr.leave'].with_user(self.user_employee).create({
             'name': 'Time Off Employee',
             'employee_id': self.employee_emp.id,
             'work_entry_type_id': self.hr_work_entry_type.id,
@@ -787,3 +789,67 @@ class TestCreateEvents(TestCommon):
             event.invalidate_recordset()
             mock_insert.assert_called_once()
             self.assertEqual(mock_insert.call_args[0][0]['subject'], event.name)
+
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    @patch.object(MicrosoftCalendarService, 'insert')
+    def test_sync_website_appointments_through_cron(self, mock_insert, mock_get_events):
+        """Check old events created after the last sync are synced."""
+        # mock setup
+        def _mock_calendar_token(user, *args, **kwargs):
+            return f'TOKEN_{user.id}' if user == self.organizer_user else False
+
+        event_uid = 1
+
+        def _mock_msft_insert(*args, **kwargs):
+            nonlocal event_uid  # ensure we have separate ids, for sanity
+            event_uid_string = f"msft_event_id_test_sync_website_appointments_through_cron_{event_uid}"
+            event_uid += 1
+            return (event_uid_string, event_uid_string)
+
+        mock_insert.side_effect = _mock_msft_insert
+        mock_get_events.return_value = ([], None)
+
+        t_now = datetime(2020, 5, 8, 8, 0, 0)
+        t_minus_12h = t_now - timedelta(hours=12)
+        t_minus_11h = t_now - timedelta(hours=11)
+
+        # test vals setup
+        CalendarEvent = self.env["calendar.event"].with_user(self.attendee_user)
+        vals_list = self.simple_event_values | {
+            'partner_id': self.organizer_user.partner_id.id,
+            'user_id': self.organizer_user.id,
+            'start': '2020-05-09 14:00',
+            'stop': '2020-05-09 15:00',
+        }
+
+        # set microsoft_last_sync_date for the user at t=-12h and sync any irrelevant event
+        with self.mock_datetime_and_now(t_minus_12h), patch.object(ResUsers, '_get_microsoft_calendar_token', _mock_calendar_token):
+            self.organizer_user.with_user(self.organizer_user).restart_microsoft_synchronization()
+            # also force set first sync far in the past as it affects the domain and we don't care to take it into account here
+            self.env['ir.config_parameter'].sudo().set_str('microsoft_calendar.sync.first_synchronization_date', t_minus_12h - timedelta(days=5))
+        self.env.cr.postcommit.clear()
+
+        # users without sync create events at last sync, 1 hour later, and 12 hours later
+        # the organizer syncs those regularly but not always exactly at that time
+        # if the user syncs after 12 hours, the event created 1 hour after the previous sync should sync too
+        events = CalendarEvent
+        for time, should_sync, expected_insert_count in zip([t_minus_12h, t_minus_11h, t_now], [True, False, True], [1, 1, 3]):
+            # force reset it as syncing between loops will set it
+            self.organizer_user.microsoft_last_sync_date = t_minus_12h
+            with self.mock_datetime_and_now(time), patch.object(ResUsers, '_get_microsoft_calendar_token', _mock_calendar_token):
+                event = CalendarEvent.create(vals_list)
+                events |= event
+            with self.mock_datetime_and_now(t_now), patch.object(ResUsers, '_get_microsoft_calendar_token', _mock_calendar_token):
+                if should_sync:
+                    # sudo() is for consistency, even though the case passes without it here.
+                    self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+                else:
+                    self.assertFalse(event.microsoft_id)
+                self.env.cr.postcommit.run()  # run the actual sync synchronously
+                self.assertEqual(mock_insert.call_count, expected_insert_count)
+
+        events.invalidate_recordset()  # postcommit used a different cursor, invalidate to force re-fetch the values from DB
+        self.assertTrue(
+            all(events.mapped('microsoft_id')),
+            "This event should be synced. It was written to after the user's microsoft_last_sync_date."
+        )

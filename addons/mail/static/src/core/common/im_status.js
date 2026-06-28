@@ -1,8 +1,9 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
 export const imStatusDataRegistry = registry.category("mail.im_status_data");
 
@@ -15,7 +16,6 @@ imStatusDataRegistry.add(
             away: "fa fa-adjust",
             busy: "fa fa-minus-circle",
             offline: "fa fa-circle-o",
-            bot: "fa fa-heart o-xsmaller o-pt-0_5",
             default: "fa fa-question-circle",
         },
         title: {
@@ -23,30 +23,43 @@ imStatusDataRegistry.add(
             away: _t("User is idle"),
             busy: _t("User is busy"),
             offline: _t("User is offline"),
-            bot: _t("User is a bot"),
             default: _t("No IM status available"),
         },
     },
     { sequence: 100 }
 );
 
+imStatusDataRegistry.add(
+    "bot",
+    {
+        condition: ({ persona }) => persona?.isBot,
+        icon: "fa fa-heart o-xsmaller o-pt-0_5",
+        title: _t("User is a bot"),
+    },
+    { sequence: 90 }
+);
+
 export class ImStatus extends Component {
-    static props = [
-        "className?",
-        "member?",
-        "persona?",
-        "size?",
-        "slots?",
-        "style?",
-        "typing?",
-        "user?",
-    ];
     static template = "mail.ImStatus";
-    static defaultProps = { className: "", style: "", size: "lg", typing: true };
     static components = { Typing };
 
     setup() {
         super.setup();
+        this.store = useService("mail.store");
+        this.props = props({
+            className: t.string().optional(""),
+            member: t.instanceOf(this.store["discuss.channel.member"].Class).optional(),
+            persona: t
+                .or([
+                    t.instanceOf(this.store["res.partner"].Class),
+                    t.instanceOf(this.store["mail.guest"].Class),
+                ])
+                .optional(),
+            size: t.string().optional("lg"),
+            style: t.string().optional(""),
+            typing: t.boolean().optional(true),
+            user: t.instanceOf(this.store["res.users"].Class).optional(),
+        });
         this.attClassObjectToString = attClassObjectToString;
     }
 
@@ -55,13 +68,13 @@ export class ImStatus extends Component {
     }
 
     get showTypingIndicator() {
-        return this.props.typing && this.props.member?.isTyping;
+        return this.props.typing && this.props.member?.isTypingUi;
     }
 
     get class() {
         return attClassObjectToString({
             [`o-mail-ImStatus d-flex ${this.colorClass} ${this.props.className}`]: true,
-            "o-fs-small": this.persona?.im_status !== "bot",
+            "o-fs-small": !this.persona?.isBot,
             [`rounded-circle bg-transparent ${this.icon}`]: !this.showTypingIndicator,
             "rounded-pill": this.showTypingIndicator,
         });
@@ -70,7 +83,9 @@ export class ImStatus extends Component {
     get activeImStatusData() {
         return imStatusDataRegistry
             .getAll()
-            .find((r) => r.condition({ member: this.props.member, user: this.user }));
+            .find((r) =>
+                r.condition({ member: this.props.member, persona: this.persona, user: this.user })
+            );
     }
 
     get icon() {

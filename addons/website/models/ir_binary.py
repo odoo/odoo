@@ -10,7 +10,7 @@ class IrBinary(models.AbstractModel):
     ):
         record = None
         if xmlid:
-            website = self.env['website'].get_current_website()
+            website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
             if website.theme_id:
                 domain = [('key', '=', xmlid), ('website_id', '=', website.id)]
                 Attachment = self.env['ir.attachment']

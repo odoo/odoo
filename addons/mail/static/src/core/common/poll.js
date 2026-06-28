@@ -1,55 +1,54 @@
-import { useState } from "@web/owl2/utils";
 import { PollVotesPanel } from "@mail/core/common/poll_votes_panel";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 
-import { Component } from "@odoo/owl";
+import { Component, props, proxy, signal, types } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
 
-/**
- * @typedef {Object} Props
- * @property {import("models").MailPollModel} poll
- * @extends {Component<Props, Env>}
- */
 export class Poll extends Component {
     static template = "mail.Poll";
-    static props = ["poll"];
 
     setup() {
-        this.state = useState({
+        super.setup(...arguments);
+        this.store = useService("mail.store");
+        this.props = props({
+            poll: types.instanceOf(this.store["mail.poll"].Class),
+        });
+        /** @type {import("@odoo/owl").Signal<Element>} */
+        this.rootRef = signal();
+        this.state = proxy({
             isShowingResults: false,
             selectedOptionIds: new Set(),
             voting: false,
         });
-        useDynamicInterval(
-            (endDt) => {
-                if (!endDt) {
-                    return;
-                }
-                const diff = endDt.diffNow(["hours", "minutes", "seconds"]);
-                if (diff.valueOf() <= 0) {
-                    this.state.remainingTimeText = _t("Poll will end soon");
-                    return;
-                }
-                const hours = Math.ceil(diff.as("hours"));
-                if (hours > 1) {
-                    this.state.remainingTimeText = _t("%(hours)s hours left", { hours });
-                    return (diff.as("hours") - hours + 1) * 3600 * 1000;
-                }
-                const minutes = Math.ceil(diff.as("minutes"));
-                if (minutes > 1) {
-                    this.state.remainingTimeText = _t("%(minutes)s minutes left", { minutes });
-                    return (diff.as("minutes") - minutes + 1) * 60 * 1000;
-                }
-                const seconds = Math.ceil(diff.as("seconds"));
-                this.state.remainingTimeText =
-                    seconds > 1 ? _t("%(seconds)s seconds left", { seconds }) : _t("1 second left");
-                return (diff.as("seconds") - seconds + 1) * 1000;
-            },
-            () => [this.props.poll.poll_end_dt]
-        );
+        useDynamicInterval(() => {
+            const endDt = this.props.poll.poll_end_dt;
+            if (!endDt) {
+                return;
+            }
+            const diff = endDt.diffNow(["hours", "minutes", "seconds"]);
+            if (diff.valueOf() <= 0) {
+                this.state.remainingTimeText = _t("Poll will end soon");
+                return;
+            }
+            const hours = Math.ceil(diff.as("hours"));
+            if (hours > 1) {
+                this.state.remainingTimeText = _t("%(hours)s hours left", { hours });
+                return (diff.as("hours") - hours + 1) * 3600 * 1000;
+            }
+            const minutes = Math.ceil(diff.as("minutes"));
+            if (minutes > 1) {
+                this.state.remainingTimeText = _t("%(minutes)s minutes left", { minutes });
+                return (diff.as("minutes") - minutes + 1) * 60 * 1000;
+            }
+            const seconds = Math.ceil(diff.as("seconds"));
+            this.state.remainingTimeText =
+                seconds > 1 ? _t("%(seconds)s seconds left", { seconds }) : _t("1 second left");
+            return (diff.as("seconds") - seconds + 1) * 1000;
+        });
     }
 
     get remainingTimeTextTitle() {
@@ -91,7 +90,11 @@ export class Poll extends Component {
     }
 
     onClickNumberOfVotes() {
-        this.env.services.dialog.add(PollVotesPanel, { poll: this.props.poll });
+        this.env.services.dialog.add(
+            PollVotesPanel,
+            { poll: this.props.poll },
+            { rootRef: this.rootRef }
+        );
     }
 
     onOptionCheckboxToggle(optionId, checked) {

@@ -34,16 +34,6 @@ class TestPoSSetup(TestPoSCommon):
         self.assertEqual(config.currency_id, self.other_currency)
         self.assertEqual(config.pricelist_id.currency_id, self.other_currency)
 
-    def test_product_categories(self):
-        # check basic product category
-        # it is expected to have standard and manual_periodic valuation
-        self.assertEqual(self.categ_basic.property_cost_method, 'standard')
-        self.assertEqual(self.categ_basic.property_valuation, 'periodic')
-        # check anglo saxon product category
-        # this product categ is expected to have fifo and real_time valuation
-        self.assertEqual(self.categ_anglo.property_cost_method, 'fifo')
-        self.assertEqual(self.categ_anglo.property_valuation, 'real_time')
-
     def test_product_price(self):
         def get_price(pricelist, product):
             return pricelist._get_product_price(product, 1)

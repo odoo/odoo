@@ -8,10 +8,10 @@ describe.current.tags("headless");
 
 test("humanSize", () => {
     allowTranslations();
-    expect(humanSize(0)).toBe("0.00 Bytes");
-    expect(humanSize(3)).toBe("3.00 Bytes");
-    expect(humanSize(2048)).toBe("2.00 Kb");
-    expect(humanSize(2645000)).toBe("2.52 Mb");
+    expect(humanSize(0)).toBe("0 Bytes");
+    expect(humanSize(3)).toBe("3 Bytes");
+    expect(humanSize(2048)).toBe("2.00 kB");
+    expect(humanSize(2645000)).toBe("2.52 MB");
 });
 
 test("resize image", async () => {

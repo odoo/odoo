@@ -1,7 +1,7 @@
 import { render } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
 import { click, queryFirst } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -147,8 +147,8 @@ test("notebook set vertically", async () => {
 test("notebook pages rendered by a template component", async () => {
     class NotebookPageRenderer extends Component {
         static template = xml`
-                <h3 t-out="props.heading"></h3>
-                <p t-out="props.text" />
+                <h3 t-out="this.props.heading"></h3>
+                <p t-out="this.props.text" />
             `;
         static props = {
             heading: String,
@@ -157,7 +157,7 @@ test("notebook pages rendered by a template component", async () => {
     }
 
     class Parent extends Component {
-        static template = xml`<Notebook defaultPage="'page_three'" pages="pages">
+        static template = xml`<Notebook defaultPage="'page_three'" pages="this.pages">
                 <t t-set-slot="page_one" title="'Page 1'" isVisible="true">
                     <h3>Page 1</h3>
                     <p>First page set directly as a slot</p>
@@ -213,7 +213,7 @@ test("each page is different", async () => {
     }
 
     class Parent extends Component {
-        static template = xml`<Notebook pages="pages"/>`;
+        static template = xml`<Notebook pages="this.pages"/>`;
         static components = { Notebook };
         static props = ["*"];
         setup() {
@@ -255,7 +255,7 @@ test("defaultPage recomputed when isVisible is dynamic", async () => {
                     <t t-set-slot="2" title="'page2'" isVisible="true">
                         <div class="page2" />
                     </t>
-                    <t t-set-slot="3" title="'page3'" isVisible="defaultPageVisible">
+                    <t t-set-slot="3" title="'page3'" isVisible="this.defaultPageVisible">
                         <div class="page3" />
                     </t>
                 </Notebook>`;
@@ -327,7 +327,7 @@ test("icons can be given for each page tab", async () => {
     class Parent extends Component {
         static components = { Notebook };
         static template = xml`
-            <Notebook defaultPage="'1'" icons="icons">
+            <Notebook defaultPage="'1'" icons="this.icons">
                 <t t-set-slot="1" title="'page1'" isVisible="true">
                     <div class="page1" />
                 </t>

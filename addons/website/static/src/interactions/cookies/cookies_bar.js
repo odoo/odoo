@@ -43,14 +43,16 @@ export class CookiesBar extends Popup {
     showPopup() {
         super.showPopup();
 
-        const policyLinkEl = this.el.querySelector(".o_cookies_bar_text_policy");
-        if (policyLinkEl && window.location.pathname === new URL(policyLinkEl.href).pathname) {
+        const cookiePolicyUrl = this.el.dataset.cookiePolicyUrl;
+        if (
+            cookiePolicyUrl &&
+            window.location.pathname === new URL(cookiePolicyUrl, window.location.origin).pathname
+        ) {
             this.onToggleCookiesBar();
         }
     }
 
     onToggleCookiesBar() {
-        this.cookieValue = cookie.get(this.el.id);
         this.bsModal.toggle();
         // As we're using Bootstrap's events, the Popup class prevents the modal
         // from being shown after hiding it: override that behavior.
@@ -72,12 +74,19 @@ export class CookiesBar extends Popup {
     }
 
     onHideModal() {
+        // cookieValue starts as true in Popup.setup() and is only replaced
+        // after explicit consent. If it is still true here, the modal was
+        // closed without a user choice, so nothing should be persisted.
+        if (this.cookieValue === true) {
+            return;
+        }
         super.onHideModal();
         const params = new URLSearchParams(window.location.search);
         const trackingFields = {
             utm_campaign: "odoo_utm_campaign",
             utm_source: "odoo_utm_source",
             utm_medium: "odoo_utm_medium",
+            utm_reference: "odoo_utm_reference",
         };
         for (const [key, value] of params) {
             if (key in trackingFields) {

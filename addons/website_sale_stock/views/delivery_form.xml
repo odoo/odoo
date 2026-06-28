@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template id="pickup_delivery_method" inherit_id="website_sale.delivery_method">
+        <input name="o_delivery_radio" position="attributes">
+            <attribute name="t-att-data-is-pickup-location-required">
+                dm.support_pickup_locations
+            </attribute>
+        </input>
+        <div name="dm_row_container" position="after">
+             <!-- === Pick up location === -->
+            <div
+                t-if="dm.support_pickup_locations"
+                name="o_pickup_location"
+                t-attf-class="position-relative d-flex gap-2 mt-3 mb-2 {{'' if is_selected else 'd-none'}}"
+            >
+                <t
+                    t-set="pickup_location_data"
+                    t-value="(is_selected and order.partner_shipping_id.pickup_location_data) or {}"
+                />
+                <div
+                    name="o_pickup_location_details"
+                    t-attf-class="d-flex justify-items-between align-items-center gap-3 w-100 border p-3 rounded {{'' if pickup_location_data else 'd-none'}}"
+                >
+                    <span>
+                        <b name="o_pickup_location_name" t-out="pickup_location_data.get('name', '')"/>
+                        <br/>
+                        <span
+                            name="o_pickup_location_address"
+                            class="text-muted"
+                            t-out="(pickup_location_data.get('street', ) or '')
+                                   + ' '
+                                   + (pickup_location_data.get('zip_code') or '')
+                                   + ' '
+                                   + (pickup_location_data.get('city') or '')"
+                        />
+                    </span>
+                    <span
+                        name="o_pickup_location_selector"
+                        class="btn btn-light fa fa-pencil ms-auto p-3"
+                        title="Change location"
+                        aria-label="Change location"
+                        t-att-data-location-id="pickup_location_data.get('id')"
+                        t-att-data-zip-code="pickup_location_data.get('zip_code')"
+                        t-att-data-pickup-location-data="json.dumps(pickup_location_data)"
+                    />
+                </div>
+                <button
+                    t-if="not pickup_location_data"
+                    name="o_pickup_location_selector"
+                    type="button"
+                    class="btn btn-primary ms-4"
+                    t-att-data-zip-code="order.partner_shipping_id.zip"
+                >
+                    Select a location
+                </button>
+            </div>
+        </div>
+    </template>
+
+</odoo>

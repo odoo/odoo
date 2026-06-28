@@ -23,15 +23,15 @@
                              <!-- Name & Image -->
                             <div class="d-flex flex-column align-items-center">
                                 <h1 class="mt-kiosk-p-3 mb-3 " t-out="product.name" t-custom-ref="productName"/>
-                                <div class="o_self_product_image ratio ratio-1x1 rounded-4 w-70 w-m-50 ">
-                                    <img class="rounded-4" t-attf-src="/web/image/product.template/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                <div t-if="product.showProductImageInSelf" class="o_self_product_image ratio ratio-1x1 rounded-4 w-70 w-m-50 ">
+                                    <img class="object-fit-scale rounded-4" t-attf-src="/web/image/product.template/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Attributes -->
-                    <div class="container o_self_container o_self_product_page_attributes">
+                    <div class="container o_self_container" t-att-class="{'o_self_product_page_attributes': product.showProductImageInSelf}">
                         <div class="d-flex flex-column z-0">
                             <div class="mt-3 mt-kiosk-p-4 mb-2" t-if="product.public_description" t-out="product.productDescriptionMarkup"/>
                             <AttributeSelection t-if="this.productTemplate.attribute_line_ids.length" productTemplate="this.productTemplate" />

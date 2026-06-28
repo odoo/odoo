@@ -9,7 +9,7 @@ class SubcontractingProductionFormController extends FormController {
             action: [
                 {
                     key: "assign",
-                    description: _t("Check Availability"),
+                    description: _t("Reserve"),
                     callback: () => {
                         this.model.orm.call('mrp.production', 'action_assign', [this.model.root.resId]);
                         this.model.load();

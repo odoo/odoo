@@ -1,5 +1,4 @@
 import { uuidv4 } from "@point_of_sale/utils";
-import { TrapDisabler } from "@point_of_sale/proxy_trap";
 import { RecordStore } from "./record_store";
 import {
     RELATION_TYPES,
@@ -19,7 +18,7 @@ import { Base } from "./base";
 import { processModelDefs } from "./model_defs";
 import { createExtraField, processModelClasses } from "./model_classes";
 import { ormSerialization } from "./serialization";
-import { reactive, toRaw } from "@odoo/owl";
+import { toRaw, proxy } from "@odoo/owl";
 const AVAILABLE_EVENT = ["create", "update", "delete"];
 
 export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
@@ -36,7 +35,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     function getFields(model) {
         return processedModelDefs[model];
     }
-    const disabler = new TrapDisabler();
 
     // A cache for the backlink indexed maps: Map<RelationName, Map<ParentId, Record[]>>
     const backlinkIndexes = new Map();
@@ -69,7 +67,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         create(vals) {
-            return disabler.call((...args) => this._create(...args), vals);
+            return this._create(vals);
         }
 
         deserialize(vals) {
@@ -85,13 +83,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         update(record, vals, opts = {}) {
-            return disabler.call((...args) => this._update(...args), record, vals, {
+            return this._update(record, vals, {
                 ...opts,
             });
         }
 
         delete(record, opts = {}) {
-            return disabler.call((...args) => this._delete(...args), record, opts);
+            return this._delete(record, opts);
         }
 
         deleteMany(toDelete, opts = {}) {
@@ -279,6 +277,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
          **/
         toRaw() {
             this.length; // Ensure reactivity when the record map of this model is updated
+            this.lastUpdateDate; // Ensure reactivity when the record fields of this model is updated
             return toRaw(this);
         }
 
@@ -416,7 +415,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             });
 
             if (ModelRecordClass.enableLazyGetters !== false) {
-                record = reactive(record);
+                record = proxy(record);
             }
 
             if (extraFields) {
@@ -550,6 +549,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 this[STORE_SYMBOL].add(record);
             }
 
+            this.lastUpdateDate = Date.now();
+
             aggregatedUpdates.fireEventAndDirty({
                 silentModels: opts.silent ? [record.model.name] : [],
             });
@@ -591,6 +592,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 }
             }
 
+            record.unmarkDirty();
             aggregatedUpdates.remove(record);
             aggregatedUpdates.fireEventAndDirty({
                 silentModels: opts.silent ? [record.model.name] : [],
@@ -698,10 +700,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
          * @param {Array<string>} [modelsToLoad=[]] - The names of the models to be loaded.
          * @returns {Array<Base>} - The list of loaded records.
          */
-        loadConnectedData(data, modelsToLoad = []) {
-            return disabler.call((...args) => this._loadData(...args), data, modelsToLoad, {
+        loadConnectedData(data, modelsToLoad = [], opts = {}) {
+            return this._loadData(data, modelsToLoad, {
                 connectRecords: false,
                 serverData: true,
+                ...opts,
             });
         }
 
@@ -715,7 +718,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
          * @returns {Array<Base>} - The list of loaded records.
          */
         connectNewData(data, serverData = true) {
-            return disabler.call((...args) => this._loadData(...args), data, [], {
+            return this._loadData(data, [], {
                 connectRecords: true,
                 serverData: serverData,
             });
@@ -793,7 +796,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         }
                         resultsArray.push(record);
                     }
-                    modelEvents.triggerEvents("create", { ids: createdIds });
+                    if (createdIds.length) {
+                        modelEvents.triggerEvents("create", { ids: createdIds });
+                    }
                 }
                 return finalResults;
             } finally {

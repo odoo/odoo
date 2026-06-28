@@ -29,24 +29,16 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
 
         order = self._create_so(
             order_line=[
-                (
-                    0,
-                    False,
-                    {
-                        "product_id": self.product_A.id,
-                        "name": "1 Product A",
-                        "product_uom_qty": 1.0,
-                    },
-                ),
-                (
-                    0,
-                    False,
-                    {
-                        "product_id": self.product_B.id,
-                        "name": "2 Product B",
-                        "product_uom_qty": 1.0,
-                    },
-                ),
+                Command.create({
+                    "product_id": self.product_A.id,
+                    "name": "1 Product A",
+                    "product_uom_qty": 1.0,
+                }),
+                Command.create({
+                    "product_id": self.product_B.id,
+                    "name": "2 Product B",
+                    "product_uom_qty": 1.0,
+                }),
             ]
         )
         order._update_programs_and_rewards()
@@ -60,24 +52,16 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         order = self.env["sale.order"].create({"partner_id": self.partner.id})
         order.write({
             "order_line": [
-                (
-                    0,
-                    False,
-                    {
-                        "product_id": self.product_A.id,
-                        "name": "10 Product A",
-                        "product_uom_qty": 10.0,
-                    },
-                ),
-                (
-                    0,
-                    False,
-                    {
-                        "product_id": self.product_B.id,
-                        "name": "2 Product B",
-                        "product_uom_qty": 1.0,
-                    },
-                ),
+                Command.create({
+                    "product_id": self.product_A.id,
+                    "name": "10 Product A",
+                    "product_uom_qty": 10.0,
+                }),
+                Command.create({
+                    "product_id": self.product_B.id,
+                    "name": "2 Product B",
+                    "product_uom_qty": 1.0,
+                }),
             ]
         })
         order._update_programs_and_rewards()
@@ -209,19 +193,19 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
             "applies_on": "current",
             "trigger": "with_code",
             "rule_ids": [
-                (0, 0, {"product_ids": self.product_A, "minimum_qty": 3, "minimum_amount": 320})
+                Command.create({
+                    "product_ids": self.product_A,
+                    "minimum_qty": 3,
+                    "minimum_amount": 320,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount_mode": "percent",
-                        "discount": 10,
-                        "discount_applicability": "order",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "percent",
+                    "discount": 10,
+                    "discount_applicability": "order",
+                })
             ],
         })
 
@@ -281,19 +265,15 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
             "trigger": "auto",
             "program_type": "promotion",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {"reward_point_mode": "order", "minimum_qty": 2})],
+            "rule_ids": [Command.create({"reward_point_mode": "order", "minimum_qty": 2})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 5,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 5,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
         p2 = self.env["loyalty.program"].create({
@@ -301,19 +281,15 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
             "trigger": "auto",
             "program_type": "promotion",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {"reward_point_mode": "order", "minimum_qty": 4})],
+            "rule_ids": [Command.create({"reward_point_mode": "order", "minimum_qty": 4})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 10,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
         order = self._create_so(order_line=[Command.create({"product_id": self.product_A.id})])
@@ -528,8 +504,8 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         )
         # Our slow provider only gets around to confirming the transaction the next day
         with freeze_time(tomorrow):
-            tx._set_done()
-            tx._post_process()
+            self._update_transaction(tx, state="done")
+            self._run_post_processing(tx)
             self.assertAlmostEqual(
                 order.amount_total,
                 tx.amount,

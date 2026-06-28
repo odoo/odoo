@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 
 export class Dropzone extends Component {
     static props = {
@@ -13,11 +13,13 @@ export class Dropzone extends Component {
     setup() {
         super.setup();
         this.root = useRef("root");
-        this.state = useState({
+        this.state = proxy({
             isDraggingInside: false,
         });
         useLayoutEffect(() => {
-            const { top, left, width, height } = this.props.ref.el.getBoundingClientRect();
+            const getEl =
+                typeof this.props.ref === "function" ? this.props.ref : () => this.props.ref.el;
+            const { top, left, width, height } = getEl().getBoundingClientRect();
             this.root.el.style = `top:${top}px;left:${left}px;width:${width}px;height:${height}px;`;
         });
     }

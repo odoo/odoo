@@ -30,17 +30,14 @@ import time
 import traceback
 import typing
 import unittest
-import warnings
 from collections import defaultdict, deque
 from concurrent.futures import CancelledError, Future, InvalidStateError, wait
-from contextlib import ExitStack, contextmanager
+from contextlib import AbstractContextManager, ExitStack, contextmanager
 from copy import deepcopy
 from datetime import datetime
 from functools import cache, partial, wraps
 from itertools import islice, zip_longest
 from textwrap import shorten
-from typing import TYPE_CHECKING
-from unittest import TestResult
 from unittest.mock import Mock, _patch, patch
 from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 from uuid import uuid4
@@ -52,6 +49,7 @@ import requests
 from lxml import etree, html
 from passlib.context import CryptContext
 from requests import PreparedRequest, Session
+from urllib3.util import parse_url
 from werkzeug.exceptions import BadRequest
 
 import odoo.cli
@@ -60,7 +58,8 @@ import odoo.orm.registry
 from odoo import api
 from odoo.exceptions import AccessError
 from odoo.fields import Command
-from odoo.http.requestlib import Request, _request_stack, request
+from odoo.http import request, request_var
+from odoo.http.requestlib import Request
 from odoo.http.session import (
     DEFAULT_LANG,
     get_default_session,
@@ -69,25 +68,22 @@ from odoo.http.session import (
     session_store,
 )
 from odoo.http.session import Session as OdooHttpSession
+from odoo.orm.environments import CacheLayer
 from odoo.modules.registry import Registry
 from odoo.sql_db import Cursor
 from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logger, profiler
 from odoo.tools.binary import BinaryBytes
+from odoo.tools.lru import LRU
 from odoo.tools.mail import single_email_re
-from odoo.tools.misc import diff_zip, find_in_path, lower_logging, str2bool
+from odoo.tools.misc import diff_zip, find_in_path, real_time, str2bool
 from odoo.tools.safe_eval import safe_whitelist
 from odoo.tools.xml_utils import _validate_xml
 
 import odoo.addons.base
 from . import case, test_cursor
-from odoo.addons.base.models import ir_actions_report
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable
-if TYPE_CHECKING:
-    from collections.abc import Iterable
-
-    from .result import OdooTestResult
 
 try:
     import websocket
@@ -151,11 +147,16 @@ class RegistryRLock(threading._RLock):
 # Further filtering on cursors can be done by extending `assertCanOpenTestCursor`.
 _registry_test_lock = RegistryRLock()
 _registry_test_lock.acquire()
+_disable_flushing_cursor = False
 
 
 @contextmanager
-def release_test_lock():
+def release_test_lock(check_acquired=False):
     """ Releases the test lock in a context manager, the lock is acquired once the context is over."""
+    if check_acquired and not _registry_test_lock.count:
+        # not acquired, just noop
+        yield
+        return
     try:
         _registry_test_lock.release()
         yield
@@ -173,23 +174,65 @@ def flushing_cursor(cr: Cursor):
     changes made on the main cursor. You can still continue using the main
     cursor inside the block, it will be flushed on exit and then reset.
     """
-    # simulating a cr.commit()
-    cr.flush()
-    if cr.transaction is None:  # no environment to clear
+    assert isinstance(odoo.modules.module.current_test, TransactionCase), "only available for TransactionCase"
+
+    if _disable_flushing_cursor:
+        # execution of wkhtml happens in parallel, we don't want to flush the
+        # cursor in that case
         yield
         return
 
-    registry = cr.transaction.registry
-    if registry.cache_invalidated:
-        registry.signal_changes()
-    cr.transaction.clear()
+    if cr.transaction is None:  # no environment to clear
+        cr.flush()
+        yield
+        return
 
-    yield
+    # simluate cr.commit()
+    state_stack = cr.transaction._state_stack__
+    registry_invalidated = cr.transaction._registry_invalidated
+    closing = cr._closing
+    # preserve registry_invalidated flag which is reset when committing
+    # sum them after yielding
+    try:
+        # Since we simulate an empty stack, make sure the parent layer is set as
+        # the cache on the registry. This ensures that existing caches are not
+        # affected by updating parent layers.
+        registry_caches = cr.transaction.registry.registry_caches__
+        for name in registry_caches:
+            layer = cr.transaction.ormcaches__[name]
+            parent = layer.parent
+            if parent is None:
+                # simulate signaling already here
+                layer.parent = parent = LRU(999999)
+                layer.update_parent()
+            registry_caches[name] = (registry_caches[name][0], parent)
 
-    # flush and invalidate changes made by the main cursor
-    cr.transaction.default_env.invalidate_all(flush=True)
-    # then reset it to start fresh
-    cr.transaction.reset()
+        cr._closing = True  # do a quick clean
+        cr.transaction._state_stack__ = []  # replace the stack
+        with cr.transaction.committing():
+            pass  # no real commit
+        # restore the stack
+        cr.transaction._state_stack__ = state_stack
+        cr._closing = closing
+
+        try:
+            yield
+        finally:
+            # the registry may be invalidated during the yield
+            registry_invalidated += cr.transaction._registry_invalidated
+
+        # simulate cr.commit() again to flush changes made by the main cursor
+        state_stack = cr.transaction._state_stack__
+        closing = cr._closing
+
+        cr._closing = False  # do a reset
+        cr.transaction._state_stack__ = []  # replace the stack
+        with cr.transaction.committing():
+            pass  # no real commit
+    finally:
+        cr.transaction._state_stack__ = state_stack
+        cr._closing = closing
+        cr.transaction._registry_invalidated = registry_invalidated
 
 
 def standalone(*tags):
@@ -334,6 +377,191 @@ class BlockedRequest(requests.exceptions.ConnectionError):
 _super_send = requests.Session.send
 
 
+class MockHTTPClient(AbstractContextManager):
+    """Mock ``requests`` calls and return a fake ``requests.Response``.
+
+    This context manager patches ``requests.sessions.Session.send``.
+    Each outgoing request is checked against the match criteria. If it
+    matches, the request is recorded in ``calls``, the optional
+    ``side_effect`` is executed, and a mocked response is returned. If
+    it does not match, the request is delegated to the previously active
+    ``send`` (either the real ``requests`` implementation, or an outer
+    ``MockHTTPClient`` when you nest mocks), so multiple
+    ``MockHTTPClient`` instances can be composed.
+
+    A request matches when all checks pass:
+
+    * ``method`` (if passed): matches the HTTP method (case-insensitive)
+    * ``url`` (if passed):  limits which requests this mock will catch.
+      Use ``"https://api.example.com/v1/items"`` to match that
+      host + path; include more (e.g. a query string) to make it
+      stricter. Anything you omit is treated as "don't care" and won't
+      affect matching.
+    * ``matcher(request)`` (if passed): a custom function predicate for
+      anything beyond method/URL (headers, JSON body, etc.).
+
+    The response is built from ``return_status`` and ``return_headers``
+    (both can be values or callables).
+    The body comes from ``return_json`` (JSON-encoded and defaults
+    ``Content-Type`` to ``application/json``) or from ``return_body``
+    when ``return_json`` is ``None``.
+
+    Examples
+    --------
+    Mock an auth flow and return dynamic JSON based on headers
+
+    .. code-block:: python
+        def is_body_authorized(req):
+            token = req.headers.get('Authorization')
+            if token == 'Bearer super-secure-token':
+                return "Authorized!"
+            return "Not authorized :("
+
+        def check_auth_header(req):
+            self.assertIn(
+                'Authorization',
+                req.headers,
+                "Missing Authorization header",
+            )
+
+        with (
+            MockHTTPClient(
+                url='https://auth.example.com/token',
+                return_json={'token': 'super-secure-token'},
+            ) as auth_mock,
+            MockHTTPClient(
+                url='https://api.example.com/am-i-authorized',
+                return_body=is_body_authorized,
+                side_effect=check_auth_header,
+            ) as api_mock,
+        ):
+            token = requests.get(
+                'https://auth.example.com/token',
+            ).json()['token']
+            auth_mock.assert_called_once()
+
+            resp = requests.get(
+                'https://api.example.com/am-i-authorized',
+                headers={'Authorization': f'Bearer {token}'},
+            )
+            api_mock.assert_called_once()
+            assert resp.text == "Authorized!"
+    """
+
+    def __init__(
+        self,
+        url: str | None = None,
+        *,
+        method: str | None = None,
+        matcher: typing.Callable[[requests.PreparedRequest], bool] | None = None,
+        return_status: int | typing.Callable[[requests.PreparedRequest], int] = 200,
+        return_json: dict | typing.Callable[[requests.PreparedRequest], dict] | None = None,
+        return_body: bytes | str | typing.Callable[[requests.PreparedRequest], bytes | str] | None = None,
+        return_headers: dict | typing.Callable[[requests.PreparedRequest], dict] | None = None,
+        side_effect: typing.Callable[[requests.PreparedRequest], None] | None = None,
+    ):
+        self.url = parse_url(url) if url else None
+        if url and not self.url.host:
+            raise ValueError(f"URL '{url}' is not valid: missing host")
+        self.method = method.upper() if method else None
+        self.matcher = matcher
+        self.return_status = return_status if callable(return_status) else lambda _req: return_status
+
+        self.return_json = None
+        if callable(return_json):
+            self.return_json = return_json
+        elif return_json is not None:
+            self.return_json = lambda _req: return_json
+        if self.return_json is not None and return_body is not None:
+            raise ValueError("Cannot specify both return_json and return_body")
+
+        self.return_body = return_body if callable(return_body) else lambda _req: return_body
+        self.return_headers = return_headers if callable(return_headers) else lambda _req: return_headers or {}
+        self.side_effect = side_effect
+        self.calls = []
+        self.super_send = None
+
+    def _request_matches(self, req: requests.PreparedRequest) -> bool:
+        if self.method and self.method != req.method.upper():
+            return False
+        if self.url and req.url:
+            request_url = parse_url(req.url)
+            if any((
+                self.url.scheme and self.url.scheme != request_url.scheme,
+                self.url.host and self.url.host != request_url.host,
+                self.url.port and self.url.port != request_url.port,
+                self.url.path and self.url.path != request_url.path,
+                self.url.query and self.url.query != request_url.query,
+            )):
+                return False
+        return self.matcher is None or self.matcher(req)
+
+    def __enter__(self):
+        self.super_send = requests.sessions.Session.send
+        self.calls = []
+
+        def send(session, req: requests.PreparedRequest, **kw):
+            if not self._request_matches(req):
+                return self.super_send(session, req, **kw)
+
+            self.calls.append(req)
+            if self.side_effect:
+                self.side_effect(req)
+
+            resp = requests.Response()
+            resp.status_code = self.return_status(req)
+            resp.url = req.url or ''
+            resp.request = req
+            resp.headers.update(self.return_headers(req))
+            if self.return_json is not None:
+                resp.headers.setdefault('Content-Type', 'application/json')
+                resp.encoding = 'utf-8'
+                resp._content = json.dumps(self.return_json(req), ensure_ascii=False).encode()
+            else:
+                return_body = self.return_body(req)
+                resp._content = return_body.encode() if isinstance(return_body, str) else return_body or b''
+
+            return resp
+
+        self.patcher = patch.object(requests.sessions.Session, 'send', send)
+        self.patcher.start()
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.patcher.stop()
+        self.super_send = None
+        return False
+
+    def __repr__(self) -> str:
+        return (
+            'MockHTTPClient('
+            f'method={str(self.method)!r}, '
+            f'url={str(self.url.url) if self.url is not None else None!r}, '
+            f'matcher={"set" if self.matcher else None!r}, '
+            f'side_effect={"set" if self.side_effect else None!r}, '
+            f'body={"json" if self.return_json is not None else "body"!r}, '
+            f'calls={len(self.calls)})'
+        )
+
+    def assert_called(self, n_times=None):
+        if n_times == 0:
+            if self.calls:
+                raise AssertionError(f"Expected 0 calls. Called {len(self.calls)} times.")
+            return
+
+        if not self.calls:
+            raise AssertionError("Expected to have been called at least once. No calls were made.")
+
+        if n_times is not None and len(self.calls) != n_times:
+            raise AssertionError(f"Expected {n_times} calls. Called {len(self.calls)} times.")
+
+    def assert_called_once(self):
+        self.assert_called(n_times=1)
+
+    def assert_not_called(self):
+        self.assert_called(n_times=0)
+
+
 class DummyRLock:
     """ Dummy reentrant lock, to be used while running rpc and js tests """
     def acquire(self):
@@ -361,11 +589,9 @@ class BaseCase(case.TestCase):
     warm = True             # False during warm-up phase (see :func:`warmup`)
     _python_version = sys.version_info
 
-    _tests_run_count = int(os.environ.get('ODOO_TEST_FAILURE_RETRIES', 0)) + 1
-
     _registry_patched = False
     _registry_readonly_enabled = True
-    test_cursor_lock_timeout: int = 20
+    test_cursor_lock_timeout: int = 3600 if DISABLE_TIMEOUTS else 20
 
     @classmethod
     def __init_subclass__(cls):
@@ -403,32 +629,6 @@ class BaseCase(case.TestCase):
         _logger.getChild('requests').info(
             "Blocking un-mocked external HTTP request %s %s", r.method, r.url)
         raise BlockedRequest(f"External requests verboten (was {r.method} {r.url})")
-
-    def run(self, result: OdooTestResult) -> None:
-        testMethod = getattr(self, self._testMethodName)
-
-        if getattr(testMethod, '_retry', True) and getattr(self, '_retry', True):
-            tests_run_count = self._tests_run_count
-        else:
-            tests_run_count = 1
-            _logger.info('Auto retry disabled for %s', self)
-
-        for retry in range(tests_run_count):
-            result.had_failure = False  # reset in case of retry without soft_fail
-            if retry:
-                _logger.runbot(f'Retrying a failed test: {self}')
-            if retry < tests_run_count-1:
-                with warnings.catch_warnings(), \
-                        result.soft_fail(), \
-                        lower_logging(25, logging.INFO) as quiet_log:
-                    super().run(typing.cast('TestResult', result))
-                if not (result.had_failure or quiet_log.had_error_log):
-                    break
-            else:  # last try
-                super().run(typing.cast('TestResult', result))
-                if not result.wasSuccessful() and BaseCase._tests_run_count != 1:
-                    _logger.runbot('Disabling auto-retry after a failed test')
-                    BaseCase._tests_run_count = 1
 
     @classmethod
     def setUpClass(cls):
@@ -571,16 +771,19 @@ class BaseCase(case.TestCase):
             env=self.env,
             session=DotDict(get_default_session(), debug='1', sid=''),
         )
+        reset_req = None
         try:
             self.env.flush_all()
             self.env.invalidate_all()
-            _request_stack.push(request)
+            reset_req = request_var.set(request)
             yield
             self.env.flush_all()
             self.env.invalidate_all()
         finally:
-            popped_request = _request_stack.pop()
-            if popped_request is not request:
+            current_request = request_var.get()
+            if reset_req is not None:
+                request_var.reset(reset_req)
+            if current_request is not request:
                 raise Exception('Wrong request stack cleanup.')
 
     @contextmanager
@@ -634,7 +837,6 @@ class BaseCase(case.TestCase):
             return Cursor_execute(self, query, params, log_exceptions)
 
         if flush:
-            self.env.flush_all()
             self.env.cr.flush()
 
         with (
@@ -643,7 +845,6 @@ class BaseCase(case.TestCase):
         ):
             yield actual_queries
             if flush:
-                self.env.flush_all()
                 self.env.cr.flush()
 
     @contextmanager
@@ -688,19 +889,16 @@ class BaseCase(case.TestCase):
 
             The second form is convenient when used with :func:`users`.
         """
+        flush_func = self.env.cr.flush if flush else lambda: None
         if self.warm:
             # mock random in order to avoid random bus gc
             with patch('random.random', lambda: 1):
                 login = self.env.user.login
                 expected = counters.get(login, default)
-                if flush:
-                    self.env.flush_all()
-                    self.env.cr.flush()
+                flush_func()
                 count0 = self.cr.sql_log_count
                 yield
-                if flush:
-                    self.env.flush_all()
-                    self.env.cr.flush()
+                flush_func()
                 count = self.cr.sql_log_count - count0
                 if count != expected:
                     # add some info on caller to allow semi-automatic update of query count
@@ -713,6 +911,10 @@ class BaseCase(case.TestCase):
                         # add a subtest in order to continue the test_method in case of failures
                         with self.subTest():
                             self.fail(msg % (login, count, expected, funcname, filename, linenum))
+                    elif expected and not count:
+                        msg = "Query count did not detect any queries %s: expected %d in %s at %s:%s"
+                        with self.subTest():
+                            self.fail(msg % (login, expected, funcname, filename, linenum))
                     else:
                         logger = logging.getLogger(type(self).__module__)
                         msg = "Query count less than expected for user %s: %d < %d in %s at %s:%s"
@@ -720,13 +922,9 @@ class BaseCase(case.TestCase):
         else:
             # flush before and after during warmup, in order to reproduce the
             # same operations, otherwise the caches might not be ready!
-            if flush:
-                self.env.flush_all()
-                self.env.cr.flush()
+            flush_func()
             yield
-            if flush:
-                self.env.flush_all()
-                self.env.cr.flush()
+            flush_func()
 
     def assertRecordValues(
             self,
@@ -877,75 +1075,41 @@ class BaseCase(case.TestCase):
             return BinaryBytes(f.read())
 
     @classmethod
-    def _registry_test_mode_patches(cls, *, cr: Cursor, registry: Registry):
+    @contextmanager
+    def registry_test_mode(cls, *, cr: Cursor | None = None, registry: Registry | None = None):
+        """ Entering registry test mode.
+
+        New cursors returned by the registry will be instances of `TestCursor`
+        which will wrap the current cursor.
+
+        Defined in BaseCase because used by upgrade for IntegrityCase.
+        This should be used on TransactionCase only.
         """
-        Returns the patches required for entering registry test mode.
-        The patches are not started.
-        """
+        assert not cls._registry_patched, 'Can only patch registry once'
+        if cr is None:
+            cr = cls.cr
+        if registry is None:
+            registry = cls.registry
+        assert cr, 'No cursor'
+        assert registry, 'No registry'
+
         def _patched_cursor(readonly: bool = False):
             return test_cursor.TestCursor(
                 cr, _registry_test_lock, readonly and cls._registry_readonly_enabled
             )
-        return [
+
+        def get_sequences(cr):
+            return registry.registry_sequence, registry.cache_sequences.copy()
+
+        with (
+            patch.object(cls, '_registry_patched', True),
             # New cursor should point to the test's cursor
             patch.object(registry, 'cursor', _patched_cursor),
             # Disable locking and signaling
             patch.object(Registry, '_lock', DummyRLock()),
-            patch.object(registry, 'setup_signaling', return_value=None), #noop
-            patch.object(registry, 'check_signaling', return_value=registry),
-        ]
-
-    @classmethod
-    def registry_enter_test_mode_cls(cls):
-        """
-        Puts the registry in test mode.
-
-        New cursors returned by the registry will be instances of `TestCursor`
-        which will wrap the current cursor.
-        """
-        assert not cls._registry_patched, 'Can only patch registry once'
-        assert cls.cr, 'No cursor'
-        assert cls.registry, 'No registry'
-
-        cls.registry_patches = cls._registry_test_mode_patches(
-            cr=cls.cr, registry=cls.registry,
-        )
-        for p in cls.registry_patches:
-            p.start()
-        cls._registry_patched = True
-        cls.addClassCleanup(cls.registry_leave_test_mode)
-
-    def registry_enter_test_mode(self, *, cr: Cursor | None = None, register_cleanup: bool = True) -> None:
-        """
-        Puts the registry in test mode.
-
-        New cursors returned by the registry will be instances of `TestCursor`
-        which will wrap the current cursor.
-
-        :param cr: the cursor to wrap (defaults to the current cursor if none)
-        :param register_cleanup: whether to register cleanup.
-        """
-        assert not type(self)._registry_patched, 'Can only patch registry once'
-        assert cr or self.cr, 'No cursor'
-        assert self.registry, 'No registry'
-
-        type(self).registry_patches = self._registry_test_mode_patches(
-            cr=cr or self.cr, registry=self.registry,
-        )
-        for p in self.registry_patches:
-            p.start()
-        type(self)._registry_patched = True
-        if register_cleanup:
-            self.addCleanup(self.registry_leave_test_mode)
-
-    @classmethod
-    def registry_leave_test_mode(cls):
-        assert cls._registry_patched, 'Registry is not patched'
-
-        for p in cls.registry_patches:
-            p.stop()
-        cls.registry_patches.clear()
-        cls._registry_patched = False
+            patch.object(registry, 'setup_signaling', return_value=None),  # noop
+        ):
+            yield
 
     @classmethod
     def set_registry_readonly_mode(cls, enabled: bool):
@@ -955,14 +1119,20 @@ class BaseCase(case.TestCase):
 
     def assertCanOpenTestCursor(self):
         """ Asserts that we can currently open a test cursor. """
-        if odoo.modules.module.current_test != self:
+        if odoo.modules.module.current_test is not self:
             message = f"Trying to open a test cursor for {self.canonical_tag} while already in a test {odoo.modules.module.current_test.canonical_tag}"
             _logger.runbot(message)
             raise BadRequest(message)
+        if isinstance(request, Mock):
+            return
         if not request or self.http_request_allow_all:
             return
         http_request_required_key = self.http_request_key
-        http_request_key = request.cookies.get(TEST_CURSOR_COOKIE_NAME)
+        # Read from the raw transmitted cookies rather than request.cookies.
+        # The latter can be cleared by a handler (e.g. downgrade_to_public_user
+        # in livechat CORS flows) before a new cursor is opened, which would
+        # incorrectly fail this check even though the cookie was sent by the test.
+        http_request_key = request.httprequest.cookies.get(TEST_CURSOR_COOKIE_NAME)
         if http_request_key != http_request_required_key:
             expected = http_request_required_key
             if not expected:
@@ -1106,7 +1276,6 @@ class Approx:  # noqa: PLW1641
         return self.cmp(self.value, other) == 0
 
 
-
 class TransactionCase(BaseCase):
     """ Test class in which all test methods are run in a single transaction,
     but each test method is run in a sub-transaction managed by a savepoint.
@@ -1120,7 +1289,7 @@ class TransactionCase(BaseCase):
     After being run, each test method cleans up the record cache and the
     registry cache. However, there is no cleanup of the registry models and
     fields. If a test modifies the registry (custom models and/or fields), it
-    should prepare the necessary cleanup (`self.registry.reset_changes()`).
+    should prepare the necessary cleanup (`self.env.transaction.will_change_registry()`).
     """
     muted_registry_logger = mute_logger(odoo.orm.registry._logger.name)
     freeze_time = None
@@ -1132,46 +1301,45 @@ class TransactionCase(BaseCase):
         # they can addup during test and take some disc space.
         # since cron are not running during tests, we need to gc manually
         # We need to check the status of the file system outside of the test cursor
-        with Registry(get_db_name()).cursor() as cr:
+        with cls.registry.cursor() as cr:
             gc_env = api.Environment(cr, api.SUPERUSER_ID, {})
             gc_env['ir.attachment']._gc_file_store_unsafe()
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.addClassCleanup(cls._gc_filestore)
         cls.registry = Registry(get_db_name())
-        cls.registry_start_invalidated = cls.registry.registry_invalidated
-        cls.registry_start_sequence = cls.registry.registry_sequence
-        cls.registry_cache_sequences = dict(cls.registry.cache_sequences)
 
-        def reset_changes():
-            if (cls.registry_start_sequence != cls.registry.registry_sequence) or cls.registry.registry_invalidated:
-                with cls.registry.cursor() as cr:
-                    cls.registry._setup_models__(cr)
-            cls.registry.registry_invalidated = cls.registry_start_invalidated
-            cls.registry.registry_sequence = cls.registry_start_sequence
-            with cls.muted_registry_logger:
-                cls.registry.clear_all_caches()
-            cls.registry.cache_invalidated.clear()
-            cls.registry.cache_sequences = cls.registry_cache_sequences
-        cls.addClassCleanup(reset_changes)
-
-        def signal_changes():
-            if not cls.registry.ready:
-                _logger.info('Skipping signal changes during tests')
-                return
-            if cls.registry.registry_invalidated or cls.registry.cache_invalidated:
+        def signal_changes(cr, names):
+            if 'registry' in names:
+                if not cls.registry.ready:
+                    _logger.info('Skipping signal changes during tests')
+                    return
                 _logger.info('Simulating signal changes during tests')
-            if cls.registry.registry_invalidated:
                 cls.registry.registry_sequence += 1
-            for cache_name in cls.registry.cache_invalidated or ():
-                cls.registry.cache_sequences[cache_name] += 1
-            cls.registry.registry_invalidated = False
-            cls.registry.cache_invalidated.clear()
+                for key, (seq, data) in cls.registry.registry_caches__.items():
+                    cls.registry.registry_caches__[key] = (seq + 1, {})
+            elif names:
+                _logger.debug('Simulating signal changes during tests')
+                for name in names:
+                    cls.registry.registry_caches__[name] = (cls.registry.registry_caches__[name][0] + 1, {})
 
-        cls._signal_changes_patcher = patch.object(cls.registry, 'signal_changes', signal_changes)
-        cls.startClassPatcher(cls._signal_changes_patcher)
+        def get_sequences(cr):
+            return cls.registry.registry_sequence, {name: val[0] for name, val in cls.registry.registry_caches__.items()}
+
+        def reset_registry(registry, *, registry_sequence, caches):
+            registry.registry_sequence = registry_sequence
+            registry.registry_caches__ = caches
+
+        cls.addClassCleanup(
+            reset_registry, cls.registry,
+            registry_sequence=cls.registry.registry_sequence,
+            caches=cls.registry.registry_caches__.copy(),
+        )
+
+        cls.startClassPatcher(patch.object(cls.registry, '_signal_changes', signal_changes))
+        cls.startClassPatcher(patch.object(cls.registry, 'get_sequences', get_sequences))
+        cls.addClassCleanup(cls._gc_filestore)
 
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(typing.cast('Cursor', cls.cr).close)
@@ -1199,6 +1367,7 @@ class TransactionCase(BaseCase):
         cls.startClassPatcher(cls.close_patcher)
 
         cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
+        cls.env.transaction._wrote__ = True  # isolate tests: avoid propagating cache on rollback
 
         # speedup CryptContext. Many user an password are done during tests, avoid spending time hasing password with many rounds
         def _crypt_context(self):  # noqa: ARG001
@@ -1212,6 +1381,17 @@ class TransactionCase(BaseCase):
     def setUp(self):
         super().setUp()
 
+        def reset_registry(registry, *, registry_sequence, caches):
+            registry.registry_sequence = registry_sequence
+            registry.registry_caches__ = caches
+
+        self.addCleanup(
+            # for flushing cursor
+            reset_registry, self.registry,
+            registry_sequence=self.registry.registry_sequence,
+            caches=self.registry.registry_caches__.copy(),
+        )
+
         def _check_registry_lock():
             if _registry_test_lock.count == 0:
                 _logger.warning('The registry test lock is still released at the end of %s', self.canonical_tag)
@@ -1222,8 +1402,6 @@ class TransactionCase(BaseCase):
                 )
 
         self.addCleanup(_check_registry_lock)
-
-        self.addCleanup(self.muted_registry_logger(self.registry.clear_all_caches))
 
         # flush everything in setUpClass before introducing a savepoint
         cr = self.cr
@@ -1245,69 +1423,59 @@ class TransactionCase(BaseCase):
 
         self.addCleanup(self.savepoint.rollback)
 
+        # To keep tests isolated, add a CacheLayer.
+        # - L1: cursor cache
+        # - L2: savepoint cache
+        # - L3: this isolation layer
+        # flushing_cursor() may push data from the current to the parent layer
+        # (from L3 to L2) and we need L1 to be unaffected by tests.
+        transaction = self.env.transaction
+        for name, layer in transaction.ormcaches__.items():
+            transaction.ormcaches__[name] = CacheLayer(layer)
+
+    @classmethod
     @contextmanager
-    def enter_registry_test_mode(self):
-        """
-        Make so that all new cursors opened on this database registry reuse the
-        one currenly used by the tests. See ``registry_enter_test_mode``.
-        """
-        # entering the test mode should flush/invalidate all changes in the
-        # current environment because changes happen inside other cursors
-        with flushing_cursor(self.env.cr):
-            self.registry_enter_test_mode(register_cleanup=False)
-            try:
-                yield
-            finally:
-                self.registry_leave_test_mode()
+    def registry_test_mode(cls, *, cr: Cursor | None = None, registry: Registry | None = None):
+        if cr is None:
+            cr = cls.cr
+        with flushing_cursor(cr), super().registry_test_mode(cr=cr, registry=registry):
+            yield
+
+    @typing.final
+    def enter_registry_test_mode(self):  # deprecated: alias for registry_test_mode
+        return self.registry_test_mode()
 
     @contextmanager
     def allow_pdf_render(self):
         """
-        Allows wkhtmltopdf to send requests to the backend.
+        Allows the pdf renderer to send requests to the backend.
         Enters registry mode if necessary.
         """
         with ExitStack() as stack:
             if not type(self)._registry_patched:
-                stack.enter_context(self.enter_registry_test_mode())
-            old_run_wkhtmltopdf = ir_actions_report._run_wkhtmltopdf
+                stack.enter_context(self.registry_test_mode())
 
-            def _patched_run_wkhtmltopdf(args):
-                with patch.object(self, 'http_request_key', 'wkhtmltopdf'), release_test_lock():
+            case_instance = self
+
+            def _patched_run_wkhtmltopdf(self, args):
+                with (
+                    patch.object(case_instance, 'http_request_key', 'wkhtmltopdf'),
+                    release_test_lock(),
+                    patch('odoo.tests.common._disable_flushing_cursor', True),
+                ):
                     args = ['--cookie', TEST_CURSOR_COOKIE_NAME, 'wkhtmltopdf', *args]
-                    return old_run_wkhtmltopdf(args)
+                    return old_run_wkhtmltopdf(self, args)
 
-            stack.enter_context(
-                patch.object(ir_actions_report, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf)
-            )
+            report_model = self.env.registry['ir.actions.report']
+            try:
+                old_run_wkhtmltopdf = report_model._run_wkhtmltopdf
+            except AttributeError:
+                pass
+            else:
+                stack.enter_context(
+                    patch.object(report_model, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf),
+                )
             yield
-
-
-class SingleTransactionCase(BaseCase):
-    """ TestCase in which all test methods are run in the same transaction,
-    the transaction is started with the first test method and rolled back at
-    the end of the last.
-    """
-    @classmethod
-    def __init_subclass__(cls):
-        super().__init_subclass__()
-        if issubclass(cls, TransactionCase):
-            _logger.warning("%s inherits from both TransactionCase and SingleTransactionCase")
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.registry = Registry(get_db_name())
-        cls.addClassCleanup(cls.registry.reset_changes)
-        cls.addClassCleanup(cls.registry.clear_all_caches)
-
-        cls.cr = cls.registry.cursor()
-        cls.addClassCleanup(typing.cast('Cursor', cls.cr).close)
-
-        cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
-
-    def setUp(self):
-        super(SingleTransactionCase, self).setUp()
-        self.env.flush_all()
 
 
 class ChromeBrowserException(Exception):
@@ -1334,16 +1502,17 @@ def run(gen_func):
     except StopIteration:
         return
 
-def save_test_file(test_name, content, prefix, extension='png', logger=_logger, document_type='Screenshot', date_format="%Y%m%d_%H%M%S_%f"):
+
+def save_test_file(test_name, content, prefix, extension='png', logger=_logger, document_type='Screenshot', date_format="%Y%m%d_%H%M%S_%f", loglevel=logging.RUNBOT, directory=''):
     assert re.fullmatch(r'\w*_', prefix)
     assert re.fullmatch(r'[a-z]+', extension)
     assert re.fullmatch(r'\w+', test_name)
     now = datetime.now().strftime(date_format)
-    screenshots_dir = pathlib.Path(odoo.tools.config['screenshots']) / get_db_name() / 'screenshots'
-    screenshots_dir.mkdir(parents=True, exist_ok=True)
-    full_path = screenshots_dir / f'{prefix}{now}_{test_name}.{extension}'
+    dest = pathlib.Path(odoo.tools.config['screenshots']) / get_db_name() / directory
+    dest.mkdir(parents=True, exist_ok=True)
+    full_path = dest / f'{prefix}{now}_{test_name}.{extension}'
     full_path.write_bytes(content)
-    logger.runbot(f'{document_type} in: {full_path}')
+    logger.log(loglevel, "%s in: %s", document_type, full_path)
 
 
 if os.name == 'posix' and platform.system() != 'Darwin':
@@ -1380,6 +1549,19 @@ class ChromeBrowser:
             self._logger.info,
             'Removing chrome user profile "%s"',
             self.user_data_dir,
+        )
+        self.chrome_log_level = logging.RUNBOT
+        self.cleanup.callback(
+            lambda: save_test_file(
+                self.test_case._testMethodName,
+                self.read_log(),
+                prefix='chrome_log_',
+                extension='txt',
+                document_type="Chrome Log",
+                logger=self._logger,
+                loglevel=self.chrome_log_level,
+                directory='chrome_logs',
+            )
         )
 
         if os.name == 'posix':
@@ -1459,8 +1641,10 @@ class ChromeBrowser:
             self._websocket_request('Browser.close')
         except ChromeBrowserException as e:
             _logger.runbot("WS error during browser shutdown: %s", e)
+            self.chrome_log_level = logging.RUNBOT
         except Exception:  # noqa: BLE001
             _logger.warning("Error during browser shutdown", exc_info=True)
+            self.chrome_log_level = logging.RUNBOT
 
     def signal_handler(self, sig, frame):
         if sig == signal.SIGXCPU:
@@ -1488,15 +1672,13 @@ class ChromeBrowser:
             raise
 
     def _spawn_chrome(self, cmd):
-        log_path = pathlib.Path(self.user_data_dir, 'err.log')
-        with log_path.open('wb') as log_file:
-            # pylint: disable=subprocess-popen-preexec-fn
-            proc = subprocess.Popen(
-                cmd,
-                stderr=log_file,
-                preexec_fn=_preexec,
-                env={**os.environ, 'TMPDIR': self.user_data_dir},
-            )  # noqa: PLW1509
+        # pylint: disable=subprocess-popen-preexec-fn
+        proc = subprocess.Popen(
+            cmd,
+            stderr=subprocess.DEVNULL,
+            preexec_fn=_preexec,
+            env={**os.environ, 'TMPDIR': self.user_data_dir},
+        )  # noqa: PLW1509
 
         port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
         for _ in range(CHECK_BROWSER_ITERATIONS):
@@ -1512,7 +1694,10 @@ class ChromeBrowser:
             except subprocess.TimeoutExpired:
                 proc.kill()
                 proc.wait()
-        self._logger.warning('Chrome headless failed to start:\n%s', log_path.read_text(encoding="utf-8"))
+        self._logger.warning(
+            'Chrome headless failed to start:\n%s',
+            self.read_log().decode(),
+        )
         self.stop()
 
         raise unittest.SkipTest(f'Failed to detect chrome devtools port after {BROWSER_WAIT :.1f}s.')
@@ -1527,32 +1712,47 @@ class ChromeBrowser:
     ):
         headless_switches = {
             '--headless': '',
-            '--disable-extensions': '',
-            '--disable-background-networking' : '',
-            '--disable-background-timer-throttling' : '',
-            '--disable-backgrounding-occluded-windows': '',
-            '--disable-renderer-backgrounding' : '',
-            '--disable-breakpad': '',
-            '--disable-client-side-phishing-detection': '',
-            '--disable-crash-reporter': '',
-            '--disable-dev-shm-usage': '',
-            '--disable-namespace-sandbox': '',
-            '--disable-translate': '',
-            '--no-sandbox': '',
-            '--disable-gpu': '',
-            '--enable-unsafe-swiftshader': '',
-            '--mute-audio': '',
+            '--disable-extensions': '',  # Disable all chrome extensions
+            '--disable-component-extensions-with-background-pages': '',  # Disable built-in extensions (e.g., PDF viewer, Hangouts...)
+            '--disable-background-networking': '',  # Stop background requests (telemetry, updates, safe browsing)
+            '--disable-background-timer-throttling': '',  # Prevent Chrome from slowing down JS in inactive tabs
+            '--disable-backgrounding-occluded-windows': '',  # Prevent Chrome from suspending hidden windows
+            '--disable-renderer-backgrounding': '',  # Keep background rendering processes running at normal priority
+            '--disable-breakpad': '',  # Disable the Breakpad crash reporting system
+            '--disable-client-side-phishing-detection': '',  # Disable local machine-learning phishing analysis
+            '--disable-crash-reporter': '',  # Disable crash report generation
+            '--disable-dev-shm-usage': '',  # Use /tmp instead of /dev/shm
+            '--disable-namespace-sandbox': '',  # Disable Linux namespace sandboxing
+            '--disable-sync': '',  # Completely disable Google account synchronization engine
+            '--no-crash-upload': '',  # Prevent uploading crash dumps to Google servers
+            '--no-sandbox': '',  # Disable OS-level sandboxing
+            '--disable-gpu': '',  # Disable hardware GPU acceleration
+            '--enable-unsafe-swiftshader': '',  # Allow software rendering fallback for WebGL when GPU is disabled
+            '--mute-audio': '',  # Prevent audio playback from allocating system resources
+            '--font-render-hinting': 'none',  # Disable sub-pixel font rendering calculations
         }
         switches = {
             # required for tours that use Youtube autoplay conditions (namely website_slides' "course_tour")
-            '--autoplay-policy': 'no-user-gesture-required',
-            '--disable-default-apps': '',
-            '--disable-device-discovery-notifications': '',
-            '--no-default-browser-check': '',
+            '--autoplay-policy': 'no-user-gesture-required',  # Allow media autoplay without requiring a user click
+            '--disable-default-apps': '',  # Disable installation of default apps
+            '--disable-domain-reliability': '',  # Stop tracking and sending telemetry for failed network requests
+            '--disable-search-engine-choice-screen': '',  # Bypass the EU search engine selection prompt on startup
+            '--disable-features': ','.join([
+                'Translate',  # Disables Chrome translation
+                'MediaRouter',  # Stop scanning for local Cast or media devices
+                'InterestFeedContentSuggestions',  # Disables the Discover feed on NTP
+            ]),
+            '--ash-no-nudges': '',  # Avoids blue bubble "user education" nudges (eg., "… give your browser a new look", Memory Saver)
+            '--propagate-iph-for-testing': '',  # Disable all in-product help (IPH) features
+            '--no-default-browser-check': '',  # Bypass the prompt asking to make Chrome the default browser
+            '--no-first-run': '',  # Skip the welcome screen and first-run setup wizards
+            '--proxy-server': '"direct://"',  # Force a direct connection, bypassing any system proxies
+            '--proxy-bypass-list': '*',  # Bypass proxy for all domains (eliminates local resolution delays)
             '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.remote_debugging_port),
             '--user-data-dir': user_data_dir,
-            '--no-first-run': '',
+            '--enable-logging': '',
+            '--v': str(int(os.environ.get("ODOO_BROWSER_LOG_VERBOSITY", "0"))),
             # FIXME: these next 2 flags are temporarily uncommented to allow client
             # code to manually run garbage collection. This is done as currently
             # the Chrome unit test process doesn't have access to its available
@@ -1586,12 +1786,27 @@ class ChromeBrowser:
             yield proc, devtools_port
         finally:
             self._logger.info("Terminating chrome headless with pid %s", proc.pid)
+            main = psutil.Process(proc.pid)
+            procs = [main] + main.children(recursive=True)
             proc.terminate()
-            try:
-                proc.wait(5)
-            except subprocess.TimeoutExpired:
-                self._logger.warning("Killing chrome headless with pid %s: still alive", proc.pid)
-                proc.kill()
+            _, alive = psutil.wait_procs(procs, 5)
+            if alive:  # can't early exit, it suppresses the finally'd exception if any
+                self._logger.warning(
+                    "Killing chrome descendants-or-self of %s: %d remaining%s",
+                    proc.pid,
+                    len(alive),
+                    "".join(f"\n- {p.name()} ({p.status()})" for p in alive),
+                )
+                for p in alive:
+                    p.kill()
+                psutil.wait_procs(alive, 1)
+                self.chrome_log_level = logging.RUNBOT
+
+    def read_log(self) -> bytes:
+        try:
+            return pathlib.Path(self.user_data_dir, 'chrome_debug.log').read_bytes()
+        except FileNotFoundError:
+            return b''
 
     def _json_command(self, command, timeout=3):
         """Queries browser state using JSON
@@ -1695,8 +1910,13 @@ class ChromeBrowser:
                 if not self._result.done():
                     del self.ws
                     self._result.set_exception(e)
-                    for f in self._responses.values():
-                        f.cancel()
+                    while True:
+                        try:
+                            _, f = self._responses.popitem()
+                        except KeyError:
+                            break
+                        else:
+                            f.cancel()
                 return
             except Exception as e:
                 if isinstance(e, ConnectionResetError) and self._result.done():
@@ -1916,7 +2136,7 @@ which leads to stray network requests and inconsistencies."""
                 self._logger.runbot("Couldn't capture screenshot: expected image data, got %r", base_png)
                 return
             decoded = binascii.a2b_base64(base_png)
-            save_test_file(type(self.test_case).__name__, decoded, prefix, logger=self._logger)
+            save_test_file(self.test_case._testMethodName, decoded, prefix, logger=self._logger, directory='screenshots')
 
         self._logger.info('Asking for screenshot')
         f = self._websocket_send('Page.captureScreenshot', with_future=True)
@@ -1945,10 +2165,16 @@ which leads to stray network requests and inconsistencies."""
             if taken > timeout:
                 break
 
-            result = self._websocket_request('Runtime.evaluate', params={
-                'expression': "try { %s } catch {}" % ready_code,
-                'awaitPromise': True,
-            }, timeout=timeout-taken)['result']
+            try:
+                result = self._websocket_request('Runtime.evaluate', params={
+                    'expression': "try { %s } catch {}" % ready_code,
+                    'awaitPromise': True,
+                }, timeout=timeout-taken)['result']
+            except CancelledError:
+                exc = self._result.done() and self._result.exception()
+                if exc:
+                    raise exc from None
+                result = "cancelled"
 
             if result == {'type': 'boolean', 'value': True}:
                 time_to_ready = time.time() - start_time
@@ -1956,6 +2182,9 @@ which leads to stray network requests and inconsistencies."""
                     self._logger.info('The ready code tooks too much time : %s', time_to_ready)
                 return True
 
+        exc = self._result.done() and self._result.exception()
+        if exc:
+            raise exc from None
         self.take_screenshot(prefix='sc_failed_ready_')
         self._logger.info('Ready code last try result: %s', result)
         return False
@@ -1978,9 +2207,11 @@ which leads to stray network requests and inconsistencies."""
             # if the runcode was a promise which took some time to execute,
             # discount that from the timeout
             if self._result.result(time.time() - start + timeout) and not self.had_failure:
+                self.chrome_log_level = logging.INFO
                 return
         except CancelledError:
             # regular-ish shutdown
+            self.chrome_log_level = logging.INFO
             return
         except ChromeBrowserException:
             self.screencaster.save()
@@ -2311,7 +2542,6 @@ class JsonRpcException(Exception):
 
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers. """
-    registry_test_mode = True
     browser = None
     browser_size = '1366x768'
     touch_enabled = False
@@ -2322,8 +2552,7 @@ class HttpCase(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        if cls.registry_test_mode:
-            cls.registry_enter_test_mode_cls()
+        cls.enterClassContext(cls.registry_test_mode())
 
         ICP = cls.env['ir.config_parameter']
         ICP.set_str('web.base.url', cls.base_url())
@@ -2352,21 +2581,26 @@ class HttpCase(TransactionCase):
         self.opener = Opener(self)
         self.http_key_sequence = itertools.count()
         # we need to allow requests during pdf rendering.
-        old_run_wkhtmltopdf = ir_actions_report._run_wkhtmltopdf
+        case_instance = self
 
-        def _patched_run_wkhtmltopdf(args):
-            with patch.object(self, 'http_request_key', 'wkhtmltopdf'), release_test_lock():
+        def _patched_run_wkhtmltopdf(self, args):
+            with (
+                patch.object(case_instance, 'http_request_key', 'wkhtmltopdf'),
+                release_test_lock(),
+                patch('odoo.tests.common._disable_flushing_cursor', True),
+            ):
                 args = ['--cookie', TEST_CURSOR_COOKIE_NAME, 'wkhtmltopdf', *args]
-                return old_run_wkhtmltopdf(args)
+                return old_run_wkhtmltopdf(self, args)
 
-        self.startPatcher(
-            patch.object(ir_actions_report, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf),
-        )
-
-    @contextmanager
-    def enter_registry_test_mode(self):
-        _logger.warning("HTTPCase is already in test mode")
-        yield
+        report_model = self.env.registry['ir.actions.report']
+        try:
+            old_run_wkhtmltopdf = report_model._run_wkhtmltopdf
+        except AttributeError:
+            pass
+        else:
+            self.startPatcher(
+                patch.object(report_model, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf),
+            )
 
     @contextmanager
     def allow_pdf_render(self):
@@ -2449,17 +2683,21 @@ class HttpCase(TransactionCase):
     def _wait_remaining_requests(self, timeout=10):
 
         def get_http_request_threads():
-            return [t for t in threading.enumerate() if t.name.startswith('odoo.service.http.request.')]
+            return [
+                t for t in threading.enumerate()
+                if t.name.startswith('odoo.service.http.request')
+                if getattr(t, 'processing_http', False)
+            ]
 
-        start_time = time.time()
+        end_time = real_time() + timeout
         request_threads = get_http_request_threads()
         if not request_threads:
             return
 
         self._logger.info('waiting for threads: %s', request_threads)
 
-        for thread in request_threads:
-            thread.join(timeout - (time.time() - start_time))
+        while real_time() < end_time:
+            time.sleep(0.1)
 
         request_threads = get_http_request_threads()
         for thread in request_threads:
@@ -2493,6 +2731,7 @@ class HttpCase(TransactionCase):
             _trace_disable=True,  # saves a query on all requests
         )
         self.session.context['lang'] = DEFAULT_LANG
+        self.session.context['host_id'] = self.env['ir.http']._get_host_id_from_domain(self.base_url())
 
         if session_extra:
             if extra_ctx := session_extra.pop('context', None):
@@ -2512,7 +2751,7 @@ class HttpCase(TransactionCase):
             # patching to speedup the check in case the password is hashed with many hashround + avoid to update the password
             with flushing, patch('odoo.addons.base.models.res_users.ResUsersPatchedInTest._check_credentials', new=patched_check_credentials):
                 credential = {'login': user, 'password': password, 'type': 'password'}
-                auth_info = self.env['res.users'].authenticate(credential, {'interactive': False})
+                auth_info = self.env(context=self.session.context)['res.users'].authenticate(credential, {'interactive': False})
             uid = auth_info['uid']
             env = api.Environment(self.cr, uid, {})
             self.session['uid'] = uid
@@ -2622,18 +2861,19 @@ class HttpCase(TransactionCase):
             atexit.callback(self._wait_remaining_requests)
             atexit.enter_context(browser.cleanup)
             if "bus.bus" in self.env.registry:
-                from odoo.addons.bus.models.bus import BusBus  # noqa: PLC0415
+                from odoo.addons.base.models.ir_http import IrHttp  # noqa: PLC0415
                 from odoo.addons.bus.websocket import CloseCode, WebsocketConnectionHandler, _kick_all  # noqa: PLC0415
 
                 atexit.callback(_kick_all, CloseCode.KILL_NOW)
-                original_send_one = BusBus._sendone
+                original_post_dispatch = IrHttp._post_dispatch
 
-                def sendone_wrapper(self, target, notification_type, message):
-                    original_send_one(self, target, notification_type, message)
-                    self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
-                    self.env.cr.postcommit.run()  # Trigger notification dispatching
+                def post_dispatch_wrapper(_, response):
+                    original_post_dispatch(response)
+                    # Trigger the creation of bus.bus records and notification dispatching
+                    request.env.cr.precommit.run()
+                    request.env.cr.postcommit.run()
 
-                atexit.enter_context(patch.object(BusBus, "_sendone", sendone_wrapper))
+                atexit.enter_context(patch.object(IrHttp, "_post_dispatch", classmethod(post_dispatch_wrapper)))
                 atexit.enter_context(patch.object(
                     WebsocketConnectionHandler, "websocket_allowed", return_value=True
                 ))
@@ -2694,11 +2934,12 @@ class HttpCase(TransactionCase):
             self._logger.warning('step_delay is only suitable for local testing')
         Users = self.registry['res.users']
 
-        def setup(_):
+        def _post_model_setup__(model):
+            super(Users, model)._post_model_setup__()
             Users.tour_enabled = False
 
         with patch.object(Users, 'tour_enabled', False),\
-                patch.object(Users, '_post_model_setup__', setup),\
+                patch.object(Users, '_post_model_setup__', _post_model_setup__),\
                 patch.object(Users, '_compute_tour_enabled', lambda _: None):
             self.browser_js(url_path=url_path, code=code, ready=ready, timeout=timeout, success_signal="tour succeeded", **kwargs)
 
@@ -2712,7 +2953,7 @@ class HttpCase(TransactionCase):
             _route_profiler = sup.profile(description=request.httprequest.full_path, db=_profiler.db)
             _profiler.sub_profilers.append(_route_profiler)
             return _route_profiler
-        return profiler.Nested(_profiler, patch('odoo.http.requestlib.Request._get_profiler_context_manager', route_profiler))
+        return profiler.Nested(_profiler, patch('odoo.http.router._get_profiler_context_manager', route_profiler))
 
     def get_method_additional_tags(self, test_method):
         """

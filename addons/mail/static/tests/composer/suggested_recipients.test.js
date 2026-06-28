@@ -10,7 +10,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred, tick } from "@odoo/hoot-mock";
+import { tick } from "@odoo/hoot-mock";
 import { mockService } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -52,7 +52,7 @@ test("Opening full composer in 'send message' mode should copy selected suggeste
         phone: "123456789",
         partner_ids: [partnerId],
     });
-    const def = new Deferred();
+    const { promise: doActionCalled, resolve: resolveDoActionCalled } = Promise.withResolvers();
     mockService("action", {
         async doAction(action) {
             if (action?.res_model === "res.fake") {
@@ -66,7 +66,7 @@ test("Opening full composer in 'send message' mode should copy selected suggeste
                 ["email", "=", "john@test.be"],
             ]);
             expect(action.context.default_partner_ids).toEqual([johnTestPartnerId, partnerId]);
-            def.resolve();
+            resolveDoActionCalled();
         },
     });
     await start();
@@ -75,7 +75,7 @@ test("Opening full composer in 'send message' mode should copy selected suggeste
     await contains(".o-mail-RecipientsInput .o_tag_badge_text:contains(John Jane)");
     await contains(".o-mail-RecipientsInput .o_tag_badge_text:contains(john@test.be)");
     await click("button[title='Open Full Composer']");
-    await def;
+    await doActionCalled;
     await expect.waitForSteps(["do-action"]);
 });
 
@@ -89,7 +89,7 @@ test("Opening full composer in 'log note' mode should not copy selected suggeste
         email_cc: "john@test.be",
         partner_ids: [partnerId],
     });
-    const def = new Deferred();
+    const { promise: doActionCalled, resolve: resolveDoActionCalled } = Promise.withResolvers();
     mockService("action", {
         async doAction(action) {
             if (action?.res_model === "res.fake") {
@@ -99,7 +99,7 @@ test("Opening full composer in 'log note' mode should not copy selected suggeste
             expect(action.name).toBe("Log note");
             expect(action.context.default_subtype_xmlid).toBe("mail.mt_note");
             expect(action.context.default_partner_ids).toBeEmpty();
-            def.resolve();
+            resolveDoActionCalled();
         },
     });
     await start();
@@ -109,7 +109,7 @@ test("Opening full composer in 'log note' mode should not copy selected suggeste
     await contains(".o-mail-RecipientsInput .o_tag_badge_text:contains(john@test.be)");
     await click("button:text('Log note')");
     await click("button[title='Open Full Composer']");
-    await def;
+    await doActionCalled;
     await expect.waitForSteps(["do-action"]);
 });
 
@@ -194,6 +194,23 @@ test("suggested recipients should not be notified when posting an internal note"
     await expect.waitForSteps(["message_post"]);
 });
 
+test("suggested recipients without name should show display_name instead", async () => {
+    const pyEnv = await startServer();
+    const [partner1, partner2] = pyEnv["res.partner"].create([
+        { name: "Test Partner" },
+        // Partner without name
+        { type: "invoice" },
+    ]);
+
+    pyEnv["res.partner"].write([partner2], { parent_id: partner1 });
+    const fakeId = pyEnv["res.fake"].create({ partner_ids: [partner2] });
+    registerArchs(archs);
+    await start();
+    await openFormView("res.fake", fakeId);
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-RecipientsInput .o_tag_badge_text", { text: "Test Partner, Invoice" });
+});
+
 test("update email for the partner on the fly", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
@@ -213,6 +230,19 @@ test("update email for the partner on the fly", async () => {
     await contains(".o-mail-Followers-counter:text('0')");
 });
 
+test("recipients dropdown only offers 'Create' when the input has text", async () => {
+    const pyEnv = await startServer();
+    const fakeId = pyEnv["res.fake"].create({});
+    registerArchs(archs);
+    await start();
+    await openFormView("res.fake", fakeId);
+    await click("button", { text: "Send message" });
+    await insertText(".o-mail-RecipientsInput .o-autocomplete--input", "New");
+    await contains(".o_m2o_dropdown_option_create", { text: "Create New" });
+    await insertText(".o-mail-RecipientsInput .o-autocomplete--input", "", { replace: true });
+    await contains(".o_m2o_dropdown_option_create", { count: 0 });
+});
+
 test("suggested recipients should not be added as follower when posting a message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
@@ -229,4 +259,29 @@ test("suggested recipients should not be added as follower when posting a messag
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");
     await contains(".o-mail-Followers-counter:text('0')");
+});
+
+test("closing full composer in 'log note' mode should preserve suggested recipients", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        name: "John Jane",
+        email: "john@jane.be",
+    });
+    const fakeId = pyEnv["res.fake"].create({
+        email_cc: "john@test.be",
+        partner_ids: [partnerId],
+    });
+    registerArchs(archs);
+    await start();
+    await openFormView("res.fake", fakeId);
+    await click("button:text('Log note')");
+    await click("button[title='Open Full Composer']");
+    await contains(".o_dialog .o_form_view");
+    // close the full composer dialog
+    await click(".o_dialog header .btn-close");
+    await contains(".o_dialog", { count: 0 });
+    // suggested recipients should still be present when clicking on send message
+    await click("button:text('Send message')");
+    await contains(".o-mail-RecipientsInput .o_tag_badge_text:contains(John Jane)");
+    await contains(".o-mail-RecipientsInput .o_tag_badge_text:contains(john@test.be)");
 });

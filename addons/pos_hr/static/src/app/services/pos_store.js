@@ -13,11 +13,13 @@ patch(PosStore.prototype, {
             }
         }
         browser.addEventListener("online", () => {
-            this.employeeBuffer.forEach((employee) =>
-                this.data.write("pos.session", [this.config.current_session_id.id], {
-                    employee_id: employee.id,
-                })
-            );
+            if (this.session?.id) {
+                this.employeeBuffer.forEach((employee) =>
+                    this.data.write("pos.session", [this.session.id], {
+                        employee_id: employee.id,
+                    })
+                );
+            }
             this.employeeBuffer = [];
         });
     },
@@ -57,8 +59,8 @@ patch(PosStore.prototype, {
         super.setCashier(employee);
 
         if (this.config.module_pos_hr) {
-            if (!this.data.network.offline) {
-                this.data.write("pos.session", [this.config.current_session_id.id], {
+            if (!this.data.network.offline && this.session?.id) {
+                this.data.write("pos.session", [this.session.id], {
                     employee_id: employee.id,
                 });
             } else {
@@ -93,6 +95,14 @@ patch(PosStore.prototype, {
      * If pos_hr is activated, return {name: string, id: int, barcode: string, pin: string, user_id: int}
      * @returns {null|*}
      */
+    getSyncAllOrdersContext(orders, options = {}) {
+        const context = super.getSyncAllOrdersContext(orders, options);
+        const cashier = this.getCashier();
+        if (cashier?.id) {
+            context.current_cashier_id = cashier.id;
+        }
+        return context;
+    },
     getCashier() {
         if (this.config.module_pos_hr) {
             return this.cashier;

@@ -11,7 +11,7 @@ from odoo.tests import tagged
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.addons.l10n_hr_edi.tests.test_hr_edi_common import TestL10nHrEdiCommon
-from ..tools import (
+from odoo.addons.l10n_hr_edi.tools.api import (
     _mer_api_query_document_process_status_outbox,
     _mer_api_receive_document,
     _mer_api_query_inbox,

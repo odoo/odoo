@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
-
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
@@ -28,32 +26,3 @@ class WebsiteConfiguratorFeature(models.Model):
     def _check_module_xor_page_view(self):
         if bool(self.module_id) == bool(self.page_view_id):
             raise ValidationError(_("One and only one of the two fields 'page_view_id' and 'module_id' should be set"))
-
-    @staticmethod
-    def _process_svg(theme, colors, image_mapping):
-        svg = None
-        try:
-            with tools.file_open(f'{theme}/static/description/{theme}.svg', 'r') as file:
-                svg = file.read()
-        except FileNotFoundError:
-            return False
-
-        default_colors = {
-            'color1': '#3AADAA',
-            'color2': '#7C6576',
-            'color3': '#F6F6F6',
-            'color4': '#FFFFFF',
-            'color5': '#383E45',
-            'menu': '#MENU_COLOR',
-            'footer': '#FOOTER_COLOR',
-        }
-        color_mapping = {default_colors[color_key]: color_value for color_key, color_value in colors.items() if color_key in default_colors.keys()}
-
-        # Replace the default colors by the chosen ones
-        for default_color, chosen_color in color_mapping.items():
-            svg = svg.replace(default_color, chosen_color)
-
-        # Replace the default images by the one corresponding to the industry
-        for default_img, new_img in image_mapping.items():
-            svg = svg.replace(default_img, new_img)
-        return svg

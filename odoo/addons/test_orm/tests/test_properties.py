@@ -5,8 +5,8 @@ from collections import abc
 from unittest.mock import patch
 
 from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
-from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.fields import Command
+from odoo.exceptions import AccessError, UserError
+from odoo.fields import Command, Domain
 from odoo.tests import tagged, TransactionCase, users
 from odoo.tools import mute_logger
 
@@ -357,6 +357,12 @@ class PropertiesCase(TestPropertiesMixin):
             ''',
             ''' SELECT "test_orm_partner"."id",
                        "test_orm_partner"."name",
+                       "test_orm_partner"."email",
+                       "test_orm_partner"."active",
+                       "test_orm_partner"."website",
+                       "test_orm_partner"."parent_id",
+                       "test_orm_partner"."country_id",
+                       "test_orm_partner"."state_id",
                        "test_orm_partner"."create_uid",
                        "test_orm_partner"."create_date",
                        "test_orm_partner"."write_uid",
@@ -1024,6 +1030,28 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertTrue(isinstance(data['boolean_value'], bool))
         self.assertEqual(self._get_sql_properties(self.message_1), {'int_value': 0, 'float_value': 0, 'boolean_value': False})
 
+    def test_properties_field_search_domain_with_number_edge_case(self):
+        """Tests that a condition where we compare a number to 1 or 0 is not wrongly altered"""
+        for ftype in ['integer', 'float']:
+            def_name = ftype + '_value'
+            self.discussion_1.attributes_definition = [
+            {
+                'name': def_name,
+                'string': 'Number value',
+                'type': ftype,
+            }]
+            self.message_1.attributes = [{
+                'name': def_name,
+                'type': ftype,
+                'value': 1,
+            }]
+            self.message_2.attributes = [{
+                'name': def_name,
+                'type': ftype,
+                'value': 2,
+            }]
+            self.assertEqual(self.env['test_orm.message'].search_count([('attributes.' + def_name, '=', 1)]), 1)
+
     def test_properties_field_integer_float_falsy_value_edge_cases(self):
         self.discussion_1.attributes_definition = [
             {
@@ -1246,7 +1274,7 @@ class PropertiesCase(TestPropertiesMixin):
         def name_get(records):
             return list(zip(records._ids, records.mapped('display_name')))
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             self.message_1.attributes = [
                 {
                     "name": "moderator_partner_ids",
@@ -1348,7 +1376,7 @@ class PropertiesCase(TestPropertiesMixin):
             }]
 
     @users('test')
-    @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.fields')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.fields')
     def test_properties_field_many2many_filtering(self):
         # a user read a properties with a many2many and he doesn't have access to all records
         tags = self.env['test_orm.multi.tag'].create(
@@ -1367,16 +1395,13 @@ class PropertiesCase(TestPropertiesMixin):
             }],
         })
 
-        self.env['ir.rule'].sudo().create({
+        # restrict access to tags
+        self.env['ir.access'].sudo().create({
             'name': 'test_rule_tags',
             'model_id': self.env['ir.model']._get('test_orm.multi.tag').id,
-            'domain_force': [('id', 'not in', tags[5:].ids)],
-            'perm_read': True,
-            'perm_create': True,
-            'perm_write': True,
+            'operation': 'crud',
+            'domain': [('id', 'not in', tags[5:].ids)],
         })
-
-        self.env.invalidate_all()
 
         values = message.read(['attributes'])[0]['attributes'][0]['value']
         self.assertEqual(values, [(tag.id, None if i >= 5 else tag.name) for i, tag in enumerate(tags.sudo())])
@@ -1536,11 +1561,8 @@ class PropertiesCase(TestPropertiesMixin):
     @users('test')
     def test_properties_field_security(self):
         """Check the access right related to the Properties fields."""
-        def _mocked_check_access(records, operation):
-            if records.env.su:
-                return
-            msg = ''
-            raise AccessError(msg)
+        def _mocked_access_domain(records, operation):
+            return Domain(records.env.su)
 
         message = self.message_1.with_user(self.test_user)
 
@@ -1557,14 +1579,14 @@ class PropertiesCase(TestPropertiesMixin):
         values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, 'Test Tag'))
         self.env.invalidate_all()
-        with patch('odoo.addons.test_orm.models.test_orm.TestOrmMultiTag.check_access', _mocked_check_access):
+        with patch('odoo.addons.test_orm.models.test_orm.TestOrmMultiTag._access_domain', _mocked_access_domain):
             values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, None))
 
         # a user read a properties with a many2one to a record
         # but doesn't have access to its parent
         self.env.invalidate_all()
-        with patch('odoo.addons.test_orm.models.test_orm.TestOrmDiscussion.check_access', _mocked_check_access):
+        with patch('odoo.addons.test_orm.models.test_orm.TestOrmDiscussion._access_domain', _mocked_access_domain):
             values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, 'Test Tag'))
 
@@ -1575,10 +1597,11 @@ class PropertiesCase(TestPropertiesMixin):
         of the new property definition should be added should be added even if
         the record is not accessible.
         """
-        self.env['ir.rule'].sudo().create({
+        self.env['ir.access'].sudo().create({
             'name': 'only discussion_1',
             'model_id': self.env['ir.model']._get('test_orm.message').id,
-            'domain_force': [('discussion', '=', self.discussion_1.id)],
+            'operation': 'crud',
+            'domain': [('discussion', '=', self.discussion_1.id)],
         })
 
         message = self.env['test_orm.message'].create({
@@ -1642,19 +1665,29 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(values[0]['attributes'][0]['value'], 'red')
 
     def test_properties_server_action_path_traversal(self):
+        email = self.env['test_orm.emailmessage'].create({
+            'discussion': self.discussion_1.id,
+            'attributes': [{
+                'name': 'discussion_color_code',
+                'type': 'char',
+                'string': 'Color Code',
+                'default': 'blue',
+                'value': 'red',
+            }],
+        })
+
         action = self.env['ir.actions.server'].create({
             'name': 'TestAction',
-            'model_id': self.env['ir.model'].search([
-                ('model', '=', 'test_orm.emailmessage'),
-            ]).id,
+            'model_id': self.env['ir.model']._get_id('test_orm.emailmessage'),
             'model_name': 'test_orm.emailmessage',
             'state': 'object_write',
         })
-        with self.assertRaises(ValidationError) as ve:
-            action.update_path = 'attributes.discussion_color_code'
-        self.assertEqual(ve.exception.args[0],
-            "The path contained by the field 'Field to Update Path' contains a non-relational field (Discussion Properties) that is not the last field in the path. You can't traverse non-relational fields (even in the quantum realm). Make sure only the last field in the path is non-relational.",
-        )
+
+        action.update_path = 'attributes.discussion_color_code'
+        action.value = 'green'
+        self.assertEqual(email['attributes']['discussion_color_code'], 'red')
+        action.with_context(active_id=email.id).run()
+        self.assertEqual(email['attributes']['discussion_color_code'], 'green')
 
     def test_getitem_property(self):
         # read a property that exist nowhere
@@ -1719,7 +1752,7 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(self.env['test_orm.message']['attributes']['many2many'], False)
 
         # Test the prefetch on the returned records
-        partner_3 = self.env['test_orm.partner'].create({})
+        partner_3 = self.env['test_orm.partner'].create({'name': 'bob'})
         self.message_1.attributes = [{
             'name': 'many2many',
             'comodel': 'test_orm.partner',
@@ -1737,7 +1770,7 @@ class PropertiesCase(TestPropertiesMixin):
         messages = self.message_1 | self.message_2 | self.message_3
         self.env.invalidate_all()
 
-        with self.assertQueryCount(9):
+        with self.assertQueryCount(7):
             messages[0]['attributes']['many2many']
             messages[1]['attributes']['many2many']
 

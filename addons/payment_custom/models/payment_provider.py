@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 from odoo.addons.payment_custom import const
@@ -19,7 +19,7 @@ class PaymentProvider(models.Model):
     )
     custom_mode = fields.Selection(
         string="Custom Mode",
-        selection=[("wire_transfer", "Wire Transfer")],
+        selection=[("pay_on_invoice", "Pay on Invoice"), ("wire_transfer", "Wire Transfer")],
         required_if_provider="custom",
     )
     qr_code = fields.Boolean(
@@ -34,10 +34,19 @@ class PaymentProvider(models.Model):
         providers.filtered(lambda p: p.custom_mode == "wire_transfer").pending_msg = None
         return providers
 
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        if self.custom_mode != "wire_transfer":
+            return vals_list
+
+        for vals in vals_list:
+            vals["is_live"] = True
+        return vals_list
+
     def _get_default_payment_method_codes(self):
         """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
-        if self.code != "custom" or self.custom_mode != "wire_transfer":
+        if self.custom_mode not in ["pay_on_invoice", "wire_transfer"]:
             return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
@@ -61,11 +70,16 @@ class PaymentProvider(models.Model):
                 account_names = "".join(
                     f"<li><pre>{account.display_name}</pre></li>" for account in accounts
                 )
+                bank_account_label = (
+                    provider.env._("Bank Account")
+                    if len(accounts) == 1
+                    else provider.env._("Bank Accounts")
+                )
                 provider.pending_msg = (
                     f"<div>"
-                    f"<h5>{_('Please use the following transfer details')}</h5>"
+                    f"<h5>{provider.env._('Please use the following transfer details')}</h5>"
                     f"<p><br></p>"
-                    f"<h6>{_('Bank Account') if len(accounts) == 1 else _('Bank Accounts')}</h6>"
+                    f"<h6>{bank_account_label}</h6>"
                     f"<ul>{account_names}</ul>"
                     f"<p><br></p>"
                     f"</div>"

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { formatMonetary } from "../formatters";
@@ -8,28 +8,25 @@ import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { nbsp } from "@web/core/utils/strings";
 
-import { Component } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { getCurrency } from "@web/core/currency";
+
+export const monetaryFieldProps = {
+    ...standardFieldProps,
+    currencyField: t.string().optional(),
+    inputType: t.string().optional("text"),
+    useFieldDigits: t.boolean().optional(),
+    hideSymbol: t.boolean().optional(false),
+    trailingZeros: t.boolean().optional(true),
+};
 
 export class MonetaryField extends Component {
     static template = "web.MonetaryField";
-    static props = {
-        ...standardFieldProps,
-        currencyField: { type: String, optional: true },
-        inputType: { type: String, optional: true },
-        useFieldDigits: { type: Boolean, optional: true },
-        hideSymbol: { type: Boolean, optional: true },
-        trailingZeros: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        hideSymbol: false,
-        inputType: "text",
-        trailingZeros: true,
-    };
+    props = props(monetaryFieldProps);
 
     setup() {
         this.inputRef = useInputField(this.inputOptions);
-        this.state = useState({ value: undefined });
+        this.state = proxy({ value: undefined });
         this.nbsp = nbsp;
         useNumpadDecimal();
         useLayoutEffect(() => {
@@ -86,7 +83,9 @@ export class MonetaryField extends Component {
         }
         return formatMonetary(this.value, {
             digits: this.currencyDigits,
-            minDigits: this.props.useFieldDigits && this.props.record.fields[this.props.name].min_display_digits,
+            minDigits:
+                this.props.useFieldDigits &&
+                this.props.record.fields[this.props.name].min_display_digits,
             currencyId: this.currencyId,
             noSymbol: !this.props.readonly || this.props.hideSymbol,
             trailingZeros: this.props.trailingZeros,

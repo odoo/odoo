@@ -10,16 +10,18 @@ import pywintypes
 from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
 from odoo.addons.iot_drivers.tools import system
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_W import win32print_lock
+from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_W import win32print_lock, PrinterInterface
 
 _logger = logging.getLogger(__name__)
 
 
 class PrinterDriver(PrinterDriverBase):
+    interface = PrinterInterface
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device)
-        self.device_connection = self._compute_device_connection(device)
+        if not device['port'].startswith(('USB', 'TMUSB', 'COM', 'LPT')):
+            self.device_connection = "network"
         self.device_name = device.get('identifier')
         self.printer_handle = device.get('printer_handle')
 
@@ -34,10 +36,6 @@ class PrinterDriver(PrinterDriverBase):
     @classmethod
     def supported(cls, device):
         return True
-
-    @staticmethod
-    def _compute_device_connection(device):
-        return 'direct' if device['port'].startswith(('USB', 'TMUSB', 'COM', 'LPT')) else 'network'
 
     def disconnect(self):
         self.send_status('disconnected', 'Printer was disconnected')
@@ -74,7 +72,7 @@ class PrinterDriver(PrinterDriverBase):
                     self.send_status(status='error', message='ERROR_FAILED')
                     raise
 
-    def print_report(self, data):
+    def print_report(self, data, duplex=True):
         with win32print_lock:
             file_name = system.path_file('document.pdf')
             file_name.write_bytes(data)
@@ -87,8 +85,9 @@ class PrinterDriver(PrinterDriverBase):
                 str(file_name),
                 "-silent",
                 "-print-settings",
-                "duplex"
             ]
+            if duplex:
+                args.append("duplex")
 
             _logger.debug("Printing report with SumatraPDF using %s", args)
 
@@ -106,7 +105,7 @@ class PrinterDriver(PrinterDriverBase):
         mimetype = guess_mimetype(document)
         action_unique_id = data.get('action_unique_id')
         if mimetype == 'application/pdf':
-            self.print_report(document)
+            self.print_report(document, data.get("duplex", True))
         else:
             self.print_raw(document, action_unique_id=action_unique_id)
         _logger.debug("_action_default finished with mimetype %s for printer %s", mimetype, self.device_name)

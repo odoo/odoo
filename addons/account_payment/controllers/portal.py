@@ -85,7 +85,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         batch_name = company.get_next_batch_payment_communication() if len(overdue_invoices) > 1 else first_invoice.name
         values.update({
             'payment': {
-                'date': fields.Date.today(),
+                'date': fields.Date.context_today(request.env.user),
                 'reference': batch_name,
                 'amount': total_amount,
                 'currency': currency,
@@ -116,55 +116,41 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         partner_sudo = request.env.user.partner_id if logged_in else invoices_data['partner']
         invoice_company = invoices_data['company'] or request.env.company
 
-        availability_report = {}
-        # Select all the payment methods and tokens that match the payment context.
-        providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
-            invoice_company.id,
-            partner_sudo.id,
-            invoices_data['total_amount'],
-            currency_id=invoices_data['currency'].id,
-            report=availability_report,
-            **kwargs,
-        )  # In sudo mode to read the fields of providers and partner (if logged out).
-        payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
-            providers_sudo.ids,
-            partner_sudo.id,
-            currency_id=invoices_data['currency'].id,
-            report=availability_report,
-        )  # In sudo mode to read the fields of providers.
-        tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
-            providers_sudo.ids, partner_sudo.id
-        )  # In sudo mode to read the partner's tokens (if logged out) and provider fields.
-
-        # Make sure that the partner's company matches the invoice's company.
+        # Prepare the portal page values
         company_mismatch = not PaymentPortal._can_partner_pay_in_company(
             partner_sudo, invoice_company
         )
-
         portal_page_values = {
             'company_mismatch': company_mismatch,
             'expected_company': invoice_company,
         }
-        payment_form_values = {
-            'show_tokenize_input_mapping': PaymentPortal._compute_show_tokenize_input_mapping(
-                providers_sudo
-            ),
-        }
+
+        # Prepare the payment form values
+        payment_form_values = self._prepare_payment_form_values(
+            invoice_company.id,
+            partner_sudo.id,
+            invoices_data['total_amount'],
+            currency_id=invoices_data['currency'].id,
+            **kwargs,
+        )
+
+        # Prepare the payment context
         payment_context = {
             'currency': invoices_data['currency'],
             'partner_id': partner_sudo.id,
-            'providers_sudo': providers_sudo,
-            'payment_methods_sudo': payment_methods_sudo,
-            'tokens_sudo': tokens_sudo,
-            'availability_report': availability_report,
             'transaction_route': invoices_data['transaction_route'],
             'landing_route': invoices_data['landing_route'],
             'access_token': access_token,
             'payment_reference': invoices_data.get('payment_reference', False),
         }
-        # Merge the dictionaries while allowing the redefinition of keys.
-        values = portal_page_values | payment_form_values | payment_context | self._get_extra_payment_form_values(**kwargs)
-        return values
+
+        # Merge the dictionaries while allowing the redefinition of keys
+        return (
+            portal_page_values
+            | payment_form_values
+            | payment_context
+            | self._get_extra_payment_form_values(**kwargs)
+        )
 
     @http.route()
     def portal_my_invoice_detail(self, invoice_id, payment_token=None, amount=None, **kw):

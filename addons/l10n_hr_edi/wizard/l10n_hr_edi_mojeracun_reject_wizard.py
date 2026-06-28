@@ -2,7 +2,7 @@ import zoneinfo
 
 from odoo import api, fields, models
 
-from ..tools import _mer_api_reject_with_id, _mer_api_update_document_process_status
+from odoo.addons.l10n_hr_edi.tools.api import _mer_api_reject_with_id, _mer_api_update_document_process_status
 
 
 class L10nHrMojEracunRejectInvoice(models.TransientModel):

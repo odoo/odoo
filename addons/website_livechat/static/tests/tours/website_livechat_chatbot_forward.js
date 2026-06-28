@@ -1,6 +1,6 @@
-import { registry } from "@web/core/registry";
+import { postMessage, waitForMessage } from "@im_livechat/../tests/tours/livechat_tour_utils";
 
-const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat.chatbot_forward", {
     steps: () => [
@@ -8,30 +8,22 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_forward", {
             trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
             run: "click",
         },
-        {
-            trigger: messagesContain("Hello, what can I do for you?"),
-        },
+        waitForMessage("Hello, what can I do for you?"),
         {
             trigger: ".o-livechat-root:shadow button:contains(Forward to operator)",
             run: "click",
         },
-        {
-            trigger: messagesContain("I'll forward you to an operator."),
-        },
-        {
-            // Wait for the operator to be added: composer is only enabled at that point.
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input:enabled",
-            run: "edit Hello, I need help!",
-        },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "press Enter",
-        },
-        {
-            trigger: messagesContain("Hello, I need help!"),
-        },
+        waitForMessage("I'll forward you to an operator."),
+        ...postMessage("Hello, I need help!"),
+        waitForMessage("Hello, I need help!"),
         {
             trigger: ".o-livechat-root:shadow .o-mail-Composer-input:enabled",
+            run: function () {
+                window.location.reload();
+            },
+            expectUnloadPage: true,
         },
+        ...postMessage("Hello, I accidentally refreshed!"),
+        waitForMessage("Hello, I accidentally refreshed!"),
     ],
 });

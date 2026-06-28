@@ -8,6 +8,10 @@
                 <pivot string="Stock Moves Analysis" sample="1">
                     <field name="picking_type_id" type="col"/>
                     <field name="date" interval="month" type="row"/>
+                    <field name="quantity" invisible="1"/>
+                    <field name="product_uom_qty" invisible="1"/>
+                    <field name="product_qty" string="Demand"/>
+                    <field name="quantity_product_uom" string="Quantity"/>
                 </pivot>
             </field>
         </record>
@@ -30,9 +34,8 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <list string="Moves" create="0" editable="bottom" default_order="date desc" duplicate="0">
-                    <field name="date" groups="base.group_no_one"
-                           decoration-danger="(state not in ('cancel','done')) and date > current_date"
-                            readonly="1"/>
+                    <field name="date" string="Date" optional="show" readonly="1"
+                        decoration-danger="(state not in ('cancel','done')) and date > current_date"/>
                     <field name="reference"/>
                     <field name="picking_type_id" column_invisible="True" readonly="1"/>
                     <field name="location_usage" column_invisible="True" readonly="1"/>
@@ -42,6 +45,8 @@
                         decoration-muted="location_usage not in ('internal','transit')" readonly="1"/>
                     <field name="location_dest_id" options="{'no_create': True}" string="To"
                         decoration-muted="location_dest_usage not in ('internal','transit')" readonly="1"/>
+                    <field name="partner_id" string="Contact" optional="hide"/>
+                    <field name="restrict_partner_id" optional="hide"/>
                     <field name="product_uom_qty" sum="Total Demand" readonly="1"/>
                     <field name="quantity" string="Quantity" sum="Total Quantity" readonly="1"
                         decoration-danger="(location_usage in ('internal','transit')) and (location_dest_usage not in ('internal','transit'))"
@@ -150,16 +155,20 @@
                                 <span><field name="uom_id" groups="uom.group_uom" widget="many2one_uom" readonly="state != 'draft'" nolabel="1" options="{'no_open': True}"/></span>
                             </div>
                         </group>
-                        <group/>
+                        <div>
+                            <div class="mt-1 mb-2 ms-auto d-flex flex-row flex-lg-column gap-2 w-lg-50"
+                                invisible="not display_assign_serial and not display_import_lot">
+                                <widget name="generate_serials" class="flex-grow-1" invisible="not display_assign_serial"/>
+                                <widget name="import_lots" class="flex-grow-1" invisible="not display_import_lot"/>
+                            </div>
+                        </div>
                     </group>
-                    <div class="d-flex">
-                        <widget class="btn btn-link btn-group" name="generate_serials" invisible="not display_assign_serial"/>
-                        <widget class="btn btn-link btn-group" name="import_lots" invisible="not display_import_lot"/>
+                    <div class="mt-3 mx-n3 d-flex flex-column justify-content-center o_stock_move_lines_padded">
+                        <field name="move_line_ids"
+                            readonly="state == 'cancel' or (state == 'done' and is_locked) or not product_id"
+                            context="{'list_view_ref': 'stock.view_stock_move_line_operation_tree', 'form_view_ref': 'stock.view_move_line_mobile_form', 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id, 'active_picking_id': picking_id}"
+                            widget="sml_x2_many"/>
                     </div>
-                    <field name="move_line_ids"
-                           readonly="state == 'cancel' or (state == 'done' and is_locked) or not product_id"
-                           context="{'list_view_ref': 'stock.view_stock_move_line_operation_tree', 'form_view_ref': 'stock.view_move_line_mobile_form', 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id, 'active_picking_id': picking_id}"
-                           widget="sml_x2_many"/>
                 </form>
             </field>
         </record>
@@ -328,7 +337,7 @@
                 <form string="Scrap Products">
                     <header invisible="context.get('from_order')">
                         <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
-                        <button name="action_scrap" type="object" string="Confirm" class="btn-primary" invisible="state in ('done', 'cancel')"/>
+                        <button name="action_scrap" type="object" string="Confirm" class="btn-primary" invisible="state in ('done', 'cancel')" context="{'not_unlink_on_discard': True}"/>
                     </header>
                     <sheet>
                         <field name="is_scrap" invisible="1"/>
@@ -409,7 +418,7 @@
                         <filter string="Destination Location" name="groupby_dest_location_id" domain="[]" context="{'group_by': 'location_dest_id'}" groups="stock.group_stock_multi_locations"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                         <filter string="Creation Date" name="groupby_create_date" domain="[]" context="{'group_by': 'create_date'}" groups="base.group_no_one"/>
-                        <filter string="Scheduled Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                        <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                     </group>
                 </search>
             </field>
@@ -422,7 +431,7 @@
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_move_search"/>
             <field name="context">{'search_default_done': 1,
-                'pivot_measures': ['quantity', '__count__'],
+                'pivot_measures': ['product_qty', '__count__'],
                 }</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

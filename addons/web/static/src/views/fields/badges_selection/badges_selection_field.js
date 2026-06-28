@@ -1,23 +1,19 @@
 import { BaseBadgesField, extractStandardFieldProps } from "./base_badges_field";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { standardFieldProps } from "../standard_field_props";
 
 export class BadgesSelectionField extends Component {
     static template = "web.BadgesSelectionField";
-    static props = {
+    props = props({
         ...standardFieldProps,
-        iconMapping: { type: Object, optional: true },
-        allowedSelectionField: { type: String, optional: true },
-        badgeLimit: { type: Number, optional: true },
-        placeholder: { type: String, optional: true },
-        defaultIcon: { type: String, optional: true },
-        canDeselect: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        iconMapping: {},
-    };
+        iconMapping: t.object().optional({}),
+        allowedSelectionField: t.string().optional(),
+        badgeLimit: t.number().optional(),
+        defaultIcon: t.string().optional(),
+        canDeselect: t.boolean().optional(),
+    });
     static components = {
         BaseBadgesField,
     };
@@ -65,7 +61,6 @@ export class BadgesSelectionField extends Component {
             ...extractStandardFieldProps(this.props),
             onChange: this.onChange.bind(this),
             badgeLimit: this.props.badgeLimit,
-            placeholder: this.props.placeholder,
             canDeselect: this.props.canDeselect,
             options: this.options,
             string: this.string,
@@ -88,8 +83,7 @@ export const badgesSelectionField = {
             help: _t("Displays a dropdown if the badge count is higher than this value."),
         },
     ],
-    extractProps: ({ options, placeholder }, dynamicInfo) => ({
-        placeholder,
+    extractProps: ({ options }, dynamicInfo) => ({
         defaultIcon: options.default_icon,
         badgeLimit: options.badge_limit,
         canDeselect: !dynamicInfo.required,

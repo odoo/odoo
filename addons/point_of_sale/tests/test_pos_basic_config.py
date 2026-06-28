@@ -30,7 +30,6 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.product4 = self.create_product('Product_4', self.categ_basic, 9.96, 4.98)
         self.product99 = self.create_product('Product_99', self.categ_basic, 99, 50)
         self.product_multi_tax = self.create_product('Multi-tax product', self.categ_basic, 100, 100, (self.taxes['tax8'] | self.taxes['tax9']).ids)
-        self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
         self.company_data_2 = self.setup_other_company()
 
     def test_orders_no_invoiced(self):
@@ -93,20 +92,6 @@ class TestPoSBasicConfig(TestPoSCommon):
                 self.product3.qty_available + 6,
                 start_qty_available[self.product3],
             )
-
-            # picking and stock moves should be in done state
-            for order in self.pos_session.order_ids:
-                self.assertEqual(
-                    order.picking_ids[0].state,
-                    'done',
-                    'Picking should be in done state.'
-                )
-                move_ids = order.picking_ids[0].move_ids
-                self.assertEqual(
-                    move_ids.mapped('state'),
-                    ['done'] * len(move_ids),
-                    'Move Lines should be in done state.'
-                )
 
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
@@ -207,21 +192,6 @@ class TestPoSBasicConfig(TestPoSCommon):
                 start_qty_available[self.product3],
             )
 
-            # picking and stock moves should be in done state
-            # no exception for invoiced orders
-            for order in self.pos_session.order_ids:
-                self.assertEqual(
-                    order.picking_ids[0].state,
-                    'done',
-                    'Picking should be in done state.'
-                )
-                move_ids = order.picking_ids[0].move_ids
-                self.assertEqual(
-                    move_ids.mapped('state'),
-                    ['done'] * len(move_ids),
-                    'Move Lines should be in done state.'
-                )
-
             # check account move in the invoiced order
             invoiced_order = self.pos_session.order_ids.filtered(lambda order: order.account_move)
             self.assertEqual(1, len(invoiced_order), 'Only one order is invoiced in this test.')
@@ -309,7 +279,7 @@ class TestPoSBasicConfig(TestPoSCommon):
                 '00100-010-0001': {
                     'invoice': {
                         'line_ids': [
-                            {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 0, 'reconciled': True},
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 0, 'reconciled': True},
                         ]
                     },
@@ -458,21 +428,6 @@ class TestPoSBasicConfig(TestPoSCommon):
                 self.product3.qty_available,
                 start_qty_available[self.product3],
             )
-
-            # picking and stock moves should be in done state
-            # no exception of return orders
-            for order in self.pos_session.order_ids:
-                self.assertEqual(
-                    order.picking_ids[0].state,
-                    'done',
-                    'Picking should be in done state.'
-                )
-                move_ids = order.picking_ids[0].move_ids
-                self.assertEqual(
-                    move_ids.mapped('state'),
-                    ['done'] * len(move_ids),
-                    'Move Lines should be in done state.'
-                )
 
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
@@ -824,16 +779,17 @@ class TestPoSBasicConfig(TestPoSCommon):
         order_data = self.create_ui_order_data([(self.product3, 1)])
         amount_paid = order_data['amount_paid']
         with (
-            self.assertLogs('odoo.addons.point_of_sale.models.pos_order', level='DEBUG') as cm,
+            self.assertLogs('odoo.addons.point_of_sale.models.pos_order') as cm,
             unittest.mock.patch('odoo.addons.point_of_sale.models.pos_order.randrange', return_value=1996)
         ):
+            self.env['ir.config_parameter'].sudo().set_bool('point_of_sale.log_order_data', True)
             res = self.env['pos.order'].sync_from_ui([order_data])
             # Basic check for logs on order synchronization
             order_log_str = self.env['pos.order']._get_order_log_representation(order_data)
             odoo_order_id = res['pos.order'][0]['id']
             self.assertEqual(len(cm.output), 4)
             self.assertEqual(cm.output[0], f"INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 started for PoS orders references: [{order_log_str}]")
-            self.assertTrue(cm.output[1].startswith(f'DEBUG:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 processing order {order_log_str} order full data: '))
+            self.assertTrue(cm.output[1].startswith(f'INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 processing order {order_log_str} order full data:'))
             self.assertEqual(cm.output[2], f'INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 order {order_log_str} created pos.order #{odoo_order_id}')
             self.assertEqual(cm.output[3], 'INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 finished')
             
@@ -1346,7 +1302,6 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(res['pos.order'][0]['id'], order_id, 'Syncing the same order should not create a new one')
 
         order = self.env['pos.order'].browse(order_id)
-        self.assertEqual(order.picking_count, 1, 'Order should have one picking')
         self.assertEqual(len(order.payment_ids), 1, 'Order should have one payment')
         self.assertEqual(self.env['account.move'].search_count([('pos_order_ids', 'in', order.ids)]), 1, 'Order should have one invoice')
 
@@ -1497,3 +1452,26 @@ class TestPoSBasicConfig(TestPoSCommon):
             special_product.unlink()
         with self.assertRaisesRegex(UserError, "You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."):
             special_product.product_variant_ids[0].unlink()
+
+    def test_pos_invoice_not_to_review_pos_only_user(self):
+        """POS invoices must not be 'marked as 'to review' even when
+        the invoicing user has no accounting review permissions."""
+        self.open_new_session()
+
+        pos_only_user = self.env['res.users'].create({
+            'name': 'POS Only User',
+            'login': 'pos_only_user',
+            'password': 'pos_only_user',
+            'group_ids': [self.env.ref('point_of_sale.group_pos_manager').id],
+        })
+
+        orders = self._create_orders([{
+            'pos_order_lines_ui_args': [(self.product1, 1)],
+            'customer': self.customer,
+            'is_invoiced': False,
+        }])
+        orders = sum(orders.values(), self.env['pos.order'])
+
+        orders.with_user(pos_only_user)._generate_pos_order_invoice()
+
+        self.assertEqual(orders.account_move.review_state, 'no_review')

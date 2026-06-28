@@ -51,6 +51,12 @@
             <field name="feedback" position="attributes">
                 <attribute name="readonly">1</attribute>
             </field>
+            <xpath expr="//label[@for='publisher_comment']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='publisher_comment']/parent::div" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
             <field name="rated_on" position="after">
                 <field name="partner_id" position="move"/>
             </field>

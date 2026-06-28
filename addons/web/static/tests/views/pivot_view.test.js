@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryFirst, queryOne, queryText, resize } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, mockDate } from "@odoo/hoot-mock";
+import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
 import {
     contains,
@@ -283,6 +283,24 @@ test("all measures should be displayed with a pivot_measures context", async () 
     expect(".o-dropdown--menu.o-dropdown--menu.dropdown-menu").toHaveCount(1);
     const measures = queryAllTexts(".o-dropdown-item");
     expect(measures).toEqual(["bouh", "Computed and not stored", "Foo", "Count"]);
+});
+
+test("measures with help text should have a tooltip attribute", async () => {
+    Partner._fields.bouh = fields.Integer({ string: "bouh", aggregator: "sum", help: "bouh help" });
+
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+			<pivot string="Partners">
+				<field name="bouh" type="measure"/>
+			</pivot>
+			`,
+    });
+
+    await contains("button:contains(Measures)").click();
+    expect(".o-dropdown--menu.o-dropdown--menu.dropdown-menu").toHaveCount(1);
+    expect('.o-dropdown-item:contains("bouh")').toHaveAttribute("data-tooltip", "bouh help");
 });
 
 test("pivot rendering with widget", async () => {
@@ -871,13 +889,7 @@ test("pivot renders group dropdown same as search groupby dropdown if group bys 
     // check custom groupby selection has groupable fields only
     expect(".o_add_custom_group_menu option:not([disabled])").toHaveCount(5);
     const optionDescriptions = queryAllTexts(".o_add_custom_group_menu option:not([disabled])");
-    expect(optionDescriptions).toEqual([
-        "Customer",
-        "Date",
-        "Other product",
-        "Product",
-        "bar",
-    ]);
+    expect(optionDescriptions).toEqual(["Customer", "Date", "Other product", "Product", "bar"]);
 });
 
 test("headers group dropdown should close on selection", async () => {
@@ -1337,7 +1349,7 @@ test("can expand all rows", async () => {
 
 test("expand all with a delay", async () => {
     let def;
-    onRpc("formatted_read_grouping_sets", () => def);
+    onRpc("formatted_read_grouping_sets", () => def?.promise);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -1367,7 +1379,7 @@ test("expand all with a delay", async () => {
     expect("tbody tr").toHaveCount(6);
 
     // expand all
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o_pivot_expand_button").click();
     expect("tbody tr").toHaveCount(6);
     def.resolve();
@@ -1401,7 +1413,7 @@ test("can download a file", async () => {
 test("download a file with single measure, measure row displayed in table", async () => {
     expect.assertions(2);
 
-    const downloadDef = new Deferred();
+    const downloadDef = Promise.withResolvers();
     patchWithCleanup(download, {
         _download: async ({ url, data }) => {
             data = JSON.parse(await data.data.text());
@@ -1424,7 +1436,7 @@ test("download a file with single measure, measure row displayed in table", asyn
     });
 
     await contains(".o_pivot_download").click();
-    await downloadDef;
+    await downloadDef?.promise;
 });
 
 test("download button is disabled when there is no data", async () => {
@@ -1906,7 +1918,6 @@ test("folded groups remain folded at reload", async () => {
     await contains("thead .o_pivot_header_cell_closed:eq(0)").click();
     await contains(".o-dropdown--menu .dropdown-item:eq(0)").click();
 
-
     values = ["14", "18", "32", "12", "12", "2", "18", "20"];
     expect(getCurrentValues()).toBe(values.join(","));
 
@@ -1927,22 +1938,7 @@ test("folded groups remain folded at reload", async () => {
 
     // sanity check of what the table should look like if all groups are
     // expanded, to ensure that the former asserts are pertinent
-    values = [
-        "14",
-        "18",
-        "32",
-        "12",
-        "12",
-        "12",
-        "12",
-        "2",
-        "18",
-        "20",
-        "2",
-        "2",
-        "18",
-        "18",
-    ];
+    values = ["14", "18", "32", "12", "12", "12", "12", "2", "18", "20", "2", "2", "18", "18"];
     expect(getCurrentValues()).toBe(values.join(","));
 });
 
@@ -2376,7 +2372,7 @@ test("Row and column groupbys plus a domain", async () => {
 
 test("parallel data loading should discard all but the last one", async () => {
     let def;
-    onRpc("formatted_read_grouping_sets", () => def);
+    onRpc("formatted_read_grouping_sets", () => def?.promise);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2394,7 +2390,7 @@ test("parallel data loading should discard all but the last one", async () => {
     expect(".o_pivot_cell_value").toHaveCount(1);
     expect("tbody tr").toHaveCount(1);
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("Product");
     await toggleMenuItem("Customer");
@@ -2646,14 +2642,7 @@ test("group bys added via control panel and expand Header do not stack", async (
     await contains(`.o_add_custom_group_menu`).select("bar");
 
     expect(queryAllTexts("thead th")).toEqual(["", "Total", "Foo"]);
-    expect(queryAllTexts("tbody th")).toEqual([
-        "Total",
-        "xphone",
-        "Yes",
-        "xpad",
-        "No",
-        "Yes",
-    ]);
+    expect(queryAllTexts("tbody th")).toEqual(["Total", "xphone", "Yes", "xpad", "No", "Yes"]);
 });
 
 test.tags("desktop");
@@ -2674,7 +2663,6 @@ test("display only one dropdown menu", async () => {
     // Click on the header dropdown togglers
     await contains("thead th.o_pivot_header_cell_closed:eq(0)").click();
     await contains("thead th.o_pivot_header_cell_closed:eq(0)").click();
-
 });
 
 test("Server order is kept by default", async () => {
@@ -2964,7 +2952,7 @@ test("correctly handle concurrent reloads", async () => {
             readGroupCount++;
             if (readGroupCount === 2) {
                 // slow down last formatted_read_grouping_sets of first reload
-                return def;
+                return def?.promise;
             }
         }
     });
@@ -2989,7 +2977,7 @@ test("correctly handle concurrent reloads", async () => {
     expect(getCurrentValues()).toBe(["32", "12", "12", "20"].join(","));
 
     // reload twice by clicking on pivot view switcher
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o_control_panel .o_switch_view.o_pivot").click();
     await contains(".o_control_panel .o_switch_view.o_pivot").click();
 
@@ -3004,7 +2992,7 @@ test("consecutively toggle several measures", async () => {
     Partner._fields.foo2 = fields.Integer({
         groupable: false,
     });
-    onRpc("formatted_read_grouping_sets", () => def);
+    onRpc("formatted_read_grouping_sets", () => def?.promise);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3018,7 +3006,7 @@ test("consecutively toggle several measures", async () => {
     expect(getCurrentValues()).toBe(["32", "12", "20"].join(","));
 
     // Toggle several measures (the reload is blocked, so all measures should be toggled in once)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleMenu("Measures");
     await toggleMenuItem("Foo2"); // add foo2
     expect(getCurrentValues()).toBe(["32", "12", "20"].join(","));
@@ -3035,7 +3023,7 @@ test("consecutively toggle several measures", async () => {
 
 test("flip axis while loading a filter", async () => {
     let def;
-    onRpc("formatted_read_grouping_sets", () => def);
+    onRpc("formatted_read_grouping_sets", () => def?.promise);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3055,7 +3043,7 @@ test("flip axis while loading a filter", async () => {
     expect(getCurrentValues()).toBe(values.join(","));
 
     // Set a domain (this reload is delayed)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("My Filter");
     expect(getCurrentValues()).toBe(values.join(","));
@@ -3072,7 +3060,7 @@ test("flip axis while loading a filter", async () => {
 
 test("sort rows while loading a filter", async () => {
     let def;
-    onRpc("formatted_read_grouping_sets", () => def);
+    onRpc("formatted_read_grouping_sets", () => def?.promise);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3090,7 +3078,7 @@ test("sort rows while loading a filter", async () => {
     expect(getCurrentValues()).toBe(["32", "12", "20"].join(","));
 
     // Set a domain (this reload is delayed)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("My Filter");
     expect(getCurrentValues()).toBe(["32", "12", "20"].join(","));
@@ -3108,7 +3096,7 @@ test("sort rows while loading a filter", async () => {
 
 test("close a group while loading a filter", async () => {
     let def;
-    onRpc("formatted_read_grouping_sets", () => def);
+    onRpc("formatted_read_grouping_sets", () => def?.promise);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3127,7 +3115,7 @@ test("close a group while loading a filter", async () => {
     expect(getCurrentValues()).toBe(["32", "12", "20"].join(","));
 
     // Set a domain (this reload is delayed)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("My Filter");
     expect(getCurrentValues()).toBe(["32", "12", "20"].join(","));
@@ -3145,7 +3133,7 @@ test("close a group while loading a filter", async () => {
 
 test("add a groupby while loading a filter", async () => {
     let def;
-    onRpc("formatted_read_grouping_sets", () => def);
+    onRpc("formatted_read_grouping_sets", () => def?.promise);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3163,7 +3151,7 @@ test("add a groupby while loading a filter", async () => {
     expect(getCurrentValues()).toBe(["32", "12", "20"].join(","));
 
     // Set a domain (this reload is delayed)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("My Filter");
     expect(getCurrentValues()).toBe(["32", "12", "20"].join(","));
@@ -3182,7 +3170,7 @@ test("add a groupby while loading a filter", async () => {
 
 test("expand a group while loading a filter", async () => {
     let def;
-    onRpc("formatted_read_grouping_sets", () => def);
+    onRpc("formatted_read_grouping_sets", () => def?.promise);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3205,7 +3193,7 @@ test("expand a group while loading a filter", async () => {
     expect(getCurrentValues()).toBe(["32", "12", "12", "20"].join(","));
 
     // Set a domain (this reload is delayed)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("My Filter");
     expect(getCurrentValues()).toBe(["32", "12", "12", "20"].join(","));
@@ -3223,7 +3211,7 @@ test("expand a group while loading a filter", async () => {
 
 test("concurrent reloads: add a filter, and directly toggle a measure", async () => {
     let def;
-    onRpc("formatted_read_grouping_sets", () => def);
+    onRpc("formatted_read_grouping_sets", () => def?.promise);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3241,7 +3229,7 @@ test("concurrent reloads: add a filter, and directly toggle a measure", async ()
     expect(getCurrentValues()).toBe(["32", "12", "20"].join(","));
 
     // Set a domain (this reload is delayed)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("My Filter");
 
@@ -3930,8 +3918,8 @@ test("display the field's falsy_value_label for false group, if defined", async 
 
 test.tags("desktop");
 test("pivot views make their control panel available directly", async () => {
-    const def = new Deferred();
-    onRpc("formatted_read_grouping_sets", () => def);
+    const def = Promise.withResolvers();
+    onRpc("formatted_read_grouping_sets", () => def?.promise);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -4003,7 +3991,7 @@ test("scroll position is restored when coming back to pivot view", async () => {
     }
 
     let def;
-    onRpc("formatted_read_grouping_sets", () => def);
+    onRpc("formatted_read_grouping_sets", () => def?.promise);
     await resize({ width: 800, height: 300 });
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
@@ -4027,7 +4015,7 @@ test("scroll position is restored when coming back to pivot view", async () => {
 
     // the pivot is "lazy", so it displays the control panel directly, and the renderer later with
     // the data => simulate this and check that the scroll position is correctly restored
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").switchView("pivot");
     expect(".o_pivot_view").toHaveCount(1);
     expect(".o_content .o_pivot").toHaveCount(0);
@@ -4053,7 +4041,7 @@ test("scroll position is restored when coming back to pivot view (mobile)", asyn
     }
 
     let def;
-    onRpc("formatted_read_grouping_sets", () => def);
+    onRpc("formatted_read_grouping_sets", () => def?.promise);
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
         res_model: "partner",
@@ -4076,7 +4064,7 @@ test("scroll position is restored when coming back to pivot view (mobile)", asyn
 
     // the pivot is "lazy", so it displays the control panel directly, and the renderer later with
     // the data => simulate this and check that the scroll position is correctly restored
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").switchView("pivot");
     expect(".o_pivot_view").toHaveCount(1);
     expect(".o_content .o_pivot").toHaveCount(0);

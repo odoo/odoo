@@ -39,6 +39,7 @@ registry.category("web_tour.tours").add("self_mobile_online_payment_meal", {
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
         Utils.clickBtn("Order"),
         CartPage.fillInput("Name", "Dr Dre"),
+        CartPage.fillInput("Phone", "490904390"),
         Utils.clickBtn("Continue"),
         Utils.clickBtn("Ok"),
         Utils.clickBtn("Order Now"),

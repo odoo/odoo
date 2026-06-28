@@ -116,12 +116,12 @@
         </record>
         <function model="discuss.channel" name="_add_members">
             <value eval="[ref('im_livechat.support_bot_session_6_demo')]"/>
-            <value name="users" model="res.users" eval="obj().browse(ref('base.user_admin'))"/>
+            <value name="users" model="res.users" eval="obj(ref('base.user_admin'))"/>
             <value name="create_member_params" eval="{
                 'livechat_member_type': 'agent',
                 'agent_expertise_ids': [ref('im_livechat.chatbot_script_expertise_discuss_demo')]
             }"/>
-            <value name="inviting_partner" model="res.partner" eval="obj().browse(ref('support_bot_operator_partner_demo'))"/>
+            <value name="inviting_partner" model="res.partner" eval="obj(ref('support_bot_operator_partner_demo'))"/>
         </function>
         <record id="support_bot_session_6_message_6" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -141,15 +141,6 @@
             <field name="message_type">notification</field>
             <field name="date" eval="datetime.now() - timedelta(seconds=10)"/>
             <field name="create_date" eval="datetime.now() - timedelta(seconds=10)"/>
-        </record>
-        <record id="support_bot_session_6_rating" model="rating.rating">
-            <field name="access_token">BOT_SESSION_6</field>
-            <field name="res_id" ref="support_bot_session_6_demo"/>
-            <field name="res_model_id" ref="mail.model_discuss_channel"/>
-            <field name="message_id" ref="support_bot_session_6_rating_message"/>
-            <field name="rated_partner_id" ref="base.partner_admin"/>
-            <field eval="False" name="partner_id"/>
-            <field eval="True" name="consumed"/>
         </record>
         <function model="discuss.channel" name="_apply_livechat_feedback"
             eval="[ref('im_livechat.support_bot_session_6_demo')], 3, 'OK'"/>

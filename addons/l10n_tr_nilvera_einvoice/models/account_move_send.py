@@ -31,7 +31,7 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         # Add the Nilvera PDF to the mail attachments.
         attachments = super()._get_invoice_extra_attachments(move)
-        if move.l10n_tr_nilvera_send_status == 'succeed' and move.l10n_tr_nilvera_pdf_id:
+        if move.l10n_tr_nilvera_send_status in {'succeed', 'commercial_approved', 'commercial_rejected', 'commercial_answered_automatically'} and move.l10n_tr_nilvera_pdf_id:
             attachments += move.l10n_tr_nilvera_pdf_id
         return attachments
 
@@ -57,11 +57,15 @@ class AccountMoveSend(models.AbstractModel):
         if not tr_nilvera_moves:
             return alerts
 
-        if tr_companies_missing_required_codes := tr_nilvera_moves.company_id.filtered(lambda c: c.country_code == 'TR' and not (c.partner_id.category_id.parent_id and self.env["res.partner.category"]._get_l10n_tr_official_mandatory_categories())):
+        if tr_companies_missing_required_codes := tr_nilvera_moves.company_id.filtered(
+            lambda c: c.country_code == 'TR'
+            and not c.partner_id._get_additional_identifier('TR_MERSIS')
+            and not c.partner_id._get_additional_identifier('TR_TICARET_SICIL')
+        ):
             alerts["tr_companies_missing_required_codes"] = {
-                "message": _("Please ensure that your company contact has either the 'MERSISNO' or 'TICARETSICILNO' tag with a value assigned."),
+                "message": _("Please ensure that your company contact has either the 'Mersis Number' or 'Trade Registry Number' has a value."),
                 "action_text": _("View Company(s)"),
-                "action": tr_companies_missing_required_codes.partner_id._get_records_action(name=_("Check tags on company(s)")),
+                "action": tr_companies_missing_required_codes.partner_id._get_records_action(name=_("Check company(s)")),
                 "level": "danger",
             }
 
@@ -137,6 +141,20 @@ class AccountMoveSend(models.AbstractModel):
                 ),
                 'action_text': _("View Invoice(s)"),
                 'action': moves_with_invalid_name._get_records_action(name=_("Check name on Invoice(s)")),
+            }
+
+        if public_spending_units_missing_vat := tr_nilvera_moves.l10n_tr_public_spending_unit_id.filtered(lambda rec:
+            not rec.vat
+            or not rec.street
+            or not rec.city
+            or not rec.state_id
+            or not rec.country_id,
+        ):
+            alerts['tr_public_spending_units_missing_vat'] = {
+                'level': 'danger',
+                'message': self.env._("For Public Sector e-Invoices, the Public Spending Unit must have a valid address and Tax ID defined."),
+                'action_text': self.env._("View Partner(s)"),
+                'action': public_spending_units_missing_vat._get_records_action(name=self.env._("Check VAT on Partner(s)")),
             }
 
         exemption_702 = self.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_702')

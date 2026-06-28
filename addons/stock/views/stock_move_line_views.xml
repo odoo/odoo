@@ -22,6 +22,7 @@
                 <field name="location_id" decoration-muted="location_usage not in ('internal', 'transit')"/>
                 <field name="location_dest_id" decoration-muted="location_dest_usage not in ('internal', 'transit')"/>
                 <field name="picking_partner_id" optional="hide"/>
+                <field name="owner_id" optional="hide" string="Owner"/>
                 <field name="company_id" optional="hide" groups="base.group_multi_company" force_save="1"/>
                 <field name="quantity" string="Quantity" class="fw-bolder"
                     decoration-danger="(location_usage in ('internal','transit')) and (location_dest_usage not in ('internal','transit')) and quantity != 0"
@@ -143,12 +144,11 @@
                 <filter string="Incoming" name="incoming" domain="[('picking_id.picking_type_id.code', '=', 'incoming')]"/>
                 <filter string="Outgoing" name="outgoing" domain="[('picking_id.picking_type_id.code', '=', 'outgoing')]"/>
                 <filter string="Internal" name="internal" domain="[('picking_id.picking_type_id.code', '=', 'internal')]"/>
-                <filter string="Manufacturing" name="manufacturing" domain="[('picking_id.picking_type_id.code', '=', 'mrp_operation')]" invisible="1"/>
                 <separator/>
                 <filter string="Scrapped" name="scrapped" domain="[('is_scrap', '=', True)]"/>
                 <separator/>
                 <filter name="date" date="date" default_period="month"/>
-                <filter string="Last 30 Days" name="filter_last_30_days" domain="[('date','&gt;=', 'today -30d')]"/>
+                <filter string="Last 30 Days" name="filter_last_30_days" domain="[('date', '&gt;=', 'today -30d'), ('date', '&lt;', 'today')]"/>
                 <filter string="Last 3 Months" name="filter_last_3_months" domain="[('date','&gt;=', 'today -3m')]"/>
                 <filter string="Last 12 Months" name="filter_last_12_months" domain="[('date','&gt;=', 'today -12m')]"/>
                 <separator/>

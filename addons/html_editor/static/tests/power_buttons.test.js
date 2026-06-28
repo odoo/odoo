@@ -1,14 +1,15 @@
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { PowerButtonsPlugin } from "@html_editor/main/power_buttons_plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { describe, expect, queryAllTexts, test } from "@odoo/hoot";
 import { click, pointerDown, press, tick, waitFor } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
-import { onRpc } from "@web/../tests/web_test_helpers";
+import { animationFrame, advanceTime } from "@odoo/hoot-mock";
+import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { PowerboxPlugin } from "../src/main/powerbox/powerbox_plugin";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
-import { insertText, redo, simulateArrowKeyPress, splitBlock, undo } from "./_helpers/user_actions";
+import { insertText, redo, splitBlock, undo } from "./_helpers/user_actions";
 import { expectElementCount } from "./_helpers/ui_expectations";
 
 describe.tags("desktop");
@@ -102,7 +103,7 @@ describe("visibility", () => {
             }
         }
         const tempP = document.createElement("p");
-        tempP.innerText = placeholder;
+        tempP.textContent = placeholder;
         tempP.style.width = "fit-content";
         const Plugins = [...MAIN_PLUGINS.filter((p) => p.id !== "powerbox"), TestPowerboxPlugin];
         const { el } = await setupEditor("<p>[]<br></p>", {
@@ -117,25 +118,45 @@ describe("visibility", () => {
         );
     });
     test("should debounce powerButtons on selection change", async () => {
-        const { el, editor } = await setupEditor(
-            "<p>[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>",
-            {
-                config: { debouncePowerbuttons: true },
-            }
-        );
+        patchWithCleanup(PowerButtonsPlugin.prototype, {
+            triggerDebouncedUpdatePowerButtons(...args) {
+                expect.step("triggerDebouncedUpdatePowerButtons");
+                return super.triggerDebouncedUpdatePowerButtons(...args);
+            },
+            updatePowerButtons(...args) {
+                expect.step("updatePowerButtons");
+                return super.updatePowerButtons(...args);
+            },
+        });
+        const { el, editor } = await setupEditor("<p>[]<br></p>", {
+            config: { debouncePowerbuttons: true },
+        });
         expect(getContent(el)).toBe(
-            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>`
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
-        await simulateArrowKeyPress(editor, "ArrowDown");
-        expect(".o_we_power_buttons").not.toBeVisible();
-        await simulateArrowKeyPress(editor, "ArrowDown");
-        expect(".o_we_power_buttons").not.toBeVisible();
-        await simulateArrowKeyPress(editor, "ArrowDown");
-        expect(".o_we_power_buttons").not.toBeVisible();
-        await simulateArrowKeyPress(editor, "ArrowDown");
-        await animationFrame();
-        await new Promise((resolve) => setTimeout(resolve, 30));
-        expect(".o_we_power_buttons").toBeVisible();
+        await expectElementCount(".o_we_power_buttons:not(.invisible)", 1);
+
+        // setupEditor triggers updatePowerButtons via
+        // layout_geometry_change_handlers, followed by a debounced update via
+        // selectionchange_handlers.
+        expect.verifySteps([
+            "updatePowerButtons",
+            "triggerDebouncedUpdatePowerButtons",
+            "updatePowerButtons",
+        ]);
+
+        // Dispatch selectionchange synchronously so the debounce timer starts
+        // at a deterministic time.
+        editor.document.dispatchEvent(new Event("selectionchange"));
+
+        // Verify that selectionchange synchronously triggers the debounced
+        // wrapper, but not updatePowerButtons yet.
+        expect.verifySteps(["triggerDebouncedUpdatePowerButtons"]);
+
+        // Advance past the 30ms debounce threshold so the debounced
+        // updatePowerButtons callback executes.
+        await advanceTime(31);
+        expect.verifySteps(["updatePowerButtons"]);
     });
 });
 
@@ -211,7 +232,7 @@ describe("buttons", () => {
         // Open powerbox via the More options button
         click(".o_we_power_buttons .power_button.oi-ellipsis-v");
         await expectElementCount(".o-we-powerbox", 1);
-        expect(queryAllTexts(".o-we-command-name").length).toBe(27);
+        expect(queryAllTexts(".o-we-command-name").length).toBe(28);
         // Type a search term
         await insertText(editor, "head");
         await animationFrame();
@@ -226,7 +247,7 @@ describe("buttons", () => {
         }
         await animationFrame();
         // All commands should be available again
-        expect(queryAllTexts(".o-we-command-name").length).toBe(27);
+        expect(queryAllTexts(".o-we-command-name").length).toBe(28);
     });
 
     test("should close the powerbox on pointerdown outside and not reopen it on subsequent keydown", async () => {
@@ -279,7 +300,7 @@ describe("buttons", () => {
         // Open powerbox via the More options button
         click(".o_we_power_buttons .power_button.oi-ellipsis-v");
         await expectElementCount(".o-we-powerbox", 1);
-        expect(queryAllTexts(".o-we-command-name").length).toBe(27);
+        expect(queryAllTexts(".o-we-command-name").length).toBe(28);
         // Type a search term
         await insertText(editor, "head");
         await animationFrame();
@@ -297,7 +318,7 @@ describe("buttons", () => {
         // Open powerbox via the More options button
         click(".o_we_power_buttons .power_button.oi-ellipsis-v");
         await expectElementCount(".o-we-powerbox", 1);
-        expect(queryAllTexts(".o-we-command-name").length).toBe(27);
+        expect(queryAllTexts(".o-we-command-name").length).toBe(28);
         // Type a search term
         await insertText(editor, "head");
         await animationFrame();
@@ -315,7 +336,7 @@ describe("buttons", () => {
         // Open powerbox via the More options button
         click(".o_we_power_buttons .power_button.oi-ellipsis-v");
         await expectElementCount(".o-we-powerbox", 1);
-        expect(queryAllTexts(".o-we-command-name").length).toBe(27);
+        expect(queryAllTexts(".o-we-command-name").length).toBe(28);
         // Type a search term
         await insertText(editor, "head");
         await animationFrame();

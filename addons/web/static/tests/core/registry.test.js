@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { Component } from "@odoo/owl";
+import { Component, t } from "@odoo/owl";
 import { serverState } from "@web/../tests/web_test_helpers";
 
 import { Registry } from "@web/core/registry";
@@ -165,7 +165,7 @@ test("can recursively open sub registry", () => {
 
 test("can validate the values from a schema", () => {
     serverState.debug = "1";
-    const schema = { name: String, age: { type: Number, optional: true } };
+    const schema = t.strictObject({ name: t.string(), age: t.number().optional() });
     const friendsRegistry = new Registry();
     friendsRegistry.addValidation(schema);
     expect(() => friendsRegistry.add("jean", { name: "Jean" })).not.toThrow();
@@ -175,12 +175,14 @@ test("can validate the values from a schema", () => {
     expect(() => friendsRegistry.add("adrien", { name: 23 })).toThrow();
     expect(() => friendsRegistry.add("hubert", { age: 54 })).toThrow();
     expect(() => friendsRegistry.add("chris", { name: "chris", city: "Namur" })).toThrow();
-    expect(() => friendsRegistry.addValidation({ something: Number })).toThrow();
+    expect(() =>
+        friendsRegistry.addValidation(t.strictObject({ something: t.number() }))
+    ).toThrow();
 });
 
 test("can validate by adding a schema after the registry is filled", async () => {
     serverState.debug = "1";
-    const schema = { name: String };
+    const schema = t.strictObject({ name: t.string() });
     const friendsRegistry = new Registry();
     expect(() => friendsRegistry.add("jean", { name: 999 })).not.toThrow();
     expect(() => friendsRegistry.addValidation(schema)).toThrow();
@@ -188,7 +190,9 @@ test("can validate by adding a schema after the registry is filled", async () =>
 
 test("can validate subclassess", async () => {
     serverState.debug = "1";
-    const schema = { component: { validate: (c) => c.prototype instanceof Component } };
+    const schema = t.strictObject({
+        component: t.customValidator(t.any(), (c) => c.prototype instanceof Component),
+    });
     const widgetRegistry = new Registry();
     widgetRegistry.addValidation(schema);
     class Widget extends Component {} // eslint-disable-line
@@ -198,7 +202,7 @@ test("can validate subclassess", async () => {
 });
 
 test("only validate in debug", async () => {
-    const schema = { name: String };
+    const schema = t.strictObject({ name: t.string() });
     const registry = new Registry();
     registry.addValidation(schema);
     expect(() => registry.add("jean", { name: 50 })).not.toThrow({

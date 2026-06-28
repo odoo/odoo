@@ -24,7 +24,7 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(true);
-        expect(results.events).toHaveLength(2);
+        expect(results.events()).toHaveLength(2);
     });
 
     test("makeExpect failing, without a test", () => {
@@ -38,7 +38,7 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.events).toHaveLength(2);
+        expect(results.events()).toHaveLength(2);
     });
 
     test("makeExpect with a test", async () => {
@@ -73,7 +73,7 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.events[0].pass).toBe(true);
+        expect(results.events()[0].pass).toBe(true);
     });
 
     test("makeExpect with no assertions & query events", async () => {
@@ -88,8 +88,8 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(true);
-        expect(results.events).toHaveLength(1);
-        expect(results.events[0].label).toBe("waitFor");
+        expect(results.events()).toHaveLength(1);
+        expect(results.events()[0].label).toBe("waitFor");
     });
 
     test("makeExpect with no assertions & no query events", () => {
@@ -98,14 +98,14 @@ describe(parseUrl(import.meta.url), () => {
         hooks.before();
 
         expect(() => customExpect.assertions(0)).toThrow(
-            "expected assertions count should be more than 1"
+            "expected assertion count should be greater than 1"
         );
 
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.events).toHaveLength(1);
-        expect(results.events[0].message).toEqual([
+        expect(results.events()).toHaveLength(1);
+        expect(results.events()[0].message).toEqual([
             "expected at least",
             ["1", "integer"],
             "assertion or query event, but none were run",
@@ -124,8 +124,8 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.events).toHaveLength(2);
-        expect(results.events[1].message.join(" ")).toBe(
+        expect(results.events()).toHaveLength(2);
+        expect(results.events()[1].message.join(" ")).toBe(
             "called once without calling any matchers"
         );
     });
@@ -142,8 +142,8 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.events).toHaveLength(2); // 1 'verifySteps' + 1 'unverified steps'
-        expect(results.events.at(-1).message).toEqual(["unverified steps"]);
+        expect(results.events()).toHaveLength(2); // 1 'verifySteps' + 1 'unverified steps'
+        expect(results.events().at(-1).message).toEqual(["unverified steps"]);
     });
 
     test("makeExpect retains current values", () => {
@@ -157,7 +157,7 @@ describe(parseUrl(import.meta.url), () => {
 
         const testResult = hooks.after();
 
-        const [assertion] = testResult.events;
+        const [assertion] = testResult.events();
         expect(assertion.pass).toBe(false);
         expect(assertion.failedDetails[1][1]).toEqual({ a: 1 });
         expect(object).toEqual({ a: 1, b: 2 });
@@ -224,8 +224,10 @@ describe(parseUrl(import.meta.url), () => {
         const testResult = hooks.after();
 
         expect(testResult.pass).toBe(true);
-        expect(testResult.events).toHaveLength(matchers.length);
-        expect(testResult.events.map(({ label }) => label)).toEqual(matchers.map(([name]) => name));
+        expect(testResult.events()).toHaveLength(matchers.length);
+        expect(testResult.events().map(({ label }) => label)).toEqual(
+            matchers.map(([name]) => name)
+        );
     });
 
     test("'expect' error handling", async () => {
@@ -234,7 +236,7 @@ describe(parseUrl(import.meta.url), () => {
         hooks.before();
 
         expect(() => customExpect(undefined).toInclude("3")).toThrow(
-            "expected received value to be of type string, any[] or object, got undefined"
+            "cannot execute matcher 'toInclude'"
         );
 
         const testResult = hooks.after();
@@ -256,7 +258,7 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.events).toHaveLength(3); // toBe + error + unverified errors
+        expect(results.events()).toHaveLength(3); // toBe + error + unverified errors
     });
 
     describe("standard matchers", () => {
@@ -520,9 +522,8 @@ describe(parseUrl(import.meta.url), () => {
 
         test("toHaveText", async () => {
             class TextComponent extends Component {
-                static props = {};
                 static template = xml`
-                    <div class="with">With<t t-out="nbsp" />nbsp</div>
+                    <div class="with">With<t t-out="this.nbsp" />nbsp</div>
                     <div class="without">Without nbsp</div>
                 `;
 

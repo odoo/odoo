@@ -1,17 +1,17 @@
 import { test, expect } from "@odoo/hoot";
-import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { click, press } from "@odoo/hoot-dom";
 import { Pager } from "@web/core/pager/pager";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { config as transitionConfig } from "@web/core/transition";
 
 class PagerController extends Component {
-    static template = xml`<Pager t-props="state" />`;
+    static template = xml`<Pager t-props="this.state" />`;
     static components = { Pager };
     static props = ["*"];
     setup() {
-        this.state = useState({ ...this.props });
+        this.state = proxy({ ...this.props });
     }
     async updateProps(nextProps) {
         Object.assign(this.state, nextProps);
@@ -189,7 +189,7 @@ test("pager value formatting", async () => {
 });
 
 test("pager disabling", async () => {
-    const reloadPromise = new Deferred();
+    const reloadPromise = Promise.withResolvers();
     const pager = await mountWithCleanup(PagerController, {
         props: {
             offset: 0,
@@ -200,7 +200,7 @@ test("pager disabling", async () => {
             // to avoid switching twice with the same action (double click).
             async onUpdate(data) {
                 // 1. Simulate a (long) server action
-                await reloadPromise;
+                await reloadPromise.promise;
                 // 2. Update the view with loaded data
                 await pager.updateProps(data);
             },
@@ -219,7 +219,7 @@ test("pager disabling", async () => {
 
 test.tags("desktop");
 test("pager disabling on desktop", async () => {
-    const reloadPromise = new Deferred();
+    const reloadPromise = Promise.withResolvers();
     const pager = await mountWithCleanup(PagerController, {
         props: {
             offset: 0,
@@ -230,7 +230,7 @@ test("pager disabling on desktop", async () => {
             // to avoid switching twice with the same action (double click).
             async onUpdate(data) {
                 // 1. Simulate a (long) server action
-                await reloadPromise;
+                await reloadPromise.promise;
                 // 2. Update the view with loaded data
                 await pager.updateProps(data);
             },

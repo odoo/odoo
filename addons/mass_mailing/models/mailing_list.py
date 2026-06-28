@@ -233,6 +233,8 @@ class MailingList(models.Model):
         The opt-out status of the destination list is preffered.
         Otherwise if it is opted out of any list, it is opted out of the final one.
         """
+        if not src_lists:
+            return
         self.ensure_one()
         # Put destination is sources lists if not already the case
         self.env['mailing.contact'].flush_model()
@@ -352,13 +354,13 @@ class MailingList(models.Model):
         """
         email_normalized = tools.email_normalize(email)
         if not self or not email_normalized:
-            return
+            return self.env['mailing.contact']
 
         contacts = self.env['mailing.contact'].with_context(active_test=False).search(
             [('email_normalized', '=', email_normalized)]
         )
         if not contacts:
-            return
+            return self.env['mailing.contact']
 
         # switch opted-in subscriptions
         if opt_out:
@@ -410,6 +412,7 @@ class MailingList(models.Model):
                 body=body,
                 subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             )
+        return contacts
 
     # ------------------------------------------------------
     # MAILING

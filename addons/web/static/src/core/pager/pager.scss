@@ -1,0 +1,13 @@
+.o_pager {
+    // Same color as .o_field_widget:focus-within
+    @include print-variable(o-input-border-color, $o-action);
+
+    span.o_pager_value:not(:hover) {
+        --border-opacity: 1;
+        border-color: transparent !important;
+    }
+
+    input.o_pager_value {
+        border-color: var(--o-input-border-color) !important;
+    }
+}

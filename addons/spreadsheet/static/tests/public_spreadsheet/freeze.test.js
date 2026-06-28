@@ -1,5 +1,5 @@
 import { animationFrame, describe, expect, test } from "@odoo/hoot";
-import { registries } from "@odoo/o-spreadsheet";
+import { Model, registries } from "@odoo/o-spreadsheet";
 import { createSpreadsheetWithChart } from "@spreadsheet/../tests/helpers/chart";
 import {
     addGlobalFilter,
@@ -13,7 +13,10 @@ import {
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { getCell, getEvaluatedCell } from "@spreadsheet/../tests/helpers/getters";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
-import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
+import {
+    createModelWithDataSource,
+    makeSpreadsheetMockEnv,
+} from "@spreadsheet/../tests/helpers/model";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 import { freezeOdooData, waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { OdooPivot, OdooPivotRuntimeDefinition } from "@spreadsheet/pivot/odoo_pivot";
@@ -28,7 +31,9 @@ defineSpreadsheetModels();
 
 test("odoo pivot functions are replaced with their value", async function () {
     const { model } = await createSpreadsheetWithPivot({ pivotType: "static" });
-    expect(getCell(model, "A3").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.HEADER(1,"bar",FALSE)');
+    expect(getCell(model, "A3").compiledFormula.toFormulaString(model.getters)).toBe(
+        '=PIVOT.HEADER(1,"bar",FALSE)'
+    );
     expect(getCell(model, "C3").compiledFormula.toFormulaString(model.getters)).toBe(
         '=PIVOT.VALUE(1,"probability:avg","bar",FALSE,"foo",2)'
     );
@@ -80,7 +85,9 @@ test("Pivot with a type different of ODOO is not converted", async function () {
 
 test("values are not exported formatted", async function () {
     const { model } = await createSpreadsheetWithPivot({ pivotType: "static" });
-    expect(getCell(model, "A3").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.HEADER(1,"bar",FALSE)');
+    expect(getCell(model, "A3").compiledFormula.toFormulaString(model.getters)).toBe(
+        '=PIVOT.HEADER(1,"bar",FALSE)'
+    );
     expect(getCell(model, "C3").compiledFormula.toFormulaString(model.getters)).toBe(
         '=PIVOT.VALUE(1,"probability:avg","bar",FALSE,"foo",2)'
     );
@@ -138,7 +145,7 @@ test("computed format is exported", async function () {
 });
 
 test("odoo charts are replaced with an image", async function () {
-    const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+    const { model } = await createSpreadsheetWithChart({ type: "bar" });
     const data = await freezeOdooData(model);
     expect(data.sheets[0].figures.length).toBe(1);
     expect(data.sheets[0].figures[0].tag).toBe("image");
@@ -171,7 +178,7 @@ test("geo charts are replaced with an image", async function () {
 });
 
 test("Carousels figure with odoo data is converted to an image", async function () {
-    const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+    const { model } = await createSpreadsheetWithChart({ type: "bar" });
     const sheetId = model.getters.getActiveSheetId();
     const chartFigureId = model.getters.getFigures(sheetId)[0].id;
     createCarousel(model, { items: [] }, "carouselId");
@@ -266,7 +273,7 @@ test("from/to global filter without value is exported", async function () {
 
 test("Empty ODOO.LIST result is frozen to an empty string", async function () {
     const { model } = await createSpreadsheetWithList();
-    setCellContent(model, "A1", '=ODOO.LIST(1, 9999,"probability")'); // has no record
+    setCellContent(model, "A1", '=ODOO.LIST.VALUE(1, 9999,"probability")'); // has no record
     await waitForDataLoaded(model);
     expect(getEvaluatedCell(model, "A1").value).toBe("");
     const frozenData = await freezeOdooData(model);
@@ -301,9 +308,9 @@ test("odoo links are replaced with their label", async function () {
         serverData: getMenuServerData(),
     });
     const frozenData = await freezeOdooData(model);
-    expect(frozenData.sheets[0].cells.A1).toBe("menu_xml");
-    expect(frozenData.sheets[0].cells.A2).toBe("menu_id");
-    expect(frozenData.sheets[0].cells.A3).toBe("odoo_view");
+    expect(frozenData.sheets[0].cells.A1).toBe("[menu_xml](neutralized:link)");
+    expect(frozenData.sheets[0].cells.A2).toBe("[menu_id](neutralized:link)");
+    expect(frozenData.sheets[0].cells.A3).toBe("[odoo_view](neutralized:link)");
     expect(frozenData.sheets[0].cells.A4).toBe("[external_link](https://odoo.com)");
     expect(frozenData.sheets[0].cells.A5).toBe("[internal_link](o-spreadsheet://Sheet1)");
 });
@@ -336,7 +343,7 @@ test("spilled pivot table", async function () {
     );
 });
 
-test("empty string computed measure is exported as =\"\"", async function () {
+test('empty string computed measure is exported as =""', async function () {
     const { model } = await createSpreadsheetWithPivot();
     setCellContent(model, "A10", "=PIVOT(1)");
     expect(getEvaluatedCell(model, "B12").value).toBe(""); // empty value
@@ -349,4 +356,30 @@ test("Lists are purged from the frozen data", async function () {
     const { model } = await createSpreadsheetWithList();
     const data = await freezeOdooData(model);
     expect(data.lists).toEqual({});
+});
+
+test("Cannot copy in frozen spreadsheets", async function () {
+    const env = await makeSpreadsheetMockEnv();
+    env.isFrozenSpreadsheet = () => true;
+    const model = new Model(
+        {},
+        {
+            custom: {
+                env,
+                isFrozenSpreadsheet: true,
+            },
+        }
+    );
+    expect(model.canDispatch("COPY", {}).isSuccessful).toBe(false);
+
+    const { cellMenuRegistry, topbarMenuRegistry, colMenuRegistry, rowMenuRegistry } = registries;
+    expect(cellMenuRegistry.get("copy").isEnabled(env)).toBe(false);
+    expect(colMenuRegistry.get("copy").isEnabled(env)).toBe(false);
+    expect(rowMenuRegistry.get("copy").isEnabled(env)).toBe(false);
+    expect(
+        topbarMenuRegistry
+            .get("edit")
+            .children.filter((c) => c.id === "copy")[0]
+            .isEnabled(env)
+    ).toBe(false);
 });

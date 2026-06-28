@@ -8,12 +8,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('bh')
     def _get_bh_template_data(self):
         return {
-            'property_account_receivable_id': 'bh_account_100201',
-            'property_account_payable_id': 'bh_account_200101',
-            'property_account_expense_id': 'bh_account_500101',
-            'property_account_income_id': 'bh_account_400101',
-            'property_stock_valuation_account_id': 'bh_account_100502',
-            'property_stock_account_production_cost_id': 'bh_account_100505',
             'code_digits': '6',
         }
 
@@ -37,5 +31,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_revenue_account_id': 'bh_account_200401',
                 'expense_account_id': 'bh_account_500101',
                 'income_account_id': 'bh_account_400101',
+                'receivable_account_id': 'bh_account_100201',
+                'payable_account_id': 'bh_account_200101',
+                'account_stock_valuation_id': 'bh_account_100502',
+                'stock_account_production_cost_id': 'bh_account_100505',
             },
         }

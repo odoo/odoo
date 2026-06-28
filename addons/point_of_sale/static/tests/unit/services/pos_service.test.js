@@ -53,6 +53,7 @@ describe("pos_store.js", () => {
         models.connectNewData({
             "pos.order": [serializedOrder],
         });
+        order.model.triggerEvents("update", { id: order.id, fields: [] });
         const updatedOrder = models["pos.order"].get(order.id);
         expect(updatedOrder.state).toBe("cancel");
         expect(isListenerCalled).toBe(true);
@@ -143,13 +144,13 @@ describe("pos_store.js", () => {
             expect(order2.lines[1].id).toBeOfType("number");
         });
 
-        test("getOrderChanges", async () => {
+        test("getChanges", async () => {
             const store = await setupPosEnv();
             const product = store.models["product.product"].get(5);
             product.display_name = "001 TEST";
-            await getFilledOrder(store);
-            const result = store.getOrderChanges();
-            const [line] = Object.values(result.orderlines);
+            const order = await getFilledOrder(store);
+            const result = order.getChanges();
+            const [line] = Object.values(result.addedQuantity);
             expect(line.basic_name).toBe("001 TEST");
         });
 
@@ -169,6 +170,39 @@ describe("pos_store.js", () => {
             expect(order.lines).toHaveLength(2);
             expect(order.lines[0].id).toBeOfType("string");
             expect(order.lines[1].id).toBeOfType("string");
+        });
+
+        test("retry sync reserializes updated order lines", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+
+            await store.syncAllOrders();
+
+            order.lines[0].qty += 1;
+
+            let syncCallCount = 0;
+            let secondPayload;
+            const originalCall = store.data.call.bind(store.data);
+            store.data.call = async (model, method, args, kwargs) => {
+                if (model === "pos.order" && method === "sync_from_ui") {
+                    syncCallCount += 1;
+                    if (syncCallCount === 1) {
+                        const firstPayload = args[0][0];
+                        expect(firstPayload.lines.length).toBeGreaterThan(0);
+                        expect(firstPayload.lines[0][0]).toBe(1);
+                        throw new Error("sync failure");
+                    }
+                    secondPayload = args[0][0];
+                }
+                return originalCall(model, method, args, kwargs);
+            };
+
+            await store.syncAllOrders({ orders: [order] });
+            await store.syncAllOrders({ orders: [order] });
+
+            expect(syncCallCount).toBe(2);
+            expect(secondPayload.lines.length).toBeGreaterThan(0);
+            expect(secondPayload.lines[0][0]).toBe(1);
         });
 
         test("insync order should not be re-synced", async () => {
@@ -205,7 +239,24 @@ describe("pos_store.js", () => {
         expect(store.getOrder().lines[0].qty).toBe(4);
     });
 
-    test("changesToOrderNoPrepCateg", async () => {
+    test("addLineToCurrentOrder keeps the given variant with a single-value dynamic attribute", async () => {
+        const store = await setupPosEnv();
+        store.setOrder(null);
+        const variantM = store.models["product.product"].get(61);
+
+        await store.addLineToCurrentOrder(
+            { product_id: variantM, product_tmpl_id: variantM.product_tmpl_id },
+            {},
+            variantM.needToConfigure()
+        );
+
+        const orderLines = store.getOrder().lines;
+        const addedProduct = orderLines.at(-1).product_id;
+        expect(orderLines.length).toBe(1);
+        expect(addedProduct.id).toBe(61);
+    });
+
+    test("getPreparationChangesNoPrepCateg", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
         const generator = store.ticketPrinter.getGenerator({ models: store.models, order });
@@ -238,10 +289,9 @@ describe("pos_store.js", () => {
 
     test("generateReceiptsDataToPrint", async () => {
         const store = await setupPosEnv();
-        const pos_categories = store.models["pos.category"].getAll().map((c) => c.id);
+        const pos_categories = store.models["pos.category"].map((c) => c.id);
         const order = await getFilledOrder(store);
         order.lines[1].setNote('[{"text":"Wait","colorIndex":0}]');
-
         order.lines[0].setCustomerNote("Test Orderline Customer Note");
         const generator = store.ticketPrinter.getGenerator({ models: store.models, order });
         const orderChange = generator.generatePreparationData(new Set([...pos_categories]), {});
@@ -250,38 +300,30 @@ describe("pos_store.js", () => {
         expect(newChanges.title).toBe("NEW");
         expect(newChanges.data.length).toBe(2);
         expect(newChanges.data[0]).toEqual({
-            uuid: order.lines[0].uuid,
-            name: "TEST",
             basic_name: "TEST",
-            combo_parent_uuid: undefined,
             customer_note: "Test Orderline Customer Note",
             product_id: 5,
             attribute_value_names: [],
             quantity: 3,
             note: "",
-            pack_lot_lines: [],
             pos_categ_id: 1,
             pos_categ_sequence: 1,
-            display_name: "TEST",
-            group: undefined,
-            isCombo: false,
+            group: false,
+            combo_line_ids: [],
+            combo_parent_uuid: undefined,
         });
         expect(newChanges.data[1]).toEqual({
-            uuid: order.lines[1].uuid,
-            name: "TEST 2",
             basic_name: "TEST 2",
-            combo_parent_uuid: undefined,
             customer_note: "",
             product_id: 6,
             attribute_value_names: [],
             quantity: 2,
             note: "Wait",
-            pack_lot_lines: [],
             pos_categ_id: 2,
             pos_categ_sequence: 2,
-            display_name: "TEST 2",
-            group: undefined,
-            isCombo: false,
+            group: false,
+            combo_line_ids: [],
+            combo_parent_uuid: undefined,
         });
     });
 
@@ -295,22 +337,38 @@ describe("pos_store.js", () => {
         productB.pos_categ_ids = [2];
 
         const currentOrderChange = {
-            new: [
-                { uuid: "combo-parent-uuid", isCombo: true },
+            addedQuantity: [
+                {
+                    uuid: "combo-parent-uuid",
+                    combo_line_ids: [
+                        {
+                            uuid: "combo-child-a-uuid",
+                            combo_parent_uuid: "combo-parent-uuid",
+                            product_id: productA,
+                            combo_line_ids: false,
+                        },
+                        {
+                            uuid: "combo-child-b-uuid",
+                            combo_parent_uuid: "combo-parent-uuid",
+                            product_id: productB,
+                            combo_line_ids: false,
+                        },
+                    ],
+                },
                 {
                     uuid: "combo-child-a-uuid",
                     combo_parent_uuid: "combo-parent-uuid",
                     product_id: productA.id,
-                    isCombo: false,
+                    combo_line_ids: false,
                 },
                 {
                     uuid: "combo-child-b-uuid",
                     combo_parent_uuid: "combo-parent-uuid",
                     product_id: productB.id,
-                    isCombo: false,
+                    combo_line_ids: false,
                 },
-                { uuid: "line1", product_id: productA.id, isCombo: false },
-                { uuid: "line2", product_id: productB.id, isCombo: false },
+                { uuid: "line1", product_id: productA.id, combo_line_ids: false },
+                { uuid: "line2", product_id: productB.id, combo_line_ids: false },
             ],
             cancelled: [],
             noteUpdate: [],
@@ -323,7 +381,7 @@ describe("pos_store.js", () => {
         );
 
         const expectedUuids = ["combo-parent-uuid", "combo-child-a-uuid", "line1"];
-        const actualUuids = filtered.new.map((c) => c.uuid);
+        const actualUuids = filtered.addedQuantity.map((c) => c.uuid);
 
         expect(actualUuids.sort()).toEqual(expectedUuids.sort());
     });
@@ -352,9 +410,10 @@ describe("pos_store.js", () => {
         const store = await setupPosEnv();
         store.selectedCategory = store.models["pos.category"].get(1);
         let products = store.productsToDisplay;
-        expect(products.length).toBe(2);
-        expect(products[0].id).toBe(19);
-        expect(products[1].id).toBe(5);
+
+        expect(products.length).toBe(3);
+        expect(products[1].id).toBe(19);
+        expect(products[products.length - 1].id).toBe(5);
         expect(store.selectedCategory.id).toBe(1);
         store.selectedCategory = store.models["pos.category"].get(1);
         store.searchProductWord = "TEST";
@@ -377,7 +436,7 @@ describe("pos_store.js", () => {
         let grouped = store.productToDisplayByCateg;
         expect(grouped.length).toBe(1); // Only one group
         expect(grouped[0][0]).toBe("0");
-        expect(grouped[0][1].length).toBe(17); // 17 products in same group
+        expect(grouped[0][1].length).toBe(18); // 18 products in same group
 
         // Case 2: Grouping enabled
         store.config.iface_group_by_categ = true;
@@ -412,8 +471,8 @@ describe("pos_store.js", () => {
         grouped = store.productToDisplayByCateg;
         expect(grouped.length).toBe(1);
         expect(grouped[0][0]).toBe(1);
-        expect(grouped[0][1][0].name).toBe("Multi Category Product");
-        expect(grouped[0][1][1].name).toBe("TEST");
+        expect(grouped[0][1][1].name).toBe("Multi Category Product");
+        expect(grouped[0][1][2].name).toBe("TEST");
 
         // Case 5: Grouping with category 'Food' selected (parent of 'Burger' & 'Pizza')
         store.selectedCategory = store.models["pos.category"].get(3);
@@ -423,6 +482,17 @@ describe("pos_store.js", () => {
         expect(grouped[0][1][0].name).toBe("Club sandwich");
         expect(grouped[1][1][0].name).toBe("Bacon burger");
         expect(grouped[2][1][0].name).toBe("Pizza margarita");
+
+        // Case 6: Grouping with special products excluded
+        const specialProduct = store.models["product.template"].get(25);
+        store.searchProductWord = "";
+        store.selectedCategory = store.models["pos.category"].get(
+            specialProduct.pos_categ_ids[0].id
+        );
+
+        grouped = store.productToDisplayByCateg;
+        expect(grouped).toHaveLength(1);
+        expect(grouped[0][1].map((p) => p.id)).not.toInclude(specialProduct.id);
     });
 
     test("productToDisplayByCateg count", async () => {
@@ -436,6 +506,8 @@ describe("pos_store.js", () => {
                 store.models["product.template"].create({
                     name: `${prefix}_${i}`,
                     pos_categ_ids: [categ.id],
+                    active: true,
+                    available_in_pos: true,
                 });
             }
 
@@ -492,8 +564,8 @@ describe("pos_store.js", () => {
         const store = await setupPosEnv();
         const order = store.addNewOrder();
         const deletedOrder = await store.onDeleteOrder(order);
-        expect(order.uiState.displayed).toBe(false);
         expect(deletedOrder).toBe(true);
+        expect(store.models["pos.order"].getBy("uuid", order.uuid)).toBeEmpty();
     });
 
     test("setNextOrderRefs", async () => {

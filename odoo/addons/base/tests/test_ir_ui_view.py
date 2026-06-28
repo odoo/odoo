@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import re
@@ -17,7 +16,6 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import common, tagged
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tools import mute_logger, view_validation, safe_eval
-from odoo.tools.cache import get_cache_key_counter
 from odoo.addons.base.models import ir_ui_view
 
 _logger = logging.getLogger(__name__)
@@ -317,17 +315,17 @@ class TestViewInheritance(ViewCase):
         # fetch an extra field on views. You better fetch that extra field with
         # the query of _get_inheriting_views() and manually feed the cache.
         self.env.invalidate_all()
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(2):
             # 1: browse([self.view_ids['A']])
             # 2: _get_inheriting_views: id, inherit_id, mode, groups
-            # 3: _combine: arch_db
             self.view_ids['A'].get_combined_arch()
 
     def test_view_validate_button_action_query_count(self):
+        from odoo.orm.cache import get_cache_key_counter  # noqa: PLC0415
         _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.action_ui_view')
         hit, miss = counter.hit, counter.miss
 
-        with self.assertQueryCount(10):
+        with self.assertQueryCount(6):
             base_view = self.assertValid("""
                 <form string="View">
                     <header>
@@ -349,10 +347,11 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(counter.miss, miss + 2)
 
     def test_view_validate_attrs_groups_query_count(self):
+        from odoo.orm.cache import get_cache_key_counter  # noqa: PLC0415
         _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.group_system')
         hit, miss = counter.hit, counter.miss
 
-        with self.assertQueryCount(6):
+        with self.assertQueryCount(2):
             base_view = self.assertValid("""
                 <form string="View">
                     <field name="name" groups="base.group_system"/>
@@ -1929,6 +1928,9 @@ class TestViews(ViewCase):
             else:
                 kw['type'] = etree.fromstring(arch_db).tag
             kw['arch_db'] = Json({'en_US': arch_db}) if self.env.lang in (None, 'en_US') else Json({'en_US': arch_db, self.env.lang: arch_db})
+        for field_name, field in self.env['ir.ui.view']._fields.items():
+            if field.required and field_name not in kw:
+                kw[field_name] = field.default(self.env['ir.ui.view'])
 
         keys = sorted(kw)
         fields = ','.join('"%s"' % (k.replace('"', r'\"'),) for k in keys)
@@ -3328,7 +3330,7 @@ class TestViews(ViewCase):
             </list>
         """
         self.assertValid(arch % '')
-        self.assertInvalid(arch % '<group/>', "List child can only have one of field, button, control, groupby, widget, header tag (not group)")
+        self.assertInvalid(arch % '<group/>', "List child can only have one of field, button, control, groupby, widget, header, column tag (not group)")
 
     def test_tree_groupby(self):
         arch = """
@@ -4840,9 +4842,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'account_auto_transfer',
             'account_avatax',
             'account_avatax_geolocalize',
-            'account_avatax_sale',
             'account_base_import',
-            'account_batch_payment',
             'account_budget',
             'account_check_printing',
             'account_consolidation',
@@ -4850,7 +4850,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'account_disallowed_expenses',
             'account_edi',
             'account_edi_proxy_client',
-            'account_edi_ubl_cii',
             'account_external_tax',
             'account_fleet',
             'account_followup',
@@ -4869,7 +4868,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'appointment',
             'approvals',
             'approvals_purchase_stock',
-            'auth_signup',
             'auth_totp',
             'barcodes_gs1_nomenclature',
             'base_address_extended',
@@ -4892,7 +4890,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'delivery_easypost',
             'delivery_fedex',
             'delivery_iot',
-            'delivery_mondialrelay',
             'delivery_sendcloud',
             'delivery_shiprocket',
             'delivery_starshipit',
@@ -4903,10 +4900,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'documents',
             'documents_account',
             'documents_approvals',
-            'documents_fleet',
-            'documents_l10n_be_hr_payroll',
-            'documents_project',
-            'documents_project_sale',
             'documents_spreadsheet',
             'event',
             'event_booth',
@@ -4929,12 +4922,10 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'helpdesk_timesheet',
             'hr',
             'hr_appraisal',
-            'hr_appraisal_skills',
             'hr_appraisal_survey',
             'hr_attendance',
             'hr_contract',
             'hr_contract_salary',
-            'hr_contract_salary_holidays',
             'hr_expense',
             'hr_expense_extract',
             'hr_fleet',
@@ -4954,12 +4945,9 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'hr_sign',
             'hr_skills',
             'hr_skills_slides',
-            'hr_skills_survey',
             'hr_timesheet',
             'hr_work_entry',
-            'iap',
             'im_livechat',
-            'iot',
             'knowledge',
             'l10n_ae_hr_payroll',
             'l10n_ar',
@@ -4972,7 +4960,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_be_hr_payroll',
             'l10n_be_hr_payroll_dimona',
             'l10n_be_hr_payroll_fleet',
-            'l10n_be_hr_payroll_sd_worx',
             'l10n_be_reports',
             'l10n_be_soda',
             'l10n_br',
@@ -5020,7 +5007,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_it_xml_export',
             'l10n_jo_edi',
             'l10n_jo_hr_payroll',
-            'l10n_jp_zengin',
             'l10n_ke_edi_oscu',
             'l10n_ke_edi_oscu_mrp',
             'l10n_ke_edi_oscu_pos',
@@ -5032,13 +5018,12 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_lu_hr_payroll',
             'l10n_lu_reports',
             'l10n_ma_hr_payroll',
-            'l10n_mx',
-            'l10n_mx_edi',
-            'l10n_mx_edi_extended',
-            'l10n_mx_edi_landing',
-            'l10n_mx_edi_pos',
-            'l10n_mx_edi_stock',
             'l10n_mx_hr_payroll',
+            'l10n_mx_edi',
+            'l10n_mx_edi_pos',
+            'l10n_mx_edi_extended',
+            'l10n_mx_edi_stock',
+            'l10n_mx_edi_landing',
             'l10n_mx_reports',
             'l10n_my_edi',
             'l10n_my_edi_pos',
@@ -5049,7 +5034,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_pe_edi_stock',
             'l10n_pe_reports',
             'l10n_pe_reports_stock',
-            'l10n_ph',
             'l10n_ph_check_printing',
             'l10n_pl_reports',
             'l10n_ro_edi_stock',
@@ -5064,17 +5048,13 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_uk_reports',
             'l10n_uk_reports_cis',
             'l10n_us_hr_payroll',
-            'l10n_us_hr_payroll_adp',
             'l10n_uy_edi',
             'loyalty',
             'lunch',
             'mail',
-            'mail_bot_hr',
             'mail_group',
             'maintenance',
-            'maintenance_worksheet',
             'marketing_automation',
-            'marketing_automation_sms',
             'mass_mailing',
             'mass_mailing_crm',
             'mass_mailing_event',
@@ -5092,11 +5072,8 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'mrp_subcontracting',
             'mrp_subcontracting_dropshipping',
             'mrp_workorder',
-            'mrp_workorder_expiry',
-            'mrp_workorder_iot',
             'onboarding',
             'partner_autocomplete',
-            'partner_commission',
             'payment',
             'payment_adyen',
             'payment_authorize',
@@ -5105,13 +5082,11 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'planning',
             'point_of_sale',
             'portal',
-            'pos_enterprise',
             'pos_hr',
             'pos_iot',
             'pos_online_payment',
             'pos_restaurant',
             'pos_restaurant_appointment',
-            'pos_self_order',
             'privacy_lookup',
             'product',
             'product_email_template',
@@ -5130,8 +5105,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'quality_control',
             'quality_control_iot',
             'quality_control_picking_batch',
-            'quality_control_worksheet',
-            'quality_iot',
             'quality_mrp',
             'quality_mrp_workorder',
             'rating',
@@ -5142,7 +5115,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'sale_amazon',
             'sale_crm',
             'sale_expense',
-            'sale_external_tax',
             'sale_loyalty',
             'sale_management',
             'sale_margin',
@@ -5150,10 +5122,8 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'sale_planning',
             'sale_product_matrix',
             'sale_project',
-            'sale_purchase',
             'sale_renting',
             'sale_renting_crm',
-            'sale_stock',
             'sale_stock_renting',
             'sale_subscription',
             'sale_timesheet',
@@ -5162,7 +5132,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'sign',
             'sms',
             'snailmail',
-            'snailmail_account',
             'social',
             'social_crm',
             'social_facebook',
@@ -5187,14 +5156,13 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'survey',
             'test_tests',
             'timesheet_grid',
-            'uom',
             'utm',
             'voip',
             'web',
             'web_studio',
         )
 
-        modules_without_error = set(self.env['ir.module.module'].search([('state', '=', 'intalled'), ('name', 'in', only_log_modules)]).mapped('name'))
+        modules_without_error = set(self.env['ir.module.module'].search([('state', '=', 'installed'), ('name', 'in', only_log_modules)]).mapped('name'))
         module_log_views = defaultdict(list)
         module_error_views = defaultdict(lambda: defaultdict(list))
         uncommented_regexp = r'''(<field [^>]*invisible=['"](True|1)['"][^>]*>)[\s\t\n ]*(.*)'''

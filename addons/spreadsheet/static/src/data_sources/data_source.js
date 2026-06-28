@@ -170,3 +170,17 @@ export async function getFields(fieldService, model) {
         throw e;
     }
 }
+
+/**
+ *
+ * @param {Object} pathInfo results from a call to fieldService.loadPath
+ * @param {string[]} pathInfo.names the names of the fields in the path
+ * @param {Object[]} pathInfo.modelsInfo the info of the models in the path
+ * @returns {string}
+ */
+export function getFullFieldStringFromPath(pathInfo) {
+    const { names, modelsInfo } = pathInfo;
+    return names
+        .map((name, i) => modelsInfo[i].fieldDefs[name]?.string || _t("Unnamed Field"))
+        .join(" > ");
+}

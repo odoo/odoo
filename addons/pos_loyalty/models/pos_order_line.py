@@ -25,3 +25,11 @@ class PosOrderLine(models.Model):
         params = super()._load_pos_data_fields(config)
         params += ['is_reward_line', 'reward_id', 'reward_identifier_code', 'points_cost', 'coupon_id']
         return params
+
+    def _has_discount(self):
+        return super()._has_discount() or (self.is_reward_line and self.reward_id.reward_type == 'discount')
+
+    def _get_discount_amount_for_report(self):
+        if self.is_reward_line:
+            return abs(self.price_subtotal_incl)
+        return super()._get_discount_amount_for_report()

@@ -133,6 +133,10 @@ export const errorService = {
         browser.addEventListener("unhandledrejection", async (ev) => {
             let error = ev.reason;
 
+            if (error && error.name === "AbortError") {
+                // abort errors are normal and expected, we don't want to do anything
+                return;
+            }
             if (error && error.type === "error" && "eventPhase" in error) {
                 // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/error_event
                 // See also MDN's img, script and iframe docs. The error Event *doesn't* bubble.
@@ -167,7 +171,7 @@ export const errorService = {
                 }
                 traceback =
                     `Uncaught unknown Error\n` +
-                    `An unknown error occured. This may be due to a Chrome extension meddling with Odoo.\n` +
+                    `An unknown error occurred. This may be due to a Chrome extension meddling with Odoo.\n` +
                     `(Opening your browser console might give you a hint on the error.)`;
             }
             const uncaughtError = new UncaughtPromiseError();

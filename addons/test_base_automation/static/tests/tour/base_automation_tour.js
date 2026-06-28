@@ -539,8 +539,23 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
             run: "fill test",
         },
         {
-            trigger:
-                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin):contains(test stage\nSearch more...)",
+            trigger: ".o-autocomplete--dropdown-item:contains(test stage)",
+            run: "click",
+        },
+        {
+            content: "Open select",
+            trigger: ".o_form_renderer #trigger_0",
+            run: "click",
+        },
+        // Because the tour runs too quickly, we cannot reliably detect the Many2OneReference re-rendering itself.
+        // To verify the update, we first use another model_field value to force the field to be destroyed,
+        // then switch to a value that recreates the Many2OneReference, and check that the field is present afterward.
+        {
+            trigger: ".o_select_menu_item:contains(User is set)",
+            run: "click",
+        },
+        {
+            trigger: "body:not(:has(.o_field_widget[name='trg_field_ref']))",
         },
         {
             content: "Open select",
@@ -552,16 +567,12 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
             run: "click",
         },
         {
-            trigger:
-                ".o_field_widget[name='trg_field_ref'] :not(:has(.o-autocomplete--dropdown-menu))",
-        },
-        {
             trigger: ".o_field_widget[name='trg_field_ref'] input",
             run: "fill test",
         },
         {
-            trigger:
-                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin):contains(test stage\nSearch more...)",
+            trigger: ".o-autocomplete--dropdown-item:contains(test tag)",
+            run: "click",
         },
         {
             trigger: ".o_form_button_cancel",

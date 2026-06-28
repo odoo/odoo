@@ -17,7 +17,8 @@ export class PaymentGlory extends PaymentInterface {
         this.gloryService.connect(
             this.payment_method_id.glory_websocket_address,
             this.payment_method_id.glory_username,
-            this.payment_method_id.glory_password
+            this.payment_method_id.glory_password,
+            this.payment_method_id.glory_use_lna
         );
 
         setTimeout(() => {

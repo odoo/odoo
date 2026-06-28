@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons.website.tools import text_from_html
 from odoo.tools import mute_logger
 from odoo.tools.urls import urljoin as url_join
 from odoo.tools.translate import html_translate
@@ -13,6 +14,7 @@ class HrJob(models.Model):
         'website.seo.metadata',
         'website.published.multi.mixin',
         'website.searchable.mixin',
+        'website.structured_data.mixin',
     ]
 
     @mute_logger('odoo.addons.base.models.ir_qweb')
@@ -102,7 +104,6 @@ spirit. To be successful, you will have solid solving problem skills.''')
     @api.model
     def _search_get_detail(self, website, order, options):
         requires_sudo = False
-        with_description = options['displayDescription']
         country_id = options.get('country_id')
         department_id = options.get('department_id')
         office_id = options.get('office_id')
@@ -132,17 +133,14 @@ spirit. To be successful, you will have solid solving problem skills.''')
             # Rule must be reinforced because of sudo.
             domain.append([('website_published', '=', True)])
 
-
-        search_fields = ['name']
-        fetch_fields = ['name', 'website_url']
+        search_fields = ['name', 'description']
+        fetch_fields = ['name', 'website_url', 'description']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
-            'website_url': {'name': 'website_url', 'type': 'text', 'truncate':  False},
+            'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'search_item_metadata': {'name': 'address', 'type': 'text'},
+            'description': {'name': 'description', 'type': 'text', 'html': True, 'match': True},
         }
-        if with_description:
-            search_fields.append('description')
-            fetch_fields.append('description')
-            mapping['description'] = {'name': 'description', 'type': 'text', 'html': True, 'match': True}
         return {
             'model': 'hr.job',
             'requires_sudo': requires_sudo,
@@ -151,4 +149,102 @@ spirit. To be successful, you will have solid solving problem skills.''')
             'fetch_fields': fetch_fields,
             'mapping': mapping,
             'icon': 'fa-briefcase',
+            'group_name': self.env._("Jobs"),
+            'sequence': 90,
         }
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        for data in results_data:
+            job_address = self.browse(data['id']).sudo().address_id
+            # sudo() to bypass access rights, since address_id is not available
+            # to users in the public group.
+            if job_address:
+                data['address'] = ", ".join(filter(None, [
+                    job_address.city,
+                    job_address.state_id.name,
+                    job_address.country_id.name,
+                ]))
+        return results_data
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._("Jobs"), '/jobs'))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _prepare_jsonld_vals(self):
+        self.ensure_one()
+        is_remote = not self.address_id
+        company_country = self.company_id.country_id
+        if not self.website_description or (is_remote and not company_country):
+            # JobPosting requires description and a resolvable location
+            # (jobLocation address, or jobLocationType + applicantLocationRequirements
+            # for fully remote roles).
+            return None
+        base_url = self.get_base_url()
+        vals = {
+            '@type': 'JobPosting',
+            '@id': f'{base_url}{self.website_url}/#jobposting',
+            'title': self.name,
+            'url': f'{base_url}{self.website_url}',
+            'description': text_from_html(self.website_description, True),
+            'directApply': True,
+            'hiringOrganization': {
+                '@id': f'{base_url}/#organization',
+            },
+        }
+        if date_posted := self._to_iso_datetime(self.published_date):
+            vals['datePosted'] = date_posted
+        if self.no_of_recruitment:
+            vals['totalJobOpenings'] = self.no_of_recruitment
+        if contract_type := self.employee_type_id.sudo():
+            vals['employmentType'] = {
+                'Permanent': 'FULL_TIME',
+                'Temporary': 'TEMPORARY',
+                'Interim': 'TEMPORARY',
+                'Seasonal': 'TEMPORARY',
+                'Full-Time': 'FULL_TIME',
+                'Part-Time': 'PART_TIME',
+                'Intern': 'INTERN',
+                'Student': 'INTERN',
+                'Apprenticeship': 'INTERN',
+                'Thesis': 'INTERN',
+                'Statutory': 'OTHER',
+                'Employee': 'FULL_TIME',
+            }.get(contract_type.name, 'OTHER')
+        if self.department_id and self.department_id.name:
+            vals['occupationalCategory'] = self.department_id.name
+        if self.department_id.company_id:
+            department_company = self.department_id.company_id
+            vals['identifier'] = {
+                '@type': 'PropertyValue',
+                'name': department_company.name,
+                'value': f'{department_company.id}-{self.id}',
+            }
+        if is_remote:
+            vals['jobLocationType'] = 'TELECOMMUTE'
+            vals['applicantLocationRequirements'] = {
+                '@type': 'Country',
+                'name': company_country.name,
+            }
+        else:
+            vals['jobLocation'] = {'@type': 'Place'}
+            if address := self._build_postaladdress_jsonld_vals(self.address_id.sudo()):
+                # Fall back to the company country when the office has none set.
+                if 'addressCountry' not in address and company_country.code:
+                    address['addressCountry'] = company_country.code
+                vals['jobLocation']['address'] = address
+        return vals
+
+    def _get_jsonld_dict(self, is_detail_page=False):
+        schemas = super()._get_jsonld_dict(is_detail_page)
+        if is_detail_page:
+            if job_vals := self._prepare_jsonld_vals():
+                schemas.append(job_vals)
+        elif self:
+            schemas.append(self._build_collectionpage_jsonld_vals(
+                self.env._("Jobs"), '/jobs', self,
+            ))
+        return schemas

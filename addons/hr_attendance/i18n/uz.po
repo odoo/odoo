@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-29 17:39+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -66,6 +66,16 @@ msgid "'Read the Documentation'"
 msgstr "'Hujjatlarni o‘qish'"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">When enabled, "
+"only the first check-in within the scheduled working hours (including "
+"tolerance) is recorded. Further check-ins are allowed only after an "
+"automatic check-out.</span>"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
 #, fuzzy
 msgid ""
@@ -111,6 +121,11 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span class=\"me-2\">Based on</span>"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 #, fuzzy
 msgid "<span class=\"me-2\">Time Period </span>"
 msgstr "<span class=\"me-2\">Vaqt oralig‘i </span>"
@@ -120,6 +135,11 @@ msgstr "<span class=\"me-2\">Vaqt oralig‘i </span>"
 #, fuzzy
 msgid "<span class=\"me-2\">Time Period</span>"
 msgstr "<span class=\"me-2\">Vaqt oralig‘i</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span class=\"me-2\">Time</span>"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -225,13 +245,15 @@ msgstr "Faol"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #, fuzzy
 msgid "Active Employees"
 msgstr "Faol xodimlar"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_version_list_view_enhanced_hr_attendance_add
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/hr_version_list_view.xml:0
 msgid "Add"
 msgstr ""
 
@@ -261,9 +283,8 @@ msgstr "Administrator"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
-#, fuzzy
 msgid "All"
-msgstr "Barchasi"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -316,6 +337,11 @@ msgid "Applied Rules"
 msgstr "Qo‘llaniladigan qoidalar"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__ruleset_id
+msgid "Applied Rulesets"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 #, fuzzy
@@ -356,6 +382,7 @@ msgstr "Arxivlangan"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #, fuzzy
 msgid "Archived Employees"
@@ -444,6 +471,11 @@ msgid "Attendance Overtime Line"
 msgstr "Qo‘shimcha ish vaqti davomati"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Attendance Rules & Enforcement"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_state
 #, fuzzy
@@ -496,6 +528,17 @@ msgid "Attendances from Backend"
 msgstr "Backend davomatlari"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__auto_check_out_mode
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_mode
+msgid "Auto Check Out Mode"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_specific_time
+msgid "Auto Check Out Specific Time"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_tolerance
 #, fuzzy
 msgid "Auto Check Out Tolerance"
@@ -522,29 +565,24 @@ msgid "Automatically Approved"
 msgstr "Avtomatik tasdiqlangan"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-#, fuzzy
-msgid ""
-"Automatically Check-Out Employees based on their working schedule with an "
-"additional tolerance. Does not apply to employees with a flexible working "
-"schedule."
-msgstr ""
-"Xodimlarni ish jadvaliga asosan qo‘shimcha chidamlilik bilan avtomatik "
-"ravishda ro‘yxatdan chiqarish. Moslashuvchan ish jadvaliga ega xodimlarga "
-"nisbatan qo‘llanilmaydi."
-
-#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #, fuzzy
 msgid "Automatically Checked-Out"
 msgstr "Avtomatik ro‘yxatdan chiqarilgan"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Automatically check out employees based on their working schedule with an "
+"additional tolerance, or at a specific time each day. Does not apply to "
+"employees with a flexible working schedule."
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
-#, fuzzy
 msgid "Back"
-msgstr "Orqaga"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__back
@@ -639,6 +677,12 @@ msgid "Browser"
 msgstr "Brauzer"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/hooks/use_camera.js:0
+msgid "Camera Error"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__can_edit
 msgid "Can Edit"
 msgstr ""
@@ -659,8 +703,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
 msgstr ""
-"%(empl_name)s uchun yangi davomat qaydini yaratib bo‘lmadi, xodim "
-"%(datetime)s dan beri ro‘yxatdan chiqmagan"
+"%(empl_name)s uchun yangi davomat qaydini yaratib bo‘lmadi, xodim %"
+"(datetime)s dan beri ro‘yxatdan chiqmagan"
 
 #. module: hr_attendance
 #. odoo-python
@@ -687,11 +731,11 @@ msgstr ""
 "tomonidan qo‘lda o‘zgartirilgan bo‘lishi mumkin."
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/components/check_in_out/check_in_out.xml:0
-#, fuzzy
-msgid "Check IN"
-msgstr "Ro‘yxatga kirish"
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Capture a photo at the time of check-in using the device camera (if "
+"available). Images are automatically optimized for performance and storage."
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
@@ -701,13 +745,6 @@ msgstr "Ro‘yxatga kirish"
 #, fuzzy
 msgid "Check In"
 msgstr "Kirish"
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/components/check_in_out/check_in_out.xml:0
-#, fuzzy
-msgid "Check OUT"
-msgstr "Chiqish"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
@@ -733,6 +770,23 @@ msgid "Check out"
 msgstr "Chiqish"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_image
+msgid "Check-In Image"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_employee.py:0
+msgid "Check-in image captured"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_employee.py:0
+msgid "Check-in is recorded, but picture could not be captured"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
 #, fuzzy
 msgid "Checked in"
@@ -741,9 +795,8 @@ msgstr "Kirildi"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
-#, fuzzy
 msgid "Checked in at"
-msgstr "Kirilgan vaqt:"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_out
@@ -754,9 +807,8 @@ msgstr "Chiqildi"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
-#, fuzzy
 msgid "Checked out at"
-msgstr "Chiqilgan vaqt:"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -767,9 +819,8 @@ msgstr "Salomlashish xabari qancha vaqt ko‘rsatilishini tanlang."
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
-#, fuzzy
 msgid "Choose how to record attendances"
-msgstr "Davomatni qayd qilish usulini tanlang"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -820,6 +871,7 @@ msgstr "Konfiguratsiya"
 
 #. module: hr_attendance
 #. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
 #, fuzzy
 msgid "Confirm"
@@ -828,9 +880,8 @@ msgstr "Tasdiqlash"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
-#, fuzzy
 msgid "Connect an RFID reader, and scan a token."
-msgstr "RFID o‘quvchini ulang va tokenni skanerlang."
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -907,12 +958,14 @@ msgstr "Boshqaruv paneli"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__date
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #, fuzzy
 msgid "Date"
 msgstr "Sana"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__day_of_date
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__date
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__quantity_period__day
 #, fuzzy
@@ -972,23 +1025,9 @@ msgstr "Farq"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__display_extra_hours
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_display_overtime
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__hr_attendance_display_overtime
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 #, fuzzy
 msgid "Display Extra Hours"
 msgstr "Qo‘shimcha soatlarni ko‘rsatish"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-#, fuzzy
-msgid "Display Extra Hours in Kiosk mode and on User profile."
-msgstr ""
-"Qo‘shimcha soatlarni Kiosk rejimida va Foydalanuvchi profilida ko‘rsatish."
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-#, fuzzy
-msgid "Display Extra Hours."
-msgstr "Qo‘shimcha soatlarni ko‘rsatish."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__display_name
@@ -1006,6 +1045,16 @@ msgstr "Qo‘shimcha soatlarni ko‘rsatish."
 #, fuzzy
 msgid "Display Name"
 msgstr "Ko‘rsatiladigan nom"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Display Overtime"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Display Overtime in Kiosk mode and on User profile."
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -1032,6 +1081,7 @@ msgstr "Oshib ketish muddati:"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__employee_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
 #, fuzzy
@@ -1137,15 +1187,8 @@ msgid "Errors"
 msgstr "Xatolar"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
-#, fuzzy
-msgid "Expected Hours"
-msgstr "Kutilayotgan ish soatlari"
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__duration
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 #, fuzzy
@@ -1167,7 +1210,6 @@ msgstr "Qo‘shimcha soatlar qoidalari"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_overtime_validation
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_overtime_validation
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 #, fuzzy
 msgid "Extra Hours Validation"
 msgstr "Qo‘shimcha soatlarni tekshirish"
@@ -1181,9 +1223,8 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
-#, fuzzy
 msgid "Extra hours"
-msgstr "Qo‘shimcha soatlar"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1214,9 +1255,13 @@ msgstr "Obunachilar (hamkorlar)"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.xml:0
-#, fuzzy
 msgid "For"
-msgstr "uchun"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__day_of_date__4
+msgid "Friday"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__timing_start
@@ -1265,6 +1310,7 @@ msgstr "Shartnomadan ish vaqtini olish"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/card_layout/card_layout.xml:0
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 #: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
 #: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
@@ -1297,6 +1343,12 @@ msgstr "HTTP yo‘naltirish"
 #, fuzzy
 msgid "Has Message"
 msgstr "Xabar mavjud"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__has_ruleset_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_version__has_ruleset_id
+msgid "Has Ruleset"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1333,9 +1385,8 @@ msgstr "Bugun avval ishlangan soatlar"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
-#, fuzzy
 msgid "Hours Previously Today:"
-msgstr "Bugun avval ishlangan soatlar:"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
@@ -1347,15 +1398,20 @@ msgstr "Bugungi soatlar"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
-#, fuzzy
 msgid "Hours Today:"
-msgstr "Bugungi soatlar:"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__expected_hours_from_contract
 #, fuzzy
 msgid "Hours from employee schedule"
 msgstr "Xodim jadvalidan olingan soatlar"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
+msgid "Hours today:"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -1461,7 +1517,16 @@ msgid "Install"
 msgstr "O‘rnatish"
 
 #. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/controllers/main.py:0
+msgid ""
+"Invalid domain, use 'name' and/or 'department_id' fields with '=' and/or "
+"'ilike' operators."
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 #, fuzzy
 msgid "Invalid request"
@@ -1510,6 +1575,11 @@ msgstr "Kiosk rejimi manzili"
 #, fuzzy
 msgid "Kiosk Settings"
 msgstr "Kiosk sozlamalari"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
+msgid "Last 2 Months"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -1567,6 +1637,12 @@ msgid "Latitude (Out)"
 msgstr "Chiqish kengligi"
 
 #. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance_overtime.py:0
+msgid "Linked Attendance"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__linked_overtime_ids
 #, fuzzy
 msgid "Linked Overtime"
@@ -1581,9 +1657,8 @@ msgstr "Namoyish ma'lumotlarini yuklash"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
-#, fuzzy
 msgid "Load sample data"
-msgstr "Namunali ma'lumotlarni yuklash"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
@@ -1712,10 +1787,9 @@ msgid "Mode"
 msgstr "Rejim"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-#, fuzzy
-msgid "Modes"
-msgstr "Rejimlar"
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__day_of_date__0
+msgid "Monday"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
@@ -1725,7 +1799,13 @@ msgid "My Attendances"
 msgstr "Mening davomatlarim"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
+msgid "My Overtimes"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #, fuzzy
 msgid "My Team"
@@ -1775,6 +1855,11 @@ msgid "No employee corresponding to Badge ID '%(barcode)s.'"
 msgstr "'%(barcode)s' nishon ID raqamiga mos keladigan xodim topilmadi"
 
 #. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_overtime_analysis
+msgid "No overtime records found"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Now"
@@ -1807,9 +1892,8 @@ msgstr "Yetkazib berish xatosi bo‘lgan xabarlar soni"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
-#, fuzzy
 msgid "OK"
-msgstr "OK"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1865,6 +1949,14 @@ msgstr "Joyida"
 #, fuzzy
 msgid "Onboarding"
 msgstr "Ish boshiga kiritish"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/hr_version_list_view.js:0
+msgid ""
+"One or more selected records already have a ruleset assigned (highlighted in "
+"yellow). Do you want to overwrite them?"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1936,15 +2028,37 @@ msgstr "Ortiqcha vaqt"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_list_view
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_graph
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_pivot
 #, fuzzy
 msgid "Overtime"
 msgstr "Ish vaqtidan tashqari"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_analysis
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_overtime_analysis
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_list_view
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_graph
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_pivot
+msgid "Overtime Analysis"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 #, fuzzy
 msgid "Overtime Details"
 msgstr "Ish vaqtidan tashqari tafsilotlari"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_graph
+msgid "Overtime Encoded"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Overtime Options"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime_rule
@@ -1961,6 +2075,7 @@ msgstr "Ish vaqtidan tashqari qoidalari"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime_ruleset
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 #, fuzzy
 msgid "Overtime Ruleset"
@@ -1979,6 +2094,11 @@ msgid "Overtime Status"
 msgstr "Ish vaqtidan tashqari holati"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Overtime Validation"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__amount_rate
 #, fuzzy
 msgid "Overtime pay rate"
@@ -1991,10 +2111,26 @@ msgid "Overview"
 msgstr "Umumiy ko‘rinish"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/hr_version_list_view.js:0
+msgid "Overwrite"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__paid
 #, fuzzy
 msgid "Pay Extra Hours"
 msgstr "Qo‘shimcha soatlar uchun haq to‘lash"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_list_view
+msgid "Pay Rate"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
+msgid "Pay Rate > 0"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -2005,12 +2141,12 @@ msgstr "Qo‘shimcha soatlar uchun haq to‘lash"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
-#, fuzzy
 msgid "Please enter your PIN to"
-msgstr "Iltimos, PIN-kodingizni kiriting"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 #: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
 #, fuzzy
@@ -2027,9 +2163,8 @@ msgstr "Iltimos, xodimni tanlang va nishon raqamini kiriting."
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
-#, fuzzy
 msgid "Powered by"
-msgstr "Tomonidan quvvatlanadi"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2133,9 +2268,8 @@ msgstr "Nishonni o‘qish"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
-#, fuzzy
 msgid "Ready to track attendances ?"
-msgstr "Davomatni kuzatishga tayyormisiz?"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -2189,6 +2323,8 @@ msgstr "Hisobot"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__rule_ids
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_list_view
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_pivot
 #, fuzzy
 msgid "Rule"
 msgstr "Qoida"
@@ -2235,6 +2371,8 @@ msgstr "Qoidalar soni"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__ruleset_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__ruleset_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_version__ruleset_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_list_view
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_pivot
 #, fuzzy
 msgid "Ruleset"
 msgstr "Qoidalar to‘plami"
@@ -2262,6 +2400,11 @@ msgstr "Qoidalar to‘plamlari"
 #, fuzzy
 msgid "SMS Delivery error"
 msgstr "SMS yuborishda xatolik yuz berdi"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__day_of_date__5
+msgid "Saturday"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2345,9 +2488,8 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
-#, fuzzy
 msgid "Set the Badge"
-msgstr "Nishonni o‘rnatish"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2369,6 +2511,23 @@ msgstr "Sozlamalar"
 #, fuzzy
 msgid "Sign out"
 msgstr "Chiqish"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__single_check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__single_check_in
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Single Check-In Attendance System"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__auto_check_out_mode__specific_time
+msgid "Specific Time"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.constraint,message:hr_attendance.constraint_res_company_check_auto_check_out_specific_time_range
+msgid "Specific Time must be within a 24-hour range (0h 0m 0s to 23h 59m 59s)."
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__time_start
@@ -2401,11 +2560,23 @@ msgid "Sum of all rates"
 msgstr "Barcha stavkalar yig‘indisi"
 
 #. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__day_of_date__6
+msgid "Sunday"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__systray
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__systray
 #, fuzzy
 msgid "Systray"
 msgstr "Tizim paneli"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_capture_check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_capture_check_in
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Take Pictures on Check-In"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__technical
@@ -2425,9 +2596,8 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
-#, fuzzy
 msgid "The attendance records of your employees will be displayed here."
-msgstr "Xodimlaringizning davomat qaydlari shu yerda ko‘rsatiladi"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_management_action
@@ -2435,6 +2605,11 @@ msgstr "Xodimlaringizning davomat qaydlari shu yerda ko‘rsatiladi"
 #, fuzzy
 msgid "The attendance reporting of your employees will be displayed here."
 msgstr "Xodimlaringizning davomat hisoboti shu yerda ko‘rsatiladi"
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_overtime_analysis
+msgid "The overtime reporting of your employees will be displayed here."
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -2485,13 +2660,27 @@ msgstr ""
 "qaydlari va hisobotlariga kirish huquqiga ega bo‘ladi"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
+#, fuzzy
+msgid "Theoretical Hours"
+msgstr "Ishlangan qo‘shimcha soatlar"
+
+#. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view
 msgid "There are no employees assigned to this overtime ruleset."
 msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view_add
-msgid "There are no employees without an overtime ruleset."
+msgid "There are no employees without this overtime ruleset."
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+msgid ""
+"This attendance was automatically checked out based on company specific time "
+"configuration."
 msgstr ""
 
 #. module: hr_attendance
@@ -2515,6 +2704,11 @@ msgid ""
 msgstr ""
 "Bu davomat o‘sha kundagi asoslanmagan yo‘qlikni qoplash uchun avtomatik "
 "tarzda yaratildi."
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__day_of_date__3
+msgid "Thursday"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__base_off__timing
@@ -2568,6 +2762,11 @@ msgid "Today Attendance"
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__auto_check_out_mode__tolerance
+msgid "Tolerance"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_company_threshold
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_company_threshold
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -2606,23 +2805,31 @@ msgstr "Kioskni sinab ko‘ring"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
-#, fuzzy
 msgid "Try the backend and reporting:"
-msgstr "Boshqaruv paneli va hisobotlarni sinab ko‘ring:"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
-#, fuzzy
 msgid "Try the kiosk"
-msgstr "Kioskni sinab ko‘ring"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
-#, fuzzy
 msgid "Try the top"
-msgstr "Yuqori qismni sinab ko‘ring"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__day_of_date__1
+msgid "Tuesday"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/hooks/use_camera.js:0
+msgid "Unable to access camera"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2709,6 +2916,11 @@ msgid "Website communication history"
 msgstr "Veb-saytdagi muloqot tarixi"
 
 #. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__day_of_date__2
+msgid "Wednesday"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__quantity_period__week
 #, fuzzy
 msgid "Week"
@@ -2789,6 +3001,11 @@ msgid "Working Hours"
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__resource_calendar_id
+msgid "Working Schedule"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
 #, fuzzy
@@ -2810,6 +3027,18 @@ msgid "You don't have the rights to execute that action."
 msgstr "Sizda bu harakatni bajarish huquqi yo‘q."
 
 #. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_employee.py:0
+msgid "You've already checked in."
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+msgid "You’ve already checked in."
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 #, fuzzy
 msgid "and"
@@ -2828,6 +3057,18 @@ msgstr "kirish"
 #, fuzzy
 msgid "check out"
 msgstr "chiqish"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
+msgid "check-in"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
+msgid "check-out"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-python
@@ -2861,6 +3102,12 @@ msgid "e.g. Over 8 hours daily"
 msgstr "masalan, Kuniga 8 soatdan ortiq"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
+msgid "for"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "from a specific duration"
 msgstr ""
@@ -2868,6 +3115,12 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "from the amount defined on the contract"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+msgid "h"
 msgstr ""
 
 #. module: hr_attendance
@@ -2879,16 +3132,14 @@ msgstr "soat"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
-#, fuzzy
 msgid "icon (e.g for work from home)"
-msgstr "belgi (masalan, uydan ishlash uchun)"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
-#, fuzzy
 msgid "or"
-msgstr "yoki"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_ir_websocket
@@ -2914,3 +3165,21 @@ msgstr "narxi bilan"
 #, fuzzy
 msgid "with optional PIN code"
 msgstr "ixtiyoriy PIN kodi bilan"
+
+#, fuzzy
+#~ msgid ""
+#~ "Automatically Check-Out Employees based on their working schedule with an "
+#~ "additional tolerance. Does not apply to employees with a flexible working "
+#~ "schedule."
+#~ msgstr ""
+#~ "Xodimlarni ish jadvaliga asosan qo‘shimcha chidamlilik bilan avtomatik "
+#~ "ravishda ro‘yxatdan chiqarish. Moslashuvchan ish jadvaliga ega xodimlarga "
+#~ "nisbatan qo‘llanilmaydi."
+
+#, fuzzy
+#~ msgid "Check IN"
+#~ msgstr "Ro‘yxatga kirish"
+
+#, fuzzy
+#~ msgid "Check OUT"
+#~ msgstr "Chiqish"

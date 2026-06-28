@@ -1,8 +1,5 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
-import { effect } from "@web/core/utils/reactive";
+import { Component, props, proxy, t, useEffect } from "@odoo/owl";
 import {
-    basicContainerBuilderComponentProps,
     useInputBuilderComponent,
     useBuilderComponent,
     useBuilderNumberInputUnits,
@@ -16,24 +13,43 @@ import { pick } from "@web/core/utils/objects";
 
 export class BuilderNumberInput extends Component {
     static template = "html_builder.BuilderNumberInput";
-    static props = {
-        ...basicContainerBuilderComponentProps,
-        ...textInputBasePassthroughProps,
-        default: { type: [Number, { value: null }], optional: true },
-        unit: { type: String, optional: true },
-        saveUnit: { type: String, optional: true },
-        step: { type: Number, optional: true },
-        min: { type: Number, optional: true },
-        max: { type: Number, optional: true },
-        composable: { type: Boolean, optional: true },
-        applyWithUnit: { type: Boolean, optional: true },
-    };
+    props = props({
+        // basicContainerBuilderComponentProps (converted inline)
+        id: t.string().optional(),
+        applyTo: t.string().optional(),
+        preview: t.boolean().optional(),
+        inheritedActions: t.array(t.string()).optional(),
+
+        action: t.string().optional(),
+        actionParam: t.any().optional(),
+
+        // Shorthand actions.
+        classAction: t.any().optional(),
+        attributeAction: t.any().optional(),
+        dataAttributeAction: t.any().optional(),
+        styleAction: t.any().optional(),
+
+        // textInputBasePassthroughProps (converted inline)
+        placeholder: t.string().optional(),
+        title: t.string().optional(),
+        style: t.string().optional(),
+        tooltip: t.string().optional(),
+        classes: t.string().optional(),
+        inputClasses: t.string().optional(),
+        prefix: t.string().optional(),
+        prefixIcon: t.string().optional(),
+        selectTextOnFocus: t.boolean().optional(),
+
+        default: t.or([t.number(), t.literal(null)]).optional(0),
+        unit: t.string().optional(),
+        saveUnit: t.string().optional(),
+        step: t.number().optional(),
+        min: t.number().optional(),
+        max: t.number().optional(),
+        composable: t.boolean().optional(false),
+        applyWithUnit: t.boolean().optional(true),
+    });
     static components = { BuilderComponent, BuilderNumberInputBase };
-    static defaultProps = {
-        composable: false,
-        applyWithUnit: true,
-        default: 0,
-    };
 
     setup() {
         if (this.props.saveUnit && !this.props.unit) {
@@ -55,13 +71,10 @@ export class BuilderNumberInput extends Component {
         this.commit = commit;
         this.preview = preview;
         this.domState = state;
-        this.state = useState({});
-        effect(
-            ({ value }) => {
-                this.state.showUnit = value?.length > 0;
-            },
-            [state]
-        );
+        this.state = proxy({});
+        useEffect(() => {
+            this.state.showUnit = state.value?.length > 0;
+        });
         this.inputRef = useChildRef();
         this.debouncedCommitValue = useInputDebouncedCommit(this.inputRef);
     }

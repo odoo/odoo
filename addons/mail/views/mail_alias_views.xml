@@ -26,22 +26,25 @@
                                     </div>
                             </button>
                         </div>
-                        <div class="d-flex justify-content-between">
-                            <h2 class="row" dir="ltr">
-                                <div class="d-flex col-8">
-                                    <field name="alias_name" placeholder="alias" class="o_field_highlight"/>
-                                    <div class="o_input_box">
-                                        <span class="o_input_box_overlay_start">@</span>
-                                        <field name="alias_domain_id" class="o_field_highlight" placeholder="e.g. mycompany.com"
-                                               options="{'no_create': True, 'no_open': True}"/>
+                        <div class="d-flex flex-column-reverse flex-md-row">
+                            <div class="oe_title d-flex justify-content-between mw-100">
+                                <h2 dir="ltr" class="w-100">
+                                    <div class="d-flex flex-column flex-md-row">
+                                        <label for="alias_name" class="d-md-none"/>
+                                        <field name="alias_name" placeholder="alias" class="o_field_highlight w-auto o_outlined"/>
+                                        <label for="alias_domain_id" class="d-md-none"/>
+                                        <div class="d-flex o_outlined">
+                                            <span>@</span>
+                                            <field name="alias_domain_id" class="o_field_highlight" placeholder="e.g. mycompany.com"
+                                                options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="alias_full_name" widget="CopyClipboardButton"
+                                                invisible="not alias_name or not alias_domain_id"
+                                                class="ms-2" options="{'btn_class': 'link p-0'}" string=""/>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-2 p-0" invisible="not alias_name or not alias_domain_id">
-                                    <field name="alias_full_name" widget="CopyClipboardButton"
-                                        class="copy_alias_email" options="{'btn_class': 'link'}" string=""/>
-                                </div>
-                            </h2>
-                            <field name="alias_status" widget="badge"
+                                </h2>
+                            </div>
+                            <field name="alias_status" widget="badge" class="ms-auto"
                                    decoration-success="alias_status == 'valid'"
                                    decoration-warning="alias_status == 'not_tested'"
                                    decoration-danger="alias_status == 'invalid'"/>

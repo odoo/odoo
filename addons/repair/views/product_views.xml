@@ -17,14 +17,15 @@
         <field name="mode">primary</field>
         <field name="inherit_id" ref="product.product_view_search_catalog"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='goods']" position="after">
+            <xpath expr="//filter[@name='favorites']" position="after">
+                <separator/>
                 <filter string="In the Repair Order"
-                    invisible="context.get('active_model') != 'stock.move' or
+                    invisible="context.get('active_model') not in ['stock.move', 'repair.service.line'] or
                                 context.get('product_catalog_order_model') != 'repair.order'"
                     name="products_in_repair"
                     domain="[('product_catalog_product_is_in_repair', '=', True)]"/>
                 <separator />
-                <filter name="bom_parts" string="BoM Components" domain="[('id', 'in', context.get('catalog_bom_product_ids'))]"/>
+                <filter name="bom_parts" string="BoM Components" domain="[('id', 'in', context.get('catalog_bom_product_ids'))]" invisible="context.get('active_model') != 'stock.move'"/>
             </xpath>
         </field>
     </record>

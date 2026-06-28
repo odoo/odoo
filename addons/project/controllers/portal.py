@@ -300,14 +300,14 @@ class ProjectCustomerPortal(CustomerPortal):
         values = {
             'id desc': {'label': _('Newest'), 'order': 'id desc', 'sequence': 10},
             'name': {'label': _('Title'), 'order': 'name', 'sequence': 20},
-            'stage_id, project_id': {'label': _('Stage'), 'order': 'stage_id, project_id', 'sequence': 50},
+            'stage_id, project_id': {'label': _('Stage'), 'order': 'stage_id, project_id.id', 'sequence': 50},
             'state': {'label': _('Status'), 'order': 'state', 'sequence': 60},
             'priority desc': {'label': _('Priority'), 'order': 'priority desc', 'sequence': 80},
             'date_deadline asc': {'label': _('Deadline'), 'order': 'date_deadline asc', 'sequence': 90},
             'date_last_stage_update desc': {'label': _('Last Stage Update'), 'order': 'date_last_stage_update desc', 'sequence': 110},
         }
         if not project:
-            values['project_id, stage_id'] = {'label': _('Project'), 'order': 'project_id, stage_id', 'sequence': 30}
+            values['project_id, stage_id'] = {'label': _('Project'), 'order': 'project_id.id, stage_id', 'sequence': 30}
         if milestones_allowed:
             values['milestone_id'] = {'label': _('Milestone'), 'order': 'milestone_id', 'sequence': 70}
         return values
@@ -384,10 +384,10 @@ class ProjectCustomerPortal(CustomerPortal):
 
         domain = Domain.AND([domain or [], [('has_template_ancestor', '=', False)]])
         if not su and Task.has_access('read'):
-            domain &= Domain(request.env['ir.rule']._compute_domain(Task._name, 'read'))
+            domain &= Task._access_domain('read').optimize_full(Task.sudo())
         Task_sudo = Task.sudo()
         milestone_domain = domain & Domain('allow_milestones', '=', True) & Domain('milestone_id', '!=', False)
-        milestones_allowed = Task_sudo.search_count(milestone_domain, limit=1) == 1
+        milestones_allowed = bool(Task_sudo.search_count(milestone_domain, limit=1))
         searchbar_sortings = dict(sorted(self._task_get_searchbar_sortings(milestones_allowed, project).items(),
                                          key=lambda item: item[1]["sequence"]))
         searchbar_inputs = dict(sorted(self._task_get_searchbar_inputs(milestones_allowed, project).items(), key=lambda item: item[1]['sequence']))
@@ -416,9 +416,12 @@ class ProjectCustomerPortal(CustomerPortal):
             group_field = None
         elif groupby == 'priority':
             group_field = 'priority desc'
+        elif groupby == 'project_id':
+            group_field = 'project_id.id'
         else:
             group_field = groupby
-        order = '%s, %s' % (group_field, sortby) if group_field else sortby
+        sort_order = searchbar_sortings[sortby]['order']
+        order = '%s, %s' % (group_field, sort_order) if group_field else sort_order
 
         def get_grouped_tasks(pager_offset):
             tasks = Task_sudo.search(domain, order=order, limit=self._items_per_page, offset=pager_offset)
@@ -453,6 +456,21 @@ class ProjectCustomerPortal(CustomerPortal):
                     grouped_tasks.sort(key=lambda tasks: task_states.get(tasks[0].state))
             return grouped_tasks
 
+        portal_page_limit = int(request.env['ir.config_parameter'].sudo().get_int(
+            'project.portal_task_page_limit', default=100,
+        ))
+        count_limit = portal_page_limit * self._items_per_page
+        has_limited_count = False
+        if page >= portal_page_limit:
+            total_display = Task_sudo.search_count(domain)
+        else:
+            total_count = Task_sudo.search_count(domain, limit=count_limit + 1)
+            if total_count >= count_limit + 1:
+                total_display = count_limit
+                has_limited_count = True
+            else:
+                total_display = total_count
+
         values.update({
             'date': date_begin,
             'date_end': date_end,
@@ -466,10 +484,11 @@ class ProjectCustomerPortal(CustomerPortal):
             'pager': {
                 "url": url,
                 "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'groupby': groupby, 'search_in': search_in, 'search': search},
-                "total": Task_sudo.search_count(domain),
+                "total": total_display,
                 "page": page,
                 "step": self._items_per_page
             },
+            'has_limited_count': has_limited_count,
             'searchbar_sortings': searchbar_sortings,
             'searchbar_groupby': searchbar_groupby,
             'searchbar_inputs': searchbar_inputs,
@@ -517,6 +536,8 @@ class ProjectCustomerPortal(CustomerPortal):
         pager_vals = values['pager']
         pager_vals['url_args'].update(filterby=filterby)
         pager = portal_pager(**pager_vals)
+        if values.get('has_limited_count'):
+            pager['pages'][-1]['num'] = f"{pager['page_count']}+"
 
         grouped_tasks = values['grouped_tasks'](pager['offset'])
         values.update({

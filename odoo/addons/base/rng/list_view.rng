@@ -86,6 +86,14 @@
                     <rng:ref name="control"/>
                     <rng:ref name="field"/>
                     <rng:ref name="widget"/>
+                    <rng:element name="column">
+                        <rng:optional><rng:attribute name="string"/></rng:optional>
+                        <rng:optional><rng:attribute name="column_invisible"/></rng:optional>
+                        <rng:optional><rng:attribute name="width"/></rng:optional>
+                        <rng:oneOrMore>
+                            <rng:ref name="field"/>
+                        </rng:oneOrMore>
+                    </rng:element>
                     <rng:ref name="separator"/>
                     <rng:ref name="list"/>
                     <rng:ref name="groupby"/>

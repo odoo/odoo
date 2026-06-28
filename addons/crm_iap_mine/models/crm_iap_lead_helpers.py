@@ -29,7 +29,7 @@ class CrmIapLeadHelpers(models.Model):
         self.env['ir.config_parameter'].sudo().set_bool(notification_parameter, True)
 
     @api.model
-    def lead_vals_from_response(self, lead_type, team_id, tag_ids, user_id, company_data, people_data):
+    def lead_vals_from_response(self, lead_type, team_id, tag_ids, user_id, company_data):
         country_id = company_data.get('country_id')
         if not country_id:
             country_id = self.env['res.country'].search([('code', '=', company_data['country_code'])]).id
@@ -54,14 +54,6 @@ class CrmIapLeadHelpers(models.Model):
             'country_id': country_id,
             'state_id': self._find_state_id(company_data.get('state_code'), country_id),
         }
-
-        # If type is people then add first contact in lead data
-        if people_data:
-            lead_vals.update({
-                'contact_name': people_data[0]['full_name'],
-                'email_from': people_data[0]['email'],
-                'function': people_data[0]['title'],
-            })
         return lead_vals
 
     @api.model

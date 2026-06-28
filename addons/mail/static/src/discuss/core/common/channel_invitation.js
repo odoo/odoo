@@ -1,8 +1,8 @@
-import { useState } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
+import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -10,28 +10,55 @@ import { _t } from "@web/core/l10n/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
+/**
+ * Open the channel invitation UI as a centered dialog, reusing {@link ChannelInvitation}.
+ *
+ * @param {import("@web/env").OdooEnv} env environment providing the dialog service.
+ * @param {import("models").DiscussChannel} channel channel to invite people to.
+ * @returns {void}
+ */
+export function openChannelInvitationDialog(env, channel) {
+    env.services.dialog.add(ChannelActionDialog, {
+        contentClass: "o-discuss-ChannelInvitation",
+        contentComponent: ChannelInvitation,
+        contentProps: {
+            channel,
+            close: () => env.services.dialog.closeAll(),
+        },
+        title: channel.displayName,
+    });
+}
+
 export class ChannelInvitation extends Component {
     static components = { ActionPanel, DiscussAvatar };
-    static defaultProps = { hasSizeConstraints: false };
-    static props = [
-        "autofocus?",
-        "hasSizeConstraints?",
-        "channel?",
-        "close?",
-        "className?",
-        "state?",
-    ];
     static template = "discuss.ChannelInvitation";
 
     setup() {
         super.setup();
         this.orm = useService("orm");
         this.store = useService("mail.store");
+        this.props = props({
+            channel: t.instanceOf(this.store["discuss.channel"].Class).optional(),
+            className: t.string().optional(),
+            close: t.function([]).optional(),
+            state: t
+                .object({
+                    searchStr: t.string().optional(),
+                    selectablePartners: t
+                        .array(t.instanceOf(this.store["res.partner"].Class))
+                        .optional(),
+                    selectedPartners: t
+                        .array(t.instanceOf(this.store["res.partner"].Class))
+                        .optional(),
+                })
+                .optional(),
+        });
         this.rtc = useService("discuss.rtc");
         this.notification = useService("notification");
         this.suggestionService = useService("mail.suggestion");
         this.sequential = useSequential();
-        this.state = useState({
+        this.state = proxy({
+            hasPendingRequest: false,
             searchResultCount: 0,
             searchStr: "",
             selectableEmails: [],
@@ -39,6 +66,7 @@ export class ChannelInvitation extends Component {
             selectedEmails: [],
             selectedPartners: [],
             sentEmails: new Set(),
+            showingPartialResults: false,
         });
         this.debouncedFetchPartnersToInvite = useDebounced(
             this.fetchPartnersToInvite.bind(this),
@@ -50,6 +78,10 @@ export class ChannelInvitation extends Component {
                 this.fetchPartnersToInvite();
             }
         });
+    }
+
+    get searchLimit() {
+        return 15;
     }
 
     get selectablePartners() {
@@ -90,11 +122,8 @@ export class ChannelInvitation extends Component {
 
     get showingResultNarrowText() {
         return _t(
-            "Showing %(result_count)s results out of %(total_count)s. Narrow your search to see more choices.",
-            {
-                result_count: this.selectablePartners.length,
-                total_count: this.state.searchResultCount,
-            }
+            "Showing the first %(search_limit)s results. Narrow your search to see more choices.",
+            { search_limit: this.searchLimit }
         );
     }
 
@@ -106,12 +135,16 @@ export class ChannelInvitation extends Component {
     }
 
     async fetchPartnersToInvite() {
-        const results = await this.sequential(() =>
-            this.orm.call("res.partner", "search_for_channel_invite", [
-                this.searchStr,
-                this.props.channel?.id ?? false,
-            ])
-        );
+        const results = await this.sequential(async () => {
+            this.state.hasPendingRequest = true;
+            const res = await this.orm.call("res.partner", "search_for_channel_invite", [], {
+                search_term: this.searchStr,
+                channel_id: this.props.channel?.id ?? false,
+                limit: this.searchLimit,
+            });
+            this.state.hasPendingRequest = false;
+            return res;
+        });
         if (!results) {
             return;
         }
@@ -124,7 +157,7 @@ export class ChannelInvitation extends Component {
             this.searchStr,
             this.props.channel?.thread
         );
-        this.state.searchResultCount = results["count"];
+        this.state.showingPartialResults = results.partner_ids.length > this.searchLimit;
         const selectableEmails = this.state.selectedEmails.filter((addr) =>
             addr.includes(this.searchStr)
         );
@@ -200,14 +233,25 @@ export class ChannelInvitation extends Component {
                 partnerIds.unshift(this.props.channel.correspondent.partner_id.id);
             }
             if (this.state.selectedEmails.length) {
-                const group = await this.store.createGroupChat({ partners_to: partnerIds });
+                const users_to = [
+                    ...new Set([
+                        ...partnerIds
+                            .map(
+                                (partnerId) =>
+                                    this.store["res.partner"].get(partnerId)?.main_user_id?.id
+                            )
+                            .filter(Boolean),
+                    ]),
+                ];
+                const group = await this.store.createGroupChat({ users_to });
                 channelId = group.id;
             } else {
                 await this.store.startChat(partnerIds);
             }
         } else if (this.selectedPartners.length) {
             invitePromises.push(
-                this.orm.call("discuss.channel", "add_members", [[channelId]], {
+                this.store.fetchStoreData("/discuss/channel/add_members", {
+                    channel_id: channelId,
                     partner_ids: this.selectedPartners.map((partner) => partner.id),
                     invite_to_rtc_call: this.rtc.localChannel?.eq(this.props.channel),
                 })

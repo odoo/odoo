@@ -1,7 +1,6 @@
-import { useRef } from "@web/owl2/utils";
 import { useHotkey } from "../hotkeys/hotkey_hook";
 
-import { Component } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 
 /**
  * Custom checkbox
@@ -20,47 +19,21 @@ import { Component } from "@odoo/owl";
 export class CheckBox extends Component {
     static template = "web.CheckBox";
     static nextId = 1;
-    static defaultProps = {
-        onChange: () => {},
-    };
-    static props = {
-        id: {
-            type: true,
-            optional: true,
-        },
-        disabled: {
-            type: Boolean,
-            optional: true,
-        },
-        value: {
-            type: Boolean,
-            optional: true,
-        },
-        slots: {
-            type: Object,
-            optional: true,
-        },
-        onChange: {
-            type: Function,
-            optional: true,
-        },
-        className: {
-            type: String,
-            optional: true,
-        },
-        name: {
-            type: String,
-            optional: true,
-        },
-        indeterminate: {
-            type: Boolean,
-            optional: true,
-        },
-    };
+    props = props({
+        id: t.any().optional(),
+        disabled: t.boolean().optional(),
+        value: t.boolean().optional(),
+        slots: t.object().optional(),
+        onChange: t.function().optional(() => () => {}),
+        className: t.string().optional(),
+        name: t.string().optional(),
+        indeterminate: t.boolean().optional(),
+    });
+
+    rootRef = signal(null);
 
     setup() {
         this.id = `checkbox-comp-${CheckBox.nextId++}`;
-        this.rootRef = useRef("root");
 
         // Make it toggleable through the Enter hotkey
         // when the focus is inside the root element
@@ -70,7 +43,7 @@ export class CheckBox extends Component {
                 const oldValue = area.querySelector("input").checked;
                 this.props.onChange(!oldValue);
             },
-            { area: () => this.rootRef.el, bypassEditableProtection: true }
+            { area: () => this.rootRef(), bypassEditableProtection: true }
         );
     }
 
@@ -82,7 +55,7 @@ export class CheckBox extends Component {
         }
 
         // Reproduce the click event behavior as if it comes from the input element.
-        const input = this.rootRef.el.querySelector("input");
+        const input = this.rootRef().querySelector("input");
         input.focus();
         if (!this.props.disabled) {
             ev.stopPropagation();

@@ -7,10 +7,9 @@ import {
     queryAllTexts,
     queryFirst,
     queryOne,
-    queryText,
     scroll,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickKanbanLoadMore,
     contains,
@@ -668,9 +667,12 @@ test("column progressbars on archiving records update counter", async () => {
     await contains(".modal-footer .btn-primary").click();
 
     expect(getKanbanCounters()).toEqual(["-4", "0"]);
-    expect(queryAll(".progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })).toHaveCount(0, {
-        message: "the counter progressbars should have been correctly updated",
-    });
+    expect(queryAll(".progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })).toHaveCount(
+        0,
+        {
+            message: "the counter progressbars should have been correctly updated",
+        }
+    );
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -732,8 +734,8 @@ test("kanban with progressbars: correctly update env when archiving records", as
 });
 
 test("kanban with progressbars: slow read_progress_bar", async () => {
-    const def = new Deferred();
-    onRpc("read_progress_bar", () => def);
+    const def = Promise.withResolvers();
+    onRpc("read_progress_bar", () => def?.promise);
 
     await mountView({
         type: "kanban",
@@ -761,7 +763,9 @@ test("kanban with progressbars: slow read_progress_bar", async () => {
     expect(".o_kanban_view").toHaveCount(1);
     expect(".o_kanban_group").toHaveCount(2);
     expect(".o_kanban_group:nth-child(2) .o_column_progress").toHaveCount(1);
-    expect(".o_kanban_group:nth-child(2) .o_column_progress .progress-bar.o_bar_has_records").toHaveCount(3);
+    expect(
+        ".o_kanban_group:nth-child(2) .o_column_progress .progress-bar.o_bar_has_records"
+    ).toHaveCount(3);
     expect(".o_kanban_group:nth-child(2) .o_kanban_header").toHaveText("Yes\n36");
 });
 
@@ -1368,7 +1372,7 @@ test("progress bar with aggregates: Archive all in a column", async () => {
     ];
 
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("web_read_group", () => def?.promise);
 
     await mountView({
         type: "kanban",
@@ -1396,7 +1400,7 @@ test("progress bar with aggregates: Archive all in a column", async () => {
     await contains(".o_cp_action_menus button").click();
     await contains(".o_menu_item:contains(Archive)").click();
     expect(".o_dialog").toHaveCount(1);
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".modal-footer .btn-primary").click();
     expect(getKanbanColumnTooltips(1)).toEqual(["2 yop", "1 gnap", "1 blip"]);
     expect(getKanbanCounters()).toEqual(["268", "15"]);
@@ -1897,7 +1901,9 @@ test("Color '200' (gray) can be used twice (for false value and another value) i
 
     expect(".o_kanban_group:nth-child(1) .progress-bar.o_bar_has_records").toHaveCount(2);
     expect(
-        queryAll(".o_kanban_group:nth-child(1) .progress-bar.o_bar_has_records").map((el) => el.dataset.tooltip)
+        queryAll(".o_kanban_group:nth-child(1) .progress-bar.o_bar_has_records").map(
+            (el) => el.dataset.tooltip
+        )
     ).toEqual(["1 blip", "1 Other"]);
     expect(".o_kanban_group:nth-child(2) .progress-bar").toHaveCount(4);
     expect(
@@ -1962,9 +1968,9 @@ test("update field on which progress bars are computed", async () => {
     // Initial state: 2 columns, the "Yes" column contains 2 records "abc", 1 "def" and 1 "ghi"
     expect(getKanbanCounters()).toEqual(["1", "4"]);
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(4);
-    expect(queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })).toHaveCount(
-        3
-    );
+    expect(
+        queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })
+    ).toHaveCount(3);
     expect(getKanbanProgressBars(1)[0].style.width).toBe("50%"); // abc: 2
     expect(getKanbanProgressBars(1)[1].style.width).toBe("25%"); // def: 1
     expect(getKanbanProgressBars(1)[2].style.width).toBe("25%"); // ghi: 1
@@ -1974,9 +1980,9 @@ test("update field on which progress bars are computed", async () => {
 
     expect(getKanbanCounters()).toEqual(["1", "2"]);
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(2);
-    expect(queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })).toHaveCount(
-        3
-    );
+    expect(
+        queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })
+    ).toHaveCount(3);
     expect(getKanbanProgressBars(1)[0].style.width).toBe("50%"); // abc: 2
     expect(getKanbanProgressBars(1)[1].style.width).toBe("25%"); // def: 1
     expect(getKanbanProgressBars(1)[2].style.width).toBe("25%"); // ghi: 1
@@ -1990,9 +1996,9 @@ test("update field on which progress bars are computed", async () => {
 
     expect(getKanbanCounters()).toEqual(["1", "1"]);
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(2);
-    expect(queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })).toHaveCount(
-        3
-    );
+    expect(
+        queryAll(".o_column_progress .progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })
+    ).toHaveCount(3);
     expect(getKanbanProgressBars(1)[0].style.width).toBe("25%"); // abc: 1
     expect(getKanbanProgressBars(1)[1].style.width).toBe("50%"); // def: 2
     expect(getKanbanProgressBars(1)[2].style.width).toBe("25%"); // ghi: 1
@@ -2036,7 +2042,7 @@ test("load more button shouldn't be visible when unfiltering column", async () =
     Partner._records.push({ id: 5, state: "abc", bar: true });
 
     let def;
-    onRpc("web_search_read", () => def);
+    onRpc("web_search_read", () => def?.promise);
 
     await mountView({
         type: "kanban",
@@ -2063,7 +2069,7 @@ test("load more button shouldn't be visible when unfiltering column", async () =
     // Filtered state: 2 columns, the "No" column contains 1 record, The "Yes" column contains 2 records
     expect(getKanbanCounters()).toEqual(["1", "2"]);
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     // UnFiltered the "Yes" column
     await contains(getKanbanProgressBars(1)[0]).click();
     expect(".o_kanban_load_more").toHaveCount(0, {
@@ -2163,15 +2169,15 @@ test("drag record to folded column, with progressbars", async () => {
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(queryText(getKanbanColumn(1))).toBe("Yes\n(2)");
+    expect(getKanbanColumn(1)).toHaveText("Yes\n(2)");
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
         ".o_kanban_group:nth-child(2)"
     );
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
-    expect(queryText(getKanbanColumn(1))).toBe("Yes\n(3)");
-    expect(getKanbanProgressBars(0).map((pb) => pb.style.width)).toEqual(["100%"]);
+    expect(getKanbanColumn(1)).toHaveText("Yes\n(3)");
+    expect(getKanbanProgressBars(0)).toHaveStyle({ width: "100%" }, { inline: true });
     expect(getKanbanCounters()).toEqual(["-4"]);
     expect.verifySteps([
         "/web/webclient/translations",
@@ -2231,7 +2237,7 @@ test("scroll on group unfold and progressbar click", async () => {
 
 test("searchbar filters are displayed directly (with progressbar)", async () => {
     let def;
-    onRpc("read_progress_bar", () => def);
+    onRpc("read_progress_bar", () => def?.promise);
 
     await mountView({
         type: "kanban",
@@ -2255,7 +2261,7 @@ test("searchbar filters are displayed directly (with progressbar)", async () => 
     expect(getFacetTexts()).toEqual([]);
 
     // toggle a filter, and slow down the read_progress_bar rpc
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("Some Filter");
 
@@ -2268,7 +2274,7 @@ test("searchbar filters are displayed directly (with progressbar)", async () => 
 
 test("Correct values for progress bar with toggling filter and slow RPC", async () => {
     let def;
-    onRpc("read_progress_bar", () => def);
+    onRpc("read_progress_bar", () => def?.promise);
 
     await mountView({
         type: "kanban",
@@ -2294,7 +2300,7 @@ test("Correct values for progress bar with toggling filter and slow RPC", async 
     expect(getKanbanProgressBars(1).map((pb) => pb.style.width)).toEqual(["50%", "50%"]);
 
     // toggle a filter, and slow down the read_progress_bar rpc
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("Some Filter");
     // abc: 1, ghi: 1

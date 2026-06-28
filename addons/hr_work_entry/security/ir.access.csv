@@ -1,0 +1,9 @@
+id,name,model_id,group_id/id,operation,domain
+access_hr_work_entry_type_officer,access_hr_work_entry_type_officer,hr.work.entry.type,hr.group_hr_user,r,
+access_hr_work_entry_type_manager,access_hr_work_entry_type_manager,hr.work.entry.type,hr.group_hr_manager,crud,
+ir_rule_hr_work_entry_type_multi_company,HR Work Entry: Multi Company,hr.work.entry.type,,crud,"[('country_id', 'in', user.env.companies.mapped('country_id').ids + [False])]"
+access_hr_work_entry_employee,access_hr_work_entry_employee,hr.user.work.entry.employee,hr.group_hr_user,r,
+hr_user_work_entry_employee,Work entries/Employee calendar filter: only self,hr.user.work.entry.employee,hr.group_hr_user,cud,"[('user_id', '=', user.id)]"
+access_hr_work_entry_export,access_hr_work_entry_export,hr.export.work.entries,hr.group_hr_user,crud,
+ir_rule_hr_export_work_entry_multi_company,HR Export Work Entry: Multi Company,hr.export.work.entries,,crud,"[('company_id', 'in', company_ids)]"
+access_hr_work_entry_employee_export,access_hr_work_entry_employee_export,hr.export.work.entries.employee,hr.group_hr_user,crud,

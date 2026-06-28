@@ -5,11 +5,11 @@ from datetime import datetime, timedelta
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request
-from odoo.tools import SQL, float_is_zero, float_round
+from odoo.tools import SQL, float_round
 
 from odoo.addons.website_sale.models.website import (
     FISCAL_POSITION_SESSION_CACHE_KEY,
@@ -19,16 +19,22 @@ from odoo.addons.website_sale.models.website import (
 
 
 class SaleOrder(models.Model):
-    _inherit = "sale.order"
+    _name = "sale.order"
+    _inherit = [
+        "sale.order",
+        # Add global alert to the order, rendered on the checkout page.
+        # Note: alerts are transient, they are cleared after being rendered.
+        "website.checkout.alert.mixin",
+    ]
 
     website_id = fields.Many2one(
         help="Website through which this order was placed for eCommerce orders.",
         comodel_name="website",
         readonly=True,
+        check_company=True,
     )
 
     cart_recovery_email_sent = fields.Boolean(string="Cart recovery email already sent")
-    shop_warning = fields.Char(string="Warning")
 
     # Computed fields
     website_order_line = fields.One2many(
@@ -60,7 +66,7 @@ class SaleOrder(models.Model):
         order_lines = self.env["sale.order.line"].search_fetch([("order_id", "in", self.ids)])
         for order in self:
             order.website_order_line = order_lines.filtered(
-                lambda sol: sol.order_id == order and sol._show_in_cart()
+                lambda sol: sol.order_id == order and sol._show_line_in_cart()
             )
 
     @api.depends("order_line.price_total", "order_line.price_subtotal")
@@ -180,6 +186,13 @@ class SaleOrder(models.Model):
                     or order.partner_id.parent_id.user_id.id
                 )
 
+    @api.depends("website_id")
+    def _compute_journal_id(self):
+        website_orders = self.filtered(lambda order: order.website_id and not order.journal_id)
+        for order in website_orders:
+            order.journal_id = order.website_id.journal_id
+        super(SaleOrder, self - website_orders)._compute_journal_id()
+
     def _default_team_id(self):
         return super()._default_team_id() or self.website_id.salesteam_id.id
 
@@ -208,7 +221,7 @@ class SaleOrder(models.Model):
                     company = self.env["res.company"].browse(vals["company_id"])
                     if website.company_id.id != company.id:
                         raise ValueError(
-                            _(
+                            self.env._(
                                 "The company of the website you are trying to sell from"
                                 " (%(website_company)s) is different than the one you want to use"
                                 " (%(company)s)",
@@ -273,6 +286,10 @@ class SaleOrder(models.Model):
         """Exclude delivery-related lines."""
         return self.order_line.filtered(lambda line: not line.is_delivery)
 
+    def _get_update_prices_lines(self):
+        """Exclude donation lines from pricelist recomputation."""
+        return super()._get_update_prices_lines().filtered(lambda line: not line.is_donation)
+
     def _get_amount_total_excluding_delivery(self):
         return sum(self._get_non_delivery_lines().mapped("price_total"))
 
@@ -311,11 +328,17 @@ class SaleOrder(models.Model):
     def _needs_customer_address(self):  # noqa: PLR6301
         """Return whether we need the address details of the customer (country, street, ...).
 
-        Make it true by default as it's required before payment for taxes based on fiscal position.
+        Orders with physical goods always require full customer address.
+        Orders without goods (services only) require customer address by default to correctly
+        determine fiscal position, taxes, pricelists (if based on country and geoip cannot be
+        trusted).
+
+        A dedicated system parameter can be set to False/0 to speed up the checkout process
+        and skip the address requirement for services.
         """
-        # TODO: should probably be removed in master, as we cannot skip the address form
-        # when the taxes applied on product/service depend on the fiscal position.
-        return True
+        return not self.only_services or self.env["ir.config_parameter"].sudo().get_bool(
+            "website_sale.require_billing_details_for_services", True
+        )
 
     def _update_address(self, partner_id, fnames=None):
         if not fnames:
@@ -377,8 +400,16 @@ class SaleOrder(models.Model):
         self.ensure_one()
         self = self.with_company(self.company_id)
 
-        if not uom_id:
-            uom_id = self.env["product.product"].browse(product_id).uom_id.id  # type: ignore
+        product = self.env["product.product"].browse(product_id)
+        if not uom_id or not product._has_multiple_uoms():
+            # Fall back on product uom if uom is not specified or if multi-uom is not
+            # allowed/supported for that product.
+            uom_id = product._get_main_uom().id  # type: ignore
+        elif uom_id not in product._get_available_uoms().ids:
+            raise ValidationError(
+                self.env._("This product is not available (anymore) in this unit of measure.")
+            )
+
         if existing_sol := self._cart_find_product_line(product_id, uom_id=uom_id, **kwargs)[:1]:
             # If a matching line is found, update the existing line instead.
             return self._cart_update_line_quantity(
@@ -396,9 +427,6 @@ class SaleOrder(models.Model):
         # NOTE: the provided product_id should not be given after `_create_new_cart_line` call as it
         # could be different from the line's product_id (see variant generation logic in
         # `_prepare_order_line_values`).
-
-        if warning:
-            (order_line or self).shop_warning = warning
 
         if not self.env.context.get("skip_cart_verification"):
             self._verify_cart_after_update()
@@ -434,11 +462,13 @@ class SaleOrder(models.Model):
         :rtype: `sale.order.line` recordset
         """
         self.ensure_one()
-
         if not self.order_line:
             return self.env["sale.order.line"]
 
         product = self.env["product.product"].browse(product_id)
+        if product._is_donation():
+            return self.env["sale.order.line"]
+
         if product.type == "combo":
             return self.env["sale.order.line"]
 
@@ -487,7 +517,7 @@ class SaleOrder(models.Model):
             # Note that if the cart is empty, the zero cart_quantity will trigger a page reload
             # and this warning won't be shown.
             return {
-                "warning": _(
+                "warning": self.env._(
                     "We weren't able to update your cart. Please refresh your page before trying"
                     " again."
                 )
@@ -511,9 +541,6 @@ class SaleOrder(models.Model):
         if not self.env.context.get("skip_cart_verification"):
             self._verify_cart_after_update()
 
-        if warning:
-            (order_line or self).shop_warning = warning
-
         return {
             "added_qty": added_qty,
             "line_id": order_line.id,
@@ -523,6 +550,51 @@ class SaleOrder(models.Model):
 
     # hook to be overridden
     def _verify_updated_quantity(self, order_line, product_id, new_qty, uom_id, **_kwargs):  # noqa: ARG002, PLR6301
+        self.ensure_one()
+        product = self.env["product.product"].browse(product_id)
+        if product.is_storable and not product.allow_out_of_stock_order:
+            uom = self.env["uom.uom"].browse(uom_id)
+            product_uom = product.uom_id
+
+            product_qty_in_cart, available_qty = self._get_cart_and_free_qty(product)
+
+            # Convert cart and available quantities to the requested uom
+            product_qty_in_cart = product_uom._compute_quantity(product_qty_in_cart, uom)
+            available_qty = product_uom._compute_quantity(available_qty, uom, round=False)
+            available_qty = float_round(available_qty, precision_digits=0, rounding_method="DOWN")
+
+            old_qty = order_line.product_uom_qty if order_line else 0
+            added_qty = new_qty - old_qty
+            total_cart_qty = product_qty_in_cart + added_qty
+            if available_qty < total_cart_qty:
+                allowed_line_qty = available_qty - (product_qty_in_cart - old_qty)
+                if allowed_line_qty > 0:
+
+                    def format_qty(qty):
+                        return int(qty) if float(qty).is_integer() else qty
+
+                    if order_line:
+                        warning = order_line._get_shop_warning_stock(total_cart_qty, available_qty)
+                    else:
+                        warning = self.env._(
+                            "You requested %(qty)g %(product_name)s,"
+                            " but only %(avl_qty)g are available in stock.",
+                            qty=total_cart_qty,
+                            product_name=product.display_name,
+                            avl_qty=available_qty,
+                        )
+                elif order_line:
+                    # Line will be deleted
+                    warning = self.env._(
+                        "Some products became unavailable and your cart has been updated. We're"
+                        " sorry for the inconvenience."
+                    )
+                else:
+                    warning = self.env._(
+                        "%(product_name)s was not added to your cart because it is unavailable.",
+                        product_name=product.display_name,
+                    )
+                return allowed_line_qty, warning
         return new_qty, ""
 
     def _cart_update_order_line(self, order_line, quantity, **kwargs):
@@ -592,6 +664,7 @@ class SaleOrder(models.Model):
         # item lines.
         if line.product_type != "combo":
             line._check_validity()
+
         return line
 
     def _prepare_order_line_values(
@@ -604,6 +677,7 @@ class SaleOrder(models.Model):
         no_variant_attribute_value_ids=None,
         product_custom_attribute_values=None,
         combo_item_id=None,
+        donation_amount=None,
         **_kwargs,
     ):
         self.ensure_one()
@@ -625,12 +699,14 @@ class SaleOrder(models.Model):
 
         if not product:
             raise UserError(
-                _("The given combination does not exist therefore it cannot be added to cart.")
+                self.env._(
+                    "The given combination does not exist therefore it cannot be added to cart."
+                )
             )
 
         if linked_line_id and linked_line_id not in self.order_line.ids:
             # Make sure the provided parent line belongs to the current order.
-            raise UserError(_("Invalid request parameters."))
+            raise UserError(self.env._("Invalid request parameters."))
 
         values = {
             "product_id": product.id,
@@ -640,6 +716,9 @@ class SaleOrder(models.Model):
             "linked_line_id": linked_line_id,
             "combo_item_id": combo_item_id,
         }
+        # Set price_unit with the user-selected donation amount
+        if product._is_donation() and donation_amount is not None:
+            values["price_unit"] = max(float(donation_amount), 1)
 
         # add no_variant attributes that were not received
         no_variant_attribute_values |= combination.filtered(
@@ -678,21 +757,22 @@ class SaleOrder(models.Model):
 
         return values
 
-    def _check_combo_quantities(self, line) -> bool:  # noqa: PLR6301
+    def _check_combo_quantities(self, line) -> str:  # noqa: PLR6301
         """Ensure all combo item lines have the same quantity.
 
-        :returns: whether the combo quantities had to be updated
+        :returns: A reason if the combo quantities had to be updated; otherwise an empty string.
         """
         # Ensure all combo lines have the same quantity
         if not (combo_lines := line.linked_line_ids):
-            return False
+            return ""
+
         available_combo_quantity = min(line.product_uom_qty for line in combo_lines)
         if available_combo_quantity < line.product_uom_qty:
-            line._set_shop_warning_stock(line.product_uom_qty, available_combo_quantity)
+            reason = line._get_shop_warning_stock(line.product_uom_qty, available_combo_quantity)
             (line + combo_lines).product_uom_qty = available_combo_quantity
-            return True
+            return reason
 
-        return False
+        return ""
 
     def _verify_cart_after_update(self):
         """Global checks on the cart after updates.
@@ -776,18 +856,16 @@ class SaleOrder(models.Model):
             ]).cart_recovery_email_sent = True
         return super()._message_mail_after_hook(mails)
 
-    def _message_post_after_hook(self, message, msg_vals):
+    def _message_post_after_hook(self, message):
         # After sending recovery cart emails, update orders to avoid sending it again
         if self.env.context.get("website_sale_send_recovery_email"):
             self.cart_recovery_email_sent = True
-        return super()._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message)
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+    def _notify_get_recipients_groups(self, message, model_description):
         # In case of cart recovery email, update link to redirect directly
         # to the cart (like ``mail_template_sale_cart_recovery`` template).
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals
-        )
+        groups = super()._notify_get_recipients_groups(message, model_description)
         if not self:
             return groups
 
@@ -798,7 +876,7 @@ class SaleOrder(models.Model):
         if customer_portal_group:
             access_opt = customer_portal_group[2].setdefault("button_access", {})
             if self.env.context.get("website_sale_send_recovery_email"):
-                access_opt["title"] = _("Resume Order")
+                access_opt["title"] = self.env._("Resume Order")
                 access_opt["url"] = (
                     f"{self.get_base_url()}/shop/cart?id={self.id}&access_token={self.access_token}"
                 )
@@ -858,10 +936,11 @@ class SaleOrder(models.Model):
                     for transaction in abandoned_sale_order.transaction_ids
                 )
                 and any(
-                    not float_is_zero(line.price_unit, precision_rounding=line.currency_id.rounding)
+                    not line.currency_id.is_zero(line.price_unit)
                     for line in abandoned_sale_order.order_line
                 )
                 and not has_later_sale_order.get(abandoned_sale_order.partner_id)
+                and abandoned_sale_order._all_product_available()
             )
         )
 
@@ -872,10 +951,6 @@ class SaleOrder(models.Model):
         :rtype: bool
         """
         return bool(self.order_line.product_id) and not self.only_services
-
-    def _remove_delivery_line(self):
-        super()._remove_delivery_line()
-        self.pickup_location_data = {}  # Reset the pickup location data.
 
     def _get_preferred_delivery_method(self, available_delivery_methods):
         """Get the preferred delivery method based on available delivery methods for the order.
@@ -984,7 +1059,7 @@ class SaleOrder(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return self.partner_id.id == request.website.user_id.sudo().partner_id.id
+        return self.partner_id.id == self.env.website.user_id.sudo().partner_id.id
 
     def _get_lang(self):
         res = super()._get_lang()
@@ -995,53 +1070,126 @@ class SaleOrder(models.Model):
 
         return res
 
-    def _get_shop_warning(self, clear=True):
+    def _is_cart_ready_for_checkout(self):
+        """Whether the cart is ready to proceed to the checkout "Address" step: `/shop/checkout`.
+
+        This method performs the necessary validations and may add user-facing messages
+        via `_add_alert` to help the customer correct the cart (for example: empty cart).
+
+        Note: `self.ensure_one()`.
+
+        :return: True if the cart can proceed to the Address step (and beyond); False to block
+            progression.
+        :rtype: bool
+        """
         self.ensure_one()
-        warn = self.shop_warning
-        if clear:
-            self.shop_warning = ""
-        return warn
 
-    def _is_cart_ready(self):
-        """Whether the cart is valid and can be confirmed (and paid for).
+        if not self._has_deliverable_products():
+            return bool(self.order_line)  # Empty cart => block the customer
 
-        :rtype: bool
-        """
-        return bool(self)
-
-    def _check_cart_is_ready_to_be_paid(self):
-        """Whether the cart is valid and the user can proceed to the payment.
-
-        :rtype: bool
-        """
-        if not self._is_cart_ready():
-            raise ValidationError(
-                _("Your cart is not ready to be paid, please verify previous steps.")
+        # Uses list comprehension to ensure all products are checked and potential alerts are saved.
+        if not all([sol._check_availability() for sol in self.order_line]):  # noqa: C419
+            self._add_warning_alert(
+                self.env._("Unfortunately, there is no longer enough stock to fulfill your order.")
             )
-        if not self.only_services:
-            if not self.carrier_id:
-                raise ValidationError(_("No delivery method is selected."))
-            if self.carrier_id not in self._get_delivery_methods():
-                raise ValidationError(
-                    _("The delivery method is not compatible with your delivery address.")
-                )
+            return False
 
-    def _recompute_cart(self):
-        """Recompute taxes and prices for the current cart."""
+        return True
+
+    def _is_cart_ready_for_payment(self):
+        """Whether the cart is ready to be confirmed and proceed to the checkout "Payment" step:
+        `/shop/payment`.
+
+        This method performs the necessary validations and may add user-facing messages
+        via `_add_alert` to help the customer correct the cart (for example: no delivery method
+        selected).
+
+        Note: `self.ensure_one()`.
+
+        :return: True if the cart can proceed to the Payment step (and beyond); False to block
+            progression.
+        :rtype: bool
+        """
+        self.ensure_one()
+
+        if self._has_deliverable_products():
+            return self._is_cart_ready_for_delivery()
+
+        return True
+
+    def _is_cart_ready_for_delivery(self):
+        """Whether the cart is ready to be delivered. This hook is called post /shop/checkout."""
+        if not self.carrier_id:
+            self._add_blocking_alert(self.env._("No delivery method is selected."))
+            return False
+
+        if self.carrier_id not in self._get_delivery_methods():
+            self._add_blocking_alert(
+                self.env._(
+                    "Unfortunately, the delivery method that you selected is no longer available."
+                    " Please update your choice. We apologize for any inconvenience."
+                )
+            )
+            return False
+
+        return True
+
+    def _is_commitment_date_valid(self):
+        """Whether the commitment date is still up to date with the carrier constraints."""
+        self.ensure_one()
+        allowed_commitment_dates = (
+            self.commitment_date and self.carrier_id._get_estimate_delivery_days()
+        ) or []
+        if (
+            not allowed_commitment_dates  # No allowed date means any date is acceptable.
+            or self.commitment_date.date().isoformat() in allowed_commitment_dates
+        ):
+            return True
+
+        # The commitment date is normally set by :meth:`_set_delivery_method`. Since the customer
+        # has already selected a delivery method, update it manually.
+        self.commitment_date = allowed_commitment_dates[0]
+
+        if len(allowed_commitment_dates) > 1:
+            message = self.env._(
+                "The selected delivery date was no longer available."
+                " Please pick another delivery date."
+            )
+        else:
+            message = self.env._(
+                "The estimated delivery date was no longer possible."
+                " We apologize for any inconvenience."
+            )
+        self._add_blocking_alert(message)
+        return False
+
+    def _update_cart_taxes_and_prices(self):
+        """Update the taxes and prices and return True if the total amount changed.
+
+        :rtype: bool
+        """
+        self.ensure_one()
+
+        initial_amount = self.amount_total
         self._recompute_taxes()
         self._recompute_prices()
+        if self.currency_id.compare_amounts(self.amount_total, initial_amount):
+            self._add_warning_alert(self.env._("Prices have changed. Please review your cart."))
+            return True
+        return False
 
-    def _validate_order(self):
-        self.filtered("website_id")._archive_partner_if_no_user()
-        super()._validate_order()
+    def _has_blocking_alerts(self):
+        """Whether the cart has pending errors that should be resolved before proceeding further in
+        the checkout."""
+        return any(alert.get("blocking") for alert in self._get_alerts())
 
-    def _archive_partner_if_no_user(self):
-        partners_to_archive = self.env["res.partner"]
-        for order in self:
-            if not (commercial_partner := order.partner_id).user_ids:
-                partners_to_archive |= commercial_partner + commercial_partner.child_ids
+    def _add_blocking_alert(self, message: str, /, **kwargs):
+        """Add an alert of 'danger' level blocking the navigation to the next checkout step."""
+        return self._add_danger_alert(message, blocking=True, **kwargs)
 
-        partners_to_archive.active = False
+    def _clear_alerts(self):
+        self.order_line._clear_alerts()
+        return super()._clear_alerts()
 
     @api.model
     def retrieve_ecommerce_dashboard(self, period_days):
@@ -1148,3 +1296,51 @@ class SaleOrder(models.Model):
             "sales": float_round(total_sales, precision_rounding=0.01),
             "visitors": visitor_count,
         }
+
+    def _allow_express_checkout(self):
+        return True
+
+    def _get_common_product_lines(self, product_id=None):
+        """Get all the lines of the current order with the given product."""
+        return self.order_line.filtered(lambda sol: sol.product_id.id == product_id)
+
+    def _get_cart_and_free_qty(self, product):
+        """Get cart quantity and free quantity for given product.
+
+        Note: self.ensure_one()
+
+        :param product: `product.product` record.
+        :returns: cart quantity and available quantity in the product uom
+        :rtype: tuple
+        """
+        self.ensure_one()
+        product.ensure_one()
+
+        return self._get_cart_qty(product.id), self._get_free_qty(product)
+
+    def _get_cart_qty(self, product_id):
+        """Return the quantity of the given product in the current cart, if any.
+
+        :param int product_id: `product.product` id
+        :return: product quantity in the product uom
+        :rtype: float
+        """
+        if not self:
+            return 0.0
+        order_lines = self._get_common_product_lines(product_id)
+        return sum(
+            order_lines.mapped(
+                lambda sol: sol.product_uom_id._compute_quantity(
+                    sol.product_uom_qty, sol.product_id.uom_id
+                )
+            )
+        )
+
+    def _get_free_qty(self, product):
+        return self.website_id._get_product_available_qty(product)
+
+    def _all_product_available(self):
+        """Whether all the products are available on the current website."""
+        if not (lines := self.order_line):
+            return True
+        return not any(product._is_sold_out() for product in lines.product_id)

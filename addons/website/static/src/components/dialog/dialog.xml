@@ -7,11 +7,11 @@
         title="this.props.title"
         modalRef="this.modalRef">
         <t t-set-slot="default">
-            <t t-if="this.props.slots and this.props.slots.default" t-slot="default"/>
+            <t t-if="this.props.slots and this.props.slots.default" t-call-slot="default"/>
             <t t-else="" t-out="this.props.body"/>
         </t>
         <t t-if="this.props.showFooter" t-set-slot="footer">
-            <t t-if="this.props.slots and this.props.slots.footer" t-slot="footer"/>
+            <t t-if="this.props.slots and this.props.slots.footer" t-call-slot="footer"/>
             <t t-else="">
                 <button class="btn btn-primary" t-on-click="this.protectedClick(this.props.primaryClick)" t-att-disabled="this.state.disabled" data-hotkey="q">
                     <t t-out="this.props.primaryTitle"/>

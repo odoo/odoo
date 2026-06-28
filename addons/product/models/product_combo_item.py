@@ -17,6 +17,7 @@ class ProductComboItem(models.Model):
         ondelete='restrict',
         domain=[('type', '!=', 'combo')],
         required=True,
+        index=True,
         check_company=True,
     )
     currency_id = fields.Many2one(comodel_name='res.currency', related='product_id.currency_id')

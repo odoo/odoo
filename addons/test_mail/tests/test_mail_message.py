@@ -78,7 +78,7 @@ class TestMessageHelpersRobustness(MailCommon, HttpCase):
     def test_load_message_failures(self):
         self.authenticate(self.user_employee.login, self.user_employee.login)
         with contextlib.suppress(Exception), mute_logger('odoo.http', 'odoo.sql_db'):  # suppress logged error due to readonly route doing an update
-            result = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["failures"]})
+            result = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["failures"]})
         self.assertEqual(sorted(r['thread']['id'] for r in result['mail.message']), sorted(self.test_records_simple[:2].ids))
         self.assertEqual(
             sorted(self.env['mail.notification'].search([('author_id', '=', self.partner_employee.id)]).mapped('mail_message_id.res_id')),
@@ -102,7 +102,7 @@ class TestMessageHelpersRobustness(MailCommon, HttpCase):
             'failure_type': 'mail_email_invalid',
         })
         with contextlib.suppress(Exception), mute_logger('odoo.http', 'odoo.sql_db'):  # suppress logged error due to readonly route doing an update
-            res = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["failures"]})
+            res = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["failures"]})
             self.assertEqual(
                 sorted(t["name"] for t in res["mail.thread"]),
                 sorted(['Some description'] + (self.test_records_simple - self.deleted_record).mapped('display_name'))
@@ -113,14 +113,14 @@ class TestMessageHelpersRobustness(MailCommon, HttpCase):
         p2_notifications = self.env['mail.notification'].search([('res_partner_id', '=', self.partner_employee_2.id)])
         p2_notifications.is_read = False
         self.authenticate(self.user_employee_2.login, self.user_employee_2.login)
-        data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["/mail/inbox/messages"]})
+        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["/mail/inbox/messages"]})
         self.assertEqual(
             {r["thread"]["id"] for r in data["mail.message"]},
             set(self.test_records_simple.ids),
             "Currently reading message on missing record, crash avoided",
         )
         p2_notifications.with_user(self.user_employee_2).mail_message_id.set_message_done()
-        data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["/mail/history/messages"]})
+        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["/mail/history/messages"]})
         self.assertEqual(
             {r["thread"]["id"] for r in data["mail.message"]},
             set(self.test_records_simple.ids),
@@ -148,7 +148,7 @@ class TestMessageValues(MailCommon):
     def setUpClass(cls):
         super(TestMessageValues, cls).setUpClass()
 
-        cls.alias_record = cls.env['mail.test.container'].with_context(cls._test_context).create({
+        cls.alias_record = cls.env['mail.test.container'].create({
             'name': 'Pigs',
             'alias_name': 'pigs',
             'alias_contact': 'followers',
@@ -187,11 +187,13 @@ class TestMessageValues(MailCommon):
 
         # check content
         self.assertEqual(len(message.attachment_ids), 1)
-        self.assertFalse(is_html_empty(message.body))
+        self.assertMessageFields(message.sudo(), {
+            'body': '<p>Test</p>',
+            'bookmarked_partner_ids': self.partner_admin,
+            'notified_partner_ids': self.partner_admin,
+            'tracking_values': [],
+        })
         self.assertEqual(len(message.sudo().notification_ids), 1)
-        self.assertEqual(message.notified_partner_ids, self.partner_admin)
-        self.assertEqual(message.bookmarked_partner_ids, self.partner_admin)
-        self.assertFalse(message.sudo().tracking_value_ids)
 
         # Reset body case
         record._message_update_content(
@@ -217,16 +219,21 @@ class TestMessageValues(MailCommon):
         self.assertEqual(message.notified_partner_ids, self.partner_admin)  # message still notified (albeit content is removed)
         self.assertEqual(message.bookmarked_partner_ids, self.partner_admin)  # bookmarked messages stay (albeit content is removed)
 
-        # test tracking values
+        # test tracking values model only (no body content)
         record.write({'user_id': self.user_admin.id})
         self.flush_tracking()
         tracking_message = record.message_ids[0]
+        tracking_message.sudo().write({'body': False})
         self.assertFalse(tracking_message.attachment_ids)
         self.assertTrue(is_html_empty(tracking_message.body))
         self.assertFalse(tracking_message.subtype_id.description)
-        self.assertFalse(tracking_message.sudo()._filter_empty(), 'Has tracking values')
+        self.assertFalse(tracking_message._filter_empty(), 'Has tracking values')
         with self.assertRaises(UserError, msg='Tracking values prevent from updating content'):
             record._message_update_content(tracking_message, body="", attachment_ids=[])
+
+        # be sure removing them correcly set it as empty
+        tracking_message.sudo().write({'tracking_value_ids': [(5, 0)]})
+        self.assertEqual(tracking_message._filter_empty(), tracking_message, 'No tracking values a anymore')
 
     @mute_logger('odoo.models.unlink')
     def test_mail_message_store_access(self):
@@ -245,13 +252,13 @@ class TestMessageValues(MailCommon):
         self.env.flush_all()
         self.env.invalidate_all()
         store_1 = Store().add(message.with_user(self.user_employee), "_store_message_fields")
-        self.assertEqual(store_1.get_result()["mail.message"][0].get("record_name"), "Test1")
+        self.assertEqual(store_1._build_result()["mail.message"][0].get("record_name"), "Test1")
 
         record1.write({"name": "Test2"})
         self.env.flush_all()
         self.env.invalidate_all()
         store_2 = Store().add(message.with_user(self.user_employee), "_store_message_fields")
-        self.assertEqual(store_2.get_result()["mail.message"][0].get('record_name'), 'Test2')
+        self.assertEqual(store_2._build_result()["mail.message"][0].get('record_name'), 'Test2')
 
         # check model not inheriting from mail.thread -> should not crash
         record_nothread = self.env['mail.test.nothread'].create({'name': 'NoThread'})
@@ -259,7 +266,7 @@ class TestMessageValues(MailCommon):
             'model': record_nothread._name,
             'res_id': record_nothread.id,
         })
-        formatted = Store().add(message, "_store_message_fields").get_result()["mail.message"][0]
+        formatted = Store().add(message, "_store_message_fields")._build_result()["mail.message"][0]
         self.assertEqual(formatted['record_name'], record_nothread.name)
 
     def test_records_by_message(self):

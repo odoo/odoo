@@ -7,6 +7,7 @@ from unittest.mock import patch
 from werkzeug.urls import url_parse
 
 from odoo.addons.mail.models.mail_message import MailMessage
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.exceptions import AccessError
@@ -24,7 +25,7 @@ class TestMailMCCommon(MailCommon, TestRecipients):
         cls.test_model = cls.env['ir.model']._get('mail.test.gateway')
         cls.email_from = '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>'
 
-        cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['mail.test.gateway'].create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
         }).with_context({})
@@ -35,7 +36,7 @@ class TestMailMCCommon(MailCommon, TestRecipients):
              'company_id': cls.user_employee_c2.company_id.id},
         ])
 
-        cls.partner_1 = cls.env['res.partner'].with_context(cls._test_context).create({
+        cls.partner_1 = cls.env['res.partner'].create({
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
         })
@@ -76,7 +77,7 @@ class TestMailMCCommon(MailCommon, TestRecipients):
 class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
 
     @users('employee_c2')
-    @mute_logger('odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_post_with_read_access(self):
         """ Check that with readonly access, a message with attachment can be
         posted on a model with the attribute _mail_post_access = 'read'. """
@@ -134,7 +135,7 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
         self.assertEqual(test_record_c1.message_main_attachment_id, first_attachment)
 
     @users('employee_c2')
-    @mute_logger('odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_post_wo_access(self):
         test_records_mc_c1, test_records_mc_c2 = self.test_records_mc.with_env(self.env)
         attachments_data = [
@@ -146,19 +147,16 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
         # Other company (no access)
         # ------------------------------------------------------------
 
-        _original_car = MailMessage._check_access
-        with patch.object(MailMessage, '_check_access',
-                          autospec=True, side_effect=_original_car) as mock_msg_car:
-            with self.assertRaises(AccessError):
-                test_records_mc_c1.message_post(
-                    body='<p>Hello</p>',
-                    force_record_name='CustomName',  # avoid ACL on display_name
-                    message_type='comment',
-                    reply_to='custom.reply.to@test.example.com',  # avoid ACL in notify_get_reply_to
-                    subtype_xmlid='mail.mt_comment',
-                )
-            self.assertEqual(mock_msg_car.call_count, 2,
-                             'Check at model level succeeds and check at record level fails')
+        self.assertTrue(self.env['mail.message'].has_access('create'), 'Check at model level succeeds')
+        with self.assertRaises(AccessError):
+            # check at record level fails
+            test_records_mc_c1.message_post(
+                body='<p>Hello</p>',
+                force_record_name='CustomName',  # avoid ACL on display_name
+                message_type='comment',
+                reply_to='custom.reply.to@test.example.com',  # avoid ACL in notify_get_reply_to
+                subtype_xmlid='mail.mt_comment',
+            )
         with self.assertRaises(AccessError):
             _name = test_records_mc_c1.name
 
@@ -255,7 +253,7 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
     def test_recipients_multi_company(self):
         """Test mentioning a partner with no common company."""
         test_records_mc_c2 = self.test_records_mc[1]
-        with self.assertBus([self.user_employee_c3]):
+        with self.assertBus(BusResult(self.user_employee_c3, "mail.message/inbox")):
             test_records_mc_c2.with_user(self.user_employee_c2).with_context(
                 allowed_company_ids=self.company_2.ids
             ).message_post(
@@ -289,7 +287,7 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
 
         self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
         result = self.make_jsonrpc_request(
-            "/mail/data", {"fetch_params": [["mail.thread", {
+            "/mail/store", {"fetch_params": [["mail.thread", {
                 "thread_id": record.id,
                 "thread_model": record._name,
                 "request_list": ["followers"],
@@ -318,7 +316,7 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
                 if test_user in self.user_portal + self.user_portal_c2:
                     with self.assertRaises(JsonRpcException):
                         result = self.make_jsonrpc_request(
-                            "/mail/data", {"fetch_params": [["mail.thread", {
+                            "/mail/store", {"fetch_params": [["mail.thread", {
                                 "thread_id": record.id,
                                 "thread_model": record._name,
                                 "request_list": ["followers"],
@@ -326,7 +324,7 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
                         )
                 else:
                     result = self.make_jsonrpc_request(
-                        "/mail/data", {"fetch_params": [["mail.thread", {
+                        "/mail/store", {"fetch_params": [["mail.thread", {
                             "thread_id": record.id,
                             "thread_model": record._name,
                             "request_list": ["followers"],
@@ -336,6 +334,16 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
                     self.assertEqual(result["mail.thread"][0]["hasWriteAccess"], has_w)
                     self.assertEqual(result["mail.thread"][0]["hasReadAccess"], has_r)
                     self.assertEqual(result["mail.thread"][0]["canPostOnReadonly"], can_post)
+
+        record.with_user(self.user_admin).message_post(
+            body='Hello!',
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment',
+            partner_ids=[self.partner_employee_c2.id, customer_c3.id],
+        )
+        self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
+        messages = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["/mail/inbox/messages"]})
+        self.assertEqual(len(messages["mail.message"]), 1)
 
     def test_redirect_to_records(self):
         """ Test mail/view redirection in MC environment, notably cids being

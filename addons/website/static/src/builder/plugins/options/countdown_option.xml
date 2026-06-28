@@ -2,6 +2,13 @@
 <templates xml:space="preserve">
 
 <t t-name="website.CountdownOption">
+    <BuilderRow label.translate="Title Position">
+        <BuilderButtonGroup action="'setCountdownTitlePosition'">
+            <BuilderButton actionParam="''" iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"/>
+            <BuilderButton actionParam="'s_countdown_title_left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+            <BuilderButton actionParam="'s_countdown_title_hidden'" icon="'fa-eye-slash'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
     <BuilderRow label.translate="Due Date">
         <BuilderDateTimePicker dataAttributeAction="'endTime'" acceptEmptyDate="false"/>
     </BuilderRow>
@@ -20,7 +27,7 @@
     </BuilderRow>
     <BuilderRow t-if="this.isActiveItem('redirect_end_action_opt')"
                 label.translate="URL">
-            <BuilderUrlPicker placeholder.translate="e.g. /my-awesome-page" dataAttributeAction="'redirectUrl'"/>
+            <BuilderUrlPicker placeholder.translate="e.g. /page or URL" dataAttributeAction="'redirectUrl'"/>
     </BuilderRow>
     <BuilderRow t-if="!this.isActiveItem('text_layout_opt')" label.translate="Size">
         <BuilderSelect dataAttributeAction="'size'">
@@ -159,9 +166,9 @@
         </BuilderRow>
         <BuilderRow label.translate="Alignment" level="2">
             <BuilderButtonGroup applyTo="'.s_countdown_inline_wrapper'">
-                <BuilderButton icon="'fa-align-left'" title.translate="Left" classAction="''"/>
+                <BuilderButton ltrRtlMapping="'left-right'" icon="'fa-align-left'" title.translate="Left" classAction="''"/>
                 <BuilderButton icon="'fa-align-center'" title.translate="Center" classAction="'align-self-center text-center'"/>
-                <BuilderButton icon="'fa-align-right'" title.translate="Right" classAction="'align-self-end text-end'"/>
+                <BuilderButton ltrRtlMapping="'left-right'" icon="'fa-align-right'" title.translate="Right" classAction="'align-self-end text-end'"/>
             </BuilderButtonGroup>
         </BuilderRow>
         <BuilderRow label.translate="Font Monospace" applyTo="'.s_countdown_inline'" level="2">
@@ -173,7 +180,13 @@
         </BuilderRow>
         <hr class="mx-3"/>
         <BuilderRow label.translate="Edge Spacing" applyTo="'.s_countdown_inline_wrapper'">
-            <BuilderRange styleAction="'padding'" min="0" max="200" step="1" displayRangeValue="true" unit="'px'"/>
+            <BuilderRange
+                styleAction="'padding'"
+                min="0"
+                max="200"
+                step="1"
+                unit="'px'"
+                withNumberInput="true" />
         </BuilderRow>
         <BuilderContext applyTo="'.s_countdown_inline_wrapper'">
             <BorderConfigurator label.translate="Border"/>
@@ -205,6 +218,16 @@
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <countdown_option selector=".s_countdown"/>
     </xpath>
+</t>
+
+<t t-name="website.s_countdown.title">
+    <div class="s_countdown_title oe_unremovable">
+        <h2 style="text-align: center">
+            <span class="h3-fs">
+                <font class="text-o-color-1">Sales begins in:</font>
+            </span>
+        </h2>
+    </div>
 </t>
 
 </templates>

@@ -1,18 +1,18 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { ProjectTaskKanbanCompiler } from "./project_task_kanban_compiler";
-import { RottingKanbanRecord } from "@mail/js/rotting_mixin/rotting_kanban_record";
 import { SubtaskKanbanList } from "@project/components/subtask_kanban_list/subtask_kanban_list"
+import { KanbanRecord } from "@web/views/kanban/kanban_record";
 
-export class ProjectTaskKanbanRecord extends RottingKanbanRecord {
+export class ProjectTaskKanbanRecord extends KanbanRecord {
     static Compiler = ProjectTaskKanbanCompiler;
     static components = {
-        ...RottingKanbanRecord.components,
+        ...KanbanRecord.components,
         SubtaskKanbanList,
     };
 
     setup() {
         super.setup();
-        this.state = useState({folded: true});
+        this.state = proxy({folded: true});
     }
 
     /**

@@ -1,12 +1,16 @@
-from . import common
-from . import test_assetsbundle
-from . import test_bus_gc
-from . import test_health
-from . import test_ir_model
-from . import test_ir_websocket
-from . import test_notify
-from . import test_websocket_caryall
-from . import test_websocket_check_session
-from . import test_close_websocket_after_tour
-from . import test_websocket_controller
-from . import test_websocket_rate_limiting
+from . import (
+    common,
+    test_assetsbundle,
+    test_bus_gc,
+    test_close_websocket_after_tour,
+    test_health,
+    test_ir_model,
+    test_ir_websocket,
+    test_notify,
+    test_websocket_caryall,
+    test_websocket_check_session,
+    test_websocket_controller,
+    test_websocket_dispatching,
+    test_websocket_rate_limiting,
+    test_websocket_timeouts,
+)

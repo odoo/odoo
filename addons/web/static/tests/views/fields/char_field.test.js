@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryFirst } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
     contains,
@@ -91,6 +91,8 @@ class Partner extends models.Model {
 }
 
 class PartnerType extends models.Model {
+    _name = "partner.type";
+
     color = fields.Integer({ string: "Color index" });
     name = fields.Char({ string: "Partner Type" });
 
@@ -514,14 +516,14 @@ test("input field: change value before pending onchange returns", async () => {
     });
 
     let def;
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
 
     await contains(".o_field_x2many_list_row_add button").click();
     expect(".o_field_widget[name='name'] input").toHaveValue("My little Name Value", {
         message: "should contain the default value",
     });
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o-autocomplete--input").click();
     await contains(".o-autocomplete--dropdown-item").click();
     await fieldInput("name").edit("tralala", { confirm: false });
@@ -544,7 +546,7 @@ test("input field: change value before pending onchange returns (2)", async () =
         }
     };
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     await mountView({
         type: "form",
         resModel: "res.partner",
@@ -558,7 +560,7 @@ test("input field: change value before pending onchange returns (2)", async () =
         </form>`,
     });
 
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
 
     expect(".o_field_widget[name='name'] input").toHaveValue("yop", {
         message: "should contain the correct value",
@@ -606,14 +608,14 @@ test("input field: change value before pending onchange returns (with fieldDebou
         </form>`,
     });
 
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
 
     await contains(".o_field_x2many_list_row_add button").click();
     expect(".o_field_widget[name='name'] input").toHaveValue("My little Name Value", {
         message: "should contain the default value",
     });
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o-autocomplete--input").click();
     await contains(".o-autocomplete--dropdown-item").click();
     await fieldInput("name").edit("tralala", { confirm: false });
@@ -660,9 +662,9 @@ test("input field: change value before pending onchange renaming", async () => {
         </form>`,
     });
 
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
 
     expect(".o_field_widget[name='name'] input").toHaveValue("yop", {
         message: "should contain the correct value",
@@ -901,7 +903,7 @@ test("edit a char field should display the status indicator buttons without flic
         obj.display_name = "cc";
     };
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     await mountView({
         type: "form",
         resModel: "res.partner",
@@ -917,7 +919,7 @@ test("edit a char field should display the status indicator buttons without flic
     });
     onRpc("onchange", () => {
         expect.step("onchange");
-        return def;
+        return def.promise;
     });
     expect(".o_form_status_indicator_buttons").not.toBeVisible({
         message: "form view is not dirty",
@@ -936,25 +938,103 @@ test("edit a char field should display the status indicator buttons without flic
     expect.verifySteps(["onchange"]);
 });
 
-test("editable and readonly/empty fields have the same minimum size", async () => {
-    Partner._records[0].name = false;
-    // The o_input_box border is only visible on touch devices, using css rules
-    document.body.classList.add("o_touch_device");
+test("translating a char field inside one2many saves the parent record", async () => {
+    Partner._fields.type_id = fields.Many2one({
+        relation: "partner.type",
+    });
+    PartnerType._fields.partner_ids = fields.One2many({
+        string: "Partners",
+        relation: "res.partner",
+        relation_field: "type_id",
+    });
+    Partner._fields.name.translate = true;
+
+    PartnerType._records[0].partner_ids = [1];
+
+    serverState.lang = "en_US";
+    serverState.multiLang = true;
+
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+    ]);
+
+    onRpc("res.partner", "get_field_translations", () => [
+        [
+            { lang: "en_US", source: "move things", value: "move things" },
+            { lang: "fr_BE", source: "move things", value: "breakfast" },
+        ],
+        {
+            translation_type: "char",
+            translation_show_source: false,
+        },
+    ]);
+
+    onRpc("web_save", ({ model }) => {
+        expect.step(model);
+    });
+
     await mountView({
         type: "form",
-        resModel: "res.partner",
-        resId: 1,
+        resModel: "partner.type",
+        resId: 12,
         arch: `
         <form>
-            <field name="name"/>
-            <field name="name" readonly="1"/>
-            <field name="int_field"/>
+            <field name="partner_ids">
+                <list editable="bottom">
+                    <field name="name"/>
+                </list>
+            </field>
         </form>`,
     });
-    const targetSize = queryFirst(".o_field_widget").getBoundingClientRect().height;
-    const readonlySize = queryFirst(".o_readonly_modifier").getBoundingClientRect().height;
-    const intSize = queryFirst("[name='int_field']").getBoundingClientRect().height;
 
-    expect(Math.abs(targetSize - readonlySize) <= 1).toBe(true);
-    expect(Math.abs(targetSize - intSize) <= 1).toBe(true);
+    await contains(".o_list_char").click();
+    await fieldInput("name").edit("move things", { confirm: false });
+    await contains(".o_selected_row .o_field_char .btn.o_field_translate").click();
+
+    expect.verifySteps(["partner.type"]);
+});
+
+test("translation dialog opens in editable list when the required field is set", async () => {
+    Partner._fields.name.translate = true;
+    Partner._fields.name.required = true;
+
+    serverState.lang = "en_US";
+    serverState.multiLang = true;
+
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+    ]);
+
+    onRpc("res.partner", "get_field_translations", () => [
+        [
+            { lang: "en_US", source: "Hello", value: "Hello" },
+            { lang: "fr_BE", source: "Hello", value: "Hii" },
+        ],
+        {
+            translation_type: "char",
+            translation_show_source: false,
+        },
+    ]);
+
+    await mountView({
+        type: "list",
+        resModel: "res.partner",
+        arch: `
+            <list editable="bottom">
+                <field name="name"/>
+            </list>`,
+    });
+
+    await contains(".o_list_button_add").click();
+
+    await fieldInput("name").edit("", { confirm: false });
+    await contains(".btn.o_field_translate").click();
+    expect(".o_translation_dialog").toHaveCount(0);
+    expect(".o_notification").toHaveCount(1);
+
+    await fieldInput("name").edit("Hello", { confirm: false });
+    await contains(".btn.o_field_translate").click();
+    expect(".o_translation_dialog").toHaveCount(1);
 });

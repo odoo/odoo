@@ -2,12 +2,18 @@
 <odoo>
     <record id="base.partner_demo_company_br" model="res.partner" forcecreate="1">
         <field name="name">BR Company</field>
-        <field name="vat">51494569013170</field>
-        <field name="street">Praça Mauá 1</field>
-        <field name="city">Rio de Janeiro</field>
+        <field name="l10n_latam_identification_type_id" ref="l10n_br.cnpj"/>
+        <field name="vat">49233848000150</field>
+        <field name="l10n_br_ie_code">9102799558</field>
+        <field name="l10n_br_im_code">01071.069.624-0</field>
+        <field name="street_name">Rua Marechal Deodoro</field>
+        <field name="street_number">630</field>
+        <field name="street_number2">Complemento II</field>
+        <field name="street2">Centro</field>
         <field name="country_id" ref="base.br"/>
-        <field name="state_id" ref="base.state_br_rj"/>
-        <field name="zip">20081-240</field>
+        <field name="state_id" ref="base.state_br_pr"/>
+        <field name="city_id" ref="l10n_br.city_br_008"/>
+        <field name="zip">80010-010</field>
         <field name="phone">+55 11 96123-4567</field>
         <field name="email">info@company.brexample.com</field>
         <field name="website">www.brexample.com</field>

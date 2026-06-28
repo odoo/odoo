@@ -24,15 +24,22 @@ export class HrEmployee extends models.ServerModel {
             user_id: 3,
             work_contact_id: 3,
         },
+        {
+            id: 4,
+            name: "A Little Guy",
+        },
     ];
 
     _load_pos_data_read(records) {
+        const employeeRoles = {
+            2: "manager",
+            3: "cashier",
+            4: "minimal",
+        };
         records.forEach((emp) => {
+            emp._role = employeeRoles[emp.id] || "manager";
             if (emp.id === 2) {
-                emp._role = "manager";
                 emp._pin = Sha1.hash("1234");
-            } else {
-                emp._role = "cashier";
             }
         });
         return records;

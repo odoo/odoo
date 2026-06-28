@@ -74,7 +74,6 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             'code': 'cash.basis.transfer.account',
             'name': 'cash_basis_transfer_account',
             'account_type': 'income',
-            'reconcile': True,
         })
 
         cash_basis_tax_account = cls.env['account.account'].create({

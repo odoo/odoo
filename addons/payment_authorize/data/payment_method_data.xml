@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- https://www.authorize.net/solutions/merchantsolutions/onlinemerchantaccount/ -->
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_ach_direct_debit" model="payment.method">
+        <field name="name">ACH Direct Debit</field>
+        <field name="code">ach_direct_debit</field>
+        <field name="provider_id" ref="payment.payment_provider_authorize"/>
+        <field name="image" type="bytes" file="payment/static/img/ach_direct_debit.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.pr'), ref('base.us')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.USD')])]"/>
+    </record>
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="sequence">10</field>
+        <field name="provider_id" ref="payment.payment_provider_authorize"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS === -->
+
+    <record id="payment_method_amex" model="payment.method">
+        <field name="name">American Express</field>
+        <field name="code">amex</field>
+        <field name="primary_payment_method_id" eval="ref('payment_authorize.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_authorize"/>
+        <field name="image" type="bytes" file="payment/static/img/amex.png"/>
+    </record>
+
+    <record id="payment_method_diners" model="payment.method">
+        <field name="name">Diners Club International</field>
+        <field name="code">diners</field>
+        <field name="primary_payment_method_id" eval="ref('payment_authorize.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_authorize"/>
+        <field name="image" type="bytes" file="payment/static/img/diners.png"/>
+    </record>
+
+    <record id="payment_method_discover" model="payment.method">
+        <field name="name">Discover</field>
+        <field name="code">discover</field>
+        <field name="primary_payment_method_id" eval="ref('payment_authorize.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_authorize"/>
+        <field name="image" type="bytes" file="payment/static/img/discover.png"/>
+    </record>
+
+    <record id="payment_method_jcb" model="payment.method">
+        <field name="name">JCB</field>
+        <field name="code">jcb</field>
+        <field name="primary_payment_method_id" eval="ref('payment_authorize.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_authorize"/>
+        <field name="image" type="bytes" file="payment/static/img/jcb.png"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_authorize.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_authorize"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_authorize.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_authorize"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+</odoo>

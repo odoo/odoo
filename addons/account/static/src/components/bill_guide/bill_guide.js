@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { AccountFileUploader } from "@account/components/account_file_uploader/account_file_uploader";
 import { DocumentFileUploader } from "../document_file_uploader/document_file_uploader";
 
 import { Component, onWillStart } from "@odoo/owl";
@@ -8,6 +9,7 @@ export class BillGuide extends Component {
     static template = "account.BillGuide";
     static components = {
         DocumentFileUploader,
+        AccountFileUploader,
     };
     static props = ["*"];  // could contain view_widget props
 
@@ -17,6 +19,7 @@ export class BillGuide extends Component {
         this.context = null;
         this.alias = null;
         this.showSampleAction = false;
+        this.ui = useService("ui");
         onWillStart(this.onWillStart);
     }
 
@@ -54,10 +57,12 @@ export class BillGuide extends Component {
             type: "ir.actions.act_window",
             res_model: "account.move",
             views: [[false, "form"]],
-            context: {
-                default_move_type: "in_invoice",
-            },
+            context: this.context || this.env.searchModel.context,
         });
+    }
+
+    get isMobileDevice() {
+        return this.ui.isSmall;
     }
 }
 

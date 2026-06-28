@@ -57,7 +57,7 @@ const deepSerialization = (
                         toUpdate.push(childRecord);
 
                         if (!opts.keepCommands) {
-                            childRecord._dirty = false;
+                            childRecord.unmarkDirty();
                         }
                     } else if (!childRecord.isSynced) {
                         toCreate.push(childRecord);
@@ -179,7 +179,7 @@ const deepSerialization = (
     }
 
     if (!opts.keepCommands) {
-        record._dirty = false;
+        record.unmarkDirty();
     }
 
     // Cleanup: remove empty entries from uuidMapping.
@@ -197,8 +197,10 @@ const deepSerialization = (
 };
 
 export const ormSerialization = (record, opts) => {
+    const serialized = {};
     const uuidMapping = {};
     const result = deepSerialization(record, opts, {
+        serialized,
         uuidMapping,
     });
     if (Object.keys(uuidMapping).length !== 0) {

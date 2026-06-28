@@ -1,21 +1,12 @@
-import { useState } from "@web/owl2/utils";
 import { SearchMedia } from "./search_media";
 import { fonts } from "@html_editor/utils/fonts";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export class IconSelector extends Component {
     static mediaSpecificClasses = ["fa"];
     static mediaSpecificStyles = ["color", "background-color"];
-    static mediaExtraClasses = [
-        "rounded-circle",
-        "rounded",
-        "img-thumbnail",
-        "shadow",
-        /^text-\S+$/,
-        /^bg-\S+$/,
-        /^fa-\S+$/,
-    ];
+    static mediaExtraClasses = [/^text-\S+$/, /^bg-\S+$/, /^fa-\S+$/];
     static tagNames = ["SPAN", "I"];
     static template = "html_editor.IconSelector";
     static components = {
@@ -24,7 +15,7 @@ export class IconSelector extends Component {
     static props = ["*"];
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             fonts: this.props.fonts,
             needle: "",
         });
@@ -65,7 +56,7 @@ export class IconSelector extends Component {
     /**
      * Utility methods, used by the MediaDialog component.
      */
-    static createElements(selectedMedia) {
+    static createElements(selectedMedia, { document = window.document } = {}) {
         return selectedMedia.map((icon) => {
             const iconEl = document.createElement("span");
             iconEl.classList.add(icon.fontBase, icon.names[0]);

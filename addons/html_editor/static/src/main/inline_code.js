@@ -1,24 +1,80 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { splitTextNode, unwrapContents } from "@html_editor/utils/dom";
-import { isElement, isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
+import { isElement, isTextNode, isVisible, isZwnbsp } from "@html_editor/utils/dom_info";
 import { closestElement, selectElements, findFurthest } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS, nodeSize } from "@html_editor/utils/position";
+import { withSequence } from "@html_editor/utils/resource";
+import { DISABLED_NAMESPACE } from "./toolbar/toolbar_plugin";
 
-/** @typedef {((codeElement: HTMLElement) => void)[]} to_inline_code_processors */
+/** @typedef {((codeElement: HTMLElement) => HTMLElement)[]} to_inline_code_processors */
 
 export class InlineCodePlugin extends Plugin {
     static id = "inlineCode";
-    static dependencies = ["selection", "history", "input", "split", "feff"];
+    static dependencies = ["clipboard", "feff", "history", "input", "selection", "split"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_input_handlers: this.onInput.bind(this),
         on_selectionchange_handlers: this.handleSelectionChange.bind(this),
         normalize_processors: this.normalize.bind(this),
+
+        /** Providers */
         feff_providers: (root, cursors) =>
             selectElements(root, ".o_inline_code").flatMap((code) =>
                 this.dependencies.feff.surroundWithFeffs(code, cursors)
             ),
+        toolbar_namespace_providers: withSequence(70, (targetedNodes) => {
+            const hasInlineCode = targetedNodes.some((node) =>
+                closestElement(node, "code.o_inline_code")
+            );
+            if (
+                targetedNodes.length &&
+                hasInlineCode &&
+                targetedNodes.every(
+                    (node) => closestElement(node, "code.o_inline_code") || !isVisible(node)
+                )
+            ) {
+                return DISABLED_NAMESPACE;
+            }
+        }),
+
+        /** Overrides */
+        are_similar_elements_overrides: ({ node, node2 }) => {
+            if (node.matches("code.o_inline_code") && node2.matches("code.o_inline_code")) {
+                return true;
+            }
+        },
+        paste_overrides: (selection, clipboardData) => {
+            const caretNode =
+                selection.direction === DIRECTIONS.RIGHT
+                    ? selection.anchorNode
+                    : selection.focusNode;
+            if (closestElement(caretNode, "code.o_inline_code")) {
+                this.dependencies.clipboard.pasteText(clipboardData.getData("text/plain"));
+                return true;
+            }
+        },
+
+        /** Predicates */
+        is_formattable_node_predicates: (node) => {
+            if (closestElement(node, "code.o_inline_code")) {
+                return false;
+            }
+        },
+        is_powerbox_available_predicates: (node) => {
+            if (closestElement(node, "code.o_inline_code")) {
+                return false;
+            }
+        },
+        is_link_allowed_on_selection_predicates: () => {
+            const targetedNodes = this.dependencies.selection.getTargetedNodes();
+            if (
+                targetedNodes.length &&
+                targetedNodes.every((node) => closestElement(node, "code.o_inline_code"))
+            ) {
+                return false;
+            }
+        },
     };
 
     setup() {
@@ -108,7 +164,7 @@ export class InlineCodePlugin extends Plugin {
                 anchorNode: codeElement,
                 anchorOffset: nodeSize(codeElement),
             });
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
             delete this.historySavePointRestore;
             return;
         }
@@ -117,7 +173,7 @@ export class InlineCodePlugin extends Plugin {
         // one in the text.
         let textNode = selection.startContainer;
         const wholeText = textNode.wholeText;
-        const textHasTwoTicks = /`[^`]+`/.test(wholeText);
+        const textHasTwoTicks = /`[^ `][^`]*`/.test(wholeText);
         // We don't apply the code tag if there is no content between the two `
         if (textHasTwoTicks && wholeText.replace(/`/g, "").length) {
             let offset = selection.startOffset;
@@ -143,7 +199,7 @@ export class InlineCodePlugin extends Plugin {
                 anchorNode: textNode,
                 anchorOffset: offset,
             });
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
             const insertedBacktickIndex = offset - 1;
             const textBeforeInsertedBacktick = textNode.textContent.substring(
                 0,
@@ -169,31 +225,32 @@ export class InlineCodePlugin extends Plugin {
             if (startOffset) {
                 splitTextNode(textNode, startOffset);
             }
-            // Remove ticks.
-            textNode.textContent = textNode.textContent.substring(
-                1,
-                textNode.textContent.length - 1
-            );
-            // Insert code element.
+            const splitLimit = findFurthest(textNode, closestBlock(textNode), (n) => !isBlock(n));
+            const splitNode = this.dependencies.split.splitAroundUntil(textNode, splitLimit);
+            // Insert code element with plain text.
             const codeElement = this.document.createElement("code");
             codeElement.classList.add("o_inline_code");
-            textNode.before(codeElement);
-            codeElement.append(textNode);
+            // Remove ticks from the text content.
+            codeElement.textContent = splitNode.textContent.substring(
+                1,
+                splitNode.textContent.length - 1
+            );
+            splitNode.replaceWith(codeElement);
             if (!codeElement.textContent.length) {
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
                 this.dependencies.selection.setSelection({
                     anchorNode: codeElement.firstChild,
                     anchorOffset: 1,
                 });
             } else if (isClosingForward) {
                 // Move selection out of code element.
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
                 this.dependencies.selection.setSelection({
                     anchorNode: codeElement.nextSibling,
                     anchorOffset: 1,
                 });
             } else {
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
                 this.dependencies.selection.setSelection({
                     anchorNode: codeElement.firstChild,
                     anchorOffset: 0,
@@ -212,5 +269,6 @@ export class InlineCodePlugin extends Plugin {
                 el.remove();
             }
         }
+        return rootEl;
     }
 }

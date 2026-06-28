@@ -60,9 +60,9 @@ class TestWebsiteRedirect(TransactionCase):
             'url_from': '/website/info',
             'url_to': '/test',
         })
-        website = self.env.ref('website.default_website')
-        with MockRequest(self.env, website=website):
-            self.env['website.rewrite'].refresh_routes()
-            pages = self.env.ref('website.default_website')._enumerate_pages()
+        website = self.env.ref('base.default_website')
+        with MockRequest(self.env, website=website) as request:
+            request.env['website.rewrite'].refresh_routes()
+            pages = request.env.ref('base.default_website')._enumerate_pages()
             urls = [url['loc'] for url in pages]
             self.assertNotIn('/test', urls)

@@ -40,7 +40,7 @@ class TestAttachmentController(HttpCase):
 
         attachment = self.env['ir.attachment'].create([{'name': 'test_pixel', 'public': True, 'res_id': False,
                                                         'mimetype': 'text/plain', 'res_model': 'forum.post',
-                                                        'raw': self.pixel, 'website_id': self.env.ref('website.default_website').id}])
+                                                        'raw': self.pixel, 'website_id': self.env.ref('base.default_website').id}])
         domain = [('name', '=', 'test_pixel')]
         result = attachment.search(domain, limit=1)
         self.assertTrue(result, "No attachment fetched")

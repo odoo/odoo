@@ -2,7 +2,7 @@
 
 import re
 import logging
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -27,10 +27,32 @@ NO_FLAG_COUNTRIES = [
     "SJ", #Svalbard + Jan Mayen : separate jurisdictions : no dedicated flag
 ]
 
+EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES = {
+    # EU Member States
+    'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE',
+    'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'CH',
+
+    # EFTA Countries in the EEA
+    'IS', 'LI', 'NO',
+}
+
+# France and its overseas territories (DOM-TOM/DROM-COM)
+FR_AND_OVERSEAS_TERRITORIES = [
+    'FR', 'BL', 'GF', 'GP', 'MF', 'MQ', 'NC', 'PF', 'PM', 'RE', 'TF', 'WF', 'YT',
+]
+
+SEPA_COUNTRIES = [
+    'AD', 'AT', 'AX', 'BE', 'BG', 'BL', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR',
+    'UK', 'GF', 'GG', 'GI', 'GP', 'GR', 'HR', 'HU', 'IE', 'IM', 'IS', 'IT', 'JE', 'LI', 'LT',
+    'LU', 'LV', 'MC', 'MF', 'MQ', 'MT', 'NL', 'NO', 'PL', 'PM', 'PT', 'RE', 'RO', 'SE', 'SI',
+    'SK', 'SM', 'VA', 'YT',
+]
+
 
 class ResCountry(models.CachedModel):
     _name = 'res.country'
     _description = 'Country'
+    _explanation = "Represents a nation or territory. Used for addressing, tax rules (fiscal positions), and localization settings."
     _order = 'name, id'
     _rec_names_search = ['name', 'code']
     _cached_data_fields = ('code', 'currency_id', 'phone_code')
@@ -104,7 +126,7 @@ class ResCountry(models.CachedModel):
         return result
 
     @api.model
-    @tools.ormcache('code', cache='stable')
+    @api.ormcache('code', cache='stable')
     def _phone_code_for(self, code):
         data = self._cached_data()
         for country_code, phone_code in zip(data['code'], data['phone_code']):
@@ -126,7 +148,7 @@ class ResCountry(models.CachedModel):
         if 'address_view_id' in vals:
             # Changing the address view of the company must invalidate the view cached for res.partner
             # because of _view_get_address
-            self.env.registry.clear_cache('templates')
+            self.env.transaction.invalidate_ormcache('templates')
         return res
 
     def get_address_fields(self):
@@ -192,6 +214,7 @@ class ResCountryGroup(models.Model):
 class ResCountryState(models.Model):
     _name = 'res.country.state'
     _description = "Country state"
+    _explanation = "Represents a sub-division of a country, such as a state, province, or region."
     _order = 'code, id'
     _rec_names_search = ['name', 'code']
 

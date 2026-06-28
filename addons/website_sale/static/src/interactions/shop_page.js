@@ -4,6 +4,7 @@ import { hasTouch, isBrowserFirefox } from '@web/core/browser/feature_detection'
 import { redirect } from '@web/core/utils/urls';
 import { setElementContent } from "@web/core/utils/html";
 import { _t } from "@web/core/l10n/translation";
+import wSaleUtils from "@website_sale/js/website_sale_utils";
 
 export class ShopPage extends Interaction {
     static selector = '.o_wsale_products_page';
@@ -47,40 +48,35 @@ export class ShopPage extends Interaction {
      *
      * @param {Event} ev
      */
-    onChangeAttribute(ev) {
-        const productGrid = this.el.querySelector('.o_wsale_products_grid_table_wrapper');
-        if (productGrid) {
-            productGrid.classList.add('opacity-50');
-        }
+    async onChangeAttribute(ev) {
         const form = ev.currentTarget.closest('form');
-        const filters = form.querySelectorAll('input:checked, select');
-        const attributeValues = new Map();
-        const tags = new Set();
-        for (const filter of filters) {
-            if (filter.value) {
-                if (filter.name === 'attribute_value') {
-                    // Group attribute value ids by attribute id.
-                    const [attributeId, attributeValueId] = filter.value.split('-');
-                    const valueIds = attributeValues.get(attributeId) ?? new Set();
-                    valueIds.add(attributeValueId);
-                    attributeValues.set(attributeId, valueIds);
-                } else if (filter.name === 'tags') {
-                    tags.add(filter.value);
-                }
-            }
-        }
+        const searchParams = this._getSearchParams(form);
         const url = new URL(form.action);
-        const searchParams = url.searchParams;
-        // Aggregate all attribute values belonging to the same attribute into a single
-        // `attribute_values` search param.
-        for (const entry of attributeValues.entries()) {
-            searchParams.append('attribute_values', `${entry[0]}-${[...entry[1]].join(',')}`);
+        await wSaleUtils.updateShopContent(this, {
+            url,
+            searchParams,
+        });
+    }
+
+    _getSearchParams(form) {
+        const filters = form.querySelectorAll('input:checked, select');
+        const attributeValueSlugs = Array.from(filters).filter(
+            filter => filter.name === 'attribute_value' && filter.value
+        ).map(filter => filter.value);
+        const tagSlugs = Array.from(filters).filter(
+            filter => filter.name === 'tags' && filter.value
+        ).map(filter => filter.value);
+        const attributeValueParams = wSaleUtils.getAttributeValueParams(attributeValueSlugs);
+        const url = new URL(form.action);
+        const searchParams = new URLSearchParams({
+            ...Object.fromEntries(wSaleUtils.clearAttributeValueParams(url.searchParams)),
+            ...Object.fromEntries(attributeValueParams),
+        });
+        // Aggregate all tags into a single `tags` search param, with duplicates removed.
+        if (tagSlugs.length) {
+            searchParams.set('tags', [...new Set(tagSlugs)].join(','));
         }
-        // Aggregate all tags into a single `tags` search param.
-        if (tags.size) {
-            searchParams.set('tags', [...tags].join(','));
-        }
-        redirect(`${url.pathname}?${searchParams.toString()}`);
+        return searchParams;
     }
 
     /**

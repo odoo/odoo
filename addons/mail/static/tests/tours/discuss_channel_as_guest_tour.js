@@ -3,11 +3,11 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("discuss_channel_as_guest_tour.js", {
     steps: () => [
         {
-            content: "Channel secret token has been hidden on welcome page",
+            content: "Shareable invitation link is shown on welcome page",
             trigger: ".o-mail-WelcomePage",
             run() {
-                if (!window.location.pathname.startsWith("/discuss/channel")) {
-                    console.error("Channel secret token is still present in URL.");
+                if (!/^\/chat\/\d+\/[^/]+$/.test(window.location.pathname)) {
+                    console.error("Invitation link is not present in URL on welcome page.");
                 }
             },
         },
@@ -35,8 +35,7 @@ registry.category("web_tour.tours").add("discuss_channel_as_guest_tour.js", {
             run: "fill @",
         },
         {
-            trigger:
-                ".o-mail-DiscussCommand:not(:has(.fa-user)):has(.fa-hashtag):text(Test channel)",
+            trigger: ".o-mail-DiscussCommand:text(Test channel)",
         },
     ],
 });

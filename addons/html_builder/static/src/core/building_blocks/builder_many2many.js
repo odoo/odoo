@@ -1,26 +1,33 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import {
-    basicContainerBuilderComponentProps,
-    getAllActionsAndOperations,
-    useBuilderComponent,
-    useDomState,
-} from "../utils";
+import { getAllActionsAndOperations, useBuilderComponent, useDomState } from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { BasicMany2Many } from "./basic_many2many";
 
 export class BuilderMany2Many extends Component {
     static template = "html_builder.BuilderMany2Many";
-    static props = {
-        ...basicContainerBuilderComponentProps,
-        model: String,
-        m2oField: { type: String, optional: true },
-        fields: { type: Array, element: String, optional: true },
-        domain: { type: Array, optional: true },
-        limit: { type: Number, optional: true },
-    };
-    static defaultProps = BuilderComponent.defaultProps;
+    props = props({
+        // basicContainerBuilderComponentProps (converted inline)
+        id: t.string().optional(),
+        applyTo: t.string().optional(),
+        preview: t.boolean().optional(),
+        inheritedActions: t.array(t.string()).optional(),
+
+        action: t.string().optional(),
+        actionParam: t.any().optional(),
+
+        // Shorthand actions.
+        classAction: t.any().optional(),
+        attributeAction: t.any().optional(),
+        dataAttributeAction: t.any().optional(),
+        styleAction: t.any().optional(),
+
+        model: t.string(),
+        m2oField: t.string().optional(),
+        fields: t.array(t.string()).optional(),
+        domain: t.array().optional(),
+        limit: t.number().optional(),
+    });
     static components = { BuilderComponent, BasicMany2Many };
 
     setup() {
@@ -31,7 +38,7 @@ export class BuilderMany2Many extends Component {
         this.applyOperation = this.env.editor.shared.history.makePreviewableAsyncOperation(
             this.callApply.bind(this)
         );
-        this.state = useState({
+        this.state = proxy({
             searchModel: undefined,
         });
         this.domState = useDomState((el) => {

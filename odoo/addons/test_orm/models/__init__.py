@@ -1,13 +1,14 @@
 from . import (
+    common,
     test_access_rights,
     test_action_bindings,
     test_config,
-    test_convert,
-    test_html_converter,
     test_inherits,
+    test_ir_qweb_fields,
     test_orm,
     test_performance,
     test_read_group,
     test_schema,
+    test_search,
     test_unity_read,
 )

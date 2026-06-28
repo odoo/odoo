@@ -1,7 +1,4 @@
 .o-mail-ActionList {
-    hr {
-        opacity: 12.5% !important;
-    }
 
     .o-mail-ActionList-group:has(.rounded-circle.o-hasBtnBg) {
         gap: map-get($spacers, 1);
@@ -121,11 +118,15 @@
                 }
             }
 
-            &.o-inline.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL):not(.o-hasBtnBg) {
-                color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
-
-                &:active {
-                    background-color: inherit;
+            &.o-inline.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL) {
+                &.o-hasBtnBg {
+                    --btn-active-bg: var(--btn-bg);
+                }
+                &:not(.o-hasBtnBg) {
+                    color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
+                    &:active {
+                        background-color: inherit;
+                    }
                 }
             }
         }
@@ -150,7 +151,7 @@
 
         &.active {
             // Same colors than dark theme since dark theme is simulated for call view.
-            background-color: #17373b;
+            background-color: #17373b !important;
             border-color: #03f9e3 !important;
         }
     }

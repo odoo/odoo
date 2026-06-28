@@ -3,6 +3,7 @@ import { Plugin } from "../plugin";
 /**
  * @typedef { Object } LocalOverlayShared
  * @property { LocalOverlayPlugin['makeLocalOverlay'] } makeLocalOverlay
+ * @property { LocalOverlayPlugin['createElement'] } createElement
  */
 
 /**
@@ -11,7 +12,7 @@ import { Plugin } from "../plugin";
  */
 export class LocalOverlayPlugin extends Plugin {
     static id = "localOverlay";
-    static shared = ["makeLocalOverlay"];
+    static shared = ["makeLocalOverlay", "createElement"];
 
     setup() {
         this.localOverlayContainer = this.config.localOverlayContainers?.ref.el;
@@ -35,6 +36,11 @@ export class LocalOverlayPlugin extends Plugin {
             this.localOverlays.add(container);
         }
         return container;
+    }
+
+    createElement(tagName, options) {
+        const document = this.localOverlayContainer?.ownerDocument ?? window.document;
+        return document.createElement(tagName, options);
     }
 
     destroy() {

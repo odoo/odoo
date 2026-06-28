@@ -12,6 +12,7 @@ from odoo.exceptions import ValidationError, MissingError
 from odoo.tools import BinaryBytes
 
 from odoo.addons.spreadsheet.utils.validate_data import fields_in_spreadsheet, menus_xml_ids_in_spreadsheet
+from odoo.addons.spreadsheet.utils.helpers import DEFAULT_SHEET_ID
 
 
 class SpreadsheetMixin(models.AbstractModel):
@@ -126,14 +127,15 @@ class SpreadsheetMixin(models.AbstractModel):
         return {
             "sheets": [
                 {
-                    "id": "sheet1",
+                    "id": DEFAULT_SHEET_ID,
                     "name": _("Sheet1"),
-                }
+                },
             ],
             "settings": {
                 "locale": locale,
             },
             "revisionId": "START_REVISION",
+            "version": "19.1.0",
         }
 
     def _zip_xslx_files(self, files):

@@ -1,5 +1,6 @@
-import { onWillRender, useExternalListener, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, computed, proxy, useListener } from "@odoo/owl";
+import { localeCompare } from "@web/core/l10n/utils";
 
 export const TABLE_TYPES = {
     Id: "id",
@@ -15,10 +16,12 @@ export class DocTable extends Component {
         data: true,
     };
 
+    items = computed(() => this.computeItems());
+
     setup() {
         this.subTableRef = useRef("subTableRef");
         this.tooltipRef = useRef("tooltipRef");
-        this.state = useState({
+        this.state = proxy({
             sortBy: 0,
             sortOrder: "desc",
             subTable: undefined,
@@ -29,11 +32,7 @@ export class DocTable extends Component {
         this.hideTimeout = null;
         this.requestAnim = null;
 
-        onWillRender(() => {
-            this.items = this.computeItems();
-        });
-
-        useExternalListener(window, "click", (event) => {
+        useListener(window, "click", (event) => {
             if (
                 this.subTableRef.el &&
                 this.subTableRef.el !== event.target &&
@@ -43,7 +42,7 @@ export class DocTable extends Component {
             }
         });
 
-        useExternalListener(window, "scroll", () => (this.state.subTable = null));
+        useListener(window, "scroll", () => (this.state.subTable = null));
     }
 
     showDynamicTooltip(event, content) {
@@ -106,9 +105,9 @@ export class DocTable extends Component {
                 const a = this.getValue(itemA[this.state.sortBy]);
                 const b = this.getValue(itemB[this.state.sortBy]);
                 if (this.state.sortOrder === "asc") {
-                    return b.localeCompare(a);
+                    return localeCompare(b, a);
                 } else {
-                    return a.localeCompare(b);
+                    return localeCompare(a, b);
                 }
             });
             return items;

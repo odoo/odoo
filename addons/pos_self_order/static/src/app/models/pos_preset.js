@@ -9,6 +9,10 @@ patch(PosPreset.prototype, {
         return Boolean(this.mail_template_id);
     },
 
+    get needsPhone() {
+        return false;
+    },
+
     slotPrefix(dateObj) {
         const today = DateTime.now();
         const slotDate = dateObj.toFormat("D");

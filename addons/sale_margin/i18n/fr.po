@@ -7,14 +7,15 @@
 # Jolien De Paepe, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:01+0000\n"
-"PO-Revision-Date: 2025-09-14 21:21+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"PO-Revision-Date: 2026-03-14 13:04+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
 "sale_margin/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -22,11 +23,16 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Delivered"
+msgstr "Livré"
+
+#. module: sale_margin
+#: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
+msgid "Delivered Qty"
 msgstr ""
 
 #. module: sale_margin
@@ -37,9 +43,14 @@ msgid "Display Name"
 msgstr "Nom d'affichage"
 
 #. module: sale_margin
+#: model:ir.actions.act_window,name:sale_margin.action_order_report_projected_margins
+msgid "Estimated Margins"
+msgstr ""
+
+#. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_report__purchase_price
 msgid "Expected Cost"
-msgstr ""
+msgstr "Coût prévu"
 
 #. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order__id
@@ -51,6 +62,11 @@ msgstr "ID"
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Invoiced"
+msgstr "Facturé"
+
+#. module: sale_margin
+#: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
+msgid "Invoiced Qty"
 msgstr ""
 
 #. module: sale_margin
@@ -70,22 +86,17 @@ msgstr "Marge (%)"
 #. module: sale_margin
 #: model_terms:ir.actions.act_window,help:sale_margin.action_order_report_projected_margins
 msgid "No data to display"
-msgstr ""
+msgstr "Aucune donnée à afficher"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Product"
-msgstr ""
-
-#. module: sale_margin
-#: model:ir.actions.act_window,name:sale_margin.action_order_report_projected_margins
-msgid "Projected Margins"
-msgstr ""
+msgstr "Produit"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Sales Analysis"
-msgstr ""
+msgstr "Analyse des ventes"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_report
@@ -105,39 +116,59 @@ msgstr "Ligne de commande"
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Sold"
+msgstr "Vendu"
+
+#. module: sale_margin
+#: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
+msgid "Sold Qty"
 msgstr ""
 
 #. module: sale_margin
 #: model_terms:ir.actions.act_window,help:sale_margin.action_order_report_projected_margins
-msgid "This report performs analysis on projected margins of sales orders."
+msgid "This report performs analysis on estimated margins of sales orders."
 msgstr ""
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Total Cost"
-msgstr ""
+msgstr "Coût total"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Total Delivered"
+msgstr "Total livré"
+
+#. module: sale_margin
+#: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
+msgid "Total Delivered Qty"
 msgstr ""
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Total Invoiced"
+msgstr "Total facturé"
+
+#. module: sale_margin
+#: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
+msgid "Total Invoiced Qty"
 msgstr ""
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Total Margin"
-msgstr ""
+msgstr "Marge totale"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Total Sold"
+msgstr "Total vendu"
+
+#. module: sale_margin
+#: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
+msgid "Total Sold Qty"
 msgstr ""
 
 #. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__purchase_price
 msgid "Unit Cost"
-msgstr ""
+msgstr "Coût unitaire"

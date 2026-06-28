@@ -14,16 +14,16 @@ import { execCommand } from "./userCommands";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { isTextNode } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { STEP_DEBOUNCE_DELAY } from "@html_editor/core/history_plugin";
+import { COMMIT_DEBOUNCE_DELAY } from "@html_editor/core/history_plugin";
 
 /** @typedef {import("@html_editor/plugin").Editor} Editor */
 
 /**
- * Makes enough time pass to ensure that undo/redo will not collapse
- * steps before and after this call.
+ * Makes enough time pass to ensure that undo/redo will not collapse commits
+ * before and after this call.
  */
-export async function ensureDistinctHistoryStep() {
-    await advanceTime(STEP_DEBOUNCE_DELAY + 1);
+export async function ensureDistinctHistoryCommit() {
+    await advanceTime(COMMIT_DEBOUNCE_DELAY + 1);
 }
 
 /**
@@ -42,6 +42,9 @@ export async function insertText(editor, text) {
         // the editor to detect them since they would not trigger the default
         // browser behavior otherwise.
         const range = editor.document.getSelection().getRangeAt(0);
+        if (!range.collapsed) {
+            range.deleteContents();
+        }
         let offset = range.startOffset;
         let node = range.startContainer;
 
@@ -126,34 +129,9 @@ export async function insertSpace(editor) {
     if (!range.collapsed) {
         throw new Error("need to implement something... maybe");
     }
-    let offset = range.startOffset;
-    const node = range.startContainer;
+
     // mimic the behavior of the browser when inserting a &nbsp
-    const twoSpace = " \u00A0";
-    node.textContent = (
-        node.textContent.slice(0, offset) +
-        " " +
-        node.textContent.slice(offset)
-    ).replaceAll("  ", twoSpace);
-
-    if (
-        node.nextSibling &&
-        node.nextSibling.textContent.startsWith(" ") &&
-        node.textContent.endsWith(" ")
-    ) {
-        node.nextSibling.textContent = "\u00A0" + node.nextSibling.textContent.slice(1);
-    }
-
-    offset++;
-    // If inserted space is the trailing space, convert it to &nbsp
-    if (node.textContent.length == offset && node.textContent.endsWith(" ")) {
-        node.textContent = node.textContent.slice(0, -1) + "\u00A0";
-    }
-
-    setSelection({
-        anchorNode: node,
-        anchorOffset: offset,
-    });
+    document.execCommand("insertText", false, " ");
 
     const [inputEvent] = await manuallyDispatchProgrammaticEvent(editor.editable, "input", {
         inputType: "insertText",
@@ -216,8 +194,8 @@ export function deleteBackward(editor, isMobileTest = false) {
 
 // history
 /** @param {Editor} editor */
-export function addStep(editor) {
-    editor.shared.history.addStep();
+export function commit(editor) {
+    editor.shared.history.commit();
 }
 /** @param {Editor} editor */
 export function undo(editor) {
@@ -284,11 +262,11 @@ export function setFontSize(size) {
     return (editor) => execCommand(editor, "formatFontSize", { size });
 }
 export function setFontSizeClassName(className) {
-    return (editor) => execCommand(editor, "formatFontSizeClassName", { className });
+    return (editor) => execCommand(editor, "formatFontSize", { className });
 }
 export function setFontFamily(fontFamily) {
     return (editor) => {
-        editor.shared.format.formatSelection("fontFamily", {
+        editor.shared.format.requestFormat("fontFamily", {
             applyStyle: fontFamily !== false,
             formatProps: {
                 name: fontFamily + "_name",
@@ -305,7 +283,7 @@ export function switchDirection(editor) {
 /** @param {Editor} editor */
 export function splitBlock(editor) {
     editor.shared.split.splitBlock();
-    editor.shared.history.addStep();
+    editor.shared.history.commit();
 }
 
 export async function simulateArrowKeyPress(editor, keys) {

@@ -1802,6 +1802,8 @@ test("properties: default value date", async () => {
     // save the form and check that the default value is not reset
     await click(".o_form_button_save");
     await animationFrame();
+    await toggleActionMenu();
+    await toggleMenuItem("Edit Properties");
     await click(".o_property_field:nth-last-child(2) .o_field_property_open_popover");
     await animationFrame();
     expect(".o_property_field_popover .o_field_property_definition_value input").toHaveValue(
@@ -1841,7 +1843,7 @@ test("properties: suffix", async () => {
     await animationFrame();
     await closePopover();
 
-    expect(".o_field_properties .o_property_field:last .o_input_box_overlay_end").toHaveText(
+    expect(".o_field_properties .o_property_field:last .o_property_field_value_suffix").toHaveText(
         "kg"
     );
 });
@@ -2462,6 +2464,8 @@ test("new property, change record, change property type", async () => {
 
     await contains(".o_property_field .o_property_field_value input").edit("aze");
     await contains(".o_pager_next").click();
+    await toggleActionMenu();
+    await toggleMenuItem("Edit Properties");
     expect(".o_property_field .o_property_field_value input").toHaveValue("");
     // Change second record's property type
     await contains(".o_property_field .o_field_property_open_popover").click();
@@ -2748,11 +2752,13 @@ test("properties: monetary with currency_id", async () => {
     ).click();
     expect(`.o_field_property_definition_currency_field select`).toHaveText("Currency");
     expect(`.o_field_property_definition_currency_field select`).toHaveValue("currency_id");
-    expect(".o_field_property_definition_value span").toHaveText("$");
+    expect(".o_field_property_definition_value .o_input > span:eq(0)").toHaveText("$");
     expect(`.o_field_property_definition_value input`).toHaveValue("0.00");
 
     await closePopover();
-    expect(".o_property_field:nth-child(2) .o_property_field_value span").toHaveText("$");
+    expect(
+        ".o_property_field:nth-child(2) .o_property_field_value .o_input > span:eq(0)"
+    ).toHaveText("$");
     expect(`.o_property_field:nth-child(2) .o_property_field_value input`).toHaveValue("0.00");
 });
 
@@ -2805,11 +2811,13 @@ test("properties: monetary with multiple currency field", async () => {
         "another_currency_id"
     );
     expect(`.o_field_property_definition_currency_field select`).toHaveValue("another_currency_id");
-    expect(".o_field_property_definition_value span").toHaveText("€");
+    expect(".o_field_property_definition_value .o_input > span:eq(1)").toHaveText("€");
     expect(`.o_field_property_definition_value input`).toHaveValue("0.00");
 
     await closePopover();
-    expect(".o_property_field:nth-child(2) .o_property_field_value span").toHaveText("€");
+    expect(
+        ".o_property_field:nth-child(2) .o_property_field_value .o_input > span:eq(1)"
+    ).toHaveText("€");
     expect(`.o_property_field:nth-child(2) .o_property_field_value input`).toHaveValue("0.00");
 });
 
@@ -2846,7 +2854,40 @@ test("properties: signature", async () => {
     await closePopover();
     expect(".o_field_property_definition").toHaveCount(0);
     expect(".o_signature").toHaveCount(1);
-    expect(".o_property_field:eq(0) .o_input_box_overlay_end").toHaveCount(0, {
+    expect(".o_signature.o_signature_editable").toHaveCount(1, {
+        message: "The signature field should be editable",
+    });
+    expect(".o_property_field:eq(0) .o_property_field_value_suffix").toHaveCount(0, {
+        message: "suffix should be removed",
+    });
+});
+
+test("properties: signature in readonly", async () => {
+    ResCompany._records[0].definitions = [
+        { name: "property_1", string: "Signature", type: "signature" },
+    ];
+    onRpc("has_access", () => true);
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="properties" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
+
+    expect(".o_signature").toHaveCount(1);
+    expect(".o_signature.o_signature_editable").toHaveCount(0, {
+        message: "The signature field should be in readonly",
+    });
+    expect(".o_property_field:eq(0) .o_property_field_value_suffix").toHaveCount(0, {
         message: "suffix should be removed",
     });
 });
@@ -2966,5 +3007,125 @@ test("properties definition: test display and edit", async () => {
     await animationFrame();
     expect(".o_property_field_value").toHaveCount(4, {
         message: "4 field value should be present : 1 for each definition.",
+    });
+});
+
+test.tags("desktop");
+test("many2one property in list view", async () => {
+    ResCompany._records[0].definitions.push({
+        name: "m2o_property",
+        string: "My Many2one Property",
+        type: "many2one",
+        comodel: "res.users",
+    });
+    Partner._records[0].properties = {
+        m2o_property: [1, "Alice"],
+    };
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `
+            <list>
+                <field name="display_name"/>
+                <field name="properties"/>
+            </list>`,
+    });
+
+    expect(".o_list_table thead th").toHaveCount(3);
+    await contains(".o_optional_columns_dropdown_toggle").click();
+    await contains(".o-dropdown-item input[name='properties.m2o_property']").click();
+    expect(".o_list_table thead th").toHaveCount(4);
+    expect(queryAllTexts(".o_data_row:eq(0) .o_data_cell")).toEqual(["first partner", "Alice"]);
+    expect(".o_data_row:eq(0) .o_m2o_avatar img").toHaveCount(1);
+});
+
+test("properties: no parent document set", async () => {
+    onRpc("has_access", () => true);
+
+    const formView = await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="properties"/>
+                    </group>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
+
+    patchWithCleanup(formView.env.services.notification, {
+        add: (message, options) => {
+            expect.step("notification");
+            expect(message).toBe("Oops! A Company is needed to add property fields.");
+            expect(options.type).toBe("warning");
+        },
+    });
+
+    expect(".o_field_properties").toHaveCount(1, { message: "The field must be in the view" });
+
+    await toggleActionMenu();
+
+    expect(".o-dropdown--menu span:contains(Edit Properties)").toHaveCount(1, {
+        message: "Show Edit Properties btn in cog menu",
+    });
+
+    await toggleMenuItem("Edit Properties");
+
+    expect.verifySteps(["notification"]);
+
+    expect(".o_field_properties:first-child .o_field_property_open_popover").toHaveCount(0, {
+        message: "The edit definition button must not be in the view",
+    });
+});
+
+test("add button visible in edit mode and during notebook switch", async () => {
+    onRpc("has_access", () => true);
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <notebook>
+                        <page string="Properties">
+                            <group>
+                                <field name="company_id"/>
+                                <field name="properties"/>
+                            </group>
+                        </page>
+                        <page string="Other">
+                            <group>
+                                <field name="display_name"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
+
+    expect(".o_field_property_add button").toHaveCount(0, {
+        message: "Add Property button should be hidden before enabling edit mode",
+    });
+
+    await toggleActionMenu();
+    await toggleMenuItem("Edit Properties");
+
+    expect(".o_field_property_add button").toHaveCount(1, {
+        message: "Add Property button should be visible in edit mode",
+    });
+
+    await contains(".o_notebook_headers .nav-link:contains(Other)").click();
+    await contains(".o_notebook_headers .nav-link:contains(Properties)").click();
+    await waitFor(".o_field_property_add button");
+
+    expect(".o_field_property_add button").toHaveCount(1, {
+        message: "Add Property button should remain visible after notebook switch",
     });
 });

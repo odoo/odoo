@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-15 17:36+0000\n"
 "PO-Revision-Date: 2025-10-08 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -167,21 +167,13 @@ msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-#, fuzzy
-msgid "<strong><i class=\"oi oi-arrow-right\"/> Payment Methods</strong>"
-msgstr "<strong><i class=\"oi oi-arrow-right\"/> To‘lov usullari</strong>"
+msgid "<strong>No payment methods are available</strong>"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-#, fuzzy
-msgid "<strong><i class=\"oi oi-arrow-right\"/> Payment Providers</strong>"
-msgstr "<strong><i class=\"oi oi-arrow-right\"/> To‘lov provayderlari</strong>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-#, fuzzy
-msgid "<strong>No payment method available</strong>"
-msgstr "<strong>Hech qanday to‘lov usuli mavjud emas</strong>"
+msgid "<strong>No payment providers are configured</strong>"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -253,6 +245,11 @@ msgstr "ACH to‘g‘ridan-to‘g‘ri debet"
 #, fuzzy
 msgid "Abitab"
 msgstr "Abitab"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "Account"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
@@ -405,13 +402,15 @@ msgid "Amount To Capture"
 msgstr "Yechiladigan summa"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
 #, fuzzy
 msgid "An error occurred during the processing of your payment."
 msgstr "To‘lovni amalga oshirishda xatolik yuz berdi."
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
 #, fuzzy
 msgid "An error occurred while saving your payment method."
 msgstr "To‘lov usulingizni saqlashda xatolik yuz berdi."
@@ -705,11 +704,6 @@ msgid "CMR"
 msgstr "CMR"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "CONNECT"
-msgstr ""
-
-#. module: payment
 #: model:payment.method,name:payment.payment_method_cabal
 #, fuzzy
 msgid "Cabal"
@@ -926,11 +920,22 @@ msgid "Confirmed"
 msgstr "Tasdiqlandi"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "Connect"
+msgstr ""
+
+#. module: payment
 #: model:ir.model,name:payment.model_res_partner
 #: model:payment.method,name:payment.payment_method_contact
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 #, fuzzy
 msgid "Contact"
 msgstr "Aloqa"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_cvs
+msgid "Convenience Stores"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cordial
@@ -971,6 +976,11 @@ msgstr "Mamlakatlar"
 #, fuzzy
 msgid "Country"
 msgstr "Mamlakat"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "Create"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__tokenize
@@ -1104,6 +1114,7 @@ msgstr "Discover"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_ir_http__display_name
+#: model:ir.model.fields,field_description:payment.field_ir_websocket__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_method__display_name
@@ -1142,6 +1153,11 @@ msgstr "Qoralama"
 #, fuzzy
 msgid "DuitNow"
 msgstr "DuitNow"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_ecpay
+msgid "ECPay"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_emi_india
@@ -1235,6 +1251,16 @@ msgstr "FPX"
 #, fuzzy
 msgid "Facilito"
 msgstr "Facilito"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_family_mart
+msgid "Family Mart"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "Find a Payment Provider"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_floa_bank
@@ -1362,6 +1388,11 @@ msgid "Help Message"
 msgstr "Yordam xabari"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_hi_life
+msgid "Hi-Life"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_hipercard
 #, fuzzy
 msgid "Hipercard"
@@ -1381,6 +1412,7 @@ msgstr "Humm"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_ir_http__id
+#: model:ir.model.fields,field_description:payment.field_ir_websocket__id
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__id
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__id
 #: model:ir.model.fields,field_description:payment.field_payment_method__id
@@ -1395,14 +1427,6 @@ msgstr "Humm"
 #, fuzzy
 msgid "ID"
 msgstr "ID"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-#, fuzzy
-msgid ""
-"If you believe that it is an error, please contact the website administrator."
-msgstr ""
-"Agar bu xato deb hisoblasangiz, iltimos, veb-sayt ma'muriga murojaat qiling."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image
@@ -1796,6 +1820,11 @@ msgid "Mobile"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_mobile_wallet
+msgid "Mobile Wallet"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_wallet_eg
 #, fuzzy
 msgid "Mobile Wallets Egypt"
@@ -1884,12 +1913,6 @@ msgid "No payment methods found for your payment providers."
 msgstr "To‘lov provayderlaringiz uchun hech qanday to‘lov usuli topilmadi."
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-#, fuzzy
-msgid "No payment providers are configured."
-msgstr "Hech qanday to‘lov provayderi sozlanmagan."
-
-#. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 #, fuzzy
 msgid "No providers available"
@@ -1913,6 +1936,11 @@ msgstr "Quyidagilar uchun hech narsa sozlanmagan:"
 #, fuzzy
 msgid "Nuvei"
 msgstr "Nuvei"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_ok_mart
+msgid "OK Mart"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ovo
@@ -2216,6 +2244,7 @@ msgstr "To‘lov usuli kodi"
 #: code:addons/payment/models/payment_provider.py:0
 #: model:ir.actions.act_window,name:payment.action_payment_method
 #: model:portal.entry,name:payment.payment_methods_portal_entry
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 #, fuzzy
@@ -2420,7 +2449,7 @@ msgid "Please switch to company"
 msgstr "Iltimos, kompaniyaga o‘ting"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
+#: model_terms:ir.ui.view,arch_db:payment.payment_status
 #, fuzzy
 msgid "Please wait..."
 msgstr "Iltimos, kuting..."
@@ -2686,7 +2715,8 @@ msgid "Save"
 msgstr "Saqlash"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
 #, fuzzy
 msgid "Saving your payment method."
 msgstr "To‘lov usuli saqlanmoqda."
@@ -2751,18 +2781,6 @@ msgstr "Xarid kartasi"
 #, fuzzy
 msgid "Siam Commerical Bank"
 msgstr "Siam tijorat banki"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
-#, fuzzy
-msgid "Skip <i class=\"oi oi-arrow-right ms-1 small\"/>"
-msgstr "O‘tkazib yuborish <i class=\"oi oi-arrow-right ms-1 small\"/>"
-
-#. module: payment
-#: model:payment.method,name:payment.payment_method_sofort
-#, fuzzy
-msgid "Sofort"
-msgstr "Sofort"
 
 #. module: payment
 #. odoo-python
@@ -2860,6 +2878,11 @@ msgid "TTB"
 msgstr "TTB"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_twqr
+msgid "TWQR"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_tabby
 #, fuzzy
 msgid "Tabby"
@@ -2908,12 +2931,6 @@ msgstr "Sinov rejimi"
 #, fuzzy
 msgid "Test mode"
 msgstr "Sinov rejimi"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
-#, fuzzy
-msgid "Thank you!"
-msgstr "Rahmat!"
 
 #. module: payment
 #. odoo-python
@@ -3257,7 +3274,8 @@ msgid "The route the user is redirected to after the transaction"
 msgstr "Foydalanuvchi tranzaksiyadan so‘ng yo‘naltiriladigan yo‘l"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
 #, fuzzy
 msgid "The saving of your payment method has been canceled."
 msgstr "To‘lov usulingizni saqlash bekor qilindi."
@@ -3640,6 +3658,11 @@ msgid "Void Transaction"
 msgstr "Tranzaksiyani bekor qilish"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_wero_brand
+msgid "WERO"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_wallets_india
 #, fuzzy
 msgid "Wallets India"
@@ -3689,6 +3712,11 @@ msgstr "WeLend"
 #, fuzzy
 msgid "WebPay"
 msgstr "WebPay"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_wero
+msgid "Wero"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
@@ -3828,6 +3856,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_mercado_pago
@@ -3857,6 +3886,7 @@ msgstr "To‘lovingiz tasdiqlandi."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_mercado_pago
@@ -3886,6 +3916,7 @@ msgstr "To‘lovingiz bekor qilindi."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_mercado_pago
@@ -3914,6 +3945,7 @@ msgstr "To‘lovingiz qayta ishlandi, ammo tasdiqlash kutilmoqda."
 #: model_terms:payment.provider,done_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,done_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,done_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,done_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,done_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,done_msg:payment.payment_provider_mercado_pago
@@ -3934,10 +3966,16 @@ msgid "Your payment has been processed."
 msgstr "To‘lovingiz qayta ishlandi."
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
 #, fuzzy
 msgid "Your payment has not been processed yet."
 msgstr "To‘lovingiz hali qayta ishlanmagan."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_status
+msgid "Your payment is being processed."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
@@ -3946,10 +3984,17 @@ msgid "Your payment is on its way!"
 msgstr "To‘lovingiz yo‘lga qo‘yildi!"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
 #, fuzzy
 msgid "Your payment method has been saved."
 msgstr "To‘lov usulingiz saqlandi."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "Your payment method has not been saved yet."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -3962,11 +4007,11 @@ msgstr "To‘lov usullaringiz"
 #: code:addons/payment/models/payment_transaction.py:0
 #, fuzzy
 msgid ""
-"Your payment operation could not be completed for following transactions: "
-"%(tx_refs)s"
+"Your payment operation could not be completed for following transactions: %"
+"(tx_refs)s"
 msgstr ""
-"Quyidagi tranzaksiyalar uchun to‘lov operatsiyangizni yakunlab bo‘lmadi: "
-"%(tx_refs)s"
+"Quyidagi tranzaksiyalar uchun to‘lov operatsiyangizni yakunlab bo‘lmadi: %"
+"(tx_refs)s"
 
 #. module: payment
 #. odoo-python
@@ -4014,9 +4059,15 @@ msgstr "tezkor to‘lov qo‘llab-quvvatlanmaydi"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ideal
+#: model:payment.method,name:payment.payment_method_ideal_brand
 #, fuzzy
 msgid "iDEAL"
 msgstr "iDEAL"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_ipass_money
+msgid "iPASS Money"
+msgstr ""
 
 #. module: payment
 #. odoo-python
@@ -4086,6 +4137,11 @@ msgid "provider"
 msgstr "provayder"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "the website administrator."
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 #, fuzzy
 msgid ""
@@ -4106,3 +4162,8 @@ msgstr "tokenlashtirish qo‘llab-quvvatlanmaydi"
 #, fuzzy
 msgid "tokenization without payment no supported"
 msgstr "to‘lovsiz tokenlashtirish qo‘llab-quvvatlanmaydi"
+
+#. module: payment
+#: model:ir.model,name:payment.model_ir_websocket
+msgid "websocket message handling"
+msgstr ""

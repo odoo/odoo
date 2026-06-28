@@ -1,6 +1,5 @@
 import { Component } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { omit } from "@web/core/utils/objects";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
@@ -13,7 +12,6 @@ export class TaskStageWithStateSelection extends Component {
 
     static props = {
         ...standardFieldProps,
-        stateReadonly: { type: Boolean, optional: true },
         viewType: { type: String },
     };
 
@@ -28,9 +26,8 @@ export class TaskStageWithStateSelection extends Component {
 
     get stateProps() {
         return {
-            ...omit(this.props, "stateReadonly", "viewType"),
+            ...omit(this.props, "viewType"),
             name: "state",
-            readonly: this.props.stateReadonly,
             viewType: this.props.viewType,
             showLabel: false,
         };
@@ -39,20 +36,11 @@ export class TaskStageWithStateSelection extends Component {
 
 export const taskStageWithStateSelection = {
     component: TaskStageWithStateSelection,
-    supportedOptions: [
-        {
-            label: _t("State readonly"),
-            name: "state_readonly",
-            type: "boolean",
-            default: true,
-        },
-    ],
     fieldDependencies: [{ name: "state", type: "selection" }],
     supportedTypes: ["many2one"],
-    extractProps({ options, viewType }) {
+    extractProps({ viewType }) {
         return {
-            stateReadonly: "state_readonly" in options ? options.state_readonly : true,
-            viewType: viewType,
+            viewType,
         };
     },
 };

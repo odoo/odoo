@@ -26,15 +26,14 @@ class CustomerPortal(sale_portal.CustomerPortal):
 
         lines_to_reorder = sale_order.order_line.filtered(
             # Skip section headers, deliveries, event tickets, ...
-            lambda line: line.with_user(request.env.user).sudo()._is_reorder_allowed()
+            lambda line: line.with_user(self.env.user).sudo()._is_reorder_allowed()
         )
 
         if not lines_to_reorder:
-            raise ValidationError(request.env._("Nothing can be reordered in this order"))
+            raise ValidationError(self.env._("Nothing can be reordered in this order"))
 
         Cart_controller = Cart()
-        order_sudo = request.cart or request.website._create_cart()
-        warnings_to_aggregate = set()
+        order_sudo = request.cart or self.env.website._create_cart()
         values = {"tracking_info": []}
         for line in lines_to_reorder:
             linked_products = []
@@ -75,14 +74,8 @@ class CustomerPortal(sale_portal.CustomerPortal):
                 no_variant_attribute_value_ids=line.product_no_variant_attribute_value_ids.ids,
                 linked_products=linked_products,
             )
-            if not cart_values["quantity"]:
-                # Only aggregate order warnings
-                warnings_to_aggregate.add(order_sudo.shop_warning)
 
             values["tracking_info"].extend(cart_values["tracking_info"])
-
-        if warnings_to_aggregate:
-            order_sudo.shop_warning = "\n".join(warnings_to_aggregate)
 
         values["cart_quantity"] = order_sudo.cart_quantity
         return values

@@ -4,6 +4,12 @@ import { _t } from "@web/core/l10n/translation";
 import { generateQRCodeDataUrl } from "@point_of_sale/utils";
 
 patch(PaymentPage.prototype, {
+    get showQrCode() {
+        return (
+            super.showQrCode ||
+            (this.selectedPaymentIsOnline && this.selfOrder.config.self_ordering_mode === "kiosk")
+        );
+    },
     async startPayment() {
         let order = this.selfOrder.currentOrder;
         const pm = this.selectedPaymentMethod;
@@ -27,7 +33,7 @@ patch(PaymentPage.prototype, {
         return paymentMethods && paymentMethods.is_online_payment;
     },
     generateQrcodeImg(url) {
-        this.state.qrImage = generateQRCodeDataUrl(url);
+        this.state.qrCode = generateQRCodeDataUrl(url);
     },
     async checkAndOpenPaymentPage(order) {
         if (order.state === "draft") {

@@ -119,22 +119,8 @@ class ProjectProject(models.Model):
             elif not project.timesheet_product_id:
                 project.timesheet_product_id = default_product
 
-    @api.depends('pricing_type', 'allow_timesheets', 'allow_billable', 'sale_line_employee_ids', 'sale_line_employee_ids.employee_id')
     def _compute_warning_employee_rate(self):
-        projects = self.filtered(lambda p: p.allow_billable and p.allow_timesheets and p.pricing_type == 'employee_rate')
-        employees = self.env['account.analytic.line']._read_group(
-            [('task_id', 'in', projects.task_ids.ids), ('employee_id', '!=', False)],
-            ['project_id'],
-            ['employee_id:array_agg'],
-        )
-        dict_project_employee = {project.id: employee_ids for project, employee_ids in employees}
-        for project in projects:
-            project.warning_employee_rate = any(
-                x not in project.sale_line_employee_ids.employee_id.ids
-                for x in dict_project_employee.get(project.id, ())
-            )
-
-        (self - projects).warning_employee_rate = False
+        self.warning_employee_rate = False
 
     @api.depends('sale_line_employee_ids.sale_line_id', 'sale_line_id')
     def _compute_partner_id(self):
@@ -166,6 +152,7 @@ class ProjectProject(models.Model):
         non_billable_projects = self - billable_projects
         non_billable_projects.sale_order_line_count = 0
         non_billable_projects.sale_order_count = 0
+        non_billable_projects.sale_order_amount_total = 0
 
     @api.depends('allow_billable', 'allow_timesheets')
     def _compute_billing_type(self):
@@ -297,3 +284,14 @@ class ProjectProject(models.Model):
             *super()._get_template_default_context_whitelist(),
             "allow_timesheets",
         ]
+
+    def _get_processed_analytic_account_vals(self, vals_list):
+        analytic_accounts_vals = super()._get_processed_analytic_account_vals(vals_list)
+        for vals in analytic_accounts_vals:
+            if (
+                (partner_id := self.env['res.partner'].browse(vals.get('partner_id')))
+                and partner_id.company_id
+                and vals.get('company_id') != partner_id.company_id.id
+            ):
+                vals['company_id'] = partner_id.company_id.id
+        return analytic_accounts_vals

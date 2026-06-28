@@ -1,6 +1,6 @@
+import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { withSequence } from "@html_editor/utils/resource";
 
 /**
  * @typedef {((arg: { sourceEl: HTMLElement, targetEl: HTMLElement }) => void)[]} on_replicated_handlers
@@ -8,12 +8,12 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class FieldChangeReplicationPlugin extends Plugin {
     static id = "fieldChangeReplication";
-    static dependencies = ["dom"];
+    static dependencies = ["dom", "domReferenceMap"];
 
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_new_records_handled_handlers: this.handleMutations.bind(this),
-        normalize_processors: withSequence(9000, this.normalizeProcessor.bind(this)),
+        on_pending_mutations_staged_handlers: this.handleMutations.bind(this),
+        on_pending_mutations_normalized_handlers: this.onNormalizedPendingMutations.bind(this),
     };
 
     setup() {
@@ -21,30 +21,40 @@ export class FieldChangeReplicationPlugin extends Plugin {
     }
 
     /**
-     * @param { import("@html_editor/core/history_plugin").HistoryMutationRecord[] } records
+     * @param { import("@html_editor/core/dom_observer_plugin").SerializedMutation[] } mutations
      */
-    handleMutations(records) {
-        records
-            .filter((r) => !(r.type === "attributes" && r.attributeName.startsWith("data-oe-t")))
-            .map((r) =>
-                closestElement(r.target, "[data-oe-model], [data-oe-translation-source-sha]")
+    handleMutations(mutations) {
+        mutations
+            .filter(
+                (m) =>
+                    !(
+                        m.type === EDITOR_MUTATION_TYPES.ATTRIBUTES &&
+                        m.attributeName.startsWith("data-oe-t")
+                    )
             )
+            .map((m) => {
+                let nodeId = m.nodeId;
+                // TODO: Wouldn't doing this only for "remove" be enough?
+                if (
+                    [EDITOR_MUTATION_TYPES.ADD, EDITOR_MUTATION_TYPES.REMOVE].includes(m.type) &&
+                    m.parentNodeId
+                ) {
+                    nodeId = m.parentNodeId;
+                }
+                return closestElement(
+                    this.dependencies.domReferenceMap.getNodeById(nodeId),
+                    "[data-oe-model], [data-oe-translation-source-sha]"
+                );
+            })
             .filter(Boolean)
             // Do not forward "unstyled" copies to other nodes.
             .filter((fieldEl) => !fieldEl.classList.contains("o_translation_without_style"))
             .forEach((fieldEl) => this.fieldsToReplicate.add(fieldEl));
     }
 
-    /**
-     * @param { Node } commonAncestor
-     * @param { "original"|"undo"|"redo"|"restore" } stepState
-     */
-    normalizeProcessor(commonAncestor, stepState) {
+    onNormalizedPendingMutations() {
         const fields = this.fieldsToReplicate;
         this.fieldsToReplicate = new Set();
-        if (stepState !== "original") {
-            return;
-        }
         const touchedEls = new Set();
         for (const sourceEl of fields) {
             const same = (attribute, quote = '"') =>

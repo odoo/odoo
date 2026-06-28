@@ -10,7 +10,6 @@
                 <field name="name" string="Title"/>
                 <field name="department_id"/>
                 <field name="work_entry_type_id"/>
-                <field name="allocation_type"/>
                 <field name="accrual_plan_id"/>
                 <field name="activity_user_id" string="Activities of"/>
                 <field name="activity_type_id" string="Activity type"/>
@@ -80,7 +79,6 @@
                 <group>
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
                     <filter name="group_type" string="Type" context="{'group_by':'work_entry_type_id'}"/>
-                    <filter name="group_allocation_type" string="Allocation Type" context="{'group_by':'allocation_type'}"/>
                     <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
                 </group>
                 <searchpanel>
@@ -113,11 +111,14 @@
                     <field name="state" widget="statusbar" statusbar_visible="confirm,validate,validate1" invisible="validation_type != 'both'"/>
                     <field name="state" widget="statusbar" statusbar_visible="confirm,validate" invisible="validation_type == 'both'"/>
                 </header>
+                <div class="alert alert-warning" role="alert" invisible="employee_id" name="warning_wrong_company">
+                    You are not assigned to any employee in the current company. Therefore, you can't request time off allocations for yourself.
+                </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
                     <div id="title" class="oe_title">
                         <h2><field name="name" class="w-100"
-                            placeholder="e.g. Time Off type (From validity start to validity end / no limit)"
+                            placeholder="e.g. Time type (From validity start to validity end / no limit)"
                             invisible="state != 'confirm'" readonly="True" force_save="True"/>
                         <field name="name_validity" invisible="state == 'confirm'"/></h2>
                     </div>
@@ -129,21 +130,21 @@
                             <field name="already_accrued" invisible="1"/>
                             <div class="o_td_label" name="validity_label" invisible="not is_officer">
                                 <label for="date_from" string="Validity Period"
-                                    invisible="allocation_type == 'accrual' or state != 'confirm'"/>
-                                <label for="date_from" string="Start Date" invisible="allocation_type == 'regular'"/>
+                                    invisible="accrual_plan_id or state != 'confirm'"/>
+                                <label for="date_from" string="Start Date" invisible="not accrual_plan_id"/>
                             </div>
                             <div class="o_row" name="validity" invisible="not is_officer">
                                 <field name="date_from" nolabel="1"
-                                    readonly="state == 'refuse' or (allocation_type == 'accrual' and state != 'confirm')"
-                                    invisible="allocation_type == 'regular' and state != 'confirm'"/>
+                                    readonly="state == 'refuse' or (accrual_plan_id and state != 'confirm')"
+                                    invisible="not accrual_plan_id and state != 'confirm'"/>
                                 <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"
-                                    invisible="allocation_type == 'accrual' or state != 'confirm'"/>
+                                    invisible="accrual_plan_id or state != 'confirm'"/>
                                 <label class="mx-2" for="date_to" string="Run until"
-                                    invisible="allocation_type == 'regular'"/>
+                                    invisible="not accrual_plan_id"/>
                                 <field name="date_to" nolabel="1"
                                     placeholder="No Limit"
-                                    readonly="state == 'refuse' or (allocation_type == 'accrual' and state != 'confirm')"
-                                    invisible="allocation_type == 'regular' and state != 'confirm'"/>
+                                    readonly="state == 'refuse' or (accrual_plan_id and state != 'confirm')"
+                                    invisible="not accrual_plan_id and state != 'confirm'"/>
                                 <div id="no_limit_label" class="oe_read_only"
                                     invisible="not id or date_to or state != 'confirm'">No limit</div>
                             </div>
@@ -151,19 +152,20 @@
                                  invisible="id or not date_to or date_to &gt;= context_today().strftime('%Y-%m-%d')">
                                 <span>The allocated days cannot be used, because the allocation is set to finish in the past.</span>
                             </div>
-                            <field name="accrual_plan_id"
-                                invisible="allocation_type == 'regular'"
-                                required="allocation_type == 'accrual'"
+                            <field name="accrual_plan_id" placeholder="Regular allocation"
                                 readonly="not is_officer or state in ['refuse', 'validate']"/>
                             <field name="work_entry_type_id"
                                 context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}"
+                                domain="[
+                                    ('id','in', allowed_work_entry_type_ids),
+                                ]"
                                 readonly="state in ['refuse', 'validate']"/>
                             <field name="number_of_days" invisible="1"/>
                             <div class="o_td_label">
                                 <label for="number_of_days_display" string="Allocation"
-                                    readonly="allocation_type == 'accrual' or state == 'validate'"/>
+                                    readonly="accrual_plan_id or state == 'validate'"/>
                             </div>
-                            <div name="duration_display">
+                            <div name="duration_display" class="d-flex gap-2 flex-wrap">
                                 <field name="number_of_days_display" nolabel="1" style="width: 6ch;"
                                     invisible="type_request_unit == 'hour'"
                                     readonly="state == 'refuse' or (state != 'confirm' and not is_officer)"/>
@@ -171,7 +173,7 @@
                                     invisible="type_request_unit != 'hour'"
                                     readonly="state == 'refuse' or (state != 'confirm' and not is_officer)"/>
                                 <span class="ml8" invisible="type_request_unit == 'hour'">Days</span>
-                                <span class="ml8" invisible="type_request_unit != 'hour'">Hours</span>
+                                <span id="hour_display_field" class="ml8" invisible="type_request_unit != 'hour'">Hours</span>
                             </div>
                         </group>
                         <group name="alloc_right_col">
@@ -196,7 +198,7 @@
                 <div class="oe_title">
                     <h2>
                         <field name="name"
-                            placeholder="e.g. Time Off type (From validity start to validity end / no limit)"
+                            placeholder="e.g. Time Type (From validity start to validity end / no limit)"
                             required="1" readonly="state == 'refuse'"/>
                     </h2>
                 </div>
@@ -206,19 +208,14 @@
                     readonly="state in ['refuse', 'validate']"
                     widget="many2one_avatar_employee"/>
             </field>
-            <field name="accrual_plan_id" position="before">
-                <field name="allocation_type"
-                    widget="radio"
-                    readonly="not is_officer or state == 'validate'"/>
-            </field>
             <label for="date_from" position="replace">
-                <label for="date_from" string="Validity Period" invisible="allocation_type == 'accrual'"/>
+                <label for="date_from" string="Validity Period" invisible="accrual_plan_id"/>
             </label>
             <field name="date_from" position="attributes">
                 <attribute name="invisible">0</attribute>
             </field>
             <xpath expr="//i[hasclass('fa-long-arrow-right')]" position="replace">
-                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" invisible="allocation_type == 'accrual'"/>
+                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" invisible="accrual_plan_id"/>
             </xpath>
             <field name="date_to" position="attributes">
                 <attribute name="invisible">0</attribute>
@@ -226,6 +223,7 @@
             <div id="no_limit_label" position="replace">
                 <div id="no_limit_label" class="oe_read_only" invisible="not id or date_to">No limit</div>
             </div>
+            <xpath expr="//div[@name='warning_wrong_company']" position="replace"/>
         </field>
     </record>
 
@@ -249,6 +247,9 @@
             <div name="validity_label" position="attributes">
                 <attribute name="invisible">1</attribute>
             </div>
+            <field name="accrual_plan_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
             <label for="number_of_days_display" position="attributes">
                 <attribute name="string">Ask for</attribute>
             </label>
@@ -276,6 +277,9 @@
             <div name="button_box" position="attributes">
                 <attribute name="invisible">1</attribute>
             </div>
+            <field name="accrual_plan_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
             <label for="number_of_days_display" position="attributes">
                 <attribute name="string">Ask for</attribute>
             </label>
@@ -314,7 +318,6 @@
                 <field name="duration_display" string="Amount"/>
                 <field name="date_from" string="Validity Start" optional="hide"/>
                 <field name="date_to" string="Validity Stop" optional="hide" readonly="state in ['refuse', 'validate', 'validate1']"/>
-                <field name="allocation_type" readonly="state not in ['confirm']"/>
                 <field name="accrual_plan_id"/>
                 <field name="notes" string="Reason" optional="hide"/>
                 <field name="message_needaction" column_invisible="True"/>
@@ -422,28 +425,28 @@
                             <widget name="web_ribbon" title="Approved" bg_color="bg-success" invisible="state != 'validate'"/>
                             <aside>
                                 <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128?unique=' + record.write_date.raw_value"
-                                    class="o_image_64_cover float-start mb-2 me-2" alt="Employee's image"/>
+                                    class="o_image_64_cover float-start rounded border" alt="Employee's image"/>
                             </aside>
                             <main class="h-100">
-                                <div class="justify-content-center o_holidays_kanban_card">
+                                <div class="o_holidays_kanban_card d-flex flex-column justify-content-center h-100 ps-2 pe-3">
                                     <div class="d-flex flex-row">
-                                        <div class="col-12 align-items-center o_hr_holidays_value">
-                                             <div class="col-4 o_hr_holidays_card">
-                                                <field class="fw-bold fs-3 mb-2" name="employee_id"/>
+                                        <div class="col-12 d-flex align-items-center o_hr_holidays_value">
+                                             <div class="col-3 o_hr_holidays_card">
+                                                <field class="fw-bold fs-4 lh-sm" name="employee_id"/>
                                             </div>
                                             <div class="col-2 o_hr_holidays_name">
                                                 <div class="o_hr_holidays_card">
                                                     <field name="work_entry_type_id" class="fw-bold me-1"/>
-                                                    <div class="d-flex flex-wrap">
-                                                    ( <field name="allocation_type"/> )
+                                                    <div class="text-muted" t-if="record.accrual_plan_id.raw_value">
+                                                        <field name="accrual_plan_id"/>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-2 o_hr_holidays_card">
+                                            <div class="col-2 o_hr_holidays_card ps-3">
                                                 <div class="fw-bold d-flex me-1">
                                                     <field name="duration_display"/>
                                                 </div>
-                                                Amount
+                                                <span class="text-muted">Amount</span>
                                             </div>
                                             <div class="col-2 o_hr_holidays_card">
                                                 <div class="fw-bold d-flex gap-1 me-1">
@@ -451,11 +454,11 @@
                                                     /
                                                     <field name="max_leaves" widget="float" digits="[3,2]"/>
                                                 </div>
-                                                <span>
+                                                <span class="text-muted">
                                                     Current balance
                                                 </span>
                                             </div>
-                                            <div class="col-2 o_hr_holidays_button flex-wrap d-flex pe-4 gap-2 justify-content-start">
+                                            <div class="o_hr_holidays_button col-3 d-flex justify-content-start gap-2 ps-5">
                                                 <button
                                                     name="action_approve" type="object" class="btn btn-primary"
                                                     t-if="record.can_approve.raw_value">
@@ -477,43 +480,41 @@
                                 </div>
                             </main>
                         </div>
-                        <div class="o_hr_holidays_kanban_mobile w-100">
-                            <main class="ps-1 d-flex flex-column w-100 gap-1">
-                                <div class="w-100 d-flex flex-row gap-2 align-items-center">
-                                    <field class="fw-bold" name="employee_id" widget="many2one_avatar_employee"/>
-                                    <field class="fw-bold w-100" name="employee_id"/>
-                                    <span
-                                        style="min-width: fit-content;"
-                                        t-attf-class="rounded-pill badge flex-shrink-1 text-bg-{{
-                                            record.state.raw_value == 'validate' ? 'success' :
-                                            ['confirm', 'validate1'].includes(record.state.raw_value) ?
-                                            'warning' : 'danger' }}"
-                                        t-out="record.state.value"/>
-                                </div>
-                                <div class="content d-flex flex-row gap-1 mb-2">
+                        <div class="o_hr_holidays_kanban_mobile d-flex gap-2 w-100">
+                            <aside>
+                                <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128?unique=' + record.write_date.raw_value"
+                                    class="o_image_40_cover float-start rounded" alt="Employee's image"/>
+                            </aside>
+                            <main class="d-flex flex-column lh-sm">
+                                <field class="fw-bold" name="employee_id"/>
+                                <div class="content d-flex flex-column">
                                     <field name="work_entry_type_id" class="text-muted"/>
-                                    <div class="text-muted">
-                                        (<field name="duration_display"/>)
-                                    </div>
+                                    <div class="text-muted">(<field name="duration_display"/>)</div>
                                 </div>
                             </main>
-                            <bottom class="d-flex justify-content-end gap-2">
+                            <div class="o_hr_holidays_button d-grid align-self-start pt-1">
+                                <span
+                                    t-attf-class="rounded-pill badge text-bg-{{
+                                        record.state.raw_value == 'validate' ? 'success' :
+                                        ['confirm', 'validate1'].includes(record.state.raw_value) ?
+                                        'warning' : 'danger' }}"
+                                    t-out="record.state.value"/>
                                 <button
-                                    name="action_approve" type="object" class="btn btn-sm btn-primary py-0"
+                                    name="action_approve" type="object" class="btn btn-sm btn-primary"
                                     t-if="record.can_approve.raw_value">
                                     Approve
                                 </button>
                                 <button
-                                    name="action_approve" type="object" class="btn btn-sm btn-primary py-0"
+                                    name="action_approve" type="object" class="btn btn-sm btn-primary"
                                     t-if="record.can_validate.raw_value and !record.can_approve.raw_value">
                                     Validate
                                 </button>
                                 <button
-                                    name="action_refuse" type="object" class="btn btn-sm btn-secondary py-0"
+                                    name="action_refuse" type="object" class="btn btn-sm btn-secondary"
                                     t-if="record.can_refuse.raw_value">
                                     Refuse
                                 </button>
-                            </bottom>
+                            </div>
                         </div>
                     </t>
                 </templates>

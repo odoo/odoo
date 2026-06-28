@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="account_invoices_generated_by_odoo">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-set="lang" t-value="o.partner_id.lang"/>
@@ -11,17 +24,69 @@
 
     <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
         <xpath expr="//t[@t-call='web.external_layout']" position="attributes">
-            <attribute name="t-call">account_edi_ubl_cii.external_layout_with_context</attribute>
+            <attribute name="t-call">account_edi_ubl_cii.layout_invoices_generated_by_odoo</attribute>
+        </xpath>
+        <xpath expr="//p[@name='payment_communication']/parent::*" position="attributes">
+            <attribute name="t-if">o.payment_reference</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='address']" position="after">
+            <t t-set="forced_vat" t-value="o.fiscal_position_id.foreign_vat"/>
+            <t t-set="address">
+                <ul class="list-unstyled m-0">
+                    <li t-if="company.is_company_details_empty">
+                        <span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                    </li>
+                    <li t-else="">
+                        <span t-field="company.company_details"/>
+                    </li>
+                    <li t-if="not forced_vat and company.vat">
+                        <t t-out="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                        <span t-out="company.vat"/>
+                    </li>
+                    <li t-elif="forced_vat">
+                        <t t-out="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                        <span t-out="forced_vat"/>
+                    </li>
+                </ul>
+            </t>
         </xpath>
     </template>
 
-    <template id="external_layout_with_context" inherit_id="web.external_layout" primary="True">
-        <xpath expr="//t[@t-if='company.external_report_layout_id']" position="replace">
-            <t t-set="chosen_layout" t-value="env.context.get('force_report_layout')"/>
-            <t t-if="chosen_layout" t-call="{{ chosen_layout }}">
-                <t t-out="0"/>
-            </t>
+    <template id="layout_invoices_generated_by_odoo" inherit_id="web.external_layout_standard" primary="True">
+        <xpath expr="//div[contains(@t-attf-class, 'header')]/table" position="replace">
+            <div class="mb-2" style="height: 50px" />
+            <div class="row">
+                <div name="company_address"/>
+            </div>
         </xpath>
+        <xpath expr="//div[@name='company_address']" position="replace">
+            <div class="col-6" name="company_address">
+                <ul class="list-unstyled m-0">
+                    <li>
+                        <span t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                    </li>
+                    <li t-if="o.partner_id.vat">
+                        <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label"/>
+                        <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-6" style="text-align: right;">
+                <div style="display: inline-block; padding: 12px 24px; border-radius: 8px; background-color: #714B67; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    <span style="font-size: 16px; font-weight: bold; color: #ffffff; display: inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px 8px; letter-spacing: 0.5px;">
+                        Preview
+                    </span>
+                </div>
+                <div style="font-size: 13px; color: #6c757d; margin-top: 12px; line-height: 1.4;">
+                    This is a visual representation of the xml content.<br/>
+                    <strong style="color: #495057;">It is not an official document.</strong>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="external_layout_with_context" inherit_id="web.internal_layout" primary="True">
+    <!-- # TODO REMOVE IN MASTER -->
     </template>
 
     <record id="action_report_account_invoices_generated_by_odoo" model="ir.actions.report">

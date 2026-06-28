@@ -10,10 +10,12 @@ from dateutil.relativedelta import relativedelta
 from psycopg2 import IntegrityError
 
 from odoo import fields, exceptions, tests
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tests import tagged, Form, HttpCase, users
+from odoo.fields import Domain
 from odoo.tests.common import freeze_time
 from odoo.tools import mute_logger
 
@@ -36,7 +38,7 @@ class TestActivityRights(TestActivityCommon):
         def _employee_no_access(records, operation):
             """Simulates employee having no access to the document"""
             if records.env.uid == self.user_employee.id and not records.env.su:
-                return records, lambda: exceptions.AccessError('Access denied to document')
+                return Domain.FALSE
             return DEFAULT
 
         test_activity = self.env['mail.activity'].with_user(self.user_admin).create({
@@ -52,8 +54,8 @@ class TestActivityRights(TestActivityCommon):
         self.assertEqual(action['res_id'], self.test_record.id)
 
         # If user has no access to the record, should return activity view instead
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_no_access):
-            self.env.transaction.clear_access_cache()
+        with patch.object(MailTestActivity, '_access_domain', autospec=True, side_effect=_employee_no_access):
+            self.env.transaction.invalidate_access_cache()
             self.assertFalse(self.test_record.with_user(self.user_employee).has_access('read'))
 
             action = test_activity.with_user(self.user_employee).action_open_document()
@@ -66,7 +68,7 @@ class TestActivityRights(TestActivityCommon):
         def _employee_crash(records, operation):
             """ If employee is test employee, consider they have no access on document """
             if records.env.uid == self.user_employee.id and not records.env.su:
-                return records, lambda: exceptions.AccessError('Hop hop hop Ernest, please step back.')
+                return Domain.FALSE
             return DEFAULT
 
         act_emp_for_adm = self.test_record.with_user(self.user_employee).activity_schedule(
@@ -92,7 +94,7 @@ class TestActivityRights(TestActivityCommon):
         ]:
             with self.subTest(user=activity.user_id.name, creator=activity.create_uid.name):
                 # no document access -> based on create_uid / user_id
-                with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
+                with patch.object(MailTestActivity, '_access_domain', autospec=True, side_effect=_employee_crash):
                     activity = activity.with_user(self.user_employee)
                     self.assertEqual(activity.can_write, can_write)
                     if can_write:
@@ -137,13 +139,13 @@ class TestActivityRights(TestActivityCommon):
             )
 
         self.env.invalidate_all()
-        self.env.transaction.clear_access_cache()
+        self.env.transaction.invalidate_access_cache()
         # check read access correctly uses '_mail_get_operation_for_mail_message_operation'
         admin_activities[0].with_user(self.user_employee).read(['summary'])
         admin_activities[1].with_user(self.user_employee).read(['summary'])
 
         self.env.invalidate_all()
-        self.env.transaction.clear_access_cache()
+        self.env.transaction.invalidate_access_cache()
         # check search correctly uses '_mail_get_operation_for_mail_message_operation'
         found = self.env['mail.activity'].with_user(self.user_employee).search([('res_model', '=', 'mail.test.access.custo')])
         self.assertEqual(found, admin_activities[:2] + emp_new_1 + emp_new_2, 'Should respect _ge_mail_get_operation_for_mail_message_operationt_mail_message_access, reading non locked records')
@@ -153,10 +155,10 @@ class TestActivityRights(TestActivityCommon):
         def _employee_crash(records, operation):
             """ If employee is test employee, consider they have no access on document """
             if records.env.uid == self.user_employee.id and not records.env.su:
-                return records, lambda: exceptions.AccessError('Hop hop hop Ernest, please step back.')
+                return Domain.FALSE
             return DEFAULT
 
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
+        with patch.object(MailTestActivity, '_access_domain', autospec=True, side_effect=_employee_crash):
             _activity = self.test_record.activity_schedule(
                 'test_mail.mail_act_test_todo',
                 user_id=self.user_employee.id)
@@ -165,12 +167,6 @@ class TestActivityRights(TestActivityCommon):
             activity2.write({'user_id': self.user_employee.id})
 
     def test_activity_security_user_noaccess_manual(self):
-        def _employee_crash(records, operation):
-            """ If employee is test employee, consider they have no access on document """
-            if records.env.uid == self.user_employee.id and not records.env.su:
-                raise exceptions.AccessError('Hop hop hop Ernest, please step back.')
-            return DEFAULT
-
         test_activity = self.env['mail.activity'].with_user(self.user_admin).create({
             'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
             'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
@@ -181,14 +177,9 @@ class TestActivityRights(TestActivityCommon):
         test_activity.flush_recordset()
 
         # can _search activities if access to the document
-        self.env['mail.activity'].with_user(self.user_employee)._search(
+        searched_activity = self.env['mail.activity'].with_user(self.user_employee)._search(
             [('id', '=', test_activity.id)])
-
-        # cannot _search activities if no access to the document
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            with self.assertRaises(exceptions.AccessError):
-                searched_activity = self.env['mail.activity'].with_user(self.user_employee)._search(
-                    [('id', '=', test_activity.id)])
+        self.assertTrue(searched_activity, "Activity not found by employee")
 
         # can formatted_read_group activities if access to the document
         read_group_result = self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
@@ -199,64 +190,71 @@ class TestActivityRights(TestActivityCommon):
         self.assertEqual(1, read_group_result[0]['__count'])
         self.assertEqual('Summary', read_group_result[0]['summary'])
 
+        # ---------------------------------------
+        # Let only the creator access an activity
+        self.env['ir.access'].create({
+            'name': 'Hop hop hop Ernest',
+            'model_id': self.env['ir.model']._get('mail.activity').id,
+            'operation': 'crud',
+            'domain': '[("user_id", "=", user.id)]',
+        })
+
+        # cannot _search activities if no access to the document
+        searched_activity = self.env['mail.activity'].with_user(self.user_employee)._search(
+            [('id', '=', test_activity.id)])
+        self.assertFalse(searched_activity)
+
         # cannot read_group activities if no access to the document
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            with self.assertRaises(exceptions.AccessError):
-                self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
-                    [('id', '=', test_activity.id)],
-                    ['summary'],
-                    ['__count'],
-                )
+        result = self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
+            [('id', '=', test_activity.id)],
+            ['summary'],
+            ['__count'],
+        )
+        self.assertFalse(result)
 
         # cannot read activities if no access to the document
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            with self.assertRaises(exceptions.AccessError):
-                searched_activity = self.env['mail.activity'].with_user(self.user_employee).search(
-                    [('id', '=', test_activity.id)])
-                searched_activity.read(['summary'])
+        with self.assertRaises(exceptions.AccessError):
+            test_activity.with_user(self.user_employee).read(['summary'])
 
         # cannot search_read activities if no access to the document
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            with self.assertRaises(exceptions.AccessError):
-                self.env['mail.activity'].with_user(self.user_employee).search_read(
-                    [('id', '=', test_activity.id)],
-                    ['summary'])
+        result = self.env['mail.activity'].with_user(self.user_employee).search_read(
+            [('id', '=', test_activity.id)],
+            ['summary'])
+        self.assertFalse(result)
 
         # can create activities for people that cannot access record
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            self.env['mail.activity'].create({
-                'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
-                'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
-                'res_id': self.test_record.id,
-                'user_id': self.user_employee.id,
-            })
+        self.env['mail.activity'].create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'res_id': self.test_record.id,
+            'user_id': self.user_employee.id,
+        })
 
         # cannot create activities if no access to the document
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            with self.assertRaises(exceptions.AccessError):
-                activity = self.test_record.with_user(self.user_employee).activity_schedule(
-                    'test_mail.mail_act_test_todo',
-                    user_id=self.user_admin.id)
+        with self.assertRaises(exceptions.AccessError):
+            self.test_record.with_user(self.user_employee).activity_schedule(
+                'test_mail.mail_act_test_todo',
+                user_id=self.user_admin.id)
 
+        # ---------------------------------------
+        # Assign the activity to the user
         test_activity.user_id = self.user_employee
         test_activity.flush_recordset()
 
         # user can read activities assigned to him even if he has no access to the document
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            found = self.env['mail.activity'].with_user(self.user_employee).search(
-                [('id', '=', test_activity.id)])
-            self.assertEqual(found, test_activity)
-            found.read(['summary'])
+        found = self.env['mail.activity'].with_user(self.user_employee).search(
+            [('id', '=', test_activity.id)])
+        self.assertEqual(found, test_activity)
+        found.read(['summary'])
 
         # user can read_group activities assigned to him even if he has no access to the document
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            read_group_result = self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
-                [('id', '=', test_activity.id)],
-                ['summary'],
-                ['__count'],
-            )
-            self.assertEqual(1, read_group_result[0]['__count'])
-            self.assertEqual('Summary', read_group_result[0]['summary'])
+        read_group_result = self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
+            [('id', '=', test_activity.id)],
+            ['summary'],
+            ['__count'],
+        )
+        self.assertEqual(1, read_group_result[0]['__count'])
+        self.assertEqual('Summary', read_group_result[0]['summary'])
 
 
 @tests.tagged('mail_activity')
@@ -502,11 +500,10 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
         # In the mean time, some FK deletes the record where the message is
         # scheduled, skipping its unlink() override
+        cls.env.invalidate_all()
         cls.env.cr.execute(
             f"DELETE FROM {cls.test_lead_records._table} WHERE id = %s", (cls.deleted_record.id,)
         )
-
-        cls.env.invalidate_all()
 
     @users("employee")
     def test_systray_activities_for_various_records(self):
@@ -519,7 +516,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
         self.authenticate(self.user_employee.login, self.user_employee.login)
         with freeze_time(self.dt_reference):
-            groups_data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["systray_get_activities"]}).get('Store', {}).get('activityGroups', [])
+            groups_data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["systray_get_activities"]}).get('Store', {}).get('activityGroups', [])
         self.assertEqual(len(groups_data), 3, 'Should have activities for 2 test models + generic for non accessible')
 
         for model_name, msg, (exp_total, exp_today, exp_planned, exp_overdue), exp_domain in [
@@ -569,7 +566,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
         # if not assigned -> should filter out
         self.env.invalidate_all()
-        self.env.transaction.clear_access_cache()
+        self.env.transaction.invalidate_access_cache()
         self.test_activities_removed.write({'user_id': self.user_admin.id})
         test_with_removed = self.env['mail.activity'].search([
             ('id', 'in', self.test_activities.ids),
@@ -603,7 +600,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
         self.authenticate(self.user_employee.login, self.user_employee.login)
         with freeze_time(self.dt_reference):
-            groups_data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["systray_get_activities"]}).get('Store', {}).get('activityGroups', [])
+            groups_data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["systray_get_activities"]}).get('Store', {}).get('activityGroups', [])
 
         for model_name, msg, (exp_total, exp_today, exp_planned, exp_overdue) in [
             ('mail.activity', 'Non accessible: deleted', (1, 1, 2, 0)),
@@ -623,7 +620,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
         # removed from systray, considering you have to log into the right company
         # to see them (change in 18+)
         with freeze_time(self.dt_reference):
-            groups_data = self.make_jsonrpc_request("/mail/data", {
+            groups_data = self.make_jsonrpc_request("/mail/store", {
                 "fetch_params": ["systray_get_activities"],
                 "context": {"allowed_company_ids": self.company_admin.ids},
             }).get('Store', {}).get('activityGroups', [])
@@ -645,7 +642,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
         # now not having accessible to company 2 records: tread like forbidden
         self.user_employee.write({'company_ids': [(3, self.company_2.id)]})
         with freeze_time(self.dt_reference):
-            groups_data = self.make_jsonrpc_request("/mail/data", {
+            groups_data = self.make_jsonrpc_request("/mail/store", {
                 "fetch_params": ["systray_get_activities"],
                 "context": {"allowed_company_ids": self.company_admin.ids},
             }).get('Store', {}).get('activityGroups', [])
@@ -690,100 +687,43 @@ class TestActivitySystrayBusNotify(TestActivityCommon):
     @users('employee')
     def test_notify_create_unlink_activities(self):
         """Check creating and unlinking activities notifies of the change in 'to be done' activity count per user."""
-        users = self.env.user + self.user_employee_2
-
-        expected_create_notifs = [
-            ([user], [{
-                "type": "mail.activity/updated",
-                "payload": {
-                    "activity_created": True,
-                    "count_diff": 2,
-                },
-            }])
-            for user in users
-        ]
-        expected_unlink_notifs = [
-            ([user], [{
-                "type": "mail.activity/updated",
-                "payload": {
-                    "activity_deleted": True,
-                    "count_diff": -2,
-                },
-            }])
-            for user in users
-        ]
-        for (
-            user,
-            (expected_create_notif_channels, expected_create_notif_message_items),
-            (expected_unlink_notif_channels, expected_unlink_notif_message_items),
-        ) in zip(users, expected_create_notifs, expected_unlink_notifs):
+        for user in self.env.user + self.user_employee_2:
             user_activity_vals = [vals | {'user_id': user.id} for vals in self.activity_vals]
-            with self.assertBus(expected_create_notif_channels, expected_create_notif_message_items):
+            with self.assertBus(BusResult(user, "mail.activity/updated", {"activity_created": True, "count_diff": 2})):
                 activities = self.env['mail.activity'].create(user_activity_vals)
-            with self.assertBus(expected_unlink_notif_channels, expected_unlink_notif_message_items):
+            with self.assertBus(BusResult(user, "mail.activity/updated", {"activity_deleted": True, "count_diff": -2})):
                 activities.unlink()
 
     @users('employee')
     def test_notify_update_activities(self):
-        write_vals_all = [
-            # added to counter for employee 2, removed from counter for current employee
-            {'user_id': self.user_employee_2.id},
-            {'user_id': self.user_employee_2.id, 'date_deadline': datetime(2023, 12, 31, 15, 0, 0), 'active': True},
-            # just notify
-            {'date_deadline': datetime(2024, 1, 2, 15, 0, 0)},  # everything is in the future -> all removed from counter
-            {'date_deadline': datetime(2023, 12, 31, 15, 0, 0)},  # everything is in the past -> the one from the future is added
-            {'active': False},  # everything is archived -> all removed from counter
-            {'active': True},  # the archived one is unarchived -> added to counter
-            {},  # no "to be done" count change -> no notif
-            [{'date_deadline': datetime(2024, 1, 2, 15, 0, 0), 'active': True}, {}, {}, {}],
-        ]
+        def format_notif(user, count_diff):
+            return BusResult(
+                user,
+                "mail.activity/updated",
+                {"count_diff": count_diff} | ({"activity_created": True} if count_diff > 0 else {"activity_deleted": True}),
+            )
 
-        expected_notifs = [
-            # transfer 4 activities to the second employee, 2 todos taken and 2 given
-            [
-                ([user], [{
-                    "type": "mail.activity/updated",
-                    "payload": {
-                        "count_diff": count_diff,
-                    } | ({"activity_created": True} if count_diff > 0 else {"activity_deleted": True}),
-                }])
-                for user, count_diff
-                in zip(self.user_employee + self.user_employee_2, [-2, 2])
-            ],
-            # transfer 4 activities to the second employee, 2 todos are taken and 4 are given
-            [
-                ([user], [{
-                    "type": "mail.activity/updated",
-                    "payload": {
-                        "count_diff": count_diff,
-                    } | ({"activity_created": True} if count_diff > 0 else {"activity_deleted": True}),
-                }])
-                for user, count_diff
-                in zip(self.user_employee + self.user_employee_2, [-2, 4])
-            ],
-        ] + [[
-                ([self.user_employee], [{
-                    "type": "mail.activity/updated",
-                    "payload": {
-                        "count_diff": count_diff,
-                    } | ({"activity_created": True} if count_diff > 0 else {"activity_deleted": True}),
-                }])
-            ] for count_diff in (-2, 1, -2, 1)
-        ] + [
-            [([], [])],  # no change -> no notif
-            [([], [])],  # no change in "todo" count -> no notif
+        cases = [
+            # added to counter for employee 2, removed from counter for current employee
+            ({'user_id': self.user_employee_2.id}, [format_notif(self.user_employee, -2), format_notif(self.user_employee_2, 2)]),
+            ({'user_id': self.user_employee_2.id, 'date_deadline': datetime(2023, 12, 31, 15, 0, 0), 'active': True}, [format_notif(self.user_employee, -2), format_notif(self.user_employee_2, 4)]),
+            # just notify
+            ({'date_deadline': datetime(2024, 1, 2, 15, 0, 0)}, [format_notif(self.user_employee, -2)]),  # everything is in the future -> all removed from counter
+            ({'date_deadline': datetime(2023, 12, 31, 15, 0, 0)}, [format_notif(self.user_employee, 1)]),  # everything is in the past -> the one from the future is added
+            ({'active': False}, [format_notif(self.user_employee, -2)]),  # everything is archived -> all removed from counter
+            ({'active': True}, [format_notif(self.user_employee, 1)]),  # the archived one is unarchived -> added to counter
+            ({}, []),  # no "to be done" count change -> no notif
+            ([{'date_deadline': datetime(2024, 1, 2, 15, 0, 0), 'active': True}, {}, {}, {}], []),  # no change in "todo" count -> no notif
         ]
-        for write_vals, expected_notif_vals in zip(write_vals_all, expected_notifs):
+        for write_vals, expected_notifications in cases:
             with self.subTest(vals=write_vals):
                 _past_archived, _past_active, _today, _tomorrow = activities = self.env['mail.activity'].create(self.activity_vals)
-                self._reset_bus()
-                if isinstance(write_vals, list):
-                    for activity, vals in zip(activities, write_vals):
-                        activity.write(vals)
-                else:
-                    activities.write(write_vals)
-                for (notif_channels, notif_messages) in expected_notif_vals:
-                    self.assertBusNotifications(notif_channels, notif_messages)
+                with self.assertBus(expected_notifications):
+                    if isinstance(write_vals, list):
+                        for activity, vals in zip(activities, write_vals):
+                            activity.write(vals)
+                    else:
+                        activities.write(write_vals)
                 activities.unlink()
 
 
@@ -858,6 +798,7 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'ids': set(record_activities.ids),
                 'reporting_date': record_activities[0].date_deadline,
                 'user_assigned_ids': record_activities.user_id.ids,
+                'role_assigned_ids': [],
                 'summaries': [act.summary for act in record_activities],
             })
 
@@ -869,6 +810,7 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'ids': set(record_2_activities.ids),
                 'reporting_date': record_2_activities[2].date_deadline,
                 'user_assigned_ids': record_2_activities[2:].user_id.ids,
+                'role_assigned_ids': [],
                 'attachments_info': {
                     'count': 2, 'most_recent_id': self.attachment_2.id, 'most_recent_name': 'Uploaded doc_2'},
                 'summaries': [act.summary for act in record_2_activities],
@@ -886,6 +828,7 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'ids': set(record_activities.ids),
                 'reporting_date': record_activities[2].date_done,
                 'user_assigned_ids': [],
+                'role_assigned_ids': [],
                 'attachments_info': {
                     'count': 1,  # 1 instead of 3 because all attachments are the same one
                     'most_recent_id': self.attachment_1.id,
@@ -927,6 +870,7 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'ids': set(record_activities.ids),
                 'reporting_date': record_activities[0].date_deadline,
                 'user_assigned_ids': record_activities.user_id.ids,
+                'role_assigned_ids': [],
                 'summaries': [act.summary for act in record_activities],
             })
 

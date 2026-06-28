@@ -17,9 +17,8 @@
         'views/res_partner_view.xml',
         'views/l10n_ar_earnings_scale_view.xml',
         'wizards/account_payment_register_views.xml',
-        'security/ir.model.access.csv',
-        'security/security.xml',
         'data/earnings_table_data.xml',
+        'security/ir.access.csv',
     ],
     'license': 'LGPL-3',
 }

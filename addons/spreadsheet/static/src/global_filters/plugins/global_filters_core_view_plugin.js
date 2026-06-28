@@ -17,24 +17,20 @@ import { EvaluationError, helpers } from "@odoo/o-spreadsheet";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import {
-    checkFilterValueIsValid,
+    checkFilterAndValue,
     getDateDomain,
     getDateRange,
     getDateGlobalFilterValueFromDefault,
 } from "@spreadsheet/global_filters/helpers";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
-import { getItemId } from "../../helpers/model";
 import { serializeDate } from "@web/core/l10n/dates";
-import { deepEqual } from "@web/core/utils/objects";
 import { getFilterCellValue, getFilterValueDomain } from "../helpers";
 const { DateTime } = luxon;
 
-const { UuidGenerator, createEmptyExcelSheet, createEmptySheet, toXC, toNumber } = helpers;
-const uuidGenerator = new UuidGenerator();
+const { toNumber } = helpers;
 
 export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     static getters = /** @type {const} */ ([
-        "exportSheetWithActiveFilters",
         "getFilterDisplayValue",
         "getGlobalFilterByName",
         "getGlobalFilterDomain",
@@ -43,6 +39,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         "isGlobalFilterActive",
         "getTextFilterOptions",
         "getTextFilterOptionsFromRanges",
+        "getDefaultValueFromGlobalFilter",
     ]);
     constructor(config) {
         super(config);
@@ -57,19 +54,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     allowDispatch(cmd) {
         switch (cmd.type) {
             case "SET_GLOBAL_FILTER_VALUE": {
-                const filter = this.getters.getGlobalFilter(cmd.id);
-                if (!filter) {
-                    return CommandResult.FilterNotFound;
-                }
-                if (!checkFilterValueIsValid(filter, cmd.value)) {
-                    return CommandResult.InvalidValueTypeCombination;
-                }
-
-                const currentFilterValue = this.getters.getGlobalFilterValue(cmd.id);
-                if (deepEqual(currentFilterValue, cmd.value)) {
-                    return CommandResult.NoChanges;
-                }
-                break;
+                return checkFilterAndValue(this.getters, cmd.id, cmd.value);
             }
         }
         return CommandResult.Success;
@@ -136,7 +121,11 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         if (value !== undefined) {
             return value;
         }
-        const preventDefaultValue = this.values[filterId]?.preventDefaultValue;
+        return this.getDefaultValueFromGlobalFilter(filter);
+    }
+
+    getDefaultValueFromGlobalFilter(filter) {
+        const preventDefaultValue = this.values[filter.id]?.preventDefaultValue ?? false;
         if (preventDefaultValue || filter.defaultValue === undefined) {
             return undefined;
         }
@@ -355,69 +344,5 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
             this.getters
         );
         return getDateDomain(from, to, field, type);
-    }
-
-    /**
-     * Adds all active filters (and their values) at the time of export in a dedicated sheet
-     *
-     * @param {Object} data
-     */
-    exportForExcel(data) {
-        if (this.getters.getGlobalFilters().length === 0) {
-            return;
-        }
-        this.exportSheetWithActiveFilters(data);
-        data.sheets[data.sheets.length - 1] = {
-            ...createEmptyExcelSheet(uuidGenerator.smallUuid(), _t("Active Filters")),
-            ...data.sheets.at(-1),
-        };
-    }
-
-    exportSheetWithActiveFilters(data) {
-        if (this.getters.getGlobalFilters().length === 0) {
-            return;
-        }
-
-        const cells = {
-            A1: "Filter",
-            B1: "Value",
-        };
-        const formats = {};
-        let numberOfCols = 2; // at least 2 cols (filter title and filter value)
-        let filterRowIndex = 1; // first row is the column titles
-        for (const filter of this.getters.getGlobalFilters()) {
-            cells[`A${filterRowIndex + 1}`] = filter.label;
-            const result = this.getFilterDisplayValue(filter.label);
-            for (const colIndex in result) {
-                numberOfCols = Math.max(numberOfCols, Number(colIndex) + 2);
-                for (const rowIndex in result[colIndex]) {
-                    const cell = result[colIndex][rowIndex];
-                    if (cell.value === undefined) {
-                        continue;
-                    }
-                    const xc = toXC(Number(colIndex) + 1, Number(rowIndex) + filterRowIndex);
-                    cells[xc] = cell.value.toString();
-                    if (cell.format) {
-                        const formatId = getItemId(cell.format, data.formats);
-                        formats[xc] = formatId;
-                    }
-                }
-            }
-            filterRowIndex += result[0].length;
-        }
-        const styleId = getItemId({ bold: true }, data.styles);
-
-        const sheet = {
-            ...createEmptySheet(uuidGenerator.smallUuid(), _t("Active Filters")),
-            cells,
-            formats,
-            styles: {
-                A1: styleId,
-                B1: styleId,
-            },
-            colNumber: numberOfCols,
-            rowNumber: filterRowIndex,
-        };
-        data.sheets.push(sheet);
     }
 }

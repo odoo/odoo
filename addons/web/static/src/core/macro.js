@@ -1,27 +1,25 @@
-import { validate } from "@web/owl2/utils";
+import { assertType, t } from "@odoo/owl";
 import { isVisible } from "@web/core/utils/ui";
 import { delay } from "@web/core/utils/concurrency";
 
-const macroSchema = {
-    name: { type: String, optional: true },
-    timeout: { type: Number, optional: true },
-    allowDelayToRemove: { type: Boolean, optional: true },
-    steps: {
-        type: Array,
-        element: {
-            type: Object,
-            shape: {
-                action: { type: [Function, String], optional: true },
-                timeout: { type: Number, optional: true },
-                trigger: { type: [Function, String], optional: true },
-            },
-            validate: (step) => step.action || step.trigger,
-        },
-    },
-    onComplete: { type: Function, optional: true },
-    onStep: { type: Function, optional: true },
-    onError: { type: Function, optional: true },
-};
+const macroSchema = t.strictObject({
+    name: t.string().optional(),
+    timeout: t.number().optional(),
+    allowDelayToRemove: t.boolean().optional(),
+    steps: t.array(
+        t.customValidator(
+            t.object({
+                action: t.or([t.function(), t.string()]).optional(),
+                timeout: t.number().optional(),
+                trigger: t.or([t.function(), t.string()]).optional(),
+            }),
+            (step) => step.action || step.trigger
+        )
+    ),
+    onComplete: t.function().optional(),
+    onStep: t.function().optional(),
+    onError: t.function().optional(),
+});
 
 class MacroError extends Error {
     constructor(type, message, options) {
@@ -93,7 +91,7 @@ export class Macro {
     isComplete = false;
     constructor(descr) {
         try {
-            validate(descr, macroSchema);
+            assertType(descr, macroSchema);
         } catch (error) {
             throw new Error(
                 `Error in schema for Macro ${JSON.stringify(descr, null, 4)}\n${error.message}`

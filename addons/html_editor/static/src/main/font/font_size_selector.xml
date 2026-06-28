@@ -1,12 +1,23 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.FontSizeSelector">
-        <Dropdown state="dropdown" menuClass="'o_font_size_selector_menu'" menuRef="menuRef">
-            <button class="btn btn-light" t-att-title="props.title" name="font_size_selector" t-att-disabled="props.isDisabled">
-                <iframe t-custom-ref="iframeContent" style="width: 4ch; height:100%;"/>
+        <Dropdown state="this.dropdown" menuClass="'o_font_size_selector_menu'" menuRef="this.menuRef" focusToggleOnClosed="false">
+            <button t-custom-ref="fontSizeSelector" class="btn btn-light" t-att-title="this.props.title" name="font_size" t-att-disabled="this.props.isDisabled">
+                <IframeInput
+                    iframeRef="this.iframeContentRef"
+                    inputRef="this.fontSizeInputRef"
+                    value="this.state.displayName"
+                    inputAttrs="{ name: 'font_size_input', type: 'number', min: 0, max: this.props.maxFontSize }"
+                    iframeClass="'o_font_size_selector_iframe'"
+                    inputStyle="`font-family: ${this.fontFamily};`"
+                    onBlur.bind="this.props.onBlur"
+                    onClick.bind="this.onClickFontSizeInput"
+                    onInput.bind="this.debouncedCustomFontSizeInput"
+                    onKeydown.bind="this.onKeyDownFontSizeInput"
+                />
             </button>
             <t t-set-slot="content">
                 <div data-prevent-closing-overlay="true">
-                    <t t-foreach="items" t-as="item" t-key="item_index">
+                    <t t-foreach="this.items" t-as="item" t-key="item_index">
                         <DropdownItem onSelected="() => this.onSelected(item)" t-on-pointerdown.prevent="() => {}">
                             <t t-out="item.name"/>
                         </DropdownItem>

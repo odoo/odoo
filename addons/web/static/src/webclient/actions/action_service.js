@@ -1,4 +1,4 @@
-import { reactive, useChildSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
@@ -12,12 +12,21 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { View, ViewNotFoundError } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
 import { ReportAction } from "./reports/report_action";
-import { UPDATE_METHODS } from "@web/core/orm_service";
+import { UPDATE_METHODS } from "@web/core/orm_plugin";
 import { CallbackRecorder } from "@web/search/action_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { PATH_KEYS, router as _router } from "@web/core/browser/router";
 
-import { Component, markup, onMounted, onWillUnmount, onError, xml, status } from "@odoo/owl";
+import {
+    Component,
+    markup,
+    onError,
+    onMounted,
+    onWillUnmount,
+    proxy,
+    status,
+    xml,
+} from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
 import { zip } from "@web/core/utils/arrays";
 import { isHtmlEmpty } from "@web/core/utils/html";
@@ -121,7 +130,7 @@ const EMBEDDED_ACTIONS_CTX_KEYS = [
 ];
 
 // only register this template once for all dynamic classes ControllerComponent
-const ControllerComponentTemplate = xml`<t t-component="Component" t-props="componentProps"/>`;
+const ControllerComponentTemplate = xml`<t t-component="this.Component" t-props="this.componentProps"/>`;
 
 export function makeActionManager(env, router = _router) {
     const breadcrumbCache = {};
@@ -484,7 +493,11 @@ export function makeActionManager(env, router = _router) {
                     return controller.props?.type === "form";
                 },
                 get url() {
-                    return router.stateToUrl(controller.state);
+                    const state = controller.state;
+                    if (env.debug) {
+                        state.debug = env.debug;
+                    }
+                    return router.stateToUrl(state);
                 },
                 onSelected() {
                     restore(controller.jsId);
@@ -564,12 +577,21 @@ export function makeActionManager(env, router = _router) {
             }
         } else if (state.model) {
             if (state.resId || state.view_type === "form") {
-                actionRequest = {
-                    res_model: state.model,
-                    res_id: state.resId === "new" ? undefined : state.resId,
-                    type: "ir.actions.act_window",
-                    views: [[state.view_id ? state.view_id : false, "form"]],
-                };
+                if (!lastAction.id && lastAction.res_model === state.model) {
+                    actionRequest = lastAction;
+                    options.props = { resId: state.resId === "new" ? undefined : state.resId };
+                    if (state.view_id) {
+                        actionRequest.views = [[state.view_id, "form"]];
+                    }
+                    options.viewType = "form";
+                } else {
+                    actionRequest = {
+                        res_model: state.model,
+                        res_id: state.resId === "new" ? undefined : state.resId,
+                        type: "ir.actions.act_window",
+                        views: [[state.view_id ? state.view_id : false, "form"]],
+                    };
+                }
             } else {
                 // This is a window action on a multi-record view => restores it from
                 // the session storage
@@ -835,6 +857,11 @@ export function makeActionManager(env, router = _router) {
         // https://html.spec.whatwg.org/multipage/webstorage.html#webstorage
         // "After creating a new auxiliary browsing context and document, the session storage is copied over."
 
+        // copy debug flag from current state
+        if (env.debug) {
+            state.debug = env.debug;
+        }
+
         // Store current action of the current window
         const currentAction = browser.sessionStorage.getItem("current_action");
         const currentState = browser.sessionStorage.getItem("current_state");
@@ -870,7 +897,7 @@ export function makeActionManager(env, router = _router) {
             return _openActionInNewWindow(action, makeState(nextStack));
         }
         // Compute breadcrumbs
-        controller.config.breadcrumbs = reactive(
+        controller.config.breadcrumbs = proxy(
             action.target === "new" ? [] : _getBreadcrumbs(nextStack)
         );
         controller.config.getDisplayName = () => controller.displayName;
@@ -951,7 +978,7 @@ export function makeActionManager(env, router = _router) {
                     return;
                 }
                 if (!controller.isMounted && status(this) === "mounted") {
-                    // The error occured during an onMounted hook of one of the components.
+                    // The error occurred during an onMounted hook of one of the components.
                     env.bus.trigger("ACTION_MANAGER:UPDATE", {
                         id: ++id,
                         Component: BlankComponent,
@@ -1048,7 +1075,13 @@ export function makeActionManager(env, router = _router) {
                 actionType: action.type,
             };
             if (action.name) {
-                actionDialogProps.title = action.name;
+                // @todo jesc: move this logic in the proper location
+                // Something to do with Quality Check specific logic
+                if (Array.isArray(action.name)) {
+                    actionDialogProps.title = action.name[0];
+                } else {
+                    actionDialogProps.title = action.name;
+                }
             }
             const size = DIALOG_SIZES[action.context.dialog_size];
             if (size) {
@@ -1371,8 +1404,16 @@ export function makeActionManager(env, router = _router) {
         }
         if (action.report_type === "qweb-html") {
             return _executeReportClientAction(action, options);
-        } else if (action.report_type === "qweb-pdf" || action.report_type === "qweb-text") {
-            const type = action.report_type.slice(5);
+        } else if (
+            action.report_type.startsWith("qweb-pdf") ||
+            action.report_type === "qweb-text"
+        ) {
+            let type = action.report_type.slice(5);
+            let engineName;
+            if (type.startsWith("pdf-")) {
+                engineName = type.slice(4);
+                type = "pdf";
+            }
             let success, message;
             env.services.ui.block();
             try {
@@ -1380,7 +1421,13 @@ export function makeActionManager(env, router = _router) {
                 if (action.context) {
                     Object.assign(downloadContext, action.context);
                 }
-                ({ success, message } = await downloadReport(rpc, action, type, downloadContext));
+                ({ success, message } = await downloadReport(
+                    rpc,
+                    action,
+                    type,
+                    downloadContext,
+                    engineName
+                ));
             } finally {
                 env.services.ui.unblock();
             }
@@ -1508,7 +1555,7 @@ export function makeActionManager(env, router = _router) {
      * @returns {Promise<void>}
      */
     async function doActionButton(params, { isEmbeddedAction, newWindow } = {}) {
-        if (!params.name) {
+        if (!params.name && !params.special) {
             return;
         }
         // determine the action to execute according to the params
@@ -1703,7 +1750,8 @@ export function makeActionManager(env, router = _router) {
             // This case would mostly happen when loadState detects a change in the URL.
             // Also, I guess we may need it when we have other monoRecord views
             index = controllerStack.findIndex(
-                (ct) => ct.action.jsId === controller.action.jsId && !ct.view.multiRecord
+                (ct) =>
+                    ct.action.jsId === controller.action.jsId && !ct.virtual && !ct.view.multiRecord
             );
             index = index > -1 ? index : controllerStack.length;
         }

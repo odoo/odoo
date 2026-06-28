@@ -1,33 +1,32 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { mergeClasses } from "@web/core/utils/classname";
 import { _t } from "@web/core/l10n/translation";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 
+export const badgeTagProps = {
+    cssClass: t.or([t.string(), t.object()]).optional(),
+    onClick: t.function().optional(),
+    onDelete: t.function().optional(),
+    crossTooltip: t.string().optional(_t("Delete")),
+    ref: t.any().optional(),
+    slots: t.any().optional(),
+    text: t.string().optional(),
+    tooltip: t.string().optional(),
+};
+
 export class BadgeTag extends Component {
     static template = "web.BadgeTag";
-    static props = {
-        color: { type: Number, optional: true },
-        cssClass: { type: [String, Object], optional: true },
-        onClick: { type: Function, optional: true },
-        onDelete: { type: Function, optional: true },
-        crossTooltip: { type: String, optional: true },
-        ref: { optional: true },
-        slots: { optional: true },
-        text: { type: String, optional: true },
-        tooltip: { type: String, optional: true },
-    };
-    static defaultProps = {
-        color: 0,
-        crossTooltip: _t("Delete"),
-    };
+    static colorType = t.number().optional(0);
+    props = props(badgeTagProps);
+    color = props({ color: this.constructor.colorType });
 
     get tagColorClass() {
-        return `o_tag_color_${this.props.color}`;
+        return `o_tag_color_${this.color.color}`;
     }
 
     get cssClass() {
         return mergeClasses(
-            `o_badge badge rounded-pill lh-1 ${this.tagColorClass}`,
+            `o_badge badge rounded-pill ${this.tagColorClass}`,
             { "cursor-pointer": this.props.onClick },
             this.props.cssClass
         );

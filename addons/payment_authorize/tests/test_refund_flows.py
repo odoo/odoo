@@ -49,9 +49,9 @@ class TestRefundFlows(AuthorizeCommon):
                 return_value={"transaction": {"transactionStatus": "authorizedPendingCapture"}},
             ),
             patch(
-                "odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI.void"
+                "odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI.void",
+                return_value={"dummy": True},
             ) as void_mock,
-            patch("odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"),
         ):
             source_tx._refund(amount_to_refund=source_tx.amount)
         self.assertEqual(void_mock.call_count, 1)
@@ -68,9 +68,9 @@ class TestRefundFlows(AuthorizeCommon):
                 return_value={"transaction": {"transactionStatus": "settledSuccessfully"}},
             ),
             patch(
-                "odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI.refund"
+                "odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI.refund",
+                return_value={"dummy": True},
             ) as refund_mock,
-            patch("odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"),
         ):
             source_tx._refund(amount_to_refund=source_tx.amount)
         self.assertEqual(refund_mock.call_count, 1)
@@ -98,4 +98,5 @@ class TestRefundFlows(AuthorizeCommon):
             ),
         ):
             refund_tx = source_tx._refund(amount_to_refund=source_tx.amount)
+            self._run_processing()
         self.assertEqual(refund_tx.state, "done")

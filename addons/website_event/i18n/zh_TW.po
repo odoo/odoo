@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 12:38+0000\n"
+"POT-Creation-Date: 2026-05-10 17:36+0000\n"
+"PO-Revision-Date: 2026-04-18 13:45+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-1/website_event/zh_Hant/>\n"
+"projects/odoo-s19-2/website_event/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_count
@@ -137,6 +137,14 @@ msgid "<i class=\"fa fa-map-marker me-2 text-muted\" title=\"Location\"/>"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
+msgid ""
+"<i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>\n"
+"                                    <span> Los Angeles, CA, United States</"
+"span>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
 msgid ""
 "<i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los Los Angeles, "
@@ -199,8 +207,8 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_badge_preview_data
 msgid ""
-"<span class=\"o_cc o_cc1 d-inline-flex align-items-center justify-content-"
-"center gap-3 border rounded py-2 px-3 rounded-pill\">\n"
+"<span class=\"o_cc o_cc1 d-inline-flex justify-content-center flex-wrap "
+"gap-3 my-3 border py-2 px-3 rounded-pill\">\n"
 "                    <i class=\"fa fa-calendar\" role=\"presentation\"/>\n"
 "                    <strong>Harmony Under the Stars</strong>\n"
 "                    <span class=\"text-muted\">August 23, 2025 - 8:15 PM</"
@@ -281,7 +289,6 @@ msgid ""
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_offset_preview_data
 msgid ""
 "<span><i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los Angeles, "
@@ -447,7 +454,7 @@ msgstr "所有"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
 msgid "All Countries"
-msgstr "所有國家"
+msgstr "所有國家/地區"
 
 #. module: website_event
 #. odoo-python
@@ -673,12 +680,6 @@ msgstr ""
 "            請留意，有關活動 EventEvent 始終可透過專用連結存取。"
 
 #. module: website_event
-#. odoo-javascript
-#: code:addons/website_event/static/src/website_builder/event_searchbar_option_plugin.js:0
-msgid "Description"
-msgstr "說明"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Discard"
@@ -711,6 +712,13 @@ msgid "Display community tab on website"
 msgstr "在網站上顯示社區選項"
 
 #. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event__subtitle
+msgid ""
+"Displayed on website and used as description when the event is added to a "
+"third-party calendar."
+msgstr ""
+
+#. module: website_event
 #. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 msgid "Don't forget to click <b>save</b> when you're done."
@@ -725,6 +733,11 @@ msgstr "下載所有門票"
 #: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
 msgid "Download Tickets"
 msgstr "下載門票"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.layout
+msgid "Drag blocks here to add them on all events"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_card_preview_data
@@ -742,12 +755,6 @@ msgstr "活動"
 #: model:ir.model.fields,field_description:website_event.field_event_event__community_menu_ids
 msgid "Event Community Menus"
 msgstr "活動社區選單"
-
-#. module: website_event
-#. odoo-javascript
-#: code:addons/website_event/static/src/website_builder/event_searchbar_option_plugin.js:0
-msgid "Event Date"
-msgstr "活動日期"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -771,7 +778,7 @@ msgstr "活動選單"
 
 #. module: website_event
 #. odoo-javascript
-#: code:addons/website_event/static/src/website_builder/event_page_option_plugin.js:0
+#: code:addons/website_event/static/src/website_builder/event_page_option.xml:0
 msgid "Event Page"
 msgstr "活動頁面"
 
@@ -803,6 +810,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Event Subtitle"
 msgstr "活動副標題"
 
@@ -860,6 +868,7 @@ msgstr ""
 #. odoo-javascript
 #. odoo-python
 #: code:addons/website_event/controllers/main.py:0
+#: code:addons/website_event/models/event_event.py:0
 #: code:addons/website_event/models/website.py:0
 #: code:addons/website_event/static/src/website_builder/dynamic_snippet_events_option.xml:0
 #: code:addons/website_event/static/src/website_builder/event_searchbar_option.xml:0
@@ -913,7 +922,7 @@ msgid "Filters"
 msgstr "篩選"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+#: model_terms:ir.ui.view,arch_db:website_event.opt_event_share_block
 msgid ""
 "Find out what people see and say about this event, and join the conversation."
 msgstr "了解其他人對本活動正談論甚麼，加入對話。"
@@ -930,11 +939,6 @@ msgstr "固定側邊欄"
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "Follow Us"
 msgstr "關注我們"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.layout
-msgid "Following content will appear on all events."
-msgstr "以下內容將出現在所有活動中."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__footer_visible
@@ -1376,12 +1380,6 @@ msgid "Register"
 msgstr "報名"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
-msgid ""
-"Register <i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
-msgstr ""
-
-#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__register_menu
 msgid "Register Menu"
 msgstr "報名選單"
@@ -1412,6 +1410,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
 msgid ""
 "Register<i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
+msgid "Register<i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
 msgstr ""
 
 #. module: website_event
@@ -1551,8 +1554,8 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "Search an event.."
-msgstr "搜尋事件⋯"
+msgid "Search an event..."
+msgstr ""
 
 #. module: website_event
 #. odoo-javascript
@@ -1589,9 +1592,14 @@ msgstr ""
 #. module: website_event
 #. odoo-javascript
 #: code:addons/website_event/static/src/website_builder/event_page_option.xml:0
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+#: model_terms:ir.ui.view,arch_db:website_event.opt_event_share_block
 msgid "Share"
 msgstr "分享"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+msgid "Short description for website and calendars."
+msgstr ""
 
 #. module: website_event
 #. odoo-javascript
@@ -1631,6 +1639,7 @@ msgstr "時段"
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_question_about_0_answer_0
 #: model:event.question.answer,name:website_event.event_question_about_2_answer_0
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "Social Media"
 msgstr "社交媒體"
 
@@ -1812,7 +1821,7 @@ msgstr "在網站上顯示"
 #: model:ir.model.fields,field_description:website_event.field_event_tag__website_published
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_published
 msgid "Visible on current website"
-msgstr "在當前網站可見"
+msgstr "在目前網站顯示"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration__visitor_id

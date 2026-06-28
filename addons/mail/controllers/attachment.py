@@ -79,10 +79,10 @@ class AttachmentController(ThreadController):
                     res.from_method("_store_ownership_fields"),
                 ),
             )
-            res = {"data": {"store_data": store.get_result(), "attachment_id": attachment.id}}
+            res = {"data": {"store_data": store, "attachment_id": attachment.id}}
         except AccessError:
             res = {"error": _("You are not allowed to upload an attachment here.")}
-        return res
+        return request.make_json_response(res)
 
     @mail_route("/mail/attachment/delete", methods=["POST"], type="jsonrpc", auth="public")
     def mail_attachment_delete(self, attachment_id, access_token=None):
@@ -143,15 +143,15 @@ class AttachmentController(ThreadController):
             raise request.not_found()
         # sudo: ir.attachment: access check is done above, sudo necessary for guests
         attachment_sudo = attachment.sudo()
-        if attachment_sudo.mimetype != "application/pdf":
-            raise UserError(request.env._("Only PDF files can have thumbnail."))
+        if attachment_sudo.mimetype != "application/pdf" and not attachment_sudo.mimetype.startswith('video/'):
+            raise UserError(request.env._("Only PDF and videos files can have thumbnail."))
         if thumbnail:
             thumbnail = BinaryBytes(base64.b64decode(thumbnail))
         else:
             with file_open("web/static/img/mimetypes/unknown.svg", "rb") as f:
                 thumbnail = BinaryBytes(f.read())
         attachment_sudo.thumbnail = thumbnail
-        Store(bus_channel=attachment_sudo).add(attachment_sudo, ["has_thumbnail"]).bus_send()
+        Store(bus_channel=attachment_sudo).add(attachment_sudo, ["has_thumbnail"])
 
     def _get_pdf_first_page_response(self, attachment):
         try:

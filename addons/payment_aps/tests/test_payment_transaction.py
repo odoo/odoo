@@ -31,13 +31,13 @@ class TestPaymentTransaction(APSCommon):
                 "access_code": self.provider.aps_access_code,
                 "merchant_identifier": self.provider.aps_merchant_identifier,
                 "merchant_reference": tx.reference,
-                "payment_option": "UNKNOWN",
+                "payment_option": "DUMMY",
                 "amount": str(converted_amount),
                 "currency": self.currency.name,
                 "language": tx.partner_lang[:2],
                 "customer_email": tx.partner_id.email_normalized,
                 "return_url": self._build_url(APSController._return_url),
-                "signature": "c9b9f35a607606c045f8882e762a4a4a35572cf230fe1cd45fa18d7c8681aeb9",
+                "signature": "00ad434241e345c10b9e4bfeedd98a0f8af7a7335bebc045c12f5c42d7def78b",
             },
         }
         self.assertEqual(tx._get_specific_rendering_values(None), expected_values)
@@ -55,8 +55,8 @@ class TestPaymentTransaction(APSCommon):
             "currency",
             "language",
             "customer_email",
-            "return_url",
             "payment_option",
+            "return_url",
             "signature",
         ]
         processing_values = tx._get_processing_values()
@@ -69,5 +69,5 @@ class TestPaymentTransaction(APSCommon):
         """Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment."""
         tx = self._create_transaction(flow="redirect")
-        tx._apply_updates(self.payment_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
         self.assertEqual(tx.state, "done")

@@ -10,9 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_jp_template_data(self):
         return {
             'code_digits': '6',
-            'property_account_receivable_id': 'l10n_jp_126000',
-            'property_account_payable_id': 'l10n_jp_220000',
-            'property_stock_valuation_account_id': 'l10n_jp_121100',
         }
 
     @template('jp', 'res.company')
@@ -36,5 +33,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'l10n_jp_tax_purchase_exc_10',
                 'expense_account_id': 'l10n_jp_510000',
                 'income_account_id': 'l10n_jp_410000',
+                'receivable_account_id': 'l10n_jp_126000',
+                'payable_account_id': 'l10n_jp_220000',
+                'account_stock_valuation_id': 'l10n_jp_121100',
             },
         }

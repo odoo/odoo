@@ -27,7 +27,7 @@ class TestProjectFlow(TestProjectCommon, MailCase):
             - 'another_parent_task' linked to the partner_3
         """
 
-        Task = self.env['project.task'].with_context({'tracking_disable': True})
+        Task = self.env['project.task']
 
         parent_task = Task.create({
             'name': 'Mother Task',
@@ -125,7 +125,7 @@ class TestProjectFlow(TestProjectCommon, MailCase):
 
     def test_rating(self):
         """Check if rating works correctly even when task is changed from project A to project B"""
-        Task = self.env['project.task'].with_context({'tracking_disable': True})
+        Task = self.env['project.task']
         first_task = Task.create({
             'name': 'first task',
             'user_ids': self.user_projectuser,
@@ -272,6 +272,13 @@ class TestProjectFlow(TestProjectCommon, MailCase):
                 self.assertEqual(task.rating_ids.rated_partner_id, task.user_ids.partner_id, 'The rating should have an assigned user if the task has only one assignee.')
                 self.assertEqual(rating_request_message.email_from, task.user_ids.partner_id.email_formatted, 'The message should have the email of the assigned user in the task as email from.')
             self.assertTrue(self.partner_1 in rating_request_message.partner_ids, 'The customer of the task should be in the partner_ids of the rating request message.')
+        # even if the ask for rating is not active in any stage the raiting mail template should remain active
+        all_active_rating_stages = self.env['project.task.type'].search([('rating_active', '=', True)])
+        all_active_rating_stages.write({'rating_active': False})
+        self.assertTrue(
+            rating_request_mail_template.active,
+            'The rating email template should remain active even when rating_active is disabled on ALL stages.'
+        )
 
     def test_email_track_template(self):
         """ Update some tracked fields linked to some template -> message with onchange """

@@ -10,9 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_lk_template_data(self):
         return {
             "code_digits": "6",
-            "property_account_receivable_id": "l10n_lk_account_111000",
-            "property_account_payable_id": "l10n_lk_account_220100",
-            "property_stock_valuation_account_id": "l10n_lk_account_141000",
         }
 
     @template("lk", "res.company")
@@ -25,19 +22,22 @@ class AccountChartTemplate(models.AbstractModel):
                 "transfer_account_code_prefix": "10120",
                 "transfer_account_id": "l10n_lk_account_101200",
                 "account_default_pos_receivable_account_id": "l10n_lk_account_111001",
-                "income_currency_exchange_account_id": "l10n_lk_account_422000",
+                "income_currency_exchange_account_id": "l10n_lk_account_416000",
                 "expense_currency_exchange_account_id": "l10n_lk_account_704000",
-                "account_journal_suspense_account_id": "l10n_lk_account_202000",
+                "account_journal_suspense_account_id": "l10n_lk_account_101300",
                 "default_cash_difference_expense_account_id": "l10n_lk_account_706000",
                 "default_cash_difference_income_account_id": "l10n_lk_account_414000",
                 "account_journal_early_pay_discount_loss_account_id": "l10n_lk_account_705000",
-                "account_journal_early_pay_discount_gain_account_id": "l10n_lk_account_423000",
+                "account_journal_early_pay_discount_gain_account_id": "l10n_lk_account_417000",
                 "account_sale_tax_id": "l10n_lk_tax_sale_18",
                 "account_purchase_tax_id": "l10n_lk_tax_purchase_18",
                 "deferred_expense_account_id": "l10n_lk_account_131000",
                 "deferred_revenue_account_id": "l10n_lk_account_220200",
                 "income_account_id": "l10n_lk_account_401000",
                 "expense_account_id": "l10n_lk_account_501000",
+                "receivable_account_id": "l10n_lk_account_111000",
+                "payable_account_id": "l10n_lk_account_220100",
+                "account_stock_valuation_id": "l10n_lk_account_141000",
             },
         }
 
@@ -51,3 +51,10 @@ class AccountChartTemplate(models.AbstractModel):
                 "default_account_id": "l10n_lk_account_101100",
             },
         }
+
+    def _get_account_parent_xmlid(self, code_prefix, template_code):
+        if template_code == 'lk':
+            return {
+                '10100': 'l10n_lk_account_10',
+            }.get(code_prefix)
+        return super()._get_account_parent_xmlid(code_prefix, template_code)

@@ -8,6 +8,8 @@
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
+            "resource_mail/static/src/core/common/**/*",
+            "resource_mail/static/src/core/web/**/*",
             'resource_mail/static/src/**/*',
         ],
         'im_livechat.assets_embed_core': [

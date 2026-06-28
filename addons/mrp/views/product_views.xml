@@ -5,7 +5,7 @@
         <record id="view_mrp_product_template_form_inherited" model="ir.ui.view">
             <field name="name">product.form.mrp.inherited</field>
             <field name="model">product.template</field>
-            <field name="inherit_id" ref="stock.view_template_property_form"/>
+            <field name="inherit_id" ref="stock.product_template_form_view_stock"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_variant_count']" position="after">
                     <field name="is_kits" invisible="1"/>
@@ -18,20 +18,6 @@
             <field name="model">product.template</field>
             <field name="mode">primary</field>
             <field name="inherit_id" ref="product.product_template_search_view"/>
-            <field name="arch" type="xml">
-                <filter name="combo" position="after">
-                    <separator/>
-                    <filter string="Manufactured Products" name="manufactured_products" domain="[('bom_ids', '!=', False)]"/>
-                    <filter string="BoM Components" name="components" domain="[('bom_line_ids', '!=', False)]"/>
-                </filter>
-            </field>
-        </record>
-
-        <record id="mrp_product_product_search_view" model="ir.ui.view">
-            <field name="name">mrp.product.product.search</field>
-            <field name="model">product.product</field>
-            <field name="mode">primary</field>
-            <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
                 <filter name="combo" position="after">
                     <separator/>
@@ -63,7 +49,8 @@
             <field name="inherit_id" ref="product.product_view_search_catalog"/>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <filter name="goods" position="after">
+                <filter name="favorites" position="after">
+                    <separator/>
                     <filter string="In the BoM"
                             invisible="context.get('active_model') != 'mrp.bom.line'"
                             name="products_in_bom"
@@ -84,18 +71,6 @@
             name="Products"
             action="product_template_action"
             parent="menu_mrp_bom" sequence="1"/>
-
-        <record id="mrp_product_variant_action" model="ir.actions.act_window">
-            <field name="name">Product Variants</field>
-            <field name="res_model">product.product</field>
-            <field name="search_view_id" ref="mrp_product_product_search_view"/>
-            <field name="view_mode">kanban,list,form</field>
-        </record>
-
-        <menuitem id="product_variant_mrp" name="Product Variants"
-            action="mrp_product_variant_action"
-            parent="menu_mrp_bom" groups="product.group_product_variant" sequence="2"/>
-
 
         <record id="product_template_form_view_bom_button" model="ir.ui.view">
             <field name="name">product.template.procurement</field>
@@ -159,6 +134,10 @@
                     </button>
                 </xpath>
             </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="stock.action_product_stock_view">
+            <field name="domain">[('is_storable', '=', True), ('is_kits','=', False)]</field>
         </record>
     </data>
 </odoo>

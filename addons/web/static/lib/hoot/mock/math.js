@@ -1,46 +1,24 @@
 /** @odoo-module */
 
-import { isNil, stringToNumber } from "../hoot_utils";
+import { validateSeed } from "../hoot_utils";
 
 //-----------------------------------------------------------------------------
 // Global
 //-----------------------------------------------------------------------------
 
 const {
-    Math,
-    Number: { isNaN: $isNaN, parseFloat: $parseFloat },
-    Object: { defineProperties: $defineProperties },
+    Object: { defineProperty: $defineProperty },
 } = globalThis;
-const { floor: $floor, random: $random } = Math;
 
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
-
-/**
- * @param {unknown} [seed]
- */
-function toValidSeed(seed) {
-    if (isNil(seed)) {
-        return generateSeed();
-    }
-    const nSeed = $parseFloat(seed);
-    return $isNaN(nSeed) ? stringToNumber(nSeed) : nSeed;
-}
 
 const DEFAULT_SEED = 1e16;
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-
-/**
- * Generates a random 16-digit number.
- * This function uses the native (unpatched) {@link Math.random} method.
- */
-export function generateSeed() {
-    return $floor($random() * 1e16);
-}
 
 /**
  * Returns a seeded random number generator equivalent to the native
@@ -69,15 +47,13 @@ export function makeSeededRandom(seed) {
 
     let state = seed;
 
-    $defineProperties(random, {
-        seed: {
-            get() {
-                return seed;
-            },
-            set(value) {
-                seed = toValidSeed(value);
-                state = seed;
-            },
+    $defineProperty(random, "seed", {
+        get() {
+            return seed;
+        },
+        set(value) {
+            seed = validateSeed(value);
+            state = seed;
         },
     });
 

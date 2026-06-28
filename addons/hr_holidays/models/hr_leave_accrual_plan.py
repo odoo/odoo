@@ -25,7 +25,7 @@ class HrLeaveAccrualPlan(models.Model):
     show_transition_mode = fields.Boolean(compute='_compute_show_transition_mode', export_string_translation=False)
     is_based_on_worked_time = fields.Boolean(compute="_compute_is_based_on_worked_time", store=True, readonly=False,
         export_string_translation=False,
-        help="Only excludes requests where the time off type is set as unpaid kind of.")
+        help="Only excludes requests where the time type is set as unpaid kind of.")
     accrued_gain_time = fields.Selection([
         ("start", "At the start of the accrual period"),
         ("end", "At the end of the accrual period")],
@@ -54,7 +54,7 @@ class HrLeaveAccrualPlan(models.Model):
         ("10", "October"),
         ("11", "November"),
         ("12", "December")
-    ], export_string_translation=False, default=lambda self: str((fields.Date.today()).month))
+    ], export_string_translation=False, default=lambda self: str((fields.Date.context_today(self)).month))
     added_value_type = fields.Selection([('day', 'Days'), ('hour', 'Hours')],
         export_string_translation=False, default="day", store=True)
 
@@ -146,7 +146,6 @@ class HrLeaveAccrualPlan(models.Model):
     @api.ondelete(at_uninstall=False)
     def _prevent_used_plan_unlink(self):
         domain = [
-            ('allocation_type', '=', 'accrual'),
             ('accrual_plan_id', 'in', self.ids),
             ('state', 'not in', ('cancel', 'refuse')),
         ]

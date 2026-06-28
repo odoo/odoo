@@ -1,5 +1,5 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onMounted, onWillUnmount, proxy } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
@@ -15,7 +15,7 @@ export class ConfirmationPage extends Component {
         this.router = useService("router");
         this.dialog = useService("dialog");
         this.changeToDisplay = [];
-        this.state = useState({
+        this.state = proxy({
             onReload: true,
             payment: this.props.screenMode === "pay",
         });
@@ -29,7 +29,11 @@ export class ConfirmationPage extends Component {
         });
         useLayoutEffect(
             () => {
-                if (!this.confirmedOrder || !this.confirmedOrder.uiState?.receiptReady) {
+                if (
+                    !this.confirmedOrder ||
+                    !this.confirmedOrder.uiState?.receiptReady ||
+                    typeof this.confirmedOrder.id !== "number"
+                ) {
                     return;
                 }
 
@@ -52,7 +56,7 @@ export class ConfirmationPage extends Component {
     }
 
     get confirmedOrder() {
-        return this.selfOrder.currentOrder;
+        return this.selfOrder.models["pos.order"].getBy("uuid", this.selfOrder.selectedOrderUuid);
     }
 
     async initOrder(retry = true) {
@@ -96,11 +100,25 @@ export class ConfirmationPage extends Component {
         return true;
     }
 
+    /**
+     * Two call are performed to update-last-changes.
+     *
+     * The first one is to get the last changes from the server and to
+     * be sure that the customer doesn't already try to order something
+     * to the kitchen.
+     *
+     * The second one is to update the last changes with the current
+     * status of the order. Since this application is public, we cannot
+     * fully trust the client data, and we need the server to validate
+     * the changes before sending them to the printer.
+     */
     async printOrderChanges() {
-        if (this.selfOrder.config.self_ordering_mode === "kiosk") {
-            const order = this.confirmedOrder;
-            await this.selfOrder.ticketPrinter.printOrderChanges({ order, webFallback: false });
+        if (this.selfOrder.config.self_ordering_mode === "mobile") {
+            return;
         }
+
+        const order = this.confirmedOrder;
+        await this.selfOrder.ticketPrinter.printOrderChanges({ order, webFallback: false });
     }
 
     async printOrder() {

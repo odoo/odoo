@@ -1,9 +1,10 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { localization } from "@web/core/l10n/localization";
 const { DateTime } = luxon;
 
 export function useTime() {
-    const state = useState({ hours: "", day: "", date: "" });
+    const state = proxy({ hours: "", day: "", date: "" });
     const timeFormat = localization.timeFormat;
     const dateFormat = localization.dateFormat
         .replace(/MM/g, "LLLL")

@@ -75,7 +75,8 @@ test("Basic jump to present when scrolling to outdated messages (DESC, chatter a
     await contains(".o-mail-Chatter", { scroll: 0 });
 });
 
-test("Basic jump to present when scrolling to outdated messages (DESC, chatter non-aside)", async () => {
+test.tags("owl3");
+test.skip("Basic jump to present when scrolling to outdated messages (DESC, chatter non-aside)", async () => {
     patchUiSize({ size: SIZES.MD });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });

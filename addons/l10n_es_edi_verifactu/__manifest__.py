@@ -7,7 +7,6 @@
     'website': "https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/spain.html#veri-factu",
     'depends': ['l10n_es', 'certificate'],
     'data': [
-        'security/ir.model.access.csv',
         'wizard/account_move_reversal_views.xml',
         'wizard/account_resequence_views.xml',
         'views/account_move_views.xml',
@@ -18,6 +17,7 @@
         'views/res_company_views.xml',
         'views/res_config_settings_views.xml',
         'data/ir_cron.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_certificate.xml',

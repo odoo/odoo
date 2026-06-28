@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields
+from odoo import fields, models
 
 
 class SaleReport(models.Model):
@@ -8,7 +8,5 @@ class SaleReport(models.Model):
 
     project_id = fields.Many2one(comodel_name='project.project', readonly=True)
 
-    def _select_additional_fields(self):
-        res = super()._select_additional_fields()
-        res['project_id'] = 's.project_id'
-        return res
+    def _select_dict(self, table):
+        return super()._select_dict(table) | {'project_id': table.order_id.project_id}

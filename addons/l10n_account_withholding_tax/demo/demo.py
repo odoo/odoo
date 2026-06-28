@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
     def _withholding_tax_get_demo_account_ref(self, template_code):
-        for data in self._get_account_tax(template_code).values():
+        for data in self._parse_csv(template_code, 'account.tax').values():
             if data['type_tax_use'] == 'purchase':
                 for line in data.get('repartition_line_ids', []):
                     if line[2]['repartition_type'] == 'tax' and line[2].get('account_id'):
@@ -23,7 +23,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': '2% WTH',
                 'tax_group_id': 'withholding_demo_tax_group',
                 'type_tax_use': 'purchase',
-                'is_withholding_tax_on_payment': True,
+                'is_withholding_tax': True,
                 'amount_type': 'percent',
                 'amount': -2,
                 'price_include_override': 'tax_excluded',

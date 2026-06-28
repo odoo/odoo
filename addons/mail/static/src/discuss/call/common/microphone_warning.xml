@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="discuss.MicrophoneWarning">
+        <div class="p-2 d-flex flex-row gap-1" style="max-width: 300px">
+            <div class="m-1">
+                <t t-if="this.rtc.microphonePermission !== 'granted'">
+                    <i class="fa fa-warning text-warning me-1"/> No microphone permissions
+                </t>
+                <t t-else="">
+                    <div class="fs-5 mb-1"><i class="fa fa-warning text-warning me-1"/> Microphone muted by system</div>
+                    <div>Go to your computer's settings to unmute your mic and increase its level</div>
+                </t>
+            </div>
+            <div class="align-self-start cursor-pointer" t-on-click="this.onClickClose" title="Dismiss warning">
+                <i class="oi oi-large oi-close"/>
+            </div>
+        </div>
+    </t>
+</templates>

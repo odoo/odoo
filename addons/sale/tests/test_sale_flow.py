@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.sale.tests.common import TestSaleCommon
@@ -17,8 +18,8 @@ class TestSaleFlow(TestSaleCommon):
             "name": "Because I am saleman!",
             "login": "saleman",
             "group_ids": [
-                (6, 0, cls.env.user.group_ids.ids),
-                (4, cls.env.ref("account.group_account_user").id),
+                Command.set(cls.env.user.group_ids.ids),
+                Command.link(cls.env.ref("account.group_account_user").id),
             ],
         })
         user.partner_id.email = "saleman@test.com"
@@ -44,40 +45,27 @@ class TestSaleFlow(TestSaleCommon):
 
     def test_qty_delivered(self):
         """Test 'qty_delivered' at-install to avoid the change when 'sale_stock' is installed."""
-        sale_order = (
-            self
-            .env["sale.order"]
-            .with_context(mail_notrack=True, mail_create_nolog=True)
-            .create({
-                "partner_id": self.partner_a.id,
-                "partner_invoice_id": self.partner_a.id,
-                "partner_shipping_id": self.partner_a.id,
-                "order_line": [
-                    (
-                        0,
-                        0,
-                        {
-                            "name": self.company_data["product_order_cost"].name,
-                            "product_id": self.company_data["product_order_cost"].id,
-                            "product_uom_qty": 2,
-                            "qty_delivered": 1,
-                            "price_unit": self.company_data["product_order_cost"].list_price,
-                        },
-                    ),
-                    (
-                        0,
-                        0,
-                        {
-                            "name": self.company_data["product_delivery_cost"].name,
-                            "product_id": self.company_data["product_delivery_cost"].id,
-                            "product_uom_qty": 4,
-                            "qty_delivered": 1,
-                            "price_unit": self.company_data["product_delivery_cost"].list_price,
-                        },
-                    ),
-                ],
-            })
-        )
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "partner_invoice_id": self.partner_a.id,
+            "partner_shipping_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "name": self.company_data["product_order_cost"].name,
+                    "product_id": self.company_data["product_order_cost"].id,
+                    "product_uom_qty": 2,
+                    "qty_delivered": 1,
+                    "price_unit": self.company_data["product_order_cost"].list_price,
+                }),
+                Command.create({
+                    "name": self.company_data["product_delivery_cost"].name,
+                    "product_id": self.company_data["product_delivery_cost"].id,
+                    "product_uom_qty": 4,
+                    "qty_delivered": 1,
+                    "price_unit": self.company_data["product_delivery_cost"].list_price,
+                }),
+            ],
+        })
 
         sale_order.action_confirm()
 

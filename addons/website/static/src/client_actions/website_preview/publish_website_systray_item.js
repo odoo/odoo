@@ -1,11 +1,10 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { deserializeDateTime, formatDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { useService, useBus } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { OptimizeSEODialog } from "@website/components/dialog/seo";
 import { RelativePublishTime } from "./relative_publish_time";
 
@@ -62,7 +61,7 @@ export class PublishSystrayItem extends Component {
         this.actionService = useService("action");
         this.websiteCustomMenus = useService("website_custom_menus");
 
-        this.state = useState({
+        this.state = proxy({
             published: false,
             scheduled: false,
             publishOn: false,

@@ -1,4 +1,4 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 /* global BarcodeDetector */
 
 import { browser } from "@web/core/browser/browser";
@@ -6,7 +6,16 @@ import { delay } from "@web/core/utils/concurrency";
 import { loadJS } from "@web/core/assets";
 import { isVideoElementReady, buildZXingBarcodeDetector } from "./ZXingBarcodeDetector";
 import { CropOverlay } from "./crop_overlay";
-import { Component, onMounted, onWillStart, onWillUnmount, status } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    onWillUnmount,
+    props,
+    proxy,
+    status,
+    t,
+} from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 
@@ -15,22 +24,16 @@ export class BarcodeVideoScanner extends Component {
     static components = {
         CropOverlay,
     };
-    static props = {
-        cssClass: { type: String, optional: true },
-        facingMode: {
-            type: String,
-            validate: (fm) => ["environment", "left", "right", "user"].includes(fm),
-        },
-        close: { type: Function, optional: true },
-        onReady: { type: Function, optional: true },
-        onResult: Function,
-        onError: Function,
-        placeholder: { type: String, optional: true },
-        delayBetweenScan: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        cssClass: "w-100 h-100",
-    };
+    props = props({
+        cssClass: t.string().optional("w-100 h-100"),
+        facingMode: t.selection(["environment", "left", "right", "user"]),
+        close: t.function().optional(),
+        onReady: t.function().optional(),
+        onResult: t.function(),
+        onError: t.function(),
+        placeholder: t.string().optional(),
+        delayBetweenScan: t.number().optional(),
+    });
     /**
      * @override
      */
@@ -42,7 +45,7 @@ export class BarcodeVideoScanner extends Component {
         this.overlayInfo = {};
         this.zoomRatio = 1;
         this.scanPaused = false;
-        this.state = useState({
+        this.state = proxy({
             isReady: false,
         });
 
@@ -129,7 +132,7 @@ export class BarcodeVideoScanner extends Component {
         // FIXME: even if it shouldn't happened, a timeout could be useful here.
         while (!isVideoElementReady(this.videoPreviewRef.el)) {
             await delay(10);
-            if (status(this) === "destroyed"){
+            if (status(this) === "destroyed") {
                 return false;
             }
         }

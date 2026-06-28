@@ -16,7 +16,7 @@ class HrLeaveAllocation(models.Model):
         if 'work_entry_type_id' in fields and self.env.context.get('deduct_extra_hours'):
             domain = Domain('overtime_deductible', '=', True) & Domain('requires_allocation', '=', True)
             if self.env.context.get('deduct_extra_hours_employee_request', False):
-                # Prevent loading manager allocated time off type in self request contexts
+                # Prevent loading manager allocated time type in self request contexts
                 domain &= Domain('employee_requests', '=', True)
             work_entry_type = self.env['hr.work.entry.type'].search(domain, limit=1)
             res['work_entry_type_id'] = work_entry_type.id
@@ -39,28 +39,29 @@ class HrLeaveAllocation(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        deductible = res.employee_id._get_deductible_employee_overtime()
-        for allocation in res:
-            if allocation.overtime_deductible:
-                if deductible[allocation.employee_id] < 0:
-                    raise ValidationError(_('The employee does not have enough overtime hours to request this leave.'))
+        res._check_employee_overtime_balance()
         return res
 
     def write(self, vals):
         res = super().write(vals)
-        if 'number_of_days' not in vals:
+        if 'number_of_days' not in vals and 'work_entry_type_id' not in vals:
             return res
         if not self.env.user.has_group("hr_holidays.group_hr_holidays_user") and any(allocation.state not in ('draft', 'confirm') for allocation in self):
             raise ValidationError(_('Only an Officer or Administrator is allowed to edit the allocation duration in this status.'))
-        deductible = self.employee_id._get_deductible_employee_overtime()
-        for allocation in self.sudo().filtered('overtime_deductible'):
-            if deductible[allocation.employee_id] < 0:
-                raise ValidationError(_('The employee does not have enough overtime hours to request this leave.'))
+        self._check_employee_overtime_balance()
         return res
 
     def action_refuse(self):
         res = super().action_refuse()
         return res
+
+    def _check_employee_overtime_balance(self):
+        for allocation in self:
+            if not allocation.overtime_deductible:
+                continue
+            deductible = allocation.employee_id._get_deductible_employee_overtime()
+            if deductible[allocation.employee_id] < 0:
+                raise ValidationError(_('The employee does not have enough overtime hours to request this leave.'))
 
     def _get_accrual_plan_level_work_entry_prorata(self, level, start_period, start_date, end_period, end_date):
         self.ensure_one()

@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { types as t } from "@odoo/owl";
 import { isInstanceOf } from "../../hoot-dom/hoot_dom_utils";
 import {
     createMock,
@@ -10,10 +11,6 @@ import {
     setSyncValue,
 } from "../hoot_utils";
 import { ensureTest } from "../main_runner";
-
-/**
- * @typedef {"android" | "ios" | "linux" | "mac" | "windows"} Platform
- */
 
 //-----------------------------------------------------------------------------
 // Global
@@ -28,6 +25,12 @@ const {
     TypeError,
 } = globalThis;
 const { userAgent: $userAgent } = navigator;
+
+//-----------------------------------------------------------------------------
+// Types
+//-----------------------------------------------------------------------------
+
+export const T_PLATFORM = t.selection(["android", "ios", "linux", "mac", "windows"]);
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -141,7 +144,7 @@ function getUserAgentBrowser() {
 }
 
 /**
- * @param {Platform} platform
+ * @param {typeof T_PLATFORM} platform
  */
 function makeUserAgent(platform) {
     const userAgent = ["Mozilla/5.0"];
@@ -296,38 +299,26 @@ export class MockServiceWorker extends MockEventTarget {
 export class MockServiceWorkerContainer extends MockEventTarget {
     static publicListeners = ["controllerchange", "message", "messageerror"];
 
+    /** @type {MockServiceWorker | null} */
+    controller = null;
+
+    /**
+     * @private
+     * @type {PromiseWithResolvers<MockServiceWorkerRegistration>}
+     */
+    _readyDef = Promise.withResolvers();
     /**
      * @private
      */
     _readyResolved = false;
-
     /**
      * @private
      * @type {Map<string, MockServiceWorkerRegistration>}
      */
     _registrations = new Map();
 
-    /** @type {MockServiceWorker | null} */
-    controller = null;
-
     get ready() {
-        return this._readyPromise;
-    }
-
-    constructor() {
-        super(...arguments);
-
-        const { promise, resolve } = Promise.withResolvers();
-        /**
-         * @type {Promise<MockServiceWorkerRegistration>}
-         * @private
-         */
-        this._readyPromise = promise;
-        /**
-         * @type {(value: MockServiceWorkerRegistration) => void}
-         * @private
-         */
-        this._resolveReady = resolve;
+        return this._readyDef.promise;
     }
 
     async getRegistration(scope = "/") {
@@ -355,13 +346,23 @@ export class MockServiceWorkerContainer extends MockEventTarget {
 
         if (!this._readyResolved) {
             this._readyResolved = true;
-            this._resolveReady(registration);
+            this._readyDef.resolve(registration);
         }
 
         return registration;
     }
 
     startMessages() {}
+
+    /**
+     * @private
+     */
+    _clear() {
+        this.controller = null;
+        this._readyDef = Promise.withResolvers();
+        this._readyResolved = false;
+        this._registrations.clear();
+    }
 }
 
 export class MockServiceWorkerRegistration {
@@ -426,6 +427,7 @@ export const mockNavigator = createMock(navigator, {
 
 export function cleanupNavigator() {
     permissionStatuses.clear();
+    mockServiceWorker._clear();
     $assign(currentPermissions, getPermissions());
     $assign(mockValues, getMockValues());
 }
@@ -460,7 +462,7 @@ export function mockSendBeacon(callback) {
 }
 
 /**
- * @param {Platform} platform
+ * @param {typeof T_PLATFORM} platform
  */
 export function mockUserAgent(platform = "linux") {
     ensureTest("mockUserAgent");

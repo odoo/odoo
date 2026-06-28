@@ -15,6 +15,13 @@ class ImportCharRequired(models.Model):
     value = fields.Char(required=True)
 
 
+class ImportCharTranslate(models.Model):
+    _name = 'import.char.translate'
+    _description = 'Tests: Base Import Model, Character translate'
+
+    value = fields.Char(translate=True)
+
+
 class ImportCharReadonly(models.Model):
     _name = 'import.char.readonly'
     _description = 'Tests: Base Import Model, Character readonly'
@@ -152,3 +159,11 @@ class PathToProperty(models.Model):
     def _compute_all_import_properties(self):
         for record in self:
             record.all_properties_ids = record.properties_id | record.another_properties_id
+
+
+class ImportBaseTranslation(models.Model):
+    _name = _description = 'import.base.translation'
+
+    name = fields.Char(translate=True)
+    description = fields.Char(translate=True)
+    html = fields.Html(translate=True)

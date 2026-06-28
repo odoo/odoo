@@ -1,9 +1,8 @@
-import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { FileInput } from "@web/core/file_input/file_input";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 
 let nextDialogId = 1;
 
@@ -17,7 +16,7 @@ export class KanbanCoverImageDialog extends Component {
         this.http = useService("http");
         const { record, fieldName } = this.props;
         const attachment = record.data[fieldName];
-        this.state = useState({
+        this.state = proxy({
             selectFile: false,
             selectedAttachmentId: attachment?.id || false,
         });
@@ -64,7 +63,9 @@ export class KanbanCoverImageDialog extends Component {
     }
 
     async setCover() {
-        const value = this.state.selectedAttachmentId ? { id: this.state.selectedAttachmentId } : false;
+        const value = this.state.selectedAttachmentId
+            ? { id: this.state.selectedAttachmentId }
+            : false;
         await this.props.record.update({ [this.props.fieldName]: value }, { save: true });
         this.props.close();
     }

@@ -26,17 +26,16 @@ export function guestNumberIs(num) {
         ...ProductScreen.clickControlButtonMore(),
         {
             content: `guest number is ${num}`,
-            trigger: ProductScreen.controlButtonTrigger("Guests") + `:contains(${num})`,
+            trigger: ProductScreen.controlButtonTrigger("Guest") + `:contains(${num})`,
         },
     ];
 }
-export function OrderButtonNotContain(data) {
+export function OrderButtonContain(data) {
     const steps = [
         {
             isActive: ["desktop"],
             content: "check order button not contain data",
-            trigger: `.product-screen .submit-order:not(:contains("${data}"))`,
-            run: function () {}, // it's a check
+            trigger: `.product-screen .submit-order:contains("${data}")`,
         },
     ];
     return steps;

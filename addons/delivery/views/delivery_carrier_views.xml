@@ -96,7 +96,7 @@
                                 <field name="delivery_type" />
                                 <button string="Install more Providers" name="install_more_provider" type="object" class="oe_link oe_edit_only"/>
                             </div>
-                            <field name="allow_cash_on_delivery"/>
+                            <field name="allow_cash_on_delivery" invisible="not supports_cash_on_delivery"/>
                             <field name="integration_level" widget="radio" invisible="delivery_type == 'fixed' or delivery_type == 'base_on_rule'"/>
                             <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                         </group>
@@ -169,14 +169,14 @@
                                     </group>
                                     <group name="content" string="Content">
                                         <label for="max_weight"/>
-                                        <div name="max_weight_row" class="o_input_box">
-                                            <field name="max_weight"/>
-                                            <field class="o_input_box_overlay_end o_input_box_overlay_inline" name="weight_uom_name"/>
+                                        <div name="max_weight_row" class="o_row">
+                                            <field name="max_weight" class="oe_inline"/>
+                                            <field name="weight_uom_name"/>
                                         </div>
                                         <label for="max_volume"/>
-                                        <div name="max_volume_row" class="o_input_box">
-                                            <field name="max_volume"/>
-                                            <field class="o_input_box_overlay_end o_input_box_overlay_inline" name="volume_uom_name"/>
+                                        <div name="max_volume_row" class="o_row">
+                                            <field name="max_volume" class="oe_inline"/>
+                                            <field name="volume_uom_name"/>
                                         </div>
                                         <field name="must_have_tag_ids"
                                                 widget="many2many_tags"
@@ -222,8 +222,9 @@
     </record>
 
     <menuitem id="sale_menu_action_delivery_carrier_form"
+        name="Deliveries"
         action="action_delivery_carrier_form"
-        parent="sale.menu_sales_config"
-        sequence="4"/>
+        parent="sale.menu_sale_config"
+        sequence="15"/>
 
 </odoo>

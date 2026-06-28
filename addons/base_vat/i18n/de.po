@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-13 18:35+0000\n"
-"PO-Revision-Date: 2026-01-31 12:24+0000\n"
+"POT-Creation-Date: 2026-05-08 17:38+0000\n"
+"PO-Revision-Date: 2026-04-23 11:51+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/"
 "base_vat/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: base_vat
 #. odoo-python
@@ -43,7 +43,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "11111111111 (NIN) or 2222222222 (VKN)"
-msgstr ""
+msgstr "11111111111 (NIN) oder 2222222222 (VKN)"
 
 #. module: base_vat
 #. odoo-python
@@ -73,6 +73,11 @@ msgid "49-098-576 or 49098576"
 msgstr "49-098-576 oder 49098576"
 
 #. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr "Basis-USt.: Aktualisierungen aus IAP VIES synchronisieren"
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
@@ -95,8 +100,6 @@ msgstr "Kontakt"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_country
-#: model:ir.model.fields,field_description:base_vat.field_res_partner__country_id
-#: model:ir.model.fields,field_description:base_vat.field_res_users__country_id
 msgid "Country"
 msgstr "Land"
 
@@ -118,12 +121,6 @@ msgstr "DE123456788 oder 12/345/67890"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "Error while checking the VAT number '%s' against the VIES service."
-msgstr "Fehler beim Abgleich der USt-IdNr. „%s“ mit dem MIAS-Dienst."
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -201,6 +198,12 @@ msgstr "Innergemeinschaft gültig"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "Invalid IAP VIES endpoint"
+msgstr "Ungültiger IAP-VIES-Endpunkt"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "Note: the expected format is %(expected_format)s"
 msgstr "Hinweis: Das erwartete Format ist %(expected_format)s"
 
@@ -211,20 +214,14 @@ msgid "Perform Vies Validation"
 msgstr "MIAS-Validierung durchführen"
 
 #. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
-#: model:ir.model.fields,field_description:base_vat.field_res_users__vat
-msgid "Tax ID"
-msgstr "USt-IdNr."
-
-#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
-"%(expected_note)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
+"(expected_note)s"
 msgstr ""
-"Die %(vat_label)s-Nummer [%(wrong_vat)s] scheint nicht gültig zu sein. "
-"%(expected_note)s"
+"Die %(vat_label)s-Nummer [%(wrong_vat)s] scheint nicht gültig zu sein. %"
+"(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
@@ -237,16 +234,24 @@ msgstr ""
 "gültig zu sein. %(expected_note)s"
 
 #. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_partner__vat
-#: model:ir.model.fields,help:base_vat.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The Intra-Community validity has been updated."
+msgstr "Die innergemeinschaftliche Gültigkeit wurde aktualisiert."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check failed. Please check the Tax ID manually."
 msgstr ""
-"Die Steueridentifikationsnummer. Die Werte hier werden auf der Grundlage des "
-"Länderformats validiert. Sie können „/“ verwenden, um anzuzeigen, dass der "
-"Partner nicht steuerpflichtig ist."
+"Die VIES-Prüfung ist fehlgeschlagen. Prüfen Sie die Steuernummer manuell."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VIES check is pending. The status will be updated soon."
+msgstr ""
+"Die VIES-Prüfung steht noch aus. Der Status wird in Kürze aktualisiert."
 
 #. module: base_vat
 #. odoo-python
@@ -276,6 +281,12 @@ msgstr "Prüfen Sie die USt-IdNr. mit dem europäischen MIAS-Service."
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "XXXXXXXXX [9 digits]"
+msgstr "XXXXXXXXX [9 Ziffern]"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr ""
 "XXXXXXXXX [9 Ziffern] und es sollte die Prüfsumme des Luhn-Algorithmus "
@@ -284,8 +295,8 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "either 11 digits for CPF or 14 digits for CNPJ"
-msgstr "entweder 11 Ziffern für CPF oder 14 Ziffern für CNPJ"
+msgid "either 11 digits for CPF or 14 characters for CNPJ"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python

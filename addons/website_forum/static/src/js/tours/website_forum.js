@@ -1,21 +1,17 @@
-import { _t } from "@web/core/l10n/translation";
 import {
     registerBackendAndFrontendTour,
 } from '@website/js/tours/tour_utils';
-import { stepUtils } from "@web_tour/tour_utils";
 
-registerBackendAndFrontendTour("question_tour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-}, () => [{
+registerBackendAndFrontendTour("question_tour", {}, () => [{
     trigger: ".o_wforum_ask_btn",
     tooltipPosition: "left",
-    content: _t("Create a new post in this forum by clicking on the button."),
+    content: "Create a new post in this forum by clicking on the button.",
     run: "click",
     expectUnloadPage: true,
 }, {
     trigger: "input[name=post_name]",
     tooltipPosition: "top",
-    content: _t("Give your post title."),
+    content: "Give your post title.",
     run: "edit Test",
 },
 {
@@ -23,7 +19,7 @@ registerBackendAndFrontendTour("question_tour", {
 },
 {
     trigger: ".note-editable p",
-    content: _t("Put your question here."),
+    content: "Put your question here.",
     tooltipPosition: "bottom",
     run: "editor Test",
 },
@@ -31,15 +27,14 @@ registerBackendAndFrontendTour("question_tour", {
     trigger: `.note-editable p:not(:text(<br>))`,
 },
 {
-    trigger: ".o_select_menu_toggler",
-    content: _t("Insert tags related to your question."),
+    content: "Insert tags related to your question.",
+    trigger: ".o_select_menu_input",
     tooltipPosition: "top",
-    run: "click",
+    run: "edit Test",
 },
-...stepUtils.editSelectMenuInput(".o_select_menu_input", "Test"),
 {
     content: "Select found select menu item",
-    trigger: ".o_popover.o_select_menu_menu .o_select_menu_item:contains('Test')",
+    trigger: ".o_select_menu_menu .o_select_menu_item:contains('Test')",
     run: 'click',
 },
 {
@@ -49,7 +44,7 @@ registerBackendAndFrontendTour("question_tour", {
 },
 {
     trigger: "button:contains(/^Post/)",
-    content: _t("Click to post your question."),
+    content: "Click to post your question.",
     tooltipPosition: "bottom",
     run: "click",
     expectUnloadPage: true,
@@ -64,13 +59,13 @@ registerBackendAndFrontendTour("question_tour", {
 },
 {
     trigger: "a:contains(Reply).collapsed",
-    content: _t("Click to reply."),
+    content: "Click to reply.",
     tooltipPosition: "bottom",
     run: "click",
 },
 {
     trigger: ".note-editable p",
-    content: _t("Put your answer here."),
+    content: "Put your answer here.",
     tooltipPosition: "bottom",
     run: "editor Test",
 },
@@ -79,7 +74,7 @@ registerBackendAndFrontendTour("question_tour", {
 },
 {
     trigger: "button:contains(\"Post Answer\")",
-    content: _t("Click to post your answer."),
+    content: "Click to post your answer.",
     tooltipPosition: "bottom",
     run: "click",
     expectUnloadPage: true,
@@ -93,7 +88,7 @@ registerBackendAndFrontendTour("question_tour", {
     run: "click",
 }, {
     trigger: ".o_wforum_validate_toggler[data-karma]:first",
-    content: _t("Click here to accept this answer."),
+    content: "Click here to accept this answer.",
     tooltipPosition: "right",
     run: "click",
 }, {

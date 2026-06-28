@@ -89,27 +89,25 @@ class TestSudo(Feedback):
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestACLFeedback(Feedback):
-    """ Tests that proper feedback is returned on ir.model.access errors
-    """
+    """ Tests that proper feedback is returned on ir.access errors """
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        ACL = cls.env['ir.model.access']
-        m = cls.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
-        ACL.search([('model_id', '=', m.id)]).unlink()
-        ACL.create({
+        Access = cls.env['ir.access']
+        model = cls.env['ir.model']._get('test_access_right.some_obj')
+        Access.search([('model_id', '=', model.id)]).unlink()
+        Access.create({
             'name': "read",
-            'model_id': m.id,
+            'model_id': model.id,
             'group_id': cls.group1.id,
-            'perm_read': True,
+            'operation': "r",
         })
-        ACL.create({
+        Access.create({
             'name':  "create-and-read",
-            'model_id': m.id,
+            'model_id': model.id,
             'group_id': cls.group0.id,
-            'perm_read': True,
-            'perm_create': True,
+            'operation': "cr",
         })
         cls.record = cls.env['test_access_right.some_obj'].create({'val': 5})
         # values are in cache, clear them up for the test
@@ -168,23 +166,26 @@ class TestIRRuleFeedback(Feedback):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.ref('base.group_user').write({'user_ids': [Command.link(cls.user.id)]})
-        cls.model = cls.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
+        cls.model = cls.env['ir.model']._get('test_access_right.some_obj')
         cls.record = cls.env['test_access_right.some_obj'].create({
             'val': 0,
         }).with_user(cls.user)
         cls.maxDiff = None
+        cls.env['ir.access'].search([('model_id', '=', cls.model.id)]).unlink()
 
     def _make_rule(self, name, domain, global_=False, attr='write'):
-        return self.env['ir.rule'].create({
+        operation = (
+            'c' if attr == 'create' else
+            'r' if attr == 'read' else
+            'u' if attr == 'write' else
+            'd'
+        )
+        return self.env['ir.access'].create({
             'name': name,
             'model_id': self.model.id,
-            'groups': [] if global_ else [Command.link(self.group2.id)],
-            'domain_force': domain,
-            'perm_read': False,
-            'perm_write': False,
-            'perm_create': False,
-            'perm_unlink': False,
-            'perm_' + attr: True,
+            'group_id': False if global_ else self.group2.id,
+            'operation': operation,
+            'domain': domain,
         })
 
     def test_local(self):
@@ -210,12 +211,14 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, {self.user.name} (id={self.user.id}) doesn't have 'write' access to:
 - {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id})
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
         )
-
+        # create access on ChildModel requires create access on parent model
+        self._make_rule('rule 1', '[]', attr='create')
+        self._make_rule('rule 2', '[]', attr='read')  # because `some_id` has `bypass_search_access` equals to `True`
         ChildModel = self.env['test_access_right.inherits']
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             ChildModel.with_user(self.user).create({'some_id': self.record.id, 'val': 2})
@@ -226,7 +229,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, {self.user.name} (id={self.user.id}) doesn't have 'write' access to:
 - {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id})
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
@@ -244,7 +247,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, {self.user.name} (id={self.user.id}) doesn't have 'write' access to:
 - {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id})
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 - rule 1
 
@@ -254,6 +257,7 @@ If you really, really need access, perhaps you can win over your friendly admini
     def test_globals_all(self):
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[("val", "=", 78)]', global_=True)
+        self._make_rule('rule 2', '[]')
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
@@ -263,7 +267,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, {self.user.name} (id={self.user.id}) doesn't have 'write' access to:
 - {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id})
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 - rule 1
 
@@ -276,6 +280,7 @@ If you really, really need access, perhaps you can win over your friendly admini
         """
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[(1, "=", 1)]', global_=True)
+        self._make_rule('rule 2', '[]')
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
@@ -285,7 +290,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, {self.user.name} (id={self.user.id}) doesn't have 'write' access to:
 - {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id})
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
@@ -305,7 +310,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, {self.user.name} (id={self.user.id}) doesn't have 'write' access to:
 - {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id})
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 - rule 2
 - rule 3
@@ -329,7 +334,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, {self.user.name} (id={self.user.id}) doesn't have 'write' access to:
 - {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id})
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
@@ -341,12 +346,11 @@ If you really, really need access, perhaps you can win over your friendly admini
         then no information about the company is shown.
         """
         ChildModel = self.env['test_access_right.child'].sudo()
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'rule 0',
-            'model_id': self.env['ir.model'].search([('model', '=', ChildModel._name)]).id,
-            'groups': [],
-            'domain_force': '[("parent_id.company_id", "=", user.company_id.id)]',
-            'perm_read': True,
+            'model_id': self.env['ir.model']._get(ChildModel._name).id,
+            'operation': 'crud',
+            'domain': '[("parent_id.company_id", "=", user.company_id.id)]',
         })
         self.record.sudo().company_id = self.env['res.company'].create({'name': 'Brosse Inc.'})
         self.user.sudo().company_ids = [Command.link(self.record.company_id.id)]
@@ -360,7 +364,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, {self.user.name} (id={self.user.id}) doesn't have 'read' access to:
 - {child_record._description}, {child_record.display_name} ({child_record._name}: {child_record.id})
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
@@ -382,7 +386,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, {self.user.name} (id={self.user.id}) doesn't have 'read' access to:
 - {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id}, company={self.record.sudo().company_id.display_name})
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.
@@ -422,12 +426,33 @@ Sorry, {self.user.name} (id={self.user.id}) doesn't have 'read' access to:
 - {record_1._description}, {record_1.display_name} ({record_1._name}: {record_1.id}, company={record_1.company_id.display_name})
 - {record_2._description}, {record_2.display_name} ({record_2._name}: {record_2.id}, company={record_2.company_id.display_name})
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.
 
 Note: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!""")
+
+    def test_access_error_reports_correct_rules_with_archived_record(self):
+        """ Ensure archived records do not cause unrelated rules to be reported as failing
+        """
+        self._make_rule('rule 0', '[("company_id", "in", company_ids + [False])]', global_=True, attr='read')
+        self._make_rule('rule 1', '[("val", "=", 1)]', global_=False, attr='read')
+        self.record.sudo().active = False
+        with self.debug_mode(), self.assertRaises(AccessError) as ctx:
+            _ = self.record.val
+        self.assertEqual(
+            ctx.exception.args[0],
+            """Uh-oh! Looks like you have stumbled upon some top-secret records.
+
+Sorry, %s (id=%s) doesn't have 'read' access to:
+- %s, %s (%s: %s)
+
+Blame the following accesses:
+- rule 1
+
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
+        % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

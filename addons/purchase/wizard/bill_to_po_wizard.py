@@ -12,7 +12,7 @@ class BillToPoWizard(models.TransientModel):
 
     def action_add_to_po(self):
         aml_ids = [abs(record_id) for record_id in self.env.context.get('active_ids') if record_id < 0]
-        lines_to_add = self.env['account.move.line'].browse(aml_ids).filtered(lambda l: l.product_id)
+        lines_to_add = self.env['account.move.line'].browse(aml_ids).sorted().filtered(lambda l: l.product_id and not l.purchase_line_id)
         if not lines_to_add:
             raise UserError(_("There are no products to add to the Purchase Order. Are these Down Payments?"))
         line_vals = lines_to_add._prepare_line_values_for_purchase()
@@ -50,7 +50,7 @@ class BillToPoWizard(models.TransientModel):
             })
         po_currency = self.purchase_order_id.currency_id
         company = self.purchase_order_id.company_id
-        date = self.purchase_order_id.date_order or fields.Date.today()
+        date = self.purchase_order_id.date_order
         line_vals = [
             {
                 'name': _("Down Payment (ref: %(ref)s)", ref=aml.display_name),

@@ -6,10 +6,9 @@
         <field name="model">account.tax</field>
         <field name="inherit_id" ref="account.view_tax_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='country_id']" position="after">
-                <field name="l10n_sa_exemption_reason_code" invisible="type_tax_use != 'sale' or country_code != 'SA' or amount != 0"/>
+            <xpath expr="//field[@name='ubl_cii_tax_exemption_reason']" position="attributes">
+                <attribute name="invisible" separator=" or " add="not l10n_sa_show_exemption_reason"></attribute>
             </xpath>
         </field>
     </record>
-
 </odoo>

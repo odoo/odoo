@@ -7,7 +7,9 @@ import { _t } from "@web/core/l10n/translation";
 
 export class LoginScreen extends Component {
     static template = "point_of_sale.LoginScreen";
-    static props = {};
+    static props = {
+        orderUuid: { type: String, optional: true },
+    };
     static storeOnOrder = false;
     setup() {
         this.pos = usePos();

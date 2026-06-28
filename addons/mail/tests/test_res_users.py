@@ -8,6 +8,7 @@ from unittest.mock import patch
 
 from odoo.addons.base.models.res_users import ResUsersPatchedInTest
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.tests import RecordCapturer, tagged, users
 from odoo.tools import mute_logger
@@ -249,15 +250,16 @@ class TestUserSettings(MailCommon):
         settings.channel_notifications = False
 
         with self.assertBus(
-                [self.user_employee],
-                [{
-                    'type': 'res.users.settings',
-                    'payload': {
-                        'id': settings.id,
-                        'channel_notifications': "no_notif",
-                    },
-                }]):
-            settings.set_res_users_settings({'channel_notifications': "no_notif"})
+            BusResult(
+                self.user_employee,
+                "res.users.settings",
+                {
+                    "id": settings.id,
+                    "channel_notifications": "no_notif",
+                },
+            ),
+        ):
+            settings.set_res_users_settings({"channel_notifications": "no_notif"})
 
     @users('employee')
     def test_set_res_users_settings_should_set_settings_properly(self):

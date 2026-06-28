@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { FormController } from "@web/views/form/form_controller";
 
 export class FormControllerWithHTMLExpander extends FormController {
@@ -6,7 +6,7 @@ export class FormControllerWithHTMLExpander extends FormController {
 
     setup() {
         super.setup();
-        this.htmlExpanderState = useState({ reload: true });
+        this.htmlExpanderState = proxy({ reload: true });
         const oldOnNotebookPageChange = this.onNotebookPageChange;
         this.onNotebookPageChange = (notebookId, page) => {
             oldOnNotebookPageChange(notebookId, page);

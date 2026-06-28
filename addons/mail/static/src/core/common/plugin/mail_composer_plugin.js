@@ -1,8 +1,27 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
+import { isBlock } from "@html_editor/utils/blocks";
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
+
+const ALLOWED_TAGS = [
+    "A",
+    "B",
+    "DIV",
+    "EM",
+    "I",
+    "LI",
+    "OL",
+    "P",
+    "S",
+    "SPAN",
+    "STRONG",
+    "U",
+    "UL",
+];
+
+const PRESERVED_CLASSNAMES = new Set(["o_mail_redirect", "o-discuss-mention"]);
 
 /**
  * This plugin works with the composer used in Discuss, ChatWindow and Chatter.
@@ -10,9 +29,10 @@ import { withSequence } from "@html_editor/utils/resource";
  */
 export class MailComposerPlugin extends Plugin {
     static id = "mail_composer";
-    static dependencies = ["clipboard", "hint", "input", "selection"];
+    static dependencies = ["clipboard", "dom", "hint", "history", "input", "selection"];
     resources = {
         on_will_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
+        paste_odoo_editor_html_overrides: this.handlePasteHtmlOverride.bind(this),
         should_bypass_paste_image_files_predicates: () => true,
         on_link_created_handlers: (linkEl) => (linkEl.target = "_blank"),
         hints: [
@@ -53,5 +73,64 @@ export class MailComposerPlugin extends Plugin {
             "focusout",
             this.config.composerPluginDependencies.onFocusout
         );
+    }
+    handlePasteHtmlOverride(selection, sanitizedFragment) {
+        if (sanitizedFragment.childNodes.length === 0) {
+            return false;
+        }
+        const removeStyle = (node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const tagName = node.nodeName.toUpperCase();
+                if (tagName === "BR") {
+                    return;
+                }
+                if (!ALLOWED_TAGS.includes(tagName)) {
+                    node.replaceWith(document.createTextNode(node.textContent));
+                    return;
+                }
+                node.removeAttribute("style");
+                if (node.hasAttribute("class")) {
+                    const preservedClasses = [...node.classList].filter((className) =>
+                        PRESERVED_CLASSNAMES.has(className)
+                    );
+                    if (preservedClasses.length) {
+                        node.className = preservedClasses.join(" ");
+                    } else {
+                        node.removeAttribute("class");
+                    }
+                }
+                // Recursively sanitize child nodes
+                [...node.childNodes].forEach(removeStyle);
+            }
+        };
+        [...sanitizedFragment.childNodes].forEach(removeStyle);
+        flattenStructuralDivWrappers(sanitizedFragment);
+        this.dependencies.dom.insert(sanitizedFragment);
+        this.dependencies.history.commit();
+        return true;
+    }
+}
+
+/**
+ * Unwrap plain `<div>` wrappers that carry no attributes after sanitization
+ * and contain only block-level children. Pasted content from Discuss/Owl UI
+ * often produces deeply nested structural wrappers (each `<div>` only wraps
+ * other blocks); they are pure noise and prevent operations like
+ * backspace-merge from working across them.
+ */
+function flattenStructuralDivWrappers(root) {
+    let changed = true;
+    while (changed) {
+        changed = false;
+        for (const div of [...root.querySelectorAll("div")]) {
+            if (
+                div.attributes.length === 0 &&
+                div.childNodes.length > 0 &&
+                [...div.childNodes].every((child) => isBlock(child))
+            ) {
+                div.replaceWith(...div.childNodes);
+                changed = true;
+            }
+        }
     }
 }

@@ -13,8 +13,11 @@
                         <field name="name"/>
                         <field name="type"/>
                     </group>
+                    <group string="Explanation">
+                        <field name="explanation" nolabel="1"/>
+                    </group>
                 </sheet>
-                </form>
+            </form>
             </field>
         </record>
         <record id="action_view_tree" model="ir.ui.view">
@@ -47,8 +50,7 @@
             <field name="view_id" ref="action_view_tree"/>
             <field name="search_view_id" ref="action_view_search"/>
         </record>
-        <menuitem id="next_id_6" name="Actions" parent="base.menu_custom" sequence="5"/>
-        <menuitem action="ir_sequence_actions" id="menu_ir_sequence_actions" parent="next_id_6"/>
+
 
         <!-- ir.actions.report -->
 
@@ -74,7 +76,7 @@
                                     </div>
                             </button>
                             <button name="associated_view" type="object"
-                                    invisible="report_type not in ['qweb-pdf', 'qweb-html', 'qweb-text']" icon='fa-code'
+                                    invisible="'qweb' not in report_type" icon='fa-code'
                                     class="oe_stat_button">
                                     <div class="o_field_widget o_stat_info">
                                         <span class="o_stat_text">Qweb Views</span>
@@ -86,7 +88,7 @@
                                 <field name="name"/>
                                 <field name="report_type"/>
                                 <field name="paperformat_id"
-                                       invisible="report_type != 'qweb-pdf'"/>
+                                       invisible="'pdf' not in report_type"/>
                             </group>
                             <group>
                                 <field name="model"/>
@@ -102,6 +104,11 @@
                                 <group>
                                     <field name="attachment_use"/>
                                     <field name="attachment"/>
+                                </group>
+                            </page>
+                            <page name="explanation" string="Explanation">
+                                <group>
+                                    <field name="explanation" nolabel="1"/>
                                 </group>
                             </page>
                         </notebook>
@@ -145,8 +152,6 @@
             <field name="view_id" ref="act_report_xml_view_tree"/>
             <field name="search_view_id" ref="act_report_xml_search_view"/>
         </record>
-        <menuitem action="ir_action_report" id="menu_ir_action_report" parent="base.next_id_6"/>
-
         <!-- ir.actions.client -->
 
         <record id="view_client_action_form" model="ir.ui.view">
@@ -170,6 +175,9 @@
                         </group>
                         <group name="help" string="Help">
                             <field name="help" nolabel="1" class="oe-bordered-editor"/>
+                        </group>
+                        <group name="explanation" string="Explanation">
+                            <field name="explanation" nolabel="1" class="oe-bordered-editor"/>
                         </group>
                     </sheet>
                 </form>
@@ -285,8 +293,6 @@
             <field name="view_id" ref="view_window_action_form"/>
             <field name="act_window_id" ref="ir_action_window"/>
         </record>
-        <menuitem action="ir_action_window" id="menu_ir_action_window" parent="base.next_id_6"/>
-
         <record id="view_client_action_tree" model="ir.ui.view">
             <field name="name">Client Actions</field>
             <field name="model">ir.actions.client</field>
@@ -303,7 +309,6 @@
             <field name="res_model">ir.actions.client</field>
             <field name="view_id" ref="view_client_action_tree"/>
         </record>
-        <menuitem action="ir_client_actions_report" id="menu_ir_client_actions_report" parent="base.next_id_6"/>
 
         <!-- ir.actions.server -->
 
@@ -402,8 +407,9 @@
                             </div>
                             <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'object_write'">
                                 <field name="evaluation_type" class="oe_inline"/>
+                                <field name="update_property" invisible="True"/> <!-- The field is store=True and readonly=False, in this view we want to save the value from compute/onchange -->
                                 <label for="update_path" string="Select Field:" class="fw-bold ps-2"/>
-                                <field name="update_path" widget="field_selector" class="oe_inline" options="{'model': 'model_name', 'allow_properties': False}" required="state == 'object_write'"/>
+                                <field name="update_path" widget="field_selector" class="oe_inline" options="{'model': 'model_name', 'allow_properties': True}" required="state == 'object_write'"/>
                                 <field name="update_field_id" invisible="True"/>  <!-- The field is store=True and readonly=False, in this view we want to save the value from compute/onchange -->
                                 <field name="update_related_model_id" invisible="True"/> <!-- This field is required for 'resource_ref' to compute possible m2m and m2o values -->
                                 <span invisible="evaluation_type != 'value' or update_field_type not in ['one2many', 'many2many']">by</span>
@@ -499,6 +505,9 @@
 env['res.partner'].create({'name': partner_name})
     </pre>
                                     </div>
+                                </page>
+                                <page string="Explanation" name="explanation">
+                                    <field name="explanation" nolabel="1" class="oe-bordered-editor"/>
                                 </page>
                                 <page string="Usage" name="usage" invisible="1"/>
                             </notebook>
@@ -596,8 +605,6 @@ env['res.partner'].create({'name': partner_name})
                 'search_default_toplevel_actions': 1,
             }</field>
         </record>
-        <menuitem action="action_server_action" id="menu_server_action" parent="base.next_id_6"/>
-
         <!-- ir.embedded.actions -->
 
         <record id="embedded_action_form" model="ir.ui.view">
@@ -646,8 +653,6 @@ env['res.partner'].create({'name': partner_name})
             <field name="res_model">ir.embedded.actions</field>
             <field name="view_id" ref="embedded_action_tree"/>
         </record>
-        <menuitem action="ir_embedded_action" id="menu_ir_embedded_action" parent="base.next_id_6"/>
-
         <!-- ir.actions.todo -->
 
         <record id="ir_actions_todo_tree" model="ir.ui.view">
@@ -706,7 +711,6 @@ env['res.partner'].create({'name': partner_name})
             <field name="view_id" ref="ir_actions_todo_tree"/>
             <field name="help">The configuration wizards are used to help you configure a new instance of Odoo. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
         </record>
-        <menuitem id="menu_ir_actions_todo_form" action="act_ir_actions_todo_form" parent="base.next_id_6"/>
         <record id="action_run_ir_action_todo" model="ir.actions.server">
             <field name="name">Config: Run Remaining Action Todo</field>
             <field name="model_id" ref="model_res_config"/>

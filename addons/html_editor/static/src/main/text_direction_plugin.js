@@ -2,12 +2,12 @@ import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
 import { closestElement } from "../utils/dom_traversal";
-import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
+import { isContentEditable, isDirectionSwitched } from "@html_editor/utils/dom_info";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export class TextDirectionPlugin extends Plugin {
     static id = "textDirection";
-    static dependencies = ["selection", "history", "split", "format"];
+    static dependencies = ["selection", "history", "split"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -29,28 +29,32 @@ export class TextDirectionPlugin extends Plugin {
     };
 
     setup() {
-        if (this.config.direction) {
+        if (this.config.direction && !this.editable.closest("[dir]")) {
             this.editable.setAttribute("dir", this.config.direction);
         }
         this.direction = this.config.direction || "ltr";
     }
 
     switchDirection() {
-        const selection = this.dependencies.split.splitSelection();
-        const targetedTextNodes = [
-            selection.anchorNode,
-            ...this.dependencies.selection.getTargetedNodes(),
-        ].filter((n) => isTextNode(n) && isContentEditable(n) && n.nodeValue.trim().length);
+        const targetedNodes = this.dependencies.selection
+            .getTargetedNodes()
+            .filter(isContentEditable);
         const blocks = new Set(
-            targetedTextNodes.map(
-                (textNode) =>
-                    closestElement(textNode, "ul,ol") ||
-                    closestElement(textNode, "[data-embedded='toggleBlock']") ||
-                    closestBlock(textNode)
+            targetedNodes.map(
+                (node) =>
+                    closestElement(node, "ul,ol") ||
+                    closestElement(node, "[data-embedded='toggleBlock']") ||
+                    closestBlock(node)
             )
         );
 
-        const shouldApplyStyle = !this.dependencies.format.isSelectionFormat("switchDirection");
+        if (!blocks.size) {
+            return;
+        }
+
+        const shouldApplyStyle = ![...blocks].every((block) =>
+            isDirectionSwitched(block, this.editable)
+        );
 
         for (const block of blocks) {
             for (const node of block.querySelectorAll("ul,ol")) {
@@ -73,6 +77,6 @@ export class TextDirectionPlugin extends Plugin {
                 element.style.setProperty("text-align", "right");
             }
         }
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 }

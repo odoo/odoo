@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { WORKER_STATE } from "@bus/workers/websocket_worker";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
@@ -11,7 +11,7 @@ export class BusMonitoringService {
     isConnectionLost = false;
 
     constructor(env, services) {
-        const reactiveThis = reactive(this);
+        const reactiveThis = proxy(this);
         reactiveThis.setup(env, services);
         return reactiveThis;
     }

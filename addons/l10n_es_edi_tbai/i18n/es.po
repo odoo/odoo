@@ -1,31 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_es_edi_tbai
+# * l10n_es_edi_tbai
 #
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 12:31+0000\n"
-"PO-Revision-Date: 2025-01-13 15:08+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-06-12 18:21+0000\n"
+"PO-Revision-Date: 2026-04-14 15:08+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-2-l10n/"
+"l10n_es_edi_tbai/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-
-#. module: l10n_es_edi_tbai
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_LROE_240_inner
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_LROE_240_inner_recibidas
-msgid "1.0"
-msgstr "1.0"
-
-#. module: l10n_es_edi_tbai
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_LROE_240_inner
-msgid "1.1"
-msgstr "1.1"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__l10n_es_edi_tbai_document__state__accepted
@@ -165,6 +157,12 @@ msgstr "Hacienda Foral de Bizkaia"
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__res_company__l10n_es_tbai_tax_agency__gipuzkoa
 msgid "Hacienda Foral de Gipuzkoa"
 msgstr "Diputación Foral de Gipuzkoa"
+
+#. module: l10n_es_edi_tbai
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_LROE_recibidas_common
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_invoice_factura
+msgid "I"
+msgstr ""
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_move__id
@@ -319,6 +317,11 @@ msgid "Manage certificates (TicketBAI)"
 msgstr "Gestionar certificados (TicketBAI)"
 
 #. module: l10n_es_edi_tbai
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_invoice_sujetos
+msgid "N"
+msgstr ""
+
+#. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_l10n_es_edi_tbai_document__name
 msgid "Name"
 msgstr "Nombre"
@@ -352,6 +355,18 @@ msgstr ""
 "TicketBAI no se podrá firmar.\n"
 
 #. module: l10n_es_edi_tbai
+#: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_bank_statement_line__l10n_es_original_invoice_credited
+#: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_move__l10n_es_original_invoice_credited
+msgid "Original Invoice Credited"
+msgstr ""
+
+#. module: l10n_es_edi_tbai
+#: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_bank_statement_line__l10n_es_tbai_original_invoice_date
+#: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_move__l10n_es_tbai_original_invoice_date
+msgid "Original Invoice Date (TicketBAI)"
+msgstr ""
+
+#. module: l10n_es_edi_tbai
 #. odoo-python
 #: code:addons/l10n_es_edi_tbai/models/l10n_es_edi_tbai_document.py:0
 msgid "Please configure the Tax ID on your company for TicketBAI."
@@ -362,6 +377,14 @@ msgstr "Configure el NIF en su compañía par TicketBai."
 #: code:addons/l10n_es_edi_tbai/models/l10n_es_edi_tbai_document.py:0
 msgid "Please configure the certificate for TicketBAI."
 msgstr "Por favor, configure el certificado para TicketBAI/SII."
+
+#. module: l10n_es_edi_tbai
+#. odoo-python
+#: code:addons/l10n_es_edi_tbai/models/account_move.py:0
+msgid ""
+"Please create the credit note from the original invoice. If that's not "
+"possible, fill in the 'Original Invoice Credited' field."
+msgstr ""
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
@@ -667,6 +690,14 @@ msgstr ""
 "cabeza de cadena (%s)"
 
 #. module: l10n_es_edi_tbai
+#. odoo-python
+#: code:addons/l10n_es_edi_tbai/models/l10n_es_edi_tbai_document.py:0
+msgid ""
+"TicketBAI: For reversal documents without a source invoice in Odoo, you must "
+"provide the original invoice number and date"
+msgstr ""
+
+#. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_res_company__l10n_es_tbai_chain_sequence_id
 msgid "TicketBai account.move chain sequence"
 msgstr "Secuencia en cadena del account.move de TicketBai"
@@ -693,6 +724,12 @@ msgstr "Adjunto XML"
 #: code:addons/l10n_es_edi_tbai/models/account_move.py:0
 msgid "You cannot delete a move that has a TicketBAI chain id."
 msgstr "No puede eliminar un asiento que tiene un ID en cadena de TicketBai."
+
+#. module: l10n_es_edi_tbai
+#. odoo-python
+#: code:addons/l10n_es_edi_tbai/models/account_move.py:0
+msgid "You cannot reset to draft a locked journal entry."
+msgstr ""
 
 #. module: l10n_es_edi_tbai
 #. odoo-python

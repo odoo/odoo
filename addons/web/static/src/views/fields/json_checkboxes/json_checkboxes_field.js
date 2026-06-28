@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -16,7 +15,7 @@ export class JsonCheckboxes extends Component {
     };
 
     setup() {
-        this.checkboxes = useState(this.props.record.data[this.props.name]);
+        this.checkboxes = proxy(this.props.record.data[this.props.name]);
         this.debouncedCommitChanges = debounce(this.commitChanges.bind(this), 100);
 
         useRecordObserver((record) => {

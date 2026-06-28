@@ -12,7 +12,7 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.storable_product.name = "Test CAC Product"
-        cls.provider.write({"state": "enabled", "is_published": True})
+        cls.provider.write({"is_live": True, "is_published": True})
         cls.in_store_dm.warehouse_ids[0].partner_id = cls.env["res.partner"].create({
             **cls.dummy_partner_address_values,
             "name": "Shop 1",
@@ -25,6 +25,7 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
         Test the basic flow of buying with click and collect as a public user with more than
         one delivery method available.
         """
+        self.website.warehouse_id = self._create_warehouse()  # Only C&C has stock available
         self.start_tour("/shop", "website_sale_collect_widget")
 
     def test_default_location_is_set_for_pick_up_in_store(self):

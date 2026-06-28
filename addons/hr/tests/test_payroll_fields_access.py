@@ -56,6 +56,16 @@ class TestPayrollFieldsAccess(TransactionCase):
             if field.groups and ('hr.group_hr_manager' in field.groups or 'hr_payroll.group_hr_payroll_user' in field.groups)
         }
         whitelist_field_names = [
+            'contract_date_start',
+            'contract_date_end',
+            'fixed_term',
+            'trial_date_end',
+            'date_start',
+            'date_end',
+            'is_current',
+            'is_past',
+            'is_future',
+            'is_in_contract',
             'resource_calendar_id',
             'hours_per_week',
             'hours_per_day',
@@ -80,7 +90,8 @@ class TestPayrollFieldsAccess(TransactionCase):
             'new_bike_model_id',
             'originated_offer_id',
             'is_non_resident',
-            'structure_id'
+            'structure_id',
+            'attendance_based',
         ]
         missing_group_field_names = [
             f_name

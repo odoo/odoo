@@ -13,7 +13,7 @@ import {
     queryFirst,
     runAllTimers,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
+import { animationFrame, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
 import { Component, onWillUpdateProps, xml } from "@odoo/owl";
 import {
     SELECTORS,
@@ -40,7 +40,6 @@ import {
     mountWithSearch,
     onRpc,
     removeFacet,
-    selectGroup,
     serverState,
     toggleMenuItem,
     toggleSearchBarMenu,
@@ -283,8 +282,8 @@ test("search input is focused when being toggled", async () => {
     class Parent extends Component {
         static template = xml`
             <div>
-                <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
-                <SearchBar toggler="searchBarToggler"/>
+                <t t-component="this.searchBarToggler.component" t-props="this.searchBarToggler.props"/>
+                <SearchBar toggler="this.searchBarToggler"/>
             </div>
         `;
         static components = { SearchBar };
@@ -796,8 +795,8 @@ test("reference fields are supported in search view", async () => {
 });
 
 test("expand an asynchronous menu and change the selected item with the mouse during expansion", async () => {
-    const def = new Deferred();
-    onRpc("name_search", () => def);
+    const def = Promise.withResolvers();
+    onRpc("name_search", () => def.promise);
     await mountWithSearch(SearchBar, {
         resModel: "partner",
         searchMenuTypes: [],
@@ -819,8 +818,8 @@ test("expand an asynchronous menu and change the selected item with the mouse du
 });
 
 test("expand an asynchronous menu and change the selected item with the arrow during expansion", async () => {
-    const def = new Deferred();
-    onRpc("name_search", () => def);
+    const def = Promise.withResolvers();
+    onRpc("name_search", () => def.promise);
     await mountWithSearch(SearchBar, {
         resModel: "partner",
         searchMenuTypes: [],
@@ -967,8 +966,8 @@ test("check kwargs of a rpc call with a domain", async () => {
 });
 
 test("should wait label promises for many2one search defaults", async () => {
-    const def = new Deferred();
-    onRpc("read", () => def);
+    const def = Promise.withResolvers();
+    onRpc("read", () => def.promise);
 
     mountWithSearch(SearchBar, {
         resModel: "partner",
@@ -987,8 +986,8 @@ test("should wait label promises for many2one search defaults", async () => {
 
 test("should wait label promises for many2many search defaults", async () => {
     Partner._fields.m2m = fields.Many2many({ relation: "partner" });
-    const def = new Deferred();
-    onRpc("read", () => def);
+    const def = Promise.withResolvers();
+    onRpc("read", () => def.promise);
 
     mountWithSearch(SearchBar, {
         resModel: "partner",
@@ -1789,7 +1788,9 @@ test("facets display with any / not any operator (check brackets)", async functi
 
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([
-        `Company : ( Bar : ( Bool ${label("not set")} and Bool ${label("not set")} ) and Bar : ( Bool ${label("set")} ) ) or Bar ${label("not set")}`,
+        `Company : ( Bar : ( Bool ${label("not set")} and Bool ${label(
+            "not set"
+        )} ) and Bar : ( Bool ${label("set")} ) ) or Bar ${label("not set")}`,
     ]);
     expect.verifySteps([`/web/domain/validate`]);
 });
@@ -1898,59 +1899,6 @@ test("dropdown menu last element is 'Custom Filter...'", async () => {
     expect(".o_searchview_autocomplete .o-dropdown-item:last").toHaveText("Custom Filter...");
 });
 
-test("order by count resets when there is no group left", async () => {
-    const searchBar = await mountWithSearch(SearchBar, {
-        resModel: "partner",
-        searchMenuTypes: ["groupBy", "filter"],
-        searchViewId: false,
-        searchViewArch: `
-            <search>
-                <filter string="Foo" name="foo" domain="[('foo', '=', 'qsdf')]"/>
-            </search>
-        `,
-    });
-    searchBar.env.searchModel.canOrderByCount = true;
-    await toggleSearchBarMenu();
-    await selectGroup("bool");
-    await selectGroup("bar");
-    await toggleMenuItem("Foo");
-    expect(".fa-sort").toHaveCount(1);
-    await contains(".fa-sort", { visible: false }).click();
-    expect(".fa-sort-numeric-desc").toHaveCount(1);
-    await contains(".fa-sort-numeric-desc").click();
-    expect(".fa-sort-numeric-asc").toHaveCount(1);
-
-    await toggleSearchBarMenu();
-    await toggleMenuItem("Foo");
-    expect(".fa-sort-numeric-asc").toHaveCount(1);
-
-    await toggleMenuItem("Foo");
-    await toggleMenuItem("Bool");
-    expect(".fa-sort-numeric-asc").toHaveCount(1);
-    await toggleMenuItem("Bar");
-    expect(".fa-sort-numeric-asc").toHaveCount(0);
-
-    await toggleMenuItem("Bar");
-    expect(".fa-sort-numeric-asc").toHaveCount(0);
-    expect(".fa-sort").toHaveCount(1);
-    await contains(".fa-sort", { visible: false }).click();
-    await contains(".fa-sort-numeric-desc").click();
-    expect(".fa-sort-numeric-asc").toHaveCount(1);
-    await toggleSearchBarMenu();
-    await toggleMenuItem("Bool");
-    expect(".fa-sort-numeric-asc").toHaveCount(1);
-
-    await contains(".o_facet_remove").click();
-    expect(".fa-sort-numeric-asc").toHaveCount(1);
-    await contains(".o_facet_remove").click();
-    expect(".o_searchview_facet").toHaveCount(0);
-
-    await toggleSearchBarMenu();
-    await toggleMenuItem("Bar");
-    expect(".fa-sort-numeric-asc").toHaveCount(0);
-    expect(".fa-sort").toHaveCount(1);
-});
-
 test("subitems have a load more item if there is more records available", async () => {
     for (let i = 0; i < 20; i++) {
         Partner._records.push({
@@ -2028,8 +1976,8 @@ test("single name_search call and no flicker when holding ArrowRight", async fun
 
 test.tags("desktop");
 test("no crash when search component is destroyed with input", async () => {
-    const def = new Deferred();
-    onRpc("web_read", () => def);
+    const def = Promise.withResolvers();
+    onRpc("web_read", () => def.promise);
     defineWebModels();
     await mountWebClient();
     await getService("action").doAction(1);

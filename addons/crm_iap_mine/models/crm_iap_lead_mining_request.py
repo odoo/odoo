@@ -14,8 +14,6 @@ DEFAULT_ENDPOINT = 'https://iap-services.odoo.com'
 
 MAX_LEAD = 200
 
-MAX_CONTACT = 5
-
 CREDIT_PER_COMPANY = 1
 CREDIT_PER_CONTACT = 1
 
@@ -31,14 +29,13 @@ class CrmIapLeadMiningRequest(models.Model):
             return 'opportunity'
 
     def _default_country_ids(self):
-        return self.env.user.company_id.country_id
+        return self.env.company.country_id
 
     name = fields.Char(string='Request Number', required=True, readonly=True, default=lambda self: _('New'), copy=False)
     state = fields.Selection([('draft', 'Draft'), ('error', 'Error'), ('done', 'Done')], string='Status', required=True, default='draft')
 
     # Request Data
     lead_number = fields.Integer(string='Number of Leads', required=True, default=3)
-    search_type = fields.Selection([('companies', 'Companies'), ('people', 'Companies and their Contacts')], string='Target', required=True, default='companies')
     error_type = fields.Selection([
         ('credits', 'Insufficient Credits'),
         ('no_result', 'No Result'),
@@ -58,41 +55,24 @@ class CrmIapLeadMiningRequest(models.Model):
     # Company Criteria Filter
     filter_on_size = fields.Boolean(string='Filter on Size', default=False)
     company_size_min = fields.Integer(string='Size', default=1)
-    company_size_max = fields.Integer(default=1000)
+    company_size_max = fields.Integer(default=100)
     country_ids = fields.Many2many('res.country', string='Countries', default=_default_country_ids)
     state_ids = fields.Many2many('res.country.state', string='States')
     available_state_ids = fields.One2many('res.country.state', compute='_compute_available_state_ids')
     industry_ids = fields.Many2many('crm.iap.lead.industry', string='Industries')
 
-    # Contact Generation Filter
-    contact_number = fields.Integer(string='Number of Contacts', default=10)
-    contact_filter_type = fields.Selection([('role', 'Role'), ('seniority', 'Seniority')], string='Filter on', default='role')
-    preferred_role_id = fields.Many2one('crm.iap.lead.role', string='Preferred Role')
-    role_ids = fields.Many2many('crm.iap.lead.role', string='Other Roles')
-    seniority_id = fields.Many2one('crm.iap.lead.seniority', string='Seniority')
-
     # Fields for the blue tooltip
     lead_credits = fields.Char(compute='_compute_tooltip', readonly=True)
-    lead_contacts_credits = fields.Char(compute='_compute_tooltip', readonly=True)
-    lead_total_credits = fields.Char(compute='_compute_tooltip', readonly=True)
 
-    @api.onchange('lead_number', 'contact_number')
+    @api.depends('lead_number')
     def _compute_tooltip(self):
         for record in self:
             company_credits = CREDIT_PER_COMPANY * record.lead_number
-            contact_credits = CREDIT_PER_CONTACT * record.contact_number
-            total_contact_credits = contact_credits * record.lead_number
-            record.lead_contacts_credits = _(
-                "Up to %(credit_count)d additional credits will be consumed to identify %(contact_count)d contacts per company.",
-                credit_count=contact_credits * company_credits,
-                contact_count=record.contact_number,
-            )
             record.lead_credits = _(
                 "%(credit_count)d credits will be consumed to find %(company_count)d companies.",
                 credit_count=company_credits,
                 company_count=record.lead_number,
             )
-            record.lead_total_credits = _("This makes a total of %d credits for this request.", total_contact_credits + company_credits)
 
     @api.depends('lead_ids.lead_mining_request_id')
     def _compute_lead_count(self):
@@ -157,13 +137,6 @@ class CrmIapLeadMiningRequest(models.Model):
         elif self.lead_number > MAX_LEAD:
             self.lead_number = MAX_LEAD
 
-    @api.onchange('contact_number')
-    def _onchange_contact_number(self):
-        if self.contact_number <= 0:
-            self.contact_number = 1
-        elif self.contact_number > MAX_CONTACT:
-            self.contact_number = MAX_CONTACT
-
     @api.onchange('country_ids')
     def _onchange_country_ids(self):
         self.state_ids = []
@@ -198,7 +171,7 @@ class CrmIapLeadMiningRequest(models.Model):
         self.ensure_one()
         payload = {
             'lead_number': self.lead_number,
-            'search_type': self.search_type,
+            'search_type': 'companies',
             'countries': [{
                 'code': country.code,
                 'states': self.state_ids.filtered(lambda state: state in country.state_ids).mapped('code'),
@@ -209,23 +182,10 @@ class CrmIapLeadMiningRequest(models.Model):
             payload.update({'company_size_min': self.company_size_min,
                             'company_size_max': self.company_size_max})
         if self.industry_ids:
-            # accumulate all reveal_ids (separated by ',') into one list
-            # eg: 3 records with values: "175,176", "177" and "190,191"
-            # will become ['175','176','177','190','191']
-            all_industry_ids = [
-                reveal_id.strip()
-                for reveal_ids in self.mapped('industry_ids.reveal_ids')
-                for reveal_id in reveal_ids.split(',')
-            ]
-            payload['industry_ids'] = all_industry_ids
-        if self.search_type == 'people':
-            payload.update({'contact_number': self.contact_number,
-                            'contact_filter_type': self.contact_filter_type})
-            if self.contact_filter_type == 'role':
-                payload.update({'preferred_role': self.preferred_role_id.reveal_id,
-                                'other_roles': self.role_ids.mapped('reveal_id')})
-            elif self.contact_filter_type == 'seniority':
-                payload['seniority'] = self.seniority_id.reveal_id
+            # accumulate all sic_group into one list
+            # eg: 3 records with values: 42, 54 and 1
+            # will become [42,54,1]
+            payload['sic_groups'] = self.industry_ids.mapped('sic_group')
         return payload
 
     def _perform_request(self):
@@ -279,7 +239,6 @@ class CrmIapLeadMiningRequest(models.Model):
             template_values = data
             template_values.update({
                 'flavor_text': _("Opportunity created by Odoo Lead Generation"),
-                'people_data': data.get('people_data'),
                 'country': country.name,
                 'zip_code': data.get('zip'),
                 'country_id': country.id,
@@ -299,8 +258,7 @@ class CrmIapLeadMiningRequest(models.Model):
     def _lead_vals_from_response(self, data):
         self.ensure_one()
         company_data = data
-        people_data = []
-        lead_vals = self.env['crm.iap.lead.helpers'].lead_vals_from_response(self.lead_type, self.team_id.id, self.tag_ids.ids, self.user_id.id, company_data, people_data)
+        lead_vals = self.env['crm.iap.lead.helpers'].lead_vals_from_response(self.lead_type, self.team_id.id, self.tag_ids.ids, self.user_id.id, company_data)
         lead_vals['lead_mining_request_id'] = self.id
         return lead_vals
 

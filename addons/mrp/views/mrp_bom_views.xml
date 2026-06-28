@@ -12,7 +12,7 @@
             <field name="name">mrp.bom.byproduct.form</field>
             <field name="model">mrp.bom.byproduct</field>
             <field name="arch" type="xml">
-                <form string="Byproduct">
+                <form string="Byproduct" create="0" edit="0">
                     <group>
                         <field name="allowed_operation_ids" invisible="1"/>
                         <field name="company_id"/>
@@ -22,9 +22,9 @@
                             <field name="product_qty"/>
                             <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                         </div>
-                        <field name="operation_id" groups="mrp.group_mrp_routings" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                        <field name="operation_id" groups="mrp.group_mrp_routings"/>
                         <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
-                        <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
+                        <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                     </group>
                 </form>
             </field>
@@ -55,9 +55,9 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="company_id" invisible="1"/>
-                            <field name="product_tmpl_id" context="{'default_is_storable': True}"/>
+                            <field name="product_tmpl_id" context="{'default_is_storable': True}" placeholder="Product to build..."/>
                             <field name="allow_operation_dependencies" invisible="1"/>
-                            <field name="product_id" groups="product.group_product_variant" context="{'default_is_storable': True}"/>
+                            <field name="product_id" groups="product.group_product_variant" options="{'no_create': True}"/>
                             <field name="product_id" groups="!product.group_product_variant" invisible="1"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row">
@@ -95,8 +95,6 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" context="{'default_is_storable': True}"/>
                                     <field name="product_tmpl_id" column_invisible="True"/>
-                                    <button name="action_see_attachments" type="object" icon="fa-files-o" aria-label="Product Attachments" title="Product Attachments" class="float-end" column_invisible="context.get('parent_production_id')"/>
-                                    <field name="attachments_count" class="text-start" string=" " column_invisible="context.get('parent_production_id')"/>
                                     <field name="product_qty"/>
                                     <field name="parent_product_tmpl_id" column_invisible="True" />
                                     <field name="uom_id" options="{'no_open': True, 'no_create': True, 'quantity_field': 'product_qty'}" groups="uom.group_uom" widget="many2one_uom"/>
@@ -111,7 +109,7 @@
                             name="operations"
                             invisible="type not in ('normal', 'phantom')"
                             groups="mrp.group_mrp_routings">
-                                <field name="operation_ids" invisible="operation_ids.length == 0" 
+                                <field name="operation_ids" invisible="operation_ids.length == 0"
                                 context="{'bom_id_invisible': True, 'default_bom_id': id, 'list_view_ref': 'mrp.mrp_routing_workcenter_bom_tree_view', 'target': 'new'}"/>
                                 <div invisible="operation_ids.length != 0">
                                     <div class="o_mrp_routing_image bill_of_material position-relative">
@@ -169,30 +167,32 @@
                        </page>
                         <page string="Miscellaneous" name="miscellaneous">
                             <group>
-                                <group>
-                                    <field name="picking_type_id" invisible="type == 'phantom'" groups="stock.group_adv_location"/>
-                                    <label for="produce_delay" string="Manuf. Lead Time"/>
-                                    <div class="o_input_box">
-                                        <field name="produce_delay"/>
-                                        <span class="o_input_box_overlay_end o_input_box_overlay_inline">days</span>
+                                <group invisible="type == 'phantom'">
+                                    <field name="picking_type_id" options="{'no_quick_create': True}" groups="stock.group_adv_location"/>
+                                    <label for="produce_delay"/>
+                                    <div class="o_row">
+                                        <field name="produce_delay" class="oe_inline"/>
+                                        <span>days</span>
                                     </div>
                                     <label for="days_to_prepare_mo"/>
-                                    <div class="o_input_box">
-                                        <field name="days_to_prepare_mo"/>
-                                        <span class="o_input_box_overlay_end o_input_box_overlay_inline">days</span>
-                                        <button name="action_compute_bom_days" type="object"
-                                                help="Compute the days required to resupply all components from BoM, by either buying or manufacturing the components and/or subassemblies."
-                                                class="btn btn-link o_input_box_overlay_end fa fa-calculator"/>
+                                    <div class="o_row">
+                                        <field name="days_to_prepare_mo" class="oe_inline"/>
+                                        <span>days</span>
+                                        <button class="btn btn-link" type="button">
+                                            <field name="json_popover" widget="mrp_bom_popover"/>
+                                        </button>
                                     </div>
-                                    <field name="enable_batch_size" widget="boolean_toggle"/>
-                                    <div class="o_input_box" invisible="type != 'normal'">
-                                        <field name="batch_size" invisible="not enable_batch_size" decoration-danger="batch_size &lt;= 0.0"/>
-                                        <field name="uom_id" groups="uom.group_uom" readonly="1" invisible="not enable_batch_size" class="o_input_box_overlay_end o_input_box_overlay_inline"/>
+                                    <label for="batch_size" invisible="type != 'normal'"/>
+                                    <div class="o_row" invisible="type != 'normal'">
+                                        <field name="enable_batch_size"/>
+                                        <field name="batch_size" class="w-50" invisible="not enable_batch_size" decoration-danger="batch_size &lt;= 0.0"/>
+                                        <field name="uom_id" groups="uom.group_uom" readonly="1" invisible="not enable_batch_size"/>
                                     </div>
+                                    <field name="continuous" invisible="type != 'normal'" groups="mrp.group_mrp_routings"/>
                                 </group>
                                 <group>
                                     <field name="ready_to_produce" invisible="type == 'phantom'" string="Manufacturing Readiness" widget="radio" groups="mrp.group_mrp_routings"/>
-                                    <field name="allow_operation_dependencies" groups="mrp.group_mrp_workorder_dependencies"/>
+                                    <field name="allow_operation_dependencies" groups="mrp.group_mrp_routings"/>
                                     <field name="note"/>
                                 </group>
                             </group>
@@ -289,26 +289,35 @@
             <field name="res_model">mrp.bom.line</field>
             <field name="path">used_in_boms</field>
             <field name="domain">[]</field>
-            <field name="view_mode">list</field>
+            <field name="view_mode">list,pivot</field>
         </record>
 
         <record id="mrp_bom_line_view_list" model="ir.ui.view">
             <field name="name">mrp.bom.line.view.list</field>
             <field name="model">mrp.bom.line</field>
             <field name="arch" type="xml">
-                <list create="False" delete="False" action="action_open_parent_bom" type="object">
-                    <field name="bom_product_tmpl_id"/>
-                    <field name="bom_code" optional="show"/>
-                    <field name="bom_type"/>
-                    <field name="bom_product_id" groups="product.group_product_variant" optional="hide"/>
-                    <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
-                    <field name="bom_product_qty" string="Quantity" optional="hide"/>
-                    <field name="bom_product_uom_id" string="Unit" groups="uom.group_uom" optional="hide"/>
-                    <field name="product_id" string="Component Variant" column_invisible="context.get('component_variant_count') == 1"/>
-                    <field name="product_qty" string="Component Quantity" optional="hide" width="130px"/>
-                    <field name="uom_id" string="Component Unit" groups="uom.group_uom" optional="hide"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <list create="0" multi_edit="1" action="action_open_parent_bom" type="object">
+                    <field name="bom_product_tmpl_id" readonly="1" string="Final Product" optional="show" /> 
+                    <field name="bom_id" readonly="1" string="Bill of Material" optional="hide"/>
+                    <field name="product_id" string="Component" optional="show" context="{'default_is_storable': True}"/>
+                    <field name="product_qty"/>
+                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
+                    <field name="operation_id" optional="hide" options="{'no_create': True}" groups="mrp.group_mrp_routings"/>
+                    <field name="bom_product_template_attribute_value_ids" optional="hide" options="{'no_create': True}" groups="product.group_product_variant" widget="many2many_tags"/>
                 </list>
+            </field>
+        </record>
+
+        <record id="mrp_bom_line_view_pivot" model="ir.ui.view">
+            <field name="name">mrp.bom.line.view.pivot</field>
+            <field name="model">mrp.bom.line</field>
+            <field name="arch" type="xml">
+                <pivot display_quantity="0" default_order="product_id asc">
+                    <field name="bom_product_tmpl_id" string="Final Product"/>
+                    <field name="bom_id" string="Bill of Material" type="col"/>
+                    <field name="product_id" string="Component" type="row"/>
+                    <field name="product_qty" type="measure"/>
+                </pivot>
             </field>
         </record>
 
@@ -318,7 +327,10 @@
             <field name="arch" type="xml">
                 <search string="Search BoM Line">
                     <field name="bom_code" string="Bill of Materials" filter_domain="['|', ('bom_code', 'ilike', self), ('bom_product_tmpl_id', 'ilike', self)]"/>
-                    <field name="bom_product_tmpl_id" string="Product"/>
+                    <field name="product_id" string="Component"/>
+                    <field name="bom_product_tmpl_id" string="Final Product"/>
+                    <field name="operation_id" groups="mrp.group_mrp_routings"/>
+                    <field name="bom_product_template_attribute_value_ids"/>
                     <filter string="Manufacturing" name="normal" domain="[('bom_type', '=', 'normal')]"/>
                     <filter string="Kit" name="phantom" domain="[('bom_type', '=', 'phantom')]"/>
                     <separator/>
@@ -353,10 +365,10 @@
                                 <label for="product_qty" string="Quantity"/>
                                 <div class="o_row">
                                     <field name="product_qty"/>
-                                    <field name="uom_id" options="{'no_open':True,'no_create':True, 'quantity_field': 'product_qty'}" groups="uom.group_uom" widget="many2one_uom"/>
+                                    <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                                 </div>
                                 <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
-                                <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
+                                <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                             </group>
                             <group string="Operation">
                                 <field name="company_id" invisible="1"/>
@@ -382,6 +394,23 @@
             <field name="name">Bill of Materials</field>
             <field name="res_model">mrp.bom</field>
             <field name="domain">[]</field> <!-- Force empty -->
+        </record>
+
+        <record id="action_open_bom_lines" model="ir.actions.server">
+            <field name="name">Compare BoMs</field>
+            <field name="model_id" ref="mrp.model_mrp_bom"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_bom"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = {
+                    'type': 'ir.actions.act_window',
+                    'name': 'BoM Lines',
+                    'res_model': 'mrp.bom.line',
+                    'views': [(env.ref('mrp.mrp_bom_line_view_pivot').id, 'pivot'), (env.ref('mrp.mrp_bom_line_view_list').id, 'list')],
+                    'domain': [('bom_id', 'in', env.context.get('active_ids'))],
+                }
+            </field>
         </record>
     </data>
 </odoo>

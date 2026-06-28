@@ -4,7 +4,6 @@ import configuratorTourUtils from "@sale/js/tours/product_configurator_tour_util
 import * as tourUtils from "@sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('sale_product_configurator_edition_tour', {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
         ...tourUtils.createNewSalesOrder(),
@@ -18,8 +17,8 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
             trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk (TEST) (Aluminium, White)"))',
         },
         ...configuratorTourUtils.saveConfigurator(),
-        tourUtils.editLineMatching("Customizable Desk (TEST) (Aluminium, White)", ""),
-        tourUtils.editConfiguration(),
+        ...tourUtils.clickSomewhereElse(),
+        tourUtils.editConfiguration("Customizable Desk (TEST) (Aluminium, White)"),
         {
             // check updated legs
             trigger: 'table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] span:contains("Customizable Desk")) td>div[name="ptal"]:has(div>label:contains("Legs")) label:has(span:contains("Aluminium")) ~ input:checked',
@@ -38,7 +37,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
         },
         {
             trigger:
-                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk")) label[style="background-color:#000000"] input:not(:visible)',
+                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk")) label[style*="rgb(0, 0, 0)"] input:not(:visible)',
             run: "click",
         },
         {
@@ -46,12 +45,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
             trigger: 'div[name="o_sale_product_configurator_name"]:contains("Customizable Desk (TEST) (Custom, Black)")',
         },
         ...configuratorTourUtils.saveConfigurator(),
-        tourUtils.editLineMatching("Customizable Desk (TEST) (Custom, Black)", "Custom: nice custom value"),
-        tourUtils.editConfiguration(),
+        ...tourUtils.clickSomewhereElse(),
+        tourUtils.editConfiguration("Customizable Desk (TEST) (Custom, Black)"),
         configuratorTourUtils.setCustomAttribute("Customizable Desk", "Legs", "another nice custom value"),
         ...configuratorTourUtils.saveConfigurator(),
-        tourUtils.editLineMatching("Customizable Desk (TEST) (Custom, Black)", "Custom: another nice custom value"),
-        tourUtils.editConfiguration(),
+        ...tourUtils.clickSomewhereElse(),
+        tourUtils.editConfiguration("Customizable Desk (TEST) (Custom, Black)"),
         {
             trigger: 'table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] span:contains("Customizable Desk")) td>div[name="ptal"]:has(div>label:contains("Legs")) label:has(span:contains("Steel")) ~ input',
             run: "click",
@@ -61,6 +60,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
         // Mr Tajine Saucisse uses the pricelist that has a rule when 2 or more products. Price is 600
         configuratorTourUtils.assertPriceTotal("1,200.00"),
         ...configuratorTourUtils.saveConfigurator(),
+        ...tourUtils.clickSomewhereElse(),
         {
             // check quantity
             trigger: 'td.o_data_cell:contains("2.00")',

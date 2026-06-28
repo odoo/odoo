@@ -9,9 +9,11 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools, _
+from odoo.addons.website.tools import text_from_html
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import is_html_empty
+from odoo.tools.misc import format_duration
 
 _logger = logging.getLogger(__name__)
 
@@ -28,6 +30,7 @@ class SlideChannel(models.Model):
         'website.seo.metadata',
         'website.published.multi.mixin',
         'website.searchable.mixin',
+        'website.structured_data.mixin',
     ]
     _order = 'sequence, id'
     _partner_unfollow_enabled = True
@@ -252,8 +255,7 @@ class SlideChannel(models.Model):
 
     @api.depends('slide_ids.is_published')
     def _compute_slide_last_update(self):
-        for record in self:
-            record.slide_last_update = fields.Date.today()
+        self.slide_last_update = fields.Date.context_today(self)
 
     @api.depends('channel_partner_all_ids.channel_id', 'channel_partner_all_ids.member_status')
     def _compute_members_counts(self):
@@ -487,6 +489,28 @@ class SlideChannel(models.Model):
             """ % {'table_name': self._table}
             self.env.cr.execute(query)
 
+    def _populate_description_short(self, vals):
+        """ Populate the empty ``vals['description_short']`` with the non-empty ``vals['description']`` for the ``self``
+            record if the field `description_short` was not explicitly modified before.
+        """
+        if self:
+            self.ensure_one()
+        if not vals.get('description'):
+            return
+        description_dict = v if isinstance((v := vals.get('description')), dict) else {self.env.lang or 'en_US': v}
+        description_short_dict = v if isinstance((v := vals.get('description_short', {})), dict) else {self.env.lang or 'en_US': v or ''}
+        for lang, description in description_dict.items():
+            if (
+                is_html_empty(description_short_dict.get(lang)) and not is_html_empty(description)
+                and (self.with_context(lang=lang).description == self.with_context(lang=lang).description_short)
+            ):
+                description_short_dict[lang] = description
+        vals['description_short'] = (
+            description_short_dict[lang]
+            if len(description_short_dict) == 1 and lang in description_short_dict
+            else description_short_dict
+        )
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -495,8 +519,7 @@ class SlideChannel(models.Model):
                 vals['channel_partner_ids'] = [(0, 0, {
                     'partner_id': self.env.user.partner_id.id
                 })]
-            if not is_html_empty(vals.get('description')) and is_html_empty(vals.get('description_short')):
-                vals['description_short'] = vals['description']
+            self.browse()._populate_description_short(vals)
 
         channels = super(SlideChannel, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
 
@@ -519,9 +542,8 @@ class SlideChannel(models.Model):
         return vals_list
 
     def write(self, vals):
-        # If description_short wasn't manually modified, there is an implicit link between this field and description.
-        if not is_html_empty(vals.get('description')) and is_html_empty(vals.get('description_short')) and self.description == self.description_short:
-            vals['description_short'] = vals.get('description')
+        if vals.get('description'):
+            self._populate_description_short(vals)
 
         res = super().write(vals)
 
@@ -608,6 +630,9 @@ class SlideChannel(models.Model):
         if message.rating_value and message.is_current_user_or_guest_author:
             self.env.user._add_karma(self.karma_gen_channel_rank, self, _("Course Ranked"))
         return message
+
+    def _get_customer_portal_message_types(self):
+        return ["comment", "email"]
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return []
@@ -1040,8 +1065,6 @@ class SlideChannel(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        with_description = options['displayDescription']
-        with_date = options['displayDetail']
         my = options.get('my')
         search_tags = options.get('tag')
         slide_category = options.get('slide_category')
@@ -1061,20 +1084,16 @@ class SlideChannel(models.Model):
                 domain.append([('tag_ids', 'in', tags_.ids)])
         if slide_category and 'nbr_%s' % slide_category in self:
             domain.append([('nbr_%s' % slide_category, '>', 0)])
-        search_fields = ['name', 'tag_ids.name']
-        fetch_fields = ['name', 'website_url', 'tag_ids']
+        search_fields = ['name', 'tag_ids.name', 'description_short']
+        fetch_fields = ['name', 'website_url', 'total_time', 'description_short']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'search_item_metadata': {'name': 'total_time', 'type': 'text'},
+            'image_url': {'name': 'image_url', 'type': 'html'},
             'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
+            'description': {'name': 'description_short', 'type': 'text', 'html': True, 'match': True},
         }
-        if with_description:
-            search_fields.append('description_short')
-            fetch_fields.append('description_short')
-            mapping['description'] = {'name': 'description_short', 'type': 'text', 'html': True, 'match': True}
-        if with_date:
-            fetch_fields.append('slide_last_update')
-            mapping['detail'] = {'name': 'slide_last_update', 'type': 'date'}
         return {
             'model': 'slide.channel',
             'base_domain': domain,
@@ -1082,12 +1101,17 @@ class SlideChannel(models.Model):
             'fetch_fields': fetch_fields,
             'mapping': mapping,
             'icon': 'fa-graduation-cap',
+            'group_name': self.env._("Courses"),
+            'sequence': 80,
         }
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for channel, data in zip(self, results_data):
             data['tag_ids'] = channel.tag_ids.read(['name'])
+            data['image_url'] = '/web/image/slide.channel/%s/image_128' % data['id']
+            if data['total_time']:
+                data['total_time'] = format_duration(data['total_time'])
         return results_data
 
     def _get_placeholder_filename(self, field):
@@ -1099,3 +1123,64 @@ class SlideChannel(models.Model):
     @api.model
     def _allow_publish_rating_stats(self):
         return True
+
+    def _prepare_jsonld_vals(self):
+        self.ensure_one()
+        website = self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        description = self.description_short and text_from_html(self.description_short, True)
+        if not description and self.description:
+            description = text_from_html(self.description, True)
+        vals = {
+            '@type': 'Course',
+            '@id': f'{self.website_absolute_url}/#course',
+            'name': self.name,
+            'provider': {'@id': f'{base_url}/#organization'},
+        }
+        if description:
+            vals['description'] = description
+        if self.website_url:
+            vals['url'] = f'{base_url}{self.website_url}'
+        if image_url := self.env['website'].image_url(self, 'image_1024'):
+            vals['image'] = f'{base_url}{image_url}'
+        return vals
+
+    def _build_course_detail_jsonld_vals(self):
+        self.ensure_one()
+        vals = self._prepare_jsonld_vals()
+        vals['offers'] = {
+            '@type': 'Offer',
+            'price': 0,
+            'priceCurrency': self.env.company.currency_id.name,
+        }
+        if self.slide_last_update:
+            vals['dateModified'] = self._to_iso_datetime(self.slide_last_update)
+        if self.rating_count:
+            vals['aggregateRating'] = {
+                '@type': 'AggregateRating',
+                'ratingValue': self.rating_avg_stars,
+                'ratingCount': self.rating_count,
+            }
+        if self.user_id:
+            vals['editor'] = {'@type': 'Person', 'name': self.user_id.name}
+        if lessons := self.slide_content_ids.filtered('is_published'):
+            vals['hasPart'] = [lesson._prepare_jsonld_vals() for lesson in lessons]
+        return vals
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._("Courses"), '/slides'))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _get_jsonld_dict(self, is_detail_page=False):
+        schemas = super()._get_jsonld_dict(is_detail_page)
+        if is_detail_page:
+            schemas.append(self._build_course_detail_jsonld_vals())
+            return schemas
+        if self:
+            schemas.append(self._build_collectionpage_jsonld_vals(
+                self.env._("Courses"), '/slides', self, embed_items=True,
+            ))
+        return schemas

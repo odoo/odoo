@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { KanbanArchParser } from "./kanban_arch_parser";
-import { KanbanCompiler } from "./kanban_compiler";
+import { CardCompiler } from "@web/views/card/card_compiler";
 import { KanbanController } from "./kanban_controller";
 import { KanbanRenderer } from "./kanban_renderer";
 
@@ -12,7 +12,7 @@ export const kanbanView = {
     Controller: KanbanController,
     Model: RelationalModel,
     Renderer: KanbanRenderer,
-    Compiler: KanbanCompiler,
+    Compiler: CardCompiler,
 
     buttonTemplate: "web.KanbanView.Buttons",
 

@@ -81,5 +81,9 @@
                 ref('outgoing_shipment_with_carrier_done'),
             ]"/>
         </function>
+
+        <record id="printer.zebra_printer_demo" model="printer.printer">
+            <field name="report_ids" eval="[(4, ref('product.report_product_template_label_zpl'))]" />
+        </record>
     </data>
 </odoo>

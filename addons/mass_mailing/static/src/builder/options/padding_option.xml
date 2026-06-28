@@ -1,8 +1,17 @@
 <templates>
     <t t-name="mass_mailing.HorizontalPaddingOption">
         <BuilderRow label.translate="Padding ↔">
-            <BuilderNumberInput title.translate="Left" styleAction="'padding-left'" unit="'px'"/>
-            <BuilderNumberInput title.translate="Right" styleAction="'padding-right'" unit="'px'"/>
+            <t t-set="left">Left</t>
+            <t t-set="right">Right</t>
+            <t t-set="sameLangDir" t-value="this.env.langDir.content === this.env.langDir.builder"/>
+            <BuilderNumberInput
+                title="this.env.langDir.builder === 'ltr' ? left : right"
+                styleAction="sameLangDir ? 'padding-left' : 'padding-right'"
+                unit="'px'"/>
+            <BuilderNumberInput
+                title="this.env.langDir.builder === 'ltr' ? right : left"
+                styleAction="sameLangDir ? 'padding-right' : 'padding-left'"
+                unit="'px'"/>
         </BuilderRow>
     </t>
     <t t-name="mass_mailing.VerticalPaddingOption">

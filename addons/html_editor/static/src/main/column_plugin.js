@@ -25,7 +25,9 @@ function isUnremovableColumn(node, root) {
 function columnIsAvailable(numberOfColumns) {
     return (selection) => {
         const row = closestElement(selection.anchorNode, ".o_text_columns .row");
-        return !(row && row.childElementCount === numberOfColumns);
+        return row
+            ? row.childElementCount !== numberOfColumns
+            : closestBlock(selection.anchorNode)?.parentNode?.isContentEditable;
     };
 }
 
@@ -86,6 +88,16 @@ export class ColumnPlugin extends Plugin {
                 text: _t("Empty column"),
             },
         ],
+        /** Resizing Parameters */
+        resizing_parameters: [
+            {
+                resizableElementsSelector: "div[class^='col-']",
+                parentContainerSelector: ".o_text_columns .row",
+                allowedEdges: ["left", "right"],
+                minSize: 44,
+                hoverClass: "o_resize_handle",
+            },
+        ],
         is_node_removable_predicates: (node, root) => {
             if (isUnremovableColumn(node, root)) {
                 return false;
@@ -138,7 +150,7 @@ export class ColumnPlugin extends Plugin {
         }
 
         this.dependencies.selection.setSelection(selectionToRestore);
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     createColumnsFromList(anchor, li, numberOfColumns) {
@@ -170,7 +182,7 @@ export class ColumnPlugin extends Plugin {
             anchorNode: columns[0].firstElementChild,
             anchorOffset: 0,
         });
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     removeColumns(anchor) {
@@ -220,7 +232,6 @@ export class ColumnPlugin extends Plugin {
 
     createEmptyParagraph() {
         const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-        baseContainer.append(this.document.createElement("br"));
         return baseContainer;
     }
 
@@ -245,7 +256,6 @@ export class ColumnPlugin extends Plugin {
                 const column = this.document.createElement("div");
                 column.classList.add(`col-${columnSize}`, "o-contenteditable-true");
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                baseContainer.append(this.document.createElement("br"));
                 column.append(baseContainer);
                 lastColumn.after(column);
                 lastColumn = column;

@@ -6,8 +6,8 @@
             <span class="o-mail-FollowerList-unfollowBtn text-danger d-flex align-items-center flex-grow-1 px-3 fw-bold">
                 Unfollow
             </span>
-            <span class="o-mail-Follower-action btn btn-icon rounded-0 p-0 opacity-50 opacity-100-hover me-1" title="Edit subscription" t-on-click.stop="(ev) => this.onClickEdit(ev)">
-                <i class="fa fa-fw fa-pencil"/>
+            <span class="o-mail-Follower-action btn btn-icon rounded-0 p-0 opacity-50 opacity-100-hover me-1" title="Edit Notification Preferences" t-on-click.stop="(ev) => this.onClickEdit(ev)">
+                <i class="fa fa-fw fa-bell"/>
             </span>
         </DropdownItem>
         <DropdownItem t-else="" class="'o-mail-FollowerList-followBtn text-success'" onSelected="() => this.onClickFollow()">

@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.SelectPartnerButton">
-        <button class="set-partner btn btn-secondary btn-lg lh-lg text-truncate w-auto" t-on-click="() => this.pos.selectPartner()">
-            <div t-if="this.props.partner" t-out="this.props.partner.name" class="text-truncate text-action" />
+        <button class="set-partner btn btn-lg lh-lg"
+            t-on-click="() => this.pos.selectPartner()"
+            t-attf-class="
+                {{this.ui.isSmall and this.props.partner ? 'btn-outline-secondary active text-action' : 'btn-secondary'}}
+                {{!this.ui.isSmall and 'text-truncate'}}
+            ">
+            <t t-if="this.ui.isSmall"><i class="fa fa-user w-100"/></t>
+            <div t-elif="this.props.partner" t-out="this.props.partner.name" class="text-truncate text-action" />
             <t t-else="">Customer</t>
         </button>
     </t>

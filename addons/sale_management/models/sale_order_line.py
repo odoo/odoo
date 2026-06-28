@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
+from odoo.fields import Command, Domain
 
 
 class SaleOrderLine(models.Model):
@@ -11,34 +12,66 @@ class SaleOrderLine(models.Model):
         string="Optional Line", copy=True, default=False
     )  # Whether this section's lines are optional in the portal.
 
-    # === COMPUTE METHODS === #
+    # === PUBLIC === #
 
-    @api.depends("product_id")
-    def _compute_name(self):
-        # Take the description on the order template if the product is present in it
-        super()._compute_name()
-        for line in self:
-            order = line.order_id
-            if line.product_id and order.sale_order_template_id and line._use_template_name():
-                for template_line in order.sale_order_template_id.sale_order_template_line_ids:
-                    if line.product_id == template_line.product_id and template_line.name:
-                        # If a specific description was set on the template, use it
-                        # Otherwise the description is handled by the super call
-                        lang = order.partner_id.lang
-                        line.name = (
-                            template_line.with_context(lang=lang).name
-                            + line.with_context(
-                                lang=lang
-                            )._get_sale_order_line_multiline_description_variants()
-                        )
-                        break
+    def save_section_template(self):
+        """Create a `sale.order.template` from a section and its related lines.
 
-    def _use_template_name(self):
-        """Decide whether the quotation template description should be used for this line (if any
-        template line matches the current one).
+        Given a section line of a sale order, this method collects the section
+        itself and all its related lines, and stores them as an inactive
+        ``sale.order.template`` with template_type ``section``. If a template with
+        the same name and user already exists, its lines are replaced;
+        otherwise, a new template is created.
+
+        :return: created/updated section template values
         """
         self.ensure_one()
-        return True
+        section_lines = self.order_id.order_line.filtered(
+            lambda line: (
+                line.product_type != "combo"
+                and not line.combo_item_id
+                and self._is_line_in_section(line)
+            )
+        )
+
+        domain = (
+            Domain("name", "=", self.name)
+            & Domain("company_id", "=", self.order_id.company_id.id)
+            & Domain("template_type", "=", "section")
+            & Domain("create_uid", "=", self.env.user.id)
+        )
+
+        existing_template = self.env["sale.order.template"].search(domain, limit=1)
+
+        template_lines = [
+            Command.create(section_line._prepare_template_line_values())
+            for section_line in self + section_lines
+        ]
+
+        if existing_template:
+            vals = {"sale_order_template_line_ids": [Command.clear(), *template_lines]}
+            if existing_template.currency_id != self.order_id.currency_id:
+                vals["currency_id"] = self.order_id.currency_id.id
+
+            # .sudo because we allow salesman to update their own templates
+            existing_template.sudo().write(vals)
+            return existing_template.read(["id", "name", "create_uid"], load="")[0]
+
+        # .sudo because we allow salesman to maintain and create their own templates
+        new_template = (
+            self
+            .env["sale.order.template"]
+            .sudo()
+            .create({
+                "name": self.name,
+                "template_type": "section",
+                "sale_order_template_line_ids": template_lines,
+                "company_id": self.order_id.company_id.id,
+                "currency_id": self.order_id.currency_id.id,
+                "share_template": False,
+            })
+        )
+        return new_template.read(["id", "name", "create_uid"], load="")[0]
 
     # === TOOLING ===#
 
@@ -56,3 +89,39 @@ class SaleOrderLine(models.Model):
 
     def _can_be_edited_on_portal(self):
         return super()._can_be_edited_on_portal() and self._is_line_optional()
+
+    def _prepare_template_line_values(self):
+        """Prepare create values for a sale order template line from a sale order line.
+
+        If the line is linked to a product, the product is stored and pricing is recomputed later.
+        For product lines without a product, price, discount, and taxes are copied explicitly.
+
+        :return: `sale.order.template.line` create values
+        :rtype: dict
+        """
+        self.ensure_one()
+        vals = {
+            "sequence": self.sequence,
+            "name": self.name,
+            "product_id": self.product_id.id,
+            "product_uom_qty": self.product_uom_qty,
+            "product_uom_id": self.product_uom_id.id,
+            "display_type": self.display_type,
+            "is_optional": self.is_optional,
+            "collapse_composition": self.collapse_composition,
+            "collapse_prices": self.collapse_prices,
+        }
+
+        if not self.product_id:
+            vals.update({
+                "tax_ids": [Command.set(self.tax_ids.ids)],
+                "discount": self.discount,
+                "price_unit": self.price_unit,
+            })
+        else:
+            # Try to remove the default product display_name from the line name
+            vals["name"] = self.name.removeprefix(f"{self.product_id.display_name}").removeprefix(
+                "\n"
+            )
+
+        return vals

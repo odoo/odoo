@@ -87,6 +87,10 @@ registry.category("web_tour.tours").add("crm_rainbowman", {
             run: "click",
         },
         {
+            trigger: "button.o_form_button_save",
+            run: "click",
+        },
+        {
             content: "wait for save completion",
             trigger: ".o_form_readonly, .o_form_saved",
         },

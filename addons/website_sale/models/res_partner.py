@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 
@@ -35,8 +35,8 @@ class ResPartner(models.Model):
         if open_order:
             return {
                 "warning": {
-                    "title": _("Open Sale Orders"),
-                    "message": _(
+                    "title": self.env._("Open Sale Orders"),
+                    "message": self.env._(
                         "This partner has an open cart. "
                         "Please note that the pricelist will not be updated on that cart. "
                         "Also, the cart might not be visible for the customer until you update the"
@@ -62,6 +62,11 @@ class ResPartner(models.Model):
         )
 
         return frontend_writable_fields
+
+    def _needs_address(self, **kwargs):
+        if cart := kwargs.get("order_sudo"):
+            return cart._needs_customer_address()
+        return super()._needs_address(**kwargs)
 
     def _get_order_fiscal_position_recompute_domain(self):
         """Return a domain of sale orders for which we should recompute fiscal position after

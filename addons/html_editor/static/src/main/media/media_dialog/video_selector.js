@@ -1,12 +1,30 @@
-import { useRef, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
-import { Component, onMounted, status } from "@odoo/owl";
+import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
 import { Switch } from "@html_editor/components/switch/switch";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+
+import { Youtube } from "@html_editor/main/media/video/providers/youtube";
+import { Dailymotion } from "@html_editor/main/media/video/providers/dailymotion";
+import { Vimeo } from "@html_editor/main/media/video/providers/vimeo";
+import { GDriveVideo } from "@html_editor/main/media/video/providers/gdrive_video";
+import { Instagram } from "@html_editor/main/media/video/providers/instagram";
+import { Facebook } from "@html_editor/main/media/video/providers/facebook";
+import { Twitch } from "@html_editor/main/media/video/providers/twitch";
+import { Loom } from "@html_editor/main/media/video/providers/loom";
+
+export const PLATFORMS = {
+    youtube: Youtube,
+    instagram: Instagram,
+    facebook: Facebook,
+    gDrive: GDriveVideo,
+    dailymotion: Dailymotion,
+    vimeo: Vimeo,
+    twitch: Twitch,
+    loom: Loom,
+};
 
 class VideoOption extends Component {
     static template = "html_editor.VideoOption";
@@ -16,14 +34,15 @@ class VideoOption extends Component {
     static props = {
         description: { type: String, optional: true },
         label: { type: String, optional: true },
-        onChangeOption: Function,
-        onChangeStartAt: Function,
+        isActive: { type: Boolean, optional: true },
         value: { type: String, optional: true },
-        name: { type: String, optional: true },
+        onOptionToggled: Function,
+        onTextInputed: Function,
+        onTextChanged: Function,
     };
 
-    get showStartAtInput() {
-        return this.props.name === "start_from";
+    get isInputVisible() {
+        return this.props.isActive && this.props.value !== undefined;
     }
 }
 
@@ -44,117 +63,78 @@ export class VideoSelector extends Component {
         VideoIframe,
         VideoOption,
     };
-    static props = {
-        selectMedia: Function,
-        errorMessages: Function,
-        vimeoPreviewIds: { type: Array, optional: true },
-        isForBgVideo: { type: Boolean, optional: true },
-        media: { validate: (p) => p.nodeType === Node.ELEMENT_NODE, optional: true },
-        "*": true,
-    };
-    static defaultProps = {
-        vimeoPreviewIds: [],
-        isForBgVideo: false,
-    };
+    props = props({
+        selectMedia: t.function(),
+        errorMessages: t.function(),
+        vimeoPreviewIds: t.array().optional([]),
+        isForBgVideo: t.boolean().optional(false),
+        media: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE).optional(),
+    });
+
+    urlInputRef = signal(null);
 
     setup() {
         this.http = useService("http");
 
-        this.state = useState({
-            options: [],
+        this.state = proxy({
+            options: {},
             src: "",
             urlInput: "",
             platform: null,
-            vimeoPreviews: [],
+            vimeoPreviews: [], // Background video suggestions (website)
             errorMessage: "",
-            isVertical: false,
         });
-
-        this.PLATFORMS = {
-            youtube: "youtube",
-            dailymotion: "dailymotion",
-            vimeo: "vimeo",
-            instagram: "instagram",
-            facebook: "facebook",
-        };
-
-        this.platformParams = {
-            youtube: "start",
-            dailymotion: "startTime",
-            vimeo: "#t=",
-        };
 
         this.OPTIONS = {
             autoplay: {
                 label: _t("Autoplay"),
                 description: _t("Videos are muted when autoplay is enabled"),
-                platforms: [
-                    this.PLATFORMS.youtube,
-                    this.PLATFORMS.vimeo,
-                ],
-                urlParameter: () => "autoplay=1",
             },
             loop: {
                 label: _t("Loop"),
-                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo],
-                urlParameter: () => "loop=1",
             },
-            hide_controls: {
+            hideControls: {
                 label: _t("Hide player controls"),
-                platforms: [
-                    this.PLATFORMS.youtube,
-                    this.PLATFORMS.vimeo,
-                ],
-                urlParameter: () => "controls=0",
             },
-            hide_fullscreen: {
+            hideFullscreen: {
                 label: _t("Hide fullscreen button"),
-                platforms: [this.PLATFORMS.youtube],
-                urlParameter: () => "fs=0",
-                isHidden: () =>
-                    this.state.options.filter((option) => option.id === "hide_controls")[0].value,
+                isVisible: () => !this.state.options?.hideControls?.isActive,
             },
-            is_vertical: {
+            isVertical: {
                 label: _t("Vertical"),
-                platforms: [
-                    this.PLATFORMS.youtube,
-                    this.PLATFORMS.instagram,
-                    this.PLATFORMS.facebook,
-                ],
-                urlParameter: () => "vertical",
             },
-            start_from: {
+            startFrom: {
                 label: _t("Start at"),
-                platforms: [
-                    this.PLATFORMS.youtube,
-                    this.PLATFORMS.vimeo,
-                    this.PLATFORMS.dailymotion,
-                ],
-                urlParameter: () => this.platformParams[this.state.platform],
             },
         };
-        this.urlInputRef = useRef("url-input");
 
         onMounted(async () => {
-            if (this.props.media) {
-                const src =
-                    this.props.media.dataset.oeExpression ||
-                    this.props.media.dataset.src ||
-                    (this.props.media.tagName === "IFRAME" &&
-                        this.props.media.getAttribute("src")) ||
-                    "";
-                if (src) {
-                    this.state.urlInput = src;
-                    if (!src.startsWith("https:") && !src.startsWith("http:")) {
-                        this.state.urlInput = "https:" + this.state.urlInput;
-                    }
-                    this.state.isVertical = !!closestElement(this.props.media, (el) =>
-                        el.matches('div[data-embedded="video"], .media_iframe_video')
-                    )?.dataset.isVertical;
-                    await this.syncOptionsWithUrl();
-                    if (status(this) === "destroyed") {
-                        return;
-                    }
+            const media = this.props.media;
+            if (media) {
+                const mediaContainer = closestElement(
+                    media,
+                    `.media_iframe_video, [data-embedded="video"]`
+                );
+                let embedUrl =
+                    media.dataset.embedUrl ||
+                    mediaContainer?.dataset?.embedUrl ||
+                    media.dataset.src ||
+                    media.dataset.oeExpression; // backward compatibility for iframe added in older odoo versions
+
+                // Deprecated oeExpression store the url without protocol for some reason.
+                if (embedUrl?.startsWith("//")) {
+                    embedUrl = "https:" + embedUrl;
+                }
+
+                if (!embedUrl && media.tagName === "IFRAME") {
+                    embedUrl = media.getAttribute("src");
+                }
+                if (embedUrl) {
+                    this.state.urlInput =
+                        media.dataset.baseUrl || mediaContainer?.dataset.baseUrl || embedUrl;
+                    this.state.src = embedUrl;
+                    this.updateOption("isVertical", mediaContainer?.dataset.isVertical);
+                    this.parseOptionsFromUrl(embedUrl);
                 }
             }
             await this.prepareVimeoPreviews();
@@ -162,66 +142,116 @@ export class VideoSelector extends Component {
 
         useAutofocus();
 
-        this.onChangeUrl = debounce(() => this.syncOptionsWithUrl(), 500);
-
-        this.onChangeStartAt = debounce(async (ev, optionId) => {
-            const start_from = this.convertTimestampToSeconds(ev.target.value);
-            this.state.options = this.state.options.map((option) => {
-                if (option.id === optionId) {
-                    // to avoid showing "0" when seconds are 0, we set it to "00:00"
-                    return { ...option, value: start_from === "0" ? "00:00" : start_from };
-                }
-                return option;
-            });
-            await this.updateVideo();
-            this.state.urlInput = "https:" + this.state.src;
-        }, 1000);
+        // Avoid refreshing the video data after each updateOption call,
+        // since multiple options can be updated at once when parsing the url, for example.
+        this.refreshVideoDataDebounced = debounce(this.refreshVideoData.bind(this), 25);
+        // A longer debounce time is preferred after the time input
+        // to avoid template rendering interfering with user inputting data
+        this.refreshVideoDataLongDebounced = debounce(this.onTextChanged.bind(this), 2000);
+        this.urlChanged = debounce(() => this.parseOptionsFromUrl(this.state.urlInput), 100);
     }
 
-    get shownOptions() {
-        if (this.props.isForBgVideo) {
-            return [];
+    /**
+     * Return a list of options config and value for the current platform
+     *
+     * @returns {Array<Object>}
+     */
+    get visibleVideoOptions() {
+        const options = [];
+        if (this.props.isForBgVideo || !this.state.platform) {
+            return options;
         }
-        return this.state.options.filter(
-            (option) => !this.OPTIONS[option.id].isHidden || !this.OPTIONS[option.id].isHidden()
-        );
-    }
-
-    get value() {
-        if (this.option.id === "start_from" && this.option.value !== "00:00") {
-            return this.convertSecondsToTimestamp(this.option.value);
-        }
-        return this.option.value;
-    }
-
-    async onChangeOption(optionId) {
-        this.state.options = this.state.options.map((option) => {
-            if (option.id === optionId) {
-                if (option.id === "is_vertical") {
-                    this.state.isVertical = !this.state.isVertical;
-                }
-                // used "0" here, to set the initial "startAt" value if option is toggled on,
-                // for other option it works as truthy value.
-                return { ...option, value: !option.value && "00:00" };
+        const platformOptionsConfig = PLATFORMS[this.state.platform].optionsConfig;
+        for (const [id, config] of Object.entries(this.OPTIONS)) {
+            const option = { id: id, ...config };
+            const isVisible = config?.isVisible ? config?.isVisible() : true;
+            option.isActive = !!this.state.options?.[id]?.isActive;
+            if (id === "startFrom") {
+                option.value = this.convertSecondsToTimestamp(this.state.options?.[id]?.value);
             }
-            return option;
-        });
-        await this.updateVideo();
-        this.state.urlInput = "https:" + this.state.src;
+            if (isVisible && platformOptionsConfig?.[id]) {
+                options.push(option);
+            }
+        }
+        return options;
     }
 
-    async onClickSuggestion(src) {
+    onChangeUrl() {
+        this.props.selectMedia({}); // Temporarily invalidate the selected video until the url is parsed.
+        this.urlChanged();
+    }
+
+    onOptionToggled(optionId) {
+        this.updateOption(optionId, !this.state.options?.[optionId]?.isActive);
+    }
+
+    updateOption(optionId, isActive) {
+        this.props.selectMedia({}); // Temporarily invalidate the selected video until the url is parsed.
+        const option = this.state.options?.[optionId] || {};
+        this.state.options[optionId] = { ...option, isActive };
+        this.refreshVideoDataDebounced();
+    }
+
+    onTextChanged(ev, optionId) {
+        this.state.options[optionId].value = this.convertTimestampToSeconds(ev.target.value);
+        this.refreshVideoData();
+    }
+
+    onTextInputed(ev, optionId) {
+        this.props.selectMedia({}); // Temporarily invalidate the selected video when the time is updated.
+        this.refreshVideoDataLongDebounced(ev, optionId);
+    }
+
+    onClickSuggestion(src) {
         this.state.urlInput = src;
-        await this.updateVideo();
+        this.state.src = src;
+        this.parseOptionsFromUrl(src);
     }
 
-    async updateVideo() {
-        if (!this.state.urlInput) {
+    /**
+     * Validate the given Url and return the videoData
+     *
+     * @param {string} url
+     */
+    getVideoUrlData(url) {
+        this.state.errorMessage = "";
+        if (!URL.canParse(url)) {
+            this.state.errorMessage = _t("The provided url is not valid");
+            this.props.errorMessages(this.state.errorMessage);
+            return;
+        }
+        // Check if the url a valid url from one of the supported platforms
+        let platform = false;
+        let urlMatch;
+        for (const [p, pClass] of Object.entries(PLATFORMS)) {
+            urlMatch = pClass.isValidVideoUrl(url);
+            if (urlMatch) {
+                platform = p;
+                break;
+            }
+        }
+
+        if (!platform) {
+            this.state.errorMessage = _t("The provided url does not reference any supported video");
+            this.props.errorMessages(this.state.errorMessage);
+            return;
+        }
+        this.state.errorMessage = "";
+        this.props.errorMessages(this.state.errorMessage);
+        return PLATFORMS[platform].getVideoUrlData(urlMatch);
+    }
+
+    /**
+     * When the url input is changed, we need to update the video preview and the options values based on the url parameters.
+     *
+     * @param {string} url
+     */
+    parseOptionsFromUrl(url) {
+        const videoData = this.getVideoUrlData(url);
+        if (!videoData) {
             this.state.src = "";
-            this.state.urlInput = "";
-            this.state.options = [];
+            this.state.options = {};
             this.state.platform = null;
-            this.state.errorMessage = "";
             /**
              * When the url input is emptied, we need to call the `selectMedia`
              * callback function to notify the other components that the media
@@ -231,104 +261,109 @@ export class VideoSelector extends Component {
             return;
         }
 
-        // Detect if we have an embed code rather than an URL
-        const embedMatch = this.state.urlInput.match(/(src|href)=["']?([^"']+)?/);
-        if (embedMatch && embedMatch[2]?.length > 0 && embedMatch[2].indexOf("instagram")) {
-            embedMatch[1] = embedMatch[2]; // Instagram embed code is different
-        }
-        const url = embedMatch ? embedMatch[1] : this.state.urlInput;
+        this.state.platform = videoData.platform;
 
-        const options = {};
-        if (this.props.isForBgVideo && URL.canParse(url)) {
-            const parsedUrl = new URL(url);
-            const urlParams = parsedUrl.searchParams;
-            const startFrom =
-                urlParams.get("start") || urlParams.get("startTime") || urlParams.get("t");
-            Object.keys(this.OPTIONS).forEach((key) => {
-                options[key] = key === "start_from" ? startFrom : true;
-            });
-        } else {
-            for (const option of this.shownOptions) {
-                options[option.id] = option.value;
+        // Update the options values based on the url parameters
+        for (const option of this.visibleVideoOptions) {
+            if (videoData.options?.[option.id]) {
+                this.updateOption(option.id, !!videoData.options[option.id]);
+                if (option.value) {
+                    this.state.options[option.id].value = videoData.options[option.id];
+                }
             }
         }
 
-        const {
-            embed_url: src,
-            video_id: videoId,
-            params,
-            platform,
-        } = await this._getVideoURLData(url, options);
+        this.refreshVideoData();
+    }
 
-        if (!src) {
-            this.state.errorMessage = _t("The provided url is not valid");
-        } else if (!platform) {
-            this.state.errorMessage = _t("The provided url does not reference any supported video");
+    /**
+     * When an option is updated,
+     * we need to refresh the video with the new options values.
+     */
+    refreshVideoData() {
+        if (!this.state.platform) {
+            return;
+        }
+        const forcedOptions = {};
+        const platformClass = PLATFORMS[this.state.platform];
+        if (this.props.isForBgVideo) {
+            forcedOptions.hideControls = true;
+            forcedOptions.hideFullscreen = true;
+            if (platformClass.optionsConfig.autoplay) {
+                forcedOptions.autoplay = true;
+            }
         } else {
-            this.state.errorMessage = "";
-        }
-        this.props.errorMessages(this.state.errorMessage);
-
-        const newOptions = [];
-        if (platform && platform !== this.state.platform) {
-            Object.keys(this.OPTIONS).forEach((key) => {
-                if (this.OPTIONS[key].platforms.includes(platform)) {
-                    const { label, description } = this.OPTIONS[key];
-                    newOptions.push({ id: key, label, description });
+            // convert current option into forced options to be encoded in the embed url.
+            for (const option of this.visibleVideoOptions) {
+                if (option.isActive !== undefined) {
+                    if (option.value) {
+                        forcedOptions[option.id] = this.convertTimestampToSeconds(option.value);
+                    } else {
+                        forcedOptions[option.id] = option.isActive;
+                    }
                 }
-            });
+            }
         }
 
-        this.state.src = src;
-        // Explicitly passing the state so the static `createElements` method,
-        // which has no access to instance properties, can still use it.
-        if (params) {
-            params.isVertical = this.state.isVertical;
+        const videoData = platformClass.getVideoUrlData(
+            platformClass.isValidVideoUrl(this.state.urlInput),
+            forcedOptions
+        );
+        this.updateVideoPreview(videoData);
+    }
+
+    async updateVideoPreview(videoData) {
+        let { embedUrl, videoId, options, platform, thumbnailUrl } = videoData;
+        this.state.src = embedUrl;
+
+        options.isVertical = this.state.options?.isVertical?.isActive;
+
+        if (thumbnailUrl instanceof Promise) {
+            thumbnailUrl = await thumbnailUrl;
         }
         this.props.selectMedia({
-            id: src,
-            src,
+            baseUrl: this.state.urlInput,
             platform,
             videoId,
-            params,
-        });
-        if (platform !== this.state.platform) {
-            this.state.platform = platform;
-            this.state.options = newOptions;
-        }
-    }
-
-    /**
-     * Keep rpc call in distinct method make it patchable by test.
-     */
-    async _getVideoURLData(url, options) {
-        return await rpc("/html_editor/video_url/data", {
-            video_url: url,
-            ...options,
+            embedUrl,
+            thumbnailUrl,
+            options,
         });
     }
 
     /**
-     * Utility method, called by the MediaDialog component.
+     * Utility method used by the MediaDialog and the videoPlugins,
+     * it will create the Iframe element based on the provided selected video data
+     * then return it to the caller to be inserted in the document.
+     *
+     * @param {Array<Object>} selectedVideos
+     * @param   {string} selectedVideos.baseUrl
+     * @param   {string} selectedVideos.platform
+     * @param   {string} selectedVideos.videoId
+     * @param   {string} selectedVideos.embedUrl
+     * @param   {string} selectedVideos.thumbnailUrl
+     * @param   {Object} selectedVideos.options
+     * @returns {Element[]}
      */
-    static createElements(selectedMedia) {
-        return selectedMedia.map((video) => {
+    static createElements(selectedVideos, { document = window.document } = {}) {
+        return selectedVideos.map((videoData) => {
             const div = document.createElement("div");
-            div.dataset.oeExpression = video.src;
-            const isVertical = !!video.params?.isVertical;
-            if (isVertical) {
+            div.dataset.baseUrl = videoData.baseUrl;
+            div.dataset.embedUrl = videoData.embedUrl;
+            div.dataset.platform = videoData.platform;
+            div.dataset.videoId = videoData.videoId;
+            let sizeClass = "media_iframe_video_size";
+            if (videoData.options?.isVertical) {
                 div.dataset.isVertical = "true";
+                sizeClass = "media_iframe_video_size_for_vertical";
             }
-            const sizeClass = isVertical
-                ? "media_iframe_video_size_for_vertical"
-                : "media_iframe_video_size";
             div.innerHTML = `
                 <div class="css_editable_mode_display"></div>
                 <div class="${sizeClass}" contenteditable="false"></div>
                 <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>
             `;
 
-            div.querySelector("iframe").src = video.src;
+            div.querySelector("iframe").src = videoData.embedUrl;
             return div;
         });
     }
@@ -339,101 +374,61 @@ export class VideoSelector extends Component {
     async prepareVimeoPreviews() {
         await Promise.all(
             this.props.vimeoPreviewIds.map(async (videoId) => {
-                const { thumbnail_url: thumbnailSrc } = await this.http.get(
-                    `https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/${encodeURIComponent(
-                        videoId
-                    )}`
-                );
-                this.state.vimeoPreviews.push({
-                    id: videoId,
-                    thumbnailSrc,
-                    src: `https://player.vimeo.com/video/${encodeURIComponent(videoId)}`,
-                });
+                try {
+                    const thumbnailSrc = await Vimeo.getThumbnailUrl(videoId);
+                    this.state.vimeoPreviews.push({
+                        id: videoId,
+                        thumbnailSrc,
+                        src: Vimeo.getEmbedUrl(videoId),
+                    });
+                } catch (err) {
+                    console.warn(`Could not get video #${videoId} from vimeo: ${err}`);
+                }
             })
         );
     }
 
     /**
-     * Utility method to make options and urlInput state consistent with state of component.
-     */
-    async syncOptionsWithUrl() {
-        await this.updateVideo();
-        if (!URL.canParse(this.state.urlInput)) {
-            // For embedded codes, only the vertical option is updated since
-            // other options rely on URL parameters that can’t be parsed.
-            this.state.options = this.state.options.map((option) => {
-                if (option.id === "is_vertical") {
-                    return { ...option, value: this.state.isVertical ? "1" : "" };
-                }
-                return { ...option };
-            });
-            return;
-        }
-        const parsedUrl = new URL(this.state.urlInput);
-        const urlParams = parsedUrl.searchParams;
-        this.state.options = this.state.options.map((option) => {
-            const urlParameter = this.OPTIONS[option.id].urlParameter();
-            let value = "";
-
-            switch (urlParameter) {
-                case "#t=":
-                    value = this.parseTimeToSeconds(this.state.urlInput.split("#t=")[1]);
-                    break;
-                case "start":
-                    value = urlParams.get("start") || urlParams.get("t");
-                    break;
-                case "startTime":
-                    value = urlParams.get("startTime") || urlParams.get("start");
-                    break;
-                case "vertical":
-                    value = this.state.isVertical ? "1" : "";
-                    break;
-                default:
-                    value = this.state.urlInput.includes(urlParameter);
-            }
-            if (option.id === "start_from" && value === "0") {
-                return { ...option, value: "00:00" };
-            }
-            return { ...option, value: value || "" };
-        });
-        await this.updateVideo();
-    }
-
-    /**
-     * Utility method,to convert timestamp to seconds.
+     * Utility method, to convert timestamp to seconds.
      *
      * @param {string} timestamp - The start time in HH:MM:SS format or seconds.
-     * @returns {string} - The start time in seconds.
+     * @returns {Number} - The start time in seconds.
      */
     convertTimestampToSeconds(timestamp) {
         timestamp = timestamp.trim();
         // Regular expression for HH:MM:SS format
         const timeRegex = /^(?:(\d+):)?([0-5]?\d):([0-5]?\d)$/;
         if (timeRegex.test(timestamp)) {
-            return (timestamp =
-                timestamp.split(":").reduce((acc, time) => acc * 60 + +time, 0) + "");
+            return parseInt(timestamp.split(":").reduce((acc, time) => acc * 60 + +time, 0) + "");
         }
-        if (isNaN(timestamp)) {
-            return "0";
+        let seconds = parseInt(timestamp);
+
+        if (isNaN(seconds)) {
+            seconds = this.parseTimeToSeconds(timestamp);
         }
-        return timestamp;
+
+        return isNaN(seconds) ? 0 : seconds;
     }
     /**
-     * Utility method,to convert seconds to timestamp.
+     * Utility method, to convert seconds to timestamp.
      *
-     * @param {string} value - The start time in seconds.
+     * @param {string|Number} value - The start time in seconds.
      * @returns {string} - The start time in HH:MM:SS or MM:SS format.
      */
     convertSecondsToTimestamp(value) {
         if (!value) {
-            return "";
-        }
-        const match = value.match(/^\d+s?$/);
-        if (!match) {
-            return "";
+            return "0:00";
         }
 
-        const totalSeconds = parseInt(match[0], 10);
+        let totalSeconds = value;
+        if (typeof value === "string") {
+            const match = value.match(/^\d+s?$/);
+            if (!match) {
+                return "0:00";
+            }
+            totalSeconds = parseInt(match[0], 10);
+        }
+
         if (!Number.isFinite(totalSeconds) || totalSeconds <= 0) {
             return value;
         }
@@ -448,7 +443,7 @@ export class VideoSelector extends Component {
         return `${minutes}:${pad(seconds)}`;
     }
     /**
-     * Utility method,to convert 'XmYs', Xm, Ys to seconds for vimeo platform.
+     * Utility method, to convert 'XmYs', Xm, Ys to seconds for vimeo platform.
      *
      * @param {string} value - The start time in 'XmYs' type format.
      * @returns {string} - The start time in seconds.

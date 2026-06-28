@@ -1,13 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
+import inspect
 import json
 import struct
-from threading import Event
 import unittest
+from itertools import chain, zip_longest
+from threading import Event
 from unittest.mock import patch
-import inspect
+
 from werkzeug.exceptions import BadRequest
-import contextlib
 
 try:
     import websocket
@@ -15,13 +17,216 @@ except ImportError:
     websocket = None
 
 from odoo.http import request
-from odoo.tests.common import HOST, release_test_lock, TEST_CURSOR_COOKIE_NAME, Like, _registry_test_lock
 from odoo.tests import HttpCase
-from ..websocket import CloseCode, Websocket, WebsocketConnectionHandler
-from ..models.bus import dispatch, hashable, channel_with_db
+from odoo.tests.common import (
+    HOST,
+    TEST_CURSOR_COOKIE_NAME,
+    BaseCase,
+    Like,
+    _registry_test_lock,
+    release_test_lock,
+)
+
+from odoo.addons.bus.models.bus import channel_with_db, json_dump
+from odoo.addons.bus.websocket import CloseCode, Websocket, WebsocketConnectionHandler
 
 
-class WebsocketCase(HttpCase):
+class BusResult:
+    """Descriptor for an expected bus notification.
+    :param channel: the bus channel
+    :param str type: the notification type
+    :param payload: the notification payload
+    When a payload dict is provided, only the specified keys and values are
+    checked against the actual notification; extra keys in the actual payload
+    are ignored.
+    """
+
+    def __init__(self, channel, type=None, payload=None):
+        self.channel = channel
+        self.type = type
+        self.payload = payload.as_dict() if hasattr(payload, "as_dict") else payload
+        self.matched = False
+        self.misordered_matched = False
+        self.wrong_order_expected_idx = None
+        self.wrong_order_received_idx = None
+
+    def _check_match(self, received, *, show_store_versioning):
+        """Return whether notifications match without mutating state."""
+        return (
+            self._normalized_channel() == received._normalized_channel()
+            and (self.type is None or self.type == received.type)
+            and (
+                self.payload is None
+                or self._normalized_message(show_store_versioning=show_store_versioning)
+                == received._normalized_message(show_store_versioning=show_store_versioning)
+            )
+        )
+
+    def match(self, received, *, show_store_versioning):
+        if self._check_match(received, show_store_versioning=show_store_versioning):
+            self.matched = True
+            received.matched = True
+            return True
+        return False
+
+    def misordered_match_idx(self, notifications, *, show_store_versioning):
+        with contextlib.suppress(StopIteration):
+            res = next(
+                idx
+                for idx, notification in enumerate(notifications, 1)
+                if (not notification.matched and not notification.misordered_matched)
+                and self._check_match(notification, show_store_versioning=show_store_versioning)
+            )
+            notifications[res - 1].misordered_matched = True
+            return res
+        return None
+
+    def format_log(self, idx, *, show_store_versioning):
+        if self.wrong_order_received_idx is not None:
+            status = f"⚠️ wrong order: expected #{idx} -> received #{self.wrong_order_received_idx}"
+        elif self.wrong_order_expected_idx is not None:
+            status = f"⚠️ wrong order: received #{idx} -> expected #{self.wrong_order_expected_idx}"
+        elif self.matched:
+            status = f"✅ matched #{idx}"
+        else:
+            status = f"❌ missing #{idx}"
+        channel, type_, payload = self.to_tuple(show_store_versioning=show_store_versioning)
+        return (
+            f"# {status}\n"
+            "(\n"
+            f"    {json_dump(channel)},\n"
+            f"    {json_dump(type_)},\n"
+            f"    {json_dump(payload)},\n"
+            "),"
+        )
+
+    def to_tuple(self, *, show_store_versioning):
+        payload = json.loads(json_dump(self.payload)) if self.payload is not None else None
+        if not show_store_versioning:
+            BusResult._pop_store_version(payload)
+        return (self._normalized_channel(), self.type, payload)
+
+    @staticmethod
+    def _pop_store_version(data):
+        if not isinstance(data, dict):
+            return
+        data.pop("__store_version__", False)
+        for value in data.values():
+            BusResult._pop_store_version(value)
+
+    def _normalized_channel(self):
+        if isinstance(self.channel, str):
+            return tuple(json.loads(self.channel))
+        return tuple(self.channel)
+
+    def _normalized_message(self, *, show_store_versioning):
+        message = {}
+        if self.type is not None:
+            message["type"] = self.type
+        if self.payload is not None:
+            message["payload"] = self.payload
+            if not show_store_versioning:
+                BusResult._pop_store_version(message["payload"])
+        return json.loads(json_dump(message)) if message else None
+
+
+class BusCase(BaseCase):
+    def _reset_bus(self):
+        self.env.cr.precommit.data.get("bus.bus.values", []).clear()
+        self.env["bus.bus"].sudo().search([]).unlink()
+
+    @contextlib.contextmanager
+    def assertBus(self, notifications, *, show_store_versioning=False):
+        """Check content of bus notifications.
+
+        `notifications` is a :class:`BusResult` instance or a list of them, e.g.:
+
+            BusResult(self.user_employee, "mail.record/insert", {...})
+            BusResult(self.user_employee)
+            BusResult(self.user_employee, "mail.message/inbox")
+            BusResult(self.user_employee, payload={"key": val})
+            BusResult(self.user_employee, "mail.record/insert", {"key": val})
+
+        A single :class:`BusResult` may be passed directly instead of a one-element list.
+        Notifications are matched in emitted order.
+        `notifications` may be either a :class:`BusResult`, a list of them,
+        or a callable evaluated after the tested code that returns one of
+        those forms.
+        """
+        self._reset_bus()
+        yield
+        self._assertBusNotifications(notifications, show_store_versioning=show_store_versioning)
+
+    def _assertBusNotifications(self, notifications, *, show_store_versioning=False):
+        """Assert bus notifications with coupled channel and message.
+
+        :param notifications: expected notifications as :class:`BusResult`, list,
+            or callable returning one of those forms.
+
+        Expected notifications must appear in order.
+        """
+        self.maxDiff = None
+        notifications = notifications() if callable(notifications) else notifications
+        if isinstance(notifications, BusResult):
+            notifications = [notifications]
+        notifications = notifications or []
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        expected_list = []
+        for notif in notifications:
+            if not isinstance(notif, BusResult):
+                msg = "Bus: expected notification items must be a BusResult instance."
+                raise TypeError(msg)
+            expected_list.append(
+                BusResult(
+                    json_dump(channel_with_db(self.cr.dbname, notif.channel)),
+                    notif.type,
+                    notif.payload,
+                ),
+            )
+        received_list = [
+            BusResult(notif.channel, **json.loads(notif.message))
+            for notif in self.env["bus.bus"].sudo().search([])
+        ]
+        for expected_notif, actual_notif in zip_longest(expected_list, received_list):
+            if expected_notif is not None and actual_notif is not None:
+                expected_notif.match(actual_notif, show_store_versioning=show_store_versioning)
+        for expected in (e for e in expected_list if not e.matched):
+            expected.wrong_order_received_idx = expected.misordered_match_idx(
+                received_list,
+                show_store_versioning=show_store_versioning,
+            )
+        for received in (e for e in received_list if not e.matched):
+            received.wrong_order_expected_idx = received.misordered_match_idx(
+                expected_list,
+                show_store_versioning=show_store_versioning,
+            )
+        if any(not notif.matched for notif in chain(expected_list, received_list)):
+
+            def format_notifications(title, notifications):
+                error_parts.append(title)
+                if notifications:
+                    for idx, notif in enumerate(notifications, 1):
+                        error_parts.append(
+                            notif.format_log(idx, show_store_versioning=show_store_versioning),
+                        )
+                else:
+                    error_parts.append("<no notifications>")
+
+            error_parts = ["Bus notifications."]
+            format_notifications("\nExpected notifications:", expected_list)
+            format_notifications("\nReceived notifications:", received_list)
+            for idx, (expected, actual) in enumerate(zip_longest(expected_list, received_list), 1):
+                with self.subTest(idx=idx):
+                    if expected is not None and actual is not None and not expected.matched:
+                        self.assertEqual(
+                            expected.to_tuple(show_store_versioning=show_store_versioning),
+                            actual.to_tuple(show_store_versioning=show_store_versioning),
+                            f"\n❌ mismatch at comparison #{idx}",
+                        )
+            raise AssertionError("\n".join(error_parts))
+
+
+class WebsocketCase(HttpCase, BusCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -35,6 +240,7 @@ class WebsocketCase(HttpCase):
 
     def setUp(self):
         super().setUp()
+        self._reset_bus()
         self._websockets = set()
         # Used to ensure websocket connections have been closed
         # properly.
@@ -112,12 +318,14 @@ class WebsocketCase(HttpCase):
         self._websockets.add(ws)
         return ws
 
-    def subscribe(self, websocket, channels=None, last=None, wait_for_dispatch=True):
+    def subscribe(self, websocket, channels=None, last=None, check_outdated=False, wait_for_dispatch=True):
         """ Subscribe the websocket to the given channels.
 
         :param websocket: The websocket of the client.
         :param channels: The list of channels to subscribe to.
         :param last: The last notification id the client received.
+        :param check_outdated: Whether the websocket should check if the last_id matches a
+            known notification.
         :param wait_for_dispatch: Whether to wait for the notification
             dispatching trigerred by the subscription.
         """
@@ -131,6 +339,7 @@ class WebsocketCase(HttpCase):
         with patch.object(Websocket, '_dispatch_bus_notifications', _mocked_dispatch_bus_notifications):
             sub = {'event_name': 'subscribe', 'data': {
                 'channels': channels or [],
+                'check_outdated': check_outdated,
             }}
             if last is not None:
                 sub['data']['last'] = last
@@ -138,20 +347,9 @@ class WebsocketCase(HttpCase):
             if wait_for_dispatch:
                 dispatch_bus_notification_done.wait(timeout=5)
 
-    def trigger_notification_dispatching(self, channels):
-        """ Notify the websockets subscribed to the given channels that new
-        notifications are available. Usefull since the bus is not able to do
-        it during tests.
-        """
-        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
-        channels = [
-            hashable(channel_with_db(self.registry.db_name, c)) for c in channels
-        ]
-        websockets = set()
-        for channel in channels:
-            websockets.update(dispatch._channels_to_ws.get(hashable(channel), []))
-        for websocket in websockets:
-            websocket.trigger_notification_dispatching()
+    def trigger_notification_dispatching(self):
+        self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
+        self.env.cr.postcommit.run()  # PostgreSQL NOTIFY happens after commit
 
     def wait_remaining_websocket_connections(self):
         """ Wait for the websocket connections to terminate. """
@@ -171,9 +369,3 @@ class WebsocketCase(HttpCase):
         if expected_reason:
             # ensure the close reason is the one we expected
             self.assertEqual(payload[2:].decode(), expected_reason)
-
-
-class BusCase:
-    def _reset_bus(self):
-        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
-        self.env["bus.bus"].sudo().search([]).unlink()

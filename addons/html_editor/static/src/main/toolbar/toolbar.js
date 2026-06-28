@@ -1,6 +1,8 @@
-import { useState, validate } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef, validate } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { omit, pick } from "@web/core/utils/objects";
+import { trapFocus } from "@html_editor/utils/dom_traversal";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
 export class Toolbar extends Component {
     static template = "html_editor.Toolbar";
@@ -55,12 +57,53 @@ export class Toolbar extends Component {
     };
 
     setup() {
-        this.state = useState(this.props.state);
+        this.state = proxy(this.props.state);
+        this.toolbarEl = useRef("toolbarEl");
+
+        useHotkey("alt+f", () => this.focusFirstToolbarButton(), {
+            bypassEditableProtection: true,
+            withOverlay: () =>
+                document.activeElement.closest(
+                    ".o-we-toolbar[data-namespace], [data-prevent-closing-overlay]"
+                )
+                    ? null
+                    : this.toolbarEl.el,
+            isAvailable: () =>
+                !document.activeElement.closest(
+                    ".o-we-toolbar[data-namespace], [data-prevent-closing-overlay]"
+                ),
+        });
+    }
+
+    focusFirstToolbarButton() {
+        this.toolbarEl.el?.querySelector("button:not([disabled])").focus();
+    }
+
+    onKeyDown(ev) {
+        const isDropdownOpen = ev.target.closest(".dropdown.show");
+        if (isDropdownOpen) {
+            return;
+        }
+        // Loop through toolbar buttons
+        if (["Tab", "ArrowLeft", "ArrowRight"].includes(ev.key)) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const toolbarButtons = this.toolbarEl.el.querySelectorAll("button");
+            const isBackward = ev.key === "ArrowLeft" || (ev.key === "Tab" && ev.shiftKey);
+            trapFocus(toolbarButtons, isBackward);
+        } else if (ev.key === "Escape") {
+            ev.stopPropagation();
+            this.props.focusEditable();
+        }
     }
 
     onButtonClick(button) {
         button.run();
-        this.props.focusEditable();
+        if (button.id === "expand_toolbar") {
+            this.focusFirstToolbarButton();
+        } else {
+            this.props.focusEditable();
+        }
     }
 }
 

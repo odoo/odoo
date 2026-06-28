@@ -225,15 +225,15 @@ class StockRule(models.Model):
             company_id = self.sudo().warehouse_id and self.sudo().warehouse_id.company_id.id or self.sudo().picking_type_id.warehouse_id.company_id.id
         final_location_id = False
         location_dest_id = self.location_dest_id.id
-        if move_to_copy.location_final_id and not move_to_copy.location_dest_id._child_of(move_to_copy.location_final_id):
-            final_location_id = move_to_copy.location_final_id.id
-        if move_to_copy.location_final_id and move_to_copy.location_final_id._child_of(self.location_dest_id):
-            location_dest_id = move_to_copy.location_final_id.id
+        if move_to_copy.forecasted_location_id and not move_to_copy.location_dest_id._child_of(move_to_copy.forecasted_location_id):
+            final_location_id = move_to_copy.forecasted_location_id.id
+        if move_to_copy.forecasted_location_id and move_to_copy.forecasted_location_id._child_of(self.location_dest_id):
+            location_dest_id = move_to_copy.forecasted_location_id.id
         new_move_vals = {
             'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
             'location_id': move_to_copy.location_dest_id.id,
             'location_dest_id': location_dest_id,
-            'location_final_id': final_location_id,
+            'forecasted_location_id': final_location_id,
             'rule_id': self.id,
             'date': self._get_push_new_date(move_to_copy),
             'date_deadline': move_to_copy.date_deadline,
@@ -304,12 +304,13 @@ class StockRule(models.Model):
         move_dest_ids = values.get('move_dest_ids') and [(4, x.id) for x in values['move_dest_ids']] or []
 
         # when create chained moves for inter-warehouse transfers, set the warehouses as partners
-        if not partner and move_dest_ids:
+        if move_dest_ids:
             move_dest = values['move_dest_ids']
             if location_dest_id == company_id.internal_transit_location_id:
-                partners = move_dest.location_dest_id.warehouse_id.partner_id
-                if len(partners) == 1:
-                    partner = partners.id
+                if not partner:
+                    partners = move_dest.location_dest_id.warehouse_id.partner_id
+                    if len(partners) == 1:
+                        partner = partners.id
                 move_dest.partner_id = self.location_src_id.warehouse_id.partner_id or self.company_id.partner_id
 
         # If the quantity is negative the move should be considered as a refund
@@ -323,7 +324,7 @@ class StockRule(models.Model):
             'product_uom_qty': qty_left,
             'partner_id': partner,
             'location_id': self.location_src_id.id,
-            'location_final_id': location_dest_id.id,
+            'forecasted_location_id': location_dest_id.id,
             'move_dest_ids': move_dest_ids,
             'rule_id': self.id,
             'reference_ids': [Command.set(values.get('reference_ids', self.env['stock.reference']).ids)],
@@ -536,9 +537,11 @@ class StockRule(models.Model):
         while locations[-1].location_id:
             locations |= locations[-1].location_id
         domain = self._get_rule_domain(locations, values)
+        routes_with_no_warehouse = self.env['stock.route']._get_routes_with_no_warehouse()
+        routes = (values.get('route_ids') or self.env['stock.route']) | routes_with_no_warehouse
         # Get a mapping (location_id, route_id) -> warehouse_id -> rule_id
         rule_dict = self._search_rule_for_warehouses(
-            values.get("route_ids", False),
+            routes,
             values.get("packaging_uom_id", False),
             product_id,
             values.get("warehouse_id", locations.warehouse_id),
@@ -587,7 +590,7 @@ class StockRule(models.Model):
             for candidate_location in candidate_locations:
                 result = get_rule_for_routes(
                     rule_dict,
-                    values.get("route_ids", self.env['stock.route']),
+                    routes,
                     values.get("packaging_uom_id", self.env['uom.uom']),
                     product_id,
                     values.get("warehouse_id", candidate_location.warehouse_id),

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
@@ -8,8 +8,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { user } from "@web/core/user";
 import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from "./search_media";
-
-import { Component, xml, onWillStart } from "@odoo/owl";
+import { Component, xml, onWillStart, proxy } from "@odoo/owl";
 
 export const IMAGE_MIMETYPES = [
     "image/jpg",
@@ -22,8 +21,26 @@ export const IMAGE_MIMETYPES = [
 ];
 export const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".jpe", ".png", ".svg", ".gif", ".webp"];
 
+export const ATTACHMENT_FIELDS = [
+    "id",
+    "name",
+    "mimetype",
+    "description",
+    "checksum",
+    "url",
+    "type",
+    "res_id",
+    "res_model",
+    "public",
+    "access_token",
+    "image_src",
+    "image_width",
+    "image_height",
+    "original_id",
+];
+
 class RemoveButton extends Component {
-    static template = xml`<i class="fa fa-trash o_existing_attachment_remove position-absolute top-0 end-0 p-2 bg-white-25 cursor-pointer opacity-0 opacity-100-hover z-1 transition-base" t-att-title="removeTitle" role="img" t-att-aria-label="removeTitle" t-on-click="this.remove"/>`;
+    static template = xml`<i class="fa fa-trash o_existing_attachment_remove position-absolute top-0 end-0 p-2 bg-white-25 cursor-pointer opacity-0 opacity-100-hover z-1 transition-base" t-att-title="this.removeTitle" role="img" t-att-aria-label="this.removeTitle" t-on-click="this.remove"/>`;
     static props = ["model?", "remove"];
     setup() {
         this.removeTitle = _t("This file is attached to the current record.");
@@ -106,7 +123,7 @@ export class FileSelectorControlPanel extends Component {
         useUnsplash: { type: Boolean, optional: true },
     };
     setup() {
-        this.state = useState({
+        this.state = proxy({
             showUrlInput: false,
             urlInput: "",
             isValidUrl: false,
@@ -189,7 +206,7 @@ export class FileSelector extends Component {
         this.loadMoreButtonRef = useRef("load-more-button");
         this.existingAttachmentsRef = useRef("existing-attachments");
 
-        this.state = useState({
+        this.state = proxy({
             attachments: [],
             canScrollAttachments: false,
             canLoadMoreAttachments: false,
@@ -252,11 +269,16 @@ export class FileSelector extends Component {
     }
 
     get attachmentsDomain() {
-        const domain = [
-            "&",
-            ["res_model", "=", this.props.resModel],
-            ["res_id", "=", this.props.resId || 0],
-        ];
+        let domain;
+        if (this.props.resId) {
+            domain = [
+                "&",
+                ["res_model", "=", this.props.resModel],
+                ["res_id", "=", this.props.resId],
+            ];
+        } else {
+            domain = [["id", "in", this.props.pendingAttachments]];
+        }
         domain.unshift("|", ["public", "=", true]);
         domain.push(["name", "ilike", this.state.needle]);
         return domain;
@@ -282,22 +304,7 @@ export class FileSelector extends Component {
         this.state.isFetchingAttachments = true;
         const attachments = await this.orm.call("ir.attachment", "search_read", [], {
             domain: this.attachmentsDomain,
-            fields: [
-                "name",
-                "mimetype",
-                "description",
-                "checksum",
-                "url",
-                "type",
-                "res_id",
-                "res_model",
-                "public",
-                "access_token",
-                "image_src",
-                "image_width",
-                "image_height",
-                "original_id",
-            ],
+            fields: ATTACHMENT_FIELDS,
             order: "id desc",
             // Try to fetch first record of next page just to know whether there is a next page.
             limit,

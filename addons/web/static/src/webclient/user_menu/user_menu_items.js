@@ -93,7 +93,7 @@ export function odooAccountItem(env) {
 function installPWAItem(env) {
     let description = _t("Install App");
     let callback = () => env.services.pwa.show();
-    let hide = !env.services.pwa.isAvailable;
+    let hide = !env.services.pwa.isAvailable || isDisplayStandalone();
     const currentApp = env.services.menu.getCurrentApp();
     if (currentApp && ["barcode", "field-service", "shop-floor"].includes(currentApp.actionPath)) {
         // While the feature could work with all apps, we have decided to only

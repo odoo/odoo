@@ -4,7 +4,7 @@
         <record id="email_template_edi_sale" model="mail.template">
             <field name="name">Sales: Send Quotation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Quotation' or 'Order' }} {{ object.name or 'n/a' }}</field>
+            <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Quotation' or 'Order' }} {{ object.name or 'n/a' }} {{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}</field>
             <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
@@ -19,6 +19,9 @@
         Your <t t-out="doc_name or ''">quotation</t> <span style="font-weight: bold;" t-out="object.name or ''"></span>
         <t t-if="object.origin">
             (with reference: <t t-out="object.origin or ''">S00052</t> )
+        </t>
+        <t t-if="object.client_order_ref">
+            (<t t-out="object.client_order_ref or ''">CUSTOMER REF</t>)
         </t>
         amounting in <span style="font-weight: bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is ready for review.
         <br/>
@@ -72,6 +75,9 @@
         <t t-if="object.origin">
             (with reference: <t t-out="object.origin or ''"></t> )
         </t>
+        <t t-if="object.client_order_ref">
+            (<t t-out="object.client_order_ref or ''">CUSTOMER REF</t>)
+        </t>
         amounting in <span style="font-weight: bold;"  t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is available.
         <br/><br/>
         Do not hesitate to contact us if you have any questions.
@@ -88,7 +94,7 @@
         <record id="mail_template_sale_confirmation" model="mail.template">
             <field name="name">Sales: Order Confirmation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="subject">{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state == 'pending') and 'Pending Order' or 'Order' }} {{ object.name or 'n/a' }}</field>
+            <field name="subject">{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state == 'pending') and 'Pending Order' or 'Order' }} {{ object.name or 'n/a' }} {{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}</field>
             <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
@@ -109,8 +115,29 @@
                         <br/><br/>
                         <t t-set="tx_sudo" t-value="object.get_portal_last_transaction()"/>
                         Your order <span style="font-weight:bold;" t-out="object.name or ''">S00049</span>
+                        <t t-if="object.client_order_ref">
+                            (<t t-out="object.client_order_ref or ''">CUSTOMER REF</t>)
+                        </t>
                         <t t-if="object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))">
-                            has been confirmed.<br/>
+                            <t
+                                t-if="hasattr(object, 'carrier_id') and object.carrier_id.delivery_type == 'in_store'"
+                            >
+                                <t
+                                    t-if="object.commitment_date and object.commitment_date.date() != object.date_order.date()"
+                                >
+                                    has been confirmed and will be ready on
+                                    <span
+                                        t-field="object.commitment_date"
+                                        t-options='{"widget": "date"}'
+                                    />.<br/>
+                                </t>
+                                <t t-else="">
+                                    has been confirmed and will be ready soon.<br/>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                has been confirmed.<br/>
+                            </t>
                             Thank you for your trust.
                         </t>
                         <t t-elif="tx_sudo and tx_sudo.state == 'pending'">
@@ -151,11 +178,11 @@
                                     <table width="100%" style="max-width: 590px; font-size: 14px; border-collapse: collapse;" role="presentation">
                                         <tr>
                                             <td width="24%" style="max-width: 120px; padding: 0 10px 10px 0; vertical-align: top;">
-                                                <img t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" t-attf-style="width: 64px; height: {{object.website_id and object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-position: center;" alt="Product image"></img>
+                                                <img t-if="line.product_id" t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" t-attf-style="width: 64px; height: {{object.website_id and object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-position: center;" alt="Product image"></img>
                                             </td>
                                             <td align="left" style="vertical-align: top; padding-bottom: 22px;">
                                                 <h3 t-attf-style="mso-line-height-rule:exactly; margin:0; font-size: 14px; {{'margin-bottom: 6px;' if line.product_type == 'combo' else ''}}">
-                                                    <strong t-out="line.product_id.name or ''" t-attf-style="color: #{color};">Taking care of Trees Course</strong>
+                                                    <strong t-out="line.product_id.name or line.name" t-attf-style="color: #{color};">Taking care of Trees Course</strong>
                                                     <span t-if="line.product_id.product_template_attribute_value_ids" style="opacity: 0.5;">
                                                         <t t-out="', '.join(line.product_id.product_template_attribute_value_ids.mapped('name'))" />
                                                     </span>
@@ -294,24 +321,20 @@
                                     <td style="width: 50%; border-top: 1px solid #dee2e6;" align="right" t-out="format_amount(object.amount_untaxed, object.currency_id) or ''">$ 10.00</td>
                                 </tr>
                             </table>
+                            <t t-if="object.tax_totals and object.tax_totals['subtotals']">
+                                <t t-set="all_tax_lines" t-value="[tax for line in object.tax_totals['subtotals'] for tax in line['tax_groups']]"/>
+                                <table width="100%" t-if="all_tax_lines" style="max-width: 590px; font-size: 14px; border-spacing: 0px; white-space: nowrap;" role="presentation">
+                                    <tr t-foreach="all_tax_lines" t-as="tax_line">
+                                        <td style="width: 20%; padding-bottom: 8px;" align="left"><span t-out="tax_line['group_name']"/></td>
+                                        <td style="width: 80%;" align="right" t-out="format_amount(tax_line['tax_amount_currency'], object.currency_id) or ''">$ 0.00</td>
+                                    </tr>
+                                </table>
+                            </t>
                             <table width="100%" style="max-width: 590px; font-size: 14px; border-spacing: 0px; white-space: nowrap;" role="presentation">
-                                <tr>
-                                    <t t-if="object.tax_totals and object.tax_totals['subtotals']">
-                                        <t t-foreach="object.tax_totals['subtotals']" t-as="line">
-                                            <t t-foreach="line['tax_groups']" t-as="tax_line">
-                                                <tr>
-                                                    <td style="width: 20%; padding-bottom: 8px;" align="left"><span t-out="tax_line['group_name']"/></td>
-                                                    <td style="width: 80%;" align="right" t-out="format_amount(tax_line['tax_amount_currency'], object.currency_id) or ''">$ 0.00</td>
-                                                </tr>
-                                            </t>
-                                        </t>
-                                    </t>
-                                </tr>
                                 <tr>
                                     <td style="width: 20%; padding-top: 4px; border-top: 1px solid #343a40; opacity: 0.9;" align="left"><strong>Total</strong></td>
                                     <td style="width: 80%; padding-top: 4px; border-top: 1px solid #343a40; font-weight: bold; " align="right">
                                         <span style="display: inline-block; margin-right: 4px; padding: 4px 8px; border: 1px solid #dee2e6; border-radius: 4px;">
-                                            <span style="opacity: 0.9;">Paid with</span>
                                             <span t-attf-style="color: #{color}; font-weight: bold;">
                                                 <t t-out="tx_sudo.provider_id.sudo().name or ''"></t>
                                             </span>
@@ -324,7 +347,11 @@
                         <table t-if="object.partner_shipping_id and not object.only_services" width="295" style="vertical-align: top; font-size: 14px; margin-bottom: 12px;" align="left" role="presentation">
                             <tr>
                                 <td style="padding-bottom: 4px; font-weight: bold;">
-                                    <span style="opacity: 0.9;">Delivery with</span>
+                                    <t
+                                        t-if="not (hasattr(object, 'carrier_id') and object.carrier_id.delivery_type == 'in_store')"
+                                    >
+                                        <span style="opacity: 0.9;">Delivery with</span>
+                                    </t>
                                     <span t-attf-style="color: {{color}}; opacity: 1;"><t t-out="object.carrier_id.name or ''"></t></span>
                                 </td>
                             </tr>

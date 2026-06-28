@@ -9,12 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('ec')
     def _get_ec_template_data(self):
         return {
-            'property_account_receivable_id': 'ec1102050101',
-            'property_account_payable_id': 'ec210301',
-            'journal_account_expense_categ_id': 'ec52022816',
-            'property_stock_valuation_account_id': 'ec110306',
-            'loss_stock_valuation_account': 'ec510112',
-            'production_stock_valuation_account': 'ec110302',
             'code_digits': '4',
         }
 
@@ -46,6 +40,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax_vat_15_510_sup_01',
                 'expense_account_id': 'ec110307',
                 'income_account_id': 'ec410101',
+                'receivable_account_id': 'ec1102050101',
+                'payable_account_id': 'ec210301',
                 'tax_calculation_rounding_method': 'round_per_line',
                 'account_stock_valuation_id': 'ec110306',
             },
@@ -61,13 +57,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'l10n_ec_emission': '001',
                 'l10n_ec_emission_address_id': self.env.company.partner_id.id,
             },
+            'purchase': {
+                'default_account_id': 'ec52022816',
+            },
         }
-
-    def _post_load_data(self, template_code, company, template_data):
-        super()._post_load_data(template_code, company, template_data)
-        # Setup default Income/Expense Accounts on Sale/Purchase journals
-        if (purchase_journal := self.ref("purchase", raise_if_not_found=False)) and (expense_account_ref := template_data.get('journal_account_expense_categ_id')):
-            purchase_journal.default_account_id = self.ref(expense_account_ref, raise_if_not_found=False)
 
     @template('ec', 'account.account')
     def _get_ec_account_account(self):
@@ -85,4 +78,18 @@ class AccountChartTemplate(models.AbstractModel):
             'ec120109': {'asset_depreciation_account_id': 'ec12011208', 'asset_expense_account_id': 'ec51040108'},
             'ec120110': {'asset_depreciation_account_id': 'ec12011209', 'asset_expense_account_id': 'ec51040109'},
             'ec120111': {'asset_depreciation_account_id': 'ec12011210', 'asset_expense_account_id': 'ec51040110'},
+        }
+
+    @template('ec', 'stock.location')
+    def _get_ec_stock_location(self):
+        if 'stock.location' not in self.env:
+            return {}
+        loss_locs = self.env['stock.location'].search([('usage', '=', 'inventory'), ('company_id', '=', self.env.company.id)])  # noqa: OLS03001
+        prod_locs = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.env.company.id)])  # noqa: OLS03001
+        return {
+            loc.id: {'valuation_account_id': 'ec510112'}
+            for loc in loss_locs
+        } | {
+            loc.id: {'valuation_account_id': 'ec110302'}
+            for loc in prod_locs
         }

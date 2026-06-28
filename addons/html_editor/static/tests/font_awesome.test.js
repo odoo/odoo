@@ -2,14 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { deleteBackward, deleteForward, insertText, undo } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
-import { execCommand } from "./_helpers/userCommands";
 import { processThroughNormalize } from "./_helpers/dispatch";
-
-function insertFontAwesome(faClass) {
-    return (editor) => {
-        execCommand(editor, "insertFontAwesome", { faClass });
-    };
-}
 
 describe("parse/render", () => {
     test("should parse an old-school fontawesome", async () => {
@@ -509,82 +502,6 @@ describe("deleteBackward", () => {
                     contentAfter: "<p>ab[]cd</p>",
                 });
             });
-        });
-    });
-});
-
-describe("FontAwesome insertion", () => {
-    test("should insert a fontAwesome at the start of an element", async () => {
-        await testEditor({
-            contentBefore: "<p>[]abc</p>",
-            stepFunction: insertFontAwesome("fa fa-star"),
-            contentAfterEdit:
-                '<p>\ufeff<i class="fa fa-star" contenteditable="false">\u200b</i>[]\ufeffabc</p>',
-            contentAfter: '<p><i class="fa fa-star"></i>[]abc</p>',
-        });
-    });
-
-    test("should insert a fontAwesome within an element", async () => {
-        await testEditor({
-            contentBefore: "<p>ab[]cd</p>",
-            stepFunction: insertFontAwesome("fa fa-star"),
-            contentAfterEdit:
-                '<p>ab\ufeff<i class="fa fa-star" contenteditable="false">\u200b</i>[]\ufeffcd</p>',
-            contentAfter: '<p>ab<i class="fa fa-star"></i>[]cd</p>',
-        });
-    });
-
-    test("should insert a fontAwesome at the end of an element", async () => {
-        await testEditor({
-            contentBefore: "<p>abc[]</p>",
-            stepFunction: insertFontAwesome("fa fa-star"),
-            contentAfterEdit:
-                '<p>abc\ufeff<i class="fa fa-star" contenteditable="false">\u200b</i>[]\ufeff</p>',
-            contentAfter: '<p>abc<i class="fa fa-star"></i>[]</p>',
-        });
-    });
-
-    test("should insert a fontAwesome after", async () => {
-        await testEditor({
-            contentBefore: '<p>ab<i class="fa fa-pastafarianism"></i>c[]d</p>',
-            stepFunction: insertFontAwesome("fa fa-star"),
-            contentAfterEdit:
-                '<p>ab\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeffc\ufeff<i class="fa fa-star" contenteditable="false">\u200b</i>[]\ufeffd</p>',
-            contentAfter:
-                '<p>ab<i class="fa fa-pastafarianism"></i>c<i class="fa fa-star"></i>[]d</p>',
-        });
-    });
-
-    test("should insert a fontAwesome before", async () => {
-        await testEditor({
-            contentBefore: '<p>ab[]<i class="fa fa-pastafarianism"></i>cd</p>',
-            contentBeforeEdit:
-                '<p>ab[]\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeffcd</p>',
-            stepFunction: insertFontAwesome("fa fa-star"),
-            contentAfterEdit:
-                '<p>ab\ufeff<i class="fa fa-star" contenteditable="false">\u200b</i>[]\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeffcd</p>',
-            contentAfter:
-                '<p>ab<i class="fa fa-star"></i>[]<i class="fa fa-pastafarianism"></i>cd</p>',
-        });
-    });
-    test.skip("should insert a fontAwesome and replace the icon", async () => {
-        await testEditor({
-            contentBefore: '<p>ab[<i class="fa fa-pastafarianism"></i>]cd</p>',
-            stepFunction: insertFontAwesome("fa fa-star"),
-            contentAfter: '<p>abs<i class="fa fa-star"></i>[]cd</p>',
-        });
-    });
-
-    test("should insert fontAwesome consecutively", async () => {
-        await testEditor({
-            contentBefore: "<p>[]<br></p>",
-            stepFunction: async (editor) => {
-                execCommand(editor, "insertFontAwesome", { faClass: "fa fa-star" });
-                execCommand(editor, "insertFontAwesome", { faClass: "fa fa-glass" });
-            },
-            contentAfterEdit:
-                '<p>\ufeff<i class="fa fa-star" contenteditable="false">\u200b</i>\ufeff<i class="fa fa-glass" contenteditable="false">\u200b</i>[]\ufeff</p>',
-            contentAfter: '<p><i class="fa fa-star"></i><i class="fa fa-glass"></i>[]</p>',
         });
     });
 });

@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
-from odoo.tools import BinaryBytes
-from odoo.tools.image import is_image_size_above
+from urllib.parse import urlparse
 
-from odoo.addons.html_editor.tools import get_video_embed_code, get_video_thumbnail
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError
+from odoo.tools.image import is_image_size_above
 
 
 class ProductImage(models.Model):
@@ -26,7 +25,6 @@ class ProductImage(models.Model):
         string="Product Variant", comodel_name="product.product", ondelete="cascade", index=True
     )
     video_url = fields.Char(string="Video URL", help="URL of a video for showcasing your product.")
-    embed_code = fields.Html(compute="_compute_embed_code", sanitize=False)
 
     can_image_1024_be_zoomed = fields.Boolean(
         string="Can Image 1024 be zoomed", compute="_compute_can_image_1024_be_zoomed", store=True
@@ -41,27 +39,14 @@ class ProductImage(models.Model):
                 image.image_1920, image.image_1024
             )
 
-    @api.depends("video_url")
-    def _compute_embed_code(self):
-        for image in self:
-            image.embed_code = (image.video_url and get_video_embed_code(image.video_url)) or False
-
-    # === ONCHANGE METHODS ===#
-
-    @api.onchange("video_url")
-    def _onchange_video_url(self):
-        if not self.image_1920:
-            thumbnail = get_video_thumbnail(self.video_url)
-            self.image_1920 = BinaryBytes(thumbnail or b"")
-
     # === CONSTRAINT METHODS ===#
 
     @api.constrains("video_url")
     def _check_valid_video_url(self):
         for image in self:
-            if image.video_url and not image.embed_code:
+            if image.video_url and not urlparse(image.video_url):
                 raise ValidationError(
-                    _(
+                    image.env._(
                         "Provided video URL for '%s' is not valid. Please enter a valid video URL.",
                         image.name,
                     )

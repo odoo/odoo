@@ -5,10 +5,13 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr_recruitment.hr_job_view_tree_inherit"/>
         <field name="arch" type="xml">
-            <field name="department_id" position="after">
-                <field name="applicant_matching_score" widget="progressbar"
-                    groups="hr_recruitment.group_hr_recruitment_interviewer"
-                    invisible="not applicant_matching_score" column_invisible="not context.get('active_applicant_id')"/>
+            <field name="open_application_count" position="before">
+                <field name="applicant_matching_score" string="Matching" widget="progressbar" options="{'overflow_class': 'bg-success'}"
+                    column_invisible="not context.get('active_applicant_id') and not context.get('active_applicant_skill_ids')"/>
+                <field name="matching_applicant_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                    column_invisible="not context.get('active_applicant_skill_ids')"/>
+                <field name="missing_applicant_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                    column_invisible="not context.get('active_applicant_skill_ids')"/>
             </field>
         </field>
     </record>
@@ -19,8 +22,11 @@
         <field name="inherit_id" ref="hr_skills.view_hr_job_form"/>
         <field name="arch" type="xml">
             <header position="inside">
-                <button name="action_search_matching_applicants" string="Matching Talents" type="object" class="btn-secondary"
-                    groups="hr_recruitment.group_hr_recruitment_user"/>
+                <button string="Matching Talents"
+                        name="action_job_add_applicants"
+                        type="object"
+                        groups="hr_recruitment.group_hr_recruitment_user"
+                />
             </header>
             <xpath expr="//group[@id='job_skills']/field[@name='current_job_skill_ids']" position="attributes">
                 <attribute name="groups">!hr.group_hr_user,!hr_recruitment.group_hr_recruitment_interviewer</attribute>
@@ -35,7 +41,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='menu_view_job_posts']" position="before">
                 <div role="menuitem" name="menu_view_matching_applicants">
-                    <a name="action_search_matching_applicants" type="object" context="{'default_job_id': id, 'search_default_talents': True}">Matching Talents</a>
+                    <a name="action_job_add_applicants" type="object" context="{'default_job_id': id}">Matching Talents</a>
                 </div>
             </xpath>
         </field>

@@ -24,12 +24,12 @@
     <!-- Generic Field Layout -->
     <!-- Changes made here needs to be reflected in the different Form view (Contact Us, Jobs, ...) -->
     <t t-name="website.form_field">
-        <div t-attf-class="s_website_form_field mb-3 #{this.field.formatInfo.col or 'col-12'} #{this.field.formatInfo.offset} #{this.field.custom and 's_website_form_custom' or ''} #{(this.field.required and 's_website_form_required' or '') or (this.field.modelRequired and 's_website_form_model_required' or '')} #{this.field.hidden and 's_website_form_field_hidden' or ''} #{this.field.dnone and 's_website_form_dnone' or ''}"
+        <div t-attf-class="s_website_form_field mb-3 #{this.field.formatInfo.col or 'col-12'} #{this.field.formatInfo.offset} #{this.field.custom and 's_website_form_custom' or ''} #{(this.field.required and 's_website_form_required' or '') or (this.field.modelRequired and 's_website_form_model_required' or '')} #{this.field.hidden and 's_website_form_field_hidden' or ''} #{this.field.dnone and 's_website_form_dnone' or ''} #{fieldTypeClasses or ''}"
             t-att-data-type="this.field.type"
             data-name="Field"
             t-att-data-translated-name="this.defaultName">
             <div t-if="this.field.formatInfo.labelPosition !== 'none' and this.field.formatInfo.labelPosition !== 'top'" class="row s_col_no_resize s_col_no_bgcolor">
-                <label t-attf-class="#{!this.field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{this.field.formatInfo.labelPosition === 'right' and 'text-end' or ''}" t-attf-style="width: #{this.field.formatInfo.labelWidth or '200px'}" t-att-for="this.field.id">
+                <label t-attf-class="#{!this.field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{this.field.formatInfo.labelPosition === 'right' and 'text-end' or ''} #{this.field.formatInfo.labelInvisible and 'invisible' or ''}" t-attf-style="width: #{this.field.formatInfo.labelWidth or '200px'}" t-att-for="this.field.id">
                      <t t-call="website.form_label_content"/>
                 </label>
                 <div class="col-sm">
@@ -70,9 +70,9 @@
             form descriptions as the behavior is kinda weird (but it mainly does
             not make sense to try and change it over there anyway).
         -->
-        <div t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true">
+        <span t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true" t-att-data-description-mark="descriptionRequiredMark">
             <t t-out="default_description"/>
-        </div>
+        </span>
     </t>
 
     <!-- Hidden Field -->
@@ -100,6 +100,8 @@
                 t-att-data-fill-with="field.fillWith"
                 t-att-placeholder="field.placeholder"
                 t-att-id="field.id"
+                t-att-minlength="field.minLength"
+                t-att-maxlength="field.maxLength"
             />
         </t>
     </t>
@@ -130,6 +132,8 @@
                 t-att-id="field.id"
                 t-att-rows="field.rows || 3"
                 t-out="field.value"
+                t-att-maxlength="field.maxLength"
+                t-att-minlength="field.minLength"
             />
         </t>
     </t>
@@ -213,6 +217,8 @@
 
     <!-- Boolean Field -->
     <t t-name="website.form_field_boolean">
+        <t t-set="fieldTypeClasses" t-value="['top', 'center', 'wrap'].includes(field.formatInfo.textPosition) and 's_website_form_description_' + field.formatInfo.textPosition"/>
+        <t t-set="descriptionRequiredMark" t-value="' ' + field.formatInfo.mark"/>
         <t t-call="website.form_field">
             <div class="form-check">
                 <input
@@ -291,7 +297,8 @@
                 </t>
                 <select t-else="" class="form-select s_website_form_input" t-att-name="field.name"
                     t-att-required="field.required || field.modelRequired || None" t-att-id="field.id"
-                    t-attf-data-link-state-to-country="{{ field.name == 'state_id' and field.linkStateToCountry ? 'true' : 'false' }}">
+                    t-att-data-fill-with="field.fillWith"
+                    t-attf-data-link-state-to-country="{{ field.name == 'state_id' and (field.linkStateToCountry ? 'true' : 'false') }}">
                     <option t-if="field.allowEmpty" t-out="field.placeholder" class="s_website_form_empty_option" value="" selected="selected"/>
                     <t t-foreach="field.records" t-as="record" t-key="record_index">
                         <option t-out="record.display_name" t-att-id="field.id + record_index" t-att-value="record.id"
@@ -309,9 +316,7 @@
     <t t-name="website.form_field_one2many">
         <!-- Binary one2many -->
         <t t-if="field.relation === 'ir.attachment'">
-            <t t-call="website.form_field_binary">
-                <t t-set="multiple" t-value="1"/>
-            </t>
+            <t t-call="website.form_field_binary" multiple="1"/>
         </t>
         <!-- Generic one2many -->
         <t t-if="field.relation !== 'ir.attachment'">
@@ -375,6 +380,7 @@
                 t-att-id="field.id"
                 t-att-data-max-files-number="field.maxFilesNumber or '1'"
                 t-att-data-max-file-size="field.maxFileSize or '64'"
+                t-att-accept="field.accept"
             />
         </t>
     </t>

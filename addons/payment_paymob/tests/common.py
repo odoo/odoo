@@ -53,7 +53,7 @@ class PaymobCommon(PaymentCommon):
             "success": "true",
             "data.message": "Approved",
             "hmac": cls.hmac_signature,
-            "merchant_order_id": cls.order_id,
+            "merchant_order_id": cls.reference,
         }
         cls.webhook_data = {
             "amount_cents": 111111,
@@ -70,7 +70,7 @@ class PaymobCommon(PaymentCommon):
             "is_refunded": False,
             "is_standalone_payment": True,
             "is_voided": False,
-            "order": {"id": 123, "merchant_order_id": cls.order_id},
+            "order": {"id": 123, "merchant_order_id": cls.reference},
             "owner": 12,
             "pending": False,
             "source_data": {"pan": "1111", "sub_type": "Visa", "type": "card"},

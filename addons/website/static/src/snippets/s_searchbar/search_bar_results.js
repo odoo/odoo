@@ -22,7 +22,7 @@ export class SearchBarResults extends Interaction {
                     "max-height": `max(40vh, ${
                         document.body.clientHeight - bcr.bottom - 16
                     }px) !important`,
-                    "min-width": this.autocompleteMinWidth,
+                    "min-width": `${this.autocompleteMinWidth}px`,
                 };
             },
             "t-att-class": () => ({

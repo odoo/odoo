@@ -75,3 +75,20 @@ class SlideChannel(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("website_sale_slides.sale_report_action_slides")
         action['domain'] = [('product_id', 'in', self.product_id.ids)]
         return action
+
+    def _build_course_detail_jsonld_vals(self):
+        vals = super()._build_course_detail_jsonld_vals()
+        if offer := self._build_course_offer_jsonld_vals():
+            vals['offers'] = offer
+        return vals
+
+    def _build_course_offer_jsonld_vals(self):
+        product = self.product_id
+        if not product:
+            return None
+        product_info = product._get_combination_info_variant()
+        return {
+            '@type': 'Offer',
+            'price': product_info.get('price', 0),
+            'priceCurrency': product.currency_id.name,
+        }

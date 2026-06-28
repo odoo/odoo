@@ -8,16 +8,14 @@ from odoo.addons.payment_asiapay.tests.common import AsiaPayCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentProvider(AsiaPayCommon):
-    def test_incompatible_with_unsupported_currencies(self):
-        """Test that AsiaPay providers are filtered out from compatible providers when the currency
-        is not supported."""
-        compatible_providers = self.env["payment.provider"]._get_compatible_providers(
+    def test_not_available_for_unsupported_currencies(self):
+        available_providers = self.env["payment.provider"]._find_available_providers(
             self.env.company.id,
             self.partner.id,
             self.amount,
             currency_id=self.env.ref("base.AFN").id,
         )
-        self.assertNotIn(self.asiapay, compatible_providers)
+        self.assertNotIn(self.asiapay, available_providers)
 
     def test_signature_calculation_for_outgoing_data(self):
         """Test that the calculated signature matches the expected signature for outgoing data."""

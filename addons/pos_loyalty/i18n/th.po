@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2025-09-16 21:36+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/pos_loyalty/"
@@ -151,8 +151,8 @@ msgid "Available rewards"
 msgstr "รางวัลที่มีอยู่"
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
+#. odoo-python
+#: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
 msgid "Balance:"
 msgstr ""
 
@@ -191,7 +191,7 @@ msgstr "สร้างลูกค้า"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
 msgid "Current Balance:"
-msgstr "ยอดคงเหลือปัจจุบัน:"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -212,6 +212,7 @@ msgid "Discount & Loyalty"
 msgstr "คูปอง & สมาชิก"
 
 #. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__display_name
@@ -232,7 +233,6 @@ msgstr "แสดงชื่อ"
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Enter Code"
 msgstr "ป้อนโค้ด"
 
@@ -289,6 +289,7 @@ msgid "How many point this reward cost on the coupon."
 msgstr "รางวัลนี้ใช้แต้มสะสมเท่าไหร่ในบัตรคูปอง"
 
 #. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__id
@@ -340,6 +341,11 @@ msgstr "โปรแกรมบัตรของขวัญไม่ถูก
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__is_reward_line
 msgid "Is Reward Line"
 msgstr "เป็นรายการรางวัล"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_account_move_line
+msgid "Journal Item"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_mail
@@ -531,12 +537,6 @@ msgstr ""
 "ไม่อนุญาตให้คืนเงินโดยการเติมเงินหรือสินค้ารางวัลสำหรับ eWallet หรือโปรแกรมบัตรของขวัญ"
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
-msgid "Reset Programs"
-msgstr "รีเซ็ตโปรแกรม"
-
-#. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_config_ids
 msgid ""
 "Restrict publishing to those shops. Note: A program will only be used in the "
@@ -544,8 +544,6 @@ msgid ""
 msgstr ""
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_id
 msgid "Reward"
 msgstr "รางวัล"
@@ -587,10 +585,8 @@ msgid ""
 msgstr "คูปองบางรายการไม่ถูกต้อง คูปองที่ใช้ได้รับการอัปเดตแล้ว กรุณาตรวจสอบคำสั่งซื้อ"
 
 #. module: pos_loyalty
-#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
-#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Spent:"
 msgstr ""
 
@@ -792,6 +788,11 @@ msgid "Unpaid gift card rejected."
 msgstr "บัตรของขวัญที่ยังไม่ได้ชำระเงินถูกปฏิเสธ"
 
 #. module: pos_loyalty
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.pos_order_receipt
+msgid "Until:"
+msgstr ""
+
+#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Use eWallet to pay"
@@ -814,10 +815,8 @@ msgid "Whether this line is part of a reward or not."
 msgstr "รายการนี้เป็นส่วนหนึ่งของรางวัลหรือไม่"
 
 #. module: pos_loyalty
-#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
-#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Won:"
 msgstr ""
 
@@ -868,3 +867,17 @@ msgstr "คืนเงิน eWallet"
 #: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
 msgid "eWallet requires a customer to be selected"
 msgstr "eWallet กำหนดให้ลูกค้าต้องได้รับเลือก"
+
+#. module: pos_loyalty
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.pos_order_receipt
+msgid "no expiration"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
+msgid "used"
+msgstr ""
+
+#~ msgid "Reset Programs"
+#~ msgstr "รีเซ็ตโปรแกรม"

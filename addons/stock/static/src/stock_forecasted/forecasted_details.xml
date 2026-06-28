@@ -14,6 +14,7 @@
             </thead>
             <tbody>
                 <t t-set="last_line_index" t-value="this.lines.length - 1"/>
+                <t t-set="skip_row" t-value="0"/>
                 <t t-foreach="this.lines" t-as="line" t-key="line_index">
                     <t t-set="currentProduct" t-value="this.props.docs.product[line.product.id]"/>
                     <t t-if="this.multipleProducts and (line_index === 0 or line.product.id !== this.lines[line_index - 1].product.id)">
@@ -32,8 +33,8 @@
                         </tr>
                     </t>
                     <tr t-attf-class="#{line.is_late and 'table-warning' or ''} #{this.multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}" >
-                        <t t-if="skip_row > 0" t-set="skip_row" t-value="skip_row - 1"/>
-                        <t t-if="!skip_row or skip_row == 0">
+                        <t t-if="skip_row" t-set="skip_row" t-value="skip_row - 1"/>
+                        <t t-if="!skip_row">
                             <t t-if="this.mergesLinesData[line_index]" t-set="skip_row" t-value="this.mergesLinesData[line_index]['rowcount']"/>
                             <td t-attf-rowspan="#{skip_row > 0 and skip_row}"/>
                             <td t-attf-rowspan="#{skip_row > 0 and skip_row}">

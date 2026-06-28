@@ -129,6 +129,13 @@ export function searchCustomer(val) {
             trigger: `.modal-header:has(.modal-title:contains(choose customer)) .input-group input`,
             run: `edit ${val}`,
         },
+        {
+            content: `Wait for search debounce`,
+            trigger: `.modal-dialog .input-group input`,
+            run: async function () {
+                await new Promise((resolve) => setTimeout(resolve, 350));
+            },
+        },
     ];
 }
 
@@ -136,6 +143,14 @@ export function searchCustomerValue(val, pressEnter = false) {
     const steps = searchCustomer(val);
 
     if (pressEnter) {
+        steps.push({
+            trigger: "body",
+            run: () =>
+                // wait 200ms so state.query can be updated with the new value before triggering keydown
+                new Promise((resolve) => {
+                    setTimeout(resolve, 200);
+                }),
+        });
         steps.push({
             content: `Manually trigger keyup event`,
             trigger: ".modal-header:has(.modal-title:contains(choose customer)) .input-group input",

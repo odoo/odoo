@@ -39,30 +39,27 @@ export class DropZoneSelectorPlugin extends Plugin {
                     ].join(", ");
                 },
                 exclude: `${special_cards_selector}`,
-                dropIn: "nav, .row.o_grid_mode",
+                dropIn: "nav, .row.o_grid_mode, .o_drop_inner_empty",
                 get dropNear() {
                     return `p, h1, h2, h3, ul, ol, div:not(.o_grid_item_image) > img, div:not(.o_grid_item_image) > a, .btn, ${this.plugin
                         .getResource("so_content_addition_selectors")
                         .join(", ")}, .s_card:not(${special_cards_selector})`;
                 },
-                excludeNearParent: so_snippet_addition_drop_in,
+                excludeNearParent: `${so_snippet_addition_drop_in}, .o_no_direct_child_drop`,
+                excludeAncestor: ".s_image_gallery",
             },
             {
                 selector: ".row > div",
-                exclude: ".s_col_no_resize.row > div, .s_col_no_resize",
-                dropNear: ".row:not(.s_col_no_resize) > div",
-            },
-            {
-                selector: ".row > div",
-                exclude: ".s_col_no_resize.row > div, .s_col_no_resize",
-                dropNear: ".row.o_grid_mode > div",
+                exclude:
+                    ".s_col_no_resize.row > div, .s_col_no_resize, .s_image_gallery .row > div",
+                dropNear: ".row:not(.s_col_no_resize) > div, .row.o_grid_mode > div",
+                excludeAncestor: ".s_image_gallery",
             },
         ],
         so_snippet_addition_selectors: ["section", ".parallax", ".s_hr"],
         so_content_addition_selectors: [
             "blockquote",
             ".s_text_highlight",
-            ".s_donation", // TODO: move to plugin
             ".o_snippet_drop_in_only",
         ],
     };

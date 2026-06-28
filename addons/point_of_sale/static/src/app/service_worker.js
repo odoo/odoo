@@ -33,6 +33,7 @@ self.addEventListener("fetch", (event) => {
     if (
         url.includes("extension") ||
         url.includes("web/dataset") ||
+        url.includes("Cashdro3WS/index3.php") ||
         event.request.method !== "GET"
     ) {
         return;

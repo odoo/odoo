@@ -28,8 +28,8 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
             "quantity": 10,
         })
 
-        with self.mock_request():
-            configurator_data = self.env["product.template"]._get_additional_configurator_data(
+        with self.mock_request() as request:
+            configurator_data = request.env["product.template"]._get_additional_configurator_data(
                 product_or_template=product,
                 date=datetime(2000, 1, 1),
                 currency=self.currency,
@@ -69,17 +69,18 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
         )
         self.cart.order_line = [Command.create({"product_id": product_a.id, "product_uom_qty": 3})]
 
-        with self.mock_request(sale_order_id=self.cart.id):
+        with self.mock_request(sale_order_id=self.cart.id) as request:
             combination_info = (
                 self
                 .env["product.template"]
                 .with_context(website_sale_product_page=True)
-                ._get_additionnal_combination_info(
+                ._get_additional_combination_info(
                     combo_product,
                     quantity=3,
                     uom=combo_product.uom_id,
-                    date=datetime(2000, 1, 1),
                     website=self.website,
+                    pricelist=request.pricelist,
+                    fiscal_position=request.fiscal_position,
                 )
             )
 
@@ -93,17 +94,18 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
         })
         combo_product = self._create_product(type="combo", combo_ids=[Command.link(combo.id)])
 
-        with self.mock_request(sale_order_id=self.cart.id):
+        with self.mock_request(sale_order_id=self.cart.id) as request:
             combination_info = (
                 self
                 .env["product.template"]
                 .with_context(website_sale_product_page=True)
-                ._get_additionnal_combination_info(
+                ._get_additional_combination_info(
                     combo_product,
                     quantity=3,
                     uom=combo_product.uom_id,
-                    date=datetime(2000, 1, 1),
                     website=self.website,
+                    pricelist=request.pricelist,
+                    fiscal_position=request.fiscal_position,
                 )
             )
 
@@ -113,17 +115,18 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
         self._add_product_qty_to_wh(
             self.product_oos_order_not_allowed.id, 9, self.warehouse.lot_stock_id.id
         )
-        with self.mock_request(sale_order_id=self.cart.id):
+        with self.mock_request(sale_order_id=self.cart.id) as request:
             combination_info = (
                 self
                 .env["product.template"]
                 .with_context(website_sale_product_page=True)
-                ._get_additionnal_combination_info(
+                ._get_additional_combination_info(
                     self.product_oos_order_not_allowed,
                     quantity=9,
                     uom=self.env.ref("uom.product_uom_pack_6"),
-                    date=datetime(2000, 1, 1),
                     website=self.website,
+                    pricelist=request.pricelist,
+                    fiscal_position=request.fiscal_position,
                 )
             )
         self.assertEqual(combination_info["free_qty"], 1)

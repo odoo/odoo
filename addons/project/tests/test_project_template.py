@@ -39,6 +39,56 @@ class TestProjectTemplates(TestProjectCommon):
         self.assertEqual(task_b.name, self.task_template_inside_template.name, "The copied task should have the same name as the original.")
         self.assertTrue(task_b.is_template, "The copied tasks should retain their template status.")
 
+    def test_convert_project_to_project_template_preserves_planned_dates(self):
+        """
+        Test that converting a project into a project template preserves the planned start and end dates.
+        """
+        project = self.env["project.project"].create({
+            "name": "Project",
+            "date_start": date(2025, 6, 1),
+            "date": date(2025, 6, 11),
+        })
+        task_1, task_2 = self.env["project.task"].create([{
+            "name": "Task 1",
+            "project_id": project.id,
+            "date_deadline": date(2025, 6, 10),
+        }, {
+            "name": "Task 2",
+            "project_id": project.id,
+            "date_deadline": date(2025, 6, 11),
+        }])
+
+        data = project.action_create_template_from_project()
+        project_template = self.env["project.project"].browse(
+            data["params"]["project_id"]
+        )
+
+        self.assertTrue(project_template.is_template,
+            "The generated project should be marked as a template."
+        )
+        self.assertEqual(project_template.date_start, project.date_start,
+            "The start date should be preserved when converting a project to a template."
+        )
+        self.assertEqual(project_template.date, project.date,
+            "The expiration date should be preserved when converting a project to a template."
+        )
+        self.assertEqual(task_1.date_deadline, project_template.task_ids[0].date_deadline,
+            "The task 1 deadline date should be preserved when converting a project to a template."
+        )
+        self.assertEqual(task_2.date_deadline, project_template.task_ids[1].date_deadline,
+            "The task 2 deadline date should be preserved when converting a project to a template."
+        )
+
+        # Create project with planned new dates
+        project_b = project_template.action_create_from_template({
+            "name": "Project B",
+            "date_start": date(2025, 6, 1),
+            "date": date(2025, 6, 10),
+        })
+
+        self.assertEqual(project_b.date_start, date(2025, 6, 1), "Project should have the new start date.")
+        self.assertEqual(project_b.date, date(2025, 6, 10), "Project should have the new expiration date.")
+
     def test_create_from_template(self):
         """
         Creating a project through the action should result in a non template copy
@@ -281,3 +331,19 @@ class TestProjectTemplates(TestProjectCommon):
         self.assertTrue(task_template.is_template)
         self.assertEqual(task_template.role_ids, self.task_template_inside_template.role_ids)
         self.assertFalse(task_template.user_ids)
+
+    def test_project_template_stage_copy(self):
+        """ The stage of a project template should be copied to the new project """
+        # Ensure project stages are enabled for the current user
+        self.env.user.group_ids |= self.env.ref('project.group_project_stages')
+
+        template_stage = self.env['project.project.stage'].create({'name': 'Template Stage', 'sequence': 100})
+        self.project_template.stage_id = template_stage
+
+        # Create project from template
+        new_project = self.project_template.action_create_from_template()
+        self.assertEqual(
+            new_project.stage_id,
+            template_stage,
+            "The new project should correctly inherit the 'Template Stage' from its template.",
+        )

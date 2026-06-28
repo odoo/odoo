@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
 "PO-Revision-Date: 2025-10-08 18:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -108,9 +108,8 @@ msgstr "Lavozim"
 #. module: hr_recruitment_skills
 #. odoo-javascript
 #: code:addons/hr_recruitment_skills/static/src/fields/skill_match_gauge_field/skill_match_gauge_field.xml:0
-#, fuzzy
 msgid "Job Position Matching"
-msgstr "Lavozimga moslik"
+msgstr ""
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__write_uid
@@ -132,6 +131,7 @@ msgstr "Darajalar soni"
 
 #. module: hr_recruitment_skills
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.crm_case_tree_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_job_list_inherit_hr_recruitment_skills
 #, fuzzy
 msgid "Matching"
 msgstr "Moslik"
@@ -142,12 +142,6 @@ msgstr "Moslik"
 #, fuzzy
 msgid "Matching Applicants"
 msgstr "Mos keluvchi nomzodlar"
-
-#. module: hr_recruitment_skills
-#: model:ir.actions.act_window,name:hr_recruitment_skills.action_find_matching_job
-#, fuzzy
-msgid "Matching Positions"
-msgstr "Mos keluvchi lavozimlar"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_score
@@ -163,6 +157,7 @@ msgstr "Moslik bali (%)"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_skill_ids
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__matching_applicant_skill_ids
 #, fuzzy
 msgid "Matching Skills"
 msgstr "Mos keluvchi ko‘nikmalar"
@@ -170,12 +165,14 @@ msgstr "Mos keluvchi ko‘nikmalar"
 #. module: hr_recruitment_skills
 #. odoo-javascript
 #: code:addons/hr_recruitment_skills/static/src/components/search_job_applicant_menu/search_job_applicant_menu.xml:0
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.view_hr_job_kanban
 msgid "Matching Talents"
 msgstr ""
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__missing_skill_ids
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__missing_applicant_skill_ids
 #, fuzzy
 msgid "Missing Skills"
 msgstr "Yetishmayotgan ko‘nikmalar"
@@ -210,12 +207,6 @@ msgstr "Jarayon"
 msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
 msgstr ""
 "Bilimning noldan (0%) to‘liq o‘zlashtirilgungacha (100%) bo‘lgan jarayoni."
-
-#. module: hr_recruitment_skills
-#: model:ir.actions.server,name:hr_recruitment_skills.action_applicant_search_applicant
-#, fuzzy
-msgid "Search Matching Applicants"
-msgstr "Mos keluvchi nomzodlarni qidirish"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__skill_ids

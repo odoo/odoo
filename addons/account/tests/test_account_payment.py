@@ -38,6 +38,24 @@ class TestAccountPayment(AccountTestInvoicingWithBanksCommon, MailCommon):
             ],
         }])
 
+        cls.commercial_partner = cls.env['res.partner'].create({
+            'name': 'Ready Mat',
+            'is_company': True,
+            'property_account_receivable_id': cls.company_data['default_account_receivable'].id,
+            'property_account_payable_id': cls.company_data['default_account_payable'].id,
+        })
+        cls.invoice_contact = cls.env['res.partner'].create({
+            'name': 'Billy Fox',
+            'type': 'invoice',
+            'parent_id': cls.commercial_partner.id,
+            'email': 'billy@readymat.example',
+        })
+        cls.other_contact = cls.env['res.partner'].create({
+            'name': 'Jane Fox',
+            'type': 'contact',
+            'parent_id': cls.commercial_partner.id,
+        })
+
     def test_payment_move_sync_create_write(self):
         copy_receivable = self.copy_account(self.company_data['default_account_receivable'])
 
@@ -682,7 +700,6 @@ class TestAccountPayment(AccountTestInvoicingWithBanksCommon, MailCommon):
             'code': '209.01.01',
             'name': 'Bank Account',
             'account_type': 'asset_cash',
-            'reconcile': False,
         })
         self.company_data['default_journal_bank'].outbound_payment_method_line_ids.payment_account_id = unreconciliable_account
         invoice = self.init_invoice(move_type='out_invoice', amounts=[10], post=True)
@@ -920,3 +937,58 @@ class TestAccountPayment(AccountTestInvoicingWithBanksCommon, MailCommon):
         payment.action_draft()
         with self.assertRaises(UserError):
             payment.amount = 300.0
+
+    def test_payment_communication_on_child_accounting_on_commercial(self):
+        """ When partner_id is set to a child contact, the payment move displays the child
+        (used for checks/receipts/emails) but every journal item is posted on the commercial
+        partner so reporting and reconciliation stay aggregated at the legal entity.
+        """
+        payment = self.init_payment(-100.0, partner=self.invoice_contact, post=True)
+
+        self.assertEqual(payment.partner_id, self.invoice_contact)
+        self.assertEqual(payment.commercial_partner_id, self.commercial_partner)
+        self.assertEqual(payment.move_id.partner_id, self.commercial_partner)
+        self.assertTrue(all(line.partner_id == self.commercial_partner for line in payment.move_id.line_ids))
+        self.assertEqual(
+            payment.destination_account_id,
+            self.commercial_partner.property_account_payable_id,
+        )
+
+    def test_payment_bank_account_from_commercial(self):
+        """ Outbound bank list for a payment on a child contact comes from the commercial partner. """
+        bank = self.env['res.partner.bank'].create({
+            'account_number': 'NL00COMM0000000001',
+            'partner_id': self.commercial_partner.id,
+        })
+        payment = self.init_payment(-100.0, partner=self.invoice_contact)
+        self.assertIn(bank, payment.available_partner_bank_ids)
+
+    def test_payment_destination_account_from_commercial(self):
+        """ property_account_*_id looked up on the commercial partner, not the child. """
+        payment = self.init_payment(-100.0, partner=self.invoice_contact)
+        self.assertEqual(
+            payment.destination_account_id,
+            self.commercial_partner.property_account_payable_id,
+        )
+
+    def test_payment_domain_accepts_child_contact(self):
+        """ The partner_id field accepts child contacts. """
+        payment = self.init_payment(-50.0, partner=self.invoice_contact)
+        self.assertEqual(payment.partner_id, self.invoice_contact)
+        self.assertEqual(payment.commercial_partner_id, self.commercial_partner)
+
+    def test_payment_duplicate_detection_same_partner(self):
+        """ Two payments on the same partner with identical amount/date are
+        flagged as duplicates.
+        """
+        payment1 = self.init_payment(-100.0, partner=self.commercial_partner, date='2025-01-15')
+        payment2 = self.init_payment(-100.0, partner=self.commercial_partner, date='2025-01-15')
+        self.assertIn(payment2, payment1.duplicate_payment_ids)
+
+    def test_payment_duplicate_detection_across_contacts(self):
+        """ Two payments sharing the same commercial but using different child contacts are
+        still flagged as duplicates of each other.
+        """
+        payment1 = self.init_payment(-100.0, partner=self.invoice_contact, date='2025-01-15')
+        payment2 = self.init_payment(-100.0, partner=self.other_contact, date='2025-01-15')
+        self.assertIn(payment2, payment1.duplicate_payment_ids)

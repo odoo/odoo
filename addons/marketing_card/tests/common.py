@@ -5,7 +5,6 @@ from unittest.mock import patch
 
 from odoo.tests import BaseCase, TransactionCase
 from odoo.tools import BinaryBytes
-from odoo.addons.base.models.ir_actions_report import IrActionsReport
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 
@@ -24,12 +23,12 @@ class MockImageRender(BaseCase):
     def mock_image_renderer(self, collect_params=True):
         self._wkhtmltoimage_bodies = []
 
-        def _ir_actions_report_build_run_wkhtmltoimage(model, bodies, width, height, image_format="jpg"):
+        def _ir_actions_report_build_run_image_engine(engine_name, model, bodies, width, height, image_format="jpg"):
             if collect_params:
                 self._wkhtmltoimage_bodies.extend(bodies)
             return [VALID_JPEG] * len(bodies)
 
-        with patch.object(IrActionsReport, '_run_wkhtmltoimage', _ir_actions_report_build_run_wkhtmltoimage):
+        with patch.object(type(self.env['ir.actions.report']), '_run_image_engine', _ir_actions_report_build_run_image_engine):
             yield
 
 
@@ -38,6 +37,9 @@ class MarketingCardCommon(TransactionCase, MockImageRender):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        cls.env['res.lang']._activate_lang('fr_FR')
+        cls.env['res.lang']._activate_lang('nl_NL')
 
         cls.company = cls.env['res.company'].create({
             'country_id': cls.env.ref("base.be").id,
@@ -79,7 +81,7 @@ class MarketingCardCommon(TransactionCase, MockImageRender):
             {'name': 'Bob', 'email': 'bob@justbob.me',
              'phone': '+32 123 446 789', 'image_1920': BinaryBytes(VALID_JPEG),
              },
-        ])
+        ] + [{'name': f'Part{n}', 'email': f'partn{n}@test.lan'} for n in range(18)])
 
         cls.card_template = cls.env['card.template'].create({
             'name': 'Test Template',
@@ -135,6 +137,9 @@ class MarketingCardCommon(TransactionCase, MockImageRender):
             'reward_target_url': f"{cls.env['card.campaign'].get_base_url()}/share-rewards/2039-sharer-badge/",
             'target_url': cls.env['card.campaign'].get_base_url(),
         })
+
+        (cls.campaign + cls.static_campaign).with_context(lang='fr_FR').content_header = "Mon Titre Francais"
+        (cls.campaign + cls.static_campaign).with_context(lang='nl_NL').content_header = "Mijn Nederlands Titel"
 
     @contextmanager
     def mock_datetime_and_now(self, mock_dt):

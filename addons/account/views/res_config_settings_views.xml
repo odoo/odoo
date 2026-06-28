@@ -23,14 +23,13 @@
                     <app data-string="Invoicing" string="Invoicing" name="account" groups="account.group_account_manager">
                         <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="has_accounting_entries" invisible="1"/>
-                        <block title="Fiscal Localization" name="fiscal_localization_setting_container" invisible="not is_root_company">
+                        <block title="Initial Setup" name="fiscal_localization_setting_container" invisible="not is_root_company">
                             <setting string="Fiscal Localization" company_dependent="1" help="Taxes, fiscal positions, chart of accounts &amp; legal statements for your country"
                                 documentation="/applications/finance/fiscal_localizations.html">
                                 <div class="content-group">
                                     <div class="mt16">
                                         <div>
-                                            <label for="chart_template" string="Package" class="col-2 o_light_label"/>
-                                            <field name="chart_template" readonly="has_accounting_entries" required="chart_template"/>
+                                            <field name="chart_template" readonly="has_accounting_entries" required="chart_template" class="w-100" placeholder="Package"/>
                                         </div>
                                         <div class="mt16">
                                             <button name="reload_template" type="object" string="Reload" class="btn-secondary ps-2 w-100" icon="fa-refresh"
@@ -56,15 +55,19 @@
                                     <div class="row">
                                         <div class="col-lg-3">
                                             <label string="Prices" for="account_price_include" class="o_light_label"/>
-                                            <div class="fa fa-question-circle" title="This setting locks once a journal entry is created."/>
                                         </div>
-                                        <field name="account_price_include" readonly="has_accounting_entries"/>
+                                        <field name="account_price_include" widget="radio"/>
                                     </div>
                                 </div>
                             </setting>
                             <setting id="rounding_method" company_dependent="1" string="Rounding Method" help="How total tax amount is computed in orders and invoices" title="- A rounding per tax is advised if your prices are tax-excluded. This minimizes cumulative rounding errors because it totals all unrounded tax amounts first and only rounds the final tax total once.\n
                                                                                                                                                                                - A rounding per line is advised if your prices are tax-included. That way, the sum of line subtotal equals the total with taxes.">
                                 <field name="tax_calculation_rounding_method" class="o_light_label mt16" widget="radio"/>
+                            </setting>
+                            <setting id="avatax_settings" string="AvaTax" help="Automatically compute US and Canadian tax rates."
+                                     documentation="/applications/finance/accounting/taxation/taxes/avatax.html"
+                                     invisible="country_code not in ('US', 'CA')" company_dependent="1">
+                                <field name="module_account_avatax" widget="upgrade_boolean"/>
                             </setting>
                             <setting id="eu_service" title="If you sell goods and services to customers in a
                                 foreign EU country, you must charge VAT based on the delivery address.
@@ -85,7 +88,7 @@
                                     </div>
                                     <div class="row mt16">
                                         <label for="account_cash_basis_base_account_id" class="col-lg-3 o_light_label"/>
-                                        <field name="account_cash_basis_base_account_id"/>
+                                        <field name="account_cash_basis_base_account_id" decoration-muted="not account_cash_basis_base_account_active"/>
                                     </div>
                                 </div>
                             </setting>
@@ -171,7 +174,7 @@
                                 <div class="content-group mt-2" invisible="not account_use_credit_limit">
                                     <div class="row">
                                         <label for="account_default_credit_limit" class="col-lg-4 o_light_label"/>
-                                        <field name="account_default_credit_limit"/>
+                                        <field name="account_default_credit_limit" widget="monetary"/>
                                     </div>
                                 </div>
                             </setting>
@@ -187,7 +190,7 @@
                                 <field name="group_uom"/>
                                 <div class="content-group" invisible="not group_uom">
                                     <button
-                                        name="%(uom.product_uom_form_action)d"
+                                        name="%(uom.uom_uom_action_list)d"
                                         icon="oi-arrow-right"
                                         type="action"
                                         string="Units &amp; Packagings"
@@ -196,7 +199,7 @@
                             </setting>
                         </block>
                         <block title="Customer Payments" id="pay_invoice_online_setting_container">
-                            <setting help="Let your customers pay their invoices online"
+                            <setting help="Let your customers pay their invoices on your portal"
                                 documentation="/applications/finance/accounting/receivables/customer_payments/online_payment.html">
                                 <field name="module_account_payment"/>
                                 <div class="mt-3 d-flex" invisible="not module_account_payment">
@@ -220,7 +223,7 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="qr_code_invoices" title="Add a QR-code to your invoices so that your customers can pay instantly with their mobile banking application." string="QR Codes" company_dependent="1" help="Add a payment QR-code to your invoices"
+                            <setting id="qr_code_invoices" help="Add a QR-code to your invoices so that your customers can pay instantly with their mobile banking application." string="SEPA QR Codes" company_dependent="1"
                                 documentation="/applications/finance/accounting/receivables/customer_invoices/epc_qr_code.html">
                                 <field name="qr_code" class="oe_inline"/>
                             </setting>
@@ -243,7 +246,7 @@
 
                         <block title="Digitization" id="account_digitalization">
                             <setting id="account_ocr_settings" help="Digitize your PDF or scanned documents with OCR and Artificial Intelligence"
-                                documentation="/applications/finance/accounting/payables/supplier_bills/invoice_digitization.html">
+                                documentation="/applications/finance/accounting/payables/supplier_bills/invoice_digitization.html" class="oe_inline mb-0">
                                 <field name="module_account_extract" widget="upgrade_boolean"/>
                                 <div id="msg_invoice_extract" class="content-group" invisible="not module_account_extract">
                                     <div class="text-warning mt16 mb4">
@@ -251,6 +254,7 @@
                                     </div>
                                 </div>
                             </setting>
+                            <div id="account_ocr_settings_moves" class="row"/>
                         </block>
 
                         <t groups="account.group_account_user">
@@ -263,11 +267,11 @@
                                         </div>
                                         <div class="row mt8">
                                             <label for="income_currency_exchange_account_id" string="Gain" class="col-lg-4 o_light_label"/>
-                                            <field name="income_currency_exchange_account_id"/>
+                                            <field name="income_currency_exchange_account_id" decoration-muted="not income_currency_exchange_account_active"/>
                                         </div>
                                         <div class="row mt8">
                                             <label for="expense_currency_exchange_account_id" string="Loss" class="col-lg-4 o_light_label"/>
-                                            <field name="expense_currency_exchange_account_id"/>
+                                            <field name="expense_currency_exchange_account_id" decoration-muted="not expense_currency_exchange_account_active"/>
                                         </div>
                                     </div>
                                 </setting>
@@ -275,11 +279,11 @@
                                     <div class="content-group">
                                         <div class="row mt8">
                                             <label for="account_journal_suspense_account_id" class="col-lg-5 o_light_label"/>
-                                            <field name="account_journal_suspense_account_id"/>
+                                            <field name="account_journal_suspense_account_id" decoration-muted="not account_journal_suspense_account_active"/>
                                         </div>
                                         <div class="row mt8">
                                             <label for="transfer_account_id" class="col-lg-5 o_light_label"/>
-                                            <field name="transfer_account_id"/>
+                                            <field name="transfer_account_id" decoration-muted="not transfer_account_active"/>
                                         </div>
                                     </div>
                                 </setting>
@@ -288,11 +292,11 @@
                                     <div class="content-group">
                                         <div class="row mt8">
                                             <label for="account_discount_expense_allocation_id" class="col-lg-5 o_light_label" string="Customer Invoices"/>
-                                            <field name="account_discount_expense_allocation_id" placeholder="Same Account as product"/>
+                                            <field name="account_discount_expense_allocation_id" placeholder="Same Account as product" decoration-muted="not account_discount_expense_allocation_active"/>
                                         </div>
                                         <div class="row mt8" id="account_discount_income_allocation">
                                             <label for="account_discount_income_allocation_id" class="col-lg-5 o_light_label" string="Vendor Bills"/>
-                                            <field name="account_discount_income_allocation_id" placeholder="Same Account as product"/>
+                                            <field name="account_discount_income_allocation_id" placeholder="Same Account as product" decoration-muted="not account_discount_income_allocation_active"/>
                                         </div>
                                     </div>
                                 </setting>
@@ -300,11 +304,11 @@
                                     <div class="content-group">
                                         <div class="row mt8">
                                             <label for="account_journal_early_pay_discount_gain_account_id" class="col-lg-5 o_light_label"/>
-                                            <field name="account_journal_early_pay_discount_gain_account_id"/>
+                                            <field name="account_journal_early_pay_discount_gain_account_id" decoration-muted="not account_journal_early_pay_discount_gain_account_active"/>
                                         </div>
                                         <div class="row mt8">
                                             <label for="account_journal_early_pay_discount_loss_account_id" class="col-lg-5 o_light_label"/>
-                                            <field name="account_journal_early_pay_discount_loss_account_id"/>
+                                            <field name="account_journal_early_pay_discount_loss_account_id" decoration-muted="not account_journal_early_pay_discount_loss_account_active"/>
                                         </div>
                                     </div>
                                 </setting>
@@ -312,11 +316,11 @@
                                     <div class="content-group">
                                         <div class="row mt8">
                                             <label for="income_account_id" class="col-lg-5 o_light_label"/>
-                                            <field name="income_account_id"/>
+                                            <field name="income_account_id" decoration-muted="not income_account_active"/>
                                         </div>
                                         <div class="row mt8">
                                             <label for="expense_account_id" class="col-lg-5 o_light_label"/>
-                                            <field name="expense_account_id"/>
+                                            <field name="expense_account_id" decoration-muted="not expense_account_active"/>
                                         </div>
                                     </div>
                                 </setting>
@@ -373,14 +377,16 @@
                                 <field name="account_storno"/>
                             </setting>
                         </block>
-                        <block title="Accounting Firms mode" id="quick_edit_mode">
-                            <div class="text-muted">
-                                <p style="margin-bottom: 0">Accounting firm mode will change invoice/bill encoding:</p>
-                                <p style="margin-bottom: 0"> - The document's sequence becomes editable on all documents.</p>
-                                <p style="margin-bottom: 0"> - A new field « Total (tax inc.) » to speed up and control the encoding by automating line creation with the right account &amp; tax.</p>
-                            </div>
-                            <setting company_dependent="1">
-                                <field name="quick_edit_mode" placeholder="Disabled"/>
+                        <block title="Accounting Firms mode">
+                            <setting  id="quick_edit_mode_enabled" company_dependent="1" help="A new field 'Total (tax inc.)' to speed up and control the encoding by automating line creation with the right account and tax.">
+                                <field name="quick_edit_mode_enabled"/>
+                                <field name="quick_edit_mode" required="quick_edit_mode_enabled" invisible="not quick_edit_mode_enabled"/>
+                            </setting>
+                            <setting  id="document_sequence_editable" company_dependent="1" help="The document's sequence becomes editable on all documents.">
+                                <field name="document_sequence_editable"/>
+                            </setting>
+                            <setting  id="set_to_review_documents" company_dependent="1" help="Review all the modification done by the user with right under bookkeeper.">
+                                <field name="set_to_review_documents"/>
                             </setting>
                         </block>
                     </app>

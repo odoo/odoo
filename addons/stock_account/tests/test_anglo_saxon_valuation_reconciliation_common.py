@@ -55,7 +55,6 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
             'default_account_stock_valuation': cls.env['account.account'].with_company(company).create({
                 'name': 'default_account_stock_valuation',
                 'code': 'STOCKVAL',
-                'reconcile': True,
                 'account_type': 'asset_current',
             }),
             'default_warehouse': cls.env['stock.warehouse'].search(

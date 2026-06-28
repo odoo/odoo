@@ -6,7 +6,7 @@
             <field name="name">Restaurant Floors</field>
             <field name="model">restaurant.floor</field>
             <field name="arch" type="xml">
-                <form string="Restaurant Floor">
+                <form string="Restaurant Floor" duplicate="0">
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <field name="active" invisible="1"/>
@@ -30,7 +30,7 @@
             <field name="name">Restaurant Floors</field>
             <field name="model">restaurant.floor</field>
             <field name="arch" type="xml">
-                <list string="Restaurant Floors">
+                <list string="Restaurant Floors" duplicate="0">
                     <field name="sequence" widget="handle" />
                     <field name="name" />
                     <field name="pos_config_ids" widget="many2many_tags"/>

@@ -110,6 +110,9 @@ class ReportController(Controller):
         requestcontent = json.loads(data)
         url, type_ = requestcontent[0], requestcontent[1]
         reportname = '???'
+        if type_.startswith('qweb-pdf'):
+            type_ = 'qweb-pdf'
+
         try:
             if type_ in ['qweb-pdf', 'qweb-text']:
                 converter = 'pdf' if type_ == 'qweb-pdf' else 'text'
@@ -155,6 +158,9 @@ class ReportController(Controller):
             res = request.make_response(html_escape(json.dumps(error)))
             raise werkzeug.exceptions.InternalServerError(response=res) from e
 
-    @route(['/report/check_wkhtmltopdf'], type='jsonrpc', auth='user', readonly=True)
-    def check_wkhtmltopdf(self):
-        return request.env['ir.actions.report'].get_wkhtmltopdf_state()
+    @route(['/report/get_pdf_engine_state'], type='jsonrpc', auth='user', readonly=True)
+    def get_pdf_engine_state(self, engine_name=None):
+        actions_report = self.env['ir.actions.report']
+        if not engine_name:
+            engine_name = actions_report._get_pdf_engine()
+        return actions_report.get_pdf_engine_state(engine_name)

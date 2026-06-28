@@ -61,7 +61,7 @@ class ResUsers(models.Model):
             self.totp_enabled = False
             self = self.filtered(lambda u: u._origin == self.env.user).with_prefetch()  # noqa: PLW0642
         for r, v in zip(self, self.sudo()):
-            r.totp_enabled = v.totp_secret not in (False, 'false')
+            r.totp_enabled = bool(v.totp_secret)
 
     def _rpc_api_keys_only(self):
         # 2FA enabled means we can't allow password-based RPC
@@ -233,8 +233,10 @@ class ResUsers(models.Model):
     def _totp_enable_search(self, operator, value):
         if operator != 'in':
             return NotImplemented
+        if True in value and False in value:
+            return fields.Domain.TRUE
         # HACK: totp_secret is not a stored field, but still present in table!
-        domain = Domain.custom(to_sql=lambda table: SQL("%s.totp_secret <> 'false'", table))
+        domain = Domain.custom(to_sql=lambda table: SQL("%s.totp_secret <> ''", table))
         if not (self.env.su or self.env.user.has_group('base.group_erp_manager')):
             domain &= Domain('id', '=', self.env.uid)
         return domain

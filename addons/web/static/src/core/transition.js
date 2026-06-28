@@ -1,7 +1,7 @@
-import { render, useComponent, useLayoutEffect, useState } from "@web/owl2/utils";
+import { render, useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { browser } from "./browser/browser";
 
-import { Component, onWillUpdateProps, status, xml } from "@odoo/owl";
+import { Component, onWillUpdateProps, status, xml, proxy } from "@odoo/owl";
 
 // Allows to disable transitions globally, useful for testing (and maybe for
 // a reduced motion setting in the future?)
@@ -37,7 +37,7 @@ export function useTransition({
     onLeave = () => {},
 }) {
     const component = useComponent();
-    const state = useState({
+    const state = proxy({
         shouldMount: initialVisibility,
         stage: initialVisibility ? "enter" : "leave",
     });
@@ -122,7 +122,7 @@ export function useTransition({
  * to be created. @see useTransition
  */
 export class Transition extends Component {
-    static template = xml`<t t-slot="default" t-if="transition.shouldMount" className="transition.className"/>`;
+    static template = xml`<t t-call-slot="default" t-if="this.transition.shouldMount" className="this.transition.className"/>`;
     static props = {
         name: String,
         visible: { type: Boolean, optional: true },

@@ -1,8 +1,8 @@
-import { reactive } from "@web/owl2/utils";
 import { PgSnapshot } from "@mail/model/field_version";
 import { Record } from "./record";
 import { STORE_SYM, modelRegistry } from "./misc";
-import { toRaw } from "@odoo/owl";
+
+import { immediateEffect, proxy, toRaw, untrack } from "@odoo/owl";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
 
@@ -181,6 +181,7 @@ export class Store extends Record {
                     // effectively delete the record
                     /** @type {Record} */
                     const record = RHD_QUEUE.keys().next().value;
+                    record._runDisposeFns();
                     RHD_QUEUE.delete(record);
                     deletingRecordsByLocalId.delete(record.localId);
                 }
@@ -255,11 +256,13 @@ export class Store extends Record {
         return this._onChange(record, name, (observe) => {
             const fn = () => {
                 observe();
-                try {
-                    cb();
-                } catch (err) {
-                    this.handleError(err);
-                }
+                untrack(() => {
+                    try {
+                        cb();
+                    } catch (err) {
+                        this.handleError(err);
+                    }
+                });
             };
             if (this._.UPDATE !== 0) {
                 if (!this._.RO_QUEUE.has(fn)) {
@@ -281,10 +284,10 @@ export class Store extends Record {
      * @returns {function} function to call to stop observing changes
      */
     _onChange(record, key, callback) {
-        let proxy;
+        let recordProxy;
         function _observe() {
-            // access proxy[key] only once to avoid triggering reactive get() many times
-            const val = proxy[key];
+            // access recordProxy[key] only once to avoid triggering reactive get() many times
+            const val = recordProxy[key];
             if (typeof val === "object" && val !== null) {
                 void Object.keys(val);
             }
@@ -294,21 +297,29 @@ export class Store extends Record {
             }
         }
         if (Array.isArray(key)) {
+            /** @type {Function[]} */
+            const arrayDisposeFns = [];
             for (const k of key) {
-                this._onChange(record, k, callback);
+                arrayDisposeFns.push(this._onChange(record, k, callback));
             }
-            return;
+            return () => {
+                arrayDisposeFns.forEach((f) => f());
+                arrayDisposeFns.length = 0;
+            };
         }
-        let ready = true;
-        proxy = reactive(record, () => {
-            if (ready) {
-                callback(_observe);
-            }
-        });
-        _observe();
-        return () => {
-            ready = false;
-        };
+        let running = false;
+        recordProxy = proxy(record);
+        const disposeFn = untrack(() =>
+            immediateEffect(() => {
+                if (!running) {
+                    _observe();
+                } else {
+                    callback(_observe);
+                }
+            })
+        );
+        running = true;
+        return disposeFn;
     }
     _cleanupData(data) {
         super._cleanupData(data);

@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_pa_template_data(self):
         return {
             'code_digits': '7',
-            'property_account_receivable_id': '121',
-            'property_account_payable_id': '211',
         }
 
     @template('pa', 'res.company')
@@ -29,5 +27,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'OTAX_19',
                 'expense_account_id': '62_01',
                 'income_account_id': '411_01',
+                'receivable_account_id': '121',
+                'payable_account_id': '211',
             },
         }

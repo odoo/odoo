@@ -45,6 +45,7 @@ class SurveyUser_Input(models.Model):
     access_token = fields.Char('Identification token', default=lambda self: str(uuid.uuid4()), readonly=True, required=True, copy=False)
     invite_token = fields.Char('Invite token', readonly=True, copy=False)  # no unique constraint, as it identifies a pool of attempts
     partner_id = fields.Many2one('res.partner', string='Contact', readonly=True, index='btree_not_null')
+    create_uid = fields.Many2one('res.users', string='Created by', index=True)
     email = fields.Char('Email', readonly=True)
     nickname = fields.Char('Nickname', help="Attendee nickname, mainly used to identify them in the survey session leaderboard.")
     # questions / answers

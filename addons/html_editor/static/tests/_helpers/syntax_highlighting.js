@@ -105,6 +105,10 @@ const TOOLBAR = (language) =>
                 <span class="mx-1 fa fa-clipboard"></span>
                 <span>Copy</span>
             </button>
+            <button class="text-nowrap btn" name="wrap" title="Wrap the code">
+                <span class="mx-1 fa fa-level-down fa-rotate-90"></span>
+                <span>Wrap</span>
+            </button>
             <button class="text-nowrap btn"><span class="mx-1 fa fa-paragraph" title="Convert to paragraph"></span></button>
         </div>
     </div>`
@@ -133,8 +137,11 @@ export const compareHighlightedContent = async (content, expected, phase, editor
         .replaceAll("data-embedded-state", "data-saved")
         // Ignore dataset order
         .replaceAll(
-            /"languageId":"([^"]*)","value":"(([^"]|\n)*)"/g,
-            `"value":"$2","languageId":"$1"`
+            /(?:"codeWrap":([^,}]+),)?"languageId":"([^"]*)","value":"(([^"]|\n)*)"/g,
+            (_, codeWrap, languageId, value) =>
+                `"value":"${value}","languageId":"${languageId}"${
+                    codeWrap ? `,"codeWrap":${codeWrap}` : ""
+                }`
         )
         // Clean up
         .replaceAll(/([{,]),+/g, "$1")
@@ -182,19 +189,20 @@ export const compareHighlightedContent = async (content, expected, phase, editor
 export const highlightedPre = ({
     value,
     language = DEFAULT_LANGUAGE_ID,
+    codeWrap = undefined,
     textareaRange = null,
     preHtml = value.replaceAll("\n", "<br>"),
 }) =>
     unformat(
         `<div data-embedded="syntaxHighlighting" data-oe-protected="true" contenteditable="false"
-            class="o_syntax_highlighting"
+            class="o_syntax_highlighting${codeWrap ? " o-code-wrap" : ""}"
             data-saved='{"value":"${value.replaceAll(
                 "\n",
                 "\\n"
-            )}","languageId":"${language.toLowerCase()}"}'>
+            )}","languageId":"${language.toLowerCase()}"${codeWrap ? `,"codeWrap":true` : ""}}'>
             ${TOOLBAR(LANGUAGES[language])}
             <pre>//PRE//</pre>${textareaRange === null ? "" : "[]"}
-            <textarea //TEXTAREA// class="o_prism_source" contenteditable="true"  placeholder="Code"></textarea>
+            <textarea //TEXTAREA// class="o_prism_source" contenteditable="true" placeholder="Code"></textarea>
         </div>`
     )
         // Do not trim spaces within the PRE and in the textarea data:

@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, asyncComputed } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -11,18 +11,16 @@ export class InternalResumeLineComponent extends Component {
     setup(){
         super.setup();
         this.orm = useService("orm");
-        onWillStart(async () => {
-            this.internalResumeLines = await this.getInternalResumeLines(
-                this.props.record.resId,
-                this.props.record.resModel
-            )
-        })
-        onWillUpdateProps(async (nextProps) => {
-            this.internalResumeLines = await this.getInternalResumeLines(
-                nextProps.record.resId,
-                nextProps.record.resModel
-            )
-        })
+        this.internalResumeLines = asyncComputed(
+            () =>
+                this.getInternalResumeLines(
+                    this.props.record.resId,
+                    this.props.record.resModel
+                ),
+            {
+                initial: [],
+            }
+        );
     }
 
     async getInternalResumeLines(resId, resModel){
@@ -39,7 +37,7 @@ export class InternalResumeLineComponent extends Component {
     }
 
     get haveResumeLines(){
-        return this.props.record.data.resume_line_ids.records.length || this.internalResumeLines.length;
+        return this.props.record.data.resume_line_ids.records.length || this.internalResumeLines().length;
     }
 
     formatDate(date) {

@@ -1,0 +1,27 @@
+body:not(.o_touch_device) .o_field_phone {
+    &:not(:hover):not(:focus-within) {
+        &:has(input:not(:hover)) span button {
+            display: none !important;
+        }
+    }
+
+    word-break: keep-all !important;
+}
+.o_field_phone {
+    button.fa-ellipsis-v {
+        display: none;
+        :first-child {
+            margin-inline-start: auto;
+        }
+    }
+    @include media-breakpoint-down(md) {
+        &:has(.o_phone_form_link:nth-child(2)) {
+            .o_phone_form_link {
+                display: none;
+            }
+            button.fa-ellipsis-v {
+                display: unset;
+            }
+        }
+    }
+}

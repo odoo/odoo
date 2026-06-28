@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_bizum" model="payment.method">
+        <field name="name">Bizum</field>
+        <field name="code">bizum</field>
+        <field name="provider_id" ref="payment.payment_provider_redsys"/>
+        <field name="image" type="bytes" file="payment/static/img/bizum.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.es')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="sequence">10</field>
+        <field name="provider_id" ref="payment.payment_provider_redsys"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS === -->
+
+    <record id="payment_method_amex" model="payment.method">
+        <field name="name">American Express</field>
+        <field name="code">amex</field>
+        <field name="primary_payment_method_id" eval="ref('payment_redsys.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_redsys"/>
+        <field name="image" type="bytes" file="payment/static/img/amex.png"/>
+    </record>
+
+    <record id="payment_method_diners" model="payment.method">
+        <field name="name">Diners Club International</field>
+        <field name="code">diners</field>
+        <field name="primary_payment_method_id" eval="ref('payment_redsys.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_redsys"/>
+        <field name="image" type="bytes" file="payment/static/img/diners.png"/>
+    </record>
+
+    <record id="payment_method_jcb" model="payment.method">
+        <field name="name">JCB</field>
+        <field name="code">jcb</field>
+        <field name="primary_payment_method_id" eval="ref('payment_redsys.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_redsys"/>
+        <field name="image" type="bytes" file="payment/static/img/jcb.png"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_redsys.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_redsys"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_unionpay" model="payment.method">
+        <field name="name">UnionPay</field>
+        <field name="code">unionpay</field>
+        <field name="primary_payment_method_id" eval="ref('payment_redsys.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_redsys"/>
+        <field name="image" type="bytes" file="payment/static/img/unionpay.png"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_redsys.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_redsys"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+</odoo>

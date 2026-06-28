@@ -1,10 +1,11 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { SelectionField } from "@web/views/fields/selection/selection_field";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { Many2One, computeM2OProps } from "@web/views/fields/many2one/many2one";
-import { user } from "@web/core/user"
+import { user } from "@web/core/user";
+import { useService } from "@web/core/utils/hooks";
 
 class TemplateSelectionPopover extends Component {
     static template = "hr.TemplateSelectionPopover";
@@ -17,14 +18,15 @@ class TemplateSelectionPopover extends Component {
     };
 
     setup() {
-        this.state = useState({ 
+        this.state = proxy({
             selectedTemplate: false,
         });
+        this.orm = useService("orm");
     }
 
     get many2oneProps() {
         const companyId = user.activeCompany.id;
-        
+
         const fieldProps = computeM2OProps({
             ...this.props.fieldProps,
             name: "contract_template_id",
@@ -33,7 +35,10 @@ class TemplateSelectionPopover extends Component {
             canCreateEdit: false,
             canQuickCreate: false,
             canOpen: false,
-            domain: () => [["employee_id", "=", false], ["company_id", "=", companyId]],
+            domain: () => [
+                ["employee_id", "=", false],
+                ["company_id", "=", companyId],
+            ],
             context: {},
             readonly: false,
         });
@@ -42,9 +47,17 @@ class TemplateSelectionPopover extends Component {
             ...fieldProps,
             placeholder: "Search contract templates...",
             value: this.state.selectedTemplate,
-            update: (value) => {
+            update: async (value) => {
+                if (value && !value.display_name) {
+                    const displayName = await this.orm.read(
+                        "hr.version",
+                        [value.id],
+                        ["display_name"]
+                    );
+                    value = { ...value, display_name: displayName[0].display_name };
+                }
                 this.state.selectedTemplate = value;
-            }
+            },
         };
     }
 
@@ -56,11 +69,11 @@ class TemplateSelectionPopover extends Component {
     }
 }
 
-export class ContractTemplateField extends SelectionField {
+export class ContractTemplateField extends Component {
     static template = "hr.ContractTemplateField";
-    
+    static props = standardFieldProps;
+
     setup() {
-        super.setup();
         this.templateButtonRef = useRef("templateButton");
         this.templatePopover = usePopover(TemplateSelectionPopover, {
             closeOnClickAway: true,
@@ -69,7 +82,6 @@ export class ContractTemplateField extends SelectionField {
     }
 
     async onSelectTemplate() {
-        
         this.templatePopover.open(this.templateButtonRef.el, {
             fieldProps: this.props,
             record: this.props.record,

@@ -1,3 +1,5 @@
+import { htmlToTextContentInline } from "@mail/utils/common/format";
+
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -51,9 +53,10 @@ export class OutOfFocusService {
                 notificationTitle = message.authorName;
             }
         }
-        const notificationContent = message.previewText
-            .toString()
-            .substring(0, PREVIEW_MSG_MAX_SIZE);
+        const notificationContent = htmlToTextContentInline(message.previewText).substring(
+            0,
+            PREVIEW_MSG_MAX_SIZE
+        );
         await this.sendNotification({
             message: notificationContent,
             sound: Boolean(message.channel_id),

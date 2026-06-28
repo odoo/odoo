@@ -1,9 +1,8 @@
-import { CallDropdown } from "@mail/discuss/call/common/call_dropdown";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { Component, onWillUnmount } from "@odoo/owl";
+import { Component, onWillUnmount, props, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-
+import { Action as ActionModel } from "@mail/core/common/action";
 import { useService } from "@web/core/utils/hooks";
 
 const actionListProps = [
@@ -14,16 +13,15 @@ const actionListProps = [
     "odooControlPanelSwitchStyle?",
 ];
 
+const actionListPropsSchema = {
+    dropdown: t.boolean().optional(),
+    fw: t.boolean().optional(true),
+    hasBtnBg: t.boolean().optional(),
+    inline: t.boolean().optional(),
+    odooControlPanelSwitchStyle: t.boolean().optional(),
+};
+
 class Action extends Component {
-    static props = [
-        "action",
-        "group?",
-        "isFirstInGroup?",
-        "isLastInGroup?",
-        "style?",
-        ...actionListProps,
-    ];
-    static defaultProps = { fw: true };
     static components = { Action, DropdownItem };
     static template = "mail.Action";
 
@@ -32,14 +30,18 @@ class Action extends Component {
     }
 
     get Dropdown() {
-        if (this.env.inDiscussCallView?.isPip) {
-            return CallDropdown;
-        }
         return Dropdown;
     }
 
     setup() {
         super.setup();
+        this.props = props({
+            action: t.instanceOf(ActionModel),
+            isFirstInGroup: t.boolean().optional(),
+            isLastInGroup: t.boolean().optional(),
+            style: t.string().optional(),
+            ...actionListPropsSchema,
+        });
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.attClassObjectToString = attClassObjectToString;
@@ -62,6 +64,20 @@ class Action extends Component {
         );
     }
 
+    get isInlineCircleButtonValue() {
+        if (!this.props.inline || !this.action.icon) {
+            return false;
+        }
+        if (this.env.inComposer || this.env.inMessage) {
+            return true;
+        }
+        return (
+            this.action.tags.includes("JOIN_LEAVE_CALL") &&
+            this.action.icon &&
+            !this.action.inlineName
+        );
+    }
+
     onSelected(action, ev) {
         action.onSelected?.(ev);
         this.env.inCallDropdown?.close();
@@ -70,7 +86,6 @@ class Action extends Component {
 
 export class ActionList extends Component {
     static components = { Action };
-    static props = ["actions", "groupClass?", ...actionListProps];
     static template = "mail.ActionList";
 
     getActionProps(action, group, { index, isFirstInGroup, isLastInGroup } = {}) {
@@ -93,6 +108,11 @@ export class ActionList extends Component {
 
     setup() {
         super.setup();
+        this.props = props({
+            actions: t.array(t.or([t.instanceOf(ActionModel), t.array(t.instanceOf(ActionModel))])),
+            groupClass: t.string().optional(),
+            ...actionListPropsSchema,
+        });
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.actionListProps = actionListProps;

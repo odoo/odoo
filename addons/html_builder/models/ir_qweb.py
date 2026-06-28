@@ -22,7 +22,7 @@ class IrQweb(models.AbstractModel):
         key = el.attrib.pop('t-snippet')
         snippet_lang = self.env.context.get('snippet_lang')
         if snippet_lang:
-            el.set('t-lang', f"'{snippet_lang}'")
+            el.set('t-lang', repr(snippet_lang))
 
         view = self.env['ir.ui.view']._get_template_view(key)
         name = el.attrib.pop('string', view.name)

@@ -39,9 +39,17 @@ class ResCompany(models.Model):
     ], string='Extra Hours Validation', default='no_validation')
     auto_check_out = fields.Boolean(string="Automatic Check Out", default=False)
     single_check_in = fields.Boolean(string="Single Check-In Attendance System")
+    auto_check_out_mode = fields.Selection([('tolerance', 'Tolerance'), ('specific_time', 'Specific Time')], default='tolerance')
     auto_check_out_tolerance = fields.Float(default=2, export_string_translation=False)
+    auto_check_out_specific_time = fields.Float(default=20.0, export_string_translation=False)
     absence_management = fields.Boolean(string="Absence Management", default=False)
     attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=False)
+    attendance_capture_check_in = fields.Boolean(string="Take Pictures on Check-In", default=False)
+
+    _check_auto_check_out_specific_time_range = models.Constraint(
+        "CHECK (NOT (auto_check_out = true AND auto_check_out_mode = 'specific_time') OR (auto_check_out_specific_time >= 0 AND auto_check_out_specific_time < 24))",
+        'Specific Time must be within a 24-hour range (0h 0m 0s to 23h 59m 59s).',
+    )
 
     @api.depends("attendance_kiosk_key")
     def _compute_attendance_kiosk_url(self):

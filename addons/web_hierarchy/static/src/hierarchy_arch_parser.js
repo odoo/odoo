@@ -8,9 +8,10 @@ export class HierarchyArchParser {
     parse(xmlDoc, models, modelName) {
         const archInfo = {
             activeActions: getActiveActions(xmlDoc),
+            avatarField: null,
+            label: null,
             defaultOrder: stringToOrderBy(xmlDoc.getAttribute("default_order") || null),
             draggable: false,
-            icon: "fa-share-alt fa-rotate-90 align-text-top",
             parentFieldName: "parent_id",
             fieldNodes: {},
             templateDocs: {},
@@ -50,8 +51,15 @@ export class HierarchyArchParser {
                 if (node.hasAttribute("draggable")) {
                     archInfo.draggable = exprToBoolean(node.getAttribute("draggable"));
                 }
-                if (node.hasAttribute("icon")) {
-                    archInfo.icon = node.getAttribute("icon");
+                if (node.hasAttribute("avatar_field")) {
+                    const avatarField = node.getAttribute("avatar_field");
+                    if (!(avatarField in fields)) {
+                        throw new Error(`The avatar field (${avatarField}) is not defined in the model (${modelName}).`);
+                    }
+                    archInfo.avatarField = avatarField;
+                }
+                if (node.hasAttribute("label")) {
+                    archInfo.label = node.getAttribute("label");
                 }
             } else if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "hierarchy");

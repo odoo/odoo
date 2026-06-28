@@ -7,7 +7,6 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 registerThreadAction("create-lead", {
-    actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: LivechatCommandDialog,
     actionPanelComponentProps: ({ thread }) => ({
         commandName: "lead",
@@ -16,9 +15,9 @@ registerThreadAction("create-lead", {
         title: _t("Create Lead"),
         icon: "fa fa-handshake-o",
     }),
-    actionPanelOpen({ owner }) {
+    actionPanelOpen({ rootRef }) {
         this.popover?.open(
-            owner.root.el.querySelector(`[name="${this.id}"]`),
+            rootRef().querySelector(`[name="${this.id}"]`),
             this.actionPanelComponentProps
         );
     },

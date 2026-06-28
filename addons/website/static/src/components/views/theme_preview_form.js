@@ -2,6 +2,7 @@ import { useEnv, useSubEnv } from "@web/owl2/utils";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { FormController } from "@web/views/form/form_controller";
 import { formView } from "@web/views/form/form_view";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { ViewButton } from "@web/views/view_button/view_button";
@@ -23,7 +24,17 @@ export function useLoaderOnClick() {
             const name = params.clickParams.name;
             if (["button_refresh_theme", "button_choose_theme"].includes(name)) {
                 website.invalidateSnippetCache = true;
-                website.showLoader({ showTips: name !== "button_refresh_theme" });
+                website.showLoader({
+                    title: _t("Switch themes, stay on trend."),
+                    loadingSteps: [
+                        {
+                            description: _t("Applying your Style/Colors"),
+                            flag: "colors",
+                        },
+                    ],
+                    bottomMessageTemplate:
+                        name !== "button_refresh_theme" && "website.website_loader.tour_tip",
+                });
                 try {
                     const resParams = params.getResParams();
                     const callback = await orm.silent.call(resParams.resModel, name, [
@@ -41,7 +52,7 @@ export function useLoaderOnClick() {
                         website.hideLoader();
                     }
                 } catch (error) {
-                    website.hideLoader();
+                    website.hideLoader({ completeRemainingProgress: false });
                     throw error;
                 }
             } else {

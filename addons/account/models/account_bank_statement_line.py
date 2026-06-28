@@ -533,7 +533,7 @@ class AccountBankStatementLine(models.Model):
         statement = self.search(
             domain=[
                 ('journal_id', '=', journal_id or self._get_default_journal().id),
-                ('date', '<=', date or fields.Date.today()),
+                ('date', '<=', date or 'today'),
             ],
             limit=1
         ).statement_id
@@ -554,12 +554,9 @@ class AccountBankStatementLine(models.Model):
         if self.review_state in ('todo', 'anomaly'):
             transaction_amount_residual = -self.amount_currency if self.foreign_currency_id else -self.amount
             company_amount_residual = -sum(liquidity_lines.mapped('balance'))
-        elif suspense_lines.account_id.reconcile:
+        else:
             transaction_amount_residual = sum(suspense_lines.mapped('amount_residual_currency'))
             company_amount_residual = sum(suspense_lines.mapped('amount_residual'))
-        else:
-            transaction_amount_residual = sum(suspense_lines.mapped('amount_currency'))
-            company_amount_residual = sum(suspense_lines.mapped('balance'))
 
         return (transaction_amount_residual, company_amount_residual)
 

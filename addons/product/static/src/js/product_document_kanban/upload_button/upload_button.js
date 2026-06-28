@@ -1,23 +1,20 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 import { useBus, useService } from "@web/core/utils/hooks";
 
 export class UploadButton extends Component {
     static template = "product.UploadButton";
-    static props = {
-        formData: { type: Object, optional: true},
-        // See https://www.iana.org/assignments/media-types/media-types.xhtml
-        allowedMIMETypes: { type: String, optional: true},
-        load: Function,
-        uploadRoute: String,
-    }
-    static defaultProps = {
-        formData: {},
-    }
+    props = props({
+        formData: t.object().optional({}),
+        // See https://www.iana.org/assignments/media-types/media-t.xhtml
+        allowedMIMETypes: t.string().optional(),
+        load: t.function(),
+        uploadRoute: t.string(),
+    });
+
+    uploadFileInputRef = signal(null);
 
     setup() {
-        this.uploadFileInputRef = useRef("uploadFileInput");
         this.fileUploadService = useService("file_upload");
         this.notification = useService('notification');
         useBus(

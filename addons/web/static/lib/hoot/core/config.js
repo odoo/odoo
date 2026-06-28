@@ -1,9 +1,15 @@
 /** @odoo-module */
 
-import { DEFAULT_EVENT_TYPES } from "../hoot_utils";
-import { generateSeed } from "../mock/math";
+import { signal } from "@odoo/owl";
+import { deepEqual, DEFAULT_EVENT_TYPES, generateSeed } from "../hoot_utils";
 
 /**
+ * @typedef {BaseConfigManager & {
+ *  [Key in keyof HootConfig]: import("@odoo/owl").ReactiveValue<HootConfig[Key]>
+ * }} ConfigManager
+ *
+ * @typedef {typeof DEFAULT_CONFIG_AND_FILTERS} HootConfig
+ *
  * @typedef {keyof typeof FILTER_SCHEMA} SearchFilter
  */
 
@@ -14,6 +20,7 @@ import { generateSeed } from "../mock/math";
 const {
     Number: { parseFloat: $parseFloat },
     Object: { entries: $entries, fromEntries: $fromEntries, keys: $keys },
+    Symbol,
 } = globalThis;
 
 //-----------------------------------------------------------------------------
@@ -44,7 +51,7 @@ function getSchemaKeys(schema) {
  * @returns {(valueIfEmpty: T) => (values: string[]) => T}
  */
 function makeParser(parse) {
-    return (valueIfEmpty) => (values) => values.length ? parse(values) : valueIfEmpty;
+    return (valueIfEmpty) => (values) => (values.length ? parse(values) : valueIfEmpty);
 }
 
 const parseBoolean = makeParser(([value]) => value === "true");
@@ -58,9 +65,59 @@ const parseString = makeParser(([value]) => value);
 
 const parseStringArray = makeParser((values) => values);
 
+class BaseConfigManager {}
+
+const S_INITIAL_CONFIG = Symbol("initial config");
+
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
+
+/**
+ * @param {ConfigManager} config
+ * @param {boolean} [ignoreSameValue] if true, values identical to default will be 'null'
+ */
+export function getConfigValues(config, ignoreSameValue) {
+    /** @type {HootConfig} */
+    const dict = {};
+    for (const [key, signal] of $entries(config)) {
+        const value = signal();
+        if (ignoreSameValue && deepEqual(value, DEFAULT_CONFIG_AND_FILTERS[key])) {
+            dict[key] = null;
+        } else {
+            dict[key] = value;
+        }
+    }
+    return dict;
+}
+
+/**
+ * Check whether the config has changed since creation.
+ *
+ * @param {ConfigManager} config
+ */
+export function hasConfigChanged(config) {
+    for (const [key, value] of $entries(config[S_INITIAL_CONFIG])) {
+        if (!deepEqual(config[key](), value)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * @param {Partial<HootConfig>} urlParams
+ * @returns {ConfigManager}
+ */
+export function makeConfigManager(urlParams) {
+    const manager = new BaseConfigManager();
+    const initialConfig = { ...DEFAULT_CONFIG_AND_FILTERS, ...urlParams };
+    manager[S_INITIAL_CONFIG] = initialConfig;
+    for (const [key, value] of $entries(initialConfig)) {
+        manager[key] = signal(value);
+    }
+    return manager;
+}
 
 export const CONFIG_SCHEMA = {
     /**
@@ -253,3 +310,5 @@ export const CONFIG_KEYS = getSchemaKeys(CONFIG_SCHEMA);
 /** @see {@link FILTER_SCHEMA} */
 export const DEFAULT_FILTERS = getSchemaDefaults(FILTER_SCHEMA);
 export const FILTER_KEYS = getSchemaKeys(FILTER_SCHEMA);
+
+export const DEFAULT_CONFIG_AND_FILTERS = { ...DEFAULT_CONFIG, ...DEFAULT_FILTERS };

@@ -6,7 +6,7 @@ registry.category("web_tour.tours").add("discuss.invite_by_email", {
         // conflict with the opening of the invite panel.
         { trigger: ".o-discuss-ChannelMemberList" },
         {
-            trigger: "button[title='Invite People']",
+            trigger: "button[title='Add People']",
             run: "click",
         },
         {

@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add("discuss_channel_call_public_tour.js", {
         {
             content: "Fill in guest name",
             trigger: "input[name='guest_name']",
-            run: "edit Guest",
+            run: "edit Jordan Lee",
         },
         {
             content: "Click join",
@@ -35,6 +35,18 @@ registry.category("web_tour.tours").add("discuss_channel_call_public_tour.js", {
         {
             content: "Check that current user is in call ('disconnect' button visible)",
             trigger: "button[title='Disconnect']",
+        },
+        {
+            content: "Reload the page from the call",
+            trigger: ".o-discuss-Call",
+            expectUnloadPage: true,
+            run() {
+                window.location.reload();
+            },
+        },
+        {
+            content: "Guest name should stay prefilled after reload",
+            trigger: "input[name='guest_name']:value('Jordan Lee')",
         },
     ],
 });

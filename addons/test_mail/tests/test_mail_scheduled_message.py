@@ -23,7 +23,7 @@ class TestScheduledMessage(MailCommon, TestRecipients):
         cls.reference_now = FieldDatetime.to_datetime('2022-12-24 12:00:00')
 
         with cls.mock_datetime_and_now(cls, cls.reference_now):
-            cls.test_record = cls.env['mail.test.ticket'].with_context(cls._test_context).create([{
+            cls.test_record = cls.env['mail.test.ticket'].create([{
                 'name': 'Test Record',
                 'customer_id': cls.partner_1.id,
                 'user_id': cls.user_employee.id,
@@ -121,8 +121,11 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
             self.schedule_message(self.test_record, scheduled_date='2022-12-24 10:00:00')
         # cannot schedule a message on a model without thread
         # with admin as employee does not have write access on res.users)
+        country = self.env['res.country'].search([], limit=1)
+        is_mail_thread = 'message_partner_ids' in country
+        self.assertFalse(is_mail_thread)
         with self.with_user("admin"), self.assertRaises(ValidationError):
-            self.schedule_message(self.user_employee)
+            self.schedule_message(country)
         scheduled_message = self.schedule_message(self.test_record)
         # cannot reschedule a message in the past
         with self.assertRaises(ValidationError):
@@ -140,6 +143,7 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
     def test_scheduled_message_posting(self):
         schedule_cron_id = self.env.ref('mail.ir_cron_post_scheduled_message').id
         test_lead = self.env["mail.test.lead"].create({})
+        create_log = self.test_record.message_ids
         with self.mock_mail_gateway(), \
             self.mock_mail_app(), \
             self.capture_triggers(schedule_cron_id) as capt:
@@ -154,7 +158,7 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
             # cron should be triggered at scheduled date
             self.assertEqual(capt.records['call_at'], FieldDatetime.to_datetime('2022-12-24 14:00:00'))
             # no message created or mail sent
-            self.assertFalse(self.test_record.message_ids)
+            self.assertEqual(self.test_record.message_ids, create_log)
             self.assertFalse(self._new_mails)
 
             # add a scheduled message that will fail to check that it won't block the cron
@@ -165,7 +169,7 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
                 body="fail",
             ).id
 
-            def _message_post_after_hook(self, message, values):
+            def _message_post_after_hook(self, message):
                 raise Exception("Boum!")
 
             with self.mock_datetime_and_now('2022-12-24 14:00:00'),\

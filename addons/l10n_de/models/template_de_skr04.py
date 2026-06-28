@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'name': 'German chart of accounts SKR04',
             'code_digits': '4',
-            'property_account_receivable_id': 'chart_skr04_1205',
-            'property_account_payable_id': 'chart_skr04_3301',
         }
 
     @template('de_skr04', 'res.company')
@@ -34,6 +32,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax_vst_19_skr04',
                 'expense_account_id': 'chart_skr04_5400',
                 'income_account_id': 'chart_skr04_4400',
+                'receivable_account_id': 'chart_skr04_1205',
+                'payable_account_id': 'chart_skr04_3301',
                 'account_stock_valuation_id': 'chart_skr04_1000',
             },
         }

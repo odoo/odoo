@@ -15,7 +15,7 @@ API_URLS = {
 SUPPORTED_CURRENCIES = ("EUR",)
 
 ISS_KEY = "https://payconiq.com/iss"
-ISS_VALUE = "Payconiq"
+ISS_VALUE = "payconiq"
 IAT_KEY = "https://payconiq.com/iat"
 JTI_KEY = "https://payconiq.com/jti"
 PATH_KEY = "https://payconiq.com/path"

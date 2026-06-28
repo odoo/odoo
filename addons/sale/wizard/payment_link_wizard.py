@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class PaymentLinkWizard(models.TransientModel):
@@ -19,7 +19,9 @@ class PaymentLinkWizard(models.TransientModel):
         for wizard in self.filtered(lambda w: w.res_model == "sale.order"):
             sale_order = wizard.env["sale.order"].browse(wizard.res_id)
             if sale_order.state in ("draft", "sent") and sale_order.require_payment:
-                wizard.confirmation_message = _("This payment will confirm the quotation.")
+                wizard.confirmation_message = wizard.env._(
+                    "This payment will confirm the quotation."
+                )
 
     @api.depends("res_model", "res_id")
     def _compute_warning_message(self):
@@ -27,10 +29,12 @@ class PaymentLinkWizard(models.TransientModel):
         for wizard in self.filtered(lambda w: w.res_model == "sale.order"):
             sale_order = wizard.env["sale.order"].browse(wizard.res_id)
             if sale_order.state in ("draft", "sent") and wizard.amount < wizard.prepayment_amount:
-                wizard.warning_message = _("The amount must be greater than the prepayment amount.")
+                wizard.warning_message = wizard.env._(
+                    "The amount must be greater than the prepayment amount."
+                )
                 sale_wizards |= wizard  # Prevent the super call from clearing the warning message.
             if sale_order.is_expired:
-                wizard.warning_message = _("The sale order has expired.")
+                wizard.warning_message = wizard.env._("The sale order has expired.")
                 sale_wizards |= wizard
         super(PaymentLinkWizard, self - sale_wizards)._compute_warning_message()
 

@@ -45,7 +45,7 @@ class TestProjectTaskQuickCreate(TestProjectCommon):
         }
 
         for expression, values in valid_expressions.items():
-            task_form = Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id}), view="project.quick_create_task_form")
+            task_form = Form(self.env['project.task'].with_context({'default_project_id': self.project_pigs.id}), view="project.quick_create_task_form")
             task_form.display_name = expression
             task = task_form.save()
             results = (task.name, len(task.tag_ids), len(task.user_ids), task.priority, task.allocated_hours)
@@ -66,7 +66,7 @@ class TestProjectTaskQuickCreate(TestProjectCommon):
         )
 
         for expression in invalid_expressions:
-            task_form = Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id}), view="project.quick_create_task_form")
+            task_form = Form(self.env['project.task'].with_context({'default_project_id': self.project_pigs.id}), view="project.quick_create_task_form")
             task_form.display_name = expression
             task = task_form.save()
             results = (task.name, len(task.tag_ids), len(task.user_ids), task.priority, task.allocated_hours)

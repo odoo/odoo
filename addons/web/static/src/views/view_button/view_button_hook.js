@@ -1,4 +1,4 @@
-import { useComponent, useEnv, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useEnv, useRef, useSubEnv } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -46,7 +46,12 @@ function undefinedAsTrue(val) {
  */
 
 /**
- * @param {{ readonly el: HTMLElement | null; }} ref
+ * @param {string | { readonly el: HTMLElement | null } | (() => HTMLElement | null)} ref
+ *  The container ref. Supports every form that used to work:
+ *  - a string ref name (resolved internally via `useRef`);
+ *  - a legacy ref object exposing `.el` (incl. `useChildRef`, which is a
+ *    function that also exposes an `.el` getter);
+ *  - an Owl 3 native signal ref (a function returning the element).
  * @param {Options} [options={}]
  */
 export function useViewButtons(ref, options = {}) {
@@ -54,6 +59,32 @@ export function useViewButtons(ref, options = {}) {
     const dialog = useService("dialog");
     const comp = useComponent();
     const env = useEnv();
+
+    // Resolve the ref to a getter returning the container element, preserving
+    // every input form that worked before the Owl 3 signal migration:
+    //  - string name: resolved internally via `useRef` (must happen now, in
+    //    the hook's setup phase);
+    //  - everything else: resolved lazily at call time, where the `.el`
+    //    accessor takes precedence over *calling* the ref. This matters for
+    //    `useChildRef`, which returns a *function* that also exposes an `.el`
+    //    getter (only defined after it has been forwarded) — calling it would
+    //    clear its value and return undefined.
+    let getRefEl;
+    if (typeof ref === "string") {
+        const internalRef = useRef(ref);
+        getRefEl = () => internalRef.el;
+    } else {
+        getRefEl = () => {
+            if (ref && "el" in ref) {
+                return ref.el;
+            }
+            if (typeof ref === "function") {
+                // Owl 3 native signal ref: calling it returns the element.
+                return ref();
+            }
+            return null;
+        };
+    }
     useSubEnv({
         async onClickViewButton({ clickParams, getResParams, beforeExecute, newWindow }) {
             async function execute() {
@@ -139,11 +170,11 @@ export function useViewButtons(ref, options = {}) {
     });
 
     function getEl() {
+        const el = getRefEl();
         if (env.inDialog) {
-            const el = ref.el;
             return el ? el.closest(".modal") : null;
         } else {
-            return ref.el;
+            return el;
         }
     }
 }

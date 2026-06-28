@@ -2,7 +2,7 @@ import { useRef } from "@web/owl2/utils";
 import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 import { usePopover } from "@web/core/popover/popover_hook";
 
@@ -10,32 +10,32 @@ import { formatDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
 
-
 export class ActivityCell extends Component {
     static components = {
         Avatar,
     };
-    static props = {
-        activityIds: {
-            type: Array,
-            element: Number,
-        },
-        attachmentsInfo: {
-            optional: true,
-            type: Object,
-        },
-        activityTypeId: Number,
-        reportingDate: String,
-        countByState: Object,
-        reloadFunc: Function,
-        resId: Number,
-        resModel: String,
-        summaries: Array,
-        userAssignedIds: Array,
-    };
     static template = "mail.ActivityCell";
 
     setup() {
+        this.props = props({
+            activityIds: t.array(t.number()),
+            activityTypeId: t.number(),
+            attachmentsInfo: t
+                .object({
+                    count: t.number(),
+                    most_recent_id: t.number(),
+                    most_recent_name: t.string(),
+                })
+                .optional(),
+            countByState: t.record(t.number()),
+            reloadFunc: t.function([]),
+            reportingDate: t.string(),
+            resId: t.number(),
+            resModel: t.string(),
+            summaries: t.array(),
+            userAssignedIds: t.array(t.number()),
+            roleAssignedIds: t.array(t.number()).optional(),
+        });
         this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
         this.contentRef = useRef("content");
     }
@@ -45,9 +45,9 @@ export class ActivityCell extends Component {
     }
     get displayedSummaries() {
         const summariesWithContent = this.props.summaries.filter((textContent) => !!textContent);
-        const extras = this.props.summaries.length - summariesWithContent.length
+        const extras = this.props.summaries.length - summariesWithContent.length;
         if (summariesWithContent.length > 0 && extras > 0) {
-            summariesWithContent.push(_t("%(extraCount)s more", { extraCount: extras } ));
+            summariesWithContent.push(_t("%(extraCount)s more", { extraCount: extras }));
         }
         return formatList(summariesWithContent);
     }

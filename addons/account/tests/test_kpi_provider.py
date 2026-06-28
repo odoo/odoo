@@ -12,10 +12,12 @@ class TestKpiProvider(TransactionCase):
         cls.partner_id = cls.env['res.partner'].create({'name': 'Someone'})
 
         # Clean things for the test
-        cls.env['account.move'].search([
-            '|', ('state', '=', 'draft'),
-            ('statement_line_id.is_reconciled', '=', False),
-        ])._unlink_or_reverse()
+        cls.env['account.payment'].search([]).action_cancel()
+        moves_to_unlink = cls.env['account.move'].search([])
+        moves_to_unlink.deferred_move_ids._unlink_or_reverse()
+        moves_to_unlink = moves_to_unlink.exists()
+        moves_to_unlink.filtered(lambda m: m.state != 'draft').button_draft()
+        moves_to_unlink._unlink_or_reverse()
 
     def test_empty_kpi_summary(self):
         # Ensure that nothing gets reported when there is nothing to report
@@ -71,11 +73,13 @@ class TestKpiProvider(TransactionCase):
         })
         move.action_post()
         move.review_state = 'todo'
+        move.flush_recordset()
         self.assertCountEqual(self.env['kpi.provider'].get_account_kpi_summary(), [
             {'id': 'account_journal_type.sale', 'name': 'Sales', 'type': 'integer', 'value': 1},
         ])
 
         move.set_moves_checked()
+        move.flush_recordset()
         self.assertCountEqual(self.env['kpi.provider'].get_account_kpi_summary(), [])
 
     def test_kpi_summary_reports_unreconciled_bank_statements(self):
@@ -113,5 +117,6 @@ class TestKpiProvider(TransactionCase):
         _st_liquidity_lines, st_suspense_lines, _st_other_lines = bank_statement.line_ids._seek_for_lines()
         st_suspense_lines.account_id = move_line.account_id
         (move_line + st_suspense_lines).reconcile()
+        bank_statement.line_ids.flush_recordset()
         self.assertTrue(bank_statement.line_ids.is_reconciled)
         self.assertCountEqual(self.env['kpi.provider'].get_account_kpi_summary(), [])

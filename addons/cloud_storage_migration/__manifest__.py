@@ -6,11 +6,11 @@
     "category": "Technical Settings",
     "depends": ["cloud_storage"],
     "data": [
-        "security/ir.model.access.csv",
         "data/data.xml",
         "data/ir_cron.xml",
         "views/cloud_storage_migration_report_views.xml",
         "views/res_config_settings.xml",
+        'security/ir.access.csv',
     ],
     "author": "Odoo S.A.",
     "license": "LGPL-3",

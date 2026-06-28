@@ -18,6 +18,7 @@ patch(DiscussCommandPalette.prototype, {
         const recentChannels = this.store.getSelfRecentChannels();
         const mentionedSet = new Set();
         const recentSet = new Set();
+        const favoriteSet = new Set();
         const CATEGORY_LIMIT = 3;
         if (!this.cleanedTerm) {
             const limitedMentioned = importantChannels.slice(0, CATEGORY_LIMIT);
@@ -44,7 +45,14 @@ patch(DiscussCommandPalette.prototype, {
                     recentSet.add(channel);
                 }
             }
+            const limitedFavorites = this.store.favoriteChannels.filter(
+                (c) => !mentionedSet.has(c) && !recentSet.has(c)
+            );
+            for (const channel of limitedFavorites) {
+                this.commands.push(this.makeDiscussCommand(channel));
+                favoriteSet.add(channel);
+            }
         }
-        super.buildResults(new Set([...mentionedSet, ...recentSet]));
+        super.buildResults(new Set([...mentionedSet, ...recentSet, ...favoriteSet]));
     },
 });

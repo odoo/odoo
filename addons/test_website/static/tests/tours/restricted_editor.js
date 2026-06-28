@@ -2,10 +2,10 @@ import {
     clickOnSave,
     clickOnEditAndWaitEditMode,
     clickOnExtraMenuItem,
-    registerWebsitePreviewTour,
     insertSnippet,
+    switchToLang,
 } from "@website/js/tours/tour_utils";
-import { stepUtils } from "@web_tour/tour_utils";
+import { registry } from "@web/core/registry";
 
 const EDIT_BUTTON_SELECTOR =
     "body .o_menu_systray button.o-website-btn-custo-primary:contains(edit)";
@@ -40,18 +40,6 @@ const closeErrorDialog = [
         trigger: "body:not(:has(.modal))",
     },
 ];
-const switchTo = (lang) => [
-    {
-        content: `Switch to ${lang}`,
-        trigger: `:iframe .js_change_lang[data-url_code='${lang}']`,
-        run: "click",
-    },
-    {
-        content: `Wait until ${lang} is applied`,
-        trigger: `:iframe html[lang*="${lang}"]`,
-    },
-    stepUtils.waitIframeIsReady(),
-];
 const goToMenuItem = [
     clickOnExtraMenuItem({}, true),
     {
@@ -63,15 +51,10 @@ const goToMenuItem = [
         content: "Wait to land on model item page",
         trigger: ':iframe a[href="/test_website/model_item/1"].nav-link.active:not(:visible)',
     },
-    stepUtils.waitIframeIsReady(),
 ];
 
-registerWebsitePreviewTour(
-    "test_restricted_editor_only",
-    {
-        undeterministicTour_doNotCopy: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("test_restricted_editor_only", {
+    steps: () => [
         // Home
         checkNoTranslate,
         ...clickOnEditAndWaitEditMode(),
@@ -87,10 +70,10 @@ registerWebsitePreviewTour(
             },
         },
         ...clickOnSave(),
-        ...switchTo("fr"),
+        ...switchToLang("fr"),
         ...translate,
         ...closeErrorDialog,
-        ...switchTo("en"),
+        ...switchToLang("en"),
         // Model item
         {
             trigger: ":iframe body:contains(welcome to your)",
@@ -110,20 +93,14 @@ registerWebsitePreviewTour(
             },
         },
         ...clickOnSave(),
-        ...switchTo("fr"),
+        ...switchToLang("fr"),
         ...translate,
         ...closeErrorDialog,
-    ]
-);
+    ],
+});
 
-registerWebsitePreviewTour(
-    "test_restricted_editor_test_admin",
-    {
-        // Remove this key to make the tour fail with error:
-        // "Element has not been found." at step "Open Edit menu"
-        undeterministicTour_doNotCopy: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("test_restricted_editor_test_admin", {
+    steps: () => [
         // Home
         checkNoTranslate,
         ...clickOnEditAndWaitEditMode(),
@@ -132,10 +109,10 @@ registerWebsitePreviewTour(
             trigger: "#snippet_groups .o_snippet[name='Intro'].o_disabled",
         },
         ...clickOnSave(),
-        ...switchTo("fr"),
+        ...switchToLang("fr"),
         ...translate,
         ...closeErrorDialog,
-        ...switchTo("en"),
+        ...switchToLang("en"),
         // Model item
         ...goToMenuItem,
         checkNoTranslate,
@@ -151,7 +128,7 @@ registerWebsitePreviewTour(
             run: "editor New value",
         },
         ...clickOnSave(),
-        ...switchTo("fr"),
+        ...switchToLang("fr"),
         ...translate,
         {
             content: "Close the dialog",
@@ -178,14 +155,16 @@ registerWebsitePreviewTour(
             run: "editor potentiel.",
         },
         ...clickOnSave(),
-    ]
-);
+    ],
+});
 
-registerWebsitePreviewTour("test_restricted_editor_tester", {}, () => [
-    ...clickOnEditAndWaitEditMode(),
-    {
-        content: "Footer should not be be editable for restricted user",
-        trigger: ":iframe :has(.o_savable) footer:not(.o_savable):not(:has(.o_savable))",
-    },
-    ...clickOnSave(),
-]);
+registry.category("web_tour.tours").add("test_restricted_editor_tester", {
+    steps: () => [
+        ...clickOnEditAndWaitEditMode(),
+        {
+            content: "Footer should not be be editable for restricted user",
+            trigger: ":iframe :has(.o_savable) footer:not(.o_savable):not(:has(.o_savable))",
+        },
+        ...clickOnSave(),
+    ],
+});

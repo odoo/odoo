@@ -10,9 +10,10 @@ class PurchaseBillLineMatch(models.Model):
     _name = 'purchase.bill.line.match'
     _description = "Purchase Line and Vendor Bill line matching view"
     _auto = False
-    _order = 'product_id, aml_id, pol_id'
+    _order = 'matching_id desc, aml_id desc, product_id'
 
     pol_id = fields.Many2one(comodel_name='purchase.order.line', readonly=True)
+    matching_id = fields.Integer(string="Matching", readonly=True)
     aml_id = fields.Many2one(comodel_name='account.move.line', readonly=True)
     company_id = fields.Many2one(comodel_name='res.company', readonly=True)
     partner_id = fields.Many2one(comodel_name='res.partner', readonly=True)
@@ -21,18 +22,23 @@ class PurchaseBillLineMatch(models.Model):
     line_uom_id = fields.Many2one(comodel_name='uom.uom', readonly=True)
     qty_invoiced = fields.Float(readonly=True)
     qty_to_invoice = fields.Float('Qty to invoice', readonly=True)
+    qty_to_invoice_raw = fields.Float('Qty not invoiced', help="Difference between demand and quantity but not affected by invoice policy", readonly=True)
     purchase_order_id = fields.Many2one(comodel_name='purchase.order', readonly=True)
     account_move_id = fields.Many2one(comodel_name='account.move', readonly=True)
     line_amount_untaxed = fields.Monetary(readonly=True)
     currency_id = fields.Many2one(comodel_name='res.currency', readonly=True)
     state = fields.Char(readonly=True)
+    date = fields.Date(readonly=True)
 
+    display_matching_tag = fields.Boolean(compute='_compute_display_matching_tag')
     product_uom_id = fields.Many2one(comodel_name='uom.uom', related='product_id.uom_id')
     product_uom_qty = fields.Float(compute='_compute_product_uom_qty', inverse='_inverse_product_uom_qty', readonly=False)
+    product_uom_qty_to_invoice = fields.Float(compute='_compute_product_uom_qty_to_invoice')
     product_uom_price = fields.Float(compute='_compute_product_uom_price', inverse='_inverse_product_uom_price', readonly=False)
     billed_amount_untaxed = fields.Monetary(compute='_compute_amount_untaxed_fields', currency_field='currency_id')
     purchase_amount_untaxed = fields.Monetary(compute='_compute_amount_untaxed_fields', currency_field='currency_id')
-    reference = fields.Char(compute='_compute_reference')
+    reference = fields.Char(readonly=True)
+    description = fields.Char(readonly=True)
 
     @api.onchange('product_uom_price')
     def _inverse_product_uom_price(self):
@@ -59,17 +65,28 @@ class PurchaseBillLineMatch(models.Model):
             line.billed_amount_untaxed = line.line_amount_untaxed if line.account_move_id else False
             line.purchase_amount_untaxed = line.line_amount_untaxed if line.purchase_order_id else False
 
-    def _compute_reference(self):
+    @api.depends_context('active_id', 'active_model')
+    def _compute_display_matching_tag(self):
         for line in self:
-            line.reference = line.purchase_order_id.display_name or line.account_move_id.display_name
-
-    def _compute_display_name(self):
-        for line in self:
-            line.display_name = line.product_id.display_name or line.aml_id.name or line.pol_id.name
+            if line.aml_id:
+                line.display_matching_tag = bool(line.matching_id)
+            else:
+                invoice_lines = line.pol_id.invoice_lines
+                line.display_matching_tag = bool(invoice_lines)
+                if self.env.context.get('active_model') == 'account.move':
+                    line.display_matching_tag = any(move.id == self.env.context.get('active_id') for move in invoice_lines.move_id)
 
     def _compute_product_uom_qty(self):
         for line in self:
-            line.product_uom_qty = line.line_uom_id._compute_quantity(line.line_qty, line.product_uom_id)
+            if line.product_id:
+                line.product_uom_qty = line.line_uom_id._compute_quantity(line.line_qty, line.product_uom_id)
+            else:
+                line.product_uom_qty = line.line_qty
+
+    @api.depends('line_uom_id', 'qty_to_invoice', 'product_uom_id')
+    def _compute_product_uom_qty_to_invoice(self):
+        for line in self:
+            line.product_uom_qty_to_invoice = line.line_uom_id._compute_quantity(line.qty_to_invoice, line.product_uom_id)
 
     @api.depends('aml_id.price_unit', 'pol_id.price_unit')
     def _compute_product_uom_price(self):
@@ -81,6 +98,7 @@ class PurchaseBillLineMatch(models.Model):
         return SQL("""
             SELECT pol.id,
                    pol.id as pol_id,
+                   pol.id as matching_id,
                    NULL as aml_id,
                    pol.company_id as company_id,
                    pol.partner_id as partner_id,
@@ -89,16 +107,20 @@ class PurchaseBillLineMatch(models.Model):
                    pol.uom_id as line_uom_id,
                    pol.qty_invoiced as qty_invoiced,
                    pol.qty_to_invoice as qty_to_invoice,
+                   pol.qty_to_invoice_raw as qty_to_invoice_raw,
                    po.id as purchase_order_id,
                    NULL as account_move_id,
                    pol.price_subtotal as line_amount_untaxed,
                    po.currency_id as currency_id,
-                   po.state as state
+                   po.state as state,
+                   po.date_order::date as date,
+                   po.name as reference,
+                   pol.name as description
               FROM purchase_order_line pol
          LEFT JOIN purchase_order po ON pol.order_id = po.id
              WHERE po.state = 'purchase'
-               AND (pol.product_qty > pol.qty_invoiced OR pol.qty_to_invoice != 0)
-                OR ((pol.display_type = '' OR pol.display_type IS NULL) AND pol.is_downpayment AND pol.qty_invoiced > 0)
+               AND (pol.display_type = '' OR pol.display_type IS NULL)
+               AND (pol.is_downpayment IS NOT TRUE OR pol.qty_invoiced > 0)
         """)
 
     @api.model
@@ -106,6 +128,7 @@ class PurchaseBillLineMatch(models.Model):
         return SQL("""
             SELECT -aml.id,
                    NULL as pol_id,
+                   aml.purchase_line_id as matching_id,
                    aml.id as aml_id,
                    aml.company_id as company_id,
                    am.partner_id as partner_id,
@@ -114,17 +137,20 @@ class PurchaseBillLineMatch(models.Model):
                    aml.product_uom_id as line_uom_id,
                    NULL as qty_invoiced,
                    NULL as qty_to_invoice,
+                   NULL as qty_to_invoice_raw,
                    NULL as purchase_order_id,
                    am.id as account_move_id,
                    aml.amount_currency as line_amount_untaxed,
                    aml.currency_id as currency_id,
-                   aml.parent_state as state
+                   aml.parent_state as state,
+                   am.invoice_date as date,
+                   COALESCE(am.name, 'Draft Bill') as reference,
+                   aml.name as description
               FROM account_move_line aml
          LEFT JOIN account_move am on aml.move_id = am.id
              WHERE aml.display_type = 'product'
                AND am.move_type in ('in_invoice', 'in_refund')
                AND aml.parent_state in ('draft', 'posted')
-               AND aml.purchase_line_id IS NULL
         """)
 
     @property
@@ -143,9 +169,16 @@ class PurchaseBillLineMatch(models.Model):
     @api.model
     def _action_create_bill_from_po_lines(self, partner, po_lines):
         """ Create a new vendor bill with the selected PO lines and returns an action to open it """
+        if len(po_lines.currency_id) == 1:
+            currency = po_lines.currency_id
+        elif len(po_lines.company_id) == 1:
+            currency = po_lines.company_id.currency_id
+        else:
+            currency = self.env.company.currency_id
         bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
             'partner_id': partner.id,
+            'currency_id': currency.id,
         })
         bill._add_purchase_order_lines(po_lines)
         return bill._get_records_action()
@@ -177,6 +210,14 @@ class PurchaseBillLineMatch(models.Model):
 
             # Add all remaining POL to the residual bill
             residual_bill._add_purchase_order_lines(residual_purchase_order_lines)
+
+    def action_unmatch_lines(self):
+        lines_per_matching = self.grouped('matching_id')
+        for matching_id, match_lines in lines_per_matching.items():
+            matched_amls = match_lines.filtered('aml_id')
+            if matched_amls and len(match_lines) - len(matched_amls) > 0:
+                # Need at least one aml and one pol to do the unmatch
+                matched_amls.aml_id.purchase_line_id = False
 
     def action_add_to_po(self):
         if not self or not self.aml_id:

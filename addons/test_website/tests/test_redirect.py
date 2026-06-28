@@ -91,7 +91,7 @@ class TestRedirect(HttpCase):
 
         WebsiteHttp = odoo.addons.website.models.ir_http.IrHttp
 
-        def _get_error_html(env, code, value):
+        def _get_error_html(self, code, value):
             return str(code).split('_')[-1], f"CUSTOM {code}"
 
         with patch.object(WebsiteHttp, '_get_error_html', _get_error_html):

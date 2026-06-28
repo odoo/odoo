@@ -1,4 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
+import { AttendeeCalendarSidePanel } from "@calendar/views/attendee_calendar/side_panel/attendee_calendar_side_panel";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
@@ -8,6 +9,7 @@ export class AttendeeCalendarController extends CalendarController {
     static template = "calendar.AttendeeCalendarController";
     static components = {
         ...AttendeeCalendarController.components,
+        CalendarSidePanel: AttendeeCalendarSidePanel,
         QuickCreateFormView: CalendarQuickCreate,
     };
 
@@ -57,6 +59,8 @@ export class AttendeeCalendarController extends CalendarController {
             size: "md",
             context: { ...props.context, ...this.props.context },
             onRecordSave: async (record) => {
+                // first ask fields for their changes, in case user was still typing
+                await record.getChanges();
                 const updates = {
                     ...(!record.data.name && { name: _t("(No Title)") }),
                     ...(record.data.allday && { show_as: "free" }),

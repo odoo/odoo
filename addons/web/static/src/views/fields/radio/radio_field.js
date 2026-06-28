@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { getFieldDomain } from "@web/model/relational_model/utils";
@@ -8,17 +8,17 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
 let nextId = 0;
+
+export const radioFieldProps = {
+    ...standardFieldProps,
+    orientation: t.string().optional("vertical"),
+    label: t.string().optional(),
+    domain: t.or([t.array(), t.function()]).optional(),
+};
+
 export class RadioField extends Component {
     static template = "web.RadioField";
-    static props = {
-        ...standardFieldProps,
-        orientation: { type: String, optional: true },
-        label: { type: String, optional: true },
-        domain: { type: [Array, Function], optional: true },
-    };
-    static defaultProps = {
-        orientation: "vertical",
-    };
+    props = props(radioFieldProps);
 
     setup() {
         this.id = `radio_field_${nextId++}`;

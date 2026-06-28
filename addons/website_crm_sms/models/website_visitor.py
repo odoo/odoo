@@ -10,14 +10,14 @@ class WebsiteVisitor(models.Model):
     def _check_for_sms_composer(self):
         check = super(WebsiteVisitor, self)._check_for_sms_composer()
         if not check and self.lead_ids:
-            sorted_leads = self.lead_ids.filtered(lambda l: l.phone == self.phone)._sort_by_confidence_level(reverse=True)
+            sorted_leads = self.lead_ids.filtered(lambda l: l.phone == self.mobile)._sort_by_confidence_level(reverse=True)
             if sorted_leads:
                 return True
         return check
 
     def _prepare_sms_composer_context(self):
         if not self.partner_id and self.lead_ids:
-            leads_with_number = self.lead_ids.filtered(lambda l: l.phone == self.phone)._sort_by_confidence_level(reverse=True)
+            leads_with_number = self.lead_ids.filtered(lambda l: l.phone == self.mobile)._sort_by_confidence_level(reverse=True)
             if leads_with_number:
                 lead = leads_with_number[0]
                 return {

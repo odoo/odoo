@@ -1,11 +1,10 @@
 import { browser } from "@web/core/browser/browser";
 import { fields, Record } from "@mail/model/export";
 
-import { Deferred, Mutex } from "@web/core/utils/concurrency";
+import { Mutex } from "@web/core/utils/concurrency";
 
 export const CHAT_HUB_DEFAULT_BUBBLE_START = 15;
 export const CHAT_HUB_KEY = "mail.ChatHub";
-export const CHAT_HUB_COMPACT_LS = "mail.user_setting.chathub_compact";
 
 /**
  * @typedef AwaitChatHubInit
@@ -45,23 +44,14 @@ export class ChatHub extends Record {
             } else if (ev.key === null) {
                 chatHub.load();
             }
-            if (ev.key === CHAT_HUB_COMPACT_LS) {
-                chatHub._recomputeCompact++;
-            }
         });
         chatHub
             .load(browser.localStorage.getItem(CHAT_HUB_KEY) ?? undefined)
-            .then(() => chatHub.initPromise.resolve());
+            .then(() => chatHub._resolveInit());
         return chatHub;
     }
 
-    _recomputeCompact = 0;
-    compact = fields.Attr(false, {
-        compute() {
-            void this._recomputeCompact;
-            return browser.localStorage.getItem(CHAT_HUB_COMPACT_LS) === "true";
-        },
-    });
+    compact = fields.Attr(false, { localStorage: true });
     canShowOpened = fields.Many("ChatWindow");
     canShowFolded = fields.Many("ChatWindow");
     /** From left to right. Right-most will actually be folded */
@@ -74,8 +64,7 @@ export class ChatHub extends Record {
     });
     /** From top to bottom. Bottom-most will actually be hidden */
     folded = fields.Many("ChatWindow", { inverse: "hubAsFolded" });
-    initPromise = new Deferred();
-    preFirstFetchPromise = new Deferred();
+    initPromise = new Promise((resolve) => (this._resolveInit = resolve));
     loadMutex = new Mutex();
 
     async closeAll() {
@@ -92,8 +81,7 @@ export class ChatHub extends Record {
         for (const chatWindow of this.opened) {
             chatWindow.bypassCompact = false;
         }
-        browser.localStorage.setItem(CHAT_HUB_COMPACT_LS, true);
-        this._recomputeCompact++;
+        this.compact = true;
     }
 
     onRecompute() {
@@ -110,10 +98,10 @@ export class ChatHub extends Record {
     async _load(str) {
         /** @type {{ opened: Object[], folded: Object[] }} */
         const { opened = [], folded = [] } = JSON.parse(str);
-        const getChannel = (data) => this.store["discuss.channel"].getOrFetch(data.id);
+        const getChannel = (data) =>
+            this.store["discuss.channel"].getOrFetch(data.id, { with_last_message: true });
         const openPromises = opened.map(getChannel);
         const foldPromises = folded.map(getChannel);
-        this.preFirstFetchPromise.resolve();
         const foldChannels = await Promise.all(foldPromises);
         const openChannels = await Promise.all(openPromises);
         /** @param {import("models").Channel[]} channels */

@@ -504,7 +504,7 @@ class BaseAutomation(models.Model):
         self._update_registry()
         if base_automations._has_trigger_onchange():
             # Invalidate templates cache to update on_change attributes if needed
-            self.env.registry.clear_cache('templates')
+            self.env.transaction.invalidate_ormcache('templates')
         return base_automations
 
     def write(self, vals: dict):
@@ -516,7 +516,7 @@ class BaseAutomation(models.Model):
             clear_templates |= self._has_trigger_onchange()
             if clear_templates and any(self._ids):
                 # Invalidate templates cache to update on_change attributes if needed
-                self.env.registry.clear_cache('templates')
+                self.env.transaction.invalidate_ormcache('templates')
         elif set(vals).intersection(self.RANGE_FIELDS):
             self._update_cron()
         return res
@@ -528,7 +528,7 @@ class BaseAutomation(models.Model):
         self._update_registry()
         if clear_templates:
             # Invalidate templates cache to update on_change attributes if needed
-            self.env.registry.clear_cache('templates')
+            self.env.transaction.invalidate_ormcache('templates')
         return res
 
     def copy(self, default=None):
@@ -685,9 +685,9 @@ class BaseAutomation(models.Model):
         """ Update the registry after a modification on automation rules. """
         if self.env.registry.ready and not self.env.context.get('import_file'):
             # re-install the model patches, and notify other workers
+            self.env.transaction.will_change_registry()
             self._unregister_hook()
             self._register_hook()
-            self.env.registry.registry_invalidated = True
 
     def _get_actions(self, records, triggers):
         """ Return the automations of the given triggers for records' model. The
@@ -1184,9 +1184,9 @@ class BaseAutomation(models.Model):
         # retrieve all the automation rules to run based on a timed condition
         final_exception = None
         automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
-        self.env['ir.cron']._commit_progress(remaining=len(automations))
 
         for automation in automations:
+            automation = automation.with_prefetch()
             # is automation deactivated or disappeared between commits?
             try:
                 if not automation.active:
@@ -1202,15 +1202,14 @@ class BaseAutomation(models.Model):
                     automation._process(record, trigger='time-based')
                 self.env.flush_all()
             except Exception as e:
-                self.env.cr.rollback()
+                self.env['ir.cron']._rollback_progress()
                 _logger.exception("Error in time-based automation rule `%s`.", automation.name)
                 final_exception = e
                 continue
 
             automation.write({'last_run': now})
             _logger.info("Time-based automation rule `%s` done.", automation.name)
-            if not self.env['ir.cron']._commit_progress(1):
-                break
+            self.env['ir.cron']._commit_progress()
         if final_exception is not None:
             # raise the last found exception to mark the cron job as failing
             raise final_exception

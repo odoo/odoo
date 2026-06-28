@@ -8,14 +8,14 @@ import {
     models,
     defineModels,
     patchWithCleanup,
+    registerTemplate,
 } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
-import { ReplaceBgImageAction } from "@html_builder/plugins/background_option/background_image_option_plugin";
-import { renderToString } from "@web/core/utils/render";
+import { ToggleBodyBgImageAction } from "@website/builder/plugins/customize_website_plugin";
 
 defineWebsiteModels();
 
@@ -131,7 +131,7 @@ test("use isActiveItem base on BuilderButton with 'websiteConfig'", async () => 
         selector: ".test-options-target",
         template: xml`
             <BuilderButton id="'a'" action="'websiteConfig'" actionParam="{views: ['test_template_1']}">1</BuilderButton>
-            <div t-if="isActiveItem('a')" class="test">a</div>
+            <div t-if="this.isActiveItem('a')" class="test">a</div>
         `,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
@@ -159,7 +159,7 @@ test("use isActiveItem base on BuilderCheckbox with 'websiteConfig'", async () =
         selector: ".test-options-target",
         template: xml`
             <BuilderCheckbox id="'a'" action="'websiteConfig'" actionParam="{views: ['test_template_1']}"/>
-            <div t-if="isActiveItem('a')" class="test">a</div>
+            <div t-if="this.isActiveItem('a')" class="test">a</div>
         `,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
@@ -440,12 +440,12 @@ test("theme background image is properly set", async () => {
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA" +
         "A".repeat(1000);
 
-    // To avoid mocking the media dialog
-    patchWithCleanup(ReplaceBgImageAction.prototype, {
-        async load() {
-            const img = document.createElement("img");
-            img.src = base64Image;
-            return img;
+    patchWithCleanup(ToggleBodyBgImageAction.prototype, {
+        async apply(params) {
+            const { type: currentType, image: currentImage } = this.getCurrentConfig();
+            const oldConfig = { type: currentType, image: currentImage };
+            const newConfig = { type: "image", image: base64Image };
+            await this.applyConfig(oldConfig, newConfig);
         },
     });
 
@@ -479,9 +479,9 @@ test("theme background image is properly set", async () => {
 });
 
 test("BuilderButton with action “templatePreviewableWebsiteConfig”", async () => {
-    renderToString.app.addTemplate("test.template.1", `<div class="template1"></div>`);
-    renderToString.app.addTemplate("test.template.2", `<div class="template2"></div>`);
-    renderToString.app.addTemplate("test.template.3", `<div class="template3"></div>`);
+    registerTemplate("test.template.1", `<div class="template1"></div>`);
+    registerTemplate("test.template.2", `<div class="template2"></div>`);
+    registerTemplate("test.template.3", `<div class="template3"></div>`);
     onRpc("/website/theme_customize_data", async (request) => {
         const { params } = await request.json();
         expect.step("theme_customize_data");

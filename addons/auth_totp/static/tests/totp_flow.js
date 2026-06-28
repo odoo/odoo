@@ -4,6 +4,23 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 import { whenReady } from "@odoo/owl";
 
+function loginIfNeeded() {
+    return [{
+        isActive: ["body:has(input#login)"],
+        trigger: "input#login",
+        run: "edit test_user",
+    }, {
+        isActive: ["body:has(input#login)"],
+        trigger: "input#password",
+        run: "edit test_user",
+    }, {
+        isActive: ["body:has(input#login)"],
+        trigger: 'button:contains("Log in")',
+        run: "click",
+        expectUnloadPage: true,
+    }];
+}
+
 function openUserPreferencesAtSecurityTab() {
     return [{
         content: 'Open user account menu',
@@ -13,9 +30,6 @@ function openUserPreferencesAtSecurityTab() {
         content: "Open My Preferences",
         trigger: '[data-menu=preferences]',
         run: 'click',
-    }, {
-        content: "wait for security tab",
-        trigger: 'button[role=tab]:contains("Security")',
     }, {
         content: "Switch to security tab",
         trigger: 'button[role=tab]:contains("Security")',
@@ -45,12 +59,17 @@ function closePreferencesDialog({content, totp_state}) {
     }, 
     {
         trigger,
-        async run(helpers) {
-            const modal = document.querySelector(".o_dialog");
-            if (modal) {
-                modal.querySelector("button[name=preference_cancel]").click();
+        async run({ click, waitUntil, queryFirst }) {
+            const button = await waitUntil(
+                () => queryFirst(".o_dialog button[name=preference_cancel]"),
+                {
+                    timeout: 5000,
+                }
+            ).catch(() => false);
+            if (button) {
+                await click(button);
             }
-        }
+        },
     },
     {
         trigger: 'body:not(:has(.o_dialog))',
@@ -58,7 +77,6 @@ function closePreferencesDialog({content, totp_state}) {
 }
 
 registry.category("web_tour.tours").add('totp_tour_setup', {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps ) #245680
     steps: () => [
 ...openUserPreferencesAtSecurityTab(),
 {
@@ -86,7 +104,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 }, {
     content: "Get secret from collapsed div",
     trigger: `.modal a:contains("Cannot scan it?")`,
-    async run(helpers) {
+    async run({ edit }) {
         const secret = this.anchor
             .closest("div")
             .querySelector("[name=secret] span:first-child");
@@ -98,7 +116,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
             secret: secret.textContent,
             offset: 0,
         });
-        await helpers.edit(token, '[name=code] input');
+        await edit(token, '[name=code] input');
     }
 },
 {
@@ -107,8 +125,17 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 },
 {
     trigger: ".o_notification_content:contains(2-Factor authentication is now enabled)",
-    run() {
-        window.location = '/odoo';
+    run: "goToUrl /odoo",
+    expectUnloadPage: true,
+},
+...loginIfNeeded(),
+{
+    isActive: ["body:has(input[name=totp_token])"],
+    trigger: "input[name=totp_token]",
+    async run({ edit, click }) {
+        const token = await rpc('/totphook', { offset: 3 });
+        await edit(token);
+        await click("button[type=submit]");
     },
     expectUnloadPage: true,
 },
@@ -120,7 +147,6 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 ]});
 
 registry.category("web_tour.tours").add('totp_login_enabled', {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [{
     content: "check that we're on the login page or go to it",
     isActive: ["body:not(:has(input#login))"],
@@ -147,10 +173,10 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
 }, {
     content: "input incorrect code",
     trigger: 'input[name=totp_token]',
-    async run(helpers) {
+    async run({ edit }) {
         // set the offset in the past, so the token will be always wrong
         await rpc("/totphook", { offset: -2 });
-        helpers.edit("123456");
+        await edit("123456");
     }
 }, {
     trigger: `button:contains("Log in")`,
@@ -162,10 +188,10 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
 }, {
     content: "reuse same code",
     trigger: 'input[name=totp_token]',
-    async run(helpers) {
+    async run({ edit }) {
         // send the same token as the one last one from the setup tour
         const token = await rpc("/totphook", { offset: 0 });
-        helpers.edit(token);
+        await edit(token);
     }
 }, {
     trigger: `button:contains("Log in")`,
@@ -177,9 +203,9 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
 }, {
     content: "input code",
     trigger: 'input[name=totp_token]',
-    async run(helpers) {
-        const token = await rpc('/totphook', { offset: 1 });
-        helpers.edit(token);
+    async run({ edit }) {
+        const token = await rpc('/totphook', { offset: 4 });
+        await edit(token);
     }
 },
 {
@@ -192,7 +218,6 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
 }]});
 
 registry.category("web_tour.tours").add('totp_login_device', {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [{
     content: "check that we're on the login page or go to it",
     isActive: ["body:not(:has(input#login))"],
@@ -223,9 +248,9 @@ registry.category("web_tour.tours").add('totp_login_device', {
 }, {
     content: "input code",
     trigger: 'input[name=totp_token]',
-    async run(helpers) {
-        const token = await rpc('/totphook', { offset: 2 });
-        helpers.edit(token);
+    async run({ edit }) {
+        const token = await rpc('/totphook', { offset: 5 });
+        await edit(token);
     }
 },
 {
@@ -277,9 +302,6 @@ registry.category("web_tour.tours").add('totp_login_device', {
     trigger: 'button:contains("Log in")',
     run: "click",
     expectUnloadPage: true,
-},  {
-    content: "check we're logged in without 2FA",
-    trigger: ".o_user_menu",
 },
 // now go and disable two-factor authentication would be annoying to do in a separate tour
 // because we'd need to login & totp again as HttpCase.authenticate can't
@@ -307,11 +329,10 @@ registry.category("web_tour.tours").add('totp_login_device', {
 },
 {
     trigger:".o_notification_content:contains(Two-factor authentication disabled)",
-    run() {
-        window.location = '/odoo';
-    },
+    run: `goToUrl /odoo`,
     expectUnloadPage: true,
 },
+...loginIfNeeded(),
 ...openUserPreferencesAtSecurityTab(),
 ...closePreferencesDialog({
     content: "Check that the button has changed",

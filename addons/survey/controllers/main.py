@@ -87,8 +87,10 @@ class Survey(http.Controller):
         if answer_sudo and answer_sudo.deadline and answer_sudo.deadline < datetime.now():
             return 'answer_deadline'
 
-        if answer_sudo and check_partner:
-            if request.env.user._is_public() and answer_sudo.partner_id and not answer_token:
+        # if there is an answer token (from the url or cookie), then we don't
+        # have to check whether the user doing the request is the correct one.
+        if answer_sudo and check_partner and not answer_token:
+            if request.env.user._is_public() and answer_sudo.partner_id:
                 # answers from public user should not have any partner_id; this indicates probably a cookie issue
                 return 'answer_wrong_user'
             if not request.env.user._is_public() and answer_sudo.partner_id != request.env.user.partner_id:
@@ -677,7 +679,7 @@ class Survey(http.Controller):
             'is_html_empty': is_html_empty,
             'review': review,
             'survey': survey_sudo,
-            'answer': answer_sudo if survey_sudo.scoring_type != 'scoring_without_answers' else answer_sudo.browse(),
+            'answer': answer_sudo,
             'questions_to_display': answer_sudo._get_print_questions(),
             'scoring_display_correction': survey_sudo.scoring_type in ['scoring_with_answers', 'scoring_with_answers_after_page'] and answer_sudo,
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),

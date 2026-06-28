@@ -36,10 +36,16 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             tooltipPosition: "right",
         },
         {
+            trigger: ".o-mail-CreateChannelDialog .btn-primary",
+            content: markup(_t("<p>Create a public or private channel.</p>")),
+            run: "click",
+            tooltipPosition: "bottom",
+        },
+        {
             trigger: ".o-mail-Composer-input",
             content: markup(
                 _t(
-                    "<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>"
+                    "<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>"
                 )
             ),
             tooltipPosition: "top",
@@ -52,13 +58,20 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "press Enter",
         },
         {
-            trigger: ".o-mail-Message[data-persistent] [title='Bookmark']:not(:visible)",
-            content: _t("Hover on your message to bookmark it"),
+            trigger:
+                ".o-mail-Message[data-persistent] [name='more-action:undefined']:not(:visible)",
+            content: _t("Hover and click to view more actions on the message"),
             tooltipPosition: "top",
             async run(helpers) {
                 await delay(1000);
                 await helpers.click();
             },
+        },
+        {
+            trigger: ".o-dropdown-item[name='add-bookmark']",
+            content: _t("click to bookmark your message"),
+            tooltipPosition: "right",
+            run: "click",
         },
         {
             trigger: "button[data-mailbox-id='bookmark']",

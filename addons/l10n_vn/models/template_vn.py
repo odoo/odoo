@@ -10,16 +10,13 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_vn_template_data(self):
         return {
             'code_digits': '4',
-            'property_account_receivable_id': 'chart1311',
-            'property_account_payable_id': 'chart3311',
-            'property_stock_valuation_account_id': 'chart1551',
-            'display_invoice_amount_total_words': True,
         }
 
     @template('vn', 'res.company')
     def _get_vn_res_company(self):
         return {
             self.env.company.id: {
+                'display_invoice_amount_total_words': True,
                 'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.vn',
                 'bank_account_code_prefix': '112',
@@ -35,9 +32,11 @@ class AccountChartTemplate(models.AbstractModel):
                 'transfer_account_id': 'chart1131',
                 'expense_account_id': 'chart632',
                 'income_account_id': 'chart5111',
+                'receivable_account_id': 'chart1311',
+                'payable_account_id': 'chart3311',
                 'deferred_expense_account_id': 'chart2421',
                 'deferred_revenue_account_id': 'chart33871',
-                'account_production_wip_account_id': 'chart154',
+                'account_production_wip_account_id': 'chart1541',
                 'default_cash_difference_income_account_id': 'chart711',
                 'default_cash_difference_expense_account_id': 'chart811',
                 'tax_calculation_rounding_method': 'round_per_line',

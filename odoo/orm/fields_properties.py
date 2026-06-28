@@ -98,14 +98,16 @@ class Properties(Field):
             assert self.definition.count(".") == 1
             self.definition_record, self.definition_record_field = self.definition.rsplit('.', 1)
 
-            if not self.inherited_field:
+            if not self.related:
                 # make the field computed, and set its dependencies
                 self._depends = (self.definition_record, )
                 self.compute = self._compute
 
     def setup(self, model):
         if not self._setup_done and self.definition_record and self.definition_record_field:
-            definition_record_field = model.env[model._fields[self.definition_record].comodel_name]._fields[self.definition_record_field]
+            definition_record_model = model.env[model._fields[self.definition_record].comodel_name]
+            definition_record_field = definition_record_model._fields[self.definition_record_field]
+            definition_record_field.setup(definition_record_model)
             definition_record_field.properties_fields += (self,)
         return super().setup(model)
 
@@ -478,6 +480,11 @@ class Properties(Field):
                         for many2many_value in property_value
                     ]
 
+    @staticmethod
+    def generate_property_name():
+        # keep only the first 64 bits
+        return str(uuid.uuid4()).replace('-', '')[:16]
+
     @classmethod
     def _add_missing_names(cls, values_list):
         """Generate new properties name if needed.
@@ -488,8 +495,7 @@ class Properties(Field):
         """
         for definition in values_list:
             if definition.get('definition_changed') and not definition.get('name'):
-                # keep only the first 64 bits
-                definition['name'] = str(uuid.uuid4()).replace('-', '')[:16]
+                definition['name'] = Properties.generate_property_name()
 
     @classmethod
     def _parse_json_types(cls, values_list, env, res_ids_per_model):
@@ -799,7 +805,7 @@ class Properties(Field):
 
         if operator in ('in', 'not in'):
             assert isinstance(value, COLLECTION_TYPES)
-            if len(value) == 1 and True in value:
+            if len(value) == 1 and any(v is True for v in value):
                 # inverse the condition
                 check_null_op_false = "!=" if operator == 'in' else "="
                 value = []
@@ -978,7 +984,8 @@ class PropertiesDefinition(Field):
     copy = True                         # containers may act like templates, keep definitions to ease usage
     readonly = False
     prefetch = True
-    properties_fields = ()  # List of Properties fields using that definition
+    properties_fields: tuple[Property, ...] = ()  # List of Properties fields using that definition
+    _shareable = False                  # field.properties_fields depends on other fields which is not shareable across registries
 
     REQUIRED_KEYS = ('name', 'type')
     ALLOWED_KEYS = (
@@ -994,6 +1001,11 @@ class PropertiesDefinition(Field):
         'selection': {'selection'},
         'tags': {'tags'},
     }
+
+    def setup(self, model):
+        if not self._setup_done:
+            self.properties_fields = ()  # reset in case of re-setup
+        return super().setup(model)
 
     def set_properties_visibility(self, definition, property_names, hidden: bool):
         """

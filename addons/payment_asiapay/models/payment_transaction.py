@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
 
@@ -55,25 +55,6 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific processing values.
         :rtype: dict
         """
-
-        def get_language_code(lang_):
-            """Return the language code corresponding to the provided lang.
-
-            If the lang is not mapped to any language code, the country code is used instead. In
-            case the country code has no match either, we fall back to English.
-
-            :param str lang_: The lang, in IETF language tag format.
-            :return: The corresponding language code.
-            :rtype: str
-            """
-            language_code_ = const.LANGUAGE_CODES_MAPPING.get(lang_)
-            if not language_code_:
-                country_code_ = lang_.split("_")[0]
-                language_code_ = const.LANGUAGE_CODES_MAPPING.get(country_code_)
-            if not language_code_:
-                language_code_ = const.LANGUAGE_CODES_MAPPING["en"]
-            return language_code_
-
         if self.provider_code != "asiapay":
             return super()._get_specific_rendering_values(processing_values)
 
@@ -92,7 +73,7 @@ class PaymentTransaction(models.Model):
             "failUrl": return_url,
             "cancelUrl": return_url,
             "payType": "N",
-            "lang": get_language_code(lang),
+            "lang": payment_utils.get_language_code(lang, const.LANGUAGE_CODES_MAPPING),
             "payMethod": const.PAYMENT_METHODS_MAPPING.get(self.payment_method_id.code, "ALL"),
         }
         url_params["secureHash"] = self.provider_id._asiapay_calculate_signature(
@@ -107,16 +88,6 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("Ref")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "asiapay":
-            return super()._extract_amount_data(payment_data)
-
-        amount = payment_data.get("Amt")
-        # AsiaPay supports only one currency per account.
-        currency = self.provider_id.available_currency_ids  # The currency is still linked.
-        return {"amount": float(amount), "currency_code": currency.name}
-
     def _apply_updates(self, payment_data):
         """Override of `payment' to update the transaction based on the payment data."""
         if self.provider_code != "asiapay":
@@ -127,7 +98,7 @@ class PaymentTransaction(models.Model):
 
         # Update the payment method.
         payment_method_code = payment_data.get("payMethod")
-        payment_method = self.env["payment.method"]._get_from_code(
+        payment_method = self.provider_id._get_pm_from_code(
             payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id
@@ -136,12 +107,12 @@ class PaymentTransaction(models.Model):
         success_code = payment_data.get("successcode")
         primary_response_code = payment_data.get("prc")
         if not success_code:
-            raise ValidationError(_("Received data with missing success code."))
+            raise ValidationError(self.env._("Received data with missing success code."))
         if success_code in const.SUCCESS_CODE_MAPPING["done"]:
             self._set_done()
         elif success_code in const.SUCCESS_CODE_MAPPING["error"]:
             self._set_error(
-                _(
+                self.env._(
                     "An error occurred during the processing of your payment (success code"
                     " %(success_code)s; primary response code %(response_code)s). Please try"
                     " again.",
@@ -157,4 +128,14 @@ class PaymentTransaction(models.Model):
                 primary_response_code,
                 self.reference,
             )
-            self._set_error(_("Unknown success code: %s", success_code))
+            self._set_error(self.env._("Unknown success code: %s", success_code))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "asiapay":
+            return super()._extract_amount_data(payment_data)
+
+        amount = payment_data.get("Amt")
+        # AsiaPay supports only one currency per account.
+        currency = self.provider_id.available_currency_ids  # The currency is still linked.
+        return {"amount": float(amount), "currency_code": currency.name}

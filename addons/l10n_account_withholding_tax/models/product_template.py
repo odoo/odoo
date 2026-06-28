@@ -38,7 +38,7 @@ class ProductTemplate(models.Model):
             tax_details = base_line['tax_details']
             wth_total = 0.0
             for tax_data in tax_details['taxes_data']:
-                if tax_data['tax'].is_withholding_tax_on_payment:
+                if tax_data['tax'].is_withholding_tax:
                     wth_total -= tax_data['tax_amount_currency']
             return wth_total
 

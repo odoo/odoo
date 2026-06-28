@@ -28,9 +28,11 @@ export class CustomizeMailingPlugin extends Plugin {
             CustomizeMailingVariable,
         },
         clean_for_save_processors: (root) => this.cleanForSave(root),
-        snippet_preview_dialog_stylesheets_processors: ({ iframe }) => {
+        snippet_preview_dialog_stylesheets_processors: (params) => {
+            const { iframe } = params;
             const styleSheet = this.extractStylesheetForPreview(iframe.contentDocument);
             iframe.contentDocument.adoptedStyleSheets.push(styleSheet);
+            return params;
         },
     };
     getRule = memoize((selector) => this._getRule(selector));
@@ -48,12 +50,17 @@ export class CustomizeMailingPlugin extends Plugin {
         }
         this.setupMailingVariables();
         this.document.adoptedStyleSheets = [...this.document.adoptedStyleSheets, this.styleSheet];
+        this._cleanups.push(() => {
+            this.document.adoptedStyleSheets = this.document.adoptedStyleSheets.filter(
+                (styleSheet) => this.styleSheet !== styleSheet
+            );
+        });
     }
 
     cleanForSave(clone) {
         const layoutEl = clone.querySelector(".o_layout");
         if (!layoutEl) {
-            return;
+            return clone;
         }
         const styleEl = this.document.createElement("STYLE");
         styleEl.id = "design-element";
@@ -66,6 +73,7 @@ export class CustomizeMailingPlugin extends Plugin {
         }
         styleEl.textContent = cssTextArray.join("\n");
         layoutEl.prepend(styleEl);
+        return clone;
     }
 
     extractStylesheetForPreview(contentDocument) {
@@ -191,12 +199,7 @@ export class CustomizeMailingPlugin extends Plugin {
 
 export class CustomizeMailingVariable extends BuilderAction {
     static id = "mass_mailing.CustomizeMailingVariable";
-    static dependencies = [
-        "builderActions",
-        "color",
-        "mass_mailing.CustomizeMailingPlugin",
-        "history",
-    ];
+    static dependencies = ["builderActions", "color", "mass_mailing.CustomizeMailingPlugin", "domObserver"];
     isApplied({ value }) {
         return this.getValue(...arguments) === value;
     }
@@ -220,7 +223,7 @@ export class CustomizeMailingVariable extends BuilderAction {
     }
     apply({ params, value }) {
         const oldValue = this.getValue(...arguments);
-        this.dependencies.history.applyCustomMutation({
+        this.dependencies.domObserver.applyCustomMutation({
             apply: () => {
                 this.dependencies["mass_mailing.CustomizeMailingPlugin"].setVariable(
                     params.variable,
@@ -237,7 +240,7 @@ export class CustomizeMailingVariable extends BuilderAction {
     }
     clean({ params }) {
         const oldValue = this.getValue(...arguments);
-        this.dependencies.history.applyCustomMutation({
+        this.dependencies.domObserver.applyCustomMutation({
             apply: () => {
                 this.dependencies["mass_mailing.CustomizeMailingPlugin"].setVariable(
                     params.variable,

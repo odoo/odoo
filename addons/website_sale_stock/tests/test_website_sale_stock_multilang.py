@@ -9,7 +9,7 @@ from odoo.tests.common import HttpCase
 class TestWebsiteSaleStockMultilang(HttpCase):
     def test_website_sale_stock_multilang(self):
         # Install French
-        website = self.env.ref("website.default_website")
+        website = self.env.ref("base.default_website")
         lang_fr = self.env["res.lang"]._activate_lang("fr_FR")
         website.language_ids = [Command.link(lang_fr.id)]
 

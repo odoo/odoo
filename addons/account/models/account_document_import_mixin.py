@@ -153,7 +153,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
         # Perform a grouping to determine how many invoices to create
         file_data_groups = grouping_method(files_data)
 
-        records = self.create([{}] * len(file_data_groups))
+        records = self.create([self._create_records_from_attachments_default_create_values()] * len(file_data_groups))
         for record, file_data_group in zip(records, file_data_groups):
             attachment_records = self._from_files_data(file_data_group)
             attachment_records.write({
@@ -174,6 +174,11 @@ class AccountDocumentImportMixin(models.AbstractModel):
                 )
 
         return records
+
+    @api.model
+    def _create_records_from_attachments_default_create_values(self):
+        """ To be overidden in the models inheriting the mixin"""
+        return {}
 
     # --------------------------------------------------------
     # Methods for grouping attachments
@@ -316,21 +321,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
 
         self.ensure_one()
 
-        for file_data in files_data:
-            if 'decoder_info' not in file_data:
-                file_data['decoder_info'] = self._get_edi_decoder(file_data, new=new)
-
-        # Identify the attachment to decode.
-        sorted_files_data = sorted(
-            files_data,
-            key=lambda file_data: (
-                file_data['decoder_info'] is not None,
-                (file_data['decoder_info'] or {}).get('priority', 0),
-            ),
-            reverse=True,
-        )
-
-        file_data = sorted_files_data[0]
+        file_data = self._get_selected_import_file_data(files_data, new=new)
 
         if file_data['decoder_info'] is None or file_data['decoder_info'].get('priority', 0) == 0:
             _logger.info(
@@ -387,29 +378,12 @@ class AccountDocumentImportMixin(models.AbstractModel):
         """ Return a list of fields that should be cleared when an attachment is unattached from the record. """
         return []
 
-    def _fix_attachments_on_record(self, attachments):
-        """ Ensure that only attachments of certain types appear in `self`'s attachments.
-
-        This is to provide a consistent behaviour where only certain attachment types
-        appear in the chatter's attachments, to avoid cluttering the attachments view.
-        """
+    def _fix_attachments_on_record_from_files_data(self, valid_files_data, extra_files_data):
         self.ensure_one()
-        attachments_to_attach = attachments.filtered(self._should_attach_to_record)
-        if attachments_to_attach:
-            # No need to write to attachments that have the same res_model and res_id
-            attachments_to_write = attachments_to_attach.filtered(lambda a: a.res_model != self._name or a.res_id != self.id)
-            attachments_to_write.write({
-                'res_model': self._name,
-                'res_id': self.id,
-            })
-        attachments_to_unattach = (attachments - attachments_to_attach).filtered(lambda a: a.res_model == self._name and not a.res_field)
-        if attachments_to_unattach:
-            for fname in self._attachment_fields_to_clear():
-                self[fname] -= attachments_to_unattach
-            attachments_to_unattach.write({
-                'res_model': False,
-                'res_id': 0,
-            })
+        valid_attachments = self._from_files_data(valid_files_data).filtered(lambda a: a.res_model != self._name or a.res_id != self.id)
+        extra_attachments = self._from_files_data(extra_files_data).filtered(lambda a: a.res_model == self._name and not a.res_field)
+        valid_attachments.write({'res_model': self._name, 'res_id': self.id})
+        extra_attachments.write({'res_model': False, 'res_id': 0})
 
     def _should_attach_to_record(self, attachment):
         """ Indicate whether a given attachment should be displayed in the record's attachments. """
@@ -471,6 +445,30 @@ class AccountDocumentImportMixin(models.AbstractModel):
             return 'pdf'
 
     @api.model
+    def _get_selected_import_file_data(self, files_data, new=False):
+        """
+        Return the file data selected for import according to decoder priority.
+
+        :param list[dict] files_data: The file data dictionaries considered for the
+            import.
+        :param bool new: Whether the import is creating a new business document instead
+            of updating an existing one.
+        :return: The selected file data dictionary.
+        """
+        for file_data in files_data:
+            if 'decoder_info' not in file_data:
+                file_data['decoder_info'] = self._get_edi_decoder(file_data, new=new)
+
+        return sorted(
+            files_data,
+            key=lambda file_data: (
+                file_data['decoder_info'] is not None,
+                (file_data['decoder_info'] or {}).get('priority', 0),
+            ),
+            reverse=True,
+        )[0]
+
+    @api.model
     def _get_xml_tree(self, file_data):
         """ Parse file_data['raw'] into an lxml.etree.ElementTree.
             Can be overridden if custom decoding is needed.
@@ -510,7 +508,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
         :return: a `files_data` list representation of the embedded attachements.
         """
         embedded = []
-        if file_data['import_file_type'] == 'pdf':
+        if file_data['import_file_type'] == 'pdf' and file_data['raw']:
             for filename, content in extract_pdf_embedded_files(file_data['name'], file_data['raw']):
                 embedded_file_data = {
                     'name': filename,

@@ -51,6 +51,11 @@ class WebsiteControllerPage(models.Model):
         default="grid",
     )
 
+    def _access_domain(self, operation):
+        # ignore access on parent model ir.ui.view, in order to reproduce the
+        # existing behavior of ir.rules with parent models
+        return self.env['ir.access']._get_domain_for(self._name, operation, include_inherits=False)
+
     def _check_user_has_model_access(self):
         for model_id in self.mapped("model_id"):
             Model = self.env[model_id.model]
@@ -122,7 +127,7 @@ class WebsiteControllerPage(models.Model):
 
         # Make sure website.is_menu_cache_disabled() will be recomputed
         if self:
-            self.env.registry.clear_cache('templates')
+            self.env.transaction.invalidate_ormcache('templates')
         return super().unlink()
 
     def open_website_url(self):

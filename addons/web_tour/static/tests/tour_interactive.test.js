@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { after, beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryFirst, waitFor, press, Deferred, waitForNone } from "@odoo/hoot-dom";
+import { queryFirst, waitFor, press, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, proxy, xml } from "@odoo/owl";
 import {
     contains,
     getService,
@@ -21,6 +21,7 @@ import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 import { TourInteractive } from "@web_tour/js/tour_interactive/tour_interactive";
 import { Tour, TourStep } from "./tour_models";
+import { TourPointer } from "@web_tour/js/tour_pointer/tour_pointer";
 
 describe.current.tags("desktop");
 
@@ -51,16 +52,16 @@ class Counter extends Component {
     static template = xml/*html*/ `
         <div class="counter">
             <div class="interval">
-                <input type="number" t-model.number="state.interval" />
+                <input type="number" t-custom-model.number="this.state.interval" />
             </div>
             <div class="counter">
-                <span class="value" t-out="state.value" />
-                <button class="inc" t-on-click="onIncrement">+</button>
+                <span class="value" t-out="this.state.value" />
+                <button class="inc" t-on-click="this.onIncrement">+</button>
             </div>
         </div>
     `;
     setup() {
-        this.state = useState({ interval: 1, value: 0 });
+        this.state = proxy({ interval: 1, value: 0 });
     }
     onIncrement() {
         this.state.value += this.state.interval;
@@ -290,12 +291,12 @@ test("Tour backward when the pointed element disappear", async () => {
 
     class Dummy extends Component {
         static props = ["*"];
-        state = useState({ bool: true });
+        state = proxy({ bool: true });
         static components = {};
         static template = xml`
-            <button class="fool w-100" t-on-click="() => { state.bool = true; }">You fool</button>
-            <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
-            <button class="bar w-100" t-if="!state.bool">Bar</button>
+            <button class="fool w-100" t-on-click="() => { this.state.bool = true; }">You fool</button>
+            <button class="foo w-100" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
+            <button class="bar w-100" t-if="!this.state.bool">Bar</button>
         `;
     }
 
@@ -348,12 +349,12 @@ test("Tour backward when the pointed element disappear and ignore warn step", as
 
     class Dummy extends Component {
         static props = ["*"];
-        state = useState({ bool: true });
+        state = proxy({ bool: true });
         static components = {};
         static template = xml`
-            <button class="fool" t-on-click="() => { state.bool = true; }">You fool</button>
-            <button class="foo" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
-            <button class="bar" t-if="!state.bool">Bar</button>
+            <button class="fool" t-on-click="() => { this.state.bool = true; }">You fool</button>
+            <button class="foo" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
+            <button class="bar" t-if="!this.state.bool">Bar</button>
         `;
     }
 
@@ -397,11 +398,11 @@ test("Tour started by the URL", async () => {
 
     class Dummy extends Component {
         static props = ["*"];
-        state = useState({ bool: true });
+        state = proxy({ bool: true });
         static components = {};
         static template = xml`
-            <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
-            <button class="bar w-100" t-if="!state.bool">Bar</button>
+            <button class="foo w-100" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
+            <button class="bar w-100" t-if="!this.state.bool">Bar</button>
         `;
     }
 
@@ -434,11 +435,11 @@ test("Log a warning if step ignored", async () => {
 
     class Dummy extends Component {
         static props = ["*"];
-        state = useState({ bool: true });
+        state = proxy({ bool: true });
         static components = {};
         static template = xml`
-            <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
-            <button class="bar w-100" t-if="!state.bool">Bar</button>
+            <button class="foo w-100" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
+            <button class="bar w-100" t-if="!this.state.bool">Bar</button>
         `;
     }
 
@@ -626,7 +627,7 @@ test("Tour don't backward when dropdown loading", async () => {
         ],
     });
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     let makeItLag = false;
     await mountWithCleanup(WebClient);
 
@@ -638,7 +639,7 @@ test("Tour don't backward when dropdown loading", async () => {
 
     onRpc("product", "web_name_search", async () => {
         if (makeItLag) {
-            await def;
+            await def.promise;
         }
     });
 
@@ -679,12 +680,12 @@ test("Don't backward when action manager is busy", async () => {
 
     class Dummy extends Component {
         static props = ["*"];
-        state = useState({ bool: true });
+        state = proxy({ bool: true });
         static components = {};
         static template = xml`
-            <button class="fool w-100" t-on-click="() => { state.bool = true; }">You fool</button>
-            <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
-            <button class="bar w-100" t-if="!state.bool">Bar</button>
+            <button class="fool w-100" t-on-click="() => { this.state.bool = true; }">You fool</button>
+            <button class="foo w-100" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
+            <button class="bar w-100" t-if="!this.state.bool">Bar</button>
         `;
     }
 
@@ -805,4 +806,70 @@ test("pointer hidden when trigger is behind overlay", async () => {
     await waitFor(".o_tour_pointer");
     // Finalize the dummy tour to avoid leaving in a dirty state
     await contains("button.foo").click();
+});
+
+test("start a tour that no longer exist should clear tourstate", async () => {
+    Tour._records = [{ name: "tour69" }];
+    registry.category("web_tour.tours").add("tour69", {
+        steps: () => [{ trigger: "button.foo", run: "click" }],
+    });
+    class Root extends Component {
+        static components = { Counter };
+        static template = xml/*html*/ `
+                <t>
+                    <Counter />
+                </t>
+            `;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour69", { mode: "manual" });
+    expect(browser.localStorage.getItem("current_tour")).toBe("tour69");
+    registry.category("web_tour.tours").remove("tour69");
+    await getService("tour_service").startTour("tour69", { mode: "manual" });
+    expect(browser.localStorage.getItem("current_tour")).toBe(null);
+});
+
+test("avoid rendering loop of pointer", async () => {
+    registry.category("web_tour.tours").add("tour1", {
+        steps: () => [{ trigger: "button.foo", run: "click" }],
+    });
+    Tour._records = [{ name: "tour1" }];
+    let patchCount = 0;
+    patchWithCleanup(TourPointer.prototype, {
+        setup() {
+            super.setup();
+            onMounted(() => {
+                patchCount++;
+            });
+            onPatched(() => {
+                patchCount++;
+            });
+        },
+    });
+    const state = proxy({ hasFoo: true });
+    class Dummy extends Component {
+        static props = ["*"];
+        static components = {};
+        static template = xml`
+            <div class="o_home_menu">Dummy menu to allow pointer to disappear</div>
+            <button t-if="this.state.hasFoo" class="foo w-100">Foo</button>
+        `;
+
+        state = state;
+    }
+    await mountWithCleanup(Dummy);
+    await getService("tour_service").startTour("tour1", { mode: "manual" });
+    await waitFor(".o_tour_pointer");
+    expect(patchCount).toBe(1);
+    await animationFrame();
+    expect(patchCount).toBe(2);
+    await animationFrame();
+    expect(patchCount).toBe(2);
+
+    state.hasFoo = false;
+    await waitForNone(".o_tour_pointer");
+    expect(patchCount).toBe(3);
+    await animationFrame();
+    expect(patchCount).toBe(3);
 });

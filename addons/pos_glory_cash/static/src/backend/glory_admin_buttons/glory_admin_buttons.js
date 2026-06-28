@@ -1,5 +1,5 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { _t } from "@web/core/l10n/translation";
@@ -9,6 +9,7 @@ import { downloadFile } from "@web/core/network/download";
 import { Logger } from "@bus/workers/bus_worker_utils";
 import { GloryService } from "@pos_glory_cash/glory_service";
 import { GLORY_STATUS_STRING } from "@pos_glory_cash/utils/constants";
+import { initLNA } from "@point_of_sale/app/utils/init_lna";
 
 export class GloryAdminButtons extends Component {
     static template = `pos_glory_cash.GloryAdminButtons`;
@@ -21,17 +22,21 @@ export class GloryAdminButtons extends Component {
         this.notification = useService("notification");
         this.logger = new Logger("pos_glory_cash");
         this.gloryService = new GloryService((newStatus) => (this.state.status = newStatus));
-        this.state = useState({ status: "DISCONNECTED", resetInProgress: false });
+        this.state = proxy({ status: "DISCONNECTED", resetInProgress: false });
 
         useLayoutEffect(
             () => {
-                const { glory_websocket_address, glory_username, glory_password } =
+                const { glory_websocket_address, glory_username, glory_password, glory_use_lna } =
                     this.props.record.data;
+                if (glory_use_lna) {
+                    initLNA(this.notification);
+                }
                 if (glory_websocket_address) {
                     this.gloryService.connect(
                         glory_websocket_address,
                         glory_username,
-                        glory_password
+                        glory_password,
+                        glory_use_lna
                     );
                 }
             },
@@ -79,7 +84,7 @@ export class GloryAdminButtons extends Component {
             });
             return;
         }
-        const protocol = window.location.protocol;
+        const protocol = this.props.record.data.glory_use_lna ? "http:" : window.location.protocol;
         const port = protocol === "http:" ? 3000 : 3001;
         browser.open(
             `${protocol}//${this.props.record.data.glory_websocket_address}:${port}/control`

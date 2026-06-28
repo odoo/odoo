@@ -1,3 +1,5 @@
+import { postMessage } from "@im_livechat/../tests/tours/livechat_tour_utils";
+
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat_logout_after_chat_start", {
@@ -6,14 +8,7 @@ registry.category("web_tour.tours").add("website_livechat_logout_after_chat_star
             trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
             run: "click",
         },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "edit Hello!",
-        },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "press Enter",
-        },
+        ...postMessage("Hello!"),
         {
             trigger:
                 ".o-livechat-root:shadow .o-mail-Thread:not([data-transient]) .o-mail-Message-content:contains('Hello!')",

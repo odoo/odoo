@@ -50,7 +50,9 @@ class TestSaleFlowTourPostInstall(TestSaleCommon, HttpCase):
         sale_user = self.env["res.users"].create({
             "name": "Super Sale Woman",
             "login": "SuperSaleWoman",
-            "group_ids": [Command.set([self.ref("sales_team.group_sale_salesman")])],
+            "group_ids": [
+                Command.set([self.ref("sales_team.group_sale_salesman"), self.ref("uom.group_uom")])
+            ],
         })
         # create and confirm a sale order to populate the list view
         sale_order = (
@@ -68,6 +70,11 @@ class TestSaleFlowTourPostInstall(TestSaleCommon, HttpCase):
                 ],
             })
         )
+
+        # Make the default UoM differ from the product's default UoM so the tour can detect when
+        # the onchange has completed.
+        self.product.uom_id = self.uom_dozen
+
         sale_order.action_confirm()
         self.start_tour(
             "/odoo", "test_basic_sale_flow_with_minimal_access_rights", login="SuperSaleWoman"

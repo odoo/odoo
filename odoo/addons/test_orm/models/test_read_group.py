@@ -65,8 +65,15 @@ class Test_Read_GroupAggregate(models.Model):
     key = fields.Integer()
     value = fields.Integer("Value")
     numeric_value = fields.Float(digits=(4, 2))
-    partner_id = fields.Many2one('res.partner')
+    partner_id = fields.Many2one('test_read_group.partner')
     display_name = fields.Char(store=True)
+
+
+class Test_Read_GroupPartner(models.Model):
+    _name = 'test_read_group.partner'
+    _description = 'Test Read Group Partner'
+    _inherit = ['test_orm.partner']
+    _order = 'name ASC, id DESC'  # We need a specific for the tests.
 
 
 # we use a selection that is in reverse lexical order, in order to check the

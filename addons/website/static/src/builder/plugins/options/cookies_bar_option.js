@@ -16,6 +16,7 @@ export class CookiesBarOptionPlugin extends Plugin {
         builder_actions: {
             SelectLayoutAction,
         },
+        immutable_link_selectors: [".o_cookies_bar_text_policy", ".o_cookies_bar_toggle"],
     };
 
     setup() {

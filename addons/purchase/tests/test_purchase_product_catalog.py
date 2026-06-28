@@ -78,7 +78,8 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
                     'order_id': purchase_order.id,
                     'product_id': other_product.id,
                     'quantity': 1,
-                    'res_model': 'purchase.order'
+                    'res_model': 'purchase.order',
+                    'uom_id': other_product.uom_id.id,
                 }
             }),
             headers={'Content-Type': 'application/json'},
@@ -94,13 +95,33 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
                     'order_id': purchase_order.id,
                     'product_id': company_product.id,
                     'quantity': 1,
-                    'res_model': 'purchase.order'
+                    'res_model': 'purchase.order',
+                    'uom_id': company_product.uom_id.id,
                 }
             }),
             headers={'Content-Type': 'application/json'},
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['result'], company_product_price)
+
+        pack_6_uom = self.env.ref('uom.product_uom_pack_6')
+        purchase_order.order_line[0].uom_id = pack_6_uom
+        resp = self.make_jsonrpc_request(
+            route='/product/catalog/update_order_line_info',
+            params={
+                    'child_field': 'order_line',
+                    'order_id': purchase_order.id,
+                    'product_id': other_product.id,
+                    'quantity': 2,
+                    'res_model': 'purchase.order',
+                    'uom_id': pack_6_uom.id,
+                },
+            headers={'Content-Type': 'application/json'},
+        )
+        self.assertTrue(resp)
+        product_uom_factor = purchase_order.order_line[0]._get_product_catalog_lines_data()['productUomFactor']
+        self.assertEqual(resp, other_product_price_converted * 6)
+        self.assertEqual(resp * product_uom_factor, other_product_price_converted)  # Price in product unit
 
     # === TOUR TESTS ===#
     def test_catalog_vendor_uom(self):
@@ -183,5 +204,5 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
         })
-        catalog_info = purchase_order._get_product_price_and_data(supplier_info.product_tmpl_id.product_variant_ids[0])
+        catalog_info = purchase_order._get_product_catalog_seller_data(supplier_info.product_tmpl_id.product_variant_ids[0])
         self.assertEqual(catalog_info['price'], 100.0)

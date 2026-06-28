@@ -69,7 +69,7 @@
                         </t>
 
                         <!-- Billing Period -->
-                        <ram:BillingSpecifiedPeriod t-if="line_vals.get('billing_start') and line_vals.get('billing_end')"> 
+                        <ram:BillingSpecifiedPeriod t-if="line_vals.get('billing_start') and line_vals.get('billing_end')">
                             <ram:StartDateTime>
                                 <udt:DateTimeString format="102" t-out="format_date(line_vals['billing_start'])"/>
                             </ram:StartDateTime>
@@ -174,6 +174,10 @@
                     <ram:IncludedNote>
                         <ram:Content t-out="ExchangedDocument_vals.get('included_note')"/>
                     </ram:IncludedNote>
+                    <ram:IncludedNote t-foreach="ExchangedDocument_vals.get('included_note_list')" t-as="included_note">
+                        <ram:Content t-out="included_note.get('content')"/>
+                        <ram:SubjectCode t-out="included_note.get('subject_code')"/>
+                    </ram:IncludedNote>
                 </rsm:ExchangedDocument>
 
                 <rsm:SupplyChainTradeTransaction>
@@ -193,6 +197,10 @@
                                 partner="record.company_id.partner_id"
                                 specified_legal_organization_val="seller_specified_legal_organization"/>
 
+                            <ram:URIUniversalCommunication t-if="record.company_id.partner_id.routing_scheme and record.company_id.partner_id.routing_endpoint">
+                                <ram:URIID t-att-schemeID="record.company_id.partner_id.routing_scheme" t-out="record.company_id.partner_id.routing_endpoint"/>
+                            </ram:URIUniversalCommunication>
+
                             <!-- VAT. -->
                             <ram:SpecifiedTaxRegistration t-if="record.fiscal_position_id.foreign_vat">
                                 <ram:ID schemeID="VA" t-out="record.fiscal_position_id.foreign_vat"/>
@@ -209,6 +217,10 @@
                             <t t-call="account_edi_ubl_cii.account_invoice_partner_facturx_export_22"
                                 partner="record.partner_id"
                                 specified_legal_organization_val="buyer_specified_legal_organization"/>
+
+                            <ram:URIUniversalCommunication t-if="record.partner_id.routing_scheme and record.partner_id.routing_endpoint">
+                                <ram:URIID t-att-schemeID="record.partner_id.routing_scheme" t-out="record.partner_id.routing_endpoint"/>
+                            </ram:URIUniversalCommunication>
 
                             <!-- VAT. -->
                             <ram:SpecifiedTaxRegistration t-if="record.commercial_partner_id.vat">
@@ -398,7 +410,7 @@
                         </pdfaExtension:schemas>
                     </rdf:Description>
                     <rdf:Description xmlns:fx="urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#" rdf:about="">
-                        <fx:ConformanceLevel>EN 16931</fx:ConformanceLevel>
+                        <fx:ConformanceLevel>EXTENDED</fx:ConformanceLevel>
                         <fx:DocumentFileName>factur-x.xml</fx:DocumentFileName>
                         <fx:DocumentType t-translation="off">INVOICE</fx:DocumentType>
                         <fx:Version>1.0</fx:Version>

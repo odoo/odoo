@@ -8,6 +8,9 @@ definePosModels();
 test("validateOrder", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
+    const product_tmpl_id = store.models["product.template"].get(8);
+    await store.addLineToOrder({ product_tmpl_id, qty: 0 }, order);
+
     const fastPaymentMethod = order.config.fast_payment_method_ids[0];
     const validation = new OrderPaymentValidation({
         pos: store,
@@ -22,6 +25,7 @@ test("validateOrder", async () => {
     expect(order.payment_ids[0].payment_method_id).toEqual(fastPaymentMethod);
     expect(order.state).toBe("paid");
     expect(order.amount_paid).toBe(17.85);
+    expect(order.lines.length).toBe(3); // Keep lines with zero quantity
 });
 test("isOrderValid", async () => {
     const store = await setupPosEnv();

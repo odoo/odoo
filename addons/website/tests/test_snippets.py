@@ -27,7 +27,7 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'default_shape_gets_palette_colors', login='admin')
 
     def test_03_snippets_all_drag_and_drop(self):
-        with MockRequest(self.env, website=self.env.ref('website.default_website')):
+        with MockRequest(self.env, website=self.env.ref('base.default_website')):
             snippets_template = self.env['ir.ui.view'].render_public_asset('website.snippets')
         html_template = html.fromstring(snippets_template)
         data_snippet_els = html_template.xpath("//*[snippets and not(hasclass('d-none'))]//*[@data-oe-snippet-key]")
@@ -63,7 +63,7 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_countdown', login='admin')
 
     def test_05_social_media(self):
-        self.env.ref('website.default_website').write({
+        self.env.ref('base.default_website').company_id.write({
             'social_facebook': "https://www.facebook.com/Odoo",
             'social_twitter': 'https://twitter.com/Odoo',
             'social_linkedin': 'https://www.linkedin.com/company/odoo',
@@ -73,13 +73,8 @@ class TestSnippets(HttpCase):
             'social_tiktok': 'https://www.tiktok.com/@odoo',
             'social_discord': 'https://discord.com/servers/discord-town-hall-169256939211980800',
         })
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_banner_default_image.jpg')
+        create_image_attachment(self.env, '/web/image/website.landscape_md_1', 'landscape_md_1.jpg')
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_social_media', login="admin")
-        self.assertEqual(
-            self.env.ref('website.default_website').social_instagram,
-            'https://instagram.com/odoo.official/',
-            'Social media should have been updated'
-        )
 
     def test_06_snippet_popup_add_remove(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_popup_add_remove', login='admin')
@@ -91,8 +86,8 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_table_of_content', login='admin')
 
     def test_09_snippet_image_gallery(self):
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_default_image.jpg')
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image_2', 's_default_image2.webp')
+        create_image_attachment(self.env, '/web/image/website.landscape_md_1', 's_default_image.jpg')
+        create_image_attachment(self.env, '/web/image/website.portrait_lg_3', 's_default_image2.webp')
         self.start_tour(self.env['website'].get_client_action_url('/', True), "snippet_image_gallery_remove", login='admin')
 
     def test_10_parallax(self):
@@ -115,7 +110,7 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_images_wall', login='admin')
 
     def test_snippet_popup_with_scrollbar_and_animations(self):
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         website.cookies_bar = True
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_popup_and_scrollbar', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_popup_and_animations', login='admin', timeout=90)
@@ -127,8 +122,8 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/', True), "snippet_image_gallery_reorder", login='admin')
 
     def test_snippet_image_gallery_thumbnail_update(self):
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_default_image.jpg')
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image_2', 's_default_image_2.jpg')
+        create_image_attachment(self.env, '/web/image/website.landscape_md_1', 's_default_image.jpg')
+        create_image_attachment(self.env, '/web/image/website.portrait_lg_3', 's_default_image_2.jpg')
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_image_gallery_thumbnail_update', login='admin')
 
     def test_dropdowns_and_header_hide_on_scroll(self):
@@ -139,7 +134,7 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'dropdowns_and_header_hide_on_scroll', login='admin')
 
     def test_snippet_image(self):
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_default_image.jpg')
+        create_image_attachment(self.env, '/web/image/website.landscape_md_1', 's_default_image.jpg')
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_image', login='admin')
 
     def test_rating_snippet(self):
@@ -154,8 +149,11 @@ class TestSnippets(HttpCase):
     def test_tabs_snippet(self):
         self.start_tour(self.env["website"].get_client_action_url("/", True), "snippet_tabs", login="admin")
 
+    def test_snippet_popup_esc(self):
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_popup_esc', login='admin')
+
     def test_cookie_bar_updates_gtag_consent(self):
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         website.google_analytics_key = 'G-XXXXXXXXXXX'
         website.cookies_bar = True
         self.start_tour(website.get_client_action_url('/'), 'cookie_bar_updates_gtag_consent')
@@ -164,11 +162,37 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_shape_image', login='admin')
 
     def test_snippet_pill_shape(self):
-        res = self.url_open('/html_editor/image_shape/website.s_intro_pill_default_image/html_builder/geometric_round/geo_round_pill.svg')
+        res = self.url_open('/html_editor/image_shape/website.portrait_lg_1/html_builder/geometric_round/geo_round_pill.svg')
         svg = html.fromstring(res.text)
-        self.assertEqual(float(svg.attrib['width']), 439, "SVG should have the width of the original image")
-        self.assertEqual(float(svg.attrib['height']), 878, "SVG height should be double the width because the pill shape has a default aspect ratio of 1/2")
+        self.assertEqual(float(svg.attrib['width']), 1000, "SVG should have the width of the original image")
+        self.assertEqual(float(svg.attrib['height']), 2000, "SVG height should be double the width because the pill shape has a default aspect ratio of 1/2")
         image_elem = svg.find('.//image')
         self.assertEqual(image_elem.attrib['width'], '100%')
         self.assertEqual(image_elem.attrib['height'], '100%')
         self.assertEqual(image_elem.attrib['preserveaspectratio'], 'xMidYMid slice')
+
+    def test_change_cookie_policy_page(self):
+        website = self.env.ref('base.default_website')
+        website.cookies_bar = True
+        cookie_page = self.env["website.page"].create({
+            "name": "Test Cookie Policy",
+            "type": "qweb",
+            "url": "/test-cookie-policy",
+            "website_id": website.id,
+        })
+        website.cookie_policy_id = cookie_page
+        # Verify /website/cookie-policy redirects to the configured policy page
+        res = self.url_open('/website/cookie-policy', allow_redirects=False)
+        self.assertEqual(res.status_code, 303)
+        self.assertTrue(res.headers['Location'].endswith('/test-cookie-policy'))
+
+        # Explicitly remove custom policy if any
+        website.cookie_policy_id = False
+        res = self.url_open('/website/cookie-policy', allow_redirects=False)
+
+        # Should redirect to default /cookie-policy page
+        self.assertEqual(res.status_code, 303)
+        self.assertTrue(res.headers['Location'].endswith('/cookie-policy'))
+
+    def test_clickable_card(self):
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'clickable_card', login='admin')

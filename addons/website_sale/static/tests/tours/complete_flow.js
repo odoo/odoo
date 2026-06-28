@@ -208,7 +208,6 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
         }),
         ...tourUtils.assertCartAmounts({
             taxes: "23.70",
-            untaxed: "158.00",
             total: "181.70",
         }),
         tourUtils.goToCheckout(),

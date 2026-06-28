@@ -120,6 +120,14 @@ describe("Range collapsed", () => {
             });
         });
 
+        test("should create a list inside a blockquote", async () => {
+            await testEditor({
+                contentBefore: "<blockquote>ab[]cd</blockquote>",
+                stepFunction: toggleUnorderedList,
+                contentAfter: "<blockquote><ul><li>ab[]cd</li></ul></blockquote>",
+            });
+        });
+
         test("should turn a paragraph in a div into a list", async () => {
             await testEditor({
                 contentBefore: "<div><p>ab[]cd</p></div>",
@@ -474,6 +482,33 @@ describe("Range collapsed", () => {
                 contentBefore: "<ul><li>ab<br><b>cd</b><br><i>ef[]</i></li></ul>",
                 stepFunction: toggleUnorderedList,
                 contentAfter: "<p>ab<br><b>cd</b><br><i>ef[]</i></p>",
+            });
+        });
+
+        test("Toggling a list item off should preserve the parent list's classes on the remaining list", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <ul class="outerClass">
+                        <li><p>Test1[]</p>
+                            <ul class="innerClass">
+                                <li>Test2</li>
+                            </ul>
+                        </li>
+                        <li>Test3</li>
+                    </ul>
+                `),
+                stepFunction: toggleUnorderedList,
+                contentAfter: unformat(`
+                    <p>Test1[]</p>
+                    <ul class="outerClass">
+                        <li class="oe-nested">
+                            <ul class="innerClass">
+                                <li>Test2</li>
+                            </ul>
+                        </li>
+                        <li>Test3</li>
+                    </ul>
+                `),
             });
         });
     });

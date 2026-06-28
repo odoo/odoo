@@ -1,10 +1,11 @@
+import { registry } from "@web/core/registry";
 import {
     clickOnSave,
     changeOptionInPopover,
     checkIfVisibleOnScreen,
     insertSnippet,
-    registerWebsitePreviewTour,
     selectHeader,
+    waitForEditMode,
 } from "@website/js/tours/tour_utils";
 
 const checkIfUserMenuNotMasked = function () {
@@ -24,23 +25,24 @@ const scrollDownToMediaList = function () {
     return {
         content: "Scroll down the page a little to leave the dropdown partially visible",
         trigger: ":iframe #wrapwrap .s_media_list",
-        run() {
+        async run() {
             // Scroll down to the media list snippet.
             this.anchor.scrollIntoView({ behavior: "instant" });
+            await new Promise((resolve) => {
+                this.anchor.ownerDocument.defaultView.addEventListener("scrollend", resolve, {
+                    once: true,
+                });
+            });
         },
     };
 };
 
-registerWebsitePreviewTour(
-    "dropdowns_and_header_hide_on_scroll",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("dropdowns_and_header_hide_on_scroll", {
+    steps: () => [
+        waitForEditMode,
         ...insertSnippet({ id: "s_media_list", name: "Media List", groupName: "Content" }),
         selectHeader(),
-        ...changeOptionInPopover("Header", "Scroll Effect", ".dropdown-item:contains('Fixed')"),
+        ...changeOptionInPopover("Header", "Scroll Effect", "Fixed"),
         {
             content: "Wait for the option to be applied",
             trigger: "[data-label='Scroll Effect'] .dropdown-toggle:contains('Fixed')",
@@ -50,11 +52,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe #wrapwrap header.o_header_fixed",
         },
         selectHeader(),
-        ...changeOptionInPopover(
-            "Header",
-            "Template",
-            ".dropdown-item[data-action-param*=sales_two]"
-        ),
+        ...changeOptionInPopover("Header", "Template", "Menu - Sales 2"),
         {
             trigger: ":iframe .o_header_sales_two_top",
             timeout: 30000,
@@ -64,7 +62,7 @@ registerWebsitePreviewTour(
             trigger:
                 ":iframe #wrapwrap header.o_header_fixed div[aria-label=Middle] div[role=search]",
         },
-        ...clickOnSave(undefined, 30000),
+        ...clickOnSave(30000),
         ...checkIfUserMenuNotMasked(),
         // We scroll the page a little because when clicking on the dropdown,
         // the page needs to scroll to the top first and then open the dropdown
@@ -83,5 +81,5 @@ registerWebsitePreviewTour(
         checkIfVisibleOnScreen(
             ":iframe #wrapwrap header .s_searchbar_input.show .o_dropdown_menu.show"
         ),
-    ]
-);
+    ],
+});

@@ -1,5 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
+import { formatCurrency } from "@web/core/currency";
 import { useErrorHandlers } from "@point_of_sale/app/hooks/hooks";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -7,7 +8,6 @@ import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
-import { DatePickerPopup } from "@point_of_sale/app/components/popups/date_picker_popup/date_picker_popup";
 
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
 import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/payment_status/payment_status";
@@ -101,12 +101,6 @@ export class PaymentScreen extends Component {
         );
     }
 
-    get uiBackText() {
-        return this.pos.config.set_tip_after_payment && this.currentOrder.toBeValidate()
-            ? _t("Keep Open")
-            : _t("Back");
-    }
-
     get _getNumberBufferConfig() {
         const config = {
             // When the buffer is updated, trigger this event.
@@ -138,7 +132,7 @@ export class PaymentScreen extends Component {
         this.pos.addAnimation = true;
         setTimeout(() => (this.pos.addAnimation = false), 1000);
     }
-    async addNewPaymentLine(paymentMethod) {
+    async addNewPaymentLine(paymentMethod, args = {}) {
         const { status: canSend, message } = paymentMethod.getPaymentInterfaceStates();
         if (!canSend) {
             this.dialog.add(AlertDialog, { title: _t("Oh snap !"), body: message });
@@ -149,13 +143,10 @@ export class PaymentScreen extends Component {
             this.makeAnimation();
         }
 
-        const result = this.currentOrder.addPaymentline(paymentMethod);
+        const result = this.currentOrder.addPaymentline(paymentMethod, args);
         if (result.status) {
             this.numberBuffer.set(result.data.amount.toString());
-            if (
-                !this.isRefundOrder &&
-                (paymentMethod.payment_interface?.fastPayments || paymentMethod.useBankQrCode)
-            ) {
+            if (!this.isRefundOrder && paymentMethod.useBankQrCode) {
                 const newPaymentLine = this.paymentLines.at(-1);
                 this.sendPaymentRequest(newPaymentLine);
             }
@@ -228,7 +219,10 @@ export class PaymentScreen extends Component {
 
         this.dialog.add(NumberPopup, {
             title: tip.amount > 0 ? _t("Change Tip") : _t("Add Tip"),
-            startingValue: String(tip.value || amount || 0),
+            startingValue:
+                tip.type === "percent"
+                    ? String(tip.value || 0)
+                    : formatCurrency(tip.amount || amount || 0),
             startingType: tip.type || "fixed",
             types: [
                 { name: "fixed", symbol: this.pos.currency.symbol },
@@ -285,18 +279,6 @@ export class PaymentScreen extends Component {
             tip = (total * valueParsed) / 100;
         }
         return this.pos.currency.round(tip);
-    }
-    async toggleShippingDatePicker() {
-        if (!this.currentOrder.shipping_date) {
-            this.dialog.add(DatePickerPopup, {
-                title: _t("Select the shipping date"),
-                getPayload: (shippingDate) => {
-                    this.currentOrder.shipping_date = shippingDate;
-                },
-            });
-        } else {
-            this.currentOrder.shipping_date = false;
-        }
     }
     deletePaymentLine(uuid) {
         const line = this.paymentLines.find((line) => line.uuid === uuid);
@@ -384,6 +366,20 @@ export class PaymentScreen extends Component {
 
     async clickTableGuests() {
         this.pos.setCustomerCount();
+    }
+
+    shouldShowTipOrder() {
+        return (
+            (this.pos.config.iface_tipproduct && this.pos.config.tip_product_id) ||
+            this.pos.canOpenCashdrawer
+        );
+    }
+
+    optionalButtonValues() {
+        return (
+            (this.pos.config.iface_tipproduct && this.pos.config.tip_product_id) ||
+            this.pos.canOpenCashdrawer
+        );
     }
 }
 

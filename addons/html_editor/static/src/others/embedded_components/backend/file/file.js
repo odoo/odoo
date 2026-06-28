@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import {
     applyObjectPropertyDifference,
     getEmbeddedProps,
@@ -15,7 +16,7 @@ export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {
         // override the state by an embedded state.
         this.state = useEmbeddedState(this.props.host);
         this.fileModel.state = this.state;
-        this.localState = useState({
+        this.localState = proxy({
             editFileName: false,
         });
         this.nameInput = useRef("nameInput");

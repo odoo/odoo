@@ -20,17 +20,15 @@ export class DatetimePicker extends Interaction {
         const parseFunction = this.type === "date" ? parseDate : parseDateTime;
         const deserializeFunction = this.type === "date" ? deserializeDate : deserializeDateTime;
         this.registerCleanup(
-            this.services.datetime_picker
-                .create({
-                    target: this.el,
-                    pickerProps: {
-                        type: this.type,
-                        minDate: this.minDate && deserializeFunction(this.minDate),
-                        maxDate: this.maxDate && deserializeFunction(this.maxDate),
-                        value: parseFunction(this.el.value),
-                    },
-                })
-                .enable()
+            this.services["datetime_picker"].create({
+                target: this.el,
+                pickerProps: {
+                    type: this.type,
+                    minDate: this.minDate && deserializeFunction(this.minDate),
+                    maxDate: this.maxDate && deserializeFunction(this.maxDate),
+                    value: parseFunction(this.el.value),
+                },
+            }).destroy
         );
     }
 }

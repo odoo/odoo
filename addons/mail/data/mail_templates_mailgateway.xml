@@ -41,14 +41,18 @@
         </template>
 
         <template id="mail_attachment_links" name="Attachment links">
-<div style="max-width: 900px; width: 100%;">
-    <hr style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 10px 0px;"/>
-    <div t-foreach="attachments" t-as="attachment">
-        <a t-attf-href="{{attachment.get_base_url()}}/web/content/{{attachment.id}}?download=1&amp;access_token={{attachment.access_token}}"
-           style="font-size: 12px; color: #875A7B; text-decoration:none !important; text-decoration:none; font-weight: 400;">
-            &amp;#128229; <t t-out="attachment.name"/>
-        </a>
-    </div>
+<div class="o-attachments-container" style="margin: 10px 0 10px; max-width: 900px; width: 100%;">
+    <span t-foreach="attachments" t-as="attachment">
+        <div style="margin:3px; padding: 10px; min-width:400px; display:inline-block; vertical-align:middle; border-style:solid; border-width:0 0 0 3px; border-radius:5px; border-color:#a2dae3; background-color:#d1ecf1; color:#09414a;" t-att-data-attachment-id="attachment.id">
+            <div t-if="is_preview" style="text-decoration:none; font-weight:500; font-size: 15px; width:fit-content; color:#008f8c;" width="fit-content">
+                &amp;#11015; <t t-out="attachment.name"/>
+            </div>
+            <a t-else="" t-attf-href="{{attachment.get_base_url()}}/web/content/{{attachment.id}}?download=1&amp;access_token={{attachment.access_token}}"
+                style="text-decoration:none; font-weight:500; font-size: 15px; width:fit-content; color:#008f8c;" width="fit-content" target="_blank">
+                 &amp;#11015; <t t-out="attachment.name"/>
+            </a>
+        </div>
+    </span>
 </div>
         </template>
     </data>

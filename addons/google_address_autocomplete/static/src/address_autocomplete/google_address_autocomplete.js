@@ -1,6 +1,7 @@
+import { props, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { CharField, charField } from "@web/views/fields/char/char_field";
+import { CharField, charField, charFieldProps } from "@web/views/fields/char/char_field";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { googlePlacesSession } from "../google_places_session";
 import { useChildRef } from "@web/core/utils/hooks";
@@ -30,6 +31,10 @@ const standardAddressFields = {
     country_id: {
         label: _t("Country field"),
         type: ["char", "many2one"]
+    },
+    city_id: {
+        label: _t("City Id field"),
+        type: ["many2one"]
     }
 }
 
@@ -37,17 +42,10 @@ export class AddressAutoComplete extends CharField {
     static template = "google_address_autocomplete.AddressAutoCompleteTemplate";
     static components = { AutoComplete, ...CharField.components };
 
-    static props = {...CharField.props,
-        addressFieldMap: {
-            type: Object,
-            optional: true,
-        }
-    }
-
-    static defaultProps = {
-        ...CharField.defaultProps,
-        addressFieldMap: {},
-    }
+    props = props({
+        ...charFieldProps,
+        addressFieldMap: t.object().optional({}),
+    });
 
     setup() {
         super.setup();
@@ -121,7 +119,7 @@ export class AddressAutoComplete extends CharField {
                     value = value[1];
                 }
                 valuesToUpdate[recordFieldName] = value || false;
-            } else if (!(recordFieldName in fields)) {
+            } else if (!(recordFieldName in fields) && value) {
                 value = Array.isArray(value) ? value[1] : value;
                 rest.push(value);
             }
@@ -130,6 +128,10 @@ export class AddressAutoComplete extends CharField {
             valuesToUpdate[this.props.name] = rest.join(" ");
         }
         this.props.record.update(valuesToUpdate);
+    }
+
+    get value() {
+        return this.props.record.data[this.props.name] || "";
     }
 }
 

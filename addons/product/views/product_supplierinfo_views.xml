@@ -14,9 +14,8 @@
                             <field name="product_name"/>
                             <field name="product_code"/>
                             <label for="delay"/>
-                            <div class="o_input_box">
-                                <field name="delay" />
-                                <span class="o_input_box_overlay_end o_input_box_overlay_inline">days</span>
+                            <div>
+                                <field name="delay" class="oe_inline"/> days
                             </div>
                         </group>
                         <group string="Pricelist">
@@ -32,15 +31,11 @@
                             <div class="o_row">
                                 <field name="price" class="oe_inline" /><field name="currency_id" groups="base.group_multi_currency" options="{'no_open': True}"/>
                             </div>
+                            <label for="date_start" string="Validity"/>
                             <div class="o_row">
-                                <div class="o_cell">
-                                    <label for="date_start" string="Validity Start"/>
-                                    <field name="date_start"/>
-                                </div>
-                                <div class="o_cell">
-                                    <label for="date_end" string="to"/>
-                                    <field name="date_end"/>
-                                </div>
+                                <field name="date_start" class="oe_inline"/>
+                                to
+                                <field name="date_end" class="oe_inline"/>
                             </div>
                             <field name="discount"/>
                             <field name="company_id" options="{'no_create': True}"/>
@@ -60,10 +55,24 @@
                 <field name="product_tmpl_id"/>
                 <field name="product_name"/>
                 <field name="product_code"/>
-                <filter string="Active Products" name="active_products" domain="['|', ('product_tmpl_id.active', '=', True),('product_id.active', '=', True)]"/>
-                <separator />
-                <filter string="Active" name="active" domain="['|', ('date_end', '=', False), ('date_end', '&gt;=',  'today -1d')]"/>
-                <filter string="Archived" name="archived" domain="[('date_end', '&lt;',  'today -1d')]"/>
+                <filter string="Active" name="active"
+                    domain="[
+                        ('product_tmpl_id.active', '=', True),
+                        '|', ('product_id', '=', False), ('product_id.active', '=', True),
+                        '|', ('date_start', '=', False), ('date_start', '&lt;=', 'today'),
+                        '|', ('date_end', '=', False), ('date_end', '&gt;=', 'today'),
+                    ]"
+                />
+                <filter string="Inactive" name="inactive"
+                    domain="[
+                        ('product_tmpl_id.active', '=', True),
+                        '|', ('product_id', '=', False), ('product_id.active', '=', True),
+                        '|', ('date_start', '&gt;', 'today'), ('date_end', '&lt;', 'today'),
+                    ]"
+                />
+                <filter string="Archived Products" name="archived_products"
+                    domain="['|', ('product_tmpl_id.active', '=', False), ('product_id.active', '=', False)]"
+                />
                 <group>
                     <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
                     <filter string="Vendor" name="groupby_vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
@@ -128,7 +137,7 @@
         <field name="name">Vendor Pricelists</field>
         <field name="res_model">product.supplierinfo</field>
         <field name="view_mode">list,form,kanban</field>
-        <field name="context">{'visible_product_tmpl_id': False, 'search_default_active_products': True}</field>
+        <field name="context">{'visible_product_tmpl_id': False, 'search_default_active': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No vendor pricelist found

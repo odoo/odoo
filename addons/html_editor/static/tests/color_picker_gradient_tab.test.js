@@ -1,6 +1,6 @@
 import { test, expect } from "@odoo/hoot";
 import { animationFrame, click } from "@odoo/hoot-dom";
-import { ColorPicker } from "@web/core/color_picker/color_picker";
+import { ColorPicker } from "@html_editor/components/color_picker/color_picker";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 test("custom gradient must be defined", async () => {
@@ -10,11 +10,7 @@ test("custom gradient must be defined", async () => {
                 selectedColor: "",
                 defaultTab: "gradient",
             },
-            getUsedCustomColors: () => [],
             applyColor() {},
-            applyColorPreview() {},
-            applyColorResetPreview() {},
-            colorPrefix: "",
             enabledTabs: ["gradient"],
         },
     });

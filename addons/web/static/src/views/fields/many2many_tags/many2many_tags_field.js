@@ -1,5 +1,6 @@
 import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { Domain } from "@web/core/domain";
@@ -19,8 +20,10 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 
-import { Component } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { getFieldDomain } from "@web/model/relational_model/utils";
+
+export const DEFAULT_TAG_LIMIT = 8;
 
 class Many2ManyTagsFieldColorListPopover extends Component {
     static template = "web.Many2ManyTagsFieldColorListPopover";
@@ -29,13 +32,29 @@ class Many2ManyTagsFieldColorListPopover extends Component {
         ColorList,
     };
     static props = {
-        colors: Array,
         tag: Object,
         switchTagColor: Function,
         onTagVisibilityChange: Function,
         close: Function,
     };
 }
+
+export const many2ManyTagsFieldProps = {
+    ...standardFieldProps,
+    canCreate: t.boolean().optional(true),
+    canQuickCreate: t.boolean().optional(true),
+    canCreateEdit: t.boolean().optional(true),
+    onTagClick: t.selection(["open_form", "edit_color"]).optional(),
+    colorField: t.string().optional(),
+    createExpression: t.string().optional(),
+    domain: t.or([t.array(), t.function()]).optional(),
+    context: t.object().optional({}),
+    tagLimit: t.number().optional(DEFAULT_TAG_LIMIT),
+    placeholder: t.string().optional(),
+    nameCreateField: t.string().optional("name"),
+    searchThreshold: t.number().optional(),
+    string: t.string().optional(),
+};
 
 export class Many2ManyTagsField extends Component {
     static template = "web.Many2ManyTagsField";
@@ -45,40 +64,15 @@ export class Many2ManyTagsField extends Component {
         Many2XAutocomplete,
         Popover: Many2ManyTagsFieldColorListPopover,
     };
-    static props = {
-        ...standardFieldProps,
-        canCreate: { type: Boolean, optional: true },
-        canQuickCreate: { type: Boolean, optional: true },
-        canCreateEdit: { type: Boolean, optional: true },
-        onTagClick: {
-            optional: true,
-            validate: (value) => ["open_form", "edit_color"].includes(value),
-        },
-        colorField: { type: String, optional: true },
-        createExpression: { type: String, optional: true },
-        domain: { type: [Array, Function], optional: true },
-        context: { type: Object, optional: true },
-        placeholder: { type: String, optional: true },
-        nameCreateField: { type: String, optional: true },
-        searchThreshold: { type: Number, optional: true },
-        string: { type: String, optional: true },
-    };
-    static defaultProps = {
-        canCreate: true,
-        canQuickCreate: true,
-        canCreateEdit: true,
-        nameCreateField: "name",
-        context: {},
-    };
-
-    static RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-
-    visibleItemsLimit = Number.POSITIVE_INFINITY;
+    props = props(many2ManyTagsFieldProps);
 
     setup() {
+        this.state = proxy({ expanded: false });
         this.orm = useService("orm");
         this.previousColorsMap = {};
-        this.popover = usePopover(this.constructor.components.Popover);
+        this.popover = usePopover(this.constructor.components.Popover, {
+            useBottomSheet: this.isBottomSheet,
+        });
         this.dialog = useService("dialog");
         this.dialogClose = [];
         useTagNavigation("many2ManyTagsField", {
@@ -113,10 +107,7 @@ export class Many2ManyTagsField extends Component {
                 create: false,
                 write: true,
             },
-            onRecordSaved: (record) => {
-                const records = this.props.record.data[this.props.name].records;
-                return records.find((r) => r.resId === record.resId).load();
-            },
+            onRecordSaved: () => this.props.record.load(),
         });
 
         this.update = (recordlist) => {
@@ -142,6 +133,10 @@ export class Many2ManyTagsField extends Component {
         }
     }
 
+    get isBottomSheet() {
+        return hasTouch();
+    }
+
     get relation() {
         return this.props.record.fields[this.props.name].relation;
     }
@@ -153,10 +148,10 @@ export class Many2ManyTagsField extends Component {
     }
 
     get tagsListProps() {
+        const limit = this.state.expanded ? 0 : this.props.tagLimit;
         return {
-            mapTooltip: (tag) => tag.props.tooltip,
             tags: this.tags,
-            visibleItemsLimit: this.visibleItemsLimit,
+            tagLimit: limit === 0 ? Number.POSITIVE_INFINITY : limit,
         };
     }
 
@@ -170,16 +165,19 @@ export class Many2ManyTagsField extends Component {
         };
     }
 
-    onTagClick(ev, record) {
+    async onTagClick(ev, record) {
         if (!this.props.record.isInEdition) {
             return;
         }
         if (this.props.onTagClick === "open_form") {
-            return this.openMany2xRecord({
-                resId: record.resId,
-                context: this.props.context,
-                title: _t("Edit: %s", record.data.display_name),
-            });
+            const saved = await this.props.record.save();
+            if (saved) {
+                return this.openMany2xRecord({
+                    resId: record.resId,
+                    context: this.props.context,
+                    title: _t("Edit: %s", record.data.display_name),
+                });
+            }
         }
         if (this.props.onTagClick !== "edit_color" || !this.props.colorField) {
             return;
@@ -188,7 +186,6 @@ export class Many2ManyTagsField extends Component {
             this.popover.close();
         } else {
             this.popover.open(ev.currentTarget, {
-                colors: this.constructor.RECORD_COLORS,
                 tag: {
                     id: record.id,
                     colorIndex: record.data[this.props.colorField],
@@ -212,6 +209,10 @@ export class Many2ManyTagsField extends Component {
         await tagRecord.update(changes);
         await tagRecord.save();
         this.popover.close();
+    }
+
+    onFocusIn() {
+        this.state.expanded = true;
     }
 
     get tags() {
@@ -319,6 +320,15 @@ export const many2ManyTagsField = {
             availableTypes: ["char"],
         },
         {
+            label: _t("Maximum Visible Tags"),
+            name: "tag_limit",
+            type: "number",
+            default: DEFAULT_TAG_LIMIT,
+            help: _t(
+                "Maximum number of tags to display before showing a counter. Set to 0 to always show all tags."
+            ),
+        },
+        {
             label: _t("On tag click"),
             name: "on_tag_click",
             type: "selection",
@@ -355,6 +365,7 @@ export const many2ManyTagsField = {
             createExpression: attrs.create,
             context: dynamicInfo.context,
             domain: dynamicInfo.domain,
+            tagLimit: options.tag_limit,
             placeholder,
             searchThreshold: options.search_threshold,
             string,

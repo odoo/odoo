@@ -2,32 +2,44 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
 const baseDescriptionContent = "Test project todo history version";
-const descriptionField = `div.note-editable.odoo-editor-editable div.o-paragraph`;
+const descriptionField = `div.note-editable.odoo-editor-editable .o-paragraph`;
 function changeDescriptionContentAndSave(newContent) {
     const newText = `${baseDescriptionContent} ${newContent}`;
     return [
         {
             // force focus on editable so editor will create initial p (if not yet done)
+            content: "focus in editable",
             trigger: "div.note-editable.odoo-editor-editable",
             run: "click",
         },
         {
+            content: "change html field content",
             trigger: descriptionField,
             run: `editor ${newText}`,
         },
         {
-            trigger: "button.o_form_button_save",
+            content: "focus in editable",
+            trigger: "div.note-editable.odoo-editor-editable",
             run: "click",
         },
         {
-            content: "Wait the form is saved",
-            trigger: ".o_form_saved",
+            content: "ensure edition is done",
+            trigger: `div.note-editable.odoo-editor-editable .o-paragraph:contains(${newText})`,
         },
+        {
+            content: "focus out to force blur on the html_field",
+            trigger: ".o_form_renderer",
+            run: "click",
+        },
+        {
+            content: "wait for record to be flagged dirty",
+            trigger: ".o_form_dirty",
+        },
+        ...stepUtils.saveForm(),
     ];
 }
 
 registry.category("web_tour.tours").add("project_todo_history_tour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [stepUtils.showAppsMenuItem(), {
         content: "Open the Todo app",
         trigger: ".o_app[data-menu-xmlid='project_todo.menu_todo_todos']",

@@ -1,7 +1,7 @@
 import base64
 import json
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 from unittest.mock import MagicMock, patch
 
 from cryptography.hazmat.backends import default_backend
@@ -292,17 +292,18 @@ class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
     @freeze_time("2026-02-12 12:00:00")
     def test_validate_critical_headers_missing_unexpected_crit(self):
         protected = {
-            "crit": [const.IAT_KEY, const.PATH_KEY, const.SUB_KEY, "unexpected-crit"],
+            "crit": [const.ISS_KEY, const.IAT_KEY, const.PATH_KEY, const.SUB_KEY, "unexpected-crit"],
+            const.ISS_KEY: const.ISS_VALUE,
             const.IAT_KEY: "2026-02-12T12:00:00.000Z",
             const.PATH_KEY: "https://example.com/webhook",
             const.SUB_KEY: "dummy-ppid",
             "unexpected-crit": "value",
         }
         validation = BancontactSignatureValidation(MockRequest())
-        missing = {const.ISS_KEY, const.JTI_KEY}
+        missing = {const.JTI_KEY}
         unexpected = {"unexpected-crit"}
         with self.bancontact_signature_raise(f"Invalid crit header: missing {missing}, unexpected {unexpected}"):
-            validation._validate_critical_headers(protected)
+            validation._validate_critical_headers(protected, "dummy-ppid")
 
     @freeze_time("2026-02-12 12:00:00")
     def test_validate_critical_headers_wrong_iss(self):
@@ -316,11 +317,11 @@ class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
         }
         validation = BancontactSignatureValidation(MockRequest())
         with self.bancontact_signature_raise("Invalid issuer: dummy"):
-            validation._validate_critical_headers(protected)
+            validation._validate_critical_headers(protected, "dummy-ppid")
 
         protected.pop(const.ISS_KEY)
         with self.bancontact_signature_raise(f"Missing required protected header(s): ['{const.ISS_KEY}']"):
-            validation._validate_critical_headers(protected)
+            validation._validate_critical_headers(protected, "dummy-ppid")
 
     @freeze_time("2026-02-12 12:00:00")
     def test_validate_critical_headers_wrong_iat(self):
@@ -334,19 +335,19 @@ class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
         }
         validation = BancontactSignatureValidation(MockRequest())
         with self.bancontact_signature_raise(f"Invalid iat: outside allowed skew ({const.MAX_SKEW_SECONDS}s)"):
-            validation._validate_critical_headers(protected)
+            validation._validate_critical_headers(protected, "dummy-ppid")
 
         protected.update({const.IAT_KEY: "2026-02-12T13:00:00.000Z"})
         with self.bancontact_signature_raise(f"Invalid iat: outside allowed skew ({const.MAX_SKEW_SECONDS}s)"):
-            validation._validate_critical_headers(protected)
+            validation._validate_critical_headers(protected, "dummy-ppid")
 
         protected.update({const.IAT_KEY: "invalid-format"})
         with self.bancontact_signature_raise("Invalid iat format: invalid-format"):
-            validation._validate_critical_headers(protected)
+            validation._validate_critical_headers(protected, "dummy-ppid")
 
         protected.pop(const.IAT_KEY)
         with self.bancontact_signature_raise(f"Missing required protected header(s): ['{const.IAT_KEY}']"):
-            validation._validate_critical_headers(protected)
+            validation._validate_critical_headers(protected, "dummy-ppid")
 
     @freeze_time("2026-02-12 12:00:00")
     def test_validate_critical_headers_wrong_path(self):
@@ -360,7 +361,22 @@ class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
         }
         validation = BancontactSignatureValidation(MockRequest())
         with self.bancontact_signature_raise("Path mismatch: https://example.com/error != https://example.com/webhook"):
-            validation._validate_critical_headers(protected)
+            validation._validate_critical_headers(protected, "dummy-ppid")
+
+    @freeze_time("2026-02-12 12:00:00")
+    def test_validate_critical_headers_wrong_subject(self):
+        protected = {
+            "crit": [const.ISS_KEY, const.IAT_KEY, const.JTI_KEY, const.PATH_KEY, const.SUB_KEY],
+            const.ISS_KEY: const.ISS_VALUE,
+            const.IAT_KEY: "2026-02-12T12:00:00.000Z",
+            const.JTI_KEY: "unique-jti-12345",
+            const.PATH_KEY: "https://example.com/webhook",
+            const.SUB_KEY: "wrong-ppid",
+        }
+
+        validation = BancontactSignatureValidation(MockRequest())
+        with self.bancontact_signature_raise("Invalid subject: wrong-ppid"):
+            validation._validate_critical_headers(protected, "dummy-ppid")
 
     @freeze_time("2026-02-12 12:00:00")
     def test_validate_critical_headers_success(self):
@@ -370,25 +386,10 @@ class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
             const.IAT_KEY: "2026-02-12T12:00:00.000Z",
             const.JTI_KEY: "unique-jti-12345",
             const.PATH_KEY: "http://example.com/webhook",  # Allow http vs https mismatch
-            const.SUB_KEY: "save-subject",
+            const.SUB_KEY: "dummy-ppid",
         }
         validation = BancontactSignatureValidation(MockRequest())
-        validation._validate_critical_headers(protected)
-        self.assertEqual(validation.subject, "save-subject")
-
-    # ----- verify_subject ----- #
-    @mute_logger("odoo.addons.pos_bancontact_pay.controllers.signature")
-    def test_verify_subject_mismatch(self):
-        validation = BancontactSignatureValidation(MockRequest())
-        validation.subject = "dummy-ppid"
-        validation.verify_subject("dummy-ppid")
-
-        validation.subject = "wrong-ppid"
-        with self.bancontact_signature_raise("Invalid subject: wrong-ppid"):
-            validation.verify_subject("dummy-ppid")
-
-        validation.test_mode = True
-        validation.verify_subject("dummy-ppid")  # Should not raise in test mode
+        validation._validate_critical_headers(protected, "dummy-ppid")
 
     # ----- verify_signature ----- #
     @mute_logger("odoo.addons.pos_bancontact_pay.controllers.signature")
@@ -408,19 +409,19 @@ class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
         }
         with self.mock_jwk_fetch([jwk], called=False, cache=cache) as get_cache:
             validation = BancontactSignatureValidation(MockRequest(data=payload, headers={"Signature": signature}))
-            validation.verify_signature()
+            validation.verify_signature("dummy-ppid")
         self.assertEqual(get_cache(), cache)
 
         tampered_payload = b"tampered payload"
         validation.request.data = tampered_payload
         with self.mock_jwk_fetch([jwk], called=False, cache=cache) as get_cache, \
             self.bancontact_signature_raise("ECDSA signature verification failed."):
-            validation.verify_signature()
+            validation.verify_signature("dummy-ppid")
         self.assertEqual(get_cache(), cache)
 
         validation.test_mode = True
         with self.mock_jwk_fetch([jwk], called=False, cache=cache) as get_cache:
-            validation.verify_signature()  # Should not raise in test mode
+            validation.verify_signature("dummy-ppid")  # Should not raise in test mode
         self.assertEqual(get_cache(), cache)
 
     # ----- Context Manager ----- #
@@ -551,7 +552,7 @@ class BancontactTestUtils:
     @staticmethod
     def create_protected_header(kid: str, url: str, ppid: str, **overrides) -> dict:
         """Create valid protected header with optional overrides."""
-        now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+        now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
         header = {
             "alg": "ES256",
             "kid": kid,

@@ -9,11 +9,11 @@ setupInteractionWhiteList(["website.image_popup", "website.base_lightbox"]);
 describe.current.tags("interaction_dev");
 
 const defaultImage = `
-    <img src="/web/image/website.s_picture_default_image" class="figure-img img-fluid rounded o_image_popup" alt=""/>
+    <img src="/web/image/website.landscape_md_2" class="figure-img img-fluid rounded o_image_popup" alt=""/>
 `;
 test("image won't open in pop-up if there is no 'o_image_popup' class in img element", async () => {
     const { core } = await startInteractions(`
-        <img src="/web/image/website.s_picture_default_image" class="figure-img img-fluid rounded" alt=""/>
+        <img src="/web/image/website.landscape_md_2" class="figure-img img-fluid rounded" alt=""/>
     `);
     expect(core.interactions).toHaveLength(0);
 });

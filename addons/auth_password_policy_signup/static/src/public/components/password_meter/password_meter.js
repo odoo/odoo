@@ -1,7 +1,7 @@
-import { useExternalListener, useState } from "@web/owl2/utils";
+import { useExternalListener } from "@web/owl2/utils";
 import { Meter } from "@auth_password_policy/password_meter";
 import { ConcretePolicy, recommendations } from "@auth_password_policy/password_policy";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 class PasswordMeter extends Component {
@@ -19,7 +19,7 @@ class PasswordMeter extends Component {
 
         const minlength = Number(inputEl.getAttribute("minlength"));
         this.hasMinlength = !isNaN(minlength);
-        this.state = useState({
+        this.state = proxy({
             password: inputEl.value || "",
         });
         this.required = new ConcretePolicy({ minlength });

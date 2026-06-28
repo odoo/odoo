@@ -1,6 +1,7 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onWillStart, onWillUpdateProps, useState, useSubEnv, xml } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, xml, proxy } from "@odoo/owl";
 import {
     defineModels,
     fields,
@@ -261,14 +262,14 @@ test("react to prop 'domain' changes", async () => {
     class Parent extends Component {
         static props = ["*"];
         static template = xml`
-            <WithSearch t-props="searchState" t-slot-scope="search">
+            <WithSearch t-props="this.searchState" t-slot-scope="search">
                 <TestComponent domain="search.domain"/>
             </WithSearch>
         `;
         static components = { WithSearch, TestComponent };
         setup() {
             useSubEnv({ config: {} });
-            this.searchState = useState({
+            this.searchState = proxy({
                 resModel: "animal",
                 domain: [["type", "=", "carnivorous"]],
             });
@@ -317,7 +318,7 @@ test("search defaults are removed from context at reload", async function () {
     class Parent extends Component {
         static props = ["*"];
         static template = xml`
-            <WithSearch t-props="searchState" t-slot-scope="search">
+            <WithSearch t-props="this.searchState" t-slot-scope="search">
                 <TestComponent
                     context="search.context"
                 />
@@ -326,7 +327,7 @@ test("search defaults are removed from context at reload", async function () {
         static components = { WithSearch, TestComponent };
         setup() {
             useSubEnv({ config: {} });
-            this.searchState = useState({
+            this.searchState = proxy({
                 resModel: "animal",
                 domain: [["type", "=", "carnivorous"]],
                 context,

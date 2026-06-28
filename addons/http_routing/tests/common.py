@@ -15,7 +15,7 @@ from odoo.tools.urls import urljoin as url_join
 def MockRequest(
     env, *, path='/mockrequest', routing=True, multilang=True,
     context=frozendict(), cookies=frozendict(), country_code=None, city_name=None,
-    website=None, remote_addr=HOST, environ_base=None, url_root=None,
+    website=None, remote_addr=HOST, environ_base=None, url_root=None, referrer=None,
 ):
     """Mock of the ``http.request``.
 
@@ -25,12 +25,20 @@ def MockRequest(
     in base module.
     """
     lang_code = context.get('lang', env.context.get('lang', 'en_US'))
-    env = env(context=dict(context, lang=lang_code))
+    env_context = dict(context, lang=lang_code)
+
+    if 'website' in env and website:
+        env_context['website_id'] = website.id
+    env_context['host_id'] = website.id if website else env.ref('base.default_website').id
+
+    env = env(context=env_context)
+
     if HttpCase.http_port():
         base_url = HttpCase.base_url()
     else:
         base_url = f"http://{HOST}:{config['http_port']}"
-    request = Mock(
+
+    mock_spec = dict(
         # request
         httprequest=Mock(
             host='localhost',
@@ -45,9 +53,12 @@ def MockRequest(
                 REMOTE_ADDR=remote_addr,
             ),
             cookies=cookies,
-            referrer='',
+            referrer=referrer or '',
             remote_addr=remote_addr,
             url_root=url_root,
+            user_agent=DotDict(
+                string='mockrequest',
+            ),
             args=[],
         ),
         type='http',
@@ -65,13 +76,18 @@ def MockRequest(
         registry=env.registry,
         cookies=cookies,
         lang=env['res.lang']._get_data(code=lang_code),
-        website=website,
         render=lambda *a, **kw: '<MockResponse>',
+        update_context=None,
+    )
+    if 'website' in env:
+        mock_spec['is_frontend'] = True
+
+    request = Mock(
+        # spec_set=list(mock_spec),  TODO: enable when cart and pricelist are removed from request
+        **mock_spec,
     )
     if url_root is not None:
         request.httprequest.url = url_join(url_root, path)
-    if website:
-        request.website_routing = website.id
     if country_code or city_name:
         try:
             request.geoip._city_record = geoip2.models.City(['en'], country=(country_code and {'iso_code': country_code}) or {}, city=(city_name and {'names': {'en': city_name}}) or {})
@@ -103,8 +119,8 @@ def MockRequest(
     request.update_context = update_context
 
     with contextlib.ExitStack() as s:
-        odoo.http.requestlib._request_stack.push(request)
-        s.callback(odoo.http.requestlib._request_stack.pop)
+        request_reset = odoo.http.request_var.set(request)
+        s.callback(odoo.http.request_var.reset, request_reset)
         s.enter_context(patch('odoo.http.router.root.get_db_router', router))
 
         yield request

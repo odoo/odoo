@@ -7,7 +7,7 @@ from unittest.mock import patch
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
-from odoo.http.requestlib import _request_stack
+from odoo.http import request_var
 from odoo.tests import (
     Form,
     HttpCase,
@@ -278,15 +278,15 @@ class TestUsers(UsersCommonCase):
         request_patch.start()
 
         self.assertEqual(user.context_get()['lang'], 'fr_FR')
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         user.lang = False
 
         self.assertEqual(user.context_get()['lang'], 'es_ES')
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         request_patch.stop()
 
         self.assertEqual(user.context_get()['lang'], 'de_DE')
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         company.lang = False
 
         self.assertEqual(user.context_get()['lang'], 'en_US')
@@ -465,7 +465,7 @@ class TestUsers2(UsersCommonCase):
         self.assertEqual(view_group_hierarchy_fr['groups'][group_system.id]['name'], 'Administrateur')
 
         # Should work the other way around too
-        self.env.registry.clear_cache('groups')
+        self.env.transaction.invalidate_ormcache('groups')
         view_group_hierarchy_fr = self.env['res.groups'].with_context(lang='fr_FR')._get_view_group_hierarchy()
         view_group_hierarchy_en = self.env['res.groups']._get_view_group_hierarchy()
         self.assertNotEqual(view_group_hierarchy_en['groups'][group_system.id]['name'], 'Administrateur')
@@ -476,7 +476,7 @@ class TestUsers2(UsersCommonCase):
             self.assertFalse(mock.called)
 
     @users('user_internal', 'portal_1')
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_user_writeable_fields(self):
         """ Check for writeable fields.
 
@@ -530,9 +530,11 @@ class TestUsers2(UsersCommonCase):
     def test_write_group_ids_performance(self):
         contact_creation_group = self.env.ref("base.group_partner_manager")
         self.assertNotIn(contact_creation_group, self.user_internal.group_ids)
+        # Process any tracking message at flush for cleaner queryCount
+        self.flush_tracking()
 
-        # all modules: 23, base: 10; nightly: +1
-        with self.assertQueryCount(24):
+        # all modules: 37, base: 9; nightly: +1
+        with self.assertQueryCount(38):
             self.user_internal.write({
                 "group_ids": [Command.link(contact_creation_group.id)],
             })
@@ -547,21 +549,13 @@ class TestUsers2(UsersCommonCase):
             'user_ids': [],
         })
 
-        # ACL
-        self.env['ir.model.access'].create({
+        # access
+        self.env['ir.access'].create({
             'name': 'Allow user profile update',
             'model_id': self.env['ir.model']._get('res.users').id,
             'group_id': group_portal_user_manager.id,
-            'perm_write': True,
-        })
-
-        # Rules
-        self.env['ir.rule'].create({
-            'name': 'Allow updates by Portal Managers on PORTAL users (only)',
-            'model_id': self.env['ir.model']._get('res.users').id,
-            'groups': [group_portal_user_manager.id],
-            'domain_force': [('share', '=', True)],
-            'perm_write': True,
+            'operation': 'u',
+            'domain': [('share', '=', True)],
         })
 
         # Users
@@ -624,6 +618,10 @@ class TestUsers2(UsersCommonCase):
         portal.partner_id.with_user(user).write({
             'name': 'New name for you'
         })
+
+    def flush_tracking(self):
+        self.env.flush_all()
+        self.cr.flush()
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -705,8 +703,8 @@ class TestUsersIdentitycheck(HttpCase):
 
         # Push a fake request to the request stack, because @check_identity requires a request.
         # Use the first session created above, used to invalid other sessions than itself.
-        _request_stack.push(SimpleNamespace(session=session, env=self.env))
-        self.addCleanup(_request_stack.pop)
+        request_reset = request_var.set(SimpleNamespace(session=session, env=self.env))
+        self.addCleanup(request_var.reset, request_reset)
         # The user clicks the button logout from all devices from his profile
         action = self.env.user.action_revoke_all_devices()
         # The form of the check identity wizard opens
@@ -735,8 +733,7 @@ class TestApiKeys(UsersCommonCase):
         cls.env['ir.config_parameter'].set_bool('base.enable_programmatic_api_keys', True)
         UsersApiKeys = cls.env['res.users.apikeys'].with_user(cls.user_internal)
         cls.tomorrow = datetime.now() + timedelta(days=1)
-        cls.unscoped_key = UsersApiKeys._generate(None, 'Key without a scope', cls.tomorrow)
-        cls.scoped_key = UsersApiKeys._generate('scope', 'Key with a scope', cls.tomorrow)
+        cls.api_key = UsersApiKeys._generate('scope', 'Key ', cls.tomorrow)
 
     def test_programmatic_apikey_management_is_deactivated_by_default(self):
         self.env['ir.config_parameter'].set_bool('base.enable_programmatic_api_keys', None)
@@ -744,59 +741,43 @@ class TestApiKeys(UsersCommonCase):
         # Attempting to create a key raises an error
         with self.assertRaisesRegex(UserError, 'Programmatic API keys are not enabled'):
             self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-                self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+                self.api_key, 'scope', 'Another key', self.tomorrow)
 
         # Attempting to revoke a key raises an error
         with self.assertRaisesRegex(UserError, 'Programmatic API keys are not enabled'):
-            self.env['res.users.apikeys'].with_user(self.user_internal).revoke(self.unscoped_key)
+            self.env['res.users.apikeys'].with_user(self.user_internal).revoke(self.api_key)
 
     def test_generate_apikey_is_limited(self):
-        # create 8 new keys, which makes 10 keys in total for user_internal
-        for i in range(8):
+        # create 9 new keys, which makes 10 keys in total for user_internal
+        for i in range(9):
             self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-                self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+                self.api_key, 'scope', 'Another key', self.tomorrow)
 
         with self.assertRaisesRegex(UserError, 'Limit of 10 API keys is reached'):
             self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-                self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+                self.api_key, 'scope', 'Another key', self.tomorrow)
 
         # This ICP can change the limit
         self.env['ir.config_parameter'].set_int('base.programmatic_api_keys_limit', 11)
         self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-            self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
-
-    def test_generate_apikey_raises_when_creating_unscoped_key_from_scoped_key(self):
-        # Creating an unscoped key from a scoped key raises an error
-        with self.assertRaisesRegex(UserError, 'The provided API key is invalid or does not belong to the current user'):
-            self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-                self.scoped_key, None, 'Another key without a scope', self.tomorrow)
+            self.api_key, 'scope', 'Another key', self.tomorrow)
 
     def test_generate_apikey_raises_when_creating_key_from_differently_scoped_key(self):
         # Creating a key with a different scope raises an error
         with self.assertRaisesRegex(UserError, 'The provided API key is invalid or does not belong to the current user'):
             self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-                self.scoped_key, 'other', 'Another key with another scope', self.tomorrow)
+                self.api_key, 'other', 'Another key with another scope', self.tomorrow)
 
     def test_generate_apikey_accepts_creating_key_from_identically_scoped_key(self):
         # Creating a key with the same scope doesn't raise
         self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-            self.scoped_key, 'scope', 'Another key with a scope', self.tomorrow)
-
-    def test_generate_apikey_accepts_creating_scoped_key_from_unscoped_key(self):
-        # Creating a key with a scope from an unscoped key doesn't raise
-        self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-            self.unscoped_key, 'scope', 'Another key with a scope', self.tomorrow)
-
-    def test_generate_apikey_accepts_creating_unscoped_key_from_unscoped_key(self):
-        # Creating an unscoped key from another unscoped key doesn't raise
-        self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-            self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+            self.api_key, 'scope', 'Another key with same scope', self.tomorrow)
 
     def test_generate_apikey_checks_ownership(self):
         # Check that an API key cannot be generated from another user's API key
         with self.assertRaisesRegex(UserError, 'The provided API key is invalid or does not belong to the current user'):
             self.env['res.users.apikeys'].with_user(SUPERUSER_ID).generate(
-                self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+                self.api_key, 'scope', 'Another key', self.tomorrow)
 
 
 class TestResUsersForm(TransactionCase):

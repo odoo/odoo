@@ -2,24 +2,19 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { isImageSupportedForStyle } from "@html_builder/plugins/image/replace_media_option";
 import { registry } from "@web/core/registry";
+import { props, t } from "@odoo/owl";
 
-/**
- * @typedef {((el: HTMLElement) => boolean | undefined)[]} can_have_hover_effect_predicates
- */
+export const animateOptionProps = {
+    dropdownClass: t.string().optional("o-hb-select-dropdown"),
+    requireAnimation: t.boolean().optional(false),
+    slots: t.object().optional(),
+};
 
 export class AnimateOption extends BaseOptionComponent {
     static id = "animate_option";
     static template = "website.AnimateOption";
     static dependencies = ["animateOption"];
-    static props = {
-        dropdownClass: { type: String, optional: true },
-        requireAnimation: { type: Boolean, optional: true },
-        slots: { type: Object, optional: true },
-    };
-    static defaultProps = {
-        dropdownClass: "o-hb-select-dropdown",
-        requireAnimation: false,
-    };
+    props = props(animateOptionProps);
 
     setup() {
         super.setup();
@@ -31,7 +26,7 @@ export class AnimateOption extends BaseOptionComponent {
             return {
                 isOptionActive: this.isOptionActive(editingElement),
                 hasAnimateClass: hasAnimateClass,
-                canHover: await this.canHaveHoverEffect(editingElement),
+                canHover: await this.dependencies.animateOption.canHaveHoverEffect(editingElement),
                 isLimitedEffect: this.limitedEffects.some((className) =>
                     editingElement.classList.contains(className)
                 ),
@@ -80,12 +75,6 @@ export class AnimateOption extends BaseOptionComponent {
         );
 
         return hasDirection;
-    }
-    async canHaveHoverEffect(el) {
-        const proms = this.getResource("hover_effect_image_dataset_providers").map((p) => p(el));
-        const datasets = await Promise.all(proms);
-        const dataset = Object.assign({}, ...datasets);
-        return this.checkPredicates("can_have_hover_effect_predicates", el, dataset) ?? false;
     }
 }
 

@@ -6,14 +6,6 @@ export function checkCashMoveShown(amount) {
         trigger: `.cash-move-list .cash-move-row .cash-move-amount:contains(${amount})`,
     };
 }
-export function noCashMoveDeleteButton() {
-    return [
-        negateStep({
-            content: `Check that the delete button is not present`,
-            trigger: `.cash-move-list .cash-move-row .delete-row`,
-        }),
-    ];
-}
 export function deleteCashMove(amount) {
     return [
         {

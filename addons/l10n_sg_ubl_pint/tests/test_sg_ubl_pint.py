@@ -21,7 +21,7 @@ class TestSgUBLPint(AccountTestInvoicingCommon):
         # TIN number is required
         cls.company_data['company'].write({
             'vat': '197401143C',
-            'l10n_sg_unique_entity_number': '201131415A',
+            'l10n_sg_unique_entity_number': '00192200M',
             'street': 'Tyersall Avenue',
             'zip': '248048',
             'city': 'Central Singapore',
@@ -29,7 +29,7 @@ class TestSgUBLPint(AccountTestInvoicingCommon):
         })
         cls.partner_a.write({
             'vat': 'S16FC0121D',
-            'l10n_sg_unique_entity_number': '301131415A',
+            'l10n_sg_unique_entity_number': '197401143C',
             'country_id': cls.env.ref('base.sg').id,
             'street': 'that other street, 3',
             'zip': '248050',
@@ -61,4 +61,32 @@ class TestSgUBLPint(AccountTestInvoicingCommon):
         self.assertXmlTreeEqual(
             self.get_xml_tree_from_string(actual_xml),
             self.get_xml_tree_from_string(expected_xml),
+        )
+
+    def test_invoice_import(self):
+        with file_open('l10n_sg_ubl_pint/tests/expected_xmls/invoice.xml', 'rb') as f:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': f.read(),
+            })
+
+        imported_invoice = self.env['account.move'] \
+            .with_context(default_move_type='out_invoice') \
+            ._create_records_from_attachments(xml_attachment)
+
+        self.assertEqual(imported_invoice.move_type, 'out_invoice')
+        self.assertEqual(imported_invoice.partner_id, self.partner_a)
+        self.assertEqual(imported_invoice.currency_id, self.other_currency)
+        self.assertEqual(
+            imported_invoice.invoice_date.strftime("%Y-%m-%d"),
+            "2019-01-01",
+        )
+        self.assertRecordValues(
+            imported_invoice,
+            [{
+                'amount_untaxed': 2000.0,
+                'amount_tax': 180.0,
+                'amount_total': 2180.0,
+            }],
         )

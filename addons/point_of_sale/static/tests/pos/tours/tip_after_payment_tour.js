@@ -9,7 +9,6 @@ import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_pop
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             // Open PoS
@@ -123,8 +122,6 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.percentAmountIs("20%", "2.00"),
             TipScreen.percentAmountIs("25%", "2.50"),
             TipScreen.clickNoTip(),
-            TipScreen.inputAmountIs("0"),
-            TipScreen.clickSettle(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "10.00",
@@ -145,8 +142,8 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.percentAmountIs("15%", "1.80"),
             TipScreen.percentAmountIs("20%", "2.40"),
             TipScreen.percentAmountIs("25%", "3.00"),
-            TipScreen.setCustomTip("1.00"),
-            TipScreen.inputAmountIs("1.00"),
+            TipScreen.setCustomTip(1.0),
+            TipScreen.inputAmountIs(1.0),
             TipScreen.clickSettle(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
@@ -170,7 +167,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.percentAmountIs("20%", "2.80"),
             TipScreen.percentAmountIs("25%", "3.50"),
             TipScreen.inputAmountIs(""),
-            TipScreen.clickSettle(),
+            TipScreen.clickNoTip(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "14.00",
@@ -231,6 +228,13 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             PaymentScreen.clickTipButton(),
             NumberPopup.enterValue("⌫"),
             NumberPopup.isShown("%"),
+            {
+                content: "When the tip will be removed, it requires delay",
+                trigger: `.modal .value:contains("%")`,
+                async run() {
+                    await new Promise((r) => setTimeout(r, 500));
+                },
+            },
             Dialog.confirm(),
             PaymentScreen.clickValidate(),
             TipScreen.isShown(),
@@ -239,7 +243,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.percentAmountIs("20%", "20.00"),
             TipScreen.percentAmountIs("25%", "25.00"),
             TipScreen.inputAmountIs(""),
-            TipScreen.clickSettle(),
+            TipScreen.clickNoTip(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "100.00",
@@ -265,7 +269,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.percentAmountIs("20%", "20.00"),
             TipScreen.percentAmountIs("25%", "25.00"),
             TipScreen.inputAmountIs(""),
-            TipScreen.clickSettle(),
+            TipScreen.clickNoTip(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "100.00",

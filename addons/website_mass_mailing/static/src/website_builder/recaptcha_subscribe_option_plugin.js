@@ -5,7 +5,7 @@ import { renderToElement } from "@web/core/utils/render";
 
 export class RecaptchaSubscribeOptionPlugin extends Plugin {
     static id = "recaptchaSubscribeOption";
-    static dependencies = ["websiteSession"];
+    static dependencies = ["websiteBridge"];
     static shared = ["hasRecaptcha"];
     resources = {
         builder_actions: {
@@ -14,7 +14,7 @@ export class RecaptchaSubscribeOptionPlugin extends Plugin {
     };
 
     hasRecaptcha() {
-        return !!this.dependencies.websiteSession.getSession().recaptcha_public_key;
+        return !!this.dependencies.websiteBridge.getSession().recaptcha_public_key;
     }
 }
 

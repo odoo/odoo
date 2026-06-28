@@ -68,6 +68,157 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
 
         self.start_tour(self_route, "self_combo_selector_category")
 
+    def test_combo_price_no_free_items(self):
+        """
+        Regression test: when all combo sub-combos are upsell (qty_free=0), remaining_total
+        (= parent list price) must be distributed proportionally to the extra lines,
+        not silently dropped.
+        """
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        # Upsell combo: qty_free=0 (no free items), all selections are charged as extras
+        no_free_combo = self.env['product.combo'].create({
+            'name': 'No Free Combo',
+            'is_upsell': True,
+            'qty_free': 0,
+            'qty_max': 1,
+            'combo_item_ids': [
+                Command.create({'product_id': self.cola.id, 'extra_price': 0}),
+                Command.create({'product_id': self.fanta.id, 'extra_price': 0}),
+            ],
+        })
+        combo_product = self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'name': 'No Free Combo Product',
+            'type': 'combo',
+            'combo_ids': [Command.set([no_free_combo.id])],
+            'taxes_id': False,
+        })
+
+        cola_item = no_free_combo.combo_item_ids.filtered(
+            lambda i: i.product_id == self.cola
+        )
+
+        order = self.env['pos.order'].create({
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [
+                Command.create({
+                    'product_id': combo_product.id,
+                    'qty': 1,
+                    'price_unit': combo_product.lst_price,
+                    'price_subtotal': combo_product.lst_price,
+                    'price_subtotal_incl': combo_product.lst_price,
+                    'tax_ids': False,
+                }),
+            ],
+        })
+
+        parent_line = order.lines
+        child_line = self.env['pos.order.line'].create({
+            'order_id': order.id,
+            'product_id': self.cola.id,
+            'qty': 1,
+            'price_unit': 0,
+            'price_subtotal': 0,
+            'price_subtotal_incl': 0,
+            'tax_ids': False,
+            'combo_parent_id': parent_line.id,
+            'combo_item_id': cola_item.id,
+        })
+
+        order.recompute_prices()
+
+        # base_price of the combo = min lst_price among items = min(cola.lst_price, fanta.lst_price) = 2.2
+        # With is_upsell=True (qty_free=0), remaining_total = parent lst_price = 10.0 must flow into the child.
+        # price_unit = base_price + proportional_share_of_parent_price
+        # = base_price + round(base_price * 10.0 / (base_price * 1)) = base_price + 10.0
+        expected_price = no_free_combo.base_price + combo_product.lst_price
+        self.assertAlmostEqual(
+            child_line.price_unit, expected_price, places=2,
+            msg="When qty_free=0, remaining_total must be proportionally distributed to extra lines",
+        )
+
+    def test_combo_price_free_items_multi_qty(self):
+        """
+        Regression test: when buying qty > 1 of a combo, free child line prices must
+        equal the same per-unit amount as buying qty=1.  The parent_coef factor
+        (parent_line.qty) must be applied so that original_total (which uses full qty)
+        and parent_lst_price (per-unit) are on the same scale.
+        """
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        free_combo = self.env['product.combo'].create({
+            'name': 'Free Combo',
+            'qty_free': 1,
+            'qty_max': 1,
+            'combo_item_ids': [
+                Command.create({'product_id': self.cola.id, 'extra_price': 0}),
+                Command.create({'product_id': self.fanta.id, 'extra_price': 0}),
+            ],
+        })
+        combo_product = self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'name': 'Free Combo Product',
+            'type': 'combo',
+            'combo_ids': [Command.set([free_combo.id])],
+            'taxes_id': False,
+        })
+
+        cola_item = free_combo.combo_item_ids.filtered(
+            lambda i: i.product_id == self.cola
+        )
+
+        price_unit_by_qty = {}
+        for parent_qty in (1, 2):
+            order = self.env['pos.order'].create({
+                'amount_total': 0,
+                'amount_paid': 0,
+                'amount_tax': 0,
+                'amount_return': 0,
+                'company_id': self.env.company.id,
+                'session_id': self.pos_config.current_session_id.id,
+                'lines': [
+                    Command.create({
+                        'product_id': combo_product.id,
+                        'qty': parent_qty,
+                        'price_unit': combo_product.lst_price,
+                        'price_subtotal': combo_product.lst_price * parent_qty,
+                        'price_subtotal_incl': combo_product.lst_price * parent_qty,
+                        'tax_ids': False,
+                    }),
+                ],
+            })
+
+            parent_line = order.lines
+            child_line = self.env['pos.order.line'].create({
+                'order_id': order.id,
+                'product_id': self.cola.id,
+                'qty': parent_qty,
+                'price_unit': 0,
+                'price_subtotal': 0,
+                'price_subtotal_incl': 0,
+                'tax_ids': False,
+                'combo_parent_id': parent_line.id,
+                'combo_item_id': cola_item.id,
+            })
+
+            order.recompute_prices()
+            price_unit_by_qty[parent_qty] = child_line.price_unit
+
+        self.assertAlmostEqual(
+            price_unit_by_qty[1], price_unit_by_qty[2], places=2,
+            msg="Child line price_unit must be the same whether buying 1 or 2 parent combos",
+        )
+
     def test_product_dont_display_all_variants(self):
         """
         Tests that when a variant is in a combo, clicking the variant
@@ -184,3 +335,205 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "test_product_dont_display_all_variants")
+
+    def test_self_order_combo_multiple_qty(self):
+        """
+        Tests that when having a combo with multiple qty, the price in the backend
+        is correctly computed based on the combo product's price.
+        """
+        water, orange_juice, water2, orange_juice2 = self.env['product.product'].create([
+            {
+                'name': 'Water',
+                'available_in_pos': True,
+                'list_price': 0.0,
+                'taxes_id': [],
+            },
+            {
+                'name': 'Orange Juice',
+                'available_in_pos': True,
+                'list_price': 0.0,
+            },
+            {
+                'name': 'Water 2',
+                'available_in_pos': True,
+                'list_price': 2.0,
+                'taxes_id': [],
+            },
+            {
+                'name': 'Orange Juice 2',
+                'available_in_pos': True,
+                'list_price': 2.0,
+            }
+
+        ])
+        drinks_combo, drinks_combo_with_price = self.env['product.combo'].create([
+            {
+                'name': 'Drinks',
+                'combo_item_ids': [
+                    Command.create({'product_id': water.id, 'extra_price': 0}),
+                    Command.create({'product_id': orange_juice.id, 'extra_price': 0}),
+                ],
+            },
+            {
+                'name': 'Drinks2',
+                'combo_item_ids': [
+                    Command.create({'product_id': water2.id, 'extra_price': 0}),
+                    Command.create({'product_id': orange_juice2.id, 'extra_price': 0}),
+                ],
+            }
+        ])
+        self.env['product.product'].create([
+            {
+                'name': 'Combo Drinks',
+                'type': 'combo',
+                'available_in_pos': True,
+                'list_price': 12.0,
+                'combo_ids': [
+                    Command.set([drinks_combo.id]),
+                ],
+            },
+            {
+                'name': 'Price for drinks',
+                'type': 'combo',
+                'available_in_pos': True,
+                'list_price': 12.0,
+                'combo_ids': [
+                    Command.set([drinks_combo_with_price.id]),
+                ],
+            }
+        ])
+
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'table',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "test_self_order_combo_multiple_qty")
+        orders = self.env['pos.order'].search([], order='id desc', limit=2)
+        self.assertEqual(orders[1].amount_total, 24)
+        self.assertEqual(orders[0].amount_total, 36)
+
+    def test_self_combo_extra_price_selection_and_confirmation(self):
+        """
+        Test extra price display in combo selection and confirmation.
+        - Combo with qty_free=0: All items show "+ €X" price badge
+        - Combo with qty_free>0: Free items have no extra badge, paid items show "Extra: €X"
+        - Confirmation page displays extra prices correctly
+        """
+
+        setup_product_combo_items(self)
+        self.desks_combo.is_upsell = True
+        self.desks_combo.qty_free = 0
+        self.desks_combo.qty_max = 3
+
+        self.desk_accessories_combo.qty_free = 1
+        self.desk_accessories_combo.qty_max = 3
+
+        self.pos_config.write({
+            'self_ordering_default_user_id': self.pos_admin.id,
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'counter',
+            'available_preset_ids': [(5, 0)],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+
+        self.start_tour(self_route, "test_self_combo_extra_price_selection_and_confirmation")
+
+    def test_combo_price_unit_mulitple_qty(self):
+        """
+        Tests that the unit price of combos ordered multiple times through the self
+        order is correct. The unit prices should match for different free items, like
+        it is done in the regular PoS.
+        """
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        combo = self.env['product.combo'].create({
+            'name': 'Combo',
+            'qty_free': 2,
+            'qty_max': 4,
+            'combo_item_ids': [
+                Command.create({'product_id': self.cola.id, 'extra_price': 0}),
+                Command.create({'product_id': self.fanta.id, 'extra_price': 0}),
+            ],
+        })
+        combo_product = self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'name': 'Combo Product',
+            'type': 'combo',
+            'combo_ids': [Command.set([combo.id])],
+            'taxes_id': False,
+        })
+        cola_item = combo.combo_item_ids.filtered(
+            lambda i: i.product_id == self.cola
+        )
+        fanta_item = combo.combo_item_ids.filtered(
+            lambda i: i.product_id == self.fanta
+        )
+
+        order = self.env['pos.order'].create({
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [
+                Command.create({
+                    'product_id': combo_product.id,
+                    'qty': 3,
+                    'price_unit': 0,
+                    'price_subtotal': 0,
+                    'price_subtotal_incl': 0,
+                    'tax_ids': False,
+                }),
+            ],
+        })
+
+        parent_line = order.lines
+        child_lines = self.env['pos.order.line'].create([
+            {
+                'order_id': order.id,
+                'product_id': self.cola.id,
+                'qty': 3,
+                'price_unit': 0,
+                'price_subtotal': 0,
+                'price_subtotal_incl': 0,
+                'tax_ids': False,
+                'combo_parent_id': parent_line.id,
+                'combo_item_id': cola_item.id,
+            },
+            {
+                'order_id': order.id,
+                'product_id': self.fanta.id,
+                'qty': 3,
+                'price_unit': 0,
+                'price_subtotal': 0,
+                'price_subtotal_incl': 0,
+                'tax_ids': False,
+                'combo_parent_id': parent_line.id,
+                'combo_item_id': fanta_item.id,
+            },
+            {
+                'order_id': order.id,
+                'product_id': self.fanta.id,
+                'qty': 3,
+                'price_unit': 0,
+                'price_subtotal': 0,
+                'price_subtotal_incl': 0,
+                'tax_ids': False,
+                'combo_parent_id': parent_line.id,
+                'combo_item_id': fanta_item.id,
+            }
+        ])
+
+        order.recompute_prices()
+        self.assertAlmostEqual(order.amount_total, (combo.base_price + combo_product.lst_price) * order.lines[0].qty)
+        self.assertEqual(child_lines[0].price_unit, child_lines[1].price_unit)

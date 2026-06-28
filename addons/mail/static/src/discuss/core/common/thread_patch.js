@@ -1,8 +1,6 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { Thread } from "@mail/core/common/thread";
 
-import { toRaw } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
@@ -16,11 +14,11 @@ const threadPatch = {
                     loadNewer ||
                     !mountedAndLoaded ||
                     !this.channel?.self_member_id ||
-                    !this.scrollableRef.el
+                    !this.scrollableRef()
                 ) {
                     return;
                 }
-                const el = this.scrollableRef.el;
+                const el = this.scrollableRef();
                 if (Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) <= 1) {
                     this.channel.self_member_id.hideUnreadBanner = true;
                 }
@@ -32,19 +30,19 @@ const threadPatch = {
     applyScrollContextually(thread) {
         if (thread.channel?.self_member_id && thread.scrollUnread) {
             if (thread.firstUnreadMessage) {
-                const messageEl = this.messageRefs.get(thread.firstUnreadMessage.id)?.el;
+                const messageEl = this.messageRefs.get(thread.firstUnreadMessage.id)?.();
                 if (!messageEl) {
                     return;
                 }
                 const messageCenter =
                     messageEl.offsetTop -
-                    this.scrollableRef.el.offsetHeight / 2 +
+                    this.scrollableRef().offsetHeight / 2 +
                     messageEl.offsetHeight / 2;
                 this.setScroll(messageCenter);
             } else {
                 const scrollTop =
                     this.props.order === "asc"
-                        ? this.scrollableRef.el.scrollHeight - this.scrollableRef.el.clientHeight
+                        ? this.scrollableRef().scrollHeight - this.scrollableRef().clientHeight
                         : 0;
                 this.setScroll(scrollTop);
             }
@@ -59,7 +57,7 @@ const threadPatch = {
     /** @override */
     fetchInitialMessages() {
         if (this.channel?.self_member_id && this.props.thread.scrollUnread) {
-            toRaw(this.props.thread).loadAround({
+            this.props.thread.loadAround({
                 messageId: this.channel.self_member_id.new_message_separator,
             });
         } else {

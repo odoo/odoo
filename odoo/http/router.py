@@ -1,17 +1,24 @@
 from __future__ import annotations
 
+import datetime as dt
 import functools
 import logging
 import re
 import threading
 import typing
+from contextlib import nullcontext
 from os.path import join as opj
 from urllib.parse import urlparse
 
 import psycopg2
 import werkzeug.routing
 from psycopg2.errors import OperationalError, ReadOnlySqlTransaction
-from werkzeug.exceptions import HTTPException, NotFound
+from werkzeug.exceptions import (
+    Forbidden,
+    HTTPException,
+    NotFound,
+    UnsupportedMediaType,
+)
 from werkzeug.security import safe_join
 from werkzeug.urls import url_encode  # TODO: use urllib
 
@@ -23,7 +30,6 @@ except ImportError:
     from werkzeug.contrib.fixers import ProxyFix
 
 import odoo.modules.db
-import odoo.service
 from odoo.api import Environment
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.modules.module import (
@@ -31,28 +37,29 @@ from odoo.modules.module import (
     initialize_sys_path,
 )
 from odoo.modules.registry import Registry
-from odoo.tools import config, file_path, real_time
+from odoo.tools import config, file_open, file_path, profiler
 from odoo.tools.misc import submap
+
+from . import request, request_var
+from .dispatcher import HttpDispatcher, JsonRPCDispatcher, _dispatchers
+from .response import Response
+from .retrying import retrying
+from .routing_map import ROUTING_KEYS, _generate_routing_rules
+from .stream import STATIC_CACHE, Stream
+from .requestlib import (
+    HTTPRequest,
+    Request,
+    is_cors_preflight,
+)
+from .session import SessionExpiredException, get_default_session, logout, session_store
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
     from wsgiref.types import StartResponse, WSGIEnvironment
 
-    from .requestlib import Request
-    from .response import Response
     from .routing_map import Endpoint
 
 _logger = logging.getLogger('odoo.http')
-
-NOT_FOUND_NODB = """\
-<!DOCTYPE html>
-<title>404 Not Found</title>
-<h1>Not Found</h1>
-<p>No database is selected and the requested URL was not found in the server-wide controllers.</p>
-<p>Please verify the hostname, <a href=/web/login>login</a> and try again.</p>
-
-<!-- Alternatively, use the X-Odoo-Database header. -->
-"""
 
 
 def db_list(force: bool = False, host: str | None = None) -> list[str]:
@@ -119,6 +126,8 @@ def dispatch_rpc(service_name: str, method: str, params: Mapping[str, typing.Any
     :param params: the keyword arguments for method call
     :return: the return value of the called method
     """
+    import odoo.service  # noqa: PLC0415
+
     if service_name == 'object':
         dispatch = odoo.service.model.dispatch
     elif service_name == 'common':
@@ -126,11 +135,14 @@ def dispatch_rpc(service_name: str, method: str, params: Mapping[str, typing.Any
     else:
         raise ValueError(f"Invalid service name: {service_name}")
 
-    with borrow_request():
+    # Remove the request to simulate that the call does not come from HTTP
+    request_reset = request_var.set(None)
+    try:
         threading.current_thread().uid = None
         threading.current_thread().dbname = None
-
         return dispatch(method, params)
+    finally:
+        request_var.reset(request_reset)
 
 
 class RegistryError(RuntimeError):
@@ -235,18 +247,9 @@ class Application:
             server that this application must call in order to send the
             HTTP response status line and the response headers.
         """
-        current_thread = threading.current_thread()
-        current_thread.query_count = 0
-        current_thread.query_time = 0
-        current_thread.perf_t0 = real_time()
-        current_thread.cursor_mode = None
-        if hasattr(current_thread, 'dbname'):
-            del current_thread.dbname
-        if hasattr(current_thread, 'uid'):
-            del current_thread.uid
-        current_thread.rpc_model_method = ''
-
         if config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
+            # It is done in our wsgi server already, but people might be
+            # using another wsgi server.
             # The ProxyFix middleware has a side effect of updating the
             # environ, see https://github.com/pallets/werkzeug/pull/2184
             def fake_app(environ, start_response):
@@ -257,17 +260,16 @@ class Application:
 
         with HTTPRequest(environ) as httprequest:
             request = Request(httprequest)
-            _request_stack.push(request)
-
+            request_reset = request_var.set(request)
             try:
-                request._post_init()
-                current_thread.url = httprequest.url
+                _set_session_and_dbname(request)
+                threading.current_thread().url = httprequest.url
 
                 if self.get_static_file(httprequest.path):
                     response = serve_static(request)
                 elif request.db:
                     try:
-                        with request._get_profiler_context_manager():
+                        with _get_profiler_context_manager(request):
                             response = serve_db(request)
                     except RegistryError as e:
                         _logger.warning("Database or registry unusable, trying without", exc_info=e.__cause__)
@@ -311,7 +313,7 @@ class Application:
                 return exc.error_response(environ, start_response)
 
             finally:
-                _request_stack.pop()
+                request_var.reset(request_reset)
 
 
 root = Application()
@@ -349,11 +351,10 @@ def serve_nodb(request: Request) -> Response:
         try:
             rule, args = router.match(return_rule=True)
         except NotFound as exc:
-            exc.response = Response(NOT_FOUND_NODB, status=exc.code, headers=[
-                ('Content-Type', 'text/html; charset=utf-8'),
-            ])
+            with file_open(f'{__file__}/../not_found_nodb.html', 'rb') as f:
+                exc.response = Response(f.read(), status=exc.code, mimetype='text/html')
             raise
-        request._set_request_dispatcher(rule)
+        _set_request_dispatcher(request, rule)
         request.dispatcher.pre_dispatch(rule, args)
         endpoint: Endpoint = rule.endpoint  # type: ignore
         response = request.dispatcher.dispatch(endpoint, args)
@@ -378,12 +379,15 @@ def serve_db(request: Request) -> Response:
         try:
             registry = Registry(request.db)
             cr = registry.cursor(readonly=True)
-            request.registry = registry.check_signaling(cr)
+            # check signaling
+            request.env = Environment(cr, request.session.uid, request.session.context)
+            request.update_context(host_id=request.env['ir.http']._get_host_id_from_domain(request.httprequest.host))
+
+            request.registry = request.env.registry
         except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError) as e:
             raise RegistryError(f"Cannot get registry {request.db}") from e
 
         # find the controller endpoint to use
-        request.env = Environment(cr, request.session.uid, request.session.context)
         try:
             rule, args = request.registry['ir.http']._match(request.httprequest.path)
         except NotFound as not_found_exc:
@@ -392,12 +396,16 @@ def serve_db(request: Request) -> Response:
             readonly = True
         else:
             # a controller endpoint matched -> dispatch it the request
-            request._set_request_dispatcher(rule)
+            _set_request_dispatcher(request, rule)
             serve_func = functools.partial(serve_ir_http, request, rule, args)
             endpoint: Endpoint = rule.endpoint  # type: ignore
             readonly = endpoint.routing['readonly']
             if callable(readonly):
                 readonly = readonly(endpoint.func.__self__, rule, args)
+        # update the parent cache for the route mapping to make it available as
+        # soon as possible and don't lose it if there are invalidations
+        for layer in request.env.transaction.ormcaches__.values():
+            layer.update_parent()
 
         # keep on using the RO cursor when a readonly route matched,
         # and for serve fallback
@@ -446,6 +454,101 @@ def serve_db(request: Request) -> Response:
             cr.close()
 
 
+def _get_profiler_context_manager(request: Request) -> typing.ContextManager:
+    """
+    Get a profiler when the profiling is enabled and the requested
+    URL is profile-safe. Otherwise, get a context-manager that does
+    nothing.
+    """
+    if request.session.get('profile_session') and request.db:
+        if request.session['profile_expiration'] < str(dt.datetime.now()):
+            # avoid having session profiling for too long if user forgets to disable profiling
+            request.session['profile_session'] = None
+            _logger.warning("Profiling expiration reached, disabling profiling")
+        elif 'set_profiling' in request.httprequest.path:
+            _logger.debug("Profiling disabled on set_profiling route")
+        elif request.httprequest.path.startswith('/websocket'):
+            _logger.debug("Profiling disabled for websocket")
+        elif odoo.evented:
+            # only longpolling should be in a evented server, but this is an additional safety
+            _logger.debug("Profiling disabled for evented server")
+        else:
+            try:
+                return profiler.Profiler(
+                    db=request.db,
+                    description=request.httprequest.full_path,
+                    profile_session=request.session['profile_session'],
+                    collectors=request.session['profile_collectors'],
+                    params=request.session['profile_params'],
+                )._get_cm_proxy()
+            except Exception:
+                _logger.exception("Failure during Profiler creation")
+                request.session['profile_session'] = None
+
+    return nullcontext()
+
+
+def _set_session_and_dbname(request: Request) -> None:
+    sid = request.httprequest.cookies.get('session_id', '')
+    session = session_store().get(sid, keep_sid=True)
+
+    for key, val in get_default_session().items():
+        session.setdefault(key, val)
+    if not session.context.get('lang'):
+        session.context['lang'] = request.default_lang()
+
+    dbname = None
+    host = request.httprequest.environ['HTTP_HOST']
+    header_dbname = request.httprequest.headers.get('X-Odoo-Database')
+    if session.db and db_filter([session.db], host=host):
+        dbname = session.db
+        if header_dbname and header_dbname != dbname:
+            e = ("Cannot use both the session_id cookie and the "
+                    "x-odoo-database header.")
+            raise Forbidden(e)
+    elif header_dbname:
+        session.can_save = False  # stateless
+        if db_filter([header_dbname], host=host):
+            dbname = header_dbname
+    else:
+        all_dbs = db_list(force=True, host=host)
+        if len(all_dbs) == 1:
+            dbname = all_dbs[0]  # monodb
+
+    if session.db != dbname:
+        if session.db:
+            _logger.warning("Logged into database %r, but dbfilter rejects it; logging session out.", session.db)
+            logout(session, keep_db=False)
+        session.db = dbname
+
+    session.is_dirty = False
+    request.session = session
+    request.db = dbname
+    threading.current_thread().sess_id = request.session.sid[:8]
+
+
+def _set_request_dispatcher(request: Request, rule: werkzeug.routing.Rule):
+    endpoint: Endpoint = rule.endpoint  # type: ignore
+    routing = endpoint.routing
+    dispatcher_cls = _dispatchers[routing['type']]
+    if (not is_cors_preflight(request, endpoint)
+        and not dispatcher_cls.is_compatible_with(request)):
+        compatible_dispatchers = [
+            disp.routing_type
+            for disp in _dispatchers.values()
+            if disp.is_compatible_with(request)
+        ]
+        e = (f"Request inferred type is compatible with {compatible_dispatchers} "
+                f"but {routing['routes'][0]!r} is type={routing['type']!r}.\n\n"
+                "Please verify the Content-Type request header and try again.")
+        # werkzeug doesn't let us add headers to UnsupportedMediaType
+        # so use the following (ugly) to still achieve what we want
+        res = UnsupportedMediaType(e).get_response()
+        res.headers['Accept'] = ', '.join(dispatcher_cls.mimetypes)
+        raise UnsupportedMediaType(response=res)
+    request.dispatcher = dispatcher_cls(request)
+
+
 def _update_served_exception(request: Request, exc: Exception) -> Exception:
     if isinstance(exc, HTTPException) and exc.code is None:
         return exc  # bubble up to _serve_db
@@ -469,7 +572,7 @@ def _serve_ir_http_fallback(request: Request, not_found: NotFound) -> Response:
     provided a response, a generic 404 - Not Found page is returned.
     """
     request.params = request.get_http_params()
-    request.registry['ir.http']._auth_method_public()
+    request.registry['ir.http']._auth_method_public({})
     response = request.registry['ir.http']._serve_fallback()
     if response:
         request.registry['ir.http']._post_dispatch(response)
@@ -491,19 +594,3 @@ def serve_ir_http(request: Request, rule: werkzeug.routing.Rule, args) -> Respon
     response = request.dispatcher.dispatch(rule.endpoint, args)
     request.registry['ir.http']._post_dispatch(response)
     return response
-
-
-# ruff: noqa: E402
-from .dispatcher import HttpDispatcher, JsonRPCDispatcher
-from .requestlib import (
-    HTTPRequest,
-    Request,
-    _request_stack,
-    borrow_request,
-    request,
-)
-from .response import Response
-from .retrying import retrying
-from .routing_map import ROUTING_KEYS, _generate_routing_rules
-from .session import SessionExpiredException, logout
-from .stream import STATIC_CACHE, Stream

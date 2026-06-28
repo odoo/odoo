@@ -1,11 +1,14 @@
-import { useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
+import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { formView } from "@web/views/form/form_view";
 import { SettingsConfirmationDialog } from "./settings_confirmation_dialog";
 import { SettingsFormRenderer } from "./settings_form_renderer";
-
+import { normalize } from "@web/core/l10n/utils";
+import { useDebounced } from "@web/core/utils/timing";
+import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 
 export class SettingsFormController extends formView.Controller {
     static template = "web.SettingsFormView";
@@ -16,9 +19,17 @@ export class SettingsFormController extends formView.Controller {
 
     setup() {
         super.setup();
-        useAutofocus();
-        this.state = useState({ displayNoContent: false });
-        this.searchState = useState({ value: "" });
+        this.inputRef = useAutofocus({ mobile: this.ui.isSmall }); // only force the focus on touch devices on small screens
+        this.state = proxy({ displayNoContent: false });
+        this.searchState = proxy({
+            value: "",
+            clearSearch: () => {
+                if (this.inputRef.el) {
+                    this.inputRef.el.value = "";
+                }
+                this.searchState.value = "";
+            },
+        });
         this.rootRef = useRef("root");
         this.canCreate = false;
         useSubEnv({ searchState: this.searchState });
@@ -47,7 +58,12 @@ export class SettingsFormController extends formView.Controller {
             }
         });
 
+        this.searchBarToggler = useSearchBarToggler();
         this.initialApp = "module" in this.props.context ? this.props.context.module : "";
+        this.debounceSearch = useDebounced(
+            (value) => (this.searchState.value = normalize(value)),
+            500
+        );
     }
 
     get modelParams() {

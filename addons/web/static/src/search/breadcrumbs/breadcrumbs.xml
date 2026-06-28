@@ -31,9 +31,7 @@
                     </li>
                     <li t-if="previousBreadcrumb" class="breadcrumb-item d-inline-flex min-w-0 o_back_button" data-hotkey="b" t-on-click.prevent="previousBreadcrumb.onSelected">
                         <a t-att-href="previousBreadcrumb.url" class="fw-bold text-truncate" t-att-data-tooltip="'Back to &quot;' + previousBreadcrumb.name + '&quot;' + (previousBreadcrumb.isFormView ? ' form' : '')">
-                            <t t-call="web.Breadcrumb.Name">
-                                <t t-set="breadcrumb" t-value="previousBreadcrumb"/>
-                            </t>
+                            <t t-call="web.Breadcrumb.Name" breadcrumb="previousBreadcrumb"/>
                         </a>
                     </li>
                 </ol>
@@ -53,12 +51,12 @@
             <t t-call="web.Breadcrumb.Actions"/>
         </div>
 
-        <t t-slot="breadcrumb-status-indicator" />
+        <t t-call-slot="breadcrumb-status-indicator" />
     </t>
 
     <t t-name="web.Breadcrumb.Actions">
         <div class="o_control_panel_breadcrumbs_actions d-inline-flex d-print-none">
-            <t t-slot="breadcrumb-additional-actions"/>
+            <t t-call-slot="breadcrumb-additional-actions"/>
         </div>
     </t>
 

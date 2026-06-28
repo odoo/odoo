@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 
-    <t t-name="resource_mail.KanbanMany2OneAvatarResourceField">
+    <t t-name="resource_mail.CardMany2OneAvatarResourceField">
         <t t-set="relation" t-value="this.props.record.fields[this.props.name].relation"/>
         <t t-set="value" t-value="this.props.record.data[this.props.name]"/>
         <KanbanMany2One t-props="this.m2oProps">
@@ -14,7 +14,7 @@
                     </span>
                 </t>
                 <t t-elif="this.props.record.data.resource_type === 'user'">
-                    <AvatarResource cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id"/>
+                    <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id"/>
                 </t>
             </t>
             <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
@@ -27,7 +27,7 @@
                     <t t-elif="autoCompleteItemScope.record.resource_type === 'user'">
                         <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.record.id}}/avatar_128"/>
                     </t>
-                    <span t-out="autoCompleteItemScope.label"/>
+                    <span class="text-truncate" t-out="autoCompleteItemScope.label"/>
                 </span>
             </t>
         </KanbanMany2One>

@@ -181,27 +181,3 @@ test(`color field in list view => automatic save by default`, async () => {
         "web_save",
     ]);
 });
-
-test.tags("desktop");
-test(`color field in list view => no save if autosave is false`, async () => {
-    stepAllNetworkCalls();
-    await mountView({
-        resModel: "color",
-        type: "list",
-        arch: `
-            <list editable="bottom">
-                <field name="text"/>
-                <field name="hex_color" widget="color" options="{'autosave': 0}"/>
-            </list>`,
-    });
-
-    await contains(`.o_data_row:eq(0) input[type=color]`, { visible: false }).edit("#fefefe");
-
-    expect.verifySteps([
-        "/web/webclient/translations",
-        "/web/webclient/load_menus",
-        "get_views",
-        "web_search_read",
-        "has_group",
-    ]);
-});

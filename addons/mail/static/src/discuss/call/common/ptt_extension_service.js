@@ -1,7 +1,7 @@
-import { reactive } from "@web/owl2/utils";
-import { markup } from "@odoo/owl";
-
 import { parseVersion } from "@mail/utils/common/misc";
+
+import { markup, proxy } from "@odoo/owl";
+
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
@@ -23,7 +23,7 @@ export const pttExtensionHookService = {
             window.chrome?.runtime
                 ?.sendMessage(EXT_ID, { type: "ask-version" })
                 .catch(() => "1.0.0.0") ?? Promise.resolve("1.0.0.0");
-        const self = reactive({
+        const self = proxy({
             isEnabled: undefined,
             voiceActivated: undefined,
             notifyIsTalking(isTalking) {

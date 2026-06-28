@@ -11,7 +11,7 @@ patch(GeneratePrinterData.prototype, {
         if (this.order.l10n_es_edi_verifactu_qr_code) {
             const baseUrl = this.order.config._base_url;
             data.image.l10n_es_edi_verifactu_qr_code = this.generateQrCode(
-                `${baseUrl}/${this.order.l10n_es_edi_verifactu_qr_code}`
+                `${baseUrl}${this.order.l10n_es_edi_verifactu_qr_code}`
             );
         }
 

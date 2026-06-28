@@ -48,7 +48,7 @@ defineHrHolidaysModels();
 defineModels([HrLeave, HrWorkEntryType]);
 
 onRpc("hr.employee", "get_time_off_dashboard_data", () => (
-    {has_accrual_allocation: true, allocation_data: {}, allocation_request_amount: 0}
+    {has_accrual_allocation: true, allocation_data: {}, allocation_request_days_hours: ""}
 ));
 onRpc("hr.employee", "get_mandatory_days", () => ({}));
 onRpc("hr.employee", "get_special_days_data", () => ({ mandatoryDays: [], bankHolidays: [] }));

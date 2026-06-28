@@ -40,9 +40,12 @@ class AccountMoveLine(models.Model):
             res.update({
                 'name': self.name,
                 'expense_ids': [Command.set(self.expense_id.ids)],
-                'product_uom_qty': self.expense_id.quantity,
                 'analytic_distribution': self.analytic_distribution,
             })
+            if self.expense_id.product_id.reinvoice_policy == 'sales_price' and self.expense_id.product_id.standard_price:
+                res.update({
+                    'product_uom_qty': self.expense_id.quantity,
+                })
         return res
 
     def _sale_create_reinvoice_sale_line(self):

@@ -12,7 +12,25 @@
                     </t>
                 </t>
             </xpath>
+            <t t-call="web.external_layout" position="before">
+                <t t-set="additional_address_sa">
+                    <li t-if="o.company_id.country_id.code == 'SA' and o.company_id.partner_id.l10n_sa_edi_additional_identification_scheme and o.company_id.partner_id.l10n_sa_edi_additional_identification_number">
+                        <span t-field="o.company_id.partner_id.l10n_sa_edi_additional_identification_scheme"/>:
+                        <span t-field="o.company_id.partner_id.l10n_sa_edi_additional_identification_number"/>
+                    </li>
+                </t>
+            </t>
             <!-- End Address format -->
+            <!-- Information div -->
+            <div name="delivery_date" position="after">
+                <div class="col" t-if="o.delivery_date and o.l10n_sa_edi_supply_end_date" name="supply_end_date">
+                    <strong name="supply_end_date_ar" t-if="display_in_ar" t-translation="off">تاريخ انتهاء التوريد<br/></strong>
+                    <strong name="supply_end_date_en" t-if="display_in_en" t-translation="off">Supply End Date<br/></strong>
+                    <strong>Supply End Date</strong>
+                    <div t-field="o.l10n_sa_edi_supply_end_date" t-options="{'format': 'YYYY-MM-dd'}">2023-09-26</div>
+                </div>
+            </div>
+            <!-- End Information div -->
         </template>
     </data>
 </odoo>

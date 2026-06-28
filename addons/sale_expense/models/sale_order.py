@@ -27,7 +27,7 @@ class SaleOrder(models.Model):
             if operator in Domain.NEGATIVE_OPERATORS:
                 return NotImplemented
             domain = super()._search_display_name(operator, value)
-            company_domain = Domain('state', '=', 'sale') & ('company_id', 'in', self.env.companies.ids)
+            company_domain = Domain('state', '=', 'sale') & Domain('company_id', 'in', self.env.companies.ids)
             query = self.sudo()._search(domain & company_domain)
             return Domain('id', 'in', query)
         return super()._search_display_name(operator, value)

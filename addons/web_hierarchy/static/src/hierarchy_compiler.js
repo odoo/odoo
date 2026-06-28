@@ -1,6 +1,6 @@
-import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
+import { CardCompiler } from "@web/views/card/card_compiler";
 
-export class HierarchyCompiler extends KanbanCompiler {
+export class HierarchyCompiler extends CardCompiler {
     /**
      * @override
      * @param {Element} el

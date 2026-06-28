@@ -1,6 +1,6 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { useHotkey } from "../hotkeys/hotkey_hook";
-import { DateTimePicker } from "./datetime_picker";
+import { DateTimePicker, dateTimePickerProps } from "./datetime_picker";
 
 /**
  * @typedef {import("./datetime_picker").DateTimePickerProps} DateTimePickerProps
@@ -14,10 +14,10 @@ import { DateTimePicker } from "./datetime_picker";
 export class DateTimePickerPopover extends Component {
     static components = { DateTimePicker };
 
-    static props = {
-        close: Function, // Given by the Popover service
-        pickerProps: { type: Object, shape: DateTimePicker.props },
-    };
+    props = props({
+        close: t.function(), // Given by the Popover service
+        pickerProps: t.object(dateTimePickerProps),
+    });
 
     static template = "web.DateTimePickerPopover";
 

@@ -1,4 +1,5 @@
-import { expect, getFixture, test } from "@odoo/hoot";
+import { useRef } from "@web/owl2/utils";
+import { expect, getFixture, queryRect, test } from "@odoo/hoot";
 import {
     click,
     hover,
@@ -11,8 +12,8 @@ import {
     queryOne,
     resize,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
-import { Component, onMounted, onPatched, useRef, useState, xml } from "@odoo/owl";
+import { animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
+import { Component, onMounted, onPatched, xml, proxy } from "@odoo/owl";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
@@ -23,12 +24,15 @@ import {
     mockService,
     mountWithCleanup,
     patchWithCleanup,
+    registerTemplate,
 } from "@web/../tests/web_test_helpers";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Dialog } from "@web/core/dialog/dialog";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useActiveElement } from "@web/core/ui/ui_service";
+import { DropdownPopover } from "@web/core/dropdown/_behaviours/dropdown_popover";
 
 const DROPDOWN_TOGGLE = ".o-dropdown.dropdown-toggle";
 const DROPDOWN_MENU = ".o-dropdown--menu.dropdown-menu";
@@ -39,7 +43,7 @@ class SimpleDropdown extends Component {
     static props = [];
     static template = xml`
         <div class="outside">outside</div>
-        <Dropdown t-props="dropdownProps">
+        <Dropdown t-props="this.dropdownProps">
             <button>Dropdown</button>
             <t t-set-slot="content">
                 <DropdownItem class="'item-a'">Item A</DropdownItem>
@@ -55,15 +59,15 @@ class MultiLevelDropdown extends Component {
     static props = [];
     static template = xml`
         <div class="outside">outside</div>
-        <Dropdown t-props="dropdownProps">
+        <Dropdown t-props="this.dropdownProps">
             <button class="dropdown-a">A</button>
             <t t-set-slot="content">
                 <DropdownItem class="'item-a'">Item A</DropdownItem>
-                <Dropdown t-props="dropdownProps">
+                <Dropdown t-props="this.dropdownProps">
                     <button class="dropdown-b">B</button>
                     <t t-set-slot="content">
                         <DropdownItem class="'item-b'">Item B</DropdownItem>
-                        <Dropdown t-props="dropdownProps">
+                        <Dropdown t-props="this.dropdownProps">
                             <button class="dropdown-c">C</button>
                             <t t-set-slot="content">
                                 <DropdownItem class="'item-c'">Item C</DropdownItem>
@@ -80,7 +84,7 @@ class NoBottomSheetDropdown extends Component {
     static components = { Dropdown, DropdownItem };
     static props = [];
     static template = xml`
-        <Dropdown t-props="dropdownProps" bottomSheet="false">
+        <Dropdown t-props="this.dropdownProps" bottomSheet="false">
             <button>Dropdown</button>
             <t t-set-slot="content">
                 <DropdownItem class="'item-a'">Item A</DropdownItem>
@@ -90,7 +94,7 @@ class NoBottomSheetDropdown extends Component {
 }
 
 function startOpenState() {
-    const state = useState({
+    const state = proxy({
         isOpen: true,
         open: () => {
             state.isOpen = true;
@@ -113,13 +117,13 @@ test("can be rendered", async () => {
 });
 
 test("can be toggled", async () => {
-    const beforeOpenProm = new Deferred();
+    const beforeOpenProm = Promise.withResolvers();
     class Parent extends SimpleDropdown {
         setup() {
             this.dropdownProps = {
                 beforeOpen: () => {
                     expect.step("beforeOpen");
-                    return beforeOpenProm;
+                    return beforeOpenProm.promise;
                 },
             };
         }
@@ -178,7 +182,88 @@ test("close on outside click", async () => {
     expect(DROPDOWN_MENU).toHaveCount(0);
 });
 
+test("close on click outside an active element", async () => {
+    class ActiveElementDropdown extends Component {
+        static components = { Dropdown, DropdownItem };
+        static props = [];
+        static template = xml`
+            <div class="outside">outside</div>
+            <div t-custom-ref="active">
+                <Dropdown>
+                    <button>Dropdown</button>
+                    <t t-set-slot="content">
+                        <DropdownItem class="'item-a'">Item A</DropdownItem>
+                    </t>
+                </Dropdown>
+            </div>
+        `;
+
+        setup() {
+            useActiveElement("active");
+        }
+    }
+
+    await mountWithCleanup(ActiveElementDropdown);
+
+    await click(DROPDOWN_TOGGLE);
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_backdrop");
+    } else {
+        await click(".outside");
+    }
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(0);
+});
+
+test("close on click outside when the opening active element was removed", async () => {
+    class ActiveElementDropdown extends Component {
+        static components = { Dropdown, DropdownItem };
+        static props = [];
+        static template = xml`
+            <div class="outside">outside</div>
+            <div t-if="this.state.showActive" t-custom-ref="active">
+                <button class="active-button">Active</button>
+            </div>
+            <Dropdown>
+                <button>Dropdown</button>
+                <t t-set-slot="content">
+                    <DropdownItem class="'item-a'">Item A</DropdownItem>
+                </t>
+            </Dropdown>
+        `;
+
+        setup() {
+            this.state = proxy({ showActive: true });
+            useActiveElement("active");
+        }
+    }
+
+    const comp = await mountWithCleanup(ActiveElementDropdown);
+
+    const activeEl = queryOne(".active-button").parentElement;
+    await click(DROPDOWN_TOGGLE);
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+
+    comp.state.showActive = false;
+    await animationFrame();
+    expect(activeEl.isConnected).toBe(false);
+    expect(DROPDOWN_MENU).toHaveCount(1);
+
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_backdrop");
+    } else {
+        await click(".outside");
+    }
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(0);
+});
+
 test("close on outside click in shadow dom", async () => {
+    const shadowRootId = "o-shadow-root-id";
     class DropdownInShadowDom extends Component {
         static components = { SimpleDropdown };
         static props = [];
@@ -188,17 +273,21 @@ test("close on outside click in shadow dom", async () => {
     class ShadowDom extends Component {
         static components = { Dropdown, DropdownItem };
         static props = [];
-        static template = xml`<div class="shadow-root" t-ref="shadow-root-ref" />`;
+        static template = xml`<div class="shadow-root" t-custom-ref="shadow-root-ref" id="${shadowRootId}" />`;
         setup() {
             const shadowRootRef = useRef("shadow-root-ref");
             onMounted(() => {
                 const shadowBody = shadowRootRef.el.attachShadow({ mode: "open" });
-                mountWithCleanup(DropdownInShadowDom, { target: shadowBody });
+                mountWithCleanup(DropdownInShadowDom, { env: this.env, target: shadowBody });
             });
         }
     }
 
-    await mountWithCleanup(ShadowDom, { noMainContainer: true });
+    await mountWithCleanup(ShadowDom, {
+        componentEnv: { rootId: shadowRootId },
+        containerEnv: { rootId: shadowRootId },
+        noMainContainer: true,
+    });
 
     const shadowBody = queryOne(".shadow-root").shadowRoot;
     await contains(DROPDOWN_TOGGLE, { root: shadowBody }).click();
@@ -239,11 +328,11 @@ test("hold position on hover", async () => {
     let parentState;
     class Parent extends Component {
         setup() {
-            this.state = useState({ filler: false });
+            this.state = proxy({ filler: false });
             parentState = this.state;
         }
         static template = xml`
-            <div t-if="state.filler" class="filler" style="height: 100px;"/>
+            <div t-if="this.state.filler" class="filler" style="height: 100px;"/>
             <Dropdown holdOnHover="true">
                 <button>Hello</button>
                 <t t-set-slot="content">World</t>
@@ -324,9 +413,9 @@ test("dropdowns keynav", async () => {
                 <Dropdown>
                     <button data-hotkey="m">Toggle</button>
                     <t t-set-slot="content">
-                        <DropdownItem class="'item1'" onSelected="() => onItemSelected(1)">item1</DropdownItem>
-                        <DropdownItem class="'item2'" attrs="{'data-hotkey': '2'}" onSelected="() => onItemSelected(2)">item2</DropdownItem>
-                        <DropdownItem class="'item3'" onSelected="() => onItemSelected(3)">item3</DropdownItem>
+                        <DropdownItem class="'item1'" onSelected="() => this.onItemSelected(1)">item1</DropdownItem>
+                        <DropdownItem class="'item2'" attrs="{'data-hotkey': '2'}" onSelected="() => this.onItemSelected(2)">item2</DropdownItem>
+                        <DropdownItem class="'item3'" onSelected="() => this.onItemSelected(3)">item3</DropdownItem>
                     </t>
                 </Dropdown>
             `;
@@ -412,7 +501,7 @@ test("dropdowns keynav is not impacted by bootstrap", async () => {
         static components = { Dropdown };
         static props = [];
         static template = xml`
-                <Dropdown state="dropdown">
+                <Dropdown state="this.dropdown">
                     <button>Open</button>
                     <t t-set-slot="content">
                         <select><option>foo</option></select>
@@ -642,14 +731,14 @@ test("date picker inside does not close when a click occurs in date picker", asy
 });
 
 test("onOpened callback props called after the menu has been mounted", async () => {
-    const beforeOpenProm = new Deferred();
+    const beforeOpenProm = Promise.withResolvers();
 
     class Parent extends SimpleDropdown {
         setup() {
             this.dropdownProps = {
                 beforeOpen: () => {
                     expect.step("beforeOpened");
-                    return beforeOpenProm;
+                    return beforeOpenProm.promise;
                 },
                 onOpened: () => {
                     expect.step("onOpened");
@@ -693,10 +782,10 @@ test("Dropdown with CheckboxItem: toggle value", async () => {
                     <button>Click to open</button>
                     <t t-set-slot="content">
                         <CheckboxItem
-                            class="{ selected: state.checked }"
-                            checked="state.checked"
+                            class="{ selected: this.state.checked }"
+                            checked="this.state.checked"
                             closingMode="'none'"
-                            onSelected.bind="onSelected">
+                            onSelected.bind="this.onSelected">
                             My checkbox item
                         </CheckboxItem>
                     </t>
@@ -704,7 +793,7 @@ test("Dropdown with CheckboxItem: toggle value", async () => {
         static components = { Dropdown, CheckboxItem };
         static props = [];
         setup() {
-            this.state = useState({ checked: false });
+            this.state = proxy({ checked: false });
         }
         onSelected() {
             this.state.checked = !this.state.checked;
@@ -723,7 +812,7 @@ test("Dropdown with CheckboxItem: toggle value", async () => {
     expect(DROPDOWN_ITEM).toHaveClass(["selected", "focus"]);
 });
 
-test("don't close dropdown outside the active element", async () => {
+test("don't close parent dropdown when clicking in a child active element", async () => {
     const env = await makeMockEnv();
 
     // This test checks that if a dropdown element opens a dialog with a dropdown inside,
@@ -752,7 +841,7 @@ test("don't close dropdown outside the active element", async () => {
                     <Dropdown>
                         <button class="parent-toggle">Dropdown</button>
                         <t t-set-slot="content">
-                            <button class="parent-item" t-on-click="clicked">Click me</button>
+                            <button class="parent-item" t-on-click="this.clicked">Click me</button>
                         </t>
                     </Dropdown>
                     <div class="outside-parent">Outside Parent</div>
@@ -808,7 +897,7 @@ test("t-if t-else as toggler", async () => {
         static props = [];
         static template = xml`
                 <Dropdown>
-                    <button t-if="state.foo === 'bar'">Coucou</button>
+                    <button t-if="this.state.foo === 'bar'">Coucou</button>
                     <a t-else="">ByeBye</a>
                     <t t-set-slot="content">
                         Hello
@@ -817,7 +906,7 @@ test("t-if t-else as toggler", async () => {
             `;
 
         setup() {
-            state = useState({ foo: "bar" });
+            state = proxy({ foo: "bar" });
             this.state = state;
         }
     }
@@ -926,7 +1015,7 @@ test("multi-level dropdown: initial open state can be true", async () => {
     class Parent extends MultiLevelDropdown {
         setup() {
             this.dropdownProps = {
-                state: useState({
+                state: proxy({
                     isOpen: true,
                     open: () => {},
                     close: () => {},
@@ -1046,7 +1135,7 @@ test("multi-level dropdown: parent closing modes on item selection", async () =>
 
 test("multi-level dropdown: recursive template can be rendered", async () => {
     class Parent extends Component {
-        static template = "recursive.Template";
+        static template = xml`<t t-call="recursive.Template" name="this.name" items="this.items"/>`;
         static props = [];
         static components = { Dropdown, DropdownItem };
         setup() {
@@ -1082,28 +1171,24 @@ test("multi-level dropdown: recursive template can be rendered", async () => {
         }
     }
 
-    await mountWithCleanup(Parent, {
-        templates: {
-            ["recursive.Template"]: /* xml */ `
-                <Dropdown state="dropdown">
-                    <button><t t-out="name" /></button>
-                    <t t-set-slot="content">
-                        <t t-foreach="items" t-as="item" t-key="item_index">
+    registerTemplate(
+        "recursive.Template",
+        /* xml */ `
+        <Dropdown state="this.dropdown">
+            <button><t t-out="name" /></button>
+            <t t-set-slot="content">
+                <t t-foreach="items" t-as="item" t-key="item_index">
 
-                            <t t-if="!item.children.length">
-                                <DropdownItem><t t-out="item.name"/></DropdownItem>
-                            </t>
-
-                            <t t-else="" t-call="recursive.Template">
-                                <t t-set="name" t-value="item.name" />
-                                <t t-set="items" t-value="item.children" />
-                            </t>
-                        </t>
+                    <t t-if="!item.children.length">
+                        <DropdownItem><t t-out="item.name"/></DropdownItem>
                     </t>
-                </Dropdown>
-            `,
-        },
-    });
+
+                    <t t-else="" t-call="recursive.Template" name="item.name" items="item.children"/>
+                </t>
+            </t>
+        </Dropdown>`
+    );
+    await mountWithCleanup(Parent);
 
     // Each sub-dropdown needs a tick to open
     await animationFrame();
@@ -1141,22 +1226,22 @@ test("multi-level dropdown: keynav", async () => {
                 <Dropdown>
                     <button class="first" data-hotkey="1">First</button>
                     <t t-set-slot="content">
-                        <DropdownItem class="'first-first'" onSelected="() => onItemSelected('first-first')">O</DropdownItem>
+                        <DropdownItem class="'first-first'" onSelected="() => this.onItemSelected('first-first')">O</DropdownItem>
                         <Dropdown>
                             <button class="second">Second</button>
                             <t t-set-slot="content">
-                                <DropdownItem class="'second-first'" onSelected="() => onItemSelected('second-first')">O</DropdownItem>
+                                <DropdownItem class="'second-first'" onSelected="() => this.onItemSelected('second-first')">O</DropdownItem>
                                 <Dropdown>
                                     <button class="third">Third</button>
                                     <t t-set-slot="content">
-                                        <DropdownItem class="'third-first'" onSelected="() => onItemSelected('third-first')">O</DropdownItem>
-                                        <DropdownItem class="'third-last'" onSelected="() => onItemSelected('third-last')">O</DropdownItem>
+                                        <DropdownItem class="'third-first'" onSelected="() => this.onItemSelected('third-first')">O</DropdownItem>
+                                        <DropdownItem class="'third-last'" onSelected="() => this.onItemSelected('third-last')">O</DropdownItem>
                                     </t>
                                 </Dropdown>
-                                <DropdownItem class="'second-last'" onSelected="() => onItemSelected('second-last')">O</DropdownItem>
+                                <DropdownItem class="'second-last'" onSelected="() => this.onItemSelected('second-last')">O</DropdownItem>
                             </t>
                         </Dropdown>
-                        <DropdownItem class="'first-last'" onSelected="() => onItemSelected('first-last')">O</DropdownItem>
+                        <DropdownItem class="'first-last'" onSelected="() => this.onItemSelected('first-last')">O</DropdownItem>
                     </t>
                 </Dropdown>
             `;
@@ -1314,7 +1399,7 @@ test("multi-level dropdown: keynav when rtl direction", async () => {
 
 test.tags("desktop");
 test("multi-level dropdown: submenu keeps position when patched", async () => {
-    expect.assertions(6);
+    expect.assertions(9);
 
     patchWithCleanup(Dropdown.prototype, {
         setup() {
@@ -1323,19 +1408,22 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
                 onMounted(() => {
                     expect.step(`submenu mounted`);
                 });
-                let previousMenuRect;
-                onPatched(() => {
-                    expect.step(`submenu patched`);
-                    if (this.state.isOpen && this.menuRef.el) {
-                        const subMenuRect = this.menuRef.el.getBoundingClientRect();
-                        if (previousMenuRect) {
-                            expect(subMenuRect.top).toBe(previousMenuRect.top);
-                            expect(subMenuRect.left).toBe(previousMenuRect.left);
-                        }
-                        previousMenuRect = subMenuRect;
-                    }
-                });
             }
+        },
+    });
+
+    patchWithCleanup(DropdownPopover.prototype, {
+        setup() {
+            let previousMenuRect;
+            onPatched(() => {
+                expect.step(`submenu dropdown patched`);
+                const subMenuRect = queryRect(".o-dropdown--menu-submenu");
+                if (previousMenuRect) {
+                    expect(subMenuRect.top).toBe(previousMenuRect.top);
+                    expect(subMenuRect.left).toBe(previousMenuRect.left);
+                }
+                previousMenuRect = subMenuRect;
+            });
         },
     });
 
@@ -1350,14 +1438,14 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
                         <Dropdown>
                             <button class="two">two</button>
                             <t t-set-slot="content">
-                                <DropdownItem t-if="state.foo" class="three">three</DropdownItem>
+                                <DropdownItem t-if="this.state.foo" class="'three'">three</DropdownItem>
                             </t>
                         </Dropdown>
                     </t>
                 </Dropdown>
             `;
         setup() {
-            this.state = useState({ foo: false });
+            this.state = proxy({ foo: false });
             parentState = this.state;
         }
     }
@@ -1369,6 +1457,7 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
     await click(".one");
     await animationFrame();
     expect.verifySteps(["submenu mounted"]);
+    expect(".three").toHaveCount(0);
 
     // Open the submenu
     await click(".two");
@@ -1376,12 +1465,14 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
     // Change submenu content
     parentState.foo = true;
     await animationFrame();
-    expect.verifySteps(["submenu patched"]);
+    expect.verifySteps(["submenu dropdown patched"]);
+    expect(".three").toHaveCount(1);
 
     // Change submenu content
     parentState.foo = false;
     await animationFrame();
-    expect.verifySteps(["submenu patched"]);
+    expect.verifySteps(["submenu dropdown patched"]);
+    expect(".three").toHaveCount(0);
 });
 
 test.tags("desktop");

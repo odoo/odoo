@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
@@ -14,7 +14,7 @@ export class SubtaskCreate extends Component {
     };
     setup() {
         this.placeholder = _t("Write a task name");
-        this.state = useState({
+        this.state = proxy({
             inputSize: 1,
             name: this.props.name,
             isFieldInvalid: false,

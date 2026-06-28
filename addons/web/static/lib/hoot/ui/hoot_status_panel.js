@@ -1,19 +1,14 @@
 /** @odoo-module */
 
-import { Component, onWillRender, useEffect, useRef, useState, xml } from "@odoo/owl";
+import { Component, plugin, signal, types as t, useEffect, xml } from "@odoo/owl";
 import { getColorHex } from "../../hoot-dom/hoot_dom_utils";
 import { Test } from "../core/test";
 import { formatTime } from "../hoot_utils";
 import { getTitle, setTitle } from "../mock/window";
 import { onColorSchemeChange } from "./hoot_colors";
 import { HootTestPath } from "./hoot_test_path";
-
-/**
- * @typedef {import("../core/runner").Runner} Runner
- *
- * @typedef {{
- * }} HootStatusPanelProps
- */
+import { getConfigPlugin, getRunnerPlugin } from "./runner_plugin";
+import { UiPlugin } from "./ui_plugin";
 
 //-----------------------------------------------------------------------------
 // Global
@@ -33,17 +28,6 @@ const $now = performance.now.bind(performance);
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
-
-/**
- * @param {HTMLCanvasElement | null} canvas
- */
-function setupCanvas(canvas) {
-    if (!canvas) {
-        return;
-    }
-    [canvas.width, canvas.height] = [canvas.clientWidth, canvas.clientHeight];
-    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-}
 
 /**
  * @param {number} min
@@ -108,114 +92,109 @@ const TITLE_PREFIX = {
 // Exports
 //-----------------------------------------------------------------------------
 
-/** @extends {Component<HootStatusPanelProps, import("../hoot").Environment>} */
 export class HootStatusPanel extends Component {
     static components = { HootTestPath };
-
-    static props = {};
-
     static template = xml`
         <div
             class="${HootStatusPanel.name} flex items-center justify-between gap-3 px-3 py-1 min-h-10 bg-gray-300 dark:bg-gray-700"
-            t-att-class="state.className"
         >
             <div class="flex items-center gap-2 overflow-hidden">
-                <t t-if="runnerState.status === 'ready'">
+                <t t-if="this.runner.status() === 'ready'">
                     Ready
                 </t>
-                <t t-elif="runnerState.status === 'running'">
-                    <i t-if="state.debug" class="text-cyan fa fa-bug" title="Debugging" />
+                <t t-elif="this.runner.status() === 'running'">
+                    <i t-if="this.isDebugging()" class="text-cyan fa fa-bug" title="Debugging" />
                     <div
                         t-else=""
                         class="animate-spin shrink-0 grow-0 w-4 h-4 border-2 border-emerald border-t-transparent rounded-full"
                         role="status"
                         title="Running"
                     />
-                    <strong class="text-primary" t-out="env.runner.totalTime" />
+                    <strong class="text-primary" t-out="this.runner.totalTime" />
                 </t>
                 <t t-else="">
                     <span class="hidden md:block">
-                        <strong class="text-primary" t-out="runnerReporting.tests" />
+                        <strong class="text-primary" t-out="this.runner.reporting.tests" />
                         tests completed
-                        (total time: <strong class="text-primary" t-out="env.runner.totalTime" />
-                        <t t-if="env.runner.aborted">, run aborted by user</t>)
+                        (total time: <strong class="text-primary" t-out="this.runner.totalTime" />
+                        <t t-if="this.runner.aborted">, run aborted by user</t>)
                     </span>
                     <span class="md:hidden flex items-center gap-1">
                         <i class="fa fa-clock-o" />
-                        <strong class="text-primary" t-out="env.runner.totalTime" />
+                        <strong class="text-primary" t-out="this.runner.totalTime" />
                     </span>
                 </t>
-                <t t-if="runnerState.currentTest">
-                    <HootTestPath test="runnerState.currentTest" />
+                <t t-if="this.runner.currentTest()">
+                    <HootTestPath test="this.runner.currentTest()" />
                 </t>
-                <t t-if="state.timer">
-                    <span class="text-cyan" t-out="formatTime(state.timer, 's')" />
+                <t t-if="this.timer()">
+                    <span class="text-cyan" t-out="this.formatTime(this.timer(), 's')" />
                 </t>
             </div>
             <div class="flex items-center gap-1">
-                <t t-if="runnerReporting.passed">
-                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'passed' ? 'emerald' : 'gray'" />
+                <t t-if="this.runner.reporting.passed">
+                    <t t-set="color" t-value="!this.ui.statusFilter() or this.ui.statusFilter() === 'passed' ? 'emerald' : 'gray'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
-                        t-on-click.stop="() => this.filterResults('passed')"
-                        t-attf-title="Show {{ runnerReporting.passed }} passed tests"
+                        t-on-click.stop="() => this.ui.statusFilter.set('passed')"
+                        t-attf-title="Show {{ this.runner.reporting.passed }} passed tests"
                     >
                         <i class="fa fa-check-circle" />
-                        <t t-out="runnerReporting.passed" />
+                        <t t-out="this.runner.reporting.passed" />
                     </button>
                 </t>
-                <t t-if="runnerReporting.failed">
-                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'failed' ? 'rose' : 'gray'" />
+                <t t-if="this.runner.reporting.failed">
+                    <t t-set="color" t-value="!this.ui.statusFilter() or this.ui.statusFilter() === 'failed' ? 'rose' : 'gray'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
-                        t-on-click.stop="() => this.filterResults('failed')"
-                        t-attf-title="Show {{ runnerReporting.failed }} failed tests"
+                        t-on-click.stop="() => this.ui.statusFilter.set('failed')"
+                        t-attf-title="Show {{ this.runner.reporting.failed }} failed tests"
                     >
                         <i class="fa fa-times-circle" />
-                        <t t-out="runnerReporting.failed" />
+                        <t t-out="this.runner.reporting.failed" />
                     </button>
                 </t>
-                <t t-if="runnerReporting.skipped">
-                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'skipped' ? 'cyan' : 'gray'" />
+                <t t-if="this.runner.reporting.skipped">
+                    <t t-set="color" t-value="!this.ui.statusFilter() or this.ui.statusFilter() === 'skipped' ? 'cyan' : 'gray'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
-                        t-on-click.stop="() => this.filterResults('skipped')"
-                        t-attf-title="Show {{ runnerReporting.skipped }} skipped tests"
+                        t-on-click.stop="() => this.ui.statusFilter.set('skipped')"
+                        t-attf-title="Show {{ this.runner.reporting.skipped }} skipped tests"
                     >
                         <i class="fa fa-pause-circle" />
-                        <t t-out="runnerReporting.skipped" />
+                        <t t-out="this.runner.reporting.skipped" />
                     </button>
                 </t>
-                <t t-if="runnerReporting.todo">
-                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'todo' ? 'purple' : 'gray'" />
+                <t t-if="this.runner.reporting.todo">
+                    <t t-set="color" t-value="!this.ui.statusFilter() or this.ui.statusFilter() === 'todo' ? 'purple' : 'gray'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
-                        t-on-click.stop="() => this.filterResults('todo')"
-                        t-attf-title="Show {{ runnerReporting.todo }} tests to do"
+                        t-on-click.stop="() => this.ui.statusFilter.set('todo')"
+                        t-attf-title="Show {{ this.runner.reporting.todo }} tests to do"
                     >
                         <i class="fa fa-exclamation-circle" />
-                        <t t-out="runnerReporting.todo" />
+                        <t t-out="this.runner.reporting.todo" />
                     </button>
                 </t>
-                <t t-if="uiState.totalResults gt uiState.resultsPerPage">
-                    <t t-set="lastPage" t-value="getLastPage()" />
+                <t t-if="this.ui.totalResults() gt this.ui.resultsPerPage()">
+                    <t t-set="lastPage" t-value="this.getLastPage()" />
                     <div class="flex gap-1 animate-slide-left">
                         <button
                             class="px-1 transition-color"
                             title="Previous page"
-                            t-att-disabled="uiState.resultsPage === 0"
-                            t-on-click.stop="previousPage"
+                            t-att-disabled="this.ui.resultsPage() === 0"
+                            t-on-click.stop="this.previousPage"
                         >
                             <i class="fa fa-chevron-left" />
                         </button>
-                        <strong class="text-primary" t-out="uiState.resultsPage + 1" />
+                        <strong class="text-primary" t-out="this.ui.resultsPage() + 1" />
                         <span class="text-gray">/</span>
                         <t t-out="lastPage + 1" />
                         <button
                             class="px-1 transition-color"
                             title="Next page"
-                            t-att-disabled="uiState.resultsPage === lastPage"
-                            t-on-click.stop="nextPage"
+                            t-att-disabled="this.ui.resultsPage() === lastPage"
+                            t-on-click.stop="this.nextPage"
                         >
                             <i class="fa fa-chevron-right" />
                         </button>
@@ -223,92 +202,82 @@ export class HootStatusPanel extends Component {
                 </t>
             </div>
         </div>
-        <canvas t-ref="progress-canvas" class="flex h-1 w-full" />
+        <canvas t-ref="this.canvasRef" class="flex h-1 w-full" />
     `;
 
-    currentTestStart;
+    // Props & plugins
+    config = getConfigPlugin();
+    runner = getRunnerPlugin();
+    ui = plugin(UiPlugin);
+
+    // Reactive values
+    canvasRef = signal(null, { type: t.ref(HTMLCanvasElement) });
+    timer = signal(0, { type: t.number() });
+    progressBarIndex = signal(0, { type: t.number() });
+    isDebugging = signal(false, { type: t.boolean() });
+
+    // Other members
+    currentTestStart = 0;
     formatTime = formatTime;
     intervalId = 0;
 
     setup() {
-        const { runner, ui } = this.env;
-        this.canvasRef = useRef("progress-canvas");
-        this.runnerReporting = useState(runner.reporting);
-        this.runnerState = useState(runner.state);
-        this.state = useState({
-            className: "",
-            timer: null,
-        });
-        this.uiState = useState(ui);
-        this.progressBarIndex = 0;
-
-        runner.beforeAll(this.globalSetup.bind(this));
-        runner.afterAll(this.globalCleanup.bind(this));
-        if (!runner.headless) {
-            runner.beforeEach(this.startTimer.bind(this));
-            runner.afterPostTest(this.stopTimer.bind(this));
+        this.runner.beforeAll(this.globalSetup.bind(this));
+        this.runner.afterAll(this.globalCleanup.bind(this));
+        if (!this.runner.headless) {
+            this.runner.beforeEach(this.startTimer.bind(this));
+            this.runner.afterPostTest(this.stopTimer.bind(this));
         }
 
-        useEffect(setupCanvas, () => [this.canvasRef.el]);
+        useEffect(() => {
+            const canvas = this.canvasRef();
+            if (!canvas) {
+                return;
+            }
+            [canvas.width, canvas.height] = [canvas.clientWidth, canvas.clientHeight];
+            canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+        });
 
         onColorSchemeChange(this.onColorSchemeChange.bind(this));
-        onWillRender(this.updateProgressBar.bind(this));
-    }
 
-    /**
-     * @param {typeof this.uiState.statusFilter} status
-     */
-    filterResults(status) {
-        this.uiState.resultsPage = 0;
-        if (this.uiState.statusFilter === status) {
-            this.uiState.statusFilter = null;
-        } else {
-            this.uiState.statusFilter = status;
-        }
+        useEffect(this.updateProgressBar.bind(this));
     }
 
     getLastPage() {
-        const { resultsPerPage, totalResults } = this.uiState;
-        return $max($floor((totalResults - 1) / resultsPerPage), 0);
+        const { resultsPerPage, totalResults } = this.ui;
+        return $max($floor((totalResults() - 1) / resultsPerPage()), 0);
     }
 
-    /**
-     * @param {Runner} runner
-     */
-    globalCleanup(runner) {
-        if (!runner.headless) {
+    globalCleanup() {
+        if (!this.runner.headless) {
             this.stopTimer();
         }
-        updateTitle(this.runnerReporting.failed > 0);
+        updateTitle(this.runner.reporting.failed > 0);
 
-        if (runner.config.fun) {
-            for (let i = 0; i < this.runnerReporting.failed; i++) {
+        if (this.config.fun()) {
+            for (let i = 0; i < this.runner.reporting.failed; i++) {
                 spawnIncentive("😭");
             }
-            for (let i = 0; i < this.runnerReporting.passed; i++) {
+            for (let i = 0; i < this.runner.reporting.passed; i++) {
                 spawnIncentive("🦉");
             }
         }
     }
 
-    /**
-     * @param {Runner} runner
-     */
-    globalSetup(runner) {
-        this.state.debug = runner.debug;
+    globalSetup() {
+        this.isDebugging.set(this.runner.debug);
     }
 
     nextPage() {
-        this.uiState.resultsPage = $min(this.uiState.resultsPage + 1, this.getLastPage());
+        this.ui.resultsPage.set($min(this.ui.resultsPage() + 1, this.getLastPage()));
     }
 
     onColorSchemeChange() {
-        this.progressBarIndex = 0;
-        this.updateProgressBar();
+        this.progressBarIndex.set(0);
     }
 
     previousPage() {
-        this.uiState.resultsPage = $max(this.uiState.resultsPage - 1, 0);
+        this.ui.resultsPage.set($max(this.ui.resultsPage() - 1, 0));
     }
 
     startTimer() {
@@ -316,8 +285,9 @@ export class HootStatusPanel extends Component {
 
         this.currentTestStart = $now();
         this.intervalId = setInterval(() => {
-            this.state.timer =
-                $floor(($now() - this.currentTestStart) / TIMER_PRECISION) * TIMER_PRECISION;
+            this.timer.set(
+                $floor(($now() - this.currentTestStart) / TIMER_PRECISION) * TIMER_PRECISION
+            );
         }, TIMER_PRECISION);
     }
 
@@ -327,26 +297,25 @@ export class HootStatusPanel extends Component {
             this.intervalId = 0;
         }
 
-        this.state.timer = 0;
+        this.timer.set(0);
     }
 
     updateProgressBar() {
-        const canvas = this.canvasRef.el;
+        const canvas = this.canvasRef();
         if (!canvas) {
             return;
         }
 
         const ctx = canvas.getContext("2d");
         const { width, height } = canvas;
-        const { done, tests } = this.runnerState;
-        const doneList = [...done];
-        const cellSize = width / tests.length;
+        const doneList = [...this.runner.finishedTests()];
+        const cellSize = width / this.runner.filteredTests().length;
         const minSize = $ceil(cellSize);
 
-        while (this.progressBarIndex < done.size) {
-            const test = doneList[this.progressBarIndex];
-            const x = $floor(this.progressBarIndex * cellSize);
-            switch (test.status) {
+        while (this.progressBarIndex() < doneList.length) {
+            const test = doneList[this.progressBarIndex()];
+            const x = $floor(this.progressBarIndex() * cellSize);
+            switch (test.status()) {
                 case Test.ABORTED:
                     ctx.fillStyle = getColorHex("amber");
                     break;
@@ -363,7 +332,7 @@ export class HootStatusPanel extends Component {
                     break;
             }
             ctx.fillRect(x, 0, minSize, height);
-            this.progressBarIndex++;
+            this.progressBarIndex.set(this.progressBarIndex() + 1);
         }
     }
 }

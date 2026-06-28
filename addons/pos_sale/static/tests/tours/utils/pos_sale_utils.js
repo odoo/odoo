@@ -4,7 +4,7 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 
 export function selectNthOrder(n) {
     return [
-        ...ProductScreen.clickControlButton("Quotation/Order"),
+        ...ProductScreen.clickControlButton("Quotation / Order"),
         {
             content: `select nth order`,
             trigger: `.modal:not(.o_inactive_modal) table.o_list_table tbody tr.o_data_row:nth-child(${n}) td`,
@@ -15,7 +15,7 @@ export function selectNthOrder(n) {
 
 export function settleSaleOrderByPrice(price) {
     return [
-        ...ProductScreen.clickControlButton("Quotation/Order"),
+        ...ProductScreen.clickControlButton("Quotation / Order"),
         {
             content: `select sale order with price ${price}`,
             trigger: `.modal:not(.o_inactive_modal) table.o_list_table tbody tr.o_data_row td:contains('${price}')`,
@@ -75,7 +75,7 @@ export function downPaymentFirstOrder(amount) {
 
 export function checkOrdersListEmpty() {
     return [
-        ...ProductScreen.clickControlButton("Quotation/Order"),
+        ...ProductScreen.clickControlButton("Quotation / Order"),
         {
             content: "Check that the orders list is empty",
             trigger: "p:contains(No record found)",
@@ -83,18 +83,9 @@ export function checkOrdersListEmpty() {
     ];
 }
 
-export function selectedOrderLinesHasLots(productName, lots) {
-    const getSerialStep = (index, serialNumber) => ({
-        content: `check lot${index} is linked`,
-        trigger: `.info-list li:contains(${serialNumber})`,
-    });
-    const lotSteps = lots.reduce((acc, serial, i) => acc.concat(getSerialStep(i, serial)), []);
-    return [...ProductScreen.selectedOrderlineHas(productName), ...lotSteps];
-}
-
 export function checkOrdersListNotEmpty() {
     return [
-        ...ProductScreen.clickControlButton("Quotation/Order"),
+        ...ProductScreen.clickControlButton("Quotation / Order"),
         {
             content: "Check that the orders list is not empty",
             trigger: ".o_data_row",

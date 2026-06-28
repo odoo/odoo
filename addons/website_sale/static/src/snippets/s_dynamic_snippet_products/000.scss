@@ -42,6 +42,11 @@
             }
         }
     }
+
+    // Prevent scroll jump when snippet is re-rendered outside of viewport
+    .oe_product_cart {
+        content-visibility: visible;
+    }
 }
 .s_dynamic_snippet_products:not(.o_arrows_bottom) .container-fluid .s_dynamic_snippet_content {
     @include media-breakpoint-up(md) {

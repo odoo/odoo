@@ -18,6 +18,7 @@ class TestUi(HttpCaseGamification):
             'email': 'mitchell.admin@example.com',
         })
         cls.forum_id = post.forum_id.id
+        cls.env.ref('website_forum.forum_help').privacy = 'public'
 
     def test_01_admin_forum_tour(self):
         self.start_tour(f"/forum/{self.forum_id}", 'question_tour', login="admin")
@@ -29,3 +30,11 @@ class TestUi(HttpCaseGamification):
         self.start_tour(f"/forum/help-{self.forum_id}", 'forum_question', login="demo")
         tags = self.env['forum.tag'].search([('name', 'in', ['Tag', 'tag', 'test tag'])])
         self.assertEqual(len(tags), 3)
+
+    def test_03_admin_forum_cover_dropzone(self):
+        forum_url = f"/forum/help-{self.forum_id}"
+        self.start_tour(
+            self.env['website'].get_client_action_url(forum_url, True),
+            'forum_cover_dropzone',
+            login='admin',
+        )

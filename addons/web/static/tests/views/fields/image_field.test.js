@@ -9,7 +9,7 @@ import {
     setInputFiles,
     waitFor,
 } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers, mockDate } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickSave,
     defineModels,
@@ -23,8 +23,6 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { getOrigin } from "@web/core/utils/urls";
-
-const { DateTime } = luxon;
 
 const MY_IMAGE =
     "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -132,7 +130,7 @@ test("ImageField is correctly rendered", async () => {
     expect(".o_field_image .o_clear_file_button").toHaveCount(1, {
         message: "the image can be deleted",
     });
-    expect("input.o_input_file").toHaveAttribute("accept", "image/*", {
+    expect("input.o_input_file").toHaveAttribute("accept", "image/*,dummy/allowAndroidCamera", {
         message:
             'the default value for the attribute "accept" on the "image" widget must be "image/*"',
     });
@@ -172,8 +170,6 @@ test("ImageField on a many2one", async () => {
     Partner._fields.parent_id = fields.Many2one({ relation: "partner" });
     Partner._records[1].parent_id = 1;
 
-    mockDate("2017-02-06 10:00:00");
-
     await mountView({
         type: "form",
         resModel: "partner",
@@ -187,7 +183,7 @@ test("ImageField on a many2one", async () => {
     expect(".o_field_widget[name=parent_id] img").toHaveCount(1);
     expect('div[name="parent_id"] img').toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/partner/1/document?unique=1486375200000`
+        `${getOrigin()}/web/image/partner/1/document`
     );
     expect(".o_field_widget[name='parent_id'] img").toHaveAttribute("alt", "first record");
 });
@@ -198,8 +194,6 @@ test("url should not use the record last updated date when the field is related"
     Partner._records[1].parent_id = 1;
     Partner._records[0].write_date = "2017-02-04 10:00:00";
     Partner._records[0].document = "3 kb";
-
-    mockDate("2017-02-06 10:00:00");
 
     await mountView({
         type: "form",
@@ -212,18 +206,19 @@ test("url should not use the record last updated date when the field is related"
             </form>`,
     });
 
-    const initialUnique = Number(getUnique(queryFirst('div[name="related"] img')));
-    expect(DateTime.fromMillis(initialUnique).hasSame(DateTime.fromISO("2017-02-06"), "days")).toBe(
-        true
+    expect('div[name="related"] img').toHaveAttribute(
+        "data-src",
+        `${getOrigin()}/web/image/partner/2/related`
     );
 
     await click(".o_field_widget[name='foo'] input");
     await edit("grrr");
     await animationFrame();
 
-    expect(Number(getUnique(queryFirst('div[name="related"] img')))).toBe(initialUnique);
-
-    mockDate("2017-02-09 10:00:00");
+    expect('div[name="related"] img').toHaveAttribute(
+        "data-src",
+        `${getOrigin()}/web/image/partner/2/related`
+    );
 
     await click("input[type=file]", { visible: false });
     await setFiles(
@@ -242,8 +237,10 @@ test("url should not use the record last updated date when the field is related"
 
     await clickSave();
 
-    const unique = Number(getUnique(queryFirst('div[name="related"] img')));
-    expect(DateTime.fromMillis(unique).hasSame(DateTime.fromISO("2017-02-09"), "days")).toBe(true);
+    expect('div[name="related"] img').toHaveAttribute(
+        "data-src",
+        `${getOrigin()}/web/image/partner/2/related`
+    );
 });
 
 test("url should use the record last updated date when the field is related on the same model", async () => {
@@ -478,7 +475,7 @@ test("ImageField: option accepted_file_extensions", async () => {
         `,
     });
     // The view must be in edit mode
-    expect("input.o_input_file").toHaveAttribute("accept", ".png,.jpeg", {
+    expect("input.o_input_file").toHaveAttribute("accept", ".png,.jpeg,dummy/allowAndroidCamera", {
         message: "the input should have the correct ``accept`` attribute",
     });
 });
@@ -838,20 +835,17 @@ test("unique in url does not change on record change if reload option is set to 
 });
 
 test("convert image to webp", async () => {
-    onRpc("ir.attachment", "create_unique", ({ args }) => {
-        // This RPC call is done two times - once for storing webp and once for storing jpeg
-        // This handles first RPC call to store webp
-        if (!args[0][0].res_id) {
-            // Here we check the image data we pass and generated data.
-            // Also we check the file type
-            expect(args[0][0].raw).not.toBe(imageData);
-            expect(args[0][0].mimetype).toBe("image/webp");
-            return [1];
+    onRpc("ir.attachment", "web_create_image_variants", ({ args }) => {
+        const variants = args[0];
+        const attachments = variants.flatMap((variant) => variant.images);
+        const webpAttachments = attachments.filter((att) => att.mimetype === "image/webp");
+        const jpegAttachments = attachments.filter((att) => att.mimetype === "image/jpeg");
+        expect(webpAttachments.length).toBeGreaterThan(0);
+        expect(jpegAttachments.length).toBeGreaterThan(0);
+        for (const att of attachments) {
+            expect(att.raw).not.toBe(imageData);
         }
-        // This handles second RPC call to store jpeg
-        expect(args[0][0].raw).not.toBe(imageData);
-        expect(args[0][0].mimetype).toBe("image/jpeg");
-        return true;
+        return attachments.map((_, i) => i + 1);
     });
 
     const imageData = Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)));

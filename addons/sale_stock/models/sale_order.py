@@ -3,10 +3,12 @@
 import json
 import logging
 
+from datetime import timedelta
+
 from odoo import api, fields, models, _
 from odoo.fields import Command
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+
 
 _logger = logging.getLogger(__name__)
 
@@ -148,18 +150,11 @@ class SaleOrder(models.Model):
             for order in self:
                 pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line') if not order_line.is_expense}
 
-        if values.get('partner_shipping_id') and self.env.context.get('update_delivery_shipping_partner'):
-            for order in self:
-                order.picking_ids.partner_id = values.get('partner_shipping_id')
         elif values.get('partner_shipping_id'):
             new_partner = self.env['res.partner'].browse(values.get('partner_shipping_id'))
             for record in self:
                 picking = record.mapped('picking_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
-                message = _("""The delivery address has been changed on the Sales Order<br/>
-                        From <strong>"%(old_address)s"</strong> to <strong>"%(new_address)s"</strong>,
-                        You should probably update the partner on this document.""",
-                            old_address=record.partner_shipping_id.display_name, new_address=new_partner.display_name)
-                picking.activity_schedule('mail.mail_activity_data_warning', note=message, user_id=self.env.user.id)
+                picking.partner_id = new_partner
 
         if 'commitment_date' in values:
             # protagate commitment_date as the deadline of the related stock move.
@@ -177,7 +172,7 @@ class SaleOrder(models.Model):
                 to_log = {}
                 order.order_line.fetch(['product_uom_id', 'product_uom_qty', 'display_type', 'is_downpayment'])
                 for order_line in order.order_line:
-                    if order_line.display_type or order_line.is_downpayment:
+                    if not order_line._is_product_line():
                         continue
                     if order_line.product_uom_id.compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0)) < 0:
                         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
@@ -200,10 +195,6 @@ class SaleOrder(models.Model):
                 ]
             })
             order.show_json_popover = bool(late_stock_picking)
-
-    @api.depends('order_line.qty_delivered')
-    def _compute_show_deliver_button(self):
-        self.show_deliver_button = False  # Revert to Delivery smart button for stock module
 
     def _action_confirm(self):
         self.order_line._action_launch_stock_rule()
@@ -250,7 +241,7 @@ class SaleOrder(models.Model):
             if sale_order.state == 'sale' and sale_order.order_line:
                 sale_order_lines_quantities = {order_line: (order_line.product_uom_qty, 0) for order_line in sale_order.order_line}
                 documents = self.env['stock.picking'].with_context(include_draft_documents=True)._log_activity_get_documents(sale_order_lines_quantities, 'move_ids', 'UP')
-        self.picking_ids.filtered(lambda p: p.state != 'done').action_cancel()
+        self.picking_ids.filtered(lambda p: p.state != 'done').with_context(skip_cancel_activity=True).action_cancel()
         if documents:
             filtered_documents = {}
             for (parent, responsible), rendering_context in documents.items():
@@ -260,6 +251,18 @@ class SaleOrder(models.Model):
                 filtered_documents[(parent, responsible)] = rendering_context
             self._log_decrease_ordered_quantity(filtered_documents, cancel=True)
         return super()._action_cancel()
+
+    def _is_portal_return_allowed(self):
+        """Return whether we should allow return on sale order portal or not."""
+        self.ensure_one()
+        return (
+            self.company_id.allow_spontaneous_returns
+            and self.state == "sale"
+            and self.effective_date
+            and self.effective_date >= (
+                fields.Datetime.now() - timedelta(days=self.company_id.return_validity_days)
+            )
+        )
 
     def _get_action_view_picking(self, pickings):
         '''
@@ -292,7 +295,7 @@ class SaleOrder(models.Model):
 
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
-        invoice_vals['delivery_date'] = self.effective_date
+        invoice_vals['delivery_date'] = self.effective_date and fields.Datetime.context_timestamp(self, self.effective_date)
         return invoice_vals
 
     def _log_decrease_ordered_quantity(self, documents, cancel=False):

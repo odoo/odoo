@@ -2,14 +2,18 @@ import { useChildSubEnv } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
-import { getVideoUrl } from "@html_editor/utils/url";
 import { CustomMediaDialog } from "./custom_media_dialog";
+import { getDataURLFromFile } from "@web/core/utils/urls";
+import { saveMultipleAttachments } from "@web/core/utils/image_library";
 
 export class X2ManyMediaViewer extends X2ManyField {
     static template = "html_editor.X2ManyMediaViewer";
     static props = {
         ...X2ManyField.props,
         convertToWebp: { type: Boolean, optional: true },
+        forceCreate: { type: Boolean, optional: true },
+        setAttachmentId: { type: Boolean, optional: true },
+        onlyImage: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -24,133 +28,48 @@ export class X2ManyMediaViewer extends X2ManyField {
     }
 
     addMedia() {
-        this.dialogs.add(CustomMediaDialog, {
-            save: (el) => {}, // Simple rebound to fake its execution
-            multiImages: true,
-            visibleTabs: ["IMAGES", "VIDEOS"],
-            imageSave: this.onImageSave.bind(this),
-            videoSave: this.onVideoSave.bind(this),
-        });
+        this.dialogs.add(CustomMediaDialog, this.mediaDialogProps);
     }
 
-    onVideoSave(videoInfo) {
-        const url = getVideoUrl(videoInfo[0].platform, videoInfo[0].videoId, videoInfo[0].params);
-        const videoList = this.props.record.data[this.props.name];
-        videoList.addNewRecord({ position: "bottom" }).then((record) => {
-            record.update({ name: videoInfo[0].platform + " - [Video]", video_url: url.href });
+    get mediaDialogProps() {
+        return {
+            save: (el) => {}, // Simple rebound to fake its execution
+            multiImages: true,
+            visibleTabs: this.props.onlyImage ? ["IMAGES"] : ["IMAGES", "VIDEOS"],
+            imageSave: this.onImageSave.bind(this),
+            videoSave: this.onVideoSave.bind(this),
+            document: window.document,
+        };
+    }
+
+    async onVideoSave(videosInfo) {
+        const videoInfo = videosInfo[0];
+        let thumbnailData = null;
+        if (videoInfo?.thumbnailUrl) {
+            const fetchResult = await fetch(videoInfo.thumbnailUrl);
+            const blob = await fetchResult.blob();
+            thumbnailData = await getDataURLFromFile(blob);
+        }
+
+        const productImageRecords = this.props.record.data[this.props.name];
+        productImageRecords.addNewRecord({ position: "bottom" }).then(async (record) => {
+            record.update({
+                name: videoInfo.platform + " - [Video]",
+                video_url: videoInfo.embedUrl,
+                image_1920: thumbnailData ? thumbnailData.split(",")[1] : null,
+            });
         });
     }
 
     async onImageSave(attachments) {
-        const attachmentIds = attachments.map((attachment) => attachment.id);
-        const attachmentRecords = await this.orm.searchRead(
-            "ir.attachment",
-            [["id", "in", attachmentIds]],
-            ["id", "raw", "name", "mimetype"],
-            {}
-        );
-        for (const attachment of attachmentRecords) {
-            const imageList = this.props.record.data[this.props.name];
-            if (!attachment.raw) {
-                // URL type attachments are mostly demo records which don't have any ir.attachment raw
-                // TODO: make it work with URL type attachments
-                return this.notification.add(
-                    `Cannot add URL type attachment "${attachment.name}". Please try to reupload this image.`,
-                    {
-                        type: "warning",
-                    }
-                );
-            }
-            if (
-                this.props.convertToWebp &&
-                !["image/gif", "image/svg+xml"].includes(attachment.mimetype)
-            ) {
-                // This method is widely adapted from onFileUploaded in ImageField.
-                // Upon change, make sure to verify whether the same change needs
-                // to be applied on both sides.
-                // Generate alternate sizes and format for reports.
-                const image = document.createElement("img");
-                image.src = `data:${attachment.mimetype};base64,${attachment.raw}`;
-                await new Promise((resolve) => image.addEventListener("load", resolve));
-
-                const originalSize = Math.max(image.width, image.height);
-                const smallerSizes = [1024, 512, 256, 128].filter((size) => size < originalSize);
-                let referenceId = undefined;
-
-                for (const size of [originalSize, ...smallerSizes]) {
-                    const ratio = size / originalSize;
-                    const canvas = document.createElement("canvas");
-                    canvas.width = image.width * ratio;
-                    canvas.height = image.height * ratio;
-                    const ctx = canvas.getContext("2d");
-                    ctx.drawImage(
-                        image,
-                        0,
-                        0,
-                        image.width,
-                        image.height,
-                        0,
-                        0,
-                        canvas.width,
-                        canvas.height
-                    );
-
-                    // WebP format
-                    const webpData = canvas.toDataURL("image/webp").split(",")[1];
-                    const [resizedId] = await this.orm.call("ir.attachment", "create_unique", [
-                        [
-                            {
-                                name: attachment.name.replace(/\.[^/.]+$/, ".webp"),
-                                description: size === originalSize ? "" : `resize: ${size}`,
-                                raw: webpData,
-                                res_id: referenceId,
-                                res_model: "ir.attachment",
-                                mimetype: "image/webp",
-                            },
-                        ],
-                    ]);
-
-                    referenceId = referenceId || resizedId;
-
-                    // JPEG format for compatibility
-                    const jpegData = canvas.toDataURL("image/jpeg").split(",")[1];
-                    await this.orm.call("ir.attachment", "create_unique", [
-                        [
-                            {
-                                name: attachment.name.replace(/\.[^/.]+$/, ".jpg"),
-                                description: `resize: ${size} - format: jpeg`,
-                                raw: jpegData,
-                                res_id: resizedId,
-                                res_model: "ir.attachment",
-                                mimetype: "image/jpeg",
-                            },
-                        ],
-                    ]);
-                }
-                const canvas = document.createElement("canvas");
-                canvas.width = image.width;
-                canvas.height = image.height;
-                const ctx = canvas.getContext("2d");
-                ctx.drawImage(image, 0, 0, image.width, image.height);
-
-                const webpData = canvas.toDataURL("image/webp").split(",")[1];
-                attachment.raw = webpData;
-                attachment.mimetype = "image/webp";
-                attachment.name = attachment.name.replace(/\.[^/.]+$/, ".webp");
-            }
-
-            imageList.addNewRecord({ position: "bottom" }).then((record) => {
-                const activeFields = imageList.activeFields;
-                const updateData = {};
-                for (const field in activeFields) {
-                    if (attachment.raw && this.supportedFields.includes(field)) {
-                        updateData[field] = attachment.raw;
-                        updateData["name"] = attachment.name;
-                    }
-                }
-                record.update(updateData);
-            });
-        }
+        await saveMultipleAttachments(this.env, {
+            attachments,
+            targetRecord: this.props.record,
+            targetFieldName: this.props.name,
+            convertToWebp: this.props.convertToWebp,
+            forceCreate: this.props.forceCreate,
+            setAttachmentId: this.props.setAttachmentId,
+        });
     }
 
     async onAdd({ context, editable } = {}) {
@@ -161,6 +80,12 @@ export class X2ManyMediaViewer extends X2ManyField {
 export const x2ManyMediaViewer = {
     ...x2ManyField,
     component: X2ManyMediaViewer,
+    relatedFields: ({ options }) => {
+        if (options.set_attachment_id) {
+            return [{ name: "name" }, { name: "attachment_id" }];
+        }
+        return [{ name: "name" }, { name: "image_1920" }, { name: "video_url" }];
+    },
     extractProps: (
         { attrs, relatedFields, viewMode, views, widget, options, string },
         dynamicInfo
@@ -172,6 +97,9 @@ export const x2ManyMediaViewer = {
         return {
             ...x2ManyFieldProps,
             convertToWebp: options.convert_to_webp,
+            forceCreate: options.force_create,
+            setAttachmentId: options.set_attachment_id,
+            onlyImage: options.only_image,
         };
     },
 };

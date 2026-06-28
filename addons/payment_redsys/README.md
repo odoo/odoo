@@ -11,15 +11,17 @@ submission provided by the `payment` module.
 
 - Payment with redirection flow
 - Webhook notifications
+- [Tokenization](https://pagosonline.redsys.es/desarrolladores-inicio/documentacion-funcionalidades-avanzadas/tokenizacion/)
 
 ## Not implemented features
 
-- [Tokenization](https://pagosonline.redsys.es/desarrolladores-inicio/documentacion-funcionalidades-avanzadas/tokenizacion/)
 - [Manual capture](https://pagosonline.redsys.es/desarrolladores-inicio/documentacion-operativa/preautorizaciones-y-confirmaciones/)
 - [Refunds](https://pagosonline.redsys.es/desarrolladores-inicio/documentacion-operativa/devolver-o-anular-un-pago/)
 
 ## Module history
 
+- `saas-19.3`
+  - Support for tokenization is added. odoo/odoo#253606.
 - `19.0`
   - Integration with the Redirection API. odoo/odoo#205135.
 
@@ -30,4 +32,5 @@ submission provided by the `payment` module.
 ### VISA
 
 **Card Number**: `4548810000000003`
+**Expiry Date**: any future date
 **CVV**: `123`

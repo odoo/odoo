@@ -2,7 +2,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { loadLanguages, _t } from "@web/core/l10n/translation";
-import { jsToPyLocale } from "@web/core/l10n/utils";
+import { jsToPyLocale, localeCompare } from "@web/core/l10n/utils";
 
 import { Component, onWillStart } from "@odoo/owl";
 
@@ -58,7 +58,7 @@ export class TranslationDialog extends Component {
                 }
                 return termInfo;
             });
-            this.terms.sort((a, b) => a.langName.localeCompare(b.langName));
+            this.terms.sort((a, b) => localeCompare(a.langName, b.langName));
         });
     }
 

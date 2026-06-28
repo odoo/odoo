@@ -1,3 +1,4 @@
+from ast import literal_eval
 import base64
 import json
 
@@ -171,10 +172,11 @@ class TestMessageController(MailControllerThreadCommon):
         self.authenticate(self.user_admin.login, self.user_admin.login)
         partner = self.env["res.partner"].create({"name": "partner"})
 
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'Access Partner',
             'model_id': self.env.ref('base.model_res_partner').id,
-            'domain_force': f"[('id', '!=', {partner.id})]"
+            'operation': 'crud',
+            'domain': f"[('id', '!=', {partner.id})]",
         })
         self.authenticate(self.user_employee.login, self.user_employee.login)
 
@@ -188,3 +190,30 @@ class TestMessageController(MailControllerThreadCommon):
             files={"ufile": base64.b64decode(b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=")},
         )
         self.assertEqual(response.status_code, 404)
+
+    def test_mail_message_post(self):
+        """Test sending a mail with the controller using "Cc"."""
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        test_record = self.env["res.partner"].create({"name": "partner"})
+        partner_to1, partner_cc1, partner_to2, partner_cc2 = self.env['res.partner'].create([
+            {'name': f'partner{name}', 'email': f'test_mail_message_post_{name}@ex.com'}
+            for name in ('to1', 'cc1', 'to2', 'cc2')])
+        partner_to = partner_to1 | partner_to2
+        partner_cc = partner_cc1 | partner_cc2
+
+        data = self.make_jsonrpc_request("/mail/message/post", {
+            "thread_model": "res.partner",
+            "thread_id": test_record.id,
+            "post_data": {
+                "body": "Test message",
+                "partner_ids": partner_to.ids,
+                "partner_cc_ids": partner_cc.ids,
+            }
+        })
+        message = next(filter(lambda m: m["id"] == data["message_id"], data["store_data"]["mail.message"]))
+        self.assertEqual(message['partner_ids'], partner_to.ids)
+        self.assertEqual(message['partner_cc_ids'], partner_cc.ids)
+        mail = self.env['mail.mail'].search([('mail_message_id', '=', message['id'])], limit=1)
+        self.assertEqual(len(mail), 1)
+        header = literal_eval(mail.headers)
+        self.assertEqual(header.get('X-Msg-Cc-Add'), ','.join(partner_cc.mapped('email_formatted')))

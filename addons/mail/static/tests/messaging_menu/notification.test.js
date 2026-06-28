@@ -340,7 +340,7 @@ test("messaging menu counter should ignore unread messages in channels that are 
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     await click(".o_menu_systray i[aria-label='Messages']"); // fetch channels
-    await contains(".o-mail-NotificationItem:text('General')"); // ensure channels fetched
+    await contains(".o-mail-NotificationItem-name:text('General')"); // ensure channels fetched
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
 });
 

@@ -73,6 +73,9 @@ class TableObject:
     def apply_to_database(self, model: BaseModel):
         raise NotImplementedError
 
+    def matches_database(self, model: BaseModel) -> bool:
+        raise NotImplementedError
+
     def __str__(self) -> str:
         try:
             definition = self.get_definition(None)
@@ -137,6 +140,12 @@ class Constraint(TableObject):
         model.pool.post_constraint(
             cr, lambda cr: sql.add_constraint(cr, model._table, conname, definition), conname)
 
+    def matches_database(self, model: BaseModel) -> bool:
+        cr = model.env.cr
+        conname = self.full_name(model)
+        definition = self.get_definition(model.pool)
+        return sql.constraint_definition(cr, model._table, conname) == definition
+
 
 class Index(TableObject):
     """ Index on the table.
@@ -196,6 +205,17 @@ class Index(TableObject):
             definition=definition_clause,
             unique=self.unique,
         ), conname)
+
+    def matches_database(self, model: BaseModel) -> bool:
+        definition = self.get_definition(model.pool)
+        if not definition:
+            # nothing is declared (e.g. a conditional index disabled for this
+            # registry), so there is nothing to enforce
+            return True
+        db_definition, db_comment = sql.index_definition(model.env.cr, self.full_name(model))
+        # same "up to date" condition as apply_to_database: the comment matches
+        # the declaration, or an uncommented index exists (tweaked by support)
+        return db_comment == definition or (not db_comment and bool(db_definition))
 
 
 class UniqueIndex(Index):

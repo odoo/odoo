@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { simplifyString } from "@api_doc/utils/doc_model_search";
 
 export class DocSidebar extends Component {
@@ -10,8 +10,8 @@ export class DocSidebar extends Component {
 
     setup() {
         this.containerRef = useRef("containerRef");
-        this.modelStore = useState(this.env.modelStore);
-        this.state = useState({
+        this.modelStore = proxy(this.env.modelStore);
+        this.state = proxy({
             collapseAddons: {},
             searchValue: "",
         });

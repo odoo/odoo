@@ -32,7 +32,6 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
             'code': 'cash.basis.transfer.account',
             'name': 'cash_basis_transfer_account',
             'account_type': 'income',
-            'reconcile': True,
         })
 
     def _create_invoice_upd_tags(self, state=None, **invoice_args):

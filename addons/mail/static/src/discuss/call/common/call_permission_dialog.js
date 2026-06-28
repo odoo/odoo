@@ -1,60 +1,54 @@
-import { Component } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-
+import { Component, props, signal, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { PermissionPromptDialog } from "@web/core/permission_prompt_dialog/permission_prompt_dialog";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallPermissionDialog extends Component {
-    static components = { Dialog };
-    static props = {
-        close: Function,
-        media: {
-            type: String,
-            validate: (s) => ["camera", "microphone"].includes(s),
-        },
-        permissionPrompt: {
-            type: String,
-            optional: true,
-        },
-        suggestAllMedias: {
-            type: Boolean,
-            optional: true,
-        },
-        useMicrophone: Function,
-        useCamera: Function,
-    };
-    static defaultProps = {
-        suggestAllMedias: true,
-    };
+    static components = { PermissionPromptDialog };
     static template = "discuss.CallPermissionDialog";
 
     setup() {
+        this.props = props({
+            close: t.function([]),
+            media: t.selection(["camera", "microphone"]),
+            permissionPrompt: t.string().optional(),
+            suggestAllMedias: t.boolean().optional(true),
+            useCamera: t.function([]),
+            useMicrophone: t.function([]),
+        });
+        /** @type {import("@odoo/owl").Signal<Element>} */
+        this.rootRef = signal();
         this.rtc = useService("discuss.rtc");
         this.ui = useService("ui");
     }
 
     async onClickUseMicrophone() {
-        if (await this.rtc.askForBrowserPermission({ audio: true })) {
+        if (await this.rtc.askForBrowserPermission({ audio: true }, { rootRef: this.rootRef })) {
             await this.props.useMicrophone();
         }
         this.props.close();
     }
 
     async onClickUseCamera() {
-        if (await this.rtc.askForBrowserPermission({ video: true })) {
+        if (await this.rtc.askForBrowserPermission({ video: true }, { rootRef: this.rootRef })) {
             await this.props.useCamera();
         }
         this.props.close();
     }
 
     async onClickUseMicAndCamera() {
-        if (await this.rtc.askForBrowserPermission({ audio: true, video: true })) {
+        if (
+            await this.rtc.askForBrowserPermission(
+                { audio: true, video: true },
+                { rootRef: this.rootRef }
+            )
+        ) {
             await Promise.all([this.props.useMicrophone(), this.props.useCamera()]);
         }
         this.props.close();
     }
 
-    get primaryActionText() {
+    get secondaryActionText() {
         return this.props.media === "camera" ? _t("Use Camera") : _t("Use Microphone");
     }
 

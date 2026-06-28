@@ -52,6 +52,7 @@ class AccountPaymentRegister(models.TransientModel):
         compute='_compute_partner_bank_id',
         domain="[('id', 'in', available_partner_bank_ids)]",
     )
+    allow_out_payment = fields.Boolean(related='partner_bank_id.allow_out_payment')
     company_currency_id = fields.Many2one('res.currency', string="Company Currency",
         related='company_id.currency_id')
     qr_code = fields.Html(
@@ -873,11 +874,12 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 wizard.payment_difference = 0.0
 
-    @api.depends('can_edit_wizard', 'writeoff_account_id')
+    @api.depends('can_edit_wizard', 'writeoff_account_id', 'payment_difference_handling', 'currency_id')
     def _compute_writeoff_is_exchange_account(self):
         for wizard in self:
             wizard.writeoff_is_exchange_account = all((
                 wizard.can_edit_wizard,
+                wizard.payment_difference_handling == 'reconcile',
                 wizard.currency_id != wizard.source_currency_id,
                 wizard.writeoff_account_id,
                 wizard.writeoff_account_id in (
@@ -1052,6 +1054,13 @@ class AccountPaymentRegister(models.TransientModel):
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
 
+    @api.model
+    def _get_payment_display_partner(self, lines, fallback_partner_id):
+        # Lines have partner_id forced to the commercial partner.
+        # The display partner for payment therefore lives in move_id.partner_id.
+        display_partners = lines.move_id.partner_id
+        return display_partners.id if len(display_partners) == 1 else fallback_partner_id
+
     def _create_payment_vals_from_wizard(self, batch_result):
         payment_vals = {
             'date': self.payment_date,
@@ -1062,7 +1071,7 @@ class AccountPaymentRegister(models.TransientModel):
             'journal_id': self.journal_id.id,
             'company_id': self.company_id.id,
             'currency_id': self.currency_id.id,
-            'partner_id': self.partner_id.id,
+            'partner_id': self._get_payment_display_partner(self.line_ids, self.partner_id.id),
             'partner_bank_id': self.partner_bank_id.id,
             'payment_method_line_id': self.payment_method_line_id.id,
             'destination_account_id': self.line_ids[0].account_id.id,
@@ -1105,7 +1114,7 @@ class AccountPaymentRegister(models.TransientModel):
                     payment_vals['write_off_line_vals'].append({
                         'name': self.writeoff_label,
                         'account_id': self.writeoff_account_id.id,
-                        'partner_id': self.partner_id.id,
+                        'partner_id': self.partner_id.commercial_partner_id.id,
                         'currency_id': self.currency_id.id,
                         'amount_currency': write_off_amount_currency,
                         'balance': self.currency_id._convert(write_off_amount_currency, self.company_id.currency_id, self.company_id, self.payment_date),
@@ -1135,7 +1144,7 @@ class AccountPaymentRegister(models.TransientModel):
             'journal_id': self.journal_id.id,
             'company_id': self.company_id.id,
             'currency_id': batch_values['source_currency_id'],
-            'partner_id': batch_values['partner_id'],
+            'partner_id': self._get_payment_display_partner(batch_result['lines'], batch_values['partner_id']),
             'payment_method_line_id': payment_method_line.id,
             'destination_account_id': batch_result['lines'][0].account_id.id,
             'write_off_line_vals': [],
@@ -1199,7 +1208,7 @@ class AccountPaymentRegister(models.TransientModel):
                 if payment.currency_id != lines.currency_id:
                     liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
                     source_balance = abs(sum(lines.mapped('amount_residual')))
-                    if liquidity_lines[0].balance:
+                    if liquidity_lines[:1].balance:
                         payment_rate = liquidity_lines[0].amount_currency / liquidity_lines[0].balance
                     else:
                         payment_rate = 0.0
@@ -1275,7 +1284,7 @@ class AccountPaymentRegister(models.TransientModel):
                         ('reconciled', '=', False),
                     ])\
                     .reconcile()
-            lines.move_id.matched_payment_ids += payment
+            lines.move_id.matched_payment_ids = [Command.link(payment.id)]
 
     def _create_payments(self):
         self.ensure_one()
@@ -1313,9 +1322,9 @@ class AccountPaymentRegister(models.TransientModel):
 
             to_process.append(to_process_values)
         else:
+            lines_to_pay = self._get_total_amounts_to_pay(batches)['lines'] if self.installments_mode in ('next', 'overdue', 'before_date') else self.line_ids
             if not self.group_payment:
                 # Don't group payments: Create one batch per move.
-                lines_to_pay = self._get_total_amounts_to_pay(batches)['lines'] if self.installments_mode in ('next', 'overdue', 'before_date') else self.line_ids
                 new_batches = []
                 for batch_result in batches:
                     sub_batches = {}
@@ -1335,6 +1344,9 @@ class AccountPaymentRegister(models.TransientModel):
                             }
                     new_batches.extend(sub_batches.values())
                 batches = new_batches
+
+            for batch_result in batches:
+                batch_result['lines'] &= lines_to_pay
 
             to_process.extend({
                     'create_vals': self._create_payment_vals_from_batch(batch_result),

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
@@ -15,31 +14,16 @@ from odoo.tests import tagged, common
 from odoo.tests.common import BaseCase, HttpCase, TransactionCase
 from odoo.tests.test_cursor import TestCursor
 from odoo.tools.misc import config
-from odoo.tools.cache import get_cache_key_counter
-from threading import Thread, Barrier
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
-
-
-def registry():
-    return Registry(common.get_db_name())
 
 
 class TestOrmCache(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        if cls.registry.registry_invalidated:
+        if cls.env.transaction._registry_invalidated:
             raise AssertionError('Registry should not be invalidated when starting this test')
-        if cls.registry.cache_invalidated:
-            raise AssertionError('Cache should not be invalidated when starting this test')
-
-        # this test verifies the actual side effects of signaling changes
-        cls._signal_changes_patcher.stop()
-        # if something invalidate the cache or registry before test_signaling_01_multiple,
-        # the test may fail the first time but succeed on retry
-        # disabling autoretry to avoid hidding "real" errrors
-        cls._retry = False
 
     def test_ormcache(self):
         """ Test the effectiveness of the ormcache() decorator. """
@@ -47,14 +31,13 @@ class TestOrmCache(TransactionCase):
         XMLID = 'base.group_no_one'
 
         # retrieve the cache, its key and stat counter
+        from odoo.orm.cache import get_cache_key_counter  # noqa: PLC0415
+        self.env.transaction.invalidate_ormcache()
         cache, key, counter = get_cache_key_counter(IMD._xmlid_lookup, XMLID)
         hit = counter.hit
         miss = counter.miss
         tx_hit = counter.tx_hit
         tx_miss = counter.tx_miss
-
-        # clear the caches of ir.model.data, retrieve its key and
-        self.env.registry.clear_cache()
         self.assertNotIn(key, cache)
 
         # lookup some reference
@@ -81,140 +64,31 @@ class TestOrmCache(TransactionCase):
         self.assertEqual(counter.tx_miss, tx_miss + 1)
         self.assertIn(key, cache)
 
-    def test_invalidation(self):
-        self.assertEqual(self.env.registry.cache_invalidated, set())
-        self.env.registry.clear_cache()
-        self.env.registry.clear_cache('templates')
-        self.assertEqual(self.env.registry.cache_invalidated, {'default', 'templates'})
-        self.env.registry.reset_changes()
-        self.assertEqual(self.env.registry.cache_invalidated, set())
-        self.env.registry.clear_cache('assets')
-        self.assertEqual(self.env.registry.cache_invalidated, {'assets'})
-        self.env.registry.reset_changes()
-        self.assertEqual(self.env.registry.cache_invalidated, set())
+    def test_ormcache_invalidation(self):
+        transaction = self.env.transaction
+        transaction.invalidate_ormcache('default')
+        IMD = self.env['ir.model.data']
+        lookup = IMD._xmlid_lookup
+        XMLID = 'base.group_no_one'
 
-    def test_invalidation_thread_local(self):
-        # this test ensures that the registry.cache_invalidated set is thread local
+        lookup.__cache__.add_value(IMD, XMLID, cache_value='val1')
+        with self.env.cr.savepoint() as sp:
+            self.assertEqual(lookup(XMLID), 'val1')
+            lookup.__cache__.add_value(IMD, XMLID, cache_value='sp1')
+            transaction.invalidate_ormcache('default')
+            self.assertNotIn(lookup(XMLID), ('val1', 'sp1'))  # computed
+            sp.rollback()
+            self.assertEqual(lookup(XMLID), 'val1')
+            lookup.__cache__.add_value(IMD, XMLID, cache_value='sp2')
+        self.assertEqual(lookup(XMLID), 'sp2')
 
-        caches = ['default', 'templates', 'assets']
-        nb_treads = len(caches)
-
-        # use barriers to ensure threads synchronization
-        sync_clear_cache = Barrier(nb_treads, timeout=5)
-        sync_assert_equal = Barrier(nb_treads, timeout=5)
-        sync_reset = Barrier(nb_treads, timeout=5)
-
-        operations = []
-        def run(cache):
-            self.assertEqual(self.env.registry.cache_invalidated, set())
-
-            self.env.registry.clear_cache(cache)
-            operations.append('clear_cache')
-            sync_clear_cache.wait()
-
-            self.assertEqual(self.env.registry.cache_invalidated, {cache})
-            operations.append('assert_contains')
-            sync_assert_equal.wait()
-
-            self.env.registry.reset_changes()
-            operations.append('reset_changes')
-            sync_reset.wait()
-
-            self.assertEqual(self.env.registry.cache_invalidated, set())
-            operations.append('assert_empty')
-
-        # run all threads
-        threads = []
-        for cache in caches:
-            threads.append(Thread(target=run, args=(cache,)))
-        for thread in threads:
-            thread.start()
-        for thread in threads:
-            thread.join()
-
-        # ensure that the threads operations where executed in the expected order
-        self.assertEqual(
-            operations,
-            ['clear_cache'] * nb_treads +
-            ['assert_contains'] * nb_treads +
-            ['reset_changes'] * nb_treads +
-            ['assert_empty'] * nb_treads
-        )
-
-    def test_signaling_01_single(self):
-        self.assertFalse(self._registry_patched)
-        self.registry.cache_invalidated.clear()
-        registry = self.registry
-        old_sequences = dict(registry.cache_sequences)
-        with self.assertLogs('odoo.registry') as logs:
-            registry.cache_invalidated.add('assets')
-            self.assertEqual(registry.cache_invalidated, {'assets'})
-            registry.signal_changes()
-            self.assertFalse(registry.cache_invalidated)
-
-        self.assertEqual(
-            logs.output,
-            ["INFO:odoo.registry:Caches invalidated, signaling through the database: ['assets']"],
-        )
-
-        for key, value in old_sequences.items():
-            if key == 'assets':
-                self.assertEqual(value + 1, registry.cache_sequences[key], "Assets cache sequence should have changed")
-            else:
-                self.assertEqual(value, registry.cache_sequences[key], "other registry sequence shouldn't have changed")
-
-        with self.assertNoLogs(None, None):  # the registry sequence should be up to date on the same worker
-            registry.check_signaling()
-
-        # simulate other worker state
-
-        registry.cache_sequences.update(old_sequences)
-
-        with self.assertLogs() as logs:
-            registry.check_signaling()
-        self.assertEqual(
-            logs.output,
-            ["INFO:odoo.registry:Invalidating caches after database signaling: ['assets', 'templates.cached_values']"],
-        )
-
-    def test_signaling_01_multiple(self):
-        self.assertFalse(self._registry_patched)
-        self.registry.cache_invalidated.clear()
-        registry = self.registry
-        old_sequences = dict(registry.cache_sequences)
-        with self.assertLogs('odoo.registry') as logs:
-            registry.cache_invalidated.add('assets')
-            registry.cache_invalidated.add('default')
-            self.assertEqual(registry.cache_invalidated, {'assets', 'default'})
-            registry.signal_changes()
-            self.assertFalse(registry.cache_invalidated)
-
-        self.assertEqual(
-            logs.output,
-            [
-                "INFO:odoo.registry:Caches invalidated, signaling through the database: ['assets', 'default']",
-            ],
-        )
-
-        for key, value in old_sequences.items():
-            if key in ('assets', 'default'):
-                self.assertEqual(value + 1, registry.cache_sequences[key], "Assets and default cache sequence should have changed")
-            else:
-                self.assertEqual(value, registry.cache_sequences[key], "other registry sequence shouldn't have changed")
-
-        with self.assertNoLogs(None, None):  # the registry sequence should be up to date on the same worker
-            registry.check_signaling()
-
-        # simulate other worker state
-
-        registry.cache_sequences.update(old_sequences)
-
-        with self.assertLogs() as logs:
-            registry.check_signaling()
-        self.assertEqual(
-            logs.output,
-            ["INFO:odoo.registry:Invalidating caches after database signaling: ['assets', 'default', 'templates.cached_values']"],
-        )
+        with self.env.cr.savepoint() as sp:
+            transaction.invalidate_ormcache('default')
+            sp.rollback()
+        self.assertEqual(lookup(XMLID), 'sp2')
+        with self.env.cr.savepoint() as sp:
+            transaction.invalidate_ormcache('default')
+        self.assertNotIn(lookup(XMLID), ('val1', 'sp1'))  # computed
 
     def test_signaling_gc(self):
         cr = self.env.cr
@@ -225,11 +99,11 @@ class TestOrmCache(TransactionCase):
             cr.execute("SELECT count(*), max(id) FROM orm_signaling_registry")
             count, max_id = cr.fetchone()
             self.assertEqual(expected_count, count, message)
-            self.assertEqual(expected_max_id, max_id-sequence_start, message)     
+            self.assertEqual(expected_max_id, max_id - sequence_start, message)
 
         cr.execute('DELETE FROM orm_signaling_registry')
-    
-        for _ in range (7):
+
+        for _ in range(7):
             cr.execute("INSERT INTO orm_signaling_registry (date) VALUES (NOW() - interval '2 hours')")
 
         cr.execute("INSERT INTO orm_signaling_registry DEFAULT VALUES")
@@ -238,14 +112,14 @@ class TestOrmCache(TransactionCase):
         self.env['ir.autovacuum']._gc_orm_signaling()
         assertSignalCount(8, 8, "less than 10 signals, no deletion")
 
-        for _ in range (5):
+        for _ in range(5):
             cr.execute("INSERT INTO orm_signaling_registry DEFAULT VALUES")
 
         assertSignalCount(13, 13, "5 more signals were inserted")
         self.env['ir.autovacuum']._gc_orm_signaling()
         assertSignalCount(10, 13, "more than 10 signals, some should have been deleted")
 
-        for _ in range (7):
+        for _ in range(7):
             cr.execute("INSERT INTO orm_signaling_registry DEFAULT VALUES")
 
         assertSignalCount(17, 20, "7 more signals were inserted")
@@ -256,14 +130,144 @@ class TestOrmCache(TransactionCase):
         cr.execute(f"SELECT setval('orm_signaling_registry_id_seq', {sequence_start})")
 
 
+class TestOrmCacheSignaling(BaseCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # do not retry, these tests must always succeed the first time and avoid
+        # an autoretry hidding errors
+        cls._retry = False
+        cls.registry = Registry(common.get_db_name())
+
+    def setUp(self):
+        super().setUp()
+        self.cr = self.cursor()
+        self.addCleanup(self.cr.close)
+        self.transaction = api.Environment(self.cr, api.SUPERUSER_ID, {}).transaction
+
+        def simulated_commit():
+            # similar to flushing_cursor, but specific for this case with no support for test cursor
+            cr = self.cr
+            with cr.transaction.committing():
+                pass  # no real commit
+
+        assert not self._registry_patched, "registry must not be patched"
+        self.patch(self.cr, 'commit', simulated_commit)
+        # flush once to set the nextval from the sequence
+        self.transaction.invalidate_ormcache('default')
+        self.transaction.invalidate_ormcache('assets')
+        self.cr.commit()
+        self.old_sequences = self.transaction._registry_caches__.copy()
+        self.addCleanup(self.registry.registry_caches__.update, self.registry.registry_caches__.copy())
+        self.assertFalse(self.cache_invalidated)
+
+    @property
+    def cache_invalidated(self):
+        return {
+            name for name, data in self.transaction.ormcaches__.items()
+            if data.parent is None
+            and '.' not in name
+        }
+
+    def test_invalidation(self):
+        transaction = self.transaction
+        self.assertEqual(self.cache_invalidated, set())
+        transaction.invalidate_ormcache()
+        transaction.invalidate_ormcache('templates')
+        self.assertEqual(self.cache_invalidated, {'default', 'templates'})
+        transaction.reset()
+        self.assertEqual(self.cache_invalidated, set())
+        transaction.invalidate_ormcache('assets')
+        self.assertEqual(self.cache_invalidated, {'assets'})
+        transaction.reset()
+        self.assertEqual(self.cache_invalidated, set())
+
+    def test_signaling_01_single(self):
+        transaction = self.transaction
+        registry = self.registry
+
+        with self.assertLogs('odoo.registry') as logs:
+            transaction.invalidate_ormcache('assets')
+            self.assertEqual(self.cache_invalidated, {'assets'})
+            self.cr.commit()
+            self.assertFalse(self.cache_invalidated)
+
+        self.assertEqual(
+            logs.output,
+            ["INFO:odoo.registry:Caches invalidated, signaling through the database: ['assets']"],
+        )
+
+        for key, (value, _data) in self.old_sequences.items():
+            if key == 'assets':
+                self.assertEqual(value + 1, registry.registry_caches__[key][0], "Assets cache sequence should have changed")
+            elif '.' not in key:  # sequences of sub-caches don't matter
+                self.assertEqual(value, registry.registry_caches__[key][0], f"other registry sequence shouldn't have changed {key}")
+
+        with self.assertNoLogs(None, None):  # the registry sequence should be up to date on the same worker
+            transaction.reset()
+
+        # simulate other worker state
+
+        registry.registry_caches__.update(self.old_sequences)
+
+        with self.assertLogs() as logs:
+            transaction.reset()
+        self.assertEqual(
+            logs.output,
+            ["INFO:odoo.registry:Invalidating caches after database signaling: ['assets', 'templates.cached_values']"],
+        )
+
+    def test_signaling_01_multiple(self):
+        transaction = self.transaction
+        registry = self.registry
+
+        with self.assertLogs('odoo.registry') as logs:
+            transaction.invalidate_ormcache('assets')
+            transaction.invalidate_ormcache('default')
+            self.assertEqual(self.cache_invalidated, {'assets', 'default'})
+            self.cr.commit()
+            self.assertFalse(self.cache_invalidated)
+
+        self.assertEqual(
+            logs.output,
+            [
+                "INFO:odoo.registry:Caches invalidated, signaling through the database: ['assets', 'default']",
+            ],
+        )
+
+        for key, (value, _data) in self.old_sequences.items():
+            if key in ('assets', 'default'):
+                self.assertEqual(value + 1, registry.registry_caches__[key][0], "Assets and default cache sequence should have changed")
+            elif '.' not in key:  # sequences of sub-caches don't matter
+                self.assertEqual(value, registry.registry_caches__[key][0], f"other registry sequence shouldn't have changed {key}")
+
+        with self.assertNoLogs(None, None):  # the registry sequence should be up to date on the same worker
+            transaction.reset()
+
+        # simulate other worker state
+
+        registry.registry_caches__.update(self.old_sequences)
+
+        with self.assertLogs() as logs:
+            transaction.reset()
+        self.assertEqual(
+            logs.output,
+            ["INFO:odoo.registry:Invalidating caches after database signaling: ['assets', 'default', 'templates.cached_values']"],
+        )
+
+
 @tagged('at_install', '-post_install')
 class TestRealCursor(BaseCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.registry = Registry(common.get_db_name())
 
     def test_execute_bad_params(self):
         """
         Try to use iterable but non-list or int params in query parameters.
         """
-        with registry().cursor() as cr:
+        with self.cursor() as cr:
             with self.assertRaises(ValueError):
                 cr.execute("SELECT id FROM res_users WHERE login=%s", 'admin')
             with self.assertRaises(ValueError):
@@ -272,29 +276,28 @@ class TestRealCursor(BaseCase):
                 cr.execute("SELECT id FROM res_users WHERE id=%s", '1')
 
     def test_using_closed_cursor(self):
-        with registry().cursor() as cr:
+        with self.cursor() as cr:
             cr.close()
             with self.assertRaises(psycopg2.InterfaceError):
                 cr.execute("SELECT 1")
 
     def test_multiple_close_call_cursor(self):
-        cr = registry().cursor()
+        cr = self.cursor()
         cr.close()
         cr.close()
 
     def test_transaction_isolation_cursor(self):
-        with registry().cursor() as cr:
+        with self.cursor() as cr:
             self.assertEqual(cr.connection.isolation_level, ISOLATION_LEVEL_REPEATABLE_READ)
 
     def test_connection_readonly(self):
         # even without db_replica, we expect the connection to be readonly for consistency
-        registry_ = registry()
-        with registry_.cursor(readonly=False) as cr:
+        with self.registry.cursor(readonly=False) as cr:
             cr.execute('SHOW transaction_read_only')
             self.assertEqual(cr.fetchone(), ('off',))
             self.assertFalse(cr._cnx.readonly)
 
-        with registry_.cursor(readonly=True) as cr:
+        with self.registry.cursor(readonly=True) as cr:
             cr.execute('SHOW transaction_read_only')
             self.assertEqual(cr.fetchone(), ('on',))
             self.assertTrue(cr._cnx.readonly)
@@ -343,7 +346,6 @@ class TestHTTPCursor(HttpCase):
             self.assertEqual(ok, 'ok')
             self.assertEqual(readonly, True, 'Call to read are expecte to be read only')
 
-
         with patch.object(type(self.env['res.partner']), 'write', return_readonly):
             result_write = self.url_open('/web/dataset/call_kw', data=json.dumps({
                 "params": {
@@ -364,7 +366,7 @@ class TestTestCursor(common.TransactionCase):
     def setUp(self):
         super().setUp()
         # make the registry in test mode
-        self.registry_enter_test_mode()
+        self.enterContext(self.enter_registry_test_mode())
         # now we make a test cursor for self.cr
         self.cr = self.registry.cursor()
         self.addCleanup(self.cr.close)
@@ -552,7 +554,7 @@ class TestCursorHooks(common.TransactionCase):
         self.assertEqual(self.log, ['preR', 'postR'])
 
     def test_hooks_on_testcursor(self):
-        self.registry_enter_test_mode()
+        self.enterContext(self.enter_registry_test_mode())
 
         cr = self.registry.cursor()
 

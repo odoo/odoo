@@ -17,9 +17,7 @@
                     <div class="card-body rounded-3">
                         <div class="o_hr_attendance_kiosk_card_wrapper d-flex flex-column align-items-center justify-content-center">
                             <div class="o_hr_attendance_kiosk_card_main p-3 mx-3 mx-xl-0 text-center">
-                                <t t-call="hr_attendance.EmployeeBadge">
-                                    <t t-set="employeeAvatar" t-value="this.employeeAvatar"/>
-                                </t>
+                                <t t-call="hr_attendance.EmployeeBadge" employeeAvatar="this.employeeAvatar"/>
                                 <h5 class="text-muted mt-2 mb-0">
                                     <t t-if="this.attendance.check_out" >Goodbye</t>
                                     <t t-else="">Welcome</t>

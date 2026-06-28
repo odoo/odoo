@@ -42,6 +42,39 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         self._add_sale_order_monetary_total_nodes(document_node, vals)
         return document_node
 
+    def _setup_base_lines(self, vals):
+        AccountTax = self.env['account.tax']
+        sale_order = vals['sale_order']
+        company = sale_order.company_id
+        base_lines = vals['base_lines'] = [line._prepare_base_line_for_taxes_computation() for line in sale_order.order_line.filtered(lambda line: not line.display_type)]
+        AccountTax._add_tax_details_in_base_lines(base_lines, company)
+        AccountTax._round_base_lines_tax_details(base_lines, company)
+
+        # CEN-EN16931 layer.
+        # [BR-27]-The Item net price (BT-146) shall NOT be negative.
+        self._ubl_turn_base_lines_price_unit_as_always_positive(vals)
+
+        # PINT layer.
+        # Manage taxes for emptying.
+        vals['base_lines'] = self._ubl_turn_emptying_taxes_as_new_base_lines(
+            base_lines=vals['base_lines'],
+            company=company,
+            vals=vals,
+        )
+
+        # Sub-dictionaries to store UBL-related values along the whole process.
+        vals['_ubl_values'] = {}
+        for base_line in vals['base_lines']:
+            base_line['_ubl_values'] = {}
+
+        # Global rounding of tax_details using 6 digits.
+        AccountTax._round_raw_total_excluded(vals['base_lines'], company)
+        AccountTax._round_raw_total_excluded(vals['base_lines'], company, in_foreign_currency=False)
+        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
+        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
+        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
+        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
+
     def _add_sale_order_config_vals(self, vals):
         sale_order = vals['sale_order']
         supplier = sale_order.company_id.partner_id.commercial_partner_id
@@ -150,11 +183,15 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
 
     def _add_sale_order_allowance_charge_nodes(self, document_node, vals):
         # OVERRIDE
-        ubl_values = vals['_ubl_values']
-        document_node['cac:AllowanceCharge'] = [
-            self._ubl_get_allowance_charge_early_payment(vals, early_payment_values)
-            for early_payment_values in ubl_values['allowance_charges_early_payment_currency']
-        ]
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
+            'currency': vals['currency_id'],
+        }
+        self._ubl_add_allowance_charge_nodes(sub_vals)
+
+        # Early payment discount lines are treated as allowances/charges.
+        self._ubl_add_allowance_charge_nodes_early_payment_discount(sub_vals)
 
     def _add_sale_order_tax_total_nodes(self, document_node, vals):
         # OVERRIDE
@@ -166,64 +203,35 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         self._ubl_add_tax_totals_nodes(sub_vals)
 
     def _add_sale_order_monetary_total_nodes(self, document_node, vals):
-        ubl_values = vals['_ubl_values']
-        sale_order = vals['sale_order']
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
+            'currency': vals['currency_id'],
+        }
+        self._ubl_add_anticipated_monetary_total_node(sub_vals)
+
+    def _ubl_add_legal_monetary_total_line_extension_amount_node(self, vals, in_foreign_currency=True):
+        # OVERRIDE
+        currency = vals['currency_id'] if in_foreign_currency else vals['company_currency']
 
         line_extension_amount = sum(
             line_node['cac:LineItem']['cbc:LineExtensionAmount']['_text']
-            for line_node in document_node['cac:OrderLine']
+            for line_node in vals['document_node'].get('cac:OrderLine', [])
         )
-        tax_amount = sum(
-            tax_total['cbc:TaxAmount']['_text']
-            for tax_total in document_node['cac:TaxTotal']
-            if tax_total['cbc:TaxAmount']['currencyID'] == vals['currency_id'].name
-        )
-        total_allowance = sum(
-            allowance_charge['cbc:Amount']['_text']
-            for allowance_charge in document_node['cac:AllowanceCharge']
-            if allowance_charge['cbc:ChargeIndicator']['_text'] == 'false'
-        )
-        total_charge = sum(
-            allowance_charge['cbc:Amount']['_text']
-            for allowance_charge in document_node['cac:AllowanceCharge']
-            if allowance_charge['cbc:ChargeIndicator']['_text'] == 'true'
-        )
-        payable_rounding_amount = ubl_values['payable_rounding_amount_currency']
-
-        document_node['cac:AnticipatedMonetaryTotal'] = {
-            'cbc:LineExtensionAmount': {
-                '_text': FloatFmt(line_extension_amount, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            },
-            'cbc:TaxExclusiveAmount': {
-                '_text': FloatFmt(line_extension_amount, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            },
-            'cbc:TaxInclusiveAmount': {
-                '_text': FloatFmt(line_extension_amount + tax_amount, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            },
-            'cbc:AllowanceTotalAmount': {
-                '_text': FloatFmt(total_allowance, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            } if total_allowance else None,
-            'cbc:ChargeTotalAmount': {
-                '_text': FloatFmt(total_charge, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            } if total_charge else None,
-            'cbc:PrepaidAmount': {
-                '_text': FloatFmt(sale_order.amount_paid, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            },
-            'cbc:PayableRoundingAmount': {
-                '_text': FloatFmt(payable_rounding_amount, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            } if payable_rounding_amount else None,
-            'cbc:PayableAmount': {
-                '_text': FloatFmt(sale_order.amount_total - sale_order.amount_paid, min_dp=vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            },
+        vals['legal_monetary_total_node']['cbc:LineExtensionAmount'] = {
+            '_text': FloatFmt(line_extension_amount, min_dp=currency.decimal_places),
+            'currencyID': currency.name,
         }
+
+    def _ubl_add_anticipated_monetary_total_node(self, vals):
+        node = vals['document_node']['cac:AnticipatedMonetaryTotal'] = {}
+        sub_vals = {**vals, 'legal_monetary_total_node': node}
+        self._ubl_add_legal_monetary_total_line_extension_amount_node(sub_vals)
+        self._ubl_add_legal_monetary_total_tax_exclusive_amount_node(sub_vals)
+        self._ubl_add_legal_monetary_total_tax_inclusive_amount_node(sub_vals)
+        self._ubl_add_legal_monetary_total_allowance_charge_total_amount_node(sub_vals)
+        self._ubl_add_legal_monetary_total_payable_rounding_amount_node(sub_vals)
+        self._ubl_add_legal_monetary_total_prepaid_payable_amount_node(sub_vals)
 
     def _add_sale_order_line_nodes(self, document_node, vals):
         document_node['cac:OrderLine'] = order_line_nodes = []
@@ -278,15 +286,6 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         }
         self._ubl_add_line_allowance_charge_nodes(sub_vals)
 
-        # Discount.
-        self._ubl_add_line_allowance_charge_nodes_for_discount(sub_vals)
-
-        # Recycling contribution taxes.
-        self._ubl_add_line_allowance_charge_nodes_for_recycling_contribution_taxes(sub_vals)
-
-        # Excise taxes.
-        self._ubl_add_line_allowance_charge_nodes_for_excise_taxes(sub_vals)
-
     def _add_sale_order_line_item_nodes(self, line_node, vals):
         # OVERRIDE
         sub_vals = {
@@ -300,15 +299,14 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
 
     def _add_sale_order_line_price_nodes(self, line_node, vals):
         # OVERRIDE
-        base_line = vals['base_line']
-        ubl_values = base_line['_ubl_values']
-
-        line_node['cac:Price'] = {
-            'cbc:PriceAmount': {
-                '_text': FloatFmt(ubl_values['price_amount_currency'], min_dp=1, max_dp=6),
-                'currencyID': vals['currency_name'],
+        sub_vals = {
+            **vals,
+            'line_node': line_node,
+            'line_vals': {
+                'base_line': vals['base_line'],
             },
         }
+        self._ubl_add_line_price_node(sub_vals)
 
     def _export_order_vals(self, sale_order):
         vals = super()._export_order_vals(sale_order)
@@ -350,6 +348,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         line_vals = super()._retrieve_line_vals(
             record, tree, document_type=document_type, qty_factor=qty_factor
         )
+        line_vals['product_uom_qty'] = line_vals.pop('quantity')
         if not line_vals.get('product_id'):
             # Set customer product reference on order line
             line_vals['edi_customer_product_ref'] = self._find_value(
@@ -398,7 +397,6 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         lines_vals, line_logs = self._import_lines(order, tree, './{*}OrderLine/{*}LineItem', document_type='order', tax_type='sale')
         # adapt each line to sale.order.line
         for line in lines_vals:
-            line['product_uom_qty'] = line.pop('quantity')
             # remove invoice line fields
             line.pop('deferred_start_date', False)
             line.pop('deferred_end_date', False)

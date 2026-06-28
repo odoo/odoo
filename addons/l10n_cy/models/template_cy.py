@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_cy_template_data(self):
         return {
             'code_digits': '4',
-            'property_account_receivable_id': 'cy_1100',
-            'property_account_payable_id': 'cy_2100',
         }
 
     @template('cy', 'res.company')
@@ -28,6 +26,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'VAT_P_IN_CY_19_G',
                 'expense_account_id': 'cy_5100',
                 'income_account_id': 'cy_4000',
+                'receivable_account_id': 'cy_1100',
+                'payable_account_id': 'cy_2100',
                 'account_stock_valuation_id': 'cy_1020',
             },
         }

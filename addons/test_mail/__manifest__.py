@@ -10,13 +10,13 @@ tests independently to functional aspects of other models. """,
     'depends': [
         'mail',
         'test_orm',
+        'mail_tracking',
     ],
     'data': [
-        'security/ir.model.access.csv',
-        'security/test_mail_security.xml',
         'data/data.xml',
         'data/mail_template_data.xml',
         'data/subtype_data.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_unit_tests': [

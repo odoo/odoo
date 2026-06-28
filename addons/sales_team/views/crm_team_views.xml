@@ -36,7 +36,7 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
                         <label for="name" string="Sales Team"/>
-                        <h1>
+                        <h1 class="o_outlined">
                             <field class="text-break" name="name" placeholder="e.g. North America"/>
                         </h1>
                         <div name="options_active" class="o_row"/>
@@ -62,7 +62,7 @@
                                     <templates>
                                         <t t-name="card" class="flex-row">
                                             <aside>
-                                                <field name="avatar_128" widget="image" class="o_image_64_cover" alt="Avatar"/>
+                                                <field name="avatar_128" widget="image" class="o_image_64_cover" alt="Avatar" options="{'size': [64, 64], 'img_class': 'border rounded h-100 object-fit-contain'}"/>
                                             </aside>
                                             <main class="ms-3">
                                                 <field name="name" class="fw-bold fs-5"/>

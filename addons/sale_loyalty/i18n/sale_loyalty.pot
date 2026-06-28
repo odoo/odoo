@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.3a1\n"
+"Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-19 17:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,6 +19,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid " - On products with the following taxes: %(taxes)s"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Issued"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Used"
 msgstr ""
 
 #. module: sale_loyalty
@@ -35,13 +47,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "A better global discount is already applied."
-msgstr ""
-
-#. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid ""
-"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
 msgstr ""
 
 #. module: sale_loyalty
@@ -113,6 +118,11 @@ msgid "Created on"
 msgstr ""
 
 #. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Discard"
+msgstr ""
+
+#. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "Discount %(desc)s%(tax_str)s"
@@ -124,6 +134,7 @@ msgid "Discount & Loyalty"
 msgstr ""
 
 #. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_history__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__display_name
@@ -184,6 +195,7 @@ msgid "How much point this reward costs on the loyalty card."
 msgstr ""
 
 #. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_history__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__id
@@ -219,9 +231,8 @@ msgid "Issued"
 msgstr ""
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Issued :"
+#: model:ir.model,name:sale_loyalty.model_account_move_line
+msgid "Journal Item"
 msgstr ""
 
 #. module: sale_loyalty
@@ -239,19 +250,8 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Loyalty Card :"
-msgstr ""
-
-#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr ""
-
-#. module: sale_loyalty
-#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__loyalty_data
-msgid "Loyalty Data"
 msgstr ""
 
 #. module: sale_loyalty
@@ -540,6 +540,14 @@ msgid "This promo code is already applied."
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid ""
+"To take advantage of this offer, your order must include at least %(amount)s"
+" %(currency)s of the eligible products."
+msgstr ""
+
+#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Update current promotional lines and select new rewards if applicable."
 msgstr ""
@@ -547,12 +555,6 @@ msgstr ""
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "Used"
-msgstr ""
-
-#. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Used :"
 msgstr ""
 
 #. module: sale_loyalty

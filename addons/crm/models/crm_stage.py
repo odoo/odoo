@@ -19,6 +19,7 @@ class CrmStage(models.Model):
     """
     _name = 'crm.stage'
     _description = "CRM Stage"
+    _explanation = "Represents a step in the sales pipeline (e.g., New, Qualified, Proposition, Won). Used to organize and track the progress of crm.lead records."
     _rec_name = 'name'
     _order = "sequence, name, id"
 
@@ -33,7 +34,6 @@ class CrmStage(models.Model):
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
     # This field for interface only
     team_count = fields.Integer('team_count', compute='_compute_team_count')
-    color = fields.Integer(string='Color', export_string_translation=False)
 
     def _auto_init(self):
         # TODO stop hardcoding ids in tests and remove this

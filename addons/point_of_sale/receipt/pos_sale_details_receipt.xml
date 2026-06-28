@@ -12,7 +12,14 @@
                         <div class="w-100 text-center mb-3" name="logo">
                             <img t-if="image.get('logo')" t-att-src="image['logo']" style="max-height: 75px" />
                         </div>
-
+                        <div class="text-large text-center text-bold">
+                            <t t-if="extra_data['session_state'] == 'opened'">
+                                X Report
+                            </t>
+                            <t t-elif="extra_data['session_state'] == 'closed'">
+                                Z Report
+                            </t>
+                        </div>
 
                         <t t-set="products" t-value="extra_data['sold']"/>
                         <t t-if="len(products)">
@@ -27,6 +34,15 @@
                             <hr class="my-2" style="border: none; border-top: 2px dashed black;"/>
                             <div class="text-large text-center text-bold">
                                 REFUNDED:
+                            </div>
+                            <t t-call="point_of_sale.pos_sale_details_receipt_product_line"/>
+                        </t>
+
+                        <t t-set="products" t-value="extra_data['cancel']"/>
+                        <t t-if="len(products)">
+                            <hr class="my-2" style="border: none; border-top: 2px dashed black;"/>
+                            <div class="text-large text-center text-bold">
+                                CANCELLED:
                             </div>
                             <t t-call="point_of_sale.pos_sale_details_receipt_product_line"/>
                         </t>

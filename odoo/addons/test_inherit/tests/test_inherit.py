@@ -64,14 +64,14 @@ class test_inherits(common.TransactionCase):
 
         # the extra values are added, both in the field and the column
         self.assertEqual(mother._fields['state'].selection,
-                         [('a', 'A'), ('d', 'D'), ('b', 'B'), ('c', 'C'), ('e', 'E')])
+                         (('a', 'A'), ('d', 'D'), ('b', 'B'), ('c', 'C'), ('e', 'E')))
 
     def test_41_selection_extension(self):
         """ check that attribute selection_add=... extends selection on fields. """
         model = self.env['test_orm.selection']
         field = model._fields['other']
         self.assertIsInstance(field.selection, str)
-        self.assertEqual(field._description_selection(self.env), [('baz', 'Baz')])
+        self.assertEqual(field._description_selection(self.env), (('baz', 'Baz'),))
 
     def test_51_define_model_inherit(self):
         model = self.env['test_inherit_parent']
@@ -165,7 +165,7 @@ class TestXMLIDS(common.TransactionCase):
     def test_xml_ids(self):
         """ check XML ids of selection fields. """
         field = self.env['test_orm.selection']._fields['state']
-        self.assertEqual(field.selection, [('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')])
+        self.assertEqual(field.selection, (('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')))
 
         ir_field = self.env['ir.model.fields']._get('test_orm.selection', 'state')
         xml_ids = ir_field._get_external_ids()

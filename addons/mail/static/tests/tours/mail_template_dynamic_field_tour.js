@@ -3,7 +3,6 @@ import { stepUtils } from "@web_tour/tour_utils";
 import { delay } from "@web/core/utils/concurrency";
 
 registry.category("web_tour.tours").add("mail_template_dynamic_field_tour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
@@ -207,9 +206,17 @@ registry.category("web_tour.tours").add("mail_template_dynamic_field_tour", {
             run: "edit localTime",
         },
         {
+            content: "Wait for the label input to reflect 'localTime'",
+            trigger: 'div.o-dynamic-field-popover input[name="label_value"]:value(localTime)',
+        },
+        {
             content: "Click on the insert button",
             trigger: "div.o-dynamic-field-popover button:first-child:contains('Update')",
             run: "click",
+        },
+        {
+            content: "Wait for the dynamic field popover to disappear",
+            trigger: "body:not(:has(.o-dynamic-field-popover))",
         },
         {
             content: "Ensure the editable contain the dynamic field t tag",

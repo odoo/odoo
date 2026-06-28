@@ -8,15 +8,17 @@ import { CharField } from "../char/char_field";
 import { standardFieldProps } from "../standard_field_props";
 import { UrlField } from "../url/url_field";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
+
+export const copyClipboardFieldProps = {
+    ...standardFieldProps,
+    string: t.string().optional(),
+    disabledExpr: t.string().optional(),
+};
 
 class CopyClipboardField extends Component {
     static template = "web.CopyClipboardField";
-    static props = {
-        ...standardFieldProps,
-        string: { type: String, optional: true },
-        disabledExpr: { type: String, optional: true },
-    };
+    props = props(copyClipboardFieldProps);
 
     setup() {
         this.copyText = this.props.string || _t("Copy");
@@ -24,7 +26,7 @@ class CopyClipboardField extends Component {
     }
 
     get copyButtonClassName() {
-        return `o_btn_${this.type}_copy btn-link o_input_box_overlay_end`;
+        return `o_btn_${this.type}_copy btn-link btn-link-inline`;
     }
     get fieldProps() {
         return omit(this.props, "string", "disabledExpr");
@@ -45,14 +47,10 @@ class CopyClipboardField extends Component {
 export class CopyClipboardButtonField extends CopyClipboardField {
     static template = "web.CopyClipboardButtonField";
     static components = { CopyButton };
-    static props = {
-        ...CopyClipboardField.props,
-        btnClass: { type: String, optional: true },
-    };
-    static defaultProps = {
-        ...CopyClipboardField.defaultProps,
-        btnClass: "primary",
-    };
+    props = props({
+        ...copyClipboardFieldProps,
+        btnClass: t.string().optional("primary"),
+    });
 
     get copyButtonClassName() {
         return `o_btn_${this.type}_copy btn-${this.props.btnClass} rounded-2`;

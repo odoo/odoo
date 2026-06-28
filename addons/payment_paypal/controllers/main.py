@@ -4,7 +4,7 @@ import pprint
 
 from werkzeug.exceptions import Forbidden
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -29,7 +29,7 @@ class PaypalController(http.Controller):
         :return: None
         """
         tx_sudo = (
-            request
+            self
             .env["payment.transaction"]
             .sudo()
             ._search_by_reference("paypal", {"reference_id": reference})
@@ -43,12 +43,13 @@ class PaypalController(http.Controller):
             )
             normalized_response = self._normalize_paypal_data(response)
             tx_sudo = (
-                request
+                self
                 .env["payment.transaction"]
                 .sudo()
                 ._search_by_reference("paypal", normalized_response)
             )
-            tx_sudo._process("paypal", normalized_response)
+            if tx_sudo:
+                tx_sudo._record(normalized_response)
 
     @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
     def paypal_webhook(self):
@@ -65,14 +66,14 @@ class PaypalController(http.Controller):
             normalized_data = self._normalize_paypal_data(data.get("resource"), from_webhook=True)
             # Check the origin and integrity of the notification.
             tx_sudo = (
-                request
+                self
                 .env["payment.transaction"]
                 .sudo()
                 ._search_by_reference("paypal", normalized_data)
             )
             if tx_sudo:
                 self._verify_notification_origin(data, tx_sudo)
-                tx_sudo._process("paypal", normalized_data)
+                tx_sudo._record(normalized_data)
         return request.make_json_response("")
 
     def _normalize_paypal_data(self, data, from_webhook=False):
@@ -101,7 +102,7 @@ class PaypalController(http.Controller):
         elif captured := purchase_unit.get("payments", {}).get("captures"):
             result.update({**captured[0], "txn_type": "CAPTURE"})
         else:
-            _logger.warning(_("Invalid response format, can't normalize."))
+            _logger.warning(self.env._("Invalid response format, can't normalize."))
         return result
 
     def _verify_notification_origin(self, payment_data, tx_sudo):
@@ -129,7 +130,10 @@ class PaypalController(http.Controller):
                 "POST", "/v1/notifications/verify-webhook-signature", json=data
             )
         except ValidationError:
-            tx_sudo._set_error(_("Unable to verify the payment data"))
+            tx_sudo.with_context(
+                # The verification request is idempotent; the handler is safe to replay
+                payment_safe_write=True
+            )._set_error(self.env._("Unable to verify the payment data"))
             return
 
         if verification.get("verification_status") != "SUCCESS":

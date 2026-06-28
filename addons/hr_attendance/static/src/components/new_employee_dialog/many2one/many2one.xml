@@ -4,18 +4,27 @@
     <t t-name="hr_attendance.Many2One">
         <AutoComplete
             value="this.props.value"
-            placeholder="this.props.placeholder || 'Select an employee'"
+            placeholder="this.props.placeholder || 'Select or create an employee'"
             sources="this.sources"
             onInput="this.props.update"
             dropdown="true"
             autofocus="true">
             <t t-set-slot="option" t-slot-scope="optionScope">
                 <div class="d-flex align-items-center">
-                    <img t-attf-src="/web/image/hr.employee.public/{{optionScope.data.id}}/avatar_128"
-                            loading="lazy"
-                            class="rounded-circle me-2"
-                            width="24" height="24"/>
-                    <t t-out="optionScope.label"/>
+                    <t t-if="optionScope.data and optionScope.data.id">
+                        <img t-attf-src="/web/image/hr.employee.public/{{optionScope.data.id}}/avatar_128"
+                                loading="lazy"
+                                class="rounded-circle me-2"
+                                width="24"
+                                height="24"
+                        />
+                        <t t-out="optionScope.label"/>
+                    </t>
+                    <t t-else="">
+                        <span class="text-action">
+                            <t t-out="optionScope.label"/>
+                        </span>
+                    </t>
                 </div>
             </t>
         </AutoComplete>

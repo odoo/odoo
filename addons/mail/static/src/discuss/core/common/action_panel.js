@@ -1,36 +1,28 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { Component } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
-import { useBackButton, useForwardRefToParent, useService } from "@web/core/utils/hooks";
+import { useBackButton, useService } from "@web/core/utils/hooks";
 
-/**
- * @typedef {Object} Props
- * @prop {string} title
- * @prop {Object} [slots]
- * @extends {Component<Props, Env>}
- */
 export class ActionPanel extends Component {
     static template = "mail.ActionPanel";
     static components = { ResizablePanel };
-    static props = [
-        "close?",
-        "contentRef?",
-        "icon?",
-        "title?",
-        "resizable?",
-        "slots?",
-        "initialWidth?",
-        "minWidth?",
-    ];
-    static defaultProps = { contentPadding: true, resizable: true };
-
     setup() {
         super.setup();
+        this.props = props({
+            close: t.function([]).optional(),
+            contentPadding: t.boolean().optional(true),
+            contentRef: t.signal(t.instanceOf(HTMLDivElement)).optional(() => signal.ref()),
+            icon: t.string().optional(),
+            initialWidth: t.number().optional(),
+            minWidth: t.number().optional(),
+            resizable: t.boolean().optional(true),
+            slots: t.object().optional(),
+            title: t.string().optional(),
+        });
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        useForwardRefToParent("contentRef");
         useSubEnv({ inDiscussActionPanel: true });
         useBackButton(
             () => this.props.close(),

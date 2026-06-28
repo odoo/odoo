@@ -1,24 +1,29 @@
+import { props, t } from "@odoo/owl";
 import { formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { selectionField, SelectionField } from "../selection/selection_field";
+import { standardFieldProps } from "../standard_field_props";
 
 const { DateTime } = luxon;
 
 export class TimezoneMismatchField extends SelectionField {
     static template = "web.TimezoneMismatchField";
-    static props = {
-        ...super.props,
-        tzOffsetField: { type: String, optional: true },
-        mismatchTitle: { type: String, optional: true },
-    };
-    static defaultProps = {
-        ...super.defaultProps,
-        tzOffsetField: "tz_offset",
-        mismatchTitle: _t(
-            "Timezone Mismatch : This timezone is different from that of your browser.\nPlease, set the same timezone as your browser's to avoid time discrepancies in your system."
-        ),
-    };
+    props = props({
+        // inlined from SelectionField props (still in old descriptor style)
+        ...standardFieldProps,
+        placeholder: t.string().optional(),
+        required: t.boolean().optional(),
+        domain: t.or([t.array(), t.function()]).optional(),
+        tzOffsetField: t.string().optional("tz_offset"),
+        mismatchTitle: t
+            .string()
+            .optional(
+                _t(
+                    "Timezone Mismatch : This timezone is different from that of your browser.\nPlease, set the same timezone as your browser's to avoid time discrepancies in your system."
+                )
+            ),
+    });
 
     get mismatch() {
         const userOffset = this.props.record.data[this.props.tzOffsetField];

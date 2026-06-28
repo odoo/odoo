@@ -195,6 +195,7 @@ class Monetary(Field[float]):
         this monetary field is expressed in (default: `\'currency_id\'`)
     """
     type = 'monetary'
+    # Monetary fields need their corresponding currency field in cache for rounding values.
     write_sequence = 10
     _column_type = ('numeric', 'numeric')
     falsy_value = 0.0

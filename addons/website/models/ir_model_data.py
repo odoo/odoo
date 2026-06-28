@@ -21,8 +21,7 @@ class IrModelData(models.Model):
                 if request:
                     # we are in a website context, see `write()` override of
                     # ir.module.module in website
-                    current_website = self.env['website'].get_current_website()
-                    copy_ids = copy_ids.filtered(lambda c: c.website_id == current_website)
+                    copy_ids = copy_ids.filtered(lambda c: c.website_id == request.env.website)
 
                 _logger.info('Deleting %s@%s (theme `copy_ids`) for website %s',
                              copy_ids.ids, record._name, copy_ids.mapped('website_id'))

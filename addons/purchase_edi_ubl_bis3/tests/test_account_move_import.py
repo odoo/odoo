@@ -23,10 +23,18 @@ class TestAccountMoveImport(AccountTestInvoicingCommon):
             'standard_price': 40.0,
         })
 
+        cls.env['ir.sequence'].create({
+            'name': 'TEST SEQUENCE',
+            'code': 'purchase.order',
+            'prefix': 'TESTPO',
+            'padding': 5,
+            'number_increment': 1,
+            'company_id': cls.env.company.id,
+        })
+
         cls.purchase_order = cls.env['purchase.order'].create({
             'partner_id': cls.partner_open_wood.id,
             'date_order': fields.Date.today(),
-            'name': 'test_purchase_order',
             'order_line': [Command.create({
                 'product_id': cls.product.id,
                 'name': cls.product.name,
@@ -80,7 +88,7 @@ class TestAccountMoveImport(AccountTestInvoicingCommon):
         # Test with reference
         bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
-            'invoice_origin': 'TEST multiple references test_purchase_order and other refs',
+            'invoice_origin': f'{self.purchase_order.name} TESTPO99932 TESTPO00001',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'quantity': 1,
@@ -88,13 +96,13 @@ class TestAccountMoveImport(AccountTestInvoicingCommon):
             })]
         })
         bill._link_bill_origin_to_purchase_orders()
-        self.assertEqual(bill.invoice_origin, 'test_purchase_order')
+        self.assertEqual(bill.invoice_origin, self.purchase_order.name)
         self.assertTrue(all(line.purchase_order_id == self.purchase_order for line in bill.line_ids if line.purchase_order_id))
 
         # Test without ref
         bill_2 = self.env['account.move'].create({
             'move_type': 'in_invoice',
-            'invoice_origin': 'TEST multiple references and other refs',
+            'invoice_origin': 'TESTPO99932 TESTPO09876',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'quantity': 1,
@@ -104,3 +112,46 @@ class TestAccountMoveImport(AccountTestInvoicingCommon):
         bill_2._link_bill_origin_to_purchase_orders()
         self.assertFalse(bill_2.invoice_origin)
         self.assertTrue(all(not line.purchase_order_id for line in bill_2.line_ids))
+
+    def test_po_matching_no_partner_override(self):
+        """
+        When importing a bill, and it matches with a purchase order, the partner on
+        the bill should be the same as the po partner
+        """
+        self.partner_open_wood.vat = 'BE0246697724'
+        # First, should set the parent as no child exists
+        bill = self._create_bill_from_xml('ubl_bis3_PO.xml')
+        expected_parent = [{
+            'invoice_origin': self.purchase_order.name,
+            'partner_id': self.partner_open_wood.id,
+        }]
+        self.assertRecordValues(bill, expected_parent)
+        bill.unlink()
+
+        # Then, create a child of 'invoice' type -> still should set the parent
+        child = self.env['res.partner'].create({
+            'name': 'Test Child openwood',
+            'type': 'invoice',
+            'parent_id': self.partner_open_wood.id,
+        })
+
+        bill = self._create_bill_from_xml('ubl_bis3_PO.xml')
+        self.assertRecordValues(bill, expected_parent)
+
+        # Finally, create a PO with the child as partner -> should find the child
+        po_child = self.env['purchase.order'].create({
+            'partner_id': child.id,
+            'date_order': fields.Date.today(),
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+                'name': self.product.name,
+                'product_qty': 1.0,
+                'tax_ids': [Command.clear()],
+            })],
+        })
+        po_child.button_confirm()
+        bill_child = self._create_bill_from_xml('ubl_bis3_PO.xml')
+        self.assertRecordValues(bill_child, [{
+            'invoice_origin': po_child.name,
+            'partner_id': child.id,
+        }])

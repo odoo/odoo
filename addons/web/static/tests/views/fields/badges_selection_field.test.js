@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, press } from "@odoo/hoot-dom";
 import {
     clickSave,
     contains,
@@ -163,17 +163,14 @@ test("BadgesSelectionField: switching to SelectMenu when badge_limit is exceeded
             </form>`,
     });
 
-    expect(".o_select_menu").toHaveCount(1, {
-        message: "Should render SelectMenu instead of badges",
+    expect("span.o_selection_badge").toHaveCount(2, {
+        message: "Should render 1 badge and 1 overflow dropdown toggle",
     });
-    expect("span.o_selection_badge").toHaveCount(0, {
-        message: "Should not render individual badges",
-    });
+    expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
 
-    // Open dropdown and check values
-    await contains(".o_select_menu input").click();
+    await contains(".o_selection_badge.o-dropdown-caret").click();
     await animationFrame();
-    expect(".o-dropdown-item").toHaveCount(2);
+    expect(".dropdown-menu").toHaveCount(1);
 });
 
 test("BadgesSelectionField: verify options are filtered via the allowed_selection_field option", async () => {
@@ -208,11 +205,9 @@ test("BadgesSelectionField: placeholder attribute is used when provided", async 
             </form>`,
     });
 
-    expect(
-        ".o_select_menu .dropdown-toggle .o_select_menu_input[placeholder='Pick a color']"
-    ).toHaveCount(1, {
-        message: "should display the custom placeholder",
-    });
+    // With 2 options and badge_limit 1: 1 visible badge + "+1" overflow dropdown toggle
+    expect("span.o_selection_badge").toHaveCount(2);
+    expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
 });
 
 test("BadgesSelectionField: placeholder falls back to field label when not provided", async () => {
@@ -227,10 +222,55 @@ test("BadgesSelectionField: placeholder falls back to field label when not provi
             </form>`,
     });
 
-    expect(".o_select_menu .dropdown-toggle .o_select_menu_input[placeholder='Color']").toHaveCount(
-        1,
-        {
-            message: "should fall back to the field label as placeholder",
-        }
-    );
+    // With 2 options and badge_limit 1: 1 visible badge + "+1" overflow dropdown toggle
+    expect("span.o_selection_badge").toHaveCount(2);
+    expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
+});
+
+test("BaseBadgesSelectionField: keyboard navigation (Tab / Arrows / Backspace / Delete)", async () => {
+    await mountView({
+        resModel: "res.partner",
+        type: "form",
+        arch: `
+            <form>
+                <button type="button" class="btn1">Btn</button>
+                <field name="color" widget="badges_selection"/>
+                <button type="button" class="btn2">Btn</button>
+            </form>
+        `,
+    });
+
+    await contains(".btn1").focus();
+    await press("Tab");
+    expect(".o_selection_badge.o-navigable:first").toBeFocused();
+
+    await press("Enter");
+    expect(".o_selection_badge.o-navigable:contains('Red')").toHaveClass("active");
+
+    await press("ArrowRight");
+    expect(".o_selection_badge.o-navigable:last").toBeFocused();
+
+    await press("Space");
+    await animationFrame();
+    expect(".o_selection_badge.o-navigable:contains('Black')").toHaveClass("active");
+
+    await press("ArrowLeft");
+    expect(".o_selection_badge.o-navigable:first").toBeFocused();
+
+    await press("Backspace");
+    await animationFrame();
+    expect(".o_selection_badge.o-navigable.active").toHaveCount(0);
+
+    await press("Enter");
+    await animationFrame();
+    expect(".o_selection_badge.o-navigable:contains('Red')").toHaveClass("active");
+
+    await press("Delete");
+    await animationFrame();
+    expect(".o_selection_badge.o-navigable.active").toHaveCount(0);
+
+    await press("Enter");
+    await animationFrame();
+    await press("Tab");
+    expect(".btn2").toBeFocused();
 });

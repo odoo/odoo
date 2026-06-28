@@ -12,6 +12,7 @@
         "views/payment_adyen_templates.xml",
         "views/payment_form_templates.xml",
         "views/payment_provider_views.xml",
+        "data/payment_method_data.xml",
         "data/payment_provider_data.xml",  # Depends on views/payment_adyen_templates.xml
         "wizards/payment_capture_wizard_views.xml",
     ],

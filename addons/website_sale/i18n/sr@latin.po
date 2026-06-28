@@ -15,23 +15,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
-"PO-Revision-Date: 2026-01-24 12:43+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
+"PO-Revision-Date: 2026-04-23 11:54+0000\n"
 "Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
-"odoo-s19-1/website_sale/sr_Latn/>\n"
+"odoo-s19-2/website_sale/sr_Latn/>\n"
 "Language: sr@latin\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "\" category."
-msgstr "\" kategorija."
+msgid "\" category"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid ""
+"%(product_name)s has not been added to your cart since it is not available."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -195,15 +202,16 @@ msgid "1 Column"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__100_pc
-msgid "100 %"
-msgstr "100 %"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "2 Columns"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+msgid "2 columns"
 msgstr ""
 
 #. module: website_sale
@@ -213,8 +221,9 @@ msgid "3 Columns"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__33_pc
-msgid "33 %"
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+msgid "3 columns"
 msgstr ""
 
 #. module: website_sale
@@ -225,25 +234,27 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+msgid "4 columns"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "5 Columns"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__50_pc
-msgid "50 %"
-msgstr "50 %"
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+msgid "5 columns"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "6 Columns"
 msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__66_pc
-msgid "66 %"
-msgstr "66 %"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -277,10 +288,10 @@ msgstr "<b>Oznake</b>"
 #: model:mail.template,body_html:website_sale.mail_template_sale_order_rating
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <t t-set=\"secondary_color\" t-value=\"object.company_id."
-"email_secondary_color or '#875A7B'\"/>\n"
-"                    <t t-set=\"primary_color\" t-value=\"object.company_id."
-"email_primary_color or '#FFFFFF'\"/>\n"
+"                    <t t-set=\"secondary_color\" t-"
+"value=\"object.company_id.email_secondary_color or '#875A7B'\"/>\n"
+"                    <t t-set=\"primary_color\" t-"
+"value=\"object.company_id.email_primary_color or '#FFFFFF'\"/>\n"
 "                    <t t-if=\"'website_id' in object and object.website_id\" "
 "t-set=\"logo_src\" t-value=\"object.website_id.image_url(object.website_id, "
 "'logo')\"/>\n"
@@ -295,8 +306,8 @@ msgid ""
 "                        <br/><br/>\n"
 "                        Take a minute to rate your order!\n"
 "                        <br/>\n"
-"                        <t t-if=\"not is_html_empty(object.user_id."
-"signature)\">\n"
+"                        <t t-if=\"not is_html_empty(object.user_id.signature)"
+"\">\n"
 "                            <div style=\"font-size: 14px; margin: 0 0 16px;"
 "\"><t t-out=\"object.user_id.signature\"/></div>\n"
 "                        </t>\n"
@@ -311,14 +322,14 @@ msgid ""
 "                                <tr>\n"
 "                                    <td style=\"width: 84px; padding: 10px "
 "10px 10px 0; vertical-align: top;\">\n"
-"                                        <img t-attf-src=\"/web/image/product."
-"product/{{ product.id }}/image_128\" t-attf-style=\"width: 64px; height: "
-"{{object.website_id and object.website_id._get_product_image_ratio_height() "
-"or '64px'}}; object-fit: cover; object-position: center;\" alt=\"Product "
-"image\"/>\n"
+"                                        <img t-attf-src=\"/web/image/"
+"product.product/{{ product.id }}/image_128\" t-attf-style=\"width: 64px; "
+"height: {{object.website_id and "
+"object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: "
+"cover; object-position: center;\" alt=\"Product image\"/>\n"
 "                                    </td>\n"
-"                                    <td style=\"padding: 10px 10px 10px 0;"
-"\">\n"
+"                                    <td style=\"padding: 10px 10px 10px "
+"0;\">\n"
 "                                        <div>\n"
 "                                            <h3 t-attf-style=\"font-size: "
 "14px; margin-bottom: {{line.product_id.product_template_attribute_value_ids "
@@ -328,20 +339,22 @@ msgid ""
 "                                            </h3>\n"
 "                                        </div>\n"
 "                                        <div>\n"
-"                                            <span t-if=\"line.product_id."
-"product_template_attribute_value_ids\" style=\"color: #6c757d;\">\n"
-"                                                <t t-out=\"', '.join(line."
-"product_id.product_template_attribute_value_ids.mapped('name'))\"/>\n"
+"                                            <span t-"
+"if=\"line.product_id.product_template_attribute_value_ids\" style=\"color: "
+"#6c757d;\">\n"
+"                                                <t t-out=\"', "
+"'.join(line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
 "                                            </span>\n"
 "                                        </div>\n"
 "                                    </td>\n"
 "                                    <td style=\"padding: 10px 0; text-align: "
 "right;\">\n"
-"                                        <a t-att-href=\"product."
-"website_absolute_url + '#o_product_page_reviews'\" t-attf-style=\"border-"
-"radius: 5px; background-color: {{secondary_color}}; padding: 8px 16px 8px "
-"16px; color: {{primary_color}}; text-decoration: none; font-size:13px; white-"
-"space: nowrap;\" target=\"_blank\">\n"
+"                                        <a t-att-"
+"href=\"product.website_absolute_url + '#o_product_page_reviews'\" t-attf-"
+"style=\"border-radius: 5px; background-color: {{secondary_color}}; padding: "
+"8px 16px 8px 16px; color: {{primary_color}}; text-decoration: none; font-"
+"size:13px; white-space: nowrap;\" target=\"_blank\">\n"
 "                                            Review Now\n"
 "                                        </a>\n"
 "                                    </td>\n"
@@ -386,6 +399,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
 msgid "<i class=\"fa fa-cart-plus me-2\"/>Add to Cart"
 msgstr "<i class=\"fa fa-cart-plus me-2\"/>Dodaj u korpu"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
+msgid ""
+"<i class=\"fa fa-circle text-danger me-1\" aria-hidden=\"true\"/>\n"
+"                                            Out of stock"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -440,7 +460,7 @@ msgstr "<i class=\"fa fa-pencil me-1\"/>Uredi"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
 msgid "<i class=\"fa fa-pencil me-1\"/>Want an invoice?"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil me-1\"/>Želite li račun?"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_button
@@ -537,6 +557,13 @@ msgid ""
 "                Shipping: 2-3 Business Days\n"
 "            </small>"
 msgstr ""
+"<small class=\"text-muted mb-0\">\n"
+"                <a href=\"/terms\" class=\"o_translate_inline text-muted\">\n"
+"                    <u>Uslovi ponude i plaćanja</u>\n"
+"                </a><br/>\n"
+"                30 dana garancije na povraćaj novca<br/>\n"
+"                Dostava: 2-3 radna dana\n"
+"            </small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -546,7 +573,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
+msgstr "<span class=\"align-middle\">da pratite svoju porudžbinu.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
@@ -575,10 +602,10 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_to_compare
+#: model_terms:ir.ui.view,arch_db:website_sale.comparison_button
 msgid ""
 "<span class=\"fa fa-exchange fa-fw o_not-animable\"/>\n"
-"                    <span class=\"o_label small ms-2\">Compare</span>"
+"            <span class=\"o_label small ms-2\">Compare</span>"
 msgstr ""
 
 #. module: website_sale
@@ -626,9 +653,9 @@ msgstr ""
 msgid ""
 "<span class=\"o_wsale_delivery_price_badge text-muted fw-bold text-end\" "
 "name=\"price\">\n"
-"                    <small class=\"fw-normal\">Select to compute delivery "
-"rate</small>\n"
-"                </span>"
+"                <small class=\"fw-normal\">Select to compute delivery rate</"
+"small>\n"
+"            </span>"
 msgstr ""
 
 #. module: website_sale
@@ -681,15 +708,6 @@ msgid "<span class=\"text-300\">|</span>"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
-msgid ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
-"on variants</span>"
-msgstr ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Na "
-"osnovu varijanti</span>"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"text-muted\">Search results for </span>'"
 msgstr ""
@@ -709,6 +727,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"visually-hidden\">filters active</span>"
 msgstr "<span class=\"visually-hidden\">aktivni filteri</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "<span invisible=\"not default_show_availability\">units</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper_boxed
@@ -744,19 +767,6 @@ msgstr "<span>Porudžbina</span>"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_kanban
 msgid "<span>Publish on website</span>"
 msgstr "<span>Objavi na website-u</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
-msgid ""
-"<span>Unfortunately your order can not be confirmed as the amount of your "
-"payment does not match the amount of your cart.\n"
-"                        Please contact the responsible of the shop for more "
-"information.</span>"
-msgstr ""
-"<span>Nažalost vaša porudžbina ne može biti potvrđena jer se iznos vaše "
-"uplate ne poklapa sa iznosom vaše korpe.\n"
-"                        Molimo vas da kontaktirate odgovornu osobu "
-"prodavnice za više inromacija.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -795,6 +805,79 @@ msgid "<strong>Warning!</strong>"
 msgstr "<strong>Pažnja!</strong>"
 
 #. module: website_sale
+#: model:mail.template,body_html:website_sale.email_template_back_in_stock
+msgid ""
+"<t t-set=\"website\" t-value=\"object.website_id or "
+"object.website_id.get_current_website()\"/>\n"
+"                <div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <t t-if=\"website\" t-set=\"logo_src\" t-"
+"value=\"website.image_url(website, 'logo')\"/>\n"
+"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/logo.png?"
+"company=#{object.company_id.id}\"/>\n"
+"                    <img t-att-src=\"logo_src\" style=\"display:block; "
+"height:50px; margin:0 0 16px;\" alt=\"Logo\"/>\n"
+"                    <p>\n"
+"                        Hello <t t-out=\"ctx.get('customer_name')"
+"\">Customer</t>,\n"
+"                    </p>\n"
+"                    <p>The product you were waiting for is now back in stock!"
+"</p>\n"
+"                    <div t-if=\"not is_html_empty(user.signature)\" "
+"style=\"font-size: 14px; margin: 0 0 16px;\">\n"
+"                        <t t-out=\"user.signature or ''\">Mitchell Admin</"
+"t>\n"
+"                    </div>\n"
+"                    <div t-attf-style=\"margin-bottom: 22px; font-size: 14px;"
+"\">\n"
+"                        <a t-att-href=\"object.website_url\" t-attf-"
+"style=\"background-color: {{website.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{website.company_id.email_primary_color or '#fff'}}; border-radius: 5px; "
+"font-size:14px;\">\n"
+"                            Order Now\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <div style=\"margin-bottom: 12px;\">\n"
+"                        <table role=\"presentation\" width=\"100%\" "
+"style=\"max-width: 590px; border-collapse: collapse; font-size: 14px;\">\n"
+"                            <tr>\n"
+"                                <td width=\"24%\" style=\"max-width: 120px; "
+"padding: 0 10px 10px 0; vertical-align: top;\">\n"
+"                                    <img t-att-"
+"src=\"website.image_url(object, 'image_1920')\" style=\"width: 100px; "
+"height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                </td>\n"
+"                                <td style=\"padding-bottom: 8px; vertical-"
+"align: top;\">\n"
+"                                    <h2 t-att-style=\"'margin:0; font-"
+"size:14px; color:%s;' % ((website and "
+"website.company_id.email_secondary_color) or '#875A7B')\">\n"
+"                                        <strong t-out=\"object.name or "
+"''\">Desk Combination</strong>\n"
+"                                    </h2>\n"
+"                                    <p t-"
+"if=\"object.product_template_attribute_value_ids\" style=\"margin: 4px "
+"0;\">\n"
+"                                        ( <t t-out=\"', "
+"'.join(object.product_template_attribute_value_ids.mapped('name'))\">Wood</"
+"t> )\n"
+"                                    </p>\n"
+"                                    <t t-out=\"object.description_ecommerce "
+"or ''\">Desk Description</t>\n"
+"                                </td>\n"
+"                                <td width=\"19%\" align=\"right\" "
+"style=\"max-width: 100%; vertical-align: top;\">\n"
+"                                    <t t-"
+"out=\"format_amount(object.list_price, object.currency_id)\">$ 450</t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </div>\n"
+"                </div>\n"
+"            "
+msgstr ""
+
+#. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" "
@@ -808,8 +891,8 @@ msgid ""
 "width=\"100%\" style=\"max-width: 590px; background-color: white; padding: "
 "0px 0px 0px 0px; border-collapse:collapse;\" role=\"presentation\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
-"                    <t t-set=\"color\" t-value=\"object.company_id."
-"email_secondary_color or '#875A7B'\"/>\n"
+"                    <t t-set=\"color\" t-"
+"value=\"object.company_id.email_secondary_color or '#875A7B'\"/>\n"
 "                    <t t-if=\"'website_id' in object and object.website_id\" "
 "t-set=\"logo_src\" t-value=\"object.website_id.image_url(object.website_id, "
 "'logo')\"/>\n"
@@ -834,10 +917,11 @@ msgid ""
 "14px;\">\n"
 "                            <a t-attf-href=\"{{ object.get_base_url() }}/"
 "shop/cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
-"target=\"_blank\" t-attf-style=\"background-color: {{object.company_id."
-"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
-"decoration: none; color: {{object.company_id.email_primary_color or "
-"'#fff'}}; border-radius: 5px; font-size:14px;\">\n"
+"target=\"_blank\" t-attf-style=\"background-color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px "
+"8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#fff'}}; border-radius: 5px; "
+"font-size:14px;\">\n"
 "                                Resume order\n"
 "                            </a>\n"
 "                        </div>\n"
@@ -864,13 +948,14 @@ msgid ""
 "                                            <h3 t-attf-style=\"mso-line-"
 "height-rule:exactly; margin:0; font-size: 14px; color: {{color}}; {{'margin-"
 "bottom: 6px;' if line.product_type == 'combo' else ''}}\">\n"
-"                                                <strong t-out=\"line."
-"product_id.name or ''\">Taking care of Trees Course</strong>\n"
-"                                                <span t-if=\"line.product_id."
-"product_template_attribute_value_ids\" style=\"color: #6c757d;\">\n"
-"                                                    <t t-out=\"', '."
-"join(line.product_id.product_template_attribute_value_ids.mapped('name'))\"/"
-">\n"
+"                                                <strong t-"
+"out=\"line.product_id.name or ''\">Taking care of Trees Course</strong>\n"
+"                                                <span t-"
+"if=\"line.product_id.product_template_attribute_value_ids\" style=\"color: "
+"#6c757d;\">\n"
+"                                                    <t t-out=\"', "
+"'.join(line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
 "                                                </span>\n"
 "                                            </h3>\n"
 "                                            <t t-set=\"combo_line_idx\" t-"
@@ -879,20 +964,21 @@ msgid ""
 "value=\"0\"/>\n"
 "                                            <t t-set=\"line_idx\" t-"
 "value=\"line_index\"/>\n"
-"                                            <t t-foreach=\"object."
-"order_line\" t-as=\"combo_liness\">\n"
+"                                            <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_liness\">\n"
 "                                                <t t-if=\"(not hasattr(line, "
 "'is_delivery') or not line.is_delivery) and (combo_liness.linked_line_id.id "
 "== line.id) and line_idx == line_index\">\n"
-"                                                    <t t-if=\"combo_liness."
-"linked_line_id.id == line.id and combo_liness.id != line.id\">\n"
+"                                                    <t t-"
+"if=\"combo_liness.linked_line_id.id == line.id and combo_liness.id != "
+"line.id\">\n"
 "                                                        <t t-"
 "set=\"totalComboLines\" t-value=\"totalComboLines + 1\"/>\n"
 "                                                    </t>\n"
 "                                                </t>\n"
 "                                            </t>\n"
-"                                            <t t-foreach=\"object."
-"order_line\" t-as=\"combo_line\">\n"
+"                                            <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_line\">\n"
 "                                                <t t-if=\"(not hasattr(line, "
 "'is_delivery') or not line.is_delivery) and (combo_line.linked_line_id.id == "
 "line.id) and combo_line.combo_item_id and line_idx == line_index\">\n"
@@ -903,8 +989,9 @@ msgid ""
 "                                                        <t t-"
 "set=\"borderBottomStyle\" t-value=\"''\"/>\n"
 "\n"
-"                                                        <t t-if=\"combo_line."
-"linked_line_id.id == line.id and combo_line.id != line.id\">\n"
+"                                                        <t t-"
+"if=\"combo_line.linked_line_id.id == line.id and combo_line.id != "
+"line.id\">\n"
 "                                                            <t t-"
 "set=\"combo_line_idx\" t-value=\"combo_line_idx + 1\"/>\n"
 "                                                        </t>\n"
@@ -946,16 +1033,17 @@ msgid ""
 "if=\"combo_line.product_id.product_template_attribute_value_ids\" "
 "style=\"color: #6c757d;\">\n"
 "                                                                        <t t-"
-"out=\"', '.join(combo_line.product_id.product_template_attribute_value_ids."
-"mapped('name'))\"/>\n"
+"out=\"', "
+"'.join(combo_line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
 "                                                                    </span>\n"
 "                                                                    -\n"
 "                                                                    <span>\n"
 "                                                                        <t t-"
 "out=\"int(combo_line.product_uom_qty) or ''\">10000</t>\n"
 "                                                                        <t t-"
-"out=\"combo_line.product_uom_id.name or ''\" t-if=\"combo_line.order_id."
-"create_uid._has_group('uom.group_uom')\"/>\n"
+"out=\"combo_line.product_uom_id.name or ''\" t-"
+"if=\"combo_line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
 "                                                                    </span>\n"
 "                                                                    <p t-"
 "if=\"hasattr(combo_line, 'is_rental') and combo_line.is_rental and "
@@ -966,18 +1054,18 @@ msgid ""
 "                                                                    <t t-"
 "if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
 "(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
-"(hasattr(combo_line, 'calendar_event_id') and combo_line."
-"calendar_event_id)\">\n"
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)"
+"\">\n"
 "                                                                        <t t-"
-"set=\"description_lines\" t-value=\"combo_line."
-"get_description_following_lines()\"/>\n"
+"set=\"description_lines\" t-"
+"value=\"combo_line.get_description_following_lines()\"/>\n"
 "                                                                        <div "
 "t-if=\"description_lines\" style=\"color: #6c757d;\">\n"
 "                                                                            <t "
 "t-foreach=\"description_lines\" t-as=\"description_line\">\n"
 "                                                                                <p "
-"t-if=\"description_line\" t-out=\"description_line\" style=\"margin: 4px 0 0;"
-"\"/>\n"
+"t-if=\"description_line\" t-out=\"description_line\" style=\"margin: 4px 0 "
+"0;\"/>\n"
 "                                                                            </"
 "t>\n"
 "                                                                        </"
@@ -985,22 +1073,22 @@ msgid ""
 "                                                                    </t>\n"
 "                                                        </div>\n"
 "                                                    </t>\n"
-"                                                <t t-elif=\"not(combo_line."
-"linked_line_id) and combo_line.id == line.id\">\n"
+"                                                <t t-"
+"elif=\"not(combo_line.linked_line_id) and combo_line.id == line.id\">\n"
 "                                                    <p t-if=\"hasattr(line, "
 "'is_rental') and line.is_rental\" style=\"margin: 4px 0 0; color: #6c757d;"
 "\">\n"
-"                                                        <t t-out=\"line."
-"_get_rental_pricing_description() or ''\"/><br/>\n"
+"                                                        <t t-"
+"out=\"line._get_rental_pricing_description() or ''\"/><br/>\n"
 "                                                    </p>\n"
 "                                                    <t t-"
 "if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
 "(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
-"(hasattr(combo_line, 'calendar_event_id') and combo_line."
-"calendar_event_id)\">\n"
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)"
+"\">\n"
 "                                                        <t t-"
-"set=\"product_description_lines\" t-value=\"line."
-"get_description_following_lines()\"/>\n"
+"set=\"product_description_lines\" t-"
+"value=\"line.get_description_following_lines()\"/>\n"
 "                                                        <div t-"
 "if=\"product_description_lines\" style=\"color: #6c757d;\">\n"
 "                                                            <t t-"
@@ -1016,11 +1104,11 @@ msgid ""
 "                                            <span style=\"display: inline-"
 "block;  margin-top: 4px; padding: 4px 8px; border-radius: 20px; background-"
 "color: #e9ecef; color: #454748; font-size: 12px;\">\n"
-"                                                <t t-out=\"int(line."
-"product_uom_qty) or ''\">10000</t>\n"
-"                                                <t t-out=\"line."
-"product_uom_id.name or ''\" t-if=\"line.order_id.create_uid._has_group('uom."
-"group_uom')\"/>\n"
+"                                                <t t-"
+"out=\"int(line.product_uom_qty) or ''\">10000</t>\n"
+"                                                <t t-"
+"out=\"line.product_uom_id.name or ''\" t-"
+"if=\"line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
 "                                            </span>\n"
 "                                        </td>\n"
 "                                        <td width=\"19%\" align=\"right\" "
@@ -1034,8 +1122,9 @@ msgid ""
 "                                            <t t-else=\"\">\n"
 "                                                <span style=\"white-space: "
 "nowrap;\">\n"
-"                                                    <t t-if=\"object."
-"website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
+"                                                    <t t-"
+"if=\"object.website_id.show_line_subtotals_tax_selection == "
+"'tax_excluded'\">\n"
 "                                                        <t t-"
 "out=\"format_amount(line.price_subtotal, object.currency_id) or ''\">$ "
 "10.00</t>\n"
@@ -1050,8 +1139,8 @@ msgid ""
 "                                            <t t-if=\"hasattr(line, "
 "'recurring_invoice') and line.recurring_invoice\">\n"
 "                                                <br/>\n"
-"                                                <t t-out=\"line."
-"subscription_plan_id.billing_period_display_sentence or ''\"/>\n"
+"                                                <t t-"
+"out=\"line.subscription_plan_id.billing_period_display_sentence or ''\"/>\n"
 "                                            </t>\n"
 "                                        </td>\n"
 "                                    </tr>\n"
@@ -1066,44 +1155,47 @@ msgid ""
 "                                <td style=\"padding-top: 8px;  border-top: "
 "1px solid #dee2e6; text-align: right; color: #495057;\" width=\"100px\" "
 "align=\"right\">\n"
-"                                    <t t-out=\"format_amount(object."
-"amount_delivery, object.currency_id) or ''\">-</t>\n"
+"                                    <t t-"
+"out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">-</"
+"t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr>\n"
-"                                <td style=\"padding-top: 4px; color: #495057;"
-"\">Subtotal</td>\n"
+"                                <td style=\"padding-top: 4px; color: "
+"#495057;\">Subtotal</td>\n"
 "                                <td style=\"padding-top: 4px; text-align: "
 "right; color: #495057;\" width=\"100px\" align=\"right\"><t t-"
 "out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">-</"
 "t></td>\n"
 "                            </tr>\n"
-"                            <tr>\n"
-"                                <t t-if=\"object.tax_totals and object."
-"tax_totals['subtotals']\">\n"
-"                                        <t t-foreach=\"object."
-"tax_totals['subtotals']\" t-as=\"line\">\n"
-"                                            <t t-"
-"foreach=\"line['tax_groups']\" t-as=\"tax_line\">\n"
-"                                                <tr>\n"
-"                                                    <td style=\"padding: 4px "
-"0 8px 0; color: #495057;\"><span t-out=\"tax_line['group_name']\"/></td>\n"
-"                                                    <td style=\"padding: 4px "
-"0 8px 0; text-align: right; color: #495057;\" width=\"100px\" "
-"align=\"right\" t-out=\"format_amount(tax_line['tax_amount_currency'], "
-"object.currency_id) or ''\">$ 0.00</td>\n"
-"                                                </tr>\n"
-"                                            </t>\n"
-"                                        </t>\n"
-"                                    </t>\n"
-"                            </tr>\n"
+"                        </table>\n"
+"                        <t t-if=\"object.tax_totals and "
+"object.tax_totals['subtotals']\">\n"
+"                            <t t-set=\"all_tax_lines\" t-value=\"[tax for "
+"line in object.tax_totals['subtotals'] for tax in line['tax_groups']]\"/>\n"
+"                            <table width=\"100%\" t-if=\"all_tax_lines\" "
+"style=\"font-size: 14px; border-collapse:collapse;\" role=\"presentation\">\n"
+"                                <tr t-foreach=\"all_tax_lines\" t-"
+"as=\"tax_line\">\n"
+"                                    <td style=\"padding: 4px 0 8px 0; color: "
+"#495057;\"><span t-out=\"tax_line['group_name']\"/></td>\n"
+"                                    <td style=\"padding: 4px 0 8px 0; text-"
+"align: right; color: #495057;\" width=\"100px\" align=\"right\" t-"
+"out=\"format_amount(tax_line['tax_amount_currency'], object.currency_id) or "
+"''\">$ 0.00</td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </t>\n"
+"                        <table width=\"100%\" role=\"presentation\" "
+"style=\"font-size: 14px; border-collapse:collapse;\">\n"
 "                            <tr>\n"
 "                                <td style=\"padding-top: 8px; border-top: "
 "1px solid #343a40;\"><strong>Total</strong></td>\n"
 "                                <td style=\"padding-top: 8px; border-top: "
 "1px solid #343a40; text-align: right\" width=\"100px\" align=\"right\">\n"
-"                                    <strong t-out=\"format_amount(object."
-"amount_total, object.currency_id) or ''\">-</strong>\n"
+"                                    <strong t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">-</"
+"strong>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
@@ -1263,7 +1355,7 @@ msgid "Active"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Add Media"
 msgstr ""
@@ -1275,12 +1367,6 @@ msgid "Add More"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__add_to_cart_action
-#: model:ir.model.fields,field_description:website_sale.field_website__add_to_cart_action
-msgid "Add To Cart Action"
-msgstr "Dodaj u korpu akcija"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Add a product"
 msgstr ""
@@ -1288,7 +1374,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
-"Add a reference price per UoM on products (i.e $/kg), in addition to "
+"Add a reference price per UoM on products (e.g $/kg), in addition to "
 "the                           sale price"
 msgstr ""
 
@@ -1322,10 +1408,9 @@ msgstr "Dodaj jedan"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/website_sale/static/src/js/product/product.xml:0
-#: code:addons/website_sale/static/src/website_builder/add_to_card_option.js:0
+#: code:addons/website_sale/static/src/website_builder/add_to_cart_option.js:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Add to Cart"
 msgstr "Dodaj u korpu"
 
@@ -1354,9 +1439,17 @@ msgid "Add to compare"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_to_wishlist
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_add_to_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale.wishlist_button
 msgid "Add to wishlist"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+msgid "Added to your wishlist"
 msgstr ""
 
 #. module: website_sale
@@ -1549,6 +1642,21 @@ msgid "Automate abandoned checkout emails"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_automate_suggested_products
+msgid "Automate suggested products"
+msgstr ""
+
+#. module: website_sale
+#: model:res.groups,name:website_sale.group_automate_suggested_products
+msgid "Automatically add optional, accessory and alternative products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Automatically add optional, accessory, and alternative products."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__publish_on
 #: model:ir.model.fields,help:website_sale.field_product_public_category__publish_on
 #: model:ir.model.fields,help:website_sale.field_product_template__publish_on
@@ -1564,6 +1672,11 @@ msgstr "Prosečna ocena"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__back_button_label
 msgid "Back Button Label"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__stock_notification_partner_ids
+msgid "Back in stock Notifications"
 msgstr ""
 
 #. module: website_sale
@@ -1607,28 +1720,6 @@ msgid "Badge"
 msgstr "Bedž"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_count
-#: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_count
-msgid "Base Unit Count"
-msgstr "Brojač osnovnih jedinica"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_name
-#: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_name
-msgid "Base Unit Name"
-msgstr "Naziv osnovne jedinice"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_show_uom_price
-msgid "Base Unit Price"
-msgstr "Cena osnovne jedinice"
-
-#. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.base_unit_action
-msgid "Base Units"
-msgstr "Osnovne jedinice"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "Based on"
 msgstr ""
@@ -1651,6 +1742,11 @@ msgstr ""
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_beds
 msgid "Beds"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
+msgid "Below"
 msgstr ""
 
 #. module: website_sale
@@ -1731,6 +1827,12 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+msgid "Bottom"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Bottom of Page"
 msgstr ""
 
@@ -1768,7 +1870,7 @@ msgstr "Dugmići"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/add_to_card_option.js:0
+#: code:addons/website_sale/static/src/website_builder/add_to_cart_option.js:0
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Buy Now"
 msgstr "Kupi odmah"
@@ -1814,8 +1916,6 @@ msgstr "Može da objavljuje"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/const.py:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Cards"
 msgstr "Kartice"
@@ -1851,6 +1951,8 @@ msgstr "Email za oporavak korpe je već poslat"
 
 #. module: website_sale
 #. odoo-javascript
+#. odoo-python
+#: code:addons/website_sale/models/product_public_category.py:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__product_category_ids
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__prevent_sale_for_categories
@@ -1872,16 +1974,9 @@ msgstr ""
 "                touchscreen interfejsa."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_category_extra_link
-msgid "Categories:"
-msgstr "Kategorije:"
-
-#. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_item_option_plugin.js:0
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_header_category_option_plugin.js:0
-#: code:addons/website_sale/static/src/website_builder/products_searchbar_option_plugin.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__category_id
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Category"
@@ -1890,6 +1985,12 @@ msgstr "Kategorija"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_footer
 msgid "Category Footer"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
+msgid "Category Header"
 msgstr ""
 
 #. module: website_sale
@@ -1913,11 +2014,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.filmstrip_categories
 msgid "Category image"
 msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_category_extra_link
-msgid "Category:"
-msgstr "Kategorija:"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps_ceiling
@@ -1954,20 +2050,15 @@ msgid "Chandeliers"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.delivery_method
-msgid "Change location"
-msgstr ""
-
-#. module: website_sale
 #: model:website.checkout.step,main_button_label:website_sale.checkout_step_delivery
 msgid "Checkout"
 msgstr "Poručivanje"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/checkout_page_option_plugin.js:0
-msgid "Checkout Pages"
-msgstr "Stranice poručivanja"
+#: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
+msgid "Checkout Page"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
@@ -1981,18 +2072,6 @@ msgid "Chips"
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/const.py:0
-msgid "Chips Contained"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-msgid "Choose a pick-up point"
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Choose one pre-made preset and customise it as you wish"
@@ -2000,16 +2079,9 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-#: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
-msgid "Choose this location"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
 #: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
-msgid "Choose your favorite"
+msgid "Choose your"
 msgstr ""
 
 #. module: website_sale
@@ -2070,13 +2142,6 @@ msgstr "Klikni na ovo dugme kako bi tvoji korisnici mogli da ga vide."
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
-#: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
-msgid "Click to select"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 msgid "Clickable items"
 msgstr ""
@@ -2087,12 +2152,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_sidebar
 msgid "Close"
 msgstr "Zatvori"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/location_selector/location_schedule/location_schedule.js:0
-msgid "Closed"
-msgstr "Zatvoren"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2167,7 +2226,7 @@ msgstr "Ime kompanije"
 #: code:addons/website_sale/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.add_to_compare
+#: model_terms:ir.ui.view,arch_db:website_sale.comparison_button
 msgid "Compare"
 msgstr ""
 
@@ -2306,6 +2365,16 @@ msgid "Content Width"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Continue Selling"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__default_allow_out_of_stock_order
+msgid "Continue selling when out-of-stock"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Continue shopping"
 msgstr ""
@@ -2370,7 +2439,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__create_uid
-#: model:ir.model.fields,field_description:website_sale.field_website_base_unit__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_uid
 msgid "Created by"
@@ -2391,7 +2459,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__create_date
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__create_date
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__create_date
-#: model:ir.model.fields,field_description:website_sale.field_website_base_unit__create_date
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__create_date
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_date
 msgid "Created on"
@@ -2407,12 +2474,6 @@ msgstr "Datum Kreiranja"
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 msgid "Current Category or All"
 msgstr "Trenutna kategorija ili sve"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_id
-#: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_id
-msgid "Custom Unit of Measure"
-msgstr "Prilagođena Jedinica mere"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2467,11 +2528,6 @@ msgid "Customize Email Templates"
 msgstr "Prilagodi Email šablone"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
-msgstr "PREVUCITE BLOKOVE OVDE DA BI BULI DOSTUPNI ZA SVE PROIZVODE"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 msgid "Darken overlay"
@@ -2519,12 +2575,22 @@ msgid "Default Sort"
 msgstr "Podrazumevano sortiranje"
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product__base_unit_id
-#: model:ir.model.fields,help:website_sale.field_product_template__base_unit_id
-#: model:ir.model.fields,help:website_sale.field_website_base_unit__name
-msgid "Define a custom unit to display in the price per unit of measure field."
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__journal_id
+#: model:ir.model.fields,field_description:website_sale.field_website__journal_id
+msgid "Default Website Journal"
 msgstr ""
-"Definišite prilagođenu jedinicu za prikaz u polju cene po jedinici mere."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Default accounting journal for online orders"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid ""
+"Default availability mode set on newly created storable products. This can "
+"be changed at the product level."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -2560,11 +2626,6 @@ msgstr ""
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options_plugin.js:0
 msgid "Delete Ribbon"
 msgstr "Obriši traku"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
-msgid "Deliver to pickup point"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
@@ -2626,7 +2687,6 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
-#: code:addons/website_sale/static/src/website_builder/products_searchbar_option_plugin.js:0
 #: model:ir.model.fields,field_description:website_sale.field_product_product__description
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_description
 #: model:ir.model.fields,field_description:website_sale.field_product_template__description
@@ -2745,6 +2805,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "Display"
 msgstr "Prikaz"
@@ -2760,6 +2821,7 @@ msgstr "Prikaz"
 #: model:ir.model.fields,field_description:website_sale.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_combo__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_document__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_image__display_name
@@ -2782,7 +2844,6 @@ msgstr "Prikaz"
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:website_sale.field_theme_utils__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website__display_name
-#: model:ir.model.fields,field_description:website_sale.field_website_base_unit__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_menu__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_page__display_name
@@ -2803,16 +2864,6 @@ msgstr "Prikaži cene proizvoda"
 #: code:addons/website_sale/static/src/website_builder/product_attribute_option.xml:0
 msgid "Display Type"
 msgstr "Vrsta prikaza"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product__base_unit_count
-#: model:ir.model.fields,help:website_sale.field_product_template__base_unit_count
-msgid ""
-"Display base unit price on your eCommerce pages. Set to 0 to hide it for "
-"this product."
-msgstr ""
-"Prikažite cenu osnovne jedinice na svojim eCommerce stranicama. Postavite na "
-"0 da biste je sakrili za ovaj proizvod."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__enable_delivery_estimate
@@ -2844,16 +2895,6 @@ msgid "Displayed only in the Category List Snippet."
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product__base_unit_name
-#: model:ir.model.fields,help:website_sale.field_product_template__base_unit_name
-msgid ""
-"Displays the custom unit for the products if defined or the selected unit of "
-"measure otherwise."
-msgstr ""
-"Prikazuje prilagođenu jedinicu za proizvode ako je definisana ili izabranu "
-"jedinicu mere u suprotnom."
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_document.py:0
 msgid ""
@@ -2872,7 +2913,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Download"
-msgstr ""
+msgstr "Preuzmi"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -2885,22 +2926,27 @@ msgid "Download Sale Order"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Drag blocks here to add them on all products"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid ""
-"Drag building blocks here to customize the footer for\n"
-"                                    \""
+msgid "Drag blocks here to customize the Shop page header"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid ""
-"Drag building blocks here to customize the header for\n"
-"                                        \""
+"Drag blocks here to customize the footer of\n"
+"                                    the \""
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "Drag building blocks here to customize the header for the shop page."
+msgid ""
+"Drag blocks here to customize the header of\n"
+"                                        the \""
 msgstr ""
 
 #. module: website_sale
@@ -2981,7 +3027,6 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_page_empty_screen
 msgid "Edit"
 msgstr "Uredi"
@@ -3041,6 +3086,18 @@ msgid "Explore Now"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_attribute__external_identifier
+msgid "External Identifier"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_attribute__external_identifier
+msgid ""
+"External Identifier will ensure a precise matching between your attributes "
+"and attributes in SEO and other external platforms."
+msgstr ""
+
+#. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_extra
 msgid "Extra Info"
 msgstr "Dodatne Informacije"
@@ -3069,7 +3126,7 @@ msgid "Extra Variant Images"
 msgstr "Dodatne slike varijante"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_normal_form_view
 msgid "Extra Variant Media"
 msgstr "Dodatni mediji za varijante"
 
@@ -3080,9 +3137,8 @@ msgstr "Dodatne informacije"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__website_sequence_asc
 msgid "Featured"
 msgstr "Istaknuto"
 
@@ -3339,6 +3395,12 @@ msgid "General Features"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+msgid "Get notified when back in stock"
+msgstr ""
+
+#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_glass
 msgid "Glass Desks"
 msgstr ""
@@ -3364,7 +3426,6 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/tour_utils.js:0
-#: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__go_to_cart
 msgid "Go to cart"
 msgstr "Idi na korpu"
 
@@ -3413,7 +3474,7 @@ msgid "HTTP Routing"
 msgstr "HTTP rutiranje"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_to_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale.wishlist_button
 msgid "Handle your wishlist from the menu icon."
 msgstr ""
 
@@ -3510,6 +3571,7 @@ msgstr "Slažem se sa"
 #: model:ir.model.fields,field_description:website_sale.field_payment_transaction__id
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__id
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__id
+#: model:ir.model.fields,field_description:website_sale.field_product_combo__id
 #: model:ir.model.fields,field_description:website_sale.field_product_document__id
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__id
 #: model:ir.model.fields,field_description:website_sale.field_product_image__id
@@ -3532,7 +3594,6 @@ msgstr "Slažem se sa"
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__id
 #: model:ir.model.fields,field_description:website_sale.field_theme_utils__id
 #: model:ir.model.fields,field_description:website_sale.field_website__id
-#: model:ir.model.fields,field_description:website_sale.field_website_base_unit__id
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__id
 #: model:ir.model.fields,field_description:website_sale.field_website_menu__id
 #: model:ir.model.fields,field_description:website_sale.field_website_page__id
@@ -3585,7 +3646,6 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_attribute_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/products_searchbar_option_plugin.js:0
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 msgid "Image"
@@ -3641,6 +3701,18 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+msgid "Image on the left"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+msgid "Image on the right"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Images"
@@ -3664,8 +3736,13 @@ msgid "In accordion"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_to_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale.wishlist_button
 msgid "In your wishlist"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.order_tax_lines
+msgid "Including"
 msgstr ""
 
 #. module: website_sale
@@ -3693,8 +3770,14 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid "Invalid category."
+#: code:addons/website_sale/controllers/wishlist.py:0
+msgid "Invalid Email"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+msgid "Invalid email"
 msgstr ""
 
 #. module: website_sale
@@ -3716,6 +3799,16 @@ msgid "Invalid video URL provided."
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
+msgid "Inventory"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Inventory Defaults"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_cols_order__inverse
 msgid "Inverse order"
 msgstr ""
@@ -3723,6 +3816,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoice automatically on payment."
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Invoicing Journal"
 msgstr ""
 
 #. module: website_sale
@@ -3741,7 +3839,6 @@ msgstr "Je Pratilac"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__is_published
 #: model:ir.model.fields,field_description:website_sale.field_product_template__is_published
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__is_published
-#: model_terms:ir.ui.view,arch_db:website_sale.product_product_website_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_view_tree_website_sale
 msgid "Is Published"
 msgstr "Je objavljeno"
@@ -3770,6 +3867,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options_plugin.js:0
 msgid "It will be removed from all products. Are you sure?"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Journal"
 msgstr ""
 
 #. module: website_sale
@@ -3834,12 +3936,6 @@ msgstr ""
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
-msgid "Large Grid"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/const.py:0
 msgid "Large Image"
 msgstr ""
 
@@ -3892,7 +3988,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__write_uid
-#: model:ir.model.fields,field_description:website_sale.field_website_base_unit__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_uid
 msgid "Last Updated by"
@@ -3905,7 +4000,6 @@ msgstr "Poslednje izmenio/la"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__write_date
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__write_date
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__write_date
-#: model:ir.model.fields,field_description:website_sale.field_website_base_unit__write_date
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__write_date
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_date
 msgid "Last Updated on"
@@ -3926,6 +4020,12 @@ msgid "Last Year"
 msgstr "Prošla godina"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__suggested_products_last_update
+#: model:ir.model.fields,field_description:website_sale.field_product_template__suggested_products_last_update
+msgid "Last update of suggested products"
+msgstr ""
+
+#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_bins_laundry
 msgid "Laundry Bins"
 msgstr ""
@@ -3939,6 +4039,7 @@ msgstr "Izgled"
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__position__left
 msgid "Left"
@@ -3983,18 +4084,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_website__contact_us_link_url
 msgid "Link URL"
 msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-msgid "List"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-msgid "Loading..."
-msgstr "Učitavam..."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__logged_in
@@ -4049,12 +4138,6 @@ msgstr "Ručno"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-msgid "Map"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -4091,6 +4174,12 @@ msgstr "Greška u isporuci poruke"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_ids
 msgid "Messages"
 msgstr "Poruke"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Minimal Cards"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -4173,16 +4262,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__name
 #: model:ir.model.fields,field_description:website_sale.field_product_image__name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
-#: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__name
 msgid "Name"
 msgstr "Naziv"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__name_asc
 msgid "Name (A-Z)"
 msgstr "Naziv (A-Z)"
 
@@ -4237,9 +4324,8 @@ msgstr "Novo!"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__publish_date_desc
 msgid "Newest Arrivals"
 msgstr "Najnovije"
 
@@ -4306,12 +4392,6 @@ msgstr "Nema definisanog proizvoda u ovoj kategoriji."
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
 msgid "No product views yet for this visitor"
 msgstr "Još uvek nema pregleda proizvoda za ovog posetioca"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-msgid "No result"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -4465,6 +4545,12 @@ msgid "One product might have different attributes (size, color, etc.)"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
+msgid "Online Catalog Template"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_report_sales
 msgid "Online Sales"
 msgstr "Online prodaja"
@@ -4473,12 +4559,6 @@ msgstr "Online prodaja"
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_dashboard
 msgid "Online Sales Analysis"
 msgstr "Analiza Online prodaje"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
-msgid "Online catalog"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__only_services
@@ -4522,13 +4602,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
 msgid "Open Source eCommerce"
 msgstr "E-Commerce otvorenog koda"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/location_selector/location/location.js:0
-#: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
-msgid "Opening hours"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -4643,9 +4716,26 @@ msgid "Our payment methods"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+msgid "Out of Stock"
+msgstr ""
+
+#. module: website_sale
 #: model:product.ribbon,name:website_sale.out_of_stock_ribbon
 msgid "Out of stock"
 msgstr "Nema na stanju"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Out-of-Stock"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__out_of_stock_message
+#: model:ir.model.fields,field_description:website_sale.field_product_template__out_of_stock_message
+msgid "Out-of-Stock Message"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -4738,6 +4828,12 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/models/payment_transaction.py:0
+msgid "Payment was not successful, please try again."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 msgid "Pedal-based opening system"
 msgstr "Sistem otvaranja na bazi pedala"
@@ -4747,12 +4843,6 @@ msgstr "Sistem otvaranja na bazi pedala"
 #: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 msgid "Phone Number"
 msgstr "Broj telefona"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-msgid "Pickup Location"
-msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -4794,12 +4884,6 @@ msgid "Preset"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
-msgid "Presets"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_history
 msgid "Press 'Enter' to add to cart"
 msgstr ""
@@ -4808,6 +4892,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__prevent_sale_for
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_sale_for
 msgid "Prevent Sale For"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Prevent from selling the specified packagings"
 msgstr ""
 
 #. module: website_sale
@@ -4826,32 +4915,23 @@ msgstr "Prethodno (leva-strelica)"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/products_searchbar_option_plugin.js:0
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__price
 msgid "Price"
 msgstr "Cena"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__list_price_desc
 msgid "Price - High to Low"
 msgstr "Cena - Opadajuće"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__list_price_asc
 msgid "Price - Low to High"
 msgstr "Cena - Rastuće"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_price
-#: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_price
-msgid "Price Per Unit"
-msgstr "Cena po jedinici mere"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
@@ -4917,7 +4997,7 @@ msgstr "Obradite porudžbinu kada primite uplatu."
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/add_to_cart_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/products_item_option.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
 #: model:ir.model,name:website_sale.model_product_template
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__product_id
 #: model:ir.model.fields,field_description:website_sale.field_website_track__product_id
@@ -4953,6 +5033,11 @@ msgstr "Vrteška proizvoda"
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Product Category"
 msgstr "Kategorija proizvoda"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_product_combo
+msgid "Product Combo"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -5007,8 +5092,7 @@ msgstr "Nazivi proizvoda"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
 msgid "Product Page"
 msgstr "Stranica proizvoda"
 
@@ -5056,6 +5140,12 @@ msgstr "Razmak između slika na stranici proizvoda"
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_image_width
 msgid "Product Page Image Width"
 msgstr "Širina slike na stranici proizvoda"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
+msgid "Product Page Template"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_cols_order
@@ -5151,7 +5241,19 @@ msgid "Product ribbon"
 msgstr "Traka proizvoda"
 
 #. module: website_sale
+#: model:mail.template,name:website_sale.email_template_back_in_stock
+msgid "Product: Back in Stock Email"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
+msgid "Product: send email regarding products availability"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
+#. odoo-python
+#: code:addons/website_sale/models/product_template.py:0
 #: code:addons/website_sale/static/src/website_builder/products_searchbar_option.xml:0
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
 #: model:ir.ui.menu,name:website_sale.menu_catalog
@@ -5175,7 +5277,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/products_list_page_option.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
 msgid "Products Page"
 msgstr "Stranica proizvoda"
 
@@ -5522,6 +5624,12 @@ msgid "Responsive"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__restricted_uom_ids
+#: model:ir.model.fields,field_description:website_sale.field_website__restricted_uom_ids
+msgid "Restrict Packagings"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_id
 #: model:ir.model.fields,help:website_sale.field_product_product__website_id
 #: model:ir.model.fields,help:website_sale.field_product_public_category__website_id
@@ -5567,6 +5675,7 @@ msgstr "Ocene"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_ribbon_id
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_ribbon_id
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__style__ribbon
+#: model_terms:ir.ui.view,arch_db:website_sale.product_normal_form_view
 msgid "Ribbon"
 msgstr "Traka"
 
@@ -5576,12 +5685,15 @@ msgid "Ribbon Name"
 msgstr "Naziv trake"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: model:ir.ui.menu,name:website_sale.product_catalog_product_ribbons
 msgid "Ribbons"
 msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__position__right
 msgid "Right"
@@ -5679,6 +5791,7 @@ msgstr "Predstavnik prodaje"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
+#: model_terms:ir.ui.view,arch_db:website_sale.product_image_and_ribbon
 msgid "Sample"
 msgstr "Uzorak"
 
@@ -5705,20 +5818,11 @@ msgid "Search Bar"
 msgstr "Traka za pretragu"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.floating_bar
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-#: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "Search Products"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search globally"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
-#: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search in {{0}}"
 msgstr ""
@@ -5762,11 +5866,6 @@ msgid "Select Quantity"
 msgstr "Izaberi količinu"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.delivery_method
-msgid "Select a location"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "Select a website"
 msgstr ""
@@ -5786,6 +5885,12 @@ msgstr "Selektivan"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_page_empty_screen
 msgid "Sell Online"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__allow_out_of_stock_order
+#: model:ir.model.fields,field_description:website_sale.field_product_template__allow_out_of_stock_order
+msgid "Sell when Out-of-Stock"
 msgstr ""
 
 #. module: website_sale
@@ -5931,7 +6036,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/product_header_shop_option_plugin.js:0
+#: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
 msgid "Shop Header"
 msgstr ""
 
@@ -5968,6 +6073,16 @@ msgid "Show \"Contact Us\" for zero-priced products or specific categories."
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
+msgid "Show Available Qty"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Show Available Quantity"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
 msgid "Show B2B Fields"
@@ -5996,6 +6111,13 @@ msgid "Show Empty"
 msgstr "Prikaži prazno"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__available_threshold
+#: model:ir.model.fields,field_description:website_sale.field_product_template__available_threshold
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__default_available_threshold
+msgid "Show Threshold"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__is_thumbnail_visible
 msgid "Show Thumbnails"
 msgstr ""
@@ -6011,6 +6133,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Show a filmstrip navigation at the Top"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__show_availability
+#: model:ir.model.fields,field_description:website_sale.field_product_template__show_availability
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__default_show_availability
+msgid "Show availability Qty"
 msgstr ""
 
 #. module: website_sale
@@ -6063,6 +6192,12 @@ msgid "Showcase"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Showcase Grid"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Sidebar"
@@ -6071,7 +6206,7 @@ msgstr "Pokretna traka"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Sign Up"
-msgstr ""
+msgstr "Registrujte se"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -6093,7 +6228,6 @@ msgstr "Sedite udobno"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_item_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Size"
 msgstr "Veličina"
 
@@ -6127,6 +6261,14 @@ msgstr ""
 #: model:product.ribbon,name:website_sale.sold_out_ribbon
 msgid "Sold out"
 msgstr "Rasprodato"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid ""
+"Some products became unavailable and your cart has been updated. We're sorry "
+"for the inconvenience."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -6178,13 +6320,6 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_product_normal_website_form_view
-#: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
-msgid "Specify unit"
-msgstr "Navedite jedinicu"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_menus_logos
 msgid "Spring collection has arrived!"
 msgstr ""
@@ -6205,9 +6340,9 @@ msgid "Status"
 msgstr "Status"
 
 #. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__stay
-msgid "Stay on Product Page"
-msgstr "Ostani na stranici proizvoda"
+#: model:ir.model.fields,field_description:website_sale.field_product_wishlist__stock_notification
+msgid "Stock Notification"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets_storage
@@ -6233,6 +6368,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Subtotal"
 msgstr "Ukupno"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__suggest_accessory_products
+#: model:ir.model.fields,field_description:website_sale.field_product_template__suggest_accessory_products
+msgid "Suggest Accessory Products"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__suggest_alternative_products
+#: model:ir.model.fields,field_description:website_sale.field_product_template__suggest_alternative_products
+msgid "Suggest Alternative Products"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__suggest_optional_products
+#: model:ir.model.fields,field_description:website_sale.field_product_template__suggest_optional_products
+msgid "Suggest Optional Products"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__alternative_product_ids
@@ -6323,7 +6476,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Terms &amp; Conditions"
-msgstr ""
+msgstr "Uslovi ponude &amp; plaćanja"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6503,16 +6656,6 @@ msgstr ""
 "Vreme označavanja korpe kao napuštene može se promeniti u podešavanjima."
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/product_product.py:0
-msgid ""
-"The value of Base Unit Count must be greater than 0. Use 0 to hide the price "
-"per unit on this product."
-msgstr ""
-"Vrednost osnovnog broja jedinica mora biti veća od 0. Koristite 0 da "
-"sakrijete cenu po jedinici za ovaj proizvod."
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Theme Preset n°"
@@ -6550,12 +6693,6 @@ msgstr "Nema potvrđenih porudžbina sa website-a"
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 msgid "There is no unpaid order from the website yet"
 msgstr "Još uvek nema neplaćenih porudžbina sa website-a"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
-msgid "There was an error loading the map"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
@@ -6606,6 +6743,12 @@ msgstr "Ovaj proizvod nema ispravnu kombinaciju."
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
 msgid "This product is no longer available."
 msgstr "Ovaj proizvod više nije dostupan."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "This product is not available (anymore) in this unit of measure."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -6745,11 +6888,6 @@ msgid "Twitter"
 msgstr ""
 
 #. module: website_sale
-#: model:res.groups,name:website_sale.group_show_uom_price
-msgid "UOM Price Display for eCommerce"
-msgstr "Prikaz JM cene za eCommerce"
-
-#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_image__video_url
 msgid "URL of a video for showcasing your product."
 msgstr "URL videa za promovisanje vašeg proizvoda."
@@ -6765,14 +6903,18 @@ msgid "Under-bed Drawers"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_sale_order__is_unfulfilled
-msgid "Unfulfilled Orders"
+#. odoo-python
+#: code:addons/website_sale/models/payment_transaction.py:0
+msgid ""
+"Unfortunately your order can not be confirmed as the amount of your payment "
+"does not match the amount of your cart. Please contact the responsible of "
+"the shop for more information."
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model,name:website_sale.model_website_base_unit
-msgid "Unit of Measure for price per unit on eCommerce products."
-msgstr "Jedinica mere za cena po jedinici na eCommerce proizvodima."
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__is_unfulfilled
+msgid "Unfulfilled Orders"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -6798,6 +6940,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_container__unset
 msgid "Unset"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.actions.server,name:website_sale.action_update_suggested_products
+msgid "Update suggested products"
 msgstr ""
 
 #. module: website_sale
@@ -6864,6 +7011,14 @@ msgid "Video URL"
 msgstr "Video URL"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/interactions/shop_page.js:0
+msgid "View Less"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/interactions/shop_page.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
 msgid "View More"
 msgstr ""
@@ -6872,7 +7027,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/cart_notification/item_added_notification/item_added_notification.xml:0
 msgid "View cart"
-msgstr "Vidi korpu"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -6942,6 +7097,12 @@ msgid "Visitors"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Visual Cards"
+msgstr ""
+
+#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_wardrobes
 msgid "Wardrobes"
 msgstr ""
@@ -6980,6 +7141,12 @@ msgstr ""
 msgid ""
 "We weren't able to update your cart. Please refresh your page before trying "
 "again."
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+msgid "We'll notify you once the product is back in stock"
 msgstr ""
 
 #. module: website_sale
@@ -7128,13 +7295,13 @@ msgid "Websites"
 msgstr "Website-ovi"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "What should be done on \"Add to Cart\"?"
-msgstr "Šta treba da se uradi sa \"Dodaj u korpu\"?"
-
-#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__new
 msgid "When New"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__out_of_stock
+msgid "When out of stock"
 msgstr ""
 
 #. module: website_sale
@@ -7188,7 +7355,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/wishlist_page_option_plugin.js:0
+#: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Wishlist Page"
 msgstr ""
 
@@ -7216,6 +7383,12 @@ msgid "Yesterday"
 msgstr "Juče"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+msgid "You already added all the available product in your cart"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid ""
 "You are editing your <b>delivery and billing</b> addresses\n"
@@ -7224,6 +7397,21 @@ msgid ""
 "create a\n"
 "                            <a class=\"o_translate_inline\" href=\"/shop/"
 "address?address_type=billing\">new address</a>."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order_line.py:0
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid ""
+"You ask for %(desired_qty)s products but only %(available_qty)s is available."
 msgstr ""
 
 #. module: website_sale
@@ -7303,17 +7491,6 @@ msgid "Your cart is waiting"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
-msgid "Your payment has been authorized."
-msgstr "Vaše plaćanje je autorizovano."
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-msgid "Your postal code"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
 msgstr "Vaša prethodna korpa je već završena."
@@ -7359,14 +7536,13 @@ msgid "Zoom-Out Light"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
-msgid "by"
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "days after order confirmation"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "days after order confirmation"
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
+msgid "e.g. 'Will be back soon'"
 msgstr ""
 
 #. module: website_sale
@@ -7379,10 +7555,11 @@ msgstr "npr. lampa, kanta"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
-#: code:addons/website_sale/static/src/website_builder/footer_option.xml:0
+#: code:addons/website_sale/static/src/website_builder/footer_option_plugin.js:0
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
@@ -7426,7 +7603,12 @@ msgid "eCommerce cart"
 msgstr "eCommerce korpa"
 
 #. module: website_sale
-#: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
+#: model:ir.actions.server,name:website_sale.update_suggested_products_cron_ir_actions_server
+msgid "eCommerce: Update suggested products"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.actions.server,name:website_sale.ir_cron_send_abandoned_email_ir_actions_server
 msgid "eCommerce: send email to customers about their abandoned cart"
 msgstr "eCommerce: šalji email-ove kupcima o njihovim napuštenim korpama"
 
@@ -7453,9 +7635,27 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+msgid "in"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr "u kategoriji \""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+msgid "in stock"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+msgid "in your cart)"
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -7481,26 +7681,8 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "list_price asc"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "list_price desc"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
 #: code:addons/website_sale/models/res_config_settings.py:0
 msgid "model"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "name asc"
 msgstr ""
 
 #. module: website_sale
@@ -7557,9 +7739,8 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "publish_date desc"
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "only if below"
 msgstr ""
 
 #. module: website_sale
@@ -7573,6 +7754,26 @@ msgid "working days"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
-msgid "{{0}} image"
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_combo_item_line
+msgid "x"
 msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
+msgid "youremail@gmail.com"
+msgstr ""
+
+#. module: website_sale
+#: model:mail.template,subject:website_sale.email_template_back_in_stock
+msgid "{{ object.name or 'Product' }} is back in stock"
+msgstr ""
+
+#~ msgid "Add To Cart Action"
+#~ msgstr "Dodaj u korpu akcija"
+
+#~ msgid "Stay on Product Page"
+#~ msgstr "Ostani na stranici proizvoda"
+
+#~ msgid "What should be done on \"Add to Cart\"?"
+#~ msgstr "Šta treba da se uradi sa \"Dodaj u korpu\"?"

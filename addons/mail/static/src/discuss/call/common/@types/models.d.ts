@@ -28,7 +28,7 @@ declare module "models" {
         useCameraByDefault: null;
         videoCount: number;
         videoCountNotSelf: number;
-        visibleCards: CardData[];
+        visibleCards: import("@mail/discuss/call/common/call").CardData[];
     }
     export interface MailGuest {
         currentRtcSession: RtcSession;

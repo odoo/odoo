@@ -14,7 +14,26 @@ class ResConfigSettings(models.TransientModel):
     l10n_my_edi_default_import_journal_id = fields.Many2one(related="company_id.l10n_my_edi_default_import_journal_id", readonly=False)
     l10n_my_edi_proxy_user_id = fields.Many2one(related="company_id.l10n_my_edi_proxy_user_id")
     l10n_my_edi_company_vat = fields.Char(related="company_id.vat")
+    l10n_my_edi_is_branch = fields.Boolean(related="company_id.l10n_my_edi_is_branch")
+    l10n_my_edi_parent_mode = fields.Selection(related="company_id.parent_id.l10n_my_edi_mode", string="Parent MyInvois mode")
+    l10n_my_edi_is_sole_proprietor = fields.Boolean(related="company_id.l10n_my_edi_is_sole_proprietor", readonly=False)
+    l10n_my_edi_show_sole_proprietor = fields.Boolean(compute="_compute_l10n_my_edi_show_sole_proprietor")
+    l10n_my_edi_identification_number = fields.Char(related="company_id.l10n_my_identification_number")
     l10n_my_accept_processing = fields.Boolean()
+
+    # --------------------------------
+    # Compute methods
+    # --------------------------------
+
+    @api.depends('company_id.vat', 'company_id.l10n_my_identification_type')
+    def _compute_l10n_my_edi_show_sole_proprietor(self):
+        for config in self:
+            company = config.company_id
+            config.l10n_my_edi_show_sole_proprietor = (
+                company.vat
+                and company.vat.startswith('IG')
+                and company.l10n_my_identification_type == 'BRN'
+            )
 
     # ----------------
     # Onchange methods
@@ -23,7 +42,9 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange('l10n_my_edi_mode')
     def _onchange_l10n_my_edi_mode(self):
         """ This onchange is mostly here to improve usability by avoiding the need to save when changing the mode. """
-        self.l10n_my_edi_proxy_user_id = self.company_id.account_edi_proxy_client_ids.filtered(
+        # Branches inherit the proxy user from their parent company.
+        company = self.company_id.parent_id if self.l10n_my_edi_is_branch else self.company_id
+        self.l10n_my_edi_proxy_user_id = company.account_edi_proxy_client_ids.filtered(
             lambda u: u.proxy_type == 'l10n_my_edi' and u.edi_mode == self.l10n_my_edi_mode
         )
 

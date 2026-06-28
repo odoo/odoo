@@ -60,14 +60,14 @@ describe("range not collapsed", () => {
         });
     });
 
-    test("should cut selection and register it as a history step", async () => {
+    test("should cut selection and register it as a history commit", async () => {
         await testEditor({
             contentBefore: "<p>a[bcd]e</p>",
             stepFunction: async (editor) => {
                 const history = editor.plugins.find((p) => p.constructor.id === "history");
-                const historyStepsCount = history.steps.length;
+                const historyCommitsCount = history.commits.length;
                 cut(editor);
-                expect(history.steps.length).toBe(historyStepsCount + 1);
+                expect(history.commits.length).toBe(historyCommitsCount + 1);
                 undo(editor);
             },
             contentAfter: "<p>a[bcd]e</p>",

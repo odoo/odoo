@@ -122,7 +122,7 @@ class TestIrConfigParameter(TransactionCase):
         ICP = self.env['ir.config_parameter'].sudo()
         ICP.create({'key': 'config_key', 'value': 'invalid int value'})
         with self.assertLogs('odoo.addons.base.models.ir_config_parameter', level='WARNING') as logs:
-            self.env.registry.clear_cache('stable')
+            self.env.transaction.invalidate_ormcache('stable')
             self.assertEqual(ICP.get_int('config_key', 100), 100)
             self.assertEqual(logs.output[0], "WARNING:odoo.addons.base.models.ir_config_parameter:ir.config_parameter with key config_key has invalid value 'invalid int value' for type int")
 
@@ -130,5 +130,5 @@ class TestIrConfigParameter(TransactionCase):
             ICP.set_int('config_key', None)
 
         with self.assertNoLogs('odoo.addons.base.models.ir_config_parameter', 'WARNING'):
-            self.env.registry.clear_cache('stable')
+            self.env.transaction.invalidate_ormcache('stable')
             self.assertEqual(ICP.get_int('config_key', 100), 100)

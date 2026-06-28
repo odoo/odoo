@@ -1,6 +1,8 @@
 import { compareDatetime } from "@mail/utils/common/misc";
 import { fields, Record } from "@mail/model/export";
 
+import { localeCompare } from "@web/core/l10n/utils";
+
 export class DiscussAppCategory extends Record {
     /**
      * @param {import("models").DiscussChannel} c1
@@ -8,11 +10,7 @@ export class DiscussAppCategory extends Record {
      */
     sortChannels(c1, c2) {
         if (["channels", "favorites"].includes(this.id) || this.discussCategoryAsAppCategory) {
-            return (
-                (c1.displayName &&
-                    String.prototype.localeCompare.call(c1.displayName, c2.displayName)) ||
-                c2.id - c1.id
-            );
+            return localeCompare(c1.displayName, c2.displayName) || c2.id - c1.id;
         }
         return compareDatetime(c2.lastInterestDt, c1.lastInterestDt) || c2.id - c1.id;
     }

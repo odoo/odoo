@@ -4,8 +4,8 @@ import ast
 import re
 from collections import defaultdict
 
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError, UserError
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 
 FIGURE_TYPE_SELECTION_VALUES = [
@@ -17,6 +17,7 @@ FIGURE_TYPE_SELECTION_VALUES = [
     ('datetime', "Datetime"),
     ('boolean', 'Boolean'),
     ('string', 'String'),
+    ('many2one', 'Many2One'),
 ]
 
 DOMAIN_REGEX = re.compile(r'(-?sum)\((.*)\)')
@@ -52,6 +53,16 @@ class AccountReport(models.Model):
     sequence = fields.Integer(string="Sequence")
     active = fields.Boolean(string="Active", default=True)
     line_ids = fields.One2many(string="Lines", comodel_name='account.report.line', inverse_name='report_id')
+    groupby = fields.Char(
+        string="Group By",
+        help="Comma-separated list of fields from account.move.line (Journal Item). \
+            When set, this report will have report lines generating sublines grouped by those keys except when specified on the report line.")
+    user_groupby = fields.Char(
+        string="User Group By",
+        compute='_compute_user_groupby', store=True, readonly=False, precompute=True,
+        help="Comma-separated list of fields from account.move.line (Journal Item). \
+            When set, the report lines will generate sublines grouped by those keys except when specified on the report line.",
+    )
     column_ids = fields.One2many(string="Columns", comodel_name='account.report.column', inverse_name='report_id')
     root_report_id = fields.Many2one(string="Root Report", comodel_name='account.report', index='btree_not_null', help="The report this report is a variant of.")
     variant_report_ids = fields.One2many(string="Variants", comodel_name='account.report', inverse_name='root_report_id')
@@ -79,7 +90,7 @@ class AccountReport(models.Model):
     search_bar = fields.Boolean(string="Search Bar")
     integer_rounding = fields.Selection(string="Integer Rounding", selection=[('HALF-UP', "Nearest"), ('UP', "Up"), ('DOWN', "Down")])
     allow_foreign_vat = fields.Boolean(
-        string="Allow Foreign VAT",
+        string="Allow Foreign Tax ID",
         compute=lambda x: x._compute_report_option_filter('allow_foreign_vat'),
         precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
@@ -115,6 +126,13 @@ class AccountReport(models.Model):
             ('cta', "Use CTA"),
         ],
         compute=lambda x: x._compute_report_option_filter('currency_translation', 'cta'),
+        precompute=True,
+        readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+    )
+
+    enable_snapshots = fields.Boolean(
+        string="Enable Snapshots",
+        compute=lambda x: x._compute_report_option_filter('enable_snapshots'),
         precompute=True,
         readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
@@ -162,6 +180,11 @@ class AccountReport(models.Model):
     filter_growth_comparison = fields.Boolean(
         string="Growth Comparison",
         compute=lambda x: x._compute_report_option_filter('filter_growth_comparison', True),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+    )
+    filter_line_comparison = fields.Boolean(
+        string="Report Line Comparison",
+        compute=lambda x: x._compute_report_option_filter('filter_line_comparison', False),
         precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_journals = fields.Boolean(
@@ -229,6 +252,11 @@ class AccountReport(models.Model):
     def _compute_use_sections(self):
         for report in self:
             report.use_sections = bool(report.section_report_ids)
+
+    @api.depends('groupby')
+    def _compute_user_groupby(self):
+        for report in self:
+            report.user_groupby = report.user_groupby or report.groupby
 
     @api.constrains('root_report_id')
     def _validate_root_report_id(self):
@@ -384,7 +412,16 @@ class AccountReportLine(models.Model):
     )
     sequence = fields.Integer(string="Sequence")
     code = fields.Char(string="Code", help="Unique identifier for this line.")
-    foldable = fields.Boolean(string="Foldable", help="By default, we always unfold the lines that can be. If this is checked, the line won't be unfolded by default, and a folding button will be displayed.")
+    foldability = fields.Selection(
+        selection=[
+            ('always_unfolded', 'Always Unfolded'),
+            ('never_unfolded', 'Never Unfolded'),
+            ('foldable', 'Foldable'),
+        ],
+        compute='_compute_foldability',
+        store=True,
+        readonly=False,
+    )
     print_on_new_page = fields.Boolean('Print On New Page', help='When checked this line and everything after it will be printed on a new page.')
     action_id = fields.Many2one(string="Action", comodel_name='ir.actions.actions', help="Setting this field will turn the line into a link, executing the action when clicked.")
     hide_if_zero = fields.Boolean(string="Hide if Zero", help="This line and its children will be hidden when all of their columns are 0.")
@@ -421,6 +458,21 @@ class AccountReportLine(models.Model):
             if report_line.parent_id:
                 report_line.horizontal_split_side = report_line.parent_id.horizontal_split_side
 
+    @api.depends('create_date')
+    def _compute_foldability(self):
+        for line in self:
+            if line.foldability:
+                continue
+            has_groupby = bool(line.groupby or line.user_groupby or line.report_id.groupby or line.report_id.user_groupby)
+            if line.children_ids:
+                line.foldability = 'always_unfolded'
+            elif has_groupby and all(expr.engine not in ('aggregation', 'external') for expr in line.expression_ids):
+                line.foldability = 'foldable'
+            elif any(expr.engine in ('aggregation', 'external') for expr in line.expression_ids):
+                line.foldability = 'never_unfolded'
+            else:
+                line.foldability = 'always_unfolded'
+
     @api.depends('groupby', 'expression_ids.engine')
     def _compute_user_groupby(self):
         for report_line in self:
@@ -430,6 +482,11 @@ class AccountReportLine(models.Model):
                 report_line._validate_groupby()
             except UserError:
                 report_line.user_groupby = report_line.groupby
+
+    @api.onchange('user_groupby')
+    def _onchange_user_groupby(self):
+        if self.user_groupby and self.foldability == 'never_unfolded':
+            self.foldability = 'foldable'
 
     @api.constrains('parent_id')
     def _validate_groupby_no_child(self):
@@ -594,10 +651,17 @@ class AccountReportExpression(models.Model):
             ('external', "External Value"),
             ('custom', "Custom Python Function"),
             ('text', "Plain Text"),
+            ('reference', "Record Reference"),
         ],
         required=True
     )
     formula = fields.Text(string="Formula", required=True)
+    model_id = fields.Many2one(
+        string="Model",
+        comodel_name="ir.model",
+        compute="_compute_model_id",
+        inverse="_inverse_model_id",
+    )
     subformula = fields.Text(string="Subformula")
     date_scope = fields.Selection(
         string="Date Scope",
@@ -676,10 +740,30 @@ class AccountReportExpression(models.Model):
         for expression in self:
             expression.auditable = expression.engine in auditable_engines
 
+    @api.depends('engine', 'formula')
+    def _compute_model_id(self):
+        for expression in self:
+            if expression.engine == "reference" and expression.formula:
+                expression.model_id = self.env["ir.model"].search([("model", "=", expression.formula)], limit=1)
+            else:
+                expression.model_id = False
+
+    @api.onchange('model_id')
+    def _inverse_model_id(self):
+        for expression in self:
+            if expression.engine == "reference":
+                expression.formula = expression.model_id.model
+
+    @api.onchange('engine')
+    def _set_figure_type_for_reference_engine(self):
+        for expression in self:
+            if expression.engine == "reference":
+                expression.figure_type = "many2one"
+
     @api.constrains('engine', 'report_line_id')
     def _validate_engine(self):
         for expression in self:
-            if expression.engine in ('aggregation', 'external') and (expression.report_line_id.groupby or expression.report_line_id.user_groupby):
+            if expression.engine == 'external' and (expression.report_line_id.groupby or expression.report_line_id.user_groupby):
                 engine_description = dict(expression._fields['engine']._description_selection(self.env))
                 raise ValidationError(_(
                     "Groupby feature isn't supported by '%(engine)s' engine. Please remove the groupby value on '%(report_line)s'",
@@ -749,7 +833,7 @@ class AccountReportExpression(models.Model):
 
                     if former_tax_tags and all(tag_expr in self for tag_expr in former_tax_tags._get_related_tax_report_expressions()):
                         # If we're changing the formula of all the expressions using that tag, rename the tag
-                        former_tax_tags._update_field_translations('name', {'en_US': vals['formula']})
+                        former_tax_tags._update_field_translations('name', {'en_US': vals['formula'].lstrip('-')})
                     else:
                         # Else, create a new tag. Its the compute functions will make sure it is properly linked to the expressions
                         tag_vals = self.env['account.report.expression']._get_tags_create_vals(vals['formula'], country.id)
@@ -791,7 +875,7 @@ class AccountReportExpression(models.Model):
         for expr in self:
             expr.display_name = f'{expr.report_line_name} [{expr.label}]'
 
-    def _expand_aggregations(self):
+    def _expand_aggregations(self, no_cross_report_expansion=False):
         """Return self and its full aggregation expression dependency"""
         result = self
 
@@ -807,6 +891,8 @@ class AccountReportExpression(models.Model):
                     labels_by_code = candidate_expr._get_aggregation_terms_details()
 
                     if candidate_expr.subformula and candidate_expr.subformula.startswith('cross_report'):
+                        if no_cross_report_expansion:
+                            continue
                         subformula_match = CROSS_REPORT_REGEX.match(candidate_expr.subformula)
                         if not subformula_match:
                             raise UserError(_(
@@ -937,9 +1023,15 @@ class AccountReportColumn(models.Model):
     blank_if_zero = fields.Boolean(string="Blank if Zero", help="When checked, 0 values will not show in this column.")
     custom_audit_action_id = fields.Many2one(string="Custom Audit Action", comodel_name="ir.actions.act_window")
 
+    _expression_label_uniq = models.Constraint(
+        "unique(report_id, expression_label)",
+        "The Expression label must be unique per account report."
+    )
+
 
 class AccountReportExternalValue(models.Model):
     _name = 'account.report.external.value'
+    _inherit = ['res.currency.rate.consolidation.mixin']
     _description = 'Accounting Report External Value'
     _check_company_auto = True
     _order = 'date, id'

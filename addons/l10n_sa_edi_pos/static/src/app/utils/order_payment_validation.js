@@ -1,13 +1,18 @@
 import { _t } from "@web/core/l10n/translation";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 import { markup } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 
 patch(OrderPaymentValidation.prototype, {
-    setup(vals) {
-        super.setup(...arguments);
-        this.dialog = this.pos.env.services.dialog;
+    shouldDownloadInvoice() {
+        // For SA companies the PDF is deferred (generated on demand). Skip the
+        // automatic post-checkout download so the cashier is never presented
+        // with a proforma instead of the real invoice.
+        if (this.order?.isSACompany()) {
+            return false;
+        }
+        return super.shouldDownloadInvoice();
     },
     async finalizeValidation() {
         await super.finalizeValidation(...arguments);
@@ -19,7 +24,7 @@ patch(OrderPaymentValidation.prototype, {
         if (
             this.order.isInvoiceMandatoryForSA() &&
             this.order.finalized &&
-            !this.order.l10n_sa_invoice_qr_code_str
+            ["rejected", "error", "unknown"].includes(this.order.l10n_sa_invoice_edi_state)
         ) {
             const orderError = _t(
                 "%s by going to Backend > Orders > Invoice",
@@ -37,10 +42,25 @@ patch(OrderPaymentValidation.prototype, {
                 errorInfo
             );
 
-            this.dialog.add(ConfirmationDialog, {
+            this.pos.dialog.add(ConfirmationDialog, {
                 title: _t("ZATCA Validation Error"),
                 body: message,
             });
         }
+    },
+
+    async validateOrder(isForceValidate) {
+        const order = this.order;
+        // the isAnySettleLine() is only available if enterprise:pos_settle_due module is installed
+        const settleLineCount = order.lines.filter((line) => line.isAnySettleLine?.()).length;
+        if (settleLineCount && settleLineCount !== order.lines.length) {
+            return this.pos.dialog.add(AlertDialog, {
+                title: _t("Settlement Error"),
+                body: _t(
+                    "Please remove the new order lines from the order to proceed with the settlement."
+                ),
+            });
+        }
+        await super.validateOrder(...arguments);
     },
 });

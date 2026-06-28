@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -401,13 +401,6 @@ msgstr ""
 "oshirilishi kerak ("
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
-#: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
-#, fuzzy
-msgid ")^FS"
-msgstr ")^FS"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
 #: model:ir.model.fields,help:stock.field_stock_move_line__state
 #, fuzzy
@@ -514,52 +507,8 @@ msgid "1 Week"
 msgstr "1 hafta"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-#: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
-msgid "1.00"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_content
-msgid "12.0"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_generic_barcode
-msgid "1234567890"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
-msgid "12345678901"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__2x7xprice
-#, fuzzy
-msgid "2 x 7 with price"
-msgstr "2 x 7 narx bilan"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
-msgid "2021-09-01"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
-msgid "2023-01-01"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "2023-09-24"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_content
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "3.00"
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__2x7
+msgid "2 x 7"
 msgstr ""
 
 #. module: stock
@@ -582,20 +531,8 @@ msgid "4 x 12 - One per unit"
 msgstr "4 x 12 - har bir birlik uchun bitta"
 
 #. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x12xprice
-#, fuzzy
-msgid "4 x 12 with price"
-msgstr "4 x 12 narx bilan"
-
-#. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x7xprice
-#, fuzzy
-msgid "4 x 7 with price"
-msgstr "4 x 7 narx bilan"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_content
-msgid "54326786758"
+#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x7
+msgid "4 x 7"
 msgstr ""
 
 #. module: stock
@@ -644,8 +581,8 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
-"<br>Mahsulotlar <b>%(operation)s</b> manzilidan belgilanganidek "
-"<b>%(destination)s</b> tomon <br/> ko‘chiriladi."
+"<br>Mahsulotlar <b>%(operation)s</b> manzilidan belgilanganidek <b>%"
+"(destination)s</b> tomon <br/> ko‘chiriladi."
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -654,14 +591,20 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
 "<br/><br/>\n"
-"        We are glad to inform you that your order has been shipped.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object."
-"carrier_tracking_ref\">\n"
+"        <t t-if=\"hasattr(object, 'delivery_type') and object.delivery_type "
+"== 'in_store'\">\n"
+"            Your order has been collected.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            We are glad to inform you that your order has been shipped.\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object."
-"get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-"
 "as=\"line\">\n"
@@ -741,13 +684,6 @@ msgstr "<span class=\"mt0 float-start\">Belgilangan paket yo‘q</span>"
 msgid "<span class=\"o_form_label\">Scannable Package Contents</span>"
 msgstr ""
 "<span class=\"o_form_label\">Skanerlash mumkin bo‘lgan paket tarkibi</span>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
-msgid ""
-"<span class=\"o_input_box_overlay_end o_input_box_overlay_inline\">days</"
-"span>"
-msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -885,6 +821,11 @@ msgstr "<span class=\"text-muted small\">Mavjud</span><span> / </span>"
 #, fuzzy
 msgid "<span class=\"text-muted small\"> On Hand</span>"
 msgstr "<span class=\"text-muted small\">Qo‘lda mavjud</span>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
+msgid "<span class=\"text-muted\">On Hand</span>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1465,6 +1406,7 @@ msgstr "Barcha o‘tkazmalar"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #, fuzzy
 msgid "All Warehouses"
 msgstr "Barcha omborxonalar"
@@ -1534,12 +1476,6 @@ msgstr "Ruxsat etilgan marshrut"
 #, fuzzy
 msgid "Allowed Uom"
 msgstr "Ruxsat etilgan o‘lchov birligi"
-
-#. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
-#, fuzzy
-msgid "Alternative (2.00\" x 1.00\")"
-msgstr "Muqobil (2,00\" x 1,00\")"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__always
@@ -1691,6 +1627,13 @@ msgid "Are you sure you want to cancel this transfer?"
 msgstr "Ushbu o‘tkazmani bekor qilmoqchimisiz?"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
+msgid ""
+"Are you sure you want to proceed this transfer with moves that have no "
+"demand?"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 #, fuzzy
@@ -1699,8 +1642,8 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Bu mahsulot uchun %(uom)s dan boshqa o‘lchov birliklari (masalan: "
-"%(problem_uom)s) ishlatilganligi sababli, o‘lchov birligini o‘zgartirib "
+"Bu mahsulot uchun %(uom)s dan boshqa o‘lchov birliklari (masalan: %"
+"(problem_uom)s) ishlatilganligi sababli, o‘lchov birligini o‘zgartirib "
 "bo‘lmaydi. Agar uni o‘zgartirmoqchi bo‘lsangiz, mahsulotni arxivlang va "
 "yangisini yarating."
 
@@ -1720,9 +1663,8 @@ msgstr "So‘rash"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
-#, fuzzy
 msgid "Assign"
-msgstr "Tayinlash"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -1924,9 +1866,8 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
-#, fuzzy
 msgid "Average Stock:"
-msgstr "O‘rtacha zaxira:"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
@@ -2144,8 +2085,8 @@ msgstr "%s umumiy yo‘nalishi topilmadi."
 #: code:addons/stock/models/stock_package.py:0
 #, fuzzy
 msgid ""
-"Can't move a container having packages in another location "
-"(%(old_location)s) to a different location (%(new_location)s)."
+"Can't move a container having packages in another location (%"
+"(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
 "Boshqa joylashuvda (%(old_location)s) paketlari bo‘lgan konteynerni boshqa "
 "joylashuvga (%(new_location)s) ko‘chirish mumkin emas."
@@ -2288,8 +2229,8 @@ msgstr "Mahsulotni o‘zgartirish faqat \"Qoralama\" holatida ruxsat etiladi."
 #: model:ir.model.fields,help:stock.field_res_config_settings__barcode_separator
 #, fuzzy
 msgid ""
-"Character(s) used to separate data contained within an aggregate barcode (i."
-"e. a barcode containing multiple barcode encodings)"
+"Character(s) used to separate data contained within an aggregate barcode "
+"(i.e. a barcode containing multiple barcode encodings)"
 msgstr ""
 "Yig‘ma shtrix-kod (ya'ni bir nechta shtrix-kod kodlashtiruvlarini o‘z ichiga "
 "olgan shtrix-kod) tarkibidagi ma'lumotlarni ajratish uchun ishlatiladigan "
@@ -2325,11 +2266,6 @@ msgstr "Yorliqlar joylashuvini tanlang"
 #, fuzzy
 msgid "Choose Type of Labels To Print"
 msgstr "Chop etish uchun yorliq turini tanlang"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
-msgid "Choose Warehouses"
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -2370,6 +2306,7 @@ msgid "Choose your date"
 msgstr "Sanani tanlang"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 #, fuzzy
 msgid "Clear"
@@ -2418,7 +2355,6 @@ msgstr "Rang"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__company_id
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_route__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_rule__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__company_id
@@ -2648,6 +2584,7 @@ msgstr "Sarflash qatori"
 #: model:ir.model,name:stock.model_res_partner
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_partner_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__partner_id
+#: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, fuzzy
 msgid "Contact"
@@ -2762,7 +2699,7 @@ msgid "Counted Quantity"
 msgstr "Hisoblangan miqdor"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #, fuzzy
 msgid "Counterpart Locations"
 msgstr "Kontragent joylashuvlari"
@@ -2904,8 +2841,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__create_uid
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking__create_uid
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_route__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_rule__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__create_uid
@@ -2916,6 +2851,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__create_uid
+#: model:ir.model.fields,field_description:stock.field_stock_zero_demand_confirmation__create_uid
 #, fuzzy
 msgid "Created by"
 msgstr "Yaratuvchi"
@@ -2950,8 +2886,6 @@ msgstr "Yaratuvchi"
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__create_date
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking__create_date
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_route__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_rule__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__create_date
@@ -2962,6 +2896,7 @@ msgstr "Yaratuvchi"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__create_date
+#: model:ir.model.fields,field_description:stock.field_stock_zero_demand_confirmation__create_date
 #, fuzzy
 msgid "Created on"
 msgstr "Yaratilgan sana"
@@ -3046,7 +2981,7 @@ msgstr "Maxsus"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__serial_prefix_format
 #: model:ir.model.fields,field_description:stock.field_product_template__serial_prefix_format
-#: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #, fuzzy
 msgid "Custom Lot/Serial"
 msgstr "Maxsus partiya/seriya"
@@ -3058,13 +2993,6 @@ msgstr "Maxsus partiya/seriya"
 #, fuzzy
 msgid "Customer"
 msgstr "Mijoz"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_product__sale_delay
-#: model:ir.model.fields,field_description:stock.field_product_template__sale_delay
-#, fuzzy
-msgid "Customer Lead Time"
-msgstr "Mijozga yetkazib berish muddati"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__property_stock_customer
@@ -3155,9 +3083,8 @@ msgstr "DHL tezkor ulagichi"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
-#, fuzzy
 msgid "Daily Demand:"
-msgstr "Kunlik talab:"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -3167,6 +3094,7 @@ msgstr "Kunlik talab:"
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_scrap_move_list
 #, fuzzy
 msgid "Date"
@@ -3576,17 +3504,6 @@ msgid "Delivery Slip"
 msgstr "Yetkazib berish varaqasi"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_product_product__sale_delay
-#: model:ir.model.fields,help:stock.field_product_template__sale_delay
-#, fuzzy
-msgid ""
-"Delivery lead time, in days. It's the number of days, promised to the "
-"customer, between the confirmation of the sales order and the delivery."
-msgstr ""
-"Yetkazib berish muddati, kunlarda. Bu sotuv buyurtmasini tasdiqlash va "
-"yetkazib berish o‘rtasidagi, mijozga va'da qilingan kunlar soni."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__delivery_count
 #, fuzzy
 msgid "Delivery order count"
@@ -3601,11 +3518,17 @@ msgstr "%s ning yetkazib berish buyurtmalari"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_qty
+#: model_terms:ir.ui.view,arch_db:stock.view_move_pivot
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
 #, fuzzy
 msgid "Demand"
 msgstr "Talab"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
+msgid "Demand in Product UoM"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
@@ -3618,18 +3541,6 @@ msgstr "Namoyish manzili va nomi"
 #, fuzzy
 msgid "Demo Display Name"
 msgstr "Namoyish ko‘rsatish nomi"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
-#, fuzzy
-msgid "Demo Lot/SN"
-msgstr "Namoyish partiya/seriya raqami"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
-#, fuzzy
-msgid "Demo Product"
-msgstr "Namoyish mahsulot"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -3666,19 +3577,19 @@ msgid "Description Picking Manual"
 msgstr "Qo‘lda terish tavsifi"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #, fuzzy
 msgid "Description for Delivery Orders"
 msgstr "Yetkazib berish buyurtmalari uchun tavsif"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #, fuzzy
 msgid "Description for Internal Transfers"
 msgstr "Ichki o‘tkazmalar uchun tavsif"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #, fuzzy
 msgid "Description for Receipts"
 msgstr "Qabulxona uchun tavsif"
@@ -3843,6 +3754,12 @@ msgid "Detailed Operations"
 msgstr "Batafsil operatsiyalar"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.stock_quant_action
+#: model:ir.ui.menu,name:stock.menu_valuation
+msgid "Detailed Stock"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, fuzzy
 msgid "Details"
@@ -3877,6 +3794,7 @@ msgstr "O‘lchamlar"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
+#: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 #, fuzzy
 msgid "Discard"
 msgstr "Bekor qilish"
@@ -3931,8 +3849,8 @@ msgstr "Yuk xatlarida partiya va seriya raqamlarini ko‘rsatish"
 #: model:ir.model.fields,field_description:stock.field_product_replenish__display_name
 #: model:ir.model.fields,field_description:stock.field_product_template__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_label_lot_template_view__display_name
-#: model:ir.model.fields,field_description:stock.field_report_stock_label_product_product_view__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__display_name
+#: model:ir.model.fields,field_description:stock.field_report_stock_report_lot_label__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_reception__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:stock.field_res_company__display_name
@@ -3967,8 +3885,6 @@ msgstr "Yuk xatlarida partiya va seriya raqamlarini ko‘rsatish"
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__display_name
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking__display_name
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_route__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__display_name
@@ -3980,6 +3896,7 @@ msgstr "Yuk xatlarida partiya va seriya raqamlarini ko‘rsatish"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_zero_demand_confirmation__display_name
 #: model:ir.model.fields,field_description:stock.field_uom_uom__display_name
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, fuzzy
@@ -4243,16 +4160,15 @@ msgid "Exception(s):"
 msgstr "Istisno(lar):"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Exchange"
 msgstr ""
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
-#, fuzzy
 msgid "Exp"
-msgstr "Muddati"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -4323,12 +4239,6 @@ msgstr "FedEx ulagichi"
 #, fuzzy
 msgid "Filtered Location"
 msgstr "Filtrlangan joy"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__location_final_id
-#, fuzzy
-msgid "Final Location"
-msgstr "Yakuniy joy"
 
 #. module: stock
 #: model:product.removal,name:stock.removal_fifo
@@ -4464,6 +4374,11 @@ msgid "Forecasted Inventory"
 msgstr "Prognozlangan inventar"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__forecasted_location_id
+msgid "Forecasted Location"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 #: model:ir.model.fields,field_description:stock.field_product_product__virtual_available
@@ -4510,7 +4425,6 @@ msgstr "Kutilayotganlar bilan prognozlangan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__print_format
-#: model:ir.model.fields,field_description:stock.field_product_label_layout__print_format
 #, fuzzy
 msgid "Format"
 msgstr "Format"
@@ -4804,8 +4718,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_replenish__id
 #: model:ir.model.fields,field_description:stock.field_product_template__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_label_lot_template_view__id
-#: model:ir.model.fields,field_description:stock.field_report_stock_label_product_product_view__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__id
+#: model:ir.model.fields,field_description:stock.field_report_stock_report_lot_label__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_reception__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:stock.field_res_company__id
@@ -4840,8 +4754,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__id
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__id
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__id
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking__id
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__id
 #: model:ir.model.fields,field_description:stock.field_stock_route__id
 #: model:ir.model.fields,field_description:stock.field_stock_rule__id
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__id
@@ -4853,6 +4765,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__id
+#: model:ir.model.fields,field_description:stock.field_stock_zero_demand_confirmation__id
 #: model:ir.model.fields,field_description:stock.field_uom_uom__id
 #, fuzzy
 msgid "ID"
@@ -5719,12 +5632,6 @@ msgid "January"
 msgstr "Yanvar"
 
 #. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__jewelry
-#, fuzzy
-msgid "Jewelry (2.20\" x 0.50\")"
-msgstr "Zargarlik buyumlari (2,20\" x 0,50\")"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #, fuzzy
 msgid "John Doe"
@@ -5785,6 +5692,11 @@ msgstr "Farqni saqlash"
 #, fuzzy
 msgid "Keep current lines"
 msgstr "Joriy qatorlarni saqlash"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
+msgid "Keep lines"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -5921,8 +5833,6 @@ msgstr "Oxirgi inventarizatsiya"
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__write_uid
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking__write_uid
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_route__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_rule__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__write_uid
@@ -5933,6 +5843,7 @@ msgstr "Oxirgi inventarizatsiya"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__write_uid
+#: model:ir.model.fields,field_description:stock.field_stock_zero_demand_confirmation__write_uid
 #, fuzzy
 msgid "Last Updated by"
 msgstr "Oxirgi yangilovchi"
@@ -5967,8 +5878,6 @@ msgstr "Oxirgi yangilovchi"
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__write_date
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking__write_date
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_route__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_rule__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__write_date
@@ -5979,6 +5888,7 @@ msgstr "Oxirgi yangilovchi"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__write_date
+#: model:ir.model.fields,field_description:stock.field_stock_zero_demand_confirmation__write_date
 #, fuzzy
 msgid "Last Updated on"
 msgstr "Oxirgi yangilangan sana"
@@ -6061,9 +5971,8 @@ msgstr "Yetkazib berish vaqti haqida ma'lumot"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
-#, fuzzy
 msgid "Lead Time:"
-msgstr "Yetkazib berish vaqti:"
+msgstr ""
 
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
@@ -6196,6 +6105,11 @@ msgid "Location Type"
 msgstr "Joylashuv turi"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move__forecasted_location_id
+msgid "Location used in the computation of the forecast."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 #, fuzzy
 msgid "Location: Store to"
@@ -6250,6 +6164,7 @@ msgstr "Avtomatik chop etish uchun partiya yorlig‘i formati"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+#: model:ir.model,name:stock.model_report_stock_report_lot_label
 #, fuzzy
 msgid "Lot Label Report"
 msgstr "Partiya yorlig‘i hisoboti"
@@ -6474,12 +6389,6 @@ msgid "Manually"
 msgstr "Qo‘lda"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
-#, fuzzy
-msgid "Manufacturing"
-msgstr "Ishlab chiqarish"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__3
 #, fuzzy
 msgid "March"
@@ -6628,7 +6537,6 @@ msgstr "Mitchel Admin"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__move_ids
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__move_id
 #, fuzzy
 msgid "Move"
 msgstr "Ko‘chirish"
@@ -6677,12 +6585,6 @@ msgid "Move Lines Count"
 msgstr "Ko‘chirish qatorlari soni"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__move_quantity
-#, fuzzy
-msgid "Move Quantity"
-msgstr "Ko‘chirish miqdori"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
 #, fuzzy
@@ -6702,7 +6604,6 @@ msgid "Move that created the return move"
 msgstr "Qaytarish harakatini yaratgan ko‘chirish"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking__product_return_moves
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
 #, fuzzy
@@ -7024,17 +6925,6 @@ msgid "No product found. Let's create one!"
 msgstr "Hech qanday mahsulot topilmadi. Keling, yangi mahsulot yarataylik!"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/wizard/stock_picking_return.py:0
-#, fuzzy
-msgid ""
-"No products to return (only lines in Done state and not fully returned yet "
-"can be returned)."
-msgstr ""
-"Qaytarish uchun mahsulotlar yo‘q (faqat \"Bajarildi\" holatidagi va hali "
-"to‘liq qaytarilmagan satrlarni qaytarish mumkin)."
-
-#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_putaway_tree
 #, fuzzy
 msgid "No putaway rule found. Let's create one!"
@@ -7092,7 +6982,7 @@ msgid "No transfer found. Let's create one!"
 msgstr "O‘tkazma topilmadi. Keling, yangi o‘tkazma yaratamiz!"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 msgid "None"
 msgstr ""
 
@@ -7102,12 +6992,6 @@ msgstr ""
 #, fuzzy
 msgid "Normal"
 msgstr "Normal"
-
-#. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__normal
-#, fuzzy
-msgid "Normal (2.25\" x 1.25\")"
-msgstr "Normal (2,25\" x 1,25\")"
 
 #. module: stock
 #. odoo-javascript
@@ -7266,12 +7150,6 @@ msgstr ""
 "yangi bo‘lgan mavjud miqdor"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
-#, fuzzy
-msgid "On hand:"
-msgstr "Mavjud:"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
 #, fuzzy
 msgid "One per lot/SN"
@@ -7294,7 +7172,6 @@ msgstr "Ochiq"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_code
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_code
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__code
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking__picking_type_code
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Operation Category"
 msgstr ""
@@ -7363,9 +7240,9 @@ msgstr "Operatsiya turi (ZPL)"
 #: model:ir.actions.act_window,name:stock.action_get_picking_type_operations
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_ids
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 #, fuzzy
 msgid "Operations"
 msgstr "Operatsiyalar"
@@ -7454,9 +7331,8 @@ msgstr "Buyurtma qilingan"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
-#, fuzzy
 msgid "Ordering Frequency:"
-msgstr "Buyurtma berish chastotasi:"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -7546,11 +7422,11 @@ msgid ""
 msgstr ""
 "Agar hisob-fakturada yoki buyurtmada boshqa to‘lov muddati ko‘rsatilmagan "
 "bo‘lsa, bizning hisob-fakturalarimiz 21 ish kuni ichida to‘lanishi kerak. "
-"To‘lov muddati o‘tganda to‘lanmagan taqdirda, \"Mening "
-"kompaniyam\" (Chikago) qolgan summaning 10 foizi miqdorida belgilangan foiz "
-"to‘lovini talab qilish huquqini o‘zida saqlab qoladi. To‘lov kechiktirilgan "
-"taqdirda, \"Mening kompaniyam\" (Chikago) oldindan ogohlantirishsiz har "
-"qanday xizmatlar ko‘rsatishni to‘xtatib qo‘yishga haqli bo‘ladi."
+"To‘lov muddati o‘tganda to‘lanmagan taqdirda, \"Mening kompaniyam\" "
+"(Chikago) qolgan summaning 10 foizi miqdorida belgilangan foiz to‘lovini "
+"talab qilish huquqini o‘zida saqlab qoladi. To‘lov kechiktirilgan taqdirda, "
+"\"Mening kompaniyam\" (Chikago) oldindan ogohlantirishsiz har qanday "
+"xizmatlar ko‘rsatishni to‘xtatib qo‘yishga haqli bo‘ladi."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
@@ -7621,6 +7497,7 @@ msgstr "Umumiy ko‘rinish"
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
+#: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 #, fuzzy
 msgid "Owner"
 msgstr "Egasi"
@@ -7684,6 +7561,7 @@ msgstr "O‘rash turi"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
+#: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_has_serial_move_line
 #, fuzzy
 msgid "Pack of 6"
 msgstr "6 donali o‘ram"
@@ -8089,7 +7967,7 @@ msgstr "Tanlangan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__picking_ids
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking__picking_id
+#: model:ir.model.fields,field_description:stock.field_stock_zero_demand_confirmation__picking_ids
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #, fuzzy
 msgid "Picking"
@@ -8175,18 +8053,10 @@ msgstr ""
 "quyidagi manzilga yuborilishi shart:"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/wizard/stock_picking_return.py:0
-#, fuzzy
-msgid "Please specify at least one non-zero quantity."
-msgstr "Iltimos, kamida bitta noldan farqli miqdorni ko‘rsating."
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
-#, fuzzy
 msgid "Preceding operations"
-msgstr "Oldingi amallar"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
@@ -8355,7 +8225,6 @@ msgstr "Ishlab chiqarilgan miqdor"
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__product_id
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category_capacity__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_id
@@ -8422,22 +8291,10 @@ msgid "Product Display Name"
 msgstr "Mahsulot ko‘rsatish nomi"
 
 #. module: stock
-#: model:ir.actions.report,name:stock.label_product_product
-#, fuzzy
-msgid "Product Label (ZPL)"
-msgstr "Mahsulot yorlig‘i (ZPL)"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__product_label_format
 #, fuzzy
 msgid "Product Label Format to auto-print"
 msgstr "Avtomatik chop etish uchun mahsulot yorlig‘i formati"
-
-#. module: stock
-#: model:ir.model,name:stock.model_report_stock_label_product_product_view
-#, fuzzy
-msgid "Product Label Report"
-msgstr "Mahsulot yorlig‘i hisoboti"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__products
@@ -8528,25 +8385,10 @@ msgid "Product Variant"
 msgstr "Mahsulot varianti"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.stock_product_normal_action
-#: model:ir.ui.menu,name:stock.product_product_menu
-#, fuzzy
-msgid "Product Variants"
-msgstr "Mahsulot variantlari"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_content
 #, fuzzy
 msgid "Product barcode"
 msgstr "Mahsulot shtrix-kodi"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/report/product_label_report.py:0
-#, fuzzy
-msgid "Product model not defined, Please contact your administrator."
-msgstr ""
-"Mahsulot modeli aniqlanmagan, iltimos, administratoringizga murojaat qiling."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -8824,7 +8666,6 @@ msgstr "Qadoqlanmagan miqdorlar"
 #: model:ir.model.fields,field_description:stock.field_stock_move__quantity
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quantity
 #: model:ir.model.fields,field_description:stock.field_stock_quant__quantity
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__quantity
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category_capacity__quantity
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__quantity
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__quantity
@@ -8836,6 +8677,7 @@ msgstr "Qadoqlanmagan miqdorlar"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree_detailed
+#: model_terms:ir.ui.view,arch_db:stock.view_move_pivot
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
@@ -8888,6 +8730,7 @@ msgid "Quantity has been moved since last count"
 msgstr "Oxirgi sanoqdan beri miqdor ko‘chirilgan"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__quantity_product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quantity_product_uom
 #, fuzzy
 msgid "Quantity in Product UoM"
@@ -9050,12 +8893,6 @@ msgstr "Reytinglar"
 #, fuzzy
 msgid "Ready"
 msgstr "Tayyor"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
-#, fuzzy
-msgid "Real Quantity"
-msgstr "Haqiqiy miqdor"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -9278,6 +9115,11 @@ msgid "Remove"
 msgstr "Olib tashlash"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
+msgid "Remove lines"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 #, fuzzy
 msgid ""
@@ -9467,9 +9309,8 @@ msgstr "Zaxiralash usuli"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
-#, fuzzy
 msgid "Reserve"
-msgstr "Zaxiralash"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
@@ -9555,30 +9396,16 @@ msgid "Resupply Routes"
 msgstr "Ta'minot yo‘nalishlari"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.act_stock_return_picking
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 #, fuzzy
 msgid "Return"
 msgstr "Qaytarish"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, fuzzy
 msgid "Return All"
 msgstr "Hammasini qaytarish"
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_return_picking
-#, fuzzy
-msgid "Return Picking"
-msgstr "Qaytarish uchun terish"
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_return_picking_line
-#, fuzzy
-msgid "Return Picking Line"
-msgstr "Qaytarish uchun terish liniyasi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -9594,7 +9421,7 @@ msgstr "Qaytarish:"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/wizard/stock_picking_return.py:0
+#: code:addons/stock/models/stock_picking.py:0
 #, fuzzy
 msgid "Return of %(picking_name)s"
 msgstr "%(picking_name)s ni qaytarish"
@@ -9607,7 +9434,7 @@ msgstr "Qaytarish varag‘i"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/wizard/stock_picking_return.py:0
+#: code:addons/stock/models/stock_picking.py:0
 #, fuzzy
 msgid "Returned Picking"
 msgstr "Qaytarilgan terish"
@@ -9749,11 +9576,11 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, fuzzy
 msgid ""
-"Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
-"%(route_company)s."
+"Rule %(rule)s belongs to %(rule_company)s while the route belongs to %"
+"(route_company)s."
 msgstr ""
-"%(rule)s qoidasi %(rule_company)s kompaniyasiga tegishli, yo‘nalish esa "
-"%(route_company)s kompaniyasiga tegishli."
+"%(rule)s qoidasi %(rule_company)s kompaniyasiga tegishli, yo‘nalish esa %"
+"(route_company)s kompaniyasiga tegishli."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -9870,7 +9697,6 @@ msgstr "Rejalashtirilgan"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__scheduled_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking__scheduled_date
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
-#: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, fuzzy
 msgid "Scheduled Date"
@@ -10150,11 +9976,11 @@ msgstr "Seriya raqamlari"
 #: code:addons/stock/models/stock_move_line.py:0
 #, fuzzy
 msgid ""
-"Serial number (%(serial_number)s) already exists in location(s): "
-"%(location_list)s. Please correct the serial number encoded."
+"Serial number (%(serial_number)s) already exists in location(s): %"
+"(location_list)s. Please correct the serial number encoded."
 msgstr ""
-"Seriya raqami (%(serial_number)s) quyidagi joylarda allaqachon mavjud: "
-"%(location_list)s. Iltimos, kiritilgan seriya raqamini to‘g‘rilang"
+"Seriya raqami (%(serial_number)s) quyidagi joylarda allaqachon mavjud: %"
+"(location_list)s. Iltimos, kiritilgan seriya raqamini to‘g‘rilang"
 
 #. module: stock
 #. odoo-python
@@ -10181,8 +10007,8 @@ msgid ""
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
 "Seriya raqami (%(serial_number)s) %(source_location)s joyida emas, balki "
-"quyidagi joylarda: %(other_locations)s.  Bu harakat uchun manba joylashuvi "
-"%(recommended_location)s ga o‘zgartiriladi"
+"quyidagi joylarda: %(other_locations)s.  Bu harakat uchun manba joylashuvi %"
+"(recommended_location)s ga o‘zgartiriladi"
 
 #. module: stock
 #. odoo-javascript
@@ -10440,6 +10266,11 @@ msgid "Show Reception Report at Validation"
 msgstr "Tasdiqlashda qabul qilish hisobotini ko‘rsatish"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_return_picking_type
+msgid "Show Return Picking Type"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__show_supply_warning
 #, fuzzy
 msgid "Show Supply Warning"
@@ -10474,6 +10305,11 @@ msgstr "Partiya raqamini ko‘rsatish"
 #, fuzzy
 msgid "Show lot_name"
 msgstr "Partiya nomini ko‘rsatish"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__show_return
+msgid "Show return button"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rules_report__warehouse_ids
@@ -10514,12 +10350,6 @@ msgid "Size: Length × Width × Height"
 msgstr "O‘lcham: Uzunlik × Kenglik × Balandlik"
 
 #. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__small
-#, fuzzy
-msgid "Small (1.25\" x 1.00\")"
-msgstr "Kichik (3,18 sm x 2,54 sm)"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/views/stock_orderpoint_list_view.xml:0
 #: model:ir.actions.act_window,name:stock.action_orderpoint_snooze
@@ -10552,6 +10382,11 @@ msgstr "Quyidagi muddatga kechiktirish"
 #, fuzzy
 msgid "Snoozed"
 msgstr "Kechiktirilgan"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
+msgid "Some moves have zero demand quantity."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_set_view
@@ -10732,8 +10567,6 @@ msgid "Stock Location"
 msgstr "Zaxira joylashuvi"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.stock_quant_action
-#: model:ir.ui.menu,name:stock.menu_valuation
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 #, fuzzy
 msgid "Stock Locations"
@@ -10883,9 +10716,8 @@ msgstr "Zaxira harakati bilan matnni tasdiqlash"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
-#, fuzzy
 msgid "Stock To Reserve:"
-msgstr "Zaxiralash uchun:"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_max_qty
@@ -11180,8 +11012,8 @@ msgstr "Partiya/seriya raqami (%s) boshqa mahsulot bilan bog‘langan."
 #: code:addons/stock/models/stock_quant.py:0
 #, fuzzy
 msgid ""
-"The Serial Number (%(serial_number)s) is already used in location(s): "
-"%(location_list)s.\n"
+"The Serial Number (%(serial_number)s) is already used in location(s): %"
+"(location_list)s.\n"
 "\n"
 "Is this expected? For example, this can occur if a delivery operation is "
 "validated before its corresponding receipt operation is validated. In this "
@@ -11340,16 +11172,6 @@ msgstr ""
 "Yaratilishi kerak bo‘lgan seriya raqamlari soni noldan katta bo‘lishi kerak."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move__location_final_id
-#, fuzzy
-msgid ""
-"The operation brings the products to the intermediate location.But this "
-"operation is part of a chain of operations targeting the final location."
-msgstr ""
-"Bu operatsiya mahsulotlarni oraliq joyga olib keladi. Ammo bu operatsiya "
-"yakuniy joyga yo‘naltirilgan operatsiyalar zanjirining bir qismidir."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 #, fuzzy
 msgid "The operation takes and suggests products from this location."
@@ -11477,8 +11299,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %(product)s, Serial Number: %(serial_number)s"
 msgstr ""
-"Seriya raqami allaqachon berilgan: Mahsulot: %(product)s, Seriya raqami: "
-"%(serial_number)s"
+"Seriya raqami allaqachon berilgan: Mahsulot: %(product)s, Seriya raqami: %"
+"(serial_number)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -11701,13 +11523,13 @@ msgstr ""
 "harakatlarini ko‘rish uchun mahsulot bo‘yicha filtrlashingiz mumkin."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #, fuzzy
 msgid "This note is added to delivery orders."
 msgstr "Bu eslatma yetkazib berish buyurtmalariga qo‘shiladi."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #, fuzzy
 msgid ""
 "This note is added to internal transfer orders (e.g. where to pick the "
@@ -11717,7 +11539,7 @@ msgstr ""
 "mahsulotni qayerdan olish kerakligi haqida)."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #, fuzzy
 msgid ""
 "This note is added to receipt orders (e.g. where to store the product in the "
@@ -11828,9 +11650,8 @@ msgstr "Vaqt oralig‘i"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
-#, fuzzy
 msgid "Time to replenish:"
-msgstr "To‘ldirish vaqti:"
+msgstr ""
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
@@ -12064,8 +11885,8 @@ msgid "Total weight of the package."
 msgstr "Qadoqning umumiy og‘irligi."
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 #, fuzzy
 msgid "Traceability"
 msgstr "Kuzatuvchanlik"
@@ -12303,17 +12124,16 @@ msgstr "USPS ulagichi"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
-#, fuzzy
 msgid "Unassign"
-msgstr "Topshiriqni bekor qilish"
+msgstr ""
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, fuzzy
 msgid ""
-"Unavailable Serial numbers. Please correct the serial numbers encoded: "
-"%(serial_numbers_to_locations)s"
+"Unavailable Serial numbers. Please correct the serial numbers encoded: %"
+"(serial_numbers_to_locations)s"
 msgstr ""
 "Mavjud bo‘lmagan seriya raqamlari. Iltimos, kodlangan seriya raqamlarini "
 "tuzating: %(serial_numbers_to_locations)s"
@@ -12337,7 +12157,6 @@ msgstr "Noyob lot/seriya raqami"
 #: model:ir.model.fields,field_description:stock.field_stock_move__uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__uom_id
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category_capacity__uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__product_uom_name
@@ -12520,9 +12339,8 @@ msgstr "Tasdiqlash"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
-#, fuzzy
 msgid "Validate Inventory"
-msgstr "Inventarni tasdiqlash"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__supplier
@@ -12558,10 +12376,16 @@ msgid "View Availability"
 msgstr "Mavjudlikni ko‘rish"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #, fuzzy
 msgid "View Diagram"
 msgstr "Diagrammani ko‘rish"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_product_template_tree
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
+msgid "View Forecast"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
@@ -12734,9 +12558,8 @@ msgstr "Ombor yo‘nalishlari"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
-#, fuzzy
 msgid "Warehouse:"
-msgstr "Ombor:"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -12916,8 +12739,8 @@ msgstr "Mahsulot kelganda"
 #, fuzzy
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</"
-"b> are created from <b>%(source_location)s</b> to fulfill the need. "
-"%(suffix)s"
+"b> are created from <b>%(source_location)s</b> to fulfill the need. %"
+"(suffix)s"
 msgstr ""
 "<b>%(destination)s</b> da mahsulotlar kerak bo‘lganda, <br> ehtiyojni "
 "qondirish uchun <b>%(source_location)s</b> dan <b>%(operation)s</b> "
@@ -12931,15 +12754,15 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br> <b>%(operation)s</"
 "b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
-"Mahsulotlar <b>%(source_location)s</b> ga yetib kelganda, <br> ularni "
-"<b>%(destination)s</b> ga yuborish uchun <b>%(operation)s</b> yaratiladi."
+"Mahsulotlar <b>%(source_location)s</b> ga yetib kelganda, <br> ularni <b>%"
+"(destination)s</b> ga yuborish uchun <b>%(operation)s</b> yaratiladi."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
 #, fuzzy
 msgid ""
-"When set to True the destination location of the stock.move will be the rule."
-"Otherwise, it takes it from the picking type."
+"When set to True the destination location of the stock.move will be the "
+"rule.Otherwise, it takes it from the picking type."
 msgstr ""
 "Rost qiymatga o‘rnatilganda, stock.move manzili qoida bo‘yicha aniqlanadi. "
 "Aks holda, u tanlash turidan olinadi."
@@ -13030,12 +12853,6 @@ msgstr "Kenglik"
 #, fuzzy
 msgid "Width must be positive"
 msgstr "Kenglik musbat bo‘lishi kerak"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__wizard_id
-#, fuzzy
-msgid "Wizard"
-msgstr "Yordamchi dastur"
 
 #. module: stock
 #. odoo-javascript
@@ -13237,8 +13054,8 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 #, fuzzy
 msgid ""
-"You cannot archive location %(location)s because it is used by warehouse "
-"%(warehouse)s"
+"You cannot archive location %(location)s because it is used by warehouse %"
+"(warehouse)s"
 msgstr ""
 "%(location)s joyini arxivlay olmaysiz, chunki u %(warehouse)s ombori "
 "tomonidan ishlatilmoqda."
@@ -13425,13 +13242,6 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/wizard/stock_picking_return.py:0
-#, fuzzy
-msgid "You may only return one picking at a time."
-msgstr "Bir vaqtda faqat bitta olinmani qaytarishingiz mumkin."
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "You must select a lot/serial number."
 msgstr ""
@@ -13462,8 +13272,8 @@ msgid ""
 "You need to supply a Lot/Serial Number for product:\n"
 "%(products)s"
 msgstr ""
-"Quyidagi mahsulot uchun partiya/seriya raqamini kiritishingiz kerak: "
-"%(products)s"
+"Quyidagi mahsulot uchun partiya/seriya raqamini kiritishingiz kerak: %"
+"(products)s"
 
 #. module: stock
 #. odoo-python
@@ -13546,7 +13356,6 @@ msgstr "ZPL"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__zpl
-#: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__zpl
 #, fuzzy
 msgid "ZPL Labels"
@@ -13565,137 +13374,22 @@ msgid "ZPL Labels - One per unit"
 msgstr "ZPL yorliqlari - har bir birlik uchun bittadan"
 
 #. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zplxprice
-#: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__zplxprice
-#, fuzzy
-msgid "ZPL Labels with price"
-msgstr "Narxi ko‘rsatilgan ZPL yorliqlari"
+#: model:ir.model,name:stock.model_stock_zero_demand_confirmation
+msgid "Zero Demand Confirmation"
+msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_label_layout__zpl_preview
-#, fuzzy
-msgid "ZPL Preview"
-msgstr "ZPL ko‘rib chiqish"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_label_layout__zpl_template
-#, fuzzy
-msgid "ZPL Template"
-msgstr "ZPL shabloni"
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
+msgid "Zero Demand Warning"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 #, fuzzy
 msgid "]<br/>min:"
 msgstr "]<br/>min:"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
-#, fuzzy
-msgid "^FO150,165 ^A0N,25^FH ^FD"
-msgstr "^FO150,165 ^A0N,25^FH ^FD"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
-#, fuzzy
-msgid "^FO150,210 ^A0N,25^FH ^FD("
-msgstr "^FO150,210 ^A0N,25^FH ^FD("
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
-#, fuzzy
-msgid "^FO160,185 ^A0N,18^FH ^FD("
-msgstr "^FO160,185 ^A0N,18^FH ^FD("
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
-#, fuzzy
-msgid "^FO290,165 ^A0N,30^FH ^FD"
-msgstr "^FO290,165 ^A0N,30^FH ^FD"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
-#, fuzzy
-msgid "^FO290,50 ^A0N,30^FH ^FD"
-msgstr "^FO290,50 ^A0N,30^FH ^FD"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
-#, fuzzy
-msgid "^FO300,200 ^A0N,40^FH ^FD"
-msgstr "^FO300,200 ^A0N,40^FH ^FD"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
-#, fuzzy
-msgid "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
-msgstr "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
-#, fuzzy
-msgid "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
-msgstr "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
-#, fuzzy
-msgid "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
-msgstr "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
-#, fuzzy
-msgid "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
-msgstr "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
-#: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
-#: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
-#: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
-#, fuzzy
-msgid "^FS"
-msgstr "^FS"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
-#, fuzzy
-msgid ""
-"^FS\n"
-"^FT35,48^A0N,15^FD"
-msgstr "^FS ^FT35,48^A0N,15^FD"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
-#, fuzzy
-msgid ""
-"^FS\n"
-"^FT35,65^A0N,20^FD"
-msgstr "^FS ^FT35,65^A0N,20^FD"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
-#, fuzzy
-msgid "^FT210,30^A0N,25^FD"
-msgstr "^FT210,30^A0N,25^FD"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
-msgid "^FT35,30^A0N,15^FD"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
-#, fuzzy
-msgid "^FT35,30^A0N,20^FD"
-msgstr "^FT35,30^A0N,20^FD"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
-#, fuzzy
-msgid "^FT35,40^A0N,25^FD"
-msgstr "^FT35,40^A0N,25^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -13718,9 +13412,8 @@ msgstr "eng yaqin"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
-#, fuzzy
 msgid "day(s)"
-msgstr "kun"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -13824,9 +13517,8 @@ msgstr "masalan: Ikki bosqichli qabul qilish"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
-#, fuzzy
 msgid "expected on"
-msgstr "kutilgan sanasi"
+msgstr ""
 
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo
@@ -13887,9 +13579,8 @@ msgstr "...ning"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
-#, fuzzy
 msgid "planned on"
-msgstr "rejalashtirilgan sanasi"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -13957,10 +13648,43 @@ msgid "units"
 msgstr "birlik"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid "x"
+msgstr ""
+
+#. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 #, fuzzy
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Yetkazib berish buyurtmasi (Havola {{ object."
-"name or 'mavjud emas' }})"
+"{{ object.company_id.name }} Yetkazib berish buyurtmasi (Havola "
+"{{ object.name or 'mavjud emas' }})"
+
+#, fuzzy
+#~ msgid "Demo Lot/SN"
+#~ msgstr "Namoyish partiya/seriya raqami"
+
+#, fuzzy
+#~ msgid "Demo Product"
+#~ msgstr "Namoyish mahsulot"
+
+#, fuzzy
+#~ msgid "Final Location"
+#~ msgstr "Yakuniy joy"
+
+#, fuzzy
+#~ msgid ""
+#~ "The operation brings the products to the intermediate location.But this "
+#~ "operation is part of a chain of operations targeting the final location."
+#~ msgstr ""
+#~ "Bu operatsiya mahsulotlarni oraliq joyga olib keladi. Ammo bu operatsiya "
+#~ "yakuniy joyga yo‘naltirilgan operatsiyalar zanjirining bir qismidir."
+
+#, fuzzy
+#~ msgid "On hand:"
+#~ msgstr "Mavjud:"
+
+#, fuzzy
+#~ msgid "Real Quantity"
+#~ msgstr "Haqiqiy miqdor"

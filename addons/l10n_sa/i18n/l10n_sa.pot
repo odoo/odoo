@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.3a1+e\n"
+"Project-Id-Version: Odoo Server 19.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 19:16+0000\n"
-"PO-Revision-Date: 2026-03-12 19:16+0000\n"
+"POT-Creation-Date: 2026-06-19 18:17+0000\n"
+"PO-Revision-Date: 2026-06-19 18:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -72,16 +72,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_sa
-#: model_terms:ir.ui.view,arch_db:l10n_sa.l10n_sa_external_layout_folder
-msgid "215"
-msgstr ""
-
-#. module: l10n_sa
-#: model_terms:ir.ui.view,arch_db:l10n_sa.l10n_sa_report_invoice_document
-msgid "27.00"
-msgstr ""
-
-#. module: l10n_sa
 #: model:account.report.line,name:l10n_sa.tax_report_withholding_tax_line_technical_and_consulting_services
 msgid ""
 "3. Technical and consulting services and international telecommunication "
@@ -94,11 +84,6 @@ msgid "3. Zero rated domestic sales"
 msgstr ""
 
 #. module: l10n_sa
-#: model_terms:ir.ui.view,arch_db:l10n_sa.l10n_sa_report_invoice_document
-msgid "31.05"
-msgstr ""
-
-#. module: l10n_sa
 #: model:account.report.line,name:l10n_sa.tax_report_withholding_tax_line_dividends
 msgid "4. Dividends (5%)"
 msgstr ""
@@ -106,11 +91,6 @@ msgstr ""
 #. module: l10n_sa
 #: model:account.report.line,name:l10n_sa.tax_report_line_exports
 msgid "4. Exports"
-msgstr ""
-
-#. module: l10n_sa
-#: model_terms:ir.ui.view,arch_db:l10n_sa.l10n_sa_report_invoice_document
-msgid "4.05"
 msgstr ""
 
 #. module: l10n_sa
@@ -166,6 +146,11 @@ msgstr ""
 
 #. module: l10n_sa
 #: model_terms:ir.ui.view,arch_db:l10n_sa.l10n_sa_report_invoice_document
+msgid "<span name=\"th_discount_amount_span\">Discount Amount</span>"
+msgstr ""
+
+#. module: l10n_sa
+#: model_terms:ir.ui.view,arch_db:l10n_sa.l10n_sa_report_invoice_document
 msgid "<span name=\"th_vat_amount_span\">VAT Amount</span>"
 msgstr ""
 
@@ -182,6 +167,11 @@ msgstr ""
 #. module: l10n_sa
 #: model_terms:ir.ui.view,arch_db:l10n_sa.l10n_sa_report_invoice_document
 msgid "<span>Reason:</span><br/>"
+msgstr ""
+
+#. module: l10n_sa
+#: model_terms:ir.ui.view,arch_db:l10n_sa.l10n_sa_report_invoice_document
+msgid "<strong class=\"text-nowrap\">Invoice Total Payable Amount</strong>"
 msgstr ""
 
 #. module: l10n_sa
@@ -208,6 +198,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_sa.selection__account_debit_note__l10n_sa_reason__br-ksa-17-reason-3
 #: model:ir.model.fields.selection,name:l10n_sa.selection__account_move__l10n_sa_reason__br-ksa-17-reason-3
 #: model:ir.model.fields.selection,name:l10n_sa.selection__account_move_reversal__l10n_sa_reason__br-ksa-17-reason-3
+#: model:ir.model.fields.selection,name:l10n_sa.selection__zatca_mixin__l10n_sa_reason__br-ksa-17-reason-3
 msgid ""
 "Amendment of the supply value which is pre-agreed upon between the supplier "
 "and consumer"
@@ -232,6 +223,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_sa.selection__account_debit_note__l10n_sa_reason__br-ksa-17-reason-1
 #: model:ir.model.fields.selection,name:l10n_sa.selection__account_move__l10n_sa_reason__br-ksa-17-reason-1
 #: model:ir.model.fields.selection,name:l10n_sa.selection__account_move_reversal__l10n_sa_reason__br-ksa-17-reason-1
+#: model:ir.model.fields.selection,name:l10n_sa.selection__zatca_mixin__l10n_sa_reason__br-ksa-17-reason-1
 msgid ""
 "Cancellation or suspension of the supplies after its occurrence either "
 "wholly or partially"
@@ -240,16 +232,16 @@ msgstr ""
 #. module: l10n_sa
 #: model:ir.model.fields,help:l10n_sa.field_account_bank_statement_line__l10n_sa_confirmation_datetime
 #: model:ir.model.fields,help:l10n_sa.field_account_move__l10n_sa_confirmation_datetime
+#: model:ir.model.fields,help:l10n_sa.field_zatca_mixin__l10n_sa_confirmation_datetime
 msgid ""
-"Date on which the invoice is generated as final document (after securing all"
-" internal approvals)."
+"Date when the invoice is confirmed and posted.\n"
+"        In other words, it is the date on which the invoice is generated\n"
+"        as final document (after securing all internal approvals)."
 msgstr ""
 
 #. module: l10n_sa
 #: model_terms:ir.ui.view,arch_db:l10n_sa.view_move_form_inherit_l10n_sa
-msgid ""
-"Date when the supply of the goods and services is performed. In case of "
-"multiple deliveries, you should take the date of the latest one."
+msgid "Date when the supply of the goods and services is performed."
 msgstr ""
 
 #. module: l10n_sa
@@ -261,8 +253,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_sa.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:l10n_sa.field_account_debit_note__display_name
 #: model:ir.model.fields,field_description:l10n_sa.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_sa.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:l10n_sa.field_account_move_reversal__display_name
 #: model:ir.model.fields,field_description:l10n_sa.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:l10n_sa.field_zatca_mixin__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -270,8 +264,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_sa.field_account_chart_template__id
 #: model:ir.model.fields,field_description:l10n_sa.field_account_debit_note__id
 #: model:ir.model.fields,field_description:l10n_sa.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_sa.field_account_move_line__id
 #: model:ir.model.fields,field_description:l10n_sa.field_account_move_reversal__id
 #: model:ir.model.fields,field_description:l10n_sa.field_ir_attachment__id
+#: model:ir.model.fields,field_description:l10n_sa.field_zatca_mixin__id
 msgid "ID"
 msgstr ""
 
@@ -279,6 +275,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_sa.selection__account_debit_note__l10n_sa_reason__br-ksa-17-reason-5
 #: model:ir.model.fields.selection,name:l10n_sa.selection__account_move__l10n_sa_reason__br-ksa-17-reason-5
 #: model:ir.model.fields.selection,name:l10n_sa.selection__account_move_reversal__l10n_sa_reason__br-ksa-17-reason-5
+#: model:ir.model.fields.selection,name:l10n_sa.selection__zatca_mixin__l10n_sa_reason__br-ksa-17-reason-5
 msgid "In case of change in Seller's or Buyer's information"
 msgstr ""
 
@@ -286,6 +283,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_sa.selection__account_debit_note__l10n_sa_reason__br-ksa-17-reason-2
 #: model:ir.model.fields.selection,name:l10n_sa.selection__account_move__l10n_sa_reason__br-ksa-17-reason-2
 #: model:ir.model.fields.selection,name:l10n_sa.selection__account_move_reversal__l10n_sa_reason__br-ksa-17-reason-2
+#: model:ir.model.fields.selection,name:l10n_sa.selection__zatca_mixin__l10n_sa_reason__br-ksa-17-reason-2
 msgid ""
 "In case of essential change or amendment in the supply, which leads to the "
 "change of the VAT due"
@@ -295,6 +293,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_sa.selection__account_debit_note__l10n_sa_reason__br-ksa-17-reason-4
 #: model:ir.model.fields.selection,name:l10n_sa.selection__account_move__l10n_sa_reason__br-ksa-17-reason-4
 #: model:ir.model.fields.selection,name:l10n_sa.selection__account_move_reversal__l10n_sa_reason__br-ksa-17-reason-4
+#: model:ir.model.fields.selection,name:l10n_sa.selection__zatca_mixin__l10n_sa_reason__br-ksa-17-reason-4
 msgid "In case of goods or services refund"
 msgstr ""
 
@@ -311,6 +310,17 @@ msgid "Invoice Taxable Amount"
 msgstr ""
 
 #. module: l10n_sa
+#: model_terms:ir.ui.view,arch_db:l10n_sa.l10n_sa_report_invoice_document
+msgid "Invoice Total Payable Amount"
+msgstr ""
+
+#. module: l10n_sa
+#: model:ir.model.fields,field_description:l10n_sa.field_account_bank_statement_line__l10n_sa_invoice_type
+#: model:ir.model.fields,field_description:l10n_sa.field_account_move__l10n_sa_invoice_type
+msgid "Invoice type"
+msgstr ""
+
+#. module: l10n_sa
 #: model:ir.model,name:l10n_sa.model_account_move
 msgid "Journal Entry"
 msgstr ""
@@ -321,8 +331,14 @@ msgid "Journal Entry Reversal"
 msgstr ""
 
 #. module: l10n_sa
+#: model:ir.model,name:l10n_sa.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: l10n_sa
 #: model:ir.model.fields,field_description:l10n_sa.field_account_bank_statement_line__l10n_sa_show_reason
 #: model:ir.model.fields,field_description:l10n_sa.field_account_move__l10n_sa_show_reason
+#: model:ir.model.fields,field_description:l10n_sa.field_zatca_mixin__l10n_sa_show_reason
 msgid "L10N Sa Show Reason"
 msgstr ""
 
@@ -333,6 +349,11 @@ msgid ""
 "Please set the Invoice Date to be either less than or equal to today as per "
 "the Asia/Riyadh time zone, since ZATCA does not allow future-dated "
 "invoicing."
+msgstr ""
+
+#. module: l10n_sa
+#: model:ir.model.fields.selection,name:l10n_sa.selection__account_move__l10n_sa_invoice_type__simplified
+msgid "Simplified"
 msgstr ""
 
 #. module: l10n_sa
@@ -353,6 +374,7 @@ msgstr ""
 
 #. module: l10n_sa
 #: model:account.report.column,name:l10n_sa.tax_report_withholding_tax_tax
+#: model:ir.model.fields.selection,name:l10n_sa.selection__account_move__l10n_sa_invoice_type__tax
 msgid "Tax"
 msgstr ""
 
@@ -396,7 +418,20 @@ msgstr ""
 #. module: l10n_sa
 #: model:ir.model.fields,field_description:l10n_sa.field_account_bank_statement_line__l10n_sa_confirmation_datetime
 #: model:ir.model.fields,field_description:l10n_sa.field_account_move__l10n_sa_confirmation_datetime
+#: model:ir.model.fields,field_description:l10n_sa.field_zatca_mixin__l10n_sa_confirmation_datetime
 msgid "ZATCA Issue Date"
+msgstr ""
+
+#. module: l10n_sa
+#: model:ir.model,name:l10n_sa.model_zatca_mixin
+msgid "ZATCA Mixin"
+msgstr ""
+
+#. module: l10n_sa
+#: model:ir.model.fields,field_description:l10n_sa.field_account_bank_statement_line__l10n_sa_qr_code_str
+#: model:ir.model.fields,field_description:l10n_sa.field_account_move__l10n_sa_qr_code_str
+#: model:ir.model.fields,field_description:l10n_sa.field_zatca_mixin__l10n_sa_qr_code_str
+msgid "ZATCA QR Code"
 msgstr ""
 
 #. module: l10n_sa
@@ -404,15 +439,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_sa.field_account_debit_note__l10n_sa_reason
 #: model:ir.model.fields,field_description:l10n_sa.field_account_move__l10n_sa_reason
 #: model:ir.model.fields,field_description:l10n_sa.field_account_move_reversal__l10n_sa_reason
+#: model:ir.model.fields,field_description:l10n_sa.field_zatca_mixin__l10n_sa_reason
 #: model_terms:ir.ui.view,arch_db:l10n_sa.view_account_debit_note_inherit_l10n_sa
 #: model_terms:ir.ui.view,arch_db:l10n_sa.view_account_move_reversal_inherit_l10n_sa
 msgid "ZATCA Reason"
-msgstr ""
-
-#. module: l10n_sa
-#: model:ir.model.fields,field_description:l10n_sa.field_account_bank_statement_line__l10n_sa_qr_code_str
-#: model:ir.model.fields,field_description:l10n_sa.field_account_move__l10n_sa_qr_code_str
-msgid "Zatka QR Code"
 msgstr ""
 
 #. module: l10n_sa
@@ -437,6 +467,11 @@ msgstr ""
 #: model:account.report.line,name:l10n_sa.tax_report_withholding_tax_line_royalties_d
 #: model:account.report.line,name:l10n_sa.tax_report_withholding_tax_line_technical_and_consulting_services_d
 msgid "b. Deducted"
+msgstr ""
+
+#. module: l10n_sa
+#: model_terms:ir.ui.view,arch_db:l10n_sa.l10n_sa_report_invoice_document
+msgid "إجمالي مبلغ الفاتورة المستحق الدفع"
 msgstr ""
 
 #. module: l10n_sa

@@ -46,6 +46,13 @@ class MailRenderMixin(models.AbstractModel):
         link_nodes, urls_and_labels = find_links_with_urls_and_labels(
             root_node, base_url, skip_regex=rf'^{URL_SKIP_PROTOCOL_REGEX}', skip_prefix=short_schema,
             skip_list=blacklist)
+        if link_nodes:
+            filtered = [
+                (node, url)
+                for node, url in zip(link_nodes, urls_and_labels)
+                if self._should_track_node(node)
+            ]
+            link_nodes, urls_and_labels = zip(*filtered) if filtered else ((), ())
         if not link_nodes:
             return html
 
@@ -60,6 +67,10 @@ class MailRenderMixin(models.AbstractModel):
             new_html = markupsafe.Markup(new_html)
 
         return new_html
+
+    @api.model
+    def _should_track_node(self, node):
+        return True
 
     @api.model
     def _shorten_links_text(self, content, link_tracker_vals, blacklist=None, base_url=None):

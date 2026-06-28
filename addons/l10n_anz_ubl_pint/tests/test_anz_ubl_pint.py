@@ -30,7 +30,7 @@ class TestAnzUBLPint(AccountTestInvoicingCommon):
         })
         cls.partner_a.write({
             'vat': '49098576',
-            'company_registry': '9429047488083',
+            'additional_identifiers': {'NZ_EN': '9429047488083'},
             'street': 'Victoria Street',
             'zip': '3247',
             'city': 'Hamilton',
@@ -55,4 +55,31 @@ class TestAnzUBLPint(AccountTestInvoicingCommon):
         self.assertXmlTreeEqual(
             self.get_xml_tree_from_string(actual_xml),
             self.get_xml_tree_from_string(expected_xml),
+        )
+
+    def test_invoice_import(self):
+        with file_open('l10n_anz_ubl_pint/tests/expected_xmls/invoice.xml', 'rb') as f:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': f.read(),
+            })
+
+        imported_invoice = self.env['account.move'] \
+            .with_context(default_move_type='out_invoice') \
+            ._create_records_from_attachments(xml_attachment)
+
+        self.assertEqual(imported_invoice.move_type, 'out_invoice')
+        self.assertEqual(imported_invoice.currency_id, self.other_currency)
+        self.assertEqual(
+            imported_invoice.invoice_date.strftime("%Y-%m-%d"),
+            "2019-01-01",
+        )
+        self.assertRecordValues(
+            imported_invoice,
+            [{
+                'amount_untaxed': 2000.0,
+                'amount_tax': 200.0,
+                'amount_total': 2200.0,
+            }],
         )

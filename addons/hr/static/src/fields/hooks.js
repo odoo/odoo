@@ -27,7 +27,7 @@ export function onEmployeeSubRedirect() {
             subordinates_type: type,
             context: user.context
         });
-        let action = await orm.call('hr.employee', 'get_formview_action', [employeeId]);
+        let action = await orm.call('hr.employee', 'get_record_default_action', [employeeId]);
         action = {...action,
             name: _t('Team'),
             view_mode: 'kanban,list,form',

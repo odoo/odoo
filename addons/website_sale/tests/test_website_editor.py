@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import binascii
 import logging
 
 from odoo.exceptions import ValidationError
@@ -32,7 +33,7 @@ class TestProductPictureController(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.website = cls.env.ref('website.default_website')
+        cls.website = cls.env.ref("base.default_website")
         cls.WebsiteSaleController = WebsiteSale()
         cls.product = cls.env["product.product"].create({
             "name": "Storage Test Box",
@@ -177,6 +178,28 @@ class TestProductPictureController(HttpCase):
             self.assertListEqual(self._get_product_image_data(), [i2, i3, i4, i5, i6, i1])
             self.assertEqual(self.product.image_1920.content, i2)
 
+    def test_resequence_image_first_with_main_image(self):
+        """Check that reordering an extra image to the first position on a product
+        template updates the template's main image accordingly."""
+        self._create_product_images()
+        # Set a main image whose content differs from the additional image moved to first,
+        # so the swap actually replaces the underlying attachment.
+        self.product.product_tmpl_id.image_1920 = ATTACHMENT_DATA[4]
+        images = self.product._get_images()
+        i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
+        # Invalidate the cached image values so they are read lazily from their attachments
+        # during the swap (as they would be on a real request).
+        self.product.product_tmpl_id.invalidate_recordset(["image_1920"])
+        self.product.product_template_image_ids.invalidate_recordset(["image_1920"])
+        with MockRequest(self.product.env, website=self.website):
+            self.WebsiteSaleController.resequence_product_image(
+                images[2]._name, images[2].id, "first"
+            )
+        self.env["product.image"].invalidate_model()
+        self.product.invalidate_recordset()
+        self.assertListEqual(self._get_product_image_data(), [i3, i1, i2, i4, i5, i6])
+        self.assertEqual(self.product.image_1920.content, i3)
+
     def test_resequence_video_left(self):
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
@@ -266,7 +289,7 @@ class TestProductVideoUpload(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.website = cls.env.ref('website.default_website')
+        cls.website = cls.env.ref("base.default_website")
         cls.WebsiteSaleController = WebsiteSale()
         cls.product = cls.env["product.product"].create({
             "name": "Test Video Product",
@@ -275,14 +298,22 @@ class TestProductVideoUpload(HttpCase):
             "website_published": True,
         })
         cls.video_data = {
-            "src": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",  # A placeholder video URL
-            "name": "Test Video",
+            "embed_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ?enablejsapi=1&rel=0",
+            "platform": "YouTube",
         }
+        # 1x1 pixel PNG image, used as a mock thumbnail for video uploads
+        cls.mock_b64_image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/D/PwAHAwL/qGeMxAAAAABJRU5ErkJggg=="  # noqa: E501
 
     def _upload_video(self):
         with MockRequest(self.product.env, website=self.website):
             self.WebsiteSaleController.add_product_media(
-                [{"src": self.video_data["src"], "name": self.video_data["name"]}],
+                [
+                    {
+                        "name": self.video_data["platform"] + " - [Video]",
+                        "video_url": self.video_data["embed_url"],
+                        "image_1920": self.mock_b64_image,
+                    }
+                ],
                 "video",
                 self.product.id,
                 self.product.product_tmpl_id.id,
@@ -297,7 +328,7 @@ class TestProductVideoUpload(HttpCase):
         image_1920 = self.product.product_template_image_ids[0].image_1920
 
         # Check that the video URL and thumbnail are correctly saved
-        self.assertEqual(video_url, self.video_data["src"])
+        self.assertEqual(video_url, self.video_data["embed_url"])
         self.assertIsNotNone(image_1920)  # Ensure a thumbnail was generated
 
         # Verify that the video was added as part of the media
@@ -308,7 +339,24 @@ class TestProductVideoUpload(HttpCase):
         with MockRequest(self.product.env, website=self.website):
             with self.assertRaises(ValidationError):
                 self.WebsiteSaleController.add_product_media(
-                    [{"src": "", "name": "Invalid Video"}],
+                    [{"video_url": "", "name": "Invalid Video"}],
+                    "video",
+                    self.product.id,
+                    self.product.product_tmpl_id.id,
+                )
+
+    def test_video_upload_thumbnail_invalid(self):
+        # Try to upload a video with invalid thumbnailUrl data
+        with MockRequest(self.product.env, website=self.website):
+            with self.assertRaises(binascii.Error):
+                self.WebsiteSaleController.add_product_media(
+                    [
+                        {
+                            "name": "Invalid Video",
+                            "video_url": self.video_data["embed_url"],
+                            "image_1920": "not-a-valid-image",
+                        }
+                    ],
                     "video",
                     self.product.id,
                     self.product.product_tmpl_id.id,

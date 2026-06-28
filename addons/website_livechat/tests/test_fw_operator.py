@@ -51,7 +51,7 @@ class TestFwOperator(ChatbotCase, HttpCase, TestLivechatCommon):
                 "user_ids": [self.operator.id],
             }
         )
-        default_website = self.env.ref("website.default_website")
+        default_website = self.env.ref("base.default_website")
         default_website.channel_id = self.livechat_channel.id
 
     def test_chatbot_removed_after_forward_to_operator(self):

@@ -21,11 +21,12 @@
                         </list>
                     </field>
                     <footer>
-                        <button name="action_backorder" string="Create backorder" data-hotkey="q"
+                        <button name="action_backorder" string="Create Backorder" data-hotkey="q"
                             colspan="1" type="object" class="btn-primary" invisible="show_backorder_lines"/>
                         <button name="action_backorder" string="Validate" data-hotkey="q"
                             colspan="1" type="object" class="btn-primary" invisible="not show_backorder_lines"/>
-                        <button name="action_close_mo" type="object" string="No Backorder" invisible="show_backorder_lines" data-hotkey="w"/>
+                        <button name="action_close_mo" string="Close Production" data-hotkey="w"
+                            colspan="1" type="object" class="btn-secondary" invisible="show_backorder_lines"/>
                         <button class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
@@ -36,6 +37,7 @@
             <field name="name">You produced less than the initial demand</field>
             <field name="res_model">mrp.production.backorder</field>
             <field name="view_mode">form</field>
+            <field name="view_id" ref="view_mrp_production_backorder_form"/>
             <field name="target">new</field>
         </record>
 

@@ -58,7 +58,7 @@ const clickOnAddTagDropdown = (prefix) => [
     },
     {
         content: "eLearning: click on tag dropdown",
-        trigger: `${prefix} [data-id="0"] button.o_select_menu_toggler`,
+        trigger: `${prefix} .modal [data-id="0"] button.o_select_menu_toggler`,
         run: "click",
     },
     {

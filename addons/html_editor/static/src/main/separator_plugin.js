@@ -4,7 +4,7 @@ import { closestBlock } from "../utils/blocks";
 import { closestElement, firstLeaf, lastLeaf, selectElements } from "../utils/dom_traversal";
 import { isEmptyBlock, paragraphRelatedElementsSelector } from "../utils/dom_info";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { fillEmpty, removeClass, splitTextNode } from "@html_editor/utils/dom";
+import { removeClass, splitTextNode } from "@html_editor/utils/dom";
 import { DIRECTIONS, nodeSize, rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 
@@ -51,6 +51,7 @@ export class SeparatorPlugin extends Plugin {
         /** Processors */
         clean_for_save_processors: (root) => {
             this.deselectHR(root);
+            return root;
         },
         deselect_custom_selected_nodes_processors: this.deselectHR.bind(this),
     };
@@ -80,7 +81,6 @@ export class SeparatorPlugin extends Plugin {
             } else if (isSelectionAtEnd) {
                 element.after(sep);
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                fillEmpty(baseContainer);
                 sep.after(baseContainer);
                 this.dependencies.selection.setCursorStart(baseContainer);
             } else {
@@ -100,13 +100,14 @@ export class SeparatorPlugin extends Plugin {
                 this.dependencies.dom.insert(sep);
             }
         }
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     deselectHR(root = this.editable) {
         for (const hr of root.querySelectorAll(".o_selected_hr")) {
             removeClass(hr, "o_selected_hr");
         }
+        return root;
     }
 
     handleSelectionInHr(selectionData) {

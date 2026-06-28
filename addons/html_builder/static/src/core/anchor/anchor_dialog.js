@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 
@@ -17,7 +17,7 @@ export class AnchorDialog extends Component {
     setup() {
         this.title = _t("Link Anchor");
         this.inputRef = useRef("anchor-input");
-        this.state = useState({ isValid: true });
+        this.state = proxy({ isValid: true });
     }
 
     async onConfirmClick() {

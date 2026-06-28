@@ -2,17 +2,18 @@ import { useRef } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 const random = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
 class KanbanExamplesNotebookTemplate extends Component {
     static template = "web.KanbanExamplesNotebookTemplate";
-    static props = ["*"];
-    static defaultProps = {
-        columns: [],
-        foldedColumns: [],
-    };
+    props = props({
+        columns: t.any().optional([]),
+        foldedColumns: t.any().optional([]),
+        description: t.any().optional(),
+        bullets: t.any().optional(),
+    });
     setup() {
         this.columns = [];
         const hasBullet = this.props.bullets && this.props.bullets.length;

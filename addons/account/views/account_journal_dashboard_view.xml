@@ -16,6 +16,7 @@
                 <field name="bank_account_id"/>
                 <field name="show_fetch_in_einvoices_button"/>
                 <field name="show_refresh_out_einvoices_status_button"/>
+                <field name="is_self_billing"/>
                 <templates>
                     <t t-name="card">
                         <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
@@ -43,7 +44,7 @@
 
                     <t t-name="JournalTop">
                         <span class="d-flex d-flew-row align-items-baseline">
-                            <a class="fs-4 fw-bold" type="object" name="open_action" context="{'show_fetch_in_einvoices_button': show_fetch_in_einvoices_button, 'show_refresh_out_einvoices_status_button': show_refresh_out_einvoices_status_button}"><field name="name"/></a>
+                            <a class="fs-4 fw-bold" type="object" name="open_action" context="{'is_self_billing': is_self_billing, 'show_fetch_in_einvoices_button': show_fetch_in_einvoices_button, 'show_refresh_out_einvoices_status_button': show_refresh_out_einvoices_status_button}"><field name="name"/></a>
                             <t t-if="dashboard.show_company" groups="base.group_multi_company" >
                                 <span class="small fw-bold ms-1"> - <field name="company_id"/></span>
                             </t>
@@ -276,11 +277,11 @@
                                         name="%(account.action_account_all_payments)d"
                                         context="{'search_default_unmatched': True, 'search_default_journal_id': id, 'search_default_state_posted': True, }"
                                     >
-                                        Payments
+                                        Outstanding payments
                                     </a>
                                 </div>
                                 <div class="col-auto text-end">
-                                    <span><t t-out="dashboard.outstanding_pay_account_balance"/></span>
+                                    <span dir="ltr"><t t-out="dashboard.outstanding_pay_account_balance"/></span>
                                 </div>
                             </div>
                             <div class="row" t-if="dashboard.nb_misc_operations > 0" groups="account.group_account_readonly">
@@ -320,7 +321,7 @@
                                     </div>
                                 </div>
                                 <div t-else="">
-                                    <widget name="account_file_uploader" btnClass="btn btn-primary oe_kanban_action"/>
+                                    <widget name="account_file_uploader" btnClass="btn btn-primary oe_kanban_action d-none d-md-inline-block"/>
                                     <widget name="bill_upload_guide"/>
                                 </div>
                             </t>

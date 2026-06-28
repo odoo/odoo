@@ -6,7 +6,7 @@ from odoo import models, api
 
 class PosSession(models.Model):
     _inherit = 'pos.session'
-    
+
     @api.model
     def _load_pos_data_models(self, config_id):
         data = super()._load_pos_data_models(config_id)
@@ -14,8 +14,12 @@ class PosSession(models.Model):
         return data
 
     @api.model
+    def _load_pos_self_data_fields(self, config):
+        return ['id', 'user_id', 'config_id', 'payment_method_ids', 'state']
+
+    @api.model
     def _load_pos_self_data_domain(self, data, config):
-        return [('config_id', '=', config.id), ('state', '=', 'opened')]
+        return [('config_id', '=', config.id), ('state', 'not in', ['closed', 'closing_control'])]
 
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
@@ -37,3 +41,17 @@ class PosSession(models.Model):
             > 0
         )
         return read_records
+
+    def close_session_from_ui(self, bank_payment_method_diff_pairs=None):
+        result = super().close_session_from_ui(bank_payment_method_diff_pairs)
+
+        if self.config_id.self_ordering_mode in ['kiosk', 'mobile']:
+            self.config_id._notify("SESSION_STATE_CHANGED", {})
+
+        return result
+
+    def _set_opening_control_data(self, cashbox_value: int, notes: str):
+        super()._set_opening_control_data(cashbox_value, notes)
+
+        if self.config_id.self_ordering_mode in ['kiosk', 'mobile']:
+            self.config_id._notify("SESSION_STATE_CHANGED", {})

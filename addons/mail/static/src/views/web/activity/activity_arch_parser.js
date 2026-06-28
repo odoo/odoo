@@ -4,7 +4,7 @@ import { Field } from "@web/views/fields/field";
 export class ActivityArchParser {
     parse(xmlDoc, models, modelName) {
         const jsClass = xmlDoc.getAttribute("js_class");
-        const title = xmlDoc.getAttribute("string");
+        const title = xmlDoc.getAttribute("string") ?? "";
 
         const fieldNodes = {};
         const templateDocs = {};

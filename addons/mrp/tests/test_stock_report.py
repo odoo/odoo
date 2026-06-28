@@ -145,6 +145,7 @@ class TestMrpStockReports(TestReportsCommon):
         mo_form.bom_id = bom
         mo_form.product_qty = 4
         mo_1 = mo_form.save()
+        mo_1.picking_type_id.create_backorder = 'ask'
         mo_1.action_confirm()
         pick = mo_1.move_raw_ids.move_orig_ids.picking_id
         pick.picking_type_id.show_operations = True  # Could be false without demo data, as the lot group is disabled
@@ -241,7 +242,7 @@ class TestMrpStockReports(TestReportsCommon):
             ],
         })
 
-        for back_order, expected_vals in [('never', [12, 12]), ('always', [24, 12])]:
+        for back_order, expected_vals in [('never', [24, 12]), ('always', [24, 12])]:
             picking_form = Form(self.env['stock.picking'])
             picking_form.picking_type_id = self.picking_type_in
             picking_form.partner_id = self.partner

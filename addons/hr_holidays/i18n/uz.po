@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -103,6 +103,12 @@ msgstr "%(allocation_name)s (%(date_from)s dan boshlab cheksiz muddatgacha)"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
+msgid "%(days)gd"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(duration)s (%(start)s)"
 msgstr ""
 
@@ -133,6 +139,18 @@ msgstr ""
 #, fuzzy
 msgid "%(holiday_name)s has been refused."
 msgstr "%(holiday_name)s rad etildi."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid "%(hours)dh"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid "%(hours)dh%(minutes)02d"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -211,7 +229,13 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "%(work_entry_type)s: %(duration)s (%(start)s)"
+msgid "%(work_entry_type)s %(duration)s"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid "%s"
 msgstr ""
 
 #. module: hr_holidays
@@ -284,18 +308,28 @@ msgstr "ushbu davrdagi qisqacha xulosasi"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
+msgid "(s)"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid ""
 "(s)\n"
 "                                    and a balance cap is set to"
-msgstr "(s) va balans chegarasi o‘rnatildi"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "(s)."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#, fuzzy
 msgid "(valid until"
-msgstr "(amal qilish muddati"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -327,13 +361,13 @@ msgid ""
 "                    <p>I'm requesting a Time Off. I would appreciate if you "
 "could approve it whenever possible!</p>\n"
 "                    <ul>\n"
-"                        <li>Time Off Type: <t t-out=\"object."
-"work_entry_type_id.name\"/></li>\n"
+"                        <li>Time Type: <t t-"
+"out=\"object.work_entry_type_id.name\"/></li>\n"
 "                        <li><t t-out=\"object.request_date_from\"/> → <t t-"
 "out=\"object.request_date_to\"/> (<t t-out=\"object.duration_display\"/>)</"
 "li>\n"
-"                        <li t-if=\"object.name\">Reason: <t t-out=\"object."
-"name\"/></li>\n"
+"                        <li t-if=\"object.name\">Reason: <t t-"
+"out=\"object.name\"/></li>\n"
 "                    </ul>\n"
 "                </div>\n"
 "            "
@@ -341,26 +375,18 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
-#, fuzzy
 msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\" invisible=\"allocation_type == 'accrual' or state != "
-"'confirm'\"/>"
+"title=\"Arrow\" invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"O‘q belgisi\" "
-"title=\"O‘q\" invisible=\"allocation_type == 'accrual' yoki state != "
-"'confirm'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
-#, fuzzy
 msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\" invisible=\"allocation_type == 'accrual'\"/>"
+"title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"O‘q belgisi\" "
-"title=\"O‘q\" invisible=\"allocation_type == 'accrual'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
@@ -369,15 +395,17 @@ msgid "<i class=\"fa fa-long-arrow-right\" title=\"to\"/>"
 msgstr "<i class=\"fa fa-long-arrow-right\" title=\"ga\"/>"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "<i class=\"fa fa-paperclip\" title=\"Attachments\"/>"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
-#, fuzzy
 msgid ""
 "<span class=\"ml8\" invisible=\"type_request_unit == 'hour'\">Days</span>\n"
-"                                <span class=\"ml8\" "
-"invisible=\"type_request_unit != 'hour'\">Hours</span>"
+"                                <span id=\"hour_display_field\" "
+"class=\"ml8\" invisible=\"type_request_unit != 'hour'\">Hours</span>"
 msgstr ""
-"<span class=\"ml8\" invisible=\"type_request_unit == 'hour'\">Kunlar</span> "
-"<span class=\"ml8\" invisible=\"type_request_unit != 'hour'\">Soatlar</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -398,20 +426,6 @@ msgstr "<span class=\"mx-1\">-</span>"
 #, fuzzy
 msgid "<span class=\"mx-1\">–</span>"
 msgstr "<span class=\"mx-1\">–</span>"
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
-msgid ""
-"<span class=\"mx-2\" invisible=\"unit_of_measure == 'hour'\">days</span>\n"
-"                                        <span class=\"mx-2\" "
-"invisible=\"unit_of_measure != 'hour'\">hours</span>"
-msgstr ""
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
-#, fuzzy
-msgid "<span class=\"mx-2\">up to</span>"
-msgstr "<span class=\"mx-2\">gacha</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
@@ -436,22 +450,55 @@ msgid "<span class=\"o_stat_text\">Time Off</span>"
 msgstr "<span class=\"o_stat_text\">Dam olish vaqti</span>"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-#, fuzzy
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
 msgid ""
-"<span>\n"
+"<span class=\"text-muted fst-italic\">Configure how time off requests are "
+"approved, allocated and managed for this time type.</span>"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid ""
+"<span class=\"text-muted\">\n"
 "                                                        Current balance\n"
 "                                                    </span>"
-msgstr "<span>Joriy balans</span>"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid ""
+"<span class=\"text-muted\">\n"
+"                                                    Amount\n"
+"                                                </span>"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
-#, fuzzy
 msgid ""
-"<span>\n"
+"<span class=\"text-muted\">\n"
 "                                                    Current balance\n"
 "                                                </span>"
-msgstr "<span>Joriy balans</span>"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
+msgid "<span class=\"text-muted\">Amount</span>"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+msgid ""
+"<span invisible=\"not cap_accrued_time_yearly and not cap_accrued_time\" "
+"class=\"ms-3\">(Caps can affect that gain)</span>"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
+msgid ""
+"<span invisible=\"unit_of_measure == 'hour'\">days</span>\n"
+"                                            <span "
+"invisible=\"unit_of_measure != 'hour'\">hours</span>"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_mandatory_day_action
@@ -466,12 +513,6 @@ msgid ""
 msgstr ""
 "<span>Xodimlarning muhim davrlarda dam olishini oldini olish uchun</span> "
 "<span>majburiy kunlarni belgilang.</span>"
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_departure_view_form
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
-msgid "<span>Cancel Future Requests</span>"
-msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -495,6 +536,11 @@ msgstr ""
 "vaqtlar xodimning ish vaqti mintaqasida ko‘rsatiladi</span> ("
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
+msgid "<span>up to</span>"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 #, fuzzy
 msgid "<strong>Departments and Employees</strong>"
@@ -503,9 +549,8 @@ msgstr "<strong>Bo‘limlar va xodimlar</strong>"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
 msgid "A balance cap is set to"
-msgstr "Balans chegarasi belgilandi"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -564,9 +609,8 @@ msgstr "Dam olish vaqtini takrorlash mumkin emas."
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
 msgid "A yearly cap is set to"
-msgstr "Yillik limit belgilandi"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__show_leaves
@@ -616,22 +660,15 @@ msgstr "Bugun ishda yo‘q"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "According to your working schedule you are expected to work %(days)s days in "
-"this period, but %(nb_days)s days will be used because this leave "
-"%(work_entry_type_name)s can only be taken by days."
+"this period, but %(nb_days)s days will be used because this leave %"
+"(work_entry_type_name)s can only be taken by days."
 msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#, fuzzy
 msgid "Accrual (Future):"
-msgstr "Jamg‘arma (Kelajakda):"
-
-#. module: hr_holidays
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__accrual
-#, fuzzy
-msgid "Accrual Allocation"
-msgstr "Jamg‘arma taqsimoti"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -686,9 +723,8 @@ msgstr "Jamg‘arma dam olish vaqti: Dam olish vaqti sonini yangilaydi"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
 msgid "Accrual frequency :"
-msgstr "Jamg‘arma chastotasi:"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -731,7 +767,7 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
-#: code:addons/hr_holidays/static/src/core/web/avatar_card_resource_popover.xml:0
+#: code:addons/hr_holidays/static/src/core/web/avatar_card/avatar_card_patch.xml:0
 #, fuzzy
 msgid "Active but on leave"
 msgstr "Faol, lekin ta'tilda"
@@ -800,9 +836,8 @@ msgstr "Faoliyat turi"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
 msgid "Add a milestone"
-msgstr "Bosqich qo‘shish"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -814,9 +849,8 @@ msgstr "Sabab qo‘shish..."
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
-#, fuzzy
-msgid "Add some description for the people that will validate it"
-msgstr "Uni tasdiqlaydiganlar uchun tavsif kiriting"
+msgid "Add some description for the leave"
+msgstr ""
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_manager
@@ -891,22 +925,22 @@ msgid "Allocate Time Off"
 msgstr "Dam olish vaqtini ajratish"
 
 #. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#, fuzzy
-msgid "Allocated"
-msgstr "Ajratilgan"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__duration_display
 #, fuzzy
 msgid "Allocated (Days/Hours)"
 msgstr "Ajratilgan (Kun/Soat)"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+msgid "Allocated:"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__duration
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__leave_type__allocation
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
 #, fuzzy
 msgid "Allocation"
 msgstr "Taqsimlash"
@@ -957,7 +991,6 @@ msgstr "Taqsimot so‘rovi"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
 #, fuzzy
 msgid "Allocation Requests"
 msgstr "Taqsimot so‘rovlari"
@@ -968,14 +1001,6 @@ msgstr "Taqsimot so‘rovlari"
 #, fuzzy
 msgid "Allocation Second Approval"
 msgstr "Taqsimotni ikkinchi marta tasdiqlash"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__allocation_type
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__allocation_type
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
-#, fuzzy
-msgid "Allocation Type"
-msgstr "Taqsimot turi"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1030,9 +1055,8 @@ msgstr "Xodim so‘rovlariga ruxsat berish"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__allows_negative
-#, fuzzy
-msgid "Allow Negative Cap"
-msgstr "Salbiy chegaraga ruxsat berish"
+msgid "Allow Negative"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__allow_request_on_top
@@ -1041,15 +1065,21 @@ msgid "Allow Request on Top"
 msgstr "Ustiga so‘rov yuborishga ruxsat berish"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__allowed_work_entry_type_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__allowed_work_entry_type_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__allowed_work_entry_type_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_generate_multi_wizard__allowed_work_entry_type_ids
+msgid "Allowed Work Entry Type"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__already_accrued
 #, fuzzy
 msgid "Already Accrued"
 msgstr "Allaqachon hisobga olingan"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 #, fuzzy
 msgid "Amount"
 msgstr "Miqdor"
@@ -1128,9 +1158,8 @@ msgstr "Tasdiqlangan so‘rovlar"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#, fuzzy
 msgid "Approved:"
-msgstr "Tasdiqlandi:"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__4
@@ -1261,9 +1290,8 @@ msgstr "Mavjud ta'til vaqti"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#, fuzzy
 msgid "Available:"
-msgstr "Mavjud:"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -1274,7 +1302,7 @@ msgstr "Qaytish"
 
 #. module: hr_holidays
 #. odoo-javascript
-#: code:addons/hr_holidays/static/src/core/common/res_partner_model_patch.js:0
+#: code:addons/hr_holidays/static/src/core/common/hr_employee_model_patch.js:0
 #, fuzzy
 msgid "Back on %(date)s"
 msgstr "%(date)s sanasiga qaytish"
@@ -1298,15 +1326,8 @@ msgstr "Balans"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
-#, fuzzy
 msgid "Balance at the"
-msgstr "Balans:"
-
-#. module: hr_holidays
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_type__accrual
-#, fuzzy
-msgid "Based on Accrual Plan"
-msgstr "Hisoblanish rejasiga asosan"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__both
@@ -1334,6 +1355,11 @@ msgstr "Xodimning tasdiqlovchisi va ta'til bo‘yicha mas'ul shaxs tomonidan"
 #, fuzzy
 msgid "By Time Off Officer"
 msgstr "Ta'til bo‘yicha mas'ul shaxs tomonidan"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__count_days_as__calendar
+msgid "Calendar Days"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_calendar_event
@@ -1391,13 +1417,6 @@ msgid "Cancel Time Off"
 msgstr "Ta'tilni bekor qilish"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__departure_do_cancel_time_off_requests
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_departure__do_cancel_time_off_requests
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_version__departure_do_cancel_time_off_requests
-msgid "Cancel Time Off Requests"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_cancel_leave
 #, fuzzy
 msgid "Cancel Time Off Wizard"
@@ -1453,19 +1472,15 @@ msgstr "O‘tkazish parametrlari"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_version.py:0
-#, fuzzy
 msgid ""
 "Changing the contract on this employee changes their working schedule in a "
 "period they already took leaves. Changing this working schedule changes the "
 "duration of these leaves in such a way the employee no longer has the "
 "required allocation for them. Please review these leaves and/or allocations "
-"before changing the contract."
+"before changing the contract.\n"
+"\n"
+"This error has been triggered by:\n"
 msgstr ""
-"Ushbu xodimning shartnomasini o‘zgartirish, u allaqachon ta'til olgan "
-"davrdagi ish jadvalini o‘zgartiradi. Bu ish jadvalining o‘zgartirilishi "
-"ta'tillar muddatini shunday o‘zgartiradiki, xodim endi ularga zarur bo‘lgan "
-"ajratmaga ega bo‘lmaydi. Iltimos, shartnomani o‘zgartirishdan oldin ushbu "
-"ta'tillar va/yoki ajratmalarni ko‘rib chiqing."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1514,6 +1529,12 @@ msgstr "25-sanani bosing"
 #, fuzzy
 msgid "Click on this button to request a time-off"
 msgstr "Ta'til so‘rash uchun ushbu tugmani bosing"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
+msgid "Click on this button to request time-off or allocation"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__color
@@ -1587,24 +1608,23 @@ msgid "Contact"
 msgstr "Aloqa"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
-#, fuzzy
-msgid ""
-"Count of allocations for this time off type (approved or waiting for "
-"approbation) with a validity period starting this year."
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__count_days_as
+msgid "Count Days as"
 msgstr ""
-"Joriy yildan boshlab amal qilish muddati bilan ushbu dam olish turi "
-"(tasdiqlangan yoki tasdiqlashni kutayotgan) uchun ajratmalar soni."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
-#, fuzzy
 msgid ""
-"Count of time off requests for this time off type (approved or waiting for "
+"Count of allocations for this time type (approved or waiting for "
+"approbation) with a validity period starting this year."
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
+msgid ""
+"Count of time off requests for this time type (approved or waiting for "
 "approbation) with a start date in the current year."
 msgstr ""
-"Joriy yilda boshlanish sanasi bilan ushbu dam olish turi (tasdiqlangan yoki "
-"tasdiqlashni kutayotgan) uchun so‘rovlar soni."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__country_id
@@ -1681,7 +1701,7 @@ msgstr "Joriy dam olish holati"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_work_entry_type_id
-msgid "Current Work Entry Type"
+msgid "Current Time Type"
 msgstr ""
 
 #. module: hr_holidays
@@ -1834,7 +1854,7 @@ msgstr "Yillik chegarani belgilash?"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__unit_of_measure
 #: model:ir.model.fields,help:hr_holidays.field_hr_work_entry_type__unit_of_measure
-msgid "Define if the time off type will be allocated/accrued in hours or days"
+msgid "Define if the time type will be allocated/accrued in hours or days"
 msgstr ""
 
 #. module: hr_holidays
@@ -1865,9 +1885,8 @@ msgstr "O‘chirish"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
-#, fuzzy
 msgid "Delete Time Off"
-msgstr "Dam olish vaqtini o‘chirish"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_department
@@ -1916,9 +1935,8 @@ msgstr "Amal qilish muddati bilan tavsif"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
-#, fuzzy
 msgid "Discard"
-msgstr "Bekor qilish"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_calendar_event__display_name
@@ -1952,12 +1970,6 @@ msgstr "Bekor qilish"
 #, fuzzy
 msgid "Display Name"
 msgstr "Ko‘rsatilgan nom"
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
-#, fuzzy
-msgid "Display Option"
-msgstr "Ko‘rsatish parametri"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__create_calendar_meeting
@@ -2162,8 +2174,8 @@ msgstr "Tugash sanasi"
 #: code:addons/hr_holidays/models/hr_employee_departure.py:0
 #, fuzzy
 msgid ""
-"End date has been updated because the employee will leave the company on "
-"%(departure_date)s."
+"End date has been updated because the employee will leave the company on %"
+"(departure_date)s."
 msgstr ""
 "Xodim kompaniyani %(departure_date)s sanasida tark etishi sababli tugash "
 "sanasi yangilandi."
@@ -2295,6 +2307,11 @@ msgid "Future Activities"
 msgstr "Kelgusi faoliyatlar"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+msgid "Gain for the year :"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 #, fuzzy
 msgid "Generate Time Off"
@@ -2329,11 +2346,10 @@ msgid "Generated Time Off"
 msgstr "Yaratilgan ta'til"
 
 #. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
-#, fuzzy
-msgid "Grant Time"
-msgstr "Vaqt berish"
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_work_entry_type.py:0
+msgid "Generic"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__group_days_leave
@@ -2458,8 +2474,9 @@ msgstr "Kadrlar belgisi ko‘rinishi"
 #. module: hr_holidays
 #: model:mail.template,subject:hr_holidays.new_timeoff_request_template
 msgid ""
-"I'm requesting {{ object.duration_display }} of {{ object.work_entry_type_id."
-"name }} from {{ object.request_date_from }} to {{ object.request_date_to }}"
+"I'm requesting {{ object.duration_display }} of "
+"{{ object.work_entry_type_id.name }} from {{ object.request_date_from }} to "
+"{{ object.request_date_to }}"
 msgstr ""
 
 #. module: hr_holidays
@@ -2528,11 +2545,10 @@ msgstr "Belgilansa, ba'zi xabarlarda yetkazib berish xatosi mavjud"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_work_entry_type__elligible_for_accrual_rate
 #: model:ir.model.fields,help:hr_holidays.field_resource_calendar_leaves__elligible_for_accrual_rate
-#, fuzzy
 msgid ""
-"If checked, this time off type will be taken into account for accruals "
+"If checked, this time type will be taken into account for accruals "
 "computation."
-msgstr "Belgilansa, bu ta'til turi to‘planishlar hisobida inobatga olinadi"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_work_entry_type__allow_request_on_top
@@ -2563,6 +2579,14 @@ msgid ""
 msgstr ""
 "Agar faol maydon \"False\" qilib o‘rnatilsa, resurs yozuvini o‘chirmasdan "
 "yashirish imkonini beradi."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_work_entry_type__count_days_as
+msgid ""
+"If you take a leave on the whole week, worked days will result in a various "
+"number based on the working hours of the employee, calendar days will result "
+"in 7 in every case."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
@@ -2746,22 +2770,14 @@ msgstr "Izoh"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 #, fuzzy
-msgid "Let's approve it"
-msgstr "Keling, uni tasdiqlaylik"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
-#, fuzzy
 msgid "Let's discover the <strong>Time Off</strong> app!"
 msgstr "<strong>Dam olish</strong> ilovasi bilan tanishamiz!"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
-#, fuzzy
-msgid "Let's go validate it"
-msgstr "Keling, uni tasdiqlaymiz"
+msgid "Let's go check it"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2775,6 +2791,11 @@ msgstr "Kasallik ta'tilini yaratishga urinib ko‘raylik, uni ro‘yxatdan tanla
 #, fuzzy
 msgid "Levels"
 msgstr "Darajalar"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
+msgid "Limited Days"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__lost
@@ -2862,6 +2883,11 @@ msgid ""
 msgstr ""
 "Ruxsat etilgan maksimal ta'til vaqti - Allaqachon olingan ta'til vaqti - "
 "Tasdiqlanishi kutilayotgan ta'til vaqti"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+msgid "Maximum gain for the year :"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__5
@@ -3033,23 +3059,16 @@ msgid "Name"
 msgstr "Ism"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
-#, fuzzy
-msgid "Negative Cap"
-msgstr "Salbiy chegara"
-
-#. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Negative allocations are not allowed for this time off type."
+msgid "Negative allocations are not allowed for this time type."
 msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
-#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.xml:0
-#, fuzzy
+#: code:addons/hr_holidays/static/src/components/time_off_new_dropdown/time_off_new_dropdown.xml:0
 msgid "New"
-msgstr "Yangi"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3073,21 +3092,16 @@ msgstr "Yangi ajratma"
 
 #. module: hr_holidays
 #. odoo-javascript
-#: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
-#, fuzzy
+#: code:addons/hr_holidays/static/src/components/time_off_new_dropdown/time_off_new_dropdown.xml:0
 msgid "New Allocation Request"
-msgstr "Yangi ajratma so‘rovi"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-#, fuzzy
 msgid ""
-"New Allocation Request created by %(user)s: %(count)s Days of "
-"%(allocation_type)s"
+"New Allocation Request created by %(user)s: %(count)s Days of %(leave_type)s"
 msgstr ""
-"%(user)s tomonidan yaratilgan yangi ajratma so‘rovi: %(allocation_type)s dan "
-"%(count)s kun"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_allocation_generate_multi_wizard
@@ -3115,6 +3129,7 @@ msgstr "Yangi muhim bosqich"
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/time_off_new_dropdown/time_off_new_dropdown.xml:0
 #: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
 #: code:addons/hr_holidays/static/src/webclient/share_target/hr_holiday_share_target_item.js:0
 #, fuzzy
@@ -3256,9 +3271,8 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__no_validation
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__no_validation
-#, fuzzy
-msgid "None needed"
-msgstr "Hech narsa kerak emas"
+msgid "None"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -3369,7 +3383,7 @@ msgstr "Mas'ul xodim: Barcha so‘rovlarni boshqarish"
 
 #. module: hr_holidays
 #. odoo-javascript
-#: code:addons/hr_holidays/static/src/core/web/avatar_card_resource_popover.xml:0
+#: code:addons/hr_holidays/static/src/core/web/avatar_card/avatar_card_patch.xml:0
 #, fuzzy
 msgid "On Time Off"
 msgstr "Dam olishda"
@@ -3383,9 +3397,8 @@ msgstr "Ta'tilda"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#, fuzzy
 msgid "Only"
-msgstr "Faqat"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -3452,13 +3465,10 @@ msgstr ""
 "etishi mumkin."
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__is_based_on_worked_time
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__is_based_on_worked_time
-#, fuzzy
-msgid ""
-"Only excludes requests where the time off type is set as unpaid kind of."
+msgid "Only excludes requests where the time type is set as unpaid kind of."
 msgstr ""
-"Faqat dam olish turi to‘lanmaydigan deb belgilangan so‘rovlar bundan "
-"mustasno."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3484,6 +3494,12 @@ msgid "Pending Requests"
 msgstr "Kutilayotgan so‘rovlar"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+msgid "Pending:"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_mandatory_day_view_search
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_search_hr_holidays_employee_type_report
 #, fuzzy
@@ -3500,13 +3516,6 @@ msgstr ""
 #, fuzzy
 msgid "Planned"
 msgstr "Rejalashtirilgan"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#, fuzzy
-msgid "Planned:"
-msgstr "Rejalashtirilgan:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_view_search
@@ -3626,11 +3635,10 @@ msgid "Refused Time Off"
 msgstr "Rad etilgan dam olish vaqti"
 
 #. module: hr_holidays
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
-#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_type__regular
-#, fuzzy
-msgid "Regular Allocation"
-msgstr "Muntazam taqsimlash"
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid "Regular allocation"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__user_id
@@ -3780,9 +3788,8 @@ msgstr "Dam olish vaqtini qidirish"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
-#, fuzzy
-msgid "Search Time Off Type"
-msgstr "Dam olish vaqti turini qidirish"
+msgid "Search Time Type"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -3809,9 +3816,8 @@ msgstr "Ikkinchi tasdiqlash"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-#, fuzzy
-msgid "Second approval request for %(allocation_type)s"
-msgstr "%(allocation_type)s uchun ikkinchi tasdiqlash so‘rovi"
+msgid "Second approval request for %(leave_type)s"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -3828,9 +3834,8 @@ msgstr "Dam olish vaqtini tanlang"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__holiday_type
-#, fuzzy
-msgid "Select Time Off Type"
-msgstr "Dam olish vaqti turini tanlang"
+msgid "Select Time Type"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__validation_type
@@ -3873,6 +3878,11 @@ msgstr ""
 "belgilanadi)."
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__time_off_selectable
+msgid "Selectable in Time Off"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__9
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__yearly_month__9
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_month__9
@@ -3901,13 +3911,6 @@ msgid "Set the employee accrual frequency :"
 msgstr "Xodimlar uchun hisoblash davriyligini o‘rnating:"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_employee__departure_do_cancel_time_off_requests
-#: model:ir.model.fields,help:hr_holidays.field_hr_employee_departure__do_cancel_time_off_requests
-#: model:ir.model.fields,help:hr_holidays.field_hr_version__departure_do_cancel_time_off_requests
-msgid "Set the running allocations validity's end and delete future time off."
-msgstr ""
-
-#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 #, fuzzy
@@ -3934,11 +3937,8 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#, fuzzy
 msgid "Some leaves cannot be linked to any allocation. To see those leaves,"
 msgstr ""
-"Ba'zi ta'tillarni hech qanday ajratmaga bog‘lab bo‘lmaydi. Ushbu ta'tillarni "
-"ko‘rish uchun,"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4032,9 +4032,8 @@ msgstr "Jami"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/calendar/calendar_filter_panel/calendar_mobile_filter_panel.xml:0
-#, fuzzy
 msgid "Summary"
-msgstr "Qisqacha mazmun"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__6
@@ -4109,24 +4108,18 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
-#, fuzzy
 msgid ""
-"The allocation requirement of a time off type cannot be changed once leaves "
-"of that type have been taken. You should create a new time off type instead."
+"The allocation requirement of a time type cannot be changed once leaves of "
+"that type have been taken. You should create a new time type instead."
 msgstr ""
-"Dam olish turining ajratma talabini, ushbu turdagi ta'tillar olingandan "
-"so‘ng o‘zgartirish mumkin emas. Buning o‘rniga yangi dam olish turini "
-"yaratishingiz kerak."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__color
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_employee_report__color
 #: model:ir.model.fields,help:hr_holidays.field_hr_work_entry_type__color
-#, fuzzy
 msgid ""
-"The color selected here will be used in every screen with the time off type."
+"The color selected here will be used in every screen with the time type."
 msgstr ""
-"Bu yerda tanlangan rang dam olish turining barcha ekranlarida ishlatiladi."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4160,14 +4153,11 @@ msgstr "Quyidagi xodimlar bu davrda ishlamasligi kerak: %s"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#, fuzzy
 msgid ""
 "The leaves planned in the future are exceeding the maximum value of the "
 "allocation.\n"
 "                It will not be possible to take all of them."
 msgstr ""
-"Kelajakda rejalashtirilgan ta'tillar taqsimotning maksimal qiymatidan oshib "
-"ketmoqda. Ularning barchasini olish imkoni bo‘lmaydi."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_work_entry_type_check_negative
@@ -4178,22 +4168,6 @@ msgid ""
 msgstr ""
 "Maksimal ortiqcha miqdor 0 dan katta bo‘lishi kerak. Agar 0 qiymatini "
 "o‘rnatmoqchi bo‘lsangiz, buning o‘rniga manfiy chegarani o‘chirib qo‘ying."
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid ""
-"The negative allocation cannot exceed the maximum allowed negative value of "
-"%(max)s day(s)."
-msgstr ""
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid ""
-"The negative allocation cannot exceed the maximum allowed negative value of "
-"%(max)s hour(s)."
-msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__expiring_carryover_days
@@ -4262,6 +4236,14 @@ msgstr "Ta'til so‘rovi quyidagi sababga ko‘ra bekor qilindi: %(reason)s"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"The total negative allocation within this validity period cannot exceed %"
+"(max)s %(unit)s."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, fuzzy
 msgid ""
@@ -4319,14 +4301,10 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
-#, fuzzy
 msgid ""
 "This area is automatically filled by the user who validate the time off with "
-"second level (If time off type need second validation)"
+"second level (If time type need second validation)"
 msgstr ""
-"Bu maydon ikkinchi daraja bilan ta'til vaqtini tasdiqlagan foydalanuvchi "
-"tomonidan avtomatik ravishda to‘ldiriladi (Agar ta'til turi ikkinchi marta "
-"tasdiqlanishi kerak bo‘lsa)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__approver_id
@@ -4339,14 +4317,10 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
-#, fuzzy
 msgid ""
 "This area is automatically filled by the user who validates the allocation "
-"with second level (If time off type need second validation)"
+"with second level (If time type need second validation)"
 msgstr ""
-"Bu maydon ikkinchi daraja bilan taqsimotni tasdiqlagan foydalanuvchi "
-"tomonidan avtomatik ravishda to‘ldiriladi (Agar ta'til turi ikkinchi marta "
-"tasdiqlanishi kerak bo‘lsa)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
@@ -4379,6 +4353,14 @@ msgstr "Bu bosqichga quyidagi sanada erishiladi:"
 #, fuzzy
 msgid "This modification is not allowed in the current state."
 msgstr "Joriy holatda bu o‘zgartirishga ruxsat berilmaydi"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
+msgid ""
+"This operation is not allowed as you are not linked to an employee in the "
+"current company."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -4416,6 +4398,7 @@ msgstr "Payshanba"
 #. module: hr_holidays
 #. odoo-javascript
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_employee.py:0
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/static/src/webclient/share_target/hr_holiday_share_target_item.js:0
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_holiday_allocation_id
@@ -4426,7 +4409,6 @@ msgstr "Payshanba"
 #: model:mail.message.subtype,name:hr_holidays.mt_leave
 #: model:res.groups.privilege,name:hr_holidays.res_groups_privilege_time_off
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_departure_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_year_view
@@ -4451,7 +4433,6 @@ msgstr "Ta'til tahlili"
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_approval
 #: model:mail.activity.type,summary:hr_holidays.mail_act_leave_approval
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_work_entry_type_normal_tree
 #, fuzzy
 msgid "Time Off Approval"
 msgstr "Ta'til tasdiqlash"
@@ -4573,30 +4554,6 @@ msgid "Time Off Taken:"
 msgstr "Olingan ta'til:"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__work_entry_type_id
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__work_entry_type_id
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__work_entry_type_id
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_report__work_entry_type_id
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__work_entry_type_id
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_generate_multi_wizard__work_entry_type_id
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__work_entry_type_id
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__work_entry_type_id
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
-#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_work_entry_type_normal_tree
-#, fuzzy
-msgid "Time Off Type"
-msgstr "Ta'til turi"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.open_view_work_entry_type
-#: model:ir.ui.menu,name:hr_holidays.hr_holidays_status_menu_configuration
-#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
-#, fuzzy
-msgid "Time Off Types"
-msgstr "Ta'til turlari"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__leave_validation_type
 #, fuzzy
 msgid "Time Off Validation"
@@ -4633,6 +4590,32 @@ msgid "Time Off: Cancel invalid leaves"
 msgstr "Ta'til: Noto‘g‘ri ta'tillarni bekor qilish"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__work_entry_type_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__work_entry_type_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__work_entry_type_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_report__work_entry_type_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__work_entry_type_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_generate_multi_wizard__work_entry_type_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__work_entry_type_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__work_entry_type_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "Time Type"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_work_entry_type_normal_tree
+msgid "Time Type Approval"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.open_view_work_entry_type
+#: model:ir.ui.menu,name:hr_holidays.hr_holidays_status_menu_configuration
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
+msgid "Time Types"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 #, fuzzy
 msgid "Time off"
@@ -4646,9 +4629,8 @@ msgstr "Allaqachon olingan ta'til"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_holidays_by_employee_and_type_report
-#, fuzzy
-msgid "Time off Analysis by Employee and Time Off Type"
-msgstr "Xodim va ta'til turi bo‘yicha ta'til tahlili"
+msgid "Time off Analysis by Employee and Time Type"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_graph
@@ -4888,16 +4870,14 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
 msgid "Unused days will be transferred totally on each"
-msgstr "Foydalanilmagan kunlar har safar to‘liq o‘tkaziladi"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
 msgid "Unused days will be transferred with a max of"
-msgstr "Foydalanilmagan kunlar maksimal miqdorda o‘tkaziladi"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__carryover_options__limited
@@ -4952,6 +4932,12 @@ msgid "User is on leave and online"
 msgstr "Foydalanuvchi ta'tilda va onlayn"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
+msgid "UserError"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_generate_multi_wizard__valid_work_entry_type_ids
 msgid "Valid Work Entry Type"
 msgstr ""
@@ -4972,9 +4958,8 @@ msgstr "Tasdiqlash"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/calendar/calendar_side_panel/calendar_side_panel.xml:0
-#, fuzzy
 msgid "Validated"
-msgstr "Tasdiqlangan"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__validation_type
@@ -5151,6 +5136,11 @@ msgid "Work Entry Type Increases Duration"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__count_days_as__working
+msgid "Working Days"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_mandatory_day__resource_calendar_id
 #, fuzzy
 msgid "Working Hours"
@@ -5161,6 +5151,11 @@ msgstr "Ish vaqti"
 #, fuzzy
 msgid "Yearly"
 msgstr "Yillik"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__yearly_gain
+msgid "Yearly Gain"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__start_type__year
@@ -5203,6 +5198,29 @@ msgstr "Sizga ushbu ta'til so‘rovini rad etishga ruxsat berilmagan"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You are not allowed to request time off on a Mandatory Day."
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid ""
+"You are not assigned to any employee in the current company. Therefore, you "
+"can't request time off allocations for yourself."
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid ""
+"You are not assigned to any employee in the current company. Therefore, you "
+"can't request time off for yourself."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
+#: code:addons/hr_holidays/static/src/views/list/holidays_list_controller.js:0
+msgid ""
+"You are not linked to an employee in the current company, so you cannot "
+"create requests for yourself."
 msgstr ""
 
 #. module: hr_holidays
@@ -5430,16 +5448,21 @@ msgstr "Hisoblangan amal qilish muddatini 0 ga o‘rnatib bo‘lmaydi."
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
-#, fuzzy
+msgid ""
+"You cannot modify the 'Duration Count' setting because one or more leaves "
+"have already                 been taken for this time off type. Changing it "
+"now would affect existing employee balances."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
 "You cannot modify the 'Public Holiday Included' setting since one or more "
-"leaves for that                         time off type are overlapping with "
+"leaves for that                         time type are overlapping with "
 "public holidays, meaning that the balance of those employees would be "
 "affected by this change."
 msgstr ""
-"\"Bayram kunlari kiritilgan\" sozlamasini o‘zgartira olmaysiz, chunki ushbu "
-"ta'til turi uchun bir yoki bir nechta ta'tillar bayram kunlari bilan to‘g‘ri "
-"keladi. Bu o‘zgarish xodimlarning balansiga ta'sir qiladi."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5455,13 +5478,10 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-#, fuzzy
 msgid ""
-"You do not have any allocation for this time off type.\n"
+"You do not have any allocation for this time type.\n"
 "Please request an allocation before submitting your time off request."
 msgstr ""
-"Bu turdagi ta'til uchun sizda hech qanday ajratma yo‘q. Ta'til so‘rovini "
-"yuborishdan oldin taqsimlash so‘rang."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5566,9 +5586,8 @@ msgstr "va"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#, fuzzy
 msgid "available"
-msgstr "mavjud"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
@@ -5585,9 +5604,8 @@ msgstr "Tur bo‘yicha"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#, fuzzy
 msgid "can be used before the allocation expires."
-msgstr "ajratilgan muddat tugashidan oldin foydalanish mumkin."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5645,12 +5663,14 @@ msgid "e.g. Seniority Plan, PTO, RTT, ..."
 msgstr "masalan, Ish staji rejasi, PTO, RTT, ..."
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
-#, fuzzy
-msgid "e.g. Time Off type (From validity start to validity end / no limit)"
+msgid "e.g. Time Type (From validity start to validity end / no limit)"
 msgstr ""
-"masalan, Ta'til turi (Amal qilish muddati boshidan oxirigacha / cheklanmagan)"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid "e.g. Time type (From validity start to validity end / no limit)"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -5660,37 +5680,32 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
 msgid "every day."
-msgstr "har kuni"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
 msgid "every hour."
-msgstr "har soatda"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
 msgid "every month on the"
-msgstr "har oyning"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
 msgid "every week on"
-msgstr "har haftaning"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
 msgid "every year on the"
-msgstr "har yilning"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -5724,13 +5739,6 @@ msgid ""
 msgstr ""
 "\"Ishlangan vaqt\" turidagi ta'tillar doimo hisoblash stavkasi uchun mos "
 "kelishi kerak."
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#, fuzzy
-msgid "new request"
-msgstr "yangi so‘rov"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5776,9 +5784,8 @@ msgstr "-da"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
 msgid "on each"
-msgstr "har bir"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -5822,9 +5829,8 @@ msgstr "yil boshi"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#, fuzzy
 msgid "taken"
-msgstr "olingan"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -5842,16 +5848,14 @@ msgstr "-ga"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
 msgid "twice a month on the"
-msgstr "oyda ikki marta"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
 msgid "twice a year on the"
-msgstr "yilda ikki marta"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -5863,12 +5867,15 @@ msgstr "aniqlanmagan"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#, fuzzy
 msgid "valid until"
-msgstr "-gacha amal qiladi"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 #, fuzzy
 msgid "validate"
 msgstr "tasdiqlash"
+
+#, fuzzy
+#~ msgid "<span class=\"mx-2\">up to</span>"
+#~ msgstr "<span class=\"mx-2\">gacha</span>"

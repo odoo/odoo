@@ -4,11 +4,11 @@ from base64 import b64decode
 from odoo import Command
 from odoo.tests import tagged
 from odoo.tools import BinaryBytes
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 @tagged('post_install_l10n', '-at_install', 'post_install')
-class TestSaEdiCommon(AccountEdiTestCommon):
+class TestSaEdiCommon(AccountTestInvoicingCommon):
     """
     Base test class for Saudi Arabia EDI functionality.
 
@@ -20,9 +20,8 @@ class TestSaEdiCommon(AccountEdiTestCommon):
     """
 
     @classmethod
-    @AccountEdiTestCommon.setup_edi_format('l10n_sa_edi.edi_sa_zatca')
-    @AccountEdiTestCommon.setup_chart_template('sa')
-    @AccountEdiTestCommon.setup_country('sa')
+    @AccountTestInvoicingCommon.setup_chart_template('sa')
+    @AccountTestInvoicingCommon.setup_country('sa')
     def setUpClass(cls):
         super().setUpClass()
 
@@ -103,7 +102,7 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'state_id': cls.riyadh.id,
             'country_id': cls.saudi_arabia.id,
             # Saudi-specific address fields
-            'l10n_sa_edi_building_number': '12300',
+            'l10n_sa_edi_building_number': '1230',
             'l10n_sa_edi_plot_identification': '2323',
         })
 
@@ -255,7 +254,8 @@ class TestSaEdiCommon(AccountEdiTestCommon):
         invoice_date='2025-01-01',
         invoice_date_due='2025-01-01',
         currency_id=None,
-        invoice_line_ids=[]):
+        invoice_line_ids=[],
+        **kwargs):
         """
         Create a draft invoice with the given parameters.
         """
@@ -281,6 +281,7 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'invoice_line_ids': [
                 _create_invoice_line(line) for line in invoice_line_ids
             ],
+            **kwargs,
         }
         return self.env['account.move'].create(vals)
 

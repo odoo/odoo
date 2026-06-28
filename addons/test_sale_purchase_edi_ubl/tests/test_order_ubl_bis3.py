@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import tagged
 
@@ -78,6 +77,10 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
 
     def test_so_fallback_partner(self):
         """ Test partner assignation on a sale order when importing a PO xml. """
+        (self.customer_company.partner_id | self.customer_company.partner_id.child_ids).write({
+            'routing_scheme': False,
+            'routing_endpoint': False,
+        })
 
         # same name and VAT -> same partner
         self.env.user.company_id = self.supplier_company
@@ -90,7 +93,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         self.customer_company.name = "Paris Corp"
         so2 = self.env['sale.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
         self.assertEqual(so2.partner_id, self.customer_company.partner_id)
-        self.assertEqual(len(so2.activity_ids), 0)
+        self.assertEqual(len(so2.activity_ids), 1)
 
         # wrong name and wrong VAT -> new partner with the new name & new VAT, activity that a new partner was created
         self.customer_company.vat = "FR123456798"
@@ -103,6 +106,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         # wrong name and no VAT -> current user's partner_id with an activity in chatter
         self.customer_company.name = "Esquie's Nest"
         self.customer_company.vat = ""  # we need to remove the VAT before generating a new xml
+        self.customer_company.partner_id.routing_identifier = False  # and no routing endpoint to match on
         xml_attachment_4 = self.get_purchase_xml([])
         self.customer_company.name = "Lumiere LLC"
         self.customer_company.vat = "US14001383"
@@ -113,6 +117,10 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
 
     def test_po_fallback_partner(self):
         """ Test partner assignation on a sale order when importing a PO xml. """
+        (self.supplier_company.partner_id | self.supplier_company.partner_id.child_ids).write({
+            'routing_scheme': False,
+            'routing_endpoint': False,
+        })
 
         # same name and VAT -> same partner
         self.env.user.company_id = self.customer_company
@@ -138,6 +146,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         # wrong name and no VAT -> current user's partner_id with an activity in chatter
         self.supplier_company.name = "Esquie's Nest"
         self.supplier_company.vat = ""  # we need to remove the VAT before generating a new xml
+        self.supplier_company.partner_id.routing_identifier = False  # and no routing endpoint to match on
         xml_attachment_4 = self.get_sale_xml([])
         self.supplier_company.name = "Gestral Inc."
         self.supplier_company.vat = "US9357841"
@@ -273,9 +282,6 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         xml_attachment = self.get_purchase_xml(line_vals)
         self.displace_prdct.active = False
         so = self.env['sale.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
-        with self.assertRaises(UserError):
-            # Raise user error if line does not have product set
-            so.action_confirm()
         line_vals[0]['product_id'] = False
         line_vals[0]['product_uom_id'] = line_vals[0].pop('uom_id')
         # Should set other values properly
@@ -335,3 +341,40 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
 
         # New SO should set product from previous SO
         self.assertEqual(new_so.order_line[0].product_id, self.place_prdct)
+
+    def test_so_import_line_allowance_charges(self):
+        po_line_vals = [{
+            'product_id': self.place_prdct.id,
+            'price_unit': 30.0,
+            'uom_id': self.uom_units.id,
+            'product_qty': 10.0,
+            'tax_ids': self.purchase_tax.ids,
+            'discount': -10.0,
+        }]
+        xml_attachment = self.get_purchase_xml(po_line_vals)
+
+        so = self.env['sale.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
+        self.assertRecordValues(so.order_line, [{
+            'price_unit': 50.0,
+            'product_uom_qty': 10.0,
+            'product_uom_id': self.uom_units.id,
+            'discount': 0.0,
+        }])
+
+    def test_po_import_line_allowance_charges(self):
+        so_line_vals = [{
+            'product_id': self.place_prdct.id,
+            'product_uom_id': self.uom_units.id,
+            'product_uom_qty': 10.0,
+            'tax_ids': self.sale_tax.ids,
+            'discount': -10.0,
+        }]
+        xml_attachment = self.get_sale_xml(so_line_vals)
+
+        po = self.env['purchase.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
+        self.assertRecordValues(po.order_line, [{
+            'price_unit': 55.0,
+            'product_uom_qty': 10.0,
+            'uom_id': self.uom_units.id,
+            'discount': 0.0,
+        }])

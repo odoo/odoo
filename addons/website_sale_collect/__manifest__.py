@@ -8,19 +8,29 @@ Allows customers to check in-store stock, pay on site, and pick up their orders 
 """,
     "depends": ["base_geolocalize", "payment_custom", "website_sale_stock"],
     "data": [
-        "data/payment_method_data.xml",
-        "data/payment_provider_data.xml",  # Depends on `payment_method_pay_on_site`.
+        "data/payment_provider_data.xml",
+        "data/payment_method_data.xml",  # Depends on `payment_provider_on_site`
         "data/product_product_data.xml",
         "data/delivery_carrier_data.xml",  # Depends on `product_pick_up_in_store`.
         "views/delivery_carrier_views.xml",
         "views/delivery_form_templates.xml",
+        "views/payment_provider_views.xml",
         "views/res_config_settings_views.xml",
+        "views/sale_order_views.xml",
         "views/stock_picking_views.xml",
         "views/stock_warehouse_views.xml",
         "views/templates.xml",
     ],
-    "demo": ["data/demo.xml"],
-    "assets": {"web.assets_frontend": ["website_sale_collect/static/src/**/*"]},
+    "assets": {
+        "web.assets_frontend": [
+            "website_sale_collect/static/src/**/*",
+            ("remove", "website_sale_collect/static/src/js/pickup_location_many2one/**/*"),
+        ],
+        "web.assets_backend": [
+            "website_sale_collect/static/src/js/location_selector/**/*",
+            "website_sale_collect/static/src/js/pickup_location_many2one/**/*",
+        ],
+    },
     "post_init_hook": "post_init_hook",
     "uninstall_hook": "uninstall_hook",
     "author": "Odoo S.A.",

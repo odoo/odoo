@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import {
     isDisplayStandalone,
@@ -39,7 +39,7 @@ const pwaService = {
         let _manifest;
         let nativePrompt;
 
-        const state = reactive({
+        const state = proxy({
             canPromptToInstall: false,
             isAvailable: false,
             isScopedApp: browser.location.href.includes("/scoped_app"),

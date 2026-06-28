@@ -4,11 +4,34 @@
 <template id="s_quotes_carousel_compact" name="Quotes Compact">
     <section class="s_quotes_carousel_wrapper" data-vxml="001" data-vcss="002">
         <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
-        <div t-attf-id="myQuoteCarouselCompact{{uniq}}" class="s_quotes_carousel s_quotes_carousel_compact s_carousel_default carousel carousel-dark slide" data-bs-ride="true" data-bs-interval="10000" data-option-name="CarouselBottomControllers">
+        <div t-attf-id="myQuoteCarouselCompact{{uniq}}" class="s_quotes_carousel s_quotes_carousel_compact s_carousel_default carousel carousel-dark slide" data-bs-ride="true" data-bs-interval="10000" data-option-name="CarouselBottomControllers" role="region" aria-roledescription="carousel">
+            <!-- Controls and indicators are set before the content so that they
+                 are focused in priority when navigating the page with tab. -->
+            <div class="o_horizontal_controllers container position-absolute start-50 bottom-0 translate-middle-x w-100 mb-md-4 z-1 o_not_editable">
+                <div class="o_horizontal_controllers_row row gap-3 gap-lg-5 justify-content-between flex-nowrap flex-row-reverse mx-0">
+                    <!-- Controls -->
+                    <div class="o_arrows_wrapper gap-2 w-auto p-0">
+                        <button class="carousel-control-prev o_not_editable" contenteditable="false" t-attf-data-bs-target="#myQuoteCarouselCompact{{uniq}}" t-attf-aria-controls="myQuoteCarouselCompact{{uniq}}_inner" data-bs-slide="prev" aria-label="Previous slide" title="Previous slide">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                            <span class="visually-hidden">Previous slide</span>
+                        </button>
+                        <button class="carousel-control-next o_not_editable" contenteditable="false" t-attf-data-bs-target="#myQuoteCarouselCompact{{uniq}}" t-attf-aria-controls="myQuoteCarouselCompact{{uniq}}_inner" data-bs-slide="next" aria-label="Next slide" title="Next slide">
+                            <span class="carousel-control-next-icon" aria-hidden="true"/>
+                            <span class="visually-hidden">Next slide</span>
+                        </button>
+                    </div>
+                    <!-- Indicators -->
+                    <div class="s_carousel_indicators_numbers carousel-indicators align-items-center flex-shrink-1 w-auto" role="tablist">
+                        <button type="button" t-attf-data-bs-target="#myQuoteCarouselCompact{{uniq}}" data-bs-slide-to="0" class="active" aria-label="Slide 1 of 3" role="tab" aria-selected="true" t-attf-aria-controls="myQuoteCarouselCompact{{uniq}}_1"/>
+                        <button type="button" t-attf-data-bs-target="#myQuoteCarouselCompact{{uniq}}" data-bs-slide-to="1" aria-label="Slide 2 of 3" role="tab" aria-selected="false" t-attf-aria-controls="myQuoteCarouselCompact{{uniq}}_2"/>
+                        <button type="button" t-attf-data-bs-target="#myQuoteCarouselCompact{{uniq}}" data-bs-slide-to="2" aria-label="Slide 3 of 3" role="tab" aria-selected="false" t-attf-aria-controls="myQuoteCarouselCompact{{uniq}}_3"/>
+                    </div>
+                </div>
+            </div>
             <!-- Content -->
-            <div class="carousel-inner">
+            <div class="carousel-inner" t-attf-id="myQuoteCarouselCompact{{uniq}}_inner" aria-live="off">
                 <!-- #01 -->
-                <div class="o_cc o_cc2 carousel-item active pt40 pb80 px-md-0" data-name="Slide">
+                <div class="o_cc o_cc2 carousel-item active pt40 pb80 px-md-0" data-name="Slide" t-attf-id="myQuoteCarouselCompact{{uniq}}_1" role="tabpanel" aria-roledescription="slide">
                     <div class="container">
                         <div class="row">
                             <blockquote data-name="Blockquote" data-snippet="s_blockquote" class="s_blockquote s_blockquote_default o_animable position-relative d-flex flex-column gap-4 w-100 me-auto my-4 p-1 fst-normal" data-vcss="001">
@@ -18,7 +41,7 @@
                                 </div>
                                 <p class="s_blockquote_quote my-auto h2-fs">" This company transformed our business. <br/>Their solutions are innovative and reliable. "</p>
                                 <div class="s_blockquote_infos gap-2 flex-row align-items-start justify-content-start w-100 text-start">
-                                    <img src="/web/image/website.s_quotes_carousel_demo_image_3" class="s_blockquote_avatar img rounded-circle" alt=""/>
+                                    <img src="/web/image/website.set_avatars_square_md_3" class="s_blockquote_avatar img rounded-circle" alt=""/>
                                     <div class="s_blockquote_author">
                                         <span class="o_small-fs">
                                             <strong>Jane DOE</strong><br/>
@@ -31,7 +54,7 @@
                     </div>
                 </div>
                 <!-- #02 -->
-                <div class="o_cc o_cc2 carousel-item pt40 pb80 px-md-0" data-name="Slide">
+                <div class="o_cc o_cc2 carousel-item pt40 pb80 px-md-0" data-name="Slide" t-attf-id="myQuoteCarouselCompact{{uniq}}_2" role="tabpanel" aria-roledescription="slide">
                     <div class="container">
                         <div class="row">
                             <blockquote data-name="Blockquote" data-snippet="s_blockquote" class="s_blockquote s_blockquote_default o_animable position-relative d-flex flex-column gap-4 w-100 me-auto my-4 p-1 fst-normal" data-vcss="001">
@@ -41,7 +64,7 @@
                                 </div>
                                 <p class="s_blockquote_quote my-auto h2-fs">" A trusted partner for growth. <br/>Professional, efficient, and always ahead of the curve. "</p>
                                 <div class="s_blockquote_infos gap-2 flex-row align-items-start justify-content-start w-100 text-start">
-                                    <img src="/web/image/website.s_quotes_carousel_demo_image_4" class="s_blockquote_avatar img rounded-circle" alt=""/>
+                                    <img src="/web/image/website.set_avatars_square_md_2" class="s_blockquote_avatar img rounded-circle" alt=""/>
                                     <div class="s_blockquote_author">
                                         <span class="o_small-fs">
                                             <strong>John DOE</strong><br/>
@@ -54,7 +77,7 @@
                     </div>
                 </div>
                 <!-- #03 -->
-                <div class="o_cc o_cc2 carousel-item pt40 pb80 px-md-0" data-name="Slide">
+                <div class="o_cc o_cc2 carousel-item pt40 pb80 px-md-0" data-name="Slide" t-attf-id="myQuoteCarouselCompact{{uniq}}_3" role="tabpanel" aria-roledescription="slide">
                     <div class="container">
                         <div class="row">
                             <blockquote data-name="Blockquote" data-snippet="s_blockquote" class="s_blockquote s_blockquote_default o_animable position-relative d-flex flex-column gap-4 w-100 me-auto my-4 p-1 fst-normal" data-vcss="001">
@@ -64,7 +87,7 @@
                                 </div>
                                 <p class="s_blockquote_quote my-auto h2-fs">" Outstanding service and results! <br/>They exceeded our expectations in every project. "</p>
                                 <div class="s_blockquote_infos gap-2 flex-row align-items-start justify-content-start w-100 text-start">
-                                    <img src="/web/image/website.s_quotes_carousel_demo_image_5" class="s_blockquote_avatar img rounded-circle" alt=""/>
+                                    <img src="/web/image/website.set_avatars_square_md_4" class="s_blockquote_avatar img rounded-circle" alt=""/>
                                     <div class="s_blockquote_author">
                                         <span class="o_small-fs">
                                             <strong>Iris DOE</strong><br/>
@@ -74,27 +97,6 @@
                                 </div>
                             </blockquote>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="o_horizontal_controllers container position-absolute start-50 bottom-0 translate-middle-x w-100 mb-md-4 o_not_editable">
-                <div class="o_horizontal_controllers_row row gap-3 gap-lg-5 justify-content-between flex-nowrap flex-row-reverse mx-0">
-                    <!-- Controls -->
-                    <div class="o_arrows_wrapper gap-2 w-auto p-0">
-                        <button class="carousel-control-prev o_not_editable" contenteditable="false" t-attf-data-bs-target="#myQuoteCarouselCompact{{uniq}}" data-bs-slide="prev" aria-label="Previous" title="Previous">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"/>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next o_not_editable" contenteditable="false" t-attf-data-bs-target="#myQuoteCarouselCompact{{uniq}}" data-bs-slide="next" aria-label="Next" title="Next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"/>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                    </div>
-                    <!-- Indicators -->
-                    <div class="s_carousel_indicators_numbers carousel-indicators align-items-center flex-shrink-1 w-auto">
-                        <button type="button" t-attf-data-bs-target="#myQuoteCarouselCompact{{uniq}}" data-bs-slide-to="0" class="active" aria-label="Carousel indicator"/>
-                        <button type="button" t-attf-data-bs-target="#myQuoteCarouselCompact{{uniq}}" data-bs-slide-to="1" aria-label="Carousel indicator"/>
-                        <button type="button" t-attf-data-bs-target="#myQuoteCarouselCompact{{uniq}}" data-bs-slide-to="2" aria-label="Carousel indicator"/>
                     </div>
                 </div>
             </div>

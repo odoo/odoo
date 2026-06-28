@@ -1,12 +1,14 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { Component, onMounted, status } from "@odoo/owl";
+import { Component, onMounted, status, proxy } from "@odoo/owl";
 import { loadIframe } from "@mail/convert_inline/iframe_utils";
+import { MailPreviewRecordField } from "@mail/views/web/fields/mail_preview_record_field/mail_preview_record_field";
+import { MailingPreviewDisplayModeToggle } from "../mailing_preview_mode_toggle/mailing_preview_mode_toggle";
 
 export class MailingPreviewIframe extends Component {
     static template = "mass_mailing.MailingPreviewIframe";
@@ -14,8 +16,14 @@ export class MailingPreviewIframe extends Component {
         ...standardFieldProps,
     };
 
+    static components = {
+        MailPreviewRecordField,
+        MailingPreviewDisplayModeToggle,
+    };
+
     setup() {
-        this.state = useState(this.env.displayState);
+        this.state = proxy(this.env.displayState);
+        this.action = useService("action");
         this.ui = useService("ui");
         this.iframeRef = useRef("iframeRef");
         this.iframeLoaded = Promise.withResolvers();
@@ -61,12 +69,14 @@ export class MailingPreviewIframe extends Component {
                 iframe.style.width = "367px";
                 iframe.style.height = "668px";
                 iframe.style.transform = "";
+                iframe.style.backgroundColor = "white";
                 iframe.contentDocument.body.scrollTop = 0;
             } else {
                 iframe.style.width = "140%";
                 iframe.style.height = "140%";
                 iframe.style.transform = `scale(${10 / 14})`;
                 iframe.style.transformOrigin = "top left";
+                iframe.style.backgroundColor = "white";
             }
         };
 
@@ -88,6 +98,10 @@ export class MailingPreviewIframe extends Component {
 
     get isBrowserSafari() {
         return isBrowserSafari();
+    }
+
+    onCloseButtonClick() {
+        this.action.doAction({ type: "ir.actions.act_window_close" });
     }
 }
 

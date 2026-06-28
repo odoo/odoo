@@ -30,7 +30,9 @@ export const timesheetUOMService = {
             },
             _getFactorCompanyDependentProps(props) {
                 const factor = user.activeCompany.timesheet_uom_factor || props.factor;
-                return { ...props, factor };
+                const digits = [0, 2];
+                const trailingZeros = false;
+                return { ...props, factor, digits, trailingZeros };
             },
             get formatter() {
                 if (this.timesheetWidget === "float_time") {

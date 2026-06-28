@@ -23,7 +23,7 @@ class TestInheritDepends(common.TransactionCase):
 
         # the extra values are added, both in the field and the column
         self.assertEqual(mother._fields['state'].selection,
-                         [('a', 'A'), ('d', 'D'), ('b', 'B'), ('c', 'C'), ('e', 'E'), ('g', 'G')])
+                         (('a', 'A'), ('d', 'D'), ('b', 'B'), ('c', 'C'), ('e', 'E'), ('g', 'G')))
 
     def test_60_inherit_with_python(self):
         self.assertEqual(self.env['test.inherit.mother'].foo(), 42 * 2)

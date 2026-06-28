@@ -172,8 +172,7 @@ class AccountMove(models.Model):
         """
         for move in self:
             move.l10n_id_coretax_efaktur_available = (
-                move.partner_id.l10n_id_pkp
-                and move.country_code == 'ID'
+                move.country_code == 'ID'
                 and move.move_type == 'out_invoice'
                 and move.line_ids.tax_ids
             )
@@ -217,10 +216,11 @@ class AccountMove(models.Model):
             exempt_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("l10n_id_tax_group_exempt", raise_if_not_found=False)
             stlg_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("l10n_id_tax_group_stlg", raise_if_not_found=False)
             default_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("default_tax_group", raise_if_not_found=False)
+            vat_collector_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("l10n_id_tax_group_vat_collector", raise_if_not_found=False)
             product_lines = move.line_ids.filtered(lambda line: line.display_type == 'product')
             all_taxes = product_lines.mapped('tax_ids')
             tax_groups = set(all_taxes.mapped('tax_group_id'))
-            ppn_groups = {non_luxury_group, luxury_group, zero_group, exempt_group, default_group}
+            ppn_groups = {non_luxury_group, luxury_group, zero_group, exempt_group, default_group, vat_collector_group}
             ppn_groups.discard(False)
             ppn_tax_groups = [g for g in tax_groups if g in ppn_groups]
             stlg_tax_groups = [g for g in tax_groups if g == stlg_group]
@@ -292,8 +292,6 @@ class AccountMove(models.Model):
         # check for every customer
         for partner in self.partner_id:
             comm = partner.commercial_partner_id
-            if not comm.l10n_id_pkp:
-                err_messages.append(_("Customer %s is not taxable, tick ID PKP if necessary", comm.name))
             if comm.l10n_id_buyer_document_type != 'TIN' and not comm.l10n_id_buyer_document_number:
                 err_messages.append(_("Document number for customer %s hasn't been filled in", comm.name))
             if not comm.vat:
@@ -378,15 +376,15 @@ class AccountMove(models.Model):
             "CustomDocMonthYear": self.l10n_id_coretax_custom_doc_month_year and self.l10n_id_coretax_custom_doc_month_year.strftime("%m%Y") or "",
             "FacilityStamp": "",
             "RefDesc": self.name,
-            "SellerIDTKU": self.company_id.vat + (self.company_id.partner_id.l10n_id_tku or '000000'),
+            "SellerIDTKU": self.company_id.vat + self.company_id.partner_id._l10n_id_efaktur_tku_branch(),
             "BuyerDocument": l10n_id_buyer_document_type_mapping_to_xml.get(partner.l10n_id_buyer_document_type, partner.l10n_id_buyer_document_type),
             "BuyerTin": partner.vat if partner.l10n_id_buyer_document_type == "TIN" else "0000000000000000",
             "BuyerCountry": COUNTRY_CODE_MAP.get(partner.country_id.code),
-            "BuyerDocumentNumber": partner.l10n_id_buyer_document_number if partner.l10n_id_buyer_document_type != "TIN" else "",
+            "BuyerDocumentNumber": partner.l10n_id_buyer_document_number or "",
             "BuyerName": self.partner_id.name,
             "BuyerAdress": self.partner_id._display_address(separator=' '),
             "BuyerEmail": partner.email or "",
-            "BuyerIDTKU": partner.vat + (partner.l10n_id_tku or '000000'),
+            "BuyerIDTKU": partner.vat + partner._l10n_id_efaktur_tku_branch(),
         })
 
         if trx_code == '07':

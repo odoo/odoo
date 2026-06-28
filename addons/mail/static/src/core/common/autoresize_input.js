@@ -1,38 +1,25 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, onMounted } from "@odoo/owl";
+import { Component, onMounted, props, signal, t, useEffect } from "@odoo/owl";
 
 import { useAutoresize } from "@web/core/utils/autoresize";
+import { useRef } from "@web/owl2/utils";
 
 export class AutoresizeInput extends Component {
     static template = "mail.AutoresizeInput";
-    static props = {
-        autofocus: { type: Boolean, optional: true },
-        className: { type: String, optional: true },
-        enabled: { optional: true },
-        onValidate: { type: Function, optional: true },
-        placeholder: { type: String, optional: true },
-        value: { type: String, optional: true },
-    };
-    static defaultProps = {
-        autofocus: false,
-        className: "",
-        enabled: true,
-        onValidate: () => {},
-        placeholder: "",
-    };
+    props = props({
+        autofocus: t.boolean().optional(false),
+        className: t.string().optional(""),
+        enabled: t.boolean().optional(true),
+        onValidate: t.function([t.string()]).optional(() => () => {}),
+        placeholder: t.string().optional(""),
+        value: t.signal(t.string()),
+    });
 
     setup() {
         super.setup();
-        this.state = useState({
-            value: this.props.value,
-            isFocused: false,
-        });
+        this.value = signal("");
+        useEffect(() => this.value.set(this.props.value() || ""));
+        this.isFocused = signal(false);
         this.inputRef = useRef("input");
-        onWillUpdateProps((nextProps) => {
-            if (this.props.value !== nextProps.value) {
-                this.state.value = nextProps.value;
-            }
-        });
         useAutoresize(this.inputRef);
         onMounted(() => {
             if (this.props.autofocus) {
@@ -52,14 +39,14 @@ export class AutoresizeInput extends Component {
                 break;
             case "Escape":
                 ev.stopPropagation();
-                this.state.value = this.props.value;
+                this.value.set(this.props.value() || "");
                 this.inputRef.el.blur();
                 break;
         }
     }
 
     onBlurInput() {
-        this.state.isFocused = false;
-        this.props.onValidate(this.state.value);
+        this.isFocused.set(false);
+        this.props.onValidate(this.value());
     }
 }

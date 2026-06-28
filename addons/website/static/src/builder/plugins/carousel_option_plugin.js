@@ -49,9 +49,13 @@ export class CarouselOptionPlugin extends Plugin {
         },
         builder_actions: {
             AddSlideAction,
+            SetAutoplayAction,
             SlideCarouselAction,
             ToggleControllersAction,
             ToggleCardImgAction,
+            SetCarouselTypeAction,
+            SetCarouselTimespanAction,
+            SetCarouselDurationAction,
         },
         on_cloned_handlers: this.onCloned.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
@@ -73,9 +77,9 @@ export class CarouselOptionPlugin extends Plugin {
             });
             carouselEl.querySelectorAll(".carousel-indicators > *").forEach((indicatorEl, i) => {
                 indicatorEl.classList.toggle("active", i === 0);
-                indicatorEl.removeAttribute("aria-current");
+                indicatorEl.setAttribute("aria-selected", "false");
                 if (i === 0) {
-                    indicatorEl.setAttribute("aria-current", "true");
+                    indicatorEl.setAttribute("aria-selected", "true");
                 }
             });
         }
@@ -101,6 +105,7 @@ export class CarouselOptionPlugin extends Plugin {
             activateClone: false,
         });
         newItemEl.classList.remove("active");
+        newItemEl.id = `${editingElement.id}_${Date.now().toString(36)}`;
 
         // Show the controllers (now that there is always more than one item).
         const controlEls = editingElement.querySelectorAll(carouselControlsSelector);
@@ -109,11 +114,14 @@ export class CarouselOptionPlugin extends Plugin {
         });
 
         // Add the new indicator.
-        const indicatorsEl = editingElement.querySelector(".carousel-indicators");
-        const newIndicatorEl = this.document.createElement("button");
-        newIndicatorEl.setAttribute("data-bs-target", "#" + editingElement.id);
-        newIndicatorEl.setAttribute("aria-label", _t("Carousel indicator"));
-        indicatorsEl.appendChild(newIndicatorEl);
+        const activeIndicatorEl = editingElement.querySelector(
+            ".carousel-indicators button.active"
+        );
+        const newIndicatorEl = activeIndicatorEl.cloneNode(true);
+        newIndicatorEl.setAttribute("aria-controls", newItemEl.id);
+        newIndicatorEl.setAttribute("aria-selected", "false");
+        activeIndicatorEl.after(newIndicatorEl);
+        this.updateIndicatorsLabels(editingElement);
 
         // Slide to the new item.
         await this.slide(editingElement, "next");
@@ -145,6 +153,7 @@ export class CarouselOptionPlugin extends Plugin {
                 controlEl.classList.toggle("d-none", newLength === 1)
             );
         }
+        this.updateIndicatorsLabels(editingElement);
     }
 
     /**
@@ -193,7 +202,7 @@ export class CarouselOptionPlugin extends Plugin {
                         );
                         const activeIndicatorEl = [...indicatorEls][activeIndex];
                         activeIndicatorEl.classList.add("active");
-                        activeIndicatorEl.setAttribute("aria-current", "true");
+                        activeIndicatorEl.setAttribute("aria-selected", "true");
 
                         // Activate the active item.
                         this.dependencies["builderOptions"].setNextTarget(activeItemEl);
@@ -236,8 +245,19 @@ export class CarouselOptionPlugin extends Plugin {
      * @param {HTMLElement} editingElement the carousel element.
      */
     assignUniqueID(editingElement) {
+        const preExistingId = editingElement.querySelector(".carousel").id;
         const id = "myCarousel" + Date.now();
-        editingElement.querySelector(".carousel").setAttribute("id", id);
+        // Update ids of .carousel, .carousel-inner, .carousel-item
+        for (const el of editingElement.querySelectorAll(`[id^=${preExistingId}`)) {
+            const currentId = el.id;
+            const newId = currentId.replace(preExistingId, id);
+            el.setAttribute("id", newId);
+            for (const controlEl of editingElement.querySelectorAll(
+                `[aria-controls='${currentId}']`
+            )) {
+                controlEl.setAttribute("aria-controls", newId);
+            }
+        }
         editingElement.querySelectorAll("[data-bs-target]").forEach((el) => {
             el.setAttribute("data-bs-target", "#" + id);
         });
@@ -291,12 +311,36 @@ export class CarouselOptionPlugin extends Plugin {
             // Activate the active slide.
             this.dependencies.builderOptions.setNextTarget(activeItemEl);
         }
+        return activeItemEl;
+    }
+    /**
+     * @param {HTMLElement} editingElement the carousel element
+     */
+    updateIndicatorsLabels(editingElement) {
+        const indicatorEls = editingElement.querySelectorAll(".carousel-indicators > *");
+        for (const indicatorEl of indicatorEls) {
+            updateIndicatorLabel(indicatorEl, indicatorEls);
+        }
     }
 }
 
 /**
+ * @param {HTMLElement} indicatorEl one indicator
+ * @param {HTMLCollection|NodeList|HTMLElement[]} siblingEls all indicators
+ */
+export function updateIndicatorLabel(indicatorEl, siblingEls) {
+    indicatorEl.setAttribute(
+        "aria-label",
+        _t("Slide %(itemIndex)s of %(total)s", {
+            itemIndex: [...siblingEls].indexOf(indicatorEl) + 1,
+            total: siblingEls.length,
+        })
+    );
+}
+
+/**
  * Updates the carousel indicators to make the one at the given index be the
- * active one.
+ * active one, as well as update the aria-labels.
  *
  * @param {HTMLElement} carouselEl the carousel element
  * @param {Number} newPosition the index
@@ -304,10 +348,11 @@ export class CarouselOptionPlugin extends Plugin {
 export function updateCarouselIndicators(carouselEl, newPosition) {
     const indicatorEls = carouselEl.querySelectorAll(".carousel-indicators > *");
     indicatorEls.forEach((indicatorEl, i) => {
+        updateIndicatorLabel(indicatorEl, indicatorEls);
         indicatorEl.classList.toggle("active", i === newPosition);
-        indicatorEl.removeAttribute("aria-current");
+        indicatorEl.setAttribute("aria-selected", "false");
         if (i === newPosition) {
-            indicatorEl.setAttribute("aria-current", "true");
+            indicatorEl.setAttribute("aria-selected", "true");
         }
     });
 }
@@ -321,6 +366,18 @@ export class AddSlideAction extends BuilderAction {
         return this.dependencies.carouselOption.addSlide(editingElement);
     }
 }
+
+export class SetAutoplayAction extends BuilderAction {
+    static id = "setAutoplay";
+    isApplied({ editingElement, params: { bsRide } }) {
+        return editingElement.dataset.bsRide === bsRide;
+    }
+    apply({ editingElement, params: { bsRide, ariaLive } }) {
+        editingElement.dataset.bsRide = bsRide;
+        editingElement.querySelector(".carousel-inner")?.setAttribute("aria-live", ariaLive);
+    }
+}
+
 export class SlideCarouselAction extends BuilderAction {
     static id = "slideCarousel";
     static dependencies = ["carouselOption"];
@@ -362,6 +419,109 @@ export class ToggleCardImgAction extends BuilderAction {
         const carouselEl = editingElement.closest(".carousel");
         const cardImgEl = carouselEl.querySelector(".o_card_img_wrapper");
         return !!cardImgEl;
+    }
+}
+
+function getTransitionDuration(el) {
+    if (el.matches(".carousel-instant")) {
+        return 0;
+    }
+
+    const customDuration = parseInt(el.style.getPropertyValue("--transition-duration"));
+    if (customDuration) {
+        return customDuration;
+    }
+
+    const carouselItemEl = el.querySelector(".carousel-item");
+    if (carouselItemEl) {
+        return parseFloat(getComputedStyle(carouselItemEl).transitionDuration) * 1000;
+    }
+
+    // Default Bootstrap carousel transition duration
+    return 600;
+}
+
+function updateCarouselType(el, typeClass) {
+    el.classList.add("slide");
+    el.classList.remove("carousel-fade", "carousel-instant");
+    if (typeClass) {
+        el.classList.add(typeClass);
+    }
+}
+
+export class SetCarouselTypeAction extends BuilderAction {
+    static id = "setCarouselType";
+    isApplied({ editingElement, params: { mainParam: carouselTypeClass } }) {
+        if (carouselTypeClass) {
+            return editingElement.classList.contains(carouselTypeClass);
+        }
+        return !(
+            editingElement.classList.contains("carousel-fade") ||
+            editingElement.classList.contains("carousel-instant")
+        );
+    }
+    apply({ editingElement, params: { mainParam: carouselTypeClass } }) {
+        const wasCarouselInstant = editingElement.classList.contains("carousel-instant");
+        const isCarouselInstant = carouselTypeClass === "carousel-instant";
+
+        if (wasCarouselInstant !== isCarouselInstant) {
+            if (wasCarouselInstant) {
+                // Remove the class "carousel-instant" before to compute the
+                // duration (otherwise transition-duration equals 0s)
+                updateCarouselType(editingElement, carouselTypeClass);
+            }
+
+            const duration = getTransitionDuration(editingElement);
+            const timespan = parseInt(editingElement.dataset.bsInterval, 10) || 1000;
+            editingElement.dataset.bsInterval =
+                timespan + (isCarouselInstant ? -duration : duration);
+
+            if (!wasCarouselInstant) {
+                // Add the class "carousel-instant" after to compute the
+                // duration (otherwise transition-duration equals 0s)
+                updateCarouselType(editingElement, carouselTypeClass);
+            }
+        } else {
+            updateCarouselType(editingElement, carouselTypeClass);
+        }
+    }
+}
+
+export class SetCarouselTimespanAction extends BuilderAction {
+    static id = "setCarouselTimespan";
+    setup() {
+        this.preview = false;
+    }
+    apply({ editingElement, value }) {
+        const duration = getTransitionDuration(editingElement);
+        const timespan = parseInt(value, 10);
+        editingElement.dataset.bsInterval = timespan + duration;
+    }
+    getValue({ editingElement }) {
+        const duration = getTransitionDuration(editingElement);
+        const timespan = parseInt(editingElement.dataset.bsInterval, 10) || 1000;
+        return timespan - duration;
+    }
+}
+
+export class SetCarouselDurationAction extends BuilderAction {
+    static id = "setCarouselDuration";
+    setup() {
+        this.preview = false;
+    }
+    apply({ editingElement, value }) {
+        if (!value) {
+            return;
+        }
+        const duration = getTransitionDuration(editingElement);
+        const timespan = parseInt(editingElement.dataset.bsInterval, 10) || 1000;
+        const newDuration = parseInt(value, 10);
+        editingElement.dataset.bsInterval = timespan + (newDuration - duration);
+        editingElement.style.setProperty("--transition-duration", value);
+    }
+    getValue({ editingElement }) {
+        const duration = getTransitionDuration(editingElement);
+        return duration;
     }
 }
 

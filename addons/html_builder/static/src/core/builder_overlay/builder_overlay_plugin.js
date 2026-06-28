@@ -23,7 +23,7 @@ export class BuilderOverlayPlugin extends Plugin {
     static shared = ["showOverlayPreview", "hideOverlayPreview", "refreshOverlays"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_step_added_handlers: this.refreshOverlays.bind(this),
+        on_committed_to_history_handlers: this.refreshOverlays.bind(this),
         on_current_options_containers_changed_handlers: this.openBuilderOverlays.bind(this),
         has_overlay_options: { hasOption: (el) => isResizable(el) },
     };
@@ -216,6 +216,8 @@ export class BuilderOverlayPlugin extends Plugin {
         this.hoverOverlay = overlay;
         this.overlayContainer.append(overlay.overlayElement);
         this.resizeObserver.observe(overlay.overlayTarget, { box: "border-box" });
+        // `refreshPosition` won't be called by the resize observer if the element was already observed
+        this.hoverOverlay.refreshPosition();
     }
 
     showOverlayPreview(el) {

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api
-from odoo.tools import float_compare, float_is_zero
-from odoo.tools.misc import unique
+from odoo import models
+from odoo.tools import float_compare
 
 
 class AccountMove(models.Model):
@@ -77,11 +76,12 @@ class AccountMove(models.Model):
                         'balance': line.currency_id._convert(
                             relevant_qty * price_unit_val_dif,
                             line.company_currency_id,
-                            line.company_id, fields.Date.today(),
+                            line.company_id,
                         ),
                         'account_id': debit_pdiff_account.id,
                         'analytic_distribution': line.analytic_distribution,
                         'display_type': 'cogs',
+                        'tax_ids': [],
                     }
                     lines_vals_list.append(vals)
 
@@ -96,11 +96,12 @@ class AccountMove(models.Model):
                         'balance': line.currency_id._convert(
                             relevant_qty * -price_unit_val_dif,
                             line.company_currency_id,
-                            line.company_id, fields.Date.today(),
+                            line.company_id,
                         ),
                         'account_id': line.account_id.id,
                         'analytic_distribution': line.analytic_distribution,
                         'display_type': 'cogs',
+                        'tax_ids': [],
                     }
                     lines_vals_list.append(vals)
         return lines_vals_list
@@ -113,13 +114,3 @@ class AccountMove(models.Model):
             self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_in_lines_vals())
 
         return super()._post(soft)
-
-    @api.depends('purchase_id')
-    def _compute_incoterm_location(self):
-        super()._compute_incoterm_location()
-        for move in self:
-            purchase_locations = move.line_ids.purchase_line_id.order_id.mapped('incoterm_location')
-            incoterm_res = next((incoterm for incoterm in purchase_locations if incoterm), False)
-            # if multiple purchase order we take an incoterm that is not false
-            if incoterm_res:
-                move.incoterm_location = incoterm_res

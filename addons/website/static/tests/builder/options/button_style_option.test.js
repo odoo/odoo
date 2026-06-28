@@ -1,4 +1,4 @@
-import { describe, expect, queryFirst, queryOne, test } from "@odoo/hoot";
+import { animationFrame, describe, expect, queryFirst, queryOne, test } from "@odoo/hoot";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -72,4 +72,80 @@ test("keep current style when switching from button", async () => {
 
     expect(":iframe p > a").toHaveClass("btn btn-custom");
     expect(":iframe p > a").toHaveStyle(buttonSecondaryStyles, { inline: true });
+});
+
+test("should preview button styles in dropdown", async () => {
+    await setupWebsiteBuilder(
+        `<p>
+            <a href="#" class="btn btn-primary test-target">clickme</a>
+            <a href="#" class="btn btn-secondary test-target">clickme</a>
+        </p>`,
+        {
+            loadIframeBundles: true,
+        }
+    );
+
+    await contains(":iframe p > a.test-target").click();
+    // primary count=2 because it's shown both in dropdown list and trigger
+    expect(".o-hb-button-style-preview.btn-primary").toHaveCount(2);
+    expect(".o-hb-button-style-preview.btn-secondary").toHaveCount(1);
+    expect(".o-hb-button-style-preview.btn-custom").toHaveCount(1);
+
+    const primaryStyle = getComputedStyle(queryOne(":iframe .btn-primary.test-target"));
+    const secondaryStyle = getComputedStyle(queryOne(":iframe .btn-secondary.test-target"));
+    const previewVariables = [
+        "background-color",
+        "border-color",
+        "border-style",
+        "color",
+        "font-family",
+        "font-weight",
+        "text-transform",
+    ];
+
+    previewVariables.forEach((v) => {
+        expect(".o-hb-button-style-preview.btn-primary").toHaveStyle(`${v}: ${primaryStyle[v]}`);
+        expect(".o-hb-button-style-preview.btn-secondary").toHaveStyle(
+            `${v}: ${secondaryStyle[v]}`
+        );
+    });
+});
+
+test("should have a button linking to theme tab", async () => {
+    await setupWebsiteBuilder('<p><a href="#" class="btn btn-primary test-target">clickme</a></p>');
+
+    await contains(":iframe p > a.test-target").click();
+    await contains("a.o-hb-button-style-btn-edit").click();
+    await animationFrame();
+    expect("button[data-name='theme']").toHaveClass("active");
+});
+
+test("button border width is not previewed", async () => {
+    await setupWebsiteBuilder(
+        `<p>
+            <a href="#" class="btn btn-custom test-target">clickme</a>
+        </p>`,
+        {
+            loadIframeBundles: true,
+        }
+    );
+
+    await contains(":iframe p > a.test-target").click();
+    await contains("[data-label='Border'] .o_we_color_preview").click();
+    await contains("button[data-color='#000000']").click();
+    await contains(".options-container [data-label=Border] input").edit("3", {
+        confirm: "enter",
+    });
+    // If border width is > 0, previewed width is fixed to 2 px
+    expect(".options-container .o-hb-select-toggle .o-hb-button-style-preview").toHaveStyle({
+        "border-width": "2px",
+    });
+
+    await contains(".options-container [data-label=Border] input").edit("0", {
+        confirm: "enter",
+    });
+    // If border width is 0, previewed width is 0
+    expect(".options-container .o-hb-select-toggle .o-hb-button-style-preview").toHaveStyle({
+        "border-color": "rgba(0, 0, 0, 0)",
+    });
 });

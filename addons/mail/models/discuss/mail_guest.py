@@ -34,7 +34,16 @@ class MailGuest(models.Model):
     channel_ids = fields.Many2many(string="Channels", comodel_name='discuss.channel', relation='discuss_channel_member', column1='guest_id', column2='channel_id', copy=False)
     presence_ids = fields.One2many("mail.presence", "guest_id", groups="base.group_system")
     # sudo: mail.guest - can access presence of accessible guest
-    im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
+    im_status = fields.Selection(
+        [
+            ("online", "Online"),
+            ("away", "Away"),
+            ("offline", "Offline"),
+        ],
+        "IM Status",
+        compute="_compute_im_status",
+        compute_sudo=True,
+    )
     offline_since = fields.Datetime("Offline since", compute="_compute_im_status", compute_sudo=True)
 
     @api.depends("presence_ids.status")
@@ -93,8 +102,8 @@ class MailGuest(models.Model):
             raise UserError(_("Guest's name is too long."))
         self.name = name
         for channel in self.channel_ids:
-            Store(bus_channel=channel).add(self, "_store_avatar_fields").bus_send()
-        Store(bus_channel=self).add(self, "_store_avatar_fields").bus_send()
+            Store(bus_channel=channel).add(self, "_store_avatar_fields")
+        Store(bus_channel=self).add(self, "_store_avatar_fields")
 
     def _update_timezone(self, timezone):
         query = """
@@ -117,12 +126,10 @@ class MailGuest(models.Model):
         return limited_field_access_token(self, "im_status", scope="mail.presence")
 
     def _store_avatar_fields(self, res: Store.FieldList):
-        """Same as _store_guest_fields but without im_status fields to reduce queries when im_status is not needed."""
         res.attr("avatar_128_access_token", lambda g: g._get_avatar_128_access_token())
         res.extend(["name", "write_date"])
 
-    def _store_guest_fields(self, res: Store.FieldList):
-        self._store_avatar_fields(res)
+    def _store_im_status_fields(self, res: Store.FieldList):
         res.attr("im_status")
         res.attr("im_status_access_token", lambda g: g._get_im_status_access_token())
 

@@ -28,7 +28,7 @@ import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
 import { EditInteractionPlugin } from "@website/builder/plugins/edit_interaction_plugin";
-import { WebsiteSessionPlugin } from "@website/builder/plugins/website_session_plugin";
+import { WebsiteBridgePlugin } from "@website/builder/plugins/website_bridge_plugin";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
 import { mockImageRequests } from "./image_test_helpers";
@@ -41,9 +41,6 @@ import { BackgroundShapeOptionPlugin } from "@html_builder/plugins/background_op
 
 class Website extends models.Model {
     _name = "website";
-    get_current_website() {
-        return [1];
-    }
 }
 
 class IrUiView extends models.Model {
@@ -58,10 +55,13 @@ export const setupWebsiteBuilderOeId = 539;
 export const invisibleEl =
     '<div class="s_invisible_el o_snippet_invisible" data-name="Invisible Element" data-invisible="1"></div>';
 
-export function defineWebsiteModels() {
+export function defineWebsiteModels({ includeMailModels = true } = {}) {
     describe.current.tags("desktop");
-    defineMailModels();
+    if (includeMailModels) {
+        defineMailModels();
+    }
     defineModels([Website, IrUiView]);
+    onRpc("/website/get_current_website_id", () => 1);
     onRpc("/website/theme_customize_data_get", () => []);
     onRpc("website", "web_search_read", () => ({
         length: 1,
@@ -71,6 +71,7 @@ export function defineWebsiteModels() {
                 default_lang_id: {
                     code: "en_US",
                 },
+                company_id: 1,
             },
         ],
     }));
@@ -133,10 +134,10 @@ export async function setupWebsiteBuilder(
     let resolveIframeLoaded = async () => {};
     const bodyHTML = `${beforeWrapwrapContent}
         <div id="wrapwrap">${headerContent} <div id="wrap" class="oe_structure oe_empty" ${
-        translateMode
-            ? ""
-            : `data-oe-model="ir.ui.view" data-oe-id="${setupWebsiteBuilderOeId}" data-oe-field="arch"`
-    }>${websiteContent}</div> ${footerContent}</div>`;
+            translateMode
+                ? ""
+                : `data-oe-model="ir.ui.view" data-oe-id="${setupWebsiteBuilderOeId}" data-oe-field="arch"`
+        }>${websiteContent}</div> ${footerContent}</div>`;
     const iframeLoaded = new Promise((resolve) => {
         resolveIframeLoaded = async (el) => {
             const iframe = el;
@@ -249,7 +250,7 @@ export async function setupWebsiteBuilder(
         await tick();
         await lastUpdatePromise;
         await animationFrame();
-        await waitUntilIdle([comp.__owl__.app]);
+        await waitUntilIdle(comp);
     };
     patchWithCleanup(Builder.prototype, {
         setup() {
@@ -275,9 +276,15 @@ export async function setupWebsiteBuilder(
         },
     });
 
-    patchWithCleanup(WebsiteSessionPlugin.prototype, {
+    patchWithCleanup(WebsiteBridgePlugin.prototype, {
         getSession() {
             return {};
+        },
+        getRegistry() {
+            return registry;
+        },
+        _t() {
+            return (source, ...substitutions) => source;
         },
     });
 
@@ -452,6 +459,7 @@ export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) 
                 default_lang_id: {
                     code: "en_US",
                 },
+                company_id: 1,
             };
         },
     });
@@ -489,12 +497,12 @@ export const websiteServiceInTranslateMode = {
 };
 
 export async function setupSidebarBuilderForTranslation(options) {
-    const { websiteContent } = options;
+    const { websiteContent, loadIframeBundles = false } = options;
     // Hack: configure the snippets menu as in translate mode when clicking
     // on the "Edit" button of the systray. The goal of this hack is to avoid
     // the handling of an extra reload of the action to arrive in translate
     // mode.
-    patchWithCleanup(Builder.prototype, {
+    patchWithCleanup(WebsiteBuilder.prototype, {
         setup() {
             super.setup();
             this.env.services.website = websiteServiceInTranslateMode;
@@ -510,6 +518,7 @@ export async function setupSidebarBuilderForTranslation(options) {
             onIframeLoaded: (iframe) => {
                 websiteServiceInTranslateMode.pageDocument = iframe.contentDocument;
             },
+            loadIframeBundles,
         }
     );
     await getTranslatedElements();
@@ -536,5 +545,13 @@ export async function insertStructureSnippet(editor, snippetName) {
     const snippetEl = await getStructureSnippet(snippetName);
     const parentEl = editor.editable.querySelector("#wrap") || editor.editable;
     parentEl.append(snippetEl);
-    editor.shared.history.addStep();
+    editor.shared.history.commit();
+}
+
+export async function toggleMobilePreview() {
+    await contains("button[data-action='mobile']").click();
+    // The click above will cause a resize of the iframe containing the builder.
+    // Resize observers that react to that change and update the ui accordingly
+    // will need one more animation frame to have their changes reflected
+    await animationFrame();
 }

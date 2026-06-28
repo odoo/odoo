@@ -8,7 +8,9 @@ export class PosPayment extends Base {
 
     setup(vals) {
         super.setup(...arguments);
-        this.payment_date = DateTime.now();
+        if (!this.payment_date) {
+            this.payment_date = DateTime.now();
+        }
         this.amount = vals.amount || 0;
         this.ticket = vals.ticket || "";
     }
@@ -23,12 +25,14 @@ export class PosPayment extends Base {
             ? {
                   qrCode: this.uiState.qrCode,
                   amount: this.getAmount(),
+                  provider: this.payment_provider,
                   isCustomerDisplay: true,
                   footer: false,
               }
             : {
                   qrCode: this.qr_code,
                   amount: formatCurrency(this.getAmount(), this.pos_order_id.currency),
+                  provider: this.payment_provider,
               };
     }
 
@@ -60,6 +64,10 @@ export class PosPayment extends Base {
 
     get useBankQrCode() {
         return this.payment_method_id.useBankQrCode;
+    }
+
+    get displayName() {
+        return this.payment_method_id.name;
     }
 
     isSelected() {

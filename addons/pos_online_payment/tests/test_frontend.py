@@ -60,7 +60,6 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
             'code': 'X1012.POSOP',
             'name': 'Debtors - (POSOP)',
             'account_type': 'asset_receivable',
-            'reconcile': True,
         })
         cls.company.account_default_pos_receivable_account_id = cls.account_default_pos_receivable_account_id
         cls.receivable_cash_account = cls.copy_account(cls.company.account_default_pos_receivable_account_id, {'name': 'POS OP Test Receivable Cash'})
@@ -203,7 +202,6 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
                 'price_unit': product.list_price,
                 'price_subtotal': untax,
                 'price_subtotal_incl': untax + atax,
-                'pack_lot_ids': [],
             }]],
             'payment_ids': [],
         }
@@ -282,7 +280,7 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         self.start_pos_tour('OnlinePaymentErrorsTour', login="pos_op_user")
 
     def test_customer_display_online_payment(self):
-        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}",
+        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}?access_token={self.main_pos_config.access_token}",
                         'CustomerDisplayTourOnlinePayment', login="pos_user")
 
     def test_refuse_online_payment_without_accounting_payment(self):

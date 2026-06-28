@@ -11,10 +11,9 @@ import { SixTerminalDialog } from "./components/dialog/six_terminal_dialog.js";
 import { LoadingFullScreen } from "./components/loading_full_screen.js";
 import { IconButton } from "./components/icon_button.js";
 
-const { Component, xml, useState, onWillStart } = owl;
+const { Component, xml, onWillStart, signal, computed } = owl;
 
 export class Homepage extends Component {
-    static props = {};
     static components = {
         SingleData,
         FooterButtons,
@@ -27,40 +26,41 @@ export class Homepage extends Component {
         IconButton,
     };
 
-    setup() {
-        this.store = useStore();
-        this.state = useState({ data: {}, loading: true, waitRestart: false });
-        this.store.advanced = localStorage.getItem("showAdvanced") === "true";
-        this.store.dev = new URLSearchParams(window.location.search).has("debug");
-        this.loadDataDelay = 10000;
+    store = useStore();
 
-        onWillStart(async () => {
-            await this.loadInitialData();
-        });
-    }
+    loading = signal(true);
+    waitRestart = signal(false);
 
-    get numDevices() {
-        return Object.values(this.state.data.devices)
+    loadDataDelay = 10000;
+
+    numDevices = computed(() =>
+        Object.values(this.store.base().devices)
             .map((devices) => devices.length)
-            .reduce((a, b) => a + b, 0);
-    }
-
-    get networkStatus() {
+            .reduce((a, b) => a + b, 0)
+    );
+    networkStatus = computed(() => {
         if (
-            !this.store.isLinux ||
-            this.state.data.network_interfaces.some((netInterface) => !netInterface.is_wifi)
+            !this.store.isLinux() ||
+            this.store.base().network_interfaces.some((netInterface) => !netInterface.is_wifi)
         ) {
             return "Ethernet";
         }
-        const wifiInterface = this.state.data.network_interfaces.find(
-            (netInterface) => netInterface.ssid
-        );
+        const wifiInterface = this.store
+            .base()
+            .network_interfaces.find((netInterface) => netInterface.ssid);
         if (wifiInterface) {
-            return this.state.data.is_access_point_up
+            return this.store.base().is_access_point_up
                 ? 'No internet connection - click on "Configure"'
                 : `Wi-Fi: ${wifiInterface.ssid}`;
         }
         return "Not Connected";
+    });
+
+    setup() {
+        this.store.advanced.set(localStorage.getItem("showAdvanced") === "true");
+        onWillStart(async () => {
+            await this.loadInitialData();
+        });
     }
 
     async loadInitialData() {
@@ -70,13 +70,12 @@ export class Homepage extends Component {
             });
 
             if (data.system === "Linux") {
-                this.store.isLinux = true;
+                this.store.isLinux.set(true);
             }
 
-            this.state.data = data;
-            this.store.base = data;
-            this.state.loading = false;
-            this.store.update = new Date().getTime();
+            this.store.base.set(data);
+            this.loading.set(false);
+            this.store.update.set(new Date().getTime());
         } catch {
             console.warn("Error while fetching data");
         }
@@ -92,35 +91,35 @@ export class Homepage extends Component {
                 url: "/iot_drivers/restart_odoo_service",
             });
 
-            this.state.waitRestart = true;
+            this.waitRestart.set(true);
         } catch {
             console.warn("Error while restarting Odoo Service");
         }
     }
 
     toggleAdvanced() {
-        this.store.advanced = !this.store.advanced;
-        localStorage.setItem("showAdvanced", this.store.advanced);
+        this.store.advanced.set(!this.store.advanced());
+        localStorage.setItem("showAdvanced", this.store.advanced());
     }
 
     static template = xml`
     <t t-translation="off">
-        <LoadingFullScreen t-if="this.state.waitRestart">
+        <LoadingFullScreen t-if="this.waitRestart()">
             <t t-set-slot="body">
             Restarting IoT Box, please wait...
             </t>
         </LoadingFullScreen>
 
-        <div t-if="!this.state.loading" class="w-100 d-flex flex-column align-items-center justify-content-center background">
+        <div t-if="!this.loading()" class="w-100 d-flex flex-column align-items-center justify-content-center background">
             <div class="bg-white p-4 rounded overflow-auto position-relative w-100 main-container">
                 <div class="position-absolute end-0 top-0 mt-3 me-4 d-flex gap-1">
-                    <IconButton t-if="!store.base.is_access_point_up" onClick.bind="toggleAdvanced" icon="this.store.advanced ? 'fa-cog' : 'fa-cogs'" />
-                    <IconButton onClick.bind="restartOdooService" icon="'fa-power-off'" />
+                    <IconButton t-if="!this.store.base().is_access_point_up" onClick.bind="this.toggleAdvanced" icon="this.store.advanced() ? 'fa-cog' : 'fa-cogs'" />
+                    <IconButton onClick.bind="this.restartOdooService" icon="'fa-power-off'" />
                 </div>
                 <div class="d-flex mb-4 flex-column align-items-center justify-content-center">
                     <h4 class="text-center m-0">IoT Box</h4>
                 </div>
-                <div t-if="!state.data.certificate_end_date and !store.base.is_access_point_up" class="alert alert-warning" role="alert">
+                <div t-if="!this.store.base().certificate_end_date and !this.store.base().is_access_point_up" class="alert alert-warning" role="alert">
                     <p class="m-0 fw-bold">
                         This IoT Box doesn't have a valid certificate.
                     </p>
@@ -129,41 +128,41 @@ export class Homepage extends Component {
                         try to restart it.
                     </small>
                 </div>
-                <div t-if="store.advanced and state.data.certificate_end_date and !store.base.is_access_point_up" class="alert alert-info" role="alert">
-                    Your IoT Box subscription is valid until <span class="fw-bold" t-esc="state.data.certificate_end_date"/>.
+                <div t-if="this.store.advanced() and this.store.base().certificate_end_date and !this.store.base().is_access_point_up" class="alert alert-info" role="alert">
+                    Your IoT Box subscription is valid until <span class="fw-bold" t-out="this.store.base().certificate_end_date"/>.
                 </div>
-                <div t-if="store.base.is_access_point_up" class="alert alert-info" role="alert">
+                <div t-if="this.store.base().is_access_point_up" class="alert alert-info" role="alert">
                     <p class="m-0 fw-bold">No Internet Connection</p>
                     <small>
                         Please connect your IoT Box to internet via an ethernet cable or via Wi-Fi by clicking on "Configure" below
                     </small>
                 </div>
-                <SingleData name="'Identifier'" value="state.data.identifier" icon="'fa-address-card'" />
-                <SingleData t-if="store.advanced" name="'Mac Address'" value="state.data.mac_address" icon="'fa-address-book'" />
-                <SingleData t-if="store.advanced" name="'Version'" value="state.data.version" icon="'fa-microchip'">
+                <SingleData name="'Identifier'" value="this.store.base().identifier" icon="'fa-address-card'" />
+                <SingleData t-if="this.store.advanced()" name="'Mac Address'" value="this.store.base().mac_address" icon="'fa-address-book'" />
+                <SingleData t-if="this.store.advanced()" name="'Version'" value="this.store.base().version" icon="'fa-microchip'">
                     <t t-set-slot="button">
                         <UpdateDialog />
                     </t>
                 </SingleData>
-                <SingleData t-if="store.advanced" name="'IP address'" value="state.data.ip" icon="'fa-globe'" />
-                <SingleData t-if="store.isLinux" name="'Internet Status'" value="networkStatus" icon="'fa-wifi'">
+                <SingleData t-if="this.store.advanced()" name="'IP address'" value="this.store.base().ip" icon="'fa-globe'" />
+                <SingleData t-if="this.store.isLinux()" name="'Internet Status'" value="this.networkStatus()" icon="'fa-wifi'">
                     <t t-set-slot="button">
                         <WifiDialog />
                     </t>
                 </SingleData>
-                <SingleData t-if="!store.base.is_access_point_up" name="'Odoo database connected'" value="state.data.server_status" icon="'fa-link'">
+                <SingleData t-if="!this.store.base().is_access_point_up" name="'Odoo database connected'" value="this.store.base().server_status" icon="'fa-link'">
                     <t t-set-slot="button">
                         <DatabaseDialog />
                     </t>
                 </SingleData>
-                <SingleData t-if="state.data.pairing_code and !this.store.base.is_access_point_up and !state.data.pairing_code_expired" name="'Pairing Code'" value="state.data.pairing_code + ' - Enter this code in the IoT app in your Odoo database'" icon="'fa-code'"/>
-                <SingleData t-if="state.data.pairing_code_expired" name="'Pairing Code'" value="'Code has expired - restart the IoT Box to generate a new one'" icon="'fa-code'"/>
-                <SingleData  t-if="store.advanced and !store.base.is_access_point_up" name="'Six terminal'" value="state.data.six_terminal" icon="'fa-money'">
+                <SingleData t-if="this.store.base().pairing_code and !this.store.base().is_access_point_up and !this.store.base().pairing_code_expired" name="'Pairing Code'" value="this.store.base().pairing_code + ' - Enter this code in the IoT app in your Odoo database'" icon="'fa-code'"/>
+                <SingleData t-if="this.store.base().pairing_code_expired" name="'Pairing Code'" value="'Code has expired - restart the IoT Box to generate a new one'" icon="'fa-code'"/>
+                <SingleData  t-if="this.store.advanced() and !this.store.base().is_access_point_up" name="'Six terminal'" value="this.store.base().six_terminal" icon="'fa-money'">
                     <t t-set-slot="button">
                         <SixTerminalDialog />
                     </t>
                 </SingleData>
-                <SingleData t-if="!this.store.base.is_access_point_up" name="'Devices'" value="numDevices + ' devices'" icon="'fa-plug'">
+                <SingleData t-if="!this.store.base().is_access_point_up" name="'Devices'" value="this.numDevices() + ' devices'" icon="'fa-plug'">
                     <t t-set-slot="button">
                         <DeviceDialog />
                     </t>
@@ -171,7 +170,7 @@ export class Homepage extends Component {
 
                 <hr class="mt-5" />
                 <FooterButtons />
-                <div class="d-flex justify-content-center gap-2 mt-2" t-if="!store.base.is_access_point_up">
+                <div class="d-flex justify-content-center gap-2 mt-2" t-if="!this.store.base().is_access_point_up">
                     <a href="https://www.odoo.com/fr_FR/help" target="_blank" class="link-primary">Help</a>
                     <a href="https://www.odoo.com/documentation/latest/applications/general/iot.html" target="_blank" class="link-primary">Documentation</a>
                 </div>

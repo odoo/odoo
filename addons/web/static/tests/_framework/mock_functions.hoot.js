@@ -11,7 +11,7 @@ import { after } from "@odoo/hoot";
  * @param {OdooModuleFactory} factory
  */
 export function mockFunctionsFactory(name, { fn }) {
-    return (...args) => {
+    return function mockFunctions(...args) {
         function clearMemoizeCaches() {
             for (const cache of memoizeCaches) {
                 cache.clear();

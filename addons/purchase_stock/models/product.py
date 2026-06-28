@@ -140,19 +140,24 @@ class ProductProduct(models.Model):
                 - going to other warehouses (eg. central warehouse dispatching to stores)
             (We don't include returns in demand estimation - they come back on hand)
         """
+        non_return_moves_domain = ['!', ('move_dest_ids.origin_returned_move_id', '=', False)]
         if not warehouse_id:
-            return Domain.OR([
-                [('location_dest_usage', 'in', ['customer', 'production'])],
-                [('location_final_id.usage', 'in', ['customer', 'production'])],
+            return Domain.AND([
+                Domain.OR([
+                    [('location_dest_usage', 'in', ['customer', 'production'])],
+                    [('forecasted_location_id.usage', 'in', ['customer', 'production'])],
+                ]),
+                non_return_moves_domain,
             ])
         else:
             return Domain.AND([
                 [('location_id.warehouse_id', '=', warehouse_id)],
                 Domain.OR([
                     [('location_dest_id.warehouse_id', '!=', warehouse_id)],
-                    [('location_final_id.warehouse_id', '!=', warehouse_id)]
+                    [('forecasted_location_id.warehouse_id', '!=', warehouse_id)]
                 ]),  # includes moves going to customer or production
-                [('location_dest_id.usage', '!=', 'inventory')]  # exclude scrap
+                [('location_dest_id.usage', '!=', 'inventory')],  # exclude scrap
+                non_return_moves_domain,
             ])
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
@@ -164,7 +169,7 @@ class ProductProduct(models.Model):
         qty_by_product_location, qty_by_product_wh = super()._get_quantity_in_progress(location_ids, warehouse_ids)
         domain = self._get_lines_domain(location_ids, warehouse_ids)
         groups = self.env['purchase.order.line'].sudo()._read_group(domain,
-            ['order_id', 'product_id', 'uom_id', 'orderpoint_id', 'location_final_id'],
+            ['order_id', 'product_id', 'uom_id', 'orderpoint_id', 'forecasted_location_id'],
             ['product_qty:sum'])
         for order, product, uom, orderpoint, location_final, product_qty_sum in groups:
             if orderpoint:
@@ -191,11 +196,11 @@ class ProductProduct(models.Model):
                     ('orderpoint_id', '=', False),
                     '|',
                         '&',
-                            ('location_final_id', '=', False),
+                            ('forecasted_location_id', '=', False),
                             ('order_id.picking_type_id.default_location_dest_id', 'in', location_ids),
                         '&',
                             ('move_ids', '=', False),
-                            ('location_final_id', 'child_of', location_ids),
+                            ('forecasted_location_id', 'child_of', location_ids),
                     '&',
                         ('move_dest_ids', '=', False),
                         ('orderpoint_id.location_id', 'in', location_ids)
@@ -239,12 +244,11 @@ class ProductProduct(models.Model):
 
         return start_date, limit_date
 
-    def get_total_routes(self):
-        routes = super().get_total_routes()
+    def get_routes_actions(self):
+        actions = super().get_routes_actions()
         if self.seller_ids:
-            buy_routes = self.env['stock.rule'].search([('action', '=', 'buy')]).route_id
-            routes |= buy_routes
-        return routes
+            actions += ['buy']
+        return actions
 
 
 class ProductSupplierinfo(models.Model):

@@ -1,14 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" ?>
 <odoo>
     <record id="hr_employee_view_form" model="ir.ui.view">
         <field name="name">hr.employee.view.form.inherit.hr.work.entry</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
-        <field name="priority" eval="90"/>
         <field name="arch" type="xml">
-            <separator name="schedule" position="after">
-                <field name="work_entry_source" invisible="1"/>
-            </separator>
+            <group name="identification_group" position="after">
+                <group name="exports" string="Export">
+                    <field name="external_code" placeholder="Code used in work entry exports"/>
+                </group>
+            </group>
         </field>
     </record>
 </odoo>

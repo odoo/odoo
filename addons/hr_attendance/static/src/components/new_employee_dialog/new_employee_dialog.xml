@@ -4,37 +4,31 @@
         <Dialog title="this.props.title" footer="this.props.footer" bodyClass="'overflow-visible'" contentClass="'overflow-visible'">
             <div class="p-3">
                 <div class="mb-3">
-                    <label class="form-label">Create the name of the new employee below</label>
-                    <div class="d-flex">
-                        <input type="text" t-custom-model="state.employeeName" class="form-control me-2" placeholder="e.g. John Doe"/>
-                        <button class="btn btn-primary" t-on-click="this.onCreate">Confirm</button>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Select Employee Without Badge</label>
+                    <label class="form-label fw-bold">Employee</label>
                     <div class="o_select_employee align-items-start">
-                        <div class="o_select_employee_display form-control">
+                        <div class="o_select_employee_display form-control mb-3">
                             <img t-if="this.state.value" class="d-flex rounded" t-attf-src="/web/image/hr.employee.public/{{this.state.value.id}}/avatar_128"/>
                             <div class="o_select_employee_option p-0">
                                 <Many2One value="this.state.searchName" update.bind="this.onSelectEmployee" token="this.props.token"/>
                             </div>
                         </div>
-                        <input type="text" t-custom-model="state.badgeId" class="form-control" placeholder="Enter Badge Number"/>
-                        <div class="d-flex flex-column gap-2">
-                            <button class="btn btn-primary"
+                        <label for="badgeNumberInput" class="form-label fw-bold">Badge Number</label>
+                        <div class="d-flex w-100 gap-2">
+                            <input id="badgeNumberInput" type="text" t-model.proxy="this.state.badgeId" class="form-control" placeholder="Scan or enter badge number"/>
+                            <button class="btn btn-primary text-nowrap"
                                 style="min-width: max-content;"
                                 t-on-click="this.onSetBadge">
-                                Set the Badge
-                            </button>                            
+                                Assign Badge
+                            </button>
                             <a
                                 title="Print"
                                 role="button"
-                                class="btn btn-secondary w-100"
+                                class="btn btn-secondary text-nowrap"
                                 t-att-href="`/hr_attendance/print_badge?employee_id=${this.state.value?.id}&amp;token=${this.props.token}`"
                                 target="_self"
                                 t-if="this.state.value and this.state.employeeHasBadge"
                             >
-                                Print It
+                                Print Badge
                             </a>
                         </div>
                     </div>

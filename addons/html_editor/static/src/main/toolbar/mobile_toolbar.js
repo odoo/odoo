@@ -1,33 +1,46 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, useListener } from "@odoo/owl";
 import { Toolbar } from "./toolbar";
 
 export class ToolbarMobile extends Component {
     static template = "html_editor.MobileToolbar";
-    static props = ["*"];
+    static props = {
+        editable: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
+        class: { type: String, optional: true },
+        state: Object,
+        getSelection: Function,
+        focusEditable: Function,
+    };
     static components = {
         Toolbar,
     };
 
     setup() {
         this.toolbar = useRef("toolbarWrapper");
-        useExternalListener(window.visualViewport, "resize", this.fixToolbarPosition);
-        useExternalListener(window.visualViewport, "scroll", this.fixToolbarPosition);
-        onMounted(() => {
-            this.fixToolbarPosition();
-        });
+        try {
+            const innerWindow = this.props.editable.ownerDocument.defaultView;
+            const frameElement = innerWindow.frameElement;
+            this.targetWindow = frameElement?.ownerDocument.defaultView ?? window;
+        } catch {
+            // iframe origin or sandbox restriction
+            this.targetWindow = window;
+        }
+        useListener(this.targetWindow.visualViewport, "resize", this.fixToolbarPosition.bind(this));
+        useListener(this.targetWindow.visualViewport, "scroll", this.fixToolbarPosition.bind(this));
+
+        onMounted(() => this.fixToolbarPosition());
     }
 
     /**
      * Fixes the position of the toolbar for the keyboard height.
      */
     fixToolbarPosition() {
-        const keyboardHeight =
-            window.innerHeight - (window.visualViewport.height + window.visualViewport.offsetTop);
-        if (keyboardHeight > 0) {
-            this.toolbar.el.style.bottom = `${keyboardHeight}px`;
-        } else {
-            this.toolbar.el.style.bottom = `0px`;
-        }
+        const visualViewport = this.targetWindow.visualViewport;
+        const keyboardHeight = Math.max(
+            0,
+            this.targetWindow.innerHeight - (visualViewport.height + visualViewport.offsetTop)
+        );
+
+        this.toolbar.el.style.bottom = `${keyboardHeight}px`;
     }
 }

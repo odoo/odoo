@@ -4,7 +4,7 @@ from odoo.fields import Command, Domain
 from odoo.tools import frozendict, groupby, html2plaintext, is_html_empty, split_every, SQL
 from odoo.tools.float_utils import float_is_zero, float_repr, float_round, float_compare
 from odoo.tools.misc import clean_context, formatLang
-from odoo.tools.translate import html_translate
+from odoo.tools.translate import html_translate, adapt_translated_field_value
 
 from collections import defaultdict
 from collections.abc import Iterable
@@ -95,7 +95,7 @@ class AccountTax(models.Model):
     name = fields.Char(string='Tax Name', required=True, translate=True, tracking=True)
     type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Type', required=True, default="sale", tracking=True,
         help="Determines where the tax is selectable. Note: 'None' means a tax can't be used by itself, however it can still be used in a group. 'adjustment' is used to perform tax adjustment.")
-    tax_scope = fields.Selection([('service', 'Services'), ('consu', 'Goods')], string="Tax Scope", help="Restrict the use of taxes to a type of product.")
+    tax_scope = fields.Selection([('service', 'Services'), ('consu', 'Goods')], string="Tax Scope")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True, tracking=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage'), ('division', 'Percentage Tax Included')],
         help="""
@@ -184,6 +184,7 @@ class AccountTax(models.Model):
         "Based on Payment: the tax is due as soon as the payment of the invoice is received.")
     cash_basis_transition_account_id = fields.Many2one(string="Cash Basis Transition Account",
         check_company=True,
+        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         comodel_name='account.account',
         help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.")
     invoice_repartition_line_ids = fields.One2many(
@@ -259,16 +260,6 @@ class AccountTax(models.Model):
             if record.tax_group_id.country_id and record.tax_group_id.country_id != record.country_id:
                 raise ValidationError(_("The tax group must have the same country_id as the tax using it."))
 
-    @api.constrains('tax_exigibility', 'cash_basis_transition_account_id')
-    def _constrains_cash_basis_transition_account(self):
-        for record in self:
-            if (
-                record.tax_exigibility == 'on_payment'
-                and not record.cash_basis_transition_account_id.reconcile
-                and not self.env.context.get('chart_template_load')
-            ):
-                raise ValidationError(_("The cash basis transition account needs to allow reconciliation."))
-
     @api.model
     @api.readonly
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
@@ -278,7 +269,16 @@ class AccountTax(models.Model):
         if fp_id := self.env.context.get('dynamic_fiscal_position_id'):
             domain &= Domain('fiscal_position_ids', 'in', [False, int(fp_id)])
         if self.env.context.get('hide_original_tax_ids') and fp_id:
-            domain &= Domain('replacing_tax_ids', 'not any', domain)
+            domain &= Domain('replacing_tax_ids', 'not any', domain) | Domain.custom(
+                to_sql=lambda table: SQL(
+                    "EXISTS (SELECT 1 FROM %s WHERE %s = %s AND %s = %s)",
+                    SQL.identifier('account_tax_alternatives'),
+                    SQL.identifier('src_tax_id'),
+                    table.id,
+                    SQL.identifier('dest_tax_id'),
+                    table.id,
+                ),
+            )
         return super().name_search(name, domain, operator, limit)
 
     @api.depends('company_id')
@@ -361,10 +361,9 @@ class AccountTax(models.Model):
                     WHERE EXISTS(
                         SELECT 1
                         FROM account_move_line_account_tax_rel AS line
-                        WHERE account_tax_id IN %s
-                        AND account_tax.id = line.account_tax_id
-                    ) """,
-                tuple(self.ids),
+                        WHERE account_tax.id = line.account_tax_id
+                    ) AND id IN %s
+                    """, tuple(self.ids),
             )))
             taxes_to_compute = set(self.ids) - used_taxes
 
@@ -377,10 +376,9 @@ class AccountTax(models.Model):
                         WHERE EXISTS(
                             SELECT 1
                             FROM account_reconcile_model_line_account_tax_rel AS reco
-                            WHERE account_tax_id IN %s
-                            AND account_tax.id = reco.account_tax_id
-                        ) """,
-                    tuple(taxes_to_compute)
+                            WHERE account_tax.id = reco.account_tax_id
+                        ) AND id IN %s
+                        """, tuple(taxes_to_compute)
                 )))
                 taxes_to_compute -= used_taxes
 
@@ -438,61 +436,51 @@ class AccountTax(models.Model):
         for (document_type, sequence), old_value, new_value in modified_lines:
             diff_keys = [key for key in old_value if old_value[key] != new_value[key]]
             if diff_keys:
-                body = Markup("<b>{type}</b> {rep} {seq}:<ul class='mb-0 ps-4'>{changes}</ul>").format(
-                    type=document_type.capitalize(),
-                    rep=_('repartition line'),
-                    seq=sequence,
-                    changes=Markup().join(
-                        [Markup("""
-                            <li>
-                                <span class='o-mail-Message-trackingOld me-1 px-1 text-muted fw-bold'>{old}</span>
-                                <i class='o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600'/>
-                                <span class='o-mail-Message-trackingNew me-1 fw-bold text-info'>{new}</span>
-                                <span class='o-mail-Message-trackingField ms-1 fst-italic text-muted'>({diff})</span>
-                            </li>
-                        """).format(old=old_value[diff_key], new=new_value[diff_key], diff=diff_key)
-                        for diff_key in diff_keys]
+                self._track_add(
+                    {self.id: {fname: str(old_value[fname]) for fname in diff_keys}},  # everything logged as pure char
+                    end_values={self.id: {fname: str(new_value[fname]) for fname in diff_keys}},  # everything logged as pure char
+                    fields_info={fname: {'type': 'char', 'string': fname} for fname in diff_keys},
+                    body=Markup("<b>{type}</b> {rep} {seq}").format(
+                        type=document_type.capitalize(),
+                        rep=_('repartition line'),
+                        seq=sequence,
                     )
                 )
-                super()._message_log(body=body)
+                self._track_finalize()
 
         for (document_type, sequence), operation, value in added_and_deleted_lines:
-            body = Markup("<b>{op} {type}</b> {rep} {seq}:<ul class='mb-0 ps-4'>{changes}</ul>").format(
-                op=operation,
-                type=document_type.capitalize(),
-                rep=_('repartition line'),
-                seq=sequence,
-                changes=Markup().join(
-                    [Markup("""
-                        <li>
-                            <span class='o-mail-Message-trackingNew me-1 fw-bold text-info'>{value}</span>
-                            <span class='o-mail-Message-trackingField ms-1 fst-italic text-muted'>({diff})</span>
-                        </li>
-                    """).format(value=value[key], diff=key)
-                    for key in value]
+            changed = [key for key in value if value[key]]
+            if changed:
+                self._track_add(
+                    {self.id: {fname: False for fname in changed}},
+                    end_values={self.id: {fname: str(value[fname]) for fname in changed}},  # everything logged as pure char
+                    fields_info={fname: {'type': 'char', 'string': fname} for fname in changed},
+                    body=Markup("<b>{op} {type}</b> {rep} {seq}").format(
+                        op=operation,
+                        type=document_type.capitalize(),
+                        rep=_('repartition line'),
+                        seq=sequence,
+                    )
                 )
-            )
-            super()._message_log(body=body)
+                self._track_finalize()
         return
 
-    def _message_log(self, **kwargs):
-        # OVERRIDE _message_log
-        # We only log the modification of the tracked fields if the tax is
-        # currently used in transactions. We remove the `repartition_lines_str`
-        # from tracked value to avoid having it logged twice (once in the raw
-        # string format and one in the nice formatted way thanks to
-        # `_message_log_repartition_lines`)
-
-        self.ensure_one()
-
-        if self.is_used:
-            repartition_line_str_field_id = self.env['ir.model.fields']._get('account.tax', 'repartition_lines_str').id
-            for tracked_value_id in kwargs['tracking_value_ids']:
-                if tracked_value_id[2]['field_id'] == repartition_line_str_field_id:
-                    kwargs['tracking_value_ids'].remove(tracked_value_id)
-                    self._message_log_repartition_lines(tracked_value_id[2]['old_value_char'], tracked_value_id[2]['new_value_char'])
-
-            return super()._message_log(**kwargs)
+    def _track_execute(self, track_init_values, trackings, track_records=None):
+        to_update, old_values, new_values = self.browse(), [], []
+        super_trackings = {}
+        for record in self:
+            changes, tracking_values = trackings.get(record.id, (None, None))
+            if changes and 'repartition_lines_str' in changes:
+                to_update |= record
+                repartition_lines_str_track = next((value for value in tracking_values if value.get('field_name') == 'repartition_lines_str'), {})
+                old_values.append(repartition_lines_str_track.get('old_value_char'))
+                new_values.append(repartition_lines_str_track.get('new_value_char'))
+            super_changes = [fname for fname in changes if fname != 'repartition_lines_str']
+            super_trackings[record.id] = (super_changes, tracking_values)
+        res = super()._track_execute(track_init_values, super_trackings, track_records=track_records)
+        for record, old_value, new_value in zip(to_update, old_values, new_values):
+            record._message_log_repartition_lines(old_value, new_value)
+        return res
 
     @api.depends('company_id')
     def _compute_invoice_repartition_line_ids(self):
@@ -622,6 +610,10 @@ class AccountTax(models.Model):
 
     @api.constrains('company_id')
     def _check_company_consistency(self):
+        if self.env.context.get('from_account_tax_creation') is True:
+            # we're creating a new tax, skip usage consistency check as there
+            # could not be any usage prior to its creation.
+            return
         for company, taxes in groupby(self, lambda tax: tax.company_id):
             if self.env['account.move.line'].search_count([
                 '|',
@@ -636,8 +628,12 @@ class AccountTax(models.Model):
         sanitized = vals.copy()
 
         # Wrap plain text in <div> if description has no HTML tags to avoid the padding with automatically added <p>
-        if sanitized.get('description') and not re.search(r'<[^>]+>', sanitized['description']):
-            sanitized['description'] = f"<div>{sanitized['description']}</div>"
+        if sanitized.get('description'):
+            sanitized['description'] = adapt_translated_field_value(
+                self.env,
+                sanitized.get('description'),
+                lambda lang, v: f"<div>{v}</div>" if not re.search(r'<[^>]+>', v) else v
+            )
 
         # Allow to provide invoice_repartition_line_ids and refund_repartition_line_ids by dispatching them
         # correctly in the repartition_line_ids
@@ -662,16 +658,19 @@ class AccountTax(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        self.env.cr.cache.pop('retrieved_tax_map', None)
         context = clean_context(self.env.context)
         context.update({
-            'mail_create_nosubscribe': True, # At create or message_post, do not subscribe the current user to the record thread
-            'mail_auto_subscribe_no_notify': True, # Do no notify users set as followers of the mail thread
-            'mail_create_nolog': True, # At create, do not log the automatic ‘<Document> created’ message
+            'mail_create_nosubscribe': True,  # At create or message_post, do not subscribe the current user to the record thread
+            'mail_auto_subscribe_no_notify': True,  # Do no notify users set as followers of the mail thread
+            'mail_create_nolog': True,  # At create, do not log the automatic "<Document> created" message
+            'from_account_tax_creation': True,  # At create, skip some usage consistency checks
         })
         taxes = super(AccountTax, self.with_context(context)).create([self._sanitize_vals(vals) for vals in vals_list])
-        return taxes
+        return taxes.with_context(self.env.context)
 
     def write(self, vals):
+        self.env.cr.cache.pop('retrieved_tax_map', None)
         return super().write(self._sanitize_vals(vals))
 
     def copy_data(self, default=None):
@@ -722,11 +721,6 @@ class AccountTax(models.Model):
                 for rep_line in tax.invoice_repartition_line_ids
                 if rep_line.repartition_type == 'tax' and not rep_line.use_in_tax_closing
             )
-
-    @api.onchange('amount')
-    def onchange_amount(self):
-        if self.amount_type in ('percent', 'division') and self.amount != 0.0 and not self.invoice_label:
-            self.invoice_label = "{0:.4g}%".format(self.amount)
 
     @api.onchange('amount_type')
     def onchange_amount_type(self):
@@ -938,7 +932,29 @@ class AccountTax(models.Model):
                 sorted_taxes |= tax
         return sorted_taxes, group_per_tax
 
-    def _batch_for_taxes_computation(self, special_mode=False, filter_tax_function=None):
+    def _is_price_included(self, document_tax_mode=None, special_mode=False):
+        """ Get the price_include value of the tax, taking into account the document_tax_mode.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param document_tax_mode:   The tax mode of the document.
+        :return:                    True if the tax is price included, False otherwise.
+        """
+        self.ensure_one()
+        if self.has_negative_factor:
+            return False
+        if special_mode == 'total_included':
+            return True
+        if special_mode == 'total_excluded':
+            return False
+        if self.price_include_override:
+            return self.price_include_override == 'tax_included'
+        if document_tax_mode:
+            return document_tax_mode == 'tax_included'
+        return self.price_include
+
+    def _batch_for_taxes_computation(self, special_mode=False, filter_tax_function=None, document_tax_mode=None):
         """ Group the current taxes all together like price-included percent taxes or division taxes.
 
         [!] Mirror of the same method in account_tax.js.
@@ -946,6 +962,7 @@ class AccountTax(models.Model):
 
         :param special_mode:        The special mode of the taxes computation: False, 'total_excluded' or 'total_included'.
         :param filter_tax_function: Optional function to filter out some taxes from the computation.
+        :param document_tax_mode:   The tax mode of the document.
         :return: A dictionary containing:
             * batch_per_tax: A mapping of each tax to its batch.
             * group_per_tax: A mapping of each tax retrieved from a group of taxes.
@@ -971,7 +988,7 @@ class AccountTax(models.Model):
             if batch:
                 same_batch = (
                     tax.amount_type == batch[0].amount_type
-                    and (special_mode or tax.price_include == batch[0].price_include)
+                    and (special_mode or tax._is_price_included(document_tax_mode) == batch[0]._is_price_included(document_tax_mode))
                     and tax.include_base_amount == batch[0].include_base_amount
                     and (
                         (tax.include_base_amount and not is_base_affected)
@@ -1022,7 +1039,7 @@ class AccountTax(models.Model):
                 taxes_data[other_tax.id]['extra_base_for_tax'] += sign * tax_amount
             taxes_data[other_tax.id]['extra_base_for_base'] += sign * tax_amount
 
-        if tax.price_include:
+        if taxes_data[tax.id]['original_price_include']:
 
             # Suppose:
             # 1.
@@ -1065,7 +1082,7 @@ class AccountTax(models.Model):
                         if other_tax.is_base_affected:
                             add_extra_base(other_tax, 1)
 
-        elif not tax.price_include:
+        else:
 
             # Case of a tax affecting the base of the subsequent ones, no price included taxes.
             if special_mode in (False, 'total_excluded'):
@@ -1163,6 +1180,7 @@ class AccountTax(models.Model):
         special_mode=False,
         manual_tax_amounts=None,
         filter_tax_function=None,
+        document_tax_mode=None,
     ):
         """ Compute the tax/base amounts for the current taxes.
 
@@ -1185,6 +1203,7 @@ class AccountTax(models.Model):
                             Note: You can only expect accurate symmetrical taxes computation with not rounded price_unit
                             as input and 'round_globally' computation. Otherwise, it's not guaranteed.
         :param filter_tax_function: Optional function to filter out some taxes from the computation.
+        :param document_tax_mode:   The tax mode of the document.
         :return: A dict containing:
             'evaluation_context':       The evaluation_context parameter.
             'taxes_data':               A list of dictionaries, one per tax containing:
@@ -1216,24 +1235,18 @@ class AccountTax(models.Model):
                 add_tax_amount_to_results(tax, tax_amount)
 
         def prepare_tax_extra_data(tax, **kwargs):
-            if tax.has_negative_factor:
-                price_include = False
-            elif special_mode == 'total_included':
-                price_include = True
-            elif special_mode == 'total_excluded':
-                price_include = False
-            else:
-                price_include = tax.price_include
             return {
                 **kwargs,
                 'tax': tax,
-                'price_include': price_include,
+                'price_include': tax._is_price_included(document_tax_mode, special_mode),
+                'original_price_include': tax._is_price_included(document_tax_mode),
+                'document_tax_mode': document_tax_mode,
                 'extra_base_for_tax': 0.0,
                 'extra_base_for_base': 0.0,
             }
 
         # Flatten the taxes, order them and filter them if necessary.
-        batching_results = self._batch_for_taxes_computation(special_mode=special_mode, filter_tax_function=filter_tax_function)
+        batching_results = self._batch_for_taxes_computation(special_mode=special_mode, filter_tax_function=filter_tax_function, document_tax_mode=document_tax_mode)
         sorted_taxes = batching_results['sorted_taxes']
         taxes_data = {}
         reverse_charge_taxes_data = {}
@@ -1260,6 +1273,7 @@ class AccountTax(models.Model):
             'quantity': quantity,
             'raw_base': raw_base,
             'special_mode': special_mode,
+            'document_tax_mode': document_tax_mode,
         }
 
         # Define the order in which the taxes must be evaluated.
@@ -1344,6 +1358,8 @@ class AccountTax(models.Model):
                     'batch': batching_results['batch_per_tax'][tax_data['tax'].id],
                     'tax_amount': tax_data['tax_amount'],
                     'price_include': tax_data['price_include'],
+                    'original_price_include': tax_data['original_price_include'],
+                    'raw_base': raw_base,
                     'base_amount': tax_data['base'],
                     'is_reverse_charge': tax_data.get('is_reverse_charge', False),
                 }
@@ -1356,7 +1372,7 @@ class AccountTax(models.Model):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _adapt_price_unit_to_another_taxes(self, price_unit, product, original_taxes, new_taxes, product_uom=None):
+    def _adapt_price_unit_to_another_taxes(self, price_unit, product, original_taxes, new_taxes, product_uom=None, document_tax_mode=None):
         """ From the price unit and taxes given as parameter, compute a new price unit corresponding to the
         new taxes.
 
@@ -1372,14 +1388,15 @@ class AccountTax(models.Model):
         [!] Mirror of the same method in account_tax.js.
         PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
 
-        :param price_unit:      The original price_unit.
-        :param product:         The product.
-        :param original_taxes:  A recordset of taxes from where you come from.
-        :param new_taxes:       A recordset of the taxes you are mapping the price unit to.
-        :param product_uom:     The product uom.
-        :return:                The price_unit after mapping of taxes.
+        :param price_unit:          The original price_unit.
+        :param product:             The product.
+        :param original_taxes:      A recordset of taxes from where you come from.
+        :param new_taxes:           A recordset of the taxes you are mapping the price unit to.
+        :param product_uom:         The product uom.
+        :param document_tax_mode:   The tax mode of the document.
+        :return:                    The price_unit after mapping of taxes.
         """
-        if original_taxes == new_taxes or False in original_taxes.mapped('price_include'):
+        if original_taxes == new_taxes or any(not tax._is_price_included(document_tax_mode) for tax in original_taxes):
             return price_unit
 
         # Find the price unit without tax.
@@ -1389,6 +1406,7 @@ class AccountTax(models.Model):
             rounding_method='round_globally',
             product=product,
             product_uom=product_uom,
+            document_tax_mode=document_tax_mode,
         )
         price_unit = taxes_computation['total_excluded']
 
@@ -1401,7 +1419,7 @@ class AccountTax(models.Model):
             product_uom=product_uom,
             special_mode='total_excluded',
         )
-        delta = sum(x['tax_amount'] for x in taxes_computation['taxes_data'] if x['tax'].price_include)
+        delta = sum(x['tax_amount'] for x in taxes_computation['taxes_data'] if x['tax']._is_price_included(document_tax_mode))
         return price_unit + delta
 
     # -------------------------------------------------------------------------
@@ -1461,6 +1479,7 @@ class AccountTax(models.Model):
             results['computation_key'] = extra_tax_data['computation_key']
 
         manual_tax_amounts = extra_tax_data.get('manual_tax_amounts') or {} if extra_tax_data else None
+        extra_tax_data_tax_ids = set(manual_tax_amounts or {})
         sorted_taxes = base_line['tax_ids']._flatten_taxes_and_sort_them()[0]
         if (
             extra_tax_data
@@ -1469,7 +1488,8 @@ class AccountTax(models.Model):
             and base_line['currency_id'].compare_amounts(base_line['price_unit'], extra_tax_data['price_unit']) == 0
             and base_line['currency_id'].compare_amounts(base_line['discount'], extra_tax_data['discount']) == 0
             and base_line['currency_id'].compare_amounts(base_line['quantity'], extra_tax_data['quantity']) == 0
-            and all(str(tax.id) in extra_tax_data['manual_tax_amounts'] for tax in sorted_taxes)
+            and len(sorted_taxes) == len(extra_tax_data_tax_ids)
+            and all(str(tax.id) in extra_tax_data_tax_ids for tax in sorted_taxes)
         ):
             results['price_unit'] = extra_tax_data['price_unit']
 
@@ -1649,6 +1669,12 @@ class AccountTax(models.Model):
             # - total_excluded to force all taxes to be price excluded.
             'special_mode': kwargs.get('special_mode') or False,
 
+            # The document_tax_mode for the taxes computation:
+            # - False for non-document cases.
+            # - tax_included to get price_unit including all taxes.
+            # - tax_excluded to get price_unit excluding all taxes.
+            'document_tax_mode': load('document_tax_mode', False),
+
             # A special typing of base line for some custom behavior:
             # - False for the normal behavior.
             # - early_payment if the base line represent an early payment in mixed mode.
@@ -1785,6 +1811,7 @@ class AccountTax(models.Model):
             product_uom=base_line['product_uom_id'],
             special_mode=base_line['special_mode'],
             filter_tax_function=base_line['filter_tax_function'],
+            document_tax_mode=base_line['document_tax_mode'],
         )
 
         # Only python side for professional with reverse charge
@@ -2081,7 +2108,14 @@ class AccountTax(models.Model):
             if mode == 'mixed':
                 current_mode = 'included'
                 for base_line, taxes_data in values['base_line_x_taxes_data']:
-                    if any(not tax_data['price_include'] for tax_data in taxes_data):
+                    if any(
+                        not tax_data['price_include']
+                        for tax_data in taxes_data
+                        if (
+                            not base_line['currency_id'].is_zero(tax_data['tax_amount_currency'])
+                            or not company.currency_id.is_zero(tax_data['tax_amount'])
+                        )
+                    ):
                         current_mode = 'excluded'
                         break
 
@@ -2862,15 +2896,18 @@ class AccountTax(models.Model):
 
             # Get all involved taxes in the tax group.
             involved_taxes = self.env['account.tax']
-            for _base_line, taxes_data in values['base_line_x_taxes_data']:
+            involved_price_include = set()
+            for base_line, taxes_data in values['base_line_x_taxes_data']:
                 for tax_data in taxes_data:
-                    involved_taxes |= tax_data['tax']
+                    tax = tax_data['tax']
+                    involved_taxes |= tax
+                    involved_price_include.add(tax_data['price_include'])
 
             # Compute the display base amounts.
             if set(involved_taxes.mapped('amount_type')) == {'fixed'}:
                 display_base_amount = False
                 display_base_amount_currency = False
-            elif set(involved_taxes.mapped('amount_type')) == {'division'} and all(involved_taxes.mapped('price_include')):
+            elif set(involved_taxes.mapped('amount_type')) == {'division'} and involved_price_include == {True}:
                 display_base_amount = 0.0
                 display_base_amount_currency = 0.0
                 for base_line, _taxes_data in values['base_line_x_taxes_data']:
@@ -3543,6 +3580,7 @@ class AccountTax(models.Model):
         computation_key=None,
         grouping_function=None,
         aggregate_function=None,
+        document_tax_mode=None,
     ):
         """
 
@@ -3555,6 +3593,7 @@ class AccountTax(models.Model):
                                     being the way the base lines will be aggregated all together.
                                     By default, the base lines will be aggregated by taxes.
         :param aggregate_function:  An optional function taking the 2 base lines as parameter to be aggregated together.
+        :param document_tax_mode:   The tax mode of the document.
         :return:                    A new list of base lines having total amounts exactly matching the expected 'amount'/'amount_type'.
         """
         if not base_lines:
@@ -4067,7 +4106,7 @@ class AccountTax(models.Model):
                     + sum(
                         sub_tax_data['raw_tax_amount_currency']
                         for sub_tax_data in second_tax_details['taxes_data']
-                        if sub_tax_data['tax'].price_include
+                        if sub_tax_data['tax']._is_price_included(base_line['document_tax_mode'])
                     )
                 ) / (base_line['quantity'] or 1.0),
                 tax_details=second_tax_details,
@@ -4438,6 +4477,93 @@ class AccountTax(models.Model):
             base_line['tax_details'][raw_field] += amount_to_distribute
 
     @api.model
+    def _get_gross_total_without_tax(self, base_line, company, in_foreign_currency=True, account_discount_base_lines=False, precision_digits=None):
+        """ Infer the gross total without tax from the base line.
+
+        :param base_line:                   A base line (see '_prepare_base_line_for_taxes_computation').
+        :param company:                     The company owning the base line.
+        :param in_foreign_currency:         True if to be applied on amounts expressed in foreign currency,
+                                            False for amounts expressed in company currency.
+        :param account_discount_base_lines: Account the distributed global discount in 'discount_base_lines'
+                                            using '_dispatch_global_discount_lines' in 'raw_discount_amount'.
+        :param precision_digits:            The precision to be used to round.
+        :return:                            The gross total without tax.
+        """
+        suffix = '_currency' if in_foreign_currency else ''
+
+        tax_details = base_line['tax_details']
+        raw_total_excluded = tax_details[f'raw_total_excluded{suffix}']
+
+        discount_factor = 1 - (base_line['discount'] / 100.0)
+        if discount_factor:
+            raw_gross_total_excluded = raw_total_excluded / discount_factor
+        elif in_foreign_currency:
+            raw_gross_total_excluded = base_line['price_unit'] * base_line['quantity']
+        elif base_line['rate']:
+            raw_gross_total_excluded = base_line['price_unit'] * base_line['quantity'] / base_line['rate']
+        else:
+            raw_gross_total_excluded = 0.0
+        if account_discount_base_lines:
+            raw_gross_total_excluded -= sum(
+                discount_base_line['tax_details'][f'raw_total_excluded{suffix}']
+                for discount_base_line in base_line.get('discount_base_lines', [])
+            )
+
+        if precision_digits is not None:
+            raw_gross_total_excluded = float_round(raw_gross_total_excluded, precision_digits=precision_digits)
+        return raw_gross_total_excluded
+
+    @api.model
+    def _get_price_unit_without_tax(self, base_line, company, raw_gross_total_excluded, in_foreign_currency=True, precision_digits=None):
+        """ Infer the gross price unit without tax from the base line.
+
+        :param base_line:                   A base line (see '_prepare_base_line_for_taxes_computation').
+        :param company:                     The company owning the base line.
+        :param raw_gross_total_excluded:    The gross total without tax.
+        :param in_foreign_currency:         True if to be applied on amounts expressed in foreign currency,
+                                            False for amounts expressed in company currency.
+        :param precision_digits:            The precision to be used to round.
+        :return:                            The gross price unit without tax.
+        """
+        if (
+            (precision_digits and float_is_zero(raw_gross_total_excluded, precision_digits=precision_digits))
+            or not raw_gross_total_excluded
+        ):
+            if in_foreign_currency:
+                raw_gross_price_unit = base_line['price_unit']
+            elif base_line['rate']:
+                raw_gross_price_unit = base_line['price_unit'] / base_line['rate']
+            else:
+                raw_gross_price_unit = 0.0
+        elif not base_line['quantity']:
+            raw_gross_price_unit = raw_gross_total_excluded
+        else:
+            raw_gross_price_unit = raw_gross_total_excluded / base_line['quantity']
+
+        if precision_digits is not None:
+            raw_gross_price_unit = float_round(raw_gross_price_unit, precision_digits=precision_digits)
+        return raw_gross_price_unit
+
+    @api.model
+    def _get_discount_amount_without_tax(self, base_line, company, raw_gross_total_excluded, in_foreign_currency=True, precision_digits=None):
+        """ Infer the discount amount without tax from the base line.
+
+        :param base_line:                   A base line (see '_prepare_base_line_for_taxes_computation').
+        :param company:                     The company owning the base line.
+        :param raw_gross_total_excluded:    The gross total without tax.
+        :param in_foreign_currency:         True if to be applied on amounts expressed in foreign currency,
+                                            False for amounts expressed in company currency.
+        :param precision_digits:            The precision to be used to round.
+        :return:                            The discount amount without tax.
+        """
+        suffix = '_currency' if in_foreign_currency else ''
+        raw_discount_amount = raw_gross_total_excluded - base_line['tax_details'][f'raw_total_excluded{suffix}']
+
+        if precision_digits is not None:
+            raw_discount_amount = float_round(raw_discount_amount, precision_digits=precision_digits)
+        return raw_discount_amount
+
+    @api.model
     def _add_and_round_raw_gross_total_excluded_and_discount(
         self,
         base_lines,
@@ -4474,39 +4600,43 @@ class AccountTax(models.Model):
             tax_details = base_line['tax_details']
             raw_total_excluded = tax_details[raw_field]
 
+            global_discount_sum = 0.0
+            if account_discount_base_lines:
+                global_discount_sum = sum(
+                    discount_base_line['tax_details'][raw_field]
+                    for discount_base_line in base_line.get('discount_base_lines', [])
+                )
+
             discount_factor = 1 - (base_line['discount'] / 100.0)
             if discount_factor:
-                raw_gross_total_excluded = raw_total_excluded / discount_factor
+                raw_gross_total_excluded = (raw_total_excluded - global_discount_sum) / discount_factor
             elif suffix == '_currency':
                 raw_gross_total_excluded = base_line['price_unit'] * base_line['quantity']
             elif base_line['rate']:
                 raw_gross_total_excluded = base_line['price_unit'] * base_line['quantity'] / base_line['rate']
             else:
                 raw_gross_total_excluded = 0.0
-            if account_discount_base_lines:
-                raw_gross_total_excluded -= sum(
-                    discount_base_line['tax_details'][raw_field]
-                    for discount_base_line in base_line.get('discount_base_lines', [])
-                )
             tax_details[f'raw_gross_total_excluded{suffix}'] = float_round(raw_gross_total_excluded, precision_digits=precision_digits)
 
             # Same as before but per unit.
-            if float_is_zero(raw_gross_total_excluded, precision_digits=precision_digits):
-                raw_gross_price_unit = base_line['price_unit']
-                if not suffix:
-                    if base_line['rate']:
-                        raw_gross_price_unit /= base_line['rate']
-                    else:
-                        raw_gross_price_unit = 0.0
-            elif not base_line['quantity']:
-                raw_gross_price_unit = raw_gross_total_excluded
-            else:
-                raw_gross_price_unit = raw_gross_total_excluded / base_line['quantity']
-            tax_details[f'raw_gross_price_unit{suffix}'] = float_round(raw_gross_price_unit, precision_digits=precision_digits)
+            raw_gross_price_unit = self._get_price_unit_without_tax(
+                base_line=base_line,
+                company=company,
+                raw_gross_total_excluded=raw_gross_total_excluded,
+                in_foreign_currency=in_foreign_currency,
+                precision_digits=precision_digits,
+            )
+            tax_details[f'raw_gross_price_unit{suffix}'] = raw_gross_price_unit
 
             # Compute the amount of the discount due to the 'discount' value set on 'base_line'.
-            raw_discount_amount = raw_gross_total_excluded - raw_total_excluded
-            tax_details[f'raw_discount_amount{suffix}'] = float_round(raw_discount_amount, precision_digits=precision_digits)
+            raw_discount_amount = self._get_discount_amount_without_tax(
+                base_line=base_line,
+                company=company,
+                raw_gross_total_excluded=raw_gross_total_excluded,
+                in_foreign_currency=in_foreign_currency,
+                precision_digits=precision_digits,
+            )
+            tax_details[f'raw_discount_amount{suffix}'] = raw_discount_amount
 
         # Tolerance.
         if not apply_strict_tolerance:
@@ -4843,7 +4973,7 @@ class AccountTax(models.Model):
                     'analytic': tax.analytic,
                     'use_in_tax_closing': rep_line.use_in_tax_closing,
                     'is_reverse_charge': tax_data['is_reverse_charge'],
-                    'price_include': tax.price_include,
+                    'price_include': tax._is_price_included(base_line['document_tax_mode']),
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': rep_line.id,
                     'group': tax_data['group'],
@@ -4865,42 +4995,140 @@ class AccountTax(models.Model):
             'total_void': total_void,
         }
 
-    def _filter_taxes_by_company(self, company_id):
+    def _filter_taxes_by_company(self, company=None):
         """ Filter taxes by the given company
             It goes through the company hierarchy until a tax is found
         """
         if not self:
             return self
-        taxes, company = self.env['account.tax'], company_id
+
+        company = company or self.env.company
+        taxes = self.env['account.tax']
         while not taxes and company:
             taxes = self.filtered(lambda t: t.company_id == company)
             company = company.sudo().parent_id
         return taxes
 
     @api.model
-    def _fix_tax_included_price(self, price, prod_taxes, line_taxes):
+    def _fix_tax_included_price(self, price, prod_taxes, line_taxes, document_tax_mode=None):
         """Subtract tax amount from price when corresponding "price included" taxes do not apply"""
         # FIXME get currency in param?
         prod_taxes = prod_taxes._origin
         line_taxes = line_taxes._origin
-        incl_tax = prod_taxes.filtered(lambda tax: tax not in line_taxes and tax.price_include)
+        incl_tax = prod_taxes.filtered(lambda tax: tax not in line_taxes and tax._is_price_included(document_tax_mode))
         if incl_tax:
             return incl_tax.compute_all(price)['total_excluded']
         return price
 
     @api.model
-    def _fix_tax_included_price_company(self, price, prod_taxes, line_taxes, company_id):
+    def _fix_tax_included_price_company(self, price, prod_taxes, line_taxes, company_id, document_tax_mode=None):
         if company_id:
             #To keep the same behavior as in _compute_tax_id
             prod_taxes = prod_taxes.filtered(lambda tax: tax.company_id == company_id)
             line_taxes = line_taxes.filtered(lambda tax: tax.company_id == company_id)
-        return self._fix_tax_included_price(price, prod_taxes, line_taxes)
+        return self._fix_tax_included_price(price, prod_taxes, line_taxes, document_tax_mode)
 
     def _get_description_plaintext(self):
         self.ensure_one()
         if is_html_empty(self.description):
             return ''
         return html2plaintext(self.description)
+
+    @api.ondelete(at_uninstall=False)
+    def unlink_except_tax_used(self):
+        if any(self.mapped('is_used')):
+            raise ValidationError(self.env._("You cannot delete taxes that are currently in use. Consider archiving them instead."))
+
+    @api.model
+    def _import_retrieve_tax_from_price_include_exclude(self, tax_values):
+        price_include = tax_values.get('price_include')
+        fiscal_position = tax_values.get('fiscal_position')
+
+        fpos_domain = []
+        if fiscal_position:
+            fpos_domain = Domain('fiscal_position_ids', '=', fiscal_position.id)
+            if fiscal_position.is_domestic:
+                fpos_domain |= Domain('fiscal_position_ids', '=', False)
+
+        criteria = []
+        if not price_include:
+            if fiscal_position:
+                criteria.append({'domain': [('price_include', '=', False)] + fpos_domain})
+            criteria.append({'domain': [('price_include', '=', False)]})
+        if price_include is None or price_include:
+            if fiscal_position:
+                criteria.append({'domain': [('price_include', '=', True)] + fpos_domain})
+            criteria.append({'domain': [('price_include', '=', True)]})
+
+        return {'criteria': criteria}
+
+    @api.model
+    def _import_retrieve_tax(self, search_plan, company, tax_values_list):
+        cache = self.env.cr.cache.setdefault('retrieved_tax_map', {}).setdefault(company.id, {})
+
+        static_domain = Domain(self._check_company_domain(company))
+        for tax_values in tax_values_list:
+            if tax_values.get('tax'):
+                continue
+            tax_domain = (
+               Domain('amount_type', '=', tax_values['amount_type'])
+               & Domain('type_tax_use', '=', tax_values['type_tax_use'])
+               & Domain('amount', '=', tax_values['amount'])
+            )
+            orders = ['sequence', 'id']
+            if name := tax_values.get('name'):
+                tax_domain &= Domain('name', '=', name)
+            if tax_exigibility := tax_values.get('tax_exigibility'):
+                tax_domain &= Domain('tax_exigibility', '=', tax_exigibility)
+            if (
+                (ubl_cii_tax_category_code := tax_values.get('ubl_cii_tax_category_code'))
+                and 'ubl_cii_tax_category_code' in self._fields
+            ):
+                tax_domain &= Domain('ubl_cii_tax_category_code', 'in', (ubl_cii_tax_category_code, False))
+                orders.insert(0, 'ubl_cii_tax_category_code')
+
+            for plan in search_plan:
+                tax = None
+                plan_values = plan(tax_values)
+                if not plan_values:
+                    continue
+
+                for criteria in plan_values['criteria']:
+                    domain = criteria.get('domain')
+                    search_method = criteria.get('search_method')
+                    if domain:
+                        domain = tax_domain & Domain(domain)
+                        cache_key = repr(domain.optimize(self.env['account.tax']))
+                    else:
+                        cache_key = criteria.get('cache_key')
+                        if cache_key:
+                            cache_key = (cache_key, str(tax_domain))
+
+                    # Look at the cache if the value has already been tested with this key.
+                    if cache_key and cache_key in cache:
+                        if tax := cache[cache_key]:
+                            tax_values['tax'] = tax
+                            break
+                        else:
+                            continue
+
+                    if domain:
+                        full_domain = static_domain & Domain(domain)
+                        tax = self.search(full_domain, order=','.join(orders), limit=1)
+                    elif search_method:
+                        tax = search_method({
+                            **criteria,
+                            'static_domain': tax_domain & static_domain,
+                        })
+
+                    if cache_key:
+                        cache[cache_key] = tax
+                    if tax:
+                        tax_values['tax'] = tax
+                        break
+
+                if tax:
+                    break
 
 
 class AccountTaxRepartitionLine(models.Model):
@@ -4924,7 +5152,9 @@ class AccountTaxRepartitionLine(models.Model):
         comodel_name='account.account',
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
         check_company=True,
+        index='btree_not_null',
         help="Account on which to post the tax amount")
+    account_active = fields.Boolean(related='account_id.active', string="Account Active")
     tag_ids = fields.Many2many(string="Tax Grids", comodel_name='account.account.tag', domain=[('applicability', '=', 'taxes')], copy=True, ondelete='restrict')
     tax_id = fields.Many2one(comodel_name='account.tax', index='btree_not_null', ondelete='cascade', check_company=True)
     company_id = fields.Many2one(string="Company", comodel_name='res.company', related="tax_id.company_id", store=True, help="The company this distribution line belongs to.")

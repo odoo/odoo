@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
 import { _t } from "@web/core/l10n/translation";
@@ -9,29 +8,26 @@ import { useService } from "@web/core/utils/hooks";
 export class MoneyDetailsPopup extends Component {
     static template = "point_of_sale.MoneyDetailsPopup";
     static components = { NumericInput, Dialog };
-    static props = {
-        moneyDetails: { type: [Object, { value: null }], optional: true },
-        action: String,
-        getPayload: Function,
-        close: Function,
-        context: { type: String, optional: true },
-    };
-    static defaultProps = {
-        moneyDetails: null,
-    };
+    props = props({
+        moneyDetails: t.or([t.object(), t.literal(null)]).optional(null),
+        action: t.string(),
+        getPayload: t.function(),
+        close: t.function(),
+        context: t.string().optional(),
+    });
 
     setup() {
         super.setup();
         this.pos = usePos();
         this.ui = useService("ui");
         this.currency = this.pos.currency;
-        this.state = useState({
+        this.state = proxy({
             moneyDetails: this.props.moneyDetails
                 ? { ...this.props.moneyDetails }
                 : Object.fromEntries(this.pos.models["pos.bill"].map((bill) => [bill.value, 0])),
         });
         this.env.dialogData.dismiss = () => {
-            if (this.pos.config.iface_cashdrawer) {
+            if (this.pos.canOpenCashdrawer) {
                 this.pos.logEmployeeMessage(this.props.action, "ACTION_CANCELLED");
             }
         };

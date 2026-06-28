@@ -28,16 +28,8 @@
                 />
             </t>
             <t t-else="">
-                <div class="o_input_box">
-                    <Many2One t-props="this.m2oProps" t-on-keydown="this.onM2oInputKeydown"/>
-                    <t t-if="this.showLabelVisibilityToggler">
-                        <button
-                            class="o_input_box_overlay_end btn btn-link fa fa-bars"
-                            id="labelVisibilityButtonId"
-                            data-tooltip="Click or press enter to add a description"
-                            t-on-click="() => this.switchLabelVisibility()"
-                        />
-                    </t>
+                <div name="m2o_product" class="d-flex align-items-center gap-1">
+                    <Many2One cssClass="'flex-grow-1'" t-props="this.m2oProps" t-on-keydown="this.onM2oInputKeydown"/>
                 </div>
                 <div
                     t-if="this.props.readonly"
@@ -51,7 +43,7 @@
                     placeholder="Enter a description"
                     rows="1"
                     type="text"
-                    t-att-class="{ ...this.sectionAndNoteClasses, 'd-none': !(this.columnIsProductAndLabel.value and (this.label or this.labelVisibility.value)) }"
+                    t-att-class="{ ...this.sectionAndNoteClasses, 'd-none': !this.columnIsProductAndLabel.value }"
                     t-att-value="this.label"
                     t-custom-ref="labelNodeRef"
                 />

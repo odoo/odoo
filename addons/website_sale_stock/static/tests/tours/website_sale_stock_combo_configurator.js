@@ -38,3 +38,28 @@ registry
             },
         ],
     });
+
+registry.category("web_tour.tours").add("test_website_sale_stock_max_combo", {
+    steps: () => [
+        {
+            content: "Select ComboProduct",
+            trigger: ".oe_product_cart:first a:contains('ComboProduct')",
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            content: "VariantMixin has set the maximum",
+            trigger: "input[name=add_qty][data-max='2']",
+        },
+        wsTourUtils.increaseProductPageQuantity(),
+        {
+            content: "One quantity should be added",
+            trigger: "input[name=add_qty]:value(2)",
+        },
+        wsTourUtils.increaseProductPageQuantity(),
+        {
+            content: "No quantity should be added",
+            trigger: "input[name=add_qty]:value(2)",
+        },
+    ],
+});

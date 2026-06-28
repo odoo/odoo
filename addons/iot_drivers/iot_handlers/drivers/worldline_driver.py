@@ -3,6 +3,7 @@
 import ctypes
 import logging
 
+from odoo.addons.iot_drivers.iot_handlers.interfaces.ctep_interface import CTEPInterface
 from odoo.addons.iot_drivers.tools.system import IS_RPI
 from odoo.addons.iot_drivers.iot_handlers.drivers.ctypes_terminal_driver import (
     CtypesTerminalDriver,
@@ -15,7 +16,7 @@ _logger = logging.getLogger(__name__)
 
 
 class WorldlineDriver(CtypesTerminalDriver):
-    connection_type = 'ctep'
+    interface = CTEPInterface
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device, manufacturer="Worldline")
@@ -93,13 +94,12 @@ class WorldlineDriver(CtypesTerminalDriver):
         except OSError:
             _logger.exception("Failed to perform Worldline transaction. Check for potential segmentation faults")
             return self.send_status(
-                error="An error has occured. Check the transaction result manually with the payment provider",
+                error="An error has occurred. Check the transaction result manually with the payment provider",
                 request_data=transaction,
             )
 
     def cancel_transaction(self, transaction):
-        # Ignore cancel request if no transaction is running
-        if self.data['result']['Stage'] != 'WaitingForCard':
+        if not self.terminal_busy:
             _logger.warning("Cancel request ignored because no transaction is running to avoid crashes")
             return
 
@@ -119,6 +119,6 @@ class WorldlineDriver(CtypesTerminalDriver):
             _logger.exception("Failed to cancel Worldline transaction. Check for potential segmentation faults.")
             self.send_status(
                 stage='Cancel',
-                error="An error has occured when cancelling Worldline transaction. Check the transaction result manually with the payment provider",
+                error="An error has occurred when cancelling Worldline transaction. Check the transaction result manually with the payment provider",
                 request_data=transaction,
             )

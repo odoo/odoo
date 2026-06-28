@@ -38,12 +38,10 @@ class TestUblExportBis3BEPeppol(TestUblExportBis3BE):
             post=True,
         )
 
-        partner.peppol_eas = '0208'
-        partner.peppol_endpoint = '0477472701'
+        partner.routing_identifier = '0208:0477472701'
         self.env.company.partner_id.vat = None
-        self.env.company.partner_id.company_registry = None
-        self.env.company.partner_id.peppol_eas = None
-        self.env.company.partner_id.peppol_endpoint = None
+        self.env.company.partner_id.additional_identifiers = None
+        self.env.company.partner_id.routing_identifier = None
         with self.assertRaisesRegex(UserError, r".*\[PEPPOL\-EN16931\-R020\].*"):
             self._generate_invoice_ubl_file(invoice, sending_methods=['peppol'])
 

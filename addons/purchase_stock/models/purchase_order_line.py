@@ -32,7 +32,7 @@ class PurchaseOrderLine(models.Model):
     propagate_cancel = fields.Boolean('Propagate cancellation', default=True)
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
     is_storable = fields.Boolean(related='product_id.is_storable')
-    location_final_id = fields.Many2one('stock.location', 'Location from procurement')
+    forecasted_location_id = fields.Many2one('stock.location', 'Forecasted Location', help='Location used in the computation of the forecast.')
     date_promised = fields.Datetime('Promised Date', help="Delivery Date promised by the vendor. If the vendor delivers products after this date, their On-Time rate will be negatively impacted.")
 
     def _compute_qty_received_method(self):
@@ -100,7 +100,8 @@ class PurchaseOrderLine(models.Model):
     def create(self, vals_list):
         lines = super().create(vals_list)
         confirmed_lines = lines.filtered(lambda l: l.order_id.state == 'purchase' and not l.display_type)
-        confirmed_lines._create_or_update_picking()
+        if not self.env.context.get('bypass_move_update'):
+            confirmed_lines._create_or_update_picking()
         confirmed_lines._set_date_promised()
         return lines
 
@@ -198,27 +199,36 @@ class PurchaseOrderLine(models.Model):
                 # Give priority to the pickings related to the line
                 moves_to_assign = line.order_id.picking_ids.move_ids.filtered(lambda m: not m.purchase_line_id and line.product_id == m.product_id)
                 moves_to_assign.purchase_line_id = line.id
+                previous_qty = self.env.context['previous_product_qty'][line.id] if 'previous_product_qty' in self.env.context else 0
+                diff_qty = line.product_qty - previous_qty
                 line_pickings = line.move_ids.picking_id.filtered(lambda p: p.state not in ('done', 'cancel') and p.location_dest_id.usage in ('internal', 'transit', 'customer'))
                 if line_pickings:
                     picking = line_pickings[0]
                 else:
                     pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
                     picking = pickings and pickings[0] or False
-                if not picking:
-                    if not line.product_qty > line.qty_received:
-                        continue
-                    res = line.order_id._prepare_picking()
-                    picking = self.env['stock.picking'].create(res)
 
-                moves = line._create_stock_moves(picking)
-                moves._action_confirm()._action_assign()
+                # if no picking was found we look for OUT picking in case of -ve qty update before creating a new picking
+                if not picking and diff_qty < 0:
+                    out_pickings = line.move_ids.picking_id.filtered(lambda p: p.state not in ('done', 'cancel') and p.location_dest_id.usage in ('supplier'))
+                    picking = out_pickings[-1:] or False
+
+                if not picking and not line.product_qty > line.qty_received and line.product_qty > 0:
+                    continue
+                move = line._create_stock_moves(picking)
+
+                if diff_qty < 0 and move.location_dest_id.usage == 'supplier':
+                    move.product_uom_qty *= -1
+                    move.location_id = picking.location_id
+                    move.location_dest_id = move.forecasted_location_id = picking.location_dest_id
+                move._action_confirm()._action_assign()
 
     def _get_move_dests_initial_demand(self, move_dests):
         return self.product_id.uom_id._compute_quantity(
             sum(move_dests.filtered(lambda m: m.state != 'cancel' and m.location_dest_id.usage != 'supplier').mapped('product_qty')),
             self.uom_id, rounding_method='HALF-UP')
 
-    def _prepare_stock_moves(self, picking):
+    def _prepare_stock_moves(self, picking=False):
         """ Prepare the stock moves data for one order line. This function returns a list of
         dictionary ready to be used in stock.move's create()
         """
@@ -233,15 +243,15 @@ class PurchaseOrderLine(models.Model):
         move_dests = self.move_dest_ids or self.move_ids.move_dest_ids
         move_dests = move_dests.filtered(lambda m: m.state != 'cancel' and not m._is_purchase_return())
 
+        qty_to_push = self.product_qty - qty
+        move_dests_initial_demand = self._get_move_dests_initial_demand(move_dests)
         if not move_dests:
             qty_to_attach = 0
-            qty_to_push = self.product_qty - qty
         else:
-            move_dests_initial_demand = self._get_move_dests_initial_demand(move_dests)
             qty_to_attach = move_dests_initial_demand - qty
-            qty_to_push = self.product_qty - move_dests_initial_demand
 
         if self.uom_id.compare(qty_to_attach, 0.0) > 0:
+            qty_to_push = self.product_qty - move_dests_initial_demand
             product_uom_qty, product_uom = self.uom_id._adjust_uom_quantities(qty_to_attach, self.product_id.uom_id)
             res.append(self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom))
         if not self.uom_id.is_zero(qty_to_push):
@@ -299,9 +309,12 @@ class PurchaseOrderLine(models.Model):
     def _prepare_stock_move_vals(self, picking, price_unit, product_uom_qty, product_uom):
         self.ensure_one()
         self._check_orderpoint_picking_type()
-        product = self.product_id.with_context(lang=self.order_id.dest_address_id.lang or self.env.user.lang)
-        location_dest = self.env['stock.location'].browse(self.order_id._get_destination_location())
-        location_final = self.location_final_id or self.order_id._get_final_location_record()
+        if not self.order_id.reference_ids:
+            self.order_id.reference_ids = self.order_id.reference_ids.create(self.order_id._prepare_reference_vals())
+        if not self.order_id.partner_id.property_stock_supplier.id:
+            raise UserError(_("You must set a Vendor Location for partner %(partner_name)s", partner_name=self.partner_id.name))
+        location_dest = picking.location_dest_id if picking else self.env['stock.location'].browse(self.order_id._get_destination_location())
+        location_final = self.forecasted_location_id or self.order_id._get_final_location_record()
         if location_final and location_final._child_of(location_dest):
             location_dest = location_final
         date_planned = self.date_planned or self.order_id.date_planned
@@ -309,11 +322,11 @@ class PurchaseOrderLine(models.Model):
             'product_id': self.product_id.id,
             'date': date_planned,
             'date_deadline': date_planned,
-            'location_id': self.order_id.partner_id.property_stock_supplier.id,
+            'location_id': picking.location_id.id if picking else self.order_id.partner_id.property_stock_supplier.id,
             'location_dest_id': location_dest.id,
-            'location_final_id': location_final.id,
-            'picking_id': picking.id,
-            'partner_id': self.order_id.dest_address_id.id,
+            'forecasted_location_id': location_final.id,
+            'picking_id': picking.id if picking else False,
+            'partner_id': self.order_id.dest_address_id.id or self.order_id.partner_id.id,
             'move_dest_ids': [(4, x) for x in self.move_dest_ids.ids],
             'state': 'draft',
             'purchase_line_id': self.id,
@@ -321,7 +334,7 @@ class PurchaseOrderLine(models.Model):
             'price_unit': price_unit,
             'picking_type_id': self.order_id.picking_type_id.id,
             'reference_ids': [Command.set(self.order_id.reference_ids.ids)],
-            'origin': self.order_id.name,
+            'origin': f"{self.order_id.name} - {self.order_id.partner_ref}" if self.order_id.partner_ref else self.order_id.name,
             'propagate_cancel': self.propagate_cancel,
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
@@ -361,24 +374,24 @@ class PurchaseOrderLine(models.Model):
         # This way, we shoud not lose any valuable information.
         if line_description and product_id.name != line_description:
             res['name'] = (res['name'] + '\n' + line_description).strip()
-        res['date_planned'] = values.get('date_planned')
+        res['date_planned'] = fields.Datetime.to_datetime(values.get('date_planned'))
         # The date must be day before or equal at the supplier target day
         if po.partner_id.group_rfq == 'week' and po.partner_id.group_on != 'default':
             delta_days = (7 + int(po.partner_id.group_on) - res['date_planned'].isoweekday()) % 7
-            res['date_planned'] = fields.Datetime.to_datetime(res['date_planned']) + relativedelta(days=delta_days)
+            res['date_planned'] = res['date_planned'] + relativedelta(days=delta_days)
             if not po.date_planned or po.date_planned >= res['date_planned']:
                 # date_order was computed based on procurement date_planned. If the PO date_planned is
                 # shifted, we also need to shift the date_order.
                 po.date_order = fields.Datetime.to_datetime(po.date_order) + relativedelta(days=delta_days)
         res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
-        res['location_final_id'] = location_dest_id.id
+        res['forecasted_location_id'] = location_dest_id.id
         res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id
         res['propagate_cancel'] = values.get('propagate_cancel')
         res['product_description_variants'] = values.get('product_description_variants')
         res['product_no_variant_attribute_value_ids'] = values.get('never_product_template_attribute_value_ids')
         return res
 
-    def _create_stock_moves(self, picking):
+    def _create_stock_moves(self, picking=False):
         values = []
         for line in self.filtered(lambda l: not l.display_type):
             for val in line._prepare_stock_moves(picking):

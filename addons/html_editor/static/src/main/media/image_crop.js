@@ -5,7 +5,6 @@ import {
     loadImageInfo,
     cropperDataFieldsWithAspectRatio,
 } from "@html_editor/utils/image_processing";
-import { IMAGE_SHAPES } from "./image_plugin";
 import { _t } from "@web/core/l10n/translation";
 import {
     Component,
@@ -26,6 +25,8 @@ export const cropperAspectRatios = {
     "1/1": { label: "1:1", value: 1 },
     "2/3": { label: "2:3", value: 2 / 3 },
 };
+
+const IMAGE_SHAPES = ["rounded", "rounded-circle", "shadow", "img-thumbnail"];
 
 export class ImageCrop extends Component {
     static template = "html_editor.ImageCrop";
@@ -200,19 +201,16 @@ export class ImageCrop extends Component {
         this.cropper = await activateCropper(
             cropperImage,
             cropperAspectRatios[this.aspectRatio]?.value || 0,
-            this.media.dataset
-        );
-
-        this.cropper.element.addEventListener("ready", () => {
-            const cropperMove = this.cropperWrapper.el.querySelector(".cropper-face.cropper-move");
-            for (const shape of IMAGE_SHAPES) {
-                if (this.media.classList.contains(shape)) {
-                    cropperMove.classList.add(shape);
-                } else {
-                    cropperMove.classList.remove(shape);
-                }
+            this.media.dataset,
+            {
+                onReady: (cropper) => {
+                    const cropperMove = cropper.face;
+                    for (const shape of IMAGE_SHAPES) {
+                        cropperMove.classList.toggle(shape, this.media.classList.contains(shape));
+                    }
+                },
             }
-        });
+        );
         this.isCropperActive = true;
     }
     /**

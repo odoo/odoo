@@ -1,23 +1,21 @@
-import { useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { CHAT_HUB_COMPACT_LS } from "@mail/core/common/chat_hub_model";
-import { ChatWindow } from "@mail/core/common/chat_window";
 import { ActionList } from "@mail/core/common/action_list";
+import { ChatWindow } from "@mail/core/common/chat_window";
 import { useHover, useMovable } from "@mail/utils/common/hooks";
-import { Component } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, proxy, useListener } from "@odoo/owl";
 
+import { Action } from "@mail/core/common/action";
 import { browser } from "@web/core/browser/browser";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { ChatBubble } from "./chat_bubble";
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { _t } from "@web/core/l10n/translation";
-import { Action } from "@mail/core/common/action";
 
 export class ChatHub extends Component {
     static components = { ActionList, ChatBubble, ChatWindow, Dropdown };
-    static props = [];
     static template = "mail.ChatHub";
 
     get chatHub() {
@@ -38,7 +36,7 @@ export class ChatHub extends Component {
         this.more = useDropdownState();
         this.ref = useRef("bubbles");
         this.root = useRef("root");
-        this.position = useState({
+        this.position = proxy({
             dragged: false,
             isDragging: false,
             top: "unset",
@@ -47,12 +45,7 @@ export class ChatHub extends Component {
             right: `${this.chatHub.BUBBLE_OUTER + this.chatHub.BUBBLE_START}px;`,
         });
         this.onResize();
-        useExternalListener(browser, "resize", this.onResize);
-        useLayoutEffect(() => {
-            if (this.chatHub.folded.length && this.store.channels?.status === "not_fetched") {
-                this.store.channels.fetch();
-            }
-        });
+        useListener(browser, "resize", () => this.onResize());
         useMovable({
             enable: () => this.chatHub.compact || !this.chatHub.opened.length,
             cursor: "grabbing",
@@ -159,8 +152,7 @@ export class ChatHub extends Component {
     }
 
     expand() {
-        browser.localStorage.removeItem(CHAT_HUB_COMPACT_LS);
-        this.chatHub._recomputeCompact++;
+        this.chatHub.compact = false;
         this.more.isOpen = this.chatHub.folded.length > this.chatHub.maxFolded;
         if (this.chatHub.opened.length > 0) {
             this.resetPosition();

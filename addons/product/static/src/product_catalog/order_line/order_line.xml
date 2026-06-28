@@ -3,12 +3,13 @@
     <t t-name="product.ProductCatalogOrderLine">
         <!-- Replace the element found using the css selector by the content of the portalled
              template.  -->
-        <t t-custom-portal="`#product-${this.props.productId}-price`">
+        <Portal target="this.portalTarget" t-key="this.rev">
             <div class="d-inline-flex align-items-baseline">
                 <span t-if="this.showPrice" t-out="this.price" class="o_product_catalog_price fw-bold me-4"/>
                 <span t-if="this.props.code" t-out="this.props.code" class="text-muted"/>
             </div>
-        </t>
+            <span t-if="this.displayPriceByProductUoM" class="d-flex text-muted small" t-out="`${this.productUnitPrice}/${this.props.productUomDisplayName}`"/>
+        </Portal>
         <div 
             t-if="this.props.readOnly and this.props.warning"
             class="text-danger text-truncate my-2 pt-3 border-top">
@@ -41,8 +42,19 @@
                     t-on-change="this.env.setQuantity"
                     t-on-focus="this._onFocus"
                 />
+                <select t-if="this.hasMultipleUoms"
+                    class="input-group-text form-select rounded-0"
+                    t-att-style="this.uomSelectStyle"
+                    t-on-change="this.onUomChange"
+                >
+                    <option t-foreach="this.props.availableUoms" t-as="uom" t-key="uom.id"
+                        t-att-value="uom.id"
+                        t-att-selected="uom.id === this.props.uomId"
+                        t-out="uom.name"
+                    />
+                </select>
                 <span
-                    t-if="this.env.displayUoM"
+                    t-elif="this.props.uomDisplayName"
                     class="input-group-text d-block rounded-0 text-truncate cursor-default"
                     t-out="this.props.uomDisplayName" t-att-title="this.props.uomDisplayName"
                 />

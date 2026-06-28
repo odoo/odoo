@@ -57,6 +57,10 @@ class ResConfigSettings(models.TransientModel):
     website_cookies_bar = fields.Boolean(
         related='website_id.cookies_bar',
         readonly=False)
+    cookie_policy_id = fields.Many2one(
+        string="Cookie Policy Page",
+        related='website_id.cookie_policy_id',
+        readonly=False)
     website_block_third_party_domains = fields.Boolean(
         'Block 3rd-party domains',
         related='website_id.block_third_party_domains',
@@ -105,7 +109,7 @@ class ResConfigSettings(models.TransientModel):
         "Multi-website",
         implied_group="website.group_multi_website")
     has_google_analytics = fields.Boolean(
-        "Google Analytics",
+        "Google Tag Manager/Google Analytics",
         compute='_compute_has_google_analytics',
         inverse='_inverse_has_google_analytics')
     has_google_search_console = fields.Boolean(
@@ -121,6 +125,7 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_has_plausible_shared_key',
         inverse='_inverse_has_plausible_shared_key')
     module_website_livechat = fields.Boolean()
+    module_website_address_autocomplete = fields.Boolean("Website Address Autocomplete")
 
     @api.depends('website_id')
     def _compute_shared_user_account(self):
@@ -203,9 +208,10 @@ class ResConfigSettings(models.TransientModel):
         # update the website_default_lang_id
         language_ids = self.language_ids._origin
         if not language_ids:
-            self.website_default_lang_id = False
+            self.website_default_lang_id = self.env['website']._default_language()
         elif self.website_default_lang_id not in language_ids:
             self.website_default_lang_id = language_ids[0]
+        self.website_language_count = len(language_ids)
 
     def action_website_create_new(self):
         return {

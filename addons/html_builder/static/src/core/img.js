@@ -1,5 +1,14 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps, xml } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillStart,
+    onWillUpdateProps,
+    props,
+    signal,
+    t,
+    xml,
+} from "@odoo/owl";
 import { Cache } from "@web/core/utils/cache";
 
 const svgCache = new Cache(async (src) => {
@@ -23,62 +32,64 @@ const svgCache = new Cache(async (src) => {
 }, JSON.stringify);
 
 export class Image extends Component {
-    static props = {
-        src: String,
-        class: { type: String, optional: true },
-        style: { type: String, optional: true },
-        alt: { type: String, optional: true },
-        attrs: { type: Object, optional: true },
-        svgCheck: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        svgCheck: true,
-    };
+    props = props({
+        src: t.string(),
+        class: t.string().optional(),
+        style: t.string().optional(),
+        alt: t.string().optional(),
+        attrs: t.object().optional(),
+        svgCheck: t.boolean().optional(true),
+    });
     static template = xml`
-        <t t-if="state.loaded">
-            <svg t-if="isSvg(props.src)" t-custom-ref="svg"
-                xmlns="http://www.w3.org/2000/svg"
-                t-att-width="svg.width"
-                t-att-viewBox="svg.viewBox"
-                t-att-fill="svg.fill"
+        <t t-if="this.loaded()">
+            <svg xmlns="http://www.w3.org/2000/svg" t-if="this.isSvg(this.props.src)" t-ref="this.svgRef"
+                t-att-width="this.svg.width"
+                t-att-viewBox="this.svg.viewBox"
+                t-att-fill="this.svg.fill"
                 class="hb-svg d-flex m-auto"
-                t-att-class="props.class"
-                t-att-style="props.style"
-                t-att="props.attrs"/>
+                t-att-class="this.props.class"
+                t-att-style="this.props.style"
+                t-att="this.props.attrs"/>
             <img t-else=""
-                t-att-src="props.src"
-                t-att-class="props.class"
-                t-att-style="props.style"
-                t-att-alt="props.alt"
-                t-att="props.attrs"/>
+                t-att-src="this.props.src"
+                t-att-class="this.props.class"
+                t-att-style="this.props.style"
+                t-att-alt="this.props.alt"
+                t-att="this.props.attrs"/>
         </t>
         `;
 
+    loaded = signal(false);
+    svgRef = signal(null);
+
     setup() {
-        this.svgRef = useRef("svg");
         this.svg = {};
-        this.state = useState({ loaded: false });
 
         onWillStart(async () => this.handleImgLoad(this.props.src));
         onWillUpdateProps(async (nextProps) => {
             if (this.props.src !== nextProps.src) {
+                this.loaded.set(false);
                 await this.handleImgLoad(nextProps.src);
             }
         });
-        useLayoutEffect(
-            (imgLoaded) => {
-                if (imgLoaded && this.isSvg(this.props.src) && this.svg.children.length) {
-                    // We can't use t-out with markup because it is parsed as HTML,
-                    // but SVG need to be parsed as XML for all features to work.
-                    const children = [];
-                    for (const child of this.svg.children) {
-                        children.push(child.cloneNode(true));
-                    }
-                    this.svgRef.el.replaceChildren(...children);
+        const insertSvgChildren = () => {
+            if (
+                this.loaded() &&
+                this.svgRef() &&
+                this.isSvg(this.props.src) &&
+                this.svg.children?.length
+            ) {
+                // We can't use t-out with markup because it is parsed as HTML,
+                // but SVG need to be parsed as XML for all features to work.
+                const children = [];
+                for (const child of this.svg.children) {
+                    children.push(child.cloneNode(true));
                 }
-            },
-            () => [this.state.loaded]
-        );
+                this.svgRef().replaceChildren(...children);
+            }
+        };
+        onMounted(insertSvgChildren);
+        onPatched(insertSvgChildren);
     }
 
     async handleImgLoad(src) {
@@ -91,11 +102,11 @@ export class Image extends Component {
         if (this.env.imgGroup) {
             this.env.imgGroup.addImgProm(prom);
             this.env.imgGroup.loaded.then(() => {
-                this.state.loaded = true;
+                this.loaded.set(true);
             });
         } else {
             await prom;
-            this.state.loaded = true;
+            this.loaded.set(true);
         }
     }
 

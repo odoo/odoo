@@ -10,6 +10,7 @@ from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 _logger = logging.getLogger(__name__)
 
 NILVERA_TEST_VAT_NUMS = {'1234567801', '1234567802'}
+L10N_TR_GIB_ALLOWED_NUMS = {'11111111111', '2222222222'}
 
 
 class ResPartner(models.Model):
@@ -58,7 +59,11 @@ class ResPartner(models.Model):
     def check_vat_tr(self, vat):
         # EXTENDS 'base_vat'
         company = self.env.company
-        return super().check_vat_tr(vat) or (company.l10n_tr_nilvera_use_test_env and vat in NILVERA_TEST_VAT_NUMS)
+        return (
+            super().check_vat_tr(vat)
+            or vat in L10N_TR_GIB_ALLOWED_NUMS
+            or (company.l10n_tr_nilvera_use_test_env and vat in NILVERA_TEST_VAT_NUMS)
+        )
 
     def _send_user_notification(self, type, message, action_button=None):
         self.env.user._bus_send(
@@ -75,7 +80,7 @@ class ResPartner(models.Model):
         # we want to skip records whose status is already set, unless we want to
         # purposefully retry them
         retry_existing = self.env.context.get('retry_existing', False)
-        for record in self.filtered(lambda p: p.vat and (retry_existing or p.l10n_tr_nilvera_customer_status == 'not_checked')):
+        for record in self.filtered(lambda p: p.vat and p.invoice_edi_format and (retry_existing or p.l10n_tr_nilvera_customer_status == 'not_checked')):
             if record._check_nilvera_customer():
                 if len(record.l10n_tr_nilvera_customer_alias_ids) > 1:
                     results['multi_alias'] |= record
@@ -105,7 +110,7 @@ class ResPartner(models.Model):
         if not self.vat:
             return
 
-        with _get_nilvera_client(self.env._, self.env.company) as client:
+        with _get_nilvera_client(self.env._, self.env.company.sudo()) as client:
             response = client.request("GET", "/general/GlobalCompany/Check/TaxNumber/" + urllib.parse.quote(self.vat), handle_response=False)
             if response.status_code == 200:
                 query_result = response.json()

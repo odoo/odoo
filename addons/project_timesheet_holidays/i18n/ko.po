@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2026-01-06 06:20+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -107,20 +107,15 @@ msgstr "작업"
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid ""
 "The default project used when automatically generating timesheets via time "
-"off requests. You can specify another project on each time off type "
-"individually."
+"off requests. You can specify another project on each time type individually."
 msgstr ""
-"휴가 요청을 통해 자동으로 작업기록을 생성할 때 사용되는 기본 프로젝트입니다. "
-"휴가 유형별로 각각 프로젝트를 다르게 지정할 수 있습니다."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid ""
 "The default task used when automatically generating timesheets via time off "
-"requests. You can specify another task on each time off type individually."
+"requests. You can specify another task on each time type individually."
 msgstr ""
-"휴가 요청을 통해 자동으로 작업기록을 생성할 때 사용되는 기본 작업입니다. 휴"
-"가 유형별로 각각 작업을 다르게 지정할 수 있습니다."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -146,8 +141,28 @@ msgstr "휴가 작업"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
-msgid "Time Off Types Count"
-msgstr "휴가 유형 수"
+msgid "Time Types Count"
+msgstr ""
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid "Timesheets linked to public holidays cannot be deleted."
+msgstr ""
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid "Timesheets linked to public holidays cannot be modified."
+msgstr ""
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid ""
+"Timesheets related to time off cannot be created or modified. Please manage "
+"your requests in the Time Off app instead."
+msgstr ""
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_project_task__display_name
@@ -186,37 +201,11 @@ msgstr "휴가 보기"
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid ""
-"You cannot create timesheets for a task that is linked to a time off type. "
-"Please use the Time Off application to request new time off instead."
-msgstr ""
-"휴가 요청과 연결되어 있는 작업에 대한 작업기록을 생성할 수 없습니다. 휴가 애"
-"플리케이션을 사용하여 새로운 휴가를 요청하십시오."
-
-#. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
-msgid "You cannot delete timesheets that are linked to global time off."
-msgstr "전체 휴가에 연결된 작업표는 삭제할 수 없습니다."
-
-#. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
-msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
 "휴가 요청과 연결되어 있는 작업기록은 삭제할 수 없습니다. 휴가 애플리케이션을 "
 "사용하여 휴가 요청을 취소하십시오."
-
-#. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
-msgid ""
-"You cannot modify timesheets that are linked to time off requests. Please "
-"use the Time Off application to modify your time off requests instead."
-msgstr ""
-"휴가 요청과 연결되어 있는 작업기록은 수정할 수 없습니다. 휴가 애플리케이션을 "
-"사용하여 휴가 요청을 수정하십시오."
 
 #. module: project_timesheet_holidays
 #. odoo-python

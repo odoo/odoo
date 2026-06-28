@@ -11,11 +11,10 @@ To publish a member, set a *Level* in their contact form and click the *Publish*
     """,
     'depends': ['partnership', 'website_partner'],
     'data': [
-        'security/ir.model.access.csv',
-        'security/ir_rule.xml',
         'views/res_partner_grade_views.xml',
         'views/website_partnership_templates.xml',
         'views/res_config_settings_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/res_partner_grade_demo.xml',

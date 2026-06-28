@@ -23,6 +23,7 @@ class AccountJournalGroup(models.Model):
         'account.journal',
         'journal_group_id',
         string="Included Journals",
+        context={'active_test': False},
     )
     sequence = fields.Integer(default=10)
 
@@ -35,6 +36,7 @@ class AccountJournalGroup(models.Model):
 class AccountJournal(models.Model):
     _name = 'account.journal'
     _description = "Journal"
+    _explanation = "Groups financial transactions. Every accounting entry must be posted in a specific journal. Controls default accounts and transaction sequencing."
     _order = 'sequence, type, code'
     _inherit = ['portal.mixin',
                 'mail.alias.mixin.optional',
@@ -86,7 +88,7 @@ class AccountJournal(models.Model):
     name_placeholder = fields.Char(compute='_compute_name_placeholder')
     code = fields.Char(
         string='Sequence Prefix',
-        size=5,
+        size=7,
         compute='_compute_code', readonly=False, store=True,
         required=True, precompute=True,
         help="Shorter name used for display. "
@@ -114,24 +116,28 @@ class AccountJournal(models.Model):
     )
     default_account_type = fields.Char(string='Default Account Type', compute="_compute_default_account_type")
     default_account_id = fields.Many2one(
-        comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
+        comodel_name='account.account', check_company=True, copy=False, ondelete='restrict', index='btree_not_null',
         string='Default Account',
         domain=_get_default_account_domain)
+    default_account_active = fields.Boolean(related='default_account_id.active', string="Default Account Active")
     suspense_account_id = fields.Many2one(
-        comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
+        comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True, index='btree_not_null',
         compute='_compute_suspense_account_id',
         help="Bank statements transactions will be posted on the suspense account until the final reconciliation "
              "allowing finding the right account.", string='Suspense Account',
         domain="[('account_type', '=', 'asset_current')]",
     )
+    suspense_account_active = fields.Boolean(related='suspense_account_id.active', string="Suspense Account Active")
     non_deductible_account_id = fields.Many2one(
         comodel_name='account.account',
         check_company=True,
         string='Private Share Account',
         readonly=False,
         store=True,
+        index='btree_not_null',
         help="Account used to register the private part of mixed expenses.",
     )
+    non_deductible_account_active = fields.Boolean(related='non_deductible_account_id.active', string="Private Share Account Active")
     restrict_mode_hash_table = fields.Boolean(string="Secure Posted Entries with Hash",
         help="If ticked, when an entry is posted, we retroactively hash all moves in the sequence from the entry back to the last hashed entry. The hash can also be performed on demand by the Secure Entries wizard.")
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
@@ -222,15 +228,17 @@ class AccountJournal(models.Model):
         "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
     )
     profit_account_id = fields.Many2one(
-        comodel_name='account.account', check_company=True,
+        comodel_name='account.account', check_company=True, index='btree_not_null',
         help="Used to register a profit when the ending balance of a cash register differs from what the system computes",
         string='Profit Account',
         domain="[('account_type', 'in', ('income', 'income_other'))]")
+    profit_account_active = fields.Boolean(related='profit_account_id.active', string="Profit Account Active")
     loss_account_id = fields.Many2one(
-        comodel_name='account.account', check_company=True,
+        comodel_name='account.account', check_company=True, index='btree_not_null',
         help="Used to register a loss when the ending balance of a cash register differs from what the system computes",
         string='Loss Account',
         domain="[('account_type', '=', 'expense')]")
+    loss_account_active = fields.Boolean(related='loss_account_id.active', string="Loss Account Active")
 
     # Bank journals fields
     company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Account Holder', readonly=True, store=False)
@@ -253,7 +261,9 @@ class AccountJournal(models.Model):
     journal_group_id = fields.Many2one(
         comodel_name='account.journal.group',
         string="Ledger",
-        index='btree_not_null'
+        index='btree_not_null',
+        help="By default, all journals post to the Statutory Ledger (Local GAAP). \n"
+             "Specifying a ledger allows you to isolate IFRS, Tax, or Intercompany adjustments without affecting local statutory accounts.",
     )
 
     available_payment_method_ids = fields.Many2many(
@@ -767,8 +777,11 @@ class AccountJournal(models.Model):
             # will raise if writing name on more than 1 record, using self[0] is safe
             if (not self.env['mail.alias']._is_encodable(vals['alias_name']) or
                 not self.env['mail.alias']._sanitize_alias_name(vals['alias_name'])):
+                val_name = vals.get('name', self.name)
+                if isinstance(val_name, dict):
+                    val_name = val_name.get(self.env.lang or 'en_US', self.name)
                 vals['alias_name'] = self._alias_prepare_alias_name(
-                    False, vals.get('name', self.name), vals.get('code', self.code), self[0].type, self[0].company_id)
+                    False, val_name, vals.get('code', self.code), self[0].type, self[0].company_id)
 
         for journal in self:
             company = journal.company_id
@@ -973,6 +986,7 @@ class AccountJournal(models.Model):
         company = self.env['res.company'].browse(vals['company_id']) if vals.get('company_id') else self.env.company
         vals['company_id'] = company.id
 
+        ProductCategory = self.env['product.category'].with_company(company)
         if journal_type in ('bank', 'cash'):
             has_liquidity_accounts = vals.get('default_account_id')
             has_profit_account = vals.get('profit_account_id')
@@ -988,6 +1002,12 @@ class AccountJournal(models.Model):
                 vals['profit_account_id'] = company.default_cash_difference_income_account_id.id
             if journal_type in ('cash', 'bank') and not has_loss_account:
                 vals['loss_account_id'] = company.default_cash_difference_expense_account_id.id
+        elif journal_type == 'purchase':
+            if account := ProductCategory._fields['property_account_expense_categ_id'].get_company_dependent_fallback(ProductCategory):
+                vals.setdefault('default_account_id', account.id)
+        elif journal_type == 'sale':
+            if account := ProductCategory._fields['property_account_income_categ_id'].get_company_dependent_fallback(ProductCategory):
+                vals.setdefault('default_account_id', account.id)
 
         if journal_type == 'credit':
             if not vals.get('default_account_id'):
@@ -1002,7 +1022,7 @@ class AccountJournal(models.Model):
                 vals['default_account_id'] = default_account_id
 
         if is_import and not vals.get('code'):
-            code = vals['name'][:5]
+            code = vals['name'][:self._fields['code'].size]
             vals['code'] = code if not protected_codes or code not in protected_codes else self._get_next_journal_default_code(journal_type, company, protected_codes)
             if not vals['code']:
                 raise UserError(_("Cannot generate an unused journal code. Please change the name for journal %s.", vals['name']))
@@ -1056,6 +1076,8 @@ class AccountJournal(models.Model):
             name = journal.name
             if journal.currency_id and journal.currency_id != journal.company_id.sudo().currency_id:
                 name = f"{name} ({journal.currency_id.name})"
+            if len(self.env.companies) > 1 and self.env.context.get('show_company_journal'):
+                name = f"{journal.company_id.name} - {name}"
             journal.display_name = name
 
     def action_configure_bank_journal(self):

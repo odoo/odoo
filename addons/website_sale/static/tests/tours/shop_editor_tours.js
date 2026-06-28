@@ -101,18 +101,18 @@ registerWebsitePreviewTour(
         {
             content: "Check the background color preview displays correctly in the dropdown",
             trigger:
-                "[data-action-id='setRibbon'] div:contains(New Ribbon) .o_wsale_color_preview[style='background-color: #FF9C00; border: ;']",
+                "[data-action-id='setRibbon'] div:contains(New Ribbon) .o_wsale_color_preview[style*='rgb(255, 156, 0)']",
         },
         {
             content: "Check the font color preview displays correctly in the dropdown",
             trigger:
-                "[data-action-id='setRibbon'] div:contains(New Ribbon) .o_wsale_color_preview[style='background-color: purple !important; border: ;']",
+                "[data-action-id='setRibbon'] div:contains(New Ribbon) .o_wsale_color_preview[style='background-color: purple !important;']",
         },
         ...clickOnSave(),
         {
             content: "Check that the ribbon was properly saved",
             trigger:
-                ":iframe .oe_product:first .o_ribbons:contains('New Ribbon')[style='color: purple; background-color:#FF9C00']",
+                ":iframe .oe_product:first .o_ribbons:contains('New Ribbon')[style*='#FF9C00'][style*='purple']",
         },
     ]
 );

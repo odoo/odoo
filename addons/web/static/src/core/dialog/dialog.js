@@ -1,13 +1,20 @@
-import { useChildSubEnv, useExternalListener, useState } from "@web/owl2/utils";
+import { useChildSubEnv } from "@web/owl2/utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
-import { Component, onWillDestroy } from "@odoo/owl";
+import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
+import { Component, onWillDestroy, props, proxy, t, useListener } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { makeDraggableHook } from "../utils/draggable_hook_builder_owl";
+import { hasTouch } from "@web/core/browser/feature_detection";
 
 const useDialogDraggable = makeDraggableHook({
     name: "useDialogDraggable",
+    onDragStart() {
+        document.documentElement.style.cursor = "grabbing";
+    },
+    onDragEnd() {
+        document.documentElement.style.cursor = "";
+    },
     onWillStartDrag({ ctx, addCleanup, addStyle, getRect }) {
         const { height, width } = getRect(ctx.current.element);
         ctx.current.container = document.createElement("div");
@@ -30,49 +37,36 @@ const useDialogDraggable = makeDraggableHook({
     },
 });
 
+export const dialogProps = {
+    contentClass: t.string().optional(""),
+    bodyClass: t.string().optional(""),
+    fullscreen: t.boolean().optional(false),
+    footer: t.boolean().optional(true),
+    header: t.boolean().optional(true),
+    size: t.selection(["sm", "md", "lg", "xl", "fs", "fullscreen"]).optional("lg"),
+    technical: t.boolean().optional(true),
+    title: t.string().optional("Odoo"),
+    modalRef: t.function().optional(),
+    slots: t.object({
+        default: t.object(), // Content is not optional
+        header: t.object().optional(),
+        footer: t.object().optional(),
+    }),
+    withBodyPadding: t.boolean().optional(true),
+    onExpand: t.function().optional(),
+};
+
 export class Dialog extends Component {
     static template = "web.Dialog";
-    static props = {
-        contentClass: { type: String, optional: true },
-        bodyClass: { type: String, optional: true },
-        fullscreen: { type: Boolean, optional: true },
-        footer: { type: Boolean, optional: true },
-        header: { type: Boolean, optional: true },
-        size: {
-            type: String,
-            optional: true,
-            validate: (s) => ["sm", "md", "lg", "xl", "fs", "fullscreen"].includes(s),
-        },
-        technical: { type: Boolean, optional: true },
-        title: { type: String, optional: true },
-        modalRef: { type: Function, optional: true },
-        slots: {
-            type: Object,
-            shape: {
-                default: Object, // Content is not optional
-                header: { type: Object, optional: true },
-                footer: { type: Object, optional: true },
-            },
-        },
-        withBodyPadding: { type: Boolean, optional: true },
-        onExpand: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        contentClass: "",
-        bodyClass: "",
-        fullscreen: false,
-        footer: true,
-        header: true,
-        size: "lg",
-        technical: true,
-        title: "Odoo",
-        withBodyPadding: true,
-    };
+    // don't do this, it is only temporary to allow the dialog props to be
+    // overridden.
+    static props = dialogProps;
+    props = props(this.constructor.props);
 
     setup() {
         this.modalRef = useForwardRefToParent("modalRef");
         useActiveElement("modalRef");
-        this.data = useState(this.env.dialogData);
+        this.data = proxy(this.env.dialogData);
         useHotkey("escape", () => this.onEscape());
         useHotkey(
             "control+enter",
@@ -85,6 +79,8 @@ export class Dialog extends Component {
                     return styles.display !== "none";
                 });
                 if (firstVisibleBtn) {
+                    // Allows the active element to be blurred before triggering the click on the button
+                    firstVisibleBtn.focus();
                     firstVisibleBtn.click();
                 }
             },
@@ -94,7 +90,7 @@ export class Dialog extends Component {
         useChildSubEnv({ inDialog: true, dialogId: this.id });
         this.isMovable = this.props.header;
         if (this.isMovable) {
-            this.position = useState({ left: 0, top: 0 });
+            this.position = proxy({ left: 0, top: 0 });
             useDialogDraggable({
                 enable: () => !this.env.isSmall,
                 ref: this.modalRef,
@@ -108,13 +104,15 @@ export class Dialog extends Component {
                 },
             });
             const throttledResize = throttleForAnimation(this.onResize.bind(this));
-            useExternalListener(window, "resize", throttledResize);
+            useListener(window, "resize", throttledResize);
         }
         onWillDestroy(() => {
             if (this.env.isSmall) {
                 this.data.scrollToOrigin();
             }
         });
+        this.bodyTabIndex = hasTouch() ? "0" : undefined;
+        useBackButton(() => this.dismiss());
     }
 
     get size() {

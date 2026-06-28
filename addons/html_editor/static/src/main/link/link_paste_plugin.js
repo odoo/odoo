@@ -53,7 +53,7 @@ export class LinkPastePlugin extends Plugin {
      */
     handlePasteTextUrl(selection, text) {
         const selectionIsInsideALink = !!closestElement(selection.anchorNode, "a");
-        const url = /^https?:\/\//i.test(text) ? text : "http://" + text;
+        const url = /^https?:\/\//i.test(text) ? text : "https://" + text;
         if (selectionIsInsideALink) {
             this.handlePasteTextUrlInsideLink(text, url);
             return;
@@ -62,8 +62,8 @@ export class LinkPastePlugin extends Plugin {
             return;
         }
         const label =
-            !selection.isCollapsed && cleanZWChars(selection.textContent()).length
-                ? selection.textContent()
+            !selection.isCollapsed && cleanZWChars(selection.toString()).length
+                ? selection.toString()
                 : text;
         this.dependencies.link.insertLink(url, label);
     }
@@ -91,7 +91,7 @@ export class LinkPastePlugin extends Plugin {
         for (let i = 0; i < splitAroundUrl.length; i++) {
             const url = /^https?:\/\//gi.test(splitAroundUrl[i])
                 ? splitAroundUrl[i]
-                : "http://" + splitAroundUrl[i];
+                : "https://" + splitAroundUrl[i];
             // Even indexes will always be plain text, and odd indexes will always be URL.
             // A url cannot be transformed inside an existing link.
             if (i % 2 && !selectionIsInsideALink) {
@@ -111,7 +111,7 @@ export class LinkPastePlugin extends Plugin {
         const link = closestElement(selection.anchorNode, "a");
         if (
             link?.parentElement?.isContentEditable &&
-            cleanZWChars(selection.textContent()) === cleanZWChars(link.innerText) &&
+            cleanZWChars(selection.toString()) === cleanZWChars(link.innerText) &&
             !this.dependencies.delete.isUnremovable(link)
         ) {
             this.dependencies.selection.setSelection(

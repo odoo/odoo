@@ -75,7 +75,7 @@
 
     <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
       <!-- custom header and footer -->
-        <t t-set="o" position="after">
+        <t t-call="web.external_layout" position="before">
             <t t-set="custom_header" t-value="'l10n_ar.custom_header'"/>
             <t t-set="report_date" t-value="o.invoice_date"/>
             <t t-set="report_number" t-value="o.l10n_latam_document_number"/>
@@ -124,9 +124,14 @@
             <attribute name="t-options">{"widget": "float", "display_currency": o.currency_id, "decimal_precision": "Product Price"}</attribute>
         </xpath>
         <!-- if b2c we still wants the latam subtotal -->
-        <t t-set="section_subtotal" t-value="line.get_section_subtotal()" position="attributes">
-            <attribute name="t-value">line.get_section_subtotal() + l10n_ar_values['price_subtotal']</attribute>
-        </t>
+        <!-- In the parent implementation, when company_price_include == 'tax_include',
+        get_section_total is used instead. However, this is not adapted for AR localization,
+        which intentionally keeps the LATAM subtotal logic here. -->
+        <xpath expr="//t[@t-set='section_subtotal']" position="attributes">
+            <attribute name="t-value">
+                line.get_section_subtotal() + l10n_ar_values['price_subtotal']
+            </attribute>
+        </xpath>
         <xpath expr="//t/tr/t[@t-set='line_colspan']" position="attributes">
             <attribute name="t-value">3 + (1 if display_discount else 0) + (1 if not line.tax_ids and not o._l10n_ar_include_vat() else 0)</attribute>
         </xpath>

@@ -16,7 +16,7 @@ import {
 import { describe, test } from "@odoo/hoot";
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
 import { MockServer, onRpc } from "@web/../tests/web_test_helpers";
-import { mail_data } from "@mail/../tests/mock_server/mail_mock_server";
+import { mail_store } from "@mail/../tests/mock_server/mail_mock_server";
 
 describe.current.tags("desktop");
 defineTestMailModels();
@@ -46,7 +46,7 @@ test("Send message button activation (access rights dependent)", async () => {
         async onRpc(request) {
             const { params } = await request.json();
             if (params.fetch_params.some((fetchParam) => fetchParam[0] === "mail.thread")) {
-                const res = await mail_data.bind(MockServer.current)(request);
+                const res = await mail_store.bind(MockServer.current)(request);
                 res["mail.thread"][0].hasWriteAccess = userAccess.hasWriteAccess;
                 res["mail.thread"][0].hasReadAccess = userAccess.hasReadAccess;
                 return res;
@@ -77,14 +77,12 @@ test("Send message button activation (access rights dependent)", async () => {
             await contains(".o-mail-Chatter-topbar button:enabled", { text: "Log note" });
             if (activities) {
                 await contains(".o-mail-Chatter-topbar button:enabled", { text: "Activity" });
-
             }
         } else {
             await contains(".o-mail-Chatter-topbar button:disabled", { text: "Send message" });
             await contains(".o-mail-Chatter-topbar button:disabled", { text: "Log note" });
             if (activities) {
                 await contains(".o-mail-Chatter-topbar button:disabled", { text: "Activity" });
-
             }
         }
     }
@@ -123,7 +121,13 @@ test("Send message button activation (access rights dependent)", async () => {
         true
     );
     await assertSendButton(false, false, "Record, no rights", "mail.test.multi.company", simpleId);
-    await assertSendButton(false, true, "Record, no rights", "mail.test.multi.company.read", simpleMcId);
+    await assertSendButton(
+        false,
+        true,
+        "Record, no rights",
+        "mail.test.multi.company.read",
+        simpleMcId
+    );
     // Note that rights have no impact on send button for draft record (chatter.isTemporary=true)
     await assertSendButton(true, false, "Draft record", "mail.test.multi.company");
     await assertSendButton(true, true, "Draft record", "mail.test.multi.company.read");

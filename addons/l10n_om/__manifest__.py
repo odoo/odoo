@@ -20,7 +20,6 @@ Activates:
     ],
     'auto_install': True,
     'data': [
-        'data/res.country.state.csv',
         'data/tax_report.xml',
     ],
     'demo': [

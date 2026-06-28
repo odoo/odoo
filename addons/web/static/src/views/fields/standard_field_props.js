@@ -1,3 +1,5 @@
+import { t } from "@odoo/owl";
+
 /**
  * @typedef StandardFieldProps
  * @property {string} [id]
@@ -7,8 +9,8 @@
  */
 
 export const standardFieldProps = {
-    id: { type: String, optional: true },
-    name: { type: String },
-    readonly: { type: Boolean, optional: true },
-    record: { type: Object },
+    id: t.string().optional(),
+    name: t.string(),
+    readonly: t.boolean().optional(),
+    record: t.object(),
 };

@@ -1,20 +1,17 @@
 import { ActivityButton } from "@mail/core/web/activity_button";
 
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { Record } from "@web/model/relational_model/record";
 
 class ListActivityButton extends ActivityButton {
-    static props = {
-        ...ActivityButton.props,
-        slots: Object,
-    };
     static template = "mail.ListActivityButton";
 
     setup() {
         super.setup();
+        this.props = props({ record: types.instanceOf(Record), slots: types.object().optional() });
         this.defaultActivityStateClass = "";
         this.defaultActivityDecorationClass = "fa-clock-o";
     }
@@ -31,8 +28,12 @@ export class ListActivity extends Component {
         { name: "activity_type_icon", type: "char" },
         { name: "activity_type_id", type: "many2one", relation: "mail.activity.type" },
     ];
-    static props = standardFieldProps;
     static template = "mail.ListActivity";
+
+    setup() {
+        super.setup();
+        this.props = props({ record: types.instanceOf(Record) });
+    }
 
     get summaryText() {
         if (this.props.record.data.activity_exception_decoration) {

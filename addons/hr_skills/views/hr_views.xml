@@ -140,6 +140,7 @@
                                     'warning': 'valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime(\'%Y-%m-%d\') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\')'
                                 }
                             }"/>
+                            <field name="certificate_file" widget="binary" filename="certificate_filename"/>
                         </list>
                     </field>
                 </page>
@@ -194,7 +195,7 @@
             </page>
             <page name="resume" position="after">
                 <page name="certification" string="Certifications">
-                    <field name="certification_ids" mode="list" nolabel="1" readonly="1">
+                    <field name="certification_ids" mode="list" nolabel="1" readonly="1" invisible="not certification_ids">
                         <list
                             no_open="1"
                             decoration-muted="valid_to and valid_to &lt; context_today().strftime('%Y-%m-%d')">
@@ -211,6 +212,11 @@
                             }"/>
                         </list>
                     </field>
+                    <div class="o_view_nocontent position-relative" invisible="certification_ids">
+                        <div class="o_nocontent_help">
+                            <p class="o_view_nocontent_empty_folder fs-4 fw-normal">No certifications found.</p>
+                        </div>
+                    </div>
                 </page>
             </page>
         </field>
@@ -508,7 +514,7 @@
                         </h1>
                         <group name="name">
                             <field name="color" widget="color_picker"/>
-                            <field name="is_certification" widget="boolean_toggle" options="{'autosave': False}"/>
+                            <field name="is_certification" widget="boolean_toggle"/>
                         </group>
                     </div>
                     <group string="Skills">

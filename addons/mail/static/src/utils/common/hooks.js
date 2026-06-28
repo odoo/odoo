@@ -1,21 +1,32 @@
 import {
-    reactive,
-    useComponent,
-    useLayoutEffect,
-    useRef,
-    useState,
-    useSubEnv,
-} from "@web/owl2/utils";
-import { Component, onMounted, onPatched, onWillUnmount, toRaw, xml } from "@odoo/owl";
+    Component,
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    props,
+    proxy,
+    types,
+    untrack,
+    useEffect,
+    xml,
+} from "@odoo/owl";
 
+import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Reactive } from "@web/core/utils/reactive";
+
+import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { browser } from "@web/core/browser/browser";
-import { _t } from "@web/core/l10n/translation";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
-import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 
+/**
+ * @param {() => HTMLElement} target
+ * @param {string} eventName
+ * @param {Function} handler
+ * @param {boolean|AddEventListenerOptions} [eventParams]
+ */
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
     let t;
@@ -49,6 +60,7 @@ export function useLazyExternalListener(target, eventName, handler, eventParams)
 export function onExternalClick(refOrName, cb) {
     let downTarget, upTarget;
     const ref = typeof refOrName === "string" ? useRef(refOrName) : refOrName;
+    let targetDocument = document;
     function onClick(ev) {
         if (ref.el && !ref.el.contains(ev.composedPath()[0])) {
             cb(ev, { downTarget, upTarget });
@@ -62,14 +74,15 @@ export function onExternalClick(refOrName, cb) {
         upTarget = ev.target;
     }
     onMounted(() => {
-        document.body.addEventListener("mousedown", onMousedown, true);
-        document.body.addEventListener("mouseup", onMouseup, true);
-        document.body.addEventListener("click", onClick, true);
+        targetDocument = ref.el?.ownerDocument || document;
+        targetDocument.body.addEventListener("mousedown", onMousedown, true);
+        targetDocument.body.addEventListener("mouseup", onMouseup, true);
+        targetDocument.body.addEventListener("click", onClick, true);
     });
     onWillUnmount(() => {
-        document.body.removeEventListener("mousedown", onMousedown, true);
-        document.body.removeEventListener("mouseup", onMouseup, true);
-        document.body.removeEventListener("click", onClick, true);
+        targetDocument.body.removeEventListener("mousedown", onMousedown, true);
+        targetDocument.body.removeEventListener("mouseup", onMouseup, true);
+        targetDocument.body.removeEventListener("click", onClick, true);
     });
 }
 
@@ -89,7 +102,6 @@ export function onExternalClick(refOrName, cb) {
  * @param {() => Array} [param1.stateObserver] when provided, function that, when called, returns list of
  *   reactive state related to presence of targets' el. This is used to help the hook detect when the targets
  *   are removed from DOM, to properly mark the hovered target as non-hovered.
- * @returns {({ isHover: boolean })}
  */
 export function useHover(refNames, { onHover, onAway, stateObserver, onHovering } = {}) {
     refNames = Array.isArray(refNames) ? refNames : [refNames];
@@ -106,7 +118,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
         }
         targets.push({ ref: useRef(refName) });
     }
-    const state = useState({
+    const state = proxy({
         set isHover(newIsHover) {
             if (this._isHover !== newIsHover) {
                 this._isHover = newIsHover;
@@ -131,7 +143,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
                 target.ref.el.removeEventListener("mouseenter", handleMouseenter, true);
                 target.ref.el.removeEventListener("mouseleave", handleMouseleave, true);
                 const idx = state._targets.findIndex((t) => t === target);
-                if (idx) {
+                if (idx !== -1) {
                     state._targets.splice(idx, 1);
                 }
             };
@@ -167,7 +179,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
         if (state.isHover) {
             return;
         }
-        for (const target of toRaw(state)._targets) {
+        for (const target of state._targets) {
             if (!target.ref.el) {
                 continue;
             }
@@ -188,7 +200,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
         if (!state.isHover) {
             return;
         }
-        for (const target of toRaw(state._targets)) {
+        for (const target of state._targets) {
             if (!target.ref.el) {
                 continue;
             }
@@ -235,13 +247,20 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
 }
 
 export class UseHoverOverlay extends Component {
-    static props = ["slots", "hover"];
-    static template = xml`<div t-custom-ref="root"><t t-slot="default"/></div>`;
+    static template = xml`<div t-custom-ref="root"><t t-call-slot="default"/></div>`;
 
     setup() {
         super.setup();
+        this.props = props({
+            hover: types.object({
+                _contains: types.array(
+                    types.function([types.instanceOf(EventTarget)], types.boolean())
+                ),
+                addTarget: types.function([types.object({ ref: types.any() })], types.function([])),
+            }),
+        });
         this.root = useRef("root");
-        const overlayContains = toRaw(this.env[OVERLAY_SYMBOL].contains);
+        const overlayContains = this.env[OVERLAY_SYMBOL].contains;
         let removeTarget;
         onMounted(() => {
             this.props.hover._contains.push(overlayContains);
@@ -250,8 +269,8 @@ export class UseHoverOverlay extends Component {
             });
         });
         onWillUnmount(() => {
-            const idx = this.props.hover._contains.find((c) => c === overlayContains);
-            if (idx) {
+            const idx = this.props.hover._contains.findIndex((c) => c === overlayContains);
+            if (idx !== -1) {
                 this.props.hover._contains.splice(idx, 1);
             }
             removeTarget?.();
@@ -262,22 +281,21 @@ export class UseHoverOverlay extends Component {
 /**
  * Hook returning reactive scroll state for a given scrollable element.
  *
- * @param {string} refName - The t-ref name of the scrollable element.
+ * @param {import("@odoo/owl").Signal<Element>} ref - The ref of the scrollable element.
  * @returns {{
  *   hasScrollbar: boolean,
  *   canScrollBefore: boolean,
  *   canScrollAfter: boolean
  * }}
  */
-export function useScrollState(refName) {
-    const ref = useRef(refName);
-    const state = useState({
+export function useScrollState(ref) {
+    const state = proxy({
         hasScrollbar: false,
         canScrollBefore: false,
         canScrollAfter: false,
     });
     function computeState() {
-        const el = ref.el;
+        const el = ref();
         if (!el) {
             return;
         }
@@ -311,7 +329,7 @@ export function useScrollState(refName) {
                 resizeObserver.disconnect();
             };
         },
-        () => [ref.el]
+        () => [ref()]
     );
     return state;
 }
@@ -343,9 +361,10 @@ export function useOnBottomScrolled(refName, callback, threshold = 1) {
  * @param {string} refName
  * @param {function} [cb]
  */
-export function useVisible(refName, cb, { ready = true } = {}) {
-    const ref = useRef(refName);
-    const state = useState({
+export function useVisible(refOrName, cb, { ready = true } = {}) {
+    const ref = typeof refOrName === "string" ? useRef(refOrName) : refOrName;
+    const getEl = () => ("el" in ref ? ref.el : ref());
+    const state = proxy({
         isVisible: undefined,
         ready,
     });
@@ -366,7 +385,7 @@ export function useVisible(refName, cb, { ready = true } = {}) {
                 };
             }
         },
-        () => [ref.el, state.ready]
+        () => [getEl(), state.ready]
     );
     return state;
 }
@@ -391,7 +410,7 @@ export function useMessageScrolling({
     duration = 1500,
 }) {
     let timeout;
-    const state = useState({
+    const state = proxy({
         clear() {
             if (this.highlightedMessageId) {
                 browser.clearTimeout(timeout);
@@ -424,9 +443,10 @@ export function useMessageScrolling({
             }
             thread.scrollTop = messageScrollDirection === "top" ? "bottom" : undefined;
             if (thread.scrollTop === "bottom") {
-                state.startupDeferred = new Deferred();
-                await state.startupDeferred;
-                state.startupDeferred = null;
+                state.startupPromise = new Promise((resolve) => (state.resolveStartup = resolve));
+                await state.startupPromise;
+                state.startupPromise = null;
+                state.resolveStartup = null;
             }
             state.highlightedMessageId = message.id;
             state.initiated = false;
@@ -434,12 +454,16 @@ export function useMessageScrolling({
         },
         initiated: false,
         /**
-         * Deferred during highlight startup, i.e. highlight is initiated but isn't scrolling yet
+         * Promise during highlight startup, i.e. highlight is initiated but isn't scrolling yet
          * Useful to set correct starting condition to initiate scroll to highlight, like scroll to bottom.
          */
-        startupDeferred: null,
-        /** Deferred during scrolling to highlight */
+        startupPromise: null,
+        /** @type {(value?: void) => void | null}  */
+        resolveStartup: null,
+        /** @type {?Promise<void>} Promise during scrolling to highlight */
         scrollPromise: null,
+        /** @type {(value?: void) => void | null}  */
+        resolveScroll: null,
         /**
          * Scroll the element into view and expose a promise that will resolved
          * once the scroll is done.
@@ -447,17 +471,18 @@ export function useMessageScrolling({
          * @param {Element} el
          */
         scrollTo(el) {
-            state.scrollPromise?.resolve();
-            const scrollPromise = new Deferred();
+            state.resolveScroll?.();
+            const { promise: scrollPromise, resolve: resolveScroll } = Promise.withResolvers();
             state.scrollPromise = scrollPromise;
+            state.resolveScroll = resolveScroll;
             if ("onscrollend" in window) {
-                document.addEventListener("scrollend", scrollPromise.resolve, {
+                document.addEventListener("scrollend", resolveScroll, {
                     capture: true,
                     once: true,
                 });
             } else {
                 // To remove when safari will support the "scrollend" event.
-                setTimeout(scrollPromise.resolve, 250);
+                setTimeout(resolveScroll, 250);
             }
             el.scrollIntoView({ behavior: "smooth", block: "center" });
             return scrollPromise;
@@ -467,25 +492,33 @@ export function useMessageScrolling({
     return state;
 }
 
+export class MessageSelectionState {
+    selectedMessageId;
+    data = new Set();
+
+    clearSelected() {
+        this.data.delete(this.selectedMessageId);
+    }
+
+    /** @param {import("models").Message} message */
+    isSelected(message) {
+        return this.data.has(message.id);
+    }
+
+    /** @param {import("models").Message} message */
+    setSelected(message) {
+        this.clearSelected();
+        this.data.add(message.id);
+        this.selectedMessageId = message.id;
+    }
+
+    get size() {
+        return this.data.size;
+    }
+}
+
 export function useMessageSelection() {
-    let selectedMessageId;
-    const state = useState({
-        _data: new Set(),
-        clearSelected() {
-            this._data.delete(selectedMessageId);
-        },
-        /** @param {import("models").Message} message */
-        isSelected(message) {
-            return this._data.has(message.id);
-        },
-        /** @param {import("models").Message} message */
-        setSelected(message) {
-            this.clearSelected();
-            this._data.add(message.id);
-            selectedMessageId = message.id;
-        },
-    });
-    return state;
+    return proxy(new MessageSelectionState());
 }
 
 export function useMicrophoneVolume() {
@@ -494,7 +527,7 @@ export function useMicrophoneVolume() {
     let disconnectAudioMonitor;
     let audioMonitorPromise;
     const store = useService("mail.store");
-    const state = useState({
+    const state = proxy({
         isReady: true,
         isActive: false,
         value: 0,
@@ -520,12 +553,9 @@ export function useMicrophoneVolume() {
                 });
                 track = audioStream.getAudioTracks()[0];
             } catch {
-                store.env.services.notification.add(
-                    _t('"%(hostname)s" requires microphone access', {
-                        hostname: browser.location.host,
-                    }),
-                    { type: "warning" }
-                );
+                store.env.services.dialog.add(CallPermissionDeniedDialog, {
+                    permissionType: "microphone",
+                });
                 return;
             }
             if (isClosed) {
@@ -602,6 +632,149 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
     };
 }
 
+/**
+ * Shared search state machine for components that combine an optional async
+ * fetch (typically an RPC) with an optional sync local lookup. Exposes reactive
+ * fields (`searchTerm`, `searching`, `loading`, `results`) and methods (`run`,
+ * `reset`). Subclass to add domain-specific fields while sharing the base logic.
+ *
+ * Narrow-dedup: if `fetch` resolves to `false` for some term, the next term
+ * that starts with it skips the fetch (a narrower query cannot have results
+ * when the broader one had none). Resolve to anything else to disable this for
+ * the current bookmark; call `reset()` to drop it (e.g. on context change).
+ */
+export class SearchState extends Reactive {
+    searchTerm = "";
+    searching = false;
+    loading = false;
+    /** @type {any} */
+    results;
+    /** @type {string | undefined} */
+    lastEmptyTerm;
+    /** @type {Function | undefined} */
+    sequential;
+    initialResults;
+    /** @type {((term: string) => Promise<boolean | void>) | null} */
+    fetch = null;
+    /** @type {((term: string) => any) | null} */
+    filter = null;
+    /** @type {(() => boolean) | null} */
+    isActiveGetter = null;
+    /** @type {(() => any[]) | null} */
+    depsGetter = null;
+
+    /**
+     * @param {Object} [options]
+     * @param {(term: string) => Promise<boolean | void>} [options.fetch] Async
+     *  server call. Resolving to `false` signals "no results" for narrow-dedup.
+     * @param {(term: string) => any} [options.filter] Sync local lookup that
+     *  produces `results`. Runs immediately on term/deps change and again after
+     *  `fetch` resolves (to pick up server-loaded data).
+     * @param {any} [options.initialResults] Value assigned to `results` on
+     *  reset. Defaults to an empty array.
+     * @param {() => any[]} [options.deps] Extra reactive values read inside
+     *  `fetch`/`filter`. Re-runs the search when they change.
+     * @param {() => boolean} [options.isActive] Predicate deciding whether a
+     *  search is active. Defaults to "term is non-empty". Override when a
+     *  non-empty term is not the right signal (e.g. a mention popover stays
+     *  active for an empty term as long as a delimiter is set).
+     */
+    constructor({ initialResults = [], fetch, filter, isActive, deps } = {}) {
+        super();
+        this.initialResults = initialResults;
+        this.results = initialResults;
+        if (fetch) {
+            this.fetch = fetch;
+        }
+        if (filter) {
+            this.filter = filter;
+        }
+        if (isActive) {
+            this.isActiveGetter = isActive;
+        }
+        if (deps) {
+            this.depsGetter = deps;
+        }
+        this.sequential = useSequential();
+        useLayoutEffect(
+            () => {
+                if (!this.isActive) {
+                    this.reset();
+                    return;
+                }
+                if (this.filter) {
+                    this.results = this.filter(this.searchTerm);
+                }
+                this.run();
+            },
+            () => [this.searchTerm, ...this.deps]
+        );
+        onWillUnmount(() => this.reset());
+    }
+
+    get isActive() {
+        return this.isActiveGetter ? this.isActiveGetter() : !!this.searchTerm;
+    }
+
+    get deps() {
+        return this.depsGetter?.() ?? [];
+    }
+
+    reset() {
+        this.searchTerm = "";
+        this.searching = false;
+        this.loading = false;
+        this.results = this.initialResults;
+        this.lastEmptyTerm = undefined;
+    }
+
+    async run({ skipFetch = false } = {}) {
+        if (!this.isActive) {
+            this.reset();
+            return;
+        }
+        const term = this.searchTerm;
+        this.searching = true;
+        if (this.lastEmptyTerm !== undefined && term.startsWith(this.lastEmptyTerm)) {
+            // Broader term already had no results, so the narrower term
+            // can't either — skip both the fetch and the local filter.
+            return;
+        }
+        if (this.fetch && !skipFetch) {
+            await this.sequential(async () => {
+                this.loading = true;
+                let result;
+                try {
+                    result = await this.fetch(term);
+                } finally {
+                    if (this.searchTerm === term) {
+                        this.loading = false;
+                    }
+                }
+                if (this.searchTerm === term) {
+                    if (this.filter) {
+                        this.results = this.filter(term);
+                    }
+                    this.lastEmptyTerm = result === false ? term : undefined;
+                }
+            });
+        } else if (this.filter) {
+            this.results = this.filter(term);
+        }
+    }
+}
+
+/**
+ * `run({ skipFetch: true })` re-applies the filter without re-fetching,
+ * e.g. after the upstream data was mutated locally.
+ *
+ * @param {ConstructorParameters<typeof SearchState>[0]} [options]
+ * @returns {SearchState}
+ */
+export function useSearch(options = {}) {
+    return proxy(new SearchState(options));
+}
+
 export function useSequential() {
     let inProgress = false;
     let nextFunction;
@@ -640,8 +813,18 @@ export function useSequential() {
     };
 }
 
-export function useDiscussSystray() {
+/** @param {import("@web/core/dropdown/dropdown_hooks").DropdownState} [dropdownState] */
+export function useDiscussSystray(dropdownState) {
     const ui = useService("ui");
+    if (dropdownState) {
+        useEffect(() => {
+            if (dropdownState.isOpen) {
+                document.body.classList.add("o-mail-discuss-systray-menu-open");
+            } else {
+                document.body.classList.remove("o-mail-discuss-systray-menu-open");
+            }
+        });
+    }
     return {
         class: "o-mail-DiscussSystray-class",
         get contentClass() {
@@ -687,14 +870,13 @@ export const LONG_PRESS_DELAY = 400;
  * Subscribes to long press events on the element matching the given ref name.
  * It internally prevents false positives caused by scroll gestures.
  *
- * @param {string} refName The ref name of the element to listen for long presses on.
+ * @param {import("@odoo/owl").Signal<Element>} ref The ref of the element to listen for long presses on.
  * @param {Object} options
  * @param {() => void} [options.action] Function called when a long press is detected.
  * @param {() => boolean} [options.predicate] Optional function to enable long press detection.
  */
-export function useLongPress(refName, { action, predicate = () => true } = {}) {
+export function useLongPress(ref, { action, predicate = () => true } = {}) {
     const MOVE_TRESHOLD = 10;
-    const ref = useRef(refName);
     let timer = null;
     let startX = 0;
     let startY = 0;
@@ -703,11 +885,15 @@ export function useLongPress(refName, { action, predicate = () => true } = {}) {
         clearTimeout(timer);
         timer = null;
     }
+    /** @param {TouchEvent} ev */
+    function isTouchTargetInside(ev) {
+        return ref()?.contains(ev.target);
+    }
     useLazyExternalListener(
-        () => ref.el,
+        () => window,
         "touchstart",
         (ev) => {
-            if (!predicate()) {
+            if (!isTouchTargetInside(ev) || !predicate()) {
                 return;
             }
             const touch = ev.touches[0];
@@ -717,13 +903,14 @@ export function useLongPress(refName, { action, predicate = () => true } = {}) {
                 action();
                 reset();
             }, LONG_PRESS_DELAY);
-        }
+        },
+        true
     );
     useLazyExternalListener(
-        () => ref.el,
+        () => window,
         "touchmove",
         (ev) => {
-            if (!timer) {
+            if (!isTouchTargetInside(ev) || !timer) {
                 return;
             }
             const touch = ev.touches[0];
@@ -732,22 +919,29 @@ export function useLongPress(refName, { action, predicate = () => true } = {}) {
             if (Math.hypot(dx, dy) > MOVE_TRESHOLD) {
                 reset();
             }
-        }
-    );
-    useLazyExternalListener(() => ref.el, "touchend", reset);
-    useLazyExternalListener(() => ref.el, "touchcancel", reset);
-}
-
-export const inDiscussCallViewProps = ["isPip?"];
-export function useInDiscussCallView() {
-    const component = useComponent();
-    useSubEnv({
-        inDiscussCallView: {
-            get isPip() {
-                return component.props.isPip;
-            },
         },
-    });
+        true
+    );
+    useLazyExternalListener(
+        () => window,
+        "touchend",
+        (ev) => {
+            if (isTouchTargetInside(ev)) {
+                reset();
+            }
+        },
+        true
+    );
+    useLazyExternalListener(
+        () => window,
+        "touchcancel",
+        (ev) => {
+            if (isTouchTargetInside(ev)) {
+                reset();
+            }
+        },
+        true
+    );
 }
 
 /** @typedef {import("@web/core/utils/hooks").useChildRef} useChildRef */
@@ -757,10 +951,17 @@ export function useInDiscussCallView() {
  * @see useChildRef
  */
 export function useChildRefs() {
-    return reactive(new Map());
+    /** @type {Map<any, import("@odoo/owl").Signal<Element>>} */
+    const map = new Map();
+    return proxy(map);
 }
 
 export class UseForwardRefsToParent {
+    /**
+     * @param {string} propName
+     * @param {(any) => any} getRefIdFn
+     * @param {import("@odoo/owl").Signal<Element>} ref
+     */
     constructor(propName, getRefIdFn, ref) {
         const component = useComponent();
         this.ref = ref;
@@ -795,4 +996,21 @@ export class UseForwardRefsToParent {
  */
 export function useForwardRefsToParent(propName, getRefIdFn, ref) {
     new UseForwardRefsToParent(propName, getRefIdFn, ref);
+}
+
+/**
+ * @template {readonly any[]} [T=any[]]
+ * @param {(...deps: T) => void} callback
+ * @param {Object} [options]
+ * @param {boolean} [options.initialRun=true] determine if the hook should skip the first run
+ */
+export function useOnChange(dependencies, callback, { initialRun } = { initialRun: true }) {
+    let firstRun = true;
+    useEffect(() => {
+        const dep = dependencies();
+        if (initialRun || !firstRun) {
+            untrack(() => callback(...dep));
+        }
+        firstRun = false;
+    });
 }

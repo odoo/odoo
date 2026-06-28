@@ -37,4 +37,5 @@ class ResLang(models.Model):
             "timeFormat": strftime_format_to_spreadsheet_time_format(self.time_format),
             "formulaArgSeparator": ";" if self.decimal_point == "," else ",",
             "weekStart": int(self.week_start),
+            "digitGrouping": self.grouping,
         }

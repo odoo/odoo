@@ -24,6 +24,20 @@ def uninstall_hook(env):
 
 
 def post_init_hook(env):
+    env.cr.execute("UPDATE website SET default_lang_id=%s", (env['website']._default_language(),))
+    lang_ids = env['website']._active_languages()
+    websites = env['website'].search([])
+
+    for website in websites:
+        website.language_ids = lang_ids
+        website.company_id._compute_website_id()
+        website._bootstrap_homepage()
+
+    if not env.user.has_group('website.group_multi_website') and len(websites) > 1:
+        all_user_groups = 'base.group_portal,base.group_user,base.group_public'
+        groups = env['res.groups'].concat(env.ref(it) for it in all_user_groups.split(','))
+        groups.write({'implied_ids': [(4, env.ref('website.group_multi_website').id)]})
+
     if request:
         env = env(context=request.default_context())
-        request.website_routing = env['website'].get_current_website().id
+        request.update_context(website_id=env.website.id)

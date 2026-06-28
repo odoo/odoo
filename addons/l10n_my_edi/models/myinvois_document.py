@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 from lxml import etree
 
 from odoo import SUPERUSER_ID, api, fields, models, modules
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import config, date_utils, split_every
 from odoo.tools.image import image_data_uri
@@ -315,7 +315,12 @@ class MyInvoisDocument(models.Model):
         """ Make sure that the sequence date range follows the company's fiscal year """
         if reset == 'year_range':
             company = self.company_id
-            return date_utils.get_fiscal_year(self.myinvois_issuance_date, day=company.fiscalyear_last_day, month=int(company.fiscalyear_last_month))
+            date_start, date_end = date_utils.get_fiscal_year(
+                self.myinvois_issuance_date,
+                day=company.fiscalyear_last_day,
+                month=int(company.fiscalyear_last_month),
+            )
+            return (date_start, date_end) + (None, None)
         return super()._get_sequence_date_range(reset)
 
     @api.ondelete(at_uninstall=False)
@@ -362,6 +367,7 @@ class MyInvoisDocument(models.Model):
         If the document already as a file, the previous file's name is updated to include an (old) tag to avoid confusion in the attachment list.
         """
         new_documents_data = []
+        errored_doc_messages = {}
         for document in self:
             if document.myinvois_file_id:
                 document.myinvois_file_id.write({
@@ -380,7 +386,8 @@ class MyInvoisDocument(models.Model):
                         ),
                     )
                     continue
-                raise UserError(document.env._("Error when generating the documents' files:\n\n- %(errors)s", errors='\n- '.join(errors)))
+                errored_doc_messages[document.id] = list(errors)
+                continue
 
             new_documents_data.append({
                 "name": f'{document.name.replace("/", "_")}_myinvois.xml' if document.name != "/" else "myinvois.xml",
@@ -390,6 +397,41 @@ class MyInvoisDocument(models.Model):
                 "res_id": document.id,
                 "res_field": "myinvois_file",
             })
+
+        errored_docs = self.env['myinvois.document'].browse(errored_doc_messages)
+        if errored_docs and allow_raising:
+            # Log on the invoices in a separate transaction so the messages persist
+            # even though the current transaction is about to be rolled back by the
+            # raised error.
+            invoice_bodies = {
+                invoice.id: self.env['account.move.send']._format_error_html({
+                    'error_title': self.env._("Error when generating the file."),
+                    'errors': errored_doc_messages[doc.id],
+                })
+                for doc in errored_docs
+                for invoice in doc.invoice_ids
+            }
+            if invoice_bodies:
+                with self.env.registry.cursor() as log_cr:
+                    log_env = self.env(cr=log_cr, user=SUPERUSER_ID)
+                    log_env['account.move'].browse(invoice_bodies)._message_log_batch(bodies=invoice_bodies)
+            if len(self) == 1:
+                raise UserError(self.env['account.move.send']._format_error_text({
+                    'error_title': self.env._("Error when generating the file."),
+                    'errors': errored_doc_messages[errored_docs.id],
+                }))
+            errored_invoices = errored_docs.invoice_ids
+            raise RedirectWarning(
+                message=self.env._(
+                    "You selected %(total)s invoices for submission.\n\n"
+                    "%(count)s invoices contain incomplete details or incorrect formatting required for LHDN e-Invoicing.\n\n"
+                    "Please click \"View Invoices\" below to review and update the information for these specific invoices.",
+                    total=len(self),
+                    count=len(errored_docs),
+                ),
+                action=errored_invoices._get_records_action(name=self.env._("Invoices Requiring Attention")),
+                button_text=self.env._("View Invoices"),
+            )
 
         self.env["ir.attachment"].with_user(SUPERUSER_ID).create(new_documents_data)
         self.invalidate_recordset(fnames=['myinvois_file_id', 'myinvois_file'])
@@ -725,7 +767,7 @@ class MyInvoisDocument(models.Model):
                 discount_amount_currency = (total_amount_currency - total_amount_discounted_currency) if has_discount else 0.0
 
                 # for the line name, when consolidating, we want to show first sequence - last sequence
-                sequenced_records = records.sorted(key=lambda r: r.name)
+                sequenced_records = records.sorted(key=lambda r: (r.sequence_number))
                 new_base_line = AccountTax._prepare_base_line_for_taxes_computation(
                     {},
                     tax_ids=taxes,
@@ -822,25 +864,13 @@ class MyInvoisDocument(models.Model):
         :return: A dict of invoices per journal, for each journal having a list of recordset each representing a single line in the xml.
         """
         lines_per_journal_prefix = {}
-        continuous_invoice_ids = set()
-        # We need to know if we 'skip' invoices when consolidating (sent separately, ...) to do so we will fetch all invoices
-        # whose sequence are between the lowest and highest in the invoices we send.
         for (journal, prefix), moves in invoices.grouped(lambda m: (m.journal_id, m.sequence_prefix)).items():
             journal_prefix_lines = []
-            # The aim of this loop is to detect 'gaps' in the sequences we are sending; most commonly would be cause
-            # by manually sending an invoice in the middle of others we want to consolidate.
-            # Note that the moves that we consolidated are added to the previous_numbers; otherwise when we re-split at
-            # the time of generating the XML the domain will skip them and result in a wrong split.
-            previous_numbers = set((self.env['account.move'].sudo().search([
-                ('journal_id', '=', journal.id),
-                ('sequence_prefix', '=', prefix),
-                ('sequence_number', '>=', min(moves.mapped('sequence_number')) - 1),
-                ('sequence_number', '<=', max(moves.mapped('sequence_number')) - 1),
-                '|',
-                ('l10n_my_edi_document_ids', '=', False),
-                ('l10n_my_edi_document_ids', 'not any', [('myinvois_state', '!=', 'cancelled')])
-            ]) | moves).mapped('sequence_number'))
-            for move in moves:
+            continuous_invoice_ids = set()
+            # Split whenever the immediate predecessor is not part of the selected invoices.
+            # This guarantees that any gap in the selected sequence creates a dedicated consolidated line.
+            previous_numbers = set(moves.mapped('sequence_number'))
+            for move in moves.sorted('sequence_number'):
                 if move.sequence_number > 1 and (move.sequence_number - 1) not in previous_numbers:
                     if continuous_invoice_ids:
                         journal_prefix_lines.append(self.env["account.move"].browse(continuous_invoice_ids))
@@ -849,7 +879,6 @@ class MyInvoisDocument(models.Model):
                     continuous_invoice_ids.add(move.id)
             if continuous_invoice_ids:
                 journal_prefix_lines.append(self.env["account.move"].browse(continuous_invoice_ids))
-                continuous_invoice_ids = set()
             lines_per_journal_prefix[journal, prefix] = journal_prefix_lines
 
         return lines_per_journal_prefix

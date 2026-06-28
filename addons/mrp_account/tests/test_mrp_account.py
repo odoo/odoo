@@ -6,7 +6,7 @@ from odoo.addons.mrp_account.tests.common import TestBomPriceCommon, TestBomPric
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
 from odoo.tools import float_compare, float_round
-from odoo import fields
+from odoo import Command, fields
 
 
 class TestMrpAccount(TestBomPriceCommon):
@@ -53,6 +53,12 @@ class TestMrpAccount(TestBomPriceCommon):
 
         bom_form = Form(self.env['mrp.bom'].with_user(mrp_manager))
         bom_form.product_id = self.dining_table
+
+    def test_mrp_manager_without_account_permissions_can_duplicate_mo(self):
+        mrp_manager = new_test_user(
+            self.env, 'temp_mrp_manager', 'mrp.group_mrp_manager,product.group_product_variant',
+        )
+        self.assertTrue(self._create_mo(self.bom_1, 1).with_user(mrp_manager).copy())
 
     def test_two_productions_unbuild_one_sell_other_fifo(self):
         """ Unbuild orders, when supplied with a specific MO record, should restrict their value
@@ -163,6 +169,45 @@ class TestMrpAccount(TestBomPriceCommon):
         mo_1 = self._create_mo(self.bom_1, 1)
         mo_1.with_user(mrp_user).button_mark_done()
 
+    def test_delivery_validate_after_product_converted_to_kit(self):
+        """
+        Create a delivery for a product, make the product a kit then
+        validate it.
+        """
+        self.env['stock.quant']._update_available_quantity(self.dining_table, self.stock_location, 1)
+        self.screw.categ_id = self.category_avco_auto
+        self.stock_location.valuation_account_id = self.account_production
+        delivery = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [Command.create({
+                'product_id': self.dining_table.id,
+                'product_uom_qty': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+        })
+        delivery.action_confirm()
+        self.bom_1.bom_line_ids = self.bom_1.bom_line_ids[1]
+        self.bom_1.type = 'phantom'
+        self.dining_table.invalidate_recordset()
+        delivery.button_validate()
+        self.assertEqual(delivery.move_ids.product_id, self.bom_1.bom_line_ids.product_id)
+        self.assertEqual(delivery.state, 'assigned')
+        # Needs to validate the delivery twice
+        delivery.move_ids.quantity = 5
+        delivery.button_validate()
+        self.assertEqual(delivery.move_ids.product_id, self.bom_1.bom_line_ids.product_id)
+        self.assertEqual(delivery.state, 'done')
+        product_aml = self.env['account.move.line'].search([('product_id', '=', self.dining_table.id)])
+        comp_aml = self.env['account.move.line'].search([('product_id', '=', self.screw.id)], order='debit')
+        self.assertEqual(len(product_aml), 0)
+        self.assertRecordValues(comp_aml, [
+            {'debit':  0.0, 'credit':  50.0},
+            {'debit':  50.0, 'credit':  0.0},
+        ])
+
     def test_mo_overview_comp_different_uom(self):
         """ Test that the overview takes into account the uom of the component in the price computation
         """
@@ -222,6 +267,7 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         """
         self.glass.qty_available = 2
         mo = self._create_mo(self.bom_1, 1, confirm=False)
+        mo.move_raw_ids.workorder_id = mo.workorder_ids[0]
 
         # post a WIP for an invalid MO, i.e. draft/cancelled/done results in a "Manual Entry"
         wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}))
@@ -441,7 +487,6 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         self.assertEqual(mo.workorder_ids._cal_cost(), 600)
 
         # Cost should stay the same for a done MO if nothing else is changed
-        mo.move_raw_ids.picked = True
         mo.button_mark_done()
         self.workcenter.costs_hour = 333
         self.assertEqual(mo.workorder_ids._cal_cost(), 600)
@@ -454,8 +499,6 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         self.assertEqual(workorder._cal_cost(), 600)
         # Simulate missing finished moves
         mo.move_finished_ids.unlink()
-        # Post inventory and complete MO
-        mo.move_raw_ids.picked = True
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
 

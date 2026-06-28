@@ -20,7 +20,7 @@
                                 <div class="col-12 col-lg-4 py-2">
                                     <h4>
                                         <a
-                                            t-att-href="'/shop/category/%s' % category.id"
+                                            t-att-href="category.website_url"
                                             class="col-lg-4 nav-link text-black p-0"
                                             t-out="category.name"
                                         />
@@ -29,7 +29,7 @@
                                         <t t-foreach="category.child_id.filtered('has_published_products')"
                                            t-as="sub_category">
                                             <a
-                                                t-att-href="'/shop/category/%s' % sub_category.id"
+                                                t-att-href="sub_category.website_url"
                                                 class="nav-link px-0"
                                                 t-out="sub_category.name"
                                             />

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale.AlertBanner">
+        <div
+            t-attf-class="alert alert-#{this.props.level or 'danger'} alert-dismissible #{this.props.classeName}"
+            role="alert"
+        >
+            <div t-out="this.props.message" class="text-prewrap"/>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"/>
+        </div>
+    </t>
+
+</templates>

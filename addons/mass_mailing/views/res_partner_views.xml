@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_list" model="ir.ui.view">
+        <field name="name">res.partner.view.list.inherit.mass.mail</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='display_name']" position="after">
+                <field name="mailing_contact_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_view_form" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.mass.mail</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <field name="mailing_contact_ids" invisible="1"/>
+                <button class="oe_stat_button" name="action_open_mailing_contacts" type="object"
+                    icon="fa-paper-plane" groups="mass_mailing.group_mass_mailing_user"
+                    invisible="not mailing_contact_ids"
+                >
+                    <div class="o_stat_info">
+                        <span class="o_stat_text" invisible="mailing_contact_ids.length != 1">Mailing Contact</span>
+                        <span class="o_stat_text" invisible="mailing_contact_ids.length == 1">Mailing Contacts</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

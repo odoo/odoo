@@ -2,6 +2,7 @@
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
+from odoo.tests.common import new_test_user
 
 
 class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
@@ -10,14 +11,14 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
 
         # Send first chat request - Open chat from operator side
         channel_1 = self._common_chat_request_flow()
-        guest = channel_1.channel_member_ids.filtered(lambda member: member.guest_id).guest_id
+        guest = channel_1.channel_member_ids.guest_id
         self.opener.cookies[guest._cookie_name] = guest._format_auth_cookie()
         # Visitor Rates the conversation (Good)
         self._send_rating(channel_1, self.visitor, 5)
 
         # Operator Re-Send a chat request
         channel_2 = self._common_chat_request_flow()
-        guest = channel_2.channel_member_ids.filtered(lambda member: member.guest_id).guest_id
+        guest = channel_2.channel_member_ids.guest_id
         self.opener.cookies[guest._cookie_name] = guest._format_auth_cookie()
         # Visitor Rates the conversation (Bad)
         self._send_rating(channel_2, self.visitor, 1, "Stop bothering me! I hate you </3 !")
@@ -112,8 +113,16 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         guest = self.env["mail.guest"].create({"name": "Guest"})
         self.assertNotEqual(chat_request.channel_member_ids.guest_id, guest)
         self.make_jsonrpc_request(
-            "/mail/action",
+            "/mail/store",
             {"fetch_params": [["init_livechat", self.livechat_channel.id]]},
             cookies={guest._cookie_name: guest._format_auth_cookie()},
         )
         self.assertEqual(chat_request.channel_member_ids.guest_id, guest)
+
+    def test_send_chat_request_does_not_join_channel(self):
+        agent = new_test_user(self.env, login="outside_agent", groups="im_livechat.im_livechat_group_user")
+        self.assertNotIn(agent, self.livechat_channel.user_ids)
+        self.visitor.with_user(agent).action_send_chat_request()
+        chat_request = self.env["discuss.channel"].search([("livechat_visitor_id", "=", self.visitor.id)])
+        self.assertEqual(chat_request.livechat_agent_partner_ids, agent.partner_id)
+        self.assertNotIn(agent, self.livechat_channel.user_ids)

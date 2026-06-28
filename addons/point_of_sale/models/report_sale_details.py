@@ -32,7 +32,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         return date_start, date_stop
 
     def _get_domain(self, date_start=False, date_stop=False, config_ids=False, session_ids=False):
-        domain = Domain('state', 'in', ['paid', 'done'])
+        domain = Domain('state', 'in', ['paid', 'done', 'cancel'])
 
         if session_ids:
             domain &= Domain('session_id', 'in', session_ids)
@@ -64,7 +64,9 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             date_start, date_stop = self._get_date_start_and_date_stop(date_start, date_stop)
 
         domain = self._get_domain(date_start, date_stop, config_ids, session_ids, **kwargs)
-        orders = self.env['pos.order'].search(domain)
+        all_orders = self.env['pos.order'].search(domain)
+        orders = all_orders.filtered(lambda o: o.state != 'cancel')
+        cancel_orders = all_orders - orders
 
         if config_ids:
             config_currencies = self.env['pos.config'].search([('id', 'in', config_ids)]).mapped('currency_id')
@@ -82,6 +84,11 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             'base_amount': 0.0,
             'taxes': {},
         }
+        products_cancelled = {}
+        cancelled_taxes = {
+            'base_amount': 0.0,
+            'taxes': {},
+        }
         refund_done = {}
         refund_taxes = {
             'base_amount': 0.0,
@@ -90,7 +97,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         for order in orders:
             if user_currency != order.pricelist_id.currency_id:
                 total += order.pricelist_id.currency_id._convert(
-                    order.amount_total, user_currency, order.company_id, order.date_order or fields.Date.today())
+                    order.amount_total, user_currency, order.company_id, order.date_order)
             else:
                 total += order.amount_total
             currency = order.session_id.currency_id
@@ -103,10 +110,17 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 else:
                     refund_done, refund_taxes = self._get_products_and_taxes_dict(line, refund_done, refund_taxes, currency)
 
+        for order in cancel_orders:
+            currency = order.session_id.currency_id
+            for line in order.lines:
+                products_cancelled, cancelled_taxes = self._get_products_and_taxes_dict(line, products_cancelled, cancelled_taxes, currency)
+
         taxes_info = self._get_taxes_info(taxes)
         refund_taxes_info = self._get_taxes_info(refund_taxes)
+        cancelled_taxes_info = self._get_taxes_info(cancelled_taxes)
         taxes = taxes['taxes']
         refund_taxes = refund_taxes['taxes']
+        cancelled_taxes = cancelled_taxes['taxes']
 
         payment_ids = self.env["pos.payment"].search([('pos_order_id', 'in', orders.ids)]).ids
         if payment_ids:
@@ -138,6 +152,18 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             for session in sessions:
                 configs.append(session.config_id)
 
+        cash_rounding_total = 0.0
+        for order in orders:
+            order_currency = order.session_id.currency_id
+            rounding_diff = order.amount_paid - order.amount_total
+            if user_currency != order_currency:
+                cash_rounding_total += order_currency._convert(
+                    rounding_diff, user_currency, order.company_id,
+                    order.date_order)
+            else:
+                cash_rounding_total += rounding_diff
+        cash_rounding_total = user_currency.round(cash_rounding_total)
+
         for payment in payments:
             payment['count'] = False
 
@@ -147,13 +173,17 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 cash_counted = session.cash_register_balance_end_real
             is_cash_method = False
             for payment in payments:
-                account_payments = self.env['account.payment'].search([('pos_session_id', '=', session.id)])
+                account_payments = self.env['account.payment'].sudo().search([('pos_session_id', '=', session.id)])
                 if payment['session'] == session.id:
                     if not payment['cash']:
+                        payment_method = self.env['pos.payment.method'].browse(payment['id'])
                         ref_value = "Closing difference in %s (%s)" % (payment['name'], session.name)
-                        account_move = self.env['account.move'].search([("ref", "=", ref_value)], limit=1)
+                        # We add the journal to the query to benefit from index `account_move_journal_id_company_id_idx`
+                        account_move = self.env['account.move'].search([
+                            ('ref', '=', ref_value),
+                            ('journal_id', '=', payment_method.journal_id.id),
+                        ], limit=1)
                         if account_move:
-                            payment_method = self.env['pos.payment.method'].browse(payment['id'])
                             is_loss = any(l.account_id == payment_method.journal_id.loss_account_id for l in account_move.line_ids)
                             is_profit = any(l.account_id == payment_method.journal_id.profit_account_id for l in account_move.line_ids)
                             payment['final_count'] = payment['total']
@@ -243,6 +273,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 })
         products = []
         refund_products = []
+        cancelled_products = []
         for category_name, product_list in products_sold.items():
             category_dictionnary = {
                 'name': category_name,
@@ -281,8 +312,28 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             refund_products.append(category_dictionnary)
         refund_products = sorted(refund_products, key=lambda l: str(l['name']))
 
+        for category_name, product_list in products_cancelled.items():
+            category_dictionnary = {
+                'name': category_name,
+                'products': sorted([{
+                    'product_id': product.id,
+                    'product_name': product.display_name,
+                    'barcode': product.barcode,
+                    'quantity': qty,
+                    'price_unit': price_unit,
+                    'discount': discount,
+                    'uom': product.uom_id.name,
+                    'total_paid': product_total,
+                    'base_amount': base_amount,
+                    'combo_products_label': combo_products_label,
+                } for (product, price_unit, discount), (qty, product_total, base_amount, combo_products_label) in product_list.items()], key=lambda l: l['product_name']),
+            }
+            cancelled_products.append(category_dictionnary)
+        cancelled_products = sorted(cancelled_products, key=lambda l: str(l['name']))
+
         products, products_info = self.with_context(config_id=configs[0].id if len(configs) > 0 else False)._get_total_and_qty_per_category(products)
         refund_products, refund_info = self.with_context(config_id=configs[0].id if len(configs) > 0 else False)._get_total_and_qty_per_category(refund_products)
+        cancelled_products, cancelled_info = self.with_context(config_id=configs[0].id if len(configs) > 0 else False)._get_total_and_qty_per_category(cancelled_products)
 
         currency = {
             'symbol': user_currency.symbol,
@@ -292,12 +343,13 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             'user_currency': user_currency,
         }
 
+        order_sessions = orders.mapped('session_id')
         session_name = False
-        if len(sessions) == 1:
-            state = sessions[0].state
-            date_start = sessions[0].start_at
-            date_stop = sessions[0].stop_at
-            session_name = sessions[0].name
+        if len(order_sessions) == 1 and session_ids:
+            state = order_sessions[0].state
+            date_start = order_sessions[0].start_at
+            date_stop = order_sessions[0].stop_at
+            session_name = order_sessions[0].name
         else:
             state = "multiple"
 
@@ -305,8 +357,9 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         for config in configs:
             config_names.append(config.name)
 
-        discount_number = len(orders.filtered(lambda o: o.lines.filtered(lambda l: l.discount > 0)))
-        discount_amount = sum(l._get_discount_amount() for l in orders.lines.filtered(lambda l: l.discount > 0))
+        lines_with_discount = orders.mapped('lines').filtered(lambda l: l._has_discount())
+        discount_number = len(lines_with_discount)
+        discount_amount = sum(l._get_discount_amount_for_report() for l in lines_with_discount)
 
         invoiceList = []
         invoiceTotal = 0
@@ -352,6 +405,10 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             'refund_taxes_info': refund_taxes_info,
             'refund_info': refund_info,
             'refund_products': refund_products,
+            'cancelled_taxes': list(cancelled_taxes.values()),
+            'cancelled_taxes_info': cancelled_taxes_info,
+            'cancelled_info': cancelled_info,
+            'cancelled_products': cancelled_products,
             'discount_number': discount_number,
             'discount_amount': discount_amount,
             'invoiceList': invoiceList,
@@ -359,6 +416,8 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             'total_paid': totalPaymentsAmount,
             'payments_per_method': payments_per_method.values(),
             'show_payment_per_method': not session_ids,
+            'cash_rounding_total': cash_rounding_total,
+            'session_state': sessions[0].state if len(sessions) == 1 else 'multiple',
         }
 
     def _get_product_total_amount(self, line):
@@ -400,14 +459,16 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
     def _get_total_and_qty_per_category(self, categories):
         all_qty = 0
         all_total = 0
+        qty_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        price_precision = self.env['decimal.precision'].precision_get('Product Price')
         for category_dict in categories:
             qty_cat = 0
             total_cat = 0
             for product in category_dict['products']:
                 qty_cat += product['quantity']
                 total_cat += product['base_amount']
-            category_dict['total'] = total_cat
-            category_dict['qty'] = qty_cat
+            category_dict['total'] = round(total_cat, price_precision)
+            category_dict['qty'] = round(qty_cat, qty_precision)
         # IMPROVEMENT: It would be better if the `products` are grouped by pos.order.line.id.
         unique_products = list({tuple(sorted(product.items())): product for category in categories for product in category['products']}.values())
         all_qty = sum([product['quantity'] for product in unique_products])

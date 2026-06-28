@@ -9,6 +9,7 @@ import { browser } from "@web/core/browser/browser";
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { jsToPyLocale, pyToJsLocale } from "@web/core/l10n/utils";
 import { App, Component, whenReady } from "@odoo/owl";
+import { services } from "@web/core/services";
 
 const { Settings } = luxon;
 
@@ -30,23 +31,23 @@ export async function createPublicRoot() {
     await lazyloader.allScriptsLoaded;
     await whenReady();
     const env = makeEnv();
-    await startServices(env);
+    Component.env = env;
+    const app = new App({
+        getTemplate,
+        dev: env.debug,
+        translateFn: appTranslateFn,
+        translatableAttributes: ["data-tooltip"],
+        plugins: services,
+    });
+    await startServices(env, app);
 
     env.services["public.interactions"].isReady.then(() => {
         document.body.setAttribute("is-ready", "true");
     });
 
-    Component.env = env;
-    const app = new App(MainComponentsContainer, {
-        getTemplate,
-        env,
-        dev: env.debug,
-        translateFn: appTranslateFn,
-        translatableAttributes: ["data-tooltip"],
-    });
     const locale = pyToJsLocale(lang) || browser.navigator.language;
     Settings.defaultLocale = locale;
-    const root = await app.mount(document.body);
+    const root = await app.createRoot(MainComponentsContainer, { env }).mount(document.body);
     odoo.__WOWL_DEBUG__ = { root };
     return root;
 }

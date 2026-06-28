@@ -28,4 +28,3 @@ from . import resource
 from . import resource_calendar
 from . import resource_calendar_leaves
 from . import ir_ui_menu
-from . import hr_export_mixin

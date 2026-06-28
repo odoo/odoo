@@ -1,37 +1,15 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 
-import { Deferred, KeepLast } from "@web/core/utils/concurrency";
+import { KeepLast } from "@web/core/utils/concurrency";
 import { memoize } from "@web/core/utils/functions";
 
-/**
- * @typedef {Object} Props
- * @property {string} src
- * @property {string} [alt]
- * @property {string} [class]
- * @property {string} [loading]
- * @property {((event: Event) => void)} [onLoad]
- * @property {((event: Event) => void)} [onClick]
- * @property {boolean} [paused]
- * @property {string} [style]
- * @extends {Component<Props, Env>}
- */
 export class Gif extends Component {
     static template = "mail.Gif";
-    static props = {
-        src: String,
-        alt: { type: String, optional: true },
-        class: { type: String, optional: true },
-        loading: { type: String, optional: true },
-        onLoad: { type: Function, optional: true },
-        onClick: { type: Function, optional: true },
-        paused: { type: Boolean, optional: true },
-        style: { type: String, optional: true },
-    };
     static components = {};
 
-    generateGifSnapshot = memoize(async (src) => {
-        const deferred = new Deferred();
+    generateGifSnapshot = memoize((src) => {
+        const { promise: gifSnapshotPromise, resolve: resolveGifSnapshot } =
+            Promise.withResolvers();
         const image = document.createElement("img");
         if (new URL(src).origin !== location.origin) {
             image.crossOrigin = "anonymous";
@@ -42,13 +20,23 @@ export class Gif extends Component {
             canvas.width = image.width;
             canvas.height = image.height;
             canvas.getContext("2d").drawImage(image, 0, 0, image.width, image.height);
-            deferred.resolve(canvas.toDataURL("image/gif"));
+            resolveGifSnapshot(canvas.toDataURL("image/gif"));
         };
-        return deferred;
+        return gifSnapshotPromise;
     });
 
     setup() {
-        this.state = useState({ snapshot: null });
+        this.snapshot = signal(null);
+        this.props = props({
+            alt: t.string().optional(),
+            class: t.string().optional(),
+            loading: t.selection(["eager", "lazy"]).optional(),
+            onClick: t.function([]).optional(),
+            onLoad: t.function([t.instanceOf(Event)]).optional(),
+            paused: t.boolean().optional(),
+            src: t.string(),
+            style: t.string().optional(),
+        });
         this.keepLast = new KeepLast();
     }
 
@@ -56,6 +44,6 @@ export class Gif extends Component {
         this.props.onLoad?.(...arguments);
         this.keepLast
             .add(this.generateGifSnapshot(this.props.src))
-            .then((snapshot) => (this.state.snapshot = snapshot));
+            .then((snapshot) => this.snapshot.set(snapshot));
     }
 }

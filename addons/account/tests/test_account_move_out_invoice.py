@@ -1899,6 +1899,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'state': 'draft',
             'ref': False,
             'payment_state': 'not_paid',
+            'invoice_origin': 'S00001',
         })
 
     def test_out_invoice_create_refund_multi_currency(self):
@@ -2747,13 +2748,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'name': 'Accrual Expense Account',
                 'code': '234567',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
             'revenue_accrual_account': self.env['account.account'].create({
                 'name': 'Accrual Revenue Account',
                 'code': '765432',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
         })
         wizard_res = wizard.do_action()
@@ -2885,13 +2884,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'name': 'Accrual Expense Account',
                 'code': '234567',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
             'revenue_accrual_account': self.env['account.account'].create({
                 'name': 'Accrual Revenue Account',
                 'code': '765432',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
         })
         wizard_res = wizard.do_action()
@@ -3047,13 +3044,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'name': 'Accrual Expense Account',
                 'code': '234567',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
             'revenue_accrual_account': self.env['account.account'].create({
                 'name': 'Accrual Revenue Account',
                 'code': '765432',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
         })
         wizard_res = wizard.do_action()
@@ -3412,7 +3407,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
@@ -3535,7 +3529,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
@@ -3677,7 +3670,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         caba_tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
@@ -3686,7 +3678,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'tax_exigibility': 'on_payment',
             'cash_basis_transition_account_id': tax_waiting_account.id,
         })
-        caba_tax.invoice_repartition_line_ids.account_id.reconcile = True
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
@@ -3759,7 +3750,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(len(invoice.invoice_line_ids), 0)
 
         # Quick edit total amount activated
-        self.env.company.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.quick_edit_mode_enabled = True
         self.env.company.account_sale_tax_id = self.env['account.tax'].create({
             'name': '21%',
             'amount': 21,
@@ -3797,7 +3788,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move_form.invoice_date = fields.Date.from_string('2022-01-01')
 
         # Quick edit total amount activated
-        self.env.company.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.quick_edit_mode_enabled = True
         # 21% sale tax
         self.env.company.account_sale_tax_id = self.env['account.tax'].create({
             'name': '21%',
@@ -3856,7 +3847,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
             ],
         })
-        self.env.company.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.quick_edit_mode_enabled = True
         self.env.company.account_sale_tax_id = tax
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
@@ -4113,10 +4104,18 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         (valid_invoice + invalid_invoice_1 + invalid_invoice_2).auto_post = 'at_date'
 
-        with self.enter_registry_test_mode():
+        with (
+            self.enter_registry_test_mode(),
+            patch('odoo.addons.base.models.ir_cron.IrCron._reschedule_asap') as reschedule_asap,
+        ):
             self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
+            # No retries for batches with failed moves
+            reschedule_asap.assert_not_called()
+
         self.assertEqual(valid_invoice.state, 'posted')
         self.assertEqual(invalid_invoice_1.state, 'draft')
+        self.assertEqual(invalid_invoice_1.auto_post, 'no')
+        self.assertEqual(invalid_invoice_2.auto_post, 'no')
 
         self.assertTrue(any(
             message.body == (
@@ -4156,35 +4155,59 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_discount_allocation_account_on_invoice(self):
         # Ensure two aml of display_type 'discount' are correctly created when setting an account for discounts in the settings
+        product_a_account = self.env['account.account'].create({
+            'name': 'account_a',
+            'code': "100001",
+            'account_type': 'income_other',
+        })
+        product_b_account = self.product_b.property_account_income_id
+
+        self.product_a.property_account_income_id = product_a_account
         discount_account = self.company_data['default_account_expense'].copy()
         self.company_data['company'].account_discount_expense_allocation_id = discount_account
+
+        currency = self.setup_other_currency('EUR', rates=[
+            ('2025-01-01', 0.000717398539),
+        ])
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
+            'currency_id': currency.id,
             'invoice_line_ids': [
                 Command.create({
                     'product_id': self.product_a.id,
                     'quantity': 1,
-                    'discount': 5,
-                })
+                    'price_unit': 10.0,
+                    'discount': 57.85,
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'quantity': 1,
+                    'price_unit': 70.0,
+                    'discount': 57.85,
+                }),
             ],
         })
-        product_line_account = invoice.line_ids.filtered(lambda x: x.product_id).account_id
         self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.display_type == 'discount'), [
             {
-                'account_id': product_line_account.id,
+                'account_id': product_a_account.id,
                 'tax_ids': [],
-                'amount_currency': -50.0,
-                'debit': 0.0,
-                'credit': 50.0,
+                'amount_currency': -5.79,
+                'balance': -8070.83,
+
             },
             {
                 'account_id': discount_account.id,
                 'tax_ids': [],
-                'amount_currency': 50.0,
-                'debit': 50.0,
-                'credit': 0.0,
+                'amount_currency': 46.29,
+                'balance': 64524.81,
+            },
+            {
+                'account_id': product_b_account.id,
+                'tax_ids': [],
+                'amount_currency': -40.5,
+                'balance': -56453.98,
             },
         ])
 
@@ -4372,7 +4395,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
     def test_on_quick_encoding_non_accounting_lines(self):
         """ Ensure that quick encoding values are only applied to accounting lines) """
 
-        self.env.company.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.quick_edit_mode_enabled = True
         move_form = Form(
             self.env['account.move'].with_context(default_move_type='out_invoice')
         )
@@ -5006,6 +5029,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 {'name': '2026-01-01', 'rate': 2.0, 'currency_id': self.other_currency.id, 'company_id': self.env.company.id},
             ]
         )
+        self.assertEqual(self.env['account.move'].get_currency_rate(self.env.company.id, self.other_currency.id, '2026-01-01'), 2.0)
         with (freeze_time('2025-01-02'), patch.object(self.env.cr, 'now', lambda: fields.Datetime.to_datetime("2025-01-02 10:00:00"))):
             move = self.env['account.move'].create({
                 'move_type': 'out_invoice',
@@ -5101,3 +5125,68 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'product_id': self.product_a.id,
             'name': 'product_a',
         }])
+
+    def test_out_invoice_fiscal_position_branch_taxes(self):
+        """Price should be recomputed when tax inclusion changes via fiscal position"""
+        # Create price-included taxes
+        tax_10_incl = self.env['account.tax'].create({
+            'name': '10% incl',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include_override': 'tax_included',
+            'include_base_amount': True,
+        })
+        self.product_a.write({
+            'lst_price': 1100.0,
+            'taxes_id': [Command.set(tax_10_incl.ids)],
+        })
+
+        # Create fiscal position mapping 10% -> 5%
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'Test FP',
+        })
+        self.tax_sale_a.write({
+            'fiscal_position_ids': [Command.set(fiscal_position.ids)],
+            'original_tax_ids': [Command.set(tax_10_incl.ids)],
+        })
+
+        # create a new branch
+        self.env.company.write({
+            'child_ids': [
+                Command.create({'name': 'Branch A'}),
+            ],
+        })
+        self.cr.precommit.run()  # load the CoA
+
+        # create an invoice on the new branch
+        branch_a = self.env.company.child_ids
+
+        # Create invoice - product will auto-apply price_unit from product with tax
+        move_form = Form(self.env['account.move'].with_company(branch_a).with_context(default_move_type='out_invoice'))
+        move_form.partner_id = self.partner_a
+        move_form.invoice_date = fields.Date.from_string('2019-01-01')
+        move_form.fiscal_position_id = fiscal_position
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_a
+        invoice = move_form.save()
+        self.assertEqual(
+            invoice.invoice_line_ids[0].price_unit,
+            1000.00,
+            msg="Price should be tax included"
+        )
+
+    def test_catalog_with_same_product_on_multiple_lines(self):
+        pack_of_6 = self.env.ref('uom.product_uom_pack_6')
+        move = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({'product_id': self.product_a.id, 'quantity': 1, 'product_uom_id': pack_of_6.id}),
+                Command.create({'product_id': self.product_a.id, 'quantity': 6}),
+            ],
+        })
+        data = move.invoice_line_ids._get_product_catalog_lines_data()
+        if self.env['res.groups']._is_feature_enabled('uom.group_uom'):
+            self.assertEqual(data['uomDisplayName'], 'Pack of 6')
+        self.assertEqual(data['quantity'], 2)

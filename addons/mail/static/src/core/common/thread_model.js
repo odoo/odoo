@@ -5,7 +5,6 @@ import { compareDatetime } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { Deferred } from "@web/core/utils/concurrency";
 
 /**
  * @typedef SuggestedRecipient
@@ -91,7 +90,7 @@ export class Thread extends Record {
          * @param {import("models").Attachment} a1
          * @param {import("models").Attachment} a2
          */
-        sort: (a1, a2) => (a1.id < a2.id ? 1 : -1),
+        sort: (a1, a2) => a2.id - a1.id,
     });
     can_react = true;
     close_chat_window = fields.Attr(undefined, {
@@ -137,6 +136,15 @@ export class Thread extends Record {
     get isFocused() {
         return this.isFocusedCounter !== 0;
     }
+    isFocusedByThread = fields.Attr(false, {
+        onUpdate() {
+            if (this.isFocusedByThread) {
+                this.isFocusedCounter++;
+            } else {
+                this.isFocusedCounter--;
+            }
+        },
+    });
     isFocusedCounter = fields.Attr(0, {
         onUpdate() {
             if (this.isFocusedCounter < 0) {
@@ -145,19 +153,23 @@ export class Thread extends Record {
         },
     });
     isLoadingAttachments = false;
-    isLoadedDeferred = new Deferred();
+    isLoadedPromise = new Promise((resolve) => (this._resolveIsLoaded = resolve));
     isLoaded = fields.Attr(false, {
         /** @this {import("models").Thread} */
         onUpdate() {
             if (this.isLoaded) {
-                this.isLoadedDeferred.resolve();
+                this._resolveIsLoaded();
             } else {
-                const def = this.isLoadedDeferred;
-                this.isLoadedDeferred = new Deferred();
-                this.isLoadedDeferred.then(() => def.resolve());
+                const { promise, resolve } = Promise.withResolvers();
+                this.isLoadedPromise = promise;
+                // chain the current resolve before overwriting it
+                this.isLoadedPromise.then(this._resolveIsLoaded);
+                this._resolveIsLoaded = resolve;
             }
         },
     });
+    /** @type {Boolean|undefined} */
+    has_mail_thread;
     message_main_attachment_id = fields.One("ir.attachment");
     message_needaction_counter = 0;
     message_needaction_counter_bus_id = 0;
@@ -208,7 +220,7 @@ export class Thread extends Record {
     scrollTop = "bottom";
     transientMessages = fields.Many("mail.message");
     /* The additional recipients are the recipients that are manually added
-     * by the user by using the "To" field of the Chatter. */
+     * by the user by using the "To" or "Cc" fields of the Chatter. */
     additionalRecipients = fields.Attr([]);
     /** @type {number|undefined} */
     recipients = fields.Many("mail.followers");
@@ -591,7 +603,7 @@ export class Thread extends Record {
         return {
             thread_id: this.id,
             thread_model: this.model,
-            ...this.rpcParams,
+            ...(Object.keys(this.rpcParams).length > 0 && { access_params: this.rpcParams }),
         };
     }
 
@@ -678,7 +690,7 @@ export class Thread extends Record {
     markAsRead(options) {
         const newestPersistentMessage = this.newestPersistentOfAllMessage;
         if (!newestPersistentMessage && !this.isLoaded) {
-            this.isLoadedDeferred
+            this.isLoadedPromise
                 .then(() => new Promise(setTimeout))
                 .then(() => this.markAsRead(options));
             return;

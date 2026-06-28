@@ -2,33 +2,23 @@
 # This file contains the translation of the following modules:
 # * l10n_es_edi_facturae
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.2alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 12:31+0000\n"
-"PO-Revision-Date: 2025-12-05 12:35+0000\n"
-"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19-l10n/"
+"POT-Creation-Date: 2026-06-12 18:21+0000\n"
+"PO-Revision-Date: 2026-06-12 03:41+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-master-l10n/"
 "l10n_es_edi_facturae/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
-
-#. module: l10n_es_edi_facturae
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.corrective_type
-msgid "01"
-msgstr "01"
-
-#. module: l10n_es_edi_facturae
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.account_invoice_facturae_export
-msgid "3.2.2"
-msgstr "3.2.2"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__27
@@ -227,8 +217,9 @@ msgstr "Número del departamento emisor."
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model,name:l10n_es_edi_facturae.model_res_company
+#, fuzzy
 msgid "Company"
-msgstr ""
+msgstr "Compañía"
 
 #. module: l10n_es_edi_facturae
 #. odoo-python
@@ -374,7 +365,6 @@ msgstr "Centro FACe"
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move_send.py:0
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.view_move_form
 msgid "Factura-e"
 msgstr "Facturae"
 
@@ -658,8 +648,9 @@ msgstr "Asiento contable"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model,name:l10n_es_edi_facturae.model_account_move_reversal
+#, fuzzy
 msgid "Journal Entry Reversal"
-msgstr ""
+msgstr "Reversión del asiento contable"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__03
@@ -759,6 +750,12 @@ msgid "Open account reimbursement"
 msgstr "Reposición"
 
 #. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_bank_statement_line__l10n_es_original_invoice_credited
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_move__l10n_es_original_invoice_credited
+msgid "Original Invoice Credited"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_tax__l10n_es_edi_facturae_tax_type__05
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__05
 msgid "Other"
@@ -798,6 +795,14 @@ msgid "Physical GLN"
 msgstr "GLN Físico"
 
 #. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/account_move.py:0
+msgid ""
+"Please fill in the invoicing period (start and end date) before generating "
+"the corrective Facturae document."
+msgstr ""
+
+#. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__29
 msgid "Portions"
 msgstr "Raciones"
@@ -829,6 +834,7 @@ msgstr "REIVA: Régimen especial de IVA para agencias de viajes"
 
 #. module: l10n_es_edi_facturae
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.view_account_move_reversal_inherit_l10n_es_edi_facturae
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.view_move_form
 msgid "Reason"
 msgstr "Motivo"
 
@@ -855,8 +861,9 @@ msgstr ""
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/wizard/account_move_reversal.py:0
+#, fuzzy
 msgid "Reversal of: %(move_name)s - %(reason)s"
-msgstr ""
+msgstr "Reversión de: %(move_name)s - %(reason)s"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_res_partner__l10n_es_edi_facturae_ac_role_type_ids
@@ -930,8 +937,8 @@ msgid "Spanish Facturae EDI Tax Type"
 msgstr "Tipo de impuesto EDI de Facturae en España"
 
 #. module: l10n_es_edi_facturae
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.product_uom_form_view_inherit_l10n_es_edi_facturae
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.product_uom_tree_view_inherit_l10n_es_edi_facturae
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.uom_uom_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.uom_uom_view_list
 msgid "Spanish Facturae EDI type"
 msgstr "Tipo EDI de Facturae en España"
 
@@ -1033,19 +1040,6 @@ msgstr ""
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
-msgid ""
-"The credit note/refund appears to have been issued manually. For the purpose "
-"of generating a Facturae document, it's necessary that the credit note/"
-"refund is created directly from the associated invoice/bill."
-msgstr ""
-"Parece que la factura rectificativa o el reembolso se ha emitido "
-"manualmente. Para generar  un documento Facturae, es necesario que la "
-"factura rectificativa o el reembolso se cree directamente desde la factura "
-"asociada."
-
-#. module: l10n_es_edi_facturae
-#. odoo-python
-#: code:addons/l10n_es_edi_facturae/models/account_move.py:0
 msgid "The partner needs a set country"
 msgstr "El contacto necesita un país establecido"
 
@@ -1062,6 +1056,15 @@ msgstr ""
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
 msgid "The product '%s' could not be found."
 msgstr "No se ha podido encontrar el producto '%s'."
+
+#. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/account_move.py:0
+msgid ""
+"To generate a Facturae corrective document, link the refund to its original "
+"invoice or, if it is not in the system, fill in the 'Original Invoice "
+"Credited' field."
+msgstr ""
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_move__l10n_es_payment_means__09
@@ -1126,3 +1129,13 @@ msgstr "text/xml"
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.template_xades_signature
 msgid "urn:oid:1.2.840.10003.5.109.10"
 msgstr "urn:oid:1.2.840.10003.5.109.10"
+
+#~ msgid ""
+#~ "The credit note/refund appears to have been issued manually. For the "
+#~ "purpose of generating a Facturae document, it's necessary that the credit "
+#~ "note/refund is created directly from the associated invoice/bill."
+#~ msgstr ""
+#~ "Parece que la factura rectificativa o el reembolso se ha emitido "
+#~ "manualmente. Para generar  un documento Facturae, es necesario que la "
+#~ "factura rectificativa o el reembolso se cree directamente desde la "
+#~ "factura asociada."

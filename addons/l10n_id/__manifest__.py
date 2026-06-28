@@ -18,10 +18,10 @@ This is the latest Indonesian Odoo localisation necessary to run Odoo accounting
     ],
     'auto_install': ['account'],
     'data': [
-        'security/ir.model.access.csv',
         'data/ir_cron.xml',
         'views/account_move_views.xml',
         'views/res_bank.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',

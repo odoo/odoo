@@ -1,25 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import re
-from stdnum.fr import siret
+from odoo import models, fields, api
+from odoo.exceptions import (
+    UserError,
+    ValidationError,
+)
+from odoo.tools.partner_identifiers import (
+    pick_preferred_identifier,
+    validation_error_message,
+)
 
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
+from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import (
+    ISO_IDENTIFIERS_METADATA,
+    validate_participant_identifier,
+)
 from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
-
-
-PEPPOL_ENDPOINT_INVALIDCHARS_RE = re.compile(r'[^a-zA-Z\d\-._~]')
-PEPPOL_ENDPOINT_INVALID_CHARS_RE_BY_EAS = {
-    '0208': re.compile(r'[^0-9]'),
-    '9925': re.compile(r'[^beBE0-9]'),
-}
-
-
-def sanitize_peppol_endpoint(peppol_endpoint, eas=None):
-    if not peppol_endpoint:
-        return peppol_endpoint
-    sanitizer = PEPPOL_ENDPOINT_INVALID_CHARS_RE_BY_EAS.get(eas, PEPPOL_ENDPOINT_INVALIDCHARS_RE)
-    return sanitizer.sub('', peppol_endpoint)
 
 
 class ResPartner(models.Model):
@@ -37,20 +31,9 @@ class ResPartner(models.Model):
         ],
     )
     is_ubl_format = fields.Boolean(compute='_compute_is_ubl_format')
-    is_peppol_edi_format = fields.Boolean(compute='_compute_is_peppol_edi_format')  # TODO remove in master
-    peppol_endpoint = fields.Char(
-        string="Peppol Endpoint",
-        help="Unique identifier used by the BIS Billing 3.0 and its derivatives, also known as 'Endpoint ID'.",
-        compute="_compute_peppol_endpoint",
-        store=True,
-        readonly=False,
-        tracking=True,
-    )
-    peppol_eas = fields.Selection(
-        string="Peppol ID",
-        help="""Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.
-             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/""",
-        compute="_compute_peppol_eas",
+    routing_scheme = fields.Selection(
+        string="Routing ID",
+        compute="_compute_routing_scheme_endpoint",
         store=True,
         readonly=False,
         tracking=True,
@@ -145,17 +128,107 @@ class ResPartner(models.Model):
             ('AS', "AS2 exchange"),
             ('AU', "File Transfer Protocol"),
             ('EM', "Electronic mail"),
-        ]
+        ],
     )
-    available_peppol_eas = fields.Json(compute='_compute_available_peppol_eas')
+    routing_endpoint = fields.Char(
+        string="Routing Endpoint",
+        compute="_compute_routing_scheme_endpoint",
+        store=True,
+        readonly=False,
+        tracking=True,
+    )
+    routing_identifier = fields.Char(
+        string="EDI Routing Address",
+        compute='_compute_routing_identifier',
+        inverse='_inverse_routing_identifier',
+    )
+    available_routing_schemes = fields.Json(compute='_compute_available_routing_schemes')
 
-    @api.constrains('peppol_endpoint')
-    def _check_peppol_fields(self):
+    @api.depends_context('company')
+    @api.depends('invoice_edi_format')
+    def _compute_is_ubl_format(self):
         for partner in self:
-            if partner.peppol_endpoint and partner.peppol_eas:
-                error = self._build_error_peppol_endpoint(partner.peppol_eas, partner.peppol_endpoint)
-                if error:
-                    raise ValidationError(error)
+            partner.is_ubl_format = partner.invoice_edi_format in self._get_ubl_cii_formats()
+
+    @api.depends('commercial_partner_id', 'commercial_partner_id.vat',
+                 'commercial_partner_id.additional_identifiers', 'commercial_partner_id.country_id')
+    def _compute_routing_scheme_endpoint(self):
+        for partner in self:
+            identifier_vals = partner._get_preferred_routing_identifier_vals(force_recompute=True)
+            partner.routing_scheme = identifier_vals.get('scheme') or False
+            partner.routing_endpoint = identifier_vals.get('value') or False
+
+    @api.depends('routing_scheme', 'routing_endpoint')
+    def _compute_routing_identifier(self):
+        for partner in self:
+            partner.routing_identifier = (
+                f'{partner.routing_scheme}:{partner.routing_endpoint}'
+                if partner.routing_scheme and partner.routing_endpoint
+                else False
+            )
+
+    def _inverse_routing_identifier(self):
+        for partner in self:
+            routing_identifier = partner.routing_identifier or ''
+            scheme, sep, endpoint = routing_identifier.partition(':')
+            if routing_identifier and not sep:
+                raise UserError(self.env._("Routing identifier should be in the format 'SCHEME:ENDPOINT'."))
+            if scheme and endpoint:  # validated through '_clean_routing_endpoint'.
+                partner.write({'routing_scheme': scheme, 'routing_endpoint': endpoint})
+            else:
+                partner.write({'routing_scheme': False, 'routing_endpoint': False})
+
+    @api.depends_context('company')
+    @api.depends('company_id')
+    def _compute_available_routing_schemes(self):
+        # TO OVERRIDE
+        self.available_routing_schemes = list(dict(self._fields['routing_scheme'].selection))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            self._clean_routing_endpoint(vals)
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self._clean_routing_endpoint(vals, partners=self)
+        return super().write(vals)
+
+    def _clean_routing_endpoint(self, vals, partners=None):
+        """ Pre-create/write on a `vals` dict:
+        - normalize
+        - reject malformed values (raises ValidationError)
+        Mutates `vals` in place.
+        """
+        if (scheme := vals.get('routing_scheme')) and (endpoint := vals.get('routing_endpoint')):
+            result = validate_participant_identifier(scheme, endpoint)
+            if not result['valid']:
+                raise ValidationError(validation_error_message(self.env, result['key'], result['example']))
+            vals['routing_endpoint'] = result['value']
+
+    def _get_all_identifiers(self, enrich=False):
+        # EXTENDS 'account'
+        all_identifiers = super()._get_all_identifiers(enrich)
+        if enrich and self.routing_identifier and (metadata := ISO_IDENTIFIERS_METADATA.get(self.routing_scheme)) and metadata['key'] not in all_identifiers:
+            all_identifiers[metadata['key']] = self.routing_endpoint
+        return all_identifiers
+
+    def _get_preferred_routing_identifier_vals(self, force_recompute=False):
+        """Returns a dict {'scheme': scheme, 'value': value, ...metadata} of the preferred identifier for the given partner.
+        - When `partner.routing_identifier` is set, return it.
+        - Otherwise picks the lowest-sequence identifier carrying an ISO scheme from `_get_all_identifiers(enrich=True)`.
+        - Returns empty dict when nothing routable is available.
+        """
+        self.ensure_one()
+        partner = self.commercial_partner_id
+        if not force_recompute and partner.routing_scheme and partner.routing_endpoint and partner.routing_scheme in ISO_IDENTIFIERS_METADATA:
+            return {'scheme': partner.routing_scheme, 'value': partner.routing_endpoint}
+        identifier_vals = pick_preferred_identifier(
+            partner._get_all_identifiers(enrich=True),
+            filter_func=lambda k, v, m: m.get('scheme') in ISO_IDENTIFIERS_METADATA and v,
+            sort_key=lambda k, v, m: (m.get('sequence', 100), k),
+        )
+        return identifier_vals or {}
 
     @api.model
     def _get_ubl_cii_formats(self):
@@ -199,12 +272,16 @@ class ResPartner(models.Model):
             # return the format with the smallest sequence
             if len(formats_by_country) == 1:
                 return formats_by_country[0]
-            else:
-                if self.peppol_eas == '0204':
-                    return 'xrechnung'
-                formats_info = self._get_ubl_cii_formats_info()
-                return min(formats_by_country, key=lambda e: formats_info[e].get('sequence', 100))  # we use a sequence of 100 by default
+            # Prefer xrechnung when the partner has a Leitweg-ID (B2G in Germany).
+            if 'DE_LTW' in self.commercial_partner_id._get_all_identifiers(enrich=True):
+                return 'xrechnung'
+            formats_info = self._get_ubl_cii_formats_info()
+            return min(formats_by_country, key=lambda e: formats_info[e].get('sequence', 100))  # we use a sequence of 100 by default
         return False
+
+    def _get_ubl_cii_edi_format(self):
+        self.ensure_one()
+        return self.invoice_edi_format or self._get_suggested_ubl_cii_edi_format()
 
     def _get_suggested_peppol_edi_format(self):
         self.ensure_one()
@@ -219,92 +296,6 @@ class ResPartner(models.Model):
     def _get_peppol_formats(self):
         formats_info = self._get_ubl_cii_formats_info()
         return [format_key for format_key, format_vals in formats_info.items() if format_vals.get('on_peppol')]
-
-    def _peppol_eas_endpoint_depends(self):
-        # field dependencies of methods _compute_peppol_endpoint() and _compute_peppol_eas()
-        # because we need to extend depends in l10n modules
-        return ['country_code', 'vat', 'company_registry']
-
-    @api.depends_context('company')
-    @api.depends('invoice_edi_format')
-    def _compute_is_ubl_format(self):
-        for partner in self:
-            partner.is_ubl_format = partner.invoice_edi_format in self._get_ubl_cii_formats()
-
-    @api.depends_context('company')
-    @api.depends('invoice_edi_format')
-    def _compute_is_peppol_edi_format(self):
-        for partner in self:
-            partner.is_peppol_edi_format = partner.invoice_edi_format in self._get_peppol_formats()
-
-    def _get_peppol_endpoint_value(self, country_code, field, eas):
-        self.ensure_one()
-        value = field in self._fields and self[field]
-
-        if (
-            country_code == 'BE'
-            and field == 'company_registry'
-            and not value
-            and self.vat
-        ):
-            value = self.vat
-            if value.isalnum():
-                value = value.removeprefix(country_code)
-
-        return sanitize_peppol_endpoint(value, eas)
-
-    @api.depends('peppol_eas')
-    def _compute_peppol_endpoint(self):
-        """ If the EAS changes and a valid endpoint is available, set it. Otherwise, keep the existing value."""
-        for partner in self:
-            partner.peppol_endpoint = sanitize_peppol_endpoint(partner.peppol_endpoint, partner.peppol_eas)
-            country_code = partner._deduce_country_code()
-            if country_code in EAS_MAPPING:
-                field = EAS_MAPPING[country_code].get(partner.peppol_eas)
-                value = partner._get_peppol_endpoint_value(country_code, field, partner.peppol_eas)
-                if field and value and not partner._build_error_peppol_endpoint(partner.peppol_eas, value):
-                    partner.peppol_endpoint = value
-
-    @api.depends(lambda self: self._peppol_eas_endpoint_depends())
-    def _compute_peppol_eas(self):
-        """
-        If the country_code changes, recompute the EAS only if there is a country_code, it exists in the
-        EAS_MAPPING, and the current EAS is not consistent with the new country_code.
-        """
-        for partner in self:
-            partner.peppol_eas = partner.peppol_eas
-            country_code = partner._deduce_country_code()
-            if country_code in EAS_MAPPING:
-                eas_to_field = EAS_MAPPING[country_code]
-                if partner.peppol_eas not in eas_to_field.keys():
-                    new_eas = next(iter(EAS_MAPPING[country_code].keys()))
-                    # Iterate on the possible EAS until a valid one is found
-                    for eas, field in eas_to_field.items():
-                        if field and field in partner._fields:
-                            value = partner._get_peppol_endpoint_value(country_code, field, eas)
-                            if value and not partner._build_error_peppol_endpoint(eas, value):
-                                new_eas = eas
-                                break
-                    partner.peppol_eas = new_eas
-
-    @api.depends_context('company')
-    @api.depends('company_id')
-    def _compute_available_peppol_eas(self):
-        # TO OVERRIDE
-        self.available_peppol_eas = list(dict(self._fields['peppol_eas'].selection))
-
-    def _build_error_peppol_endpoint(self, eas, endpoint):
-        """ This function contains all the rules regarding the peppol_endpoint."""
-        if eas == '0208' and not re.match(r"^\d{10}$", endpoint):
-            return _("The Peppol endpoint is not valid. The expected format is: 0239843188")
-        if eas == '0009' and not siret.is_valid(endpoint):
-            return _("The Peppol endpoint is not valid. The expected format is: 73282932000074")
-        if eas == '0007' and not re.match(r"^\d{10}$", endpoint):
-            return _("The Peppol endpoint is not valid. "
-                     "It should contain exactly 10 digits (Company Registry number)."
-                     "The expected format is: 1234567890")
-        if PEPPOL_ENDPOINT_INVALIDCHARS_RE.search(endpoint) or not 1 <= len(endpoint) <= 50:
-            return _("The Peppol endpoint (%s) is not valid. It should contain only letters and digit.", endpoint)
 
     @api.model
     def _get_edi_builder(self, invoice_edi_format):
@@ -321,3 +312,16 @@ class ResPartner(models.Model):
             return self.env['account.edi.xml.ubl_bis3']
         if invoice_edi_format == 'ubl_sg':
             return self.env['account.edi.xml.ubl_sg']
+
+    @api.model
+    def _import_retrieve_customer_from_routing_identifier(self, customer_values):
+        routing_scheme = customer_values.get('routing_scheme')
+        routing_endpoint = customer_values.get('routing_endpoint')
+        if not routing_scheme or not routing_endpoint:
+            return
+
+        return {
+            'criteria': [{
+                'domain': [('routing_scheme', '=', routing_scheme), ('routing_endpoint', '=', routing_endpoint)],
+            }],
+        }

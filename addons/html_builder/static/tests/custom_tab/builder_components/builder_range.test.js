@@ -28,7 +28,7 @@ test("should commit changes", async () => {
     });
     addBuilderOption({
         selector: ".test-options-target",
-        template: xml`<BuilderRange action="'customAction'" displayRangeValue="true"/>`,
+        template: xml`<BuilderRange action="'customAction'"/>`,
     });
     await setupHTMLBuilder(`
         <div class="test-options-target">10</div>
@@ -61,11 +61,11 @@ test("range input should step up or down with arrow keys", async () => {
     });
     addBuilderOption({
         selector: ".test-integer-step",
-        template: xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`,
+        template: xml`<BuilderRange action="'customAction'" step="2"/>`,
     });
     addBuilderOption({
         selector: ".test-fractional-step",
-        template: xml`<BuilderRange action="'customAction'" step="0.15" displayRangeValue="true"/>`,
+        template: xml`<BuilderRange action="'customAction'" step="0.15"/>`,
     });
     await setupHTMLBuilder(`
         <div class="test-integer-step">10</div>
@@ -153,7 +153,7 @@ test("keeping an arrow key pressed should commit only once", async () => {
     });
     addBuilderOption({
         selector: ".test-options-target",
-        template: xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`,
+        template: xml`<BuilderRange action="'customAction'" step="2"/>`,
     });
     freezeTime();
     await setupHTMLBuilder(`
@@ -232,6 +232,52 @@ test("should syncronize previews", async () => {
     await advanceTime(1200);
     await expect.verifySteps(["customAction isPreviewing: false"]);
     await expect(".options-container input[type='number']").toHaveProperty("value", 10);
+});
+
+test("number input should have the same min, max and step as the range input", async () => {
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement }) {
+                return editingElement.textContent;
+            }
+            apply({ editingElement, value }) {
+                expect.step(`customAction ${value}`);
+                editingElement.textContent = value;
+            }
+        },
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderRange withNumberInput="true" action="'customAction'" min="0" max="5" step="2"/>`,
+    });
+    await setupHTMLBuilder(`
+        <div class="test-options-target">2</div>
+    `);
+
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container input[type='number']").keyDown("ArrowUp");
+
+    // Check that step=2
+    expect(".options-container input[type='number']").toHaveProperty("value", 4);
+    expect(":iframe .test-options-target").toHaveInnerHTML("4");
+    expect.verifySteps(["customAction 4"]);
+
+    await contains(".options-container input[type='number']").keyDown("ArrowUp");
+
+    // Check that max=5
+    expect(".options-container input[type='number']").toHaveProperty("value", 5);
+    expect(":iframe .test-options-target").toHaveInnerHTML("5");
+    expect.verifySteps(["customAction 5"]);
+
+    await contains(".options-container input[type='number']").keyDown("ArrowDown");
+    await contains(".options-container input[type='number']").keyDown("ArrowDown");
+    await contains(".options-container input[type='number']").keyDown("ArrowDown");
+
+    // Check that min=0
+    expect(".options-container input[type='number']").toHaveProperty("value", 0);
+    expect(":iframe .test-options-target").toHaveInnerHTML("0");
+    expect.verifySteps(["customAction 3", "customAction 1", "customAction 0"]);
 });
 
 describe("unit & saveUnit", () => {
@@ -372,4 +418,45 @@ describe("unit & saveUnit", () => {
         expect.verifySteps(["customAction 7000ms"]);
         expect(":iframe .test-options-target").toHaveInnerHTML("7000ms");
     });
+});
+
+test("should map range from 0 to 100 scale when empty convertorRatio object is passed", async () => {
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement }) {
+                return editingElement.textContent;
+            }
+            apply({ editingElement, value }) {
+                expect.step(`applied ${value}`);
+                editingElement.textContent = value;
+            }
+        },
+    });
+    addBuilderOption({
+        selector: ".test-ratio-target",
+        template: xml`<BuilderRange action="'customAction'" min="-2" max="2" withNumberInput="true" convertorRatio="{}" step="0.1"/>`,
+    });
+    await setupHTMLBuilder(`<div class="test-ratio-target">-2</div>`);
+    await contains(":iframe .test-ratio-target").click();
+    expect(".options-container input[type='number']").toHaveProperty("value", 1);
+    // Arrow down at min (-2) stays at -2 (boundary check)
+    await contains(".options-container input[type='range']").focus();
+    await press("ArrowDown");
+    await advanceTime(750);
+    expect.verifySteps(["applied -2", "applied -2"]);
+    // Arrow up on slider: moves from 0 -> 2.5 (ratio), applies -1.9
+    // Ratioed step: (0.1 / 4) * 100 = 2.5 per arrow press
+    await press("ArrowUp");
+    await advanceTime(750);
+    expect.verifySteps(["applied -1.9", "applied -1.9"]);
+    expect(".options-container input[type='number']").toHaveProperty("value", 3);
+    // Arrow up on input: moves from 2.5 -> 5 (ratio), applies -1.8
+    await contains(".options-container input[type='number']").focus();
+    await press("ArrowUp");
+    await advanceTime(750);
+    // Since the values are not committed when pressing the up/down arrow keys,
+    // we expect the change to be applied only once which is preview operation.
+    expect.verifySteps(["applied -1.84"]);
+    expect(".options-container input[type='number']").toHaveProperty("value", 5);
 });

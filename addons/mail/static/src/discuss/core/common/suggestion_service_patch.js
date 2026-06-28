@@ -1,6 +1,7 @@
+import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
 import { SuggestionService } from "@mail/core/common/suggestion_service";
-import { cleanTerm } from "@mail/utils/common/format";
 
+import { localeCompare, normalize } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
@@ -24,21 +25,21 @@ const suggestionServicePatch = {
     },
     getSupportedDelimiters(thread, env) {
         const res = super.getSupportedDelimiters(...arguments);
-        return thread?.channel ? [...res, ["/", 0]] : res;
+        return thread?.channel ? [...res, [SUGGESTION_DELIMITERS.CHANNEL_COMMAND, 0]] : res;
     },
     /**
      * @override
      */
-    isSuggestionValid(partner, thread) {
+    isPartnerSuggestionValid(partner, { composerType, thread }) {
         if (thread?.channel && partner.eq(this.store.odoobot)) {
             return true;
         }
-        return super.isSuggestionValid(...arguments);
+        return super.isPartnerSuggestionValid(partner, { composerType, thread });
     },
     /**
      * @override
      */
-    getPartnerSuggestions(thread) {
+    getPartnerSuggestions({ composerType, thread }) {
         const isNonPublicChannel =
             thread &&
             (thread.channel?.channel_type === "group" ||
@@ -65,15 +66,15 @@ const suggestionServicePatch = {
             }
             return Array.from(partnersById.values());
         } else {
-            return super.getPartnerSuggestions(...arguments);
+            return super.getPartnerSuggestions({ thread, composerType });
         }
     },
     /**
      * @override
      */
-    searchSuggestions({ delimiter, term }, { thread } = {}) {
-        if (delimiter === "/") {
-            return this.searchChannelCommand(cleanTerm(term), thread.channel);
+    searchSuggestions({ delimiter, term }, { composerType, thread } = {}) {
+        if (delimiter === SUGGESTION_DELIMITERS.CHANNEL_COMMAND) {
+            return this.searchChannelCommand(normalize(term), thread.channel);
         }
         return super.searchSuggestions(...arguments);
     },
@@ -83,11 +84,11 @@ const suggestionServicePatch = {
             return;
         }
         const commands = this.getChannelCommands(channel).filter(({ name }) =>
-            cleanTerm(name).includes(cleanedSearchTerm)
+            normalize(name).includes(cleanedSearchTerm)
         );
         const sortFunc = (c1, c2) => {
-            const cleanedName1 = cleanTerm(c1.name);
-            const cleanedName2 = cleanTerm(c2.name);
+            const cleanedName1 = normalize(c1.name);
+            const cleanedName2 = normalize(c2.name);
             if (
                 cleanedName1.startsWith(cleanedSearchTerm) &&
                 !cleanedName2.startsWith(cleanedSearchTerm)
@@ -100,13 +101,7 @@ const suggestionServicePatch = {
             ) {
                 return 1;
             }
-            if (cleanedName1 < cleanedName2) {
-                return -1;
-            }
-            if (cleanedName1 > cleanedName2) {
-                return 1;
-            }
-            return c1.id - c2.id;
+            return localeCompare(c1.name, c2.name) || c1.id - c2.id;
         };
         return {
             type: "ChannelCommand",
@@ -115,7 +110,7 @@ const suggestionServicePatch = {
     },
     /** @override */
     sortPartnerSuggestionsContext(thread) {
-        return Object.assign(super.sortPartnerSuggestionsContext(), {
+        return Object.assign(super.sortPartnerSuggestionsContext(...arguments), {
             recentChatPartnerIds: this.store.getRecentChatPartnerIds(),
             memberPartnerIds: new Set(
                 thread?.channel?.channel_member_ids

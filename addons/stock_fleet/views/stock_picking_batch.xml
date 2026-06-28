@@ -103,10 +103,10 @@
         </field>
     </record>
 
-    <record id="stock_picking_batch_kanban" model="ir.ui.view">
-        <field name="name">stock.picking.batch.kanban.inherit.stock.fleet</field>
+    <record id="stock_picking_batch_card" model="ir.ui.view">
+        <field name="name">stock.picking.batch.card.inherit.stock.fleet</field>
         <field name="model">stock.picking.batch</field>
-        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_kanban"/>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_card"/>
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='company_id']" position="after">

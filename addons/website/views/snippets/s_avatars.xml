@@ -2,18 +2,20 @@
 <odoo>
 
 <template name="Avatars" id="s_avatars">
-    <div class="s_avatars o_not_editable d-flex flex-row flex-wrap">
+    <t t-set="count" t-value="count or '100+'"/>
+    <div t-attf-class="s_avatars o_not_editable d-flex flex-row flex-wrap #{extraClasses}">
         <div class="s_avatars_wrapper d-flex">
-            <img src="/web/image/website.s_company_team_image_1" class="s_avatars_avatar o_editable_media o_avatar img border rounded-circle" style="border-color: var(--body-bg) !important; --box-border-left-width: 3px; --box-border-bottom-width: 3px; --box-border-right-width: 3px; --box-border-top-width: 3px;" alt=""/>
-            <img src="/web/image/website.s_company_team_image_2" class="s_avatars_avatar o_editable_media o_avatar img border rounded-circle" style="border-color: var(--body-bg) !important; --box-border-left-width: 3px; --box-border-bottom-width: 3px; --box-border-right-width: 3px; --box-border-top-width: 3px;" alt=""/>
-            <img src="/web/image/website.s_company_team_image_3" class="s_avatars_avatar o_editable_media o_avatar img border rounded-circle" style="border-color: var(--body-bg) !important; --box-border-left-width: 3px; --box-border-bottom-width: 3px; --box-border-right-width: 3px; --box-border-top-width: 3px;" alt=""/>
-            <div class="s_avatars_more s_avatars_avatar d-flex justify-content-center align-items-center text-bg-light border rounded-circle o-contenteditable-true" style="border-color: var(--body-bg) !important; --box-border-left-width: 3px; --box-border-bottom-width: 3px; --box-border-right-width: 3px; --box-border-top-width: 3px;">
-                <p class="m-0">10+</p>
+            <img src="/web/image/website.set_avatars_square_md_1" class="s_avatars_avatar o_editable_media o_avatar img border rounded-circle" style="border-color: var(--body-bg) !important; --box-border-left-width: 3px; --box-border-bottom-width: 3px; --box-border-right-width: 3px; --box-border-top-width: 3px;" alt=""/>
+            <img src="/web/image/website.set_avatars_square_md_2" class="s_avatars_avatar o_editable_media o_avatar img border rounded-circle" style="border-color: var(--body-bg) !important; --box-border-left-width: 3px; --box-border-bottom-width: 3px; --box-border-right-width: 3px; --box-border-top-width: 3px;" alt=""/>
+            <img src="/web/image/website.set_avatars_square_md_3" class="s_avatars_avatar o_editable_media o_avatar img border rounded-circle" style="border-color: var(--body-bg) !important; --box-border-left-width: 3px; --box-border-bottom-width: 3px; --box-border-right-width: 3px; --box-border-top-width: 3px;" alt=""/>
+            <div t-attf-class="s_avatars_more s_avatars_avatar justify-content-center align-items-center text-bg-light border rounded-circle o-contenteditable-true #{hideMore and 'd-none' or ''}" style="border-color: var(--body-bg) !important; --box-border-left-width: 3px; --box-border-bottom-width: 3px; --box-border-right-width: 3px; --box-border-top-width: 3px;">
+                <p class="m-0"><t t-out="count"/></p>
             </div>
         </div>
-        <p class="s_avatars_label o_small-fs m-0 o-contenteditable-true">
-            <strong>100+</strong><br/>
-            Happy customers
+        <p t-attf-class="s_avatars_label o_small-fs m-0 o-contenteditable-true #{hideLabel and 'd-none' or ''}">
+            <strong><t t-out="count"/></strong><br/>
+            <t t-if="labelText" t-out="labelText"/>
+            <t t-else="">Happy customers</t>
         </p>
     </div>
 </template>

@@ -14,28 +14,28 @@
             'o-active': this.props.isActive,
         }">
             <div class="o-mail-NotificationItem-avatarContainer position-relative flex-shrink-0 align-self-start" t-att-class="{ 'o-small': this.ui.isSmall }">
-                <DiscussAvatar t-if="this.props.thread or this.props.persona" thread="this.props.thread" persona="this.props.persona" size="this.ui.isSmall ? 52 : undefined"/>
+                <DiscussAvatar t-if="this.props.thread or this.props.persona" record="this.props.thread or this.props.persona" size="this.ui.isSmall ? 52 : undefined" iconExtraTransform="this.ui.isSmall ? 'scale(.75) translate(3, 3)' : undefined"/>
                 <img t-else="" class="o_avatar w-100 h-100" t-att-class="{ 'rounded-3': this.ui.isSmall, 'rounded': !this.ui.isSmall }" alt="Notification Item Image" t-att-src="this.props.iconSrc"/>
-                <t t-if="this.props.slots and this.props.slots.icon" t-slot="icon"/>
+                <t t-if="this.props.slots and this.props.slots.icon" t-call-slot="icon"/>
             </div>
             <div class="d-flex flex-column flex-grow-1 align-self-start overflow-auto o-scrollbar-thin" t-att-class="{ 'o-ps-1_5': this.ui.isSmall, 'ps-1': !this.ui.isSmall }">
                 <div class="o-mail-NotificationItem-line d-flex text-nowrap">
-                    <span class="o-mail-NotificationItem-name o-fw-600" t-att-class="{ 'fs-5': this.ui.isSmall }" t-att-style="this.props.nameMaxLine !== undefined ? this.webkitLineClamp(this.props.nameMaxLine) : ''">
-                        <t t-slot="name"/>
+                    <span class="o-mail-NotificationItem-name o-fw-600" t-att-class="{ 'fs-5': this.ui.isSmall, 'o_line_clamp': this.props.nameMaxLine !== undefined }" t-att-style="this.props.nameMaxLine !== undefined ? '--lines-clamp: ' + this.props.nameMaxLine + ';' : ''">
+                        <t t-call-slot="name"/>
                     </span>
                     <span class="flex-grow-1"/>
                     <small t-if="this.props.datetime" class="o-mail-NotificationItem-date ms-2 me-1 flex-shrink-0 align-self-end smaller" t-att-class="{ 'opacity-75': this.props.muted, 'o-fw-600': !this.props.muted }" t-att-title="this.props.datetime?.toLocaleString(this.DateTime.DATETIME_SHORT) ?? ''">
                         <t t-out="this.dateText"/>
                     </small>
                     <t t-if="this.props.slots and this.props.slots.sideContent">
-                        <t t-slot="sideContent"/>
+                        <t t-call-slot="sideContent"/>
                     </t>
                 </div>
                 <div class="d-flex o-mail-NotificationItem-line">
-                    <div class="o-mail-NotificationItem-text" t-att-class="{ 'text-truncate': this.props.textTruncate, 'text-start': !this.props.textTruncate, 'small': !this.ui.isSmall, 'o-muted': this.props.muted }" t-att-style="this.props.textMaxLine !== undefined ? this.webkitLineClamp(this.props.textMaxLine) : ''">
-                        <t t-slot="body-icon"/>
+                    <div class="o-mail-NotificationItem-text" t-att-class="{ 'text-truncate': this.props.textTruncate, 'text-start': !this.props.textTruncate, 'small': !this.ui.isSmall, 'o-muted': this.props.muted, 'o_line_clamp': this.props.textMaxLine !== undefined }" t-att-style="this.props.textMaxLine !== undefined ? '--lines-clamp: ' + this.props.textMaxLine + ';' : ''">
+                        <t t-call-slot="body-icon"/>
                         <MessageSeenIndicator t-if="this.message?.showSeenIndicator(this.props.thread)" message="this.message"/>
-                        <t t-if="this.props.slots?.body" name="notificationBody" t-slot="body"/>
+                        <t t-if="this.props.slots?.body" name="notificationBody" t-call-slot="body"/>
                     </div>
                     <div class="flex-grow-1"/>
                     <div class="d-flex align-items-start position-relative">

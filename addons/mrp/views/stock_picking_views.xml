@@ -111,7 +111,7 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_view_reception_report']" position="after">
+            <xpath expr="//button[@name='action_view_allocation_report']" position="after">
                 <button class="oe_stat_button" name="action_view_mrp_production" type="object" icon="fa-wrench" invisible="not production_count" groups="mrp.group_mrp_user">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="production_count"/></span>
@@ -127,13 +127,16 @@
         <field name="model">stock.picking.type</field>
         <field name="inherit_id" ref="stock.view_picking_type_form"/>
         <field name="arch" type="xml">
+            <field name="create_backorder" position="after">
+                <field name="auto_confirm_production" invisible="code != 'mrp_operation'"/>
+            </field>
             <xpath expr="//group[@name='stock_picking_type_lot']" position="after">
                 <group invisible="code != 'mrp_operation'" string="Traceability" groups="stock.group_production_lot">
                     <field name="use_create_components_lots"/>
                 </group>
             </xpath>
-            <field name="auto_show_reception_report" position="after">
-                <field name="auto_show_reception_report" invisible="code != 'mrp_operation'" groups="mrp.group_mrp_reception_report"/>
+            <field name="auto_show_allocation_report" position="attributes">
+                <attribute name="invisible" add="code != 'mrp_operation'" separator="and"/>
             </field>
             <xpath expr="//page[@name='hardware']" position="after">
                 <page name="mrp_hardware" string="Hardware" invisible="code != 'mrp_operation'">
@@ -152,8 +155,8 @@
                                 <label for="done_mrp_lot_label_to_print" string="Print labels as:" invisible="not auto_print_done_mrp_lot" class="fw-bold"/>
                                 <field name="done_mrp_lot_label_to_print" invisible="not auto_print_done_mrp_lot"/>
                             </div>
-                            <field name="auto_print_mrp_reception_report" string="Allocation Report" groups="mrp.group_mrp_reception_report"/>
-                            <field name="auto_print_mrp_reception_report_labels" string="Allocation Report Labels" groups="mrp.group_mrp_reception_report"/>
+                            <field name="auto_print_mrp_reception_report" string="Allocation Report" invisible="not auto_show_allocation_report"/>
+                            <field name="auto_print_mrp_reception_report_labels" string="Allocation Report Labels" invisible="not auto_show_allocation_report"/>
                         </group>
                         <group string="">
                             <div colspan="2">

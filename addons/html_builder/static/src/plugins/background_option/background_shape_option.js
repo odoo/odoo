@@ -1,9 +1,9 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { toRatio } from "@html_builder/utils/utils";
 import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
 import { BackgroundShapeSelector } from "./background_shape_selector";
+import { ratioValueConverter } from "@html_builder/utils/utils";
 
 export class BackgroundShapeOption extends BaseOptionComponent {
     static template = "html_builder.BackgroundShapeOption";
@@ -12,7 +12,7 @@ export class BackgroundShapeOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.backgroundShapePlugin = this.dependencies.backgroundShapeOption;
-        this.toRatio = toRatio;
+        this.ratioValueConverter = ratioValueConverter();
         this.state = useDomState((editingElement) => {
             const shapeData = this.backgroundShapePlugin.getShapeData(editingElement);
             const shapeInfo = this.backgroundShapePlugin.getBackgroundShapes()[shapeData.shape];

@@ -358,7 +358,7 @@ describe("wrapInlinesInBlocks", () => {
                 `<div contenteditable="false" style="display: inline;">inline</div>`
             )
         );
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         // It is debatable whether an empty paragraph-related element
         // should be kept or not after inserting an inline flow-content element
         // (which would be wrapped inside a div, not in the paragraph-related
@@ -394,7 +394,7 @@ describe("wrapInlinesInBlocks", () => {
                 `text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>`
             )
         );
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         expect(getContent(el)).toBe(
             unformat(`
                 <div class="o-paragraph">text</div>
@@ -427,7 +427,7 @@ describe("wrapInlinesInBlocks", () => {
                 `text<br><div contenteditable="false" style="display: inline;">inline</div><br><span class="a">span</span>`
             )
         );
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         expect(getContent(el)).toBe(
             unformat(`
                 <div class="o-paragraph">text</div>
@@ -453,6 +453,20 @@ describe("wrapInlinesInBlocks", () => {
         div.innerHTML = "<span>abc</span> <span>def</span>";
         editor.shared.dom.wrapInlinesInBlocks(div);
         expect(div.innerHTML).toBe("<p><span>abc</span> <span>def</span></p>");
+    });
+    test("should not remove invisible unremovable nodes", async () => {
+        const { editor } = await setupEditor("");
+        const div = document.createElement("div");
+        div.innerHTML = 'text<span class="oe_unremovable"></span>more';
+        editor.shared.dom.wrapInlinesInBlocks(div);
+        expect(div.innerHTML).toBe('<p>text<span class="oe_unremovable"></span>more</p>');
+    });
+    test("should remove invisible removable nodes", async () => {
+        const { editor } = await setupEditor("");
+        const div = document.createElement("div");
+        div.innerHTML = "text<span></span>more";
+        editor.shared.dom.wrapInlinesInBlocks(div);
+        expect(div.innerHTML).toBe("<p>textmore</p>");
     });
 });
 

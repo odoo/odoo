@@ -2,6 +2,7 @@
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.web.controllers.home import Home
 
 
 class WebsiteBackend(http.Controller):
@@ -19,7 +20,7 @@ class WebsiteBackend(http.Controller):
             'dashboards': {}
         }
 
-        current_website = website_id and Website.browse(website_id) or Website.get_current_website()
+        current_website = website_id and Website.browse(website_id) or self.env.website
         multi_website = request.env.user.has_group('website.group_multi_website')
         websites = multi_website and request.env['website'].search([]) or current_website
         dashboard_data['websites'] = websites.read(['id', 'name'])
@@ -35,22 +36,24 @@ class WebsiteBackend(http.Controller):
     def get_iframe_fallback(self):
         return request.render('website.iframefallback')
 
-    @http.route('/website/track_installing_modules', type='jsonrpc', auth='user', readonly=True)
-    def website_track_installing_modules(self, selected_features, total_features=None):
-        """
-        During the website configuration, this route allows to track the
-        website features being installed and their dependencies in order to
-        show the progress between installed and yet to install features.
-        """
-        features_not_installed = request.env['website.configurator.feature']\
-            .browse(selected_features).module_id.upstream_dependencies(exclude_states=())\
-            .filtered(lambda feature: feature.state != 'installed')
 
-        # On the 1st run, the total tallies the targeted, not yet installed
-        # features. From then on, the compared to total should not change.
-        total_features = total_features or len(features_not_installed)
-        features_info = {
-            'total': total_features,
-            'nbInstalled': total_features - len(features_not_installed)
-        }
-        return features_info
+class WebsiteBackendHome(Home):
+
+    @http.route()
+    def web_client(self, s_action=None, **kw):
+        website_actions = ('website.website_configurator', 'website.website_preview', 'website.action_website_configuration')
+        subpath = kw.get('subpath', '')
+        is_website_action = False
+        if subpath.startswith('action-'):
+            action = subpath[7:]
+            is_website_action = action in website_actions
+            for website_action in website_actions:
+                is_website_action = is_website_action or action == str(self.env['ir.model.data']._xmlid_to_res_id(website_action))
+
+        if (is_website_action
+            and not self.env.context.get('website_id')
+            and (website_id := request.session.get('force_website_id') or self.env.context.get('host_id'))
+            and website_id in self.env['website'].get_all().ids):
+            request.update_context(website_id=website_id)
+
+        return super().web_client(s_action, **kw)

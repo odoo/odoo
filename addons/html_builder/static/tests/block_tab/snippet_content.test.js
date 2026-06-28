@@ -4,6 +4,7 @@ import {
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { BuilderOptionsPlugin } from "@html_builder/core/builder_options_plugin";
+import { BuilderSelectionRestrictionPlugin } from "@html_builder/core/builder_selection_restriction_plugin";
 import { Operation } from "@html_builder/core/operation";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
@@ -146,13 +147,15 @@ test("click just after drop is redispatched in next operation", async () => {
         },
     });
     patchWithCleanup(BuilderOptionsPlugin.prototype, {
-        async onClick(ev) {
-            expect.step("onClick");
-            super.onClick(ev);
-        },
         updateContainers(...args) {
             expect.step("updateContainers");
             super.updateContainers(...args);
+        },
+    });
+    patchWithCleanup(BuilderSelectionRestrictionPlugin.prototype, {
+        async onClick(ev) {
+            expect.step("onClick");
+            super.onClick(ev);
         },
     });
     await setupHTMLBuilder("", {
@@ -185,7 +188,7 @@ test("click just after drop is redispatched in next operation", async () => {
     await click(":iframe", { position: { x: 200, y: 50 }, relative: true });
     expect.verifySteps(["next"]); // On click
     await nextDef.promise;
-    expect.verifySteps(["updateContainers"]); // End of drop, on addStep()
+    expect.verifySteps(["updateContainers"]); // End of drop, on commit()
     await animationFrame();
     expect.verifySteps(["onClick", "next", "updateContainers"]); // On click redispatched
     await animationFrame();

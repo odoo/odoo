@@ -1,7 +1,5 @@
-import {
-    clickOnEditAndWaitEditMode,
-    registerWebsitePreviewTour,
-} from "@website/js/tours/tour_utils";
+import { registry } from "@web/core/registry";
+import { clickOnEditAndWaitEditMode } from "@website/js/tours/tour_utils";
 import slidesTourTools from "@website_slides/../tests/tours/slides_tour_tools";
 
 /**
@@ -11,12 +9,8 @@ import slidesTourTools from "@website_slides/../tests/tours/slides_tour_tools";
  * they create some lessons in it;
  * they publishe it;
  */
-registerWebsitePreviewTour(
-    "course_publisher",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps ) #245680
-    },
-    () =>
+registry.category("web_tour.tours").add("course_publisher", {
+    steps: () =>
         [
             {
                 content: "eLearning: click on New (top-menu)",
@@ -127,5 +121,5 @@ registerWebsitePreviewTour(
             //     // run: 'drag_and_drop div.o_wslides_slides_list_drag ul.ui-sortable:first',
             //     run: 'drag_and_drop div.o_wslides_slides_list_drag a.o_wslides_js_slide_section_add',
             // }]
-        )
-);
+        ),
+});

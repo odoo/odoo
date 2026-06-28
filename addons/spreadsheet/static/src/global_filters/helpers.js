@@ -28,13 +28,16 @@ const { DateTime, Interval } = luxon;
 /**
  * @param {DateValue} dateFilterValue
  * @param {{ chain: string, type: string }} [fieldMatching]
- * @returns {string}
+ * @returns {string | undefined}
  */
 export function getBestGranularity(dateFilterValue, fieldMatching, getters) {
     if (!dateFilterValue) {
         return "year";
     }
     const { from, to } = getDateRange(dateFilterValue, 0, DateTime.local(), getters);
+    if (!from || !to) {
+        return undefined;
+    }
     const numberOfDays = Math.round(to.diff(from, "days").days);
     if (numberOfDays <= 1) {
         return fieldMatching?.type === "datetime" ? "hour" : "day";
@@ -56,6 +59,9 @@ export function getValidGranularities(dateFilterValue, getters) {
         return ["day", "week", "month", "quarter", "year"];
     }
     const { from, to } = getDateRange(dateFilterValue, 0, DateTime.local(), getters);
+    if (!from || !to) {
+        return ["day", "week", "month", "quarter", "year"];
+    }
     const numberOfDays = Math.round(to.diff(from, "days").days);
     if (numberOfDays <= 1) {
         return ["hour", "day"];
@@ -143,11 +149,18 @@ const SET_OPERATORS_BEHAVIORS = {
     },
 };
 
+const PLACEHOLDER_BY_TYPE = {
+    writeInput: _t("Enter one or several values"),
+    selectInput: _t("Select one or several criteria"),
+    numericInput: _t("Enter a value"),
+};
+
 const FILTERS_BEHAVIORS = {
     text: [
         {
             operators: ["ilike", "not ilike"],
             defaultValue: { strings: [] },
+            placeholder: PLACEHOLDER_BY_TYPE["writeInput"],
             validateValue: (filterValue) => isArrayOfStrings(filterValue.strings),
             validateDefaultValue: (filterValue) => isArrayOfStrings(filterValue.strings),
             getSearchBarFacetValues: (env, filter, filterValue) => filterValue.strings,
@@ -163,6 +176,7 @@ const FILTERS_BEHAVIORS = {
         {
             operators: ["in", "not in"],
             defaultValue: { strings: [] },
+            placeholder: PLACEHOLDER_BY_TYPE["writeInput"],
             validateValue: (filterValue) => isArrayOfStrings(filterValue.strings),
             validateDefaultValue: (filterValue) => isArrayOfStrings(filterValue.strings),
             getSearchBarFacetValues: (env, filter, filterValue) => filterValue.strings,
@@ -176,6 +190,7 @@ const FILTERS_BEHAVIORS = {
         {
             operators: ["starts with"],
             defaultValue: { strings: [] },
+            placeholder: PLACEHOLDER_BY_TYPE["writeInput"],
             validateValue: (filterValue) => isArrayOfStrings(filterValue.strings),
             validateDefaultValue: (filterValue) => isArrayOfStrings(filterValue.strings),
             getSearchBarFacetValues: (env, filter, filterValue) => filterValue.strings,
@@ -194,6 +209,7 @@ const FILTERS_BEHAVIORS = {
         {
             operators: ["in", "not in", "child_of"],
             defaultValue: { ids: [] },
+            placeholder: PLACEHOLDER_BY_TYPE["selectInput"],
             validateValue: (filterValue) => isArrayOfIds(filterValue.ids),
             validateDefaultValue: isCurrentUserOrArrayOfIds,
             async getSearchBarFacetValues(env, filter, filterValue) {
@@ -215,6 +231,7 @@ const FILTERS_BEHAVIORS = {
         {
             operators: ["ilike", "not ilike"],
             defaultValue: { strings: [] },
+            placeholder: PLACEHOLDER_BY_TYPE["writeInput"],
             validateValue: (filterValue) => isArrayOfStrings(filterValue.strings),
             validateDefaultValue: (filterValue) => isArrayOfStrings(filterValue.strings),
             getSearchBarFacetValues: (env, filter, filterValue) => filterValue.strings,
@@ -233,6 +250,7 @@ const FILTERS_BEHAVIORS = {
         {
             operators: ["in", "not in"],
             defaultValue: { selectionValues: [] },
+            placeholder: PLACEHOLDER_BY_TYPE["selectInput"],
             validateValue: (filterValue) => isArrayOfStrings(filterValue.selectionValues),
             validateDefaultValue: (filterValue) => isArrayOfStrings(filterValue.selectionValues),
             async getSearchBarFacetValues(env, filter, filterValue) {
@@ -261,6 +279,7 @@ const FILTERS_BEHAVIORS = {
         {
             operators: ["=", "!=", ">", "<"],
             defaultValue: { targetValue: undefined },
+            placeholder: PLACEHOLDER_BY_TYPE["numericInput"],
             validateValue: (filterValue) => isNumericFilterValueValid(filterValue.targetValue),
             validateDefaultValue: (filterValue) =>
                 isNumericFilterValueValid(filterValue.targetValue),
@@ -281,6 +300,7 @@ const FILTERS_BEHAVIORS = {
         {
             operators: ["between"],
             defaultValue: { minimumValue: undefined, maximumValue: undefined },
+            placeholder: PLACEHOLDER_BY_TYPE["numericInput"],
             validateValue: (filterValue) =>
                 isNumericFilterValueValid(filterValue.minimumValue) &&
                 isNumericFilterValueValid(filterValue.maximumValue),
@@ -311,6 +331,21 @@ const FILTERS_BEHAVIORS = {
         },
     ],
 };
+
+export function checkFilterAndValue(getters, filterId, value) {
+    if (!getters.getGlobalFilter(filterId)) {
+        return CommandResult.FilterNotFound;
+    }
+    if (!checkFilterValueIsValid(getters.getGlobalFilter(filterId), value)) {
+        return CommandResult.InvalidValueTypeCombination;
+    }
+
+    const currentFilterValue = getters.getGlobalFilterValue(filterId);
+    if (deepEqual(currentFilterValue, value)) {
+        return CommandResult.NoChanges;
+    }
+    return CommandResult.Success;
+}
 
 /**
  * Check if the value is valid for given filter.
@@ -598,7 +633,7 @@ globalFilterDateRegistry
                     DateTime.fromISO(value.from).startOf("day"),
                     DateTime.fromISO(value.to).endOf("day")
                 );
-                return interval.toLocaleString(DateTime.DATE_FULL);
+                return interval.toLocaleString(DateTime.DATE_FULL).replace(/\s+–\s+/, " – ");
             } else if (value.from) {
                 return _t("Since %(from)s", {
                     from: DateTime.fromISO(value.from).toLocaleString(DateTime.DATE_FULL),
@@ -1011,6 +1046,14 @@ export function getEmptyFilterValue(filter, operator) {
         return undefined;
     }
     return getFilterBehavior(filter, operator).defaultValue;
+}
+
+export function getFilterValuePlaceholder(filter, operator) {
+    if (!operator || filter.type === "date") {
+        return;
+    }
+    const filterBehavior = getFilterBehavior(filter, operator);
+    return filterBehavior.placeholder;
 }
 
 export function isEmptyFilterValue(filter, filterValue) {

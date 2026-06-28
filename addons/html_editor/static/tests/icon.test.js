@@ -1,13 +1,14 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { click, queryAll, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
 import { splitBlock, undo } from "./_helpers/user_actions";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { execCommand } from "./_helpers/userCommands";
 import { unformat } from "./_helpers/format";
+import { expandToolbar } from "./_helpers/toolbar";
 
 test("icon toolbar is displayed", async () => {
     const { el } = await setupEditor(`<p><span class="fa fa-glass"></span></p>`);
@@ -145,6 +146,46 @@ test("Can resize an icon", async () => {
     expect("span.fa-glass.fa-5x").toHaveCount(0);
 });
 
+test("Can resize an oi icon", async () => {
+    const { el } = await setupEditor(
+        `<p><span class="oi oi-pastafarianism" contenteditable="false"></span></p>`
+    );
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<span class="oi oi-pastafarianism" contenteditable="false">\u200b</span>\ufeff</p>`
+    );
+    // Selection normalization include U+FEFF, moving the cursor outside the
+    // icon and triggering the normal toolbar. To prevent this, we exclude
+    // U+FEFF from selection.
+    setSelection({
+        anchorNode: el.firstChild,
+        anchorOffset: 1,
+        focusNode: el.firstChild,
+        focusOffset: 2,
+    });
+    expect(getContent(el)).toBe(
+        `<p>\ufeff[<span class="oi oi-pastafarianism" contenteditable="false">\u200b</span>]\ufeff</p>`
+    );
+    await waitFor(".o-we-toolbar");
+    await click("button[name='icon_size_2']");
+    expect("span.oi-pastafarianism.oi-2x").toHaveCount(1);
+    await expectElementCount("button[name='icon_size_2'].active", 1);
+    await click("button[name='icon_size_3']");
+    expect("span.oi-pastafarianism.oi-2x").toHaveCount(0);
+    expect("span.oi-pastafarianism.oi-3x").toHaveCount(1);
+    await expectElementCount("button[name='icon_size_3'].active", 1);
+    await click("button[name='icon_size_4']");
+    expect("span.oi-pastafarianism.oi-3x").toHaveCount(0);
+    expect("span.oi-pastafarianism.oi-4x").toHaveCount(1);
+    await expectElementCount("button[name='icon_size_4'].active", 1);
+    await click("button[name='icon_size_5']");
+    expect("span.oi-pastafarianism.oi-4x").toHaveCount(0);
+    expect("span.oi-pastafarianism.oi-5x").toHaveCount(1);
+    await expectElementCount("button[name='icon_size_5'].active", 1);
+    await click("button[name='icon_size_1']");
+    expect("span.oi-pastafarianism.oi-5x").toHaveCount(0);
+    await expectElementCount("button[name='icon_size_5'].active", 0);
+});
+
 test("Can spin an icon", async () => {
     const { el } = await setupEditor(`<p><span class="fa fa-glass"></span></p>`);
     expect(getContent(el)).toBe(
@@ -169,14 +210,25 @@ test("Can spin an icon", async () => {
 });
 
 test("Can set icon color", async () => {
-    const { el } = await setupEditor(`<p><span class="fa fa-glass">[]</span></p>`);
+    const { el } = await setupEditor('<p><span class="fa fa-glass"></span></p>');
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</p>`
+    );
+    // A selection inside the font awesome is automatically converted to a
+    // selection around the font awesome, triggering the opening of the toolbar.
+    const fa = el.querySelector(".fa");
+    setSelection({ anchorNode: fa, anchorOffset: 0, focusNode: fa, focusOffset: 0 });
     await waitFor(".o-we-toolbar");
+    expect(getContent(el)).toBe(
+        `<p>\ufeff[<span class="fa fa-glass" contenteditable="false">\u200b</span>]\ufeff</p>`
+    );
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-select-color-foreground");
     await animationFrame();
-    const colorButton = await waitFor(".o_color_button[data-color='#6BADDE']");
-    colorButton.click();
+    await waitFor(".o_color_button[data-color='#6BADDE']");
+    await click(".o_color_button[data-color='#6BADDE']");
     await expectElementCount(".o_font_color_selector", 0); // selector closed
+    await waitFor(".o-we-toolbar .o-select-color-foreground [style*='rgb(107, 173, 222)']");
     expect(getContent(el)).toBe(
         `<p>[<font style="color: rgb(107, 173, 222);">\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</font>]</p>`
     );
@@ -383,7 +435,7 @@ test("Should be able to undo after adding spin effect to an icon", async () => {
         focusNode: el.firstChild,
         focusOffset: 2,
     });
-    editor.shared.history.stageSelection();
+    editor.shared.selection.stageSelection();
     expect(getContent(el)).toBe(
         `<p>\ufeff[<span class="fa fa-glass" contenteditable="false">\u200b</span>]\ufeff</p>`
     );
@@ -455,4 +507,92 @@ test("should wrap icons in feff when under list item", async () => {
             </ul>
         `),
     });
+});
+
+test("should not allow to edit label if selection contain icon", async () => {
+    await setupEditor(`<p>[ab<span class="fa fa-glass" contenteditable="false"></span>]</p>`);
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+    await click('.o-we-toolbar button[name="link"]');
+    await waitFor('[name="o_linkpopover_url_img"]');
+    expect('[name="o_linkpopover_url_img"]').toHaveCount(1);
+});
+
+test("should not allow to edit label if selection contain oi icon", async () => {
+    await setupEditor(
+        `<p>[ab<span class="oi oi-pastafarianism" contenteditable="false"></span>]</p>`
+    );
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+    await click('.o-we-toolbar button[name="link"]');
+    await waitFor('[name="o_linkpopover_url_img"]');
+    expect('[name="o_linkpopover_url_img"]').toHaveCount(1);
+});
+
+test("should be able to unlink an icon", async () => {
+    onRpc(`${location.origin}/test`, () => ({
+        title: "title",
+        description: "description",
+    }));
+    onRpc(`/html_editor/link_preview_internal`, () => ({
+        title: "title",
+        description: "description",
+    }));
+    await setupEditor(
+        `<p><a href="/test" class="my_link o_link_in_selection">[<span class="fa fa-glass" contenteditable="false"></span>]</a></p>`
+    );
+    await waitFor(".o-we-toolbar");
+    await click('[name="unlink"]');
+    expect(".my_link").toHaveCount(0);
+});
+
+test("icon toolbar when only an icon is selected", async () => {
+    await setupEditor(`<p>[<span class="fa fa-glass" contenteditable="false"></span>]</p>`);
+    await waitFor(".o-we-toolbar");
+
+    // Check that the toolbar contains exactly these 5 groups
+    const toolbarGroups = queryAll(".o-we-toolbar .btn-group");
+    expect(toolbarGroups).toHaveCount(5);
+    expect(toolbarGroups.map((g) => g.getAttribute("name"))).toEqual([
+        "icon_color",
+        "icon_size",
+        "icon_spin",
+        "icon_replace",
+        "image_link",
+    ]);
+
+    // icon_color: exactly 2 buttons, one for font color and one for background color
+    expect(queryAll(".o-we-toolbar .btn-group[name='icon_color'] button")).toHaveCount(2);
+    expect(
+        queryAll(".o-we-toolbar .btn-group[name='icon_color'] .o-select-color-foreground")
+    ).toHaveCount(1);
+    expect(
+        queryAll(".o-we-toolbar .btn-group[name='icon_color'] .o-select-color-background")
+    ).toHaveCount(1);
+
+    // icon_size: exactly 5 buttons to resize the icon from 1x to 5x
+    expect(queryAll(".o-we-toolbar .btn-group[name='icon_size'] button")).toHaveCount(5);
+    for (const size of [1, 2, 3, 4, 5]) {
+        expect(
+            queryAll(`.o-we-toolbar .btn-group[name='icon_size'] button[name='icon_size_${size}']`)
+        ).toHaveCount(1);
+    }
+
+    // icon_spin: exactly 1 button to toggle the icon spin animation
+    expect(queryAll(".o-we-toolbar .btn-group[name='icon_spin'] button")).toHaveCount(1);
+    expect(
+        queryAll(".o-we-toolbar .btn-group[name='icon_spin'] button[name='icon_spin']")
+    ).toHaveCount(1);
+
+    // icon_replace: exactly 1 button to replace the icon
+    expect(queryAll(".o-we-toolbar .btn-group[name='icon_replace'] button")).toHaveCount(1);
+    expect(
+        queryAll(".o-we-toolbar .btn-group[name='icon_replace'] button[name='icon_replace']")
+    ).toHaveCount(1);
+
+    // image_link: exactly 1 button to add a link to the icon
+    expect(queryAll(".o-we-toolbar .btn-group[name='image_link'] button")).toHaveCount(1);
+    expect(queryAll(".o-we-toolbar .btn-group[name='image_link'] button[name='link']")).toHaveCount(
+        1
+    );
 });

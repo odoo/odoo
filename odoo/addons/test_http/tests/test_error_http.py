@@ -42,6 +42,7 @@ class TestHttpJsonError(TestHttpBase):
                 'debug': ...,
                 'message': ...,
                 'name': ...,
+                'timestamp': ...,
             },
             'message': ...,
         },

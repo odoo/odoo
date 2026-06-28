@@ -1,5 +1,3 @@
-import { insertText as htmlInsertText } from "@html_editor/../tests/_helpers/user_actions";
-
 import {
     click,
     contains,
@@ -9,6 +7,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { beforeEach, describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { Command, getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";

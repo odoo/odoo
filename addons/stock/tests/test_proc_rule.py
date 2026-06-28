@@ -382,7 +382,7 @@ class TestProcRule(TransactionCase):
         ])
         self.assertTrue(rr)
 
-        orderpoint.replenishment_uom_id = single_unit
+        orderpoint.replenishment_uom_id = self.productA.uom_id
         self.assertEqual(orderpoint.qty_to_order, 16.0)  # 15.0 < 14.5 + 15 <= 30.0
         self.assertEqual(orderpoint.qty_to_order_to_max, 16.0)
         orderpoint.replenishment_uom_id = False

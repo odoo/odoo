@@ -159,7 +159,7 @@
                 </field>
             </record>
             <record id="tax_report_de_section_b" model="account.report.line">
-                <field name="name">B. Taxable supplies, other services, and self-supplies</field>
+                <field name="name">B. Non-taxable supplies, other services, and self-supplies</field>
                 <field name="name@de">B. Steuerfreie Lieferungen, sonstige Leistungen und unentgeltliche Wertabgaben</field>
                 <field name="code">AGG_DE_25</field>
                 <field name="hierarchy_level">0</field>
@@ -199,7 +199,7 @@
                             <record id="tax_report_de_tag_49_tag" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">49</field>
+                                <field name="formula">-49</field>
                             </record>
                         </field>
                     </record>
@@ -225,7 +225,7 @@
                             <record id="tax_report_de_tag_48_tag" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">48</field>
+                                <field name="formula">-48</field>
                             </record>
                         </field>
                     </record>

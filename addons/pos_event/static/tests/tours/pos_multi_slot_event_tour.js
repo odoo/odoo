@@ -63,3 +63,17 @@ registry.category("web_tour.tours").add("SellingMultiSlotEventInPos", {
             SlotSelectionScreen.assertDisabledSlot("08:00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_multislot_unlimited_qty", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            SlotSelectionScreen.clickDisplayedSlot("08:00"),
+            Dialog.confirm(),
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            Dialog.confirm(),
+            Dialog.confirm(),
+        ].flat(),
+});

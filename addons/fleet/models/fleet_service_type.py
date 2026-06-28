@@ -14,3 +14,8 @@ class FleetServiceType(models.Model):
         ('contract', 'Contract'),
         ('service', 'Service')
         ], 'Category', required=True, help='Choose whether the service refer to contracts, vehicle services or both')
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        default=lambda self: self.env.company,
+    )

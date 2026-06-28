@@ -22,21 +22,29 @@
                         widget="radio"
                         invisible="count &gt; 1"/>
                 </group>
+                <group
+                    name="regular_specification"
+                    invisible="advance_payment_method != 'delivered' or not allow_invoice_overages"
+                >
+                    <field name="invoice_overages"/>
+                </group>
                 <group name="down_payment_specification"
                     invisible="advance_payment_method not in ('fixed', 'percentage')">
                     <field name="company_id" invisible="1"/>
                     <label for="fixed_amount" invisible="advance_payment_method != 'fixed'"/>
                     <label for="amount" invisible="advance_payment_method != 'percentage'"/>
-                    <div id="payment_method_details" class="o_input_box">
+                    <div id="payment_method_details">
                         <field name="currency_id" invisible="1"/>
                         <field name="fixed_amount"
                             invisible="advance_payment_method != 'fixed'"
-                            required="advance_payment_method == 'fixed'"/>
+                            required="advance_payment_method == 'fixed'"
+                            class="oe_inline"/>
                         <field name="amount"
                             invisible="advance_payment_method != 'percentage'"
-                            required="advance_payment_method == 'percentage'"/>
+                            required="advance_payment_method == 'percentage'"
+                            class="oe_inline"/>
                         <span invisible="advance_payment_method != 'percentage'"
-                            class="o_input_box_overlay_end">%</span>
+                            class="oe_inline">% </span>
                     </div>
                 </group>
                 <group invisible="not has_down_payments">

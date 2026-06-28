@@ -366,7 +366,7 @@ test("Edit contenteditable", async () => {
 test("Selecting item in autocomplete field through Enter", async () => {
     class Dummy extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete id="'autocomplete'" value="'World'" sources="sources"/>`;
+        static template = xml`<AutoComplete id="'autocomplete'" value="'World'" sources="this.sources"/>`;
         static props = ["*"];
 
         sources = [
@@ -400,7 +400,7 @@ test("Edit input after autofocus", async () => {
         static template = xml/*html*/ `
             <t>
                 <div class="container">
-                    <input type="text" class="o_input" t-ref="input"/>
+                    <input type="text" class="o_input" t-custom-ref="input"/>
                 </div>
             </t>
         `;

@@ -26,6 +26,8 @@
                     <attribute name="readonly">0</attribute>
                     <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
                     <attribute name="domain">[('product_tmpl_id', '=', parent.id)]</attribute>
+                    <attribute name="placeholder">All variants</attribute>
+                    <attribute name="optional">show</attribute>
                 </xpath>
                 <xpath expr="//field[@name='delay']" position="attributes">
                     <attribute name="optional">show</attribute>
@@ -107,7 +109,7 @@
                     <button class="oe_stat_button" name="action_view_po"
                             groups="purchase.group_purchase_user"
                             type="object" icon="fa-credit-card" invisible="not purchase_ok"
-                            help="Purchased in the last 365 days. Incoming represents confirmed purchase orders not received or partially received">
+                            help="Purchased in the last 365 days. Incoming represents confirmed purchase orders not received, or partially received">
                         <div class="o_field_widget o_stat_info" invisible="is_storable == True">
                             <span class="o_stat_value d-flex gap-1">
                                 <field name="purchased_product_qty" widget="statinfo" nolabel="1" class="oe_inline" options="{'hide_trailing_zeros': true}"/>
@@ -148,7 +150,7 @@
                     <button class="oe_stat_button" name="action_view_po"
                             groups="purchase.group_purchase_user"
                             type="object" icon="fa-credit-card" invisible="not purchase_ok"
-                            help="Purchased in the last 365 days. Incoming represents confirmed sales order not received, or partially received">
+                            help="Purchased in the last 365 days. Incoming represents confirmed purchase orders not received, or partially received">
                         <div class="o_field_widget o_stat_info" invisible="is_storable == True">
                             <span class="o_stat_value d-flex gap-1">
                                 <field name="purchased_product_qty" widget="statinfo" nolabel="1" class="oe_inline" options="{'hide_trailing_zeros': true}"/>
@@ -214,7 +216,7 @@
                 <xpath expr="//field[@name='product_tmpl_id']" position="after">
                     <field name="seller_ids" string="Vendor"/>
                 </xpath>
-                <xpath expr="//filter[@name='goods']" position="after">
+                <xpath expr="//filter[@name='favorites']" position="after">
                     <separator/>
                     <filter string="In the Order"
                             name="products_in_purchase_order"

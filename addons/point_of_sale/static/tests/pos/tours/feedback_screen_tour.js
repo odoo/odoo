@@ -11,10 +11,8 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
-import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("FeedbackScreenTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -22,19 +20,15 @@ registry.category("web_tour.tours").add("FeedbackScreenTour", {
             OfflineUtil.setOfflineMode(),
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Partner Full"),
+            ProductScreen.clickCustomer("APartner Full"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.validateButtonIsHighlighted(true),
-            PaymentScreen.clickShipLaterButton(),
-            PaymentScreen.shippingLaterHighlighted(),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "55.00", // letter tray has 10% tax (search SRC)
                 cashier_name: "A", // A simple PoS man! (Take the first word)
-                is_shipping_date: true,
-                is_shipping_date_today: true, //receipt had expected delivery printed
             }),
             Dialog.confirm("Continue with limited functionality"),
             FeedbackScreen.clickNextOrder(),
@@ -85,6 +79,13 @@ registry.category("web_tour.tours").add("FeedbackScreenTour", {
             PaymentScreen.tipContainerIsShown(true),
             PaymentScreen.clickTipButton(),
             NumberPopup.enterValue("0"),
+            {
+                content: "When the tip will be removed, it requires delay",
+                trigger: `.modal .value:contains("0.00")`,
+                async run() {
+                    await new Promise((r) => setTimeout(r, 500));
+                },
+            },
             Dialog.confirm(),
             PaymentScreen.selectedPaymentlineHas("Cash", "30.0"),
             PaymentScreen.tipContainerIsShown(false),
@@ -116,46 +117,10 @@ registry.category("web_tour.tours").add("FeedbackScreenTour", {
                         name: "Desk Pad",
                         cssRules: [
                             {
-                                css: ".info-list .customer-note",
+                                css: ".lines .line-note",
                                 text: "Test customer note",
                             },
                         ],
-                    },
-                ],
-            }),
-            FeedbackScreen.clickNextOrder(),
-
-            // Test that Internal notes are not available on receipt
-            ProductScreen.addOrderline("Desk Pad", "1", "5"),
-            inLeftSide([
-                { ...ProductScreen.clickLine("Desk Pad")[0], isActive: ["mobile"] },
-                ...ProductScreen.addInternalNote("Test internal note"),
-                ...ProductScreen.clickSelectedLine("Desk Pad"),
-                ...ProductScreen.addInternalNote("Test internal note on order"),
-                ...Order.hasInternalNote("Test internal note on order"),
-            ]),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
-            FeedbackScreen.checkTicketData({
-                orderlines: [
-                    {
-                        name: "Desk Pad",
-                        cssRules: [
-                            {
-                                css: ".info-list .o_tag_badge_text",
-                                text: "Test internal note",
-                                negation: true,
-                            },
-                        ],
-                    },
-                ],
-                cssRules: [
-                    {
-                        css: ".order-container .internal-note-container span div",
-                        text: "Test internal note on order",
-                        negation: true,
                     },
                 ],
             }),
@@ -262,25 +227,6 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product A"),
-            ProductScreen.enterLotNumber("123456789", "lot"),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
-            FeedbackScreen.checkTicketData({
-                orderlines: [
-                    { name: "Product A", cssRules: [{ css: ".lot-number", text: "123456789" }] },
-                ],
-            }),
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("point_of_sale.test_printed_receipt_tour", {
     steps: () =>
         [
@@ -299,6 +245,19 @@ registry.category("web_tour.tours").add("point_of_sale.test_printed_receipt_tour
                         },
                     ],
                 },
+                true
+            ),
+            FeedbackScreen.checkTicketData(
+                {
+                    cssRules: [
+                        {
+                            css: "[name='simplified_receipt_label']",
+                            text: "Receipt",
+                            negation: false,
+                        },
+                    ],
+                },
+                false,
                 true
             ),
         ].flat(),
@@ -382,22 +341,20 @@ registry.category("web_tour.tours").add("test_automatic_receipt_printing", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            Dialog.confirm("Continue"),
             FeedbackScreen.isShown(),
             FeedbackScreen.isContinueEnabled(),
             FeedbackScreen.isTransitioning(),
-            FeedbackScreen.clickScreen(),
-            FeedbackScreen.isTransitioning().map(negateStep),
-            FeedbackScreen.clickNextOrder(),
+            FeedbackScreen.isSuccess(),
             ProductScreen.isShown(),
+            Chrome.closePrintingWarning(),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            Dialog.confirm("Continue"),
             FeedbackScreen.isShown(),
             FeedbackScreen.isContinueEnabled(),
             FeedbackScreen.isTransitioning(),
+            FeedbackScreen.isSuccess(),
             ProductScreen.isShown(),
         ].flat(),
 });

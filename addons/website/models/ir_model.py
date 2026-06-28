@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import ir_http
 from odoo import models
 
 
@@ -42,7 +41,7 @@ class Base(models.AbstractModel):
 
     def _get_base_lang(self):
         """ Returns the default language of the website as the base language if the record is bound to it """
-        website = ir_http.get_request_website()
+        website = self.env.website
         if website:
             return website.default_lang_id.code
         return super()._get_base_lang()

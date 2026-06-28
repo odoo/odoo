@@ -65,6 +65,7 @@ class QueryTestCase(BaseCase):
         self.assertEqual(query.get_result_ids(), ())
         self.assertTrue(query.is_empty())
         self.assertIn('SELECT', query.subselect()._sql_tuple[0], "subselect must contain SELECT")
+        self.assertTrue(query.where_clause, "we have a restriction")
 
         query.add_where(SQL("x > 0"))
         self.assertTrue(query.is_empty(), "adding where clauses keeps the result empty")
@@ -74,6 +75,7 @@ class QueryTestCase(BaseCase):
         query.set_result_ids([1, 2, 3])
         self.assertEqual(query.get_result_ids(), (1, 2, 3))
         self.assertFalse(query.is_empty())
+        self.assertTrue(query.where_clause, "we have a restriction")
 
         query.add_where(SQL("x > 0"))
         self.assertIsNone(query._ids, "adding where clause resets the ids")
@@ -82,7 +84,7 @@ class QueryTestCase(BaseCase):
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestQuery(TransactionCase):
     def test_auto(self):
-        model = self.env['res.partner.category']
+        model = self.env['test_orm.partner.category']
         model.create([{'name': 'Test Category 1'}, {'name': 'Test Category 2'}])
         query = model._search([])
         self.assertIsInstance(query, Query)
@@ -91,13 +93,13 @@ class TestQuery(TransactionCase):
         self.assertGreater(len(ids), 1)
 
     def test_records_as_query(self):
-        records = self.env['res.partner.category']
+        records = self.env['test_orm.partner.category']
         query = records._as_query()
         self.assertEqual(list(query), records.ids)
         self.cr.execute(query.select())
         self.assertEqual([row[0] for row in self.cr.fetchall()], records.ids)
 
-        records = self.env['res.partner.category'].search([])
+        records = self.env['test_orm.partner.category'].search([])
         query = records._as_query()
         self.assertEqual(list(query), records.ids)
         self.cr.execute(query.select())
@@ -125,62 +127,62 @@ class TestQuery(TransactionCase):
         self.assertIsInstance(column, SQL, "identifier should only be at class-level")
 
         # _with_model should work with any model
-        category = self.env['res.partner.category']
+        category = self.env['test_orm.partner.category']
         self.assertIs(table._with_model(category)._model, category)
 
     def test_model_aliases(self):
-        model = self.env['res.partner.category']
+        model = self.env['test_orm.partner.category']
         query = Query(model)
         category = query.table
         self.assertIsInstance(category, SQL)
         self.assertEqual(category._alias, model._table)
         self.assertIs(category._model, model)
         self.assertIs(category._query, query)
-        self.assertEqual(category._sql_tuple[0], '"res_partner_category"')
+        self.assertEqual(category._sql_tuple[0], '"test_orm_partner_category"')
 
         code, params, to_flush = category.active._sql_tuple
-        self.assertEqual(code, '"res_partner_category"."active"')
+        self.assertEqual(code, '"test_orm_partner_category"."active"')
         self.assertFalse(params)
         self.assertIn(model._fields['active'], to_flush)
 
         # name is translated, check that 'category' delegates to the field
         self.assertTrue(model._fields['name'].translate)
         code, params, to_flush = category.name._sql_tuple
-        self.assertEqual(code, '"res_partner_category"."name"->>%s')
+        self.assertEqual(code, '"test_orm_partner_category"."name"->>%s')
         code, params, to_flush = category._with_model(category._model.with_context(prefetch_langs=True)).name._sql_tuple
-        self.assertEqual(code, '"res_partner_category"."name"')
+        self.assertEqual(code, '"test_orm_partner_category"."name"')
 
-        model = self.env['res.partner']
+        model = self.env['test_orm.partner']
         query = Query(model)
         partner = query.table
 
-        field = partner.company_id
+        field = partner.country_id
         code, params, to_flush = field._sql_tuple
-        self.assertEqual(code, '"res_partner"."company_id"')
-        self.assertEqual(len(query._joins), 1, "not yet joined on company")
+        self.assertEqual(code, '"test_orm_partner"."country_id"')
+        self.assertEqual(len(query._joins), 1, "not yet joined on country")
 
-        company = field.id._table  # implicit join
-        self.assertIsInstance(company, SQL)
-        self.assertEqual(company._alias, 'res_partner__company_id')
-        self.assertEqual(company._model._name, 'res.company')
-        self.assertIs(company._query, query)
-        self.assertEqual(len(query._joins), 2, "joined on company")
+        country = field.id._table  # implicit join
+        self.assertIsInstance(country, SQL)
+        self.assertEqual(country._alias, 'test_orm_partner__country_id')
+        self.assertEqual(country._model._name, 'test_orm.country')
+        self.assertIs(country._query, query)
+        self.assertEqual(len(query._joins), 2, "joined on country")
 
-        company_field = field.name
-        self.assertEqual(company_field._table._alias, company._alias)
-        code, params, to_flush = company_field._sql_tuple
-        self.assertEqual(code, '"res_partner__company_id"."name"')
+        country_field = field.name
+        self.assertEqual(country_field._table._alias, country._alias)
+        code, params, to_flush = country_field._sql_tuple
+        self.assertEqual(code, '"test_orm_partner__country_id"."name"')
 
         with self.assertQueries(['''
-            SELECT "res_partner__company_id"."name"
-            FROM "res_partner"
-            LEFT JOIN "res_company" AS "res_partner__company_id"
-                ON ("res_partner"."company_id" = "res_partner__company_id"."id")
+            SELECT "test_orm_partner__country_id"."name"
+            FROM "test_orm_partner"
+            LEFT JOIN "test_orm_country" AS "test_orm_partner__country_id"
+                ON ("test_orm_partner"."country_id" = "test_orm_partner__country_id"."id")
         ''']):
-            self.env.execute_query(query.select(company_field))
+            self.env.execute_query(query.select(country_field))
 
         # not for x2many fields, because they change the result's cardinality
-        with self.assertRaisesRegex(ValueError, "Cannot generate SQL for multi-relational field res.partner.child_ids"):
+        with self.assertRaisesRegex(ValueError, "Cannot generate SQL for multi-relational field test_orm.partner.child_ids"):
             partner.child_ids
-        with self.assertRaisesRegex(ValueError, "Cannot generate SQL for multi-relational field res.partner.category_id"):
+        with self.assertRaisesRegex(ValueError, "Cannot generate SQL for multi-relational field test_orm.partner.category_id"):
             partner.category_id

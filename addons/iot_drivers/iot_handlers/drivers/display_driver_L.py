@@ -9,6 +9,7 @@ import time
 import werkzeug
 
 from odoo import http
+from odoo.addons.iot_drivers.iot_handlers.interfaces.display_interface_L import DisplayInterface
 from odoo.addons.iot_drivers.browser import Browser, BrowserState
 from odoo.addons.iot_drivers.driver import Driver
 from odoo.addons.iot_drivers.main import iot_devices
@@ -20,14 +21,13 @@ _logger = logging.getLogger(__name__)
 
 
 class DisplayDriver(Driver):
-    connection_type = 'display'
+    interface = DisplayInterface
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device)
         self.device_type = 'display'
         self.device_connection = 'hdmi'
         self.device_name = device['name']
-        self.owner = False
         self.customer_display_data = {}
 
         saved_url, self.orientation = helpers.load_browser_state()
@@ -110,7 +110,7 @@ class DisplayDriver(Driver):
             return
 
         origin = helpers.get_odoo_server_url() or http.request.httprequest.origin
-        self.update_url(f"{origin}/pos_customer_display/{data['pos_id']}/{data['access_token']}")
+        self.update_url(f"{origin}/pos_customer_display/{data['pos_id']}/{data['access_token']}?access_token={data['access_token']}")
 
     def _action_close_customer_display(self, data):
         system.update_conf({"browser_url": "", "screen_orientation": ""})

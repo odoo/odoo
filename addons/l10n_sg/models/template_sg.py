@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_sg_template_data(self):
         return {
             'code_digits': '6',
-            'property_account_receivable_id': 'account_account_735',
-            'property_account_payable_id': 'account_account_777',
         }
 
     @template('sg', 'res.company')
@@ -31,6 +29,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'sg_purchase_tax_tx8_9',
                 'expense_account_id': 'account_account_819',
                 'income_account_id': 'account_account_803',
+                'receivable_account_id': 'account_account_735',
+                'payable_account_id': 'account_account_777',
                 'account_stock_valuation_id': 'account_account_699',
             },
         }

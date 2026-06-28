@@ -1,12 +1,13 @@
 /** @odoo-module */
 
+import { registry } from "@web/core/registry";
 import {
     clickOnEditAndWaitEditMode,
     clickOnElement,
     clickOnSave,
     insertSnippet,
-    registerWebsitePreviewTour,
     changeOptionInPopover,
+    waitForEditMode,
 } from "@website/js/tours/tour_utils";
 
 const snippets = [
@@ -46,15 +47,9 @@ function scrollToSnippet(snippetId) {
     ];
 }
 
-registerWebsitePreviewTour(
-    "snippet_popup_and_animations",
-    {
-        // Remove this key to make the tour fail with error:
-        // "The scroll animation in the modal did not start properly"
-        undeterministicTour_doNotCopy: true,
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("snippet_popup_and_animations", {
+    steps: () => [
+        waitForEditMode,
         ...insertSnippet(snippets[1]), // Media List
         ...insertSnippet(snippets[1]), // Media List
         ...insertSnippet(snippets[2]), // Columns
@@ -70,19 +65,16 @@ registerWebsitePreviewTour(
         },
         {
             content: "Scroll to top",
-            trigger: ":iframe html",
+            trigger: ":iframe html .s_three_columns .row > :last-child",
             run() {
-                const animatedColumnEl = this.anchor.querySelector(
-                    ".s_three_columns .row > :last-child"
-                );
                 // When the animated element is fully visible, its animation
                 // delay should be rounded to -1 in the following condition.
-                if (Math.round(parseFloat(animatedColumnEl.style.animationDelay)) !== -1) {
+                if (Math.round(parseFloat(this.anchor.style.animationDelay)) !== -1) {
                     throw new Error(
                         "The scroll animation in the page did not start properly with the cookies bar open."
                     );
                 }
-                this.anchor.scrollTo({
+                this.anchor.ownerDocument.documentElement.scrollTo({
                     top: 0,
                     left: 0,
                     behavior: "smooth",
@@ -93,14 +85,8 @@ registerWebsitePreviewTour(
             trigger: ":iframe header#top:not(.o_header_affixed)",
         },
         {
-            content: "Wait for the page to be scrolled to the top.",
-            trigger: ":iframe .s_three_columns .row > .o_animating:last-child",
-            isActive: [`:iframe .s_three_columns .row > .o_animating:last-child`],
-            async run({ waitUntil, anchor }) {
-                await waitUntil(() => !anchor.classList.contains(`o_animating`), {
-                    timeout: 10000,
-                });
-            },
+            content: "Wait until the column is no longer animated/visible.",
+            trigger: ":iframe .s_three_columns:not(:has(.o_animating))",
         },
         {
             content: "Close the Cookies Bar.",
@@ -128,32 +114,22 @@ registerWebsitePreviewTour(
         {
             content:
                 "Verify the animation delay of the animated element in the popup at the beginning",
-            trigger: ":iframe .s_popup .modal",
+            trigger: ":iframe .s_popup .modal .s_three_columns .row > :last-child.o_animating",
             run() {
-                const animatedColumnEl = this.anchor.querySelector(
-                    ".s_three_columns .row > :last-child"
-                );
                 // When the animated element is fully visible, its animation
                 // delay should be rounded to -1 in the following condition.
-                if (Math.round(parseFloat(animatedColumnEl.style.animationDelay)) !== -1) {
+                if (Math.round(parseFloat(this.anchor.style.animationDelay)) !== -1) {
                     throw new Error("The scroll animation in the modal did not start properly.");
                 }
-                this.anchor.closest(".modal").scrollTo({
-                    top: 0,
-                    left: 0,
-                    behavior: "smooth",
-                });
             },
         },
         {
+            trigger: ":iframe .s_popup .modal",
+            run: "scroll",
+        },
+        {
             content: "Wait until the column is no longer animated/visible.",
-            trigger: ":iframe .s_three_columns .row > .o_animating:last-child",
-            isActive: [`:iframe .s_three_columns .row > .o_animating:last-child`],
-            async run({ anchor, waitUntil }) {
-                await waitUntil(() => !anchor.classList.contains(`o_animating`), {
-                    timeout: 10000,
-                });
-            },
+            trigger: ":iframe .s_three_columns:not(:has(.o_animating))",
         },
         {
             content: "Close the Popup",
@@ -229,5 +205,5 @@ registerWebsitePreviewTour(
             trigger:
                 ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']:not([src^='data:image'])",
         },
-    ]
-);
+    ],
+});

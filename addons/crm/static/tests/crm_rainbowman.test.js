@@ -198,6 +198,7 @@ test("first lead won, click on statusbar on desktop", async () => {
     });
 
     await contains(".o_statusbar_status button[data-value='3']").click();
+    await contains("button.o_form_button_save").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
     expect.verifySteps(["Go, go, go! Congrats for your first deal."]);
 });
@@ -211,6 +212,7 @@ test("first lead won, click on statusbar on mobile", async () => {
 
     await contains(".o_statusbar_status button.dropdown-toggle").click();
     await contains(".o-dropdown--menu .dropdown-item:contains('Won')").click();
+    await contains("button.o_form_button_save").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
     expect.verifySteps(["Go, go, go! Congrats for your first deal."]);
 });
@@ -223,6 +225,7 @@ test("first lead won, click on statusbar in edit mode on desktop", async () => {
     });
 
     await contains(".o_statusbar_status button[data-value='3']").click();
+    await contains("button.o_form_button_save").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
     expect.verifySteps(["Go, go, go! Congrats for your first deal."]);
 });
@@ -236,6 +239,7 @@ test("first lead won, click on statusbar in edit mode on mobile", async () => {
 
     await contains(".o_statusbar_status button.dropdown-toggle").click();
     await contains(".o-dropdown--menu .dropdown-item:contains('Won')").click();
+    await contains("button.o_form_button_save").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
     expect.verifySteps(["Go, go, go! Congrats for your first deal."]);
 });
@@ -248,6 +252,7 @@ test("team record 30 days, click on statusbar on desktop", async () => {
     });
 
     await contains(".o_statusbar_status button[data-value='3']").click();
+    await contains("button.o_form_button_save").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
     expect.verifySteps(["Boom! Team record for the past 30 days."]);
 });
@@ -261,6 +266,7 @@ test("team record 30 days, click on statusbar on mobile", async () => {
 
     await contains(".o_statusbar_status button.dropdown-toggle").click();
     await contains(".o-dropdown--menu .dropdown-item:contains('Won')").click();
+    await contains("button.o_form_button_save").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
     expect.verifySteps(["Boom! Team record for the past 30 days."]);
 });
@@ -273,6 +279,7 @@ test("team record 7 days, click on statusbar on desktop", async () => {
     });
 
     await contains(".o_statusbar_status button[data-value='3']").click();
+    await contains("button.o_form_button_save").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
     expect.verifySteps(["Yeah! Best deal out of the last 7 days for the team."]);
 });
@@ -286,6 +293,7 @@ test("team record 7 days, click on statusbar on mobile", async () => {
 
     await contains(".o_statusbar_status button.dropdown-toggle").click();
     await contains(".o-dropdown--menu .dropdown-item:contains('Won')").click();
+    await contains("button.o_form_button_save").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
     expect.verifySteps(["Yeah! Best deal out of the last 7 days for the team."]);
 });
@@ -298,6 +306,7 @@ test("user record 30 days, click on statusbar on desktop", async () => {
     });
 
     await contains(".o_statusbar_status button[data-value='3']").click();
+    await contains("button.o_form_button_save").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
     expect.verifySteps(["You just beat your personal record for the past 30 days."]);
 });
@@ -311,6 +320,7 @@ test("user record 30 days, click on statusbar on mobile", async () => {
 
     await contains(".o_statusbar_status button.dropdown-toggle").click();
     await contains(".o-dropdown--menu .dropdown-item:contains('Won')").click();
+    await contains("button.o_form_button_save").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
     expect.verifySteps(["You just beat your personal record for the past 30 days."]);
 });
@@ -323,6 +333,7 @@ test("user record 7 days, click on statusbar on desktop", async () => {
     });
 
     await contains(".o_statusbar_status button[data-value='3']").click();
+    await contains("button.o_form_button_save").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
     expect.verifySteps(["You just beat your personal record for the past 7 days."]);
 });
@@ -336,6 +347,7 @@ test("user record 7 days, click on statusbar on mobile", async () => {
 
     await contains(".o_statusbar_status button.dropdown-toggle").click();
     await contains(".o-dropdown--menu .dropdown-item:contains('Won')").click();
+    await contains("button.o_form_button_save").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
     expect.verifySteps(["You just beat your personal record for the past 7 days."]);
 });
@@ -348,6 +360,7 @@ test("click on stage (not won) on statusbar on desktop", async () => {
     });
 
     await contains(".o_statusbar_status button[data-value='2']").click();
+    await contains("button.o_form_button_save").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(0);
     expect.verifySteps(["no rainbowman"]);
 });
@@ -361,6 +374,7 @@ test("click on stage (not won) on statusbar on mobile", async () => {
 
     await contains(".o_statusbar_status button.dropdown-toggle").click();
     await contains(".o-dropdown--menu .dropdown-item:contains('Middle')").click();
+    await contains("button.o_form_button_save").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(0);
     expect.verifySteps(["no rainbowman"]);
 });

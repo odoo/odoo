@@ -55,7 +55,7 @@ class WebsiteProfile(http.Controller):
         elif not user_sudo.exists():
             raise request.not_found()
 
-        elif request.env.user.karma < request.website.karma_profile_min:
+        elif request.env.user.karma < self.env.website.karma_profile_min:
             return False, _("Not have enough karma to view other users' profile.")
         return user_sudo, False
 
@@ -63,7 +63,7 @@ class WebsiteProfile(http.Controller):
         kwargs.pop('edit_translations', None) # avoid nuking edit_translations
         values = {
             'user': request.env.user,
-            'is_public_user': request.website.is_public_user(),
+            'is_public_user': self.env.website.is_public_user(),
             'validation_email_sent': request.session.get('validation_email_sent', False),
             'validation_email_done': request.session.get('validation_email_done', False),
         }
@@ -126,8 +126,11 @@ class WebsiteProfile(http.Controller):
 
     # Edit Profile
     # ---------------------------------------------------
-    def _profile_edition_preprocess_values(self, user, **kwargs):
-        values = {
+    @http.route('/profile/user/save', type='jsonrpc', auth='user', methods=['POST'], website=True)
+    def save_edited_profile(self, **kwargs):
+        user_id = int(kwargs.get('user_id', 0))
+        user = request.env['res.users'].browse(user_id or request.env.uid)
+        qcontext = {
             'name': kwargs.get('name'),
             'website': kwargs.get('website'),
             'email': kwargs.get('email'),
@@ -137,20 +140,20 @@ class WebsiteProfile(http.Controller):
         }
 
         if 'image_1920' in kwargs:
-            values['image_1920'] = kwargs.get('image_1920')
+            qcontext['image_1920'] = kwargs.get('image_1920')
 
         if request.env.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
-            values['website_published'] = kwargs.get('website_published')
-        return values
+            qcontext['website_published'] = kwargs.get('website_published')
 
-    @http.route('/profile/user/save', type='jsonrpc', auth='user', methods=['POST'], website=True)
-    def save_edited_profile(self, **kwargs):
-        user_id = int(kwargs.get('user_id', 0))
-        user = request.env['res.users'].browse(user_id or request.env.uid)
-        values = self._profile_edition_preprocess_values(user, **kwargs)
-        if not user.partner_id._can_edit_country() and values.get('country_id') != user.partner_id.country_id.id:
+        if not user.partner_id._can_edit_country() and qcontext.get('country_id') != user.partner_id.country_id.id:
             raise UserError(_("Changing the country is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."))
-        user.write(values)
+        if not user.has_access('write'):
+            # no write access, grant it if we can edit the partner
+            if user.partner_id._can_be_edited_by_current_customer(**kwargs):
+                user = user.sudo()
+            else:
+                raise UserError(_("You are not allowed to edit this user"))
+        user.write(qcontext)
 
     # Ranks and Badges
     # ---------------------------------------------------
@@ -226,15 +229,38 @@ class WebsiteProfile(http.Controller):
         current_user_values = False
         if user_count:
             page_count = math.ceil(user_count / self._users_per_page)
-            pager = request.website.pager(url="/profile/users", total=user_count, page=page, step=self._users_per_page,
+            pager = self.env.website.pager(url="/profile/users", total=user_count, page=page, step=self._users_per_page,
                                           scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages,
                                           url_args=kwargs)
 
-            users = User.sudo().search(dom, limit=self._users_per_page, offset=pager['offset'], order='karma DESC')
-            user_values = self._prepare_all_users_values(users)
-
             # Get karma position for users (only website_published)
             position_domain = [('karma', '>', 1), ('website_published', '=', True)]
+
+            if group_by:
+                to_date = fields.Date.today()
+                if group_by == 'week':
+                    from_date = to_date - relativedelta(weeks=1)
+                elif group_by == 'month':
+                    from_date = to_date - relativedelta(months=1)
+                else:
+                    from_date = None
+                user_ids = request.env['res.users']._get_user_ids_ranked_by_karma(
+                    dom,
+                    from_date=from_date,
+                    to_date=to_date,
+                    limit=self._users_per_page,
+                    offset=pager['offset'],
+                )
+                users = User.sudo().browse(user_ids)
+            else:
+                users = User.sudo().search(
+                    dom,
+                    limit=self._users_per_page,
+                    offset=pager['offset'],
+                    order='karma DESC, id DESC',
+                )
+
+            user_values = self._prepare_all_users_values(users)
             position_map = self._get_position_map(position_domain, users, group_by)
 
             max_position = max([user_data['karma_position'] for user_data in position_map.values()], default=1)
@@ -292,7 +318,7 @@ class WebsiteProfile(http.Controller):
 
     @http.route('/profile/send_validation_email', type='jsonrpc', auth='user', website=True)
     def send_validation_email(self, **kwargs):
-        if request.env.uid != request.website.user_id.id:
+        if request.env.uid != self.env.website.user_id.id:
             request.env.user._send_profile_validation_email(**kwargs)
         request.session['validation_email_sent'] = True
         return True

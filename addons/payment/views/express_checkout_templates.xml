@@ -7,7 +7,8 @@
             - amount: The amount to pay.
             - minor_amount: The amount to pay in the minor units of its currency.
             - currency: The currency of the payment, as a `res.currency` record.
-            - providers_sudo: The compatible providers, as a sudoed `payment.provider` recordset.
+            - express_checkout_provider_sudo: The available provider, as a sudoed `payment.provider`
+                                              record.
             - merchant_name: The merchant name.
             - payment_method_unknown_id: The ID of the "Unknown" payment method record, to use as
                                          the generic express checkout method.
@@ -27,26 +28,28 @@
                                     called `payment_access_token` to prevent mixing up with the
                                     `access_token` used for abandoned carts.
         -->
-        <form name="o_payment_express_checkout_form" class="container"
-              t-att-data-reference-prefix="reference_prefix"
-              t-att-data-amount="amount"
-              t-att-data-minor-amount="minor_amount"
-              t-att-data-currency-id="currency and currency.id"
-              t-att-data-currency-name="currency.name.lower()"
-              t-att-data-merchant-name="merchant_name"
-              t-att-data-partner-id="partner_id"
-              t-att-data-payment-method-unknown-id="payment_method_unknown_id"
-              t-att-data-access-token="payment_access_token"
-              t-att-data-shipping-info-required="shipping_info_required"
-              t-att-data-delivery-amount="delivery_amount"
-              t-att-data-transaction-route="transaction_route"
-              t-att-data-shipping-address-update-route="shipping_address_update_route"
-              t-att-data-express-checkout-route="express_checkout_route"
-              t-att-data-landing-route="landing_route"
+        <form
+            t-if="express_checkout_provider_sudo"
+            name="o_payment_express_checkout_form"
+            class="container"
+            t-att-data-reference-prefix="reference_prefix"
+            t-att-data-amount="amount"
+            t-att-data-minor-amount="minor_amount"
+            t-att-data-currency-id="currency and currency.id"
+            t-att-data-currency-name="currency.name.lower()"
+            t-att-data-merchant-name="merchant_name"
+            t-att-data-partner-id="partner_id"
+            t-att-data-payment-method-unknown-id="payment_method_unknown_id"
+            t-att-data-access-token="payment_access_token"
+            t-att-data-shipping-info-required="shipping_info_required"
+            t-att-data-transaction-route="transaction_route"
+            t-att-data-shipping-address-update-route="shipping_address_update_route"
+            t-att-data-express-checkout-route="express_checkout_route"
+            t-att-data-landing-route="landing_route"
         >
-            <t t-set="provider_sudo" t-value="providers_sudo[:1]"/>
+            <t t-set="provider_sudo" t-value="express_checkout_provider_sudo"/>
             <t t-set="express_checkout_form_xml_id"
-               t-value="provider_sudo.express_checkout_form_view_id.xml_id"
+               t-value="express_checkout_provider_sudo.express_checkout_form_view_id.xml_id"
             />
             <t t-if="express_checkout_form_xml_id">
                 <t t-call="{{express_checkout_form_xml_id}}"/>

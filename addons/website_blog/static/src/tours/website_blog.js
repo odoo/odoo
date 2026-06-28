@@ -39,7 +39,6 @@ registerWebsitePreviewTour("blog", {}, () => [
     },
     {
         trigger: ".o_builder_sidebar_open .o-snippets-menu",
-        timeout: 15000,
     },
     {
         trigger: ':iframe h1[data-oe-expression="blog_post.name"]',

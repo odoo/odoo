@@ -6,7 +6,7 @@ import logging
 import re
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.crm.models import crm_stage
 from odoo.exceptions import ValidationError
@@ -98,7 +98,7 @@ class CrmRevealRule(models.Model):
         return action
 
     @api.model
-    @tools.ormcache()
+    @api.ormcache()
     def _get_active_rules(self):
         """
         Returns informations about the all rules.
@@ -265,14 +265,10 @@ class CrmRevealRule(models.Model):
         company_country = self.env.company.country_id
         rule_payload = {}
         for rule in self:
-            # accumulate all reveal_ids (separated by ',') into one list
-            # eg: 3 records with values: "175,176", "177" and "190,191"
-            # will become ['175','176','177','190','191']
-            reveal_ids = [
-                reveal_id.strip()
-                for reveal_ids in rule.mapped('industry_tag_ids.reveal_ids')
-                for reveal_id in reveal_ids.split(',')
-            ]
+            # accumulate all sic_group into one list
+            # eg: 3 records with values: 42, 54 and 1
+            # will become [42,54,1]
+            sic_groups = rule.industry_tag_ids.mapped('sic_group')
             data = {
                 'rule_id': rule.id,
                 'lead_for': rule.lead_for,
@@ -280,7 +276,7 @@ class CrmRevealRule(models.Model):
                 'filter_on_size': rule.filter_on_size,
                 'company_size_min': rule.company_size_min,
                 'company_size_max': rule.company_size_max,
-                'industry_tags': reveal_ids,
+                'industry_tags': sic_groups,
                 'user_country': company_country and company_country.code or False
             }
             if rule.lead_for == 'people':
@@ -369,9 +365,14 @@ class CrmRevealRule(models.Model):
     def _lead_vals_from_response(self, result):
         self.ensure_one()
         company_data = result['reveal_data']
-        people_data = result.get('people_data')
-        lead_vals = self.env['crm.iap.lead.helpers'].lead_vals_from_response(self.lead_type, self.team_id.id, self.tag_ids.ids, self.user_id.id, company_data, people_data)
+        lead_vals = self.env['crm.iap.lead.helpers'].lead_vals_from_response(self.lead_type, self.team_id.id, self.tag_ids.ids, self.user_id.id, company_data)
 
+        if people_data := result.get('people_data'):
+            lead_vals.update({
+                'contact_name': people_data[0]['full_name'],
+                'email_from': people_data[0]['email'],
+                'function': people_data[0]['title'],
+            })
         lead_vals.update({
             'priority': self.priority,
             'reveal_ip': result['ip'],

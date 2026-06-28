@@ -152,7 +152,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         })
         self.employee_emp.resource_calendar_id = self.calendar_1.id
 
-        leave = self.env['hr.leave'].create({
+        leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test new leave',
             'employee_id': self.employee_emp.id,
             'work_entry_type_id': work_entry_type.id,
@@ -178,6 +178,77 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'request_date_to': global_leave.date_to + timedelta(days=1),
         })
         self.assertEqual(leave.number_of_days, 2, 'There is a global leave')
+
+    @freeze_time('2026-03-19')
+    def test_load_public_holidays_opens_preview_wizard(self):
+        self.company.country_id = self.env.ref('base.be')
+        self.company.tz = 'Europe/Brussels'
+        self.external_company.country_id = self.env.ref('base.in')
+        self.external_company.tz = 'Asia/Kolkata'
+        companies = self.company + self.external_company
+        public_holidays_domain = [
+            ('company_id', 'in', companies.ids),
+            ('resource_id', '=', False),
+            ('date_from', '>=', datetime(2025, 12, 31, 0, 0, 0)),
+            ('date_to', '<=', datetime(2027, 1, 2, 0, 0, 0)),
+        ]
+        existing_public_holidays = self.env['resource.calendar.leaves'].search(public_holidays_domain)
+
+        action = self.env['resource.calendar.leaves'].with_context(
+            allowed_company_ids=companies.ids,
+        ).load_public_holidays()
+
+        self.assertEqual(action['res_model'], 'load.public.holiday.wizard')
+        self.assertEqual(action['target'], 'new')
+
+        wizard = self.env['load.public.holiday.wizard'].create({})
+        self.assertEqual(wizard.year, 2026)
+        self.assertTrue(wizard.line_ids.filtered(
+            lambda line: line.company_id == self.company
+            and line.start_date == date(2026, 1, 1)
+            and line.name == "New Year's Day"
+        ))
+        self.assertTrue(wizard.line_ids.filtered(
+            lambda line: line.company_id == self.external_company
+            and line.start_date == date(2026, 1, 26)
+            and line.name == "Republic Day"
+        ))
+        self.assertEqual(
+            self.env['resource.calendar.leaves'].search(public_holidays_domain),
+            existing_public_holidays,
+        )
+
+    def test_public_holiday_wizard_add_creates_records_only_on_confirmation(self):
+        self.company.country_id = self.env.ref('base.be')
+        self.company.tz = 'Europe/Brussels'
+
+        wizard_model = self.env['load.public.holiday.wizard'].with_context(
+            allowed_company_ids=self.company.ids,
+            params={'view_type': 'list'},
+        )
+        wizard = wizard_model.create({'year': 2026})
+
+        expected_count = len(wizard.line_ids)
+        public_holidays_domain = [
+            ('company_id', '=', self.company.id),
+            ('resource_id', '=', False),
+            ('date_from', '>=', datetime(2025, 12, 31, 0, 0, 0)),
+            ('date_to', '<=', datetime(2027, 1, 2, 0, 0, 0)),
+        ]
+        existing_public_holidays = self.env['resource.calendar.leaves'].search(public_holidays_domain)
+
+        action = wizard.action_add_public_holidays()
+
+        self.assertEqual(action['type'], 'ir.actions.client')
+        public_holidays = self.env['resource.calendar.leaves'].search(public_holidays_domain)
+        created_leaves = public_holidays - existing_public_holidays
+        self.assertEqual(len(created_leaves), expected_count)
+        self.assertTrue(created_leaves.filtered(lambda leave: leave.name == "New Year's Day"))
+
+        second_wizard = wizard_model.create({'year': 2026})
+
+        self.assertFalse(second_wizard.line_ids)
+        self.assertIn('All public holidays for 2026 are already present', second_wizard.warning_message)
 
     @freeze_time('2024-12-01')
     def test_global_leave_keeps_employee_resource_leave(self):
@@ -264,7 +335,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'unit_of_measure': 'day',
         })
 
-        employee_leave = self.env['hr.leave'].create({
+        employee_leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Holiday 5 days',
             'employee_id': employee_david.id,
             'work_entry_type_id': work_entry_type.id,

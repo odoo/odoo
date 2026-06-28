@@ -18,6 +18,19 @@
                     There was an error while sending this invoice via Peppol.
                 </div>
             </sheet>
+            <page name="other_info" position="inside">
+                <group string="Peppol info"
+                        name="accounting_info_group"
+                        invisible="not peppol_message_uuid"
+                        groups="base.group_no_one">
+                    <label for="peppol_move_state"/>
+                    <div>
+                        <a class="oe_link fw-bold" type="object" name="action_open_peppol_reponses">
+                            <field name="peppol_move_state"/>
+                        </a>
+                    </div>
+                </group>
+            </page>
         </field>
     </record>
 

@@ -18,13 +18,13 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
 
             ProductScreen.addOrderline("Desk Pad", "1"),
             pay(),
-            FeedbackScreen.isShown(),
+            FeedbackScreen.isContinueEnabled(),
             checkSimplifiedInvoiceNumber("0001"),
             FeedbackScreen.clickNextOrder(),
 
             ProductScreen.addOrderline("Desk Pad", "1", SIMPLIFIED_INVOICE_LIMIT - 1),
             pay(),
-            FeedbackScreen.isShown(),
+            FeedbackScreen.isContinueEnabled(),
             checkSimplifiedInvoiceNumber("0002"),
             FeedbackScreen.clickNextOrder(),
 
@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
             Dialog.confirm(),
             PartnerList.clickPartner(""),
 
-            FeedbackScreen.isShown(),
+            FeedbackScreen.isContinueEnabled(),
             FeedbackScreen.checkTicketData({
                 cssRules: [
                     {
@@ -55,8 +55,8 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
                         negation: true,
                     },
                     {
-                        css: "pos-receipt-container div",
-                        text: "Badajoz",
+                        css: "tbody[name='company_info'] tr td",
+                        text: "Fake Street 123, Barcelona, BA, 08001",
                     },
                 ],
             }),
@@ -64,7 +64,7 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
 
             ProductScreen.addOrderline("Desk Pad", "1"),
             pay(),
-            FeedbackScreen.isShown(),
+            FeedbackScreen.isContinueEnabled(),
             FeedbackScreen.checkTicketData({
                 cssRules: [
                     {
@@ -72,8 +72,8 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
                         text: "0003",
                     },
                     {
-                        css: "pos-receipt-container div",
-                        text: "Badajoz",
+                        css: "tbody[name='company_info'] tr td",
+                        text: "Fake Street 123, Barcelona, BA, 08001",
                     },
                 ],
             }),

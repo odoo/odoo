@@ -1,28 +1,29 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { parseEmail } from "@mail/utils/common/format";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useService } from "@web/core/utils/hooks";
 import { isEmail } from "@web/core/utils/strings";
 
-import { Component } from "@odoo/owl";
+import { Component, props, signal, types, useListener } from "@odoo/owl";
 /**
  * This class represents the popover opened when we detect that one of our recipients is missing an email
  * address in the RecipientsInput. It allows the user to correct this error and update the partner
  * with an email address.
  */
 export class RecipientsInputTagsListPopover extends Component {
-    static props = {
-        tagToUpdate: { type: Object },
-        onUpdateTag: { type: Function },
-        close: { type: Function },
-    };
     static template = "mail.RecipientsInputTagsListPopover";
 
     setup() {
+        this.props = props({
+            close: types.function([]),
+            onUpdateTag: types.function([types.string()]),
+            tagToUpdate: types.object({ onDelete: types.function([]) }),
+        });
         this.orm = useService("orm");
-        this.state = useState({ value: "" });
+        this.inputValue = signal("");
+        this.inError = signal(false);
         this.popoverRef = useRef("tagsListPopoverRef");
-        useExternalListener(window, "click", (ev) => {
+        useListener(window, "click", (ev) => {
             if (!this.popoverRef.el?.contains(ev.target)) {
                 this.discardTag();
             }
@@ -31,7 +32,7 @@ export class RecipientsInputTagsListPopover extends Component {
 
     onKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
-        this.state.error = false;
+        this.inError.set(false);
         if (hotkey === "enter") {
             this.updateTag();
         }
@@ -42,10 +43,10 @@ export class RecipientsInputTagsListPopover extends Component {
 
     updateTag() {
         if (!this.isValidEmail) {
-            this.state.error = true;
+            this.inError.set(true);
             return;
         }
-        this.props.onUpdateTag(this.state.value);
+        this.props.onUpdateTag(this.inputValue());
         this.props.close();
     }
 
@@ -55,7 +56,7 @@ export class RecipientsInputTagsListPopover extends Component {
     }
 
     get isValidEmail() {
-        const value = parseEmail(this.state.value);
+        const value = parseEmail(this.inputValue());
         const name = value ? value[0] : "";
         return isEmail(name);
     }

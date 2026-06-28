@@ -11,8 +11,9 @@ patch(QuickVideoSettings.prototype, {
     onClickVideoSettings() {
         this.actionService.doAction({
             context: {
-                dialog_size: "small",
+                dialog_size: "medium",
                 footer: false,
+                initialTab: "video",
             },
             name: _t("Voice & Video Settings"),
             tag: "mail.discuss_call_settings_action",

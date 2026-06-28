@@ -22,13 +22,12 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
         super(TestSMSPost, cls).setUpClass()
         cls._test_body = 'VOID CONTENT'
 
-        cls.test_record = cls.env['mail.test.sms'].with_context(**cls._test_context).create({
+        cls.test_record = cls.env['mail.test.sms'].create({
             'name': 'Test',
             'customer_id': cls.partner_1.id,
             'mobile_nbr': cls.test_numbers[0],
             'phone_nbr': cls.test_numbers[1],
         })
-        cls.test_record = cls._reset_mail_context(cls.test_record)
 
     def test_message_sms_internals_body(self):
         with self.with_user('employee'), self.mockSMSGateway():
@@ -130,14 +129,14 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
 
         self.assertSMSNotification([{'partner': self.partner_1}], self._test_body, messages)
 
-        # TDE: should take first found one according to partner ordering
+        # Should take the first partner in ordering that has a valid number.
         with self.with_user('employee'):
             record = self.env['mail.test.sms.partner.2many'].create({'customer_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]})
 
             with self.mockSMSGateway():
                 messages = record._message_sms(self._test_body)
 
-        self.assertSMSNotification([{'partner': self.partner_2}], self._test_body, messages)
+        self.assertSMSNotification([{'partner': self.partner_1}], self._test_body, messages)
 
     def test_message_sms_on_field_w_partner(self):
         with self.with_user('employee'), self.mockSMSGateway():
@@ -311,17 +310,12 @@ class TestSMSPostException(SMSCommon, TestSMSRecipients):
         super(TestSMSPostException, cls).setUpClass()
         cls._test_body = 'VOID CONTENT'
 
-        cls.test_record = cls.env['mail.test.sms'].with_context(**cls._test_context).create({
+        cls.test_record = cls.env['mail.test.sms'].create({
             'name': 'Test',
             'customer_id': cls.partner_1.id,
         })
         cls.test_record = cls._reset_mail_context(cls.test_record)
-        cls.partner_3 = cls.env['res.partner'].with_context({
-            'mail_create_nolog': True,
-            'mail_create_nosubscribe': True,
-            'mail_notrack': True,
-            'no_reset_password': True,
-        }).create({
+        cls.partner_3 = cls.env['res.partner'].create({
             'name': 'Ernestine Loubine',
             'email': 'ernestine.loubine@agrolait.com',
             'country_id': cls.env.ref('base.be').id,

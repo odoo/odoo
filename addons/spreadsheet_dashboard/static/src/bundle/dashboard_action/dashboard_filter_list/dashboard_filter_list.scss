@@ -1,0 +1,21 @@
+.o-filter-values .o-filter-clear {
+    width: 8%;
+    height: 36px;
+}
+
+.o_bottom_sheet .o_bottom_sheet_sheet {
+    .o_bottom_sheet_body:not(.o_custom_bottom_sheet) {
+        // Remove unnecessary padding since there is no checkmark
+        &:has(.dropdown-item.active, .dropdown-item.selected) .o-filter-item {
+            padding-right: 16px;
+        }
+    }
+
+    .o-filter-values {
+        min-width: unset;
+        .o-filter-item  .o-autocomplete .dropdown-item {
+            --dropdown-item-padding-y: 3px;
+            font-weight: 400;
+        }
+    }
+}

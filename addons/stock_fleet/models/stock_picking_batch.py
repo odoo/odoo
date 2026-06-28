@@ -11,7 +11,7 @@ class StockPickingBatch(models.Model):
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
     vehicle_category_id = fields.Many2one(
         'fleet.vehicle.model.category', string="Vehicle Category",
-        compute='_compute_vehicle_category_id', store=True, readonly=False)
+        compute='_compute_vehicle_category_id', store=True, readonly=False, index='btree_not_null')
     allowed_dock_ids = fields.Many2many(related='picking_type_id.dock_ids', string="Allowed Docks")
     dock_id = fields.Many2one('stock.location', string="Dock", domain="[('id', 'child_of', allowed_dock_ids)]",
         compute='_compute_dock_id', store=True, readonly=False)

@@ -137,18 +137,17 @@
                             <widget name="web_ribbon" title="Approved" bg_color="bg-success" invisible="state != 'validate'"/>
                             <aside>
                                 <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128'"
-                                    class="o_image_64_cover float-start me-2" alt="Employee's image"/>
+                                    class="o_image_64_cover float-start rounded border" alt="Employee's image"/>
                             </aside>
                             <main class="h-100">
-                                <div class="justify-content-center o_holidays_kanban_card">
+                                <div class="o_holidays_kanban_card d-flex flex-column justify-content-center h-100 ps-2 pe-3">
                                     <div class="d-flex flex-row">
-                                        <div class="col-12 align-items-center o_hr_holidays_value">
-                                            <div class="col-4 o_hr_holidays_card">
-                                                <field class="fw-bold fs-3 mb-2" name="employee_id"/>
+                                        <div class="col-12 d-flex align-items-center o_hr_holidays_value">
+                                            <div class="col-3 o_hr_holidays_card">
+                                                <field class="fw-bold fs-4 lh-sm" name="employee_id"/>
                                             </div>
                                             <div class="col-2 o_hr_holidays_name">
-                                                <field name="work_entry_type_id" class="fw-bold"/>
-                                                <div class="d-flex flex-row">
+                                                <div class="d-flex flex-row fw-bold">
                                                     <t t-set="same_day" t-value="record.request_date_from.raw_value == record.request_date_to.raw_value"/>
                                                     <t t-set="leave_unit" t-value="record.work_entry_type_request_unit.raw_value"/>
                                                     <t t-out="luxon.DateTime.fromISO(record.request_date_from.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
@@ -186,12 +185,15 @@
                                                         <field name="request_hour_to" widget="float_time_selection"/>
                                                     </t>
                                                 </div>
+                                                <field name="work_entry_type_id" class="text-muted"/>
                                             </div>
-                                            <div class="col-2 o_hr_holidays_card">
+                                            <div class="col-2 o_hr_holidays_card ps-3">
                                                 <div class="fw-bold d-flex me-1">
                                                     <field name="duration_display"/>
                                                 </div>
-                                                Amount
+                                                <span class="text-muted">
+                                                    Amount
+                                                </span>
                                             </div>
                                             <div class="col-2 o_hr_holidays_card">
                                                 <div t-if="record.work_entry_type_requires_allocation.raw_value"> <!-- To keep the same space-->
@@ -200,12 +202,17 @@
                                                         /
                                                         <field name="max_leaves" widget="float" digits="[3,2]"/>
                                                     </div>
-                                                    <span>
+                                                    <span class="text-muted">
                                                         Current balance
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="col-2 o_hr_holidays_button flex-wrap d-flex pe-4 gap-2 justify-content-start">
+                                            <div class="col-1">
+                                                <button t-if="record.attachment_is_visible and record.supported_attachment_ids_count.raw_value > 0" name="action_documents" type="object" class="btn btn-link text-nowrap">
+                                                    <i class="fa fa-paperclip" title="Attachments" /> <field name="supported_attachment_ids_count" nolabel="1"/>
+                                                </button>
+                                            </div>
+                                            <div class="o_hr_holidays_button col-2 d-flex justify-content-start gap-2">
                                                 <button
                                                     name="action_approve" type="object" class="btn btn-primary"
                                                     t-if="record.can_approve.raw_value">
@@ -227,82 +234,80 @@
                                 </div>
                             </main>
                         </div>
-                        <div class="f-flex flex-row o_hr_holidays_kanban_mobile w-100">
-                            <main>
-                                <div class="flex flex-grow-1 align-items-start mb-1">
-                                    <div class="mb-1 d-flex align-items-center gap-2 hr_leave_kanban_title">
-                                        <field name="employee_id" widget="many2one_avatar_employee"/>
-                                        <field name="employee_id" class="fw-bold w-100"/>
-                                        <span
-                                            style="min-width: fit-content;"
-                                            t-attf-class="rounded-pill badge flex-shrink-1 text-bg-{{
-                                                record.state.raw_value == 'validate' ? 'success' :
-                                                ['confirm', 'validate1'].includes(record.state.raw_value) ?
-                                                'warning' : 'danger' }}"
-                                            t-out="record.state.value"/>
-                                    </div>
-                                    <div class="d-flex flex-row">
-                                        <div id="date_part" class="d-flex flex-row"> <!-- To be override in my_kanban-->
-                                                <t t-set="same_day" t-value="record.request_date_from.raw_value == record.request_date_to.raw_value"/>
-                                                <t t-set="leave_unit" t-value="record.work_entry_type_request_unit.raw_value"/>
-                                                <t t-out="luxon.DateTime.fromISO(record.request_date_from.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
-                                                <t t-if="leave_unit == 'day'">
-                                                    <t t-if="!same_day">
-                                                        <span class="mx-1">–</span>
-                                                        <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
-                                                    </t>
-                                                </t>
-                                                <t t-elif="leave_unit == 'half_day'">
-                                                    <t t-set="same_period" t-value="record.request_date_from_period.raw_value == record.request_date_to_period.raw_value"/>
-                                                    <span class="mx-1">-</span>
-                                                    <t t-out="record.request_date_from_period.value"/>
-                                                    <t t-if="same_day">
-                                                        <t t-if="!same_period">
-                                                            <span class="mx-1">–</span>
-                                                            <t t-out="record.request_date_to_period.value"/>
-                                                        </t>
-                                                    </t>
-                                                    <t t-else="">
-                                                        <span class="mx-1">–</span>
-                                                        <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
-                                                        <span class="mx-1"><t t-out="record.request_date_to_period.value"/></span>
-                                                    </t>
-                                                </t>
-                                                <t t-elif="leave_unit == 'hour'">
-                                                    <span class="mx-1">-</span>
-                                                    <field name="request_hour_from" widget="float_time_selection"/>
+                        <div class="o_hr_holidays_kanban_mobile d-flex gap-2 w-100">
+                            <aside class="hr_leave_kanban_aside">
+                                <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128'"
+                                    class="o_image_40_cover float-start rounded" alt="Employee's image"/>
+                            </aside>
+                            <main class="d-flex flex-column lh-sm">
+                                <span class="hr_leave_kanban_employee_id"><field name="employee_id" class="fw-bold"/></span>
+                                <div class="d-flex flex-row">
+                                    <div id="date_part" class="d-flex flex-row"> <!-- To be override in my_kanban-->
+                                            <t t-set="same_day" t-value="record.request_date_from.raw_value == record.request_date_to.raw_value"/>
+                                            <t t-set="leave_unit" t-value="record.work_entry_type_request_unit.raw_value"/>
+                                            <t t-out="luxon.DateTime.fromISO(record.request_date_from.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
+                                            <t t-if="leave_unit == 'day'">
+                                                <t t-if="!same_day">
                                                     <span class="mx-1">–</span>
-                                                    <t t-if="!same_day">
-                                                        <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
-                                                        <span class="mx-1">-</span>
-                                                    </t>
-                                                    <field name="request_hour_to" widget="float_time_selection"/>
+                                                    <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
                                                 </t>
-                                        </div>
+                                            </t>
+                                            <t t-elif="leave_unit == 'half_day'">
+                                                <t t-set="same_period" t-value="record.request_date_from_period.raw_value == record.request_date_to_period.raw_value"/>
+                                                <span class="mx-1">-</span>
+                                                <t t-out="record.request_date_from_period.value"/>
+                                                <t t-if="same_day">
+                                                    <t t-if="!same_period">
+                                                        <span class="mx-1">–</span>
+                                                        <t t-out="record.request_date_to_period.value"/>
+                                                    </t>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="mx-1">–</span>
+                                                    <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
+                                                    <span class="mx-1"><t t-out="record.request_date_to_period.value"/></span>
+                                                </t>
+                                            </t>
+                                            <t t-elif="leave_unit == 'hour'">
+                                                <span class="mx-1">-</span>
+                                                <field name="request_hour_from" widget="float_time_selection"/>
+                                                <span class="mx-1">–</span>
+                                                <t t-if="!same_day">
+                                                    <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
+                                                    <span class="mx-1">-</span>
+                                                </t>
+                                                <field name="request_hour_to" widget="float_time_selection"/>
+                                            </t>
                                     </div>
-                                    <field name="work_entry_type_id" class="text-muted"/>
-                                    <span class="text-muted">
-                                        (<field name="duration_display"/>)
-                                    </span>
                                 </div>
+                                <field name="work_entry_type_id" class="text-muted"/>
+                                <span class="text-muted">
+                                    (<field name="duration_display"/>)
+                                </span>
                             </main>
-                            <bottom class="d-flex justify-content-end gap-2 mt-0">
-                                <button t-if="record.can_approve.raw_value" name="action_approve" type="object" class="btn btn-sm btn-primary py-0"
+                            <button t-if="record.attachment_is_visible and record.supported_attachment_ids_count.raw_value > 0" name="action_documents" type="object" class="btn btn-link me-4 text-nowrap">
+                                <i class="fa fa-paperclip" title="Attachments" /> <field name="supported_attachment_ids_count" nolabel="1"/>
+                            </button>
+                            <div class="o_hr_holidays_button d-grid align-self-start pt-1">
+                                <span
+                                    t-attf-class="badge rounded-pill text-bg-{{
+                                        record.state.raw_value == 'validate' ? 'success' :
+                                        ['confirm', 'validate1'].includes(record.state.raw_value) ?
+                                        'warning' : 'danger' }}"
+                                    t-out="record.state.value"/>
+                                <button t-if="record.can_approve.raw_value" name="action_approve" type="object" class="btn btn-sm btn-primary"
                                     groups="hr_holidays.group_hr_holidays_user">
                                     Approve
                                 </button>
-                                <button t-if="record.can_validate.raw_value and !record.can_approve.raw_value" name="action_approve" type="object" class="btn btn-sm btn-primary py-0"
+                                <button t-if="record.can_validate.raw_value and !record.can_approve.raw_value" name="action_approve" type="object" class="btn btn-sm btn-primary"
                                     groups="hr_holidays.group_hr_holidays_manager">
                                     Validate
                                 </button>
-                                <button t-if="record.can_refuse.raw_value" name="action_refuse" type="object" class="btn btn-sm btn-secondary py-0"
+                                <button t-if="record.can_refuse.raw_value" name="action_refuse" type="object" class="btn btn-sm btn-secondary"
                                     groups="hr_holidays.group_hr_holidays_user">
                                     Refuse
                                 </button>
-                                <button t-if="record.attachment_is_visible and record.supported_attachment_ids_count.raw_value > 0" name="action_documents" type="object" class="btn btn-link btn-sm ps-0 text-danger">
-                                    <i class="fa fa-paperclip"> <field name="supported_attachment_ids_count" nolabel="1"/></i>
-                                </button>
-                            </bottom>
+                            </div>
                         </div>
                     </t>
                 </templates>
@@ -344,14 +349,20 @@
             <field name="employee_id" invisible="1"/> <!-- for the employee's default value-->
             <field name="user_id" invisible="1"/> <!-- for conditional rendering of buttons on card -->
             <header>
-                <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_approve or not id"/>
-                <button string="Validate" name="action_approve" invisible="not can_validate or can_approve or not id" type="object" class="oe_highlight"/>
+                <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_approve or not id" data-hotkey="q"/>
+                <button string="Validate" name="action_approve" invisible="not can_validate or can_approve or not id" type="object" class="oe_highlight" data-hotkey="v"/>
                 <button string="Back to Approval" name="action_back_to_approval" type="object" invisible="not can_back_to_approve or not id"/>
-                <button string="Refuse" name="action_refuse" type="object" invisible="not can_refuse or not id"/>
+                <button string="Refuse" name="action_refuse" type="object" invisible="not can_refuse or not id" data-hotkey="x"/>
                 <button string="Cancel" name="action_cancel" type="object" invisible="not can_cancel or not id" />
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate,validate1" invisible="validation_type != 'both'"/>
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate" invisible="validation_type == 'both'"/>
             </header>
+            <div class="alert alert-warning"
+                    name="warning_wrong_company"
+                    role="alert"
+                    invisible="employee_id">
+                You are not assigned to any employee in the current company. Therefore, you can't request time off for yourself.
+            </div>
             <sheet>
                 <field name="dashboard_warning_message" class="alert alert-danger d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not dashboard_warning_message"/>
                 <field name="work_entry_type_increases_duration" class="alert alert-info d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not work_entry_type_increases_duration"/>
@@ -400,6 +411,8 @@
                             </div>
                             <field name="work_entry_type_id" force_save="1"
                                 domain="[
+                                    ('id', 'in', allowed_work_entry_type_ids),
+                                    ('time_off_selectable', '=', True),
                                     '|',
                                         ('requires_allocation', '=', False),
                                         '&amp;',
@@ -407,7 +420,7 @@
                                             '|',
                                                 ('allows_negative', '=', True),
                                                 '&amp;',
-                                                    ('virtual_remaining_leaves', '&gt;', 0),
+                                                    ('virtual_remaining_leaves', '>', 0),
                                                     ('allows_negative', '=', False),
                                 ]"
                                 context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
@@ -438,9 +451,6 @@
         <field name="mode">primary</field>
         <field name="priority">100</field>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='col_left']/*[1]" position="before">
-                <field name="employee_id" widget="many2one_avatar_employee" readonly="1"/>
-            </xpath>
             <xpath expr="//header" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -480,6 +490,19 @@
         </field>
     </record>
 
+    <record id="hr_leave_view_form_dashboard_new_time_off_custom" model="ir.ui.view">
+        <field name="name">hr.leave.view.form.dashboard.new.time.off.custom</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_dashboard_new_time_off"/>
+        <field name="mode">primary</field>
+        <field name="priority">17</field>
+        <field name="arch" type="xml">
+            <field name="work_entry_type_id" position="attributes">
+                <attribute name="domain">[('id', 'in', allowed_work_entry_type_ids or [])]</attribute>
+            </field>
+        </field>
+    </record>
+
     <record id="hr_leave_view_form_dashboard_manager_new_time_off" model="ir.ui.view">
         <field name="name">hr.leave.view.form.dashboard.new.time.off</field>
         <field name="model">hr.leave</field>
@@ -487,9 +510,6 @@
         <field name="mode">primary</field>
         <field name="priority">17</field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@widget='many2one_avatar_employee']" position="attributes"> 
-                <attribute name="readonly">0</attribute>
-            </xpath>
             <field name="work_entry_type_id" position="before">
                 <field name="user_id" invisible="1"/> <!-- Used in HolidaysFormViewDialog -->
             </field>
@@ -546,6 +566,21 @@
         </field>
     </record>
 
+    <record id="hr_leave_employee_view_dashboard_month" model="ir.ui.view">
+        <field name="name">hr.leave.view.dashboard.month</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_employee_view_dashboard"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//calendar" position="attributes">
+                <attribute name="mode">month</attribute>
+                <attribute name="month_overflow">0</attribute>
+                <attribute name="form_view_id">%(hr_holidays.hr_leave_view_form_dashboard_new_time_off_custom)d</attribute>
+            </xpath>
+        </field>
+
+    </record>
+
     <record id="hr_leave_view_form_manager" model="ir.ui.view">
         <field name="name">hr.leave.view.form.manager</field>
         <field name="model">hr.leave</field>
@@ -561,6 +596,20 @@
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="department_id" groups="hr_holidays.group_hr_holidays_responsible" readonly="1"/>
             </xpath>
+            <xpath expr="//field[@name='work_entry_type_id']" position="attributes">
+                <attribute name="domain">[
+                    '|',
+                        ('requires_allocation', '=', False),
+                        '&amp;',
+                            ('has_valid_allocation', '=', True),
+                            '|',
+                                ('allows_negative', '=', True),
+                                '&amp;',
+                                    ('virtual_remaining_leaves', '&gt;', 0),
+                                    ('allows_negative', '=', False),
+                ]</attribute>
+            </xpath>
+            <xpath expr="//div[@name='warning_wrong_company']" position="replace"/>
         </field>
     </record>
 
@@ -568,11 +617,12 @@
         <field name="name">hr.holidays.view.list</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <list string="Time Off Requests" sample="1" duplicate="false" js_class="hr_holidays_payslip_list">
+            <list string="Time Off Requests" sample="1" expand="context.get('expand_leave_list', False)" duplicate="false" js_class="hr_holidays_payslip_list">
                 <header>
                     <button type="action"
                         name="%(hr_holidays.action_hr_leave_generate_multi_wizard)d"
                         string="New Group Time Off" class="btn btn-secondary"
+                        invisible="context.get('default_employee_id', False)"
                         groups="hr_holidays.group_hr_holidays_responsible" display="always"
                     />
                     <button type="object"
@@ -690,7 +740,7 @@
     </record>
 
     <record id="hr_leave_action_new_request" model="ir.actions.act_window">
-        <field name="name">Dashboard</field>
+        <field name="name">My Time Off</field>
         <field name="path">time-off</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">calendar,list,form,activity</field>
@@ -749,16 +799,8 @@
             <xpath expr="//div[@id='date_part']" position="attributes">
                 <attribute name="class" add="w-100 fw-bold" separator=" "/>
             </xpath>
-            <xpath expr="//div[@id='date_part']" position="after">
-                <span
-                    style="min-width: fit-content;"
-                    t-attf-class="rounded-pill badge flex-shrink-1 text-bg-{{
-                    record.state.raw_value == 'validate' ? 'success' :
-                    ['confirm', 'validate1'].includes(record.state.raw_value) ?
-                    'warning' : 'danger' }}"
-                    t-out="record.state.value"/>
-            </xpath>
-            <xpath expr="//div[hasclass('hr_leave_kanban_title')]" position="replace"/>
+            <xpath expr="//span[hasclass('hr_leave_kanban_employee_id')]" position="replace"/>
+            <xpath expr="//aside[hasclass('hr_leave_kanban_aside')]" position="replace"/>
         </field>
     </record>
 

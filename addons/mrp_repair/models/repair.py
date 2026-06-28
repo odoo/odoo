@@ -67,10 +67,11 @@ class RepairOrder(models.Model):
     def _get_action_add_from_catalog_extra_context(self):
         bom = self.env['mrp.bom']._bom_find(self.product_id, company_id=self.company_id.id)[self.product_id]
         product_ids = [line.product_id.id for line in bom.bom_line_ids] if bom else []
+        child_field = self.env.context.get('child_field')
         return {
             **super()._get_action_add_from_catalog_extra_context(),
             'catalog_bom_product_ids': product_ids,
-            'search_default_bom_parts': bool(product_ids)
+            'search_default_bom_parts': bool(product_ids) and child_field == 'move_ids',
         }
 
 

@@ -15,14 +15,13 @@
     'auto_install': True,
     'post_init_hook': '_pos_online_payment_post_init',
     'assets': {
+        'web.assets_frontend': [
+            'pos_online_payment/static/src/portal/**/*',
+        ],
         'point_of_sale.assets_prod': [
             'pos_online_payment/static/src/app/**/*',
             'pos_online_payment/static/src/overrides/pos_overrides/**/*',
             'pos_online_payment/static/src/overrides/customer_display_overrides/customer_display_adapter.js',
-        ],
-        'point_of_sale.customer_display_assets': [
-            'pos_online_payment/static/src/app/components/popups/online_payment_popup/**/*',
-            'pos_online_payment/static/src/overrides/customer_display_overrides/customer_display.js',
         ],
         'point_of_sale.customer_display_assets_test': [
             'pos_online_payment/static/tests/tours/customer_display_tour.js',

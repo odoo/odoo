@@ -6,41 +6,37 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <group name="provider_credentials" position='inside'>
-                <group invisible="code != 'paypal'">
-                    <field
-                        name="paypal_email_account"
-                        required="code == 'paypal' and state != 'disabled'"
+            <group name="provider_credentials" position="inside">
+                <field
+                    string="Email"
+                    name="paypal_email_account"
+                    invisible="code != 'paypal'"
+                    required="is_live"
+                />
+                <field
+                    string="Client ID"
+                    name="paypal_client_id"
+                    invisible="code != 'paypal'"
+                    required="is_live"
+                />
+                <field
+                    string="Client Secret"
+                    name="paypal_client_secret"
+                    invisible="code != 'paypal'"
+                    required="is_live"
+                    widget="password"
+                />
+                <label string="Webhook ID" for="paypal_webhook_id" invisible="code != 'paypal'"/>
+                <div invisible="code != 'paypal'" class="o_row" col="2">
+                    <field name="paypal_webhook_id"/>
+                    <button
+                        string="Generate your webhook"
+                        type="object"
+                        name="action_paypal_create_webhook"
+                        invisible="paypal_webhook_id"
+                        class="btn-primary"
                     />
-                    <field
-                        name="paypal_client_id"
-                        string="Client ID"
-                        required="code == 'paypal' and state != 'disabled'"
-                    />
-                    <field
-                        name="paypal_client_secret"
-                        string="Client Secret"
-                        password="True"
-                        required="code == 'paypal' and state != 'disabled'"
-                    />
-                    <label for="paypal_webhook_id" string="Webhook ID"/>
-                    <div class="o_row" col="2">
-                        <field name="paypal_webhook_id"/>
-                        <button
-                            string="Generate your webhook"
-                            type="object"
-                            name="action_paypal_create_webhook"
-                            class="btn-primary"
-                            invisible="paypal_webhook_id"
-                        />
-                    </div>
-                    <widget
-                        name="documentation_link"
-                        path="/applications/finance/payment_providers/paypal.html"
-                        label="How to configure your paypal account?"
-                        colspan="2"
-                    />
-                </group>
+                </div>
             </group>
         </field>
     </record>

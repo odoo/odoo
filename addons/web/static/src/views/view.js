@@ -1,4 +1,4 @@
-import { reactive, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
@@ -13,7 +13,17 @@ import { useActionLinks } from "@web/views/view_hook";
 import { computeViewClassName } from "./utils";
 import { loadBundle } from "@web/core/assets";
 import { cookie } from "@web/core/browser/cookie";
-import { Component, markRaw, onWillUpdateProps, onWillStart, toRaw } from "@odoo/owl";
+import {
+    Component,
+    markRaw,
+    onWillUpdateProps,
+    onWillStart,
+    proxy,
+    props,
+    toRaw,
+    t,
+    applyDefaults,
+} from "@odoo/owl";
 import { session } from "@web/session";
 
 /**
@@ -83,11 +93,12 @@ import { session } from "@web/session";
 
 const viewRegistry = registry.category("views");
 
-viewRegistry.addValidation({
-    type: { validate: (t) => t in session.view_info },
-    Controller: { validate: (c) => c.prototype instanceof Component },
-    "*": true,
-});
+viewRegistry.addValidation(
+    t.object({
+        type: t.customValidator(t.string(), (v) => v in session.view_info),
+        Controller: t.component(),
+    })
+);
 
 /**
  * Returns the default config to use if no config, or an incomplete config has
@@ -104,7 +115,7 @@ export function getDefaultConfig() {
         embeddedActions: [],
         currentEmbeddedActionId: false,
         parentActionId: false,
-        breadcrumbs: reactive([
+        breadcrumbs: proxy([
             {
                 get name() {
                     return displayName;
@@ -183,24 +194,27 @@ const STANDARD_PROPS = [
 const ACTIONS = ["create", "delete", "edit", "group_create", "group_delete", "group_edit"];
 
 /** @extends {Component<ViewProps, import("@web/env").OdooEnv>} */
+export const viewProps = {
+    display: t.any().optional({}),
+    context: t.any().optional({}),
+    loadActionMenus: t.any().optional(false),
+    loadIrFilters: t.any().optional(false),
+    className: t.any().optional(""),
+};
+const viewPropsType = t.object(viewProps);
+
 export class View extends Component {
     static _download = async function () {};
     static template = "web.View";
     static components = { WithSearch };
     static searchMenuTypes = ["filter", "groupBy", "favorite"];
     static canOrderByCount = false;
-    static defaultProps = {
-        display: {},
-        context: {},
-        loadActionMenus: false,
-        loadIrFilters: false,
-        className: "",
-    };
-    static props = {
-        "*": true,
-    };
+    // View accepts any prop (owl3 validation is loose); only the keys with
+    // defaults are declared here.
+    props = props();
 
     setup() {
+        this.props = this.applyViewDefaults(this.props);
         const { arch, fields, resModel, searchViewArch, searchViewFields, type } = this.props;
         if (!resModel) {
             throw Error(`View props should have a "resModel" key`);
@@ -235,6 +249,13 @@ export class View extends Component {
         onWillUpdateProps((nextProps) => this.onWillUpdateProps(nextProps));
 
         useDebugCategory("view", { component: this });
+    }
+
+    /**
+     * @param {ViewProps} props
+     */
+    applyViewDefaults(props) {
+        return applyDefaults(props, viewPropsType);
     }
 
     /**
@@ -329,7 +350,7 @@ export class View extends Component {
 
         const archXmlDoc = parseXML(arch.replace(/&amp;nbsp;/g, nbsp));
         for (const action of ACTIONS) {
-            if (action in this.props.context && !this.props.context[action]) {
+            if (action in context && !context[action]) {
                 archXmlDoc.setAttribute(action, "0");
             }
         }
@@ -438,8 +459,8 @@ export class View extends Component {
 
         if (descr.display) {
             // FIXME: there's something inelegant here: display might come from
-            // the View's defaultProps, in which case, modifying it in place
-            // would have unwanted effects.
+            // the View's default props (shared object), in which case, modifying
+            // it in place would have unwanted effects.
             const viewDisplay = deepCopy(descr.display);
             const display = { ...this.withSearchProps.display };
             for (const key in viewDisplay) {
@@ -467,6 +488,7 @@ export class View extends Component {
      * @param {ViewProps} nextProps
      */
     onWillUpdateProps(nextProps) {
+        nextProps = this.applyViewDefaults(nextProps);
         const oldProps = pick(this.props, "arch", "type", "resModel");
         const newProps = pick(nextProps, "arch", "type", "resModel");
         if (JSON.stringify(oldProps) !== JSON.stringify(newProps)) {

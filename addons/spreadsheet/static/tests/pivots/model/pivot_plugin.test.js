@@ -1,4 +1,4 @@
-import { describe, expect, test, Deferred } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import {
     defineSpreadsheetActions,
@@ -41,7 +41,9 @@ import { Model } from "@odoo/o-spreadsheet";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { Partner, Product } from "../../helpers/data";
+import { createSheet, deleteSheet } from "../../helpers/commands";
 const { toZone } = spreadsheet.helpers;
+const { pivotRegistry, pivotNormalizationValueRegistry } = spreadsheet.registries;
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -127,7 +129,7 @@ test("can get a pivotId from cell formula where the id is a reference", async fu
 test("can get a Pivot from cell formula where the id is a reference in an inactive sheet", async function () {
     const { model } = await createSpreadsheetWithPivot();
     const firstSheetId = model.getters.getActiveSheetId();
-    model.dispatch("CREATE_SHEET", { sheetId: "2" });
+    createSheet(model, { sheetId: "2" });
     model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: firstSheetId, sheetIdTo: "2" });
     setCellContent(model, "A1", "1");
     setCellContent(model, "A2", '=PIVOT.VALUE(A1,"probability")');
@@ -624,8 +626,8 @@ test("concurrently load the same pivot twice", async function () {
 });
 
 test("display loading while data is not fully available", async function () {
-    const metadataPromise = new Deferred();
-    const dataPromise = new Deferred();
+    const metadataPromise = Promise.withResolvers();
+    const dataPromise = Promise.withResolvers();
     const spreadsheetData = {
         sheets: [
             {
@@ -650,11 +652,11 @@ test("display loading while data is not fully available", async function () {
     };
     onRpc("partner", "fields_get", async ({ method, model }) => {
         expect.step(`${model}/${method}`);
-        await metadataPromise;
+        await metadataPromise.promise;
     });
     onRpc("partner", "formatted_read_grouping_sets", async ({ kwargs, method, model }) => {
         expect.step(`${model}/${method}`);
-        await dataPromise;
+        await dataPromise.promise;
     });
     onRpc("product", "read", () => {
         throw new Error("should not be called because data is put in cache");
@@ -2006,8 +2008,8 @@ test("isPivotUnused getter", async () => {
     const sheetId = model.getters.getActiveSheetId();
     expect(model.getters.isPivotUnused(pivotId)).toBe(false);
 
-    model.dispatch("CREATE_SHEET", { sheetId: "2" });
-    model.dispatch("DELETE_SHEET", { sheetId: sheetId });
+    createSheet(model, { sheetId: "2" });
+    deleteSheet(model, sheetId);
     expect(model.getters.isPivotUnused(pivotId)).toBe(true);
 
     setCellContent(model, "A1", "=PIVOT.HEADER(1)");
@@ -2024,6 +2026,12 @@ test("isPivotUnused getter", async () => {
 
     setCellContent(model, "A1", "=PIVOT(1)");
     expect(model.getters.isPivotUnused(pivotId)).toBe(false);
+
+    model.dispatch("REQUEST_UNDO", {});
+    expect(model.getters.isPivotUnused(pivotId)).toBe(true);
+
+    setCellContent(model, "A2", "[ds](odoo-data-source://pivot/1)");
+    expect(model.getters.isListUnused("1")).toBe(false);
 });
 
 test("Data are fetched with the correct aggregator", async () => {
@@ -2613,6 +2621,56 @@ test("`getPivotCellFromPosition` should not throw on missing company default cur
     expect(() => {
         model.getters.getPivotCellFromPosition({ sheetId, col: 0, row: 0 });
     }).not.toThrow();
+});
+
+test("Groupable fields in pivot", async function () {
+    const groupableFieldTypes = [
+        "boolean",
+        "integer",
+        "float",
+        "monetary",
+        "char",
+        "text",
+        "date",
+        "datetime",
+        "selection",
+        "reference",
+        "many2one",
+        "many2many",
+        "many2one_reference",
+    ];
+    const { model, pivotId } = await createSpreadsheetWithPivot({});
+    expect(pivotId).toBe(model.getters.getPivotId("1"));
+    const pivot = model.getters.getPivot(pivotId);
+    let mockField = Object.values(pivot.getFields())[0];
+
+    for (const fieldType of groupableFieldTypes) {
+        mockField = { ...mockField, type: fieldType, groupable: true };
+        expect(pivotRegistry.get(pivot.type).isGroupable(mockField)).toBe(true, {
+            message: `Field ${fieldType} should be groupable`,
+        });
+        expect(pivotNormalizationValueRegistry.contains(fieldType)).toBe(true, {
+            message: `Field ${fieldType} should be normalizable`,
+        });
+    }
+
+    const nonGroupableFieldTypes = [
+        "html",
+        "binary",
+        "json",
+        "properties",
+        "properties_definition",
+        "one2many",
+    ];
+    for (const fieldType of nonGroupableFieldTypes) {
+        mockField = { ...mockField, type: fieldType, groupable: true };
+        expect(pivotRegistry.get(pivot.type).isGroupable(mockField)).toBe(false, {
+            message: `Field ${fieldType} should not be groupable`,
+        });
+        expect(pivotNormalizationValueRegistry.contains(fieldType)).toBe(false, {
+            message: `Field ${fieldType} should not be normalizable`,
+        });
+    }
 });
 
 test("REFRESH_PIVOT properly invalidates a pivot table", async function () {

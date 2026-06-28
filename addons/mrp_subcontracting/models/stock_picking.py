@@ -21,8 +21,8 @@ class StockPicking(models.Model):
             picking.show_subcontracting_details_visible = any(m.show_subcontracting_details_visible for m in picking.move_ids)
 
     @api.depends('picking_type_id', 'partner_id')
-    def _compute_location_id(self):
-        super()._compute_location_id()
+    def _compute_location_dest_id(self):
+        super()._compute_location_dest_id()
 
         for picking in self:
             # If this is a subcontractor resupply transfer, set the destination location
@@ -38,6 +38,19 @@ class StockPicking(models.Model):
         for picking in self:
             if any(move.is_subcontract and move.product_id.tracking in ['lot', 'serial'] for move in picking.move_ids):
                 picking.show_lots_text = False
+
+    def _prepare_return_move_default_values(self, move_id):
+        vals = super()._prepare_return_move_default_values(move_id)
+        if move_id.is_subcontract:
+            vals['location_dest_id'] = self.partner_id.with_company(self.company_id).property_stock_subcontractor.id
+        vals['is_subcontract'] = False
+        return vals
+
+    def _prepare_return_picking_default_values(self):
+        vals = super()._prepare_return_picking_default_values()
+        if all(move_id.quantity > 0 and move_id.is_subcontract for move_id in self.move_ids):
+            vals['location_dest_id'] = self.partner_id.with_company(self.company_id).property_stock_subcontractor.id
+        return vals
 
     # -------------------------------------------------------------------------
     # Action methods
@@ -104,10 +117,14 @@ class StockPicking(models.Model):
 
     def _prepare_subcontract_mo_vals(self, subcontract_move, bom):
         subcontract_move.ensure_one()
-        reference = self.env['stock.reference'].create({
-            'name': self.name,
-            'move_ids': [Command.link(subcontract_move.id)],
-        })
+        if not self.reference_ids:
+            references = self.env['stock.reference'].create({
+                'name': self.name,
+                'move_ids': [Command.link(subcontract_move.id)],
+            })
+        else:
+            references = self.reference_ids
+
         product = subcontract_move.product_id
         warehouse = self._get_warehouse(subcontract_move)
         subcontracting_location = \
@@ -126,7 +143,7 @@ class StockPicking(models.Model):
             'picking_type_id': warehouse.subcontracting_type_id.id,
             'date_start': subcontract_move.date - relativedelta(days=bom.produce_delay),
             'origin': self.name,
-            'reference_ids': [Command.link(reference.id)],
+            'reference_ids': [Command.link(ref.id) for ref in references],
         }
         return vals
 

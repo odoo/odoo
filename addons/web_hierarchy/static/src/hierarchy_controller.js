@@ -1,7 +1,6 @@
-import { render, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
 
-import { useBus } from "@web/core/utils/hooks";
 import { useModel } from "@web/model/model";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { useSetupAction } from "@web/search/action_hook";
@@ -48,13 +47,6 @@ export class HierarchyController extends Component {
             parentFieldName,
             childFieldName,
         });
-        useBus(
-            this.model.bus,
-            "update",
-            () => {
-                render(this, true);
-            }
-        );
         useViewButtons(this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),

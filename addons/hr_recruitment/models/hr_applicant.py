@@ -89,25 +89,25 @@ class HrApplicant(models.Model):
     create_date = fields.Datetime("Applied on", readonly=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', tracking=True,
                                compute='_compute_stage', store=True, readonly=False,
-                               domain="['|', ('job_ids', '=', False), ('job_ids', '=', job_id)]",
+                               domain="['&', '|', ('job_ids', '=', False), ('job_ids', '=', job_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
                                copy=False, index=True,
                                group_expand='_read_group_stage_ids')
     last_stage_id = fields.Many2one('hr.recruitment.stage', "Last Stage",
                                     help="Stage of the applicant before being in the current stage. Used for lost cases analysis.")
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags", tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency', related='company_id.currency_id')
-    company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, readonly=False, tracking=True)
+    company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, index=True, readonly=False, tracking=True)
     recruiter_id = fields.Many2one('hr.employee', "Recruiter", compute='_compute_recruiter', domain=_recruiter_domain, check_company=True,
-        tracking=True, store=True, readonly=False)
+        tracking=True, store=True, index=True, readonly=False)
     date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, readonly=False, tracking=True, copy=False)
     date_open = fields.Datetime("Assigned", readonly=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Evaluation", default='0')
-    salary_proposed = fields.Monetary("Proposed", aggregator="avg", currency_field='currency_id', help="Salary Proposed by the Organisation", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
+    salary_proposed = fields.Monetary("Proposed", aggregator="avg", currency_field='currency_id', help="Salary Proposed by the Organisation", groups="hr_recruitment.group_hr_recruitment_user")
     job_id = fields.Many2one('hr.job', "Job Position", domain="company_id and [('company_id', '=', company_id)] or []", tracking=True, index=True, copy=False)
-    salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
-    salary_expected = fields.Monetary("Expected", aggregator="avg", currency_field='currency_id', help="Salary Expected by Applicant", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
-    salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
+    salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", groups="hr_recruitment.group_hr_recruitment_user")
+    salary_expected = fields.Monetary("Expected", aggregator="avg", currency_field='currency_id', help="Salary Expected by Applicant", groups="hr_recruitment.group_hr_recruitment_user")
+    salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", groups="hr_recruitment.group_hr_recruitment_user")
     schedule_pay = fields.Selection([
         ('hourly', 'Hour'),
         ('daily', 'Day'),
@@ -200,21 +200,8 @@ class HrApplicant(models.Model):
         if not indirectly_linked:
             return
 
-        all_emails = {a.email_normalized for a in indirectly_linked if a.email_normalized}
-        all_phones = {a.partner_phone_sanitized for a in indirectly_linked if a.partner_phone_sanitized}
-        all_linkedins = {a.linkedin_profile for a in indirectly_linked if a.linkedin_profile}
-
-        epl_domain = Domain.FALSE
-        if all_emails:
-            epl_domain |= Domain("email_normalized", "in", list(all_emails))
-        if all_phones:
-            epl_domain |= Domain("partner_phone_sanitized", "in", list(all_phones))
-        if all_linkedins:
-            epl_domain |= Domain("linkedin_profile", "in", list(all_linkedins))
-
-        pool_domain = Domain(["|", ("talent_pool_ids", "!=", False), ("pool_applicant_id", "!=", False)])
-        domain = pool_domain & epl_domain
-        in_pool_applicants = self.env["hr.applicant"].with_context(active_test=True).search(domain)
+        domain = self._get_similar_applicants_domain() & Domain(["|", ("talent_pool_ids", "!=", False), ("pool_applicant_id", "!=", False)])
+        in_pool_applicants = self.env["hr.applicant"].with_context(active_test=False).search(domain)
 
         in_pool_emails = defaultdict(int)
         in_pool_phones = defaultdict(int)
@@ -318,9 +305,7 @@ class HrApplicant(models.Model):
             if applicant.pool_applicant_id:
                 related_ids.update(pool_applicant_map.get(applicant.pool_applicant_id, set()))
 
-            count = len(related_ids)
-
-            applicant.application_count = max(0, count)
+            applicant.application_count = len(related_ids)
 
     @api.depends("talent_pool_ids")
     def _compute_is_pool(self):
@@ -329,7 +314,7 @@ class HrApplicant(models.Model):
 
     def _get_similar_applicants_domain(self, ignore_talent=False, only_talent=False):
         """
-        This method returns a domain for the applicants whitch match with the
+        This method returns a domain for the applicants which match with the
         current applicant according to email_from, partner_phone or linkedin_profile.
         Thus, search on the domain will return the current applicant as well
         if any of the following fields are filled.
@@ -382,21 +367,8 @@ class HrApplicant(models.Model):
         if not indirect:
             return
 
-        all_emails = {a.email_normalized for a in indirect if a.email_normalized}
-        all_phones = {a.partner_phone_sanitized for a in indirect if a.partner_phone_sanitized}
-        all_linkedins = {a.linkedin_profile for a in indirect if a.linkedin_profile}
-
-        epl_domain = Domain.FALSE
-        if all_emails:
-            epl_domain |= Domain("email_normalized", "in", list(all_emails))
-        if all_phones:
-            epl_domain |= Domain("partner_phone_sanitized", "in", list(all_phones))
-        if all_linkedins:
-            epl_domain |= Domain("linkedin_profile", "in", list(all_linkedins))
-
-        pool_domain = Domain(["|", ("talent_pool_ids", "!=", False), ("pool_applicant_id", "!=", False)])
-        domain = pool_domain & epl_domain
-        in_pool_applicants = self.env["hr.applicant"].with_context(active_test=True).search(domain)
+        domain = self._get_similar_applicants_domain() & Domain(["|", ("talent_pool_ids", "!=", False), ("pool_applicant_id", "!=", False)])
+        in_pool_applicants = self.env["hr.applicant"].with_context(active_test=False).search(domain)
         in_pool_data = {"emails": set(), "phones": set(), "linkedins": set()}
 
         for applicant in in_pool_applicants:
@@ -513,7 +485,7 @@ class HrApplicant(models.Model):
             'meeting_display_text': _('No Meeting'),
             'meeting_display_date': ''
         })
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         for applicant in applicant_with_meetings:
             count = len(applicant.meeting_ids)
             dates = applicant.meeting_ids.mapped('start')
@@ -548,7 +520,7 @@ class HrApplicant(models.Model):
         domains = []
         # Map statuses to domain filters
         if 'refused' in value:
-            domains.append([('active', '=', True), ('refuse_reason_id', '!=', None)])
+            domains.append([('active', '=', False), ('refuse_reason_id', '!=', None)])
         if 'hired' in value:
             domains.append([('active', '=', True), ('date_closed', '!=', False)])
         if 'archived' in value or False in value:
@@ -572,9 +544,27 @@ class HrApplicant(models.Model):
         job_id = self.env.context.get('default_job_id')
         search_domain = [('job_ids', '=', False)]
         if job_id:
-            search_domain = ['|', ('job_ids', '=', job_id)] + search_domain
+            job = self.env['hr.job'].browse(job_id)
+            search_domain = Domain.AND([
+                Domain.OR([
+                    search_domain, [('job_ids', '=', job_id)]
+                ]),
+                Domain.OR([
+                    [('company_id', '=', False)], [('company_id', '=', job.company_id.id)],
+                ])
+            ])
+        else:
+            search_domain = Domain.AND([
+                search_domain,
+                Domain.OR([
+                    [('company_id', '=', False)], [('company_id', 'in', self.env.companies.ids)]
+                ]),
+            ])
         if stages:
-            search_domain = ['|', ('id', 'in', stages.ids)] + search_domain
+            search_domain = Domain.OR([
+                search_domain,
+                [('id', 'in', stages.ids)]
+            ])
 
         stage_ids = stages.sudo()._search(search_domain, order=stages._order)
         return stages.browse(stage_ids)
@@ -881,25 +871,24 @@ class HrApplicant(models.Model):
 
     def action_job_add_applicants(self):
         return {
-            "name": _("Create Applications"),
+            "name": _("Apply to Jobs"),
             "type": "ir.actions.act_window",
             "res_model": "job.add.applicants",
             "target": "new",
-            "views": [[False, "form"]],
+            "views": [[self.env.ref('hr_recruitment.job_add_applicants_view_form').id, "form"]],
             "context": {
                 "is_modal": True,
-                "dialog_size": "medium",
                 "default_applicant_ids": self.ids
                 or self.env.context.get("default_applicant_ids"),
             },
         }
 
-    def _track_template(self, changes):
-        res = super()._track_template(changes)
+    def _track_template_parameters(self, tracked_fields):
+        res = super()._track_template_parameters(tracked_fields)
         applicant = self[0]
         # When applcant is unarchived, they are put back to the default stage automatically. In this case,
         # don't post automated message related to the stage change.
-        if 'stage_id' in changes and applicant.exists()\
+        if 'stage_id' in tracked_fields and applicant.exists()\
             and applicant.stage_id.template_id\
             and not applicant.env.context.get('just_moved')\
             and not applicant.env.context.get('just_unarchived'):
@@ -915,11 +904,11 @@ class HrApplicant(models.Model):
             return self.env.ref('hr_recruitment.mt_talent_new', raise_if_not_found=False)
         return self.env.ref('hr_recruitment.mt_applicant_new')
 
-    def _track_subtype(self, init_values):
+    def _track_log_get_default_subtype(self, track_init_values):
         record = self[0]
-        if 'stage_id' in init_values and record.stage_id:
+        if 'stage_id' in track_init_values and record.stage_id:
             return self.env.ref('hr_recruitment.mt_applicant_stage_changed')
-        return super()._track_subtype(init_values)
+        return super()._track_log_get_default_subtype(track_init_values)
 
     def _notify_get_reply_to(self, default=None, author_id=False):
         """ Override to set alias of applicants to their job definition if any. """
@@ -989,7 +978,7 @@ class HrApplicant(models.Model):
         res._compute_partner_phone_email()
         return res
 
-    def _message_post_after_hook(self, message, msg_vals):
+    def _message_post_after_hook(self, message):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -1010,7 +999,7 @@ class HrApplicant(models.Model):
                 self.search([
                     ('partner_id', '=', False), email_domain, ('stage_id.fold', '=', False)
                 ]).write({'partner_id': new_partner[0].id})
-        return super()._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message)
 
     def create_employee_from_applicant(self):
         """ Create an employee from applicant """
@@ -1110,18 +1099,6 @@ class HrApplicant(models.Model):
         res = super(HrApplicant, self.with_context(just_unarchived=True)).action_unarchive()
         self.reset_applicant()
         return res
-
-    def action_send_email(self):
-        return {
-            'name': _('Send Email'),
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'view_mode': 'form',
-            'res_model': 'applicant.send.mail',
-            'context': {
-                'default_applicant_ids': self.ids,
-            }
-        }
 
     def _get_duration_from_tracking(self, trackings):
         json = super()._get_duration_from_tracking(trackings)

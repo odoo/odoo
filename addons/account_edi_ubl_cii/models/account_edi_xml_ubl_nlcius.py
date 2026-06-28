@@ -49,9 +49,9 @@ class AccountEdiXmlUbl_Nl(models.AbstractModel):
         grouping_key['tax_exemption_reason_code'] = None
         return grouping_key
 
-    def _ubl_add_values_tax_currency_code(self, vals):
+    def _ubl_add_tax_currency_code_node(self, vals):
         # OVERRIDE account.edi.xml.ubl_bis3
-        self._ubl_add_values_tax_currency_code_empty(vals)
+        self._ubl_add_tax_currency_code_node_empty(vals)
 
     def _ubl_tax_totals_node_grouping_key(self, base_line, tax_data, vals, currency):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -80,12 +80,11 @@ class AccountEdiXmlUbl_Nl(models.AbstractModel):
         super()._ubl_add_accounting_supplier_party_identification_nodes(vals)
         nodes = vals['party_node']['cac:PartyIdentification']
         partner = vals['party_vals']['partner']
-        commercial_partner = partner.commercial_partner_id
-
-        if commercial_partner.peppol_endpoint:
+        identifier_vals = partner._get_preferred_routing_identifier_vals()
+        if identifier_vals:
             nodes.append({
                 'cbc:ID': {
-                    '_text': commercial_partner.peppol_endpoint,
+                    '_text': identifier_vals['value'],
                     'schemeID': None,
                 },
             })
@@ -96,23 +95,34 @@ class AccountEdiXmlUbl_Nl(models.AbstractModel):
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
 
-        if (
-            commercial_partner.country_code == 'NL'
-            and commercial_partner.peppol_endpoint
-        ):
-            vals['party_node']['cac:PartyIdentification'] = [{
-                'cbc:ID': {
-                    '_text': commercial_partner.peppol_endpoint,
-                    'schemeID': commercial_partner.peppol_eas if commercial_partner.peppol_eas in ('0106', '0190') else None,
-                },
-            }]
+        if commercial_partner.country_code != 'NL':
+            return
 
-    def _add_invoice_payment_means_nodes(self, document_node, vals):
+        # NL customer: prefer the OIN/KVK as scheme-typed PartyIdentification.
+        if oin := commercial_partner._get_additional_identifier('NL_OIN'):
+            vals['party_node']['cac:PartyIdentification'] = [{
+                'cbc:ID': {'_text': oin, 'schemeID': '0190'},
+            }]
+        elif kvk := commercial_partner._get_additional_identifier('NL_KVK'):
+            vals['party_node']['cac:PartyIdentification'] = [{
+                'cbc:ID': {'_text': kvk, 'schemeID': '0106'},
+            }]
+        else:
+            identifier_vals = commercial_partner._get_preferred_routing_identifier_vals()
+            if identifier_vals:
+                vals['party_node']['cac:PartyIdentification'] = [{
+                    'cbc:ID': {'_text': identifier_vals['value'], 'schemeID': identifier_vals['scheme']},
+                }]
+
+    def _ubl_add_customization_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
-        super()._add_invoice_payment_means_nodes(document_node, vals)
-        # [BR-NL-29] The use of a payment means text (cac:PaymentMeans/cbc:PaymentMeansCode/@name) is not recommended
-        payment_means_node = document_node['cac:PaymentMeans']
-        if 'name' in payment_means_node['cbc:PaymentMeansCode']:
-            payment_means_node['cbc:PaymentMeansCode']['name'] = None
-        if 'listID' in payment_means_node['cbc:PaymentMeansCode']:
-            payment_means_node['cbc:PaymentMeansCode']['listID'] = None
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0'
+
+    def _ubl_add_payment_means_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_payment_means_nodes(vals)
+        for node in vals['document_node']['cac:PaymentMeans']:
+            # [BR-NL-29] The use of a payment means text (cac:PaymentMeans/cbc:PaymentMeansCode/@name) is not recommended
+            node['cbc:PaymentMeansCode']['name'] = None
+            node['cbc:PaymentMeansCode']['listID'] = None

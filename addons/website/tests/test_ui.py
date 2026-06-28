@@ -29,7 +29,7 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
         Page = self.env['website.page']
         Attachment = self.env['ir.attachment']
 
-        website_default = self.env.ref('website.default_website')
+        website_default = self.env.ref('base.default_website')
         website_test = Website.create({'name': 'Website Test'})
 
         # simulate attachment state when editing 2 theme through customize
@@ -45,7 +45,7 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
 
         # simulate PDF from ecommerce order
         # Note: it will only have its website_id flag if the website has a domain
-        # equal to the current URL (fallback or get_current_website())
+        # equal to the current URL.
         so_attachment = Attachment.create({
             'name': 'SO036.pdf',
             'type': 'binary',
@@ -68,7 +68,7 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         Lang = self.env['res.lang']
         Page = self.env['website.page']
 
-        default_website = self.env.ref('website.default_website')
+        default_website = self.env.ref('base.default_website')
         parseltongue = Lang.create({
             'name': 'Parseltongue',
             'code': 'pa_GB',
@@ -141,7 +141,7 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         self.assertEqual(View.search_count([('key', '=', 'test.generic_view')]), 2, "homepage view should have been COW'd")
         self.assertTrue(generic_page.arch == oe_structure_layout, "Generic homepage view should be untouched")
         self.assertEqual(len(generic_page.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 0, "oe_structure view should have been deleted when aboutus was COW")
-        specific_page = Website.with_context(website_id=self.ref('website.default_website')).viewref('test.generic_view')
+        specific_page = Website.with_context(website_id=self.ref('base.default_website')).viewref('test.generic_view')
         self.assertTrue(specific_page.arch != oe_structure_layout, "Specific homepage view should have been changed")
         self.assertEqual(len(specific_page.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 1, "oe_structure view should have been created on the specific tree")
 
@@ -231,7 +231,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
             'url_code': 'pa_GB',
         })
         self.env['res.lang']._activate_lang(parseltongue.code)
-        default_website = self.env.ref('website.default_website')
+        default_website = self.env.ref('base.default_website')
         default_website.write({
             'default_lang_id': lang_en.id,
             'language_ids': [(6, 0, (lang_en + parseltongue).ids)],
@@ -252,7 +252,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
         lang_en = self.env.ref('base.lang_en')
         lang_fr = self.env.ref('base.lang_fr')
         self.env['res.lang']._activate_lang(lang_fr.code)
-        default_website = self.env.ref('website.default_website')
+        default_website = self.env.ref('base.default_website')
         default_website.write({
             'default_lang_id': lang_en.id,
             'language_ids': [(6, 0, (lang_en + lang_fr).ids)],
@@ -324,13 +324,26 @@ class TestUiTranslate(odoo.tests.HttpCase):
         lang_en = self.env.ref('base.lang_en')
         lang_fr = self.env.ref('base.lang_fr')
         self.env['res.lang']._activate_lang(lang_fr.code)
-        default_website = self.env.ref('website.default_website')
+        default_website = self.env.ref('base.default_website')
         default_website.write({
             'default_lang_id': lang_en.id,
             'language_ids': [(6, 0, (lang_en + lang_fr).ids)],
         })
 
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'translate_select_element', login='admin')
+
+    def test_searchbar_in_translated_website(self):
+        lang_fr = self.env.ref('base.lang_fr')
+        self.env["base.language.install"].create({
+            'overwrite': True,
+            'lang_ids': [(6, 0, [lang_fr.id])],
+        }).lang_install()
+        self.env.ref('base.default_website').write({
+            'default_lang_id': lang_fr.id,
+            'language_ids': [Command.link(lang_fr.id)],
+        })
+
+        self.start_tour('/fr', 'searchbar_in_translated_website', login='admin')
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -443,7 +456,7 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_12_edit_translated_page_redirect(self):
         lang = self.env['res.lang']._activate_lang('nl_NL')
-        self.env.ref('website.default_website').write({'language_ids': [(4, lang.id, 0)]})
+        self.env.ref('base.default_website').write({'language_ids': [(4, lang.id, 0)]})
         self.start_tour("/nl/contactus", 'edit_translated_page_redirect', login='admin')
 
     def test_14_carousel_snippet_content_removal(self):
@@ -477,7 +490,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour(self.env["website"].get_client_action_url('/', True), 'website_multi_edition', login='admin')
 
     def test_24_snippet_cache_across_websites(self):
-        default_website = self.env.ref('website.default_website')
+        default_website = self.env.ref('base.default_website')
         website = self.env['website'].create({
             'name': 'Test Website',
             'domain': '',
@@ -494,7 +507,7 @@ class TestUi(HttpCaseWithWebsiteUser):
                     </div>
                 </section>
             """,
-            thumbnail_url='/website/static/src/img/snippets_thumbs/s_text_block.svg',
+            thumbnail_url='/website/static/src/img/snippets_thumbs/thumb_snippets_intro.svg',
             snippet_key='s_carousel',
             template_key='website.snippets')
         self.start_tour(self.env["website"].get_client_action_url('/@/', True), 'snippet_cache_across_websites', login='admin', cookies={
@@ -502,16 +515,6 @@ class TestUi(HttpCaseWithWebsiteUser):
         })
 
     def test_26_website_media_dialog_icons(self):
-        self.env.ref('website.default_website').write({
-            'social_twitter': 'https://twitter.com/Odoo',
-            'social_facebook': 'https://www.facebook.com/Odoo',
-            'social_linkedin': 'https://www.linkedin.com/company/odoo',
-            'social_youtube': 'https://www.youtube.com/user/OpenERPonline',
-            'social_github': 'https://github.com/odoo',
-            'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
-            'social_tiktok': 'https://www.tiktok.com/@odoo',
-            'social_discord': 'https://discord.com/servers/discord-town-hall-169256939211980800',
-        })
         self.start_tour(self.env["website"].get_client_action_url('/', True), 'website_media_dialog_icons', login='admin')
 
     def test_27_website_clicks(self):
@@ -528,7 +531,8 @@ class TestUi(HttpCaseWithWebsiteUser):
             'parent_id': menu_root.id,
             'action': 'ir.actions.act_window,%d' % (self.env.ref('base.open_module_tree').id,),
         })
-        self.env.ref('base.user_admin').action_id = self.env.ref('base.menu_administration').id
+        self.env.ref('base.user_admin').action_id = self.env['ir.actions.actions'].search([('name', '=', 'Settings')], limit=1)
+        self.assertTrue(self.env.ref('base.user_admin').action_id, 'The user should have an action (or the test/tour will not test anything).')
         self.assertFalse(menu_root.action, 'The top menu should not have an action (or the test/tour will not test anything).')
         self.start_tour('/', 'website_backend_menus_redirect', login='admin')
 
@@ -556,6 +560,16 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_website_media_dialog_insert_media(self):
         self.start_tour(self.env['website'].get_client_action_url("/", True), "website_media_dialog_insert_media", login="admin")
+
+    def test_website_media_dialog_insert_file(self):
+        # Ensure at least one document exists for the step that chooses one
+        self.env['ir.attachment'].create({
+            'name': 'doc.txt',
+            'raw': b'Text',
+            'mimetype': 'text/plain',
+            'public': True,
+        })
+        self.start_tour(self.env['website'].get_client_action_url('/', True), "website_media_dialog_insert_file", login="admin")
 
     def test_website_text_font_size(self):
         self.start_tour(self.env['website'].get_client_action_url("/", True), 'website_text_font_size', login='admin', timeout=300)
@@ -587,7 +601,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         to test (TODO).
         """
         # Remove all menu items but the first one
-        website = self.env['website'].get_current_website()
+        website = self.env.ref('base.default_website')
         website.menu_id.child_id[1:].unlink()
         # Create a new menu item whose text is very long so that we are sure
         # it is folded into the extra items "+" menu outside of edit mode and
@@ -604,18 +618,9 @@ class TestUi(HttpCaseWithWebsiteUser):
         # Previous tests are testing the dirty behavior when the extra items
         # "+" menu comes in play. For other "no dirty" tests, we just remove
         # most menu items first to make sure they pass independently.
-        website = self.env['website'].get_current_website()
-        website.menu_id.child_id[1:].unlink()
+        self.env.ref('base.default_website').menu_id.child_id[1:].unlink()
 
         self.start_tour(self.env["website"].get_client_action_url('/', True), 'website_no_dirty_page', login='admin')
-
-    def test_interaction_lifecycle(self):
-        self.env['ir.asset'].create({
-            'name': 'wysiwyg_patch_start_and_destroy',
-            'bundle': 'website.assets_wysiwyg',
-            'path': 'website/static/tests/tour_utils/lifecycle_patch_wysiwyg.js',
-        })
-        self.start_tour(self.env['website'].get_client_action_url('/', True), 'interaction_lifecycle', login='admin')
 
     def test_drop_404_ir_attachment_url(self):
         website_snippets = self.env.ref('website.snippets')
@@ -661,7 +666,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_powerbox_keyword', login='admin')
 
     def test_website_no_dirty_lazy_image(self):
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         # Enable multiple langs to reduce the chance of the test being silently
         # broken by ensuring that it receives a lot of extra o_dirty elements.
         # This is done to account for potential later changes in the number of
@@ -694,7 +699,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour(self.env["website"].get_client_action_url("/", True), 'website_no_dirty_lazy_image', login='admin')
 
     def test_website_edit_menus_delete_parent(self):
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         self.env['website.menu'].create({
             'name': 'Test Child Menu',
             'url': '/test-child',
@@ -761,7 +766,7 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_alt_a_edit(self):
         lang_en = self.env.ref('base.lang_en')
-        self.env.ref('website.default_website').write({
+        self.env.ref('base.default_website').write({
             'default_lang_id': lang_en.id,
             'language_ids': [Command.link(lang_en.id)],
         })
@@ -771,7 +776,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         lang_en = self.env.ref('base.lang_en')
         lang_fr = self.env.ref('base.lang_fr')
         self.env['res.lang']._activate_lang(lang_fr.code)
-        self.env.ref('website.default_website').write({
+        self.env.ref('base.default_website').write({
             'default_lang_id': lang_en.id,
             'language_ids': [Command.link(lang_en.id), Command.link(lang_fr.id)],
         })
@@ -796,7 +801,7 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_background_color_gradient_precedence(self):
         # Configure CC1 with a gradient and apply it to the header, then set a
         # different gradient directly on the header background.
-        self.env['website.assets'].with_context(website_id=self.ref('website.default_website')).make_scss_customization(
+        self.env['website.assets'].with_context(website_id=self.ref('base.default_website')).make_scss_customization(
             '/website/static/src/scss/options/user_values.scss',
             {
                 'o-cc1-bg-gradient': 'linear-gradient(rgb(0, 0, 0), rgb(1, 1, 1))',

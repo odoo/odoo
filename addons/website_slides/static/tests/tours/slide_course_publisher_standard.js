@@ -1,8 +1,6 @@
+import { registry } from "@web/core/registry";
 import slidesTourTools from "@website_slides/../tests/tours/slides_tour_tools";
-import {
-    clickOnEditAndWaitEditMode,
-    registerWebsitePreviewTour,
-} from "@website/js/tours/tour_utils";
+import { clickOnEditAndWaitEditMode } from "@website/js/tours/tour_utils";
 
 /**
  * Global use case:
@@ -11,12 +9,8 @@ import {
  * they create some lessons in it;
  * they publish it;
  */
-registerWebsitePreviewTour(
-    "course_publisher_standard",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps ) #245680
-    },
-    () =>
+registry.category("web_tour.tours").add("course_publisher_standard", {
+    steps: () =>
         [
             {
                 content: "eLearning: click on New (top-menu)",
@@ -139,5 +133,5 @@ registerWebsitePreviewTour(
             ],
             slidesTourTools.addImageToSection("Introduction", "Overview", true),
             slidesTourTools.addPdfToSection("Introduction", "Exercise", true)
-        )
-);
+        ),
+});

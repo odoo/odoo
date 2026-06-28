@@ -13,7 +13,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 @tagged("-at_install", "post_install")
 class TestPaymentToken(PaymentCommon):
-    @mute_logger("odoo.addons.base.models.ir_rule")
+
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_users_have_no_access_to_other_users_tokens(self):
         users = [self.public_user, self.portal_user, self.internal_user]
         token = self._create_token(partner_id=self.admin_partner.id)
@@ -28,9 +29,9 @@ class TestPaymentToken(PaymentCommon):
             token.partner_id = self.public_user.partner_id
 
     def test_unarchiving_token_requires_active_provider(self):
-        """Test that unarchiving disabled tokens is forbidden if the provider is disabled."""
+        """Test that unarchiving disabled tokens is forbidden if the provider is archived."""
+        self.provider.active = False
         token = self._create_token(active=False)
-        token.provider_id.state = "disabled"
         with self.assertRaises(UserError):
             token.active = True
 

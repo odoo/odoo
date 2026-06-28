@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import website_checkout_alert_mixin  # isort: split
+
 from . import (
     account_move,
     crm_team,
@@ -11,6 +13,7 @@ from . import (
     payment_transaction,
     product_attribute,
     product_attribute_category,
+    product_combo,
     product_document,
     product_feed,
     product_image,
@@ -32,7 +35,6 @@ from . import (
     sale_order_line,
     theme_utils,
     website,
-    website_base_unit,
     website_checkout_step,
     website_menu,
     website_page,

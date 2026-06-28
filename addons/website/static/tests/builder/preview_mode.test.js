@@ -40,7 +40,7 @@ class CustomAction extends BuilderAction {
     static dependencies = ["history"];
     apply({ editingElement }) {
         editingElement.classList.add("applied");
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
     isApplied({ editingElement }) {
         return editingElement.classList.contains("applied");

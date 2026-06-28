@@ -20,7 +20,7 @@ class IrHttp(models.AbstractModel):
                     allowed_company_ids.append(company_id)
             user = user.with_context(allowed_company_ids=allowed_company_ids)
         store.add_global_values(user.sudo(False)._store_init_global_fields)
-        result["storeData"] = store.get_result()
+        result["storeData"] = store.as_dict()
         guest = self.env['mail.guest']._get_guest_from_context()
         if not request.session.uid and guest:
             user_context = {'lang': guest.lang}

@@ -20,24 +20,19 @@ function sortList(env, position, direction) {
         return;
     }
     const listId = env.model.getters.getListIdFromPosition(position);
-    const definition = env.model.getters.getListModelDefinition(listId);
+    const definition = env.model.getters.getListDefinition(listId);
     const orderBy =
         direction === "none"
             ? []
             : [
                   { name: field.name, asc: direction === "asc" },
-                  ...definition.searchParams.orderBy.filter(
-                      (orderBy) => orderBy.name !== field.name
-                  ),
+                  ...definition.orderBy.filter((orderBy) => orderBy.name !== field.name),
               ];
     env.model.dispatch("UPDATE_ODOO_LIST", {
         listId,
         list: {
             ...definition,
-            searchParams: {
-                ...definition.searchParams,
-                orderBy,
-            },
+            orderBy,
         },
     });
 }

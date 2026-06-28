@@ -3,15 +3,9 @@
 import { Homepage } from "./homepage.js";
 import Store from "./store.js";
 
-const { mount, reactive } = owl;
-
-function createStore() {
-    return reactive(new Store());
-}
+const { mount } = owl;
 
 mount(Homepage, document.body, {
-    env: {
-        store: createStore(),
-    },
+    plugins: [Store],
     dev: new URLSearchParams(window.location.search).has("debug"),
 });

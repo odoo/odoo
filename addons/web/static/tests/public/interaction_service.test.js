@@ -299,7 +299,7 @@ test("recover from error as much as possible when applying dynamiccontent", asyn
     b = "boom";
     c = "cc";
     expect(() => interaction.updateContent()).toThrow(
-        "An error occured while updating dynamic attribute 'b' (in interaction 'Test')"
+        "An error occurred while updating dynamic attribute 'b' (in interaction 'Test')"
     );
     expect(".test").toHaveOuterHTML(`<div class="test" a="aa" b="b" c="cc"></div>`);
 });
@@ -325,6 +325,28 @@ test("interactions are stopped in reverse order", async () => {
     expect.verifySteps(["setup 1", "setup 2"]);
     core.stopInteractions();
     expect.verifySteps(["destroy 2", "destroy 1"]);
+});
+
+test("stop interactions continues after a destroy crash", async () => {
+    class Boom extends Interaction {
+        static selector = ".test";
+
+        destroy() {
+            expect.step("destroy boom");
+            throw new Error("boom");
+        }
+    }
+    class NotBoom extends Interaction {
+        static selector = ".test";
+
+        destroy() {
+            expect.step("destroy notboom");
+        }
+    }
+
+    const { core } = await startInteraction([NotBoom, Boom], `<div class="test"></div>`);
+    expect(() => core.stopInteractions()).toThrow("Could not destroy interaction Boom");
+    expect.verifySteps(["destroy boom", "destroy notboom"]);
 });
 
 test("can mount a component", async () => {

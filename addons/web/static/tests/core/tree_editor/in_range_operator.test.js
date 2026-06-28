@@ -1,79 +1,94 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, queryFirst, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 
-import { makeMockEnv } from "@web/../tests/web_test_helpers";
+import { makeMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Domain } from "@web/core/domain";
 import { condition, connector, expression } from "@web/core/tree_editor/condition_tree";
 import { constructDomainFromTree } from "@web/core/tree_editor/construct_domain_from_tree";
+import { InRange, Select } from "@web/core/tree_editor/tree_editor_components";
 import {
     eliminateVirtualOperators,
     introduceVirtualOperators,
 } from "@web/core/tree_editor/virtual_operators";
+import { pyDateStr, pyDatetimeStr } from "./condition_tree_editor_test_helpers";
 
 describe.current.tags("headless");
 
 const options = {
     getFieldDef: (name) => {
         if (name === "m2o") {
-            return { type: "man2one" };
+            return { type: "many2one" };
         }
-        if (name === "m2o.date_2" || name === "date_1" || name === "date_3") {
+        if (name === "m2o.date_2" || name === "date_1" || name === "date_2" || name === "date_3") {
             return { type: "date" };
         }
-        if (name === "m2o.datetime_2" || name === "datetime_1" || name === "datetime_3") {
+        if (name === "m2o.dt_2" || name === "dt_1" || name === "dt_2" || name === "dt_3") {
             return { type: "datetime" };
         }
         return null;
     },
 };
-
 const fullOptions = { ...options, generateSmartDates: false };
+
+const DATE_START = "2025-07-02 00:00:00";
+const DATE_END = "2025-07-03 00:00:00";
+const complexPath = expression("path");
+
+const pyDate = (delta) => expression(pyDateStr(delta));
+const pyDatetime = (delta) => expression(pyDatetimeStr(delta));
+
+const and = (c, negate) => connector("&", c, negate);
+const or = (c, negate) => connector("|", c, negate);
+const inRange = (f, v, negate) => condition(f, "in range", v, negate);
+const m2oAny = (c, negate = false) => condition("m2o", "any", c, negate);
 
 test(`"in range" operator: no introduction for complex paths (generateSmartDates=false)`, async () => {
     const toTest = [
         {
-            tree_py: connector("&", [
-                condition(expression("path"), ">=", "2025-07-02 00:00:00"),
-                condition(expression("path"), "<=", "2025-07-03 00:00:00"),
+            tree_py: and([
+                condition(complexPath, ">=", DATE_START),
+                condition(complexPath, "<=", DATE_END),
             ]),
         },
         {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [
-                    condition(expression("path"), ">=", "2025-07-02 00:00:00"),
-                    condition(expression("path"), "<=", "2025-07-03 00:00:00"),
+            tree_py: m2oAny(
+                and([
+                    condition(complexPath, ">=", DATE_START),
+                    condition(complexPath, "<=", DATE_END),
                 ])
             ),
         },
         {
-            tree_py: connector("&", [
-                condition(expression("path"), ">=", "2025-07-02 00:00:00"),
-                condition(expression("path"), "<=", "2025-07-03 00:00:00"),
+            tree_py: and([
+                condition(complexPath, ">=", DATE_START),
+                condition(complexPath, "<=", DATE_END),
             ]),
         },
         {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [
-                    condition(expression("path"), ">=", "2025-07-02 00:00:00"),
-                    condition(expression("path"), "<=", "2025-07-03 00:00:00"),
+            tree_py: m2oAny(
+                and([
+                    condition(complexPath, ">=", DATE_START),
+                    condition(complexPath, "<=", DATE_END),
                 ])
             ),
         },
         {
-            tree_py: connector("&", [
-                condition("m2o.datetime_2", ">=", "2025-07-02 00:00:00"),
-                condition("m2o.datetime_2", "<=", "2025-07-03 00:00:00"),
+            tree_py: and([
+                condition("m2o.dt_2", ">=", DATE_START),
+                condition("m2o.dt_2", "<=", DATE_END),
             ]),
         },
         {
-            tree_py: connector("&", [
-                condition("m2o.date_2", ">=", "2025-07-02 00:00:00"),
-                condition("m2o.date_2", "<=", "2025-07-03 00:00:00"),
+            tree_py: and([
+                condition("m2o.dt_2", ">=", "today -5d"),
+                condition("m2o.dt_2", "<", "today"),
+            ]),
+        },
+        {
+            tree_py: and([
+                condition("m2o.date_2", ">=", DATE_START),
+                condition("m2o.date_2", "<=", DATE_END),
             ]),
         },
     ];
@@ -85,127 +100,63 @@ test(`"in range" operator: no introduction for complex paths (generateSmartDates
 test(`"in range" operator: no introduction if condition negated or "|" or different path (generateSmartDates=false)`, async () => {
     const toTest = [
         {
-            tree_py: connector("&", [
-                condition("date_1", ">=", "2025-07-02 00:00:00", true),
-                condition("date_1", "<=", "2025-07-03 00:00:00"),
+            tree_py: and([
+                condition("date_1", ">=", DATE_START, true),
+                condition("date_1", "<=", DATE_END),
             ]),
         },
         {
-            tree_py: connector("&", [
-                condition("date_1", ">=", "2025-07-02 00:00:00"),
-                condition("date_1", "<=", "2025-07-03 00:00:00", true),
+            tree_py: and([
+                condition("date_1", ">=", DATE_START),
+                condition("date_1", "<=", DATE_END, true),
             ]),
         },
         {
-            tree_py: connector("&", [
-                condition("date_1", ">=", "2025-07-02 00:00:00", true),
-                condition("date_1", "<=", "2025-07-03 00:00:00", true),
+            tree_py: and([
+                condition("date_1", ">=", DATE_START, true),
+                condition("date_1", "<=", DATE_END, true),
             ]),
         },
         {
-            tree_py: connector("|", [
-                condition("date_1", ">=", "2025-07-02 00:00:00"),
-                condition("date_1", "<=", "2025-07-03 00:00:00"),
+            tree_py: or([
+                condition("date_1", ">=", DATE_START),
+                condition("date_1", "<=", DATE_END),
             ]),
         },
         {
-            tree_py: connector("&", [
-                condition("date_1", ">=", "2025-07-02 00:00:00"),
-                condition("date_3", "<=", "2025-07-03 00:00:00"),
+            tree_py: and([
+                condition("date_1", ">=", DATE_START),
+                condition("date_3", "<=", DATE_END),
             ]),
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "datetime_1",
-                    ">=",
-                    expression(
-                        `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    ),
-                    true
-                ),
-                condition(
-                    "datetime_1",
-                    "<",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
+            tree_py: and([
+                condition("dt_1", ">=", pyDatetime("today"), true),
+                condition("dt_1", "<", pyDatetime("days = 1")),
             ]),
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "datetime_1",
-                    ">=",
-                    expression(
-                        `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
-                condition(
-                    "datetime_1",
-                    "<",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    ),
-                    true
-                ),
+            tree_py: and([
+                condition("dt_1", ">=", pyDatetime("today")),
+                condition("dt_1", "<", pyDatetime("days = 1"), true),
             ]),
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "datetime_1",
-                    ">=",
-                    expression(
-                        `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    ),
-                    true
-                ),
-                condition(
-                    "datetime_1",
-                    "<",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    ),
-                    true
-                ),
+            tree_py: and([
+                condition("dt_1", ">=", pyDatetime("today"), true),
+                condition("dt_1", "<", pyDatetime("days = 1"), true),
             ]),
         },
         {
-            tree_py: connector("|", [
-                condition(
-                    "datetime_1",
-                    ">=",
-                    expression(
-                        `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
-                condition(
-                    "datetime_1",
-                    "<",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
+            tree_py: or([
+                condition("dt_1", ">=", pyDatetime("today")),
+                condition("dt_1", "<", pyDatetime("days = 1")),
             ]),
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "datetime_1",
-                    ">=",
-                    expression(
-                        `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
-                condition(
-                    "datetime_3",
-                    "<",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
+            tree_py: and([
+                condition("dt_1", ">=", pyDatetime("today")),
+                condition("dt_3", "<", pyDatetime("days = 1")),
             ]),
         },
     ];
@@ -219,295 +170,142 @@ test(`"in range" operator: introduction/elimination for datetime fields (generat
     await makeMockEnv();
     const toTest = [
         {
-            tree_py: connector("&", [
-                condition("datetime_1", ">=", "2025-07-02 00:00:00"),
-                condition("datetime_1", "<=", "2025-07-03 00:00:00"),
+            tree_py: and([condition("dt_1", ">=", DATE_START), condition("dt_1", "<=", DATE_END)]),
+            tree: inRange("dt_1", ["datetime", "dateRange", DATE_START, DATE_END]),
+            domain: ["&", ["dt_1", ">=", DATE_START], ["dt_1", "<=", DATE_END]],
+        },
+        {
+            tree_py: and([
+                condition("dt_1", ">=", pyDatetime("today")),
+                condition("dt_1", "<", pyDatetime("days = 1")),
             ]),
-            tree: condition("datetime_1", "in range", [
-                "datetime",
-                "custom range",
-                "2025-07-02 00:00:00",
-                "2025-07-03 00:00:00",
-            ]),
+            tree: inRange("dt_1", ["datetime", "today", false, false]),
             domain: [
                 "&",
-                ["datetime_1", ">=", "2025-07-02 00:00:00"],
-                ["datetime_1", "<=", "2025-07-03 00:00:00"],
+                ["dt_1", ">=", "2025-07-02 23:00:00"],
+                ["dt_1", "<", "2025-07-03 23:00:00"],
             ],
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "datetime_1",
-                    ">=",
-                    expression(
-                        `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
-                condition(
-                    "datetime_1",
-                    "<",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
+            tree_py: and([
+                condition("dt_1", ">=", pyDatetime("days = -7")),
+                condition("dt_1", "<", pyDatetime("today")),
             ]),
-            tree: condition("datetime_1", "in range", ["datetime", "today", false, false]),
+            tree: inRange("dt_1", ["datetime", "last7Days", false, false]),
             domain: [
                 "&",
-                ["datetime_1", ">=", "2025-07-02 23:00:00"],
-                ["datetime_1", "<", "2025-07-03 23:00:00"],
+                ["dt_1", ">=", "2025-06-25 23:00:00"],
+                ["dt_1", "<", "2025-07-02 23:00:00"],
             ],
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "datetime_1",
-                    ">=",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(days = -7), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
-                condition(
-                    "datetime_1",
-                    "<",
-                    expression(
-                        `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
+            tree_py: and([
+                condition("dt_1", ">=", pyDatetime("days = -30")),
+                condition("dt_1", "<", pyDatetime("today")),
             ]),
-            tree: condition("datetime_1", "in range", ["datetime", "last 7 days", false, false]),
+            tree: inRange("dt_1", ["datetime", "last30Days", false, false]),
             domain: [
                 "&",
-                ["datetime_1", ">=", "2025-06-25 23:00:00"],
-                ["datetime_1", "<", "2025-07-02 23:00:00"],
+                ["dt_1", ">=", "2025-06-02 23:00:00"],
+                ["dt_1", "<", "2025-07-02 23:00:00"],
             ],
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "datetime_1",
-                    ">=",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(days = -30), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
-                condition(
-                    "datetime_1",
-                    "<",
-                    expression(
-                        `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
+            tree_py: and([
+                condition("dt_1", ">=", pyDatetime("day = 1")),
+                condition("dt_1", "<", pyDatetime("days = 1")),
             ]),
-            tree: condition("datetime_1", "in range", ["datetime", "last 30 days", false, false]),
+            tree: inRange("dt_1", ["datetime", "monthToDate", false, false]),
             domain: [
                 "&",
-                ["datetime_1", ">=", "2025-06-02 23:00:00"],
-                ["datetime_1", "<", "2025-07-02 23:00:00"],
+                ["dt_1", ">=", "2025-06-30 23:00:00"],
+                ["dt_1", "<", "2025-07-03 23:00:00"],
             ],
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "datetime_1",
-                    ">=",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(day = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
-                condition(
-                    "datetime_1",
-                    "<",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
+            tree_py: and([
+                condition("dt_1", ">=", pyDatetime("day = 1, months = -1")),
+                condition("dt_1", "<", pyDatetime("day = 1")),
             ]),
-            tree: condition("datetime_1", "in range", ["datetime", "month to date", false, false]),
+            tree: inRange("dt_1", ["datetime", "lastMonth", false, false]),
             domain: [
                 "&",
-                ["datetime_1", ">=", "2025-06-30 23:00:00"],
-                ["datetime_1", "<", "2025-07-03 23:00:00"],
+                ["dt_1", ">=", "2025-05-31 23:00:00"],
+                ["dt_1", "<", "2025-06-30 23:00:00"],
             ],
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "datetime_1",
-                    ">=",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(day = 1, months = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
-                condition(
-                    "datetime_1",
-                    "<",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(day = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
+            tree_py: and([
+                condition("dt_1", ">=", pyDatetime("day = 1, month = 1")),
+                condition("dt_1", "<", pyDatetime("days = 1")),
             ]),
-            tree: condition("datetime_1", "in range", ["datetime", "last month", false, false]),
+            tree: inRange("dt_1", ["datetime", "yearToDate", false, false]),
             domain: [
                 "&",
-                ["datetime_1", ">=", "2025-05-31 23:00:00"],
-                ["datetime_1", "<", "2025-06-30 23:00:00"],
+                ["dt_1", ">=", "2024-12-31 23:00:00"],
+                ["dt_1", "<", "2025-07-03 23:00:00"],
             ],
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "datetime_1",
-                    ">=",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(day = 1, month = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
-                condition(
-                    "datetime_1",
-                    "<",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
+            tree_py: and([
+                condition("dt_1", ">=", pyDatetime("days = -365")),
+                condition("dt_1", "<", pyDatetime("today")),
             ]),
-            tree: condition("datetime_1", "in range", ["datetime", "year to date", false, false]),
+            tree: inRange("dt_1", ["datetime", "last365Days", false, false]),
             domain: [
                 "&",
-                ["datetime_1", ">=", "2024-12-31 23:00:00"],
-                ["datetime_1", "<", "2025-07-03 23:00:00"],
+                ["dt_1", ">=", "2024-07-02 23:00:00"],
+                ["dt_1", "<", "2025-07-02 23:00:00"],
             ],
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "datetime_1",
-                    ">=",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(day = 1, month = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
-                condition(
-                    "datetime_1",
-                    "<",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
+            tree_py: and([
+                condition("dt_1", ">=", pyDatetime("days = -8")),
+                condition("dt_1", "<", pyDatetime("today")),
             ]),
-            tree: condition("datetime_1", "in range", ["datetime", "year to date", false, false]),
+            tree: inRange("dt_1", ["datetime", "relativeRange", -8, "day"]),
             domain: [
                 "&",
-                ["datetime_1", ">=", "2024-12-31 23:00:00"],
-                ["datetime_1", "<", "2025-07-03 23:00:00"],
+                ["dt_1", ">=", "2025-06-24 23:00:00"],
+                ["dt_1", "<", "2025-07-02 23:00:00"],
             ],
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "datetime_1",
-                    ">=",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(day = 1, months = -12), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
-                condition(
-                    "datetime_1",
-                    "<",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(day = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
+            tree_py: and([
+                condition("dt_1", ">", pyDatetime("days = 1")),
+                condition("dt_1", "<=", pyDatetime("weeks = 8, days = 1")),
             ]),
-            tree: condition("datetime_1", "in range", ["datetime", "last 12 months", false, false]),
+            tree: inRange("dt_1", ["datetime", "relativeRange", 8, "week"]),
             domain: [
                 "&",
-                ["datetime_1", ">=", "2024-06-30 23:00:00"],
-                ["datetime_1", "<", "2025-06-30 23:00:00"],
+                ["dt_1", ">", "2025-07-03 23:00:00"],
+                ["dt_1", "<=", "2025-08-28 23:00:00"],
             ],
         },
         {
-            tree_py: connector(
-                "&",
-                [
-                    condition("datetime_1", ">=", "2025-07-02 00:00:00"),
-                    condition("datetime_1", "<=", "2025-07-03 00:00:00"),
-                ],
+            tree_py: and(
+                [condition("dt_1", ">=", DATE_START), condition("dt_1", "<=", DATE_END)],
                 true
             ),
-            tree: condition(
-                "datetime_1",
-                "in range",
-                ["datetime", "custom range", "2025-07-02 00:00:00", "2025-07-03 00:00:00"],
+            tree: inRange("dt_1", ["datetime", "dateRange", DATE_START, DATE_END], true),
+            domain: ["!", "&", ["dt_1", ">=", DATE_START], ["dt_1", "<=", DATE_END]],
+        },
+        {
+            tree_py: m2oAny(
+                and([condition("dt_2", ">=", DATE_START), condition("dt_2", "<=", DATE_END)])
+            ),
+            tree: inRange("m2o.dt_2", ["datetime", "dateRange", DATE_START, DATE_END]),
+            domain: [["m2o", "any", ["&", ["dt_2", ">=", DATE_START], ["dt_2", "<=", DATE_END]]]],
+        },
+        {
+            tree_py: m2oAny(
+                and([condition("dt_2", ">=", DATE_START), condition("dt_2", "<=", DATE_END)]),
                 true
             ),
+            tree: m2oAny(inRange("dt_2", ["datetime", "dateRange", DATE_START, DATE_END]), true),
             domain: [
                 "!",
-                "&",
-                ["datetime_1", ">=", "2025-07-02 00:00:00"],
-                ["datetime_1", "<=", "2025-07-03 00:00:00"],
-            ],
-        },
-        {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [
-                    condition("datetime_2", ">=", "2025-07-02 00:00:00"),
-                    condition("datetime_2", "<=", "2025-07-03 00:00:00"),
-                ])
-            ),
-            tree: condition("m2o.datetime_2", "in range", [
-                "datetime",
-                "custom range",
-                "2025-07-02 00:00:00",
-                "2025-07-03 00:00:00",
-            ]),
-            domain: [
-                [
-                    "m2o",
-                    "any",
-                    [
-                        "&",
-                        ["datetime_2", ">=", "2025-07-02 00:00:00"],
-                        ["datetime_2", "<=", "2025-07-03 00:00:00"],
-                    ],
-                ],
-            ],
-        },
-        {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [
-                    condition("datetime_2", ">=", "2025-07-02 00:00:00"),
-                    condition("datetime_2", "<=", "2025-07-03 00:00:00"),
-                ]),
-                true
-            ),
-            tree: condition(
-                "m2o",
-                "any",
-                condition("datetime_2", "in range", [
-                    "datetime",
-                    "custom range",
-                    "2025-07-02 00:00:00",
-                    "2025-07-03 00:00:00",
-                ]),
-                true
-            ),
-            domain: [
-                "!",
-                [
-                    "m2o",
-                    "any",
-                    [
-                        "&",
-                        ["datetime_2", ">=", "2025-07-02 00:00:00"],
-                        ["datetime_2", "<=", "2025-07-03 00:00:00"],
-                    ],
-                ],
+                ["m2o", "any", ["&", ["dt_2", ">=", DATE_START], ["dt_2", "<=", DATE_END]]],
             ],
         },
     ];
@@ -525,227 +323,111 @@ test(`"in range" operator: introduction/elimination for date fields (generateSma
     await makeMockEnv();
     const toTest = [
         {
-            tree_py: connector("&", [
-                condition("date_1", ">=", "2025-07-02 00:00:00"),
-                condition("date_1", "<=", "2025-07-03 00:00:00"),
+            tree_py: and([
+                condition("date_1", ">=", DATE_START),
+                condition("date_1", "<=", DATE_END),
             ]),
-            tree: condition("date_1", "in range", [
-                "date",
-                "custom range",
-                "2025-07-02 00:00:00",
-                "2025-07-03 00:00:00",
-            ]),
-            domain: [
-                "&",
-                ["date_1", ">=", "2025-07-02 00:00:00"],
-                ["date_1", "<=", "2025-07-03 00:00:00"],
-            ],
+            tree: inRange("date_1", ["date", "dateRange", DATE_START, DATE_END]),
+            domain: ["&", ["date_1", ">=", DATE_START], ["date_1", "<=", DATE_END]],
         },
         {
-            tree_py: connector("&", [
-                condition("date_1", ">=", expression(`context_today().strftime("%Y-%m-%d")`)),
-                condition(
-                    "date_1",
-                    "<",
-                    expression(`(context_today() + relativedelta(days = 1)).strftime('%Y-%m-%d')`)
-                ),
+            tree_py: and([
+                condition("date_1", ">=", pyDate("today")),
+                condition("date_1", "<", pyDate("days = 1")),
             ]),
-            tree: condition("date_1", "in range", ["date", "today", false, false]),
+            tree: inRange("date_1", ["date", "today", false, false]),
             domain: ["&", ["date_1", ">=", "2025-07-03"], ["date_1", "<", "2025-07-04"]],
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "date_1",
-                    ">=",
-                    expression(`(context_today() + relativedelta(days = -7)).strftime('%Y-%m-%d')`)
-                ),
-                condition("date_1", "<", expression(`context_today().strftime("%Y-%m-%d")`)),
+            tree_py: and([
+                condition("date_1", ">=", pyDate("days = -7")),
+                condition("date_1", "<", pyDate("today")),
             ]),
-            tree: condition("date_1", "in range", ["date", "last 7 days", false, false]),
+            tree: inRange("date_1", ["date", "last7Days", false, false]),
             domain: ["&", ["date_1", ">=", "2025-06-26"], ["date_1", "<", "2025-07-03"]],
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "date_1",
-                    ">=",
-                    expression(`(context_today() + relativedelta(days = -30)).strftime('%Y-%m-%d')`)
-                ),
-                condition("date_1", "<", expression(`context_today().strftime("%Y-%m-%d")`)),
+            tree_py: and([
+                condition("date_1", ">=", pyDate("days = -30")),
+                condition("date_1", "<", pyDate("today")),
             ]),
-            tree: condition("date_1", "in range", ["date", "last 30 days", false, false]),
+            tree: inRange("date_1", ["date", "last30Days", false, false]),
             domain: ["&", ["date_1", ">=", "2025-06-03"], ["date_1", "<", "2025-07-03"]],
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "date_1",
-                    ">=",
-                    expression(`(context_today() + relativedelta(day = 1)).strftime('%Y-%m-%d')`)
-                ),
-                condition(
-                    "date_1",
-                    "<",
-                    expression(`(context_today() + relativedelta(days = 1)).strftime('%Y-%m-%d')`)
-                ),
+            tree_py: and([
+                condition("date_1", ">=", pyDate("day = 1")),
+                condition("date_1", "<", pyDate("days = 1")),
             ]),
-            tree: condition("date_1", "in range", ["date", "month to date", false, false]),
+            tree: inRange("date_1", ["date", "monthToDate", false, false]),
             domain: ["&", ["date_1", ">=", "2025-07-01"], ["date_1", "<", "2025-07-04"]],
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "date_1",
-                    ">=",
-                    expression(
-                        `(context_today() + relativedelta(day = 1, months = -1)).strftime('%Y-%m-%d')`
-                    )
-                ),
-                condition(
-                    "date_1",
-                    "<",
-                    expression(`(context_today() + relativedelta(day = 1)).strftime('%Y-%m-%d')`)
-                ),
+            tree_py: and([
+                condition("date_1", ">=", pyDate("day = 1, months = -1")),
+                condition("date_1", "<", pyDate("day = 1")),
             ]),
-            tree: condition("date_1", "in range", ["date", "last month", false, false]),
+            tree: inRange("date_1", ["date", "lastMonth", false, false]),
             domain: ["&", ["date_1", ">=", "2025-06-01"], ["date_1", "<", "2025-07-01"]],
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "date_1",
-                    ">=",
-                    expression(
-                        `(context_today() + relativedelta(day = 1, month = 1)).strftime('%Y-%m-%d')`
-                    )
-                ),
-                condition(
-                    "date_1",
-                    "<",
-                    expression(`(context_today() + relativedelta(days = 1)).strftime('%Y-%m-%d')`)
-                ),
+            tree_py: and([
+                condition("date_1", ">=", pyDate("day = 1, month = 1")),
+                condition("date_1", "<", pyDate("days = 1")),
             ]),
-            tree: condition("date_1", "in range", ["date", "year to date", false, false]),
+            tree: inRange("date_1", ["date", "yearToDate", false, false]),
             domain: ["&", ["date_1", ">=", "2025-01-01"], ["date_1", "<", "2025-07-04"]],
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "date_1",
-                    ">=",
-                    expression(
-                        `(context_today() + relativedelta(day = 1, month = 1)).strftime('%Y-%m-%d')`
-                    )
-                ),
-                condition(
-                    "date_1",
-                    "<",
-                    expression(`(context_today() + relativedelta(days = 1)).strftime('%Y-%m-%d')`)
-                ),
+            tree_py: and([
+                condition("date_1", ">=", pyDate("days = -365")),
+                condition("date_1", "<", pyDate("today")),
             ]),
-            tree: condition("date_1", "in range", ["date", "year to date", false, false]),
-            domain: ["&", ["date_1", ">=", "2025-01-01"], ["date_1", "<", "2025-07-04"]],
+            tree: inRange("date_1", ["date", "last365Days", false, false]),
+            domain: ["&", ["date_1", ">=", "2024-07-03"], ["date_1", "<", "2025-07-03"]],
         },
         {
-            tree_py: connector("&", [
-                condition(
-                    "date_1",
-                    ">=",
-                    expression(
-                        `(context_today() + relativedelta(day = 1, months = -12)).strftime('%Y-%m-%d')`
-                    )
-                ),
-                condition(
-                    "date_1",
-                    "<",
-                    expression(`(context_today() + relativedelta(day = 1)).strftime('%Y-%m-%d')`)
-                ),
+            tree_py: and([
+                condition("date_1", ">=", pyDate("days = -8")),
+                condition("date_1", "<", pyDate("today")),
             ]),
-            tree: condition("date_1", "in range", ["date", "last 12 months", false, false]),
-            domain: ["&", ["date_1", ">=", "2024-07-01"], ["date_1", "<", "2025-07-01"]],
+            tree: inRange("date_1", ["date", "relativeRange", -8, "day"]),
+            domain: ["&", ["date_1", ">=", "2025-06-25"], ["date_1", "<", "2025-07-03"]],
         },
         {
-            tree_py: connector(
-                "&",
-                [
-                    condition("date_1", ">=", "2025-07-02 00:00:00"),
-                    condition("date_1", "<=", "2025-07-03 00:00:00"),
-                ],
+            tree_py: and([
+                condition("date_1", ">", pyDate("today")),
+                condition("date_1", "<=", pyDate("weeks = 8")),
+            ]),
+            tree: inRange("date_1", ["date", "relativeRange", 8, "week"]),
+            domain: ["&", ["date_1", ">", "2025-07-03"], ["date_1", "<=", "2025-08-28"]],
+        },
+        {
+            tree_py: and(
+                [condition("date_1", ">=", DATE_START), condition("date_1", "<=", DATE_END)],
                 true
             ),
-            tree: condition(
-                "date_1",
-                "in range",
-                ["date", "custom range", "2025-07-02 00:00:00", "2025-07-03 00:00:00"],
-                true
+            tree: inRange("date_1", ["date", "dateRange", DATE_START, DATE_END], true),
+            domain: ["!", "&", ["date_1", ">=", DATE_START], ["date_1", "<=", DATE_END]],
+        },
+        {
+            tree_py: m2oAny(
+                and([condition("date_2", ">=", DATE_START), condition("date_2", "<=", DATE_END)])
             ),
+            tree: inRange("m2o.date_2", ["date", "dateRange", DATE_START, DATE_END]),
             domain: [
-                "!",
-                "&",
-                ["date_1", ">=", "2025-07-02 00:00:00"],
-                ["date_1", "<=", "2025-07-03 00:00:00"],
+                ["m2o", "any", ["&", ["date_2", ">=", DATE_START], ["date_2", "<=", DATE_END]]],
             ],
         },
         {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [
-                    condition("date_2", ">=", "2025-07-02 00:00:00"),
-                    condition("date_2", "<=", "2025-07-03 00:00:00"),
-                ])
-            ),
-            tree: condition("m2o.date_2", "in range", [
-                "date",
-                "custom range",
-                "2025-07-02 00:00:00",
-                "2025-07-03 00:00:00",
-            ]),
-            domain: [
-                [
-                    "m2o",
-                    "any",
-                    [
-                        "&",
-                        ["date_2", ">=", "2025-07-02 00:00:00"],
-                        ["date_2", "<=", "2025-07-03 00:00:00"],
-                    ],
-                ],
-            ],
-        },
-        {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [
-                    condition("date_2", ">=", "2025-07-02 00:00:00"),
-                    condition("date_2", "<=", "2025-07-03 00:00:00"),
-                ]),
+            tree_py: m2oAny(
+                and([condition("date_2", ">=", DATE_START), condition("date_2", "<=", DATE_END)]),
                 true
             ),
-            tree: condition(
-                "m2o",
-                "any",
-                condition("date_2", "in range", [
-                    "date",
-                    "custom range",
-                    "2025-07-02 00:00:00",
-                    "2025-07-03 00:00:00",
-                ]),
-                true
-            ),
+            tree: m2oAny(inRange("date_2", ["date", "dateRange", DATE_START, DATE_END]), true),
             domain: [
                 "!",
-                [
-                    "m2o",
-                    "any",
-                    [
-                        "&",
-                        ["date_2", ">=", "2025-07-02 00:00:00"],
-                        ["date_2", "<=", "2025-07-03 00:00:00"],
-                    ],
-                ],
+                ["m2o", "any", ["&", ["date_2", ">=", DATE_START], ["date_2", "<=", DATE_END]]],
             ],
         },
     ];
@@ -761,47 +443,43 @@ test(`"in range" operator: introduction/elimination for date fields (generateSma
 test(`"in range" operator: no introduction for complex paths`, async () => {
     const toTest = [
         {
-            tree_py: connector("&", [
-                condition(expression("path"), ">=", "2025-07-02 00:00:00"),
-                condition(expression("path"), "<=", "2025-07-03 00:00:00"),
+            tree_py: and([
+                condition(complexPath, ">=", DATE_START),
+                condition(complexPath, "<=", DATE_END),
             ]),
         },
         {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [
-                    condition(expression("path"), ">=", "2025-07-02 00:00:00"),
-                    condition(expression("path"), "<=", "2025-07-03 00:00:00"),
+            tree_py: m2oAny(
+                and([
+                    condition(complexPath, ">=", DATE_START),
+                    condition(complexPath, "<=", DATE_END),
                 ])
             ),
         },
         {
-            tree_py: connector("&", [
-                condition(expression("path"), ">=", "2025-07-02 00:00:00"),
-                condition(expression("path"), "<=", "2025-07-03 00:00:00"),
+            tree_py: and([
+                condition(complexPath, ">=", DATE_START),
+                condition(complexPath, "<=", DATE_END),
             ]),
         },
         {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [
-                    condition(expression("path"), ">=", "2025-07-02 00:00:00"),
-                    condition(expression("path"), "<=", "2025-07-03 00:00:00"),
+            tree_py: m2oAny(
+                and([
+                    condition(complexPath, ">=", DATE_START),
+                    condition(complexPath, "<=", DATE_END),
                 ])
             ),
         },
         {
-            tree_py: connector("&", [
-                condition("m2o.datetime_2", ">=", "2025-07-02 00:00:00"),
-                condition("m2o.datetime_2", "<=", "2025-07-03 00:00:00"),
+            tree_py: and([
+                condition("m2o.dt_2", ">=", DATE_START),
+                condition("m2o.dt_2", "<=", DATE_END),
             ]),
         },
         {
-            tree_py: connector("&", [
-                condition("m2o.date_2", ">=", "2025-07-02 00:00:00"),
-                condition("m2o.date_2", "<=", "2025-07-03 00:00:00"),
+            tree_py: and([
+                condition("m2o.date_2", ">=", DATE_START),
+                condition("m2o.date_2", "<=", DATE_END),
             ]),
         },
     ];
@@ -813,64 +491,58 @@ test(`"in range" operator: no introduction for complex paths`, async () => {
 test(`"in range" operator: no introduction if condition negated or "|" or different path`, async () => {
     const toTest = [
         {
-            tree_py: connector("&", [
-                condition("date_1", ">=", "2025-07-02 00:00:00", true),
-                condition("date_1", "<=", "2025-07-03 00:00:00"),
+            tree_py: and([
+                condition("date_1", ">=", DATE_START, true),
+                condition("date_1", "<=", DATE_END),
             ]),
         },
         {
-            tree_py: connector("&", [
-                condition("date_1", ">=", "2025-07-02 00:00:00"),
-                condition("date_1", "<=", "2025-07-03 00:00:00", true),
+            tree_py: and([
+                condition("date_1", ">=", DATE_START),
+                condition("date_1", "<=", DATE_END, true),
             ]),
         },
         {
-            tree_py: connector("&", [
-                condition("date_1", ">=", "2025-07-02 00:00:00", true),
-                condition("date_1", "<=", "2025-07-03 00:00:00", true),
+            tree_py: and([
+                condition("date_1", ">=", DATE_START, true),
+                condition("date_1", "<=", DATE_END, true),
             ]),
         },
         {
-            tree_py: connector("|", [
-                condition("date_1", ">=", "2025-07-02 00:00:00"),
-                condition("date_1", "<=", "2025-07-03 00:00:00"),
+            tree_py: or([
+                condition("date_1", ">=", DATE_START),
+                condition("date_1", "<=", DATE_END),
             ]),
         },
         {
-            tree_py: connector("&", [
-                condition("date_1", ">=", "2025-07-02 00:00:00"),
-                condition("date_3", "<=", "2025-07-03 00:00:00"),
+            tree_py: and([
+                condition("date_1", ">=", DATE_START),
+                condition("date_3", "<=", DATE_END),
             ]),
         },
         {
-            tree_py: connector("&", [
-                condition("datetime_1", ">=", "today", true),
-                condition("datetime_1", "<", "today +1d"),
+            tree_py: and([
+                condition("dt_1", ">=", "today", true),
+                condition("dt_1", "<", "today +1d"),
             ]),
         },
         {
-            tree_py: connector("&", [
-                condition("datetime_1", ">=", "today"),
-                condition("datetime_1", "<", "today +1d", true),
+            tree_py: and([
+                condition("dt_1", ">=", "today"),
+                condition("dt_1", "<", "today +1d", true),
             ]),
         },
         {
-            tree_py: connector("&", [
-                condition("datetime_1", ">=", "today", true),
-                condition("datetime_1", "<", "today +1d", true),
+            tree_py: and([
+                condition("dt_1", ">=", "today", true),
+                condition("dt_1", "<", "today +1d", true),
             ]),
         },
         {
-            tree_py: connector("|", [
-                condition("datetime_1", ">=", "today"),
-                condition("datetime_1", "<", "today +1d"),
-            ]),
+            tree_py: or([condition("dt_1", ">=", "today"), condition("dt_1", "<", "today +1d")]),
         },
         {
-            tree_py: connector("&", [
-                condition("datetime_1", ">=", "today"),
-                condition("datetime_3", "<", "today +1d"),
-            ]),
+            tree_py: and([condition("dt_1", ">=", "today"), condition("dt_3", "<", "today +1d")]),
         },
     ];
     for (const { tree_py } of toTest) {
@@ -882,167 +554,91 @@ test(`"in range" operator: introduction/elimination for datetime fields`, async 
     await makeMockEnv();
     const toTest = [
         {
-            tree_py: connector("&", [
-                condition("datetime_1", ">=", "2025-07-02 00:00:00"),
-                condition("datetime_1", "<=", "2025-07-03 00:00:00"),
-            ]),
-            tree: condition("datetime_1", "in range", [
-                "datetime",
-                "custom range",
-                "2025-07-02 00:00:00",
-                "2025-07-03 00:00:00",
-            ]),
-            domain: [
-                "&",
-                ["datetime_1", ">=", "2025-07-02 00:00:00"],
-                ["datetime_1", "<=", "2025-07-03 00:00:00"],
-            ],
+            tree_py: and([condition("dt_1", ">=", DATE_START), condition("dt_1", "<=", DATE_END)]),
+            tree: inRange("dt_1", ["datetime", "dateRange", DATE_START, DATE_END]),
+            domain: ["&", ["dt_1", ">=", DATE_START], ["dt_1", "<=", DATE_END]],
         },
         {
-            tree_py: connector("&", [
-                condition("datetime_1", ">=", "today"),
-                condition("datetime_1", "<", "today +1d"),
-            ]),
-            tree: condition("datetime_1", "in range", ["datetime", "today", false, false]),
-            domain: ["&", ["datetime_1", ">=", "today"], ["datetime_1", "<", "today +1d"]],
+            tree_py: and([condition("dt_1", ">=", "today"), condition("dt_1", "<", "today +1d")]),
+            tree: inRange("dt_1", ["datetime", "today", false, false]),
+            domain: ["&", ["dt_1", ">=", "today"], ["dt_1", "<", "today +1d"]],
         },
         {
-            tree_py: connector("&", [
-                condition("datetime_1", ">=", "today -7d"),
-                condition("datetime_1", "<", "today"),
-            ]),
-            tree: condition("datetime_1", "in range", ["datetime", "last 7 days", false, false]),
-            domain: ["&", ["datetime_1", ">=", "today -7d"], ["datetime_1", "<", "today"]],
+            tree_py: and([condition("dt_1", ">=", "today -7d"), condition("dt_1", "<", "today")]),
+            tree: inRange("dt_1", ["datetime", "last7Days", false, false]),
+            domain: ["&", ["dt_1", ">=", "today -7d"], ["dt_1", "<", "today"]],
         },
         {
-            tree_py: connector("&", [
-                condition("datetime_1", ">=", "today -30d"),
-                condition("datetime_1", "<", "today"),
-            ]),
-            tree: condition("datetime_1", "in range", ["datetime", "last 30 days", false, false]),
-            domain: ["&", ["datetime_1", ">=", "today -30d"], ["datetime_1", "<", "today"]],
+            tree_py: and([condition("dt_1", ">=", "today -30d"), condition("dt_1", "<", "today")]),
+            tree: inRange("dt_1", ["datetime", "last30Days", false, false]),
+            domain: ["&", ["dt_1", ">=", "today -30d"], ["dt_1", "<", "today"]],
         },
         {
-            tree_py: connector("&", [
-                condition("datetime_1", ">=", "today =1d"),
-                condition("datetime_1", "<", "today +1d"),
+            tree_py: and([
+                condition("dt_1", ">=", "today =1d"),
+                condition("dt_1", "<", "today +1d"),
             ]),
-            tree: condition("datetime_1", "in range", ["datetime", "month to date", false, false]),
-            domain: ["&", ["datetime_1", ">=", "today =1d"], ["datetime_1", "<", "today +1d"]],
+            tree: inRange("dt_1", ["datetime", "monthToDate", false, false]),
+            domain: ["&", ["dt_1", ">=", "today =1d"], ["dt_1", "<", "today +1d"]],
         },
         {
-            tree_py: connector("&", [
-                condition("datetime_1", ">=", "today =1d -1m"),
-                condition("datetime_1", "<", "today =1d"),
+            tree_py: and([
+                condition("dt_1", ">=", "today =1d -1m"),
+                condition("dt_1", "<", "today =1d"),
             ]),
-            tree: condition("datetime_1", "in range", ["datetime", "last month", false, false]),
-            domain: ["&", ["datetime_1", ">=", "today =1d -1m"], ["datetime_1", "<", "today =1d"]],
+            tree: inRange("dt_1", ["datetime", "lastMonth", false, false]),
+            domain: ["&", ["dt_1", ">=", "today =1d -1m"], ["dt_1", "<", "today =1d"]],
         },
         {
-            tree_py: connector("&", [
-                condition("datetime_1", ">=", "today =1m =1d"),
-                condition("datetime_1", "<", "today +1d"),
+            tree_py: and([
+                condition("dt_1", ">=", "today =1m =1d"),
+                condition("dt_1", "<", "today +1d"),
             ]),
-            tree: condition("datetime_1", "in range", ["datetime", "year to date", false, false]),
-            domain: ["&", ["datetime_1", ">=", "today =1m =1d"], ["datetime_1", "<", "today +1d"]],
+            tree: inRange("dt_1", ["datetime", "yearToDate", false, false]),
+            domain: ["&", ["dt_1", ">=", "today =1m =1d"], ["dt_1", "<", "today +1d"]],
         },
         {
-            tree_py: connector("&", [
-                condition("datetime_1", ">=", "today =1m =1d"),
-                condition("datetime_1", "<", "today +1d"),
-            ]),
-            tree: condition("datetime_1", "in range", ["datetime", "year to date", false, false]),
-            domain: ["&", ["datetime_1", ">=", "today =1m =1d"], ["datetime_1", "<", "today +1d"]],
+            tree_py: and([condition("dt_1", ">=", "today -365d"), condition("dt_1", "<", "today")]),
+            tree: inRange("dt_1", ["datetime", "last365Days", false, false]),
+            domain: ["&", ["dt_1", ">=", "today -365d"], ["dt_1", "<", "today"]],
         },
         {
-            tree_py: connector("&", [
-                condition("datetime_1", ">=", "today =1d -12m"),
-                condition("datetime_1", "<", "today =1d"),
-            ]),
-            tree: condition("datetime_1", "in range", ["datetime", "last 12 months", false, false]),
-            domain: ["&", ["datetime_1", ">=", "today =1d -12m"], ["datetime_1", "<", "today =1d"]],
+            tree_py: and([condition("dt_1", ">=", "today -8d"), condition("dt_1", "<", "today")]),
+            tree: inRange("dt_1", ["datetime", "relativeRange", -8, "day"]),
+            domain: ["&", ["dt_1", ">=", "today -8d"], ["dt_1", "<", "today"]],
         },
         {
-            tree_py: connector(
-                "&",
-                [
-                    condition("datetime_1", ">=", "2025-07-02 00:00:00"),
-                    condition("datetime_1", "<=", "2025-07-03 00:00:00"),
-                ],
+            tree_py: and([
+                condition("dt_1", ">", "today +1d"),
+                condition("dt_1", "<=", "today +8w +1d"),
+            ]),
+            tree: inRange("dt_1", ["datetime", "relativeRange", 8, "week"]),
+            domain: ["&", ["dt_1", ">", "today +1d"], ["dt_1", "<=", "today +8w +1d"]],
+        },
+        {
+            tree_py: and(
+                [condition("dt_1", ">=", DATE_START), condition("dt_1", "<=", DATE_END)],
                 true
             ),
-            tree: condition(
-                "datetime_1",
-                "in range",
-                ["datetime", "custom range", "2025-07-02 00:00:00", "2025-07-03 00:00:00"],
+            tree: inRange("dt_1", ["datetime", "dateRange", DATE_START, DATE_END], true),
+            domain: ["!", "&", ["dt_1", ">=", DATE_START], ["dt_1", "<=", DATE_END]],
+        },
+        {
+            tree_py: m2oAny(
+                and([condition("dt_2", ">=", DATE_START), condition("dt_2", "<=", DATE_END)])
+            ),
+            tree: inRange("m2o.dt_2", ["datetime", "dateRange", DATE_START, DATE_END]),
+            domain: [["m2o", "any", ["&", ["dt_2", ">=", DATE_START], ["dt_2", "<=", DATE_END]]]],
+        },
+        {
+            tree_py: m2oAny(
+                and([condition("dt_2", ">=", DATE_START), condition("dt_2", "<=", DATE_END)]),
                 true
             ),
+            tree: m2oAny(inRange("dt_2", ["datetime", "dateRange", DATE_START, DATE_END]), true),
             domain: [
                 "!",
-                "&",
-                ["datetime_1", ">=", "2025-07-02 00:00:00"],
-                ["datetime_1", "<=", "2025-07-03 00:00:00"],
-            ],
-        },
-        {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [
-                    condition("datetime_2", ">=", "2025-07-02 00:00:00"),
-                    condition("datetime_2", "<=", "2025-07-03 00:00:00"),
-                ])
-            ),
-            tree: condition("m2o.datetime_2", "in range", [
-                "datetime",
-                "custom range",
-                "2025-07-02 00:00:00",
-                "2025-07-03 00:00:00",
-            ]),
-            domain: [
-                [
-                    "m2o",
-                    "any",
-                    [
-                        "&",
-                        ["datetime_2", ">=", "2025-07-02 00:00:00"],
-                        ["datetime_2", "<=", "2025-07-03 00:00:00"],
-                    ],
-                ],
-            ],
-        },
-        {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [
-                    condition("datetime_2", ">=", "2025-07-02 00:00:00"),
-                    condition("datetime_2", "<=", "2025-07-03 00:00:00"),
-                ]),
-                true
-            ),
-            tree: condition(
-                "m2o",
-                "any",
-                condition("datetime_2", "in range", [
-                    "datetime",
-                    "custom range",
-                    "2025-07-02 00:00:00",
-                    "2025-07-03 00:00:00",
-                ]),
-                true
-            ),
-            domain: [
-                "!",
-                [
-                    "m2o",
-                    "any",
-                    [
-                        "&",
-                        ["datetime_2", ">=", "2025-07-02 00:00:00"],
-                        ["datetime_2", "<=", "2025-07-03 00:00:00"],
-                    ],
-                ],
+                ["m2o", "any", ["&", ["dt_2", ">=", DATE_START], ["dt_2", "<=", DATE_END]]],
             ],
         },
     ];
@@ -1059,159 +655,95 @@ test(`"in range" operator: introduction/elimination for date fields`, async () =
     await makeMockEnv();
     const toTest = [
         {
-            tree_py: connector("&", [
-                condition("date_1", ">=", "2025-07-02 00:00:00"),
-                condition("date_1", "<=", "2025-07-03 00:00:00"),
-            ]),
-            tree: condition("date_1", "in range", [
-                "date",
-                "custom range",
-                "2025-07-02 00:00:00",
-                "2025-07-03 00:00:00",
-            ]),
-            domain: [
-                "&",
-                ["date_1", ">=", "2025-07-02 00:00:00"],
-                ["date_1", "<=", "2025-07-03 00:00:00"],
-            ],
-        },
-        {
-            tree_py: connector("&", [
+            tree_py: and([
                 condition("date_1", ">=", "today"),
                 condition("date_1", "<", "today +1d"),
             ]),
-            tree: condition("date_1", "in range", ["date", "today", false, false]),
+            tree: inRange("date_1", ["date", "today", false, false]),
             domain: ["&", ["date_1", ">=", "today"], ["date_1", "<", "today +1d"]],
         },
         {
-            tree_py: connector("&", [
+            tree_py: and([
                 condition("date_1", ">=", "today -7d"),
                 condition("date_1", "<", "today"),
             ]),
-            tree: condition("date_1", "in range", ["date", "last 7 days", false, false]),
+            tree: inRange("date_1", ["date", "last7Days", false, false]),
             domain: ["&", ["date_1", ">=", "today -7d"], ["date_1", "<", "today"]],
         },
         {
-            tree_py: connector("&", [
+            tree_py: and([
                 condition("date_1", ">=", "today -30d"),
                 condition("date_1", "<", "today"),
             ]),
-            tree: condition("date_1", "in range", ["date", "last 30 days", false, false]),
+            tree: inRange("date_1", ["date", "last30Days", false, false]),
             domain: ["&", ["date_1", ">=", "today -30d"], ["date_1", "<", "today"]],
         },
         {
-            tree_py: connector("&", [
+            tree_py: and([
                 condition("date_1", ">=", "today =1d"),
                 condition("date_1", "<", "today +1d"),
             ]),
-            tree: condition("date_1", "in range", ["date", "month to date", false, false]),
+            tree: inRange("date_1", ["date", "monthToDate", false, false]),
             domain: ["&", ["date_1", ">=", "today =1d"], ["date_1", "<", "today +1d"]],
         },
         {
-            tree_py: connector("&", [
+            tree_py: and([
                 condition("date_1", ">=", "today =1d -1m"),
                 condition("date_1", "<", "today =1d"),
             ]),
-            tree: condition("date_1", "in range", ["date", "last month", false, false]),
+            tree: inRange("date_1", ["date", "lastMonth", false, false]),
             domain: ["&", ["date_1", ">=", "today =1d -1m"], ["date_1", "<", "today =1d"]],
         },
         {
-            tree_py: connector("&", [
+            tree_py: and([
                 condition("date_1", ">=", "today =1m =1d"),
                 condition("date_1", "<", "today +1d"),
             ]),
-            tree: condition("date_1", "in range", ["date", "year to date", false, false]),
+            tree: inRange("date_1", ["date", "yearToDate", false, false]),
             domain: ["&", ["date_1", ">=", "today =1m =1d"], ["date_1", "<", "today +1d"]],
         },
         {
-            tree_py: connector("&", [
-                condition("date_1", ">=", "today =1d -12m"),
-                condition("date_1", "<", "today =1d"),
+            tree_py: and([
+                condition("date_1", ">=", "today -365d"),
+                condition("date_1", "<", "today"),
             ]),
-            tree: condition("date_1", "in range", ["date", "last 12 months", false, false]),
-            domain: ["&", ["date_1", ">=", "today =1d -12m"], ["date_1", "<", "today =1d"]],
+            tree: inRange("date_1", ["date", "last365Days", false, false]),
+            domain: ["&", ["date_1", ">=", "today -365d"], ["date_1", "<", "today"]],
         },
         {
-            tree_py: connector(
-                "&",
-                [
-                    condition("date_1", ">=", "2025-07-02 00:00:00"),
-                    condition("date_1", "<=", "2025-07-03 00:00:00"),
-                ],
+            tree_py: and([
+                condition("date_1", ">=", DATE_START),
+                condition("date_1", "<=", DATE_END),
+            ]),
+            tree: inRange("date_1", ["date", "dateRange", DATE_START, DATE_END]),
+            domain: ["&", ["date_1", ">=", DATE_START], ["date_1", "<=", DATE_END]],
+        },
+        {
+            tree_py: and(
+                [condition("date_1", ">=", DATE_START), condition("date_1", "<=", DATE_END)],
                 true
             ),
-            tree: condition(
-                "date_1",
-                "in range",
-                ["date", "custom range", "2025-07-02 00:00:00", "2025-07-03 00:00:00"],
-                true
+            tree: inRange("date_1", ["date", "dateRange", DATE_START, DATE_END], true),
+            domain: ["!", "&", ["date_1", ">=", DATE_START], ["date_1", "<=", DATE_END]],
+        },
+        {
+            tree_py: m2oAny(
+                and([condition("date_2", ">=", DATE_START), condition("date_2", "<=", DATE_END)])
             ),
+            tree: inRange("m2o.date_2", ["date", "dateRange", DATE_START, DATE_END]),
             domain: [
-                "!",
-                "&",
-                ["date_1", ">=", "2025-07-02 00:00:00"],
-                ["date_1", "<=", "2025-07-03 00:00:00"],
+                ["m2o", "any", ["&", ["date_2", ">=", DATE_START], ["date_2", "<=", DATE_END]]],
             ],
         },
         {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [
-                    condition("date_2", ">=", "2025-07-02 00:00:00"),
-                    condition("date_2", "<=", "2025-07-03 00:00:00"),
-                ])
-            ),
-            tree: condition("m2o.date_2", "in range", [
-                "date",
-                "custom range",
-                "2025-07-02 00:00:00",
-                "2025-07-03 00:00:00",
-            ]),
-            domain: [
-                [
-                    "m2o",
-                    "any",
-                    [
-                        "&",
-                        ["date_2", ">=", "2025-07-02 00:00:00"],
-                        ["date_2", "<=", "2025-07-03 00:00:00"],
-                    ],
-                ],
-            ],
-        },
-        {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [
-                    condition("date_2", ">=", "2025-07-02 00:00:00"),
-                    condition("date_2", "<=", "2025-07-03 00:00:00"),
-                ]),
+            tree_py: m2oAny(
+                and([condition("date_2", ">=", DATE_START), condition("date_2", "<=", DATE_END)]),
                 true
             ),
-            tree: condition(
-                "m2o",
-                "any",
-                condition("date_2", "in range", [
-                    "date",
-                    "custom range",
-                    "2025-07-02 00:00:00",
-                    "2025-07-03 00:00:00",
-                ]),
-                true
-            ),
+            tree: m2oAny(inRange("date_2", ["date", "dateRange", DATE_START, DATE_END]), true),
             domain: [
                 "!",
-                [
-                    "m2o",
-                    "any",
-                    [
-                        "&",
-                        ["date_2", ">=", "2025-07-02 00:00:00"],
-                        ["date_2", "<=", "2025-07-03 00:00:00"],
-                    ],
-                ],
+                ["m2o", "any", ["&", ["date_2", ">=", DATE_START], ["date_2", "<=", DATE_END]]],
             ],
         },
     ];
@@ -1222,4 +754,18 @@ test(`"in range" operator: introduction/elimination for date fields`, async () =
     for (const { tree_py, domain } of toTest) {
         expect(new Domain(constructDomainFromTree(tree_py)).toList()).toEqual(domain || []);
     }
+});
+
+test(`"in range" operator: date range tooltips on dropdown`, async () => {
+    mockDate("2025-07-03 16:20:00");
+    await makeMockEnv();
+
+    await mountWithCleanup(Select, {
+        props: { value: "last7Days", update: () => {}, options: InRange.options },
+    });
+    expect(queryFirst("select option", { text: "Last 7 days" })).toHaveAttribute(
+        "title",
+        "Jun 27 → Jul 3"
+    );
+    expect("select").toHaveAttribute("title", "Jun 27 → Jul 3"); // Also display tooltip folded
 });

@@ -104,7 +104,7 @@ test("link is removed when figure is deleted", async function () {
 
 test("Links of Odoo charts are duplicated when duplicating a sheet", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot();
-    insertChartInSpreadsheet(model, "odoo_pie");
+    insertChartInSpreadsheet(model, "pie");
     const sheetId = model.getters.getActiveSheetId();
     const secondSheetId = "mySecondSheetId";
     const chartId = model.getters.getChartIds(sheetId)[0];
@@ -157,7 +157,6 @@ test("Datasource link is removed when a pivot is deleted", async function () {
     });
     model.dispatch("REMOVE_PIVOT", { pivotId });
     expect(model.getters.getChartOdooLink(chartId)).toBe(undefined);
-    console.log("exportData", model.exportData());
     expect(model.exportData().odooLinkReferences).toBeEmpty();
 });
 
@@ -176,13 +175,12 @@ test("Datasource link is removed when a list is deleted", async function () {
     });
     model.dispatch("REMOVE_ODOO_LIST", { listId });
     expect(model.getters.getChartOdooLink(chartId)).toBe(undefined);
-    console.log("exportData", model.exportData());
     expect(model.exportData().odooLinkReferences).toBeEmpty();
 });
 
 test("Datasource link is removed when an odoo chart is deleted", async function () {
     const { model } = await createModelWithDataSource();
-    const odooChartId = insertChartInSpreadsheet(model, "odoo_line");
+    const odooChartId = insertChartInSpreadsheet(model, "line");
     createBasicChart(model, chartId);
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
         chartId,
@@ -198,7 +196,6 @@ test("Datasource link is removed when an odoo chart is deleted", async function 
         sheetId: model.getters.getActiveSheetId(),
     });
     expect(model.getters.getChartOdooLink(chartId)).toBe(undefined);
-    console.log("exportData", model.exportData());
     expect(model.exportData().odooLinkReferences).toBeEmpty();
 });
 

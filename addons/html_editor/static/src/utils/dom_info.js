@@ -38,19 +38,34 @@ export function isEmptyTextNode(node) {
 
 /**
  * Return true if the given node appears bold. The node is considered to appear
- * bold if its font weight is bigger than 500 (eg.: Heading 1), or if its font
- * weight is bigger than that of its closest block.
+ * bold if its font weight is bigger than the regular font weight configured
+ * for its context, or if its font weight is bigger than that of its closest
+ * block.
  *
  * @param {Node} node
  * @returns {boolean}
  */
 export function isBold(node) {
-    const fontWeight = +getComputedStyle(closestElement(node)).fontWeight;
+    const element = closestElement(node);
+    let regularFontWeightVariable = "--font-weight-normal";
+    if (element.closest(".btn")) {
+        regularFontWeightVariable = "--btn-font-weight";
+    } else if (element.closest(".display-1, .display-2, .display-3, .display-4")) {
+        regularFontWeightVariable = "--display-font-weight";
+    } else if (element.closest("h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6")) {
+        regularFontWeightVariable = "--headings-font-weight";
+    }
+    const style = getComputedStyle(element);
+    const fontWeight = +style.fontWeight;
+    const regularFontWeight = +style.getPropertyValue(regularFontWeightVariable) || 500;
     const referenceElement = closestElement(
         node,
         (el) => isBlock(el) || +getComputedStyle(el).fontWeight !== fontWeight
     );
-    return fontWeight > 500 || fontWeight > +getComputedStyle(referenceElement).fontWeight;
+    return (
+        fontWeight > regularFontWeight ||
+        fontWeight > +getComputedStyle(referenceElement).fontWeight
+    );
 }
 
 /**
@@ -179,7 +194,7 @@ export function isWhitespace(value) {
 }
 
 // eslint-disable-next-line no-control-regex
-const visibleCharRegex = /[^\s\u200b]|[\u00A0\u0009]$/; // contains at least a char that is always visible (TODO: 0009 shouldn't be included)
+const visibleCharRegex = /[^\s\u200b]|[\u00A0\u0009]/; // contains at least a char that is always visible (TODO: 0009 shouldn't be included)
 export function isVisibleTextNode(testedNode) {
     if (!testedNode || !testedNode.length || testedNode.nodeType !== Node.TEXT_NODE) {
         return false;
@@ -307,7 +322,10 @@ export function isVisible(node) {
             isMediaElement(node) ||
             hasVisibleContent(node) ||
             isProtecting(node) ||
-            isEmbeddedComponent(node))
+            isEmbeddedComponent(node) ||
+            // Keep editor tables visible even when cells only contain
+            // placeholder ZWS content, as `.o_table` tables are always visible.
+            (node.nodeName === "TD" && !!closestElement(node, "table.o_table")))
     );
 }
 export function hasVisibleContent(node) {
@@ -346,9 +364,11 @@ export const ICON_SELECTOR = iconTags
     .map((tag) => iconClasses.map((cls) => `${tag}.${cls}`).join(", "))
     .join(", ");
 
-export const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
+export const MEDIA_SELECTOR = `${ICON_SELECTOR}, .media_iframe_video, .o_file_box`;
 
 export const EDITABLE_MEDIA_CLASS = "o_editable_media";
+
+export const ICON_SIZE_CLASS_REGEX = new RegExp(`^(${iconClasses.join("|")})-[2-5]x$`);
 
 /**
  * Indicates if the given node is an icon element.
@@ -364,16 +384,60 @@ export function isIconElement(node) {
         iconClasses.some((cls) => node.classList.contains(cls))
     );
 }
+/**
+ * Returns the icon type (base class) of a given element.
+ * @param {Element} el
+ * @returns {string|null} The detected icon type, or null if the element
+ * is not an icon or no known type is found.
+ */
+export function getIconType(el) {
+    if (!isIconElement(el)) {
+        return null;
+    }
+    for (const type of iconClasses) {
+        if (el.classList.contains(type)) {
+            return type;
+        }
+    }
+}
 // @todo @phoenix: move the specific part in a proper plugin.
 export function isMediaElement(node) {
     return (
         node.nodeName === "IMG" ||
         isIconElement(node) ||
         (node.classList &&
-            (node.classList.contains("o_image") ||
+            (node.classList.contains("o_file_box") ||
                 node.classList.contains("media_iframe_video"))) ||
         node.nodeName === "CANVAS"
     );
+}
+
+/**
+ * Checks whether the content of mediaContainerEl is only made of "media"
+ * (image, video, icon, document) - or links around "media".
+ *
+ * @param {HTMLElement} mediaContainerEl element within which to check
+ * @param {boolean} [requiresSingleMedia=false] if true, limits the positive
+ *     result to situations where only a single media is present
+ * @returns {boolean}
+ */
+export function hasMediaOnly(mediaContainerEl, requiresSingleMedia = false) {
+    const nonEmptyContent = [...mediaContainerEl.childNodes].filter(
+        (node) =>
+            node.tagName !== "BR" &&
+            (node.nodeType !== Node.TEXT_NODE || node.textContent.replaceAll(/\s+/g, ""))
+    );
+    if (requiresSingleMedia && nonEmptyContent.length !== 1) {
+        return false;
+    }
+    return nonEmptyContent.every((el) => {
+        if (isMediaElement(el) || el.tagName === "IMG") {
+            return true;
+        }
+        if (el.tagName === "A") {
+            return hasMediaOnly(el, requiresSingleMedia);
+        }
+    });
 }
 
 // See https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
@@ -487,7 +551,7 @@ export function isEmbeddedComponent(node) {
 
 /**
  * A "protected" node will have its mutations filtered and not be registered
- * in an history step. Some editor features like selection handling, command
+ * in an history commit. Some editor features like selection handling, command
  * hint, toolbar, tooltip, etc. are also disabled. Protected roots have their
  * data-oe-protected attribute set to either "" or "true". If the closest parent
  * with a data-oe-protected attribute has the value "false", it is not
@@ -546,7 +610,7 @@ export const paragraphRelatedElements = ["P", "H1", "H2", "H3", "H4", "H5", "H6"
  * @returns {boolean}
  */
 export function allowsParagraphRelatedElements(node) {
-    return isBlock(node) && !isParagraphRelatedElement(node);
+    return !isParagraphRelatedElement(node) && isBlock(node);
 }
 
 export const phrasingContent = new Set(["#text", ...phrasingTagNames]);
@@ -670,7 +734,12 @@ export function isEmptyBlock(blockEl) {
  * @returns {boolean}
  */
 export function isShrunkBlock(blockEl) {
-    return isEmptyBlock(blockEl) && !blockEl.querySelector("br") && !isSelfClosingElement(blockEl);
+    return (
+        isElement(blockEl) &&
+        !blockEl.querySelector("br") &&
+        !isSelfClosingElement(blockEl) &&
+        isEmptyBlock(blockEl)
+    );
 }
 
 export function isEditorTab(node) {
@@ -811,56 +880,9 @@ export function nextLeaf(node, editable, skipInvisible = false) {
     }
 }
 
-function hasPseudoElementContent(node, pseudoSelector) {
+export function hasPseudoElementContent(node, pseudoSelector) {
     const content = getComputedStyle(node, pseudoSelector).getPropertyValue("content");
     return content && content !== "none";
-}
-
-const NOT_A_NUMBER = /[^\d]/g;
-
-export function areSimilarElements(node, node2) {
-    if (![node, node2].every((n) => n?.nodeType === Node.ELEMENT_NODE)) {
-        return false; // The nodes don't both exist or aren't both elements.
-    }
-    if (node.nodeName !== node2.nodeName) {
-        return false; // The nodes aren't the same type of element.
-    }
-    for (const name of new Set([...node.getAttributeNames(), ...node2.getAttributeNames()])) {
-        if (name === "style") {
-            if (!hasSameStyleAttributes(node, node2)) {
-                return false;
-            }
-        } else if (name === "class") {
-            if (!hasSameClasses(node, node2)) {
-                return false; // The nodes don't have the same classes.
-            }
-        } else if (node.getAttribute(name) !== node2.getAttribute(name)) {
-            return false; // The nodes don't have the same attributes.
-        }
-    }
-    if (
-        [node, node2].some(
-            (n) => hasPseudoElementContent(n, ":before") || hasPseudoElementContent(n, ":after")
-        )
-    ) {
-        return false; // The nodes have pseudo elements with content.
-    }
-    if (isBlock(node)) {
-        return false;
-    }
-    const nodeStyle = getComputedStyle(node);
-    const node2Style = getComputedStyle(node2);
-    if (node.matches("code.o_inline_code")) {
-        if (nodeStyle.padding === node2Style.padding && nodeStyle.margin === node2Style.margin) {
-            return true;
-        }
-    }
-    return (
-        !+nodeStyle.padding.replace(NOT_A_NUMBER, "") &&
-        !+node2Style.padding.replace(NOT_A_NUMBER, "") &&
-        !+nodeStyle.margin.replace(NOT_A_NUMBER, "") &&
-        !+node2Style.margin.replace(NOT_A_NUMBER, "")
-    );
 }
 
 export function hasSameStyleAttributes(node, node2) {
@@ -909,7 +931,7 @@ export function isContentEditableAncestor(node) {
     return node.isContentEditable && node.matches("[contenteditable]");
 }
 
-const QWEB_STYLE_ATTRS = ["t-att-class", "t-attf-class", "t-att-style", "t-attf-style"];
+export const QWEB_STYLE_ATTRS = ["t-att-class", "t-attf-class", "t-att-style", "t-attf-style"];
 
 /**
  * @param {Node} node
@@ -997,4 +1019,99 @@ export function isRedundantElement(node) {
     }
 
     return true;
+}
+
+/**
+ * Check if two DOMRect are overlapping.
+ *
+ * @param {DOMRect} rect1
+ * @param {DOMRect} rect2
+ * @returns {boolean}
+ */
+export function isOverlapping(rect1, rect2) {
+    return !(
+        rect1.right < rect2.left ||
+        rect1.left > rect2.right ||
+        rect1.bottom < rect2.top ||
+        rect1.top > rect2.bottom
+    );
+}
+
+/**
+ * Check if the given element is overlapping any floating image
+ * (with class `float-start`) in the document.
+ *
+ * @param {HTMLElement} element
+ * @returns {boolean}
+ */
+export function isElementOverlappingAnyFloatingImage(element) {
+    const elRect = element.getBoundingClientRect();
+    const document = element.ownerDocument;
+
+    const images = document.querySelectorAll("img.float-start");
+    for (const img of images) {
+        const imgRect = img.getBoundingClientRect();
+        if (isOverlapping(imgRect, elRect)) {
+            return true; // Overlaps at least one
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Returns the bounding rect of the iframe containing the given document.
+ * If the document is not inside an iframe, returns `{ top: 0, left: 0 }`.
+ *
+ * @param {Document} document
+ * @returns {{ top: number, left: number } | DOMRect}
+ */
+function getIframeBoundingRect(document) {
+    let frameRect = { top: 0, left: 0 };
+    let frameElement;
+    try {
+        frameElement = document.defaultView.frameElement;
+    } catch {
+        // We don't access the frameElement if we don't have access to it.
+        // (i.e. iframe origin or sandbox restriction)
+    }
+    if (frameElement) {
+        frameRect = frameElement.getBoundingClientRect();
+    }
+    return frameRect;
+}
+
+/**
+ * Returns an element's bounding rect adjusted by its iframe's offset.
+ *
+ * @param {Element} el
+ * @returns {DOMRect} Adjusted rectangle
+ */
+export function getIframeAdjustedBoundingRect(el) {
+    const frameRect = getIframeBoundingRect(el.ownerDocument);
+    let rect = el.getBoundingClientRect();
+    rect = {
+        top: rect.top + frameRect.top,
+        bottom: rect.bottom + frameRect.top,
+        left: rect.left + frameRect.left,
+        right: rect.right + frameRect.left,
+        width: rect.width,
+        height: rect.height,
+    };
+    return rect;
+}
+
+/**
+ * Computes client (viewport) coordinates for an event, adjusted to account
+ * for an iframe offset if the event originates from within one.
+ *
+ * @param {MouseEvent | PointerEvent} ev - The event object
+ * @returns {{ clientX: number, clientY: number }} Adjusted coordinates
+ */
+export function getIframeAdjustedClientCoords(ev) {
+    let { clientX, clientY, target } = ev;
+    const frameRect = getIframeBoundingRect(target.ownerDocument);
+    clientX += frameRect.left;
+    clientY += frameRect.top;
+    return { clientX, clientY };
 }

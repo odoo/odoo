@@ -12,7 +12,7 @@ export class ResPartner extends ServerModel {
         const ResUsers = this.env["res.users"];
 
         for (const partner of this) {
-            const users = ResUsers.browse(partner.user_ids);
+            const users = ResUsers.browse(partner.user_ids).filter((user) => user.active);
             const internalUsers = users.filter((user) => !user.share);
             if (internalUsers.length > 0) {
                 partner.main_user_id = internalUsers[0].id;

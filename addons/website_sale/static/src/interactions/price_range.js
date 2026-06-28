@@ -1,6 +1,6 @@
 import { Interaction } from '@web/public/interaction';
-import { redirect } from '@web/core/utils/urls';
 import { registry } from '@web/core/registry';
+import wSaleUtils from '@website_sale/js/website_sale_utils';
 
 export class PriceRange extends Interaction {
     static selector = '#o_wsale_price_range_option';
@@ -11,7 +11,7 @@ export class PriceRange extends Interaction {
     /**
      * @param {Event} ev
      */
-    onPriceRangeSelected(ev) {
+    async onPriceRangeSelected(ev) {
         const range = ev.currentTarget;
         const url = new URL(range.dataset.url, window.location.origin);
         const searchParams = url.searchParams;
@@ -21,11 +21,10 @@ export class PriceRange extends Interaction {
         if (parseFloat(range.max) !== range.valueHigh) {
             searchParams.set("max_price", range.valueHigh);
         }
-        const product_list_div = document.querySelector('.o_wsale_products_grid_table_wrapper');
-        if (product_list_div) {
-            product_list_div.classList.add('opacity-50');
-        }
-        redirect(`${url.pathname}?${searchParams.toString()}`);
+        await wSaleUtils.updateShopContent(this, {
+            url,
+            searchParams,
+        });
     }
 }
 

@@ -2,6 +2,7 @@
 
 import json
 import logging
+from urllib.parse import urlsplit
 
 import psycopg2
 
@@ -10,14 +11,15 @@ from odoo.exceptions import AccessError
 from odoo.http import Controller, request, route
 from odoo.http.router import db_list
 from odoo.http.session import authenticate, check, touch, update_session_token
-from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tools import LazyTranslate, _, config, hmac
 from odoo.tools.cloc import Cloc
+from odoo.tools.urls import urljoin
 
 from .utils import (
     _get_login_redirect_url,
     ensure_db,
     is_user_internal,
+    og_title_from_path,
 )
 
 _lt = LazyTranslate(__name__)
@@ -98,12 +100,8 @@ class Home(Controller):
             request.update_context(lang=lang)
 
         menus = request.env["ir.ui.menu"].load_web_menus(request.session.debug)
-        body = json.dumps(menus)
-        return request.make_response(body, [
-            # this method must specify a content-type application/json instead of using the default text/html set because
-            # the type of the route is set to HTTP, but the rpc is made with a get and expects JSON
-            ('Content-Type', 'application/json'),
-            ('Cache-Control', f'public, max-age={STATIC_CACHE_LONG}'),
+        return request.make_json_response(menus, [
+            ('Cache-Control', 'no-store'),
         ])
 
     def _login_redirect(self, uid, redirect=None):
@@ -121,7 +119,7 @@ class Home(Controller):
         if request.env.uid is None:
             if request.session.uid is None:
                 # no user -> auth=public with specific website public user
-                request.env["ir.http"]._auth_method_public()
+                request.env["ir.http"]._auth_method_public({})
             else:
                 # auth=user
                 request.update_env(user=request.session.uid)
@@ -156,6 +154,18 @@ class Home(Controller):
         if not odoo.tools.config['list_db']:
             values['disable_database_manager'] = True
 
+        safe_redirect = redirect if (redirect and redirect.startswith('/') and not redirect.startswith('//')) else None
+        values['disable_opengraph'] = bool(safe_redirect and safe_redirect.startswith('/odoo'))
+        if values['disable_opengraph']:
+            url_root = request.httprequest.url_root
+            try:
+                values['og_url'] = urljoin(url_root, safe_redirect)
+            except ValueError:
+                values['og_url'] = request.httprequest.url
+            values['og_title'] = og_title_from_path(request.env, safe_redirect)
+            values['og_image_url'] = urljoin(url_root, '/web/static/img/og_image.png')
+            values['og_domain'] = urlsplit(url_root).hostname
+
         response = request.render('web.login', values)
         response.headers['Cache-Control'] = 'no-cache'
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
@@ -174,7 +184,7 @@ class Home(Controller):
         if request.env.user._is_system():
             uid = request.session.uid = odoo.SUPERUSER_ID
             # invalidate session token cache as we've changed the uid
-            request.env.registry.clear_cache()
+            request.env.transaction.invalidate_ormcache()
             update_session_token(request.session, request.env)
 
         return request.redirect(self._login_redirect(uid))

@@ -77,5 +77,25 @@ export class ProductCombo extends models.ServerModel {
             qty_max: 5,
             sequence: 5,
         },
+        {
+            id: 7,
+            name: "Combo 7",
+            combo_item_ids: [13, 14],
+            base_price: 14,
+            is_upsell: false,
+            qty_free: 1,
+            qty_max: 1,
+            sequence: 6,
+        },
+        {
+            id: 8,
+            name: "Combo 8",
+            combo_item_ids: [15, 16],
+            base_price: 12,
+            is_upsell: false,
+            qty_free: 1,
+            qty_max: 1,
+            sequence: 7,
+        },
     ];
 }

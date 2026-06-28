@@ -18,7 +18,11 @@
                             <field name="printer_type" widget="radio" options="{'horizontal': True}" class="pb-1" invisible="True" />  <!-- Invisble to be overrided -->
                             <field name="printer_ip" invisible="printer_type != 'epson_epos'" placeholder="10.100.50.87" required="printer_type == 'epson_epos'"/>
                             <field name="use_lna"/>
-                            <field name="product_categories_ids" invisible="use_type != 'preparation'" widget="many2many_tags" required="use_type == 'preparation'"/>
+                            <field name="paper_size_keys" invisible="True"/>
+                            <field name="paper_size" widget="dynamic_selection" options="{'available_field': 'paper_size_keys'}"/>
+                            <field name="timeout" widget="integer" options="{'type': 'number', 'step': 1000}" placeholder="3000" groups="base.group_no_one"/>
+                            <field name="product_categories_ids" invisible="use_type != 'preparation'" widget="many2many_tags" required="use_type == 'preparation'" placeholder="None"/>
+                            <field name="use_cashdrawer" invisible="use_type != 'receipt' or paper_size == 'label'"/>
                         </group>
                     </group>
                 </sheet>
@@ -49,6 +53,48 @@
                 <field name="use_type"/>
                 <field name="printer_type"/>
             </list>
+        </field>
+    </record>
+    <record id="view_pos_printer_kanban" model="ir.ui.view">
+        <field name="name">pos.printer.kanban</field>
+        <field name="model">pos.printer</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="1" sample="1">
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex align-items-center mb-3">
+                            <field name="name" class="fw-bold fs-4"/>
+                            <field name="printer_ip" invisible="1"/>
+                            <widget name="point_of_sale_test_epos" class="ms-auto"/>
+                        </div>
+                        <div class="row g-1">
+                            <div class="col-4 fw-semibold text-dark">
+                                Use Type:
+                            </div>
+                            <div class="col-8 text-muted">
+                                <field name="use_type"/>
+                            </div>
+                            <div class="col-4 fw-semibold text-dark use_lna_label">
+                                Use LNA:
+                            </div>
+                            <div class="col-8 text-muted use_lna">
+                                <field name="use_lna"/>
+                            </div>
+                            <div class="col-4 fw-semibold text-dark" invisible="use_type != 'preparation'">
+                                Categories:
+                            </div>
+                            <div class="col-8" invisible="use_type != 'preparation'">
+                                <t t-if="record.product_categories_ids.raw_value.length">
+                                    <field name="product_categories_ids" widget="many2many_tags" class="text-muted"/>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-muted">No Categories</span>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 

@@ -3,6 +3,7 @@
 
 from odoo.tests import HttpCase, tagged
 
+
 @tagged('post_install', '-at_install')
 class TestUi(HttpCase):
 

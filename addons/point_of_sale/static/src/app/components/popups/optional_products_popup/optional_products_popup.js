@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -14,7 +13,7 @@ export class OptionalProductPopup extends Component {
     setup() {
         this.pos = usePos();
         this.dialog = useService("dialog");
-        this.state = useState({
+        this.state = proxy({
             product_lines:
                 this.props.productTemplate?.pos_optional_product_ids.map((product) => ({
                     product_tmpl_id: product,
@@ -25,6 +24,13 @@ export class OptionalProductPopup extends Component {
     }
 
     async changeQuantity(optional_product, increase) {
+        if (
+            increase &&
+            optional_product.qty === 0 &&
+            !(await this.pos.canAddProductToCurrentOrder(optional_product.product_tmpl_id))
+        ) {
+            return;
+        }
         if (
             optional_product.product_tmpl_id.isConfigurable() &&
             !Object.keys(optional_product.payload).length

@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "../standard_widget_props";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 /**
  * This widget adds a ribbon on the top right side of the form
@@ -19,17 +19,13 @@ import { Component } from "@odoo/owl";
  */
 export class RibbonWidget extends Component {
     static template = "web.Ribbon";
-    static props = {
+    props = props({
         ...standardWidgetProps,
-        record: { type: Object, optional: true },
-        text: { type: String },
-        title: { type: String, optional: true },
-        bgClass: { type: String, optional: true },
-    };
-    static defaultProps = {
-        title: "",
-        bgClass: "text-bg-success",
-    };
+        record: t.object().optional(),
+        text: t.string(),
+        title: t.string().optional(""),
+        bgClass: t.string().optional("text-bg-success"),
+    });
 
     get classes() {
         let classes = this.props.bgClass;

@@ -1,17 +1,18 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { props, proxy, t } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { useBus, useRefListener, useService } from '@web/core/utils/hooks';
 
-export const ExpenseDocumentDropZone = (T) => class ExpenseDocumentDropZone extends T {
-    static props = [
-        ...T.props,
-        'uploadDocument',
-    ];
+export const ExpenseDocumentDropZone = (T, parentProps) => class ExpenseDocumentDropZone extends T {
+    props = props({
+        ...parentProps,
+        uploadDocument: t.function(),
+    });
 
     setup() {
         super.setup();
-        this.dragState = useState({
+        this.dragState = proxy({
             showDragZone: false,
         });
         this.root = useRef("root");

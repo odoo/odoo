@@ -69,10 +69,16 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-VAT 1 Base</field>
                                     </record>
-                                    <record id="l10n_cz_vat_declaration_line_3_output_tax" model="account.report.expression">
-                                        <field name="label">output_tax</field>
+                                    <record id="l10n_cz_vat_declaration_line_3_raw_output_tax" model="account.report.expression">
+                                        <field name="label">raw_output_tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-VAT 1 Tax</field>
+                                    </record>
+                                    <record id="l10n_cz_vat_declaration_line_3_output_tax" model="account.report.expression">
+                                        <field name="label">output_tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">R1.raw_output_tax</field>
+                                        <field name="subformula">round(0, UP)</field>
                                     </record>
                                 </field>
                             </record>
@@ -86,10 +92,16 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-VAT 2 Base</field>
                                     </record>
-                                    <record id="l10n_cz_vat_declaration_line_4_output_tax" model="account.report.expression">
-                                        <field name="label">output_tax</field>
+                                    <record id="l10n_cz_vat_declaration_line_4_raw_output_tax" model="account.report.expression">
+                                        <field name="label">raw_output_tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-VAT 2 Tax</field>
+                                    </record>
+                                    <record id="l10n_cz_vat_declaration_line_4_output_tax" model="account.report.expression">
+                                        <field name="label">output_tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">R2.raw_output_tax</field>
+                                        <field name="subformula">round(0, UP)</field>
                                     </record>
                                 </field>
                             </record>
@@ -109,10 +121,16 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 3 Base</field>
                                     </record>
-                                    <record id="l10n_cz_vat_declaration_line_6_output_tax" model="account.report.expression">
-                                        <field name="label">output_tax</field>
+                                    <record id="l10n_cz_vat_declaration_line_6_raw_output_tax" model="account.report.expression">
+                                        <field name="label">raw_output_tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 3 Tax</field>
+                                    </record>
+                                    <record id="l10n_cz_vat_declaration_line_6_output_tax" model="account.report.expression">
+                                        <field name="label">output_tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">R3.raw_output_tax</field>
+                                        <field name="subformula">round(0, UP)</field>
                                     </record>
                                 </field>
                             </record>
@@ -126,10 +144,16 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 4 Base</field>
                                     </record>
-                                    <record id="l10n_cz_vat_declaration_line_7_output_tax" model="account.report.expression">
-                                        <field name="label">output_tax</field>
+                                    <record id="l10n_cz_vat_declaration_line_7_raw_output_tax" model="account.report.expression">
+                                        <field name="label">raw_output_tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 4 Tax</field>
+                                    </record>
+                                    <record id="l10n_cz_vat_declaration_line_7_output_tax" model="account.report.expression">
+                                        <field name="label">output_tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">R4.raw_output_tax</field>
+                                        <field name="subformula">round(0, UP)</field>
                                     </record>
                                 </field>
                             </record>
@@ -149,10 +173,16 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 5 Base</field>
                                     </record>
-                                    <record id="l10n_cz_vat_declaration_line_9_output_tax" model="account.report.expression">
-                                        <field name="label">output_tax</field>
+                                    <record id="l10n_cz_vat_declaration_line_9_raw_output_tax" model="account.report.expression">
+                                        <field name="label">raw_output_tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 5 Tax</field>
+                                    </record>
+                                    <record id="l10n_cz_vat_declaration_line_9_output_tax" model="account.report.expression">
+                                        <field name="label">output_tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">R5.raw_output_tax</field>
+                                        <field name="subformula">round(0, UP)</field>
                                     </record>
                                 </field>
                             </record>
@@ -166,10 +196,16 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 6 Base</field>
                                     </record>
-                                    <record id="l10n_cz_vat_declaration_line_10_output_tax" model="account.report.expression">
-                                        <field name="label">output_tax</field>
+                                    <record id="l10n_cz_vat_declaration_line_10_raw_output_tax" model="account.report.expression">
+                                        <field name="label">raw_output_tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 6 Tax</field>
+                                    </record>
+                                    <record id="l10n_cz_vat_declaration_line_10_output_tax" model="account.report.expression">
+                                        <field name="label">output_tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">R6.raw_output_tax</field>
+                                        <field name="subformula">round(0, UP)</field>
                                     </record>
                                 </field>
                             </record>
@@ -189,10 +225,16 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 7 Base</field>
                                     </record>
-                                    <record id="l10n_cz_vat_declaration_line_12_output_tax" model="account.report.expression">
-                                        <field name="label">output_tax</field>
+                                    <record id="l10n_cz_vat_declaration_line_12_raw_output_tax" model="account.report.expression">
+                                        <field name="label">raw_output_tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 7 Tax</field>
+                                    </record>
+                                    <record id="l10n_cz_vat_declaration_line_12_output_tax" model="account.report.expression">
+                                        <field name="label">output_tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">R7.raw_output_tax</field>
+                                        <field name="subformula">round(0, UP)</field>
                                     </record>
                                 </field>
                             </record>
@@ -206,10 +248,16 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 8 Base</field>
                                     </record>
-                                    <record id="l10n_cz_vat_declaration_line_13_output_tax" model="account.report.expression">
-                                        <field name="label">output_tax</field>
+                                    <record id="l10n_cz_vat_declaration_line_13_raw_output_tax" model="account.report.expression">
+                                        <field name="label">raw_output_tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 8 Tax</field>
+                                    </record>
+                                    <record id="l10n_cz_vat_declaration_line_13_output_tax" model="account.report.expression">
+                                        <field name="label">output_tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">R8.raw_output_tax</field>
+                                        <field name="subformula">round(0, UP)</field>
                                     </record>
                                 </field>
                             </record>
@@ -225,10 +273,16 @@
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">VAT 9 Base</field>
                             </record>
-                            <record id="l10n_cz_vat_declaration_line_14_output_tax" model="account.report.expression">
-                                <field name="label">output_tax</field>
+                            <record id="l10n_cz_vat_declaration_line_14_raw_output_tax" model="account.report.expression">
+                                <field name="label">raw_output_tax</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">VAT 9 Tax</field>
+                            </record>
+                            <record id="l10n_cz_vat_declaration_line_14_output_tax" model="account.report.expression">
+                                <field name="label">output_tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">R9.raw_output_tax</field>
+                                <field name="subformula">round(0, UP)</field>
                             </record>
                         </field>
                     </record>
@@ -246,10 +300,16 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 10 Base</field>
                                     </record>
-                                    <record id="l10n_cz_vat_declaration_line_16_output_tax" model="account.report.expression">
-                                        <field name="label">output_tax</field>
+                                    <record id="l10n_cz_vat_declaration_line_16_raw_output_tax" model="account.report.expression">
+                                        <field name="label">raw_output_tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 10 Tax</field>
+                                    </record>
+                                    <record id="l10n_cz_vat_declaration_line_16_output_tax" model="account.report.expression">
+                                        <field name="label">output_tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">R10.raw_output_tax</field>
+                                        <field name="subformula">round(0, UP)</field>
                                     </record>
                                 </field>
                             </record>
@@ -263,10 +323,16 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 11 Base</field>
                                     </record>
-                                    <record id="l10n_cz_vat_declaration_line_17_output_tax" model="account.report.expression">
-                                        <field name="label">output_tax</field>
+                                    <record id="l10n_cz_vat_declaration_line_17_raw_output_tax" model="account.report.expression">
+                                        <field name="label">raw_output_tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 11 Tax</field>
+                                    </record>
+                                    <record id="l10n_cz_vat_declaration_line_17_output_tax" model="account.report.expression">
+                                        <field name="label">output_tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">R11.raw_output_tax</field>
+                                        <field name="subformula">round(0, UP)</field>
                                     </record>
                                 </field>
                             </record>
@@ -286,10 +352,16 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 12 Base</field>
                                     </record>
-                                    <record id="l10n_cz_vat_declaration_line_19_output_tax" model="account.report.expression">
-                                        <field name="label">output_tax</field>
+                                    <record id="l10n_cz_vat_declaration_line_19_raw_output_tax" model="account.report.expression">
+                                        <field name="label">raw_output_tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 12 Tax</field>
+                                    </record>
+                                    <record id="l10n_cz_vat_declaration_line_19_output_tax" model="account.report.expression">
+                                        <field name="label">output_tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">R12.raw_output_tax</field>
+                                        <field name="subformula">round(0, UP)</field>
                                     </record>
                                 </field>
                             </record>
@@ -303,10 +375,16 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 13 Base</field>
                                     </record>
-                                    <record id="l10n_cz_vat_declaration_line_20_output_tax" model="account.report.expression">
-                                        <field name="label">output_tax</field>
+                                    <record id="l10n_cz_vat_declaration_line_20_raw_output_tax" model="account.report.expression">
+                                        <field name="label">raw_output_tax</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 13 Tax</field>
+                                    </record>
+                                    <record id="l10n_cz_vat_declaration_line_20_output_tax" model="account.report.expression">
+                                        <field name="label">output_tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">R13.raw_output_tax</field>
+                                        <field name="subformula">round(0, UP)</field>
                                     </record>
                                 </field>
                             </record>
@@ -363,7 +441,7 @@
                             <record id="l10n_cz_vat_declaration_line_25_value" model="account.report.expression">
                                 <field name="label">value</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">VAT 23</field>
+                                <field name="formula">-VAT 23</field>
                             </record>
                         </field>
                     </record>
@@ -375,7 +453,7 @@
                             <record id="l10n_cz_vat_declaration_line_26_value" model="account.report.expression">
                                 <field name="label">value</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">VAT 24</field>
+                                <field name="formula">-VAT 24</field>
                             </record>
                         </field>
                     </record>
@@ -503,11 +581,19 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 40 Base</field>
                                     </record>
-                                    <record id="l10n_cz_vat_declaration_line_39_in_full_amount" model="account.report.expression">
-                                        <field name="label">in_full_amount</field>
+                                    <record id="l10n_cz_vat_declaration_line_39_raw_in_full_amount" model="account.report.expression">
+                                        <field name="label">raw_in_full_amount</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 40 Total</field>
                                     </record>
+
+                                    <record id="l10n_cz_vat_declaration_line_39_in_full_amount" model="account.report.expression">
+                                        <field name="label">in_full_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">R40.raw_in_full_amount</field>
+                                        <field name="subformula">round(0, UP)</field>
+                                    </record>
+
                                     <record id="l10n_cz_vat_declaration_line_39_reduced_claim" model="account.report.expression">
                                         <field name="label">reduced_claim</field>
                                         <field name="engine">external</field>
@@ -526,10 +612,16 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 41 Base</field>
                                     </record>
-                                    <record id="l10n_cz_vat_declaration_line_40_in_full_amount" model="account.report.expression">
-                                        <field name="label">in_full_amount</field>
+                                    <record id="l10n_cz_vat_declaration_line_40_raw_in_full_amount" model="account.report.expression">
+                                        <field name="label">raw_in_full_amount</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">VAT 41 Total</field>
+                                    </record>
+                                    <record id="l10n_cz_vat_declaration_line_40_in_full_amount" model="account.report.expression">
+                                        <field name="label">in_full_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">R41.raw_in_full_amount</field>
+                                        <field name="subformula">round(0, UP)</field>
                                     </record>
                                     <record id="l10n_cz_vat_declaration_line_40_reduced_claim" model="account.report.expression">
                                         <field name="label">reduced_claim</field>
@@ -551,10 +643,16 @@
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">VAT 42 Base</field>
                             </record>
-                            <record id="l10n_cz_vat_declaration_line_41_in_full_amount" model="account.report.expression">
-                                <field name="label">in_full_amount</field>
+                            <record id="l10n_cz_vat_declaration_line_41_raw_in_full_amount" model="account.report.expression">
+                                <field name="label">raw_in_full_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">VAT 42 Total</field>
+                            </record>
+                            <record id="l10n_cz_vat_declaration_line_41_in_full_amount" model="account.report.expression">
+                                <field name="label">in_full_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">R42.raw_in_full_amount</field>
+                                <field name="subformula">round(0, UP)</field>
                             </record>
                             <record id="l10n_cz_vat_declaration_line_41_reduced_claim" model="account.report.expression">
                                 <field name="label">reduced_claim</field>
@@ -662,10 +760,16 @@
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">VAT 47 Base</field>
                             </record>
-                            <record id="l10n_cz_vat_declaration_line_47_in_full_amount" model="account.report.expression">
-                                <field name="label">in_full_amount</field>
+                            <record id="l10n_cz_vat_declaration_line_47_raw_in_full_amount" model="account.report.expression">
+                                <field name="label">raw_in_full_amount</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">VAT 47 Total</field>
+                            </record>
+                            <record id="l10n_cz_vat_declaration_line_47_in_full_amount" model="account.report.expression">
+                                <field name="label">in_full_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">R47.raw_in_full_amount</field>
+                                <field name="subformula">round(0, UP)</field>
                             </record>
                             <record id="l10n_cz_vat_declaration_line_47_reduced_claim" model="account.report.expression">
                                 <field name="label">reduced_claim</field>

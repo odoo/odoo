@@ -5,26 +5,25 @@ import { useBus, useChildRef, useService } from "@web/core/utils/hooks";
 import { RecipientsInputTagsListPopover } from "./recipients_input_tags_list_popover";
 import { RecipientsPopover } from "./recipients_popover";
 
-import { Component, EventBus } from "@odoo/owl";
+import { Component, EventBus, props, types } from "@odoo/owl";
 
 export class RecipientTag extends Component {
     static template = "mail.RecipientTag";
     static components = { BadgeTag };
-    static props = [
-        "bus",
-        "color?",
-        "email",
-        "id",
-        "name",
-        "onClick?",
-        "onDelete",
-        "resId?",
-        "text",
-        "tooltip",
-        "updateRecipient",
-    ];
 
     setup() {
+        this.props = props({
+            bus: types.instanceOf(EventBus),
+            color: types.string().optional(),
+            email: types.string(),
+            id: types.string(),
+            name: types.string(),
+            onDelete: types.function([]),
+            resId: types.number().optional(),
+            text: types.string(),
+            tooltip: types.string(),
+            updateRecipient: types.function([types.string(), types.number()]),
+        });
         this.ref = useChildRef();
         this.action = useService("action");
 
@@ -72,6 +71,10 @@ export class RecipientTag extends Component {
     }
 }
 
+/**
+ * @param {() => {id: string, email: string}[]} getTags
+ * @returns {EventBus}
+ */
 export function useRecipientChecker(getTags) {
     const bus = new EventBus();
     useLayoutEffect(

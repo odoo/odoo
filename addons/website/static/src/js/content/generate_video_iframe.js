@@ -1,13 +1,22 @@
-const SUPPORTED_DOMAINS = [
-    "youtu.be",
-    "youtube.com",
-    "youtube-nocookie.com",
-    "instagram.com",
-    "player.vimeo.com",
-    "vimeo.com",
-    "dailymotion.com",
-    "facebook.com",
-];
+import { Youtube } from "@html_editor/main/media/video/providers/youtube";
+import { Dailymotion } from "@html_editor/main/media/video/providers/dailymotion";
+import { Vimeo } from "@html_editor/main/media/video/providers/vimeo";
+import { GDriveVideo } from "@html_editor/main/media/video/providers/gdrive_video";
+import { Instagram } from "@html_editor/main/media/video/providers/instagram";
+import { Facebook } from "@html_editor/main/media/video/providers/facebook";
+import { Twitch } from "@html_editor/main/media/video/providers/twitch";
+import { Loom } from "@html_editor/main/media/video/providers/loom";
+
+export const PLATFORMS = {
+    youtube: Youtube,
+    instagram: Instagram,
+    facebook: Facebook,
+    gDrive: GDriveVideo,
+    dailymotion: Dailymotion,
+    vimeo: Vimeo,
+    twitch: Twitch,
+    loom: Loom,
+};
 
 /**
  * This is a non-lazy version of the `manageIframeSrc` function already
@@ -35,9 +44,18 @@ function manageIframeSrcOnLoad(iframeEl, src) {
  *
  * @param {HTMLElement} parentEl The iframe container.
  * @param {function} manageIframeSrcFct The iframe `src` handler.
- * @returns {HTMLIframeElement}
+ * @returns {HTMLIFrameElement}
  */
 export function generateVideoIframe(parentEl, manageIframeSrcFct) {
+    // Depending on version / compatibility / instance, the src is saved in the
+    // 'data-embed-url', 'data-src' attribute or the 'data-oe-expression' one.
+    let src = parentEl.dataset.embedUrl || parentEl.dataset.src || parentEl.dataset.oeExpression;
+    // Do not generate an iframe if there is no src, as it means that the
+    // container only contains the SVG placeholder.
+    if (!src) {
+        return;
+    }
+
     // Bug fix / compatibility: empty the <div/> element as all information
     // to rebuild the iframe should have been saved on the <div/> element
     parentEl.replaceChildren();
@@ -51,20 +69,31 @@ export function generateVideoIframe(parentEl, manageIframeSrcFct) {
         : "media_iframe_video_size";
     parentEl.append(extraEditionEl, extraSizeEl);
 
-    // Rebuild the iframe. Depending on version / compatibility / instance, the
-    // src is saved in the 'data-src' attribute or the 'data-oe-expression' one.
-    const src = parentEl.dataset.oeExpression || parentEl.dataset.src;
-    // Validate the src to only accept supported domains we can trust
-    const m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
-    if (!m) {
-        // Unsupported protocol or wrong URL format, don't inject iframe
-        return;
+    // Deprecated oeExpression store the src without protocol for some reason.
+    if (src.startsWith("//")) {
+        src = "https:" + src;
     }
-    const domain = m[1].replace(/^www\./, "");
-    if (!SUPPORTED_DOMAINS.includes(domain)) {
-        // Unsupported domain, don't inject iframe
-        return;
+
+    if (!URL.canParse(src)) {
+        // not a valid URL, don't inject iframe
+        return null;
     }
+    // Check if the url is from one of the supported platforms.
+    let platform = false;
+    let urlMatch;
+    for (const [p, pClass] of Object.entries(PLATFORMS)) {
+        urlMatch = pClass.isValidVideoUrl(src);
+        if (urlMatch) {
+            platform = p;
+            break;
+        }
+    }
+    if (!platform) {
+        return null;
+    }
+    // Sanitize the URL by processing it back into the platform matcher.
+    src = PLATFORMS[platform].getVideoUrlData(urlMatch).embedUrl;
+
     const iframeEl = document.createElement("iframe");
     iframeEl.setAttribute("frameborder", "0");
     iframeEl.setAttribute("allowfullscreen", "allowfullscreen");

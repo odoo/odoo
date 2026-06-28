@@ -2,9 +2,11 @@
 
 from odoo import _
 from odoo.http import request
+from odoo.tools.partner_identifiers import validation_error_message
 
 from odoo.addons.account.controllers.portal import PortalAccount as CustomerPortal
 from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import validate_participant_identifier
 
 
 class PortalAccount(CustomerPortal):
@@ -18,18 +20,9 @@ class PortalAccount(CustomerPortal):
         if request.env.company.peppol_can_send:
             rendering_values['invoice_sending_methods'].update({'peppol': _("by Peppol")})
             rendering_values.update({
-                'peppol_eas_list': dict(request.env['res.partner']._fields['peppol_eas'].selection),
+                'routing_scheme_list': dict(request.env['res.partner']._fields['routing_scheme'].selection),
             })
         return rendering_values
-
-    def _get_mandatory_billing_address_fields(self, country_sudo):
-        mandatory_fields = super()._get_mandatory_billing_address_fields(country_sudo)
-
-        sending_method = request.params.get('invoice_sending_method')
-        if sending_method == 'peppol':
-            mandatory_fields.update({'peppol_eas', 'peppol_endpoint', 'invoice_edi_format'})
-
-        return mandatory_fields
 
     def _validate_address_values(self, address_values, *args, **kwargs):
         # EXTENDS 'portal'
@@ -45,10 +38,14 @@ class PortalAccount(CustomerPortal):
                 invalid_fields.add('country_id')
                 address_values['country_id'] = 'error'
                 error_messages.append(_("That country is not available for Peppol."))
-            if endpoint_error_message := request.env['res.partner']._build_error_peppol_endpoint(peppol_eas, peppol_endpoint):
+            result = validate_participant_identifier(peppol_eas, peppol_endpoint)
+            if not result['valid']:
                 invalid_fields.add('invalid_peppol_endpoint')
+                peppol_endpoint = result['value']
+                endpoint_error_message = validation_error_message(request.env, result['key'], result['example'])
                 error_messages.append(endpoint_error_message)
-            if request.env['res.partner']._get_peppol_verification_state(peppol_endpoint, peppol_eas, edi_format) != 'valid':
+            peppol_identifier = f'{peppol_eas}:{peppol_endpoint}'
+            if request.env['res.partner']._get_peppol_verification_state(peppol_identifier, edi_format) != 'valid':
                 invalid_fields.add('invalid_peppol_config')
                 error_messages.append(_("If you want to be invoiced by Peppol, your configuration must be valid."))
 

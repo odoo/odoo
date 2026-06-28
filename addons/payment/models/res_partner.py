@@ -21,3 +21,18 @@ class ResPartner(models.Model):
         partners_data = {partner.id: count for partner, count in payments_data}
         for partner in self:
             partner.payment_token_count = partners_data.get(partner.id, 0)
+
+    # === BUSINESS METHODS === #
+
+    def _get_payment_tokens(self, **_kwargs):
+        """Return all tokens manageable by the partner.
+
+        Manageable tokens include those linked to unpublished providers, or to the commercial
+        partner.
+
+        :return: The partner's tokens
+        :rtype: payment.token
+        """
+        return self.env["payment.token"].search([
+            ("partner_id", "in", [self.id, self.commercial_partner_id.id])
+        ])

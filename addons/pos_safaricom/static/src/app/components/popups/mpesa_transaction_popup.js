@@ -1,4 +1,5 @@
-import { Component, useState, useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -15,14 +16,14 @@ export class MpesaTransactionPopup extends Component {
 
     setup() {
         this.pos = usePos();
-        this.state = useState({
+        this.state = proxy({
             transactions: [],
             showQrCode: false,
             searchQuery: "",
         });
         this.ui = useService("ui");
         this.tx = null;
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.updateTransactions();
             },
@@ -40,6 +41,7 @@ export class MpesaTransactionPopup extends Component {
                     phone: r.number,
                     amount: r.amount,
                     received_at: r.received_at,
+                    trans_id: r.trans_id,
                 }))
                 .reverse();
         }
@@ -67,7 +69,8 @@ export class MpesaTransactionPopup extends Component {
         return this.state.transactions.filter(
             (transaction) =>
                 transaction.name.toLowerCase().includes(search.toLowerCase()) ||
-                transaction.phone.toLowerCase().includes(search.toLowerCase())
+                transaction.phone.toLowerCase().includes(search.toLowerCase()) ||
+                transaction.trans_id.toLowerCase().includes(search.toLowerCase())
         );
     }
 }

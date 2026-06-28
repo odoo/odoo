@@ -1,20 +1,20 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 
-/**
- * @typedef {Object} Props
- * @property {import('models').Thread} thread
- * @extends {Component<Props, Env>}
- */
+import { useService } from "@web/core/utils/hooks";
+
 export class Priority extends Component {
     static template = "mail.Priority";
-    static props = ["thread"];
+
+    setup() {
+        super.setup(...arguments);
+        this.store = useService("mail.store");
+        this.props = props({
+            thread: types.instanceOf(this.store["mail.thread"].Class),
+        });
+    }
 
     get priorityDefinition() {
         return Object.fromEntries(this.props.thread.priority_definition);
-    }
-
-    get maxStar() {
-        return Math.max(...Object.keys(this.priorityDefinition).map(Number));
     }
 
     get priority() {

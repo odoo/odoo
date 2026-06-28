@@ -8,11 +8,13 @@ export class DynamicRecordList extends DynamicList {
     static type = "DynamicRecordList";
 
     /**
-     * @param {import("./relational_model").Config} config
+     * @param {import("./relational_model").Config} _config
      * @param {Object} data
      */
-    setup(config, data) {
-        super.setup(config);
+    setup(_config, data) {
+        super.setup(...arguments);
+
+        this.records = [];
         this._setData(data);
     }
 
@@ -38,7 +40,7 @@ export class DynamicRecordList extends DynamicList {
     /**
      * @param {number} resId
      * @param {boolean} [atFirstPosition]
-     * @returns {Promise<Record>} the newly created record
+     * @returns {Promise<RelationalRecord>} the newly created record
      */
     addExistingRecord(resId, atFirstPosition) {
         return this.model.mutex.exec(async () => {
@@ -51,7 +53,7 @@ export class DynamicRecordList extends DynamicList {
 
     /**
      * @param {boolean} [atFirstPosition=false]
-     * @returns {Promise<Record>}
+     * @returns {Promise<RelationalRecord>}
      */
     addNewRecord(atFirstPosition = false) {
         return this.model.mutex.exec(async () => {
@@ -104,14 +106,22 @@ export class DynamicRecordList extends DynamicList {
     // -------------------------------------------------------------------------
 
     async _addNewRecord(atFirstPosition) {
-        const values = await this.model._loadNewRecord({
-            resModel: this.resModel,
-            activeFields: this.activeFields,
-            fields: this.fields,
-            context: this.context,
-        });
+        const { promise, resolve } = Promise.withResolvers();
+        const values = await this.model._loadNewRecord(
+            {
+                resModel: this.resModel,
+                activeFields: this.activeFields,
+                fields: this.fields,
+                context: this.context,
+                isMonoRecord: true,
+            },
+            {
+                cache: this.model._getCacheParams({ ...this.config, isMonoRecord: true }, promise),
+            }
+        );
         const record = this._createRecordDatapoint(values, "edit");
         this._addRecord(record, atFirstPosition ? 0 : this.records.length);
+        resolve({ root: record, loadId: this.config.loadId });
         return record;
     }
 

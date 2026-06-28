@@ -24,8 +24,4 @@ export class HrDepartment extends models.ServerModel {
             department.display_name = department.complete_name;
         }
     }
-
-    get _to_store_defaults() {
-        return ["name"];
-    }
 }

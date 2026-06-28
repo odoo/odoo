@@ -18,11 +18,11 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    def _prepare_stock_moves(self, picking):
+    def _prepare_stock_moves(self, picking=False):
         res = super()._prepare_stock_moves(picking)
         for re in res:
-            if self.sale_line_id and re.get('location_final_id'):
-                final_loc = self.env['stock.location'].browse(re.get('location_final_id'))
+            if self.sale_line_id and re.get('forecasted_location_id'):
+                final_loc = self.env['stock.location'].browse(re.get('forecasted_location_id'))
                 if final_loc.usage == 'customer' or final_loc.usage == 'transit':
                     re['sale_line_id'] = self.sale_line_id.id
             if self.sale_line_id.route_ids:
@@ -46,4 +46,6 @@ class PurchaseOrderLine(models.Model):
         # only set the sale line id in case of a dropshipping
         if not values.get('move_dest_ids'):
             res['sale_line_id'] = values.get('sale_line_id', False)
+        if values.get('analytic_distribution'):
+            res['analytic_distribution'] = values['analytic_distribution']
         return res

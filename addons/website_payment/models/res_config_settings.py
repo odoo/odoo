@@ -10,18 +10,14 @@ class ResConfigSettings(models.TransientModel):
     # === COMPUTE METHODS === #
 
     @api.depends('company_id', 'website_id')
-    def _compute_active_provider_id(self):
-        return super()._compute_active_provider_id()
+    def _compute_installed_provider_id(self):
+        return super()._compute_installed_provider_id()
 
-    @api.depends('company_id', 'website_id')
-    def _compute_has_enabled_provider(self):
-        return super()._compute_has_enabled_provider()
-
-    def _get_active_providers_domain(self, *args, **kwargs):
+    def _get_installed_providers_domain(self, *args, **kwargs):
         """Override of `payment` to only return providers compatible with the current website."""
         self.ensure_one()
         return Domain.AND([
-            super()._get_active_providers_domain(*args, **kwargs),
+            super()._get_installed_providers_domain(*args, **kwargs),
             ['|', ('website_id', '=', False), ('website_id', '=', self.website_id.id)],
         ])
 

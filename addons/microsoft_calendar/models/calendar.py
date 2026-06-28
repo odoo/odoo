@@ -433,7 +433,9 @@ class CalendarEvent(models.Model):
         elif self.env.user.partner_id.email not in emails:
             commands_attendee += [(0, 0, {'state': 'accepted', 'partner_id': self.env.user.partner_id.id})]
             commands_partner += [(4, self.env.user.partner_id.id)]
-        partners = self.env['mail.thread']._partner_find_from_emails_single(emails, no_create=False)
+        partners = self.env['mail.thread'].with_context(
+            mail_create_log_from_calendar_sync=True,
+        )._partner_find_from_emails_single(emails, no_create=False)
         attendees_by_emails = {a.email: a for a in existing_attendees}
         partners_by_emails = {p.email_normalized: p for p in partners}
         for email, attendee_info in zip(emails, microsoft_attendees):
@@ -702,9 +704,7 @@ class CalendarEvent(models.Model):
         """
         user = self.env.user
         records = self.filtered(lambda e: not e.user_id or e.user_id == user or user.partner_id in e.partner_ids)
-        for event in records:
-            # remove the tracking data to avoid calling _track_template in the pre-commit phase
-            self.env.cr.precommit.data.pop(f'mail.tracking.create.{event._name}.{event.id}', None)
+        records._track_clear_for_template()
         super(CalendarEvent, records)._cancel_microsoft()
         attendees = (self - records).attendee_ids.filtered(lambda a: a.partner_id == user.partner_id)
         attendees.do_decline()

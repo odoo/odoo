@@ -9,17 +9,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:02+0000\n"
-"PO-Revision-Date: 2026-01-06 06:19+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"PO-Revision-Date: 2026-04-30 07:34+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "hr_recruitment_skills/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: hr_recruitment_skills
 #: model:ir.model,name:hr_recruitment_skills.model_hr_applicant
@@ -95,7 +95,7 @@ msgstr "職位"
 #. odoo-javascript
 #: code:addons/hr_recruitment_skills/static/src/fields/skill_match_gauge_field/skill_match_gauge_field.xml:0
 msgid "Job Position Matching"
-msgstr "職種との適合度"
+msgstr ""
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__write_uid
@@ -114,6 +114,7 @@ msgstr "レベル数"
 
 #. module: hr_recruitment_skills
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.crm_case_tree_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_job_list_inherit_hr_recruitment_skills
 msgid "Matching"
 msgstr "マッチング"
 
@@ -122,11 +123,6 @@ msgstr "マッチング"
 #: code:addons/hr_recruitment_skills/models/hr_job.py:0
 msgid "Matching Applicants"
 msgstr "マッチする応募者"
-
-#. module: hr_recruitment_skills
-#: model:ir.actions.act_window,name:hr_recruitment_skills.action_find_matching_job
-msgid "Matching Positions"
-msgstr "一致する職位"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_score
@@ -140,18 +136,21 @@ msgstr "マッチングスコア(%)"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_skill_ids
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__matching_applicant_skill_ids
 msgid "Matching Skills"
 msgstr "マッチングスキル"
 
 #. module: hr_recruitment_skills
 #. odoo-javascript
 #: code:addons/hr_recruitment_skills/static/src/components/search_job_applicant_menu/search_job_applicant_menu.xml:0
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.view_hr_job_kanban
 msgid "Matching Talents"
-msgstr ""
+msgstr "求めるスキル"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__missing_skill_ids
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__missing_applicant_skill_ids
 msgid "Missing Skills"
 msgstr "不足しているスキル"
 
@@ -164,7 +163,7 @@ msgstr "この職位に移動"
 #. odoo-python
 #: code:addons/hr_recruitment_skills/models/hr_job.py:0
 msgid "No Matching Talents"
-msgstr ""
+msgstr "該当する人材が見つかりません"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,help:hr_recruitment_skills.field_hr_applicant_skill__levels_count
@@ -180,11 +179,6 @@ msgstr "進捗"
 #: model:ir.model.fields,help:hr_recruitment_skills.field_hr_applicant_skill__level_progress
 msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
 msgstr "進捗は、知識ゼロ(0%)から完全習得(100%)まで。"
-
-#. module: hr_recruitment_skills
-#: model:ir.actions.server,name:hr_recruitment_skills.action_applicant_search_applicant
-msgid "Search Matching Applicants"
-msgstr "マッチする応募者を検索"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__skill_ids
@@ -259,7 +253,7 @@ msgstr "検証中断"
 msgid ""
 "We do not have any talents who meet the skill requirements for this job "
 "position in the database at the moment."
-msgstr ""
+msgstr "現在、データベースにはこの求人要件を満たす人材が登録されていません。"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,help:hr_recruitment_skills.field_hr_applicant_skill__is_certification

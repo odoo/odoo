@@ -22,6 +22,9 @@ export class PrintPopup extends Component {
         this.doBasicPrint = useTrackedAsync(() =>
             this.pos.ticketPrinter.printOrderReceipt({ order: this.order, basic: true })
         );
+        this.doSimplifiedPrint = useTrackedAsync(() =>
+            this.pos.ticketPrinter.printOrderReceipt({ order: this.order, simplified: true })
+        );
         if (this.printList.length === 1) {
             this.printList[0].method();
             this.props.close();
@@ -35,17 +38,23 @@ export class PrintPopup extends Component {
     get printList() {
         const list = [
             {
-                label: _t("Print Receipt"),
+                label: _t("Full Receipt"),
                 method: () => this.doFullPrint.call(),
                 status: this.doFullPrint.status,
                 icon: "fa-print",
                 isPrimary: true,
             },
+            {
+                label: _t("Simplified Receipt"),
+                method: () => this.doSimplifiedPrint.call(),
+                status: this.doSimplifiedPrint.status,
+                icon: "fa-file-text-o",
+                isPrimary: false,
+            },
         ];
         if (this.pos.config.basic_receipt) {
-            list[0].label = _t("Print Full Receipt");
             list.push({
-                label: _t("Print Basic Receipt"),
+                label: _t("Gift Receipt"),
                 method: () => this.doBasicPrint.call(),
                 status: this.doBasicPrint.status,
                 icon: "fa-gift",

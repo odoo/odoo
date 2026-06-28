@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+# PLW1641 (eq-without-hash) we don't want domains to be hashable, we raise
+# ruff: noqa: PLW1641
 
 """ Domain expression processing
 
@@ -282,16 +284,19 @@ class Domain:
     @staticmethod
     def custom(
         *,
-        to_sql: Callable[[TableSQL], SQL],
+        to_sql: Callable[[TableSQL], SQL] | None = None,
         predicate: Callable[[BaseModel], bool] | None = None,
+        optimize: Callable[[DomainCustom, BaseModel], Domain] | None = None,
     ) -> DomainCustom:
         """Create a custom domain.
 
         :param to_sql: callable(model, alias, query) that returns the SQL
+        :param optimize: callable(custom_domain, model) that runs for full
+                         optimization in order to translate to a normal domain
         :param predicate: callable(record) that checks whether a record is kept
                           when filtering
         """
-        return DomainCustom(to_sql, predicate)
+        return DomainCustom(to_sql, predicate, optimize)
 
     @staticmethod
     def AND(items: Iterable) -> Domain:
@@ -368,7 +373,7 @@ class Domain:
         raise NotImplementedError
 
     def __hash__(self):
-        raise NotImplementedError
+        raise NotImplementedError("Domains are not hashable")
 
     def __iter__(self):
         """For-backward compatibility, return the polish-notation domain list"""
@@ -391,6 +396,17 @@ class Domain:
         """Return whether self is FALSE"""
         return False
 
+    def is_condition(self,
+        field_expr: str = '',
+        operator: str | tuple[str] = (),
+        value: type | tuple[type] = (),
+    ) -> bool:
+        """Return whether this domain is a simple condition, and whether it
+        matches the ``field_expr`` (if given), the ``operator`` (if given), and
+        the ``value`` type (if given).
+        """
+        return False
+
     def iter_conditions(self) -> Iterable[DomainCondition]:
         """Yield simple conditions of the domain"""
         yield from ()
@@ -402,7 +418,9 @@ class Domain:
     def validate(self, model: BaseModel) -> None:
         """Validates that the current domain is correct or raises an exception"""
         # just execute the optimization code that goes through all the fields
-        self._optimize(model, OptimizationLevel.FULL)
+        # the search domain is set to False to avoid performing searches
+        model = model.with_context(search_domain=Domain.FALSE)
+        self._optimize(model, OptimizationLevel.FULL)._to_sql(Query(model).table)
 
     def _as_predicate[M: BaseModel](self, records: M) -> Callable[[M], bool]:
         """Return a predicate function from the domain (bound to records).
@@ -499,9 +517,6 @@ class DomainBool(Domain):
     def __eq__(self, other):
         return self is other  # because this class has two instances only
 
-    def __hash__(self):
-        return hash(self.value)
-
     def is_true(self) -> bool:
         return self.value
 
@@ -569,9 +584,6 @@ class DomainNot(Domain):
     def __eq__(self, other):
         return self is other or (isinstance(other, DomainNot) and self.child == other.child)
 
-    def __hash__(self):
-        return ~hash(self.child)
-
     def _as_predicate(self, records):
         predicate = self.child._as_predicate(records)
         return lambda rec: not predicate(rec)
@@ -634,9 +646,6 @@ class DomainNary(Domain):
             and self.OPERATOR == other.OPERATOR
             and self.children == other.children
         )
-
-    def __hash__(self):
-        return hash(self.OPERATOR) ^ hash(self.children)
 
     @classproperty
     def INVERSE(cls) -> type[DomainNary]:
@@ -752,15 +761,17 @@ class DomainOr(DomainNary):
 
 class DomainCustom(Domain):
     """Domain condition that generates directly SQL and possibly a ``filtered`` predicate."""
-    __slots__ = ('_filtered', '_sql')
+    __slots__ = ('_filtered', '_optimize_func', '_sql')
 
     _filtered: Callable[[BaseModel], bool] | None
-    _sql: Callable[[BaseModel, str, Query], SQL]
+    _optimize_func: Callable[[DomainCustom, BaseModel], Domain] | None
+    _sql: Callable[[BaseModel, str, Query], SQL] | None
 
     def __new__(
         cls,
-        sql: Callable[[TableSQL], SQL],
+        sql: Callable[[TableSQL], SQL] | None = None,
         filtered: Callable[[BaseModel], bool] | None = None,
+        optimize_func: Callable[[DomainCustom, BaseModel], Domain] | None = None,
     ):
         """Create a new domain.
 
@@ -768,11 +779,21 @@ class DomainCustom(Domain):
                        which is used to generate the query for searching
         :param predicate: callable(record) that checks whether a record is kept
                           when filtering (``Model.filtered``)
+        :param optimize_func: callable(custom_domain, model) when set this
+                              domain is at dynamic level and can be fully
+                              optimized by that function
         """
+        assert sql or optimize_func, "Need optimization or sql function"
         self = object.__new__(cls)
         object.__setattr__(self, '_sql', sql)
         object.__setattr__(self, '_filtered', filtered)
-        object.__setattr__(self, '_opt_level', OptimizationLevel.FULL)
+        object.__setattr__(self, '_optimize_func', optimize_func)
+        object.__setattr__(self, '_opt_level', OptimizationLevel.FULL if optimize_func is None else OptimizationLevel.DYNAMIC_VALUES)
+        return self
+
+    def _optimize_step(self, model, level):
+        if level == OptimizationLevel.FULL and self._optimize_func:
+            return self._optimize_func(self, model)
         return self
 
     def _as_predicate(self, records):
@@ -782,7 +803,7 @@ class DomainCustom(Domain):
         query = records._filtered_access('read')._as_query(ordered=False)
         if query.is_empty():
             return Domain.FALSE._as_predicate(records)
-        query.add_where(self.optimize_full(records)._to_sql(query.table))
+        query.add_where(self._to_sql(query.table))
         return DomainCondition('id', 'any!', query)._as_predicate(records)
 
     def __eq__(self, other):
@@ -790,10 +811,8 @@ class DomainCustom(Domain):
             isinstance(other, DomainCustom)
             and self._sql == other._sql
             and self._filtered == other._filtered
+            and self._optimize_func == other._optimize_func
         )
-
-    def __hash__(self):
-        return hash(self._sql)
 
     def __iter__(self):
         yield self
@@ -802,6 +821,8 @@ class DomainCustom(Domain):
         return object.__repr__(self)
 
     def _to_sql(self, table: TableSQL) -> SQL:
+        assert self._sql is not None, \
+            f"Must fully optimize before generating the query {self}"
         return self._sql(table)
 
 
@@ -903,8 +924,18 @@ class DomainCondition(Domain):
             and self.value == other.value
         )
 
-    def __hash__(self):
-        return hash(self.field_expr) ^ hash(self.operator) ^ hash(self.value)
+    def is_condition(self,
+        field_expr: str = '',
+        operator: str | tuple[str] = (),
+        value: type | tuple[type] = (),
+    ) -> bool:
+        return (
+            not field_expr or self.field_expr == field_expr
+        ) and (
+            not operator or self.operator in ((operator,) if isinstance(operator, str) else operator)
+        ) and (
+            not value or isinstance(self.value, value)
+        )
 
     def iter_conditions(self):
         yield self
@@ -922,7 +953,7 @@ class DomainCondition(Domain):
     def _field(self, model: BaseModel) -> Field:
         """Cached Field instance for the expression."""
         field = self._field_instance  # type: ignore[arg-type]
-        if field is None or field.model_name != model._name:
+        if field is None or field is not model._fields[field.name]:
             field, _ = self.__get_field(model)
         return field
 
@@ -973,6 +1004,10 @@ class DomainCondition(Domain):
 
             # handle searchable fields
             if field.search and field.name == self.field_expr:
+                if field.type == 'boolean' and isinstance(domain := _optimize_boolean_in_all(self, model), DomainBool):
+                    # apply the tautology before trying the search method
+                    # this is a basic optimization, but for active flag it is left for later
+                    return domain
                 domain = self._optimize_field_search_method(model)
                 # The domain is optimized so that value data types are comparable.
                 # Only simple optimization to avoid endless recursion.
@@ -1295,12 +1330,11 @@ def _operator_equal_as_in(condition, _):
     value = condition.value
     operator = 'in' if condition.operator == '=' else 'not in'
     if isinstance(value, COLLECTION_TYPES):
-        # TODO make a warning or equality against a collection
         if not value:  # views sometimes use ('user_ids', '!=', []) to indicate the user is set
-            _logger.debug("The domain condition %r should compare with False.", condition)
+            _logger.warning("The domain condition %r should compare with False.", condition)
             value = OrderedSet([False])
         else:
-            _logger.debug("The domain condition %r should use the 'in' or 'not in' operator.", condition)
+            _logger.warning("The domain condition %r should use the 'in' or 'not in' operator.", condition)
             value = OrderedSet(value)
     elif isinstance(value, SQL):
         # transform '=' SQL("x") into 'in' SQL("(x)")
@@ -1336,8 +1370,10 @@ def _optimize_in_required(condition, model):
     field = condition._field(model)
     if (
         field.falsy_value is None
-        and (field.required or field.name == 'id')
-        and field in model.env.registry.not_null_fields
+        and (
+            (field.required and field in model.env.registry.not_null_fields)
+            or field.name == 'id'
+        )
         # only optimize if there are no NewId's
         and all(model._ids)
     ):
@@ -1373,13 +1409,29 @@ def _optimize_any_domain_at_level(level: OptimizationLevel, condition, model):
     domain = condition.value
     if not isinstance(domain, Domain):
         return condition
+
     field = condition._field(model)
     if not field.relational:
         condition._raise("Cannot use 'any' with non-relational fields")
+
     try:
         comodel = model.env[field.comodel_name]
     except KeyError:
         condition._raise("Cannot determine the comodel relation")
+
+    if isinstance(search_domain := model.env.context.get('search_domain'), Domain):
+        # model with search_domain like (field, 'any', comodel_domain)
+        # => comodel with comodel_domain
+        comodel_domain = Domain.OR(
+            c.value
+            for c in search_domain.iter_conditions()
+            if c.is_condition(condition.field_expr, value=Domain)
+        )
+        if comodel_domain.is_false() and not search_domain.is_false():
+            # we don't know the condition, accept all
+            comodel_domain = Domain.TRUE
+        comodel = comodel.with_context(search_domain=comodel_domain)
+
     domain = domain._optimize(comodel, level)
     # const if the domain is empty, the result is a constant
     # if the domain is True, we keep it as is
@@ -1653,6 +1705,54 @@ def _optimize_type_datetime_relative(condition, model):
     return DomainCondition(condition.field_expr, operator, value)
 
 
+@field_type_optimization(['properties'], level=OptimizationLevel.DYNAMIC_VALUES)
+def _optimize_properties_date_datetime(condition, model):
+    operator = condition.operator
+    if (
+        operator not in ('in', 'not in', '>', '<', '<=', '>=')
+        or condition.field_expr.count('.') != 1
+        or not isinstance(condition.value, (str, OrderedSet))
+    ):
+        return condition
+    definition = model.get_property_definition(condition.field_expr)
+    property_type = definition.get("type")
+
+    if property_type == 'date':
+        value = _value_to_date(condition.value, model.env)
+    elif property_type == 'datetime':
+        value, _ = _value_to_datetime(condition.value, model.env)
+    else:
+        return condition
+    # we need to serialize the value as a string to be able to use with properties
+    if isinstance(value, COLLECTION_TYPES):
+        value = OrderedSet(
+            str(item) if isinstance(item, (date, datetime)) else item
+            for item in value
+        )
+    elif isinstance(value, (date, datetime)):
+        value = str(value)
+
+    return DomainCondition(condition.field_expr, operator, value)
+
+
+@field_type_optimization(['selection'], level=OptimizationLevel.DYNAMIC_VALUES)
+def _optimize_type_selection(condition, model):
+    """Transform expressions like `(field, 'not in', excl)` into `(field, 'in', incl)`.
+    This may lead to better performance if `field` is indexed.
+    """
+    field = condition._field(model)
+    if (
+        condition.operator != 'not in'
+        or '.' in condition.field_expr
+        or field._selection is None
+        or not any(condition.value)  # not in [False] should remain like that
+    ):
+        return condition
+    excluded = condition.value
+    included = OrderedSet([*field._selection, False]) - excluded
+    return DomainCondition(condition.field_expr, 'in', included)
+
+
 @field_type_optimization(['binary'])
 def _optimize_type_binary_attachment(condition, model):
     field = condition._field(model)
@@ -1797,6 +1897,48 @@ def _operator_parent_of_domain(comodel: BaseModel, parent):
     return parent_ids
 
 
+@operator_optimization(['access'], level=OptimizationLevel.DYNAMIC_VALUES)
+def _operator_access_rule_domain(condition, model):
+    field = condition._field(model)
+    if condition.field_expr != field.name:
+        condition._raise("The 'access' operator does not work for properties")
+
+    if field.name == 'id':
+        comodel = model
+    elif field.type == 'many2one' and field.comodel_name:
+        comodel = model.env[field.comodel_name]
+    else:
+        condition._raise("The 'access' operator works only for many2one and 'id' fields")
+        assert False, "no return above"  # for pylint
+
+    operation = condition.value
+    if operation not in ('read', 'write', 'create', 'unlink'):
+        condition._raise("Invalid value for 'access' operator")
+
+    comodel = comodel.sudo(False)
+    access_domain = comodel._access_domain(operation)
+    if access_domain.is_false():
+        # no access to the comodel for any record
+        return Domain.FALSE
+    if access_domain.is_true() or comodel.env.su:
+        # access to all or edge-case for super user
+        return DomainCondition(field.name, '!=', False)
+
+    def filtered_access(record):
+        if field.name == 'id':
+            return record.sudo(False).has_access(operation)
+        return (
+            record.has_access('read')
+            and (corecord := field.__get__(record.sudo()))
+            and corecord.sudo(False).has_access(operation)
+        )
+
+    def optimize_sql(custom, model):
+        return DomainCondition(field.name, 'any!', access_domain)
+
+    return DomainCustom(filtered=filtered_access, optimize_func=optimize_sql)
+
+
 @operator_optimization(['any', 'not any'], level=OptimizationLevel.FULL)
 def _optimize_any_with_rights(condition, model):
     if model.env.su or condition._field(model).bypass_search_access:
@@ -1837,8 +1979,29 @@ def _optimize_m2o_bypass_comodel_id_lookup(condition, model):
         if operator == 'not any!':
             domain = ~domain
         return domain
-
     return condition
+
+
+@field_type_optimization(['one2many', 'many2many'], level=OptimizationLevel.FULL)
+def _optimize_x2m_in_operator(condition, model):
+    """For x2m fields, we always will generate a query so we can express it as
+    the "any!" operator directly.
+    """
+    if condition.operator not in ('in', 'not in'):
+        return condition
+    field_expr = condition.field_expr
+    ids = condition.value
+    # rewrite condition (field_expr, 'in', ids), then negate in the case 'not in'
+    domain = Domain.FALSE
+    if False in ids:
+        # x2m in {False, ...} => x2m not any! (Domain.TRUE) or x2m in {...}
+        domain |= Domain(field_expr, 'not any!', Domain.TRUE)
+        ids = ids - {False}
+    if ids:
+        # x2m in ids => x2m any! (ids_as_query)
+        comodel = model.env[condition._field(model).comodel_name]
+        domain |= Domain(field_expr, 'any!', comodel.browse(ids)._as_query(ordered=False))
+    return domain if condition.operator == 'in' else ~domain
 
 
 # --------------------------------------------------

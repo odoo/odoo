@@ -9,7 +9,6 @@
         'sale',
     ],
     'data': [
-        'data/payment_method_data.xml',
         'views/payment_method_views.xml',
         'views/sale_order_views.xml',
     ],

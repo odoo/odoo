@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { AttachmentView } from "@mail/core/common/attachment_view";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
-import { onMounted, onWillUnmount } from "@odoo/owl";
+import { onMounted, onWillUnmount, signal, types } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { SIZES } from "@web/core/ui/ui_service";
@@ -18,12 +17,11 @@ patch(FormRenderer.prototype, {
             AttachmentView,
             Chatter,
         };
-        this.messagingState = useState({
-            /** @type {import("models").Thread} */
-            thread: undefined,
-        });
         if (this.env.services["mail.store"]) {
             this.mailStore = useService("mail.store");
+            this.thread = signal(null, {
+                type: types.instanceOf(this.mailStore["mail.thread"].Class),
+            });
         }
         this.uiService = useService("ui");
         this.mailPopoutService = useService("mail.popout");
@@ -39,11 +37,13 @@ patch(FormRenderer.prototype, {
         if (!this.mailStore || !this.props.record.resId) {
             return false;
         }
-        this.messagingState.thread = this.mailStore["mail.thread"].insert({
-            id: this.props.record.resId,
-            model: this.props.record.resModel,
-        });
-        return this.messagingState.thread.attachmentsInWebClientView.length > 0;
+        this.thread.set(
+            this.mailStore["mail.thread"].insert({
+                id: this.props.record.resId,
+                model: this.props.record.resModel,
+            })
+        );
+        return this.thread().attachmentsInWebClientView.length > 0;
     },
     mailLayout(hasAttachmentContainer) {
         const xxl = this.uiService.size >= SIZES.XXL;

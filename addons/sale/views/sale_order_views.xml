@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Kept first because this server action is referenced by the SO list header button -->
-    <record id="model_sale_order_action_quotation_confirm" model="ir.actions.server">
-        <field name="name">Confirm Orders</field>
-        <field name="model_id" ref="sale.model_sale_order"/>
-        <field name="binding_model_id" ref="sale.model_sale_order"/>
-        <field name="binding_view_types">list</field>
-        <field name="state">code</field>
-        <field name="code">records.action_confirm()</field>
-    </record>
-
     <!-- VIEWS -->
 
     <record id="sale_order_view_activity" model="ir.ui.view">
@@ -123,22 +113,19 @@
         <field name="model">sale.order</field>
         <field name="priority">1000</field>
         <field name="arch" type="xml">
-            <list class="o_sale_order"
-                  string="Sales Orders"
-                  sample="1"
-                  decoration-muted="state == 'cancel'">
+            <list
+                string="Sales Orders"
+                class="o_sale_order"
+                sample="1"
+                multi_edit="1"
+                decoration-muted="state == 'cancel'"
+            >
                 <header>
                     <button
                         string="Create Invoices"
                         name="%(sale.action_view_sale_advance_payment_inv)d"
                         type="action"
                         class="btn-secondary"/>
-                    <button
-                        string="Confirm Orders"
-                        name="%(sale.model_sale_order_action_quotation_confirm)d"
-                        type="action"
-                        class="btn-secondary"
-                    />
                 </header>
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="currency_id" column_invisible="True"/>
@@ -148,6 +135,7 @@
                 <field name="delivery_date" string="Delivery Date" optional="hide"
                     decoration-muted="not commitment_date"
                     decoration-danger="(commitment_date and (expected_date &lt; commitment_date or commitment_date &lt; context_today().strftime('%Y-%m-%d'))) and state in ['draft', 'sent']"/>
+                <field name="commitment_date" readonly="1" optional="hide"/>
                 <field name="partner_id" readonly="1"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="activity_ids" widget="list_activity" optional="show"/>
@@ -204,13 +192,6 @@
         <field name="mode">primary</field>
         <field name="priority">2</field>
         <field name="arch" type="xml">
-            <xpath expr="//header/button[@name='%(sale.action_view_sale_advance_payment_inv)d']" position="before">
-                <button
-                    string="Deliver"
-                    name="deliver_sold_quantity"
-                    type="object"
-                    class="btn-secondary"/>
-            </xpath>
             <field name="invoice_status" position="before">
                 <field
                     name="delivery_status"
@@ -219,27 +200,6 @@
                     decoration-info="delivery_status in ['pending', 'started']"
                     widget="badge"
                     optional="hide"/>
-            </field>
-        </field>
-    </record>
-
-    <record id="view_orders_to_invoice_tree" model="ir.ui.view">
-        <field name="name">sale.order.list (To Invoice)</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale_order_tree"/>
-        <field name="mode">primary</field>
-        <field name="priority">32</field>
-        <field name="arch" type="xml">
-            <field name="amount_total" position="before">
-                <field name="amount_to_invoice"
-                       sum="Amount to invoice"
-                       widget="monetary"
-                       decoration-bf="1"
-                       decoration-info="invoice_status == 'to invoice'"
-                       optional="show"/>
-            </field>
-            <field name="amount_total" position="attributes">
-                <attribute name="optional">hide</attribute>
             </field>
         </field>
     </record>
@@ -330,7 +290,7 @@
                     type="action"
                     class="btn-primary"
                     data-hotkey="q"
-                    invisible="invoice_status != 'to invoice'"/>
+                    invisible="invoice_status != 'to invoice' and not (has_overages and invoice_status == 'upselling')"/>
                 <button
                     string="Create Invoice"
                     id="create_invoice_percentage"
@@ -339,13 +299,6 @@
                     context="{'default_advance_payment_method': 'percentage'}"
                     data-hotkey="q"
                     invisible="invoice_status != 'no' or state != 'sale'"/>
-                <button
-                    string="Deliver"
-                    id="deliver_quantities"
-                    name="deliver_sold_quantity"
-                    type="object"
-                    invisible="not show_deliver_button"
-                    data-hotkey="d"/>
                 <button
                     string="Send"
                     id="quotation_send_primary"
@@ -374,7 +327,7 @@
                     data-hotkey="q"
                     invisible="state != 'sent'"/>
                 <button
-                    string="Print"
+                    string="Download"
                     name="sale.action_report_saleorder"
                     type="action"
                     data-hotkey="i"
@@ -488,6 +441,14 @@
                         invisible="invoice_count == 0">
                         <field name="invoice_count" widget="statinfo" string="Invoices"/>
                     </button>
+                    <button
+                        name="action_view_payment_transaction"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-money"
+                        groups="account.group_account_invoice,base.group_no_one">
+                        <field name="transaction_count" widget="statinfo" string="Payments"/>
+                    </button>
                 </div>
                 <div class="badge rounded-pill text-bg-secondary float-end fs-6 border-0"
                     invisible="not locked">
@@ -495,7 +456,7 @@
                     Locked
                 </div>
                 <div class="oe_title">
-                    <h1>
+                    <h1 class="o_outlined">
                         <field name="name" readonly="1"/>
                     </h1>
                 </div>
@@ -540,21 +501,18 @@
                                groups="product.group_product_pricelist"
                                invisible="not has_active_pricelist"/>
                         <div groups="product.group_product_pricelist"
-                             class="o_input_box"
+                             class="o_row"
                              invisible="not has_active_pricelist">
                             <field
                                 name="pricelist_id"
                                 options="{'no_open': True, 'no_create': True}"
                                 readonly="state in ['cancel', 'sale']"/>
-                            <button string="Update Prices" name="action_update_prices" type="object"
-                                data-tooltip="Recompute all prices based on this pricelist"
-                                class="o_input_box_overlay_end btn btn-link"
+                            <button name="action_update_prices" type="object"
+                                string="Update Prices"
+                                help="Recompute all prices based on this pricelist"
+                                class="btn-link mb-1 px-0" icon="fa-refresh"
                                 confirm="This will update the unit price of all products based on the new pricelist."
-                                invisible="not show_update_pricelist or state in ['sale', 'cancel']"
-                            >
-                                <i class="fa fa-refresh" />
-                                <span class="d-touch-none ms-1">Update Prices</span>
-                            </button>
+                                invisible="not show_update_pricelist or state in ['sale', 'cancel']"/>
                         </div>
                         <field name="currency_id" invisible="1"/>
                         <field
@@ -568,11 +526,10 @@
                             options="{'no_open': True, 'no_create': True}"/>
                         <label for="commitment_date" invisible="state == 'draft'"/>
                         <label for="commitment_date" string="Delivery Date" invisible="state != 'draft'"/>
-                        <div name="commitment_date_div" class="o_input_box">
-                            <field name="commitment_date" readonly="state == 'cancel' or locked"/>
+                        <div name="commitment_date_div" class="o_row align-items-center">
+                            <field name="commitment_date" options="{'placeholder_field': 'expected_date'}" readonly="state == 'cancel' or locked"/>
                             <field
                                 name="delivery_status"
-                                class="o_input_box_overlay_end"
                                 widget="badge"
                                 decoration-success="delivery_status == 'full'"
                                 decoration-warning="delivery_status == 'partial'"
@@ -580,10 +537,17 @@
                                 invisible="state != 'sale'"
                             />
                         </div>
+                        <field name="expected_date" invisible="1"/>  <!-- Needed for the placeholder widget -->
                    </group>
+                   <div>
+                        <field name="document_tax_mode" id="document_tax_mode_mobile" class="d-md-none no-gap-badges" widget="document_tax_mode_selector" nolabel="True" readonly="state != 'draft'"/>
+                    </div>
                 </group>
                 <notebook>
                     <page string="Order Lines" name="order_lines">
+                    <div class="position-relative document_tax_mode">
+                        <field name="document_tax_mode" id="document_tax_mode" class="overlap_badge_tab d-none d-md-block no-gap-badges" widget="document_tax_mode_selector" nolabel="True" readonly="state != 'draft'"/>
+                    </div>
                         <field
                             name="order_line"
                             widget="sol_o2m"
@@ -615,7 +579,7 @@
                                                     'partner_id': parent.partner_id,
                                                 }"
                                                 readonly="not product_updatable"
-                                                required="not display_type and not is_downpayment"
+                                                required="mandatory_product and not display_type and not is_downpayment"
                                                 force_save="1"
                                                 widget="many2one_barcode"
                                             />
@@ -650,17 +614,15 @@
                                             readonly="qty_invoiced &gt; 0"/>
                                         <t groups="sale.group_discount_per_so_line">
                                             <label for="discount"/>
-                                            <div class="o_input_box" name="discount">
-                                                <field name="discount"/>
-                                                <span class="o_input_box_overlay_end o_input_box_overlay_inline">%</span>
+                                            <div name="discount">
+                                                <field name="discount" class="oe_inline"/> %
                                             </div>
                                         </t>
                                     </group>
                                     <group invisible="display_type">
                                         <label for="customer_lead"/>
-                                        <div name="lead" class="o_input_box">
-                                            <field name="customer_lead" readonly="product_type != 'consu'"/>
-                                            <span class="o_input_box_overlay_end o_input_box_overlay_inline">days</span>
+                                        <div name="lead">
+                                            <field name="customer_lead" class="oe_inline" readonly="product_type != 'consu'"/> days
                                         </div>
                                         <field name="analytic_distribution" widget="analytic_distribution"
                                            groups="analytic.group_analytic_accounting"
@@ -690,17 +652,33 @@
                                 </div>
                             </form>
                             <list
+                                name="sol_list"
                                 string="Sales Order Lines"
                                 editable="bottom"
                                 limit="200"
                                 decoration-warning="(state in ['draft', 'sent'] and is_product_archived) or sale_line_warn_msg"
                             >
                                 <control>
-                                    <create name="add_product_control" string="Add a product"/>
-                                    <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
-                                    <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                    <create
+                                        string="Add Line"
+                                        name="add_product_control"
+                                        data-hotkey="shift+p"
+                                    />
+                                    <create
+                                        string="Add Section"
+                                        name="add_section_control"
+                                        data-hotkey="shift+h"
+                                        context="{'default_display_type': 'line_section'}"
+                                    />
+                                    <create
+                                        string="Add Note"
+                                        name="add_note_control"
+                                        data-hotkey="shift+n"
+                                        context="{'default_display_type': 'line_note'}"
+                                    />
                                     <button
                                         string="Catalog"
+                                        data-hotkey="shift+k"
                                         name="action_add_from_catalog"
                                         type="object"
                                         class="px-4 btn-link"
@@ -735,34 +713,35 @@
                                     name="product_id"
                                     string="Product Variant"
                                     readonly="not product_updatable"
-                                    required="not display_type and not is_downpayment"
+                                    required="mandatory_product and not display_type and not is_downpayment"
                                     force_save="1"
                                     context="{
                                         'default_lst_price': price_unit,
                                         'default_uom_id': product_uom_id,
                                         'partner_id': parent.partner_id,
                                     }"
-                                    options="{
-                                        'show_label_warning': True
-                                    }"
                                     optional="hide"
-                                    widget="sol_product_many2one"/>
-                                <field name="product_template_id"
+                                    widget="sol_product_many2one"
+                                />
+                                <field
+                                    name="product_template_id"
                                     string="Product"
                                     readonly="id and not product_updatable"
-                                    required="not display_type and not is_downpayment"
+                                    required="mandatory_product and not display_type and not is_downpayment"
                                     context="{
                                         'default_list_price': price_unit,
                                         'default_uom_id': product_uom_id,
                                         'partner_id': parent.partner_id,
                                     }"
-                                    options="{
-                                        'show_label_warning': True
-                                    }"
-                                    optional="show"
+                                    optional="hide"
                                     widget="sol_product_many2one"
-                                    placeholder="Type to find a product..."/>
-                                <field name="name" widget="sol_text" optional="show"/>
+                                    placeholder="Type to find a product..."
+                                />
+                                <field
+                                    name="name"
+                                    widget="sol_label_text"
+                                    context="{'partner_id': parent.partner_id}"
+                                />
                                 <field
                                     name="analytic_distribution"
                                     widget="analytic_distribution"
@@ -792,6 +771,7 @@
                                     string="Delivered"
                                     decoration-info="(not display_type and invoice_status == 'to invoice')"
                                     decoration-bf="(not display_type and invoice_status == 'to invoice')"
+                                    decoration-danger="qty_overage and qty_delivered &gt; qty_invoiced"
                                     column_invisible="parent.state != 'sale'"
                                     readonly="qty_delivered_method != 'manual' or is_downpayment"
                                     optional="show"/>
@@ -834,12 +814,12 @@
                                 <field
                                     name="price_subtotal"
                                     string="Amount"
-                                    column_invisible="parent.company_price_include == 'tax_included'"
+                                    column_invisible="parent.document_tax_mode == 'tax_included'"
                                     invisible="is_downpayment"/>
                                 <field
                                     name="price_total"
                                     string="Amount"
-                                    column_invisible="parent.company_price_include == 'tax_excluded'"
+                                    column_invisible="parent.document_tax_mode == 'tax_excluded'"
                                     invisible="is_downpayment"/>
                                 <!-- Optional amounts columns -->
                                 <field
@@ -862,9 +842,17 @@
                                 <field name="display_type"/>
                                 <field name="currency_id"/>
                                 <control>
-                                    <create name="add_product_control" string="Add product"/>
-                                    <create name="add_section_control" string="Add section" context="{'default_display_type': 'line_section'}"/>
-                                    <create name="add_note_control" string="Add note" context="{'default_display_type': 'line_note'}"/>
+                                    <create string="Add Line" name="add_product_control"/>
+                                    <create
+                                        string="Add Section"
+                                        name="add_section_control"
+                                        context="{'default_display_type': 'line_section'}"
+                                    />
+                                    <create
+                                        string="Add Note"
+                                        name="add_note_control"
+                                        context="{'default_display_type': 'line_note'}"
+                                    />
                                     <button
                                         string="Catalog"
                                         name="action_add_from_catalog"
@@ -948,44 +936,37 @@
                             </group>
                             <group class="oe_subtotal_footer border-top-0 d-flex order-0 order-lg-1 flex-column gap-0 gap-sm-3" colspan="2" name="sale_total">
                                 <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" readonly="1"/>
+                                <field name="extra_total_fields" widget="sale-extra-totals" nolabel="1" readonly="1"/>
                             </group>
                         </group>
                     </page>
                     <page string="Other Info" name="other_information">
                         <group>
-                            <group name="sales_person" string="Sales">
-                                <field name="user_id" widget="many2one_avatar_user"/>
-                                <field name="team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}" options="{'no_create': True}"/>
-                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <group name="confirmation_info" string="Confirmation">
                                 <field name="require_signature" widget="boolean_toggle"
                                     readonly="state in ['cancel', 'sale']"/>
                                 <field name="require_payment" widget="boolean_toggle"
                                     readonly="state in ['cancel', 'sale']"/>
+                                <label for="prepayment_percent" class="text-nowrap" invisible="not require_payment"/>
                                 <field name="prepayment_percent"
                                     readonly="state in ['cancel', 'sale']"
+                                    nolabel="1"
                                     invisible="not require_payment"
-                                    widget="percentage"/>
+                                    widget="percentage"
+                                    class="oe_inline"/>
+                            </group>
+                            <group name="sales_person" string="Sales">
+                                <field name="user_id" widget="many2one_avatar_user"/>
+                                <field name="team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}" options="{'no_create': True}"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="reference" readonly="1" invisible="not reference"/>
                                 <field name="client_order_ref"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
                             </group>
                             <group name="sale_info" string="Invoicing">
-                                <field name="show_update_fpos" invisible="1"/>
                                 <label for="fiscal_position_id"/>
-                                <div class="o_input_box">
+                                <div class="o_row">
                                     <field name="fiscal_position_id" options="{'no_create': True}"/>
-                                    <button
-                                        string="Update Taxes"
-                                        name="action_update_taxes"
-                                        type="object"
-                                        data-tooltip="Recompute all taxes based on this fiscal position"
-                                        class="o_input_box_overlay_end btn btn-link"
-                                        confirm="This will update all taxes based on the currently selected fiscal position."
-                                        invisible="not show_update_fpos or state in ['sale', 'cancel']"
-                                    >
-                                        <i class="fa fa-refresh" />
-                                        <span class="d-touch-none ms-1">Update Taxes</span>
-                                    </button>
                                 </div>
                                 <field name="preferred_payment_method_line_id"/>
                                 <field name="partner_invoice_id" groups="!account.group_delivery_invoice_address" invisible="1"/>
@@ -1008,17 +989,26 @@
                             </group>
                         </group>
                     </page>
-                    <page groups="base.group_no_one" string="Customer Signature" name="customer_signature" invisible="not require_signature and not signed_by and not signature and not signed_on">
-                        <group>
-                            <field name="signed_by" readonly="signature"/>
-                            <field name="signed_on" readonly="signature"/>
-                            <field name="signature" widget="image"/>
-                        </group>
-                    </page>
                 </notebook>
             </sheet>
             <chatter/>
             </form>
+        </field>
+    </record>
+
+    <record id="view_order_form_mandatory_product" model="ir.ui.view">
+        <field name="name">sale.order.form.mandatory.product</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <!-- Will be activated along with mandatory product setting -->
+        <field name="active">False</field>
+        <field name="arch" type="xml">
+            <xpath
+                expr="//list[@name='sol_list']//field[@name='product_template_id']"
+                position="attributes"
+            >
+                <attribute name="optional">show</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -1031,7 +1021,7 @@
                 <field name="name"
                     string="Order"
                     filter_domain="['|', '|', ('name', 'ilike', self), ('client_order_ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
-                <field name="partner_id" operator="child_of"/>
+                <field name="partner_id" filter_domain="['|', ('partner_id', 'child_of', self), ('partner_id.child_ids.email', 'ilike', self)]"/>
                 <field name="user_id"/>
                 <field name="team_id" string="Sales Team"/>
                 <field name="order_line" string="Product" filter_domain="[('order_line.product_id', 'ilike', self)]"/>
@@ -1176,14 +1166,6 @@
             </h2><p>
             Boost sales with online payments or signatures, upsells, and a great customer portal.
             </p>
-            <a
-                role="button"
-                class="btn btn-secondary"
-                href="https://www.odoo.com/documentation/latest/_downloads/312a470653db882b08ad72eb30cb4088/sample_quotation.pdf"
-                target="_blank"
-            >
-                Check a sample. It's clean!
-            </a>
         </field>
     </record>
 
@@ -1213,14 +1195,6 @@
             </p><p>
             Boost sales with online payments or signatures, upsells, and a great customer portal.
             </p>
-            <a
-                role="button"
-                class="btn btn-secondary"
-                href="https://www.odoo.com/documentation/latest/_downloads/312a470653db882b08ad72eb30cb4088/sample_quotation.pdf"
-                target="_blank"
-            >
-                Check a sample. It's clean!
-            </a>
         </field>
     </record>
 
@@ -1283,13 +1257,6 @@
         </field>
     </record>
 
-    <record id="action_orders_to_invoice_tree" model="ir.actions.act_window.view">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">list</field>
-        <field name="view_id" ref="sale.view_orders_to_invoice_tree"/>
-        <field name="act_window_id" ref="action_orders_to_invoice"/>
-    </record>
-
     <record id="action_orders_upselling" model="ir.actions.act_window">
         <field name="name">Orders to Upsell</field>
         <field name="res_model">sale.order</field>
@@ -1313,12 +1280,21 @@
     <!-- ACTIONS (SERVER) -->
 
     <record id="model_sale_order_action_quotation_sent" model="ir.actions.server">
-        <field name="name">Mark Quotation as Sent</field>
+        <field name="name">Mark as Sent</field>
         <field name="model_id" ref="sale.model_sale_order"/>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_view_types">form,list,kanban</field>
         <field name="state">code</field>
         <field name="code">action = records.action_quotation_sent()</field>
+    </record>
+
+    <record id="model_sale_order_action_quotation_confirm" model="ir.actions.server">
+        <field name="name">Confirm Orders</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.action_confirm()</field>
     </record>
 
     <record id="model_sale_order_action_share" model="ir.actions.server">
@@ -1330,12 +1306,21 @@
         <field name="code">action = records.action_share()</field>
     </record>
 
+    <record id="model_sale_order_action_deliver_sold_quantity" model="ir.actions.server">
+        <field name="name">Deliver</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">records.deliver_sold_quantity()</field>
+    </record>
+
     <record id="model_sale_order_send_mail" model="ir.actions.server">
         <field name="name">Send an email</field>
         <field name="model_id" ref="sale.model_sale_order"/>
         <field name="sequence">1</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
-        <field name="binding_view_types">list,kanban,form</field>
+        <field name="binding_view_types">list,kanban</field>
         <field name="state">code</field>
         <field name="code">
             if records:

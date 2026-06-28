@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add('burndown_chart_tour', {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
     run: "click",
@@ -47,10 +46,6 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
     trigger: '.o_control_panel .o_searchview_dropdown_toggler',
     run: "click",
 }, {
-    content: 'The Stage group menu item is visible',
-    trigger: '.o_group_by_menu .o_menu_item:contains("Stage")',
-    run: "click",
-}, {
     content: 'Open the Date group by sub menu',
     trigger: '.o_group_by_menu button.o_menu_item:contains("Date")',
     run: "click",
@@ -62,6 +57,8 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
     content: 'A "The Burndown Chart must be grouped by Date" notification is shown when trying to remove the group by "Date: Month > Stage"',
     trigger: '.o_notification_manager .o_notification:contains("The Burndown Chart must be grouped by Date") button.o_notification_close',
     run: "click",
+}, {
+    trigger: "body:not(:has(.o_filter_menu))",
 }, {
     content: 'Open the search panel menu',
     trigger: '.o_control_panel .o_searchview_dropdown_toggler',

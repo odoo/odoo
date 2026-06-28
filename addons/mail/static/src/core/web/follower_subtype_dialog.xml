@@ -4,7 +4,7 @@
         <Dialog t-if="this.props.follower.partner_id" bodyClass="'d-flex flex-column'" contentClass="'o-mail-FollowerSubtypeDialog'" size="'sm'" title="this.title">
             <t t-set-slot="default">
                 <div
-                    t-foreach="this.state.subtypes"
+                    t-foreach="this.subtypes()"
                     t-as="subtype"
                     t-key="subtype.id"
                     class="o-mail-FollowerSubtypeDialog-subtype"
@@ -18,7 +18,7 @@
             </t>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="this.onClickApply">
-                    Apply
+                    Update
                 </button>
                 <button class="btn btn-secondary" t-on-click="this.props.close">
                     Discard

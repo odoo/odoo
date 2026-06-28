@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from werkzeug.exceptions import Forbidden
 
-from odoo import _, fields
+from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.http import Controller, request, route
 
@@ -32,9 +32,11 @@ class MercadoPagoOnboardingController(Controller):
         provider_id = int(data["provider_id"])
         authorization_code = data.get("authorization_code")
         csrf_token = data.get("csrf_token")  # Could be missing if authorization was cancelled.
-        provider_sudo = request.env["payment.provider"].sudo().browse(provider_id).exists()
+        provider_sudo = self.env["payment.provider"].sudo().browse(provider_id).exists()
         if not provider_sudo or provider_sudo.code != "mercado_pago":
-            raise ValidationError(_("Could not find Mercado Pago provider %s", provider_sudo))
+            raise ValidationError(
+                self.env._("Could not find Mercado Pago provider %s", provider_sudo)
+            )
 
         # Verify the CSRF token.
         if not request.validate_csrf(csrf_token):
@@ -42,19 +44,19 @@ class MercadoPagoOnboardingController(Controller):
             raise Forbidden
 
         # Request and set the OAuth tokens on the provider.
-        action = request.env.ref("payment.action_payment_provider")
+        action = self.env.ref("payment.action_payment_provider")
         redirect_url = f"/odoo/action-{action.id}/{int(provider_sudo.id)}"
         if not authorization_code:  # The user cancelled the authorization.
             return request.redirect(redirect_url)
 
         # Fetch an access token using the authorization token.
-        proxy_payload = self.env["payment.provider"]._prepare_json_rpc_payload({
+        proxy_payload = {
             "authorization_code": authorization_code,
             "account_country_code": provider_sudo.mercado_pago_account_country_id.code.lower(),
-        })
+        }
         try:
             response_content = provider_sudo._send_api_request(
-                "POST", "/get_access_token", json=proxy_payload, is_proxy_request=True
+                "POST", "2/get_access_token", json=proxy_payload, is_proxy_request=True
             )
         except ValidationError as e:
             return request.render(
@@ -74,10 +76,12 @@ class MercadoPagoOnboardingController(Controller):
             "mercado_pago_refresh_token": response_content["refresh_token"],
             "mercado_pago_access_token_expiry": expires_in,
             "mercado_pago_public_key": response_content["public_key"],
-            # Enable the provider.
-            "state": "enabled",
+            # Set the provider live
+            "is_live": True,
             "is_published": True,
             "allow_tokenization": True,
         })
+        # Set the currency to the one compatible with the seller account.
+        provider_sudo._inverse_mercado_pago_account_country_id()
 
         return request.redirect(redirect_url)

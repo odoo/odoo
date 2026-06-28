@@ -8,10 +8,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('it')
     def _get_it_template_data(self):
-        return {
-            'property_account_receivable_id': '1501',
-            'property_account_payable_id': '2501',
-        }
+        return {}
 
     @template('it', 'res.company')
     def _get_it_res_company(self):
@@ -28,8 +25,12 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': '3111',
                 'account_sale_tax_id': '22v',
                 'account_purchase_tax_id': '22am',
+                'deferred_expense_account_id': '1902',
+                'deferred_revenue_account_id': '2702',
                 'expense_account_id': '4101',
                 'income_account_id': '3101',
+                'receivable_account_id': '1501',
+                'payable_account_id': '2501',
                 'account_stock_valuation_id': '1404',
             },
         }

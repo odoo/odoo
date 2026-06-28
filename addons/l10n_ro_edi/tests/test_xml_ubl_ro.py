@@ -150,7 +150,7 @@ class TestUBLROCommon(TestUBLCommon):
         super().setUpClass()
         cls.other_currency = cls.setup_other_currency('EUR')
         cls.company_data['company'].write({
-            'country_id': cls.env.ref('base.ro').id,  # needed to compute peppol_endpoint based on VAT
+            'country_id': cls.env.ref('base.ro').id,  # needed to compute routing_endpoint based on VAT
             'state_id': cls.env.ref('base.RO_B').id,
             'name': 'Hudson Construction',
             'city': 'SECTOR1',
@@ -251,25 +251,23 @@ class TestUBLRO(TestUBLROCommon):
 
     def test_export_invoice_without_country_code_prefix_in_vat(self):
         self.company_data['company'].write({'vat': '1234567897'})
-        self.partner_a.write({'vat': False, 'peppol_eas': False, 'peppol_endpoint': False})
+        self.partner_a.write({'vat': False, 'routing_identifier': False})
         invoice = self.create_move("out_invoice", currency_id=self.company.currency_id.id)
         attachment = self.get_attachment(invoice)
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_no_prefix_vat.xml')
 
-    def test_export_no_vat_but_have_company_registry(self):
-        self.company_data['company'].write({'vat': False, 'company_registry': 'RO1234567897'})
-        invoice = self.create_move("out_invoice", currency_id=self.company.currency_id.id)
-        attachment = self.get_attachment(invoice)
-        self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice.xml')
-
     def test_export_no_vat_but_have_company_registry_without_prefix(self):
-        self.company_data['company'].write({'vat': False, 'company_registry': '1234567897'})
-        self.partner_a.write({'vat': False, 'peppol_eas': False, 'peppol_endpoint': False})
+        self.company_data['company'].partner_id.write({
+            'vat': False,
+            'additional_identifiers': {'RO_EN': '1234567897'},
+        })
+        self.partner_a.write({'vat': False, 'routing_identifier': False})
         invoice = self.create_move("out_invoice", currency_id=self.company.currency_id.id)
         attachment = self.get_attachment(invoice)
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_no_prefix_company_registry.xml')
 
     def test_export_invoice_no_vat_prefix(self):
+        self.company_data['company'].partner_id.routing_identifier = False
         self.company_data['company'].vat = self.company_data['company'].vat[2:]
         no_vat_partner = self.partner_a.copy({'name': 'Roasted Romanian Roller', 'vat': False, 'invoice_edi_format': 'ciusro'})
         invoice = self.create_move("out_invoice", partner_id=no_vat_partner.id, currency_id=self.company.currency_id.id)
@@ -277,9 +275,13 @@ class TestUBLRO(TestUBLROCommon):
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_defaults.xml')
 
     def test_export_no_vat_and_no_company_registry_raises_error(self):
-        self.company_data['company'].write({'vat': False, 'company_registry': False})
+        self.company_data['company'].partner_id.write({
+            'vat': False,
+            'additional_identifiers': False,
+            'routing_identifier': False,
+        })
         invoice = self.create_move("out_invoice", send=False)
-        with self.assertRaisesRegex(UserError, "doesn't have a VAT nor Company ID"):
+        with self.assertRaisesRegex(UserError, "doesn't have a VAT nor any other Peppol-routable identifier"):
             invoice._generate_and_send(allow_fallback_pdf=False, template_id=self.move_template.id)
 
     def test_export_invoice_cpv_code(self):
@@ -290,7 +292,10 @@ class TestUBLRO(TestUBLROCommon):
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_cpv_code.xml')
 
     def test_export_constraints(self):
-        self.company_data['company'].company_registry = False
+        self.company_data['company'].partner_id.write({
+            'additional_identifiers': False,
+            'routing_identifier': False,
+        })
         for required_field in ('city', 'street', 'state_id', 'vat'):
             with self.assertRaisesRegex(UserError, "required"):
                 self.company_data["company"][required_field] = False
@@ -301,6 +306,42 @@ class TestUBLRO(TestUBLROCommon):
         invoice = self.create_move("out_invoice", send=False)
         with self.assertRaisesRegex(UserError, "city name must be 'SECTORX'"):
             invoice._generate_and_send(allow_fallback_pdf=False, template_id=self.move_template.id)
+
+    def test_export_invoice_characters_limit(self):
+        """ Test that 'Item name', 'Item description' and 'Note' don't exceed the limit accepted by the SPV:
+            - Item name: 100 characters limit
+            - Item description: 200 characters limit
+            - Note: 300 characters limit
+        """
+        product = self._create_product(
+            name='A product name that is longer than 100 characters in order to trigger a rejection of the invoice by the SPV.'
+        )
+        invoice = self._generate_move(
+            self.env.company.partner_id,
+            self.partner_a,
+            send=True,
+            move_type="out_invoice",
+            currency_id=self.company.currency_id.id,
+            invoice_line_ids=[
+                {
+                    'name': (
+                        'A product description that is longer than 200 characters in order to trigger a rejection of the invoice by the SPV. '
+                        'The product description should be trimmed to 200 characters if it is too long in order to pass the validation from the SPV.'
+                    ),
+                    'product_id': product.id,
+                    'quantity': 1.0,
+                    'price_unit': 500.0,
+                    'tax_ids': [Command.set(self.tax_19.ids)],
+                },
+            ],
+            narration=(
+                'A note that is longer than 300 charracters in order to trigger a rejection of the invoice by the SPV. '
+                'With this extra line, this note will exceed the limit of 300 characters that are authorized by the SPV. '
+                'A note should be trimmed to 300 characters if it is too long in order to pass the validation from the SPV.'
+           ),
+        )
+        attachment = self.get_attachment(invoice)
+        self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_characters_limit.xml')
 
     ####################################################
     # Testing of the bill synchronization with SPV
@@ -451,8 +492,9 @@ class TestUBLRO(TestUBLROCommon):
 
         self.env['account.move']._l10n_ro_edi_fetch_invoices()
 
-        self.assertEqual(invoice.l10n_ro_edi_state, 'invoice_refused')
+        self.assertEqual(invoice.l10n_ro_edi_state, "invoice_refused")
         self.assertEqual(len(invoice.l10n_ro_edi_document_ids), 1)
+        self.assertEqual(invoice.l10n_ro_edi_document_ids.state, 'invoice_refused')
 
     @patch('odoo.addons.l10n_ro_edi.models.account_move._request_ciusro_synchronize_invoices', new=_patch_request_ciusro_synchronize_invoices)
     def test_ciusro_synchronize_invoices_refusal_held_non_indexed(self):
@@ -474,8 +516,9 @@ class TestUBLRO(TestUBLROCommon):
 
         with freeze_time(invoice.create_date + relativedelta(days=HOLDING_DAYS + 2)):
             self.env['account.move']._l10n_ro_edi_fetch_invoices()
-        self.assertEqual(invoice.l10n_ro_edi_state, 'invoice_refused')
+        self.assertEqual(invoice.l10n_ro_edi_state, "invoice_refused")
         self.assertEqual(len(invoice.l10n_ro_edi_document_ids), 1)
+        self.assertEqual(invoice.l10n_ro_edi_document_ids.state, 'invoice_refused')
 
     @patch('odoo.addons.l10n_ro_edi.models.account_move._request_ciusro_synchronize_invoices', new=_patch_request_ciusro_synchronize_invoices)
     def test_ciusro_synchronize_invoices_not_indexed_with_duplicate_name(self):

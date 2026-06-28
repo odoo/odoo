@@ -1,4 +1,3 @@
-import { useExternalListener, useState } from "@web/owl2/utils";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { DebugMenu } from "@web/core/debug/debug_menu";
 import { localization } from "@web/core/l10n/localization";
@@ -8,7 +7,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
 
-import { Component, onMounted, onWillStart } from "@odoo/owl";
+import { Component, onMounted, onWillStart, proxy, useListener } from "@odoo/owl";
 import { router, routerBus } from "@web/core/browser/router";
 import { browser } from "@web/core/browser/browser";
 import { rpcBus } from "@web/core/network/rpc";
@@ -37,7 +36,7 @@ export class WebClient extends Component {
             );
         }
         this.localization = localization;
-        this.state = useState({
+        this.state = proxy({
             fullscreen: false,
         });
         useBus(routerBus, "ROUTE_CHANGE", async () => {
@@ -60,7 +59,7 @@ export class WebClient extends Component {
             // order to initialize themselves:
             this.env.bus.trigger("WEB_CLIENT_READY");
         });
-        useExternalListener(window, "click", this.onGlobalClick, { capture: true });
+        useListener(window, "click", this.onGlobalClick.bind(this), { capture: true });
         this.serviceWorkerActivationResolvers = Promise.withResolvers();
         this.serviceWorkerIsActivated = this.serviceWorkerActivationResolvers.promise;
         onWillStart(this.registerServiceWorker);
@@ -80,9 +79,7 @@ export class WebClient extends Component {
 
             if (matchingMenus.length > 0) {
                 // Use sessionStorage context to determine the correct menu
-                menuId = matchingMenus.find(m => 
-                    m.appID === storedMenuId
-                )?.appID;
+                menuId = matchingMenus.find((m) => m.appID === storedMenuId)?.appID;
                 if (!menuId) {
                     menuId = matchingMenus[0]?.appID;
                 }

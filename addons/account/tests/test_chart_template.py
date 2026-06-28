@@ -3,8 +3,8 @@ import io
 from markupsafe import Markup
 from unittest.mock import patch
 
-from odoo import Command
-from odoo.exceptions import UserError
+from odoo import Command, fields
+from odoo.exceptions import RedirectWarning
 from odoo.tests import tagged
 from odoo.addons.account.models.chart_template import code_translations, AccountChartTemplate, TEMPLATE_MODELS
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -51,9 +51,6 @@ def test_get_data(self, template_code, demo=False):
     return {
         'template_data': {
             'code_digits': 6,
-            'currency_id': self.env.ref('base.EUR').id,
-            'property_account_receivable_id': 'test_account_receivable_template',
-            'property_account_payable_id': 'test_account_payable_template',
         },
         'account.tax.group': {
             'tax_group_taxes': {
@@ -69,6 +66,8 @@ def test_get_data(self, template_code, demo=False):
                 'transfer_account_code_prefix': '3000',
                 'income_account_id': 'test_account_income_template',
                 'expense_account_id': 'test_account_expense_template',
+                'receivable_account_id': 'test_account_receivable_template',
+                'payable_account_id': 'test_account_payable_template',
                 'account_sale_tax_id': 'test_tax_1_template',
             },
         },
@@ -369,6 +368,55 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             fiscal_position.map_account(self.env['account.chart.template'].ref('test_account_3_template')),
             self.env['account.chart.template'].ref('test_account_4_template'),
         )
+
+    def test_reload_journals_create_new_without_updating_existing(self):
+        """Reloading a chart should not overwrite existing journal customizations."""
+        purchase_journal = self.env['account.chart.template'].ref('purchase')
+        manual_default_account = self.env['account.chart.template'].ref('test_account_income_template')
+
+        # Simulate manual user input
+        purchase_journal.write({
+            'color': 7,
+            'default_account_id': manual_default_account.id,
+            'non_deductible_account_id': False,
+        })
+        self.env.invalidate_all()
+        self.env.cr._now = fields.Datetime.now()
+        self.env.cr.execute("UPDATE account_journal SET write_date = %s WHERE id = %s", [self.env.cr.now(), purchase_journal.id])
+
+        def local_get_data(self, template_code, demo=False):
+            data = test_get_data(self, template_code)
+            data['account.journal']['purchase']['color'] = 3
+            data['account.journal']['purchase']['default_account_id'] = 'test_account_expense_template'
+            data['account.journal']['purchase']['non_deductible_account_id'] = 'test_account_expense_template'
+            data['account.journal']['new_general'] = {
+                'name': 'New General Journal',
+                'type': 'general',
+                'code': 'NEW',
+                'color': 5,
+            }
+            return data
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
+
+        self.assertRecordValues(purchase_journal, [{
+            'color': 7,
+            'default_account_id': manual_default_account.id,
+            'non_deductible_account_id': False,
+        }])
+        self.assertRecordValues(self.env['account.chart.template'].ref('new_general'), [{
+            'name': 'New General Journal',
+            'type': 'general',
+            'code': 'NEW',
+            'color': 5,
+        }])
+
+        purchase_journal.default_account_id = False
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
+
+        self.assertFalse(purchase_journal.default_account_id)
 
     def test_remove_fiscal_position_try_loading_force_create_false(self):
         """Test that removing a fiscal position and calling try_loading with force_create=False does not recreate it."""
@@ -758,6 +806,25 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             # silently ignore if the field doesn't exist (yet)
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
 
+    def test_unknown_template_data_keys(self):
+        """ Tests that if a key is not in TEMPLATE_DATA_KEYS when the context value
+        'l10n_check_fields_complete' is set, an error is raised. Without the context,
+        the key is silently removed."""
+
+        def local_get_data(self, template_code, demo=False):
+            data = test_get_data(self, template_code)
+            data['template_data']['unknown_template_data_key'] = 'some_value'
+            return data
+
+        company = self.company
+        company.chart_template = False
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            with self.assertRaisesRegex(ValueError, 'unknown_template_data_key'):
+                self.env['account.chart.template'].with_context(l10n_check_fields_complete=True).try_loading('test', company=company, install_demo=False)
+
+            self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
+
     def test_branch(self):
         # Test the auto-installation of a chart template (including demo data) on a branch
         # Create a new main company, because install_demo doesn't do anything when reloading data
@@ -846,7 +913,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
                 Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'tax'}),
             ]
         }
-        with self.assertRaisesRegex(UserError, 'update your localization'):
+        with self.assertRaisesRegex(RedirectWarning, 'update your localization'):
             self.env['account.chart.template']._deref_account_tags('test', {'tax1': tax_to_load})
 
     def test_install_with_translations(self):
@@ -1112,3 +1179,33 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
         self.assertEqual(company.chart_template, 'test')
+
+    def test_reload_template_with_account_missing_code(self):
+        """
+        Test that chart template loading works correctly when an account without a code exists.
+        """
+        account = self.env['account.account'].search([('code', '=', '411111')])
+        self.assertTrue(account)
+
+        account.code = False
+        # Reload the chart template.
+        self._use_chart_template(self.company)
+
+        self.assertFalse(account.code)
+
+    def test_install_module_partial_data(self):
+        company = self.env['res.company'].create({'name': 'Test Company'})
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
+
+        def new_module_data(self, template_code):
+            return {
+                'template_data': {},
+                'account.tax': {'deleted_xmlid': {'amount': 5}},  # if the xmlid didn't exist, assume it was deleted and don't block
+            }
+        with (
+            patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=new_module_data, autospec=True),
+            self.assertLogs('odoo.addons.account.models.chart_template', level='WARN') as log_cm,
+        ):
+            self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
+        self.assertIn("reloading the CoA for 'deleted_xmlid'", log_cm.output[0])

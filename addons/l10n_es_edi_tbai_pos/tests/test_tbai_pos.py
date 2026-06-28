@@ -80,6 +80,10 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
         self.assertEqual(pos_refund.state, 'paid')
         self.assertEqual(pos_refund.l10n_es_tbai_state, 'sent')
 
+        orig_num = order.l10n_es_tbai_post_document_id._get_tbai_sequence_and_number()[1]
+        refund_num = pos_refund.l10n_es_tbai_post_document_id._get_tbai_sequence_and_number()[1]
+        self.assertNotEqual(orig_num, refund_num)
+
     def test_tbai_refund_invoiced_pos_order(self):
         self.ten_dollars_with_10_incl.product_variant_id.lst_price = 100
         order, _ = self.create_backend_pos_order({

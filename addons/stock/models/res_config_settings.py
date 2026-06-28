@@ -31,28 +31,17 @@ class ResConfigSettings(models.TransientModel):
     stock_move_email_validation = fields.Boolean(related='company_id.stock_move_email_validation', readonly=False)
     module_stock_sms = fields.Boolean("SMS Confirmation")
     module_delivery = fields.Boolean("Delivery Methods")
-    module_delivery_dhl = fields.Boolean("DHL Express Connector")
-    module_delivery_fedex_rest = fields.Boolean("FedEx Connector")
-    module_delivery_ups_rest = fields.Boolean("UPS Connector")
-    module_delivery_usps_rest = fields.Boolean("USPS Connector")
-    module_delivery_bpost = fields.Boolean("bpost Connector")
-    module_delivery_easypost = fields.Boolean("Easypost Connector")
-    module_delivery_sendcloud = fields.Boolean("Sendcloud Connector")
-    module_delivery_shiprocket = fields.Boolean("Shiprocket Connector")
-    module_delivery_starshipit = fields.Boolean("Starshipit Connector")
-    module_delivery_envia = fields.Boolean("Envia.com Connector")
     module_quality_control = fields.Boolean("Quality")
     module_quality_control_worksheet = fields.Boolean("Quality Worksheet")
     group_stock_multi_locations = fields.Boolean('Storage Locations', implied_group='stock.group_stock_multi_locations',
         help="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.")
     annual_inventory_month = fields.Selection(related='company_id.annual_inventory_month', readonly=False)
     annual_inventory_day = fields.Integer(related='company_id.annual_inventory_day', readonly=False)
-    group_stock_reception_report = fields.Boolean("Reception Report", implied_group='stock.group_reception_report')
     module_stock_dropshipping = fields.Boolean("Dropshipping")
     barcode_separator = fields.Char(
         "Separator", config_parameter='stock.barcode_separator',
         help="Character(s) used to separate data contained within an aggregate barcode (i.e. a barcode containing multiple barcode encodings)")
-    module_stock_fleet = fields.Boolean("Dispatch Management System")
+    module_stock_fleet = fields.Boolean("Transport Management")
     replenish_on_order = fields.Boolean("Replenish on Order (MTO)", compute='_compute_replenish_on_order', inverse='_inverse_replenish_on_order')
     stock_text_confirmation = fields.Boolean(related='company_id.stock_text_confirmation', string='Stock Text Validation with stock move', readonly=False)
     stock_confirmation_type = fields.Selection(related='company_id.stock_confirmation_type', string='Stock Text Validation type', readonly=False)
@@ -155,4 +144,9 @@ class ResConfigSettings(models.TransientModel):
             if self.env['product.product'].search_count([('tracking', 'in', ['lot', 'serial'])], limit=1):
                 raise UserError(_("You have product(s) in stock that have lot/serial number tracking enabled. \nSwitch off tracking on all the products before switching off this setting."))
 
+        return
+
+    def action_view_delivery_methods(self):
+        if action := self.env.ref('delivery.action_delivery_carrier_form', raise_if_not_found=False):
+            return action._get_action_dict()
         return

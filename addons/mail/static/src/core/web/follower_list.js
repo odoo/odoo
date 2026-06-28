@@ -1,28 +1,26 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useVisible } from "@mail/utils/common/hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { Follower } from "@mail/core/web/follower";
 import { FollowerSubtypeDialog } from "@mail/core/web/follower_subtype_dialog";
-
-/**
- * @typedef {Object} Props
- * @property {function} [onAddFollowers]
- * @property {function} [onFollowerChanged]
- * @property {import('@mail/core/common/thread_model').Thread} thread
- * @extends {Component<Props, Env>}
- */
 
 export class FollowerList extends Component {
     static template = "mail.FollowerList";
     static components = { DropdownItem, Follower };
-    static props = ["onAddFollowers?", "onFollowerChanged?", "thread", "dropdown"];
 
     setup() {
         super.setup();
         this.action = useService("action");
         this.store = useService("mail.store");
+        this.props = props({
+            dropdown: types.instanceOf(DropdownState),
+            onAddFollowers: types.function([]).optional(),
+            onFollowerChanged: types.function([]).optional(),
+            thread: types.instanceOf(this.store["mail.thread"].Class),
+        });
         useVisible("load-more", (isVisible) => {
             if (isVisible) {
                 this.props.thread.loadMoreFollowers();
@@ -53,21 +51,23 @@ export class FollowerList extends Component {
     }
 
     async onClickFollow() {
-        this.props.thread.follow();
-        this.props.onFollowerChanged?.();
+        const { thread } = this.props;
+        await thread.follow();
+        this.props.onFollowerChanged?.(thread);
     }
 
     async onClickUnfollow() {
-        if (this.props.thread.selfFollower) {
-            await this.props.thread.selfFollower.remove();
-            this.props.onFollowerChanged?.();
+        const { thread } = this.props;
+        if (thread.selfFollower) {
+            await thread.selfFollower.remove();
+            this.props.onFollowerChanged?.(thread);
         }
     }
 
     async onClickEdit() {
         this.env.services.dialog.add(FollowerSubtypeDialog, {
             follower: this.props.thread.selfFollower,
-            onFollowerChanged: () => this.props.onFollowerChanged?.(),
+            onFollowerChanged: (thread) => this.props.onFollowerChanged?.(thread),
         });
         this.props.dropdown.close();
     }

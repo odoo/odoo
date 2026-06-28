@@ -28,6 +28,37 @@ li {
     }
 }
 
+.o_customer_display_sidebar .o_customer_display_footer {
+    display: none !important;
+
+    @include media-breakpoint-up(md) {
+        display: flex !important;
+    }
+    @media (orientation: portrait) {
+        display: none !important;
+    }
+}
+
+.o_customer_display_main .o_customer_display_footer {
+    display: flex !important;
+
+    @include media-breakpoint-up(md) {
+        display: none !important;
+    }
+    @media (orientation: portrait) {
+        display: flex !important;
+    }
+}
+
+.order-container {
+    @include media-breakpoint-up(md) {
+        padding-top: 16px !important;
+    }
+    @media (orientation: portrait) {
+        padding-top: 0 !important;
+    }
+}
+
 .o_customer_display_logo img {
     max-height: 10rem;
 
@@ -60,7 +91,6 @@ li {
 .o_customer_display_orderline {
     scroll-snap-align: center;
     animation: item_in 1s ease;
-    padding: 0 !important;
 
     &:not(:last-child) {
         border-bottom: $border-width solid $border-color;

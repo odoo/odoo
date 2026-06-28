@@ -9,16 +9,14 @@ class AccountChartTemplate(models.AbstractModel):
     @template('dz')
     def _get_dz_template_data(self):
         return {
-            'property_account_receivable_id': 'l10n_dz_413',
-            'property_account_payable_id': 'l10n_dz_401',
             'code_digits': 6,
-            'display_invoice_amount_total_words': True,
         }
 
     @template('dz', 'res.company')
     def _get_dz_res_company(self):
         return {
             self.env.company.id: {
+                'display_invoice_amount_total_words': True,
                 'account_fiscal_country_id': 'base.dz',
                 'bank_account_code_prefix': '512',
                 'cash_account_code_prefix': '53',
@@ -34,6 +32,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'l10n_dz_vat_purchase_19',
                 'expense_account_id': 'l10n_dz_600',
                 'income_account_id': 'l10n_dz_700',
+                'receivable_account_id': 'l10n_dz_413',
+                'payable_account_id': 'l10n_dz_401',
                 'account_stock_valuation_id': 'l10n_dz_31',
             },
         }

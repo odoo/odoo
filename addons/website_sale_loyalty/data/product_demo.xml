@@ -3,4 +3,21 @@
     <record id="loyalty.gift_card_product_50" model="product.product">
         <field name="is_published" eval="True"/>
     </record>
+    <!-- Free Shipping promotion -->
+    <record id="free_shipping_promotion" model="loyalty.program">
+        <field name="name">Free Shipping</field>
+        <field name="program_type">promotion</field>
+        <field name="trigger">auto</field>
+    </record>
+
+    <record id="free_shipping_promotion_rule" model="loyalty.rule">
+        <field name="minimum_amount">1000</field>
+        <field name="product_category_id" ref="product.product_category_furniture"/>
+        <field name="program_id" ref="free_shipping_promotion"/>
+    </record>
+
+    <record id="free_shipping_promotion_reward" model="loyalty.reward">
+        <field name="reward_type">shipping</field>
+        <field name="program_id" ref="free_shipping_promotion"/>
+    </record>
 </odoo>

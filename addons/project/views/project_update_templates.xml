@@ -15,7 +15,7 @@
     <template id="project_update_default_description" name="Project Update Description">
 <!--As this template is rendered in an html field, the spaces may be interpreted as nbsp while editing. -->
 <div name="summary">
-<br/><h1 style="font-weight: bolder;">Summary</h1>
+<h1 style="font-weight: bolder;">Summary</h1>
 <br/><p>How’s this project going?</p><br/><br/>
 </div>
 
@@ -37,19 +37,6 @@
 </li>
 </t>
 </ul>
-
-<t t-if="milestones['updated']">
-<t t-if="milestones['last_update_date']">Since <t t-out="milestones['last_update_date']" t-options='{"widget": "date"}'/> (last project update), </t>
-<t t-if="len(milestones['updated']) > 1">the deadline for the following milestones has been updated:</t>
-<t t-else="">the deadline for the following milestone has been updated:</t>
-<ul>
-<t t-foreach="milestones['updated']" t-as="milestone">
-<li>
-<t t-out="milestone['name']"/> (<t t-out="milestone['old_value']" t-options='{"widget": "date"}'/> =&gt; <t t-out="milestone['new_value']"  t-options='{"widget": "date"}'/>)
-</li>
-</t>
-</ul>
-</t>
 
 <t t-if="milestones['created']">
 <t t-if="len(milestones['created']) > 1">The following milestones have been added:</t>

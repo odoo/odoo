@@ -5,10 +5,15 @@
     'description': """
 Allows to display sale information in the SOL services apps
 ===========================================================
-Additional information is displayed in the name of the SOL when it is used in services apps (project and planning). 
+Additional information is displayed in the name of the SOL when it is used in services apps (project and planning).
 """,
     'category': 'Sales/Sales',
     'depends': ['sale_management'],
+    'assets': {
+        'web.assets_backend': [
+            'sale_service/static/src/**/*',
+        ],
+    },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -1,17 +1,13 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { hasTouch } from "@web/core/browser/feature_detection";
 import { Domain } from "@web/core/domain";
 import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { utils } from "@web/core/ui/ui_service";
 import { exprToBoolean } from "@web/core/utils/strings";
-import { debounce } from "@web/core/utils/timing";
 import { getFieldContext } from "@web/model/relational_model/utils";
 import { X2M_TYPES, getClassNameFromDecoration } from "@web/views/utils";
-import { positionInputBoxOverlay } from "@web/core/input_box/input_box";
 import { getTooltipInfo } from "./field_tooltip";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, t, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 const isSmall = utils.isSmall;
@@ -31,9 +27,9 @@ const validFieldTypes = {
     properties_definition: { availableOffline: false },
     reference: { availableOffline: false },
     many2one_reference: { availableOffline: false },
-    many2one: { availableOffline: false },
+    many2one: { availableOffline: true },
     one2many: { availableOffline: false },
-    many2many: { availableOffline: false },
+    many2many: { availableOffline: true },
     selection: { availableOffline: true },
     date: { availableOffline: true },
     datetime: { availableOffline: true },
@@ -42,83 +38,74 @@ const validFieldTypes = {
     html: { availableOffline: true },
 };
 
-const supportedInfoValidation = {
-    type: Array,
-    element: Object,
-    shape: {
-        label: String,
-        name: String,
-        type: String,
-        availableTypes: { type: Array, element: String, optional: true },
-        default: { type: String, optional: true },
-        help: { type: String, optional: true },
-        choices: /* choices if type == selection */ {
-            type: Array,
-            element: Object,
-            shape: { label: String, value: String },
-            optional: true,
-        },
+const supportedInfoValidation = t.array(
+    t.object({
+        label: t.string(),
+        name: t.string(),
+        type: t.string(),
+        availableTypes: t.array(t.string()).optional(),
+        default: t.any().optional(),
+        help: t.string().optional(),
+        choices: /* choices if type == selection */ t
+            .array(
+                t.object({
+                    label: t.string(),
+                    value: t.any(),
+                })
+            )
+            .optional(),
         /**
          * If true, the listed fields come from the relation.
          * e.g.: the field is a relational one like many2many_tags, so
          * property 'field' will search on the relation.
          * */
-        isRelationalField: { type: Boolean, optional: false },
-    },
-    optional: true,
-};
+        isRelationalField: t.boolean().optional(),
+    })
+);
 
-fieldRegistry.addValidation({
-    component: { validate: (c) => c.prototype instanceof Component },
-    displayName: { type: String, optional: true },
-    supportedAttributes: supportedInfoValidation,
-    supportedOptions: supportedInfoValidation,
-    supportedTypes: {
-        type: Array,
-        element: String,
-        optional: true,
-        validate: (array) => array.every((x) => x in validFieldTypes),
-    },
-    extractProps: { type: Function, optional: true },
-    isEmpty: { type: Function, optional: true },
-    isValid: { type: Function, optional: true }, // Override the validation for the validation visual feedbacks
-    additionalClasses: { type: Array, element: String, optional: true },
-    fieldDependencies: {
-        type: [Function, { type: Array, element: Object, shape: { name: String, type: String } }],
-        optional: true,
-    },
-    relatedFields: {
-        type: [
-            Function,
-            {
-                type: Array,
-                element: Object,
-                shape: {
-                    name: String,
-                    type: String,
-                    readonly: { type: Boolean, optional: true },
-                    selection: { type: Array, element: { type: Array, element: String } },
-                    optional: true,
-                },
-            },
-        ],
-        optional: true,
-    },
-    useSubView: { type: Boolean, optional: true },
-    label: { type: [String, { value: false }], optional: true },
-    listViewWidth: {
-        type: [
-            Number,
-            {
-                type: Array,
-                element: Number,
-                validate: (array) => array.length === 1 || array.length === 2,
-            },
-            Function,
-        ],
-        optional: true,
-    },
-});
+fieldRegistry.addValidation(
+    t.object({
+        component: t.component(),
+        displayName: t.string().optional(),
+        supportedAttributes: supportedInfoValidation.optional(),
+        supportedOptions: supportedInfoValidation.optional(),
+        supportedTypes: t
+            .customValidator(t.array(t.string()), (array) =>
+                array.every((x) => x in validFieldTypes)
+            )
+            .optional(),
+        extractProps: t.function().optional(),
+        isEmpty: t.function().optional(),
+        isValid: t.function().optional(), // Override the validation for the validation visual feedbacks
+        additionalClasses: t.array(t.string()).optional(),
+        fieldDependencies: t
+            .or([t.function(), t.array(t.object({ name: t.string(), type: t.string() }))])
+            .optional(),
+        relatedFields: t
+            .or([
+                t.function(),
+                t.array(
+                    t.object({
+                        name: t.string(),
+                        type: t.string(),
+                        readonly: t.boolean().optional(),
+                        selection: t.array(t.tuple([t.any(), t.string()])).optional(),
+                    })
+                ),
+            ])
+            .optional(),
+        useSubView: t.boolean().optional(),
+        label: t.or([t.string(), t.literal(false)]).optional(),
+        listViewWidth: t
+            .or([
+                t.number(),
+                t.tuple([t.number()]),
+                t.tuple([t.number(), t.number()]),
+                t.function(),
+            ])
+            .optional(),
+    })
+);
 
 class DefaultField extends Component {
     static template = xml``;
@@ -365,44 +352,12 @@ export class Field extends Component {
 
     setup() {
         this.offlineService = useService("offline");
-        this.fieldRef = useRef("fieldRef");
-
-        this.debouncedOverlayPositioning = debounce(() => {
-            positionInputBoxOverlay(this.fieldRef.el);
-        }, 500);
         if (this.props.fieldInfo) {
             this.field = this.props.fieldInfo.field;
         } else {
             const fieldType = this.props.record.fields[this.props.name].type;
             this.field = getFieldFromRegistry(fieldType, this.props.type);
         }
-
-        useLayoutEffect(
-            () => {
-                this.debouncedOverlayPositioning();
-            },
-            () => [this.props.record.data]
-        );
-
-        useLayoutEffect(
-            (fieldEl) => {
-                if (!fieldEl) {
-                    return;
-                }
-                positionInputBoxOverlay(fieldEl);
-                if (hasTouch() && this.props.fieldInfo?.viewType === "form") {
-                    const focusIn = () => this.onFieldFocus(true);
-                    const focusOut = () => this.onFieldFocus(false);
-                    fieldEl.addEventListener("focusin", focusIn);
-                    fieldEl.addEventListener("focusout", focusOut);
-                    return () => {
-                        fieldEl.removeEventListener("focusin", focusIn);
-                        fieldEl.removeEventListener("focusout", focusOut);
-                    };
-                }
-            },
-            () => [this.fieldRef.el]
-        );
     }
 
     get classNames() {

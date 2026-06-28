@@ -13,9 +13,6 @@
     <xpath expr="//div[@id='wrapwrap']" position="attributes">
         <attribute name="t-att-data-forum_id">forum and forum.id</attribute>
     </xpath>
-    <xpath expr="//body" position="inside">
-        <script t-if="seo_microdata" type="application/ld+json" t-out="seo_microdata"></script>
-    </xpath>
 </template>
 
 <!-- PAGE INDEX -->
@@ -56,10 +53,8 @@
                                 data-bs-placement="top"
                                 title="Favorite"/>
                         </a>
-                        <t t-if="question.state == 'active'" t-call="website_forum.follow"
-                            object="question"
-                            icons_design="True"
-                            btn_classes="'opacity-50 opacity-100-hover' "/>
+                        <t t-if="question.state == 'active'" t-call="website_forum.follow_button"
+                            object="question" btn_classes.f="opacity-50 opacity-100-hover"/>
                     </div>
                 </div>
             </div>
@@ -158,19 +153,9 @@
                 </div>
                 <!-- 'Search Box' -->
                 <t t-if="question_count or tags" t-call="website.website_search_box_input"
-                    display_description.f="false"
-                    display_detail.f="true"
                     _form_classes.f="flex-grow-1"
-                    _input_classes.f="border-0 bg-light"
-                    _submit_classes.f="btn-light">
-                    <t t-if="_page_name == 'tags'">
-                        <t t-set="search_type" t-value="'forum_tags_only'"/>
-                        <t t-set="action" t-value="'/forum/%s/tag' % (_forum_slug)"/>
-                    </t>
-                    <t t-else="">
-                        <t t-set="search_type" t-value="'forums'"/>
-                        <t t-set="action" t-value="'/forum/%s' % (_forum_slug)"/>
-                    </t>
+                    search_type="'forums' if _page_name != 'tags' else 'forum_tag'"
+                    action="'/forum/%s' % (_forum_slug)">
                     <input t-if="filters" type="hidden" name="filters" t-att-value="filters"/>
                     <input t-if="my" type="hidden" name="my" t-att-value="my"/>
                     <input t-if="sorting" type="hidden" name="sorting" t-att-value="sorting"/>
@@ -207,7 +192,10 @@
             </div>
         </t>
         <t t-else="">
-            <div class="oe_structure" id="oe_structure_website_forum_header_1"/>
+            <t t-set="editor_message">Drag blocks here to add them on all forum</t>
+            <div class="oe_structure oe_empty" id="oe_structure_website_forum_header_1" t-att-data-editor-message="editor_message"/>
+            <div id="website_forum_welcome_header"/>
+            <div class="oe_structure oe_empty" id="oe_structure_website_forum_header_2" t-att-data-editor-message="editor_message"/>
             <div id="wrap" t-attf-class="o_wforum_wrapper position-relative container row mx-auto px-0 #{ 'h-100' if forum_welcome_message else ''} #{website_forum_action}">
                 <t t-set="_forum_slug" t-value="slug(forum) if forum else 'all'"/>
                 <t t-set="_forum_path" t-value="url_for('/forum') + '/' + _forum_slug"/>
@@ -224,6 +212,7 @@
                     </div>
                 </div>
             </div>
+            <div class="oe_structure oe_empty" id="oe_structure_website_forum_footer_1" t-att-data-editor-message="editor_message"/>
         </t>
     </t>
 </template>
@@ -272,7 +261,7 @@
         <a t-attf-href="/profile/user/#{ uid }?forum_id=#{ forum.id if forum else '' }"
             class="btn w-100 py-1 text-start d-flex align-items-center" data-bs-toggle="tooltip" data-trigger="hover"
             title="My profile">
-            <img class="o_wforum_avatar rounded-circle object-fit-cover" t-att-src="request.website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
+            <img class="o_wforum_avatar rounded-circle object-fit-cover" t-att-src="website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
             <div class="d-flex flex-column justify-content-center ms-2">
                 <span class="mt-0 mb-1 h6-fs fw-bold" t-out="user_id.name"/>
                 <span class="fs-6 text-reset opacity-50"><t t-out="user_id.karma"/> XP</span>
@@ -348,13 +337,13 @@
     </div>
 </template>
 
-<template id="header_welcome_message" inherit_id="website_forum.header" name="Forum Welcome Message (oe_structure_forum_top)">
-    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_website_forum_header_1']" position="replace">
-        <div t-if="forum" class="oe_structure oe_empty" id="oe_structure_website_forum_header_1">
-            <section t-if="editable or (is_public_user and not forum_welcome_message)" t-attf-class="s_cover parallax s_parallax_is_fixed bg-black-50 pt48 pb48 #{'css_non_editable_mode_hidden' if editable else 'forum_intro'}" data-scroll-background-ratio="1" data-snippet="s_cover">
+<template id="header_welcome_message" inherit_id="website_forum.header" name="Forum Welcome Message">
+    <xpath expr="//div[@id='website_forum_welcome_header']" position="inside">
+        <div t-if="forum">
+            <section t-if="editable or translatable or (is_public_user and not forum_welcome_message)" t-attf-class="s_cover parallax s_parallax_is_fixed bg-black-50 pt48 pb48 #{'css_non_editable_mode_hidden' if editable or translatable else 'forum_intro'}" data-scroll-background-ratio="1" data-snippet="s_cover">
                 <t t-if="forum.image_1920">
                     <span class="s_parallax_bg_wrap">
-                        <span class="s_parallax_bg oe_img_bg" t-attf-style="background-image: url('#{request.website.image_url(forum, 'image_1920')}'); background-position: center;"/>
+                        <span class="s_parallax_bg oe_img_bg" t-attf-style="background-image: url('#{website.image_url(forum, 'image_1920')}'); background-position: center;"/>
                     </span>
                 </t>
                 <div t-if="forum.image_1920" class="o_we_bg_filter bg-black-50"/>

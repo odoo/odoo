@@ -1,4 +1,8 @@
-import { addBusMessageHandler, busModels } from "@bus/../tests/bus_test_helpers";
+import {
+    addBusMessageHandler,
+    busModels,
+    waitUntilSubscribe,
+} from "@bus/../tests/bus_test_helpers";
 import {
     after,
     before,
@@ -9,7 +13,7 @@ import {
     test,
 } from "@odoo/hoot";
 import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
-import { Deferred, microTick } from "@odoo/hoot-mock";
+import { microTick } from "@odoo/hoot-mock";
 import {
     MockServer,
     authenticate,
@@ -32,22 +36,27 @@ import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
 import { click, contains } from "./mail_test_helpers_contains";
 
 import { closeStream, mailGlobal } from "@mail/utils/common/misc";
-import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
+import { Component, onMounted, onPatched } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 import { registry } from "@web/core/registry";
 import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 export { SIZES } from "@web/core/ui/ui_service";
+import { IndexedDB } from "@web/core/utils/indexed_db";
 
-import {
-    DISCUSS_ACTION_ID,
-    authenticateGuest,
-    mailDataHelpers,
-} from "./mock_server/mail_mock_server";
+import { SoundEffects } from "@mail/core/common/sound_effects_service";
+import { Store as StoreService } from "@mail/core/common/store_service";
+import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
+import { Network, Rtc } from "@mail/discuss/call/common/rtc_service";
+import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
+import { makeRecordFieldLocalId } from "@mail/model/misc";
+import { LocalStorageEntry } from "@mail/utils/common/local_storage";
+import { DISCUSS_ACTION_ID, authenticateGuest } from "./mock_server/mail_mock_server";
 import { Base } from "./mock_server/mock_models/base";
+import { DiscussCallHistory } from "./mock_server/mock_models/discuss_call_history";
 import { DiscussCategory } from "./mock_server/mock_models/discuss_category";
 import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
 import { DiscussChannelMember } from "./mock_server/mock_models/discuss_channel_member";
@@ -57,6 +66,7 @@ import { DiscussVoiceMetadata } from "./mock_server/mock_models/discuss_voice_me
 import { IrAttachment } from "./mock_server/mock_models/ir_attachment";
 import { IrWebSocket } from "./mock_server/mock_models/ir_websocket";
 import { M2xAvatarUser } from "./mock_server/mock_models/m2x_avatar_user";
+import { MailCallArtifact } from "./mock_server/mock_models/mail_call_artifact";
 import { MailActivity } from "./mock_server/mock_models/mail_activity";
 import { MailActivitySchedule } from "./mock_server/mock_models/mail_activity_schedule";
 import { MailActivityType } from "./mock_server/mock_models/mail_activity_type";
@@ -74,7 +84,6 @@ import { MailPushDevice } from "./mock_server/mock_models/mail_push_device";
 import { MailScheduledMessage } from "./mock_server/mock_models/mail_scheduled_message";
 import { MailTemplate } from "./mock_server/mock_models/mail_template";
 import { MailThread } from "./mock_server/mock_models/mail_thread";
-import { MailTrackingValue } from "./mock_server/mock_models/mail_tracking_value";
 import { ResCountry } from "./mock_server/mock_models/res_country";
 import { ResFake } from "./mock_server/mock_models/res_fake";
 import { ResLang } from "./mock_server/mock_models/res_lang";
@@ -83,12 +92,7 @@ import { ResRole } from "./mock_server/mock_models/res_role";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
-import { Network, Rtc } from "@mail/discuss/call/common/rtc_service";
-import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
-import { SoundEffects } from "@mail/core/common/sound_effects_service";
-import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
-import { makeRecordFieldLocalId } from "@mail/model/misc";
-import { LocalStorageEntry } from "@mail/utils/common/local_storage";
+import { Store } from "./mock_server/store";
 
 export * from "./mail_test_helpers_contains";
 
@@ -128,6 +132,7 @@ export const mailModels = {
     ...webModels,
     ...busModels,
     Base,
+    DiscussCallHistory,
     DiscussChannel,
     DiscussCategory,
     DiscussChannelMember,
@@ -137,6 +142,7 @@ export const mailModels = {
     IrAttachment,
     IrWebSocket,
     M2xAvatarUser,
+    MailCallArtifact,
     MailActivity,
     MailActivitySchedule,
     MailActivityType,
@@ -154,7 +160,6 @@ export const mailModels = {
     MailScheduledMessage,
     MailTemplate,
     MailThread,
-    MailTrackingValue,
     ResCountry,
     ResFake,
     ResLang,
@@ -338,6 +343,7 @@ let discussAsTabId = 0;
  *  asTab?: boolean;
  *  authenticateAs?: any | { login: string; password: string; };
  *  env?: Partial<OdooEnv>;
+ *  waitUntilSubscribe?: boolean;
  * }} [options]
  */
 export async function start(options) {
@@ -374,10 +380,10 @@ export async function start(options) {
     if ("res.users" in pyEnv) {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = pyEnv["res.users"];
-        const store = new mailDataHelpers.Store();
+        const store = new Store();
         ResUsers._init_store_data(store);
         patchWithCleanup(session, {
-            storeData: store.get_result(),
+            storeData: store.as_dict(),
         });
         registerDebugInfo("session.storeData", session.storeData);
     }
@@ -393,17 +399,26 @@ export async function start(options) {
         addSwitchTabDropdownItem(rootTarget, target);
         const selector = `.o-mail-Discuss-asTabContainer[data-as-tab-id="${target.dataset.asTabId}"]`;
         env = await makeMockEnv({ discussAsTabId, selector }, { makeNew: true });
-    } else {
-        env = getMockEnv() || (await makeMockEnv({}));
     }
-    env.testEnv = true;
     patchWithCleanup(SoundEffects.prototype, {
         _setAudioSrc(audio, srcPath) {
             audio["data-src"] = srcPath;
         },
     });
-    await mountWithCleanup(WebClient, { env, target });
-    await loadEmoji();
+    await Promise.all([
+        options?.waitUntilSubscribe === false ? Promise.resolve() : waitUntilSubscribe(),
+        mountWithCleanup(WebClient, { env, target }),
+    ]);
+    // Note that loading the emojis cannot be called before setting up the env because
+    // it depends on translations being loaded.
+    await emojiLoader.load();
+    env ||= getMockEnv();
+    const storeService = env.services["mail.store"];
+    const popoutService = env.services["mail.popout"];
+    after(() => {
+        storeService._runDisposeFns();
+        popoutService.resetAll();
+    });
     return Object.assign(env, { ...options?.env, target });
 }
 
@@ -534,6 +549,99 @@ export function mockGetMedia() {
 }
 
 /**
+ * Intercept the browser's native fullscreen API so tests can drive it without a real user
+ * gesture. `document.fullscreenElement` and the `fullscreenchange` event are simulated, letting
+ * the `mail.fullscreen` service derive its `isBrowserFullscreen` state from a controllable source.
+ *
+ * @param {Object} [param0]
+ * @param {boolean} [param0.grant=true] Whether fullscreen requests are granted. When `false`,
+ *  `requestFullscreen` resolves without entering fullscreen (as a browser does without a user
+ *  gesture), so callers fall back to the windowed overlay.
+ * @returns {{ isBrowserFullscreen: () => boolean, leaveBrowserFullscreen: () => void }}
+ *  `isBrowserFullscreen` reads the simulated state; `leaveBrowserFullscreen` simulates the user
+ *  leaving fullscreen externally (e.g. with the Escape key).
+ */
+export function mockBrowserFullscreen({ grant = true } = {}) {
+    let fullscreenElement = null;
+    function setFullscreenElement(element) {
+        if (fullscreenElement === element) {
+            return;
+        }
+        fullscreenElement = element;
+        window.dispatchEvent(new Event("fullscreenchange"));
+    }
+    Object.defineProperty(document, "fullscreenElement", {
+        configurable: true,
+        get: () => fullscreenElement,
+    });
+    after(() => delete document.fullscreenElement);
+    patchWithCleanup(document.body, {
+        async requestFullscreen() {
+            if (grant) {
+                setFullscreenElement(document.body);
+            }
+        },
+    });
+    patchWithCleanup(document, {
+        async exitFullscreen() {
+            setFullscreenElement(null);
+        },
+    });
+    return {
+        isBrowserFullscreen: () => Boolean(fullscreenElement),
+        leaveBrowserFullscreen: () => setFullscreenElement(null),
+    };
+}
+
+/**
+ * Simulate the popout window used for picture-in-picture by backing it with an in-DOM iframe.
+ * Forces the non-native popout path (`documentPictureInPicture` disabled) and makes `browser.open`
+ * return a fake window whose document is the iframe's, so the PiP content can be queried in tests
+ * through the returned `popoutIframe.contentDocument`.
+ *
+ * @returns {{ popoutWindow: Object, popoutIframe: HTMLIFrameElement }}
+ */
+export function mockPipWindow() {
+    const popoutIframe = document.createElement("iframe");
+    const outsideArea = document.createElement("div");
+    getFixture().appendChild(outsideArea);
+    const popoutWindow = {
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        closed: false,
+        get document() {
+            const doc = popoutIframe.contentDocument;
+            if (!doc) {
+                return undefined;
+            }
+            const originalWrite = doc.write;
+            doc.write = (content) => {
+                // This avoids duplicating the test script in the popoutWindow.
+                const sanitizedContent = content.replace(
+                    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+                    ""
+                );
+                originalWrite.call(doc, sanitizedContent);
+            };
+            return doc;
+        },
+        close() {
+            popoutWindow.closed = true;
+            popoutIframe.remove();
+        },
+    };
+    patchWithCleanup(window, { documentPictureInPicture: false });
+    patchWithCleanup(browser, {
+        open: () => {
+            popoutWindow.closed = false;
+            outsideArea.append(popoutIframe);
+            return popoutWindow;
+        },
+    });
+    return { popoutWindow, popoutIframe };
+}
+
+/**
  * A MockRemote represents the network API of a remote user, for example calling remote.updateUpload() behaves as if that remote user
  * had called this function on their own rtc_service.network
  *
@@ -565,11 +673,12 @@ export async function makeMockRtcNetwork({ env, channelId }) {
     const dispatchUpdate = (payload) => {
         mockNetwork.dispatchEvent(new CustomEvent("update", { detail: payload }));
     };
-    const rtcServiceIsListening = new Deferred();
+    const { promise: rtcServiceIsListening, resolve: resolveRtcServiceIsListening } =
+        Promise.withResolvers();
     patchWithCleanup(Network.prototype, {
         addEventListener(name, f) {
             if (name === "update") {
-                rtcServiceIsListening.resolve();
+                resolveRtcServiceIsListening();
                 // disabling the p2p network so that it does not try to send webRTC events like candidates and offers.
                 rtc.network.p2p.disconnect();
             }
@@ -670,17 +779,17 @@ export function prepareRegistriesWithCleanup() {
 const observeRenderResults = new Map();
 let nextObserveRenderResults = 0;
 /**
- * Patch component `onWillRender` to track amount of renders.
+ * Patch component `onMounted`/`onPatched` to track amount of renders.
  * This only prepares with the patching. To effectively observe the amount of renders,
  * should call @see observeRenders
- * Having both function allow to track renders as side-effect on specific actions, rather
+ * Having both functions allow to track renders as side-effect on specific actions, rather
  * than aggregate all renders including setup: as this value requires some thinking on
  * which render comes from what, usually the less with brief explanations the better.
  */
 export function prepareObserveRenders() {
     patchWithCleanup(Component.prototype, {
         setup(...args) {
-            const cb = () => {
+            const countRender = () => {
                 for (const result of observeRenderResults.values()) {
                     if (!result.has(this.constructor)) {
                         result.set(this.constructor, 0);
@@ -688,16 +797,8 @@ export function prepareObserveRenders() {
                     result.set(this.constructor, result.get(this.constructor) + 1);
                 }
             };
-            onMounted(cb);
-            onPatched(cb);
-            onWillDestroy(() => {
-                for (const result of observeRenderResults.values()) {
-                    // owl could invoke onrendered and cancel immediately to re-render, so should compensate
-                    if (result.has(this.constructor) && status(this) === "cancelled") {
-                        result.set(this.constructor, result.get(this.constructor) - 1);
-                    }
-                }
-            });
+            onMounted(countRender);
+            onPatched(countRender);
             return super.setup(...args);
         },
     });
@@ -731,7 +832,11 @@ export function observeRenders() {
 export async function isInViewportOf(childSelector, parentSelector) {
     await contains(parentSelector);
     await contains(childSelector);
-    const inViewportDeferred = new Deferred();
+    const {
+        promise: inViewportPromise,
+        reject: rejectInViewport,
+        resolve: resolveInViewport,
+    } = Promise.withResolvers();
     const failTimeout = setTimeout(() => check({ crashOnFail: true }), 3000);
     const check = ({ crashOnFail = false } = {}) => {
         const parent = queryFirst(parentSelector);
@@ -750,17 +855,17 @@ export async function isInViewportOf(childSelector, parentSelector) {
             expect(true).toBe(true, {
                 message: `Element ${childSelector} found in viewport of ${parentSelector}`,
             });
-            inViewportDeferred.resolve();
+            resolveInViewport();
         } else if (crashOnFail) {
             const failMsg = `Element ${childSelector} not found in viewport of ${parentSelector}`;
             expect(false).toBe(true, { message: failMsg });
-            inViewportDeferred.reject(new Error(failMsg));
+            rejectInViewport(new Error(failMsg));
         } else {
             parent.addEventListener("scrollend", check, { once: true });
         }
     };
     check();
-    return inViewportDeferred;
+    return inViewportPromise;
 }
 
 export async function hover(selector) {
@@ -803,7 +908,16 @@ export function assertChatHub({ opened = [], folded = [] }) {
     expect(browser.localStorage.getItem(CHAT_HUB_KEY)).toEqual(toChatHubData(opened, folded));
 }
 
-export const STORE_FETCH_ROUTES = ["/mail/action", "/mail/data"];
+export const STORE_FETCH_ROUTES = ["/mail/store"];
+
+/**
+ * In-flight store fetches, keyed by name, each holding a FIFO queue of the `DataResponse` promises
+ * returned by `Store.fetchStoreData`. That promise resolves once the requested data has actually been
+ * applied to the store (after the RPC insert for auto-resolve fetches, or once the awaited data lands
+ * for `requestData` fetches), so `waitStoreFetch` can await it to be sure the response was processed and
+ * not just that the request was sent. Populated by `listenStoreFetch`, consumed by `waitStoreFetch`.
+ */
+const storeFetchQueues = new Map();
 
 /**
  * Prepares listeners for the various ways a store fetch could be triggered. It is important to call
@@ -818,6 +932,16 @@ export const STORE_FETCH_ROUTES = ["/mail/action", "/mail/data"];
  *  and the specific params should be logged in expect.step. By default only the name is logged.
  */
 export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRpcOverride } = {}) {
+    storeFetchQueues.clear();
+    patchWithCleanup(StoreService.prototype, {
+        fetchStoreData(name) {
+            const promise = super.fetchStoreData(...arguments);
+            const queue = storeFetchQueues.get(name) ?? [];
+            queue.push(promise);
+            storeFetchQueues.set(name, queue);
+            return promise;
+        },
+    });
     async function registerStep(request, name, params) {
         const res = await onRpcOverride?.(request);
         if (logParams.includes(name)) {
@@ -843,15 +967,7 @@ export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRp
         }
         return res;
     }
-    /**
-     * The fetch could happen through any of those routes depending on various conditions.
-     * Most tests don't care about which route is used, so we just listen to all of them.
-     */
-    onRpc("/mail/action", async (request) => {
-        const { params } = await request.json();
-        return registerSteps(request, params.fetch_params);
-    });
-    onRpc("/mail/data", async (request) => {
+    onRpc("/mail/store", async (request) => {
         const { params } = await request.json();
         return registerSteps(request, params.fetch_params);
     });
@@ -892,6 +1008,20 @@ export async function waitStoreFetch(
         ],
         { ignoreOrder, timeout }
     );
+    /**
+     * The expect.step above is logged when the RPC request is intercepted, not when its response is
+     * applied to the store. Await the corresponding `DataResponse` promise(s) so the fetched data is
+     * actually in the store before resolving, otherwise a late response could still land (and clobber
+     * concurrent bus updates) after the test moved on. Awaiting all the promises queued so far for the
+     * name (and emptying the queue) consumes them without assuming a 1:1 mapping between fetches and
+     * waitStoreFetch calls: a fetch that no test awaits (e.g. one that is expected to fail) is settled
+     * here too. `allSettled` is used so an expected fetch failure does not reject this helper.
+     */
+    const names = (typeof nameOrNames === "string" ? [nameOrNames] : nameOrNames).map(
+        (nameOrNameAndParams) =>
+            typeof nameOrNameAndParams === "string" ? nameOrNameAndParams : nameOrNameAndParams[0]
+    );
+    await Promise.allSettled(names.flatMap((name) => storeFetchQueues.get(name)?.splice(0) ?? []));
     /**
      * Extra tick necessary to ensure the RPC is fully processed before resolving.
      * This is necessary because the expect.step in onRpc is not synchronous with the moment
@@ -1050,9 +1180,19 @@ export async function assertChatBubbleAndWindowImStatus(conversationName, count)
 export function sendPresenceUpdate(modelName, id, newPresence) {
     const env = MockServer.env;
     env[modelName].write(id, { im_status: newPresence });
-    const store = new mailDataHelpers.Store().add(env[modelName].browse(id), {
+    const store = new Store().add(env[modelName].browse(id), {
         presence_status: newPresence,
         im_status: newPresence,
     });
-    env["bus.bus"]._sendone(serverState.partnerId, "mail.record/insert", store.get_result());
+    env["bus.bus"]._sendone(serverState.userId, "mail.record/insert", store.as_dict());
+}
+
+export async function setIndexedDB(table, key, value) {
+    const db = new IndexedDB("mail");
+    await db.write(table, key, value);
+}
+
+export async function getIndexedDB(table, key) {
+    const db = new IndexedDB("mail");
+    return await db.read(table, key);
 }

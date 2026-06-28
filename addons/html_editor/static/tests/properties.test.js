@@ -170,7 +170,7 @@ test("properties: html in list view", async () => {
     await contains(".o-dropdown--menu input[type='checkbox']").click();
     expect("div[name='properties.bd6404492c244cff_html']").toHaveCount(3);
     const elements = document.querySelectorAll("div[name='properties.bd6404492c244cff_html']");
-    expect(elements[0].innerText).toBe("test");
-    expect(elements[1].innerText).toBe("Hello World\n\nhttps://excalidraw.com");
-    expect(elements[2].innerText).toBe("");
+    expect(elements[0]).toHaveText("test");
+    expect(elements[1]).toHaveText("Hello World\n\nhttps://excalidraw.com");
+    expect(elements[2]).toHaveText("");
 });

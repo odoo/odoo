@@ -3,7 +3,7 @@
 import json
 from datetime import timedelta
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import urls
 
@@ -21,7 +21,7 @@ class PaymentProvider(models.Model):
         selection_add=[("paypal", "PayPal")], ondelete={"paypal": "set default"}
     )
     paypal_email_account = fields.Char(
-        string="Email",
+        string="PayPal Email",
         help="The public business email solely used to identify the account with PayPal",
         required_if_provider="paypal",
         default=lambda self: self.env.company.email,
@@ -81,7 +81,7 @@ class PaymentProvider(models.Model):
         base_url = self.get_base_url()
         if "localhost" in base_url:
             raise UserError(
-                "PayPal: " + _("You must have an HTTPS connection to generate a webhook.")
+                "PayPal: " + self.env._("You must have an HTTPS connection to generate a webhook.")
             )
         data = {
             "url": urls.urljoin(base_url, PaypalController._webhook_url),
@@ -126,11 +126,9 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
-        if self.state == "enabled":
-            api_url = "https://api-m.paypal.com"
-        else:  # test
-            api_url = "https://api-m.sandbox.paypal.com"
-        return api_url
+        if self.is_live:
+            return "https://api-m.paypal.com"
+        return "https://api-m.sandbox.paypal.com"
 
     def _build_request_headers(
         self, *args, idempotency_key=None, is_refresh_token_request=False, **kwargs
@@ -171,7 +169,7 @@ class PaymentProvider(models.Model):
             )
             access_token = response_content["access_token"]
             if not access_token:
-                raise ValidationError(_("Could not generate a new access token."))
+                raise ValidationError(self.env._("Could not generate a new access token."))
             self.write({
                 "paypal_access_token": access_token,
                 "paypal_access_token_expiry": fields.Datetime.now()

@@ -4,7 +4,7 @@
     <record id="payment_method_pay_on_site" model="payment.method">
         <field name="name">Pay on site</field>
         <field name="code">pay_on_site</field>
-        <field name="sequence">1000</field>
+        <field name="provider_id" ref="website_sale_collect.payment_provider_on_site"/>
         <field name="image" type="bytes" file="website_sale_collect/static/img/pay_on_site.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>

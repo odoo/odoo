@@ -3,7 +3,6 @@ from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.addons.point_of_sale.tests.test_generic_localization import TestGenericLocalization
 from odoo.tests import tagged
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
@@ -40,8 +39,7 @@ class TestGenericSA(TestGenericLocalization):
 class TestUi(TestPointOfSaleHttpCommon):
 
     @classmethod
-    @AccountEdiTestCommon.setup_edi_format('l10n_sa_edi.edi_sa_zatca')
-    @AccountEdiTestCommon.setup_country('sa')
+    @AccountTestInvoicingCommon.setup_country('sa')
     def setUpClass(cls):
         super().setUpClass()
         # Setup company

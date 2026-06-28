@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
@@ -9,7 +8,7 @@ export class NetworkConnectionLostPopup extends Component {
     static props = ["close", "access_token"];
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             time: 5,
             online: navigator.onLine,
             retrying: false,

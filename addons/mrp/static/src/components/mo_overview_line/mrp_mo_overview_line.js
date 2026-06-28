@@ -115,10 +115,6 @@ export class MoOverviewLine extends Component {
             res_model: "mrp.workorder",
             views: [[false, "list"]],
             context: {
-                search_default_ready: true,
-                search_default_waiting: true,
-                search_default_progress: true,
-                search_default_blocked: true,
                 search_default_name: this.data.name,
                 search_default_production_id: this.data.production_id,
             },
@@ -147,7 +143,7 @@ export class MoOverviewLine extends Component {
 
     get formattedQuantity() {
         if (this.data.model === "mrp.workorder" || !this.data.model) {
-            return this.formatFloatTime(this.data.quantity, { unit: this.data.state ? "minutes" : "hours" });
+            return this.formatFloatTime(this.data.quantity, { unit: this.data.state ? "minutes" : "hours", showSeconds: true });
         }
         return this.formatFloat(this.data.quantity);
     }

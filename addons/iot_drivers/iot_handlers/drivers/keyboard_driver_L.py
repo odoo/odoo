@@ -17,6 +17,7 @@ from usb import util
 from odoo.addons.iot_drivers.driver import Driver
 from odoo.addons.iot_drivers.event_manager import event_manager
 from odoo.addons.iot_drivers.tools import helpers, system
+from odoo.addons.iot_drivers.iot_handlers.interfaces.usb_interface_L import USBInterface
 
 _logger = logging.getLogger(__name__)
 xlib = ctypes.cdll.LoadLibrary('libX11.so.6')
@@ -32,7 +33,7 @@ class KeyboardUSBDriver(Driver):
     # If you read the file "/dev/input/event0" you will get the input from the device in real time
     # One usb device can have multiple associated event files (like a foot pedal which has 3 event files)
 
-    connection_type = 'usb'
+    interface = USBInterface
     keyboard_layout_groups = []
     available_layouts = []
     input_devices = []
@@ -43,7 +44,6 @@ class KeyboardUSBDriver(Driver):
             KeyboardUSBDriver.display = xlib.XOpenDisplay(bytes(":0.0", "utf-8"))
 
         super().__init__(identifier, device)
-        self.device_connection = 'direct'
         self.device_name = self._set_name()
         self.data["status"] = "success"  # allow listening on device
 

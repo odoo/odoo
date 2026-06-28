@@ -9,33 +9,40 @@
     </t>
 
     <t t-name="discuss.ChannelInvitation.main">
-        <div class="d-flex flex-column flex-grow-1 bg-inherit o-min-height-0" t-att-class="{ 'w-100': this.props.hasSizeConstraints, 'px-1': !this.props.channel }">
+        <div class="d-flex flex-column flex-grow-1 bg-inherit o-min-height-0" t-att-class="{ 'px-1': !this.props.channel }">
             <t t-if="this.store.self_user?.share === false">
                 <div class="position-relative">
-                    <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-view" t-att-value="this.searchStr" t-custom-ref="input" t-att-placeholder="this.searchPlaceholder" t-on-input="this.onInput"/>
+                    <label id="o-discuss-ChannelInvitation-searchStatusIcon" for="o-discuss-ChannelInvitation-search" class="position-absolute top-50 px-2 translate-middle-y smaller opacity-50" role="status">
+                        <t t-if="this.state.hasPendingRequest">
+                            <i class="fa fa-spin fa-circle-o-notch" title="Loading…" aria-hidden="true"/>
+                            <p class="visually-hidden">Invite suggestions are loading…</p>
+                        </t>
+                        <i t-else="" class="oi oi-search" aria-hidden="true"/>
+                    </label>
+                    <input id="o-discuss-ChannelInvitation-search" class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 ps-4 bg-view" aria-describedby="o-discuss-ChannelInvitation-searchStatusIcon" t-att-value="this.searchStr" t-custom-ref="input" t-att-placeholder="this.searchPlaceholder" t-on-input="this.onInput"/>
                     <div t-if="this.props.channel?.allow_invite_by_email" class="o-discuss-ChannelInvitation-iconContainer position-absolute top-50 end-0 translate-middle-y me-2 smaller opacity-50" data-tooltip="Type email to invite">
                         <i class="fa fa-envelope-o fa-lg"/>
                         <i class="fa fa-plus-circle o-discuss-ChannelInvitation-iconPlus position-absolute bg-white rounded-circle"/>
                     </div>
                 </div>
-                <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': this.selectablePartners.length === 0 and this.state.selectableEmails.length === 0 }">
-                    <div t-if="this.selectablePartners.length === 0 and this.state.selectableEmails.length === 0" class="smaller text-muted mx-1 opacity-50">
+                <div class="d-flex flex-column pt-1">
+                    <p t-if="this.selectablePartners.length === 0 and this.state.selectableEmails.length === 0" class="mx-1 my-0 smaller text-muted opacity-50">
                         <t t-if="this.props.channel">No one found to invite.</t>
-                        <t t-else="">No user found.</t>
-                    </div>
-                    <div t-if="this.state.searchResultCount > this.selectablePartners.length" class="smaller text-muted mx-1 mb-1 fst-italic" t-out="this.showingResultNarrowText"/>
-                    <t t-foreach="this.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
-                        <t t-call="discuss.ChannelInvitation-selectableItem">
-                            <t t-set="selectableItemIndex" t-value="selectablePartner_index"/>
+                        <t t-else="">No users found.</t>
+                    </p>
+                    <div t-if="this.state.showingPartialResults" class="smaller text-muted mx-1 mb-1 fst-italic" t-out="this.showingResultNarrowText"/>
+                    <ul class="pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': this.selectablePartners.length === 0 and this.state.selectableEmails.length === 0}">
+                        <t t-foreach="this.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
+                            <t t-call="discuss.ChannelInvitation-selectableItem"
+                                selectableItemIndex="selectablePartner_index"/>
                         </t>
-                    </t>
-                    <t t-foreach="this.state.selectableEmails" t-as="selectableEmailAddress" t-key="selectableEmailAddress">
-                        <t t-call="discuss.ChannelInvitation-selectableItem">
-                            <t t-set="selectableEmailAddress" t-value="selectableEmailAddress"/>
-                            <t t-set="selectableItemIndex" t-value="this.selectablePartners.length + selectableEmailAddress_index"/>
+                        <t t-foreach="this.state.selectableEmails" t-as="selectableEmailAddress" t-key="selectableEmailAddress">
+                            <t t-call="discuss.ChannelInvitation-selectableItem"
+                                selectableEmailAddress="selectableEmailAddress"
+                                selectableItemIndex="this.selectablePartners.length + selectableEmailAddress_index"/>
                         </t>
-                    </t>
-                </ul>
+                    </ul>
+                </div>
             </t>
             <div class="o-discuss-ChannelInvitation-invitationBox pt-0 pb-1 bg-inherit">
                 <t t-if="this.store.self_user" >
@@ -57,7 +64,7 @@
                         <t t-out="this.invitationButtonText"/>
                     </button>
                 </t>
-                <hr t-if="this.props.channel?.invitationLink" class="border-dark-subtle"/>
+                <hr t-if="this.store.self_user and this.props.channel?.invitationLink" class="border-dark-subtle"/>
                 <t t-if="this.props.channel?.invitationLink">
                     <div class="input-group">
                         <input class="border border-secondary form-control lh-1 rounded-start border-0 smaller" type="text" t-att-value="this.props.channel.invitationLink" readonly="" disabled="" t-on-focus="this.onFocusInvitationLinkInput"/>
@@ -89,7 +96,7 @@
         >
             <div class="d-flex align-items-center p-1 bg-inherit">
                 <div class="position-relative d-flex flex-shrink-0 bg-inherit">
-                    <DiscussAvatar t-if="selectablePartner" persona="selectablePartner"/>
+                    <DiscussAvatar t-if="selectablePartner" record="selectablePartner"/>
                     <div t-else="" class="w-100 h-100 d-flex align-items-center justify-content-center rounded-3 bg-primary text-white">
                         <i class="fa fa-envelope"/>
                     </div>

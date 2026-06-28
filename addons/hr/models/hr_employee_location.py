@@ -10,7 +10,7 @@ class HrEmployeeLocation(models.Model):
     _name = 'hr.employee.location'
     _description = "Employee Location"
 
-    work_location_id = fields.Many2one('hr.work.location', required=True, string="Location")
+    work_location_id = fields.Many2one('hr.work.location', required=True, index=True, string="Location")
     work_location_name = fields.Char(related='work_location_id.name', string="Location name")
     work_location_type = fields.Selection(related="work_location_id.location_type")
     employee_id = fields.Many2one('hr.employee', default=lambda self: self.env.user.employee_id, required=True, ondelete="cascade")

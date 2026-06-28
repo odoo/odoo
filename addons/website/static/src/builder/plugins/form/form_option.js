@@ -4,7 +4,6 @@ import { getModelName } from "./utils";
 import { FormActionFieldsOption } from "./form_action_fields_option";
 import { session } from "@web/session";
 import { selectElements } from "@html_editor/utils/dom_traversal";
-import { getParsedDataFor } from "@website/js/utils";
 import { registry } from "@web/core/registry";
 
 export class FormOption extends BaseOptionComponent {
@@ -47,14 +46,10 @@ export class FormOption extends BaseOptionComponent {
         // Get potential message
         const el = this.env.getEditingElement();
         this.messageEl = el.parentElement.querySelector(".s_website_form_end_message");
+        this.canChangeFieldsLayout = !!el.querySelector(
+            ".s_website_form_field:not(.s_website_form_dnone)"
+        );
         this.showEndMessage = false;
-        // Get the email_to value from the data-for attribute if it exists. We
-        // use it if there is no value on the email_to input.
-        this.formId = el.id;
-        const dataForValues = getParsedDataFor(this.formId, el.ownerDocument);
-        if (dataForValues) {
-            this.dataForEmailTo = dataForValues["email_to"];
-        }
         this.state = useDomState(async (el) => {
             const modelName = getModelName(el);
 
@@ -71,7 +66,7 @@ export class FormOption extends BaseOptionComponent {
             // Apply the default model selected in willStart on it.
             if (!el.dataset.model_name) {
                 const formInfo = await prepareFormModel(el, activeForm);
-                applyFormModel(el, activeForm, activeForm.id, formInfo);
+                await applyFormModel(el, activeForm, activeForm.id, formInfo);
             }
             return {
                 models,

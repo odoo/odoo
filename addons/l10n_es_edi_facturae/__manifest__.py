@@ -21,8 +21,6 @@ for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx
         'data/l10n_es_edi_facturae.ac_role_type.csv',
         'data/signature_templates.xml',
 
-        'security/ir.model.access.csv',
-
         'views/l10n_es_edi_facturae_views.xml',
         'views/res_partner_views.xml',
         'views/account_tax_views.xml',
@@ -31,11 +29,11 @@ for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx
         'views/account_menuitem.xml',
 
         'wizard/account_move_reversal_view.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/l10n_es_edi_facturae_demo.xml',
     ],
-    'auto_install': ['l10n_es'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'uninstall_hook': 'uninstall_hook',

@@ -11,5 +11,6 @@ class ResCompany(models.Model):
         self.ensure_one()
         return self.chart_template == 'pe' or self.account_fiscal_country_id.code == "PE" or super()._localization_use_documents()
 
-    def _is_latam(self):
-        return super()._is_latam() or self.country_code == 'PE'
+    def _get_l10n_latam_base_country_codes(self):
+        # EXTENDS 'l10n_latam_base' - adds PE
+        return super()._get_l10n_latam_base_country_codes() + ['PE']

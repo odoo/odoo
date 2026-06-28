@@ -10,6 +10,7 @@ from collections import defaultdict
 from odoo.tools import unique
 from odoo.tools.func import filter_kwargs
 
+from . import request
 from .dispatcher import _dispatchers
 
 _logger = logging.getLogger('odoo.http')
@@ -156,6 +157,12 @@ def route(
           database. Mainly used by the framework and authentication
           modules. The request code will not have any facilities to
           access the current user.
+    :param str bearer_scope: The scope of the bearer token which will be
+        used to authenticate the user. If the bearer_scope is set to 'A'
+        on a route, then only tokens generated with scope 'A' (but not
+        scope 'B') can be used to authenticate the user on that endpoint.
+        Must be set for ``auth='bearer'`` and must not be set for other
+        authentication methods.
     :param Iterable[str] methods: A list of http methods (verbs) this
         route applies to. If not specified, all methods are allowed.
     :param str cors: The Access-Control-Allow-Origin cors directive value.
@@ -196,6 +203,7 @@ def route(
             routing['methods'] = wrong
         if routing.get('auth') == 'bearer':
             routing.setdefault('save_session', False)  # stateless
+            assert 'bearer_scope' in routing, "bearer_scope must be set for auth='bearer'"
 
         @functools.wraps(endpoint)
         def route_wrapper(self, *args, **params):
@@ -352,7 +360,3 @@ def _check_and_complete_route_definition(controller_cls: type[Controller], subme
             'readonly' if parent_readonly else 'read/write',
         )
         submethod.original_routing['readonly'] = False
-
-
-# ruff: noqa: E402
-from .requestlib import request

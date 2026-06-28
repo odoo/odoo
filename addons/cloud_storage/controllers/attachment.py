@@ -7,7 +7,7 @@ from odoo.addons.mail.tools.discuss import mail_route
 
 
 class CloudAttachmentController(AttachmentController):
-    @mail_route(type="http")
+    @mail_route()
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
         is_cloud_storage = kwargs.get('cloud_storage')
         if (is_cloud_storage and not request.env['ir.config_parameter'].sudo().get_str('cloud_storage_provider')):

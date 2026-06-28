@@ -52,9 +52,7 @@
         <t t-foreach="viewTree.inherit_children" t-as="child" t-key="child.id">
             <li t-if="this.isViewDisplayed(child)"
                 t-attf-class="{{child.active ? '' : 'o_is_inactive'}}">
-                <t t-call="website.report_viewhierarchy_children">
-                    <t t-set="viewTree" t-value="child"/>
-                </t>
+                <t t-call="website.report_viewhierarchy_children" viewTree="child"/>
             </li>
         </t>
     </ul>

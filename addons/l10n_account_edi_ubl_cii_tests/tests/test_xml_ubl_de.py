@@ -115,8 +115,8 @@ class TestUBLDE(TestUBLCommon):
 
     def test_export_import_invoice_xrechnung(self):
         self.partner_2.write({
-            'peppol_eas': '0204',
-            'peppol_endpoint': '123456789',
+            'routing_identifier': '0204:123456789',
+            'additional_identifiers': {'DE_LTW': '123456789'},
             'invoice_edi_format': 'xrechnung'
         })
         invoice = self._generate_move(
@@ -176,10 +176,11 @@ class TestUBLDE(TestUBLCommon):
         self.assertEqual(attachment.name[-13:], "xrechnung.xml")
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
-    def test_export_import_invoice_without_vat_and_peppol_endpoint(self):
+    def test_export_import_invoice_without_vat_and_routing_endpoint(self):
         self.partner_2.write({
             'vat': False,
-            'peppol_endpoint': False,
+            'routing_identifier': False,
+            'additional_identifiers': False,
             'email': 'partner_2@test.test',
         })
         invoice = self._generate_move(
@@ -242,8 +243,8 @@ class TestUBLDE(TestUBLCommon):
 
     def test_export_import_refund_xrehnung(self):
         self.partner_2.write({
-            'peppol_eas': '0204',
-            'peppol_endpoint': '123456789',
+            'routing_identifier': '0204:123456789',
+            'additional_identifiers': {'DE_LTW': '123456789'},
             'invoice_edi_format': 'xrechnung'
         })
 
@@ -372,8 +373,8 @@ class TestUBLDE(TestUBLCommon):
     def test_leitweg_id(self):
         partner = self.partner_2
         partner.write({
-            'peppol_eas': '0204',
-            'peppol_endpoint': '123456789',
+            'routing_identifier': '0204:123456789',
+            'additional_identifiers': {'DE_LTW': '123456789'},
             'invoice_edi_format': 'xrechnung',
         })
 
@@ -399,3 +400,30 @@ class TestUBLDE(TestUBLCommon):
         xml_content = attachment.raw.content
         xml_etree = self.get_xml_tree_from_string(xml_content)
         self.assertEqual(xml_etree.find('{*}BuyerReference').text, '123456789')
+
+    def test_leitweg_id_for_child_contact(self):
+        self.partner_2.write({
+            'routing_identifier': '0204:13075957-K000-52',
+            'additional_identifiers': {'DE_LTW': '13075957-K000-52'},
+            'invoice_edi_format': 'xrechnung',
+        })
+
+        child_contact = self.env['res.partner'].create({
+            'name': 'Child Contact',
+            'parent_id': self.partner_2.id,
+        })
+
+        invoice = self._generate_move(
+            self.partner_1,
+            child_contact,
+            move_type='out_invoice',
+            partner_id=child_contact.id,
+            invoice_line_ids=[{'product_id': self.product_a.id}],
+        )
+
+        attachment = invoice.ubl_cii_xml_id
+        self.assertTrue(attachment)
+
+        xml_content = attachment.raw.content
+        xml_etree = self.get_xml_tree_from_string(xml_content)
+        self.assertEqual(xml_etree.find('{*}BuyerReference').text, '13075957-K000-52')

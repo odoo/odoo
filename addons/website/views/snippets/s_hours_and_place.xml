@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_hours_and_place" name="Hours and Place">
+    <section class="s_hours_and_place o_cc o_cc1 pt80 pb80">
+        <div class="container">
+            <h2>Visit Us</h2>
+            <p><br/></p>
+            <div class="row s_nb_column_fixed">
+                <div class="o_colored_level o_cc o_cc2 col-lg-3 rounded pt24 pb24" style="border-radius: 9.6px !important;">
+                    <h3 class="h5-fs">Opening hours</h3>
+                    <p><br/></p>
+                    <p class="o_small-fs"><u>Monday</u><br/>8.00am-6.00pm</p>
+                    <p class="o_small-fs"><u>Tuesday</u><br/>8.00am-6.00pm</p>
+                    <p class="o_small-fs"><u>Wednesday</u><br/>8.00am-12.00pm</p>
+                    <p class="o_small-fs"><u>Thursday</u><br/>8.00am-6.00pm</p>
+                    <p><a class="btn btn-primary" href="/contactus">Get directions</a></p>
+                </div>
+                <div class="col-lg-9">
+                    <t t-snippet-call="website.s_map" string="Map" padding.f="pt216 pb216"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

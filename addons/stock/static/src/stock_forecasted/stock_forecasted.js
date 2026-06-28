@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -9,7 +8,7 @@ import { ForecastedButtons } from "./forecasted_buttons";
 import { ForecastedDetails } from "./forecasted_details";
 import { ForecastedHeader } from "./forecasted_header";
 import { ForecastedWarehouseFilter } from "./forecasted_warehouse_filter";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 export class StockForecasted extends Component {
@@ -27,7 +26,7 @@ export class StockForecasted extends Component {
         this.orm = useService("orm");
         this.action = useService("action");
 
-        this.context = useState(this.props.action.context);
+        this.context = proxy(this.props.action.context);
         this.productId = this.context.active_id;
         this.resModel = this.context.active_model;
         this.title = this.props.action.name || _t("Forecasted Report");
@@ -35,7 +34,7 @@ export class StockForecasted extends Component {
             this.context.active_id = this.props.action.params.active_id;
             this.reloadReport();
         }
-        this.warehouses = useState([]);
+        this.warehouses = proxy([]);
 
         onWillStart(this._getReportValues);
     }
@@ -123,10 +122,14 @@ export class StockForecasted extends Component {
     }
 
     async openView(resModel, view, resId=false, domain = false) {
+        const views = [[false, view]];
+        if (view !== "form") {
+            views.push([false, "form"]);
+        }
         const action = {
             type: "ir.actions.act_window",
             res_model: resModel,
-            views: [[false, view]],
+            views,
             view_mode: view,
             res_id:  resId,
             domain: domain,

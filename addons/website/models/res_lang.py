@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, tools, _
+from odoo import api, models, _
 from odoo.addons.base.models.res_lang import LangDataDict, LangData
 from odoo.exceptions import UserError
-from odoo.http import request
 
 
 class ResLang(models.Model):
@@ -15,18 +14,19 @@ class ResLang(models.Model):
                 raise UserError(_("Cannot deactivate a language that is currently used on a website."))
         return super().write(vals)
 
-    @tools.ormcache('self.env.context.get("website_id")', 'self.env.context.get("web_force_installed_langs")')
+    @api.ormcache('self.env.context.get("website_id")', 'self.env.context.get("web_force_installed_langs")')
     def _get_frontend(self) -> LangDataDict:
         """ Return the available languages for current request
         :return: LangDataDict({code: LangData})
         """
-        if request and getattr(request, 'is_frontend', True):
+        website = self.env.website
+        if website:
             # get languages while ignoring current language as the one in the context may be invalid
             if self.env.context.get('web_force_installed_langs'):
                 langs = sorted(map(dict, self._get_active_by('code').values()),
                                key=lambda lang: lang['name'])
             else:
-                lang_ids = self.env['website'].get_current_website().with_context(lang=False).language_ids.sorted('name').ids
+                lang_ids = website.with_context(lang=False).language_ids.sorted('name').ids
                 langs = [dict(self.env['res.lang']._get_data(id=id_)) for id_ in lang_ids]
             es_419_exists = any(lang['code'] == 'es_419' for lang in langs)
             already_shortened = []

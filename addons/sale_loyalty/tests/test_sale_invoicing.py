@@ -8,27 +8,25 @@ from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 @tagged("post_install", "-at_install")
 class TestSaleInvoicing(TestSaleCouponCommon):
-    def test_invoicing_order_with_promotions(self):
-        discount_coupon_program = self.env["loyalty.program"].create({
+    def setUp(self):
+        super().setUp()
+        self.discount_coupon_program = self.env["loyalty.program"].create({
             "name": "10% Discount",
             "program_type": "coupons",
             "applies_on": "current",
             "trigger": "auto",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 10,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                })
             ],
         })
 
+    def test_invoicing_order_with_promotions(self):
         product = self.env["product.product"].create({
             "invoice_policy": "delivery",
             "name": "Product invoiced on delivery",
@@ -39,11 +37,11 @@ class TestSaleInvoicing(TestSaleCouponCommon):
 
         # Check default invoice_policy on discount product
         self.assertEqual(
-            discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, "order"
+            self.discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, "order"
         )
 
         order._update_programs_and_rewards()
-        self._claim_reward(order, discount_coupon_program)
+        self._claim_reward(order, self.discount_coupon_program)
         # Order is not confirmed, there shouldn't be any invoiceable line
         invoiceable_lines = order._get_invoiceable_lines()
         self.assertEqual(len(invoiceable_lines), 0)
@@ -70,35 +68,15 @@ class TestSaleInvoicing(TestSaleCouponCommon):
         self.assertEqual(len(account_move.invoice_line_ids), 2)
 
     def test_coupon_on_order_sequence(self):
-        discount_coupon_program = self.env["loyalty.program"].create({
-            "name": "10% Discount",
-            "program_type": "coupons",
-            "applies_on": "current",
-            "trigger": "auto",
-            "rule_ids": [(0, 0, {})],
-            "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 10,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                    },
-                )
-            ],
-        })
-
         product_6 = self.env["product.product"].create({"name": "Large Cabinet"})
         order = self._create_so(order_line=[Command.create({"product_id": product_6.id})])
 
         # Check default invoice_policy on discount product
         self.assertEqual(
-            discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, "order"
+            self.discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, "order"
         )
 
-        self._auto_rewards(order, discount_coupon_program)
+        self._auto_rewards(order, self.discount_coupon_program)
 
         self.assertEqual(len(order.order_line), 2, "Coupon correctly applied")
 
@@ -119,3 +97,30 @@ class TestSaleInvoicing(TestSaleCouponCommon):
             order.order_line.sorted(lambda x: x.sequence)[-1].is_reward_line,
             "Global coupons appear on the last line",
         )
+
+    def test_reward_line_does_not_split_group_tax(self):
+        tax_gst = self.env["account.tax"].create({
+            "name": "GST 5%",
+            "amount_type": "percent",
+            "amount": 5.0,
+        })
+        tax_qst = self.env["account.tax"].create({
+            "name": "QST 9.975%",
+            "amount_type": "percent",
+            "amount": 9.975,
+        })
+        tax_quebec = self.env["account.tax"].create({
+            "name": "Quebec Tax 14.975%",
+            "amount_type": "group",
+            "children_tax_ids": [Command.set((tax_gst + tax_qst).ids)],
+        })
+        product = self.env["product.product"].create({
+            "name": "Product K",
+            "lst_price": 500,
+            "taxes_id": [Command.set(tax_quebec.ids)],
+        })
+        order = self._create_so(order_line=[Command.create({"product_id": product.id})])
+        order._update_programs_and_rewards()
+        self._claim_reward(order, self.discount_coupon_program)
+        reward_line = order.order_line.filtered("is_reward_line")
+        self.assertEqual(reward_line.tax_ids, tax_quebec)

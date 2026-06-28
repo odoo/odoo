@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-22 17:47+0000\n"
 "PO-Revision-Date: 2025-10-08 18:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -138,13 +138,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #, fuzzy
 msgid ""
-"<span class=\"text-danger error_partner_assign_interested\" style=\"display:"
-"none;\">You need to fill up the next action and contact the customer before "
-"accepting the lead</span>"
+"<span class=\"text-danger error_partner_assign_interested\" "
+"style=\"display:none;\">You need to fill up the next action and contact the "
+"customer before accepting the lead</span>"
 msgstr ""
-"<span class=\"text-danger error_partner_assign_interested\" style=\"display:"
-"none;\">Potensial mijozni qabul qilishdan oldin keyingi harakatni "
-"belgilashingiz va mijoz bilan bog‘lanishingiz kerak</span>"
+"<span class=\"text-danger error_partner_assign_interested\" "
+"style=\"display:none;\">Potensial mijozni qabul qilishdan oldin keyingi "
+"harakatni belgilashingiz va mijoz bilan bog‘lanishingiz kerak</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -193,39 +193,42 @@ msgid ""
 "<t>\n"
 "Hello,<br/>\n"
 "We have been contacted by those prospects that are in your region. Thus, the "
-"following leads have been assigned to <t t-out=\"ctx['partner_id'].name or "
-"''\"/>:<br/>\n"
+"following leads have been assigned to <t t-out=\"ctx['partner_id'].name if "
+"ctx.get('partner_id') else ''\"/>:<br/>\n"
 "<ol>\n"
-"    <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-"
+"    <li t-foreach=\"ctx.get('partner_leads', [])\" t-as=\"lead\"><a t-att-"
 "href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject "
 "Undefined'\">Subject Undefined</a>, <t t-out=\"lead['lead_id'].partner_name "
 "or lead['lead_id'].contact_name or 'Contact Name Undefined'\">Contact Name "
-"Undefined</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id']."
-"country_id.name or 'Country Undefined'\">Country Undefined</t>, <t t-"
-"out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Email "
+"Undefined</t>, <t t-out=\"lead['lead_id'].country_id and "
+"lead['lead_id'].country_id.name or 'Country Undefined'\">Country Undefined</"
+"t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Email "
 "Undefined</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> "
 "</li><br/>\n"
 "</ol>\n"
 "<t t-if=\"ctx.get('partner_in_portal')\">\n"
-"    Please connect to your <a t-att-href=\"'%s?db=%s' % (object."
-"get_base_url(), object.env.cr.dbname)\">Partner Portal</a> to get details. "
-"On each lead are two buttons on the top left corner that you should press "
-"after having contacted the lead: \"I'm interested\" &amp; \"I'm not "
-"interested\".<br/>\n"
+"    Please connect to your <a t-att-href=\"'%s?db=%s' % "
+"(object.get_base_url(), object.env.cr.dbname)\">Partner Portal</a> to get "
+"details.\n"
+"    <t t-if=\"any(lead['lead_id'].type == 'lead' for lead in "
+"ctx['partner_leads'])\">On each lead, there are two buttons that you should "
+"press after contacting the lead: \"I'm interested\" &amp; \"I'm not "
+"interested\".</t><br/>\n"
 "</t>\n"
 "<t t-else=\"\">\n"
 "    You do not have yet a portal access to our database. Please contact\n"
-"    <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email "
-"and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,"
-"ctx['partner_id'].user_id.email) or 'us'\">us</t>.<br/>\n"
+"    <t t-out=\"ctx.get('partner_id') and ctx['partner_id'].user_id and "
+"ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % "
+"(ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or "
+"'us'\">us</t>.<br/>\n"
 "</t>\n"
 "The lead will be sent to another partner if you do not contact the lead "
 "before 20 days.<br/><br/>\n"
 "Thank you,<br/>\n"
-"<t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature "
-"or ''\"/>\n"
+"<t t-out=\"ctx.get('partner_id') and ctx['partner_id'].user_id and "
+"ctx['partner_id'].user_id.signature or ''\"/>\n"
 "<br/>\n"
-"<t t-if=\"not ctx['partner_id'].user_id\">\n"
+"<t t-if=\"not ctx.get('partner_id') or not ctx['partner_id'].user_id\">\n"
 "    PS: It looks like you do not have an account manager assigned to you, "
 "please contact us.\n"
 "</t>\n"
@@ -357,13 +360,6 @@ msgstr "Shahar"
 #, fuzzy
 msgid "Close"
 msgstr "Yopish"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-#, fuzzy
-msgid "Communication history"
-msgstr "Muloqot tarixi"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -639,7 +635,7 @@ msgstr "Kelgusi faoliyatlar"
 #. module: website_crm_partner_assign
 #: model:mail.template,subject:website_crm_partner_assign.email_template_lead_forward_mail
 #, fuzzy
-msgid "Fwd: Lead: {{ ctx['partner_id'].name }}"
+msgid "Fwd: Lead: {{ ctx['partner_id'].name if ctx.get('partner_id') else ''}}"
 msgstr "Yo‘n: Potensial mijoz: {{ ctx['partner_id'].name }}"
 
 #. module: website_crm_partner_assign
@@ -1087,7 +1083,7 @@ msgstr "Hamkorlar"
 
 #. module: website_crm_partner_assign
 #. odoo-javascript
-#: code:addons/website_crm_partner_assign/static/src/website_builder/website_crm_partner_assign_option.js:0
+#: code:addons/website_crm_partner_assign/static/src/website_builder/website_crm_partner_assign_option.xml:0
 #, fuzzy
 msgid "Partners Page"
 msgstr "Hamkorlar sahifasi"
@@ -1518,3 +1514,7 @@ msgstr "user_id"
 #, fuzzy
 msgid "won_status"
 msgstr "g‘alaba_holati"
+
+#, fuzzy
+#~ msgid "Communication history"
+#~ msgstr "Muloqot tarixi"

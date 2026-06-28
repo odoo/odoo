@@ -8,16 +8,17 @@ import { markup } from "@odoo/owl";
 export const channelMemberActionsRegistry = registry.category("discuss.channel.member/actions");
 
 /** @typedef {import("@odoo/owl").Component} Component */
-/** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
 /** @typedef {import("models").ChannelMember} ChannelMember */
-
 /**
- * @typedef {ActionDefinition} ChannelActionDefinition
+ * @typedef {Object} ChannelMemberActionSpecificParams
+ * @property {ChannelMember} member
  */
+/** @typedef {import("@mail/core/common/action").ActionParams<ChannelMemberAction, UseChannelMemberActions_Def> & ChannelMemberActionSpecificParams} ChannelMemberActionParams */
+/** @typedef {import("@mail/core/common/action").ActionDefinition<ChannelMemberActionParams, ChannelMemberAction>} ChannelMemberActionDefinition */
 
 /**
  * @param {string} id
- * @param {ChannelActionDefinition} definition
+ * @param {ChannelMemberActionDefinition} definition
  */
 export function registerChannelMemberAction(id, definition) {
     channelMemberActionsRegistry.add(id, definition);
@@ -53,14 +54,19 @@ registerChannelMemberAction("remove-member", {
     icon: "fa fa-sign-out",
     name: _t("Remove Member"),
     onSelected: ({ member, store }) => {
-        const dialogTitle = _t(
-            "Are you sure you want to remove %(member_name)s from the members of '%(channel_name)s'?",
-            { member_name: member.name, channel_name: member.channel_id.displayName }
-        );
+        const isMeeting = member.channel_id.default_display_mode === "video_full_screen";
+        const dialogTitle = isMeeting
+            ? _t("Are you sure you want to remove %(member_name)s from the call?", {
+                  member_name: member.name,
+              })
+            : _t(
+                  "Are you sure you want to remove %(member_name)s from the members of '%(channel_name)s'?",
+                  { member_name: member.name, channel_name: member.channel_id.displayName }
+              );
         const moreInfo = _t("Don't worry, they can rejoin later or be invited back at any time.");
         store.env.services.dialog.add(ConfirmationDialog, {
             body: markup`<p>${dialogTitle}</p><span class="text-muted small">${moreInfo}</span>`,
-            confirmLabel: _t("Remove Member"),
+            confirmLabel: isMeeting ? _t("Remove") : _t("Remove Member"),
             cancel: () => {},
             confirm: () => {
                 rpc("/discuss/channel/remove_member", {
@@ -91,16 +97,18 @@ export class ChannelMemberAction extends Action {
     }
 }
 
+/** @typedef {UseActions<ChannelMemberActionParams, ChannelMemberAction>} UseChannelMemberActions_Def */
 class UseChannelMemberActions extends UseActions {
     ActionClass = ChannelMemberAction;
 }
 
 /**
- * @param {Object} [params0={}]
- * @param {ChannelMember|() => ChannelMember} member
+ * @param {import("@mail/core/common/action").ActionRootRefParam & {member?: ChannelMember|() => ChannelMember}} [params0={}]
+ * @returns {UseChannelMemberActions_Def}
  */
-export function useChannelMemberActions({ member } = {}) {
+export function useChannelMemberActions({ member, rootRef } = {}) {
     return useAction(channelMemberActionsRegistry, UseChannelMemberActions, ChannelMemberAction, {
         member,
+        rootRef,
     });
 }

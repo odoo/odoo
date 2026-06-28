@@ -1,19 +1,14 @@
-import {
-    reactive,
-    useChildSubEnv,
-    useExternalListener,
-    useLayoutEffect,
-    useRef,
-    useState,
-} from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
-import { useSuggestion } from "@mail/core/common/suggestion_hook";
+import { mapSuggestionsToOptions, useSuggestion } from "@mail/core/common/suggestion_hook";
 import { useSelection } from "@mail/utils/common/hooks";
+import { generatePartnerMentionElement, trimEmptyBlocksAround } from "@mail/utils/common/format";
+import { getInnerHtml } from "@mail/utils/common/html";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 
@@ -22,11 +17,26 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { useDebounced } from "@web/core/utils/timing";
 
-import { Component, markup, onMounted, onWillUnmount, toRaw, EventBus } from "@odoo/owl";
+import {
+    Component,
+    markup,
+    onMounted,
+    onWillUnmount,
+    EventBus,
+    immediateEffect,
+    onWillDestroy,
+    props,
+    proxy,
+    signal,
+    t,
+    useListener,
+    useApp,
+} from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import {
+    createDocumentFragmentFromContent,
     htmlFormatList,
     htmlJoin,
     isHtmlEmpty,
@@ -47,18 +57,33 @@ import { useComposerActions } from "@mail/core/common/composer_actions";
 import { ActionList } from "@mail/core/common/action_list";
 import { closestElement, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { rightPos } from "@html_editor/utils/position";
+import { syntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/backend/syntax_highlighting/syntax_highlighting";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { IndexedDB } from "@web/core/utils/indexed_db";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
     SAVE: "save",
 };
 export const MENTION_AMOUNT_WARNING = 50;
-
+export const COMPOSER_TYPES = {
+    NOTE: "note",
+    MESSAGE: "message",
+};
 class FullComposerRecoveryPopover extends Component {
-    static props = ["composer", "onClickFullRecover", "onClickTextRecover", "close?"];
     static template = "mail.FullComposerRecoveryPopover";
+
+    setup() {
+        super.setup(...arguments);
+        this.store = useService("mail.store");
+        this.props = props({
+            close: t.function([]).optional(),
+            composer: t.instanceOf(this.store["Composer"].Class),
+            onClickFullRecover: t.function([]),
+            onClickTextRecover: t.function([]),
+        });
+    }
 
     onClickFullRecover() {
         this.props.onClickFullRecover();
@@ -71,19 +96,6 @@ class FullComposerRecoveryPopover extends Component {
     }
 }
 
-/**
- * @typedef {Object} Props
- * @property {import("models").Composer} composer
- * @property {'compact'|'normal'|'extended'} [mode] default: 'normal'
- * @property {'message'|'note'|false} [type] default: false
- * @property {string} [placeholder]
- * @property {string} [className]
- * @property {function} [onDiscardCallback]
- * @property {function} [onPostCallback]
- * @property {number} [autofocus]
- * @property {import("@web/core/utils/hooks").Ref} [dropzoneRef]
- * @extends {Component<Props, Env>}
- */
 export class Composer extends Component {
     static components = {
         ActionList,
@@ -94,30 +106,9 @@ export class Composer extends Component {
         NavigableList,
         Wysiwyg,
     };
-    static defaultProps = {
-        mode: "normal",
-        className: "",
-        sidebar: true,
-        showFullComposer: true,
-        allowUpload: true,
-    };
-    static props = [
-        "composer",
-        "autofocus?",
-        "onCloseFullComposerCallback?",
-        "onDiscardCallback?",
-        "onPostCallback?",
-        "mode?",
-        "placeholder?",
-        "dropzoneRef?",
-        "className?",
-        "sidebar?",
-        "type?",
-        "showFullComposer?",
-        "allowUpload?",
-        "disabled?",
-    ];
     static template = "mail.Composer";
+
+    app = useApp();
 
     setup() {
         super.setup();
@@ -127,7 +118,23 @@ export class Composer extends Component {
         this.isMobileOS = isMobileOS();
         this.isIosPwa = isIOS() && isDisplayStandalone();
         this.store = useService("mail.store");
-        this.composerActions = useComposerActions({ composer: () => this.props.composer });
+        this.props = props({
+            allowUpload: t.boolean().optional(true),
+            autofocus: t.or([t.number(), t.boolean()]).optional(0),
+            className: t.string().optional(""),
+            composer: t.instanceOf(this.store["Composer"].Class),
+            disabled: t.boolean().optional(),
+            dropzoneRef: t.signal(t.instanceOf(HTMLElement)).optional(),
+            mode: t.selection(["compact", "normal", "extended"]).optional("normal"),
+            onCloseFullComposerCallback: t.function([t.boolean()]).optional(),
+            onDiscardCallback: t.function([t.instanceOf(Event)]).optional(),
+            onPostCallback: t.function([]).optional(),
+            placeholder: t.string().optional(),
+            sidebar: t.boolean().optional(true),
+            showFullComposer: t.boolean().optional(true),
+            type: t.or([t.selection(["message", "note"]), t.literal(false)]).optional(),
+        });
+        this.composerActions = useComposerActions(this.composerActionsParams);
         this.EDIT_CLICK_TYPE = EDIT_CLICK_TYPE;
         this.OR_PRESS_SEND_KEYBIND = _t("or press %(send_keybind)s", {
             send_keybind: htmlJoin(
@@ -143,13 +150,13 @@ export class Composer extends Component {
         this.composerService = useService("mail.composer");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
-        this.inputContainerRef = useRef("input-container");
+        this.inputContainerRef = signal.ref(HTMLSpanElement);
         this.pickerContainerRef = useRef("picker-container");
-        this.state = useState({
+        this.state = proxy({
             active: true,
             isFullComposerOpen: false,
         });
-        this.root = useRef("root");
+        this.rootRef = signal.ref(HTMLDivElement);
         this.fullComposerRecoveryPopover = usePopover(FullComposerRecoveryPopover, {
             closeOnClickAway: false,
             closeOnEscape: false,
@@ -181,19 +188,20 @@ export class Composer extends Component {
             execBeforeUnmount: true,
         });
         this.updateFromEditor = false;
-        useExternalListener(window, "beforeunload", this.saveContent.bind(this));
-        useExternalListener(
+        useListener(window, "beforeunload", this.saveContent.bind(this));
+        useListener(
             window,
             "click",
             (ev) => {
+                const target = ev.composedPath()[0];
                 if (
                     this.ui.isSmall &&
-                    this.composerActions.activePicker &&
+                    this.composerActions.activeAction &&
                     this.pickerContainerRef.el &&
-                    ev.target !== this.pickerContainerRef.el &&
-                    !this.pickerContainerRef.el.contains(ev.target)
+                    target !== this.pickerContainerRef.el &&
+                    !this.pickerContainerRef.el.contains(target)
                 ) {
-                    this.composerActions.activePicker.close?.();
+                    this.composerActions.activeAction.actionPanelClose();
                 }
             },
             { capture: true }
@@ -261,6 +269,43 @@ export class Composer extends Component {
             () => [this.props.composer.forceCursorMove]
         );
         useLayoutEffect(
+            () => {
+                if (!this.env.inChatter || !this.props.composer.mentionedPartners.length) {
+                    return;
+                }
+                const fragment = createDocumentFragmentFromContent(
+                    this.props.composer.composerHtml
+                );
+                const elements = fragment.querySelectorAll(
+                    `.o_mail_redirect, .o-discuss-readonly-mention`
+                );
+                let hasChanged = false;
+                for (const el of elements) {
+                    const partnerId = Number(el.dataset.oeId);
+                    const partner = this.props.composer.mentionedPartners.find(
+                        (p) => p.id === partnerId
+                    );
+                    if (
+                        partner.partner_share &&
+                        this.props.type === COMPOSER_TYPES.NOTE &&
+                        el.tagName === "A"
+                    ) {
+                        const span = generatePartnerMentionElement(partner, { readonly: true });
+                        el.replaceWith(span);
+                        hasChanged = true;
+                    } else if (el.tagName !== "A") {
+                        const link = generatePartnerMentionElement(partner);
+                        el.replaceWith(link);
+                        hasChanged = true;
+                    }
+                }
+                if (hasChanged) {
+                    this.props.composer.composerHtml = getInnerHtml(fragment);
+                }
+            },
+            () => [this.props.type]
+        );
+        useLayoutEffect(
             (isFullComposerOpen, restoredFromFullComposer, fullComposerButtonEl) => {
                 if (isFullComposerOpen || !restoredFromFullComposer || !fullComposerButtonEl) {
                     this.fullComposerRecoveryPopover.close();
@@ -283,7 +328,7 @@ export class Composer extends Component {
             () => [
                 this.state.isFullComposerOpen,
                 this.props.composer.restoredFromFullComposer,
-                this.root.el?.querySelector("button[name='open-full-composer']"),
+                this.rootRef()?.querySelector("button[name='open-full-composer']"),
             ]
         );
         onMounted(() => {
@@ -295,22 +340,23 @@ export class Composer extends Component {
         onWillUnmount(() => {
             this.props.composer.isFocused = false;
         });
-        const composerProxy = reactive(this.props.composer, () => {
-            if (this.status === 2 /* DESTROYED */) {
-                return;
-            }
-            const composerHtml = composerProxy.composerHtml;
-            if (this.updateFromEditor) {
-                return;
-            }
-            if (!this.editor?.editable) {
-                return;
-            }
-            setElementContent(this.editor.editable, composerHtml);
-            this.setEditorCursorEnd();
-            this.editor.shared.history.addStep();
-        });
-        void composerProxy.composerHtml; // start observing
+        onWillDestroy(
+            immediateEffect(() => {
+                if (this.status === 2 /* DESTROYED */) {
+                    return;
+                }
+                const composerHtml = this.props.composer.composerHtml;
+                if (this.updateFromEditor) {
+                    return;
+                }
+                if (!this.editor?.editable) {
+                    return;
+                }
+                setElementContent(this.editor.editable, composerHtml);
+                this.setEditorCursorEnd();
+                this.editor.shared.history.commit();
+            })
+        );
     }
 
     setEditorCursorEnd() {
@@ -330,6 +376,25 @@ export class Composer extends Component {
 
     get areAllActionsDisabled() {
         return this.props.disabled;
+    }
+
+    get composerActionsParams() {
+        return { composer: () => this.props.composer };
+    }
+
+    /** @param {import("@mail/core/common/action").PartitionedActions} partitionedActions */
+    computeMoreActions(partitionedActions) {
+        if (this.props.mode === "extended" || partitionedActions.other.length === 0) {
+            this.moreActions = undefined;
+            return;
+        }
+        this.moreActions = this.composerActions.more(this.composerActionsParams, {
+            actions: partitionedActions.other,
+            disabledCondition: this.areAllActionsDisabled,
+            dropdownPosition: "top-start",
+            icon: "fa fa-plus-circle",
+            name: _t("More Actions"),
+        });
     }
 
     get isMultiUpload() {
@@ -361,6 +426,7 @@ export class Composer extends Component {
         return {
             content: this.props.composer.composerHtml,
             placeholder: this.placeholder,
+            baseContainers: ["DIV", "P"],
             Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
             composerPluginDependencies: {
                 onBeforePaste: (selection, ev) => this.onPaste(ev),
@@ -369,21 +435,24 @@ export class Composer extends Component {
                 onInput: this.onInput.bind(this),
                 onKeydown: this.onKeydown.bind(this),
             },
-            classList: ["o-mail-Composer-html"],
+            embeddedComponentInfo: { app: this.app, env: this.env },
+            resources: {
+                embedded_components: [syntaxHighlightingEmbedding],
+            },
+            classList: ["o-mail-Composer-html", "min-w-0"],
             onChange: () => this.onChangeWysiwygContent(),
             onEditorReady: () => {
                 this.setEditorCursorEnd();
-                this.editor.shared.history.addStep();
+                this.editor.shared.history.commit();
             },
         };
     }
 
     onClickCancelOrSaveEditText(ev) {
-        const composer = toRaw(this.props.composer);
-        if (composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.CANCEL) {
+        if (this.props.composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.CANCEL) {
             this.props.onDiscardCallback(ev);
         }
-        if (composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.SAVE) {
+        if (this.props.composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.SAVE) {
             this.editMessage(ev);
         }
     }
@@ -401,7 +470,7 @@ export class Composer extends Component {
     }
 
     get CANCEL_OR_SAVE_EDIT_TEXT() {
-        const tags = {
+        const substitutions = {
             open_samp: markup`<samp>`,
             close_samp: markup`</samp>`,
             open_em: markup`<em>`,
@@ -410,16 +479,16 @@ export class Composer extends Component {
             close_cancel: markup`</button>`,
             open_save: markup`<button class="btn btn-link fst-italic p-0 align-baseline" data-type="${EDIT_CLICK_TYPE.SAVE}">`,
             close_save: markup`</button>`,
+            save_keyboard_shortcut: this.env.inChatter
+                ? isMacOS()
+                    ? markup`CMD-Enter`
+                    : markup`CTRL-Enter`
+                : markup`Enter`,
         };
-        return this.env.inChatter
-            ? _t(
-                  "Press %(open_samp)sESC%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
-                  tags
-              )
-            : _t(
-                  "Press %(open_samp)sESC%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
-                  tags
-              );
+        return _t(
+            "Press %(open_samp)sESC%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)s%(save_keyboard_shortcut)s%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
+            substitutions
+        );
     }
 
     get SEND_TEXT() {
@@ -464,99 +533,31 @@ export class Composer extends Component {
     }
 
     get hasSuggestions() {
-        return Boolean(this.suggestion?.state.items);
+        return Boolean(this.suggestion?.search.results);
     }
 
     get navigableListProps() {
+        const { loading, searchTerm, results } = this.suggestion.search;
         const props = {
-            anchorRef: this.inputContainerRef.el,
+            anchorRef: this.inputContainerRef,
             position: this.env.inChatter ? "bottom-fit" : "top-fit",
             onSelect: (ev, option) => {
                 this.suggestion.insert(option);
                 markEventHandled(ev, "composer.selectSuggestion");
             },
-            isLoading: !!this.suggestion.search.term && this.suggestion.state.isFetching,
+            isLoading: !!searchTerm && loading,
             options: [],
+            rememberPosition: false,
         };
         if (!this.hasSuggestions) {
             return props;
         }
-        const suggestions = this.suggestion.state.items.suggestions;
-        switch (this.suggestion.state.items.type) {
-            case "Partner":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionPartner",
-                    options: suggestions.map((suggestion) => {
-                        if (suggestion.isSpecial) {
-                            return {
-                                ...suggestion,
-                                group: 1,
-                                optionTemplate: "mail.Composer.suggestionSpecial",
-                                classList: "o-mail-Composer-suggestion",
-                            };
-                        } else if (suggestion.Model.getName() === "res.role") {
-                            return {
-                                label: suggestion.name,
-                                role: suggestion,
-                                thread: this.thread,
-                                optionTemplate: "mail.Composer.suggestionRole",
-                                classList: "o-mail-Composer-suggestion",
-                            };
-                        } else {
-                            return {
-                                label: this.thread?.getPersonaName(suggestion) ?? suggestion.name,
-                                thread: this.thread,
-                                partner: suggestion,
-                                classList: "o-mail-Composer-suggestion",
-                            };
-                        }
-                    }),
-                };
-            case "discuss.channel":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionChannel",
-                    options: suggestions.map((suggestion) => ({
-                        label: suggestion.fullNameWithParent,
-                        channel: suggestion,
-                        classList: "o-mail-Composer-suggestion",
-                    })),
-                };
-            case "ChannelCommand":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionChannelCommand",
-                    options: suggestions.map((suggestion) => ({
-                        label: suggestion.name,
-                        help: suggestion.help,
-                        classList: "o-mail-Composer-suggestion",
-                    })),
-                };
-            case "mail.canned.response":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionCannedResponse",
-                    options: suggestions.map((suggestion) => ({
-                        cannedResponse: suggestion,
-                        label: suggestion.substitution,
-                        source: suggestion.source,
-                        title: suggestion.substitution,
-                        classList: "o-mail-Composer-suggestion",
-                    })),
-                };
-            case "emoji":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionEmoji",
-                    options: suggestions.map((suggestion) => ({
-                        emoji: suggestion,
-                        label: suggestion.codepoints,
-                    })),
-                };
-            default:
-                return props;
-        }
+        return {
+            ...props,
+            ...mapSuggestionsToOptions(results.type, results.suggestions, {
+                thread: this.thread,
+            }),
+        };
     }
 
     onDropFile(ev) {
@@ -601,18 +602,25 @@ export class Composer extends Component {
     }
 
     onKeydown(ev) {
-        const composer = toRaw(this.props.composer);
         switch (ev.key) {
             case "ArrowUp":
-                if (!this.env.inChatter && composer.composerText === "" && composer.thread) {
-                    const messageToEdit = composer.thread.lastEditableMessageOfSelf;
+                if (
+                    !this.env.inChatter &&
+                    this.props.composer.composerText === "" &&
+                    this.props.composer.thread
+                ) {
+                    const messageToEdit = this.props.composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
                         messageToEdit.enterEditMode(this.props.composer.thread);
                     }
                 }
                 break;
             case "Enter": {
-                if (isEventHandled(ev, "NavigableList.select") || !this.state.active) {
+                if (
+                    isEventHandled(ev, "NavigableList.select") ||
+                    document.querySelector(".o-we-SuggestionList .o-navigable") ||
+                    !this.state.active
+                ) {
                     ev.preventDefault();
                     return;
                 }
@@ -625,7 +633,7 @@ export class Composer extends Component {
                     return;
                 }
                 ev.preventDefault(); // to prevent useless return
-                if (composer.message) {
+                if (this.props.composer.message) {
                     this.editMessage();
                 } else {
                     this.sendMessage();
@@ -678,9 +686,8 @@ export class Composer extends Component {
         const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
         let default_body = this.props.composer.composerHtml;
         if (isHtmlEmpty(default_body)) {
-            const composer = toRaw(this.props.composer);
             // Reset signature when recovering an empty body.
-            composer.emailAddSignature = true;
+            this.props.composer.emailAddSignature = true;
         }
         const signature = this.thread.effectiveSelf.main_user_id?.getSignatureBlock();
         default_body = this.formatDefaultBodyForFullComposer(
@@ -695,11 +702,23 @@ export class Composer extends Component {
             default_partner_ids:
                 this.props.type === "note"
                     ? []
-                    : allRecipients.map((recipient) => recipient.partner_id),
+                    : allRecipients
+                          .filter((r) => r.recipient_type !== "cc")
+                          .map((r) => r.partner_id),
+            default_partner_cc_ids:
+                this.props.type === "note"
+                    ? []
+                    : allRecipients
+                          .filter((r) => r.recipient_type === "cc")
+                          .map((r) => r.partner_id),
             default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             clicked_on_full_composer: true,
+            body_contains_signature_only:
+                !this.props.composer.composerText ||
+                this.props.composer.composerText.trim().length === 0,
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually
+            is_thread_composer: true,
             ...this.fullComposerAdditionalContext,
         };
         const action = {
@@ -717,17 +736,13 @@ export class Composer extends Component {
                 // args === { special: true } : click on 'discard'
                 const accidentalDiscard = args?.dismiss;
                 const isDiscard = accidentalDiscard || args?.special;
-                // otherwise message is posted (args === [undefined])
-                if (!isDiscard && this.props.composer.thread.model === "mail.box") {
-                    this.notifySendFromMailbox();
-                }
                 if (accidentalDiscard) {
                     this.fullComposerBus.trigger("ACCIDENTAL_DISCARD", {
-                        onAccidentalDiscard: (isEmpty) => {
+                        onAccidentalDiscard: async (isEmpty) => {
                             if (!isEmpty) {
                                 this.state.isFullComposerOpen = true;
                                 this.saveContent();
-                                this.restoreContent();
+                                await this.restoreContent();
                                 this.state.isFullComposerOpen = false;
                             }
                         },
@@ -773,9 +788,7 @@ export class Composer extends Component {
     }
 
     notifySendFromMailbox() {
-        this.env.services.notification.add(_t('Message posted on "%s"', this.thread.displayName), {
-            type: "info",
-        });
+        this.store.notifySendFromMailbox(this.thread.displayName);
     }
 
     isEventTrusted(ev) {
@@ -793,7 +806,7 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
-            await cb(this.props.composer.composerHtml);
+            await cb(trimEmptyBlocksAround(this.props.composer.composerHtml));
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
@@ -812,27 +825,29 @@ export class Composer extends Component {
     }
 
     async sendMessage() {
-        const composer = toRaw(this.props.composer);
-        this.composerActions.activePicker?.close?.();
-        if (composer.message) {
+        this.composerActions.activeAction?.actionPanelClose?.();
+        if (this.props.composer.message) {
             this.editMessage();
             return;
         }
         if (this.props.type !== "note") {
             const allRecipients = [
-                ...composer.thread.suggestedRecipients,
-                ...composer.thread.additionalRecipients,
+                ...this.props.composer.thread.suggestedRecipients,
+                ...this.props.composer.thread.additionalRecipients,
             ];
             if (allRecipients.some((recipient) => !recipient.email || !isEmail(recipient.email))) {
                 return;
             }
         }
-        const { specialMentions, roles } = this.store.getMentionsFromText(composer.composerHtml, {
-            mentionedRoles: composer.mentionedRoles,
-        });
+        const { specialMentions, roles } = this.store.getMentionsFromText(
+            this.props.composer.composerHtml,
+            {
+                mentionedRoles: this.props.composer.mentionedRoles,
+            }
+        );
         const hasEveryoneBigMention =
             specialMentions.includes("everyone") &&
-            composer.thread.channel?.member_count > MENTION_AMOUNT_WARNING;
+            this.props.composer.thread.channel?.member_count > MENTION_AMOUNT_WARNING;
         const rolesMentionAmount = roles.reduce((sum, role) => sum + (role.user_ids_count || 0), 0);
         if (hasEveryoneBigMention || rolesMentionAmount > MENTION_AMOUNT_WARNING) {
             const confirmDef = Promise.withResolvers();
@@ -841,7 +856,7 @@ export class Composer extends Component {
                     "You're about to notify %(amount)s people with %(mention)s. Do you want to continue?",
                     {
                         amount: hasEveryoneBigMention
-                            ? composer.thread.channel.member_count
+                            ? this.props.composer.thread.channel.member_count
                             : rolesMentionAmount,
                         mention: hasEveryoneBigMention
                             ? markup`<a class="o-discuss-mention pe-none">@everyone</a>`
@@ -867,15 +882,13 @@ export class Composer extends Component {
     }
 
     get postData() {
-        const composer = toRaw(this.props.composer);
         return {
-            attachments: composer.attachments || [],
-            emailAddSignature: composer.emailAddSignature,
+            attachments: [...(this.props.composer.attachments || [])],
+            emailAddSignature: this.props.composer.emailAddSignature,
             isNote: this.props.type === "note",
-            mentionedChannels: composer.mentionedChannels || [],
-            mentionedPartners: composer.mentionedPartners || [],
-            mentionedRoles: composer.mentionedRoles || [],
-            cannedResponseIds: composer.cannedResponses.map((c) => c.id),
+            mentionedPartners: [...(this.props.composer.mentionedPartners || [])],
+            mentionedRoles: [...(this.props.composer.mentionedRoles || [])],
+            cannedResponseIds: this.props.composer.cannedResponses.map((c) => c.id),
             parentId: this.props.composer.replyToMessage?.id,
         };
     }
@@ -885,7 +898,6 @@ export class Composer extends Component {
      * @property {import("models").Attachment[]} attachments
      * @property {boolean} isNote
      * @property {number} parentId
-     * @property {integer[]} mentionedChannelIds
      * @property {integer[]} mentionedPartnerIds
      */
 
@@ -895,17 +907,15 @@ export class Composer extends Component {
      * @param {extraData} extraData Message extra meta data info needed by other modules
      */
     async _sendMessage(value, postData, extraData) {
-        const thread = toRaw(this.props.composer.thread);
-        const postThread = toRaw(this.thread);
-        const post = postThread.post.bind(postThread, value, postData, extraData);
+        const post = this.thread.post.bind(this.thread, value, postData, extraData);
         let message;
-        if (postThread.channel) {
+        if (this.thread.channel) {
             // feature of (optimistic) temp message
             post();
         } else {
             message = await post();
         }
-        if (thread.model === "mail.box") {
+        if (this.props.composer.thread.model === "mail.box") {
             this.notifySendFromMailbox();
         }
         this.suggestion?.clearRawMentions();
@@ -913,49 +923,52 @@ export class Composer extends Component {
         this.props.composer.replyToMessage = undefined;
         this.props.composer.emailAddSignature = true;
         this.props.composer.thread.additionalRecipients = [];
+        this.deleteSavedContent();
         return message;
     }
 
     async editMessage() {
-        const composer = toRaw(this.props.composer);
         if (!this.askDeleteFromEdit) {
             await this.processMessage(async (value) =>
-                composer.message.edit(value, composer.attachments, {
-                    mentionedChannels: composer.mentionedChannels,
-                    mentionedPartners: composer.mentionedPartners,
-                    mentionedRoles: composer.mentionedRoles,
+                this.props.composer.message.edit(value, this.props.composer.attachments, {
+                    mentionedPartners: this.props.composer.mentionedPartners,
+                    mentionedRoles: this.props.composer.mentionedRoles,
                 })
             );
         } else {
-            composer.message.showDeleteConfirm(this);
+            this.props.composer.message.showDeleteConfirm(this, this.rootRef);
         }
         this.suggestion?.clearRawMentions();
     }
 
     get askDeleteFromEdit() {
-        const composer = toRaw(this.props.composer);
-        return !composer.composerText && composer.message.attachment_ids.length === 0;
+        return (
+            !this.props.composer.composerText &&
+            this.props.composer.message.attachment_ids.length === 0
+        );
     }
 
     onClickInsertCannedResponse(ev) {
         markEventHandled(ev, "composer.clickInsertCannedResponse");
-        const composer = toRaw(this.props.composer);
         if (this.editor) {
             if (!isHtmlEmpty(this.props.composer.composerHtml)) {
                 this.editor.shared.dom.insert(" ");
             }
             this.editor.shared.dom.insert("::");
-            this.editor.shared.history.addStep();
+            this.editor.shared.history.commit();
         } else {
-            const composerText = composer.composerText;
-            const firstPart = composerText.slice(0, composer.selection.start);
-            const secondPart = composerText.slice(composer.selection.end, composerText.length);
+            const composerText = this.props.composer.composerText;
+            const firstPart = composerText.slice(0, this.props.composer.selection.start);
+            const secondPart = composerText.slice(
+                this.props.composer.selection.end,
+                composerText.length
+            );
             const toInsertPart = firstPart.length === 0 || firstPart.at(-1) === " " ? "::" : " ::";
-            composer.composerText = firstPart + toInsertPart + secondPart;
+            this.props.composer.composerText = firstPart + toInsertPart + secondPart;
             this.selection.moveCursor((firstPart + toInsertPart).length);
         }
         if (!this.ui.isSmall || !this.env.inChatter) {
-            composer.autofocus++;
+            this.props.composer.autofocus++;
         }
     }
 
@@ -974,29 +987,31 @@ export class Composer extends Component {
     }
 
     addEmoji(str) {
-        const composer = toRaw(this.props.composer);
         if (this.editor) {
             this.editor.shared.dom.insert(str);
-            this.editor.shared.history.addStep();
+            this.editor.shared.history.commit();
         } else {
-            const composerText = composer.composerText;
-            const firstPart = composerText.slice(0, composer.selection.start);
-            const secondPart = composerText.slice(composer.selection.end, composerText.length);
-            composer.composerText = firstPart + str + secondPart;
+            const composerText = this.props.composer.composerText;
+            const firstPart = composerText.slice(0, this.props.composer.selection.start);
+            const secondPart = composerText.slice(
+                this.props.composer.selection.end,
+                composerText.length
+            );
+            this.props.composer.composerText = firstPart + str + secondPart;
             this.selection.moveCursor((firstPart + str).length);
         }
         if (this.ui.isSmall && !this.env.inChatter) {
             return false;
         } else {
-            composer.autofocus++;
+            this.props.composer.autofocus++;
         }
     }
 
-    onFocusin() {
-        const composer = toRaw(this.props.composer);
-        composer.isFocused = true;
-        if (composer.thread?.shouldMarkAsReadOnFocus) {
-            composer.thread.markAsRead();
+    onFocusin(ev) {
+        ev.stopPropagation();
+        this.props.composer.isFocused = true;
+        if (this.props.composer.thread?.shouldMarkAsReadOnFocus) {
+            this.props.composer.thread.markAsRead();
         }
     }
 
@@ -1011,30 +1026,25 @@ export class Composer extends Component {
     }
 
     saveContent() {
-        const composer = toRaw(this.props.composer);
-        if (composer.restoredFromFullComposer && !this.state.isFullComposerOpen) {
+        if (this.props.composer.restoredFromFullComposer && !this.state.isFullComposerOpen) {
             return;
         }
-        const saveContentToLocalStorage = ({
+        const saveContentToLocalStorage = async ({
             composerHtml,
             emailAddSignature,
             replyToMessageId,
-            fromFullComposer = composer.restoredFromFullComposer,
+            fromFullComposer = this.props.composer.restoredFromFullComposer,
         }) => {
             if (isHtmlEmpty(composerHtml)) {
-                browser.localStorage.removeItem(composer.localId);
+                await this.deleteSavedContent();
             } else {
-                browser.localStorage.setItem(
-                    composer.localId,
-                    JSON.stringify({
-                        emailAddSignature,
-                        replyToMessageId,
-                        composerHtml: isMarkup(composerHtml)
-                            ? ["markup", composerHtml]
-                            : composerHtml,
-                        fromFullComposer,
-                    })
-                );
+                const db = new IndexedDB("mail");
+                await db.write("composer", this.props.composer.localId, {
+                    emailAddSignature,
+                    replyToMessageId,
+                    composerHtml: isMarkup(composerHtml) ? ["markup", composerHtml] : composerHtml,
+                    fromFullComposer,
+                });
             }
         };
         if (this.state.isFullComposerOpen) {
@@ -1044,34 +1054,37 @@ export class Composer extends Component {
             });
         } else {
             saveContentToLocalStorage({
-                composerHtml: composer.composerHtml,
+                composerHtml: this.props.composer.composerHtml,
                 emailAddSignature: true,
-                replyToMessageId: composer.replyToMessage?.id,
+                replyToMessageId: this.props.composer.replyToMessage?.id,
                 fromFullComposer: false,
             });
         }
     }
 
-    restoreContent() {
-        const composer = toRaw(this.props.composer);
-        let config;
-        try {
-            config = JSON.parse(browser.localStorage.getItem(composer.localId));
-        } catch {
-            browser.localStorage.removeItem(composer.localId);
-        }
+    async deleteSavedContent() {
+        const db = new IndexedDB("mail");
+        await db.delete("composer", this.props.composer.localId);
+    }
+
+    async restoreContent() {
+        const db = new IndexedDB("mail");
+        const config = await db.read("composer", this.props.composer.localId);
         if (!config) {
+            await this.deleteSavedContent();
             return;
         }
         if (!isHtmlEmpty(config.composerHtml)) {
-            if (composer.thread && !composer.thread.channel) {
-                composer.restoredFromFullComposer = config.fromFullComposer;
+            if (this.props.composer.thread && !this.props.composer.thread.channel) {
+                this.props.composer.restoredFromFullComposer = config.fromFullComposer;
             }
-            composer.emailAddSignature = config.emailAddSignature;
-            composer.composerHtml = config.composerHtml;
+            this.props.composer.emailAddSignature = config.emailAddSignature;
+            this.props.composer.composerHtml = config.composerHtml;
         }
         if (Number.isInteger(config.replyToMessageId)) {
-            composer.replyToMessage = this.store["mail.message"].insert(config.replyToMessageId);
+            this.props.composer.replyToMessage = this.store["mail.message"].insert(
+                config.replyToMessageId
+            );
         }
     }
 }

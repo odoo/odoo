@@ -11,10 +11,7 @@
                 <div class="o-EmojiPicker-search d-flex align-items-center m-2 rounded">
                     <i t-if="!this.state.showCategories" aria-label="back" t-on-click="this.openCategories" class="oi oi-arrow-left cursor-pointer p-2 fs-5"/>
                     <span class="d-flex mx-1 w-100 rounded o-active">
-                        <t t-call="discuss.GifPicker.searchInput">
-                            <t t-if="this.props.state" t-set="localState" t-value="this.props.state"/>
-                            <t t-else="" t-set="localState" t-value="this.state"/>
-                        </t>
+                        <t t-call="discuss.GifPicker.searchInput"/>
                         <i class="oi oi-search p-2 fs-5 rounded-start-0 rounded-3 o-active" title="Search..." role="img" aria-label="Search..."/>
                     </span>
                 </div>
@@ -99,6 +96,6 @@
     </t>
 
     <t t-name="discuss.GifPicker.searchInput">
-        <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active" placeholder="Search for a GIF" t-custom-model="localState.searchTerm" t-custom-ref="autofocus" />
+        <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active" placeholder="Search for a GIF" t-model.proxy="this.state.searchTerm" t-custom-ref="autofocus" />
     </t>
 </templates>

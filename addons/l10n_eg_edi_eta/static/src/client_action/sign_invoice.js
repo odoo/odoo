@@ -1,10 +1,41 @@
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
+import { browser } from "@web/core/browser/browser";
+
+function jsonToFormData(params) {
+    if (params instanceof FormData) {
+        return params;
+    }
+
+    const formData = new FormData();
+    for (const [key, value] of Object.entries(params)) {
+        for (const val of [].concat(value)) {
+            formData.append(key, val);
+        }
+    }
+    return formData;
+}
+
+async function initLNA(notification) {
+    try {
+        const result = await navigator.permissions.query({ name: "local-network-access" });
+        if (["granted", "prompt"].includes(result?.state)) {
+            return true;
+        }
+        const message = _t(
+            "Local Network Access permission is denied. Some hardware devices might not work properly. Please allow Local Network Access in your browser settings."
+        );
+        notification.add(message, { type: "warning" });
+        return false;
+    } catch {
+        return false;
+    }
+}
 
 async function actionGetDrive(env, action, type) {
     const { drive_id, sign_host: host } = action.params;
-    const { orm, http, dialog, action: actionService } = env.services;
+    const { orm, notification, dialog, action: actionService } = env.services;
 
     let route = host;
     let key, method;
@@ -18,9 +49,16 @@ async function actionGetDrive(env, action, type) {
         key = "invoices";
     }
 
+    const useLna = await initLNA(notification);
+
     let result;
     try {
-        result = await http.post(route, action.params);
+        result = await browser.fetch(route, {
+            method: "POST",
+            targetAddressSpace: useLna ? "local" : undefined,
+            body: jsonToFormData(action.params),
+        });
+        result = await result.json();
     } catch {
         dialog.add(AlertDialog, {
             body: _t("Error trying to connect to the middleware. Is the middleware running?"),

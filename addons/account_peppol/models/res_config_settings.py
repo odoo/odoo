@@ -4,6 +4,8 @@ from odoo import _, api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
+    routing_scheme = fields.Selection(string="Routing Scheme", related='company_id.partner_id.routing_scheme', readonly=False)
+    routing_endpoint = fields.Char(string="Routing Endpoint", related='company_id.partner_id.routing_endpoint', readonly=False)
     account_peppol_edi_user = fields.Many2one(related='company_id.account_peppol_edi_user')
     account_peppol_edi_mode = fields.Selection(related='account_peppol_edi_user.edi_mode')
     account_peppol_contact_email = fields.Char(
@@ -11,9 +13,7 @@ class ResConfigSettings(models.TransientModel):
         inverse='_inverse_account_peppol_contact_email',
     )
 
-    account_peppol_eas = fields.Selection(related='company_id.peppol_eas', readonly=False)
     account_peppol_edi_identification = fields.Char(related='account_peppol_edi_user.edi_identification')
-    account_peppol_endpoint = fields.Char(related='company_id.peppol_endpoint', readonly=False)
     account_peppol_migration_key = fields.Char(related='company_id.account_peppol_migration_key', readonly=False)
     account_peppol_phone_number = fields.Char(related='company_id.account_peppol_phone_number', readonly=False)
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
@@ -30,6 +30,10 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_peppol_participation_role',
         inverse='_inverse_peppol_participation_role',
     )
+
+    def _get_peppol_proxy_type(self):
+        self.ensure_one()
+        return self.account_peppol_edi_user.proxy_type
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -95,7 +99,7 @@ class ResConfigSettings(models.TransientModel):
                 }
             }
             record.account_peppol_edi_user._call_peppol_proxy(
-                endpoint='/api/peppol/1/update_user',
+                endpoint=record.account_peppol_edi_user._get_peppol_proxy_endpoint('1/update_user'),
                 params=params,
             )
 
@@ -143,3 +147,8 @@ class ResConfigSettings(models.TransientModel):
         if self.account_peppol_edi_user:
             self.account_peppol_edi_user._peppol_deregister_participant()
         return True
+
+    def button_peppol_reregister(self):
+        self.ensure_one()
+        self.account_peppol_edi_user._peppol_deregister_participant()
+        return self.action_open_peppol_form()

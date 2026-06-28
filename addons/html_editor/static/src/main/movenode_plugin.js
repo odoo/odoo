@@ -1,6 +1,6 @@
 import { useNativeDraggable } from "@html_editor/utils/drag_and_drop";
-import { childNodeIndex, endPos, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
-import { xml } from "@odoo/owl";
+import { childNodeIndex, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
+import { htmlEscape, xml } from "@odoo/owl";
 import { Plugin } from "../plugin";
 import { closestElement } from "../utils/dom_traversal";
 import { _t } from "@web/core/l10n/translation";
@@ -136,7 +136,7 @@ export class MoveNodePlugin extends Plugin {
             elementsToGarbageCollect.delete(element);
             let hookElement = this.elementHookMap.get(element);
             if (!hookElement) {
-                hookElement = document.createElement("div");
+                hookElement = this.dependencies.localOverlay.createElement("div");
                 this.elementHookMap.set(element, hookElement);
                 hookElement.classList.add("oe-dropzone-hook");
                 hookElement.addEventListener("mouseenter", () => {
@@ -266,8 +266,26 @@ export class MoveNodePlugin extends Plugin {
             anchorY += (anchorBlockRect.height - WIDGET_MOVE_SIZE) / 2;
         }
 
-        this.moveWidget = this.document.createElement("div");
+        this.moveWidget = this.dependencies.localOverlay.createElement("div");
         this.moveWidget.className = "oe-sidewidget-move oi oi-draggable";
+        const formSheet = this.widgetContainer.closest(".o_form_sheet");
+        // Calculate moveWidget's left pos in advance to avoid layout trashing
+        let moveWidgetLeftPos = anchorX - WIDGET_CONTAINER_WIDTH;
+        if (formSheet) {
+            const formSheetRect = formSheet.getBoundingClientRect();
+            if (formSheetRect.left > moveWidgetLeftPos) {
+                this.moveWidget.classList.toggle("oe_movewidget_border", true);
+                // Set moveWidget postion with respect to form sheet border
+                const MOVE_WIDGET_OFFSET_FROM_SHEET_BORDER = 5.5;
+                moveWidgetLeftPos = formSheetRect.left - MOVE_WIDGET_OFFSET_FROM_SHEET_BORDER;
+                // Set ::after element width same as offset so the border
+                // perfectly bridges the gap between the widget and the sheet border.
+                this.moveWidget.style.setProperty(
+                    "--after-element-width",
+                    `${MOVE_WIDGET_OFFSET_FROM_SHEET_BORDER}px`
+                );
+            }
+        }
         this.widgetContainer.append(this.moveWidget);
 
         let moveWidgetOffsetTop = 0;
@@ -279,13 +297,15 @@ export class MoveNodePlugin extends Plugin {
         this.moveWidget.style.width = `${WIDGET_MOVE_SIZE}px`;
         this.moveWidget.style.height = `${WIDGET_MOVE_SIZE}px`;
         this.moveWidget.style.top = `${anchorY - containerRect.y - moveWidgetOffsetTop}px`;
-        this.moveWidget.style.left = `${anchorX - containerRect.x - WIDGET_CONTAINER_WIDTH}px`;
+        this.moveWidget.style.left = `${moveWidgetLeftPos - containerRect.x}px`;
 
+        const dragToMoveTooltip = htmlEscape(_t("Drag to move"));
+        const clickToSelectTooltip = htmlEscape(_t("Click to select"));
         this.services.tooltip.add(this.moveWidget, {
             template: xml`
                 <div class="o-tooltip tooltip-inner text-start px-3">
-                    ${_t("Drag to move")}<br/>
-                    ${_t("Click to select")}
+                    ${dragToMoveTooltip}<br/>
+                    ${clickToSelectTooltip}
                 </div>`,
             arrow: true,
         });
@@ -320,7 +340,7 @@ export class MoveNodePlugin extends Plugin {
                     const container =
                         movableElement.tagName === "LI"
                             ? movableElement.parentElement.cloneNode(false)
-                            : document.createElement("div");
+                            : this.dependencies.localOverlay.createElement("div");
                     if (container.tagName === "OL") {
                         const originalIndex = childNodeIndex(movableElement) + 1;
                         container.setAttribute("start", originalIndex);
@@ -371,7 +391,7 @@ export class MoveNodePlugin extends Plugin {
                 originalRect.height + marginTop + marginBottom
             );
 
-            const dropzoneBox = document.createElement("div");
+            const dropzoneBox = this.dependencies.localOverlay.createElement("div");
             dropzoneBox.className = `oe-dropzone-box`;
             dropzoneBox.style.top = `${dropzoneRect.top - containerRect.top}px`;
             dropzoneBox.style.left =
@@ -381,7 +401,7 @@ export class MoveNodePlugin extends Plugin {
             dropzoneBox.style.width = `${dropzoneRect.width}px`;
             dropzoneBox.style.height = `${dropzoneRect.height}px`;
 
-            const dropzoneHintBox = document.createElement("div");
+            const dropzoneHintBox = this.dependencies.localOverlay.createElement("div");
             dropzoneHintBox.className = `oe-dropzone-box`;
             dropzoneHintBox.style.top = `${dropzoneHintRect.top - containerRect.top}px`;
             dropzoneHintBox.style.left = `${dropzoneHintRect.left - containerRect.left}px`;
@@ -390,7 +410,7 @@ export class MoveNodePlugin extends Plugin {
 
             const sideElements = {};
             for (const direction of directions) {
-                const sideElement = document.createElement("div");
+                const sideElement = this.dependencies.localOverlay.createElement("div");
                 sideElement.className = `oe-dropzone-box-side oe-dropzone-box-side-${direction}`;
                 sideElements[direction] = sideElement;
                 dropzoneBox.append(sideElement);
@@ -398,7 +418,7 @@ export class MoveNodePlugin extends Plugin {
                     this._currentZone = [direction];
 
                     removeDropHint();
-                    this._currentDropHint = document.createElement("div");
+                    this._currentDropHint = this.dependencies.localOverlay.createElement("div");
                     this._currentDropHint.className = `oe-current-drop-hint`;
                     const currentDropHintSize = 4;
                     const currentDropHintSizeHalf = currentDropHintSize / 2;
@@ -452,6 +472,7 @@ export class MoveNodePlugin extends Plugin {
         this.dropzoneHintContainer.replaceChildren();
 
         if (this._currentDropHintElementPosition) {
+            const cursors = this.dependencies.selection.preserveSelection();
             const [position, focusElelement] = this._currentDropHintElementPosition;
             this._currentDropHintElementPosition = undefined;
             const previousParent = movableElement.parentElement;
@@ -478,17 +499,25 @@ export class MoveNodePlugin extends Plugin {
                     previousParent.remove();
                 } else {
                     const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                    const br = document.createElement("br");
-                    baseContainer.append(br);
                     previousParent.append(baseContainer);
                 }
             }
-            const selectionPosition = endPos(movableElement);
-            this.dependencies.selection.setSelection({
-                anchorNode: selectionPosition[0],
-                anchorOffset: selectionPosition[1],
-            });
-            this.dependencies.history.addStep();
+            // Preserve the selection if it was inside the moved element,
+            // otherwise place the caret at the start of the moved element.
+            const isSelectionInsideMovedNode =
+                movableElement.contains(cursors.anchor.node) &&
+                movableElement.contains(cursors.focus.node);
+            if (isSelectionInsideMovedNode) {
+                cursors.restore();
+            } else {
+                const selectionPosition = getDeepestPosition(movableElement, 0);
+                this.dependencies.selection.setSelection({
+                    anchorNode: selectionPosition[0],
+                    anchorOffset: selectionPosition[1],
+                });
+            }
+            this.dependencies.selection.focusEditable();
+            this.dependencies.history.commit();
         }
     }
     onMousemove(e) {

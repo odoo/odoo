@@ -188,18 +188,17 @@
                                 <td style="padding-top: 4px; color: #495057;">Subtotal</td>
                                 <td style="padding-top: 4px; text-align: right; color: #495057;" width="100px" align="right"><t t-out="format_amount(object.amount_untaxed, object.currency_id) or ''">-</t></td>
                             </tr>
-                            <tr>
-                                <t t-if="object.tax_totals and object.tax_totals['subtotals']">
-                                        <t t-foreach="object.tax_totals['subtotals']" t-as="line">
-                                            <t t-foreach="line['tax_groups']" t-as="tax_line">
-                                                <tr>
-                                                    <td style="padding: 4px 0 8px 0; color: #495057;"><span t-out="tax_line['group_name']"/></td>
-                                                    <td style="padding: 4px 0 8px 0; text-align: right; color: #495057;" width="100px" align="right" t-out="format_amount(tax_line['tax_amount_currency'], object.currency_id) or ''">$ 0.00</td>
-                                                </tr>
-                                            </t>
-                                        </t>
-                                    </t>
-                            </tr>
+                        </table>
+                        <t t-if="object.tax_totals and object.tax_totals['subtotals']">
+                            <t t-set="all_tax_lines" t-value="[tax for line in object.tax_totals['subtotals'] for tax in line['tax_groups']]"/>
+                            <table width="100%" t-if="all_tax_lines" style="font-size: 14px; border-collapse:collapse;" role="presentation">
+                                <tr t-foreach="all_tax_lines" t-as="tax_line">
+                                    <td style="padding: 4px 0 8px 0; color: #495057;"><span t-out="tax_line['group_name']"/></td>
+                                    <td style="padding: 4px 0 8px 0; text-align: right; color: #495057;" width="100px" align="right" t-out="format_amount(tax_line['tax_amount_currency'], object.currency_id) or ''">$ 0.00</td>
+                                </tr>
+                            </table>
+                        </t>
+                        <table width="100%" role="presentation" style="font-size: 14px; border-collapse:collapse;">
                             <tr>
                                 <td style="padding-top: 8px; border-top: 1px solid #343a40;"><strong>Total</strong></td>
                                 <td style="padding-top: 8px; border-top: 1px solid #343a40; text-align: right" width="100px" align="right">
@@ -283,6 +282,92 @@
             </field>
             <field name="report_template_ids" eval="[]"/>
             <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_template_back_in_stock" model="mail.template">
+            <field name="name">Product: Back in Stock Email</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="subject">{{ object.name or 'Product' }} is back in stock</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="False"/>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
+            <field name="body_html" type="html">
+                <t t-set="website" t-value="object.website_id or object.website_id.get_current_website()"/>
+                <div style="margin: 0px; padding: 0px;">
+                    <t
+                        t-if="website"
+                        t-set="logo_src"
+                        t-value="website.image_url(website, 'logo')"
+                    />
+                    <t
+                        t-else=""
+                        t-set="logo_src"
+                        t-valuef="/logo.png?company=#{object.company_id.id}"
+                    />
+                    <img
+                        t-att-src="logo_src"
+                        style="display:block; height:50px; margin:0 0 16px;"
+                        alt="Logo"
+                    />
+                    <p>
+                        Hello <t t-out="ctx.get('customer_name')">Customer</t>,
+                    </p>
+                    <p>The product you were waiting for is now back in stock!</p>
+                    <div
+                        t-if="not is_html_empty(user.signature)"
+                        style="font-size: 14px; margin: 0 0 16px;"
+                    >
+                        <t t-out="user.signature or ''">Mitchell Admin</t>
+                    </div>
+                    <div t-attf-style="margin-bottom: 22px; font-size: 14px;">
+                        <a
+                            t-att-href="object.website_url"
+                            t-attf-style="background-color: {{website.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{website.company_id.email_primary_color or '#fff'}}; border-radius: 5px; font-size:14px;"
+                        >
+                            Order Now
+                        </a>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <table
+                            role="presentation"
+                            width="100%"
+                            style="max-width: 590px; border-collapse: collapse; font-size: 14px;"
+                        >
+                            <tr>
+                                <td
+                                    width="24%"
+                                    style="max-width: 120px; padding: 0 10px 10px 0; vertical-align: top;"
+                                >
+                                    <img
+                                        t-att-src="website.image_url(object, 'image_1920')"
+                                        style="width: 100px; height: 100px; object-fit: contain;"
+                                        alt="Product image"
+                                    />
+                                </td>
+                                <td style="padding-bottom: 8px; vertical-align: top;">
+                                    <h2 t-att-style="'margin:0; font-size:14px; color:%s;' % ((website and website.company_id.email_secondary_color) or '#875A7B')">
+                                        <strong t-out="object.name or ''">Desk Combination</strong>
+                                    </h2>
+                                    <p
+                                        t-if="object.product_template_attribute_value_ids"
+                                        style="margin: 4px 0;"
+                                    >
+                                        ( <t t-out="', '.join(object.product_template_attribute_value_ids.mapped('name'))">Wood</t> )
+                                    </p>
+                                    <t t-out="object.description_ecommerce or ''">Desk Description</t>
+                                </td>
+                                <td
+                                    width="19%"
+                                    align="right"
+                                    style="max-width: 100%; vertical-align: top;"
+                                >
+                                    <t t-out="format_amount(object.list_price, object.currency_id)">$ 450</t>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </field>
         </record>
     </data>
 </odoo>

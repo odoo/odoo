@@ -14,6 +14,7 @@ export class ProductVariantPreviewImageHover extends Interaction {
     setup() {
         this.productImg = this.el.querySelector('.oe_product_image_img_wrapper_primary img');
         this.originalImgSrc = this.productImg.getAttribute('src');
+        this.originalImgSrcset = this.productImg.getAttribute('srcset');
     }
 
     /**
@@ -43,17 +44,27 @@ export class ProductVariantPreviewImageHover extends Interaction {
      */
     _mouseLeave() {
         if (!this.env.isSmall) {
-            this._setImgSrc(this.originalImgSrc);
+            this._setImgSrc(this.originalImgSrc, this.originalImgSrcset);
         }
     }
 
     /**
-     * Set the image source of the product to the given image source
+     * Set the product image `src` and its `srcset` to the given `src` and `srcset`.
+     *
+     * For variant-specific images, no `srcset` is provided, the existing `srcset` attribute is
+     * removed.
+     * This ensures the browser uses the `src` directly, as browsers prioritize `srcset` over `src`.
      *
      * @param {string} imageSrc
+     * @param {string} imageSrcset
      */
-    _setImgSrc(imageSrc) {
+    _setImgSrc(imageSrc, imageSrcset) {
         this.productImg.src = imageSrc;
+        if (imageSrcset) {
+            this.productImg.setAttribute('srcset', imageSrcset);
+        } else {
+            this.productImg.removeAttribute('srcset');
+        }
     }
 
     /**

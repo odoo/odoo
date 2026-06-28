@@ -15,6 +15,7 @@ export class NoteButton extends Component {
 
     setup() {
         this.pos = usePos();
+        this.ui = useService("ui");
         this.dialog = useService("dialog");
     }
 
@@ -25,29 +26,27 @@ export class NoteButton extends Component {
         if (selectedOrderline) {
             this.setChanges(selectedOrderline, payload);
         } else {
-            this.pos.getOrder().setGeneralCustomerNote(payload);
+            const order = this.pos.getOrder();
+            order.general_customer_note = payload;
         }
         return { confirmed: typeof payload === "string", inputNote: payload };
     }
 
     // Update line changes and set them
     async setChanges(selectedOrderline, payload) {
-        var quantity_with_note = 0;
-        const changes = this.pos.getOrderChanges();
-        for (const key in changes.orderlines) {
-            if (changes.orderlines[key].uuid == selectedOrderline.uuid) {
-                quantity_with_note = changes.orderlines[key].quantity;
-                break;
-            }
-        }
-        const saved_quantity = selectedOrderline.qty - quantity_with_note;
-        if (saved_quantity > 0 && quantity_with_note > 0) {
+        const savedQuantity = selectedOrderline.prep_line_ids.reduce((totalQty, prepLine) => {
+            totalQty += prepLine.quantity;
+            return totalQty;
+        }, 0);
+
+        const qtyToAdd = selectedOrderline.qty - savedQuantity;
+        if (savedQuantity > 0 && qtyToAdd > 0) {
             await this.pos.addLineToCurrentOrder({
                 product_tmpl_id: selectedOrderline.product_id.product_tmpl_id,
-                qty: quantity_with_note,
+                qty: qtyToAdd,
                 note: payload,
             });
-            selectedOrderline.qty = saved_quantity;
+            selectedOrderline.qty = savedQuantity;
             for (const line of selectedOrderline.combo_line_ids) {
                 line.setQuantity(line.uiState.oldQty);
             }
@@ -125,9 +124,9 @@ export class InternalNoteButton extends NoteButton {
 
     async onClick() {
         const selectedOrderline = this.pos.getOrder().getSelectedOrderline();
-        const selectedNote = JSON.parse(this.currentNote || "[]");
-        const payload = await this.openTextInput(selectedNote.map((n) => n.text).join("\n"));
-        const coloredNotes = payload ? this.reframeNotes(payload) : "[]";
+        const selectedNote = JSON.parse(this.currentNote || null);
+        const payload = await this.openTextInput(selectedNote?.map((n) => n.text).join("\n"));
+        const coloredNotes = payload ? this.reframeNotes(payload) : "";
         if (selectedOrderline) {
             this.setChanges(selectedOrderline, coloredNotes);
         } else {

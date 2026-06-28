@@ -1,5 +1,5 @@
 import { render } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, props, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cloneTree, connector, isTree, TRUE_TREE } from "@web/core/tree_editor/condition_tree";
@@ -20,25 +20,20 @@ export class TreeEditor extends Component {
         DropdownItem,
         TreeEditor,
     };
-    static props = {
-        tree: Object,
-        resModel: String,
-        update: Function,
-        getDefaultCondition: Function,
-        getPathEditorInfo: Function,
-        getOperatorEditorInfo: Function,
-        getDefaultOperator: Function,
-        readonly: { type: Boolean, optional: true },
-        slots: { type: Object, optional: true },
-        isDebugMode: { type: Boolean, optional: true },
-        defaultConnector: { type: [{ value: "&" }, { value: "|" }], optional: true },
-        isSubTree: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        defaultConnector: "&",
-        readonly: false,
-        isSubTree: false,
-    };
+    props = props({
+        tree: t.object(),
+        resModel: t.string(),
+        update: t.function(),
+        getDefaultCondition: t.function(),
+        getPathEditorInfo: t.function(),
+        getOperatorEditorInfo: t.function(),
+        getDefaultOperator: t.function(),
+        readonly: t.boolean().optional(false),
+        slots: t.object().optional(),
+        isDebugMode: t.boolean().optional(),
+        defaultConnector: t.selection(["&", "|"]).optional("&"),
+        isSubTree: t.boolean().optional(false),
+    });
 
     setup() {
         this.isTree = isTree;
@@ -189,6 +184,7 @@ export class TreeEditor extends Component {
         node.negate = false;
         node.operator = this.props.getDefaultOperator(fieldDef);
         node.value = getDefaultValue(fieldDef, node.operator);
+        node.isProperty = fieldDef?.is_property;
     }
 
     async updatePath(node, path) {

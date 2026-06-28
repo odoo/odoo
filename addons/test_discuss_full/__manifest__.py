@@ -16,6 +16,7 @@
         "im_livechat",
         "mail",
         "mail_bot",
+        "microsoft_calendar",
         "project_todo",
         "website_livechat",
         "website_sale",
@@ -24,6 +25,12 @@
     "assets": {
         "web.assets_tests": [
             "test_discuss_full/static/tests/tours/**/*",
+        ],
+        'im_livechat.embed_assets_unit_tests_setup': [
+            "test_discuss_full/static/tests/test_discuss_full_test_helpers.js",
+        ],
+        "im_livechat.embed_assets_unit_tests": [
+            "test_discuss_full/static/tests/embed/**/*",
         ],
     },
     "author": "Odoo S.A.",

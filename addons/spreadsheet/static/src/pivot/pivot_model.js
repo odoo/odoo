@@ -6,6 +6,7 @@ import { PivotModel } from "@web/views/pivot/pivot_model";
 
 import { helpers, constants, EvaluationError, SpreadsheetPivotTable } from "@odoo/o-spreadsheet";
 import { parseGroupField } from "./pivot_helpers";
+import { localeCompare } from "@web/core/l10n/utils";
 
 const { toNormalizedPivotValue, toNumber, isDateOrDatetimeField, pivotTimeAdapter, deepEquals } =
     helpers;
@@ -839,7 +840,7 @@ export class OdooPivotModel extends PivotModel {
 
             const aLabel = (Array.isArray(aValue) ? aValue[1] : String(aValue)).toLowerCase();
             const bLabel = (Array.isArray(bValue) ? bValue[1] : String(bValue)).toLowerCase();
-            return order === "asc" ? aLabel.localeCompare(bLabel) : bLabel.localeCompare(aLabel);
+            return order === "asc" ? localeCompare(aLabel, bLabel) : localeCompare(bLabel, aLabel);
         };
 
         const sortSubGroups = (groupBys, subGroups) => {

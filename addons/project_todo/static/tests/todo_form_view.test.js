@@ -27,7 +27,7 @@ beforeEach(() => {
             <form string="To-do" class="o_todo_form_view" js_class="todo_form">
                 <field name="name"/>
                 <field name="priority" invisible="1"/>
-                <field name="date_deadline" widget="remaining_days"/>
+                <field name="date_deadline" widget="relative_date"/>
             </form>`,
         activity: `
             <activity string="MailTestActivity">
@@ -83,7 +83,7 @@ test("Check that project_task_action_convert_todo_to_task does not appear in the
     });
 });
 
-test("Check that todo_form view contains the TodoDoneCheckmark and remaining_days widgets", async () => {
+test("Check that todo_form view contains the TodoDoneCheckmark and relative_date widgets", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
         name: "To-do",
@@ -101,8 +101,8 @@ test("Check that todo_form view contains the TodoDoneCheckmark and remaining_day
 
     await contains(".o_data_cell").click();
     await animationFrame();
-    expect(".o_field_remaining_days").toHaveCount(1, {
-        message: "The todo form view should have deadline field (o_field_remaining_days)",
+    expect(".o_field_relative_date").toHaveCount(1, {
+        message: "The todo form view should have deadline field (o_field_relative_date)",
     });
 });
 test.tags("desktop");

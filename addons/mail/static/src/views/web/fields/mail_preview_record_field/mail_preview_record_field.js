@@ -4,12 +4,16 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { referenceField, ReferenceField } from "@web/views/fields/reference/reference_field";
 
-class MailPreviewRecordField extends ReferenceField {
+export class MailPreviewRecordField extends ReferenceField {
     static components = {
         ...super.components,
         Pager,
     };
     static template = "mail.MailPreviewRecordField";
+    static props = {
+        ...super.props,
+        hideRecordSelector: { type: Boolean, optional: true },
+    };
 
     setup() {
         super.setup();
@@ -21,7 +25,7 @@ class MailPreviewRecordField extends ReferenceField {
                 this.records = [
                     {
                         id: this.currentResId,
-                        display_name: this.props.record.data[this.props.name].display_name,
+                        display_name: this.props.record.data[this.props.name].displayName,
                     },
                 ];
                 // Load other records to enable navigation
@@ -47,7 +51,7 @@ class MailPreviewRecordField extends ReferenceField {
             [this.props.name]: {
                 displayName: value.display_name,
                 resId: value.id,
-                resModel: this.props.record.data[this.props.name].resModel,
+                resModel: this.getRelation(),
             },
         });
     }

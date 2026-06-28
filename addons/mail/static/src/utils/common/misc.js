@@ -1,7 +1,21 @@
-import { reactive, useLayoutEffect } from "@web/owl2/utils";
+import { effect, immediateEffect, plugin, proxy, untrack, useEffect, useScope } from "@odoo/owl";
+
 import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
-import { effect } from "@web/core/utils/reactive";
+
+/**
+ * Version of plugin() where the plugin is allowed to not be provided by any parented component.
+ *
+ * @template T
+ * @param {T extends import("@odoo/owl").PluginConstructor} pluginType
+ * @returns {import("@odoo/owl").PluginInstance<T>|undefined}
+ */
+export function maybePlugin(pluginType) {
+    if (useScope().pluginManager?.getPluginById(pluginType.id)) {
+        return plugin(pluginType);
+    }
+    return undefined;
+}
 
 export function assignDefined(obj, data, keys = Object.keys(data)) {
     for (const key of keys) {
@@ -80,12 +94,13 @@ export function isDragSourceExternalFile(dataTransfer) {
  * @param {Object} target
  * @param {string|string[]} key
  * @param {Function} callback
+ * @returns {Function} dispose function
  */
 export function onChange(target, key, callback) {
-    let proxy;
+    let targetProxy;
     function _observe() {
-        // access proxy[key] only once to avoid triggering reactive get() many times
-        const val = proxy[key];
+        // access targetProxy[key] only once to avoid triggering reactive get() many times
+        const val = targetProxy[key];
         if (typeof val === "object" && val !== null) {
             void Object.keys(val);
         }
@@ -95,17 +110,28 @@ export function onChange(target, key, callback) {
         }
     }
     if (Array.isArray(key)) {
+        /** @type {Function[]} */
+        const arrayDisposeFns = [];
         for (const k of key) {
-            onChange(target, k, callback);
+            arrayDisposeFns.push(onChange(target, k, callback));
         }
-        return;
+        return () => {
+            arrayDisposeFns.forEach((f) => f());
+            arrayDisposeFns.length = 0;
+        };
     }
-    proxy = reactive(target, () => {
-        _observe();
-        callback();
-    });
-    _observe();
-    return proxy;
+    let running = false;
+    targetProxy = proxy(target);
+    const disposeFn = untrack(() =>
+        immediateEffect(() => {
+            _observe();
+            if (running) {
+                untrack(() => callback());
+            }
+        })
+    );
+    running = true;
+    return disposeFn;
 }
 
 /**
@@ -143,7 +169,7 @@ export function compareDatetime(date1, date2) {
  * @param {string} v2 - The second version string to compare.
  * @return {number} -1 if v1 is less than v2, 1 if v1 is greater than v2, and 0 if they are equal.
  */
-function compareVersion(v1, v2) {
+export function compareVersion(v1, v2) {
     const parts1 = v1.split(".");
     const parts2 = v2.split(".");
 
@@ -236,123 +262,40 @@ export const hasHardwareAcceleration = memoize(() => {
  * A hook that repeatedly calls a function with dynamically computed
  * intervals.
  *
- * @template D type of dependencies
- * @param {(...dependencies: D) => Number|void} fn A callback that is
- * invoked initially, after dependencies change (if the dependencies are
- * wrapped in `useState` or otherwise triggers a re-render) or when the
- * delay has passed. Returning a falsy value cancels the interval.
- * @param {() => D} dependencies Returns an array of dependencies.
+ * @param {() => number|void} fn A callback that is invoked initially, after
+ * signals, proxies, or computed values read during the callback change, or
+ * when the delay has passed. Returning a falsy value cancels the interval.
+ * Avoid reading reactive values that the callback itself writes unless they
+ * are intended dependencies.
  */
-export function useDynamicInterval(fn, dependencies) {
-    useLayoutEffect((...dependencies) => {
+export function useDynamicInterval(fn) {
+    useEffect(() => {
         let timer;
         function tick() {
-            const nextDelay = fn(...dependencies);
+            const nextDelay = fn();
             if (nextDelay) {
                 timer = setTimeout(tick, Math.ceil(nextDelay));
             }
         }
         tick();
         return () => clearTimeout(timer);
-    }, dependencies);
-}
-
-/**
- * Runs a reactive effect whenever the dependencies change. The effect receives
- * the current values returned by `dependencies`. If the effect returns a
- * cleanup function, it is run before the next execution.
- *
- * @template T - type of reactive targets
- * @template D - type of dependencies
- * @param {Object} options
- * @param {(dependencies: D) => (() => void) | void} options.effect The effect
- *        callback. May return a cleanup function.
- * @param {(...targets: T) => D} options.dependencies Returns an array/object of
- *        values to track. The effect is called only if these values change.
- * @param {[...T]} options.reactiveTargets Array of reactive objects that the
- * effect depends on.
- */
-export function effectWithCleanup({ effect: effectFn, dependencies, reactiveTargets }) {
-    let cleanup;
-    let prevDependencies;
-    effect((...deps) => {
-        const nextDependencies = dependencies(...deps);
-        const changed =
-            !prevDependencies ||
-            (Array.isArray(nextDependencies)
-                ? nextDependencies.some((v, i) => v !== prevDependencies[i])
-                : Object.keys(nextDependencies).some(
-                      (key) => nextDependencies[key] !== prevDependencies[key]
-                  ));
-        if (changed) {
-            prevDependencies = Array.isArray(nextDependencies)
-                ? [...nextDependencies]
-                : { ...nextDependencies };
-            cleanup?.();
-            cleanup = Array.isArray(nextDependencies)
-                ? effectFn(...nextDependencies)
-                : effectFn({ ...nextDependencies });
-        }
-    }, reactiveTargets);
-}
-
-/**
- * A thin wrapper around `effectWithCleanup` that debounces the cleanup phase:
- * setup runs immediately when activated, while cleanup is delayed until the
- * predicate remains false for `delay` ms.
- *
- * Setup is executed again only after cleanup has completed, ensuring symmetry
- * between setup and cleanup.
- *
- * @template T - type of reactive targets
- * @template D - type of dependencies
- * @param {Object} options
- * @param {(dependencies: D) => (() => void)} options.effect Function called
- * when the predicate becomes true and the effect is not active. Receives the
- * values returned by `dependencies`.
- * @param {number} options.delay Debounce delay in milliseconds before running
- * cleanup.
- * @param {(...targets: T) => D} options.dependencies Function returning an
- * array of values tracked by the effect; passed to setup/cleanup.
- * @param {(...targets: T) => boolean} options.predicate Function returning a
- * boolean to determine whether the effect should be activated.
- * @param {[...T]} options.reactiveTargets Array of reactive objects that the
- * effect depends on.
- */
-export function effectWithDebouncedCleanup({
-    delay,
-    dependencies,
-    effect: effectFn,
-    predicate,
-    reactiveTargets,
-}) {
-    let timeout;
-    let active = false;
-    let cleanup;
-    effectWithCleanup({
-        effect(ctx) {
-            const { predicate, ...deps } = ctx;
-            if (!predicate) {
-                return;
-            }
-            clearTimeout(timeout);
-            if (!active) {
-                cleanup = effectFn(deps);
-                active = true;
-            }
-            return () => {
-                timeout = setTimeout(() => {
-                    cleanup();
-                    active = false;
-                }, delay);
-            };
-        },
-        dependencies: (...targets) => ({
-            predicate: predicate(...targets),
-            ...dependencies(...targets),
-        }),
-        reactiveTargets,
     });
+}
+
+/**
+ * @param {() => void} effectFn
+ * @returns {() => void} A function to dispose the effect then invoke last returned cleanup function
+ */
+export function effectWithCleanup(effectFn) {
+    let cleanup;
+    const disposeFn = effect(() => {
+        untrack(() => cleanup?.());
+        cleanup = effectFn();
+    });
+    return () => {
+        disposeFn();
+        untrack(() => cleanup?.());
+    };
 }
 
 /**

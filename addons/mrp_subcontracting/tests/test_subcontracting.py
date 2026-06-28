@@ -128,10 +128,9 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(avail_qty_finished, 1)
 
         # Ensure returns to subcontractor location
-        return_form = Form(self.env['stock.return.picking'].with_context(active_id=picking_receipt.id, active_model='stock.picking'))
-        return_wizard = return_form.save()
-        return_wizard.product_return_moves.quantity = 1
-        return_picking = return_wizard._create_return()
+        return_picking = picking_receipt._create_return()
+        return_picking.move_ids.product_uom_qty = 1
+        return_picking.action_confirm()
         self.assertEqual(len(return_picking), 1)
         self.assertEqual(return_picking.move_ids.location_dest_id, self.subcontractor_partner1.property_stock_subcontractor)
 
@@ -980,10 +979,10 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt.button_validate()
         self.assertEqual(picking_receipt.state, 'done')
         # Ensure returns to subcontractor location
-        return_form = Form(self.env['stock.return.picking'].with_context(active_id=picking_receipt.id, active_model='stock.picking'))
-        return_wizard = return_form.save()
-        return_wizard.product_return_moves.quantity = 1
-        return_picking = return_wizard._create_return()
+        return_picking = picking_receipt._create_return()
+        return_picking.move_ids.product_uom_qty = 1
+        return_picking.action_confirm()
+        return_picking.action_assign()
         self.assertEqual(len(return_picking), 1)
         self.assertEqual(return_picking.location_dest_id, supplier_location)
         self.assertEqual(return_picking.location_id, stock_location)
@@ -1025,21 +1024,66 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             {'product_id': self.comp2.id, 'product_uom_qty': 10.0},
         ])
 
+    def test_subcontracting_order_returned_for_exchange(self):
+        """
+        Test the locations used when returning a receipt for exchange from a subcontractor
+        """
+        custom_subcontract_location = self.env['stock.location'].create({
+            'name': 'Custom Subcontractor Location',
+            'location_id': self.env.company.subcontracting_location_id.id,
+            'usage': 'internal',
+            'company_id': self.env.company.id,
+        })
+        self.subcontractor_partner1.property_stock_subcontractor = custom_subcontract_location.id
+        initial_receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'partner_id': self.subcontractor_partner1.id,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.finished.id,
+                })
+            ]
+        })
+        initial_receipt.action_confirm()
+        initial_receipt.move_ids.quantity = 1
+        initial_receipt.button_validate()
+        return_picking = initial_receipt._create_return()
+        return_picking.move_ids.product_uom_qty = 1
+        return_picking.action_confirm()
+        exchange_picking = Form.from_action(self.env, return_picking.action_exchange()).save()
+        self.assertRecordValues(initial_receipt.move_ids, [{
+            'location_id': self.subcontractor_partner1.property_stock_subcontractor.id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+        }])
+        self.assertEqual(return_picking.return_id, initial_receipt)
+        self.assertRecordValues(return_picking.move_ids, [{
+            'location_id': self.warehouse.lot_stock_id.id,
+            'location_dest_id': self.subcontractor_partner1.property_stock_subcontractor.id,
+        }])
+        self.assertEqual(exchange_picking.return_id.return_id, initial_receipt)
+        self.assertRecordValues(exchange_picking.move_ids, [{
+            'location_id': self.subcontractor_partner1.property_stock_subcontractor.id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+        }])
+
     def test_flow_tracked_1(self):
         """ This test mimics test_flow_1 but with a BoM that has tracking included in it.
         """
         # Create a receipt picking from the subcontractor
         self.finished.tracking = 'lot'
         self.comp1.tracking = 'serial'
-        picking_form = Form(self.env['stock.picking'])
-        picking_form.picking_type_id = self.warehouse.in_type_id
-        picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids.new() as move:
-            move.product_id = self.finished
-            move.product_uom_qty = 1
-            move.picked = True
-        picking_receipt = picking_form.save()
+        picking_receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'partner_id': self.subcontractor_partner1.id,
+            'move_ids': [Command.create({
+                'product_id': self.finished.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
         picking_receipt.action_confirm()
+        picking_receipt.move_ids.picked = True
 
         # Check the created manufacturing order
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
@@ -1057,22 +1101,17 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             'product_id': self.comp1.id,
         })
 
-        action = picking_receipt.move_ids.action_show_details()
-        with Form(picking_receipt.move_ids.with_context(action['context']), view=action['view_id']) as move_form:
+        with Form.from_action(self.env, picking_receipt.move_ids.action_show_details()) as move_form:
             with move_form.move_line_ids.new() as move_line:
                 move_line.lot_id = lot_id
-                move_line.picked = True
                 move_line.quantity = 1
-            move_form.save()
+            move_form.move_line_ids.remove(0)
         action = picking_receipt.move_ids.action_show_subcontract_details()
         mo = self.env['mrp.production'].browse(action['res_id'])
-        action = mo.move_raw_ids[0].action_show_details()
-        with Form(mo.move_raw_ids[0].with_context(action['context']), view=action['view_id']) as move_form:
+        with Form.from_action(self.env, mo.move_raw_ids[0].action_show_details()) as move_form:
             with move_form.move_line_ids.new() as move_line:
                 move_line.lot_id = serial_id
-                move_line.picked = True
                 move_line.quantity = 1
-            move_form.save()
 
         picking_receipt.button_validate()
         self.assertEqual(mo.state, 'done')

@@ -267,20 +267,24 @@ class TestCrmLeadRainbowmanMessages(TestCrmCommon):
             })
             self._update_create_date(lead_first_to_last, jan1_12pm)
             self.flush_tracking()
-            all_leads.invalidate_recordset(['duration_tracking'])
-            msg_first_to_last = self._set_won_get_rainbowman_message(lead_first_to_last, self.user_sales_manager)
-            self.assertEqual(
-                msg_first_to_last,
-                'No detours, no delays - from New straight to the win! 🚀',
-                'First stage to last stage',
-            )
+            # 1 min
+            jan3_1pm_1m = datetime(2025, 2, 3, 13, 0, 59)
+            with self.mock_datetime_and_now(jan3_1pm_1m):
+                all_leads.invalidate_recordset(['duration_tracking'])
+                msg_first_to_last = self._set_won_get_rainbowman_message(lead_first_to_last, self.user_sales_manager)
+                self.assertEqual(
+                    msg_first_to_last,
+                    'No detours, no delays - from New straight to the win! 🚀',
+                    'First stage to last stage',
+                )
 
-            self.assertFalse(
-                self._set_won_get_rainbowman_message(next(iter_leads_norevenue), self.user_sales_manager),
-                'Check that no message is returned if no "achievement" is reached',
-            )
+                self.assertFalse(
+                    self._set_won_get_rainbowman_message(next(iter_leads_norevenue), self.user_sales_manager),
+                    'Check that no message is returned if no "achievement" is reached',
+                )
 
         with self.mock_datetime_and_now(jan4):
+            all_leads.invalidate_recordset(['duration_tracking'])
             # test lead rainbowman messages (leads with expected revenues)
             last_30_days_cases = [
                 (self.user_sales_manager, 650, 'Boom! Team record for the past 30 days.'),
@@ -304,7 +308,7 @@ class TestCrmLeadRainbowmanMessages(TestCrmCommon):
             last_7_days_cases = [
                 (self.user_sales_manager, 650, 'Yeah! Best deal out of the last 7 days for the team.'),
                 (self.user_sales_manager, 500, False),
-                (self.user_sales_manager, 650, False),
+                (self.user_sales_manager, 650, "You're on fire! Fifth deal won today 🔥"),
                 (self.user_sales_manager, 800, 'Yeah! Best deal out of the last 7 days for the team.'),
                 (self.user_sales_salesman, 700, 'You just beat your personal record for the past 7 days.'),
                 (self.user_sales_salesman, 650, False),
@@ -404,6 +408,7 @@ class TestCrmLeadRainbowmanMessages(TestCrmCommon):
             },
         )
         iter_leads = iter(leads)
+        leads.invalidate_recordset(['duration_tracking'])
         for deal_closing_time, expected_messages in cases:
             with self.mock_datetime_and_now(deal_closing_time):
                 for sales_user in sales_users:

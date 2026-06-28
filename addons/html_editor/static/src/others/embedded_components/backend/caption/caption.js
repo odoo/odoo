@@ -1,10 +1,10 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import {
     applyObjectPropertyDifference,
     getEmbeddedProps,
     StateChangeManager,
 } from "@html_editor/others/embedded_component_utils";
-import { Component, onMounted, onWillDestroy } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, proxy } from "@odoo/owl";
 
 export class EmbeddedCaptionComponent extends Component {
     static template = "html_editor.EmbeddedCaption";
@@ -19,8 +19,8 @@ export class EmbeddedCaptionComponent extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({
-            caption: "",
+        this.state = proxy({
+            caption: this.props.image.getAttribute("data-caption") || "",
             host: this.props.host,
         });
         this.captionInput = useRef("captionInput");
@@ -29,12 +29,16 @@ export class EmbeddedCaptionComponent extends Component {
                 this.captionInput.el.focus();
             });
         }
+        this._appliedNativeHistory = true;
         // Ensure the state, the attribute and the placeholder are in sync.
         this.updateCaption();
         const observer = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
                 if (mutation.type === "attributes" && mutation.attributeName === "data-caption") {
-                    this.updateCaption();
+                    const incomingValue = mutation.target.getAttribute("data-caption");
+                    if (incomingValue !== this.state.caption) {
+                        this.updateCaption();
+                    }
                 }
             }
         });
@@ -45,15 +49,13 @@ export class EmbeddedCaptionComponent extends Component {
     }
 
     updateCaption(caption = this.props.image.getAttribute("data-caption")) {
-        if (caption !== this.state.caption) {
-            this.state.caption = caption;
-            this.props.onUpdateCaption(caption);
-        }
+        this.state.caption = caption;
+        this.props.onUpdateCaption(caption);
     }
 
     onInputBlur() {
         // This is triggered before the selection changes. Wait before updating
-        // so when the history step triggers a normalization, it restores that
+        // so when the history commit triggers a normalization, it restores that
         // new selection and not the old one.
         setTimeout(() => {
             if (this.captionInput.el) {

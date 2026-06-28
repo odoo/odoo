@@ -6,16 +6,18 @@ export class EmbeddedVideoSelector extends VideoSelector {
     static mediaSpecificClasses = [];
 
     /** @override */
-    static createElements(selectedMedia) {
-        return selectedMedia.map((media) =>
-            renderToElement("html_editor.EmbeddedVideoBlueprint", {
+    static createElements(selectedVideos, { document = window.document } = {}) {
+        return selectedVideos.map((videoData) => {
+            const videoElement = renderToElement("html_editor.EmbeddedVideoBlueprint", {
                 embeddedProps: JSON.stringify({
-                    videoId: media.videoId,
-                    platform: media.platform,
-                    params: media.params || {},
+                    baseUrl: videoData.baseUrl || "",
+                    videoId: videoData.videoId,
+                    platform: videoData.platform,
+                    params: videoData.options || {},
                 }),
-                isVertical: media.params?.isVertical,
-            })
-        );
+                isVertical: videoData.options?.isVertical || false,
+            });
+            return document.importNode(videoElement, true);
+        });
     }
 }

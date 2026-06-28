@@ -56,7 +56,6 @@ export { on } from "./helpers/events";
 export {
     animationFrame,
     cancelAllTimers,
-    Deferred,
     delay,
     freezeTime,
     unfreezeTime,

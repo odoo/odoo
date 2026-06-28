@@ -1,36 +1,67 @@
-import { Component } from "@odoo/owl";
-import {
-    clickableBuilderComponentProps,
-    useActionInfo,
-    useSelectableItemComponent,
-} from "../utils";
+import { Component, xml, props, t } from "@odoo/owl";
+import { useActionInfo, useSelectableItemComponent } from "../utils";
 import { BuilderComponent } from "./builder_component";
+import { BuilderSelectableWrapperComponent } from "./builder_selectable_wrapper_component";
 import { Image } from "../img";
 
-export class BuilderButton extends Component {
-    static template = "html_builder.BuilderButton";
+const builderButtonProps = {
+    // clickableBuilderComponentProps (converted inline)
+    id: t.string().optional(),
+    applyTo: t.string().optional(),
+    preview: t.boolean().optional(),
+    inheritedActions: t.array(t.string()).optional(),
+
+    action: t.string().optional(),
+    actionParam: t.any().optional(),
+
+    // Shorthand actions.
+    classAction: t.any().optional(),
+    attributeAction: t.any().optional(),
+    dataAttributeAction: t.any().optional(),
+    styleAction: t.any().optional(),
+
+    inverseAction: t.boolean().optional(),
+
+    actionValue: t
+        .or([
+            t.boolean(),
+            t.string(),
+            t.number(),
+            t.literal(null),
+            t.array(t.or([t.boolean(), t.string(), t.number()])),
+        ])
+        .optional(),
+
+    // Shorthand actions values.
+    classActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
+    attributeActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
+    dataAttributeActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
+    styleActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
+
+    title: t.string().optional(),
+    titleActive: t.string().optional(),
+    label: t.string().optional(),
+    iconImg: t.string().optional(),
+    iconImgAlt: t.string().optional(),
+    iconImgStyle: t.string().optional(),
+    icon: t.string().optional(),
+    className: t.string().optional(),
+    classActive: t.string().optional(),
+    style: t.string().optional(),
+    type: t.string().optional(),
+
+    slots: t.object().optional(),
+};
+
+export class BuilderButtonInternal extends Component {
+    static template = "html_builder.BuilderButtonInternal";
     static components = { BuilderComponent, Image };
-    static props = {
-        ...clickableBuilderComponentProps,
-
-        title: { type: String, optional: true },
-        titleActive: { type: String, optional: true },
-        label: { type: String, optional: true },
-        iconImg: { type: String, optional: true },
-        iconImgAlt: { type: String, optional: true },
-        icon: { type: String, optional: true },
-        className: { type: String, optional: true },
-        classActive: { type: String, optional: true },
-        style: { type: String, optional: true },
-        type: { type: String, optional: true },
-
-        slots: { type: Object, optional: true },
-    };
-
-    static defaultProps = {
-        type: "secondary",
-        titleActive: "",
-    };
+    props = props({
+        ...builderButtonProps,
+        type: t.string().optional("secondary"),
+        titleActive: t.string().optional(""),
+        iconImgStyle: t.string().optional(""),
+    });
 
     setup() {
         this.info = useActionInfo();
@@ -68,5 +99,40 @@ export class BuilderButton extends Component {
             return `oi ${this.props.icon}`;
         }
         return "";
+    }
+}
+
+export class BuilderButton extends BuilderSelectableWrapperComponent {
+    static template = xml`
+        <BuilderButtonInternal t-props="this.forwardedProps">
+            <t t-call-slot="default"/>
+        </BuilderButtonInternal>
+        `;
+    static components = { BuilderButtonInternal };
+    props = props({
+        ltrRtlMapping: t.string().optional(),
+        isLabelLinkedToContent: t.boolean().optional(),
+        slots: t.object().optional(),
+        ...builderButtonProps,
+    });
+
+    get forwardedProps() {
+        return {
+            ...super.forwardedProps,
+            iconImgStyle: this.iconImgStyle,
+        };
+    }
+
+    get iconImgStyle() {
+        let iconImgStyle = this.props.iconImgStyle || "";
+        if (this.props.ltrRtlMapping && this.props.iconImg) {
+            const shouldMirrorIcon = this.props.isLabelLinkedToContent
+                ? this.env.langDir.content !== this.env.langDir.builder
+                : this.env.langDir.builder === "rtl";
+            if (shouldMirrorIcon) {
+                iconImgStyle = `transform: scaleX(-1); ${iconImgStyle}`;
+            }
+        }
+        return iconImgStyle;
     }
 }

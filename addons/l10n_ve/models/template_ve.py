@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_ve_template_data(self):
         return {
             'code_digits': '7',
-            'property_account_receivable_id': 'account_activa_account_1122001',
-            'property_account_payable_id': 'account_activa_account_2122001',
         }
 
     @template('ve', 'res.company')
@@ -29,6 +27,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax3purchase',
                 'expense_account_id': 'account_activa_account_7151001',
                 'income_account_id': 'account_activa_account_5111001',
+                'receivable_account_id': 'account_activa_account_1122001',
+                'payable_account_id': 'account_activa_account_2122001',
                 'account_stock_valuation_id': 'account_activa_account_1131002',
             },
         }

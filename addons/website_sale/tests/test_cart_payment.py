@@ -23,7 +23,7 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
             "provider_id": cls.provider.id,
             "reference": cls.reference,
             "operation": "online_redirect",
-            "partner_id": cls.partner.id,
+            "partner_id": cls.cart.partner_id.id,
         })
         cls.cart.write({"transaction_ids": [Command.set([cls.tx.id])]})
 
@@ -32,7 +32,7 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
         'cancel', or 'error' returns the orders.
         """
         for unpaid_order_tx_state in ("draft", "cancel", "error"):
-            self.tx.state = unpaid_order_tx_state
+            self._update_transaction(self.tx, state=unpaid_order_tx_state)
             with self.mock_request(sale_order_id=self.cart.id) as request:
                 self.assertEqual(
                     request.cart,
@@ -47,7 +47,7 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
         """
         self.tx.provider_id.support_manual_capture = "full_only"
         for paid_order_tx_state in ("pending", "authorized", "done"):
-            self.tx.state = paid_order_tx_state
+            self._update_transaction(self.tx, state=paid_order_tx_state)
             with self.mock_request(sale_order_id=self.cart.id) as request:
                 self.assertFalse(
                     request.cart,
@@ -57,6 +57,8 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
 
     @mute_logger("odoo.http")
     def test_transaction_route_rejects_unexpected_kwarg(self):
+        self.cart.partner_id.write(self.dummy_partner_address_values.copy())
+        self.cart._set_delivery_method(self.free_delivery)
         url = self._build_url(f"/shop/payment/transaction/{self.cart.id}")
         route_kwargs = {
             "access_token": self.cart._portal_ensure_token(),
@@ -70,9 +72,9 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
         salesperson = self.env.ref("base.user_admin")
         self.website.salesperson_id = salesperson
         self.cart.user_id = False
-        self.tx._set_pending()
+        self._update_transaction(self.tx, state="pending")
         with patch.object(self.env.registry["sale.order"], "_send_order_notification_mail") as mock:
-            self.tx._post_process()
+            self._run_post_processing(self.tx)
             self.assertEqual(mock.call_count, 1, "One payment confirmation mail should be sent")
             self.assertEqual(
                 self.cart.user_id,

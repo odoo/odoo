@@ -64,7 +64,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_signup_invitation_scope(self):
-        current_website = self.env['website'].sudo().get_current_website()
+        current_website = self.env['website'].sudo().get_current_website(fallback=True)
         return current_website.auth_signup_uninvited or super(ResUsers, self)._get_signup_invitation_scope()
 
     def authenticate(self, credential, user_agent_env):
@@ -75,7 +75,7 @@ class ResUsers(models.Model):
         leads, ...) as possible. """
         visitor_pre_authenticate_sudo = None
         if request and request.env:
-            visitor_pre_authenticate_sudo = request.env['website.visitor']._get_visitor_from_request()
+            visitor_pre_authenticate_sudo = self.env['ir.http']._get_visitor_from_request()
         auth_info = super().authenticate(credential, user_agent_env)
         if auth_info.get('uid') and visitor_pre_authenticate_sudo:
             env = self.env(user=auth_info['uid'])

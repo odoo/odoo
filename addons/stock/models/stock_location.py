@@ -143,17 +143,18 @@ class StockLocation(models.Model):
 
     @api.depends('cyclic_inventory_frequency', 'last_inventory_date', 'usage', 'company_id')
     def _compute_next_inventory_date(self):
+        today = fields.Date.context_today(self)
         for location in self:
             if location.company_id and location.usage in ['internal', 'transit'] and location.cyclic_inventory_frequency > 0:
                 try:
                     if location.last_inventory_date:
-                        days_until_next_inventory = location.cyclic_inventory_frequency - (fields.Date.today() - location.last_inventory_date).days
+                        days_until_next_inventory = location.cyclic_inventory_frequency - (today - location.last_inventory_date).days
                         if days_until_next_inventory <= 0:
-                            location.next_inventory_date = fields.Date.today() + timedelta(days=1)
+                            location.next_inventory_date = today + timedelta(days=1)
                         else:
                             location.next_inventory_date = location.last_inventory_date + timedelta(days=location.cyclic_inventory_frequency)
                     else:
-                        location.next_inventory_date = fields.Date.today() + timedelta(days=location.cyclic_inventory_frequency)
+                        location.next_inventory_date = today + timedelta(days=location.cyclic_inventory_frequency)
                 except OverflowError:
                     raise UserError(_("The selected Inventory Frequency (Days) creates a date too far into the future."))
             else:
@@ -390,7 +391,7 @@ class StockLocation(models.Model):
         company_inventory_date = False
 
         if self.company_id.annual_inventory_month:
-            today = fields.Date.today()
+            today = fields.Date.context_today(self)
             annual_inventory_month = int(self.company_id.annual_inventory_month)
             # Manage 0 and negative annual_inventory_day
             annual_inventory_day = max(self.company_id.annual_inventory_day, 1)
@@ -424,6 +425,23 @@ class StockLocation(models.Model):
         specified."""
         self.ensure_one()
         if self.storage_category_id:
+            positive_quant = self.quant_ids.filtered(lambda q: q.product_id.uom_id.compare(q.quantity, 0) > 0)
+            # check if only allow new product when empty
+            if self.storage_category_id.allow_new_product == "empty" and positive_quant:
+                return False
+            # check if only allow same product
+            if self.storage_category_id.allow_new_product == "same":
+                # In case it's a package, `product` is not defined, so try to get
+                # the package products from the context
+                product = product or self.env.context.get('products')
+                if (positive_quant and positive_quant.product_id != product) or len(product) > 1:
+                    return False
+                if self.env['stock.move.line'].search_count([
+                    ('product_id', '!=', product.id),
+                    ('state', 'not in', ('done', 'cancel')),
+                    ('location_dest_id', '=', self.id),
+                ], limit=1):
+                    return False
             forecast_weight = self._get_weight(self.env.context.get('exclude_sml_ids', set()))[self]['forecast_weight']
             # check if enough space
             if package and package.package_type_id:
@@ -444,23 +462,6 @@ class StockLocation(models.Model):
                 if product_capacity and location_qty >= product_capacity.quantity:
                     return False
                 if product_capacity and quantity + location_qty > product_capacity.quantity:
-                    return False
-            positive_quant = self.quant_ids.filtered(lambda q: q.product_id.uom_id.compare(q.quantity, 0) > 0)
-            # check if only allow new product when empty
-            if self.storage_category_id.allow_new_product == "empty" and positive_quant:
-                return False
-            # check if only allow same product
-            if self.storage_category_id.allow_new_product == "same":
-                # In case it's a package, `product` is not defined, so try to get
-                # the package products from the context
-                product = product or self.env.context.get('products')
-                if (positive_quant and positive_quant.product_id != product) or len(product) > 1:
-                    return False
-                if self.env['stock.move.line'].search_count([
-                    ('product_id', '!=', product.id),
-                    ('state', 'not in', ('done', 'cancel')),
-                    ('location_dest_id', '=', self.id),
-                ], limit=1):
                     return False
         return True
 
@@ -532,7 +533,7 @@ class StockRoute(models.Model):
     warehouse_selectable = fields.Boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.")
     package_type_selectable = fields.Boolean('Applicable on Package Type', help="When checked, the route will be selectable on package types")
     supplied_wh_id = fields.Many2one('stock.warehouse', 'Supplied Warehouse', index='btree_not_null')
-    supplier_wh_id = fields.Many2one('stock.warehouse', 'Supplying Warehouse')
+    supplier_wh_id = fields.Many2one('stock.warehouse', 'Supplying Warehouse', index='btree_not_null')
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company, index=True,
@@ -596,3 +597,19 @@ class StockRoute(models.Model):
 
     def _is_valid_resupply_route_for_product(self, product):
         return False
+
+    def _get_routes_with_no_warehouse(self):
+        rule_actions = self._get_non_push_pull_rule_actions()
+        route_domain = [
+            ('warehouse_selectable', '=', True),
+            ('rule_ids.action', 'in', rule_actions),
+            ('company_id', 'in', [False, self.env.company.id]),
+            '|',
+                ('warehouse_ids', '=', False),
+                ('warehouse_ids', 'not in', self.env['stock.warehouse']._search([
+                    ('company_id', '=', self.env.company.id)]))
+        ]
+        return self.env['stock.route'].search(route_domain)
+
+    def _get_non_push_pull_rule_actions(self):
+        return []

@@ -133,6 +133,20 @@ class HrApplicant(models.Model):
                 mapped_commands.append(command)
         return mapped_commands
 
+    def action_job_add_applicants(self):
+        res = super().action_job_add_applicants()
+        if len(self.ids) == 1:
+            res["context"]["active_applicant_skill_ids"] = self.skill_ids.ids
+            res["context"]["active_applicant_id"] = self.id
+            applicant_job_ids = self.job_id
+            if self.pool_applicant_id:
+                applicant_job_ids += self.pool_applicant_id.linked_applicant_ids.job_id
+            else:
+                domain = self._get_similar_applicants_domain()
+                applicant_job_ids += self.env["hr.applicant"].search(domain).job_id
+            res["context"]["active_applicant_job_ids"] = applicant_job_ids.ids
+        return res
+
     def action_add_to_job(self):
         self.with_context(just_moved=True).write(
             {
@@ -168,3 +182,19 @@ class HrApplicant(models.Model):
                         mapped_skills = source_applicant._map_applicant_skill_ids_to_other_applicant_skill_ids(applicant, original_vals)
                         applicant.with_context(skills_synced=True).write({"applicant_skill_ids": mapped_skills})
         return super().write(vals)
+
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        if self.env.context.get("show_matching_score_in_name", False):
+            for applicant in self:
+                if applicant.matching_score:
+                    name = f"{applicant.display_name or applicant.name} \t --{applicant.matching_score:.0f}%--"
+                    applicant.display_name = name.strip()
+
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        show_matching_score_in_name = self.env.context.get('show_matching_score_in_name', False)
+        if show_matching_score_in_name:
+            records = self.search(domain).sorted(lambda a: a.matching_score, reverse=True)[:limit]
+            return [(r.id, r.display_name) for r in records]
+        return super().name_search(name=name, domain=domain if domain else None, operator=operator, limit=limit)

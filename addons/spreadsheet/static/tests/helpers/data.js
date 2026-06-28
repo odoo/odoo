@@ -81,42 +81,6 @@ export function getBasicServerData() {
     };
 }
 
-/**
- *
- * @param {string} model
- * @param {Array<string>} columns
- * @param {{name: string, asc: boolean}[]} orderBy
- *
- * @returns { {definition: Object, columns: Array<Object>}}
- */
-export function generateListDefinition(model, columns, actionXmlId, orderBy = []) {
-    const cols = [];
-    for (const name of columns) {
-        const fieldName = name.split(".")[0]; // in case of property field (eg. partner_properties.my_property)
-        const PyModel = Object.values(SpreadsheetModels).find((m) => m._name === model);
-        cols.push({
-            name,
-            type: PyModel._fields[fieldName].type,
-        });
-    }
-    return {
-        definition: {
-            metaData: {
-                resModel: model,
-                columns,
-            },
-            searchParams: {
-                domain: [],
-                context: {},
-                orderBy,
-            },
-            name: "List",
-            actionXmlId,
-        },
-        columns: cols,
-    };
-}
-
 export function getBasicListArchs() {
     return {
         "partner,false,list": getBasicListArch(),
@@ -140,6 +104,8 @@ function mockSpreadsheetDataController(_request, { res_model, res_id }) {
 }
 
 onRpc("/spreadsheet/data/<string:res_model>/<int:res_id>", mockSpreadsheetDataController);
+
+onRpc("/spreadsheet/<string:res_model>/<int:res_id>/dispatch", function () {});
 
 export function defineSpreadsheetModels() {
     defineModels(SpreadsheetModels);

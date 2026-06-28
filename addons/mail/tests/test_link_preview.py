@@ -6,6 +6,7 @@ from unittest.mock import patch
 import io
 import requests
 
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools import link_preview
 from odoo.tests.common import tagged
@@ -142,45 +143,43 @@ class TestLinkPreview(MailCommon):
                 body=Markup(f'<a href={self.source_url}>Nothing link</a>'),
             )
 
-            def get_bus_params():
-                return (
-                    [self.env.user],
-                    [
+            def notifications():
+                return [
+                    BusResult(
+                        self.env.user,
+                        "mail.record/insert",
                         {
-                            "type": "mail.record/insert",
-                            "payload": {
-                                "mail.link.preview": [
-                                    {
-                                        "id": message.message_link_preview_ids.link_preview_id.id,
-                                        "image_mimetype": False,
-                                        "og_description": self.og_description,
-                                        "og_image": self.og_image,
-                                        "og_mimetype": False,
-                                        "og_site_name": False,
-                                        "og_title": self.og_title,
-                                        "og_type": False,
-                                        "source_url": self.source_url,
-                                    },
-                                ],
-                                "mail.message": self._filter_messages_fields(
-                                    {
-                                        "id": message.id,
-                                        "message_link_preview_ids": message.message_link_preview_ids.ids,
-                                    },
-                                ),
-                                "mail.message.link.preview": [
-                                    {
-                                        "id": message.message_link_preview_ids.id,
-                                        "link_preview_id": message.message_link_preview_ids.link_preview_id.id,
-                                        "message_id": message.id,
-                                    }
-                                ],
-                            },
-                        }
-                    ],
-                )
+                            "mail.link.preview": [
+                                {
+                                    "id": message.message_link_preview_ids.link_preview_id.id,
+                                    "image_mimetype": False,
+                                    "og_description": self.og_description,
+                                    "og_image": self.og_image,
+                                    "og_mimetype": False,
+                                    "og_site_name": False,
+                                    "og_title": self.og_title,
+                                    "og_type": False,
+                                    "source_url": self.source_url,
+                                },
+                            ],
+                            "mail.message": self._filter_messages_fields(
+                                {
+                                    "id": message.id,
+                                    "message_link_preview_ids": message.message_link_preview_ids.ids,
+                                },
+                            ),
+                            "mail.message.link.preview": [
+                                {
+                                    "id": message.message_link_preview_ids.id,
+                                    "link_preview_id": message.message_link_preview_ids.link_preview_id.id,
+                                    "message_id": message.id,
+                                }
+                            ],
+                        },
+                    )
+                ]
 
-            with self.assertBus(get_params=get_bus_params):
+            with self.assertBus(notifications):
                 self.env["mail.link.preview"]._create_from_message_and_notify(message)
 
     def test_link_preview_no_content_type(self):

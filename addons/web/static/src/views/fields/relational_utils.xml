@@ -34,7 +34,7 @@
         />
         <AutoComplete t-else="" t-props="this.autoCompleteProps">
             <t t-set-slot="option" t-slot-scope="optionScope">
-                <t t-slot="{{ optionScope.data.slotName }}" t-props="optionScope.data" label="optionScope.label">
+                <t t-call-slot="{{ optionScope.data.slotName }}" t-props="optionScope.data" label="optionScope.label">
                     <t t-out="optionScope.label"/>
                 </t>
             </t>

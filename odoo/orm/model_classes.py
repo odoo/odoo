@@ -15,7 +15,6 @@ from odoo.exceptions import ValidationError
 from odoo.tools import (
     OrderedSet,
     LastOrderedSet,
-    discardattr,
     frozendict,
     sql,
 )
@@ -140,6 +139,14 @@ _logger = logging.getLogger('odoo.registry')
 # This increases the number of fields that are shared across registries.
 
 
+def discardattr(obj: object, key: str) -> None:
+    """ Perform a ``delattr(obj, key)`` but without crashing if ``key`` is not present. """
+    try:  # noqa: SIM105
+        delattr(obj, key)
+    except AttributeError:
+        pass
+
+
 def is_model_definition(cls: type) -> bool:
     """ Return whether ``cls`` is a model definition class. """
     return isinstance(cls, models.MetaModel) and getattr(cls, 'pool', None) is None
@@ -162,7 +169,7 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
                         "please use @api.constrains on methods instead.")
     if hasattr(model_def, '_sql_constraints'):
         _logger.warning("Model attribute '_sql_constraints' is no longer supported, "
-                        "please define model.Constraint on the model.")
+                        "please define models.Constraint on the model.")
 
     # all models except 'base' implicitly inherit from 'base'
     name = model_def._name
@@ -186,6 +193,7 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
             '_inherit_children': OrderedSet(),      # names of children models
             '_inherits_children': set(),            # names of children models
             '_fields__': {},                        # populated in _setup()
+            '_fields_update_order__': {},           # populated in _post_model_setup__()
             '_table_objects': frozendict(),         # populated in _setup()
         })
         model_cls._fields = MappingProxyType(model_cls._fields__)
@@ -234,6 +242,11 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
 
 def _check_model_extension(model_cls: type[BaseModel], model_def: type[BaseModel]):
     """ Check whether ``model_cls`` can be extended with ``model_def``. """
+    if model_def._table:
+        raise TypeError(
+            f"{model_def} cannot redefine _table while extending model {model_cls._name!r}. "
+            "That class should either remove '_table', or set a different '_name'."
+        )
     if model_cls._abstract and not model_def._abstract:
         raise TypeError(
             f"{model_def} transforms the abstract model {model_cls._name!r} into a non-abstract model. "
@@ -325,6 +338,10 @@ def setup_model_classes(env: Environment):
         _setup_fields(model_cls, env)
 
     for model_cls in models_classes:
+        model_cls._fields_update_order__ = {
+            field: (field.write_sequence, i)
+            for i, field in enumerate(model_cls._fields.values())
+        }
         model_cls(env, (), ())._post_model_setup__()
 
 
@@ -408,9 +425,9 @@ def _setup(model_cls: type[BaseModel], env: Environment):
                 ))
                 if rows and rows[0][0] == 'jsonb':
                     # patch the field definition by adding an override
-                    _logger.warning("Patching %s.%s with company_dependent=True", model_cls._name, name)
+                    _logger.debug("Patching %s.%s with company_dependent=True", model_cls._name, name)
                     fields_.append(type(fields_[0])(company_dependent=True))
-        if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == model_cls._name:
+        if len(fields_) == 1 and fields_[0]._shareable and fields_[0].model_name == model_cls._name:
             model_cls._fields__[name] = fields_[0]
         else:
             Field = type(fields_[-1])
@@ -537,13 +554,18 @@ def _setup_fields(model_cls: type[BaseModel], env: Environment):
 def _add_manual_models(env: Environment):
     """ Add extra models to the registry. """
     # clean up registry first
+    removed_fields = OrderedSet()
     for name, model_cls in list(env.registry.items()):
         if model_cls._custom:
+            removed_fields.update(model_cls._fields.values())
             del env.registry.models[name]
             # remove the model's name from its parents' _inherit_children
             for parent_cls in model_cls.__bases__:
                 if hasattr(parent_cls, 'pool'):
                     parent_cls._inherit_children.discard(name)
+
+    if removed_fields:
+        env.registry._discard_fields(list(removed_fields))
 
     # we cannot use self._fields to determine translated fields, as it has not been set up yet
     env.cr.execute("SELECT *, name->>'en_US' AS name FROM ir_model WHERE state = 'manual'")
@@ -610,7 +632,7 @@ def add_field(model_cls: type[BaseModel], name: str, field: Field):
     if not isinstance(getattr(model_cls, name, field), fields.Field):
         _logger.warning("In model %r, field %r overriding existing value", model_cls._name, name)
     setattr(model_cls, name, field)
-    field._toplevel = True
+    field._shareable = False
     field.__set_name__(model_cls, name)
     # add field as an attribute and in model_cls._fields__ (for reflection)
     model_cls._fields__[name] = field

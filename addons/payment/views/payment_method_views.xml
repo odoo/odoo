@@ -13,8 +13,7 @@
                         <h1><field name="name" placeholder="Name"/></h1>
                     </div>
                     <group>
-                        <field name="code" readonly="id" groups="base.group_no_one"/>
-                        <field name="primary_payment_method_id" invisible="is_primary"/>
+                        <field name="code" readonly="id"/>
                         <field name="active"/>
                         <label for="supported_country_ids"/>
                         <div>
@@ -40,16 +39,13 @@
                         </div>
                     </group>
                     <notebook>
-                        <page string="Providers" name="providers">
-                            <field name="provider_ids" readonly="1">
-                                <list decoration-muted="state == 'disabled'" editable="bottom">
-                                    <field name="name"/>
-                                    <field name="state"/>
-                                </list>
-                            </field>
-                        </page>
                         <page string="Brands" name="brands" invisible="not is_primary">
-                            <field name="brand_ids"/>
+                            <field name="provider_id" invisible="True"/>
+                            <field
+                                name="brand_ids"
+                                delete="False"
+                                context="{'default_provider_id': provider_id}"
+                            />
                         </page>
                         <page string="Configuration"
                               name="configuration"
@@ -74,9 +70,11 @@
                                        widget="many2many_tags"
                                        placeholder="Select currencies. Leave empty to allow any."
                                 />
-                                <field name="provider_ids"
-                                       string="Supported by"
-                                       widget="many2many_tags"
+                                <field
+                                    name="provider_id"
+                                    string="Supported by"
+                                    invisible="context.get('hide_provider')"
+                                    readonly="id"
                                 />
                             </group>
                         </page>
@@ -123,7 +121,7 @@
                 <field name="name" string="Name"/>
                 <filter name="available_pms"
                         string="Available methods"
-                        domain="[('provider_ids.state', '!=', 'disabled')]"
+                        domain="[('provider_id.module_state', '=', 'installed')]"
                 />
             </search>
         </field>

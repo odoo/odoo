@@ -21,6 +21,7 @@
 
 <t t-name="website.InputURLAutoComplete">
     <AutoCompleteInLinkPopover
+        id="'o_linkpopover_url'"
         sources="this.sources"
         value="this.state.url"
         input="this.urlRef"
@@ -32,9 +33,7 @@
         updateValue.bind="this.updateValue"
     >
         <t t-set-slot="urlOption" t-slot-scope="urlOptionScope">
-            <t t-call="website.AutoCompleteItem">
-                <t t-set="option" t-value="urlOptionScope"/>
-            </t>
+            <t t-call="website.AutoCompleteItem" option="urlOptionScope"/>
         </t>
     </AutoCompleteInLinkPopover>
 </t>
@@ -47,7 +46,7 @@
         <t t-call="website.InputURLAutoComplete"/>
     </xpath>
     <xpath expr="//a[hasclass('o_we_url_link')]" position="attributes">
-        <attribute name="t-on-click">onClickForcePreviewMode</attribute>
+        <attribute name="t-on-click">this.onClickForcePreviewMode</attribute>
     </xpath>
 </t>
 

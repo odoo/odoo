@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_fi_template_data(self):
         return {
             'code_digits': '4',
-            'property_account_receivable_id': 'account_1701',
-            'property_account_payable_id': 'account_2871',
             }
 
     @template('fi', 'res.company')
@@ -31,6 +29,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax_dom_purchase_goods_25_5',
                 'expense_account_id': 'account_4000',
                 'income_account_id': 'account_3000',
+                'receivable_account_id': 'account_1701',
+                'payable_account_id': 'account_2871',
                 'account_stock_valuation_id': 'account_1501',
             },
         }

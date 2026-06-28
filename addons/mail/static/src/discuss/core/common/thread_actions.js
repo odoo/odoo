@@ -59,7 +59,7 @@ registerThreadAction("add-to-favorites", {
         store.fetchStoreData(
             "/discuss/channel/favorite",
             { channel_id: channel.id, is_favorite: true },
-            { readonly: false, silent: false }
+            { silent: false }
         );
         if (owner.env.inDiscussApp && !owner.env.isSmall) {
             return;
@@ -90,7 +90,7 @@ registerThreadAction("remove-from-favorites", {
         store.fetchStoreData(
             "/discuss/channel/favorite",
             { channel_id: channel.id, is_favorite: false },
-            { readonly: false, silent: false }
+            { silent: false }
         );
         if (owner.env.inDiscussApp && !owner.env.isSmall) {
             return;
@@ -104,15 +104,14 @@ registerThreadAction("remove-from-favorites", {
     sequenceGroup: 20,
 });
 registerThreadAction("notification-settings", {
-    actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: NotificationSettings,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
-    actionPanelOpen({ channel, owner, store }) {
+    actionPanelOpen({ owner, rootRef }) {
         if (owner.isDiscussContent) {
-            this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
-                hasSizeConstraints: true,
-                channel,
-            });
+            this.popover?.open(
+                rootRef().querySelector(`[name="${this.id}"]`),
+                this.actionPanelComponentProps
+            );
         }
     },
     actionPanelOuterClass: ({ owner, store }) => store.discussDropdownMenuClass(owner),
@@ -153,31 +152,31 @@ registerThreadAction("attachments", {
     sequenceGroup: 10,
 });
 registerThreadAction("invite-people", {
-    actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: ChannelInvitation,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
-    actionPanelOpen({ owner, store, channel }) {
+    actionPanelOpen({ owner, store, channel, rootRef }) {
         if (owner.isDiscussSidebarChannelActions) {
             store.env.services.dialog?.add(ChannelActionDialog, {
                 title: channel.displayName,
                 contentComponent: ChannelInvitation,
                 contentProps: {
-                    autofocus: true,
                     channel,
                     close: () => store.env.services.dialog.closeAll(),
                 },
             });
         } else if (!owner.env.inMeetingView) {
-            this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
-                hasSizeConstraints: true,
-                channel,
-            });
+            this.popover?.open(
+                rootRef().querySelector(`[name="${this.id}"]`),
+                this.actionPanelComponentProps
+            );
         }
     },
     actionPanelOuterClass: ({ owner, store }) =>
         `o-discuss-ChannelInvitation ${
             owner.props.chatWindow ? "bg-inherit" : ""
-        } border border-secondary ` + store.discussDropdownMenuClass(owner),
+        } border border-secondary ${
+            owner.env.inMeetingView ? "" : store.discussDropdownMenuClass(owner)
+        }`,
     condition: ({ channel, owner }) =>
         channel &&
         !owner.env.pipWindow &&
@@ -218,14 +217,7 @@ registerThreadAction("member-list", {
         }
     },
     actionPanelComponent: ChannelMemberList,
-    actionPanelComponentProps: ({ actions, channel }) => ({
-        openChannelInvitePanel({ keepPrevious } = {}) {
-            actions.actions
-                .find(({ id }) => id === "invite-people")
-                ?.actionPanelOpen({ keepPrevious });
-        },
-        channel,
-    }),
+    actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOpen: ({ owner, store }) => {
         if (owner.env.inDiscussApp) {
             store.discuss.isMemberPanelOpenByDefault = true;
@@ -303,7 +295,6 @@ registerThreadAction("leave", {
 });
 
 registerThreadAction("delete-thread", {
-    actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: DeleteThreadDialog,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOuterClass: "bg-100",

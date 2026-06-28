@@ -28,12 +28,12 @@ class ProductFeed(Controller):
         :return: The XML feed compressed using GZIP.
         :rtype: bytes
         """
-        if not request.env["res.groups"]._is_feature_enabled("website_sale.group_product_feed"):
+        if not self.env["res.groups"]._is_feature_enabled("website_sale.group_product_feed"):
             raise NotFound
 
         feed_sudo = self._find_and_check_feed_access(feed_id, access_token)
 
-        if feed_sudo.website_id != request.website:
+        if feed_sudo.website_id != self.env.website:
             raise BadRequest(self.env._("Website does not match."))
 
         compressed_gmc_xml = feed_sudo._render_and_cache_compressed_gmc_feed()
@@ -58,7 +58,7 @@ class ProductFeed(Controller):
             feed_id = int(feed_id)
         except ValueError as ve:
             raise BadRequest from ve
-        feed_sudo = request.env["product.feed"].sudo().browse(feed_id).exists()
+        feed_sudo = self.env["product.feed"].sudo().browse(feed_id).exists()
         if not feed_sudo:
             raise NotFound
 

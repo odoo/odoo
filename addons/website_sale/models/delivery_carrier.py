@@ -38,7 +38,7 @@ class DeliveryCarrier(models.Model):
             current_date = localized(fields.Datetime.now())
             max_range_days = self.delivery_estimate_lead_days + self.delivery_estimate_range_days
             # Add 30 days as a buffer to account for unavailable days.
-            availabilities = self.delivery_calendar_id._attendance_intervals_batch(
+            availabilities = self.delivery_calendar_id._work_intervals_batch(
                 current_date, current_date + timedelta(days=max_range_days + 30)
             )[False]
             available_days = list(

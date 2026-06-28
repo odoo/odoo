@@ -101,7 +101,6 @@ registry.category("web_tour.tours").add("self_order_product_info", {
         },
         {
             trigger: '.modal-body:contains("Nice Product")',
-            run: () => {},
         },
     ],
 });

@@ -1,0 +1,136 @@
+.pos_payment_status {
+    .skip-link {
+        visibility: hidden;
+        opacity: 0;
+
+        animation:
+            skip-visible 0s linear 10s forwards,
+            skip-fade-in 0.5s ease 10s forwards;
+
+        @keyframes skip-visible {
+            to {
+                visibility: visible;
+            }
+        }
+
+        @keyframes skip-fade-in {
+            to {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.pos_pay_confirmation {
+    --size: 60px;
+    --stroke-color: var(--primary);
+
+    // --- Common
+    .o_tx_status_container {
+        width: var(--size);
+        height: var(--size);
+
+        // --- Circle
+        circle {
+            fill: none;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke: var(--stroke-color);
+
+            stroke-dasharray: 300;
+            stroke-dashoffset: 300;
+
+            animation: draw-circle 1.2s forwards cubic-bezier(0.5, 0, 0.5, 1);
+        }
+
+        @keyframes draw-circle {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        // --- Lines
+        .icon-line {
+            fill: none;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke: var(--stroke-color);
+
+            --stroke-length: 70;
+            stroke-dasharray: var(--stroke-length);
+            stroke-dashoffset: var(--stroke-length);
+
+            animation: draw-line 0.6s forwards ease-out;
+            animation-delay: 0.3s;
+        }
+
+        @keyframes draw-line {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    }
+
+    // --- Check
+    .o_check_container {
+        --stroke-color: var(--success);
+    }
+
+    // --- Error
+    .o_error_container {
+        --stroke-color: var(--danger);
+        .icon-line {
+            &.line-2 {
+                animation-delay: 0.5s;
+            }
+        }
+    }
+
+    // --- Pending
+    .o_pending_container {
+        --stroke-color: var(--info);
+
+        .icon-line {
+            animation-duration: 1s;
+            --stroke-length: 175;
+        }
+    }
+
+    // --- Draft
+    .o_draft_container {
+        --stroke-color: var(--warning);
+        .icon-line {
+            &.line-1 {
+                --stroke-length: 150;
+                animation-duration: 0.8s;
+            }
+            &.line-2 {
+                --stroke-length: 25;
+                animation-duration: 0.4s;
+                animation-delay: 0.4s;
+            }
+            &.line-3 {
+                --stroke-length: 25;
+                animation-duration: 0.4s;
+                animation-delay: 0.5s;
+            }
+            &.line-4 {
+                --stroke-length: 25;
+                animation-duration: 0.4s;
+                animation-delay: 0.6s;
+            }
+        }
+    }
+
+    // --- Unknown
+    .o_unknown_container {
+        --stroke-color: var(--gray-600);
+        .icon-line {
+            &.line-2 {
+                --stroke-length: 25;
+                animation-duration: 0.2s;
+                animation-delay: 0.9s;
+            }
+        }
+    }
+}

@@ -11,6 +11,8 @@ class TestAngloSaxonAccounting(TestValuationReconciliationCommon):
         Reproduce the flow of creating an invoice from a sale order with company A
         and posting the invoice with both companies selected and company B as the main.
         """
+        # Conflict between account common and stock common file. We should remove the depends on account common.
+        self.env.user.company_id = self.company
         company_a_data = self.company
         company_b_data = self._create_company()
         companies_with_b_first = company_b_data + company_a_data

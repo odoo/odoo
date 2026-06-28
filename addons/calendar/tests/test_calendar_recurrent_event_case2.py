@@ -54,3 +54,45 @@ class TestRecurrentEvent(common.TransactionCase):
             ('start', '>=', '2011-03-13'), ('stop', '<=', '2011-05-13')
         ])
         self.assertEqual(meetings_count, 10, 'Recurrent weekly meetings are not created!')
+
+    def test_recurrent_meeting3(self):
+        """
+        Test that 'forever' recurrences are limited to a certain number of years (default 15).
+        The default limit can be change by the system parameter `calendar.max_recurrence_years`.
+        """
+        values = {
+            'duration': 1.0,
+            'end_type': 'forever',
+            'start': '2026-04-01 05:00:00',
+            'stop': '2026-04-01 06:00:00',
+            'recurrency': True,
+        }
+        for rrule_type, name, expected_count in (
+            ('daily', 'Daily Meeting', 720),
+            ('monthly', 'Monthly Meeting', 180),
+            ('yearly', 'Yearly Meeting', 15),
+        ):
+            with self.subTest(rrule_type=rrule_type):
+                self.CalendarEvent.create(dict(values, name=name, rrule_type=rrule_type))
+                meetings_count = self.CalendarEvent.search_count([('name', '=', name)])
+                self.assertEqual(
+                    meetings_count,
+                    expected_count,
+                    f'Recurrent {rrule_type} meetings should be created and not exceed {expected_count}!',
+                )
+
+        # Edit the max recurrence years
+        self.env['ir.config_parameter'].sudo().set_int('calendar.max_recurrence_years', 5)
+        for rrule_type, name, expected_count in (
+            ('daily', 'Custom Daily Meeting', 720),
+            ('monthly', 'Custom Monthly Meeting', 60),
+            ('yearly', 'Custom Yearly Meeting', 5),
+        ):
+            with self.subTest(rrule_type=rrule_type):
+                self.CalendarEvent.create(dict(values, name=name, rrule_type=rrule_type))
+                meetings_count = self.CalendarEvent.search_count([('name', '=', name)])
+                self.assertEqual(
+                    meetings_count,
+                    expected_count,
+                    f'Recurrent {rrule_type} meetings should be created and not exceed {expected_count}!',
+                )

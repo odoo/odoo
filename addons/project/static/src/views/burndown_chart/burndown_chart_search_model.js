@@ -31,9 +31,6 @@ export class BurndownChartSearchModel extends SearchModel {
                     case 'stage_id':
                         this.stageIdSearchItemId = searchItem.id;
                         break;
-                    case 'is_closed':
-                        this.isClosedSearchItemId = searchItem.id;
-                        break;
                 }
             }
         }
@@ -76,20 +73,6 @@ export class BurndownChartSearchModel extends SearchModel {
             }
         }
         super.toggleDateGroupBy(...arguments);
-    }
-
-    /**
-     * @override
-     * Ensure here that there is always either the 'stage' or the 'is_closed' searchItemId inside the query.
-     */
-    toggleSearchItem(searchItemId) {
-        // if the current searchItem stage/is_closed, the counterpart is added before removing the current searchItem
-        if (searchItemId === this.isClosedSearchItemId){
-            super.toggleSearchItem(this.stageIdSearchItemId);
-        } else if (searchItemId === this.stageIdSearchItemId){
-            super.toggleSearchItem(this.isClosedSearchItemId);
-        }
-        super.toggleSearchItem(...arguments);
     }
 
     /**

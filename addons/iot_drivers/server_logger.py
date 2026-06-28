@@ -25,7 +25,7 @@ class ServerLogger(logging.Handler):
         """
         super().__init__()
         self.setFormatter(
-            ColoredFormatter('(%(asctime)s) %(name)s: %(message)s %(perf_info)s')
+            ColoredFormatter('(%(asctime)s) %(name)s: %(message)s')
         )
         self.addFilter(self._logs_filter)
         self._server_iot_log_url = server_url + '/iot/log'

@@ -51,7 +51,7 @@
                     <div class="input-group">
                         <textarea t-custom-ref="codeInput" class="form-control" t-att-value="this.props.embedCode"
                                   readonly="readonly" onClick="this.select();"/>
-                        <CopyButton content="this.props.embedCode" copyText="this.copyEmbedCodeText"
+                        <CopyButton content="() => this.codeInput.el.value" copyText="this.copyEmbedCodeText"
                                     successText="this.successText"/>
                     </div>
                     <div t-if="this.props.category == 'document' and this.props.documentMaxPage > 1" class="input-group mt-4">

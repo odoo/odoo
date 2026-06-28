@@ -3,7 +3,7 @@
 import json
 from datetime import datetime
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 
@@ -39,9 +39,17 @@ class PaymentProvider(models.Model):
         groups="base.group_system",
     )
     paymob_hmac_key = fields.Char(
-        string="Paymob HMAC Key", required_if_provider="paymob", copy=False
+        string="Paymob HMAC Key",
+        required_if_provider="paymob",
+        copy=False,
+        groups="base.group_system",
     )
-    paymob_api_key = fields.Char(string="Paymob API Key", required_if_provider="paymob", copy=False)
+    paymob_api_key = fields.Char(
+        string="Paymob API Key",
+        required_if_provider="paymob",
+        copy=False,
+        groups="base.group_system",
+    )
 
     # === CONSTRAINT METHODS === #
 
@@ -49,12 +57,16 @@ class PaymentProvider(models.Model):
     def _check_available_country_currency_ids(self):
         for provider in self.filtered(lambda p: p.code == "paymob"):
             if len(provider.available_currency_ids) > 1:
-                raise ValidationError(_("Only one currency can be selected per Paymob account."))
+                raise ValidationError(
+                    provider.env._("Only one currency can be selected per Paymob account.")
+                )
             if (
                 provider.available_currency_ids
                 and provider.available_currency_ids.name not in const.CURRENCY_MAPPING.values()
             ):
-                raise ValidationError(_("Only currencies supported by Paymob can be selected."))
+                raise ValidationError(
+                    provider.env._("Only currencies supported by Paymob can be selected.")
+                )
 
     # === COMPUTE METHODS === #
 
@@ -94,7 +106,7 @@ class PaymentProvider(models.Model):
             "page_size": 500,
             "is_deprecated": "false",
             "is_standalone": "false",
-            "is_live": self.state == "enabled",
+            "is_live": self.is_live,
         }
         paymob_gateways_data = self._send_api_request(
             "GET", "/api/ecommerce/integrations", params=params
@@ -109,8 +121,10 @@ class PaymentProvider(models.Model):
         if len(matched_gateways_data) < len(self.payment_method_ids):
             displayed_notification["params"].update({
                 "type": "warning",
-                "title": _("Payment methods not found"),
-                "message": _("Not all enabled payment methods were found on your account."),
+                "title": self.env._("Payment methods not found"),
+                "message": self.env._(
+                    "Not all enabled payment methods were found on your account."
+                ),
             })
             return displayed_notification
 
@@ -120,8 +134,8 @@ class PaymentProvider(models.Model):
         # All payment methods were successfully updated.
         displayed_notification["params"].update({
             "type": "success",
-            "title": _("Successfully synchronized with Paymob"),
-            "message": _("Payment methods have been successfully set up!"),
+            "title": self.env._("Successfully synchronized with Paymob"),
+            "message": self.env._("Payment methods have been successfully set up!"),
         })
         return displayed_notification
 
@@ -184,13 +198,11 @@ class PaymentProvider(models.Model):
         for gateway_data in matched_gateways_data:
             payment_method_code = const.PAYMENT_METHODS_MAPPING[gateway_data["gateway_type"]]
             if payment_method_code == "card" and gateway_data.get("installments"):
-                installment_payment_method = self.env["payment.method"].search(
-                    [("code", "=", "installments_eg")], limit=1
-                )
+                installment_payment_method = self._get_pm_from_code("installments_eg")
                 if not installment_payment_method:
                     continue
                 payment_method_code = "installments_eg"
-            environment = "live" if self.state == "enabled" else "test"
+            environment = "live" if self.is_live else "test"
             payload = {"integration_name": f"{payment_method_code.replace('_', '')}{environment}"}
             self._send_api_request(
                 "PUT", f"/api/ecommerce/integrations/{gateway_data['id']}", json=payload
@@ -213,6 +225,11 @@ class PaymentProvider(models.Model):
         :rtype: str
         """
         self.ensure_one()
+        if not self.paymob_account_country_id:
+            raise ValidationError(
+                self.env._("The account country is not set.")
+            )
+
         api_prefix = const.API_MAPPING[self.paymob_account_country_id.code]
         return f"https://{api_prefix}.paymob.com"
 
@@ -246,7 +263,7 @@ class PaymentProvider(models.Model):
         )
         access_token = response_content["token"]
         if not access_token:
-            raise ValidationError(_("Could not generate a new access token."))
+            raise ValidationError(self.env._("Could not generate a new access token."))
         return access_token
 
     def _parse_response_error(self, response):
@@ -258,5 +275,7 @@ class PaymentProvider(models.Model):
         # Paymob errors: https://developers.paymob.com/egypt/error-codes
         if "This field may not be blank" in msg:
             missing_fields = ", ".join(json.loads(msg).get("billing_data", {}).keys())
-            return _("The following fields must be filled: %(fields)s", fields=missing_fields)
+            return self.env._(
+                "The following fields must be filled: %(fields)s", fields=missing_fields
+            )
         return msg

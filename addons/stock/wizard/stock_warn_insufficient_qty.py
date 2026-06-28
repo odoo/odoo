@@ -46,4 +46,6 @@ class StockWarnInsufficientQtyScrap(models.TransientModel):
         return self.with_context(clean_context(self.env.context)).scrap_move_id._action_scrap()
 
     def action_cancel(self):
+        if self.env.context.get('not_unlink_on_discard'):
+            return True
         return self.scrap_move_id.sudo().unlink()

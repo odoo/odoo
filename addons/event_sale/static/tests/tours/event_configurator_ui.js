@@ -33,8 +33,7 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
             trigger: "body:not(:has(.modal))",
         },
         ...tourUtils.clickSomewhereElse(),
-        tourUtils.editLineMatching("Event Registration", "VIP"),
-        tourUtils.editConfiguration(),
+        tourUtils.editConfiguration("VIP"),
         {
             trigger: 'div[name="event_ticket_id"] input',
             run: "click",
@@ -52,7 +51,7 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
             trigger: "body:not(:has(.modal))",
         },
         ...tourUtils.clickSomewhereElse(),
-        tourUtils.checkSOLDescriptionContains("Event Registration", "Standard"),
+        tourUtils.checkSOLDescriptionContains("Standard", "Design Fair Los Angeles"),
         ...stepUtils.saveForm(),
     ],
 });

@@ -109,3 +109,15 @@ test("Add image as cover", async () => {
     await contains(".o-snippets-top-actions button[data-action='save']").click();
     expect.verifySteps(["save attachment", "save cover"]);
 });
+
+test("Cover container with data-res-model is savable but not editable", async () => {
+    await setupWebsiteBuilder(`
+        <div class="o_record_cover_container" data-res-model="blog.post" data-res-id="3">
+            <div class="o_record_cover_image"/>
+            <h1 data-oe-model="blog.post" data-oe-id="3" data-oe-field="name">Title</h1>
+        </div>
+    `);
+
+    expect(":iframe .o_record_cover_container").toHaveClass("o_savable");
+    expect(":iframe .o_record_cover_container").toHaveAttribute("contenteditable", "false");
+});

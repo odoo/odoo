@@ -1,12 +1,13 @@
-import { LinkPopover } from "@html_editor/main/link/link_popover";
+import { LinkPopover, linkPopoverProps } from "@html_editor/main/link/link_popover";
+import { props, t } from "@odoo/owl";
 
 export class NavbarLinkPopover extends LinkPopover {
     static template = "website.navbarLinkPopover";
-    static props = {
-        ...LinkPopover.props,
-        onClickEditLink: Function,
-        onClickEditMenu: Function,
-    };
+    props = props({
+        ...linkPopoverProps,
+        onClickEditLink: t.function(),
+        onClickEditMenu: t.function(),
+    });
 
     /**
      * @override

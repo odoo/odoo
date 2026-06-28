@@ -4,9 +4,7 @@ import hashlib
 import hmac
 import pprint
 
-from werkzeug.exceptions import Forbidden
-
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -30,19 +28,12 @@ class AuthorizeController(http.Controller):
         """
         # Check that the transaction details have not been altered
         if not payment_utils.check_access_token(access_token, reference, partner_id):
-            raise ValidationError(_("Received tampered payment request data."))
+            raise ValidationError(self.env._("Received tampered payment request data."))
 
         # Retrieve the transaction
-        tx_sudo = request.env["payment.transaction"].sudo().search([("reference", "=", reference)])
+        tx_sudo = self.env["payment.transaction"].sudo().search([("reference", "=", reference)])
         if not tx_sudo:
-            raise ValidationError(_("Transaction not found."))
-
-        # Lock the transaction row to prevent concurrent updates (e.g., from cron jobs)
-        # This prevents sql concurrent updates, which stops ORM from automatically
-        # retrying the route and consuming the single-use OTS token a second time.
-        tx_sudo.env.cr.execute(
-            "SELECT 1 FROM payment_transaction WHERE id = %s FOR NO KEY UPDATE", [tx_sudo.id]
-        )
+            raise ValidationError(self.env._("Transaction not found."))
 
         # Send the payment request to Authorize.Net.
         response_content = tx_sudo._authorize_create_transaction_request(opaque_data)
@@ -53,7 +44,7 @@ class AuthorizeController(http.Controller):
             reference,
             pprint.pformat(response_content),
         )
-        tx_sudo._process("authorize", {"response": response_content})
+        tx_sudo._record({"response": response_content})
 
     @http.route(const.WEBHOOK_ROUTE, type="http", auth="public", methods=["POST"], csrf=False)
     def authorize_webhook(self):
@@ -70,14 +61,20 @@ class AuthorizeController(http.Controller):
         )
         event_type = data.get("eventType")
         if event_type in const.HANDLED_WEBHOOK_EVENTS:
-            tx_sudo = (
-                request.env["payment.transaction"].sudo()._search_by_reference("authorize", data)
-            )
+            tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("authorize", data)
             if tx_sudo and data.get("webhookId") == tx_sudo.provider_id.authorize_webhook_id:
                 # Check the integrity of the notification
                 signature_header = request.httprequest.headers.get("X-ANET-Signature")
-                signature = signature_header and signature_header.split("=", 1)[1].upper()
-                self._verify_signature(signature, request.httprequest.get_data(), tx_sudo)
+                received_signature = signature_header and signature_header.split("=", 1)[1].upper()
+                signature_key = tx_sudo.provider_id.authorize_signature_key
+                request_body = request.httprequest.get_data()
+                expected_signature = (
+                    hmac
+                    .new(signature_key.encode(), request_body, hashlib.sha512)
+                    .hexdigest()
+                    .upper()
+                )
+                payment_utils.verify_signature(received_signature, expected_signature)
 
                 # Process the payment data. The data are structured in the same format as the
                 # transaction API's responses.
@@ -89,27 +86,5 @@ class AuthorizeController(http.Controller):
                         "x_type": const.WEBHOOK_EVENT_TYPE_MAPPING[event_type],
                     }
                 }
-                tx_sudo._process("authorize", payment_data)
+                tx_sudo._record(payment_data)
         return request.make_json_response("")
-
-    @staticmethod
-    def _verify_signature(signature, request_body, tx_sudo):
-        """Check that the received signature matches the expected one.
-
-        :param str signature: The extracted HMAC signature value.
-        :param bytes request_body: The raw request body.
-        :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
-        :rtype: None
-        :raise Forbidden: If the signatures don't match.
-        """
-        if not signature:
-            _logger.warning("Received notification with missing signature.")
-            raise Forbidden
-
-        signature_key = tx_sudo.provider_id.authorize_signature_key
-        expected_signature = (
-            hmac.new(signature_key.encode(), request_body, hashlib.sha512).hexdigest().upper()
-        )
-        if not hmac.compare_digest(expected_signature, signature):
-            _logger.warning("Received notification with invalid signature.")
-            raise Forbidden

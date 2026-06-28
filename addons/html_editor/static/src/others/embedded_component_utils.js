@@ -1,5 +1,5 @@
-import { onRendered, reactive, useComponent, useRef, useState } from "@web/owl2/utils";
-import { onMounted, onPatched, onWillDestroy, toRaw } from "@odoo/owl";
+import { onRendered, useComponent, useRef } from "@web/owl2/utils";
+import { effect, onMounted, onPatched, onWillDestroy, toRaw, proxy } from "@odoo/owl";
 
 /**
  * @typedef {HTMLElement} HostElement host element for an embedded component
@@ -34,6 +34,50 @@ import { onMounted, onPatched, onWillDestroy, toRaw } from "@odoo/owl";
  * @property {function(StateChangeManagerConfig):StateChangeManager} [getStateChangeManager]
  *           @see useEmbeddedState
  */
+
+/**
+ * Mount an Owl root component on a host element, patching the mount fiber to
+ * synchronously clear the host's children just before the component's rendered
+ * HTML is inserted (i.e., just before the original `fiber.complete` runs).
+ *
+ * @param {import("@odoo/owl").App} app
+ * @param {typeof import("@odoo/owl").Component} Component
+ * @param {HTMLElement} host
+ * @param {Object} props
+ * @param {Object} env
+ * @param {Object} [options]
+ * @param {function(): boolean|undefined} [options.onBeforeComplete] called
+ *   before clearing host children; return `false` to abort the complete call
+ *   entirely (skips both `replaceChildren` and the original `fiberComplete`).
+ * @param {function()} [options.onAfterComplete] called after the original
+ *   `fiber.complete`.
+ * @returns {{ root: object, mountPromise: Promise }}
+ */
+export function mountComponent(
+    app,
+    Component,
+    host,
+    props,
+    env,
+    { onBeforeComplete, onAfterComplete } = {}
+) {
+    const root = app.createRoot(Component, { props, env });
+    const mountPromise = root.mount(host);
+    // Patch mount fiber to hook into the exact call stack where root is
+    // mounted (but before). This will remove host children synchronously
+    // just before adding the root rendered html.
+    const fiber = root.node.fiber;
+    const fiberComplete = fiber.complete;
+    fiber.complete = function () {
+        if (onBeforeComplete?.() === false) {
+            return;
+        }
+        host.replaceChildren();
+        fiberComplete.call(this);
+        onAfterComplete?.();
+    };
+    return { root, mountPromise };
+}
 
 /**
  * Get all element children with `data-embedded-editable` attribute which are
@@ -254,6 +298,7 @@ export class StateChangeManager {
      */
     constructor(config) {
         this.config = config;
+        this.effects = new WeakMap();
     }
     setup() {
         const defaultState = sortedCopy(this.getEmbeddedState());
@@ -281,6 +326,10 @@ export class StateChangeManager {
      * handled differently when unmounted.
      */
     setupUnmounted() {
+        if (this.embeddedState) {
+            this.effects.get(this.embeddedState)();
+            this.effects.delete(this.embeddedState);
+        }
         this.previousEmbeddedState = null;
         this.state = null;
         this.embeddedState = null;
@@ -299,16 +348,17 @@ export class StateChangeManager {
      */
     constructEmbeddedState(state) {
         this.state = state;
-        this.embeddedState = reactive(
-            this.assignDeepProxyCopy({}, state),
-            this.batchedChangeState()
-        );
+        this.embeddedState = proxy(this.assignDeepProxyCopy({}, state));
         this.embeddedStateProxy = new Proxy(
             this.embeddedState,
             embeddedStateProxyHandler(state, this)
         );
-        // First subscription to changes.
-        observeAllKeys(this.embeddedStateProxy);
+        const onStateChanged = this.batchedChangeState();
+        const disposeEffect = effect(() => {
+            observeAllKeys(this.embeddedStateProxy);
+            onStateChanged();
+        });
+        this.effects.set(this.embeddedState, disposeEffect);
         this.isLiveComponent = true;
         return this.embeddedStateProxy;
     }
@@ -334,15 +384,15 @@ export class StateChangeManager {
      * @param { Object } options
      * @param {boolean} options.reverse whether to read the stateChange from
      *        next to previous
-     * @param {boolean} options.forNewStep whether the attribute change is being
-     *        used to create a new step.
+     * @param {boolean} options.ensureNewMutations whether the attribute change is being
+     *        used to create a new commit.
      * @returns {string} new JSON representation of a stateChange, in case
      *          it needs to be represented under another form to be shared
      *          in collaboration (a local peer doing revertMutations implies
      *          that collaborators will do applyMutations, so the stateChange
      *          must be expressed with another form for them).
      */
-    onStateChanged(attrState, { reverse = false, forNewStep = false } = {}) {
+    onStateChanged(attrState, { reverse = false, ensureNewMutations = false } = {}) {
         const stateChange = attrState ? JSON.parse(attrState) : this.defaultStateChange;
         const state = this.getState();
         if (reverse) {
@@ -361,14 +411,14 @@ export class StateChangeManager {
                 // pending change is applied in `changeState`.
                 this.assignDeepProxyCopy(toRaw(this.embeddedState), sortedState);
             }
-            if (!forNewStep) {
+            if (!ensureNewMutations) {
                 this.previousStateChange = stateChange;
             } else {
-                // If mutations are being applied to create a new step, the
+                // If mutations are being applied to create a new commit, the
                 // state change must be expressed under another form for
                 // collaborators, since the collaborator will always
                 // "applyMutations" and never "revertMutations" when receiving
-                // external steps.
+                // remote commits.
                 const next = JSON.stringify(sortedState);
                 if (previous !== next) {
                     this.previousStateChange = {
@@ -564,7 +614,7 @@ export class StateChangeManager {
  * That state can be modified through 2 channels:
  * - By the component itself, as with any normal state.
  * - By the embedded_component_plugin, during history or collaborative
- *   operations (undo/redo/resetStepsUntil/addExternalStep). The attribute
+ *   operations (undo/redo/insertRemoteCommit). The attribute
  *   `data-embedded-state` will be used to contain a serialized representation
  *   of a state change.
  *
@@ -598,6 +648,6 @@ export function useEmbeddedState(host) {
     }
     const stateChangeManager = component.env.getStateChangeManager(host);
     onWillDestroy(() => stateChangeManager.setupUnmounted());
-    const state = useState(stateChangeManager.getEmbeddedState());
+    const state = proxy(stateChangeManager.getEmbeddedState());
     return stateChangeManager.constructEmbeddedState(state);
 }

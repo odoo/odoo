@@ -9,7 +9,6 @@ export class ForecastedHeader extends Component {
     setup(){
         this.orm = useService("orm");
         this.action = useService("action");
-        this.tooltip = useService("tooltip");
 
         this._formatFloat = (num) => formatFloat(num, { digits: [0, this.props.docs.precision] });
     }

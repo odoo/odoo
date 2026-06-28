@@ -1,7 +1,7 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { onWillStart, onMounted } from "@odoo/owl";
+import { onWillStart, onMounted, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
@@ -17,7 +17,7 @@ export class ProductsItemOption extends BaseOptionComponent {
 
         const { loadInfo, getItemSize, getCount } = this.dependencies.productsItemOptionPlugin;
 
-        this.state = useState({
+        this.state = proxy({
             itemSize: getItemSize(),
             count: getCount(),
         });

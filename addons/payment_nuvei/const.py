@@ -3,18 +3,8 @@
 # The currencies supported by Nuvei, in ISO 4217 format.
 SUPPORTED_CURRENCIES = ["ARS", "BRL", "CAD", "CLP", "COP", "MXN", "PEN", "USD", "UYU"]
 
-# The codes of the payment methods to activate when Nuvei is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
-    "card",
-    # Brand payment methods.
-    "visa",
-    "mastercard",
-    "amex",
-    "discover",
-    "tarjeta_mercadopago",
-    "naranja",
-}
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card"}
 
 # Some payment methods require no decimal points no matter the currency
 INTEGER_METHODS = ["webpay"]

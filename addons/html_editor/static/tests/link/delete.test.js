@@ -1,6 +1,6 @@
-import { describe, test } from "@odoo/hoot";
-import { deleteBackward, deleteImage } from "../_helpers/user_actions";
+import { describe, test, tick } from "@odoo/hoot";
 import { base64Img, testEditor } from "../_helpers/editor";
+import { deleteBackward, deleteImage, simulateArrowKeyPress, undo } from "../_helpers/user_actions";
 
 describe("delete selection involving links", () => {
     test("should remove link", async () => {
@@ -97,4 +97,17 @@ describe("empty list items, starting and ending with links", () => {
         });
         testIndex += 1;
     }
+});
+
+test("Should properly restore selection on undo the delete", async () => {
+    await testEditor({
+        contentBefore: `<div class="o-paragraph">abc</div><div class="o-paragraph"><strong>cb[]</strong></div>`,
+        stepFunction: async (editor) => {
+            await simulateArrowKeyPress(editor, "ArrowUp");
+            await tick();
+            deleteBackward(editor);
+            undo(editor);
+        },
+        contentAfter: `<div>ab[]c</div><div><strong>cb</strong></div>`,
+    });
 });

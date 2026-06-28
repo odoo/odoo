@@ -1,6 +1,7 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { TableAlignSelector } from "./table_align_selector";
 
@@ -40,9 +41,9 @@ export class TableAlignPlugin extends Plugin {
             },
         ],
         toolbar_items: [
-            {
+            withSequence(20, {
                 id: "table_alignment",
-                groupId: "layout",
+                groupId: "table",
                 description: _t("Vertical align table cells content"),
                 isAvailable: () =>
                     this.dependencies.selection
@@ -52,17 +53,18 @@ export class TableAlignPlugin extends Plugin {
                 props: {
                     getItems: () => verticalAlignmentItems,
                     getDisplay: () => this.verticalAlignMode,
+                    focusEditable: () => this.dependencies.selection.focusEditable(),
                     onSelected: (item) => {
                         this.setVerticalAlignment(item.mode);
                     },
                 },
-            },
+            }),
         ],
 
         /** Handlers */
         on_selectionchange_handlers: this.updateVerticalAlignParams.bind(this),
-        on_undone_handlers: this.updateVerticalAlignParams.bind(this),
-        on_redone_handlers: this.updateVerticalAlignParams.bind(this),
+        on_history_commit_undone_handlers: this.updateVerticalAlignParams.bind(this),
+        on_history_commit_redone_handlers: this.updateVerticalAlignParams.bind(this),
         on_all_formats_removed_handlers: this.setVerticalAlignment.bind(this),
 
         /** Predicates */
@@ -74,7 +76,7 @@ export class TableAlignPlugin extends Plugin {
     };
 
     setup() {
-        this.verticalAlignMode = reactive({ displayName: "" });
+        this.verticalAlignMode = proxy({ displayName: "" });
     }
 
     get currentVerticalAlign() {
@@ -111,7 +113,7 @@ export class TableAlignPlugin extends Plugin {
         }
 
         if (isAlignmentUpdated) {
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
         }
         this.updateVerticalAlignParams();
     }

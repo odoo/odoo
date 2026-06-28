@@ -17,10 +17,10 @@ one vendor and others from another vendor.
     'depends': ['purchase'],
     'demo': ['data/purchase_alternative_demo.xml'],
     'data': [
-        'security/ir.model.access.csv',
         'views/purchase_views.xml',
         'wizard/purchase_alternative_warning.xml',
         'wizard/purchase_alternative_create.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

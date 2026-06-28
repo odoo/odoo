@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
-from odoo.fields import Datetime
+from odoo import Command, SUPERUSER_ID, fields
+from odoo.fields import Datetime, Domain
 from odoo.tests import Form, new_test_user, tagged
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
@@ -115,8 +115,8 @@ class TestSaleProject(TestSaleProjectCommon):
         })
 
     def test_sale_order_with_project_task(self):
-        SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
-        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
+        SaleOrder = self.env['sale.order']
+        SaleOrderLine = self.env['sale.order.line']
 
         sale_order = SaleOrder.create({
             'partner_id': self.partner.id,
@@ -220,7 +220,7 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertEqual(self.project_global._get_sale_orders(), sale_order | sale_order_2)
 
     def test_sol_product_type_update(self):
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
@@ -244,7 +244,7 @@ class TestSaleProject(TestSaleProjectCommon):
         group_sale_manager = self.env.ref('sales_team.group_sale_manager')
         group_project_user = self.env.ref('project.group_project_user')
         self.env.user.write({'group_ids': [(6, 0, [group_sale_manager.id, group_project_user.id])]})
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
@@ -356,7 +356,7 @@ class TestSaleProject(TestSaleProjectCommon):
             show_create_project_button is set to True. If the sale order also has one project linked to it, then the show_project_and_task_button should be True, and the show_create_button
             should be updated to False
         """
-        sale_order_1 = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order_1 = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
@@ -387,7 +387,6 @@ class TestSaleProject(TestSaleProjectCommon):
         # add a project to the SO
         line_delivered_milestone.project_id = self.project_global
         sale_order_1._compute_show_project_and_task_button()
-        self.assertFalse(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on milestone' and a project on the sale order, the button should be hidden")
         self.assertTrue(sale_order_1.show_project_button, "There is a product service with the service_policy set on 'delivered on milestone' and a project on the sale order, the button should be displayed")
 
         # add an ordered_prepaid service product
@@ -429,11 +428,11 @@ class TestSaleProject(TestSaleProjectCommon):
         When we add an SOL from a template that is a service that has a service_policy that will generate a task,
         even if default_task_id is present in the context, a new task should be created when confirming the SO.
         """
-        default_task = self.env['project.task'].with_context(tracking_disable=True).create({
+        default_task = self.env['project.task'].create({
             'name': 'Task',
             'project_id': self.project_global.id
         })
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True, default_task_id=default_task.id).create({
+        sale_order = self.env['sale.order'].with_context(default_task_id=default_task.id).create({
             'partner_id': self.partner.id,
         })
         quotation_template = self.env['sale.order.template'].create({
@@ -466,7 +465,7 @@ class TestSaleProject(TestSaleProjectCommon):
 
     def test_project_creation_on_so_confirm_with_account(self):
         # Ensures that the company of the account of the SO is propagated to the project.
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
@@ -594,13 +593,13 @@ class TestSaleProject(TestSaleProjectCommon):
             'project_id':project_B.id,
         })
 
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
         })
 
-        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
+        SaleOrderLine = self.env['sale.order.line']
         SaleOrderLine.create({
             'name': product_A.name,
             'product_id': product_A.id,
@@ -685,6 +684,11 @@ class TestSaleProject(TestSaleProjectCommon):
             product_context = sol_form._get_context('product_id')
             product = sol_form.product_id.with_context(product_context).new({
                 'name': 'Test product',
+                # `new()` skips `default_get` of `reinvoice_policy` since its not a dependency of
+                # `_compute_qty_delivered_method`, so it must be correct before the first
+                # compute run or it will never hold right value in memory since the record is not
+                # yet committed to DB
+                'reinvoice_policy': 'no',
             })
             self.assertEqual(product.type, 'service')
             self.assertEqual(product.type, 'service')
@@ -731,7 +735,7 @@ class TestSaleProject(TestSaleProjectCommon):
             - Done
             - Cancelled
         """
-        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
         })
         product = self.env['product.product'].create({
@@ -888,6 +892,36 @@ class TestSaleProject(TestSaleProjectCommon):
             self.assertEqual(sale_order_action["type"], "ir.actions.act_window")
             self.assertEqual(sale_order_action["res_model"], "sale.order")
 
+    def test_multi_company_so_creation(self):
+        # SO with project template with non-superuser company_id able creates project with proper company
+        company = self.env['res.company'].create({
+            'name': 'Multi-Company Test Company',
+            'currency_id': self.env.ref('base.EUR').id,
+        })
+
+        company_project_template = self.env['project.project'].with_company(company).create({
+            'name': 'Multi-Company Test Company Project Template',
+            'company_id': company.id,
+        })
+
+        product_with_project_template = self.env['product.product'].with_company(company).create({
+            'name': 'product with template',
+            'list_price': 1,
+            'type': 'service',
+            'service_tracking': 'project_only',
+            'project_template_id': company_project_template.id,
+        })
+
+        # SOs with one created project
+        sale_order = self.env['sale.order'].with_company(company).create({'partner_id': self.partner.id})
+        self.env['sale.order.line'].with_company(company).create({
+            'product_id': product_with_project_template.id,
+            'order_id': sale_order.id,
+        })
+        sale_order_sudo = sale_order.with_user(SUPERUSER_ID)
+        sale_order_sudo.action_confirm()
+        self.assertEqual(company_project_template.company_id, sale_order.project_ids[0].company_id, "The created project should have the same company as the template")
+
     def test_creating_AA_when_adding_service_to_confirmed_so(self):
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
@@ -982,7 +1016,7 @@ class TestSaleProject(TestSaleProjectCommon):
             self.partner_b,  # partner_shipping_id
             self.env['res.partner'].create({'name': "unrelated partner"}),
         ]
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': partners[0].id,
             'partner_invoice_id': partners[1].id,
             'partner_shipping_id': partners[2].id,
@@ -1097,7 +1131,7 @@ class TestSaleProject(TestSaleProjectCommon):
             copy.order_line.project_id._get_analytic_distribution(),
         )
 
-    def test_confirm_sale_order_on_task_save(self):
+    def test_non_confirm_sale_order_on_task_save(self):
         sale_order = self.env['sale.order'].create({
             'name': 'Sale Order',
             'partner_id': self.partner.id,
@@ -1113,9 +1147,9 @@ class TestSaleProject(TestSaleProjectCommon):
             'project_id': self.project_global.id,
         })
         task.write({'sale_line_id': sale_order_line.id})
-        self.assertEqual(sale_order.state, 'sale')
+        self.assertEqual(sale_order.state, 'draft')
 
-    def test_confirm_sale_order_on_project_creation(self):
+    def test_non_confirm_sale_order_on_project_creation(self):
         sale_order = self.env['sale.order'].create({
             'name': 'Sale Order',
             'partner_id': self.partner.id,
@@ -1130,7 +1164,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'name': 'Project',
             'sale_line_id': sale_order_line.id,
         })
-        self.assertEqual(sale_order.state, 'sale')
+        self.assertEqual(sale_order.state, 'draft')
 
     def test_create_project_on_fly(self):
         """
@@ -1339,22 +1373,18 @@ class TestSaleProject(TestSaleProjectCommon):
             'project_id': self.project_global.id,
             'sale_order_id': order.id,
         })
-        domain = [
-            ('planned_date_begin', '>=', Datetime.to_datetime('2023-01-01')),
-            ('date_deadline', '<=', Datetime.to_datetime('2023-01-04')),
-        ]
         Task = self.env['project.task'].with_context({
             'gantt_start_date': Datetime.to_datetime('2023-01-01'),
             'gantt_scale': 'month',
         })
 
-        displayed_sale_order = Task._group_expand_sales_order(None, domain)
+        displayed_sale_order = Task._group_expand_sales_order(None, Domain.TRUE)
         self.assertFalse(
             displayed_sale_order,
             'Sale orders without scheduled tasks should not be displayed in the Gantt view',
         )
 
-        displayed_sale_order = Task._group_expand_sales_order(None, [('sale_order_id', 'ilike', 'Test')] + domain)
+        displayed_sale_order = Task._group_expand_sales_order(None, [('sale_order_id', 'ilike', 'Test')])
         self.assertEqual(order, displayed_sale_order, 'The matching sale order should be displayed in the Gantt view')
 
     def test_so_with_service_product_negative_qty(self):
@@ -1375,7 +1405,7 @@ class TestSaleProject(TestSaleProjectCommon):
             =========
             When the user clicks on the stat button `Make Billable`, the `create_for_project_id` is added
             to the contex. With that context, we will make sure the action_confirm will do nothing if the
-            user clicks on it since the SO will automatically be confirmed in that use case.
+            user clicks on it since the SO will not automatically be confirmed in that use case.
         """
         self.project_global.partner_id = self.partner
         action_dict = self.project_global.with_context(
@@ -1391,7 +1421,7 @@ class TestSaleProject(TestSaleProjectCommon):
         })
         self.assertEqual(sale_order.partner_id, self.partner)
         self.assertEqual(sale_order.project_id, self.project_global)
-        self.assertEqual(sale_order.state, 'sale')
+        self.assertEqual(sale_order.state, 'draft')
         self.assertEqual(self.project_global.sale_line_id, sale_order.order_line)
 
         sale_order.action_confirm()  # no error should be raised even if the SO is already confirmed
@@ -1641,8 +1671,8 @@ class TestSaleProject(TestSaleProjectCommon):
             - Create a project and link it to the sale order.
             - Create a task and link it to the project.
             - Verify that the project is linked to the sale order.
-            - Verify that the task without SO item is not linked to the sale order.
-            - Verify that the project & task smart button is hidden.
+            - Verify that the task is linked to the sale order.
+            - Verify that the project & task smart button is visible.
             - Confirm the sale order.
             - Verify the visibility of the project & task smart button.
         """
@@ -1674,9 +1704,9 @@ class TestSaleProject(TestSaleProjectCommon):
             (1, 0),
             "Project must be linked and tasks without SO lines should not be linked to the sales order."
         )
-        self.assertFalse(
+        self.assertTrue(
             sale_order.show_project_button,
-            "The project smart buttons should be hidden in the sale order."
+            "The project smart buttons should be visible in the sale order."
         )
 
         sale_order.action_confirm()
@@ -1951,3 +1981,124 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertFalse(optional_product_line.project_id)
         optional_product_line.write({'product_uom_qty': 1})
         self.assertEqual(optional_product_line.project_id.sale_order_id, sale_order_with_option)
+
+    def test_subtask_inherits_sale_line_from_template(self):
+        """Test that subtasks created from project template inherit sale_line_id from parent task."""
+
+        project_template = self.env['project.project'].create({
+            'name': 'Project Template with Subtasks',
+        })
+        parent_task_template = self.env['project.task'].create({
+            'name': 'Parent Task Template',
+            'project_id': project_template.id,
+        })
+        self.env['project.task'].create([
+            {
+                'name': 'Subtask Template 1',
+                'parent_id': parent_task_template.id,
+                'project_id': project_template.id,
+            },
+            {
+                'name': 'Subtask Template 2',
+                'parent_id': parent_task_template.id,
+                'project_id': project_template.id,
+            }
+        ])
+
+        service_product = self.env['product.product'].create({
+            'name': 'Service with Project Template',
+            'standard_price': 20,
+            'list_price': 40,
+            'type': 'service',
+            'invoice_policy': 'delivery',
+            'uom_id': self.uom_hour.id,
+            'service_tracking': 'task_in_project',
+            'project_id': False,
+            'project_template_id': project_template.id,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': service_product.id,
+            'product_uom_qty': 1,
+        })
+        sale_order.action_confirm()
+
+        created_project = sale_order_line.project_id
+        self.assertTrue(created_project, "A new project should have been created")
+
+        created_tasks = created_project.task_ids
+        parent_task = created_tasks.filtered(lambda t: not t.parent_id)
+        subtasks = created_tasks.filtered(lambda t: t.parent_id)
+
+        self.assertEqual(len(subtasks), 2, "Should have exactly two subtasks from template")
+        self.assertEqual(parent_task.sale_line_id, sale_order_line, "Parent task should have sale_line_id set")
+
+        for subtask in subtasks:
+            self.assertEqual(subtask.sale_line_id, sale_order_line, "Subtask '%s' should inherit sale_line_id from parent task" % subtask.name)
+
+    def test_section_sale_line_from_template_has_no_task(self):
+        default_task = self.env['project.task'].with_context(tracking_disable=True).create({
+            'name': 'Task',
+            'project_id': self.project_global.id
+        })
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True, default_task_id=default_task.id).create({
+            'partner_id': self.partner.id,
+        })
+
+        quotation_template = self.env['sale.order.template'].create({
+            'name': 'Test quotation with section',
+        })
+        quotation_template.write({
+            'sale_order_template_line_ids': [
+                Command.set(
+                    self.env['sale.order.template.line'].create([{
+                        'name': 'section 1',
+                        'sale_order_template_id': quotation_template.id,
+                        'display_type': 'line_section',
+                    }]).ids
+                )
+            ]
+        })
+
+        sale_order.with_context(default_task_id=default_task.id).write({
+            'sale_order_template_id': quotation_template.id,
+        })
+        sale_order.with_context(default_task_id=default_task.id)._onchange_sale_order_template_id()
+        self.assertFalse(sale_order.order_line.mapped('task_id'), "SOL should have no related tasks, because it is a section")
+
+    def test_aal_category_report_and_billable_type_sale_project(self):
+        """ This test ensures that aal are generated with the correct billable type and category report. """
+        lines = self.env['account.analytic.line'].create([{
+            'account_id': self.project_global.account_id.id,
+            'name': 'other revenue',
+            'amount': 500,
+            'unit_amount': 1,
+        }, {
+            'account_id': self.project_global.account_id.id,
+            'name': 'other cost',
+            'amount': -500,
+            'unit_amount': 1,
+        }])
+        self.assertEqual(lines[0].category_report, 'revenues')
+        self.assertEqual(lines[0].billable_type, '11_other_revenues')
+        self.assertEqual(lines[1].category_report, 'costs')
+        self.assertEqual(lines[1].billable_type, '30_other_costs')
+
+        vendor_bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': fields.Date.today(),
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'quantity': 1,
+                'price_unit': 10,
+                'analytic_distribution': {self.project_global.account_id.id: 100},
+            })],
+        })
+        vendor_bill.action_post()
+        line_vendor_bill = self.env['account.analytic.line'].search([('account_id', '=', self.project_global.account_id.id), ('category', '=', 'vendor_bill')])
+        self.assertEqual(line_vendor_bill.category_report, 'costs')
+        self.assertEqual(line_vendor_bill.billable_type, '12_vendor_bill')

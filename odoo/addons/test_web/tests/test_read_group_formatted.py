@@ -21,8 +21,8 @@ class TestFormattedReadGroup(common.TransactionCase):
 
     def test_simple_formatted_read_group(self):
         Model = self.env['test_read_group.aggregate']
-        partner_1 = self.env['res.partner'].create({'name': 'z_one'})
-        partner_2 = self.env['res.partner'].create({'name': 'a_two'})
+        partner_1 = self.env['test_read_group.partner'].create({'name': 'z_one'})
+        partner_2 = self.env['test_read_group.partner'].create({'name': 'a_two'})
         Model.create({'key': 1, 'partner_id': partner_1.id, 'value': 1})
         Model.create({'key': 1, 'partner_id': partner_1.id, 'value': 2})
         Model.create({'key': 1, 'partner_id': partner_2.id, 'value': 3})
@@ -42,7 +42,7 @@ class TestFormattedReadGroup(common.TransactionCase):
             ]
         )
 
-        # groupby on many2one, the order use the order of the comodel (res.partner)
+        # groupby on many2one, the order use the order of the comodel (test_read_group.partner)
         self.assertEqual(
             Model.formatted_read_group([], groupby=['key', 'partner_id'], aggregates=['value:sum']),
             [
@@ -1304,17 +1304,18 @@ class TestFormattedReadGroup(common.TransactionCase):
             ]
         )
 
-        # group tasks with some ir.rule on users
+        # group tasks with some ir.access on users
         users_model = self.env['ir.model']._get(mario._name)
-        self.env['ir.rule'].create(
+        self.env['ir.access'].create(
             {
                 'name': 'Only The Lone Wanderer allowed',
                 'model_id': users_model.id,
-                'domain_force': [('id', '=', mario.id)],
+                'operation': 'crud',
+                'domain': [('id', '=', mario.id)],
             },
         )
 
-        # as demo user, ir.rule should apply
+        # as demo user, ir.access should apply
         tasks = tasks.with_user(self.base_user)
         result = tasks.formatted_read_group([], groupby=['user_ids'], aggregates=['__count', 'name:array_agg'])
         self.assertEqual(
@@ -1555,13 +1556,14 @@ class TestFormattedReadGroup(common.TransactionCase):
         field_info = RelatedFoo.fields_get(['bar_base_ids'], ['groupable'])
         self.assertTrue(field_info['bar_base_ids']['groupable'])
 
-        # With ir.rule on the comodel of the many2many
+        # With ir.access on the comodel of the many2many
         related_base_model = self.env['ir.model']._get('test_read_group.related_base')
-        self.env['ir.rule'].create(
+        self.env['ir.access'].create(
             {
                 'name': 'Only The Lone Wanderer allowed',
                 'model_id': related_base_model.id,
-                'domain_force': str([('name', '!=', 'A')]),
+                'operation': 'crud',
+                'domain': str([('name', '!=', 'A')]),
             },
         )
 
@@ -1606,8 +1608,8 @@ class TestFormattedReadGroup(common.TransactionCase):
             FROM "test_read_group_order_line"
             LEFT JOIN "test_read_group_order" AS "test_read_group_order_line__order_id"
             ON ("test_read_group_order_line"."order_id" = "test_read_group_order_line__order_id"."id")
-            GROUP BY "test_read_group_order_line"."order_id", (COALESCE("test_read_group_order_line__order_id"."company_dependent_name"->%s,to_jsonb(%s::VARCHAR))->>0)::VARCHAR
-            ORDER BY (COALESCE("test_read_group_order_line__order_id"."company_dependent_name"->%s,to_jsonb(%s::VARCHAR))->>0)::VARCHAR
+            GROUP BY "test_read_group_order_line"."order_id", (COALESCE("test_read_group_order_line__order_id"."company_dependent_name"->(%s::VARCHAR),to_jsonb(%s::VARCHAR))->>0)::VARCHAR
+            ORDER BY (COALESCE("test_read_group_order_line__order_id"."company_dependent_name"->(%s::VARCHAR),to_jsonb(%s::VARCHAR))->>0)::VARCHAR
         '''
         self.env['ir.default'].set('test_read_group.order', 'company_dependent_name', 'name with space')
         OrderLine = OrderLine.with_context(test_read_group_order_company_dependent=True)
@@ -1713,10 +1715,11 @@ class TestFormattedReadGroup(common.TransactionCase):
 
         # Test without sudo + ir_rules
         users_model = self.env['ir.model']._get(RelatedFoo._name)
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': "Only The Lone Wanderer allowed",
             'model_id': users_model.id,
-            'domain_force': [('id', 'in', foos[1:].ids)],
+            'operation': 'crud',
+            'domain': [('id', 'in', foos[1:].ids)],
         })
         RelatedBase = RelatedBase.with_user(self.base_user)
 
@@ -1902,10 +1905,11 @@ class TestFormattedReadGroup(common.TransactionCase):
 
         # Test without sudo + ir_rules
         users_model = self.env['ir.model']._get(RelatedFoo._name)
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': "Only The Lone Wanderer allowed",
             'model_id': users_model.id,
-            'domain_force': [('id', 'in', foos[1:].ids)],
+            'operation': 'crud',
+            'domain': [('id', 'in', foos[1:].ids)],
         })
 
         # Warmup ormcache
@@ -2080,7 +2084,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
             {
                 "name": "key2",
                 "currency_id": cls.eur.id,
-                "total_in_currency_id": 2.00,  # 2 €
+                "total_in_currency_id": 1.50,  # 1.50 €
 
                 "related_model_id": eur_parent.id,
                 "total_in_related_stored_currency_id": 3.00,  # 3 €
@@ -2110,8 +2114,12 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
         self.assertFalse(field_infos['total_in_related_non_stored_currency_id'].get('aggregator'), False)
 
     def test_sum_monetary_rated_us(self):
-
         self.env['res.currency.rate'].create([
+            {
+                'currency_id': self.usd.id,
+                'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
+                'rate': 1.0,
+            },
             {
                 'currency_id': self.eur.id,
                 'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
@@ -2140,47 +2148,20 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                     DISTINCT "test_read_group_aggregate_monetary"."currency_id"
                     ORDER BY "test_read_group_aggregate_monetary"."currency_id"
                 ),
-                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rates"."rate", 1.0))
+                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rate"."rate", 1.0))
             FROM
                 "test_read_group_aggregate_monetary"
-                LEFT JOIN (
-                    SELECT
-                        "res_currency"."id",
-                        COALESCE("before_rate"."rate", "after_rate"."rate", 1.0) AS "rate",
-                        COALESCE("before_rate"."name", "after_rate"."name") AS "name"
-                    FROM
-                        "res_currency"
-                        LEFT JOIN LATERAL (
-                            SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
-                            FROM "res_currency_rate"
-                            WHERE (
-                                ("res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL)
-                                AND "res_currency_rate"."name" < %s
-                            ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
-                            ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" DESC
-                            LIMIT 1
-                        ) AS "before_rate" ON (TRUE)
-                        LEFT JOIN LATERAL (
-                            SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
-                            FROM "res_currency_rate"
-                            WHERE (
-                                "res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL
-                            ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
-                            ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" ASC
-                            LIMIT 1
-                        ) AS "after_rate" ON (TRUE)
-                ) AS "test_read_group_aggregate_monetary__currency_id__rates" ON (
-                    "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."id"
-                )
+            LEFT JOIN LATERAL (SELECT * FROM UNNEST(%s, %s) AS v(currency_id, rate)) AS "test_read_group_aggregate_monetary__currency_id__rate"
+            ON ("test_read_group_aggregate_monetary__currency_id__rate"."currency_id" = "test_read_group_aggregate_monetary"."currency_id")
         """]):
             self.assertEqual(
                 self.MonetaryAgg.formatted_read_group([], [], aggregates),
                 [
                     {
-                        'total_in_currency_id:sum': 8.0,
+                        'total_in_currency_id:sum': 7.5,
                         'currency_id:array_agg_distinct': (self.usd + self.eur + self.stn).ids + [None],
-                        # 3 $ + 3 euro + 1 Db + 1 no currency = 7.8 $
-                        'total_in_currency_id:sum_currency': 3 + 3 * 1.25 + 0.05 + 1,
+                        # 3 $ + 2.5 euro + 1 Db + 1 no currency
+                        'total_in_currency_id:sum_currency': 3 + 2.5 * 1.25 + 0.05 + 1,
                         '__extra_domain': [],
                     },
                 ]
@@ -2198,9 +2179,9 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                 },
                 {
                     'name': 'key2',
-                    'total_in_currency_id:sum': 3,
+                    'total_in_currency_id:sum': 2.5,
                     'currency_id:array_agg_distinct': (self.eur + self.stn).ids,
-                    'total_in_currency_id:sum_currency': 0.05 + 2 * 1.25,  # 1 Db + 2 eur
+                    'total_in_currency_id:sum_currency': 0.05 + 1.5 * 1.25,  # 1 Db + 1.5 eur
                     '__extra_domain': [('name', '=', 'key2')],
                 },
                 {
@@ -2226,12 +2207,17 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
             {
                 'currency_id': self.usd.id,
                 'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
-                'rate': 1.25,  # 1 $ = 0.8 eur, 1 eur = 1.25 $
+                'rate': 1.0,
+            },
+            {
+                'currency_id': self.eur.id,
+                'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
+                'rate': 0.8,  # 1 $ = 0.8 eur, 1 eur = 1.25 $
             },
             {
                 'currency_id': self.stn.id,
                 'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
-                'rate': 25,  # 1 eur = 25 Db, 1 Db = 0.04 eur
+                'rate': 20,  # 1 $ = 20 Db, 1 eur = 25 Db, 1 Db = 0.04 eur
             },
         ])
 
@@ -2249,47 +2235,20 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                     DISTINCT "test_read_group_aggregate_monetary"."currency_id"
                     ORDER BY "test_read_group_aggregate_monetary"."currency_id"
                 ),
-                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rates"."rate", 1.0))
+                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rate"."rate", 1.0))
             FROM
                 "test_read_group_aggregate_monetary"
-                LEFT JOIN (
-                    SELECT
-                        "res_currency"."id",
-                        COALESCE("before_rate"."rate", "after_rate"."rate", 1.0) AS "rate",
-                        COALESCE("before_rate"."name", "after_rate"."name") AS "name"
-                    FROM
-                        "res_currency"
-                        LEFT JOIN LATERAL (
-                            SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
-                            FROM "res_currency_rate"
-                            WHERE (
-                                ("res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL)
-                                AND "res_currency_rate"."name" < %s
-                            ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
-                            ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" DESC
-                            LIMIT 1
-                        ) AS "before_rate" ON (TRUE)
-                        LEFT JOIN LATERAL (
-                            SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
-                            FROM "res_currency_rate"
-                            WHERE (
-                                "res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL
-                            ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
-                            ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" ASC
-                            LIMIT 1
-                        ) AS "after_rate" ON (TRUE)
-                ) AS "test_read_group_aggregate_monetary__currency_id__rates" ON (
-                    "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."id"
-                )
+            LEFT JOIN LATERAL (SELECT * FROM UNNEST(%s, %s) AS v(currency_id, rate)) AS "test_read_group_aggregate_monetary__currency_id__rate"
+            ON ("test_read_group_aggregate_monetary__currency_id__rate"."currency_id" = "test_read_group_aggregate_monetary"."currency_id")
         """]):
             self.assertEqual(
                 self.MonetaryAgg.formatted_read_group([], [], aggregates),
                 [{
-                    'total_in_currency_id:sum': 8.0,
+                    'total_in_currency_id:sum': 7.5,
                     'currency_id:array_agg_distinct': (self.usd + self.eur + self.stn).ids + [None],
                     'total_in_currency_id:sum_currency':
-                        # 3 $ + 3 euro + 1 Db + 1 no currency = 6.44 euro
-                        (3 * 0.8) + 3 + (1 * 0.05 * 0.8) +
+                        # 3 $ + 2.5 euro + 1 Db + 1 no currency = 5.94 euro
+                        (3 * 0.8) + 2.5 + (1 / 20 * 0.8) +
                         1,  # Do nothing, if no currency is set
                     '__extra_domain': [],
                 }],
@@ -2323,11 +2282,11 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
         self.assertEqual(
             self.MonetaryAgg.formatted_read_group([], [], aggregates),
             [{
-                'total_in_currency_id:sum': 8.0,
+                'total_in_currency_id:sum': 7.5,
                 'currency_id:array_agg_distinct': (self.usd + self.eur + self.stn).ids + [None],
                 'total_in_currency_id:sum_currency':
-                    # 3 $ + 3 euro + 1 Db + 1 no currency = 7.8 euro
-                    3 + 3 * 1.25 + 0.05 + 1,  # Do nothing, if no currency is set
+                    # 3 $ + 2.5 euro + 1 Db + 1 no currency = 7.8 euro
+                    3 + 2.5 * 1.25 + 0.05 + 1,  # Do nothing, if no currency is set
 
                 'total_in_related_stored_currency_id:sum': 13.0,
                 'related_stored_currency_id:array_agg_distinct': (self.usd + self.eur + self.stn).ids + [None],

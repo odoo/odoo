@@ -5,8 +5,9 @@
         <field name="model">hr.attendance</field>
         <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
         <field name="arch" type="xml">
-            <field name="manual_duration" position="after">
+            <field name="duration" position="after">
                 <field name="compensable_as_leave" optional="show"/>
+                <field name="leave_compensation_rate" optional="show"/>
             </field>
         </field>
     </record>
@@ -17,8 +18,36 @@
         <field name="inherit_id" ref="hr_attendance.hr_attendance_overtime_rule_view_form"/>
         <field name="arch" type="xml">
             <group name="action_section" position="inside">
-                <field name="compensable_as_leave"/>
+                <label for="compensable_as_leave" string="Give back as time off"/>
+                <span class="d-flex gap-1" name="compensable_as_leave">
+                    <field class="w-auto" nolabel="1" name="compensable_as_leave"/>
+                    <label for="leave_compensation_rate" string="with a rate of" invisible="not compensable_as_leave"/>
+                    <field name="leave_compensation_rate" style="width:10ch" widget="percentage" invisible="not compensable_as_leave"/>
+                </span>
             </group>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_analysis_list_view" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.analysis.list</field>
+        <field name="model">hr.attendance.overtime.line</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_overtime_analysis_list_view"/>
+        <field name="arch" type="xml">
+            <field name="rule_ids" position="after">
+                <field name="compensable_as_leave" string="Time Off Eligible" width="200"/>
+            </field>
+        </field>
+    </record>
+
+
+    <record id="hr_attendance_overtime_analysis_view_filter" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.analysis.view.filter</field>
+        <field name="model">hr.attendance.overtime.line</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_overtime_analysis_view_filter"/>
+        <field name="arch" type="xml">
+            <filter name="pay_rate_gt_0" position="before">
+                <filter string="Time Off Eligible" name="time_off_eligible" domain="[('compensable_as_leave', '=', True)]"/>
+            </filter>
         </field>
     </record>
 </odoo>

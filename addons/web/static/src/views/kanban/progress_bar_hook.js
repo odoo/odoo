@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError } from "@web/core/network/rpc";
@@ -363,7 +363,7 @@ class ProgressBarState {
 }
 
 export function useProgressBar(progressAttributes, model, aggregateFields, activeBars) {
-    const progressBarState = reactive(
+    const progressBarState = proxy(
         new ProgressBarState(progressAttributes, model, aggregateFields, activeBars)
     );
 
@@ -381,7 +381,7 @@ export function useProgressBar(progressAttributes, model, aggregateFields, activ
     const onRootLoaded = model.hooks.onRootLoaded;
     model.hooks.onRootLoaded = async (root) => {
         await onRootLoaded(root);
-        if (model.isReady) {
+        if (model.isReady()) {
             // do not wait for the progressbar on first load, to show the kanban view asap
             return prom;
         }

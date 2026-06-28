@@ -7,32 +7,6 @@
             <field name="domain">['|', ('move_id.raw_material_production_id', '=', active_id), ('move_id.production_id', '=', active_id)]</field>
         </record>
 
-        <record id="view_stock_move_operations_raw" model="ir.ui.view">
-            <field name="name">stock.move.operations.raw.form</field>
-            <field name="model">stock.move</field>
-            <field name="priority">1</field>
-            <field name="mode">primary</field>
-            <field name="inherit_id" ref="stock.view_stock_move_operations" />
-            <field name="arch" type="xml">
-                <xpath expr="//label[@for='product_uom_qty']" position="attributes">
-		            <attribute name="string">Total To Consume</attribute>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="view_stock_move_operations_finished" model="ir.ui.view">
-            <field name="name">stock.move.operations.finished.form</field>
-            <field name="model">stock.move</field>
-            <field name="priority">1</field>
-            <field name="mode">primary</field>
-            <field name="inherit_id" ref="stock.view_stock_move_operations" />
-            <field name="arch" type="xml">
-                <xpath expr="//label[@for='product_uom_qty']" position="attributes">
-		            <attribute name="string">To Produce</attribute>
-                </xpath>
-            </field>
-        </record>
-
         <record id="view_mrp_stock_move_operations" model="ir.ui.view">
             <field name="name">stock.move.mrp.operations.raw.form</field>
             <field name="model">stock.move</field>
@@ -59,6 +33,9 @@
                         }
                     </attribute>
                 </xpath>
+                <xpath expr="//field[@name='result_package_id' and @widget='package_m2o']" position="attributes">
+                    <attribute name="column_invisible">parent.picking_code == 'mrp_operation'</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -67,10 +44,9 @@
             <field name="model">stock.move.line</field>
             <field name="inherit_id" ref="stock.stock_move_line_view_search" />
             <field name="arch" type="xml">
-                <filter name="manufacturing" position="attributes">
-                    <attribute name="invisible">0</attribute>
-                    <attribute name="domain">[('move_id.production_id', '!=', False)]</attribute>
-                </filter>
+                <xpath expr="//filter[@name='internal']" position="after">
+                    <filter string="Manufacturing" name="manufacturing" domain="[('move_id.picking_type_id.code', '=', 'mrp_operation')]"/>
+                </xpath>
             </field>
         </record>
 

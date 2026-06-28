@@ -8,6 +8,14 @@
             <xpath expr="//page[@id='other_tab']//field[@name='delivery_date']" position="after">
                 <field name="l10n_es_is_simplified" invisible="country_code != 'ES'" readonly="state != 'draft'"/>
             </xpath>
+            <xpath expr="//page[@name='other_info']//group[@name='sale_info_group']" position="after">
+                <group string="Spanish Electronic Invoicing"
+                       name="l10n_es_electronic_invoicing"
+                       invisible="True">
+                    <field name="l10n_es_original_invoice_credited"
+                           invisible="move_type not in ['out_refund', 'in_refund'] or reversed_entry_id"/>
+                </group>
+            </xpath>
         </field>
     </record>
 </odoo>

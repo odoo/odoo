@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+from collections import defaultdict
 import random
 
 from odoo import api, models, fields, _
-from odoo.addons.website.tools import text_from_html
+from odoo.addons.website.tools import images_from_html, text_from_html
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
 from odoo.tools import html_escape
@@ -21,6 +22,7 @@ class BlogBlog(models.Model):
         'website.located.mixin',
         'website.cover_properties.mixin',
         'website.searchable.mixin',
+        'website.structured_data.mixin',
     ]
     _order = 'name'
 
@@ -104,34 +106,27 @@ class BlogBlog(models.Model):
 
         return tag_by_blog
 
-    @api.model
-    def _search_get_detail(self, website, order, options):
-        with_description = options['displayDescription']
-        search_fields = ['name']
-        fetch_fields = ['id', 'name']
-        mapping = {
-            'name': {'name': 'name', 'type': 'text', 'match': True},
-            'website_url': {'name': 'url', 'type': 'text', 'truncate': False},
+    def _prepare_jsonld_vals(self):
+        self.ensure_one()
+        base_url = self.get_base_url()
+        blog_url = f'{base_url}{self.website_url}'
+        vals = {
+            '@type': 'Blog',
+            '@id': f'{blog_url}/#blog',
+            'name': self.name,
+            'url': blog_url,
+            'publisher': {'@id': f'{base_url}/#organization'},
         }
-        if with_description:
-            search_fields.append('subtitle')
-            fetch_fields.append('subtitle')
-            mapping['description'] = {'name': 'subtitle', 'type': 'text', 'match': True}
-        return {
-            'model': 'blog.blog',
-            'base_domain': [website.website_domain()],
-            'search_fields': search_fields,
-            'fetch_fields': fetch_fields,
-            'mapping': mapping,
-            'icon': 'fa-rss-square',
-            'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
-        }
+        if self.subtitle:
+            vals['description'] = self.subtitle
+        return vals
 
-    def _search_render_results(self, fetch_fields, mapping, icon, limit):
-        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
-        for data in results_data:
-            data['url'] = '/blog/%s' % data['id']
-        return results_data
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._("Blog Posts"), '/blog'))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
 
 
 class BlogTagCategory(models.Model):
@@ -170,7 +165,10 @@ class BlogPost(models.Model):
     _description = "Blog Post"
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin',
         'website.page_visibility_options.mixin',
-        'website.cover_properties.mixin', 'website.searchable.mixin']
+        'website.cover_properties.mixin',
+        'website.searchable.mixin',
+        'website.structured_data.mixin',
+    ]
     _order = 'id DESC'
     _mail_post_access = 'read'
 
@@ -198,8 +196,6 @@ class BlogPost(models.Model):
     content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
     teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser', translate=True)
     teaser_manual = fields.Text(string='Teaser Content', translate=True)
-
-    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment')])
 
     # creation / update stuff
     create_date = fields.Datetime('Created on', readonly=True)
@@ -272,10 +268,8 @@ class BlogPost(models.Model):
             'res_id': self.id,
         }
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals
-        )
+    def _notify_get_recipients_groups(self, message, model_description):
+        groups = super()._notify_get_recipients_groups(message, model_description)
         if not self:
             return groups
 
@@ -286,14 +280,13 @@ class BlogPost(models.Model):
 
         return groups
 
-    def _notify_thread_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
+    def _notify_thread_by_inbox(self, message, recipients_data, **kwargs):
         # Override to avoid keeping all notified recipients of a comment.
         # We avoid tracking needaction on post comments. Only emails should be
         # sufficient.
-        msg_vals = msg_vals or {}
-        if msg_vals.get('message_type', message.message_type) == 'comment':
+        if message.message_type == 'comment':
             return
-        return super(BlogPost, self)._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
+        return super()._notify_thread_by_inbox(message, recipients_data, **kwargs)
 
     def _default_website_meta(self):
         res = super(BlogPost, self)._default_website_meta()
@@ -310,8 +303,6 @@ class BlogPost(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        with_description = options['displayDescription']
-        with_date = options['displayDetail']
         blog = options.get('blog')
         tags = options.get('tag')
         date_begin = options.get('date_begin')
@@ -323,7 +314,14 @@ class BlogPost(models.Model):
         if tags:
             active_tag_ids = [self.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')] or []
             if active_tag_ids:
-                domain.append([('tag_ids', 'in', active_tag_ids)])
+                tags = self.env['blog.tag'].browse(active_tag_ids)
+                tags_by_category = defaultdict(list)
+                for tag in tags:
+                    tags_by_category[tag.category_id.id].append(tag.id)
+                domain.extend([
+                    [('tag_ids', 'in', ids)]
+                    for ids in tags_by_category.values()
+                ])
         if date_begin and date_end:
             domain.append([("published_date", ">=", date_begin), ("published_date", "<=", date_end)])
         if self.env.user.has_group('website.group_website_designer'):
@@ -335,20 +333,16 @@ class BlogPost(models.Model):
                 domain.append([("publish_on", "!=", False)])
         else:
             domain.append([("website_published", "=", True)])
-        search_fields = ['name', 'author_name', 'tag_ids.name']
-        fetch_fields = ['name', 'website_url', 'tag_ids']
+        search_fields = ['name', 'author_name', 'tag_ids.name', 'content']
+        fetch_fields = ['name', 'website_url', 'author_name', 'content']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'search_item_metadata': {'name': 'author_name', 'type': 'text', 'match': True},
+            'image_url': {'name': 'image_url', 'type': 'html'},
             'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
+            'description': {'name': 'content', 'type': 'text', 'html': True, 'match': True},
         }
-        if with_description:
-            search_fields.append('content')
-            fetch_fields.append('content')
-            mapping['description'] = {'name': 'content', 'type': 'text', 'html': True, 'match': True}
-        if with_date:
-            fetch_fields.append('published_date')
-            mapping['detail'] = {'name': 'published_date', 'type': 'date'}
         return {
             'model': 'blog.post',
             'base_domain': domain,
@@ -356,10 +350,92 @@ class BlogPost(models.Model):
             'fetch_fields': fetch_fields,
             'mapping': mapping,
             'icon': 'fa-rss',
+            'group_name': self.env._("Blog Articles"),
+            'sequence': 60,
         }
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for post, data in zip(self, results_data):
             data['tag_ids'] = post.tag_ids.read(['name'])
+            data['image_url'] = post._get_image_url()
         return results_data
+
+    def _get_customer_portal_message_types(self):
+        return ["comment", "email"]
+
+    def _prepare_jsonld_vals(self):
+        self.ensure_one()
+        website = self.env['website'].get_current_website()
+        base_url = self.get_base_url()
+        post_url = f'{base_url}{self.website_url}'
+        vals = {
+            '@type': 'BlogPosting',
+            '@id': f'{post_url}/#blogpost',
+            'headline': self.name,
+            'url': post_url,
+            'dateModified': self._to_iso_datetime(self.write_date),
+            'publisher': {'@id': f'{base_url}/#organization'},
+            'isPartOf': {'@id': f'{base_url}{self.blog_id.website_url}/#blog'},
+        }
+        if self.published_date:
+            vals['datePublished'] = self._to_iso_datetime(self.published_date)
+        if tags := self.tag_ids.mapped('name'):
+            vals['keywords'] = ', '.join(tags)
+        if self.teaser:
+            vals['description'] = self.teaser
+        if image_url := self._get_image_url():
+            image_url = f'{base_url}{image_url}'
+        elif html_images := images_from_html(self.content, base_url):
+            image_url = html_images[0]
+        if image_url:
+            vals['image'] = image_url
+        if (
+            website.is_view_active('website_blog.opt_blog_post_comment')
+            and self.website_message_ids
+        ):
+            vals['commentCount'] = len(self.website_message_ids)
+        if self.env.lang:
+            vals['inLanguage'] = self.env.lang.replace('_', '-')
+        if self.content and (content_text := text_from_html(self.content, True)):
+            vals['wordCount'] = len(content_text.split())
+        if author_sudo := self.author_id.sudo():
+            is_company = author_sudo.is_company
+            if is_company and author_sudo == self.website_id.company_id.partner_id:
+                vals['author'] = {'@id': f'{base_url}/#organization'}
+            else:
+                author_vals = {
+                    '@type': 'Organization' if is_company else 'Person',
+                    '@id': f'{base_url}/#{"company" if is_company else "author"}-{author_sudo.id}',
+                    'name': author_sudo.display_name,
+                }
+                if author_sudo.website:
+                    author_vals['url'] = author_sudo.website
+                if is_company and author_sudo.image_128:
+                    author_vals['logo'] = f'{base_url}{self.website_id.image_url(author_sudo, "image_128")}'
+                vals['author'] = author_vals
+        return vals
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        if is_detail_page:
+            blog = self.blog_id
+        else:
+            blog = self.env['blog.blog'].browse(self.env.context.get('blog_id'))
+        items = blog._get_breadcrumb_items(bool(blog))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _get_jsonld_dict(self, is_detail_page=False):
+        schemas = super()._get_jsonld_dict(is_detail_page)
+        if is_detail_page:
+            schemas.append(self._prepare_jsonld_vals())
+            return schemas
+        current_blog = self.env['blog.blog'].browse(self.env.context.get('blog_id')).exists()
+        if current_blog:
+            schemas.append(current_blog._prepare_jsonld_vals())
+        if self:
+            name = current_blog.name if current_blog else self.env._("Blog Posts")
+            path = current_blog.website_url if current_blog else '/blog'
+            schemas.append(self._build_collectionpage_jsonld_vals(name, path, self))
+        return schemas

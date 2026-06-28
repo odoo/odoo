@@ -31,7 +31,7 @@ const selectSignImageStep = [
     },
     {
         content: "Click on image 14",
-        trigger: ":iframe .s_image_gallery img[src*='library_image_14']",
+        trigger: ":iframe .s_image_gallery img[src*='set_2_square_md_6']",
         run: "click",
     },
 ];
@@ -93,7 +93,7 @@ registerWebsitePreviewTour(
         {
             content: "Check if sign is in second column",
             trigger:
-                ":iframe .s_image_gallery .o_masonry_col:nth-child(2):has(img[data-index='1'][src*='library_image_14'])",
+                ":iframe .s_image_gallery .o_masonry_col:nth-child(2):has(img[data-index='1'][src*='set_2_square_md_6'])",
         },
         ...reselectSignImageSteps,
         {
@@ -104,7 +104,7 @@ registerWebsitePreviewTour(
         {
             content: "Check if sign is in first column",
             trigger:
-                ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][src*='library_image_14'])",
+                ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][src*='set_2_square_md_6'])",
         },
         ...reselectSignImageSteps,
         {
@@ -115,7 +115,7 @@ registerWebsitePreviewTour(
         {
             content: "Check if sign is in third column",
             trigger:
-                ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][src*='library_image_14'])",
+                ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][src*='set_2_square_md_6'])",
         },
         ...reselectSignImageSteps,
         {
@@ -126,7 +126,7 @@ registerWebsitePreviewTour(
         {
             content: "Check if sign is in first column",
             trigger:
-                ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][src*='library_image_14'])",
+                ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][src*='set_2_square_md_6'])",
         },
         ...reselectSignImageSteps,
         {
@@ -137,7 +137,7 @@ registerWebsitePreviewTour(
         {
             content: "Check layout",
             trigger:
-                ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][src*='library_image_14'])",
+                ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][src*='set_2_square_md_6'])",
         },
     ]
 );

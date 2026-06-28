@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useService } from "@web/core/utils/hooks";
@@ -16,7 +15,7 @@ export class WebsiteLinksTagsWrapper extends Component {
     setup() {
         this.orm = useService("orm");
         this.keepLast = new KeepLast();
-        this.state = useState({
+        this.state = proxy({
             placeholder: this.props.placeholder,
             choices: [],
             value: undefined,

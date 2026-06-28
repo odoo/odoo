@@ -14,144 +14,185 @@
             <BuilderSelectItem actionValue="'radar'">Radar</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow t-if="this.domState.data.datasets.length > 1" label.translate="Stacked">
-        <BuilderCheckbox t-if="this.isActiveItem('bar_chart_opt') or this.isActiveItem('horizontal_bar_chart_opt') or this.isActiveItem('line_chart_opt')"
-            dataAttributeAction="'stacked'"
-            dataAttributeActionValue="'true'"/>
+    <BuilderRow label.translate="Stacked" level="1" t-if="this.domState.data.datasets.length > 1 and (this.isActiveItem('bar_chart_opt') or this.isActiveItem('horizontal_bar_chart_opt') or this.isActiveItem('line_chart_opt'))">
+        <BuilderCheckbox dataAttributeAction="'stacked'" dataAttributeActionValue="'true'"/>
     </BuilderRow>
     <BuilderRow label.translate="Legend">
-        <BuilderSelect dataAttributeAction="'legendPosition'">
-            <BuilderSelectItem dataAttributeActionValue="'none'">None</BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'top'">Top</BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'left'">Left</BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'bottom'">Bottom</BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'right'">Right</BuilderSelectItem>
-        </BuilderSelect>
+        <BuilderButtonGroup dataAttributeAction="'legendPosition'">
+            <t t-set="leftLegendButton">
+                <BuilderButton dataAttributeActionValue="'left'" title.translate="Left" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+            </t>
+            <t t-set="rightLegendButton">
+                <BuilderButton dataAttributeActionValue="'right'" title.translate="Right" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+            </t>
+
+            <!-- In RTL/LTR, swap only the button display order without using
+                 ltrRtlMapping, since Chart.js does not mirror legend sides
+                 based on text direction. The values for "left" and "right"
+                 should not be swapped. -->
+            <BuilderButton dataAttributeActionValue="'none'" title.translate="Hide" icon="'fa-eye-slash'"/>
+            <BuilderButton dataAttributeActionValue="'top'" title.translate="Top" iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"/>
+            <t t-if="this.env.langDir.builder === 'ltr'">
+                <t t-out="leftLegendButton"/>
+                <t t-out="rightLegendButton"/>
+            </t>
+            <t t-else="">
+                <t t-out="rightLegendButton"/>
+                <t t-out="leftLegendButton"/>
+            </t>
+            <BuilderButton dataAttributeActionValue="'bottom'" title.translate="Bottom" iconImg="'/website/static/src/img/snippets_options/pos_bottom.svg'"/>
+        </BuilderButtonGroup>
     </BuilderRow>
     <BuilderRow label.translate="Tooltip">
         <BuilderCheckbox dataAttributeAction="'tooltipDisplay'" dataAttributeActionValue="'true'"/>
     </BuilderRow>
 
-    <table class="o_builder_matrix ms-3"
-            t-on-mouseover="this.onTableMouseover"
-            t-on-mouseout="this.onTableMouseoutOrFocusout"
-            t-on-focusin="this.onTableFocusin"
-            t-on-focusout="this.onTableMouseoutOrFocusout">
-        <thead>
-            <tr>
-                <th></th> <!-- Empty cell in the top left corner -->
-                <t t-foreach="this.domState.data.datasets" t-as="dataset" t-key="dataset.key">
-                    <th t-on-click.capture="this.onDatasetLabelClick">
-                        <BuilderTextInput
-                            action="'updateDatasetLabel'"
-                            actionParam="dataset.key"
-                            style="this.domState.isPieChart ? '' : ('border: 2px solid ' + (this.getColor(dataset.backgroundColor) || this.getColor(dataset.borderColor)))"/>
-                    </th>
-                </t>
+    <BuilderRow label.translate="Chart Data">
+        <BuilderSlidingPanel
+            label.translate="Chart Data"
+            extraClasses="'btn-success larger_button_icon'"
+            fullHeight="false"
+            darkBackground="false">
+            <i class="fa fa-table"/>
+            <span class="visually-hidden">Edit Chart Data</span>
+            <t t-set-slot="content" t-slot-scope="panel">
+                <BuilderRow label.translate="Rows × Columns">
+                    <BuilderNumberInput min="1" title.translate="Rows" action="'setRows'" preview="false"/>
+                    <BuilderNumberInput min="1" title.translate="Columns" action="'setColumns'" preview="false"/>
+                </BuilderRow>
 
-                <th t-on-click.capture="this.onButtonCellClick">
-                    <BuilderButton
-                        action="'addColumn'"
-                        className="'add_column fa fa-fw fa-plus text-success d-inline-block'"
-                        title.translate="Add Dataset"
-                        type="''"
-                        preview="false"/>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr t-foreach="this.domState.data.labels" t-as="label" t-key="label_index">
-                <th>
-                    <BuilderTextInput action="'updateLabelName'" actionParam="label_index"/>
-                </th>
+                <div class="o_builder_matrix_wrapper mx-2 my-3">
+                    <table class="o_builder_matrix"
+                            t-on-mouseover="this.onTableMouseover"
+                            t-on-mouseout="this.onTableMouseoutOrFocusout"
+                            t-on-focusin="this.onTableFocusin"
+                            t-on-focusout="this.onTableMouseoutOrFocusout">
+                        <thead>
+                            <tr>
+                                <th class="o_builder_matrix_sticky_left o_builder_matrix_sticky_top"></th> <!-- Empty cell in the top left corner -->
+                                <t t-foreach="this.domState.data.datasets" t-as="dataset" t-key="dataset.key">
+                                    <th class="o_builder_matrix_sticky_top" t-on-click.capture="this.onDatasetLabelClick">
+                                        <BuilderTextInput
+                                            t-on-paste="this.onPasteValues"
+                                            t-on-keydown="this.onCellKeydown"
+                                            action="'updateDatasetLabel'"
+                                            actionParam="dataset.key"
+                                            style="this.domState.isPieChart ? '' : ('border: 2px solid ' + (this.getColor(dataset.backgroundColor) || this.getColor(dataset.borderColor)))"/>
+                                    </th>
+                                </t>
 
-                <t t-foreach="this.domState.data.datasets" t-as="dataset" t-key="dataset.key">
-                    <t t-set="backgroundColor" t-value="this.getColor(dataset.backgroundColor[label_index])"/>
-                    <t t-set="borderColor" t-value="this.getColor(dataset.borderColor[label_index])"/>
-                    <td>
-                        <BuilderNumberInput
-                            action="'updateDatasetValue'"
-                            actionParam="{ datasetKey: dataset.key, valueIndex: label_index }"
-                            style="this.domState.isPieChart ? ('border: 2px solid ' + (backgroundColor || borderColor)) : ''"/>
-                    </td>
-                </t>
+                                <th class="o_builder_matrix_sticky_top" t-on-click.capture="this.onButtonCellClick">
+                                    <BuilderButton
+                                        action="'addColumn'"
+                                        className="'add_column fa fa-fw fa-plus text-success d-inline-block'"
+                                        title.translate="Add Dataset"
+                                        type="''"
+                                        preview="false"/>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="this.domState.data.labels" t-as="label" t-key="label_index">
+                                <th class="o_builder_matrix_sticky_left">
+                                    <BuilderTextInput
+                                        t-on-paste="this.onPasteValues"
+                                        t-on-keydown="this.onCellKeydown"
+                                        action="'updateLabelName'"
+                                        actionParam="label_index"/>
+                                </th>
 
-                <td t-on-click.capture="this.onButtonCellClick">
-                    <BuilderButton t-if="this.domState.data.labels.length > 1"
-                        action="'removeRow'"
-                        actionParam="label_index"
-                        className="'o_builder_matrix_remove_row visually-hidden-focusable text-danger fa fa-fw fa-minus'"
-                        title.translate="Remove Row"
-                        type="''"
-                        preview="false"/>
-                </td>
-            </tr>
+                                <t t-foreach="this.domState.data.datasets" t-as="dataset" t-key="dataset.key">
+                                    <t t-set="backgroundColor" t-value="this.getColor(dataset.backgroundColor[label_index])"/>
+                                    <t t-set="borderColor" t-value="this.getColor(dataset.borderColor[label_index])"/>
+                                    <td>
+                                        <BuilderNumberInput
+                                            t-on-paste="this.onPasteValues"
+                                            t-on-keydown="this.onCellKeydown"
+                                            action="'updateDatasetValue'"
+                                            actionParam="{ datasetKey: dataset.key, valueIndex: label_index }"
+                                            style="this.domState.isPieChart ? ('border: 2px solid ' + (backgroundColor || borderColor)) : ''"/>
+                                    </td>
+                                </t>
 
-            <tr>
-                <th t-on-click.capture="this.onButtonCellClick">
-                    <BuilderButton
-                        action="'addRow'"
-                        className="'add_row fa fa-fw fa-plus text-success d-inline-block'"
-                        title.translate="Add Row"
-                        type="''"
-                        preview="false"/>
-                </th>
-                <t t-foreach="this.domState.data.datasets" t-as="dataset" t-key="dataset.key">
-                    <td t-on-click.capture="this.onButtonCellClick">
-                        <BuilderButton t-if="this.domState.data.datasets.length > 1"
-                            action="'removeColumn'"
-                            actionParam="dataset.key"
-                            className="'o_builder_matrix_remove_col visually-hidden-focusable text-danger fa fa-fw fa-minus'"
-                            title.translate="Remove Column"
-                            type="''"
-                            preview="false"/>
-                    </td>
-                </t>
-                <td></td> <!-- Empty cell in the bottom right corner -->
-            </tr>
-        </tbody>
-    </table>
+                                <td t-on-click.capture="this.onButtonCellClick">
+                                    <BuilderButton t-if="this.domState.data.labels.length > 1"
+                                        action="'removeRow'"
+                                        actionParam="label_index"
+                                        className="'o_builder_matrix_remove_row visually-hidden-focusable text-danger fa fa-fw fa-minus'"
+                                        title.translate="Remove Row"
+                                        type="''"
+                                        preview="false"/>
+                                </td>
+                            </tr>
 
-    <BuilderRow t-if="this.state.currentCell.datasetIndex or this.state.currentCell.datasetIndex === 0"
-                t-key="window.String(this.state.currentCell.datasetIndex) + window.String(this.state.currentCell.dataIndex)"
-                label="this.state.currentCell.backgroundLabel">
-        <BuilderColorPicker
-            getUsedCustomColors.bind="this.getColorPalette"
-            action="'colorChange'"
-            actionParam="{
-                type: 'backgroundColor',
-                datasetIndex: this.state.currentCell.datasetIndex,
-                dataIndex: this.state.currentCell.dataIndex,
-                backgroundColor: this.state.currentCell.backgroundColor,
-            }"
-            enabledTabs="['solid', 'custom']"
-            ></BuilderColorPicker>
-    </BuilderRow>
-    <BuilderRow t-if="this.state.currentCell.datasetIndex or this.state.currentCell.datasetIndex === 0"
-                t-key="window.String(this.state.currentCell.datasetIndex) + window.String(this.state.currentCell.dataIndex)"
-                label="this.state.currentCell.borderLabel">
-        <BuilderColorPicker
-            getUsedCustomColors.bind="this.getColorPalette"
-            action="'colorChange'"
-            actionParam="{
-                type: 'borderColor',
-                datasetIndex: this.state.currentCell.datasetIndex,
-                dataIndex: this.state.currentCell.dataIndex,
-                borderColor: this.state.currentCell.borderColor,
-            }"
-            enabledTabs="['solid', 'custom']"
-            ></BuilderColorPicker>
-    </BuilderRow>
-    <BuilderRow t-if="this.isActiveItem('bar_chart_opt') or this.isActiveItem('horizontal_bar_chart_opt') or this.isActiveItem('line_chart_opt')"
-                label.translate="Min Axis">
-        <BuilderNumberInput step="1" action="'setMinMax'" actionParam="'min'"/>
-    </BuilderRow>
-    <BuilderRow t-if="this.isActiveItem('bar_chart_opt') or this.isActiveItem('horizontal_bar_chart_opt') or this.isActiveItem('line_chart_opt')"
-                label.translate="Max Axis">
-        <BuilderNumberInput step="1" action="'setMinMax'" actionParam="'max'"/>
-    </BuilderRow>
-    <BuilderRow label.translate="Border Width">
-        <BuilderNumberInput dataAttributeAction="'borderWidth'" default="2" unit="'px'" saveUnit="''" min="0"/>
+                            <tr>
+                                <th class="o_builder_matrix_sticky_left" t-on-click.capture="this.onButtonCellClick">
+                                    <BuilderButton
+                                        action="'addRow'"
+                                        className="'add_row fa fa-fw fa-plus text-success d-inline-block'"
+                                        title.translate="Add Row"
+                                        type="''"
+                                        preview="false"/>
+                                </th>
+                                <t t-foreach="this.domState.data.datasets" t-as="dataset" t-key="dataset.key">
+                                    <td t-on-click.capture="this.onButtonCellClick">
+                                        <BuilderButton t-if="this.domState.data.datasets.length > 1"
+                                            action="'removeColumn'"
+                                            actionParam="dataset.key"
+                                            className="'o_builder_matrix_remove_col visually-hidden-focusable text-danger fa fa-fw fa-minus'"
+                                            title.translate="Remove Column"
+                                            type="''"
+                                            preview="false"/>
+                                    </td>
+                                </t>
+                                <td></td> <!-- Empty cell in the bottom right corner -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <BuilderRow t-if="this.state.currentCell.datasetIndex or this.state.currentCell.datasetIndex === 0"
+                            t-key="window.String(this.state.currentCell.datasetIndex) + window.String(this.state.currentCell.dataIndex)"
+                            label="this.state.currentCell.backgroundLabel">
+                    <BuilderColorPicker
+                        getUsedCustomColors.bind="this.getColorPalette"
+                        action="'colorChange'"
+                        actionParam="{
+                            type: 'backgroundColor',
+                            datasetIndex: this.state.currentCell.datasetIndex,
+                            dataIndex: this.state.currentCell.dataIndex,
+                            backgroundColor: this.state.currentCell.backgroundColor,
+                        }"
+                        enabledTabs="['solid', 'custom']"/>
+                </BuilderRow>
+                <BuilderRow t-if="this.state.currentCell.datasetIndex or this.state.currentCell.datasetIndex === 0"
+                            t-key="window.String(this.state.currentCell.datasetIndex) + window.String(this.state.currentCell.dataIndex)"
+                            label="this.state.currentCell.borderLabel">
+                    <BuilderColorPicker
+                        getUsedCustomColors.bind="this.getColorPalette"
+                        action="'colorChange'"
+                        actionParam="{
+                            type: 'borderColor',
+                            datasetIndex: this.state.currentCell.datasetIndex,
+                            dataIndex: this.state.currentCell.dataIndex,
+                            borderColor: this.state.currentCell.borderColor,
+                        }"
+                        enabledTabs="['solid', 'custom']"/>
+                </BuilderRow>
+                <BuilderRow t-if="this.isActiveItem('bar_chart_opt') or this.isActiveItem('horizontal_bar_chart_opt') or this.isActiveItem('line_chart_opt')"
+                            label.translate="Min Axis">
+                    <BuilderNumberInput step="1" action="'setMinMax'" actionParam="'min'"/>
+                </BuilderRow>
+                <BuilderRow t-if="this.isActiveItem('bar_chart_opt') or this.isActiveItem('horizontal_bar_chart_opt') or this.isActiveItem('line_chart_opt')"
+                            label.translate="Max Axis">
+                    <BuilderNumberInput step="1" action="'setMinMax'" actionParam="'max'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Border Width">
+                    <BuilderNumberInput dataAttributeAction="'borderWidth'" default="2" unit="'px'" saveUnit="''" min="0"/>
+                </BuilderRow>
+
+            </t>
+        </BuilderSlidingPanel>
     </BuilderRow>
 </t>
 

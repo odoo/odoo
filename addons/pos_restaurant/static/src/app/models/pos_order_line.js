@@ -29,4 +29,14 @@ patch(PosOrderline.prototype, {
         }
         return super.canBeMergedWith(orderline);
     },
+    // To be overriden by other modules (eg: pos_discount)
+    isGlobalDiscountApplicable() {
+        return true;
+    },
+    getCourse() {
+        if (!this.config?.module_pos_restaurant || !this.course_id) {
+            return super.getCourse();
+        }
+        return { index: this.course_id.index, name: this.course_id.name };
+    },
 });

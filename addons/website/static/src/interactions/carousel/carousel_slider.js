@@ -1,4 +1,5 @@
 import { Interaction } from "@web/public/interaction";
+import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { registry } from "@web/core/registry";
 import { onceAllImagesLoaded } from "@website/utils/images";
@@ -9,6 +10,20 @@ export class CarouselSlider extends Interaction {
         _root: {
             "t-on-slide.bs.carousel": this.onSlideCarousel,
             "t-on-slid.bs.carousel": this.onSlidCarousel,
+            "t-on-focusin": () => window.Carousel.getInstance(this.el)?.pause(),
+            "t-on-focusout": this.resumeCarouselCycling,
+            "t-on-keydown": (ev) => {
+                const hotkey = getActiveHotkey(ev);
+                if (/input|textarea/i.test(ev.target.tagName)) {
+                    return;
+                }
+                if (["home", "end"].includes(hotkey)) {
+                    const childToFocus = hotkey === "home" ? ":first-child" : ":last-child";
+                    ev.preventDefault();
+                    this.el.querySelector(`.carousel-indicators > ${childToFocus}`).click();
+                }
+            },
+            "t-att-data-bs-ride": this.handleBsRide,
         },
         img: {
             "t-on-load": this.computeMaxHeight,
@@ -20,6 +35,7 @@ export class CarouselSlider extends Interaction {
             "t-att-style": () => ({
                 "min-height": this.maxHeight ? `${this.maxHeight}px` : "",
             }),
+            "t-att-role": () => (this.areIndicatorsVisible ? "tabpanel" : "group"),
         },
         ".slide-link": { "t-att-class": () => ({ "d-none": !this.showClickableSlideLinks }) },
         ".carousel-indicators button, .carousel-indicators li": {
@@ -34,6 +50,7 @@ export class CarouselSlider extends Interaction {
                     this.prefetchImages([toLoadEl]);
                 }
             },
+            "t-att-tabindex": (el) => (el.classList.contains("active") ? undefined : "-1"),
         },
     };
     carouselOptions = undefined;
@@ -45,6 +62,13 @@ export class CarouselSlider extends Interaction {
         if (this.carouselInnerEl) {
             this.carouselItemEls = [...this.carouselInnerEl.querySelectorAll(".carousel-item")];
         }
+        const carouselIndicatorsEl = this.el.querySelector(".carousel-indicators");
+        this.areIndicatorsVisible =
+            carouselIndicatorsEl &&
+            getComputedStyle(this.el.querySelector(".carousel-indicators")).display !== "none";
+        this.carouselIndicatorEls = this.el.querySelectorAll(
+            ".carousel-indicators > :is(button, li)"
+        );
 
         this.hasInterval = ![undefined, "false", "0"].includes(this.el.dataset.bsInterval);
         if (!["true", "carousel", "false"].includes(this.el.dataset.bsRide)) {
@@ -53,7 +77,7 @@ export class CarouselSlider extends Interaction {
         if (this.el.dataset.bsRide === "false") {
             window.Carousel.getOrCreateInstance(this.el, { ride: false, pause: true });
         } else if (!this.hasInterval) {
-            this.el.dataset.bsInterval = "1000";
+            this.el.dataset.bsInterval = "5000";
         }
     }
 
@@ -125,6 +149,24 @@ export class CarouselSlider extends Interaction {
         if (this.options.scrollMode === "single") {
             this.onSlideSingleScroll(ev);
         }
+        this.focusNextIndicator(ev.to);
+    }
+
+    /**
+     * @param {number} nextItemIndex
+     */
+    focusNextIndicator(nextItemIndex) {
+        const nextActiveIndicatorEl = this.carouselIndicatorEls.item(nextItemIndex);
+        // If before the slide, the focused element was another indicator, move
+        // the focus to the newly active indicator.
+        if (
+            this.el.contains(document.activeElement) &&
+            document.activeElement.matches(
+                `.carousel-indicators > :is(button, li):not([data-bs-slide-to="${nextItemIndex}"])`
+            )
+        ) {
+            nextActiveIndicatorEl.focus();
+        }
     }
 
     /**
@@ -134,6 +176,18 @@ export class CarouselSlider extends Interaction {
      * @param {Event} ev The Bootstrap Carousel slid event.
      */
     onSlidCarousel(ev) {
+        if (this.el.querySelector(".carousel-indicators button")) {
+            // For indicators, aria-selected with role=tab is a better default
+            // than Bootstrap's aria-current.
+            this.el
+                .querySelector(".carousel-indicators button[aria-selected='true']")
+                .setAttribute("aria-selected", "false");
+            const activeIndicatorEl = this.el.querySelector(".carousel-indicators button.active");
+            // Somehow `activeIndicatorEl` is sometimes null in edit mode.
+            activeIndicatorEl?.setAttribute("aria-selected", "true");
+            activeIndicatorEl?.removeAttribute("aria-current");
+        }
+
         if (this.options.scrollMode === "single") {
             this.onSlidSingleScroll(ev);
         }
@@ -172,6 +226,34 @@ export class CarouselSlider extends Interaction {
             const carouselItemsEls = this.carouselInnerEl.querySelectorAll(".carousel-item");
             this.carouselInnerEl.appendChild(carouselItemsEls[0]);
         }
+    }
+
+    /**
+     * If the carousel should auto-slide and it has been paused, resume it.
+     */
+    resumeCarouselCycling() {
+        if (["true", "carousel"].includes(this.el.dataset.bsRide)) {
+            const carouselBS = window.Carousel.getInstance(this.el);
+            carouselBS.cycle();
+        }
+    }
+
+    /**
+     * Alters `data-bs-ride` if the user prefers reduced motion.
+     *
+     * @returns {'false'|Symbol} - "false" if prefers reduced motion, initial
+     * value otherwise
+     */
+    handleBsRide() {
+        if (browser.matchMedia(`(prefers-reduced-motion: reduce)`).matches) {
+            // Only recreate the Bootstrap carousel the 1st time.
+            if (this.el.dataset.bsRide !== "false") {
+                window.Carousel.getInstance(this.el)?.dispose();
+                window.Carousel.getOrCreateInstance(this.el, { ride: false, pause: true });
+            }
+            return "false";
+        }
+        return Interaction.INITIAL_VALUE;
     }
 
     /**

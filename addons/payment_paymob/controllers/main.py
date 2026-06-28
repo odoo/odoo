@@ -5,11 +5,10 @@ import hmac
 import json
 import pprint
 
-from werkzeug.exceptions import Forbidden
-
 from odoo import http
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paymob import const
 
@@ -27,10 +26,13 @@ class PaymobController(http.Controller):
         :param dict data: The payment data.
         """
         _logger.info("Handling redirection from Paymob with data:\n%s", pprint.pformat(data))
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("paymob", data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("paymob", data)
         if tx_sudo:
-            self._verify_signature(data, tx_sudo)
-            tx_sudo._process("paymob", data)
+            received_signature = data.get("hmac", "")
+            hmac_key = tx_sudo.provider_id.paymob_hmac_key
+            expected_signature = PaymobController._compute_signature(data, hmac_key)
+            payment_utils.verify_signature(received_signature, expected_signature)
+            tx_sudo._record(data)
         return request.redirect("/payment/status")
 
     @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
@@ -47,14 +49,14 @@ class PaymobController(http.Controller):
         )
         normalized_data = self._normalize_response(payment_data, data.get("hmac"))
         tx_sudo = (
-            request
-            .env["payment.transaction"]
-            .sudo()
-            ._search_by_reference("paymob", normalized_data)
+            self.env["payment.transaction"].sudo()._search_by_reference("paymob", normalized_data)
         )
         if tx_sudo:
-            self._verify_signature(data, tx_sudo)
-            tx_sudo._process("paymob", normalized_data)
+            received_signature = data.get("hmac", "")
+            hmac_key = tx_sudo.provider_id.paymob_hmac_key
+            expected_signature = PaymobController._compute_signature(data, hmac_key)
+            payment_utils.verify_signature(received_signature, expected_signature)
+            tx_sudo._record(normalized_data)
         return ""  # Acknowledge the notification
 
     @staticmethod
@@ -88,27 +90,6 @@ class PaymobController(http.Controller):
             "source_data.type": payment_data.get("source_data", {}).get("type"),
         })
         return response
-
-    def _verify_signature(self, payment_data, tx_sudo):
-        """Check that the received signature matches the expected one.
-
-        :param dict payment_data: The notification payload containing the received signature.
-        :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
-        :return: None
-        :raise Forbidden: If the signatures don't match.
-        """
-        # Retrieve the received signature from the payload
-        received_signature = payment_data.get("hmac", "")
-        if not received_signature:
-            _logger.warning("Received payment data with missing signature.")
-            raise Forbidden
-
-        # Compare the received signature with the expected signature computed from the payload.
-        hmac_key = tx_sudo.provider_id.paymob_hmac_key
-        expected_signature = self._compute_signature(payment_data, hmac_key)
-        if not hmac.compare_digest(received_signature, expected_signature):
-            _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden
 
     @staticmethod
     def _compute_signature(payload, hmac_key):

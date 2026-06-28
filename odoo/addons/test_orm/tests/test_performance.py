@@ -1,27 +1,26 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import logging
 
-from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.tests.common import TransactionCase, users, warmup, tagged
-from odoo.tools import mute_logger, sql
 from odoo import Command
+from odoo.tests.common import TransactionCase, tagged, users, warmup
+from odoo.tools import mute_logger, sql
+
+from .common import TestOrmPartnerCommon
+from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
 _logger = logging.getLogger(__name__)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class TestPerformance(SavepointCaseWithUserDemo):
-
+@tagged('at_install', '-post_install')
+class TestPerformance(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls._load_partners_set()
 
-        partner3 = cls.env['res.partner'].search([('name', '=', 'AnalytIQ')], limit=1)
-        partner4 = cls.env['res.partner'].search([('name', '=', 'Urban Trends')], limit=1)
-        partner10 = cls.env['res.partner'].search([('name', '=', 'Ctrl-Alt-Fix')], limit=1)
-        partner12 = cls.env['res.partner'].search([('name', '=', 'Ignitive Labs')], limit=1)
+        partner3 = cls.partners.filtered_domain([('name', '=', 'AnalytIQ')])[0]
+        partner4 = cls.partners.filtered_domain([('name', '=', 'Urban Trends')])[0]
+        partner10 = cls.partners.filtered_domain([('name', '=', 'Ctrl-Alt-Fix')])[0]
+        partner12 = cls.partners.filtered_domain([('name', '=', 'Ignitive Labs')])[0]
 
         cls.env['test_performance.base'].create([{
             'name': 'Object 0',
@@ -581,7 +580,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
             records.invalidate_model(['value'])
             records.mapped('value')
 
-        with self.assertQueryCount(__system__=2, demo=2):
+        with self.assertQueryCount(__system__=1, demo=1):
             records.invalidate_model(['value'])
             new_recs = records.browse(records.new(origin=record).id for record in records)
             new_recs.mapped('value')
@@ -645,8 +644,8 @@ class TestPerformance(SavepointCaseWithUserDemo):
         new_records_ids.append(new_record.id)
         new_records = model.browse(new_records_ids)
 
-        # fetch 'line_ids' on all records (2 queries), fetch 'value' on all lines (1 query)
-        with self.assertQueryCount(3):
+        # fetch 'line_ids' on all records (1 query), fetch 'value' on all lines (1 query)
+        with self.assertQueryCount(2):
             for record in new_records:
                 for line in record.line_ids:
                     line.value

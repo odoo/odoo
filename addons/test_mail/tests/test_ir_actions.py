@@ -191,10 +191,9 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
             action_form.model_id = self.res_partner_model
             action_form.state = 'next_activity'
             self.assertTrue(action_form._get_modifier('activity_plan_id', 'invisible'))
-            self.assertEqual(action_form.name, 'Create Activity')
             self.assertTrue(action_form._get_modifier('activity_type_id', 'required'))
 
-            action_form.activity_type_id = self.env.ref('mail.mail_activity_data_todo')
+            self.assertEqual(action_form.activity_type_id, self.env.ref('mail.mail_activity_data_todo'))
             self.assertEqual(action_form.name, 'Create To-Do')
             self.assertEqual(action_form.activity_summary, 'To-Do')
             self.assertEqual(action_form.activity_date_deadline_range, 1)

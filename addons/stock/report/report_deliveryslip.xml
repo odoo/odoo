@@ -259,6 +259,11 @@
         <td class="text-end" name="move_line_lot_quantity">
             <span t-out="format_number(move_line.quantity)"/>
             <span t-field="move_line.uom_id"/>
+            <t t-if="move_line.move_id.packaging_uom_id != move_line.uom_id" groups="uom.group_uom">
+                <br/>
+                <span class="text-muted" t-out="move_line.uom_id._compute_quantity(move_line.quantity, move_line.move_id.packaging_uom_id)">1.00</span>
+                <span class="text-muted" t-field="move_line.move_id.packaging_uom_id">Pack of 6</span>
+            </t>
         </td>
     </template>
     <template id="stock_report_delivery_aggregated_move_lines">
@@ -277,7 +282,7 @@
             </td>
             <td class="text-end" name="move_line_aggregated_qty_ordered">
                 <span t-out="format_number(aggregated_lines[line]['qty_ordered'])"/>
-                <span t-out="aggregated_lines[line]['uom_id'].name"/>
+                <span t-out="aggregated_lines[line]['uom_id'].name" groups="uom.group_uom"/>
                 <t t-if="aggregated_lines[line]['packaging_uom_id'] != aggregated_lines[line]['uom_id']" groups="uom.group_uom">
                     <br/>
                     <span class="text-muted" t-out="aggregated_lines[line]['packaging_qty_ordered']">1.00</span>
@@ -286,7 +291,7 @@
             </td>
             <td class="text-end" name="move_line_aggregated_quantity">
                 <span t-out="format_number(aggregated_lines[line]['quantity'])"/>
-                <span t-out="aggregated_lines[line]['uom_id'].name"/>
+                <span t-out="aggregated_lines[line]['uom_id'].name" groups="uom.group_uom"/>
                 <t t-if="aggregated_lines[line]['packaging_uom_id'] != aggregated_lines[line]['uom_id']" groups="uom.group_uom">
                     <br/>
                     <span class="text-muted" t-out="aggregated_lines[line]['packaging_quantity']">1.00</span>

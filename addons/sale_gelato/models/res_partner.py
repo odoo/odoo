@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
@@ -36,7 +36,7 @@ class ResPartner(models.Model):
         if missing_fields:
             translated_field_names = [f._description_string(self.env) for f in missing_fields]
             raise ValidationError(
-                _(
+                self.env._(
                     "The following required address fields are missing: %s",
                     ", ".join(translated_field_names),
                 )
@@ -59,7 +59,9 @@ class ResPartner(models.Model):
                 f"{field_name} (max {limit} characters)"
                 for field_name, limit in exceeding_fields.items()
             ])
-            raise ValidationError(_("The following address fields are too long: %s", message))
+            raise ValidationError(
+                self.env._("The following address fields are too long: %s", message)
+            )
 
     def _gelato_prepare_address_payload(self):
         """Prepare the address payload with the partner details.

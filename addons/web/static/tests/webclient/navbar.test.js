@@ -1,18 +1,30 @@
-import { beforeEach, destroy, expect, test } from "@odoo/hoot";
-import { queryAll, queryAllAttributes, queryAllTexts, resize } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import {
+    advanceTime,
+    animationFrame,
+    beforeEach,
+    expect,
+    queryAll,
+    queryAllAttributes,
+    queryAllTexts,
+    resize,
+    runAllTimers,
+    test,
+} from "@odoo/hoot";
 import {
     clearRegistry,
     contains,
     defineMenus,
+    destroyApp,
     getService,
     makeMockEnv,
     mockService,
     mountWithCleanup,
     patchWithCleanup,
+    serverState,
 } from "@web/../tests/web_test_helpers";
+import { onRendered } from "@web/owl2/utils";
 
-import { Component, onRendered, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { NavBar } from "@web/webclient/navbar/navbar";
 import { mockOffline } from "../web_test_helpers";
@@ -66,6 +78,30 @@ test("href attribute with path on apps menu items", async () => {
     await mountWithCleanup(NavBar);
     await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
     expect(".o-dropdown--menu .dropdown-item").toHaveAttribute("href", "/odoo/my-path");
+});
+
+test.tags("desktop");
+test("href attribute includes debug param when in debug mode", async () => {
+    serverState.debug = "assets";
+    defineMenus([{ id: 1, actionID: 339 }]);
+    await mountWithCleanup(NavBar);
+    await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
+    expect(".o-dropdown--menu .dropdown-item").toHaveAttribute(
+        "href",
+        "/odoo/action-339?debug=assets"
+    );
+});
+
+test.tags("desktop");
+test("href attribute with path includes debug param when in debug mode", async () => {
+    serverState.debug = "assets";
+    defineMenus([{ id: 1, actionID: 339, actionPath: "my-path" }]);
+    await mountWithCleanup(NavBar);
+    await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
+    expect(".o-dropdown--menu .dropdown-item").toHaveAttribute(
+        "href",
+        "/odoo/my-path?debug=assets"
+    );
 });
 
 test.tags("desktop");
@@ -261,9 +297,12 @@ test("can adapt with 'more' menu sections behavior", async () => {
     await resize({ width: 1080 });
 
     // TODO: this test case doesn't make sense since it relies on small widths
-    // with `env.isSmall` still returning `false`.
-    const env = await makeMockEnv();
-    Object.defineProperty(env, "isSmall", { get: () => false });
+    // with `ui.isSmall` still returning `false`.
+    mockService("ui", () => ({
+        isSmall: false,
+        getActiveElementOf: () => document.activeElement,
+    }));
+    await makeMockEnv();
 
     // Set menu and mount
     getService("menu").setCurrentMenu(1);
@@ -332,9 +371,12 @@ test("'more' menu sections adaptations do not trigger render in some cases", asy
     await resize({ width: 600 });
 
     // TODO: this test case doesn't make sense since it relies on small widths
-    // with `env.isSmall` still returning `false`.
-    const env = await makeMockEnv();
-    Object.defineProperty(env, "isSmall", { get: () => false });
+    // with `ui.isSmall` still returning `false`.
+    mockService("ui", () => ({
+        isSmall: false,
+        getActiveElementOf: () => document.activeElement,
+    }));
+    await makeMockEnv();
 
     const navbar = await mountWithCleanup(MyNavbar);
 
@@ -437,9 +479,12 @@ test("'more' menu sections properly updated on app change", async () => {
     await resize({ width: 1080 });
 
     // TODO: this test case doesn't make sense since it relies on small widths
-    // with `env.isSmall` still returning `false`.
-    const env = await makeMockEnv();
-    Object.defineProperty(env, "isSmall", { get: () => false });
+    // with `ui.isSmall` still returning `false`.
+    mockService("ui", () => ({
+        isSmall: false,
+        getActiveElementOf: () => document.activeElement,
+    }));
+    await makeMockEnv();
 
     // Set menu and mount
     getService("menu").setCurrentMenu(1);
@@ -490,13 +535,13 @@ test("Do not execute adapt when navbar is destroyed", async () => {
 
     // Set menu and mount
     getService("menu").setCurrentMenu(1);
-    const navbar = await mountWithCleanup(MyNavbar);
+    await mountWithCleanup(MyNavbar);
     expect.verifySteps(["adapt NavBar"]);
     await resize();
     await runAllTimers();
     expect.verifySteps(["adapt NavBar"]);
     await resize();
-    destroy(navbar);
+    destroyApp();
     await runAllTimers();
     expect.verifySteps([]);
 });
@@ -551,4 +596,47 @@ test("[Offline] unavailable menus are disabled", async () => {
     expect(".o-overlay-item .o_app").toHaveCount(3);
     expect(".o-overlay-item .o_app.o_disabled_offline").toHaveCount(1);
     expect(".o-overlay-item .o_app:eq(2)").toHaveClass("o_disabled_offline");
+});
+
+test.tags("desktop");
+test("navbar adapts app brand and menu sections on resize from mobile to desktop and back to mobile", async () => {
+    defineMenus([
+        {
+            id: 1,
+            name: "My App",
+            children: [
+                { id: 10, name: "Section 1" },
+                { id: 11, name: "Section 2" },
+            ],
+        },
+    ]);
+
+    // Start with mobile width
+    await resize({ width: 500 });
+
+    await makeMockEnv();
+    getService("menu").setCurrentMenu(1);
+    await mountWithCleanup(NavBar);
+
+    // App brand and menu sections should be hidden on mobile width
+    expect(".o_menu_brand").toHaveCount(0);
+    expect(".o_menu_sections").toHaveCount(0);
+
+    // Resize to desktop width
+    await resize({ width: 1200 });
+    await waitNavbarAdaptation();
+
+    // App brand and menu sections should be visible on desktop width
+    expect(".o_menu_brand").toBeVisible();
+    expect(".o_menu_brand").toHaveText("My App");
+    expect(".o_menu_sections").toBeVisible();
+    expect(".o_menu_sections > *").toHaveCount(2);
+
+    // Resize back to mobile width
+    await resize({ width: 500 });
+    await waitNavbarAdaptation();
+
+    // App brand and menu sections should be hidden again on mobile width
+    expect(".o_menu_brand").toHaveCount(0);
+    expect(".o_menu_sections").toHaveCount(0);
 });

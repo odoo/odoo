@@ -282,6 +282,8 @@ class StockPicking(models.Model):
             domain.append(('picking_ids.location_id', '=', self.location_id.id))
         if self.picking_type_id.batch_group_by_dest_loc:
             domain.append(('picking_ids.location_dest_id', '=', self.location_dest_id.id))
+        if self.env.context.get('batches_to_validate'):
+            domain.append(('id', 'not in', self.env.context.get('batches_to_validate')))
 
         return Domain(domain)
 

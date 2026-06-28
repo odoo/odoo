@@ -2,24 +2,31 @@ import { Plugin } from "@html_editor/plugin";
 import {
     BG_CLASSES_REGEX,
     COLOR_COMBINATION_CLASSES_REGEX,
+    getColorOrClass,
     hasAnyNodesColor,
     hasColor,
     TEXT_CLASSES_REGEX,
 } from "@html_editor/utils/color";
-import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
+import { fillEmpty, removeStyle, unwrapContents } from "@html_editor/utils/dom";
 import {
     isEmptyBlock,
+    isPhrasingContent,
     isRedundantElement,
     isTextNode,
     isVisibleTextNode,
     isWhitespace,
     isZWS,
 } from "@html_editor/utils/dom_info";
-import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
-import { isColorGradient, rgbaToHex } from "@web/core/utils/colors";
+import {
+    closestElement,
+    descendants,
+    findUpTo,
+    selectElements,
+} from "@html_editor/utils/dom_traversal";
+import { isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { isBlock } from "@html_editor/utils/blocks";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 const COLOR_COMBINATION_CLASSES = [1, 2, 3, 4, 5].map((i) => `o_cc${i}`);
@@ -31,26 +38,31 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
  * @property { ColorPlugin['removeAllColor'] } removeAllColor
  * @property { ColorPlugin['getElementColors'] } getElementColors
  * @property { ColorPlugin['applyColor'] } applyColor
+ * @property { ColorPlugin['requestColor'] } requestColor
+ * @property { ColorPlugin['getActiveColorInfo'] } getActiveColorInfo
  */
 
 /**
  * @typedef {((element: HTMLElement, cssProp: string, color: string, params: Object) => boolean)[]} apply_color_style_overrides
- * @typedef {((color: string, mode: "color" | "backgroundColor") => void)[]} color_apply_overrides
+ * @typedef {((color: string, mode: "color" | "backgroundColor") => void)[]} apply_color_overrides
  * @typedef {((color: string, mode: "color" | "backgroundColor") => string)[]} apply_background_color_processors
  * @typedef {((color: string) => string)[]} background_color_processors
+ * @typedef {(() => void)[]} on_color_requested_handlers
  *
  * @typedef {((el: HTMLElement, actionParam: string) => string)[]} color_combination_providers
  */
 
 export class ColorPlugin extends Plugin {
     static id = "color";
-    static dependencies = ["selection", "split", "history", "format"];
+    static dependencies = ["selection", "split", "history", "format", "delete"];
     static shared = [
         "colorElement",
         "removeAllColor",
         "getElementColors",
         "getColorCombination",
         "applyColor",
+        "requestColor",
+        "getActiveColorInfo",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -58,15 +70,20 @@ export class ColorPlugin extends Plugin {
             {
                 id: "applyColor",
                 run: ({ color, mode }) => {
-                    this.applyColor(color, mode);
-                    this.dependencies.history.addStep();
+                    this.requestColor(color, mode);
+                    this.dependencies.history.commit();
                 },
                 isAvailable: isHtmlContentSupported,
             },
         ],
         /** Handlers */
         on_all_formats_removed_handlers: this.removeAllColor.bind(this),
+        on_collapsed_formats_removed_handlers: this.removeAllColor.bind(this),
         color_combination_providers: getColorCombinationFromClass,
+        on_beforeinput_handlers: this.onBeforeInput.bind(this),
+        before_insert_handlers: this.beforeInsert.bind(this),
+        on_selectionchange_handlers: this.clearPendingColors.bind(this),
+        on_deleted_handlers: this.convertEmptyColorToPendingIntent.bind(this),
 
         /** Predicates */
         has_format_predicates: (node) => {
@@ -85,11 +102,54 @@ export class ColorPlugin extends Plugin {
         normalize_processors: this.normalize.bind(this),
     };
 
+    setup() {
+        this.activeColorInfo = {};
+    }
+
     normalize(root) {
         for (const el of selectElements(root, "font")) {
             if (isRedundantElement(el)) {
                 unwrapContents(el);
             }
+        }
+        return root;
+    }
+
+    getActiveColorInfo() {
+        return this.activeColorInfo;
+    }
+
+    onBeforeInput(ev) {
+        if (ev.inputType === "insertText") {
+            const selection = this.dependencies.selection.getEditableSelection();
+            if (!selection.isCollapsed) {
+                return;
+            }
+            this.applyPendingColors();
+        }
+    }
+
+    beforeInsert() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        if (selection.isCollapsed) {
+            this.applyPendingColors();
+        }
+    }
+
+    /**
+     * Discard pending color intents when the selection changes.
+     */
+    clearPendingColors() {
+        if (this.skipNextColorClear) {
+            this.skipNextColorClear = false;
+            return;
+        }
+        this.activeColorInfo = {};
+    }
+
+    applyPendingColors() {
+        for (const [mode, color] of Object.entries(this.activeColorInfo)) {
+            this.applyColor(color, mode);
         }
     }
 
@@ -106,29 +166,54 @@ export class ColorPlugin extends Plugin {
         );
 
         return {
-            color: hasGradient && hasTextGradientClass ? gradient : rgbaToHex(elStyle.color),
+            color:
+                hasGradient && hasTextGradientClass ? gradient : normalizeCSSColor(elStyle.color),
             backgroundColor:
-                hasGradient && !hasTextGradientClass ? gradient : rgbaToHex(backgroundColor),
+                hasGradient && !hasTextGradientClass
+                    ? gradient
+                    : normalizeCSSColor(backgroundColor),
         };
     }
 
     removeAllColor() {
+        const sel = this.dependencies.selection.getEditableSelection();
+        if (sel.isCollapsed) {
+            const el = closestElement(sel.anchorNode);
+            const block = closestBlock(sel.anchorNode);
+            for (const mode of ["color", "backgroundColor"]) {
+                if (findUpTo(el, block, (node) => getColorOrClass(node, mode))) {
+                    this.activeColorInfo[mode] = "";
+                }
+            }
+            this.skipNextColorClear = true;
+            this.trigger("on_color_requested_handlers");
+            return;
+        }
+        this.activeColorInfo = {};
         const colorModes = ["color", "backgroundColor"];
+        const colorNodeProviders = this.getResource("color_target_providers");
         let someColorWasRemoved = true;
         while (someColorWasRemoved) {
             someColorWasRemoved = false;
             for (const mode of colorModes) {
                 let max = 40;
                 const hasAnySelectedNodeColor = (mode) => {
-                    const nodes = this.dependencies.selection
+                    const nodes = new Set();
+                    const editableTargetedNodes = this.dependencies.selection
                         .getTargetedNodes()
-                        .filter(
-                            (n) =>
-                                isTextNode(n) ||
-                                (mode === "backgroundColor" &&
-                                    n.classList.contains("o_selected_td"))
-                        );
-                    return hasAnyNodesColor(nodes, mode);
+                        .filter(this.dependencies.selection.isNodeEditable);
+                    for (const node of editableTargetedNodes) {
+                        for (const getColorNode of colorNodeProviders) {
+                            const colorNode = getColorNode(node);
+                            if (colorNode) {
+                                nodes.add(colorNode);
+                            }
+                        }
+                        if (isTextNode(node)) {
+                            nodes.add(node);
+                        }
+                    }
+                    return hasAnyNodesColor([...nodes], mode);
                 };
                 while (hasAnySelectedNodeColor(mode) && max > 0) {
                     this.applyColor("", mode);
@@ -143,6 +228,25 @@ export class ColorPlugin extends Plugin {
         }
     }
 
+    requestColor(color, mode, previewMode = false) {
+        const sel = this.dependencies.selection.getEditableSelection();
+        if (sel.isCollapsed) {
+            const block = closestBlock(sel.anchorNode);
+            const colorNode = findUpTo(closestElement(sel.anchorNode), block, (node) =>
+                getColorOrClass(node, mode)
+            );
+            const current = colorNode && getColorOrClass(colorNode, mode);
+            if ((current?.value ?? "") === color) {
+                delete this.activeColorInfo[mode];
+            } else {
+                this.activeColorInfo[mode] = color;
+            }
+            this.skipNextColorClear = true;
+            this.trigger("on_color_requested_handlers");
+            return;
+        }
+        this.applyColor(color, mode, previewMode);
+    }
     /**
      * Apply a css or class color on the current selection (wrapped in <font>).
      *
@@ -155,26 +259,19 @@ export class ColorPlugin extends Plugin {
         if (mode === "backgroundColor") {
             color = this.processThrough("apply_background_color_processors", color, mode);
         }
-        if (this.delegateTo("color_apply_overrides", color, mode, previewMode)) {
+        const coloredNodes = new Set();
+        if (this.delegateTo("apply_color_overrides", color, mode, coloredNodes, previewMode)) {
             return;
         }
         const selection = this.dependencies.selection.getEditableSelection();
         let targetedNodes;
         // Get the <font> nodes to color
         if (selection.isCollapsed) {
-            let zws;
-            if (
-                selection.anchorNode.nodeType === Node.TEXT_NODE &&
-                selection.anchorNode.textContent === "\u200b"
-            ) {
-                zws = selection.anchorNode;
-            } else {
-                zws = this.dependencies.format.insertAndSelectZws();
-            }
+            const zws = this.dependencies.format.getOrCreateZws();
             this.dependencies.selection.setSelection(
                 {
                     anchorNode: zws,
-                    anchorOffset: 0,
+                    anchorOffset: 1,
                 },
                 { normalize: false }
             );
@@ -200,29 +297,15 @@ export class ColorPlugin extends Plugin {
                 : current;
         };
 
-        const hexColor = rgbaToHex(color).toLowerCase();
+        const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
         const selectedNodes = targetedNodes
-            .filter((node) => {
-                if (mode === "backgroundColor" && color) {
-                    return !closestElement(node, "table.o_selected_table");
-                }
-                if (closestElement(node).classList.contains("o_default_color")) {
-                    return false;
-                }
-                const li = closestElement(node, "li");
-                if (li && color && this.dependencies.selection.areNodeContentsFullySelected(li)) {
-                    return rgbaToHex(li.style.color).toLowerCase() !== hexColor;
-                }
-                return true;
-            })
+            .filter(
+                (node) =>
+                    !coloredNodes.has(node) &&
+                    !(systemNodesSelector && closestElement(node, systemNodesSelector)) &&
+                    (this.checkPredicates("is_formattable_node_predicates", node) ?? true)
+            )
             .map((node) => findTopMostDecoration(node));
-
-        const targetedFieldNodes = new Set(
-            this.dependencies.selection
-                .getTargetedNodes()
-                .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
-                .filter(Boolean)
-        );
 
         const alreadyWithinFont = new Set();
         const getFonts = (selectedNodes) =>
@@ -232,25 +315,28 @@ export class ColorPlugin extends Plugin {
                 if (alreadyWithinFont.has(node)) {
                     return [];
                 }
+                // Background gradient cannot be applied within text gradient.
+                const shouldBreakGradient = (node) =>
+                    mode === "backgroundColor" &&
+                    isColorGradient(color) &&
+                    node.classList.contains("text-gradient");
                 let font = closestElement(
                     node,
                     (node) =>
-                        (hasColor(node, "color") || hasColor(node, "backgroundColor")) &&
+                        (hasColor(node, mode) || shouldBreakGradient(node)) &&
                         node.nodeName !== "LI"
                 );
                 if (
                     color &&
                     font &&
-                    (!hasColor(font, mode) ||
-                        (isColorGradient(font.style["background-image"]) &&
-                            !this.dependencies.selection.areNodeContentsFullySelected(font))) &&
-                    // Background gradient cannot be applied within text
-                    // gradient.
-                    !(
-                        font.classList.contains("text-gradient") &&
-                        mode === "backgroundColor" &&
-                        isColorGradient(color)
-                    )
+                    !shouldBreakGradient(font) &&
+                    // Partially selected gradient font
+                    ((isColorGradient(font.style["background-image"]) &&
+                        !this.dependencies.selection.areNodeContentsFullySelected(font)) ||
+                        // Gradient found between node uptil font
+                        findUpTo(node, font, (ancestor) =>
+                            isColorGradient(ancestor.style?.["background-image"])
+                        ))
                 ) {
                     font = null;
                 }
@@ -277,7 +363,11 @@ export class ColorPlugin extends Plugin {
                                     newFont.classList.add(className);
                                 }
                             });
-                            newFont.append(...font.childNodes);
+                            for (const child of [...font.childNodes]) {
+                                cursors.update(callbacksForCursorUpdate.append(newFont, child));
+                                newFont.append(child);
+                            }
+                            cursors.update(callbacksForCursorUpdate.append(font, newFont));
                             font.append(newFont);
                             font = newFont;
                         }
@@ -315,10 +405,15 @@ export class ColorPlugin extends Plugin {
                     } else {
                         // No <font> found: insert a new one.
                         font = this.document.createElement("font");
+                        cursors.update(callbacksForCursorUpdate.after(node, font));
                         node.after(font);
                     }
                     if (node.textContent) {
+                        cursors.update(callbacksForCursorUpdate.append(font, node));
                         font.appendChild(node);
+                        if (isTextNode(node) && isZWS(node)) {
+                            font.setAttribute("data-oe-zws-empty-inline", "");
+                        }
                         descendants(node).forEach((n) => alreadyWithinFont.add(n));
                     } else {
                         fillEmpty(font);
@@ -328,10 +423,6 @@ export class ColorPlugin extends Plugin {
                 }
                 return font;
             });
-
-        for (const fieldNode of targetedFieldNodes) {
-            this.colorElement(fieldNode, color, mode);
-        }
 
         let fonts = getFonts(selectedNodes);
         // Dirty fix as the previous call could have unconnected elements
@@ -343,6 +434,7 @@ export class ColorPlugin extends Plugin {
 
         // Color the selected <font>s and remove uncolored fonts.
         const fontsSet = new Set(fonts);
+        delete this.activeColorInfo[mode];
         for (const font of fontsSet) {
             this.colorElement(font, color, mode);
             if (
@@ -351,12 +443,69 @@ export class ColorPlugin extends Plugin {
                 ["FONT", "SPAN"].includes(font.nodeName) &&
                 (!font.hasAttribute("style") || !color)
             ) {
-                cursors.update(callbacksForCursorUpdate.unwrap(font));
-                unwrapContents(font);
+                const parent = font.parentNode;
+                if (
+                    font.childNodes.length === 1 &&
+                    isTextNode(font.firstChild) &&
+                    isZWS(font.firstChild)
+                ) {
+                    cursors.update(callbacksForCursorUpdate.remove(font));
+                    font.remove();
+                } else {
+                    cursors.update(callbacksForCursorUpdate.unwrap(font));
+                    unwrapContents(font);
+                }
+                fillEmpty(parent);
                 fontsSet.delete(font);
             }
         }
         cursors.restore();
+    }
+
+    convertEmptyColorToPendingIntent() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const anchorNode = selection.anchorNode;
+        let element = closestElement(anchorNode);
+        const cursor = this.dependencies.selection.preserveSelection();
+        while (
+            isZWS(element) &&
+            isPhrasingContent(element) &&
+            !this.dependencies.delete.isUnremovable(element)
+        ) {
+            const color = getColorOrClass(element, "color");
+            const bgColor = getColorOrClass(element, "backgroundColor");
+            if (!color && !bgColor) {
+                break;
+            }
+            const parent = element.parentElement;
+            if (color) {
+                this.activeColorInfo.color = color.value;
+                this.colorElement(element, "", "color");
+            }
+            if (bgColor) {
+                this.activeColorInfo.backgroundColor = bgColor.value;
+                this.colorElement(element, "", "backgroundColor");
+            }
+            const nonZwsAttrs = element
+                .getAttributeNames()
+                .filter((attr) => attr !== "data-oe-zws-empty-inline");
+            if (["FONT", "SPAN"].includes(element.nodeName) && !nonZwsAttrs.length) {
+                cursor.update(callbacksForCursorUpdate.unwrap(element));
+                unwrapContents(element);
+            }
+            element = parent;
+        }
+        if (
+            Object.keys(this.activeColorInfo).length &&
+            anchorNode.isConnected &&
+            anchorNode.nodeType === Node.TEXT_NODE &&
+            anchorNode.textContent === "\u200b"
+        ) {
+            cursor.update(callbacksForCursorUpdate.remove(anchorNode));
+            anchorNode.remove();
+            this.skipNextColorClear = true;
+        }
+        cursor.restore();
     }
 
     /**
@@ -408,15 +557,18 @@ export class ColorPlugin extends Plugin {
         } else if (isColorGradient(color) || color === "") {
             element.style.webkitTextFillColor = "";
         }
-        if (color.startsWith("text") || color.startsWith("bg-")) {
-            element.style[mode] = "";
-            element.classList.add(color);
-        } else if (isColorGradient(color)) {
+        if (isColorGradient(color)) {
             element.style[mode] = "";
             parts.gradient = color;
             if (mode === "color") {
                 element.style["background-color"] = "";
                 element.classList.add("text-gradient");
+            } else {
+                // When a gradient is applied as background-image, explicitly set
+                // background-color: transparent. This overrides o_cc(x) background,
+                // allowing gradient with transparency to show the content
+                // underneath.
+                element.style["background-color"] = "transparent";
             }
             this.applyColorStyle(
                 element,
@@ -429,9 +581,14 @@ export class ColorPlugin extends Plugin {
             if (hasGradientStyle && !backgroundImagePartsToCss(parts)) {
                 element.style["background-image"] = "";
             }
-            // Change camelCase to kebab-case.
-            mode = mode.replace("backgroundColor", "background-color");
-            this.applyColorStyle(element, mode, color, params);
+            if (color.startsWith("text") || color.startsWith("bg-")) {
+                element.style[mode] = "";
+                element.classList.add(color);
+            } else {
+                // Change camelCase to kebab-case.
+                mode = mode.replace("backgroundColor", "background-color");
+                this.applyColorStyle(element, mode, color, params);
+            }
         }
 
         // It was decided that applying a color combination removes any "color"
@@ -500,7 +657,11 @@ export class ColorPlugin extends Plugin {
         if (this.delegateTo("apply_color_style_overrides", element, mode, color, params)) {
             return;
         }
-        element.style[mode] = color;
+        if (color) {
+            element.style[mode] = color;
+        } else {
+            removeStyle(element, mode);
+        }
     }
 }
 

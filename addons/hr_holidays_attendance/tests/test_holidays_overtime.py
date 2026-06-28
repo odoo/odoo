@@ -135,7 +135,7 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
         self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
         self.assertEqual(self.employee.total_overtime, 8, 'Should have 8 hours of overtime')
 
-        leave = self.env['hr.leave'].create({
+        leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'no overtime',
             'employee_id': self.employee.id,
             'work_entry_type_id': self.work_entry_type_no_alloc.id,
@@ -159,6 +159,7 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
             'request_date_from': '2021-01-04',
             'request_date_to': '2021-01-04',
         })
+        leave.action_back_to_approval()
         self._check_deductible(8)
 
         leave.date_to = datetime(2021, 1, 5)
@@ -192,6 +193,30 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
         alloc.number_of_days = 2
         self._check_deductible(0)
 
+    def test_allocation_change_leave_type_to_overtime(self):
+        """Changing an allocation's leave type to an overtime-deductible type should validate overtime."""
+        non_overtime_type = self.env['hr.work.entry.type'].create({
+            'name': 'Regular Leave',
+            'code': 'Regular Leave',
+            'requires_allocation': 'yes',
+            'employee_requests': 'yes',
+            'allocation_validation_type': 'hr',
+            'overtime_deductible': False,
+        })
+        # Create allocation with non-overtime type
+        alloc = self.env['hr.leave.allocation'].create({
+            'name': 'test allocation',
+            'work_entry_type_id': non_overtime_type.id,
+            'employee_id': self.employee.id,
+            'number_of_days': 1,
+            'state': 'confirm',
+            'date_from': time.strftime('%Y-1-1'),
+            'date_to': time.strftime('%Y-12-31'),
+        })
+        # Change to overtime-deductible type without enough overtime → should raise
+        with self.assertRaises(ValidationError):
+            alloc.work_entry_type_id = self.work_entry_type_employee_allocation.id
+
     @freeze_time('2022-01-01')
     def test_leave_check_cancel(self):
         self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
@@ -205,7 +230,6 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
             'request_date_from': '2022-01-06',
             'request_date_to': '2022-01-06',
         })
-        leave.with_user(self.user_manager).action_approve()
         self._check_deductible(8)
 
         self.assertTrue(leave.with_user(self.user).can_cancel)
@@ -278,14 +302,13 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
             'count_as': 'working_time',
         })
 
-        leave = self.env['hr.leave'].create({
+        self.env['hr.leave'].create({
             'name': 'no overtime',
             'employee_id': self.employee.id,
             'work_entry_type_id': work_entry_type_worked.id,
             'request_date_from': datetime(2021, 1, 5),
             'request_date_to': datetime(2021, 1, 5),
         })
-        leave._action_validate()
 
         atts = self.env['hr.attendance'].create([
             {
@@ -317,7 +340,6 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
             'request_date_from': '2022-1-6',
             'request_date_to': '2022-1-6',
         })
-        leave.with_user(self.user_manager).action_approve()
         self._check_deductible(8)
 
         leave.with_user(self.user_manager).action_refuse()
@@ -394,7 +416,7 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
 
         # Use some of the overtime as a day off (8 hours)
         # Affects unspent_compensable_time's value
-        leave = self.env['hr.leave'].create(
+        self.env['hr.leave'].create(
             {
                 'name': 'no overtime',
                 'employee_id': self.employee.id,
@@ -403,7 +425,6 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
                 'request_date_to': '2022-1-6',
             }
         )
-        leave.with_user(self.user_manager).action_approve()
         expected_final_data = {
             'worked_hours': 27.0,  # 11 + 16 hours from Jan attendances
             'overtime_hours': 19.0,  # 3 + 16 hours from Jan attendances
@@ -455,7 +476,7 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
         self.new_attendance(check_in=datetime(2026, 1, 13, 8), check_out=datetime(2026, 1, 13, 16))
         self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime')
 
-        leave = self.env['hr.leave'].create({
+        leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Vacation Yippie',
             'employee_id': self.employee.id,
             'work_entry_type_id': self.regular_leave_type.id,
@@ -469,3 +490,30 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
 
         leave.action_refuse()
         self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime as the leave has been refused.')
+
+    def test_employee_kiosk_remaining_overtime(self):
+        self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 17))
+        self.new_attendance(check_in=datetime(2021, 1, 3, 8), check_out=datetime(2021, 1, 3, 17))
+        self.assertEqual(self.employee.total_overtime, 18, 'Should have 18 hours of overtime')
+
+        self.env['hr.leave'].with_context(leave_fast_create=True).create({
+            'name': 'overtime leave',
+            'employee_id': self.employee.id,
+            'work_entry_type_id': self.work_entry_type_no_alloc.id,
+            'request_date_from': datetime(2021, 1, 4),
+            'request_date_to': datetime(2021, 1, 4),
+        })
+
+        self._check_deductible(10)
+        response = self.make_jsonrpc_request(
+            '/hr_attendance/attendance_employee_data',
+            {
+                'token': self.employee.company_id.attendance_kiosk_key,
+                'employee_id': self.employee.id,
+            },
+        )
+        self.assertEqual(
+            response.get('total_overtime'),
+            10,
+            "Kiosk should show remaining deductible overtime after leave deduction",
+        )

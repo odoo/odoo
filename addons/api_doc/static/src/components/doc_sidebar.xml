@@ -30,6 +30,7 @@
                         >
                             <div t-out="model.name"></div>
                             <small class="d-block" t-out="model.model"></small>
+                            <small t-if="model.doc" class="d-block text-muted text-truncate" t-out="model.doc"></small>
                         </a>
                     </t>
                 </div>

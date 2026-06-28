@@ -13,10 +13,10 @@ class TestOnSitePaymentTransaction(HttpCase, ClickAndCollectCommon):
         tx = self._create_transaction(
             flow="direct",
             sale_order_ids=[order.id],
-            state="pending",
+            state="done",
             payment_method_id=self.provider.payment_method_ids.id,
         )
         with mute_logger("odoo.addons.sale.models.payment_transaction"):
-            tx._post_process()
+            self._run_post_processing(tx)
 
         self.assertEqual(order.state, "sale")

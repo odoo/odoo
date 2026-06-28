@@ -9,11 +9,14 @@ patch(registry.category('web_tour.tours').get('configurator_translation'), {
 
     steps() {
         const originalSteps = super.steps();
-        const websiteBuildStepIndex = originalSteps.findIndex(
-            (step) => step.id === 'build_website'
+        const loaderStepIndex = originalSteps.findIndex(
+            (step) => step.id === 'loader'
         );
+        if (loaderStepIndex === -1) {
+            return originalSteps;
+        }
         originalSteps.splice(
-            websiteBuildStepIndex + 1,
+            loaderStepIndex,
             0,
             {
                 content: "Choose a shop page style",
@@ -36,11 +39,14 @@ patch(registry.category('web_tour.tours').get('configurator_translation'), {
 patch(registry.category("web_tour.tours").get("configurator_page_creation"), {
     steps() {
         const originalSteps = super.steps();
-        const websiteBuildStepIndex = originalSteps.findIndex(
-            (step) => step.id === "build_website"
+        const loaderStepIndex = originalSteps.findIndex(
+            (step) => step.id === "loader"
         );
+        if (loaderStepIndex === -1) {
+            return originalSteps;
+        }
         originalSteps.splice(
-            websiteBuildStepIndex + 1,
+            loaderStepIndex,
             0,
             {
                 content: "Choose a shop page style",

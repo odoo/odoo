@@ -28,7 +28,6 @@ class TestAddToCartSnippet(HttpCase):
         cls.dummy_provider = cls.env["payment.provider"].create({
             "name": "Dummy Provider",
             "code": "none",
-            "state": "test",
             "is_published": True,
             "allow_tokenization": True,
             "redirect_form_view_id": redirect_form.id,

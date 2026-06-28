@@ -4,37 +4,17 @@ import { isToday } from "@mail/utils/common/dates";
 import { useHover } from "@mail/utils/common/hooks";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
-import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
+import { ActionSwiper, onSwipeType } from "@web/core/action_swiper/action_swiper";
 import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
 
+const isMarkAsRead = t.boolean();
+
 export class NotificationItem extends Component {
     static components = { ActionSwiper, DiscussAvatar, MessageSeenIndicator };
-    static props = [
-        "counter?",
-        "datetime?",
-        "first?",
-        "hasMarkAsReadButton?",
-        "iconSrc?",
-        "important?",
-        "muted?",
-        "onClick",
-        "onSwipeLeft?",
-        "onSwipeRight?",
-        "slots?",
-        "isActive?",
-        "nameMaxLine?",
-        "persona?",
-        "textMaxLine?",
-        "thread?",
-    ];
-    static defaultProps = {
-        counter: 0,
-        muted: 0,
-    };
     static template = "mail.NotificationItem";
 
     setup() {
@@ -43,6 +23,29 @@ export class NotificationItem extends Component {
         this.DateTime = DateTime;
         this.ui = useService("ui");
         this.store = useService("mail.store");
+        this.props = props({
+            counter: t.number().optional(0),
+            datetime: t.instanceOf(DateTime).optional(),
+            first: t.boolean().optional(),
+            hasMarkAsReadButton: t.boolean().optional(),
+            iconSrc: t.string().optional(),
+            important: t.or([t.boolean(), t.number()]).optional(),
+            isActive: t.boolean().optional(),
+            muted: t.number().optional(0),
+            nameMaxLine: t.number().optional(),
+            onClick: t.function([isMarkAsRead]),
+            onSwipeLeft: onSwipeType.optional(),
+            onSwipeRight: onSwipeType.optional(),
+            persona: t
+                .or([
+                    t.instanceOf(this.store["res.partner"].Class),
+                    t.instanceOf(this.store["mail.guest"].Class),
+                ])
+                .optional(),
+            slots: t.object().optional(),
+            textMaxLine: t.number().optional(),
+            thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
+        });
         this.markAsReadRef = useRef("markAsRead");
         this.rootHover = useHover("root");
         useSubEnv({ inNotificationItem: true });
@@ -64,14 +67,5 @@ export class NotificationItem extends Component {
 
     get message() {
         return this.props.thread?.newestPersistentOfAllMessage;
-    }
-
-    webkitLineClamp(maxLine) {
-        return `
-            display: -webkit-box;
-            overflow: hidden;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: ${maxLine};
-        `;
     }
 }

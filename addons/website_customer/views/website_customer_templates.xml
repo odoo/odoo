@@ -140,7 +140,7 @@
                                     />
                                     <div class="card-body">
                                         <h5 class="card-title" t-field="partner.display_name"/>
-                                        <small class="o_wcrm_short_description text-muted overflow-hidden" t-field="partner.website_short_description"/>
+                                        <small class="o_wcrm_short_description o_line_clamp text-muted" style="--lines-clamp: 4;" t-field="partner.website_short_description"/>
                                         <small t-if="not partner.website_short_description" class="css_editable_mode_hidden text-muted fst-italic" groups="website.group_website_restricted_editor">
                                             Enter a short description
                                         </small>
@@ -252,7 +252,7 @@
   <t t-call="website.layout">
     <div id="wrap">
         <div class="oe_structure oe_empty" id="oe_structure_website_customer_details_1"
-            data-editor-message="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL CUSTOMERS"/>
+            data-editor-message.translate="Drag blocks here to add them on all customers"/>
         <div class="container mb-3">
             <div class="row">
                 <div class="mt-4 mb-3" t-if="not edit_page">
@@ -265,7 +265,7 @@
             </div>
         </div>
         <div class="oe_structure oe_empty" id="oe_structure_website_customer_details_2"
-            data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL CUSTOMERS"/>
+            data-editor-message.translate="Drag blocks here to add them on all customers"/>
     </div>
   </t>
 </template>

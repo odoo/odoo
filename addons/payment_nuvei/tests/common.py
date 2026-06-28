@@ -18,6 +18,9 @@ class NuveiCommon(PaymentHttpCommon):
 
         cls.provider = cls.nuvei
 
+        cls.payment_data_signature = (
+            "660a42e9796754d93c9e4b87c3ac4e34ce8880e32813609c15b273a1d5cee563"
+        )
         cls.payment_data = {
             "ppp_status": "OK",
             "currency": "USD",
@@ -28,8 +31,7 @@ class NuveiCommon(PaymentHttpCommon):
             "message": "Success",
             "Error": "Success",
             "Status": "APPROVED",
-            "advanceResponseChecksum": "660a42e9796754d93c9e4b87c3ac4e34ce"
-            "8880e32813609c15b273a1d5cee563",
+            "advanceResponseChecksum": cls.payment_data_signature,
             "totalAmount": cls.amount,
             "TransactionID": "7110000000004858227",
             "item_amount_1": cls.amount,

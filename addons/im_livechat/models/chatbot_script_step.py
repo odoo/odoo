@@ -142,29 +142,34 @@ class ChatbotScriptStep(models.Model):
     # --------------------------
 
     def _chatbot_prepare_customer_values(self, discuss_channel, create_partner=True, update_partner=True):
-        """ Common method that allows retreiving default customer values from the discuss.channel
-        following a chatbot.script.
+        """Retrieve default customer values from a ``discuss.channel``
+        following a ``chatbot.script``.
 
-        This method will return a dict containing the 'customer' values such as:
-        {
-            'partner': The created partner (see 'create_partner') or the partner from the
-              environment if not public
-            'email': The email extracted from the discuss.channel messages
-              (see step_type 'question_email')
-            'phone': The phone extracted from the discuss.channel messages
-              (see step_type 'question_phone')
-            'description': A default description containing the "Please contact me on" and "Please
-              call me on" with the related email and phone numbers.
-              Can be used as a default description to create leads or tickets for example.
-        }
+        This method will return a dict containing the 'customer' values:
 
-        :param record discuss_channel: the discuss.channel holding the visitor's conversation with the bot.
-        :param bool create_partner: whether or not to create a res.partner is the current user is public.
-          Defaults to True.
-        :param bool update_partner: whether or not to set update the email and phone on the res.partner
-          from the environment (if not a public user) if those are not set yet. Defaults to True.
+        * ``partner``: the created partner (see ``create_partner``) or the
+          partner from the environment if not public.
+        * ``email``: the email extracted from the ``discuss.channel`` messages
+          (see step type ``question_email``).
+        * ``phone``: the phone extracted from the ``discuss.channel`` messages
+          (see step type ``question_phone``).
+        * ``description``: a default description containing "Please contact me
+          on" and "Please call me on" with the related email and phone. Can be
+          used as a default description when creating leads or tickets, for
+          example.
 
-        :returns: a dict containing the customer values."""
+        :param discuss_channel: The ``discuss.channel`` holding the visitor's
+            conversation with the bot.
+        :type discuss_channel: discuss.channel
+        :param bool create_partner: Whether to create a ``res.partner`` if the
+            current user is public. Defaults to ``True``.
+        :param bool update_partner: Whether to update the email and phone on
+            the ``res.partner`` from the environment (if not a public user)
+            when those are not set yet. Defaults to ``True``.
+        :returns: A dict containing the customer values
+            (``partner``, ``email``, ``phone``, ``description``).
+        :rtype: dict
+        """
 
         partner = False
         user_inputs = discuss_channel._chatbot_find_customer_values_in_messages({
@@ -210,10 +215,10 @@ class ChatbotScriptStep(models.Model):
     def _find_first_user_free_input(self, discuss_channel):
         """Find the first message from the visitor responding to a free_input step."""
         chatbot_partner = self.chatbot_script_id.operator_partner_id
-        for answer in discuss_channel.chatbot_message_ids.sorted("id"):
+        for answer in discuss_channel.sudo().chatbot_message_ids.sorted("id"):
             if answer.script_step_id.step_type not in ("free_input_single", "free_input_multi"):
                 continue
-            message = answer.mail_message_id
+            message = answer.mail_message_id.with_env(self.env)
             if message.has_access('read') and message.author_id != chatbot_partner:
                 return message.with_prefetch()
         return self.env["mail.message"]

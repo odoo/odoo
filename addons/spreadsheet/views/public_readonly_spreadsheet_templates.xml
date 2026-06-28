@@ -5,19 +5,18 @@
     <t t-set="head">
         <script>
             odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
-            odoo.__session_info__.spreadsheet_public_props = <t t-out="json.dumps(props)"/>;
         </script>
+        <t t-call="web.conditional_assets_tests" ignore_missing_deps="True"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, interactive-widget=resizes-content"/>
         <t t-call-assets="spreadsheet.public_spreadsheet"/>
     </t>
     <t t-call="web.layout" head="head">
-        <div class="d-flex flex-column justify-content vh-100 o-public-spreadsheet">
-            <header class="container-fluid p-0 d-flex align-items-center justify-content-between border-bottom">
-                <div t-out="spreadsheet_name" class="text-primary fw-bold ps-3"/>
+        <div class="d-flex flex-column justify-content vh-100 vw-100 o-public-spreadsheet">
+            <header class="container-fluid p-0 d-flex align-items-center justify-content-between border-bottom d-print-none">
+                <img class="ps-2" t-att-src="spreadsheet_icon_src"></img>
+                <div t-out="spreadsheet_name" class="text-primary fw-bold ps-2"/>
                 <div class="fst-italic flex-fill ps-3">
                     <t t-if="is_frozen">Frozen and copied on <span t-field="share.create_date"/></t>
-                    <div class="d-inline-flex" t-if="props['downloadExcelUrl']">
-                        <a class="btn btn-secondary o_download_btn" t-att-href="props['downloadExcelUrl']" title="Download"><i class="fa fa-download"/></a>
-                    </div>
                 </div>
                 <div class="nav d-table my-auto">
                     <t t-call="portal.user_dropdown"
@@ -29,7 +28,12 @@
                         _link_class.f="nav-link fw-bold"/>
                 </div>
             </header>
-            <main id="spreadsheet-mount-anchor" class="flex-fill"/>
+            <main class="flex-fill">
+                <owl-component
+                    t-att-name="spreadsheet_public_component"
+                    t-att-props="json.dumps(props)"
+                />
+            </main>
         </div>
     </t>
 </template>

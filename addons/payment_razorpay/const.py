@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-OAUTH_URL = "https://razorpay.api.odoo.com/api/razorpay/1"
+OAUTH_URL = "https://razorpay.api.odoo.com/api/razorpay/"
 
 # The currencies supported by Razorpay, in ISO 4217 format. Last updated on May 26, 2021.
 # See https://razorpay.com/docs/payments/payments/international-payments/#supported-currencies.
@@ -100,18 +100,11 @@ SUPPORTED_CURRENCIES = [
     "ZAR",
 ]
 
-# The codes of the payment methods to activate when Razorpay is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
-    "card",
-    "netbanking",
-    "upi",
-    # Brand payment methods.
-    "visa",
-    "mastercard",
-    "amex",
-    "discover",
-}
+# The codes of the countries where OAuth is enabled
+OAUTH_SUPPORTED_COUNTRY_CODES = ["IN"]
+
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card"}
 
 # The codes of payment methods that are not recognized by the orders API.
 FALLBACK_PAYMENT_METHOD_CODES = {"emi_india", "fpx", "paylater_india", "wallets_india"}

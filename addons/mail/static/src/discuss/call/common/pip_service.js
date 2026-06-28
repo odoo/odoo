@@ -1,6 +1,8 @@
-import { reactive } from "@web/owl2/utils";
-import { registry } from "@web/core/registry";
 import { Meeting } from "./meeting";
+
+import { proxy } from "@odoo/owl";
+
+import { registry } from "@web/core/registry";
 
 export const callPipService = {
     dependencies: ["mail.popout"],
@@ -13,9 +15,7 @@ export const callPipService = {
         const popoutService = services["mail.popout"];
         const popout = popoutService.createManager(Symbol("discuss.native.pip"));
         let pipWindow = null;
-        const state = reactive({
-            active: false,
-        });
+        const state = proxy({ active: false });
         popout.addHooks(
             () => {},
             () => {
@@ -52,7 +52,7 @@ export const callPipService = {
             pipWindow.document.body.style.overflow = "hidden";
             pipWindow.document.body.style.display = "block";
         }
-        return reactive({
+        return proxy({
             get isNativePipAvailable() {
                 return Boolean(window.documentPictureInPicture);
             },

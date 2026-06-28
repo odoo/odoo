@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('gr')
     def _get_gr_template_data(self):
         return {
-            'property_account_receivable_id': 'l10n_gr_30_01_01_01',
-            'property_account_payable_id': 'l10n_gr_50_01_01',
             'code_digits': '6',
         }
 
@@ -33,5 +31,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'l10n_gr_tax_p24_G',
                 'expense_account_id': 'l10n_gr_64_01_01_01',
                 'income_account_id': 'l10n_gr_70_01_01',
+                'receivable_account_id': 'l10n_gr_30_01_01_01',
+                'payable_account_id': 'l10n_gr_50_01_01',
             },
         }

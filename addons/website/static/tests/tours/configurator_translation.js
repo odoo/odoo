@@ -3,27 +3,8 @@ import { translatedTermsGlobal } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { clickOnEditAndWaitEditMode } from "@website/js/tours/tour_utils";
 
-function runConfiguratorFlow(industrySearchText, featureOrPageName) {
+function runConfiguratorFlow(industrySearchText) {
     return [
-        // Configurator first screen
-        {
-            content: "Click next",
-            trigger: "button.o_configurator_show",
-            run: "click",
-        },
-        // Make sure "Back" works
-        {
-            content: "Use browser's Back",
-            trigger: "button.o_change_website_type",
-            run() {
-                window.history.back();
-            },
-        },
-        {
-            content: "Return to description screen",
-            trigger: "button.o_configurator_show",
-            run: "click",
-        },
         // Description screen
         {
             content: "Select a website type",
@@ -41,7 +22,7 @@ function runConfiguratorFlow(industrySearchText, featureOrPageName) {
             run: "click",
         },
         {
-            content: "Choose from the objective list",
+            content: "Choose from the positioning list",
             trigger: "button.o_change_website_purpose",
             run: "click",
         },
@@ -51,19 +32,13 @@ function runConfiguratorFlow(industrySearchText, featureOrPageName) {
             trigger: ".palette_card",
             run: "click",
         },
-        // Features screen
         {
-            content: "Select feature or page",
-            trigger: `.card:contains(${featureOrPageName})`,
+            content: "Go to the next configurator step",
+            trigger: "button.o_configurator_next:not(:disabled)",
             run: "click",
         },
         {
-            id: "build_website",
-            content: "Click on build my website",
-            trigger: "button.btn-primary",
-            run: "click",
-        },
-        {
+            id: "loader",
             content: "Loader should be shown",
             trigger: ".o_website_loader_container",
             expectUnloadPage: true,
@@ -78,7 +53,7 @@ function runConfiguratorFlow(industrySearchText, featureOrPageName) {
 
 registry.category("web_tour.tours").add("configurator_translation", {
     steps: () => [
-        ...runConfiguratorFlow("in fr", "Parseltongue_pricing"),
+        ...runConfiguratorFlow("in fr"),
         {
             content: "Check if the current interface language is active and monkey patch terms",
             trigger: "body",
@@ -108,8 +83,8 @@ registry.category("web_tour.tours").add("configurator_translation", {
 
 registry.category("web_tour.tours").add("configurator_page_creation", {
     steps: () => [
-        ...runConfiguratorFlow("abbey", "Pricing Plan"),
-        // Verify configurator page templates exist in landing pages category.
+        ...runConfiguratorFlow("abbey"),
+        // Verify configurator page templates exist in the About Us category.
         {
             content: "Open create content menu",
             trigger: ".o_new_content_container button",
@@ -121,18 +96,18 @@ registry.category("web_tour.tours").add("configurator_page_creation", {
             run: "click",
         },
         {
-            content: "Click on landing pages category",
-            trigger: "[data-id='landing']",
+            content: "Click on About Us pages category",
+            trigger: ".o_website_page_templates_dialog aside [data-id='about_us']",
             run: "click",
         },
         {
             content: "Check if configurator pages exist",
-            trigger: "[data-id='landing'] .o_page_template[data-configurator-page]",
+            trigger: "#pane_about_us .o_page_template[data-configurator-page]",
         },
         {
-            content: "Configurator pages should appear at the start of the landing category",
+            content: "Configurator pages should appear at the start of the About Us category",
             trigger:
-                "[data-id='landing'] .row > :first-child .o_page_template:first-of-type[data-configurator-page]",
+                "#pane_about_us .row > :first-child .o_page_template:first-of-type[data-configurator-page]",
         },
         {
             content: "Exit dialog",

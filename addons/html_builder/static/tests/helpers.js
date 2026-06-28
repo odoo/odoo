@@ -1,3 +1,4 @@
+import { useRef, useSubEnv } from "@web/owl2/utils";
 import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
 import { Image } from "@html_builder/core/img";
@@ -13,12 +14,13 @@ import { Plugin } from "@html_editor/plugin";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { after, click, queryAll, queryFirst } from "@odoo/hoot";
 import { animationFrame, waitForNone, queryOne, waitFor, advanceTime, tick } from "@odoo/hoot-dom";
-import { Component, onMounted, useRef, useState, useSubEnv, xml } from "@odoo/owl";
+import { Component, onMounted, xml, proxy } from "@odoo/owl";
 import {
     contains,
     defineModels,
     models,
     mountWithCleanup,
+    onRpc,
     patchWithCleanup,
     waitUntilIdle,
 } from "@web/../tests/web_test_helpers";
@@ -32,7 +34,7 @@ export function patchWithCleanupImg() {
     const defaultImg =
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
     patchWithCleanup(Image, {
-        template: xml`<img t-att-data-src="props.src" t-att-alt="props.alt" t-att-class="props.class" t-att-style="props.style" t-att="props.attrs" src="${defaultImg}"/>`,
+        template: xml`<img t-att-data-src="this.props.src" t-att-alt="this.props.alt" t-att-class="this.props.class" t-att-style="this.props.style" t-att="this.props.attrs" src="${defaultImg}"/>`,
     });
     patchWithCleanup(Image.prototype, {
         loadImage: () => {},
@@ -99,17 +101,17 @@ export function getSnippetStructure({
 
 class BuilderContainer extends Component {
     static template = xml`
-        <div class="d-flex h-100 w-100" t-ref="container">
-            <div class="o_website_preview flex-grow-1" t-ref="website_preview">
+        <div class="d-flex h-100 w-100" t-custom-ref="container">
+            <div class="o_website_preview flex-grow-1" t-custom-ref="website_preview">
                 <div class="o_iframe_container">
-                    <iframe class="h-100 w-100" t-ref="iframe" t-on-load="onLoad"/>
+                    <iframe class="h-100 w-100" t-custom-ref="iframe" t-on-load="this.onLoad"/>
                     <div t-if="this.state.isMobile" class="o_mobile_preview_layout">
                         <img alt="phone" src="/html_builder/static/img/phone.svg"/>
                     </div>
                 </div>
             </div>
-            <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
-            <div t-if="state.isEditing" t-att-class="{'o_builder_sidebar_open': state.isEditing and state.showSidebar}" class="o-website-builder_sidebar border-start border-dark">
+            <LocalOverlayContainer localOverlay="this.overlayRef" identifier="this.env.localOverlayContainerKey"/>
+            <div t-if="this.state.isEditing" t-att-class="{'o_builder_sidebar_open': this.state.isEditing and this.state.showSidebar}" class="o-website-builder_sidebar border-start border-dark">
                 <Builder t-props="this.getBuilderProps()"/>
             </div>
         </div>`;
@@ -120,10 +122,12 @@ class BuilderContainer extends Component {
         headerContent: String,
         Plugins: Array,
         onEditorLoad: Function,
+        iframeLangDir: String,
+        builderProps: { type: Object, optional: true },
     };
 
     setup() {
-        this.state = useState({ isMobile: false, isEditing: false, showSidebar: true });
+        this.state = proxy({ isMobile: false, isEditing: false, showSidebar: true });
         this.iframeRef = useRef("iframe");
         const originalIframeLoaded = new Promise((resolve) => {
             this._originalIframeLoadedResolve = resolve;
@@ -140,6 +144,9 @@ class BuilderContainer extends Component {
 
                 const el = this.iframeRef.el;
                 el.contentDocument.body.innerHTML = `<div id="wrapwrap">${this.props.headerContent}<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${this.props.content}</div></div>`;
+                if (this.props.iframeLangDir === "rtl") {
+                    el.contentDocument.body.querySelector("#wrapwrap").classList.add("o_rtl");
+                }
                 resolve(el);
             });
         });
@@ -168,6 +175,7 @@ class BuilderContainer extends Component {
             config: {
                 builderOptionsTemplate: "html_builder.TestBuilderOptions",
             },
+            ...this.props.builderProps,
         };
     }
 }
@@ -207,12 +215,17 @@ export async function setupHTMLBuilder(
         dropzoneSelectors,
         snippets,
         styleContent,
+        iframeLangDir = "ltr",
+        patchImages = true,
+        builderProps,
     } = {}
 ) {
     defineMailModels();
     defineModels([IrUiView]);
 
-    patchWithCleanupImg();
+    if (patchImages) {
+        patchWithCleanupImg();
+    }
 
     if (!snippets) {
         snippets = {
@@ -265,7 +278,7 @@ export async function setupHTMLBuilder(
         await tick();
         await lastUpdatePromise;
         await animationFrame();
-        await waitUntilIdle([comp.__owl__.app]);
+        await waitUntilIdle(comp);
     };
     patchWithCleanup(Builder.prototype, {
         setup() {
@@ -325,6 +338,8 @@ export async function setupHTMLBuilder(
             onEditorLoad: (editor) => {
                 attachedEditor = editor;
             },
+            iframeLangDir,
+            builderProps,
         },
     });
     await comp.iframeLoaded;
@@ -461,7 +476,7 @@ export async function waitForSnippetDialog() {
 
 export async function modifyText(editor, editableContent) {
     setContent(editableContent, '<h1 class="title">H[]ello</h1>');
-    editor.shared.history.addStep();
+    editor.shared.history.commit();
     await insertText(editor, "1");
 }
 
@@ -543,7 +558,7 @@ export async function confirmAddSnippet(snippetName) {
 }
 
 export const dummyBase64Img =
-    "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
 export const exampleContent = '<h1 class="title">Hello</h1>';
 
@@ -592,4 +607,19 @@ export async function unfoldAllOptionsGroups() {
         await click(i);
     }
     await animationFrame();
+}
+
+export const dummyCORSSrc = "/web/image/0-redirect/foo.jpg";
+
+export function setupCORSProtectedImg() {
+    onRpc("/html_editor/get_image_info", () => ({
+        original: {
+            id: 1,
+            image_src: dummyCORSSrc,
+            mimetype: "image/jpeg",
+        },
+    }));
+    onRpc(dummyCORSSrc, () => {
+        throw new Error("simulated cors error");
+    });
 }

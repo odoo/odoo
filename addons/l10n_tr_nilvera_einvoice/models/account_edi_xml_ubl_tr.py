@@ -162,9 +162,12 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         For export invoices, a buyer party node is created based on the customer,
         and the PartyIdentification values are updated to indicate an export customer.
 
+        For public sector invoices, a buyer party node is created based on the public sector partner.
+
         :param document_node: dict representing the invoice XML structure to modify.
         :param vals: dict containing invoice-related values, including 'invoice'.
         """
+        buyer_party_node = False
         if vals['invoice'].l10n_tr_is_export_invoice:
             buyer_party_node = self._get_party_node({**vals, 'partner': vals['customer'], 'role': 'buyer'})
             buyer_party_node['cac:PartyIdentification'] = [{'cbc:ID': {
@@ -172,7 +175,11 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 'schemeID': 'PARTYTYPE',
                 },
             }]
-            document_node['cac:BuyerCustomerParty'] = {'cac:Party': buyer_party_node}
+
+        elif vals['invoice'].l10n_tr_gib_invoice_scenario == 'KAMU' and vals['invoice'].l10n_tr_public_spending_unit_id:
+            buyer_party_node = self._get_party_node({**vals, 'partner': vals['invoice'].l10n_tr_public_spending_unit_id, 'role': 'buyer'})
+
+        document_node['cac:BuyerCustomerParty'] = {'cac:Party': buyer_party_node} if buyer_party_node else None
 
     def _add_invoice_delivery_nodes(self, document_node, vals):
         super()._add_invoice_delivery_nodes(document_node, vals)
@@ -696,25 +703,18 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         return party_node
 
     def _get_party_identification_node_list(self, partner):
-        official_categories = partner.category_id._get_l10n_tr_official_categories()
-        return [
+        nodes = [
             {
                 'cbc:ID': {
                     '_text': partner.vat,
                     'schemeID': 'VKN' if partner.is_company else 'TCKN',
                 },
             },
-            *(
-                {
-                    'cbc:ID': {
-                        '_text': category.name,
-                        'schemeID': category.parent_id.name,
-                    },
-                }
-                for category in partner.category_id
-                if category.parent_id in official_categories
-            ),
         ]
+        for key, scheme_id in [('TR_MERSIS', 'MERSISNO'), ('TR_TICARET_SICIL', 'TICARETSICILNO'), ('TR_SUBE', 'SUBENO')]:
+            if value := partner._get_additional_identifier(key):
+                nodes.append({'cbc:ID': {'_text': value, 'schemeID': scheme_id}})
+        return nodes
 
     def _get_tax_category_node(self, vals):
         """Overrides UBL 21 to returns the tax category node for a line or invoice, including TR-specific fields.
@@ -807,10 +807,10 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         :param invoice: account.move record (the invoice).
         :return: str, TR profile ID to be used in E-invoicing.
         """
-        if (is_einvoice := invoice.l10n_tr_nilvera_customer_status == 'einvoice') and invoice.l10n_tr_gib_invoice_scenario:
-            return invoice.l10n_tr_gib_invoice_scenario
         if invoice.l10n_tr_is_export_invoice:
             return 'IHRACAT'
+        if (is_einvoice := invoice.l10n_tr_nilvera_customer_status == 'einvoice') and invoice.l10n_tr_gib_invoice_scenario:
+            return invoice.l10n_tr_gib_invoice_scenario
         return 'TEMELFATURA' if is_einvoice else 'EARSIVFATURA'
 
     @api.model
@@ -979,12 +979,35 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         })
         return partner_vals
 
-    def _import_fill_invoice_form(self, invoice, tree, qty_factor):
+    def _import_document_allowance_charges(self, tree, record, tax_type, qty_factor=1):
         # EXTENDS account.edi.xml.ubl_20
-        logs = super()._import_fill_invoice_form(invoice, tree, qty_factor)
+        # UBL-TR does not use document-level allowance/charge nodes as global discounts.
+        # In practice, the AllowanceCharge found at the document root reflects the sum of
+        # line-level discounts, so importing it as a separate global discount would duplicate it.
+        return [], []
 
-        # ==== Nilvera UUID ====
-        if uuid_node := tree.findtext('./{*}UUID'):
-            invoice.l10n_tr_nilvera_uuid = uuid_node
+    def _import_fill_invoice(self, invoice, tree, qty_factor):
+        # EXTENDS account.edi.xml.ubl_20
+        logs = super()._import_fill_invoice(invoice, tree, qty_factor)
+
+        scenario = self._find_value(".//cbc:ProfileID", tree)
+        if scenario not in {key for key, _ in self.env['account.move']._fields['l10n_tr_gib_invoice_scenario'].selection}:
+            scenario = False
+        invoice_type = self._find_value(".//cbc:InvoiceTypeCode", tree)
+        if invoice_type not in {key for key, _ in self.env['account.move']._fields['l10n_tr_gib_invoice_type'].selection}:
+            invoice_type = False
+
+        invoice.write({
+            'l10n_tr_nilvera_uuid': self._find_value('./cbc:UUID', tree),
+            'l10n_tr_gib_invoice_scenario': scenario,
+            'l10n_tr_gib_invoice_type': invoice_type,
+        })
+
+        if scenario == 'TICARIFATURA' and invoice.move_type in {'in_invoice', 'out_invoice'}:
+            try:
+                # Don't want to block the import in case status retrieval fails
+                invoice.l10n_tr_action_fetch_ticarifatura_response()
+            except UserError as e:
+                logs.append(self.env._("Failed to fetch TICARIFATURA response: %s", str(e)))
 
         return logs

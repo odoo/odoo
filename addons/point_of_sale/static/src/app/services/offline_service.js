@@ -23,6 +23,7 @@ patch(offlineService, {
                 _checkConnection: () => Promise.resolve(),
                 isAvailableOffline: () => false,
                 scheduledORM: {},
+                cacheMany2XSearch: () => {},
             };
         }
         return super.start(...arguments);

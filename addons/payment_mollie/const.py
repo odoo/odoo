@@ -62,16 +62,8 @@ SUPPORTED_CURRENCIES = [
     "ZAR",
 ]
 
-# The codes of the payment methods to activate when Mollie is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
-    "card",
-    # Brand payment methods.
-    "visa",
-    "mastercard",
-    "amex",
-    "discover",
-}
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card"}
 
 # Mapping of payment method codes to Mollie codes.
 PAYMENT_METHODS_MAPPING = {

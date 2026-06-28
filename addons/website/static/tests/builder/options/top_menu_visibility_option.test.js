@@ -1,7 +1,7 @@
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { queryOne, waitFor } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -147,4 +147,25 @@ test("regular -> hidden -> regular", async () => {
     await contains(".o-overlay-container [data-action-value='regular']").click();
     const modifiedWrapwrap = queryOne(":iframe #wrapwrap");
     expect(modifiedWrapwrap).toHaveOuterHTML(precedentWrapwrap);
+});
+
+test("'Show Disclaimer' option should toggle dislaimer template", async () => {
+    await setupWebsiteBuilder("", {
+        openEditor: true,
+        headerContent: `
+            <header id="top" data-anchor="true" data-name="Header">
+                Menu content
+            </header>`,
+    });
+    onRpc("/website/theme_customize_data", async (request) => {
+        const { params } = await request.json();
+        expect.step("theme_customize_data");
+        expect(params.enable).toEqual(["website.option_header_disclaimer"]);
+        expect(params.disable).toEqual([]);
+    });
+    await contains(":iframe #wrapwrap > header").click();
+    await waitFor("[data-label='Show Disclaimer']");
+    expect("[data-label='Show Disclaimer']").toBeVisible();
+    await contains("[data-label='Show Disclaimer'] input").click();
+    expect.verifySteps(["theme_customize_data"]);
 });

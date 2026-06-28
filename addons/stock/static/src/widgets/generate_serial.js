@@ -1,6 +1,6 @@
 import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 import { Dialog } from '@web/core/dialog/dialog';
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -87,6 +87,7 @@ export class GenerateDialog extends Component {
                 default_location_id: this.props.move.data.location_id.id,
                 default_tracking: this.props.move.data.has_tracking,
                 default_quantity: qtyToProcess,
+                default_uom_id: this.props.move.data.has_tracking === 'lot' ? this.props.move.data.product_uom?.id : undefined,
             },
             this.props.mode,
             this.nextSerial.el?.value,

@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
@@ -7,26 +6,20 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 export class FieldSelectorPopover extends Component {
     static template = "html_editor.FieldSelectorPopover";
     static components = { ModelFieldSelector };
-    static props = {
-        resModel: String,
-        validate: Function,
-        close: Function,
-        path: { optional: true },
-        label: { optional: true },
-        disableLabel: { optional: true },
-        followRelations: { optional: true },
-        filter: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        path: false,
-        label: false,
-        followRelations: true,
-        disableLabel: false,
-    };
+    props = props({
+        resModel: t.string(),
+        validate: t.function(),
+        close: t.function(),
+        path: t.any().optional(false),
+        label: t.any().optional(false),
+        disableLabel: t.any().optional(false),
+        followRelation: t.any().optional(true),
+        filter: t.function().optional(),
+    });
 
     setup() {
         useAutofocus();
-        this.state = useState({
+        this.state = proxy({
             path: this.props.path || "",
             label: this.props.label || "",
             modelName: this.props.resModel,

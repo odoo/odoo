@@ -3,7 +3,9 @@ import { _t } from "@web/core/l10n/translation";
 
 registerMessageAction("create-or-view-thread", {
     condition: ({ message, channel }) =>
-        message.channel_id?.eq(channel) && message.channel_id?.canCreateSubChannels,
+        !message.isEmpty &&
+        message.channel_id?.eq(channel) &&
+        message.channel_id?.canCreateSubChannels,
     icon: "fa fa-comments-o",
     onSelected: ({ message }) => {
         if (message.linkedSubChannel) {
@@ -13,5 +15,5 @@ registerMessageAction("create-or-view-thread", {
         }
     },
     name: ({ message }) => (message.linkedSubChannel ? _t("View Thread") : _t("Create Thread")),
-    sequence: 75,
+    sequence: 95,
 });

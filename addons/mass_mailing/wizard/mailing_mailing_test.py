@@ -180,5 +180,6 @@ class MailingMailingTest(models.TransientModel):
             'params': {
                 'type': 'info',
                 'message': notif_message,
+                'next': {'type': 'ir.actions.act_window_close'},
             },
         }

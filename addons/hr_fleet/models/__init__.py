@@ -2,7 +2,6 @@
 
 from . import hr_employee
 from . import hr_employee_departure
-from . import hr_version
 from . import fleet_vehicle_assignation_log
 from . import fleet_vehicle
 from . import fleet_vehicle_log_contract

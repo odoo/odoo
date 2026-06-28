@@ -1,3 +1,5 @@
+import { localeCompare } from "@web/core/l10n/utils";
+
 export function simplifyString(str) {
     return (
         str
@@ -72,7 +74,7 @@ export function search(models, query, filters) {
 
     results.sort((a, b) => {
         if (a.priority === b.priority) {
-            return a.label.localeCompare(b.label);
+            return localeCompare(a.label, b.label);
         } else {
             return b.priority - a.priority;
         }

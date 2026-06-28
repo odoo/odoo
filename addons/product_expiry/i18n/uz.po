@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:36+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
 "PO-Revision-Date: 2025-10-08 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -43,15 +43,15 @@ msgstr "--Muddati tugagan--"
 #, fuzzy
 msgid ""
 "<span class=\"badge rounded-pill float-end text-bg-warning\" invisible=\"not "
-"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; "
-"expiration_date)\">Expiring</span>\n"
+"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)"
+"\">Expiring</span>\n"
 "            <span class=\"badge rounded-pill float-end text-bg-danger\" "
 "invisible=\"not product_expiry_alert\">Expired</span>"
 msgstr ""
 "<span class=\"badge rounded-pill float-end text-bg-warning\" invisible=\"not "
-"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; "
-"expiration_date)\">Muddati yaqinlashmoqda</span>             <span "
-"class=\"badge rounded-pill float-end text-bg-danger\" invisible=\"not "
+"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)"
+"\">Muddati yaqinlashmoqda</span>             <span class=\"badge rounded-"
+"pill float-end text-bg-danger\" invisible=\"not "
 "product_expiry_alert\">Muddati tugagan</span>"
 
 #. module: product_expiry
@@ -229,6 +229,7 @@ msgstr "Yetkazib berish varaqalarida yaroqlilik muddatlarini ko‘rsatish"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__display_name
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__display_name
 #: model:ir.model.fields,field_description:product_expiry.field_report_stock_quantity__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_report_stock_report_lot_label__display_name
 #: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:product_expiry.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__display_name
@@ -352,6 +353,7 @@ msgstr "Bepul foydalanish miqdori"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__id
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__id
 #: model:ir.model.fields,field_description:product_expiry.field_report_stock_quantity__id
+#: model:ir.model.fields,field_description:product_expiry.field_report_stock_report_lot_label__id
 #: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__id
 #: model:ir.model.fields,field_description:product_expiry.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__id
@@ -387,6 +389,11 @@ msgstr "Oxirgi yangilangan sana"
 #, fuzzy
 msgid "Lot"
 msgstr "Partiya"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_report_stock_report_lot_label
+msgid "Lot Label Report"
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_lot
@@ -427,8 +434,8 @@ msgstr ""
 #, fuzzy
 msgid ""
 "Number of days before the Expiration Date after which the goods should be "
-"removed from the stock and not be counted in the Fresh On Hand Stock anymore."
-"It will be computed on the lot/serial number."
+"removed from the stock and not be counted in the Fresh On Hand Stock "
+"anymore.It will be computed on the lot/serial number."
 msgstr ""
 "Yaroqlilik muddati tugashidan necha kun oldin tovarlar ombordan olib "
 "tashlanishi va yangi qo‘ldagi zaxira hisobidan chiqarilishi kerakligi. Bu "
@@ -611,9 +618,8 @@ msgstr "Hozir chiqarish"
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
-#, fuzzy
 msgid "To remove on"
-msgstr "Chiqarish sanasi"
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking
@@ -669,8 +675,8 @@ msgid ""
 "expired or should at least be removed from stock.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
-"Siz muddati o‘tgan yoki kamida zaxiradan olib tashlanishi kerak bo‘lgan "
-"%(product_name)s, %(lot_name)s mahsulotini yetkazib bermoqchisiz. Davom "
+"Siz muddati o‘tgan yoki kamida zaxiradan olib tashlanishi kerak bo‘lgan %"
+"(product_name)s, %(lot_name)s mahsulotini yetkazib bermoqchisiz. Davom "
 "etishni xohlayotganingizni tasdiqlaysizmi?"
 
 #. module: product_expiry

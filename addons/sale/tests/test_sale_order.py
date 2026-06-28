@@ -255,8 +255,9 @@ class TestSaleOrder(SaleCommon):
                 "product_no_variant_attribute_value_ids": ptav1.ids,
             }),
             Command.create({"product_id": product_with_desc.id}),
+            Command.create({"name": "Productless SOL\nsub description", "price_unit": 12.0}),
         ]
-        sol1, sol2, sol3, sol4, sol5, sol6 = self.sale_order.order_line
+        sol1, sol2, sol3, sol4, sol5, sol6, sol7 = self.sale_order.order_line
         sol1.name += "\nOK THANK YOU\nGOOD BYE"
 
         self.assertEqual(
@@ -289,6 +290,11 @@ class TestSaleOrder(SaleCommon):
             sol6.display_name,
             f"{self.sale_order.name} - {product_with_desc.display_name} ({self.partner.name})",
             "Product lines with standard sales description should display the product name",
+        )
+        self.assertEqual(
+            sol7.display_name,
+            f"{self.sale_order.name} - Productless SOL ({self.partner.name})",
+            "Product lines without product should display the SOL name",
         )
 
     def test_state_changes(self):
@@ -496,11 +502,10 @@ class TestSaleOrder(SaleCommon):
             patched.assert_not_called()
 
     def test_so_company_empty(self):
-        """Test that emptying company on SO form should raise."""
-        company_2 = self.env["res.company"].create({"name": "Company 2"})
-        self.env = self.env(
-            context=dict(self.env.context, allowed_company_ids=[self.env.company.id, company_2.id])
-        )
+        """Check emptying company on SO form."""
+        self.env["res.company"].create({  # activate multi company for the form view
+            "name": "Company 2"
+        })
         so_form = Form(self.env["sale.order"])
         with self.assertRaises(ValidationError):
             so_form.company_id = self.env["res.company"]
@@ -816,7 +821,10 @@ class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
         'invoiced' (and not 'upselling')."""
         sale_order = self.env["sale.order"].create({
             "partner_id": self.partner.id,
-            "order_line": [(0, 0, {"product_id": self.product.id, "product_uom_qty": -1})],
+            "order_line": [
+                Command.create({"product_id": self.product.id, "product_uom_qty": -1}),
+                Command.create({"name": "Productless SOL", "product_uom_qty": -1}),
+            ],
         })
         sale_order.action_confirm()
         sale_order._create_invoices(final=True)
@@ -893,6 +901,33 @@ class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
         (sale_order_1 | sale_order_2).action_reopen_order()
         self.assertFalse(sale_order_1.invoicing_closed)
         self.assertFalse(sale_order_2.invoicing_closed)
+
+    def test_sol_invoice_policy(self):
+        """SOL invoice policy should come from the product when available,
+        otherwise fallback on the company policy.
+        """
+        self.env.company.sale_invoice_policy = "delivery"
+        self.product.invoice_policy = "order"
+
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
+                Command.create({"product_id": self.product.id, "product_uom_qty": 4}),
+                Command.create({"name": "Productless SOL", "product_uom_qty": 5, "price_unit": 42}),
+            ],
+        })
+
+        product_line, productless_line = sale_order.order_line
+        sale_order.action_confirm()
+
+        self.assertEqual(product_line.invoice_policy, "order")
+        self.assertEqual(product_line.qty_to_invoice, 4)
+
+        self.assertEqual(productless_line.invoice_policy, "delivery")
+        self.assertEqual(productless_line.qty_to_invoice, 0)
+
+        productless_line.qty_delivered = 3
+        self.assertEqual(productless_line.qty_to_invoice, 3)
 
 
 @tagged("post_install", "-at_install")
@@ -1155,7 +1190,7 @@ class TestSalesTeam(SaleCommon):
             sale_order.order_line,
         )
 
-    def test_action_recompute_taxes(self):
+    def test_recompute_taxes(self):
         """Test the action that can be triggered after a fiscal position change."""
         special_tax = self.env["account.tax"].create({
             "name": "special_tax_10",
@@ -1209,15 +1244,45 @@ class TestSalesTeam(SaleCommon):
         self.assertEqual(order.amount_total, 300)
         self.assertEqual(order.amount_tax, 100)
         order.fiscal_position_id = mapping_a
-        order._recompute_prices()
-        order.action_update_taxes()
+        order._recompute_taxes()
         self.assertEqual(order.amount_total, 270)
         self.assertEqual(order.amount_tax, 70)
         order.fiscal_position_id = mapping_b
-        order._recompute_prices()
-        order.action_update_taxes()
+        order._recompute_taxes()
         self.assertEqual(order.amount_total, 252)
         self.assertEqual(order.amount_tax, 52)
+
+        # Test `_onchange_fpos_id_recompute_taxes`
+
+        (partner_no_fpos, partner_fpos_a_1, partner_fpos_a_2) = self.env["res.partner"].create([
+            {"name": "Partner No FPOS"},
+            {"name": "Partner 1 FPOS A", "property_account_position_id": mapping_a.id},
+            {"name": "Partner 2 FPOS A", "property_account_position_id": mapping_a.id},
+        ])
+
+        with Form(self.env["sale.order"]) as order_form:
+            order_form.partner_id = partner_no_fpos
+            with order_form.order_line.new() as line_form:
+                line_form.product_id = self.product
+                line_form.product_uom_qty = 1.0
+        form_order = order_form.save()
+        self.assertEqual(form_order.amount_total, 300)
+        self.assertEqual(form_order.amount_tax, 100)
+
+        # Setting a partner with a different fpos should recompute taxes.
+        order_form.partner_id = partner_fpos_a_1
+        form_order = order_form.save()
+        self.assertEqual(form_order.amount_total, 270)
+        self.assertEqual(form_order.amount_tax, 70)
+        self.assertEqual(form_order.fiscal_position_id, mapping_a)
+
+        # Setting a partner with the same fpos shouldn't recompute taxes.
+        with patch(
+            "odoo.addons.sale.models.sale_order_line.SaleOrderLine._compute_tax_ids"
+        ) as patched:
+            order_form.partner_id = partner_fpos_a_2
+            form_order = order_form.save()
+            patched.assert_not_called()
 
 
 @tagged("post_install", "-at_install")
@@ -1228,7 +1293,8 @@ class TestSaleMailComposerUI(MailCommon, HttpCase):
         cls.env["mail.alias.domain"].create({"name": "example.com"})
         cls.partner = cls.env["res.partner"].create({
             "name": "test customer",
-            "email": "dummy@example.com",
+            "lang": "en_US",
+            "email": "en@example.com",
         })
         cls.quotation = cls.env["sale.order"].create({"partner_id": cls.partner.id})
 
@@ -1236,3 +1302,60 @@ class TestSaleMailComposerUI(MailCommon, HttpCase):
         url = f"/odoo/sales/{self.quotation.id}"
         with self.mock_mail_app():
             self.start_tour(url, "mail_attachment_removal_tour", login="admin")
+
+    def test_mail_button_translation(self):
+        """Test the final rendering context to ensure the button is properly translated
+        for each recipient's language, checking both the 'View' and the type_name."""
+        self.env["res.lang"]._activate_lang("fr_FR")
+        self.partner_fr = self.env["res.partner"].create({
+            "name": "French Customer",
+            "lang": "fr_FR",
+            "email": "fr@example.com",
+        })
+        # Quotation -> SO
+        self.quotation.action_confirm()
+        self.message = self.env["mail.message"].create({
+            "model": "sale.order",
+            "res_id": self.quotation.id,
+            "body": "Testing button translation",
+            "message_type": "comment",
+        })
+        recipients_data = [
+            {
+                "id": self.partner.id,
+                "lang": "en_US",
+                "type": "customer",
+                "notif": "email",
+                "groups": [],
+                "uid": self.partner.user_ids[0].id if self.partner.user_ids else False,
+            },
+            {
+                "id": self.partner_fr.id,
+                "lang": "fr_FR",
+                "type": "follower",
+                "notif": "email",
+                "groups": [],
+                "uid": self.partner_fr.user_ids[0].id if self.partner_fr.user_ids else False,
+            },
+        ]
+
+        iterator = self.quotation._notify_get_classified_recipients_iterator(
+            message=self.message, recipients_data=recipients_data
+        )
+        results = {lang: group for lang, render_values, group in iterator}
+
+        button_en = results["en_US"].get("button_access", {}).get("title", "")
+        button_fr = results["fr_FR"].get("button_access", {}).get("title", "")
+
+        self.assertNotEqual(
+            button_en,
+            button_fr,
+            "The button text is identical, the context language was not fetched correctly.",
+        )
+
+        self.assertEqual(
+            button_en, "View Sales Order", f"Expected 'View Sales Order', got '{button_en}'"
+        )
+        self.assertEqual(
+            button_fr, "Voir Commande client", f"Expected 'Voir Commande client', got '{button_fr}'"
+        )

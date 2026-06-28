@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 from odoo.http import request, route
 from odoo.tools import consteq
 from odoo.tools.image import image_data_uri
-from odoo.tools.translate import _
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers.portal import PaymentPortal
@@ -29,25 +28,26 @@ class Cart(PaymentPortal):
         :return: The rendered cart page.
         :rtype: str
         """
-        if not request.website.has_ecommerce_access():
+        if not self.env.website.has_ecommerce_access():
             return request.redirect("/web/login")
 
         order_sudo = request.cart
 
         values = {}
         if id and access_token:
-            abandoned_order = request.env["sale.order"].sudo().browse(int(id)).exists()
+            abandoned_order = self.env["sale.order"].sudo().browse(int(id)).exists()
             if not abandoned_order or not consteq(
                 abandoned_order.access_token, access_token
             ):  # wrong token (or SO has been deleted)
                 raise NotFound
-            if abandoned_order.state != "draft":  # abandoned cart already finished
+            if abandoned_order.state not in ("draft", "sent"):  # abandoned cart already finished
                 values.update({"abandoned_proceed": True})
             elif revive_method == "squash" or (
                 revive_method == "merge" and not request.session.get("sale_order_id")
             ):  # restore old cart or merge with unexistant
                 request.session["sale_order_id"] = abandoned_order.id
-                return request.redirect("/shop/cart")
+                request.cart = abandoned_order
+                order_sudo = abandoned_order
             elif revive_method == "merge":
                 abandoned_order.order_line.write({"order_id": request.session["sale_order_id"]})
                 abandoned_order.action_cancel()
@@ -61,7 +61,7 @@ class Cart(PaymentPortal):
 
         values.update({
             "website_sale_order": order_sudo,
-            "date": fields.Date.today(),
+            "date": fields.Date.context_today(self),
             "suggested_products": [],
         })
         if order_sudo:
@@ -71,7 +71,7 @@ class Cart(PaymentPortal):
             values["suggested_products"] = order_sudo._cart_accessories()
             values.update(self._get_express_shop_payment_values(order_sudo))
 
-        values.update(request.website._get_checkout_step_values())
+        values.update(self.env.website._get_checkout_step_values("/shop/cart"))
         values.update(self._cart_values(**post))
         values.update(self._prepare_order_history())
         return request.render("website_sale.cart", values)
@@ -120,14 +120,14 @@ class Cart(PaymentPortal):
         :return: The values
         :rtype: dict
         """
-        order_sudo = request.cart or request.website._create_cart()
+        order_sudo = request.cart or self.env.website._create_cart()
         # Do not allow float values in ecommerce by default
         quantity = (quantity and int(quantity)) or 1
 
-        product = request.env["product.product"].browse(product_id).exists()
+        product = self.env["product.product"].browse(product_id).exists()
         if not product or not product._is_add_to_cart_allowed():
             raise UserError(
-                _("The given product does not exist therefore it cannot be added to cart.")
+                self.env._("The given product does not exist therefore it cannot be added to cart.")
             )
 
         added_qty_per_line = {}
@@ -150,11 +150,7 @@ class Cart(PaymentPortal):
         if linked_products and values["line_id"]:
             for product_data in linked_products:
                 product_sudo = (
-                    request
-                    .env["product.product"]
-                    .sudo()
-                    .browse(product_data["product_id"])
-                    .exists()
+                    self.env["product.product"].sudo().browse(product_data["product_id"]).exists()
                 )
                 if product_data["quantity"] and (
                     not product_sudo
@@ -166,7 +162,9 @@ class Cart(PaymentPortal):
                     )
                 ):
                     raise UserError(
-                        _("The given product does not exist therefore it cannot be added to cart.")
+                        self.env._(
+                            "The given product does not exist therefore it cannot be added to cart."
+                        )
                     )
 
                 product_values = order_sudo.with_context(skip_cart_verification=True)._cart_add(
@@ -204,15 +202,14 @@ class Cart(PaymentPortal):
                 added_qty_per_line[product_values["line_id"]] = product_values["added_qty"]
 
         warning = values.pop("warning", "")
-        if is_combo and order_sudo._check_combo_quantities(updated_line):
+        if is_combo and (changed_reason := order_sudo._check_combo_quantities(updated_line)):
             # If quantities were modified through `_check_combo_quantities`, the added qty per line
-            # must be adapted accordingly, and the returned warning should be the final one saved
-            # on the combo line.
+            # must be adapted accordingly, and the final returned warning should be the reason.
             added_qty_per_line = {
                 line.id: updated_line.product_uom_qty
                 for line in (updated_line + updated_line.linked_line_ids)
             }
-            warning = updated_line.shop_warning
+            warning = changed_reason
             values["quantity"] = updated_line.product_uom_qty
 
         # Recompute delivery prices & other cart stuff (loyalty rewards)
@@ -220,7 +217,7 @@ class Cart(PaymentPortal):
 
         # The validity of a combo product line can only be checked after creating all of its combo
         # item lines.
-        main_product_line = request.env["sale.order.line"].browse(values["line_id"])
+        main_product_line = self.env["sale.order.line"].browse(values["line_id"])
         if main_product_line.product_type == "combo":
             main_product_line._check_validity()
 
@@ -235,6 +232,8 @@ class Cart(PaymentPortal):
             notifications.append({"type": "item_added", "data": notification})
 
         if warning:
+            # Store the warning on the order line so the cart page can show its source to the user.
+            (updated_line or order_sudo)._add_warning_alert(warning)
             notifications.append({"type": "warning", "data": {"warning_message": warning}})
 
         return {
@@ -250,35 +249,30 @@ class Cart(PaymentPortal):
     def quick_add(self, product_template_id, product_id, quantity=1.0, **kwargs):
         values = self.add_to_cart(product_template_id, product_id, quantity=quantity, **kwargs)
 
-        IrUiView = request.env["ir.ui.view"]
         order_sudo = request.cart
-        values["website_sale.cart_lines"] = IrUiView._render_template(
-            "website_sale.cart_lines",
-            {
-                "website_sale_order": order_sudo,
-                "date": fields.Date.today(),
-                "suggested_products": order_sudo._cart_accessories(),
-            },
-        )
-        values["website_sale.shorter_cart_summary"] = IrUiView._render_template(
+        values.update(self._get_updated_cart_page_values(order_sudo))
+        # If the cart was empty, no cart summary was rendered on the page. However, we just
+        # added a product, so render it now.
+        values["website_sale.shorter_cart_summary"] = self.env.website._render_template(
             "website_sale.shorter_cart_summary",
             {
                 "website_sale_order": order_sudo,
                 "show_shorter_cart_summary": True,
                 **self._get_express_shop_payment_values(order_sudo),
-                **request.website._get_checkout_step_values(),
+                **self.env.website._get_checkout_step_values("/shop/cart"),
             },
         )
-        values["website_sale.quick_reorder_history"] = IrUiView._render_template(
+        # Products already in the cart should not appear in quick reorder suggestions.
+        # We just added one, so refresh the quick reorder view.
+        values["website_sale.quick_reorder_history"] = self.env.website._render_template(
             "website_sale.quick_reorder_history",
             {"website_sale_order": order_sudo, **self._prepare_order_history()},
         )
-        values["cart_ready"] = order_sudo._is_cart_ready()
         return values
 
     def _get_express_shop_payment_values(self, order, **_kwargs):
         payment_form_values = CustomerPortal._get_payment_values(
-            self, order, website_id=request.website.id, is_express_checkout=True
+            self, order, website_id=self.env.website.id, is_express_checkout=True
         )
         payment_form_values.update({
             "payment_access_token": payment_form_values.pop("access_token"),  # Rename the key.
@@ -286,20 +280,20 @@ class Cart(PaymentPortal):
             "minor_amount": payment_utils.to_minor_currency_units(
                 order._get_amount_total_excluding_delivery(), order.currency_id
             ),
-            "merchant_name": request.website.name,
+            "merchant_name": self.env.website.name,
             "transaction_route": f"/shop/payment/transaction/{order.id}",
             "express_checkout_route": WebsiteSale._express_checkout_route,
             "landing_route": "/shop/payment/validate",
-            "payment_method_unknown_id": request.env.ref("payment.payment_method_unknown").id,
             "shipping_info_required": order._has_deliverable_products(),
-            # Todo: remove in master
-            "delivery_amount": payment_utils.to_minor_currency_units(
-                order.amount_total - order._compute_amount_total_without_delivery(),
-                order.currency_id,
-            ),
             "shipping_address_update_route": WebsiteSale._express_checkout_delivery_route,
         })
-        if request.website.is_public_user():
+        provider_sudo = payment_form_values["providers_sudo"][:1]
+        if provider_sudo:
+            payment_form_values["express_checkout_provider_sudo"] = provider_sudo
+            payment_form_values["payment_method_unknown_id"] = provider_sudo._get_pm_from_code(
+                "unknown"
+            ).id
+        if self.env.website.is_public_user():
             payment_form_values["partner_id"] = -1
         return payment_form_values
 
@@ -324,7 +318,6 @@ class Cart(PaymentPortal):
         """
         order_sudo = request.cart
         quantity = int(quantity)  # Do not allow float values in ecommerce by default
-        IrUiView = request.env["ir.ui.view"]
 
         # This method must be only called from the cart page BUT in some advanced logic
         # eg. website_sale_loyalty, a cart line could be a temporary record without id.
@@ -335,32 +328,46 @@ class Cart(PaymentPortal):
             ].id
 
         values = order_sudo._cart_update_line_quantity(line_id, quantity, **kwargs)
-
-        values["cart_quantity"] = order_sudo.cart_quantity
-        values["cart_ready"] = order_sudo._is_cart_ready()
-        values["amount"] = order_sudo.amount_total
-        values["minor_amount"] = (
-            order_sudo
-            and payment_utils.to_minor_currency_units(
-                order_sudo.amount_total, order_sudo.currency_id
-            )
-        ) or 0.0
-        values["website_sale.cart_lines"] = IrUiView._render_template(
-            "website_sale.cart_lines",
-            {
-                "website_sale_order": order_sudo,
-                "date": fields.Date.today(),
-                "suggested_products": order_sudo._cart_accessories(),
-            },
-        )
-        values["website_sale.total"] = IrUiView._render_template(
-            "website_sale.total", {"website_sale_order": order_sudo}
-        )
-        values["website_sale.quick_reorder_history"] = IrUiView._render_template(
+        values.update(self._get_updated_cart_page_values(order_sudo))
+        # Products already in the cart should not appear in quick reorder suggestions.
+        # Since we might have cleared the line (quantity == 0), we need to refresh the view.
+        values["website_sale.quick_reorder_history"] = self.env.website._render_template(
             "website_sale.quick_reorder_history",
             {"website_sale_order": order_sudo, **self._prepare_order_history()},
         )
         return values
+
+    def _get_updated_cart_page_values(self, order_sudo):
+        """Construct the values needed to update the UI after a cart update.
+
+        :param sale.order order_sudo: The current cart order.
+        :rtype: dict
+        """
+        IrUiView = self.env["ir.ui.view"]
+
+        return {
+            "cart_has_blocking_alerts": order_sudo._has_blocking_alerts(),
+            "cart_quantity": order_sudo.cart_quantity,
+            "amount": order_sudo.amount_total,
+            "minor_amount": payment_utils.to_minor_currency_units(
+                order_sudo.amount_total, order_sudo.currency_id
+            ),
+            "website_sale.cart_lines": IrUiView._render_template(
+                "website_sale.cart_lines",
+                {
+                    "website_sale_order": order_sudo,
+                    "date": fields.Date.today(),
+                    "suggested_products": order_sudo._cart_accessories(),
+                },
+            ),
+            "website_sale.total": IrUiView._render_template(
+                "website_sale.total", {"website_sale_order": order_sudo, **self._total_values()}
+            ),
+        }
+
+    def _total_values(self):
+        """Pass additional values when rendering the 'website_sale.total' template."""
+        return {}
 
     def _prepare_order_history(self):
         """Prepare the order history of the current user.
@@ -387,14 +394,14 @@ class Cart(PaymentPortal):
 
         # Get the last 10 confirmed orders from the current website user.
         previous_orders_lines_sudo = (
-            request
+            self
             .env["sale.order"]
             .sudo()
             .search(
                 [
-                    ("partner_id", "=", request.env.user.partner_id.id),
+                    ("partner_id", "=", self.env.user.partner_id.id),
                     ("state", "=", "sale"),
-                    ("website_id", "=", request.website.id),
+                    ("website_id", "=", self.env.website.id),
                 ],
                 order="date_order desc",
                 limit=10,
@@ -403,7 +410,7 @@ class Cart(PaymentPortal):
         )
 
         # Prepare the order history.
-        SaleOrderLineSudo = request.env["sale.order.line"].sudo()
+        SaleOrderLineSudo = self.env["sale.order.line"].sudo()
         cart_lines_sudo = request.cart.order_line if request.cart else SaleOrderLineSudo
         seen_lines_sudo = SaleOrderLineSudo
         lines_per_order_date = {}
@@ -414,8 +421,8 @@ class Cart(PaymentPortal):
                 line_sudo.linked_line_id.product_type == "combo"
                 or not line_sudo._is_sellable()
                 or (
-                    request.website.prevent_sale
-                    and request.website._prevent_product_sale(
+                    self.env.website.prevent_sale
+                    and self.env.website._prevent_product_sale(
                         line_sudo.product_id,
                         line_sudo.product_id._get_combination_info_variant()["price"] == 0,
                     )
@@ -434,7 +441,7 @@ class Cart(PaymentPortal):
             seen_lines_sudo |= line_sudo
 
             # Group lines by date.
-            days_ago = (fields.Date.today() - line_sudo.order_id.date_order.date()).days
+            days_ago = (fields.Date.context_today(self) - line_sudo.order_id.date_order.date()).days
             if days_ago == 0:
                 line_group_label = self.env._("Today")
             elif days_ago == 1:
@@ -546,7 +553,7 @@ class Cart(PaymentPortal):
             ):
                 infos["image_url"] = image_data_uri(combo_item.product_id.image_128)
 
-        if line.product_template_id._has_multiple_uoms():
+        if line.product_id._has_multiple_uoms():
             infos["uom_name"] = line.product_uom_id.name
 
         return infos

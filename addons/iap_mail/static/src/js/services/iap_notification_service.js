@@ -1,8 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-import { markup } from "@odoo/owl";
-
 export const iapNotificationService = {
     dependencies: ["bus_service", "notification"],
 
@@ -24,14 +22,16 @@ export const iapNotificationService = {
         }
 
         function displayCreditErrorNotification(params) {
-            const message = markup`
-                <a class='btn btn-link' href='${params.get_credits_url}' target='_blank'>
-                    <i class='oi oi-arrow-right'></i>
-                    ${_t("Buy more credits")}
-                </a>`;
-            notification.add(message, {
-                title: params.title,
+            notification.add(params.title, {
                 type: "danger",
+                buttons: [
+                    {
+                        name: _t("Buy"),
+                        onClick: () => {
+                            window.open(params.get_credits_url, '_blank');
+                        }
+                    }
+                ]
             });
         }
     },

@@ -13,7 +13,7 @@ Manage time off requests and allocations
 
 This application controls the time off schedule of your company. It allows employees to request time off. Then, managers can review requests for time off and approve or reject them. This way you can control the overall time off planning for the company or department.
 
-You can configure several kinds of time off (sickness, paid days, ...) and allocate time off to an employee or department quickly using time off allocation. An employee can also make a request for more days off by making a new time off allocation. It will increase the total of available days for that time off type (if the request is accepted).
+You can configure several kinds of time off (sickness, paid days, ...) and allocate time off to an employee or department quickly using time off allocation. An employee can also make a request for more days off by making a new time off allocation. It will increase the total of available days for that time type (if the request is accepted).
 
 You can keep track of time off in different ways by following reports:
 
@@ -34,15 +34,14 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'data/mail_template_data.xml',
 
         'security/hr_holidays_security.xml',
-        'security/ir.model.access.csv',
 
         'wizard/hr_holidays_cancel_leave_views.xml',
         'wizard/hr_holidays_summary_employees_views.xml',
         'wizard/hr_leave_generate_multi_wizard_views.xml',
         'wizard/hr_leave_allocation_generate_multi_wizard_views.xml',
+        'wizard/load_public_holiday_wizard_views.xml',
 
         'views/resource_views.xml',
-        'views/hr_employee_departure_views.xml',
         'views/hr_leave_views.xml',
         'views/hr_work_entry_type_views.xml',
         'views/hr_leave_allocation_views.xml',
@@ -60,6 +59,29 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
 
         'views/hr_views.xml',
         'views/hr_holidays_views.xml',
+        'security/ir.access.csv',
+    ],
+    'other_files': [
+        'data/public_holidays/public_holidays_au.csv',
+        'data/public_holidays/public_holidays_be.csv',
+        'data/public_holidays/public_holidays_ch.csv',
+        'data/public_holidays/public_holidays_eg.csv',
+        'data/public_holidays/public_holidays_hk.csv',
+        'data/public_holidays/public_holidays_in.csv',
+        'data/public_holidays/public_holidays_jo.csv',
+        'data/public_holidays/public_holidays_ke.csv',
+        'data/public_holidays/public_holidays_lt.csv',
+        'data/public_holidays/public_holidays_lu.csv',
+        'data/public_holidays/public_holidays_ma.csv',
+        'data/public_holidays/public_holidays_mx.csv',
+        'data/public_holidays/public_holidays_my.csv',
+        'data/public_holidays/public_holidays_nl.csv',
+        'data/public_holidays/public_holidays_pl.csv',
+        'data/public_holidays/public_holidays_ro.csv',
+        'data/public_holidays/public_holidays_sa.csv',
+        'data/public_holidays/public_holidays_sk.csv',
+        'data/public_holidays/public_holidays_tr.csv',
+        'data/public_holidays/public_holidays_us.csv',
     ],
     'demo': [
         'data/hr_holidays_demo.xml',
@@ -67,6 +89,8 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
     'application': True,
     'assets': {
         'web.assets_backend': [
+            "hr_holidays/static/src/core/common/**/*",
+            "hr_holidays/static/src/core/web/**/*",
             'hr_holidays/static/src/**/*',
             ('remove', 'hr_holidays/static/src/views/graph/**'),
             # Don't include dark mode files in light mode
@@ -80,6 +104,10 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         ],
         'im_livechat.assets_embed_core': [
             'hr_holidays/static/src/core/common/**/*',
+        ],
+        'im_livechat.embed_assets_unit_tests_setup': [
+            'hr_holidays/static/tests/hr_holidays_test_helpers.js',
+            'hr_holidays/static/tests/mock_server/**/*',
         ],
         'mail.assets_public': [
             'hr_holidays/static/src/core/common/**/*',

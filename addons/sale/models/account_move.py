@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import OrderedSet, groupby
 
@@ -176,7 +176,7 @@ class AccountMove(models.Model):
                 for sale_line in line.sale_line_ids:
                     todo.add((sale_line.order_id, invoice.name))
         for order, name in todo:
-            order.message_post(body=_("Invoice %s paid", name))
+            order.message_post(body=self.env._("Invoice %s paid", name))
         return res
 
     def _action_invoice_ready_to_be_sent(self):
@@ -254,10 +254,7 @@ class AccountMove(models.Model):
         for order in self.line_ids.sale_line_ids.order_id:
             order_amount = min(self._get_sale_order_invoiced_amount(order), order.amount_to_invoice)
             order_amount_company = order.currency_id._convert(
-                max(order_amount, 0),
-                self.company_id.currency_id,
-                self.company_id,
-                fields.Date.context_today(self),
+                max(order_amount, 0), self.company_id.currency_id, self.company_id
             )
             exclude_amount += order_amount_company
         return exclude_amount
@@ -283,7 +280,7 @@ class AccountMove(models.Model):
             lambda line: line._is_line_reinvoicable()
         )
         if not so_lines:
-            return self.env['account.analytic.line']
+            return self.env["account.analytic.line"]
 
         return (
             self

@@ -548,7 +548,7 @@ test("multi_create: input validation (datetime field)", async () => {
 
 test.tags("desktop");
 test("multi_create: use state to keep values of inputs", async () => {
-    onRpc("event.type", "get_formview_action", ({ args, model }) => ({
+    onRpc("event.type", "get_record_default_action", ({ args, model }) => ({
         type: "ir.actions.act_window",
         res_model: model,
         target: "current",

@@ -8,6 +8,7 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
+import { setIframeInput } from "@html_editor/../tests/tours/helpers/iframe_input";
 
 const snippets = [
     {
@@ -56,7 +57,6 @@ function addCheck(steps, checkX, checkNoX, xType, noSwitch = false) {
     const step = {
         trigger: selectorCheckX || selectorCheckNoX,
         content: `The correct ${name} is marked as selected`,
-        tooltipPosition: "bottom",
     };
     if (!noSwitch) {
         steps.push(switchTo(xType, name));
@@ -101,7 +101,6 @@ function checkAndUpdateBackgroundColor({
         steps.push({
             trigger: finalSelector,
             content: "The selected colors have been applied (CC AND (BG or GRADIENT))",
-            tooltipPosition: "bottom",
             run: finalRun,
         });
     }
@@ -314,9 +313,17 @@ registerWebsitePreviewTour(
         }),
         ...updateAndCheckCustomGradient({
             updateStep: {
-                trigger: ".o_popover .o_color_picker_inputs .o_hex_div input",
+                trigger: ".o_popover .o_color_picker_inputs .o_hex_div iframe.o_hex_iframe",
                 content: "Pick step color",
-                run: "edit #FF0000",
+                async run({ waitUntil }) {
+                    await setIframeInput(
+                        this.anchor,
+                        "input[name='hex_input']",
+                        "#FF0000",
+                        waitUntil,
+                        { eventType: "input" }
+                    );
+                },
             },
             checkGradient: "linear-gradient(135deg, #cb5eee 0%, #FF0000 45%, #4be1ec 100%)",
         }),
@@ -331,9 +338,12 @@ registerWebsitePreviewTour(
         // Linear
         ...updateAndCheckCustomGradient({
             updateStep: {
-                trigger: ".o_popover input[name='angle']",
+                trigger: ".o_popover iframe.o_angle_iframe",
                 content: "Change angle",
-                run: "edit 50 && click .o_color_picker_inputs",
+                async run({ waitUntil }) {
+                    await setIframeInput(this.anchor, "input[name='angle_input']", 50, waitUntil);
+                    document.querySelector(".o_color_picker_inputs").click();
+                },
             },
             checkGradient: "linear-gradient(50deg, #cb5eee 0%, #4be1ec 100%)",
         }),
@@ -349,18 +359,34 @@ registerWebsitePreviewTour(
         }),
         ...updateAndCheckCustomGradient({
             updateStep: {
-                trigger: ".o_popover input[name='positionX']",
+                trigger: ".o_popover iframe.o_position_x_iframe",
                 content: "Change X position",
-                run: "edit 33 && click .o_color_picker_inputs",
+                async run({ waitUntil }) {
+                    await setIframeInput(
+                        this.anchor,
+                        "input[name='position_x_input']",
+                        33,
+                        waitUntil
+                    );
+                    document.querySelector(".o_color_picker_inputs").click();
+                },
             },
             checkGradient:
                 "radial-gradient(circle closest-side at 33% 25%, #cb5eee 0%, #4be1ec 100%)",
         }),
         ...updateAndCheckCustomGradient({
             updateStep: {
-                trigger: ".o_popover input[name='positionY']",
+                trigger: ".o_popover iframe.o_position_y_iframe",
                 content: "Change Y position",
-                run: "edit 75 && click .o_color_picker_inputs",
+                async run({ waitUntil }) {
+                    await setIframeInput(
+                        this.anchor,
+                        "input[name='position_y_input']",
+                        75,
+                        waitUntil
+                    );
+                    document.querySelector(".o_color_picker_inputs").click();
+                },
             },
             checkGradient:
                 "radial-gradient(circle closest-side at 33% 75%, #cb5eee 0%, #4be1ec 100%)",

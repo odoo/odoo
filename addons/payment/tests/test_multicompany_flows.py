@@ -35,7 +35,7 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
         })
 
         cls.provider = cls.dummy_provider.copy({"company_id": cls.company_b.id})
-        cls.provider.state = "test"
+        cls.payment_method = cls.provider.payment_method_ids[:1]
 
     def test_pay_logged_in_another_company(self):
         """User pays for an amount in another company."""
@@ -72,8 +72,8 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
             ]
         }
         validation_values.update({
-            "provider_id": self.provider.id,
-            "payment_method_id": self.provider.payment_method_ids[:1].id,
+            "provider_id": self.payment_method.provider_id.id,
+            "payment_method_id": self.payment_method.id,
             "token_id": None,
             "flow": "direct",
             "tokenization_requested": False,

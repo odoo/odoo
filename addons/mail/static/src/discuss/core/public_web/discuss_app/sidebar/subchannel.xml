@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarSubchannel">
-        <Dropdown t-if="this.store.discuss.isSidebarCompact" state="this.floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu rounded-2 o-discuss-dropdownMenu border-secondary mx-2 my-0 min-w-0 ' + this.store.discussDropdownMenuClass(this)" manual="true">
+        <Dropdown t-if="this.store.discuss.isSidebarCompact" state="this.floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu rounded-3 o-discuss-dropdownMenu border-secondary mx-2 my-0 min-w-0 ' + this.store.discussDropdownMenuClass(this)" manual="true">
             <t t-call="mail.DiscussSidebarSubchannel.main"/>
             <t t-set-slot="content">
                 <UseHoverOverlay hover="this.hover">
@@ -27,16 +27,15 @@
                     <line x1="0" y1="100%" x2="100%" y2="100%" stroke="currentColor" stroke-width="3"/>
                 </svg>
             </t>
-            <button class="o-mail-DiscussSidebarChannel-subChannel o-mail-DiscussSidebar-item btn btn-secondary border-0 bg-inherit d-flex flex-grow-1 smaller rounded-2 text-start text-truncate align-items-center" t-att-title="this.store.discuss.isSidebarCompact ? undefined : this.channel.displayName" t-on-click="(ev) => this.openChannel(ev, this.channel)" t-att-class="{
+            <button class="o-mail-DiscussSidebarChannel-subChannel o-mail-DiscussSidebar-item btn btn-secondary border-0 bg-inherit d-flex flex-grow-1 smaller rounded-3 text-start text-truncate align-items-center" t-att-title="this.store.discuss.isSidebarCompact ? undefined : this.channel.displayName" t-on-click="(ev) => this.openChannel(ev, this.channel)" t-att-class="{
                 'o-active': this.channel.discussAppAsThread,
                 'px-1 py-2 mx-1 text-wrap word-break lh-1': this.store.discuss.isSidebarCompact,
                 'o-nonCompact me-1 pe-0 ps-1 o-py-0_5': !this.store.discuss.isSidebarCompact,
                 'o-unread': this.channel.self_member_id?.message_unread_counter > 0 and !this.channel.self_member_id?.mute_until_dt,
                 'opacity-50': this.channel.self_member_id?.mute_until_dt,
             }">
-                <span class="text-truncate" t-out="this.channel.displayName" t-att-class="{
-                    'o-fw-600': this.channel.self_member_id?.message_unread_counter > 0,
-                    'opacity-75 opacity-100-hover': !(this.channel.self_member_id?.message_unread_counter > 0 and !this.channel.self_member_id?.mute_until_dt),
+                <span class="o-mail-DiscussSidebar-itemName text-truncate" t-out="this.channel.displayName" t-att-class="{
+                    'o-fw-600': this.channel.self_member_id?.message_unread_counter > 0 and !this.channel.self_member_id?.mute_until_dt,
                 }" t-att-style="this.store.discuss.isSidebarCompact ? 'text-overflow: clip;' : ''"/>
                 <span class="flex-grow-1"/>
                 <t t-if="!this.store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarChannel.actions"/>

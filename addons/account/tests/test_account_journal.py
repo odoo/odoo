@@ -133,7 +133,7 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
             {"name": "OD_BLABLU"},
         ])
 
-        self.assertEqual(sorted(new_journals.mapped("code")), ["MISC1", "OD_BL"], "The journals should be set correctly")
+        self.assertEqual(sorted(new_journals.mapped("code")), ["MISC1", "OD_BLAB"], "The journals should be set correctly")
 
     def test_archive_used_journal(self):
         journal = self.env['account.journal'].create({
@@ -571,3 +571,15 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
                 'payment_account_id': outstanding_payment_account.id if index == 0 else False,
             } for index, name in enumerate(outbound_method_lines_names)
         ])
+
+    def test_new_purchase_journal_gets_default_account(self):
+        journal = self.env['account.journal'].create({
+            'name': 'Test Purchase',
+            'type': 'purchase',
+            'code': 'TPUR',
+        })
+        ProductCategory = self.env['product.category'].with_company(journal.company_id)
+        self.assertEqual(
+            journal.default_account_id,
+            ProductCategory._fields['property_account_expense_categ_id'].get_company_dependent_fallback(ProductCategory),
+        )

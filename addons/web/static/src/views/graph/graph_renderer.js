@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import {
     getBorderWhite,
@@ -16,7 +16,7 @@ import { loadBundle } from "@web/core/assets";
 import { renderToMarkup } from "@web/core/utils/render";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillUnmount, onWillStart, markup } from "@odoo/owl";
+import { Component, onWillUnmount, onWillStart, markup, onMounted, onPatched } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cookie } from "@web/core/browser/cookie";
@@ -136,7 +136,8 @@ export class GraphRenderer extends Component {
             await loadBundle("web.chartjs_lib");
         });
 
-        useLayoutEffect(() => this.renderChart());
+        onMounted(() => this.renderChart());
+        onPatched(() => this.renderChart());
         onWillUnmount(this.onWillUnmount);
     }
 
@@ -270,11 +271,13 @@ export class GraphRenderer extends Component {
      */
     formatValue(value, measure, allIntegers = true) {
         const largeNumber = Math.abs(value) >= 1000;
-        const widget = this.model.metaData.fieldAttrs[measure]?.widget
-        let options = this.model.metaData.fieldAttrs[measure]?.options
+        const widget = this.model.metaData.fieldAttrs[measure]?.widget;
+        let options = this.model.metaData.fieldAttrs[measure]?.options;
         if (widget) {
             const formatter = formatters.get(widget);
-            options = formatter.extractOptions ? formatter.extractOptions({ options }) : {};
+            options = formatter.extractOptions
+                ? formatter.extractOptions({ options, attrs: {} })
+                : {};
             return formatter(value, options);
         }
         if (allIntegers && !largeNumber) {

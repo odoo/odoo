@@ -22,6 +22,7 @@ class AsiaPayCommon(PaymentCommon):
         cls.provider = cls.asiapay
 
         cls.redirect_payment_data = {"Ref": cls.reference}
+        cls.webhook_payment_data_signature = "3e5bf55d9a23969130a6686db7aa4f0230956d0a"
         cls.webhook_payment_data = {
             "src": "dummy",
             "prc": "dummy",
@@ -31,5 +32,5 @@ class AsiaPayCommon(PaymentCommon):
             "Cur": cls.currency.name,
             "Amt": cls.amount,
             "payerAuth": "dummy",
-            "secureHash": "3e5bf55d9a23969130a6686db7aa4f0230956d0a",
+            "secureHash": cls.webhook_payment_data_signature,
         }

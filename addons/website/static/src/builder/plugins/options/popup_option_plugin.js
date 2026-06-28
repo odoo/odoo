@@ -4,14 +4,15 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class PopupOptionPlugin extends Plugin {
     static id = "PopupOption";
-    static dependencies = ["anchor", "visibility", "history", "popupVisibilityPlugin"];
+    static dependencies = ["anchor", "visibility", "domObserver", "popupVisibilityPlugin"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         dropzone_selectors: {
             selector: ".s_popup",
             exclude: "#website_cookies_bar",
-            excludeAncestor: ".s_popup, .s_table_of_content, .s_tabs, .s_tabs_images",
+            excludeAncestor:
+                ".s_popup, .s_table_of_content, .s_tabs, .s_tabs_images, .position-sticky",
             dropIn: ":not(p).oe_structure:not(.oe_structure_solo):not([data-snippet] *), :not(.o_mega_menu):not(p)[data-oe-type=html]:not([data-snippet] *)",
         },
         builder_actions: {
@@ -34,6 +35,7 @@ export class PopupOptionPlugin extends Plugin {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         on_will_remove_handlers: this.onWillRemove.bind(this),
         no_parent_containers: ".s_popup",
+        anchor_excluded_selectors: ".s_popup",
     };
 
     onCloned({ cloneEl }) {
@@ -45,7 +47,7 @@ export class PopupOptionPlugin extends Plugin {
     onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(".s_popup")) {
             this.assignUniqueID(snippetEl);
-            this.dependencies.history.addCustomMutation({
+            this.dependencies.domObserver.stageCustomMutation({
                 apply: () => {
                     this.dependencies.visibility.toggleTargetVisibility(snippetEl, true);
                 },
@@ -58,7 +60,7 @@ export class PopupOptionPlugin extends Plugin {
 
     onWillRemove(el) {
         this.dependencies.visibility.toggleTargetVisibility(el, false);
-        this.dependencies.history.addCustomMutation({
+        this.dependencies.domObserver.stageCustomMutation({
             apply: () => {
                 this.dependencies.visibility.toggleTargetVisibility(el, false);
             },
@@ -78,16 +80,19 @@ export class PopupOptionPlugin extends Plugin {
 // current page only.
 export class MoveBlockAction extends BuilderAction {
     static id = "moveBlock";
+    setup() {
+        this.preview = false;
+    }
     isApplied({ editingElement, value }) {
         return editingElement.closest("#o_shared_blocks")
             ? value === "allPages"
             : value === "currentPage";
     }
-    apply({ editingElement, value }) {
+    apply({ editingElement, value, params: { mainParam: targetSelector } }) {
         const selector = value === "allPages" ? "#o_shared_blocks" : "main .oe_structure.o_savable";
         const whereEl = this.editable.querySelector(selector);
-        const popupEl = editingElement.closest(".s_popup");
-        whereEl.insertAdjacentElement("afterbegin", popupEl);
+        const targetEl = editingElement.closest(targetSelector);
+        whereEl.insertAdjacentElement("afterbegin", targetEl);
     }
 }
 export class SetBackdropAction extends BuilderAction {

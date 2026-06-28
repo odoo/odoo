@@ -1,4 +1,5 @@
-import { useEnv, useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
+import { useEnv } from "@web/owl2/utils";
 import { DROPDOWN_NESTING } from "@web/core/dropdown/_behaviours/dropdown_nesting";
 import { Reactive } from "@web/core/utils/reactive";
 
@@ -35,7 +36,7 @@ export class DropdownState extends Reactive {
  * @returns {DropdownState}
  */
 export function useDropdownState({ onOpen, onClose } = {}) {
-    return useState(new DropdownState({ onOpen, onClose }));
+    return proxy(new DropdownState({ onOpen, onClose }));
 }
 
 /**

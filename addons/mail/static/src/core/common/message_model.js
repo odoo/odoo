@@ -2,17 +2,17 @@ import { isEmptyBlock } from "@html_editor/utils/dom_info";
 
 import { fields, Record } from "@mail/model/export";
 import {
-    EMOJI_REGEX,
     convertBrToLineBreak,
     decorateEmojis,
+    EMOJI_REGEX,
     generateEmojisOnHtml,
-    getNonEditableMentions,
+    prepareBodyForEditing,
     htmlToTextContentInline,
+    htmlToHtmlInline,
 } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
-import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
@@ -20,6 +20,7 @@ import { createDocumentFragmentFromContent, createElementWithContent } from "@we
 import { url } from "@web/core/utils/urls";
 
 import { markup } from "@odoo/owl";
+import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 import { discussComponentRegistry } from "./discuss_component_registry";
 
 const { DateTime } = luxon;
@@ -45,17 +46,13 @@ export class Message extends Record {
     call_history_ids = fields.Many("discuss.call.history");
     richBody = fields.Html("", {
         compute() {
-            if (!this.store.emojiLoader.loaded) {
-                loadEmoji();
-            }
+            emojiLoader.load();
             return decorateEmojis(this.body) ?? "";
         },
     });
     richTranslationValue = fields.Html("", {
         compute() {
-            if (!this.store.emojiLoader.loaded) {
-                loadEmoji();
-            }
+            emojiLoader.load();
             return decorateEmojis(this.translationValue) ?? "";
         },
     });
@@ -139,7 +136,6 @@ export class Message extends Record {
     /** @type {boolean} */
     is_transient;
     message_link_preview_ids = fields.Many("mail.message.link.preview", { inverse: "message_id" });
-    /** @type {number[]} */
     parent_id = fields.One("mail.message");
     /**
      * When set, this temporary/pending message failed message post, and the
@@ -165,6 +161,7 @@ export class Message extends Record {
         },
     });
     partner_ids = fields.Many("res.partner");
+    partner_cc_ids = fields.Many("res.partner");
     /** @type {string} */
     reply_to;
     subtype_id = fields.One("mail.message.subtype");
@@ -205,8 +202,6 @@ export class Message extends Record {
     pinned_at = fields.Datetime();
     /** @type {string} */
     subject;
-    /** @type {Object[]} */
-    trackingValues = [];
     /** @type {string|undefined} */
     translationValue;
     /** @type {string|undefined} */
@@ -239,7 +234,7 @@ export class Message extends Record {
     }
 
     get bubbleColor() {
-        if (this.message_type === "notification") {
+        if (["notification", "tracking"].includes(this.message_type)) {
             return undefined;
         }
         if (!this.isSelfAuthored && !this.isNote && !this.isHighlightedFromMention) {
@@ -367,11 +362,7 @@ export class Message extends Record {
         const name = this.thread?.display_name;
         const threadName = name ? name.trim().toLowerCase() : "";
         const defaultSubject = this.default_subject ? this.default_subject.toLowerCase() : "";
-        // suggested is expected to not change much so it's best to consider it the default for display purposes
-        const suggestedSubject = this.thread?.suggestedSubject
-            ? this.thread.suggestedSubject.toLowerCase()
-            : "";
-        const candidates = new Set([defaultSubject, threadName, suggestedSubject]);
+        const candidates = new Set([defaultSubject, threadName]);
         return candidates.has(this.subject?.toLowerCase());
     }
 
@@ -394,7 +385,7 @@ export class Message extends Record {
     }
 
     get hasTextContent() {
-        return !this.isBodyEmpty || this.edited;
+        return !this.isBodyEmpty || this.subject || this.edited;
     }
 
     isEmpty = fields.Attr(false, {
@@ -413,9 +404,9 @@ export class Message extends Record {
         return (
             this.isBodyEmpty &&
             this.attachment_ids.length === 0 &&
-            this.trackingValues.length === 0 &&
             !this.subtype_id?.description &&
-            !this.poll
+            !this.poll &&
+            !this.subject
         );
     }
 
@@ -445,7 +436,7 @@ export class Message extends Record {
         if (this.author) {
             return this.getPersonaName(this.author);
         }
-        return this.email_from;
+        return this.email_from || _t("Unnamed");
     }
 
     get notificationHidden() {
@@ -484,7 +475,7 @@ export class Message extends Record {
             if (!this.body) {
                 return "";
             }
-            return decorateEmojis(htmlToTextContentInline(this.body));
+            return decorateEmojis(htmlToHtmlInline(this.body));
         },
     });
 
@@ -598,13 +589,15 @@ export class Message extends Record {
             !this.is_transient &&
                 !this.isPending &&
                 this.thread?.can_react &&
-                !this.thread.isTransient
+                !this.thread.isTransient &&
+                this.thread.has_mail_thread
         );
     }
 
     /** @param {import("models").Thread} thread  */
     canMarkAsUnread(thread) {
         return (
+            !this.isEmpty &&
             !this.needaction &&
             thread?.model !== "discuss.channel" &&
             this.self_notification?.notification_type === "inbox"
@@ -615,6 +608,7 @@ export class Message extends Record {
     canReplyTo(thread) {
         return (
             ["discuss.channel", "mail.box"].includes(thread?.model) &&
+            !this.isEmpty &&
             this.message_type !== "user_notification" &&
             !thread.channel?.composerHidden
         );
@@ -649,11 +643,7 @@ export class Message extends Record {
         this.store.env.services.notification.add(_t("Text copied"), { type: "success" });
     }
 
-    async edit(
-        body,
-        attachments = [],
-        { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
-    ) {
+    async edit(body, attachments = [], { mentionedPartners = [], mentionedRoles = [] } = {}) {
         const messageBodyEl = createElementWithContent("div", this.body);
         const updatedBodyEl = createElementWithContent("div", body);
         messageBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
@@ -662,7 +652,6 @@ export class Message extends Record {
             return;
         }
         const validMentions = this.store.getMentionsFromText(body, {
-            mentionedChannels,
             mentionedPartners,
             mentionedRoles,
             thread: this.thread,
@@ -693,25 +682,18 @@ export class Message extends Record {
     }
 
     /** @param {import("models").Thread} thread the thread where the message is being viewed when starting edition */
-    async enterEditMode(thread) {
-        const doc = createDocumentFragmentFromContent(this.body);
-        const validChannels = (
-            await Promise.all(
-                Array.from(
-                    doc.querySelectorAll(".o_channel_redirect[data-oe-model='discuss.channel']")
-                ).map(async (el) => this.store["discuss.channel"].getOrFetch(el.dataset.oeId))
-            )
-        ).filter((channel) => channel?.exists());
+    enterEditMode(thread) {
         const validRoles = Array.from(
-            doc.querySelectorAll(".o-discuss-mention[data-oe-model='res.role']")
+            createDocumentFragmentFromContent(this.body).querySelectorAll(
+                ".o-discuss-mention[data-oe-model='res.role']"
+            )
         ).map((el) => this.store["res.role"].get(el.dataset.oeId));
         const text = convertBrToLineBreak(this.body);
         if (thread?.messageInEdition) {
             thread.messageInEdition.composer = undefined;
         }
         this.composer = {
-            composerHtml: getNonEditableMentions(this.body),
-            mentionedChannels: validChannels,
+            composerHtml: prepareBodyForEditing(this.body),
             mentionedPartners: this.partner_ids,
             mentionedRoles: validRoles,
             selection: {
@@ -733,13 +715,13 @@ export class Message extends Record {
 
     /**
      * @param {Object} owner
-     * @param {import("@web/env").OdooEnv} owner.env
+     * @param {import("@odoo/owl").Signal<HTMLElement>} [rootRef]
      */
-    showDeleteConfirm(owner) {
+    showDeleteConfirm(owner, rootRef) {
         this.store.env.services.dialog.add(
             discussComponentRegistry.get("MessageDeleteDialog"),
             { message: this, onConfirm: () => this.onShowDeleteConfirm(owner) },
-            { context: owner }
+            { rootRef }
         );
     }
 
@@ -758,7 +740,12 @@ export class Message extends Record {
      * @returns {string}
      */
     getPersonaName(persona) {
-        return this.thread?.getPersonaName(persona) || persona?.displayName || persona?.name;
+        return (
+            this.thread?.getPersonaName(persona) ||
+            persona?.displayName ||
+            persona?.name ||
+            _t("Unnamed")
+        );
     }
 
     /** @param {import("models").Thread} thread  */
@@ -766,7 +753,7 @@ export class Message extends Record {
         await this.store.env.services.orm.silent.call("mail.message", "mark_as_unread", [
             [this.id],
         ]);
-        if (thread.model != "mail.box") {
+        if (!thread?.eq(this.store.history)) {
             this.store.env.services.notification.add(_t("Marked as unread"), { type: "info" });
         }
     }
@@ -822,6 +809,7 @@ export class Message extends Record {
             attachment_ids: [],
             attachment_tokens: [],
             body: "",
+            subject: "",
             partner_ids: [],
         };
     }
@@ -837,19 +825,11 @@ export class Message extends Record {
     }
 
     async addBookmark() {
-        await this.store.fetchStoreData(
-            "add_bookmark",
-            { message_id: this.id },
-            { readonly: false }
-        );
+        await this.store.fetchStoreData("add_bookmark", { message_id: this.id });
     }
 
     async removeBookmark(thread) {
-        await this.store.fetchStoreData(
-            "remove_bookmark",
-            { message_id: this.id },
-            { readonly: false }
-        );
+        await this.store.fetchStoreData("remove_bookmark", { message_id: this.id });
         this.closeNotificationFn?.();
         if (thread?.eq(this.store.bookmarkBox)) {
             this.closeNotificationFn = this.store.env.services.notification.add(

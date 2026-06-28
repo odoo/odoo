@@ -37,6 +37,9 @@ if typing.TYPE_CHECKING:
 _logger = logging.getLogger(__name__)
 
 
+_FORCED_MODULES = ('base',)
+
+
 def load_data(env: Environment, idref: IdRef, mode: LoadMode, kind: LoadKind, package: ModuleNode) -> bool:
     """
     noupdate is False, unless it is demo data
@@ -109,7 +112,7 @@ def force_demo(env: Environment) -> None:
     if env['ir.module.module'].search_count([('state', 'in', ('to install', 'to upgrade', 'to remove'))], limit=1):
         env.cr.commit()
         Registry.new(env.cr.dbname, update_module=True)
-        env.transaction.reset()
+        env.cr.rollback()
 
 
 def load_module_graph(
@@ -240,23 +243,6 @@ def load_module_graph(
                 # validate the views that have not been checked yet
                 env['ir.ui.view']._validate_module_views(module_name)
 
-            concrete_models = [model for model in model_names if not registry[model]._abstract]
-            if concrete_models:
-                env.cr.execute("""
-                    SELECT model FROM ir_model 
-                    WHERE id NOT IN (SELECT DISTINCT model_id FROM ir_model_access) AND model IN %s
-                """, [tuple(concrete_models)])
-                models = [model for [model] in env.cr.fetchall()]
-                if models:
-                    lines = [
-                        f"The models {models} have no access rules in module {module_name}, consider adding some, like:",
-                        "id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink"
-                    ]
-                    for model in models:
-                        xmlid = model.replace('.', '_')
-                        lines.append(f"{module_name}.access_{xmlid},access_{xmlid},{module_name}.model_{xmlid},base.group_user,1,0,0,0")
-                    _logger.warning('\n'.join(lines))
-
             registry.updated_modules.append(package.name)
 
             ver = adapt_version(package.manifest['version'])
@@ -266,7 +252,6 @@ def load_module_graph(
             package.state = 'installed'
             module.env.flush_all()
             module.env.cr.commit()
-            registry.signal_changes()
 
         test_time = 0.0
         test_queries = 0
@@ -363,8 +348,7 @@ def load_modules(
     cr.execute("SET SESSION lock_timeout = '15s'")
     if not modules_db.is_initialized(cr):
         if not update_module:
-            _logger.error("Database %s not initialized, you can force it with `-i base`", cr.dbname)
-            return
+            raise ImportError(f"Database {cr.dbname} not initialized, you can force it with `-i base`")
         _logger.info("Initializing database %s", cr.dbname)
         modules_db.initialize(cr)
     elif 'base' in reinit_modules:
@@ -395,6 +379,7 @@ def load_modules(
 
     report = registry._assertion_report
     env = api.Environment(cr, api.SUPERUSER_ID, {})
+    assert registry is env.registry, "Registry changed while loading!"
     load_module_graph(
         env,
         graph,
@@ -441,6 +426,15 @@ def load_modules(
 
     # STEP 3: Load marked modules (skipping base which was done in STEP 1)
     # loop this step in case extra modules' states are changed to 'to install'/'to update' during loading
+
+    graph.extend(_FORCED_MODULES)
+    for module_name in _FORCED_MODULES:
+        module = graph[module_name]
+        # `KeyError` means some direct or indirect dependencies
+        # are missing for the forced modules.
+        if module.state not in ('installed', 'to install', 'to upgrade'):
+            module.state = 'to install'
+
     while True:
         if update_module:
             states = ('installed', 'to upgrade', 'to remove', 'to install')
@@ -502,6 +496,8 @@ def load_modules(
     registry.finalize_constraints(cr)
 
     # STEP 4: Finish and cleanup installations
+    if update_module:
+        env.transaction.will_change_registry()
     if registry.updated_modules:
 
         cr.execute("SELECT model from ir_model")

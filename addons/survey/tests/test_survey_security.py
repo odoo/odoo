@@ -21,7 +21,7 @@ class TestAccess(common.TestSurveyCommon):
         self.answer_0_0 = self._add_answer_line(self.question_ft, self.answer_0, 'Test Answer')
         self.answer_0_1 = self._add_answer_line(self.question_num, self.answer_0, 5)
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     @users('user_emp')
     def test_access_survey_employee(self):
         # Create: nope
@@ -54,7 +54,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.question_ft.with_user(self.env.user).unlink()
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     @users('user_portal')
     def test_access_survey_portal(self):
         # Create: nope
@@ -87,7 +87,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.question_ft.with_user(self.env.user).unlink()
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     @users('user_public')
     def test_access_survey_public(self):
         # Create: nope
@@ -138,7 +138,7 @@ class TestAccess(common.TestSurveyCommon):
         # Unlink: all
         (self.survey | survey).unlink()
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     @users('survey_user')
     def test_access_survey_survey_user(self):
         # Restrict common survey to survey_manager
@@ -170,7 +170,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             restricted_to_other_survey.with_user(self.env.user).unlink()
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     @users('user_emp')
     def test_access_answers_employee(self):
         # Create: nope
@@ -199,7 +199,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.answer_0_0.with_user(self.env.user).unlink()
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     @users('user_portal')
     def test_access_answers_portal(self):
         # Create: nope
@@ -228,7 +228,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.answer_0_0.with_user(self.env.user).unlink()
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     @users('user_public')
     def test_access_answers_public(self):
         # Create: nope
@@ -257,7 +257,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.answer_0_0.with_user(self.env.user).unlink()
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     @users('survey_user')
     def test_access_answers_survey_user(self):
         survey_own = self.env['survey.survey'].create({'title': 'Other'})

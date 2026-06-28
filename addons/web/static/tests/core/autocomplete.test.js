@@ -1,6 +1,5 @@
 import { expect, test } from "@odoo/hoot";
 import {
-    Deferred,
     animationFrame,
     hover,
     isInViewPort,
@@ -15,7 +14,7 @@ import {
     queryRect,
     runAllTimers,
 } from "@odoo/hoot-dom";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -68,7 +67,7 @@ function item(label, onSelect, data = {}) {
 test("can be rendered", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Hello'" sources="sources"/>`;
+        static template = xml`<AutoComplete value="'Hello'" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources(() => [item("World"), item("Hello")]);
@@ -93,10 +92,10 @@ test("can be rendered", async () => {
 test.todo("select option with onChange", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="state.value" sources="sources" onChange.bind="onChange" />`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources" onChange.bind="this.onChange" />`;
         static props = [];
 
-        state = useState({ value: "" });
+        state = proxy({ value: "" });
         sources = buildSources(() => [
             item("/contactus", this.onSelect.bind(this)),
             item("/contactus-thank-you", this.onSelect.bind(this)),
@@ -135,10 +134,10 @@ test.todo("select option with onChange", async () => {
 test("select option", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="state.value" sources="sources"/>`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources"/>`;
         static props = [];
 
-        state = useState({ value: "Hello" });
+        state = proxy({ value: "Hello" });
         sources = buildSources(() => [
             item("World", this.onSelect.bind(this)),
             item("Hello", this.onSelect.bind(this)),
@@ -169,13 +168,13 @@ test("autocomplete with resetOnSelect='true'", async () => {
         static components = { AutoComplete };
         static template = xml`
             <div>
-                <div class= "test_value" t-out="state.value"/>
-                <AutoComplete value="''" sources="sources" resetOnSelect="true"/>
+                <div class="test_value" t-out="this.state.value"/>
+                <AutoComplete value="''" sources="this.sources" resetOnSelect="true"/>
             </div>
         `;
         static props = [];
 
-        state = useState({ value: "Hello" });
+        state = proxy({ value: "Hello" });
         sources = buildSources(() => [
             item("World", this.onSelect.bind(this)),
             item("Hello", this.onSelect.bind(this)),
@@ -202,7 +201,7 @@ test("autocomplete with resetOnSelect='true'", async () => {
 test("open dropdown on input", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Hello'" sources="sources"/>`;
+        static template = xml`<AutoComplete value="'Hello'" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources(() => [item("World"), item("Hello")]);
@@ -219,7 +218,7 @@ test("open dropdown on input", async () => {
 test("cancel result on escape keydown", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Hello'" sources="sources" autoSelect="true"/>`;
+        static template = xml`<AutoComplete value="'Hello'" sources="this.sources" autoSelect="true"/>`;
         static props = [];
 
         sources = buildSources(() => [item("World"), item("Hello")]);
@@ -242,7 +241,7 @@ test("cancel result on escape keydown", async () => {
 test("select input text on first focus", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Bar'" sources="sources"/>`;
+        static template = xml`<AutoComplete value="'Bar'" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources(() => [item("Bar")]);
@@ -260,7 +259,7 @@ test("scroll outside should cancel result", async () => {
         static template = xml`
             <div class="autocomplete_container overflow-auto" style="max-height: 100px;">
                 <div style="height: 1000px;">
-                    <AutoComplete value="'Hello'" sources="sources" autoSelect="true"/>
+                    <AutoComplete value="'Hello'" sources="this.sources" autoSelect="true"/>
                 </div>
             </div>
         `;
@@ -289,7 +288,7 @@ test("scroll inside should keep dropdown open", async () => {
         static template = xml`
             <div class="autocomplete_container overflow-auto" style="max-height: 100px;">
                 <div style="height: 1000px;">
-                    <AutoComplete value="'Hello'" sources="sources"/>
+                    <AutoComplete value="'Hello'" sources="this.sources"/>
                 </div>
             </div>
         `;
@@ -312,7 +311,7 @@ test("scroll inside should keep dropdown open", async () => {
 test("losing focus should cancel result", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Hello'" sources="sources" autoSelect="true"/>`;
+        static template = xml`<AutoComplete value="'Hello'" sources="this.sources" autoSelect="true"/>`;
         static props = [];
 
         sources = buildSources(() => [item("World"), item("Hello")]);
@@ -335,7 +334,7 @@ test("losing focus should cancel result", async () => {
 test("click out after clearing input", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Hello'" sources="sources"/>`;
+        static template = xml`<AutoComplete value="'Hello'" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources(() => [item("World"), item("Hello")]);
@@ -358,14 +357,14 @@ test("click out after clearing input", async () => {
 test("open twice should not display previous results", async () => {
     const ITEMS = [item("AB"), item("AC"), item("BC")];
 
-    let def = new Deferred();
+    let def = Promise.withResolvers();
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources(async (request) => {
-            await def;
+            await def.promise;
             return ITEMS.filter((option) => option.label.includes(request));
         });
     }
@@ -384,7 +383,7 @@ test("open twice should not display previous results", async () => {
     expect(".o-autocomplete--dropdown-item").toHaveCount(3);
     expect(".fa-spin").toHaveCount(0);
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o-autocomplete input").fill("A", { confirm: false });
     await runAllTimers();
     expect(".o-autocomplete--dropdown-item").toHaveCount(1);
@@ -398,7 +397,7 @@ test("open twice should not display previous results", async () => {
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
 
     // re-open the dropdown -> should not display the previous results
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o-autocomplete input").click();
     await runAllTimers();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
@@ -409,7 +408,7 @@ test("open twice should not display previous results", async () => {
 test("press enter on autocomplete with empty source", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources(() => []);
@@ -436,7 +435,7 @@ test("press enter on autocomplete with empty source (2)", async () => {
 
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources((request) =>
@@ -467,7 +466,7 @@ test.tags("desktop");
 test("autofocus=true option work as expected", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
-        static template = xml`<AutoComplete value="'Hello'" sources="sources" autofocus="true"/>`;
+        static template = xml`<AutoComplete value="'Hello'" sources="this.sources" autofocus="true"/>`;
         static props = [];
 
         sources = buildSources(() => [item("World"), item("Hello")]);
@@ -482,13 +481,13 @@ test("autocomplete in edition keep edited value before select option", async () 
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`
-            <button class="myButton" t-on-mouseover="onHover">My button</button>
-            <AutoComplete value="this.state.value" sources="sources"/>
+            <button class="myButton" t-on-mouseover="this.onHover">My button</button>
+            <AutoComplete value="this.state.value" sources="this.sources"/>
         `;
         static props = [];
 
         sources = buildSources(() => [item("My Selection", this.onSelect.bind(this))]);
-        state = useState({ value: "Hello" });
+        state = proxy({ value: "Hello" });
 
         onHover() {
             this.state.value = "My Click";
@@ -508,8 +507,6 @@ test("autocomplete in edition keep edited value before select option", async () 
     expect(".o-autocomplete input").toHaveValue("Yolo");
 
     // Leave inEdition mode when selecting an option
-    await contains(".o-autocomplete input").click();
-    await runAllTimers();
     await contains(queryFirst(".o-autocomplete--dropdown-item")).click();
     expect(".o-autocomplete input").toHaveValue("My Selection");
 
@@ -524,12 +521,12 @@ test("autocomplete in edition keep edited value before blur", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`
-            <button class="myButton" t-on-mouseover="onHover">My button</button>
+            <button class="myButton" t-on-mouseover="this.onHover">My button</button>
             <AutoComplete value="this.state.value" sources="[]"/>
         `;
         static props = [];
 
-        state = useState({ value: "Hello" });
+        state = proxy({ value: "Hello" });
 
         onHover() {
             this.state.value = `My Click ${count++}`;
@@ -559,16 +556,16 @@ test("correct sequence of blur, focus and select", async () => {
         static components = { AutoComplete };
         static template = xml`
             <AutoComplete
-                value="state.value"
-                sources="sources"
-                onBlur.bind="onBlur"
-                onChange.bind="onChange"
+                value="this.state.value"
+                sources="this.sources"
+                onBlur.bind="this.onBlur"
+                onChange.bind="this.onChange"
                 autoSelect="true"
             />
         `;
         static props = [];
 
-        state = useState({ value: "" });
+        state = proxy({ value: "" });
         sources = buildSources(() => [
             item("World", this.onSelect.bind(this)),
             item("Hello", this.onSelect.bind(this)),
@@ -620,13 +617,48 @@ test("correct sequence of blur, focus and select", async () => {
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
 });
 
+test.tags("desktop");
+test("autocomplete arrow navigation", async () => {
+    class Parent extends Component {
+        static components = { AutoComplete };
+        static template = xml`
+            <AutoComplete
+                value="this.state.value"
+                sources="this.sources"
+            />
+        `;
+        static props = [];
+
+        state = proxy({ value: "" });
+        sources = buildSources(() => [item("World"), item("Hello")]);
+    }
+
+    await mountWithCleanup(Parent);
+
+    await contains(".o-autocomplete input").click();
+
+    const dropdownItemIds = queryAllAttributes(".dropdown-item", "id");
+    expect(dropdownItemIds).toEqual(["autocomplete_0_0", "autocomplete_0_1"]);
+    expect(".o-autocomplete--input").toHaveAttribute("aria-activedescendant", dropdownItemIds[0]);
+
+    await press("ArrowUp");
+    await animationFrame();
+
+    expect(".o-autocomplete--input").toHaveAttribute("aria-activedescendant", dropdownItemIds[1]);
+
+    await press("ArrowDown");
+    await animationFrame();
+
+    expect(".o-autocomplete--input").toHaveAttribute("aria-activedescendant", dropdownItemIds[0]);
+});
+
 test("autocomplete always closes on click away", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="state.value" sources="sources" autoSelect="true"/>`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources" autoSelect="true"/>`;
         static components = { AutoComplete };
         static props = [];
 
-        state = useState({ value: "" });
+        state = proxy({ value: "" });
         sources = buildSources(() => [
             item("World", this.onSelect.bind(this)),
             item("Hello", this.onSelect.bind(this)),
@@ -647,15 +679,39 @@ test("autocomplete always closes on click away", async () => {
     expect(".o-autocomplete--dropdown-item").toHaveCount(0);
 });
 
+test("autocomplete dropdown remains open when props.value changes", async () => {
+    let state;
+    class Parent extends Component {
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources" autoSelect="true"/>`;
+        static components = { AutoComplete };
+        static props = [];
+
+        setup() {
+            this.sources = buildSources(() => [item("World"), item("Hello")]);
+            this.state = proxy({ value: "" });
+            state = this.state;
+        }
+    }
+    await mountWithCleanup(Parent);
+    expect(".o-autocomplete input").toHaveValue("");
+    await contains(".o-autocomplete input").click();
+    expect(".o-autocomplete--dropdown-item").toHaveCount(2);
+
+    state.value = "World";
+    await animationFrame();
+    expect(".o-autocomplete input").toHaveValue("World");
+    expect(".o-autocomplete--dropdown-item").toHaveCount(2);
+});
+
 test("autocomplete trim spaces for search", async () => {
     const ITEMS = [item("World"), item("Hello")];
 
     class Parent extends Component {
-        static template = xml`<AutoComplete value="state.value" sources="sources"/>`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources"/>`;
         static components = { AutoComplete };
         static props = [];
 
-        state = useState({ value: " World" });
+        state = proxy({ value: " World" });
         sources = buildSources((request) => ITEMS.filter(({ label }) => label.startsWith(request)));
     }
     await mountWithCleanup(Parent);
@@ -665,11 +721,11 @@ test("autocomplete trim spaces for search", async () => {
 
 test("tab and shift+tab close the dropdown", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="state.value" sources="sources"/>`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources"/>`;
         static components = { AutoComplete };
         static props = [];
 
-        state = useState({ value: "" });
+        state = proxy({ value: "" });
         sources = buildSources(() => [item("World"), item("Hello")]);
     }
     await mountWithCleanup(Parent);
@@ -682,21 +738,23 @@ test("tab and shift+tab close the dropdown", async () => {
     await press("Tab");
     await animationFrame();
     expect(dropdown).not.toHaveCount();
+    expect(input).toBeFocused();
     // Shift + Tab
     await contains(input).click();
     expect(dropdown).toBeVisible();
     await press("Tab", { shiftKey: true });
     await animationFrame();
     expect(dropdown).not.toHaveCount();
+    expect(input).toBeFocused();
 });
 
 test("Clicking away selects the first option when selectOnBlur is true", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="state.value" sources="sources" selectOnBlur="true"/>`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources" selectOnBlur="true"/>`;
         static components = { AutoComplete };
         static props = [];
 
-        state = useState({ value: "" });
+        state = proxy({ value: "" });
         sources = buildSources(() => [
             item("World", this.onSelect.bind(this)),
             item("Hello", this.onSelect.bind(this)),
@@ -720,11 +778,11 @@ test("Clicking away selects the first option when selectOnBlur is true", async (
 
 test("selectOnBlur doesn't interfere with selecting by mouse clicking", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="state.value" sources="sources" selectOnBlur="true"/>`;
+        static template = xml`<AutoComplete value="this.state.value" sources="this.sources" selectOnBlur="true"/>`;
         static components = { AutoComplete };
         static props = [];
 
-        state = useState({ value: "" });
+        state = proxy({ value: "" });
         sources = buildSources(() => [
             item("World", this.onSelect.bind(this)),
             item("Hello", this.onSelect.bind(this)),
@@ -752,12 +810,12 @@ test("autocomplete scrolls when moving with arrows", async () => {
                     max-height: 100px;
                 }
             </style>
-            <AutoComplete value="state.value" sources="sources" autoSelect="true"/>
+            <AutoComplete value="this.state.value" sources="this.sources" autoSelect="true"/>
         `;
         static components = { AutoComplete };
         static props = [];
 
-        state = useState({ value: "" });
+        state = proxy({ value: "" });
         sources = buildSources(() => [
             item("Never"),
             item("Gonna"),
@@ -786,7 +844,6 @@ test("autocomplete scrolls when moving with arrows", async () => {
         message: "'Up' " + msgNotInView,
     });
     await press("ArrowUp");
-    await press("ArrowUp");
     await animationFrame();
     expect(activeItemSelector).toHaveText("Up");
     expect(isInViewWithinScrollableY(activeItemSelector)).toBe(true, { message: msgInView });
@@ -809,10 +866,10 @@ test("autocomplete scrolls when moving with arrows", async () => {
 test("source with option slot", async () => {
     class Parent extends Component {
         static template = xml`
-            <AutoComplete value="''" sources="sources">
+            <AutoComplete value="''" sources="this.sources">
                 <t t-set-slot="use_this_slot" t-slot-scope="scope">
                     <div class="slot_item">
-                        <t t-esc="scope.data.id"/>: <t t-esc="scope.label"/>
+                        <t t-out="scope.data.id"/>: <t t-out="scope.label"/>
                     </div>
                 </t>
             </AutoComplete>
@@ -837,7 +894,7 @@ test("source with option slot", async () => {
 test("unselectable options are... not selectable", async () => {
     class Parent extends Component {
         static template = xml`
-            <AutoComplete value="''" sources="sources"/>
+            <AutoComplete value="''" sources="this.sources"/>
         `;
         static components = { AutoComplete };
         static props = [];
@@ -862,17 +919,9 @@ test("unselectable options are... not selectable", async () => {
 
     await press("arrowup");
     await animationFrame();
-    expect(`.o-autocomplete--input`).not.toHaveAttribute("aria-activedescendant");
-
-    await press("arrowdown");
-    await animationFrame();
     expect(`.o-autocomplete--input`).toHaveAttribute("aria-activedescendant", "autocomplete_0_1");
 
     await press("arrowdown");
-    await animationFrame();
-    expect(`.o-autocomplete--input`).not.toHaveAttribute("aria-activedescendant");
-
-    await press("arrowup");
     await animationFrame();
     expect(`.o-autocomplete--input`).toHaveAttribute("aria-activedescendant", "autocomplete_0_1");
 
@@ -893,7 +942,7 @@ test("unselectable options are... not selectable", async () => {
 test.tags("desktop");
 test("items are selected only when the mouse moves, not just on enter", async () => {
     class Parent extends Component {
-        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         static components = { AutoComplete };
         static props = [];
 
@@ -935,15 +984,15 @@ test("items are selected only when the mouse moves, not just on enter", async ()
 });
 
 test("do not attempt to scroll if element is null", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     class Parent extends Component {
-        static template = xml`<AutoComplete value="''" sources="sources" />`;
+        static template = xml`<AutoComplete value="''" sources="this.sources" />`;
         static components = { AutoComplete };
         static props = [];
 
         sources = [
             buildSources(async () => {
-                await def;
+                await def.promise;
                 return [item("delayed one"), item("delayed two"), item("delayed three")];
             }),
             buildSources(Array.from(Array(20)).map((_, index) => item(`item ${index}`))),

@@ -63,7 +63,7 @@ class HrJob(models.Model):
     applicant_hired = fields.Integer(compute='_compute_applicant_hired', string="Applicants Hired", groups="hr_recruitment.group_hr_recruitment_interviewer")
     manager_id = fields.Many2one(
         'hr.employee', related='department_id.manager_id', string="Department Manager",
-        readonly=True, store=True, groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
+        readonly=True, store=True)
     document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents", readonly=True, groups="hr_recruitment.group_hr_recruitment_interviewer")
     documents_count = fields.Integer(compute='_compute_document_ids', string="Document Count", groups="hr_recruitment.group_hr_recruitment_interviewer")
     employee_count = fields.Integer(compute='_compute_employee_count')
@@ -79,7 +79,7 @@ class HrJob(models.Model):
         help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.",
     )
     extended_interviewer_ids = fields.Many2many('res.users', 'hr_job_extended_interviewer_res_users', compute='_compute_extended_interviewer_ids', store=True, groups="hr_recruitment.group_hr_recruitment_interviewer")
-    industry_id = fields.Many2one('res.partner.industry', 'Industry', tracking=True, groups="hr_recruitment.group_hr_recruitment_interviewer")
+    industry_id = fields.Many2one('res.partner.industry', 'Industry', tracking=True)
     expected_degree = fields.Many2one("hr.recruitment.degree", groups="hr_recruitment.group_hr_recruitment_interviewer")
 
     activity_count = fields.Integer(compute='_compute_activities', groups="hr_recruitment.group_hr_recruitment_interviewer")
@@ -367,7 +367,7 @@ class HrJob(models.Model):
                 )
                 if application_ids:
                     application_ids.message_unsubscribe(to_unsubscribe)
-                    application_ids.with_context(mail_auto_subscribe_no_notify=True).recruiter_id.user_id = job.recruiter_id.user_id
+                    application_ids.with_context(mail_auto_subscribe_no_notify=True).recruiter_id = job.recruiter_id
 
         # Since the alias is created upon record creation, the default values do not reflect the current values unless
         # specifically rewritten
@@ -461,5 +461,19 @@ class HrJob(models.Model):
                 'search_default_group_job': 1,
                 'search_default_job_id': self.id,
                 'expand': 1
+            },
+        }
+
+    def action_job_add_applicants(self):
+        return {
+            "name": self.env._("Matching Talents"),
+            "type": "ir.actions.act_window",
+            "res_model": "job.add.applicants",
+            "target": "new",
+            "views": [[self.env.ref('hr_recruitment.job_add_applicants_from_job_view_form').id, "form"]],
+            "context": {
+                "is_modal": True,
+                "default_job_ids": self.ids
+                or self.env.context.get("default_job_ids"),
             },
         }

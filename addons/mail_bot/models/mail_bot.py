@@ -11,7 +11,7 @@ class MailBot(models.AbstractModel):
     _name = 'mail.bot'
     _description = 'Mail Bot'
 
-    def _apply_logic(self, channel, values, command=None):
+    def _apply_logic(self, channel, message, command=None):
         """ Apply bot logic to generate an answer (or not) for the user
         The logic will only be applied if odoobot is in a chat with a user or
         if someone pinged odoobot.
@@ -22,10 +22,11 @@ class MailBot(models.AbstractModel):
         """
         channel.ensure_one()
         odoobot_id = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
-        if values.get("author_id") == odoobot_id or values.get("message_type") != "comment" and not command:
+        message = message or self.env['mail.message']
+        if message.author_id.id == odoobot_id or message.message_type != "comment" and not command:
             return
-        body = values.get("body", "").replace("\xa0", " ").strip().lower().strip(".!")
-        if answer := self._get_answer(channel, body, values, command):
+        body = (message.body or '').replace("\xa0", " ").strip().lower().strip(".!")
+        if answer := self._get_answer(channel, body, message, command):
             answers = answer if isinstance(answer, list) else [answer]
             for ans in answers:
                 channel.sudo().message_post(
@@ -51,7 +52,7 @@ class MailBot(models.AbstractModel):
             "paperclip_icon": Markup("<i class='fa fa-paperclip' aria-hidden='true'/>"),
         }
 
-    def _get_answer(self, channel, body, values, command=False):
+    def _get_answer(self, channel, body, message, command=False):
         odoobot = self.env.ref("base.partner_root")
         # onboarding
         odoobot_state = self.env.user.odoobot_state
@@ -59,7 +60,6 @@ class MailBot(models.AbstractModel):
         if channel.channel_type == "chat" and odoobot in channel.channel_member_ids.partner_id:
             # main flow
             source = _("Thanks")
-            description = _("This is a temporary canned response to see how canned responses work.")
             if odoobot_state == 'onboarding_emoji' and self._body_contains_emoji(body):
                 self.env.user.odoobot_state = "onboarding_command"
                 self.env.user.odoobot_failed = False
@@ -78,7 +78,7 @@ class MailBot(models.AbstractModel):
                     "%(command_start)s@OdooBot%(command_end)s in a sentence.",
                     **self._get_style_dict()
                 )
-            elif odoobot_state == "onboarding_ping" and odoobot.id in values.get("partner_ids", []):
+            elif odoobot_state == "onboarding_ping" and odoobot in message.partner_ids:
                 self.env.user.odoobot_state = "onboarding_attachement"
                 self.env.user.odoobot_failed = False
                 return self.env._(
@@ -86,7 +86,7 @@ class MailBot(models.AbstractModel):
                     "attachment%(bold_end)s, like a picture of your cute dog...",
                     **self._get_style_dict()
                 )
-            elif odoobot_state == "onboarding_attachement" and values.get("attachment_ids"):
+            elif odoobot_state == "onboarding_attachement" and message.attachment_ids:
                 self.env["mail.canned.response"].create({
                     "source": source,
                     "substitution": _("Thanks for your feedback. Goodbye!"),
@@ -128,7 +128,7 @@ class MailBot(models.AbstractModel):
                 self.env.user.odoobot_state = "onboarding_emoji"
                 return _("To start, try to send me an emoji :)")
             # easter eggs
-            elif odoobot_state == "idle" and body in ['❤️', _('i love you'), _('love')]:
+            elif odoobot_state == "idle" and body in ['❤️', _('i love you'), _('love'), '<p>❤️</p>', '<p>%s</p>' % _('i love you'), '<p>%s</p>' % _('love')]:
                 return _("Aaaaaw that's really cute but, you know, bots don't work that way. You're too human for me! Let's keep it professional ❤️")
             elif _('fuck') in body or "fuck" in body:
                 return _("That's not nice! I'm a bot but I have feelings... 💔")

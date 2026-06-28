@@ -1,7 +1,8 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { integerField, IntegerField } from "@web/views/fields/integer/integer_field";
+import { props, t } from "@odoo/owl";
+import { integerField, IntegerField, integerFieldProps } from "@web/views/fields/integer/integer_field";
 
 
 
@@ -18,11 +19,11 @@ import { integerField, IntegerField } from "@web/views/fields/integer/integer_fi
  * See also `BooleanUpdateFlagField`.
  */
 export class IntegerUpdateFlagField extends IntegerField {
-    static props= {
-        ...IntegerField.props,
-        flagFieldName: { type: String },
-        referenceValue: { type: Number },
-    }
+    props = props({
+        ...integerFieldProps,
+        flagFieldName: t.string(),
+        referenceValue: t.number(),
+    });
     /**
      * @override
      */

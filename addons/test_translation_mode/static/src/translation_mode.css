@@ -1,0 +1,71 @@
+.o-body-with-translate-side-panel {
+    --translate-side-panel-width: clamp(25rem, 30vw, 30rem);
+
+    width: calc(100vw - var(--translate-side-panel-width));
+}
+
+.o-translation-pointer {
+    --_rgb: var(--info-rgb);
+
+    border: 2px solid rgb(var(--_rgb));
+    box-shadow: 0 0 0.5rem 2px rgb(var(--_rgb));
+    border-radius: 0.25rem;
+    position: fixed;
+    z-index: 9999;
+    left: var(--_x, 0);
+    top: var(--_y, 0);
+    width: var(--_w, 0);
+    height: var(--_h, 0);
+    pointer-events: none;
+
+    animation: o-translation-pointer-animation 500ms infinite ease-in-out;
+}
+
+.o-translate-side-panel {
+    /* Dark */
+    --_highlight-bg-rgb: 209, 236, 241;
+
+    height: 100vh;
+    width: var(--translate-side-panel-width);
+    z-index: 2000;
+
+    .o-translate-card {
+        cursor: pointer;
+
+        &:hover {
+            background-color: rgba(var(--_highlight-bg-rgb), 0.5);
+        }
+
+        &:focus,
+        &:focus-within {
+            background-color: rgba(var(--_highlight-bg-rgb), 1);
+        }
+    }
+
+    .o-translation-flag {
+        object-fit: contain;
+        max-width: 1.5rem;
+    }
+}
+
+/* TODO: use bundle system */
+@media (prefers-color-scheme: dark) {
+    .o-translate-side-panel {
+        --_highlight-bg-rgb: 32, 54, 75;
+    }
+}
+
+@keyframes o-translation-pointer-animation {
+    from {
+        background-color: rgba(var(--_rgb), 0.05);
+        box-shadow: 0 0 2px 0 rgb(var(--_rgb));
+    }
+    50% {
+        background-color: rgba(var(--_rgb), 0.25);
+        box-shadow: 0 0 1rem 2px rgb(var(--_rgb));
+    }
+    to {
+        background-color: rgba(var(--_rgb), 0.05);
+        box-shadow: 0 0 2px 0 rgb(var(--_rgb));
+    }
+}

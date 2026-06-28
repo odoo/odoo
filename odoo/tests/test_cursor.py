@@ -3,6 +3,8 @@ from __future__ import annotations
 import typing
 from datetime import datetime
 
+import psycopg2
+
 import odoo.modules
 from odoo.sql_db import Cursor, Savepoint, _logger
 
@@ -42,7 +44,6 @@ class TestCursor(Cursor):
         super().__init__(MockedPsycoConnection(cursor, readonly), cursor.dbname)
         self._closed = True  # consider closed until acquired
         self._cnx._obj = self._obj
-        self._now = datetime.now()
         # we use a lock to serialize concurrent requests
         self._lock = lock
         current_test = odoo.modules.module.current_test
@@ -63,6 +64,11 @@ class TestCursor(Cursor):
                 and last_cursor._cnx._savepoint
             ):
                 raise Exception('Opening a read/write test cursor from a readonly one')  # noqa: TRY301
+            # Flush the main cursor
+            from .common import flushing_cursor  # noqa: PLC0415
+            flushing = flushing_cursor(cursor)
+            flushing.__enter__()
+            self._cnx._when_closed = lambda: flushing.__exit__(None, None, None)
         except Exception:
             self._lock.release()
             raise
@@ -70,25 +76,34 @@ class TestCursor(Cursor):
         self._cursors_stack.append(self)
 
     def execute(self, *args, **kwargs) -> None:
-        assert not self.closed, "Cannot use a closed cursor"
+        if self.closed:
+            raise psycopg2.InterfaceError("Cursor already closed")
+        if self._now is None:
+            self._now = datetime.now()
         self._cnx._check_savepoint()
         return super().execute(*args, **kwargs)
 
-    def close(self):
-        if self._closed:
-            return
+    def _close(self):
         try:
-            super().close()
+            super()._close()
         finally:
             tos = self._cursors_stack.pop()
             if tos is not self:
                 _logger.warning("Found different un-closed cursor when trying to close %s: %s", self, tos)
+            self._cnx._cursor.sql_log_count += self.sql_log_count  # propagate stats to the main cursor
             self._lock.release()
 
     def commit(self) -> None:
         """ Perform an SQL `COMMIT` """
         self.precommit.add(self.postcommit.clear)  # ignore post-commit hooks
         super().commit()
+
+    def rollback(self) -> None:
+        super().rollback()
+        # rollback again to release the savepoint that may be created during
+        # reset of the registry (after the rollback) which may perform queries
+        if not self.closed:
+            self._cnx.rollback()
 
     def now(self) -> datetime:
         """ Return the transaction's timestamp ``datetime.now()``. """
@@ -105,12 +120,14 @@ class MockedPsycoConnection(_base_PsycoConnection):
         # savepoint at its last commit. This savepoint is created lazily.
         self._savepoint: Savepoint | None = None
         self._obj = None
+        self._when_closed = lambda: None
 
     def set_session(self, *a, **kw):
         pass  # ignoring
 
     def give_back(self, keep_in_pool=True):
         del self._obj
+        self._when_closed()
 
     def _check_savepoint(self) -> None:
         if self._savepoint:
@@ -126,7 +143,9 @@ class MockedPsycoConnection(_base_PsycoConnection):
 
     def commit(self):
         if self._savepoint is not None:
-            self._savepoint.close(rollback=False)
+            # readonly transaction must rollback the read only flag
+            # in any case, no changes have been made
+            self._savepoint.close(rollback=self.readonly)
             self._savepoint = None
 
     def rollback(self):

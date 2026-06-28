@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_animated_cover" name="Animated Cover">
+    <section class="s_animated_cover o_full_screen_height o_colored_level o_cc o_cc5 oe_img_bg o_bg_img_center o_bg_img_origin_border_box" style="background-image: url('/web/image/website.landscape_xl_1');">
+        <div class="o_we_bg_filter bg-black-15"/>
+        <div class="oe_structure oe_empty">
+            <section class="s_title pt40 pb40 o_colored_level" data-vcss="001" data-snippet="s_title" data-name="Title">
+                <div class="container s_allow_columns">
+                    <t t-snippet-call="website.s_avatars" string="Avatars" hideMore.f="True"/>
+                    <h1 class="h2-fs">Built to last.<br/>Designed to Inspire.</h1>
+                </div>
+            </section>
+            <section class="s_announcement_scroll s_announcement_scroll_direction_left s_announcement_scroll_hover_pause w-100 pt24 pb24"
+                     style="--marquee-animation-speed: 5s; --marquee-item-font-size: 320;"
+                     role="marquee" data-snippet="s_announcement_scroll" data-name="Announcement Scroll">
+                <div class="s_announcement_scroll_marquee_container d-flex s_announcement_scroll_heading_family">
+                    <div class="o_not_editable s_announcement_scroll_marquee_item lh-1">• OUR SERVICES</div>
+                </div>
+            </section>
+        </div>
+    </section>
+</template>
+
+<asset id="website.s_animated_cover_000_scss" name="Animated Cover 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_animated_cover/000.scss</path>
+</asset>
+
+</odoo>

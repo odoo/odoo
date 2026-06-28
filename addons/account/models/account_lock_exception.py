@@ -1,5 +1,5 @@
 from odoo import _, api, fields, models
-from odoo.fields import Command, Domain
+from odoo.fields import Domain
 from odoo.tools.misc import format_datetime
 from odoo.exceptions import UserError, ValidationError
 
@@ -189,13 +189,7 @@ class AccountLock_Exception(models.Model):
             company = exception.company_id
 
             # Create tracking values to display the lock date change in the chatter
-            field = exception.lock_date_field
-            value = exception.lock_date
-            field_info = exception.fields_get([field])[field]
-            tracking_values = self.env['mail.tracking.value']._create_tracking_values(
-                company[field], value, field, field_info, exception,
-            )
-            tracking_value_ids = [Command.create(tracking_values)]
+            field_name = exception.lock_date_field
 
             # In case there is no explicit end datetime "forever" is implied by not mentioning an end datetime
             end_datetime_string = _(" valid until %s", format_datetime(self.env, exception.end_datetime)) if exception.end_datetime else ""
@@ -207,9 +201,10 @@ class AccountLock_Exception(models.Model):
                 end_datetime_string=end_datetime_string,
                 reason=reason_string,
             )
-            company.sudo().message_post(
+            company._track_add(
+                {company.id: {field_name: company[field_name]}},
+                end_values={company.id: {field_name: exception.lock_date}},
                 body=company_chatter_message,
-                tracking_value_ids=tracking_value_ids,
             )
 
         exceptions._invalidate_affected_user_lock_dates()
@@ -257,50 +252,29 @@ class AccountLock_Exception(models.Model):
     def _get_audit_trail_during_exception_domain(self):
         self.ensure_one()
 
-        common_message_domain = [
-            ('date', '>=', self.create_date),
+        domain = [
+            ('account_audit_log_move_id.company_id', 'child_of', self.company_id.id),
+            ('create_date', '>=', self.create_date),
         ]
         if self.user_id:
-            common_message_domain.append(('create_uid', '=', self.user_id.id))
-        if self.end_datetime:
-            common_message_domain.append(('date', '<=', self.end_datetime))
+            domain.append(('author_id', '=', self.user_id.partner_id.id))
 
         # Add restrictions on the accounting date to avoid unnecessary entries
         min_date = self.lock_date
         max_date = self.company_lock_date
-        move_date_domain = []
-        tracking_old_datetime_domain = []
-        tracking_new_datetime_domain = []
         if min_date:
-            move_date_domain.append([('date', '>=', min_date)])
-            tracking_old_datetime_domain.append([('tracking_value_ids.old_value_datetime', '>=', min_date)])
-            tracking_new_datetime_domain.append([('tracking_value_ids.new_value_datetime', '>=', min_date)])
+            domain.append(('account_audit_log_move_id.date', '>=', min_date))
         if max_date:
-            move_date_domain.append([('date', '<=', max_date)])
-            tracking_old_datetime_domain.append([('tracking_value_ids.old_value_datetime', '<=', max_date)])
-            tracking_new_datetime_domain.append([('tracking_value_ids.new_value_datetime', '<=', max_date)])
-
-        return [
-            ('company_id', 'child_of', self.company_id.id),
-            ('audit_trail_message_ids', 'any', common_message_domain),
-            '|',
-                # The date was changed from or to a value inside the excepted period
-                ('audit_trail_message_ids', 'any', [
-                    ('tracking_value_ids.field_id', '=', self.env['ir.model.fields']._get('account.move', 'date').id),
-                    '|',
-                        *Domain.AND(tracking_old_datetime_domain),
-                        *Domain.AND(tracking_new_datetime_domain),
-                ]),
-                # The date of the move is inside the excepted period and sth. was changed on the move
-                *Domain.AND(move_date_domain),
-        ]
+            domain.append(('account_audit_log_move_id.date', '<=', max_date))
+        return domain
 
     def action_show_audit_trail_during_exception(self):
         self.ensure_one()
         return {
-            'name': _("Journal Items"),
+            'name':  self.env._("Audit Trail"),
             'type': 'ir.actions.act_window',
-            'res_model': 'account.move.line',
-            'view_mode': 'list,form',
-            'domain': [('move_id', 'any', self._get_audit_trail_during_exception_domain())],
+            'res_model': 'mail.message',
+            'view_id': self.env.ref('account.view_message_tree_audit_log').id,
+            'view_mode': 'list',
+            'domain': self._get_audit_trail_during_exception_domain(),
        }

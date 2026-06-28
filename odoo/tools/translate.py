@@ -24,6 +24,7 @@ from collections import defaultdict, namedtuple
 from collections.abc import Iterable, Iterator
 from contextlib import suppress
 from datetime import datetime
+from difflib import get_close_matches
 from os.path import join
 from pathlib import Path
 from tokenize import generate_tokens, STRING, NEWLINE, INDENT, DEDENT
@@ -34,15 +35,19 @@ from markupsafe import escape, Markup
 from psycopg2.extras import Json
 
 import odoo
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from .config import config
 from .i18n import format_list
 from .misc import file_open, file_path, frozendict, get_iso_codes, split_every, OrderedSet, SKIPPED_ELEMENT_TYPES
+from .sql import SQL
 
 if typing.TYPE_CHECKING:
     import types
 
+    from collections.abc import Callable
+    from typing import Literal
     from odoo.api import Environment
+    from odoo.orm.fields_textual import BaseString
 
 __all__ = [
     "_",
@@ -89,7 +94,7 @@ FIELD_TRANSLATE = {
 
 
 def _get_frame(stack_level: int = 0) -> types.FrameType | None:
-    from odoo.tools.safe_eval import safe_call as wrapper_func  # noqa: PLC0415
+    from odoo.tools.safe_eval.runtime import safe_call as wrapper_func  # noqa: PLC0415
 
     stack_level += 1  # +1 to skip this function
     frame = origin_frame = inspect.currentframe()
@@ -105,6 +110,7 @@ def _get_frame(stack_level: int = 0) -> types.FrameType | None:
         'Impossible to retrieve frame for translation language, skipping translation %s',
         origin_frame, stack_info=True,
     )
+    return None
 
 
 def is_translatable_attrib(key, node):
@@ -426,7 +432,10 @@ def get_text_content(term):
 
 def is_text(term):
     """ Return whether the term has only text. """
-    return len(html.fromstring(f"<_>{term}</_>")) == 0
+    it = html.fromstring(f"<root>{term}</root>").iter()
+    next(it)  # consume <root>
+    return next(it, None) is None
+
 
 xml_translate.get_text_content = get_text_content
 html_translate.get_text_content = get_text_content
@@ -441,6 +450,315 @@ xml_translate.term_adapter = xml_term_adapter
 
 FIELD_TRANSLATE['html_translate'] = html_translate
 FIELD_TRANSLATE['xml_translate'] = xml_translate
+
+
+"""
+Field data value for translated fields:
+
+- `None`: Database value is NULL and no translation exists.
+- `dict`: Partial translations with fallback values. Values for untranslated languages
+  may be filled with the `en_US` value after `fetch`.
+  e.g. `{'fr_FR': 'French', 'nl_NL': 'English'}`.
+- `StoredTranslations`: Complete translations. Values for untranslated languages will
+  fallback to the `en_US` value when accessed via `__getitem__` from cache.
+  e.g. `StoredTranslations({'en_US': 'English', 'fr_FR': 'French'})`.
+"""
+
+
+class StoredTranslations(dict):
+    """Dictionary-based cache value that stores the raw JSON translations from the database.
+
+    This provides easier write operations at the cost of slower cache reads, as it implements
+    custom fallback logic in `__getitem__`. The `'en_US'` key is expected to be present as the
+    default fallback language.
+    """
+    __slots__ = ()
+
+    @staticmethod
+    def fallback_langs(lang: str) -> tuple[str, ...]:
+        if lang == '_en_US':
+            return '_en_US', 'en_US'
+        if lang == 'en_US':
+            return ('en_US',)
+        if lang.startswith('_'):
+            return lang, lang[1:], '_en_US', 'en_US'
+        return lang, 'en_US'
+
+    def __getitem__(self, key):
+        """ Retrieve the translation for the specified language code with automatic fallback.
+
+        :param key: Language code (non-empty string).
+                    Fallback logic:
+                    - For normal language codes (e.g., 'fr_FR'):
+                    Tries: key -> 'en_US'
+                    - For technical language codes (prefixed with '_', e.g., '_fr_FR'):
+                    Tries: key -> key[1:] -> '_en_US' -> 'en_US'
+
+                    Note: This fallback behavior is consistent with ``field.to_sql``
+                    when ``prefetch_lang=False`` for translated fields
+
+        :return: The translation value for the language code.
+        """
+        # Direct dict method calls for performance optimization (bypass super())
+        if (res := dict.get(self, key)) is not None:
+            return res
+        if key[0] == '_':
+            if (res := dict.get(self, key[1:])) is not None:
+                return res
+            if (res := dict.get(self, '_en_US')) is not None:
+                return res
+        try:
+            return dict.__getitem__(self, 'en_US')
+        except KeyError:
+            _logger.warning("StoredTranslations %s has no translation for 'en_US'", dict(self))
+            # return the same behavior as ``field.to_sql`` when ``prefetch_lang=False``
+            # if 'en_US' is missing for a NOT NULL value
+            return None
+
+    def __contains__(self, key) -> bool:
+        return True
+
+    def copy(self) -> StoredTranslations:
+        return StoredTranslations(self)
+
+    def get(self, key, default=None):
+        return self[key]
+
+    def normalize(self, env: Environment, field: BaseString) -> StoredTranslations | None:
+        """Check and auto fix issues for stored translations and return a new StoredTranslations instance or None"""
+        return self._validate(env, field, auto_fix=True)
+
+    def validate(self, env: Environment, field: BaseString) -> None:
+        """Validate stored translations against soft constraints for the translated field"""
+        self._validate(env, field, auto_fix=False)
+
+    def _validate(self, env: Environment, field: BaseString, *, check_structure: bool = True, auto_fix: bool = False) -> StoredTranslations | None:
+        """Validate stored translations against soft constraints for the translated field"""
+        fixed_self = self.copy()
+        issues = []
+
+        active_langs = env['res.lang']._get_active_by('code')
+        valid_langs = active_langs.keys() | {'en_US'}
+        if callable(field.translate):
+            valid_langs |= {'_' + lang for lang in valid_langs}
+
+        # clean up invalid languages and drop None values
+        for k, v in self.items():
+            if k not in valid_langs:
+                if not auto_fix:
+                    raise ValidationError(env._("Translations %(translations)s for field %(field)s has invalid language '%(language)s'", translations=self, field=field, language=k))
+                # Unlike other issues (usually coding errors), invalid languages are typically
+                # caused by deactivating languages in res.lang; clean them up silently.
+                fixed_self.pop(k)
+            elif v is None:
+                if not auto_fix:
+                    raise ValidationError(env._("Translations %(translations)s for field %(field)s has None value for language '%(language)s'", translations=self, field=field, language=k))
+                issues.append(f"It has None value for language '{k}'.")
+                fixed_self.pop(k)
+
+        # en_US must exist
+        if not dict.__contains__(fixed_self, 'en_US'):  # noqa: PLC2801
+            if not auto_fix:
+                raise ValidationError(env._("Translations %(translations)s for field %(field)s must have 'en_US'", translations=self, field=field))
+            issues.append("It has no 'en_US'.")
+            if not fixed_self:
+                return None
+            fixed_self['en_US'] = next(iter(fixed_self.values()))
+
+        # check technical languages which start with '_'
+        assert field.translate
+        if callable(field.translate):
+            for k, v in list(fixed_self.items()):
+                if k.startswith('_') and not dict.__contains__(fixed_self, k[1:]):  # noqa: PLC2801
+                    if not auto_fix:
+                        raise ValidationError(env._("Translations %(translations)s for field %(field)s has technical language %(technical_language)s but not corresponding language '%(language)s'", translations=self, field=field, technical_language=k, language=k[1:]))
+                    issues.append(f"It has technical language '{k}' but not corresponding language '{k[1:]}'.")
+                    fixed_self[k[1:]] = fixed_self['en_US']
+
+        if check_structure and callable(field.translate):
+            translations = {k: fixed_self['_' + k] for k in fixed_self if not k.startswith('_')}
+            # all translations must share the same structure
+            if len({*translations.values()}) > 1:
+                translation_en = translations['en_US']
+                structure_en = ParsedTranslation(translation_en, field).structure
+                for k, v in translations.items():
+                    if v != translation_en and ParsedTranslation(v, field).structure != structure_en:
+                        if not auto_fix:
+                            raise ValidationError(env._("Translations %(translations)s for field %(field)s have different structures", translations=self, field=field))
+                        issues.append(f"Its translation for language '{k}' has different structure from 'en_US.'")
+                        fixed_self.pop(k, None)
+                        fixed_self.pop('_' + k, None)
+
+        if issues:
+            _logger.info(
+                "Auto fix StoredTranslations for field %s from %s to %s because:\n%s",
+                field, self, fixed_self, ",\n".join(issues)
+            )
+
+        return fixed_self
+
+    def written(self, env: Environment, field: BaseString, translation_dict: dict[str, ParsedTranslation], *, adapt_close_terms: bool = False, delay_translations: bool = False) -> StoredTranslations | None:
+        """ Apply written translations and build a new stored mapping.
+
+        :param env: Current Odoo environment, used for validation and
+                    language-aware errors.
+        :param field: A model_terms translated field (``callable(field.translate)``).
+        :param translation_dict: Mapping ``{lang_code: ParsedTranslation}`` for
+                                 languages explicitly written in this update.
+        :param adapt_close_terms: If ``True`` and supported by
+                                  ``field.translate.term_adapter``, remap old
+                                  term translations to close new terms.
+        :param delay_translations: If ``True``, keep current non-written
+                                   language values and store recomputed values
+                                   in technical keys (``_lang``). If ``False``,
+                                   write recomputed values directly.
+        :return: A new validated ``StoredTranslations`` result, or ``None`` when no
+                 valid translation can be kept.
+        """
+        assert callable(field.translate)  # model translated field is not supported
+        valid_self = self._validate(env, field, check_structure=False, auto_fix=True)
+
+        if not translation_dict:
+            return valid_self
+
+        if not valid_self:
+            return StoredTranslations({
+                'en_US': next(iter(translation_dict.values())).value,
+                **{k: v.value for k, v in translation_dict.items()},
+            })
+
+        # assert all(not key.startswith('_') for key in translation_dict)
+        # assert len({v.structure for v in translation_dict.values())}) <= 1
+
+        # use the first matched language as base language if its written translation is the same as before
+        # otherwise, use the first write language as the base language
+        # in practice, it is always recommended to use the env.lang value as the first key of translation_dict
+        translate_terms_only = False
+        base_lang = next(
+            (k for k, v in translation_dict.items() if v.value == valid_self['_' + k] and (translate_terms_only := True)),
+            next(iter(translation_dict))
+        )
+
+        if translate_terms_only:
+            # Base language value is unchanged; update only term translations for non-base languages.
+            for k, v in translation_dict.items():
+                valid_self[k] = v.value  # update new translations
+                valid_self.pop('_' + k, None)  # drop old technical sycnhronized translations for updated languages
+            return valid_self
+
+        base_value = translation_dict[base_lang].value
+        base_terms = translation_dict[base_lang].terms
+        base_terms_set = set(base_terms)
+        other_old_translations = {
+            k: valid_self['_' + k]
+            for k in valid_self
+            if not k.startswith('_')
+            and k not in translation_dict
+        }
+
+        # parse the translation term mapping for old non-update translations
+        translation_dictionary = field.get_translation_dictionary(valid_self['_' + base_lang], other_old_translations)
+
+        # best effort to migrate old translation terms to new close translation terms
+        get_text_content = field.translate.get_text_content if hasattr(field.translate, 'get_text_content') else lambda term: term
+        is_text = field.translate.is_text if hasattr(field.translate, 'is_text') else lambda term: True
+        term_adapter = field.translate.term_adapter if adapt_close_terms and hasattr(field.translate, 'term_adapter') else None
+        text2terms = defaultdict(list[str])
+        for term in base_terms:
+            if term_text := get_text_content(term):
+                text2terms[term_text].append(term)
+        for old_term in list(translation_dictionary):
+            if old_term in base_terms_set:
+                continue
+            old_term_text = get_text_content(old_term)
+            # Find the new base term text which is most similar to the old term's text (fuzzy match, cutoff 0.9)
+            closest_text = next(iter(get_close_matches(old_term_text, text2terms, n=1, cutoff=0.9)), None)
+            if closest_text is None:
+                continue
+            # Among new base terms sharing that text, find the specific new base term closest to the old term
+            closest_term = get_close_matches(old_term, text2terms[closest_text], n=1, cutoff=0)[0]
+            if closest_term in translation_dictionary:
+                continue
+            old_is_text = is_text(old_term)
+            closest_is_text = is_text(closest_term)
+            if not old_is_text and closest_is_text:
+                # Don't migrate translations for a old non-text term to a new text term
+                # in case the new text term is used for TRANSLATED_ATTRS
+                continue
+            if not closest_is_text and term_adapter:
+                adapter = term_adapter(closest_term)
+                if adapter(old_term) is None:
+                    # Don't migrate if old term and closest_term have different structures when adapter is applied
+                    continue
+                translation_dictionary[closest_term] = {k: adapter(v) for k, v in translation_dictionary.pop(old_term).items()}
+            else:
+                translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
+
+        # use the old translation mapping to get new translations for the not directly updated languages
+        other_new_translations = {
+            l: field.translate(lambda term: translation_dictionary.get(term, {l: None})[l], base_value)
+            for l in other_old_translations
+        }
+
+        # update self for not directly updated languages
+        if delay_translations:
+            for k, v in other_new_translations.items():
+                if v == valid_self[k]:
+                    valid_self.pop('_' + k, None)
+                else:
+                    valid_self['_' + k] = v
+        else:
+            for k, v in other_new_translations.items():
+                valid_self.pop('_' + k, None)
+                valid_self[k] = other_new_translations[k]
+
+        # update self for directly updated languages
+        for k, v in translation_dict.items():
+            # remove old technical synchronized translations
+            valid_self.pop('_' + k, None)
+            # use new updated translations
+            valid_self[k] = v.value
+        return valid_self
+
+
+class ParsedTranslation:
+    def __init__(self, value: str, field: BaseString):
+        assert isinstance(value, str)
+        self.value: str = value
+
+        assert callable(field.translate)
+        self.terms: list[str] = []
+
+        def translate_func(term):
+            self.terms.append(term)
+            return 'X'
+
+        self.structure = field.translate(translate_func, value)
+
+
+def adapt_translated_field_value(
+    env: Environment,
+    val: dict[str, str] | str | Literal[False] | None,
+    adapter: Callable[[str, str], str],
+) -> dict[str, str] | str | Literal[False] | None:
+    """Apply an adapter to a translated field value, handling all supported value formats.
+
+    Translated fields accept either a plain string (single language) or a dict mapping
+    language codes to translated strings. This function normalizes both formats by
+    applying the adapter to each value, preserving None and False as-is.
+
+    :param env: the Odoo environment
+    :param val: the value to adapt; can be a dict {lang: value}, a plain string,
+                or None/False
+    :param adapter: callable(lang, value) -> str; receives language code and value,
+                    returns the adapted value for each translation
+    :return: the adapted value
+    """
+    if val is None or val is False:
+        return val
+    if not isinstance(val, dict):
+        return adapter(env.lang or 'en_US', val)
+    return {k: adapter(k, v) for k, v in val.items()}
 
 
 def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> str:
@@ -1083,12 +1401,14 @@ def trans_export_records(lang, model_name, ids, buffer, format, env):
     return True
 
 
-def _push(callback, term, source_line):
-    """ Sanity check before pushing translation terms """
-    term = (term or "").strip()
-    # Avoid non-char tokens like ':' '...' '.00' etc.
-    if len(term) > 8 or any(x.isalpha() for x in term):
-        callback(term, source_line)
+def is_meaningful_term(term):
+    """ Returns True if the given term is a meaningful translation term that should be exported.
+
+    This is used to filter out terms that are unlikely to be translated, such as purely numeric strings,
+    punctuation, or empty strings.
+    """
+    return bool(term and any(c.isalpha() for c in term.strip()))
+
 
 def _extract_translatable_qweb_terms(element, callback):
     """ Helper method to walk an etree document representing
@@ -1108,15 +1428,15 @@ def _extract_translatable_qweb_terms(element, callback):
                 and not (el.tag == 'attribute' and not is_translatable_attrib(el.get('name'), el))
                 and el.get("t-translation", '').strip() != "off"):
 
-            _push(callback, el.text, el.sourceline)
+            callback(el.text, el.sourceline)
             # heuristic: tags with names starting with an uppercase letter are
             # component nodes
             is_component = el.tag[0].isupper() or "t-component" in el.attrib or "t-set-slot" in el.attrib
             for attr in el.attrib:
                 if (not is_component and attr in OWL_TRANSLATED_ATTRS) or (is_component and attr.endswith(".translate")):
-                    _push(callback, el.attrib[attr], el.sourceline)
+                    callback(el.attrib[attr], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
-        _push(callback, el.tail, el.sourceline)
+        callback(el.tail, el.sourceline)
 
 
 def babel_extract_qweb(fileobj, keywords, comment_tags, options):
@@ -1133,8 +1453,12 @@ def babel_extract_qweb(fileobj, keywords, comment_tags, options):
     :rtype: Iterable
     """
     result = []
+
     def handle_text(text, lineno):
-        result.append((lineno, None, text, []))
+        text = (text or "").strip()
+        if is_meaningful_term(text):
+            result.append((lineno, None, text, []))
+
     tree = etree.parse(fileobj)
     _extract_translatable_qweb_terms(tree.getroot(), handle_text)
     return result
@@ -1231,14 +1555,8 @@ class TranslationReader:
         msgid "<source>"
         record_id is the database id of the record being translated
         """
-        # empty and one-letter terms are ignored, they probably are not meant to be
-        # translated, and would be very hard to translate anyway.
-        sanitized_term = (source or '').strip()
-        # remove non-alphanumeric chars
-        sanitized_term = re.sub(r'\W+', '', sanitized_term)
-        if not sanitized_term or len(sanitized_term) <= 1:
-            return
-        self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
+        if is_meaningful_term(source):
+            self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
 
     def _export_imdinfo(self, model: str, imd_per_id: dict[int, ImdInfo]):
         records = self._get_translatable_records(imd_per_id.values())
@@ -1437,13 +1755,16 @@ class TranslationModuleReader(TranslationReader):
             self._export_imdinfo(model, imd_per_id)
 
     def _get_module_from_path(self, path):
-        for (mp, rec) in self._path_list:
-            mp = os.path.join(mp, '')
-            dirname = os.path.join(os.path.dirname(path), '')
-            if rec and path.startswith(mp) and dirname != mp:
-                path = path[len(mp):]
-                return path.split(os.path.sep)[0]
-        return 'base' # files that are not in a module are considered as being in 'base' module
+        dirname = os.path.join(os.path.dirname(path), '')
+        best_mp = max((
+            mpf for mp, rec in self._path_list
+            if rec and (mpf := os.path.join(mp, '')) and path.startswith(mpf) and dirname != mpf
+        ), key=len, default='')
+
+        if best_mp:
+            path = path[len(best_mp):]
+            return path.split(os.path.sep)[0]
+        return 'base'  # files that are not in a module are considered as being in 'base' module
 
     def _verified_module_filepaths(self, fname, path, root):
         fabsolutepath = join(root, fname)
@@ -1638,7 +1959,6 @@ class TranslationImporter:
         if not self.model_translations and not self.model_terms_translations:
             return
 
-        cr = self.cr
         env = self.env
         env.flush_all()
 
@@ -1649,21 +1969,22 @@ class TranslationImporter:
             # field_name, {xmlid: {src: {lang: value}}}
             for field_name, field_dictionary in model_dictionary.items():
                 field = fields.get(field_name)
-                for sub_xmlids in split_every(cr.IN_MAX, field_dictionary.keys()):
+                for sub_xmlids in split_every(env.cr.IN_MAX, field_dictionary.keys()):
                     # [module_name, imd_name, module_name, imd_name, ...]
-                    params = []
-                    for xmlid in sub_xmlids:
-                        params.extend(xmlid.split('.', maxsplit=1))
-                    cr.execute(f'''
-                        SELECT m.id, imd.module || '.' || imd.name, m."{field_name}", imd.noupdate
-                        FROM "{model_table}" m, "ir_model_data" imd
+                    params = [xmlid.split('.', maxsplit=1) for xmlid in sub_xmlids]
+                    rows = env.execute_query(SQL("""
+                        SELECT m.id, imd.module || '.' || imd.name, m.%s, imd.noupdate
+                        FROM %s m, "ir_model_data" imd
                         WHERE m.id = imd.res_id
-                        AND ({" OR ".join(["(imd.module = %s AND imd.name = %s)"] * (len(params) // 2))})
-                    ''', params)
+                        AND (%s)
+                    """, SQL.identifier(field_name), SQL.identifier(model_table), SQL(" OR ").join(
+                        SQL("(imd.module = %s AND imd.name = %s)", *param)
+                        for param in params
+                    )))
 
                     # [id, translations, id, translations, ...]
                     params = []
-                    for id_, xmlid, values, noupdate in cr.fetchall():
+                    for id_, xmlid, values, noupdate in rows:
                         if not values:
                             continue
                         _value_en = values.get('_en_US', values['en_US'])
@@ -1701,16 +2022,19 @@ class TranslationImporter:
                             if f'_{lang}' in values:
                                 changed_values[f'_{lang}'] = None
                         if changed_values:
-                            params.extend((id_, Json(changed_values)))
+                            params.append((id_, Json(changed_values)))
                     if params:
-                        env.cr.execute(f"""
-                            UPDATE "{model_table}" AS m
-                            SET "{field_name}" = jsonb_strip_nulls("{field_name}" || t.value)
+                        env.execute_query(SQL("""
+                            UPDATE %(table)s AS m
+                            SET %(field_name)s = jsonb_strip_nulls(%(field_name)s || t.value)
                             FROM (
-                                VALUES {', '.join(['(%s, %s::jsonb)'] * (len(params) // 2))}
+                                VALUES %(values)s
                             ) AS t(id, value)
                             WHERE m.id = t.id
-                        """, params)
+                        """, table=SQL.identifier(model_table), field_name=SQL.identifier(field_name), values=SQL(", ").join(
+                            SQL("(%s, %s::jsonb)", *param)
+                            for param in params
+                        )))
 
         self.model_terms_translations.clear()
 
@@ -1718,32 +2042,41 @@ class TranslationImporter:
             Model = env[model_name]
             model_table = Model._table
             for field_name, field_dictionary in model_dictionary.items():
-                for sub_field_dictionary in split_every(cr.IN_MAX, field_dictionary.items()):
+                for sub_field_dictionary in split_every(env.cr.IN_MAX, field_dictionary.items()):
                     # [xmlid, translations, xmlid, translations, ...]
                     params = []
                     for xmlid, translations in sub_field_dictionary:
-                        params.extend([*xmlid.split('.', maxsplit=1), Json(translations)])
+                        params.append([*xmlid.split('.', maxsplit=1), Json(translations)])
                     if not force_overwrite:
-                        value_query = f"""CASE WHEN {overwrite} IS TRUE AND imd.noupdate IS FALSE
-                        THEN m."{field_name}" || t.value
-                        ELSE t.value || m."{field_name}"END"""
+                        value_query = SQL("""CASE WHEN %(overwrite)s IS TRUE AND imd.noupdate IS FALSE
+                        THEN m.%(field_name)s || t.value
+                        ELSE t.value || m.%(field_name)s
+                        END""", overwrite=overwrite, field_name=SQL.identifier(field_name))
                     else:
-                        value_query = f'm."{field_name}" || t.value'
-                    env.cr.execute(f"""
-                        UPDATE "{model_table}" AS m
-                        SET "{field_name}" = {value_query}
+                        value_query = SQL("m.%s || t.value", SQL.identifier(field_name))
+                    env.execute_query(SQL("""
+                        UPDATE %(table)s AS m
+                        SET %(field_name)s = %(value_query)s
                         FROM (
-                            VALUES {', '.join(['(%s, %s, %s::jsonb)'] * (len(params) // 3))}
+                            VALUES %(values)s
                         ) AS t(imd_module, imd_name, value)
                         JOIN "ir_model_data" AS imd
-                        ON imd."model" = '{model_name}' AND imd.name = t.imd_name AND imd.module = t.imd_module
+                        ON imd."model" = %(model_name)s AND imd.name = t.imd_name AND imd.module = t.imd_module
                         WHERE imd."res_id" = m."id"
-                    """, params)
+                    """,
+                    table=SQL.identifier(model_table),
+                    field_name=SQL.identifier(field_name),
+                    model_name=model_name,
+                    value_query=value_query,
+                    values=SQL(", ").join(
+                        SQL("(%s, %s, %s::jsonb)", *param)
+                        for param in params
+                    )))
 
         self.model_translations.clear()
 
         env.invalidate_all()
-        env.registry.clear_cache()
+        env.transaction.invalidate_ormcache()
         if self.verbose:
             _logger.info("translations are loaded successfully")
 

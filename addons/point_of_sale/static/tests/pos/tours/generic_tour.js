@@ -8,7 +8,6 @@ import { registry } from "@web/core/registry";
 
 //This tour is meant to be run on all localizations
 registry.category("web_tour.tours").add("generic_localization_tour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps ) #245680
     steps: () =>
         [
             Chrome.startPoS().map((step) => ({ ...step, timeout: 20000 })),
@@ -17,8 +16,14 @@ registry.category("web_tour.tours").add("generic_localization_tour", {
             ProductScreen.clickCustomer("AAAA Generic Partner"),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             ProductScreen.clickDisplayedProduct("Wall Shelf Unit"),
+            ProductScreen.addDiscount(10),
+            {
+                content: "check discount applied on orderline",
+                trigger: ".orderline .price-per-unit",
+            },
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.enterPaymentLineAmount("Cash", "200"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
             GenericHooks.afterValidateHook(),

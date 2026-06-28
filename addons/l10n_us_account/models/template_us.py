@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_us_template_data(self):
         return {
             'code_digits': '0',
-            'property_account_receivable_id': 'account_account_us_receivable',
-            'property_account_payable_id': 'account_account_us_payable',
         }
 
     @template('us', 'res.company')
@@ -77,17 +75,23 @@ class AccountChartTemplate(models.AbstractModel):
                 'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.us',
                 'account_default_pos_receivable_account_id': 'account_account_us_pos_receivable',
+                'bank_account_code_prefix': False,
+                'cash_account_code_prefix': False,
+                'transfer_account_code_prefix': False,
                 'income_currency_exchange_account_id': 'account_account_us_income_currency_exchange',
                 'expense_currency_exchange_account_id': 'account_account_us_expense_currency_exchange',
                 'default_cash_difference_income_account_id': 'account_account_us_cash_diff_income',
                 'default_cash_difference_expense_account_id': 'account_account_us_cash_diff_expense',
                 'account_journal_early_pay_discount_loss_account_id': 'account_account_us_cash_discount_loss',
                 'account_journal_early_pay_discount_gain_account_id': 'account_account_us_cash_discount_gain',
-                'expense_account_id': 'account_account_us_expense',
+                'expense_account_id': 'account_account_us_cost_of_goods_sold',
                 'income_account_id': 'account_account_us_income',
+                'receivable_account_id': 'account_account_us_receivable',
+                'payable_account_id': 'account_account_us_payable',
                 'account_sale_tax_id': default_sales_tax,
                 'account_purchase_tax_id': default_purchase_tax,
                 'account_stock_valuation_id': 'account_account_us_inventory_valuation',
+                'account_production_wip_account_id': 'account_account_us_wip',
             },
         }
 
@@ -103,7 +107,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_us_account_account(self):
         return {
             'account_account_us_inventory_valuation': {
-                'account_stock_variation_id': 'account_account_us_raw_materials',
+                'account_stock_variation_id': 'account_account_us_inventory_variation',
             },
             'account_account_us_technology': {
                 'asset_depreciation_account_id': 'account_account_us_depreciation_technology',

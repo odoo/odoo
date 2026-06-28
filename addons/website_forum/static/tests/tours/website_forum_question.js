@@ -1,8 +1,6 @@
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add('forum_question', {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
     {
         content: "Ask the question in this forum by clicking on the button.",
@@ -26,11 +24,9 @@ registry.category("web_tour.tours").add('forum_question', {
         trigger: ".note-editable:not(:has(br))",
     },
     {
-        content: "Insert tags related to your question.",
-        trigger: '.o_select_menu_toggler',
-        run: 'click',
+        trigger: ".o_select_menu_input",
+        run: `edit Tag`,
     },
-    ...stepUtils.editSelectMenuInput(".o_select_menu_input", "Tag"),
     {
         content: "Create a new tag.",
         trigger: ".o-dropdown-item:contains(Create option)",
@@ -42,10 +38,9 @@ registry.category("web_tour.tours").add('forum_question', {
     },
     {
         content: "Insert tags related to your question.",
-        trigger: ".o_select_menu_toggler",
-        run: "click",
+        trigger: ".o_select_menu_input",
+        run: "edit tag, test tag",
     },
-    ...stepUtils.editSelectMenuInput(".o_select_menu_input", "tag, test tag"),
     {
         content: "Create multiple new tags.",
         trigger: ".o-dropdown-item:contains(Create option)",
@@ -104,7 +99,6 @@ registry.category("web_tour.tours").add('forum_question', {
     {
         trigger: "a:contains(\"Reply\").collapsed",
         content: "Click to reply.",
-        tooltipPosition: "bottom",
         run: "click",
     },
     {

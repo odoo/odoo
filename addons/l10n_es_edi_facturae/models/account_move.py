@@ -151,6 +151,8 @@ class AccountMove(models.Model):
         readonly=False,
     )
 
+    l10n_es_original_invoice_credited = fields.Char(string='Original Invoice Credited', store=True)
+
     def _auto_init(self):
         # Create compute stored field l10n_es_edi_facturae_reason_code and
         # l10n_es_payment_means here to avoid timeout error on large databases.
@@ -244,27 +246,38 @@ class AccountMove(models.Model):
 
     def _l10n_es_edi_facturae_get_corrective_data(self):
         self.ensure_one()
-        if self.move_type.endswith('refund'):
-            if not self.reversed_entry_id:
-                raise UserError(_("The credit note/refund appears to have been issued manually. For the purpose of "
-                                  "generating a Facturae document, it's necessary that the credit note/refund is created "
-                                  "directly from the associated invoice/bill."))
+        if not self.is_refund():
+            return {}
 
-            refunded_invoice = self.env['account.move'].browse(self._l10n_es_edi_facturae_get_refunded_invoices()[self.id])
+        refunded_invoice = self.env['account.move'].browse(
+            self._l10n_es_edi_facturae_get_refunded_invoices().get(self.id)
+        )
+        if refunded_invoice:
+            invoice_name = refunded_invoice.name
             tax_period = refunded_invoice._l10n_es_edi_facturae_get_tax_period()
+            start_date = tax_period['start']
+            end_date = tax_period['end']
+        elif self.l10n_es_original_invoice_credited:
+            invoice_name = self.l10n_es_original_invoice_credited
+            start_date = self.l10n_es_invoicing_period_start_date
+            end_date = self.l10n_es_invoicing_period_end_date
+            if not (start_date and end_date):
+                raise UserError(_("Please fill in the invoicing period (start and end date) "
+                                  "before generating the corrective Facturae document."))
+        else:
+            raise UserError(_("To generate a Facturae corrective document, link the refund to its "
+                              "original invoice or, if it is not in the system, fill in the 'Original Invoice Credited' field."))
 
-            reason_code = self.l10n_es_edi_facturae_reason_code or '10'
-            reason_description = SPANISH_CREDIT_REASON_TYPE[reason_code]
-            return {
-                'refunded_invoice_record': refunded_invoice,
-                'ReasonCode': reason_code,
-                'Reason': reason_description,
-                'TaxPeriod': {
-                    'StartDate': tax_period.get('start'),
-                    'EndDate': tax_period.get('end'),
-                }
-            }
-        return {}
+        reason_code = self.l10n_es_edi_facturae_reason_code or '10'
+        return {
+            'refunded_invoice_record': invoice_name,
+            'ReasonCode': reason_code,
+            'Reason': SPANISH_CREDIT_REASON_TYPE[reason_code],
+            'TaxPeriod': {
+                'StartDate': start_date,
+                'EndDate': end_date,
+            },
+        }
 
     def _l10n_es_edi_facturae_get_administrative_centers(self, partner):
         self.ensure_one()
@@ -486,20 +499,25 @@ class AccountMove(models.Model):
             invoice_values['Items'].append(invoice_line_values)
 
         def grouping_function_per_base_line_tax(base_line, tax_data):
+            if not tax_data:
+                return
             return {
-                'record': base_line['record'],
-                'tax': tax_data['tax'] if tax_data else None,
+                'tax_es_type': tax_data['tax'].l10n_es_edi_facturae_tax_type,
+                'tax_rate': tax_data['tax'].amount,
+                'tax_amount_type': tax_data['tax'].amount_type,
             }
 
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function_per_base_line_tax)
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
         for grouping_key, values in values_per_grouping_key.items():
-            tax = grouping_key['tax']
-            if not tax:
+            if not grouping_key:
+                continue
+            tax_record = values['base_line_x_taxes_data'][0][1][0]['tax']
+            if not tax_record:
                 continue
 
-            is_withholding = tax.amount < 0.0
-            tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data({**values, 'grouping_key': tax})
+            is_withholding = values['grouping_key']['tax_rate'] < 0.0
+            tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data({**values, 'grouping_key': tax_record}, round=True)
             if is_withholding:
                 invoice_values['TaxesWithheld'].append(tax_data)
                 invoice_values['TotalTaxesWithheld'] -= values['tax_amount_currency']
@@ -552,7 +570,11 @@ class AccountMove(models.Model):
             'Invoices': [invoice_values],
         }
 
-        if self.l10n_es_invoicing_period_start_date and self.l10n_es_invoicing_period_end_date:
+        if (
+            not self.is_refund()
+            and self.l10n_es_invoicing_period_start_date
+            and self.l10n_es_invoicing_period_end_date
+        ):
             template_values['Invoices'][0]['InvoiceIssueData']['InvoicingPeriod'] = {
                 'StartDate': self.l10n_es_invoicing_period_start_date,
                 'EndDate': self.l10n_es_invoicing_period_end_date,

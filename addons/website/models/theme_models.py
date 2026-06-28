@@ -246,6 +246,30 @@ class ThemeUtils(models.AbstractModel):
         'website.footer_custom',
     ]
 
+    # Templates managing the header content width.
+    _header_width_templates = [
+        'website.header_width_small',
+        'website.header_width_full',
+    ]
+
+    # Templates managing header and footer options that are not mutually
+    # exclusive.
+    # Active by default.
+    _header_footer_active_option_templates = [
+        # Header
+        'website.option_header_brand_logo',
+        'website.header_text_element',
+        'website.header_search_box',
+        'website.header_call_to_action',
+    ]
+    # Unactive by default.
+    _header_footer_unactive_option_templates = [
+        # Header
+        'website.header_social_links',
+        # Footer
+        'website.footer_no_copyright',
+    ]
+
     def _post_copy(self, mod):
         # Call specific theme post copy
         theme_post_copy = '_%s_post_copy' % mod.name
@@ -291,19 +315,31 @@ class ThemeUtils(models.AbstractModel):
         # Reinitialize footer scrolltop template
         self.disable_view('website.option_footer_scrolltop')
 
+        # Reinitialize the header content width
+        for view in self._header_width_templates:
+            self.disable_view(view)
+
+        # Reinitialize some header and footer options.
+        for view in self._header_footer_active_option_templates:
+            self.enable_view(view)
+        for view in self._header_footer_unactive_option_templates:
+            self.disable_view(view)
+
+        # Reinitialize some page options
+        self.set_page_option("header_overlay", False)
+
     @api.model
     def _toggle_asset(self, key, active):
         ThemeIrAsset = self.env['theme.ir.asset'].sudo().with_context(active_test=False)
         obj = ThemeIrAsset.search([('key', '=', key)])
-        website = self.env['website'].get_current_website()
         if obj:
-            obj = obj.copy_ids.filtered(lambda x: x.website_id == website)
+            obj = obj.copy_ids.filtered(lambda x: x.website_id == self.env.website)
         else:
             Asset = self.env['ir.asset'].sudo().with_context(active_test=False)
             obj = Asset.search([('key', '=', key)], limit=1)
             has_specific = obj.key and Asset.search_count([
                 ('key', '=', obj.key),
-                ('website_id', '=', website.id)
+                ('website_id', '=', self.env.website.id)
             ]) >= 1
             if not has_specific and active == obj.active:
                 return
@@ -312,10 +348,9 @@ class ThemeUtils(models.AbstractModel):
     @api.model
     def _toggle_view(self, xml_id, active):
         obj = self.env.ref(xml_id)
-        website = self.env['website'].get_current_website()
         if obj._name == 'theme.ir.ui.view':
             obj = obj.with_context(active_test=False)
-            obj = obj.copy_ids.filtered(lambda x: x.website_id == website)
+            obj = obj.copy_ids.filtered(lambda x: x.website_id == self.env.website)
         else:
             # If a theme post copy wants to enable/disable a view, this is to
             # enable/disable a given functionality which is disabled/enabled
@@ -325,7 +360,7 @@ class ThemeUtils(models.AbstractModel):
             View = self.env['ir.ui.view'].with_context(active_test=False)
             has_specific = obj.key and View.search_count([
                 ('key', '=', obj.key),
-                ('website_id', '=', website.id)
+                ('website_id', '=', self.env.website.id)
             ]) >= 1
             if not has_specific and active == obj.active:
                 return
@@ -347,11 +382,27 @@ class ThemeUtils(models.AbstractModel):
         elif xml_id in self._footer_templates:
             for view in self._footer_templates:
                 self.disable_view(view)
+        elif xml_id in self._header_width_templates:
+            for view in self._header_width_templates:
+                self.disable_view(view)
         self._toggle_view(xml_id, True)
 
     @api.model
     def disable_view(self, xml_id):
         self._toggle_view(xml_id, False)
+
+    @api.model
+    def set_page_option(self, page_option, value):
+        # Only for the homepage and if it is a simple page, as it could break
+        # technical pages.
+        homepage_url = self.env.website.homepage_url or '/'
+        homepage = self.env['website.page'].search([
+            ('website_id', '=', self.env.website.id),
+            ('url', '=', homepage_url),
+        ], limit=1)
+
+        if homepage:
+            homepage.write({page_option: value})
 
 
 class IrUiView(models.Model):

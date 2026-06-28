@@ -29,7 +29,7 @@ class MercadoPagoPaymentController(http.Controller):
         :rtype: None
         """
         tx_sudo = (
-            request
+            self
             .env["payment.transaction"]
             .sudo()
             ._search_by_reference("mercado_pago", {"external_reference": reference})
@@ -48,9 +48,7 @@ class MercadoPagoPaymentController(http.Controller):
             json=payload,
             idempotency_key=payment_utils.generate_idempotency_key(tx_sudo, scope="direct_payment"),
         )
-        tx_sudo._process(
-            "mercado_pago", dict(response_content, merchantReference=reference, token=token)
-        )
+        tx_sudo._record(dict(response_content, merchantReference=reference, token=token))
 
     @http.route(const.PAYMENT_RETURN_ROUTE, type="http", methods=["GET"], auth="public")
     def mercado_pago_return_from_checkout(self, **data):
@@ -68,7 +66,7 @@ class MercadoPagoPaymentController(http.Controller):
         return request.redirect("/payment/status")
 
     @http.route(
-        f"{const.WEBHOOK_ROUTE}/<reference>",
+        f"{const.WEBHOOK_ROUTE}/<path:reference>",
         type="http",
         auth="public",
         methods=["POST"],
@@ -117,4 +115,4 @@ class MercadoPagoPaymentController(http.Controller):
         except ValidationError:
             _logger.error("Unable to verify the payment data")
         else:
-            tx_sudo._process("mercado_pago", verified_data)
+            tx_sudo._record(verified_data)

@@ -2,7 +2,9 @@
 
 ## Technical details
 
-API: [Payments API](https://docs.mollie.com/reference/v2/payments-api/create-payment) version `2`
+API:
+- [Payments API](https://docs.mollie.com/reference/v2/payments-api/create-payment) version `2`
+- [Customers API](https://docs.mollie.com/reference/v2/customers-api/create-customer) version `1`
 
 This module integrates Mollie using the generic payment with redirection flow based on form
 submission provided by the `payment` module.

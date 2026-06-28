@@ -1,0 +1,136 @@
+.o_card {
+    --Card-border-width: 0;
+    --Card-min-width: 240px;
+    --Card-padding-v: 0;
+    --Card-padding-h: 0;
+    --Card__image-width: #{$o-kanban-image-width};
+    --Card__image--fill-width: #{$o-kanban-image-fill-width};
+
+}
+
+// TODO AAB: clean this (a lot of references to kanban)
+.o_card_record {
+    --fieldWidget-display: block;
+    --Tag-max-width: 100%;
+    --Tag-font-size: #{$o-font-size-base-smaller};
+    --Tags-margin: calc(1em - var(--Tag-font-size, .75rem)) 0;
+
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    min-width: var(--Card-min-width, 150px);
+    margin: 0 0 (-$border-width);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    break-inside: avoid;
+
+    &:has(.ribbon) {
+        min-height: var(--Ribbon-wrapper-width);
+    }
+
+    // do not break wrap inside buttons
+    button {
+        word-wrap: normal;
+        word-break: normal;
+    }
+
+    @include media-only(print) {
+        font-size: 0.8rem;
+    }
+
+    padding: var(--Card-padding-v) var(--Card-padding-h);
+    border-width: var(--Card-border-width, #{$border-width});
+    border-style: solid;
+    border-color: $border-color;
+    background-color: $o-view-background-color;
+
+    @include media-only(print) {
+        .o_field_background_image {
+            height: auto;
+        }
+
+        div.o_field_widget.o_field_background_image > img {
+            position: relative;
+        }
+    }
+
+    &:where(:not(.row)) {
+        flex-flow: column;
+
+        .o_record_main {
+            flex-grow: 1;
+        }
+
+        aside {
+            flex: 0 0 var(--Card__image-width);
+        }
+    }
+
+    > .o_record_main {
+        display: flex;
+        flex-flow: column;
+        min-width: 0;
+        height: 100%;
+
+        @include media-only(print) {
+            height: auto;
+        }
+    }
+
+    > footer, > .o_record_main > footer {
+        display: flex;
+        align-items: center;
+        column-gap: var(--Card-Footer-gap, #{map-get($spacers, 2)});
+        margin-top: auto;
+        padding-top: var(--Card-padding-v);
+        font-size: var(--Card-Footer-font-size, .875rem);
+    }
+
+    aside {
+        img {
+            height: var(--Card__image-height, var(--Card__image-width));
+
+            @include media-only(print) {
+                height: auto;
+            }
+        }
+
+        &.o_card_aside_full {
+            --Card__image-height: 100%;
+            --Card__image-width: var(--Card__image--fill-width);
+
+            @include media-only(print) {
+                --Card__image-height: auto;
+            }
+
+            .o_card_image_fill {
+                min-height: var(--Card__image-fill-width);
+                max-height: var(--Card__image-max-height, $o-kanban-image-fill-width * 1.5);
+
+                @include media-only(print) {
+                    height: auto;
+                }
+            }
+
+            > * {
+                @include media-breakpoint-up(md) {
+                    height: calc(100% + var(--Card-padding-v)* 2);
+                    margin-top: calc(var(--Card-padding-v)* -1);
+                    margin-bottom: calc(var(--Card-padding-v)* -1);
+                    margin-left: calc(var(--Card-padding-h)* -1);
+                
+                    @include media-only(print) {
+                        height: auto;
+                    }
+                }
+            }
+        }
+    }
+
+    .o_attachment_image > img {
+        width: 100%;
+        height: auto;
+        border-radius: var(--Attachment-Image-border-radius, #{$border-radius});
+    }
+}

@@ -4,7 +4,7 @@
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/india.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['in'],
-    'version': '2.0',
+    'version': '2.1',
     'description': """
 Indian Accounting: Chart of Account.
 ====================================
@@ -28,7 +28,6 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
     'auto_install': ['account'],
     'data': [
         'security/l10n_in_security.xml',
-        'security/ir.model.access.csv',
         "data/iap_service_data.xml",
         'data/account.account.tag.csv',
         'data/l10n_in_chart_data.xml',
@@ -40,6 +39,9 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'data/account_cash_rounding.xml',
         'data/account_tax_report_tcs_data.xml',
         'data/account_tax_report_tds_data.xml',
+        'data/account_tax_report_tcs_it_act_25_data.xml',
+        'data/account_tax_report_tds_it_act_25_data.xml',
+        'data/account_report_data.xml',
         'data/l10n_in.section.alert.csv',
         'wizard/l10n_in_withhold_wizard.xml',
         'views/l10n_in_pan_entity_views.xml',
@@ -59,6 +61,7 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'views/account_tax_views.xml',
         'views/uom_uom_views.xml',
         'views/base_document_layout_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/product_demo.xml',

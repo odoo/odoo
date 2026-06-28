@@ -1,26 +1,24 @@
 import { usePopover } from "@web/core/popover/popover_hook";
-import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
+
+export const avatarProps = {
+    resModel: t.string(),
+    resId: t.number(),
+    uniqueId: t.number().optional(),
+    canOpenPopover: t.boolean().optional(true),
+    cssClass: t.or([t.string(), t.object()]).optional(),
+    displayName: t.string().optional(),
+    noSpacing: t.boolean().optional(),
+};
 
 export class Avatar extends Component {
     static template = "mail.Avatar";
-    static components = { Popover: AvatarCardPopover };
-    static props = {
-        resModel: { type: String },
-        resId: { type: Number },
-        uniqueId: { type: Number, optional: true },
-        canOpenPopover: { type: Boolean, optional: true },
-        cssClass: { type: [String, Object], optional: true },
-        displayName: { type: String, optional: true },
-        noSpacing: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        canOpenPopover: true,
-    };
+    props = props(avatarProps);
 
     setup() {
-        this.avatarCard = usePopover(this.constructor.components.Popover);
+        this.avatarCard = usePopover(AvatarCard);
     }
 
     get canOpenPopover() {

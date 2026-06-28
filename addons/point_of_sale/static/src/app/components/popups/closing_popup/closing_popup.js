@@ -1,10 +1,9 @@
-import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
@@ -35,7 +34,7 @@ export class ClosePosPopup extends Component {
         this.report = useService("report");
         this.dialog = useService("dialog");
         this.ui = useService("ui");
-        this.state = useState(this.getInitialState());
+        this.state = proxy(this.getInitialState());
         this.confirm = useAsyncLockedMethod(this.confirm);
     }
     get cashMoveData() {
@@ -242,7 +241,11 @@ export class ClosePosPopup extends Component {
                 return this.handleClosingError(response);
             }
             this.pos.session.state = "closed";
-            this.pos.router.close();
+            try {
+                await this.pos.ticketPrinter.printSaleDetailsReceipt({ download: true });
+            } finally {
+                this.pos.router.close();
+            }
         } catch (error) {
             if (error instanceof ConnectionLostError) {
                 throw error;
@@ -323,7 +326,7 @@ export class ClosePosPopup extends Component {
     }
     get validPms() {
         return this.props.non_cash_payment_methods.filter(
-            (item) => item.number == 1 && (item.type === "bank" || item.type === "cash")
+            (pm) => pm.number !== 0 && (pm.type === "bank" || pm.type === "cash")
         );
     }
     isTheLastPM(pm) {

@@ -1,4 +1,7 @@
+import math
+
 from odoo import http
+from odoo.addons.google_address_autocomplete.controllers.google_address_autocomplete import AutoCompleteController
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.service.model import call_kw
@@ -7,26 +10,49 @@ from odoo.exceptions import MissingError
 from odoo.tools import consteq
 
 
+def _haversine_distance(lat1, long1, lat2, long2):
+    """Compute the straight-line distance in km between two lat/long points."""
+    R = 6371  # earth's radius in km
+    dlat = math.radians(lat2 - lat1)
+    dlong = math.radians(long2 - long1)
+    arcsin = (
+        math.sin(dlat / 2) ** 2
+        + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2))
+        * math.sin(dlong / 2) ** 2
+    )
+    return 2 * R * math.atan2(math.sqrt(arcsin), math.sqrt(1 - arcsin))
+
+
 class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-order/<device_type>/", auth="public", type="jsonrpc", website=True)
     def process_order(self, order, access_token, table_identifier, device_type):
         pos_config, table = self._verify_authorization(access_token, table_identifier, order)
+        if not pos_config.self_ordering_mode == device_type:
+            raise Unauthorized("Invalid device type")
 
         # Create a safe copy of the order with only the necessary fields for order creation to
         # avoid potential security issues and to reduce the payload size
         safe_data = pos_config.env['pos.order']._check_pos_order(pos_config, order, device_type, table)
         results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([safe_data])
         order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
+        preset_id = order_ids.preset_id
+
+        if preset_id and preset_id.service_at == 'delivery':
+            self._ensure_delivery_fee(order_ids, preset_id)
 
         # Recompute all prices from newly created lines to ensure price correctness and
         # avoid potential manipulation from the frontend
         order_ids.recompute_prices()
+
         amount_total = order_ids.amount_total
 
         if amount_total == 0:
             order_ids.state = 'paid'
             order_ids._process_saved_order(False)
             order_ids._send_self_order_receipt()
+
+        for order in order_ids:
+            order._send_order()
 
         return self._generate_return_values(order_ids, pos_config)
 
@@ -38,24 +64,60 @@ class PosSelfOrderController(http.Controller):
             del o['mobile']
 
         return {
-            'pos.order': self.env['pos.order']._load_pos_self_data_read(order, config),
-            'res.partner': self.env['res.partner']._load_pos_self_data_read(order.partner_id, config),
+            'pos.order': orders,
             'pos.order.line': self.env['pos.order.line']._load_pos_self_data_read(order.lines, config),
             'pos.payment': self.env['pos.payment']._load_pos_self_data_read(order.payment_ids, config),
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_self_data_read(order.lines.custom_attribute_value_ids, config),
+            'pos.prep.order': self.env['pos.prep.order']._load_pos_data_read(order.prep_order_ids, config) if config else [],
+            'pos.prep.line': self.env['pos.prep.line']._load_pos_data_read(order.prep_order_ids.prep_line_ids, config) if config else [],
         }
 
-    def _verify_line_price(self, lines, pos_config, preset_id):
-        lines.order_id.recompute_prices()
+    def _ensure_delivery_fee(self, order, preset):
+        """Add or remove the delivery fee line based on the order total and preset configuration."""
+        delivery_product = preset.delivery_product_id
+        if not delivery_product:
+            return
+
+        non_delivery_lines = order.lines.filtered(
+            lambda l: l.product_id != delivery_product
+        )
+        tax_included = order.config_id.iface_tax_included == 'total'
+        total_field = 'price_subtotal_incl' if tax_included else 'price_subtotal'
+        non_delivery_total = sum(non_delivery_lines.mapped(total_field))
+
+        free_min = preset.free_delivery_min_amount
+        delivery_is_free = bool(free_min) and non_delivery_total >= free_min
+
+        existing_delivery_lines = order.lines.filtered(
+            lambda l: l.product_id == delivery_product
+        )
+        if delivery_is_free:
+            existing_delivery_lines.unlink()
+        elif not existing_delivery_lines:
+            new_line = order.env['pos.order.line'].sudo().create({
+                'order_id': order.id,
+                'product_id': delivery_product.id,
+                'qty': 1,
+                'price_subtotal': 0.0,
+                'price_subtotal_incl': 0.0,
+                'full_product_name': delivery_product.name,
+            })
+            order._compute_line_price(new_line, price=preset.delivery_product_price)
 
     @http.route('/pos-self-order/validate-partner', auth='public', type='jsonrpc', website=True)
-    def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None):
+    def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None, preset_id=None):
         pos_config = self._verify_pos_config(access_token)
+        preset = pos_config.env['pos.preset'].browse(int(preset_id)) if preset_id else False
         existing_partner = pos_config.env['res.partner'].sudo().browse(int(partner_id)) if partner_id else False
+        google_places_api_key = request.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key') or None
 
         if existing_partner and existing_partner.exists():
+            if google_places_api_key and preset and preset.exists() and preset.service_at == 'delivery':
+                error = self._check_delivery_address_for_partner(preset, existing_partner)
+                if error:
+                    return {'error': error}
             return {
-                'res.partner': self.env['res.partner']._load_pos_self_data_read(existing_partner, pos_config),
+                'res.partner': existing_partner.read(['id'], load=False),
             }
 
         state_id = pos_config.env['res.country.state'].browse(int(state_id)) if state_id else False
@@ -71,10 +133,37 @@ class PosSelfOrderController(http.Controller):
             'state_id': state_id.id if state_id else False,
             'company_id': pos_config.company_id.id,
         })
+        if google_places_api_key and preset and preset.exists() and preset.service_at == 'delivery':
+            error = self._check_delivery_address_for_partner(preset, partner_sudo)
+            if error:
+                return {'error': error}
 
         return {
-            'res.partner': self.env['res.partner']._load_pos_self_data_read(partner_sudo, pos_config),
+            'res.partner': partner_sudo.read(['id'], load=False),
         }
+
+    def _check_delivery_address_for_partner(self, preset, partner):
+        if not partner.partner_latitude and not partner.partner_longitude:
+            partner.geo_localize()
+        if not partner.partner_latitude and not partner.partner_longitude:
+            return {
+                'type': 'address',
+                'message': self.env._("We couldn't locate this address. Please enter a complete address with a street number."),
+            }
+        if not preset.delivery_from_address:
+            return None
+        distance_km = _haversine_distance(
+            partner.partner_latitude, partner.partner_longitude,
+            preset.delivery_from_latitude, preset.delivery_from_longitude,
+        )
+        max_distance = preset.delivery_max_distance_km
+        max_distance_km = max_distance * 1.60934 if preset.delivery_distance_unit == 'mi' else max_distance
+        if max_distance_km and distance_km > max_distance_km:
+            return {
+                'type': 'delivery',
+                'message': self.env._("Delivery isn't available for this address. You can still place your order using another method."),
+            }
+        return None
 
     @http.route('/pos-self-order/remove-order', auth='public', type='jsonrpc', website=True)
     def remove_order(self, access_token, order_id, order_access_token):
@@ -92,17 +181,7 @@ class PosSelfOrderController(http.Controller):
     @http.route('/pos-self-order/get-user-data', auth='public', type='jsonrpc', website=True)
     def get_orders_by_access_token(self, access_token, order_access_tokens, table_identifier=None):
         pos_config = self._verify_pos_config(access_token)
-        table = pos_config.env["restaurant.table"].search([('identifier', '=', table_identifier)], limit=1)
-        domain = False
-
-        if not table_identifier or pos_config.self_ordering_pay_after == 'each':
-            domain = [(False, '=', True)]
-        else:
-            domain = ['&', '&',
-                ('table_id', '=', table.id),
-                ('state', '=', 'draft'),
-                ('access_token', 'not in', [data.get('access_token') for data in order_access_tokens])
-            ]
+        domain = [(False, '=', True)]
 
         for data in order_access_tokens:
             domain = Domain.OR([domain, ['&',
@@ -186,20 +265,36 @@ class PosSelfOrderController(http.Controller):
         amount_total = sum(lines.mapped('price_subtotal_incl'))
         return amount_total, amount_untaxed
 
-    def _verify_pos_config(self, access_token, check_active_session=True):
+    @http.route('/pos-self/autocomplete/address', methods=['POST'], type='jsonrpc', auth='public', website=True)
+    def pos_self_order_autocomplete_address(self, access_token, partial_address, **kwargs):
+        self._verify_pos_config(access_token)
+        google_places_api_key = request.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key') or None
+        if not google_places_api_key:
+            return {'results': []}
+        return AutoCompleteController()._perform_place_search(partial_address, api_key=google_places_api_key)
+
+    @http.route('/pos-self/autocomplete/address_full', methods=['POST'], type='jsonrpc', auth='public', website=True)
+    def pos_self_order_autocomplete_address_full(self, access_token, address, google_place_id=None, **kwargs):
+        self._verify_pos_config(access_token)
+        google_places_api_key = request.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key') or None
+        if not google_places_api_key:
+            return {'address': None}
+        return AutoCompleteController()._perform_complete_place_search(address, api_key=google_places_api_key, google_place_id=google_place_id)
+
+    def _verify_pos_config(self, access_token):
         """
         Finds the pos.config with the given access_token and returns a record with reduced privileges.
         The record is has no sudo access and is in the context of the record's company and current pos.session's user.
         """
         pos_config_sudo = request.env['pos.config'].sudo().search([('access_token', '=', access_token)], limit=1)
-        if self._verify_config_constraint(pos_config_sudo, check_active_session):
+        if self._verify_config_constraint(pos_config_sudo):
             raise Unauthorized("Invalid access token")
         company = pos_config_sudo.company_id
         user = pos_config_sudo.self_ordering_default_user_id
         return pos_config_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids)
 
-    def _verify_config_constraint(self, pos_config_sudo, check_active_session=True):
-        return not pos_config_sudo or (pos_config_sudo.self_ordering_mode != 'mobile' and pos_config_sudo.self_ordering_mode != 'kiosk') or (check_active_session and not pos_config_sudo.has_active_session)
+    def _verify_config_constraint(self, pos_config_sudo):
+        return not pos_config_sudo or (pos_config_sudo.self_ordering_mode != 'mobile' and pos_config_sudo.self_ordering_mode != 'kiosk')
 
     def _verify_authorization(self, access_token, table_identifier, order):
         """
@@ -220,5 +315,5 @@ class PosSelfOrderController(http.Controller):
 
     @http.route(['/pos-self/ping'], type='jsonrpc', auth='public')
     def pos_ping(self, access_token):
-        self._verify_pos_config(access_token, check_active_session=False)
+        self._verify_pos_config(access_token)
         return {'response': 'pong'}

@@ -1,6 +1,9 @@
 .o_add_snippets_preview .o_snippets_preview_row {
-    transform: scale(0.6) !important;
-    width: 166% !important;
+    @include media-breakpoint-up(lg) {
+        transform: scale(0.6);
+        width: 166%;
+    }
+
     .o_snippet_preview_wrap {
         min-height: auto !important;
         &[data-label]:not([data-label=""])::before {

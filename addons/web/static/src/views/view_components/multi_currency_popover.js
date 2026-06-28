@@ -1,5 +1,4 @@
-import { useExternalListener, useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy, useListener } from "@odoo/owl";
 import { getCurrency, getCurrencyRates } from "@web/core/currency";
 import { toLocaleDateString } from "@web/core/l10n/dates";
 import { user } from "@web/core/user";
@@ -18,11 +17,11 @@ export class MultiCurrencyPopover extends Component {
     setup() {
         this.orm = useService("orm");
         this.defaultCurrency = user.activeCompany.currency_id;
-        this.state = useState({ rates: null });
+        this.state = proxy({ rates: null });
         onWillStart(async () => {
             this.state.rates = await getCurrencyRates();
         });
-        useExternalListener(window, "mouseover", (ev) => {
+        useListener(window, "mouseover", (ev) => {
             if (ev.target !== this.props.target) {
                 this.props.close();
             }

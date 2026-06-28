@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
-import { useSequential } from "@mail/utils/common/hooks";
+import { SearchState } from "@mail/utils/common/hooks";
 import { getInnerHtml } from "@mail/utils/common/html";
-import { onWillUnmount } from "@odoo/owl";
+import { effect, onMounted, onWillDestroy, onWillUnmount, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 import { escapeRegExp } from "@web/core/utils/strings";
@@ -64,62 +63,101 @@ export function searchHighlight(searchTerm, target) {
     return getInnerHtml(htmlDoc.body);
 }
 
-/** @param {import('models').Thread} thread */
-export function useMessageSearch(thread) {
-    const store = useService("mail.store");
-    const sequential = useSequential();
-    const state = useState({
-        thread,
-        async search(before = false) {
-            if (this.searchTerm || this.is_notification !== undefined) {
-                this.searching = true;
-                const data = await sequential(() =>
-                    store.searchMessagesInThread(
-                        this.searchTerm,
-                        this.thread,
-                        before,
-                        this.is_notification
-                    )
-                );
-                if (!data) {
-                    return;
+export class MessageSearchState extends SearchState {
+    count = 0;
+    /** @type {boolean | undefined} */
+    is_notification = undefined;
+    hasMore = false;
+    /** @type {import('@mail/core/common/message_model').Message[]} */
+    messages = [];
+    searched = false;
+    /** @type {import('models').Thread | undefined} */
+    thread;
+    loadMoreBeforeMessageId;
+    /** @type {import("models").Store} */
+    store;
+
+    /** @param {import('models').Thread} [initialThread] */
+    constructor(initialThread) {
+        super();
+        this.store = useService("mail.store");
+        this.thread = initialThread;
+        this.fetch = this.fetchMessages.bind(this);
+        let disposeEffect = () => {};
+        onMounted(() => {
+            disposeEffect = effect(() => {
+                if (this.isActive) {
+                    this.run();
+                } else if (this.searched) {
+                    this.clear();
                 }
-                const { count, loadMore, messages } = data;
-                this.searched = true;
-                this.searching = false;
-                this.count = count;
-                this.loadMore = loadMore;
-                if (before) {
-                    this.messages.push(...messages);
-                } else {
-                    this.messages = messages;
-                }
-            } else {
-                this.clear();
+            });
+        });
+        onWillDestroy(disposeEffect);
+        onWillUnmount(() => this.clear());
+    }
+
+    get isActive() {
+        return !!this.searchTerm || this.is_notification !== undefined;
+    }
+
+    get deps() {
+        return [this.is_notification];
+    }
+
+    /** @param {string} term */
+    async fetchMessages(term) {
+        const before = this.loadMoreBeforeMessageId;
+        this.loadMoreBeforeMessageId = undefined;
+        const data = await this.store.searchMessagesInThread(
+            term,
+            this.thread,
+            before ?? false,
+            this.is_notification
+        );
+        if (!data) {
+            return;
+        }
+        this.searched = true;
+        this.count = data.count;
+        this.hasMore = data.loadMore;
+        if (before !== undefined) {
+            this.messages.push(...data.messages);
+        } else {
+            this.messages = data.messages;
+            if (data.messages.length === 0) {
+                return false;
             }
-        },
-        count: 0,
-        clear() {
-            this.is_notification = undefined;
-            this.messages = [];
-            this.searched = false;
-            this.searching = false;
-            this.searchTerm = undefined;
-        },
-        /** @type {Boolean | undefined} */
-        is_notification: undefined,
-        loadMore: false,
-        /** @type {import('@mail/core/common/message_model').Message[]} */
-        messages: [],
-        /** @type {string|undefined} */
-        searchTerm: undefined,
-        searched: false,
-        searching: false,
-        /** @param {string} target */
-        highlight: (target) => searchHighlight(state.searchTerm, target),
-    });
-    onWillUnmount(() => {
-        state.clear();
-    });
-    return state;
+        }
+    }
+
+    /** @param {number} beforeMessageId */
+    loadMore(beforeMessageId) {
+        this.loadMoreBeforeMessageId = beforeMessageId;
+        this.run();
+    }
+
+    clear() {
+        this.is_notification = undefined;
+        this.messages = [];
+        this.searched = false;
+        this.count = 0;
+        this.hasMore = false;
+        this.reset();
+    }
+
+    /**
+     * Highlights `searchTerm` in `text`.
+     * @param {string} text
+     */
+    highlight(text) {
+        return searchHighlight(this.searchTerm, text);
+    }
+}
+
+/**
+ * @param {import('models').Thread} [initialThread]
+ */
+export function useMessageSearch(initialThread) {
+    return proxy(new MessageSearchState(initialThread));
 }

@@ -1,11 +1,14 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { loadImageInfo } from "@html_editor/utils/image_processing";
-import { renderToElement } from "@web/core/utils/render";
 import { updateCarouselIndicators } from "../carousel_option_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { hasMediaOnly, isMediaElement } from "@html_editor/utils/dom_info";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { forwardToThumbnail } from "@html_builder/utils/utils_css";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
+import { _t } from "@web/core/l10n/translation";
+import { renderToElement } from "@web/core/utils/render";
 import { uuid } from "@web/core/utils/strings";
 
 /**
@@ -36,7 +39,6 @@ export class ImageGalleryOptionPlugin extends Plugin {
             RemoveAllImagesAction,
             SetImageGalleryLayoutAction,
             SetImageGalleryColumnsAction,
-            SetCarouselSpeedAction,
             IndicatorsStyleClassAction,
         },
         system_classes: ["o_empty_gallery_alert"],
@@ -55,6 +57,16 @@ export class ImageGalleryOptionPlugin extends Plugin {
         on_cloned_handlers: ({ cloneEl }) => {
             const carousels = cloneEl.querySelectorAll(".s_image_gallery .carousel");
             this.addUniqueIds(carousels);
+        },
+        // Make sure s_image_gallery elements are not editable, while keeping
+        // the media they contain editable (+ compatibility with older
+        // versions).
+        content_editable_providers: this.getContentEditableEls.bind(this),
+        content_not_editable_providers: this.getContentNotEditableEls.bind(this),
+        dropzone_selectors: {
+            selector: ".s_image_gallery .row > div",
+            dropNear: ".s_image_gallery .row > div",
+            dropLockWithin: ".s_image_gallery",
         },
     };
 
@@ -138,6 +150,7 @@ export class ImageGalleryOptionPlugin extends Plugin {
                 this.dependencies.builderOptions.setNextTarget(activeImageEl);
             }
         }
+        return activeItemEl;
     }
 
     /**
@@ -277,19 +290,23 @@ export class ImageGalleryOptionPlugin extends Plugin {
             id: "slideshow_" + new Date().getTime(),
             colorContrast,
             copyAttributes: true,
+            getIndicatorLabel: (itemPosition, total) =>
+                _t("Slide %(itemPosition)s of %(total)s", { itemPosition, total }),
         });
         if (carouselEl) {
             carouselEl.removeEventListener("slid.bs.carousel", this.onCarouselSlid);
         }
         container.replaceChildren(slideshowEl);
-        slideshowEl.querySelectorAll("img").forEach((img, index) => {
-            img.setAttribute("data-index", index);
-            if (imagesData[index]?.linkEl) {
-                const linkEl = imagesData[index].linkEl.cloneNode(false);
-                img.before(linkEl);
-                linkEl.append(img);
-            }
-        });
+        slideshowEl
+            .querySelectorAll("img:not(.o_carousel_controllers img)")
+            .forEach((img, index) => {
+                img.setAttribute("data-index", index);
+                if (imagesData[index]?.linkEl) {
+                    const linkEl = imagesData[index].linkEl.cloneNode(false);
+                    img.before(linkEl);
+                    linkEl.append(img);
+                }
+            });
         if (images.length) {
             slideshowEl
                 .querySelector(".carousel .o_carousel_controllers")
@@ -400,7 +417,7 @@ export class ImageGalleryOptionPlugin extends Plugin {
     }
 
     getImages(currentContainer) {
-        const imgs = currentContainer.querySelectorAll("img");
+        const imgs = currentContainer.querySelectorAll("img:not(.o_carousel_controllers img)");
         return [...imgs].sort((imgA, imgB) => this.getIndex(imgA) - this.getIndex(imgB));
     }
 
@@ -426,7 +443,7 @@ export class ImageGalleryOptionPlugin extends Plugin {
     onWillRemove(toRemoveEl) {
         // If the removed element is an image from a gallery, store the gallery
         // element for `onRemoved`.
-        if (toRemoveEl.matches(".s_image_gallery img")) {
+        if (toRemoveEl.matches(".s_image_gallery img:not(.o_carousel_controllers img)")) {
             this.imageRemovedGalleryElement = toRemoveEl.closest(".s_image_gallery");
         }
     }
@@ -451,34 +468,49 @@ export class ImageGalleryOptionPlugin extends Plugin {
     getImageElement(el) {
         return el.tagName === "IMG" ? el : el.querySelector("img");
     }
+
+    getContentEditableEls(rootEl) {
+        return [...selectElements(rootEl, ".s_image_gallery *")].filter(
+            (el) => isMediaElement(el) || el.tagName === "IMG"
+        );
+    }
+
+    getContentNotEditableEls(rootEl) {
+        return [
+            ...selectElements(
+                rootEl,
+                ".s_image_gallery .row > *, .s_image_gallery .carousel-inner > *"
+            ),
+        ].filter((el) => hasMediaOnly(el, !!el.closest(".o_grid, .o_nomode, .o_slideshow")));
+    }
 }
 
 export class AddImageAction extends BuilderAction {
     static id = "addImage";
     static dependencies = ["media", "imageGalleryOption"];
-    async load({ editingElement }) {
-        let selectedImages;
-        await new Promise((resolve) => {
-            const onClose = this.dependencies.media.openMediaDialog({
-                onlyImages: true,
-                multiImages: true,
-                save: (images) => {
-                    selectedImages = images;
-                    resolve();
-                },
-            });
-            onClose.then(resolve);
-        });
-        if (!selectedImages) {
-            return [];
-        }
-        return this.dependencies.imageGalleryOption.processImages(editingElement, selectedImages);
+    setup() {
+        this.canTimeout = false;
     }
-    apply({ editingElement, loadResult: { images } }) {
-        if (images && images.length) {
-            const mode = this.dependencies.imageGalleryOption.getMode(editingElement);
-            this.dependencies.imageGalleryOption.setImages(editingElement, mode, images);
-        }
+    async apply({ editingElement }) {
+        await this.dependencies.media.openMediaDialog({
+            onlyImages: true,
+            multiImages: true,
+            save: async (images) => {
+                const { images: processedImages } =
+                    await this.dependencies.imageGalleryOption.processImages(
+                        editingElement,
+                        images
+                    );
+                if (processedImages && processedImages.length) {
+                    const mode = this.dependencies.imageGalleryOption.getMode(editingElement);
+                    this.dependencies.imageGalleryOption.setImages(
+                        editingElement,
+                        mode,
+                        processedImages
+                    );
+                }
+            },
+        });
     }
 }
 export class RemoveAllImagesAction extends BuilderAction {
@@ -530,16 +562,6 @@ export class SetImageGalleryColumnsAction extends BuilderAction {
     }
     isApplied({ editingElement, params: { mainParam: columns } }) {
         return columns === this.dependencies.imageGalleryOption.getColumns(editingElement);
-    }
-}
-
-export class SetCarouselSpeedAction extends BuilderAction {
-    static id = "setCarouselSpeed";
-    apply({ editingElement, value }) {
-        editingElement.dataset.bsInterval = value * 1000;
-    }
-    getValue({ editingElement }) {
-        return editingElement.dataset.bsInterval / 1000;
     }
 }
 

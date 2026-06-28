@@ -1,9 +1,10 @@
-import { useComponent, useEnv, useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { useComponent, useEnv, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
-import { onMounted, onPatched } from "@odoo/owl";
+import { onMounted, onPatched, proxy, useListener } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 /**
  * Introduce error handlers in the component.
@@ -112,7 +113,7 @@ export function useTrackedAsync(asyncFn, options = {}) {
      * lastArgs: any[]
      * }}
      */
-    const state = useState({
+    const state = proxy({
         status: "idle",
         result: null,
         lastArgs: null,
@@ -131,6 +132,9 @@ export function useTrackedAsync(asyncFn, options = {}) {
         } catch (error) {
             state.status = "error";
             state.result = error;
+            if (error instanceof ConnectionLostError) {
+                throw error;
+            }
         }
     };
 
@@ -157,7 +161,7 @@ export function useTrackedAsync(asyncFn, options = {}) {
 }
 
 export function useIsChildLarger(container) {
-    const state = useState({
+    const state = proxy({
         isLarger: false,
         maxItems: 0,
     });
@@ -189,7 +193,7 @@ export function useIsChildLarger(container) {
         }
     };
 
-    useExternalListener(window, "resize", () => {
+    useListener(window, "resize", () => {
         computeSize();
     });
 

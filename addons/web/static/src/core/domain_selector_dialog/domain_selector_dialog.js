@@ -1,6 +1,6 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Domain } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
@@ -14,32 +14,27 @@ export class DomainSelectorDialog extends Component {
         Dialog,
         DomainSelector,
     };
-    static props = {
-        close: Function,
-        onConfirm: Function,
-        resModel: String,
-        className: { type: String, optional: true },
-        defaultConnector: { type: [{ value: "&" }, { value: "|" }], optional: true },
-        domain: String,
-        isDebugMode: { type: Boolean, optional: true },
-        readonly: { type: Boolean, optional: true },
-        text: { type: String, optional: true },
-        confirmButtonText: { type: String, optional: true },
-        disableConfirmButton: { type: Function, optional: true },
-        discardButtonText: { type: String, optional: true },
-        title: { type: String, optional: true },
-        context: { type: Object, optional: true },
-    };
-    static defaultProps = {
-        isDebugMode: false,
-        readonly: false,
-        context: {},
-    };
+    props = props({
+        close: t.function(),
+        onConfirm: t.function(),
+        resModel: t.string(),
+        className: t.string().optional(),
+        defaultConnector: t.selection(["&", "|"]).optional(),
+        domain: t.string(),
+        isDebugMode: t.boolean().optional(false),
+        readonly: t.boolean().optional(false),
+        text: t.string().optional(),
+        confirmButtonText: t.string().optional(),
+        disableConfirmButton: t.function().optional(),
+        discardButtonText: t.string().optional(),
+        title: t.string().optional(),
+        context: t.object().optional({}),
+    });
 
     setup() {
         this.notification = useService("notification");
         this.orm = useService("orm");
-        this.state = useState({ domain: this.props.domain });
+        this.state = proxy({ domain: this.props.domain });
         this.confirmButtonRef = useRef("confirm");
     }
 

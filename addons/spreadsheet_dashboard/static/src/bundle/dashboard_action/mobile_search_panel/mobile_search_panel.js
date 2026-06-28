@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export class DashboardMobileSearchPanel extends Component {
     static template = "spreadsheet_dashboard.DashboardMobileSearchPanel";
@@ -18,7 +17,7 @@ export class DashboardMobileSearchPanel extends Component {
     };
 
     setup() {
-        this.state = useState({ isOpen: false });
+        this.state = proxy({ isOpen: false });
     }
 
     get searchBarText() {

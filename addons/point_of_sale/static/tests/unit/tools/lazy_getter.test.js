@@ -1,6 +1,7 @@
+import { onWillRender } from "@web/owl2/utils";
 import { afterEach, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
-import { Component, onWillRender, reactive, useState, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import {
     mountWithCleanup,
     allowTranslations,
@@ -82,15 +83,15 @@ class AppStore extends WithLazyGetterTrap {
 class WithStore extends Component {
     static props = {};
     static template = xml`
-        <span t-att-class="property">
-            <t t-out="constructor.name" />: <t t-out="this.store[property]" />
+        <span t-att-class="this.property">
+            <t t-out="this.constructor.name" />: <t t-out="this.store[this.property]" />
         </span>
     `;
 
     property = "";
 
     setup() {
-        this.store = useState(this.env.store);
+        this.store = proxy(this.env.store);
         onWillRender(() => this.onWillRender());
     }
 
@@ -133,8 +134,8 @@ class Root extends Component {
     static components = { A, B, C, D, AB, ABC, BC, CD };
     static props = {};
     static template = xml`
-        <t t-foreach="constructor.components" t-as="key" t-key="key">
-            <t t-component="constructor.components[key]" />
+        <t t-foreach="this.constructor.components" t-as="key" t-key="key">
+            <t t-component="this.constructor.components[key]" />
         </t>
     `;
 }
@@ -159,7 +160,7 @@ test("each getter should only be called once and only when needed", async () => 
         },
     });
 
-    const store = reactive(new AppStore());
+    const store = proxy(new AppStore());
     await mountWithCleanup(Root, {
         env: { store },
         noMainContainer: true,
@@ -200,7 +201,7 @@ test("only dependent components rerender", async () => {
         },
     });
 
-    const store = reactive(new AppStore());
+    const store = proxy(new AppStore());
     await mountWithCleanup(Root, {
         env: { store },
         noMainContainer: true,
@@ -262,7 +263,7 @@ test("only dependent getters are called and in correct order", () => {
             return result;
         },
     });
-    const store = reactive(new AppStore());
+    const store = proxy(new AppStore());
 
     expect(store.y).toBe(0);
     verifyUnorderedSteps(["ab", "bc", "cd", "abc", "x", "y"], [["ab", "abc", "x", "y"]]);
@@ -308,7 +309,7 @@ test("dynamically creates a lazy getter", () => {
         }
     }
 
-    const reactiveObj = reactive(new DemoClass());
+    const reactiveObj = proxy(new DemoClass());
     reactiveObj.name = "demo";
 
     let computeCallCount = 0;

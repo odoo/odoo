@@ -1,14 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import tagged
 from odoo.addons.point_of_sale.tests.test_order_receipt import TestPosOrderReceipt
-from odoo.addons.account_edi.tests.common import AccountTestInvoicingCommon
-from odoo.addons.l10n_sa_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestOrderReceiptL10n(TestPosOrderReceipt):
     @classmethod
-    @AccountEdiTestCommon.setup_edi_format('l10n_sa_edi.edi_sa_zatca')
     @AccountTestInvoicingCommon.setup_country('sa')
     def setUpClass(self):
         super().setUpClass()

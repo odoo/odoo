@@ -88,13 +88,14 @@ class ProductProduct(models.Model):
         domain = Domain.AND([
             Domain('order_id.state', '=', 'purchase'),
             Domain('product_id', 'in', self.ids),
+            Domain("company_id", "in", self.env.companies.ids),
         ])
         if self.env.context.get("to_date"):
             domain = Domain.AND([
                 domain,
                 Domain('order_id.date_planned', '<=', self.env.context.get("to_date").date())
             ])
-        order_lines = self.env['purchase.order.line']._read_group(domain, ['product_id', 'uom_id'], ['product_uom_qty:sum', 'qty_received:sum'])
+        order_lines = self.env['purchase.order.line'].sudo()._read_group(domain, ['product_id', 'uom_id'], ['product_uom_qty:sum', 'qty_received:sum'])
         for product, line_uom, qty_ordered, qty_received in order_lines:
             to_receive = (qty_ordered - qty_received) * line_uom.factor / product.uom_id.factor
             res[product.id]['incoming_qty'] += to_receive

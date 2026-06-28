@@ -1,4 +1,4 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
 import { CallDropdown } from "@mail/discuss/call/common/call_dropdown";
@@ -8,22 +8,13 @@ import { isEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, types, useListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 
 const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
 
 export class CallParticipantCard extends Component {
-    static props = [
-        "className",
-        "cardData",
-        "channel",
-        "minimized?",
-        "inset?",
-        "isSidebarItem?",
-        "compact?",
-    ];
     static components = { CallParticipantVideo, CallContextMenu, CallDropdown };
     static template = "discuss.CallParticipantCard";
     /** @type {import("models").Rtc} */
@@ -31,10 +22,33 @@ export class CallParticipantCard extends Component {
 
     setup() {
         super.setup();
-        this.contextMenuAnchorRef = useRef("contextMenuAnchor");
         this.root = useRef("root");
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
+        this.props = props({
+            cardData: types.object({
+                key: types.string(),
+                member: types.instanceOf(this.store["discuss.channel.member"].Class).optional(),
+                session: types
+                    .instanceOf(this.store["discuss.channel.rtc.session"].Class)
+                    .optional(),
+                type: types.selection(["camera", "screen"]).optional(),
+                videoStream: types
+                    .or([types.instanceOf(MediaStream), types.selection([false])])
+                    .optional(),
+            }),
+            channel: types.instanceOf(this.store["discuss.channel"].Class),
+            className: types.string(),
+            compact: types.boolean().optional(),
+            inset: types
+                .function([
+                    types.instanceOf(this.store["discuss.channel.rtc.session"].Class),
+                    types.selection(["camera", "screen"]),
+                ])
+                .optional(),
+            isSidebarItem: types.boolean().optional(),
+            minimized: types.boolean().optional(),
+        });
         this.ui = useService("ui");
         this.rootHover = useHover("root");
         this.isMobileOS = isMobileOS();
@@ -57,7 +71,7 @@ export class CallParticipantCard extends Component {
                 viewCountIncrement: -1,
             });
         });
-        useExternalListener(browser, "fullscreenchange", this.onFullScreenChange);
+        useListener(browser, "fullscreenchange", () => this.onFullScreenChange());
     }
 
     get isContextMenuAvailable() {
@@ -170,6 +184,14 @@ export class CallParticipantCard extends Component {
         return this.rtcSession && this.rtcSession.eq(this.rtcSession.channel?.activeRtcSession);
     }
 
+    get isPinned() {
+        return this.rtcSession?.eq(this.rtcSession.channel?.pinnedRtcSession);
+    }
+
+    get isLocallyMuted() {
+        return this.rtcSession?.isLocallyMuted;
+    }
+
     async onClick(ev) {
         if (isEventHandled(ev, "CallParticipantCard.clickVolumeAnchor")) {
             return;
@@ -179,18 +201,21 @@ export class CallParticipantCard extends Component {
             return;
         }
         if (this.rtcSession) {
+            if (!this.props.inset) {
+                return;
+            }
             const channel = this.rtcSession.channel;
+            // The inset only swaps which stream of the spotlighted participant is shown (e.g.
+            // screen ⇄ camera); it must not promote a different participant into the spotlight.
+            if (this.rtcSession.notEq(channel.activeRtcSession)) {
+                return;
+            }
             this.rtcSession.mainVideoStreamType = this.props.cardData.type;
-            if (this.rtcSession.eq(channel.activeRtcSession) && !this.props.inset) {
-                channel.activeRtcSession = undefined;
-                this.rtcSession.mainVideoStreamType = undefined;
-            } else {
-                const activeRtcSession = channel.activeRtcSession;
-                const currentMainVideoType = this.rtcSession.mainVideoStreamType;
-                channel.activeRtcSession = this.rtcSession;
-                if (this.props.inset && activeRtcSession) {
-                    this.props.inset(activeRtcSession, currentMainVideoType);
-                }
+            const activeRtcSession = channel.activeRtcSession;
+            const currentMainVideoType = this.rtcSession.mainVideoStreamType;
+            channel.activeRtcSession = this.rtcSession;
+            if (activeRtcSession) {
+                this.props.inset(activeRtcSession, currentMainVideoType);
             }
             return;
         }
@@ -268,6 +293,10 @@ export class CallParticipantCard extends Component {
     }
 
     onFullScreenChange() {
-        this.root.el.style = "left:''; top:''";
+        if (!this.root.el) {
+            return;
+        }
+        this.root.el.style.left = "";
+        this.root.el.style.top = "";
     }
 }

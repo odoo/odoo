@@ -1,5 +1,3 @@
-import { toRaw } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
@@ -15,12 +13,17 @@ const { DateTime } = luxon;
 export const messageActionsRegistry = registry.category("mail.message/actions");
 
 /** @typedef {import("@odoo/owl").Component} Component */
-/** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
 /** @typedef {import("models").Message} Message */
 /** @typedef {import("models").Thread} Thread */
 /**
- * @typedef {ActionDefinition} MessageActionDefinition
+ * @typedef {Object} MessageActionSpecificParams
+ * @property {Message} message
+ * @property {import("@odoo/owl").Signal<HTMLElement>} [reactionAnchorRef] when set, the anchor element for reactions
+ * @property {Thread} [thread] when set, the thread the message is being viewed
  */
+/** @typedef {import("@mail/core/common/action").ActionParams<MessageAction, UseMessageActions_Def> & MessageActionSpecificParams} MessageActionParams */
+/** @typedef {import("@mail/core/common/action").ActionDefinition<MessageActionParams, MessageAction>} MessageActionDefinition */
+
 /**
  * @param {string} id
  * @param {MessageActionDefinition} definition
@@ -31,19 +34,19 @@ export function registerMessageAction(id, definition) {
 
 registerMessageAction("reaction", {
     component: QuickReactionMenu,
-    componentProps: ({ message, owner }) => ({
+    componentProps: ({ action, message, owner }) => ({
+        action,
         message,
-        action: messageActionsRegistry.get("reaction"),
-        messageActive: owner.isActive,
+        messageActive: owner.isActive(),
     }),
-    componentCondition: ({ owner }) => !isMobileOS() && !owner.isMessageContextMenu,
+    componentCondition: ({ reactionAnchorRef }) => !isMobileOS() && !reactionAnchorRef,
     condition: ({ message, thread }) => message.canAddReaction(thread),
     icon: "oi oi-smile-add",
     name: _t("Add a Reaction"),
-    onSelected({ owner }) {
-        const anchorEl = owner.isMessageContextMenu
-            ? owner.anchor.el
-            : owner.root?.el?.querySelector(`[name="${this.id}"]`);
+    onSelected({ owner, reactionAnchorRef, rootRef }) {
+        const anchorEl = reactionAnchorRef
+            ? reactionAnchorRef()
+            : rootRef?.()?.querySelector(`[name="${this.id}"]`);
         return owner.reactionPicker.open({ el: anchorEl });
     },
     setup: ({ message, owner, thread }) =>
@@ -61,21 +64,18 @@ registerMessageAction("reaction", {
     sequence: 10,
 });
 registerMessageAction("reply-to", {
-    condition: ({ message: msg, thread: thr }) => {
-        const message = toRaw(msg);
-        const thread = toRaw(thr);
-        return (
-            message.canReplyTo(thread) ||
-            (!["discuss.channel", "mail.box"].includes(thread?.model) &&
-                message.isNote &&
-                !message.isSelfAuthored)
-        );
+    condition: ({ message, thread }) => {
+        if (message.canReplyTo(thread)) {
+            return true;
+        }
+        if (["discuss.channel", "mail.box"].includes(thread?.model)) {
+            return false;
+        }
+        return !message.isEmpty && message.isNote && !message.isSelfAuthored;
     },
     icon: "fa fa-reply",
     name: _t("Reply"),
-    onSelected: ({ message: msg, owner, thread: thr }) => {
-        const message = toRaw(msg);
-        const thread = toRaw(thr);
+    onSelected: ({ message, owner, thread }) => {
         const composer = thread.composer;
         if (message.eq(composer.replyToMessage)) {
             composer.replyToMessage = undefined;
@@ -87,12 +87,8 @@ registerMessageAction("reply-to", {
         if (thread.channel) {
             return;
         }
-        if (!message.isSelfAuthored && message.model !== "discuss.channel") {
-            const mentionText = `@${message.authorName} `;
-            if (!composer.composerText.includes(mentionText)) {
-                composer.mentionedPartners.add(message.author);
-                composer.insertText(mentionText, 0, { moveCursorToEnd: true });
-            }
+        if (!message.isSelfAuthored && message.model !== "discuss.channel" && message.author) {
+            composer.insertReplyFromNote(message);
         }
         owner.env.inChatter?.toggleComposer("note", { force: true });
         composer.restoredFromFullComposer = false;
@@ -100,52 +96,52 @@ registerMessageAction("reply-to", {
             composer.autofocus++;
         }
     },
-    sequence: ({ message, store, thread }) =>
-        thread?.eq(store.inbox) || message.isSelfAuthored ? 55 : 20,
+    sequence: ({ message }) => (message.isSelfAuthored ? 55 : 20),
 });
 registerMessageAction("add-bookmark", {
-    condition: ({ message }) => message.canToggleBookmark && !message.is_bookmarked,
+    condition: ({ message }) =>
+        message.canToggleBookmark && !message.isEmpty && !message.is_bookmarked,
     icon: "fa fa-bookmark-o",
     name: _t("Bookmark"),
     onSelected: ({ message }) => message.addBookmark(),
-    sequence: 30,
+    sequence: 80,
 });
 registerMessageAction("remove-bookmark", {
     condition: ({ message }) => message.canToggleBookmark && message.is_bookmarked,
     icon: "fa fa-bookmark",
     name: _t("Remove from Bookmarks"),
     onSelected: ({ message, thread }) => message.removeBookmark(thread),
-    sequence: 30,
+    sequence: 80,
 });
 registerMessageAction("mark-as-read", {
     condition: ({ store, thread }) => thread?.eq(store.inbox),
     icon: "fa fa-check",
     name: _t("Mark as Read"),
     onSelected: ({ message }) => message.setDone(),
-    sequence: 40,
+    sequence: 35,
 });
 registerMessageAction("mark-as-unread", {
     condition: ({ message, thread }) => message.canMarkAsUnread(thread),
     icon: "fa fa-eye-slash",
     name: _t("Mark as Unread"),
     onSelected: ({ message, thread }) => message.markAsUnread(thread),
-    sequence: 40,
+    sequence: 50,
 });
 registerMessageAction("reactions", {
     condition: ({ message }) => message.reactions.length,
     icon: "fa fa-smile-o",
     name: _t("View Reactions"),
-    onSelected: ({ message, owner, store }) => {
-        store.env.services.dialog.add(MessageReactionMenu, { message }, { context: owner });
+    onSelected: ({ message, rootRef, store }) => {
+        store.env.services.dialog.add(MessageReactionMenu, { message }, { rootRef });
     },
-    sequence: 50,
+    sequence: 60,
 });
 registerMessageAction("unfollow", {
     condition: ({ message, thread }) => message.canUnfollow(thread),
     icon: "fa fa-user-times",
     name: _t("Unfollow"),
     onSelected: ({ message }) => message.unfollow(),
-    sequence: 60,
+    sequence: 110,
 });
 registerMessageAction("edit", {
     condition: ({ message }) => message.editable,
@@ -161,7 +157,7 @@ registerMessageAction("delete", {
     condition: ({ message }) => message.deletable,
     icon: "fa fa-trash",
     name: _t("Delete"),
-    onSelected: ({ message, owner }) => toRaw(message).showDeleteConfirm(owner),
+    onSelected: ({ message, owner, rootRef }) => message.showDeleteConfirm(owner, rootRef),
     sequence: 120,
     tags: ACTION_TAGS.DANGER,
 });
@@ -193,7 +189,7 @@ registerMessageAction("copy-message", {
     onSelected: ({ message }) => message.copyMessageText(),
     name: _t("Copy Text"),
     icon: "fa fa-copy",
-    sequence: () => (isMobileOS() ? 30 : 105),
+    sequence: 85,
 });
 registerMessageAction("copy-link", {
     condition: ({ message, thread }) =>
@@ -202,9 +198,9 @@ registerMessageAction("copy-link", {
         thread &&
         (!thread.access_token || thread.hasReadAccess),
     icon: "fa fa-link",
-    name: _t("Copy Link"),
+    name: _t("Copy Message Link"),
     onSelected: ({ message }) => message.copyLink(),
-    sequence: 110,
+    sequence: 90,
 });
 registerMessageAction("end-poll", {
     condition: ({ message }) =>
@@ -218,15 +214,20 @@ registerMessageAction("end-poll", {
 export class MessageAction extends Action {
     /** @type {() => Message} */
     messageFn;
+    /** @type {import("@odoo/owl").Signal<HTMLElement>} */
+    reactionAnchorRef;
     /** @type {() => Thread} */
     threadFn;
     /**
      * @param {Object} param0
-     * @param {Thread|() => Thread} thread
+     * @param {Message|() => Message} param0.message
+     * @param {import("@odoo/owl").Signal<HTMLElement>} [param0.reactionAnchorRef]
+     * @param {Thread|() => Thread} [param0.thread]
      */
-    constructor({ message, thread }) {
+    constructor({ message, reactionAnchorRef, thread }) {
         super(...arguments);
         this.messageFn = typeof message === "function" ? message : () => message;
+        this.reactionAnchorRef = reactionAnchorRef;
         this.threadFn = typeof thread === "function" ? thread : () => thread;
     }
 
@@ -235,20 +236,28 @@ export class MessageAction extends Action {
         return Object.assign(super.params, {
             message: this.messageFn(),
             channel: thread?.channel,
+            reactionAnchorRef: this.reactionAnchorRef,
             thread,
         });
     }
 }
 
+/** @typedef {UseActions<MessageActionParams, MessageAction>} UseMessageActions_Def */
 class UseMessageActions extends UseActions {
     ActionClass = MessageAction;
 }
 
 /**
- * @param {Object} [params0={}]
- * @param {Message|() => Message} [message]
- * @param {Thread|() => Thread} [thread] when set, the thread the message is being viewed
+ * @param {import("@mail/core/common/action").ActionRootRefParam & {message?: Message|() => Message, reactionAnchorRef?: import("@odoo/owl").Signal<HTMLElement>, thread?: Thread|() => Thread}} [params0={}]
+ *   `reactionAnchorRef`: when set, the anchor element for reactions. `thread`: when set, the thread the
+ *   message is being viewed.
+ * @returns {UseMessageActions_Def}
  */
-export function useMessageActions({ message, thread } = {}) {
-    return useAction(messageActionsRegistry, UseMessageActions, MessageAction, { message, thread });
+export function useMessageActions({ message, thread, reactionAnchorRef, rootRef } = {}) {
+    return useAction(messageActionsRegistry, UseMessageActions, MessageAction, {
+        message,
+        reactionAnchorRef,
+        rootRef,
+        thread,
+    });
 }

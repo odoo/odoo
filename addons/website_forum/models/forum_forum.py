@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import textwrap
 from collections import defaultdict
 from operator import itemgetter
 
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 from odoo.tools.translate import html_translate
 
 MOST_USED_TAGS_COUNT = 5  # Number of tags to track as "most used" to display on frontend
@@ -23,6 +22,7 @@ class ForumForum(models.Model):
         'website.multi.mixin',
         'website.located.mixin',
         'website.searchable.mixin',
+        'website.structured_data.mixin',
     ]
     _order = "sequence, id"
 
@@ -135,6 +135,8 @@ class ForumForum(models.Model):
     has_pending_post = fields.Boolean(string='Has pending post', compute='_compute_has_pending_post')
     can_moderate = fields.Boolean(string="Is a moderator", compute="_compute_can_moderate")
 
+    can_access = fields.Boolean("Has Access", compute='_compute_can_access', search='_search_can_access')
+
     # tags
     tag_ids = fields.One2many('forum.tag', 'forum_id', string='Tags')
     tag_most_used_ids = fields.One2many('forum.tag', string="Most used tags", compute='_compute_tag_ids_usage')
@@ -145,6 +147,67 @@ class ForumForum(models.Model):
         for record in self:
             if record.id:
                 record.website_url = '/forum/%s' % self.env['ir.http']._slug(record)
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._("Forums"), '/forum'))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _get_jsonld_dict(self, is_detail_page=False):
+        schemas = super()._get_jsonld_dict(is_detail_page)
+        if is_detail_page:
+            if questions := self.post_ids.filtered(
+                lambda post: not post.parent_id and post.state == 'active',
+            ):
+                schemas.append(self._build_collectionpage_jsonld_vals(
+                    self.name, self.website_url, questions,
+                ))
+        elif self:
+            schemas.append(self._build_collectionpage_jsonld_vals(
+                self.env._("Forum"), '/forum', self,
+            ))
+        return schemas
+
+    @api.depends_context('uid')
+    @api.depends('privacy', 'authorized_group_id')
+    def _compute_can_access(self):
+        """Compute the read access of the forums' posts for the current user."""
+        if self.env.user._is_admin():
+            self.can_access = True
+            return
+
+        if self.env.user.has_group('base.group_public'):
+            public_forum = self.filtered(lambda f: f.privacy == 'public')
+            public_forum.can_access = True
+            (self - public_forum).can_access = False
+            return
+
+        accessible = self.filtered(lambda f: (
+            f.privacy in {'public', 'connected'}
+            or (
+                f.privacy == 'private'
+                and f.authorized_group_id in self.env.user.all_group_ids
+            )
+        ))
+        accessible.can_access = True
+        (self - accessible).can_access = False
+
+    def _search_can_access(self, operator, value):
+        if operator != '=' or value is not True:
+            raise NotImplementedError()
+
+        if self.env.user._is_admin():
+            return Domain.TRUE
+
+        if self.env.user.has_group('base.group_public'):
+            return Domain('privacy', '=', 'public')
+
+        return (
+            Domain('privacy', 'in', ['public', 'connected'])
+            | Domain([('privacy', '=', 'private'), ('authorized_group_id', 'in', self.env.user.all_group_ids.ids)])
+        )
 
     @api.depends_context('uid')
     def _compute_has_pending_post(self):
@@ -201,9 +264,9 @@ class ForumForum(models.Model):
             [('forum_id', 'in', self.ids), ('parent_id', '=', False), ('state', '=', 'active')],
             groupby=['forum_id'], aggregates=['id:max'],
         )
-        forum_to_last_post_id = {forum.id: last_post_id for forum, last_post_id in last_forums_posts}
+        forum_to_last_post = dict(last_forums_posts)
         for forum in self:
-            forum.last_post_id = forum_to_last_post_id.get(forum.id, False)
+            forum.last_post_id = forum_to_last_post.get(forum, False)
 
     @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
     def _compute_forum_statistics(self):
@@ -213,7 +276,7 @@ class ForumForum(models.Model):
             self.update(default_stats)
             return
 
-        result = {cid: dict(default_stats) for cid in self.ids}
+        result = defaultdict(default_stats.copy)
         read_group_res = self.env['forum.post']._read_group(
             [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close')), ('parent_id', '=', False)],
             ['forum_id'],
@@ -271,8 +334,9 @@ class ForumForum(models.Model):
         return res
 
     def _set_default_faq(self):
+        website = self.env.website or self.env.website.browse(self.env.context.get('host_id')) or self.env.ref('base.default_website')
         for forum in self:
-            forum.faq = self.env['ir.ui.view']._render_template('website_forum.faq_accordion', {"forum": forum})
+            forum.faq = website._render_template('website_forum.faq_accordion', {"forum": forum})
 
     # ----------------------------------------------------------------------
     # TOOLS
@@ -320,18 +384,15 @@ class ForumForum(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        with_description = options['displayDescription']
-        search_fields = ['name', 'tag_ids.name']
-        fetch_fields = ['id', 'name', 'tag_ids']
+        search_fields = ['name', 'tag_ids.name', 'description']
+        fetch_fields = ['id', 'name', 'description']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'image_url': {'name': 'image_url', 'type': 'html'},
             'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
+            'description': {'name': 'description', 'type': 'text', 'truncate': True, 'match': True},
         }
-        if with_description:
-            search_fields.append('description')
-            fetch_fields.append('description')
-            mapping['description'] = {'name': 'description', 'type': 'text', 'match': True}
         return {
             'model': 'forum.forum',
             'base_domain': [website.website_domain()],
@@ -340,6 +401,8 @@ class ForumForum(models.Model):
             'mapping': mapping,
             'icon': 'fa-comments-o',
             'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
+            'group_name': self.env._("Forum"),
+            'sequence': 120,
         }
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
@@ -347,4 +410,5 @@ class ForumForum(models.Model):
         for forum, data in zip(self, results_data):
             data['website_url'] = forum.website_url
             data['tag_ids'] = forum.tag_ids.read(['name'])
+            data['image_url'] = '/web/image/forum.forum/%s/image_128' % data['id']
         return results_data

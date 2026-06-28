@@ -64,14 +64,13 @@ test("use blur is 'on'", async () => {
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item:text('Voice & Video Settings')");
     await contains(".o-discuss-CallSettings");
+    await click("button[title='Video']");
+    await contains("input[title='Blur video background']:checked");
     await contains(
-        ".o-discuss-CallSettings-item:has(label:contains('Blur video background')) input:checked"
+        "div[title='Background blur intensity'] .o-discuss-DiscussCallSettings-width-text-percentage:text('10%')"
     );
     await contains(
-        "label[title='Background blur intensity'] .o-discuss-DiscussCallSettings-width-text-percentage:text('10%')"
-    );
-    await contains(
-        "label[title='Edge blur intensity'] .o-discuss-DiscussCallSettings-width-text-percentage:text('30%')"
+        "div[title='Edge blur intensity'] .o-discuss-DiscussCallSettings-width-text-percentage:text('30%')"
     );
     const useBlurKey = makeRecordFieldLocalId(Settings.localId(), "useBlur");
     expect(localStorage.getItem(useBlurKey)).toBe(toRawValue(true));
@@ -94,12 +93,7 @@ test("show only video 'on'", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
-    // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains("[title='Open Actions Menu']");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Voice & Video Settings')");
-    await contains(".o-discuss-CallSettings");
-    await contains("input[title='Show video participants only']:checked");
+    expect(getService("mail.store").settings.showOnlyVideo).toBe(true);
     const showOnlyVideoKey = makeRecordFieldLocalId(Settings.localId(), "showOnlyVideo");
     expect(localStorage.getItem(showOnlyVideoKey)).toBe(toRawValue(true));
     expect(localStorage.getItem("mail_user_setting_show_only_video")).toBe(null);
@@ -206,6 +200,7 @@ test("call auto focus is 'off", async () => {
     await click("[title='Start Call']");
     await click("button[aria-label='Video Settings']");
     await click(".o-discuss-QuickVideoSettings button:has(:text('Advanced Settings'))");
+    await contains(".o-discuss-CallSettings .o-mail-TabHeader.o-active:has(:text('Video'))");
     await contains("input[title='Auto-focus speaker']:not(:checked)");
     // correct local storage values
     const useCallAutoFocusKey = makeRecordFieldLocalId(Settings.localId(), "useCallAutoFocus");
@@ -281,13 +276,14 @@ test("device input/output id", async () => {
     await click(".o-dropdown-item:text('Voice & Video Settings')");
     await contains(".o-discuss-CallSettings");
     await contains(
-        "label[title='Microphone'] .o-mail-DeviceSelect-button[data-kind='audioinput']:text('audio_input_2_label')"
+        "div[aria-label='Microphone'] .o-mail-DeviceSelect-button[data-kind='audioinput']:text('audio_input_2_label')"
     );
     await contains(
-        "label[title='Speakers'] .o-mail-DeviceSelect-button[data-kind='audiooutput']:text('audio_output_2_label')"
+        "div[aria-label='Speakers'] .o-mail-DeviceSelect-button[data-kind='audiooutput']:text('audio_output_2_label')"
     );
+    await click("button[title='Video']");
     await contains(
-        "label[title='Camera'] .o-mail-DeviceSelect-button[data-kind='videoinput']:text('video_input_2_label')"
+        "div[aria-label='Camera'] .o-mail-DeviceSelect-button[data-kind='videoinput']:text('video_input_2_label')"
     );
     // correct local storage values
     const audioInputDeviceIdKey = makeRecordFieldLocalId(Settings.localId(), "audioInputDeviceId");

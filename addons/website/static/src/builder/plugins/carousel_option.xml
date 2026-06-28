@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+<t t-name="website.CarouselAnimationOption">
+    <BuilderRow label.translate="Transition">
+        <BuilderSelect action="'setCarouselType'" preview="false">
+            <BuilderSelectItem id="'transition_slide'" actionParam="''">Slide</BuilderSelectItem>
+            <BuilderSelectItem id="'transition_fade'" actionParam="'carousel-fade'">Fade</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'carousel-instant'">None</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <t t-if="this.isActiveItem('transition_slide') || this.isActiveItem('transition_fade')">
+        <BuilderRow label.translate="Duration" tooltip.translate="Adjust how long the animation effect to change slide takes" level="1">
+            <BuilderRange
+                action="'setCarouselDuration'"
+                unit="'s'"
+                saveUnit="'ms'"
+                step="0.1"
+                min="0.1"
+                max="5"
+                withNumberInput="true"/>
+        </BuilderRow>
+    </t>
+
+    <BuilderRow label.translate="Autoplay">
+        <BuilderSelect action="'setAutoplay'">
+            <BuilderSelectItem id="'auto_after_first_hover'" actionParam="{ bsRide: 'true', ariaLive: 'off' }">After First Hover</BuilderSelectItem>
+            <BuilderSelectItem id="'auto_always'" actionParam="{ bsRide: 'carousel', ariaLive: 'off' }">Always</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{ bsRide: 'false', ariaLive: 'polite' }">Never</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <t t-if="this.isActiveItem('auto_after_first_hover') || this.isActiveItem('auto_always')">
+        <BuilderRow label.translate="Timespan" tooltip.translate="Adjust how long each slide stays on screen" level="1">
+            <BuilderNumberInput
+                action="'setCarouselTimespan'"
+                unit="'s'"
+                saveUnit="'ms'"
+                step="0.1"
+                min="1"
+                applyWithUnit="false"/>
+        </BuilderRow>
+    </t>
+</t>
+
 <t t-name="website.CarouselOption">
     <BuilderRow label.translate="Slide">
         <BuilderButton type="'success'" title.translate="Add Slide"  action="'addSlide'">Add Slide</BuilderButton>
     </BuilderRow>
-    
+
     <BuilderRow label.translate="Style">
         <BuilderSelect>
             <BuilderSelectItem classAction="''">Regular</BuilderSelectItem>
@@ -38,50 +81,27 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <BuilderRow label.translate="Transition">
-        <BuilderSelect>
-            <BuilderSelectItem classAction="'slide'">Slide</BuilderSelectItem>
-            <BuilderSelectItem classAction="'carousel-fade slide'">Fade</BuilderSelectItem>
-            <BuilderSelectItem classAction="'carousel-instant slide'">None</BuilderSelectItem>
-        </BuilderSelect>
-    </BuilderRow>
-
-    <BuilderRow label.translate="Autoplay" level="1">
-        <BuilderSelect dataAttributeAction="'bsRide'">
-            <BuilderSelectItem id="'auto_after_first_hover'" dataAttributeActionValue="'true'">After First Hover</BuilderSelectItem>
-            <BuilderSelectItem id="'auto_always'" dataAttributeActionValue="'carousel'">Always</BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'false'">Never</BuilderSelectItem>
-        </BuilderSelect>
-    </BuilderRow>
-
-    <t t-if="this.isActiveItem('auto_after_first_hover') || this.isActiveItem('auto_always')">
-        <BuilderRow label.translate="Timespan" level="1">
-            <BuilderNumberInput dataAttributeAction="'bsInterval'"
-                default="10"
-                unit="'s'"
-                saveUnit="'ms'"
-                step="0.1"
-                min="1"
-                preview="false"
-                applyWithUnit="false"/>
-        </BuilderRow>
-    </t>
-
+    <t t-call="website.CarouselAnimationOption"/>
 </t>
 
 <t t-name="website.CarouselItemHeaderMiddleButtons">
+    <t t-set="backward">Move Backward</t>
+    <t t-set="forward">Move Forward</t>
+    <t t-set="slidePrev" t-value="() => this.slide('prev')"/>
+    <t t-set="slideNext" t-value="() => this.slide('next')"/>
+    <t t-set="sameLangDir" t-value="this.env.langDir.content === this.env.langDir.builder"/>
     <button class="btn btn-primary ms-0 py-0 px-1 me-1"
-            title="Move Backward"
-            aria-label="Move Backward"
+            t-att-title="sameLangDir ? backward : forward"
+            t-att-aria-label="sameLangDir ? backward : forward"
             t-att-class="{ disabled: !this.state.hasMultiItems }"
-            t-on-click="() => this.slide('prev')">
+            t-on-click="sameLangDir ? slidePrev : slideNext">
         <span class="fa fa-fw fa-angle-left"/>
     </button>
     <button class="btn btn-primary py-0 px-1 me-2"
-            title="Move Forward"
-            aria-label="Move Forward"
+            t-att-title="sameLangDir ? forward : backward"
+            t-att-aria-label="sameLangDir ? forward : backward"
             t-att-class="{ disabled: !this.state.hasMultiItems }"
-            t-on-click="() => this.slide('next')">
+            t-on-click="sameLangDir ? slideNext : slidePrev">
         <span class="fa fa-fw fa-angle-right"/>
     </button>
     <button class="btn btn-success ms-0 py-0 px-1 me-1"

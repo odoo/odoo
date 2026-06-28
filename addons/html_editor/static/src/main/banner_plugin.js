@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { fillEmpty, fillShrunkPhrasingParent } from "@html_editor/utils/dom";
+import { fillShrunkPhrasingParent } from "@html_editor/utils/dom";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
@@ -28,7 +28,11 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert an info banner"),
                 icon: "fa-info-circle",
                 isAvailable: (selection) =>
-                    this.checkPredicates("is_banner_command_available_predicates", selection, "info") ?? true,
+                    this.checkPredicates(
+                        "is_banner_command_available_predicates",
+                        selection,
+                        "info"
+                    ) ?? true,
                 run: () => {
                     this.insertBanner(_t("Banner Info"), "💡", "info");
                 },
@@ -39,7 +43,11 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a success banner"),
                 icon: "fa-check-circle",
                 isAvailable: (selection) =>
-                    this.checkPredicates("is_banner_command_available_predicates", selection, "success") ?? true,
+                    this.checkPredicates(
+                        "is_banner_command_available_predicates",
+                        selection,
+                        "success"
+                    ) ?? true,
                 run: () => {
                     this.insertBanner(_t("Banner Success"), "✅", "success");
                 },
@@ -50,7 +58,11 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a warning banner"),
                 icon: "fa-exclamation-triangle",
                 isAvailable: (selection) =>
-                    this.checkPredicates("is_banner_command_available_predicates", selection, "warning") ?? true,
+                    this.checkPredicates(
+                        "is_banner_command_available_predicates",
+                        selection,
+                        "warning"
+                    ) ?? true,
                 run: () => {
                     this.insertBanner(_t("Banner Warning"), "⚠️", "warning");
                 },
@@ -61,7 +73,11 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a danger banner"),
                 icon: "fa-exclamation-circle",
                 isAvailable: (selection) =>
-                    this.checkPredicates("is_banner_command_available_predicates", selection, "danger") ?? true,
+                    this.checkPredicates(
+                        "is_banner_command_available_predicates",
+                        selection,
+                        "danger"
+                    ) ?? true,
                 run: () => {
                     this.insertBanner(_t("Banner Danger"), "❌", "danger");
                 },
@@ -72,7 +88,11 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a monospace banner"),
                 icon: "fa-laptop",
                 isAvailable: (selection) =>
-                    this.checkPredicates("is_banner_command_available_predicates", selection, "secondary") ?? true,
+                    this.checkPredicates(
+                        "is_banner_command_available_predicates",
+                        selection,
+                        "secondary"
+                    ) ?? true,
                 run: () => {
                     this.insertBanner(
                         _t("Monospace Banner"),
@@ -146,7 +166,7 @@ export class BannerPlugin extends Plugin {
 
         const bannerClasses = `${containerClass}o_editor_banner user-select-none o-contenteditable-false ${
             emoji ? "lh-1 " : ""
-        }d-flex align-items-center alert alert-${alertClass} pb-0 pt-3`;
+        }d-flex align-items-center alert alert-${alertClass} pb-0 pt-3 ps-3 pe-3`;
         const bannerContentClasses = `${contentClass}o_editor_banner_content o-contenteditable-true w-100 px-3`;
         const emojiHtml = emoji
             ? `<i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="${htmlEscape(
@@ -166,7 +186,7 @@ export class BannerPlugin extends Plugin {
             } else {
                 icon.remove();
             }
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
             return;
         }
         const blockEl = closestBlock(selection.anchorNode);
@@ -175,12 +195,12 @@ export class BannerPlugin extends Plugin {
             baseContainer = this.document.createElement(blockEl.nodeName);
             baseContainer.append(...blockEl.childNodes);
         } else if (blockEl.nodeName === "LI") {
-            baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            baseContainer.append(...blockEl.childNodes);
+            baseContainer = this.dependencies.baseContainer.createBaseContainer({
+                children: [...blockEl.childNodes],
+            });
             fillShrunkPhrasingParent(blockEl);
         } else {
             baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            fillShrunkPhrasingParent(baseContainer);
         }
         const baseContainerHtml = baseContainer.outerHTML;
         const bannerElement = parseHTML(
@@ -196,7 +216,7 @@ export class BannerPlugin extends Plugin {
         this.dependencies.selection.setCursorEnd(
             bannerElement.querySelector(`.o_editor_banner_content > ${baseContainer.tagName}`)
         );
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     onBannerEmojiChange(iconElement) {
@@ -204,7 +224,7 @@ export class BannerPlugin extends Plugin {
             target: iconElement,
             onSelect: (emoji) => {
                 iconElement.textContent = emoji;
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
             },
         });
     }
@@ -217,7 +237,6 @@ export class BannerPlugin extends Plugin {
         }
         const bannerElement = closestElement(editorBannerContent, ".o_editor_banner");
         const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-        fillEmpty(baseContainer);
         bannerElement.replaceWith(baseContainer);
         this.dependencies.selection.setCursorStart(baseContainer);
         return true;
@@ -228,6 +247,7 @@ export class BannerPlugin extends Plugin {
             const spacesElement = document.createTextNode("\u00A0\u00A0\u00A0\u00A0");
             el.replaceWith(spacesElement);
         }
+        return root;
     }
 
     handleShiftTab() {

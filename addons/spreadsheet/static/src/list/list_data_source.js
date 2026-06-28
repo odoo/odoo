@@ -11,8 +11,9 @@ import { orderByToString } from "@web/search/utils/order_by";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
+import { getFullFieldStringFromPath } from "../data_sources/data_source";
 
-const { toNumber } = spreadsheet.helpers;
+const { toNumber, deepEquals } = spreadsheet.helpers;
 const { DEFAULT_LOCALE } = spreadsheet.constants;
 
 /**
@@ -29,6 +30,8 @@ const { DEFAULT_LOCALE } = spreadsheet.constants;
  * @property {Object} context
  */
 
+export const SEARCH_COUNT_LIMIT = 10_000;
+
 export class ListDataSource extends OdooViewsDataSource {
     /**
      * @override
@@ -36,7 +39,6 @@ export class ListDataSource extends OdooViewsDataSource {
      * @param {Object} params
      * @param {ListMetaData} params.metaData
      * @param {ListSearchParams} params.searchParams
-     * @param {number} params.limit
      */
     constructor(services, params) {
         super(services, params);
@@ -44,9 +46,15 @@ export class ListDataSource extends OdooViewsDataSource {
         this.maxPositionFetched = 0;
         this.data = [];
         this.fieldPathsToFetch = new Set(["id"]);
+        this.fieldPathDefinitionsToFetch = new Set(params.columns.map((col) => col.name));
+        this.definitionColumns = params.columns
+            .filter((col) => !col.computedBy)
+            .map((col) => col.name);
         this.alreadyFetchedFieldPaths = new Set();
         this.fieldService = services.env.services.field;
         this.fieldPathsToFieldMap = {};
+        this._recordConcurrency = {};
+        this._recordsCount = {};
     }
 
     /**
@@ -57,6 +65,34 @@ export class ListDataSource extends OdooViewsDataSource {
         this.maxPosition = Math.max(this.maxPosition, position);
     }
 
+    onDefinitionChange(nextDefinition) {
+        let shouldReload = false;
+        const searchParams = JSON.parse(JSON.stringify(nextDefinition.searchParams));
+        if (!deepEquals(this._initialSearchParams, searchParams)) {
+            this._initialSearchParams = searchParams;
+            this._customDomain = this._initialSearchParams.domain;
+            shouldReload = true;
+        }
+        const columns = nextDefinition.columns
+            .filter((col) => !col.computedBy)
+            .map((col) => col.name);
+        if (!deepEquals([...this.definitionColumns].sort(), [...columns].sort())) {
+            this.definitionColumns = columns;
+            columns.forEach((col) => this.fieldPathDefinitionsToFetch.add(col));
+            shouldReload = true;
+        }
+
+        const resModel = JSON.parse(JSON.stringify(nextDefinition.metaData)).resModel;
+        if (!deepEquals(this._metaData.resModel, resModel)) {
+            this._metaData = { resModel };
+            shouldReload = true;
+        }
+
+        if (shouldReload) {
+            this._triggerFetching();
+        }
+    }
+
     isModelValid() {
         return this._isModelValid;
     }
@@ -65,9 +101,22 @@ export class ListDataSource extends OdooViewsDataSource {
      * @param {string} fieldPath
      */
     addFieldPathToFetch(fieldPath) {
-        if (fieldPath && !this.alreadyFetchedFieldPaths.has(fieldPath)) {
+        if (!this.alreadyFetchedFieldPaths.has(fieldPath)) {
             this.fieldPathsToFetch.add(fieldPath);
         }
+    }
+
+    async getRecordsCount({ fullCount } = { fullCount: false }) {
+        const key = fullCount ? "full" : "partial";
+        if (!this._recordsCount[key]) {
+            const { domain, context } = this._searchParams;
+            const limit = fullCount ? undefined : SEARCH_COUNT_LIMIT;
+            this._recordsCount[key] = this._orm.searchCount(this._metaData.resModel, domain, {
+                context,
+                limit,
+            });
+        }
+        return this._recordsCount[key];
     }
 
     async load(params) {
@@ -84,20 +133,22 @@ export class ListDataSource extends OdooViewsDataSource {
 
     async _load() {
         await super._load();
+        // invalidate record count cache
+        this._recordsCount = {};
+        this.fieldPathsToFieldMap = {};
+        const { domain, orderBy, context } = this._searchParams;
+        const specification = await this._getReadSpec();
+        this.alreadyFetchedFieldPaths = new Set([...this.fieldPathsToFetch]);
         if (this.maxPosition === 0) {
             this.data = [];
             return;
         }
-        this.fieldPathsToFieldMap = {};
-        const { domain, orderBy, context } = this._searchParams;
-        const specification = await this._getReadSpec();
         const { records } = await this._orm.webSearchRead(this._metaData.resModel, domain, {
             specification,
             order: orderByToString(orderBy),
             limit: this.maxPosition,
             context,
         });
-        this.alreadyFetchedFieldPaths = new Set([...this.fieldPathsToFetch]);
         this.data = records;
         this.maxPositionFetched = this.maxPosition;
     }
@@ -165,17 +216,28 @@ export class ListDataSource extends OdooViewsDataSource {
      * Get the fields to fetch from the server.
      */
     async _getReadSpec() {
+        // FIXME: this method both populates fieldPathsToFieldMap and returns the spec for the read.
+        // This is not ideal and should be split in two methods but would require to store additional info
         const allFieldPaths = await Promise.all(
-            [...this.fieldPathsToFetch].map((fieldPath) =>
-                this.fieldService.loadPath(this._metaData.resModel, fieldPath)
+            [...this.fieldPathsToFetch.union(this.fieldPathDefinitionsToFetch)].map((fieldPath) =>
+                fieldPath
+                    ? this.fieldService.loadPath(this._metaData.resModel, fieldPath)
+                    : { isInvalid: "path" }
             )
         );
         const validFieldPaths = allFieldPaths.filter((result) => !result.isInvalid);
         const spec = {};
         for (const pathInfo of validFieldPaths) {
-            this.fieldPathsToFieldMap[pathInfo.names.join(".")] =
-                pathInfo.modelsInfo.at(-1).fieldDefs[pathInfo.names.at(-1)];
-            this._addSpecForFieldPath(spec, pathInfo);
+            const { names, modelsInfo } = pathInfo;
+            const fieldPath = names.join(".");
+            this.fieldPathsToFieldMap[fieldPath] = {
+                ...modelsInfo.at(-1).fieldDefs[names.at(-1)],
+                fullString: getFullFieldStringFromPath(pathInfo),
+            };
+
+            if (this.fieldPathsToFetch.has(fieldPath)) {
+                this._addSpecForFieldPath(spec, pathInfo);
+            }
         }
         return spec;
     }
@@ -195,6 +257,7 @@ export class ListDataSource extends OdooViewsDataSource {
      * @returns {string | EvaluationError}
      */
     getListHeaderValue(fieldPath) {
+        this.addFieldPathToFetch(fieldPath);
         if (this.isLoading()) {
             return LOADING_ERROR;
         }
@@ -205,9 +268,18 @@ export class ListDataSource extends OdooViewsDataSource {
             this._triggerFetching();
             return LOADING_ERROR;
         }
+        if (!this.alreadyFetchedFieldPaths.has(fieldPath)) {
+            this._triggerFetching();
+            return LOADING_ERROR;
+        }
         this.assertIsValid();
         const field = this.fieldPathsToFieldMap[fieldPath];
-        return field ? field.string : fieldPath;
+        if (!field) {
+            return new EvaluationError(
+                _t("The field %s does not exist or you do not have access to that field", fieldPath)
+            );
+        }
+        return field.string;
     }
 
     /**
@@ -238,6 +310,7 @@ export class ListDataSource extends OdooViewsDataSource {
      * @returns {string|number|undefined|EvaluationError}
      */
     getListCellValue(position, fieldPath) {
+        this.addFieldPathToFetch(fieldPath);
         if (this.isLoading()) {
             return LOADING_ERROR;
         }
@@ -251,7 +324,6 @@ export class ListDataSource extends OdooViewsDataSource {
             return LOADING_ERROR;
         }
         if (!this.alreadyFetchedFieldPaths.has(fieldPath)) {
-            this.addFieldPathToFetch(fieldPath);
             this._triggerFetching();
             return LOADING_ERROR;
         }
@@ -414,5 +486,17 @@ export class ListDataSource extends OdooViewsDataSource {
                     resolve();
                 })
         );
+    }
+
+    get source() {
+        this._assertMetadataIsLoaded();
+        const data = this._metaData;
+        return {
+            resModel: data.resModel,
+            type: "list",
+            fields: data.columns,
+            groupby: undefined,
+            domain: this._searchParams.domain,
+        };
     }
 }

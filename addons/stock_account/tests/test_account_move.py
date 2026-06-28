@@ -172,7 +172,11 @@ class TestAccountMove(TestStockValuationCommon):
             self.assertEqual(bill.invoice_line_ids.account_id, product_accounts['expense'])
 
     def test_cogs_analytic_accounting(self):
-        """Check analytic distribution is correctly propagated to COGS lines"""
+
+        """Check analytic distribution is correctly propagated to COGS lines.
+        Both the debit interim account line and the credit expense account line
+        should carry the analytic distribution; otherwise analytic accounting
+        becomes unbalanced."""
         product = self.product_standard_auto
         default_plan = self.env['account.analytic.plan'].create({
             'name': 'Default',
@@ -198,8 +202,62 @@ class TestAccountMove(TestStockValuationCommon):
         })
         move.action_post()
 
-        cogs_line = move.line_ids.filtered(lambda l: l.account_id == product._get_product_accounts()['expense'])
-        self.assertEqual(cogs_line.analytic_distribution, {str(analytic_account.id): 100})
+        cogs_lines = move.line_ids.filtered(lambda l: l.display_type == 'cogs')
+        self.assertRecordValues(cogs_lines.sorted('balance'), [
+            {'analytic_distribution': {str(analytic_account.id): 100}, 'account_id': product._get_product_accounts()['expense'].id},
+            {'analytic_distribution': {str(analytic_account.id): 100}, 'account_id': product._get_product_accounts()['stock_valuation'].id},
+        ])
+
+    def test_stock_picking_applies_analytic_distribution_to_journal_entry(self):
+        """
+        Check analytic distribution is correctly propagated to journal entry
+        while validating a picking related to a partner
+        """
+        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
+        product = self.product_standard_auto
+        cost_of_production = self.env['account.account'].create({
+            'name': 'STCK Test Account',
+            'code': '100119',
+            'reconcile': True,
+            'account_type': 'asset_current',
+        })
+        default_plan = self.env['account.analytic.plan'].create({
+            'name': 'Default',
+        })
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Account 1',
+            'plan_id': default_plan.id,
+            'company_id': False,
+        })
+        self.env['account.analytic.distribution.model'].create({
+            'analytic_distribution': {analytic_account.id: 100},
+            'product_id': product.id,
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+        })
+        self.stock_location.valuation_account_id = cost_of_production.id
+
+        receipt = self.env['stock.picking'].create([
+            {
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'picking_type_id': self.picking_type_in.id,
+                'partner_id': self.partner.id,
+                'move_ids': [Command.create({
+                    'product_id': product.id,
+                    'location_id': self.supplier_location.id,
+                    'location_dest_id': self.stock_location.id,
+                    'product_uom_qty': 1.0,
+                })],
+            },
+        ])
+        receipt.button_validate()
+
+        aml = self.env['account.move.line'].search([('product_id', '=', product.id)], order='debit')
+        self.assertRecordValues(aml, [
+            {'analytic_distribution': {str(analytic_account.id): 100}, 'credit': 10, 'debit': 0},
+            {'analytic_distribution': {str(analytic_account.id): 100}, 'credit': 0, 'debit': 10},
+        ])
 
     def test_cogs_account_branch_company(self):
         """Check branch company accounts are selected"""
@@ -208,7 +266,6 @@ class TestAccountMove(TestStockValuationCommon):
         test_account = self.env['account.account'].with_company(branch.id).create({
             'name': 'STCK Test Account',
             'code': '100119',
-            'reconcile': True,
             'account_type': 'asset_current',
         })
         self.category_standard_auto.with_company(branch.id).property_valuation = "real_time"
@@ -217,6 +274,7 @@ class TestAccountMove(TestStockValuationCommon):
         bill = self.env['account.move'].with_company(branch.id).with_context(default_move_type='in_invoice').create({
             'partner_id': self.partner.id,
             'invoice_date': fields.Date.today(),
+            'company_id': branch.id,
             'invoice_line_ids': [
                 Command.create({
                     'product_id': product.id,

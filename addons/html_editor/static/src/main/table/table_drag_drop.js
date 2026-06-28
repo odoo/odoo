@@ -1,4 +1,9 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
+import { useCrossDocumentListener } from "../../utils/hooks";
+import {
+    getIframeAdjustedBoundingRect,
+    getIframeAdjustedClientCoords,
+} from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
 import { Component, onMounted, onWillUnmount } from "@odoo/owl";
@@ -16,17 +21,18 @@ export class TableDragDrop extends Component {
         close: Function,
         moveRow: Function,
         moveColumn: Function,
+        tableGrid: Object,
     };
 
     setup() {
         this.overlayRef = useRef("dragOverlay");
         this.pointerPos = { ...this.props.pointerPos };
         this.tableElement = closestElement(this.props.target, "table");
-        this.tableRect = this.tableElement.getBoundingClientRect();
+        this.tableRect = getIframeAdjustedBoundingRect(this.tableElement);
         const targetRect =
             this.props.type === "row"
-                ? this.props.target.parentElement.getBoundingClientRect()
-                : this.props.target.getBoundingClientRect();
+                ? getIframeAdjustedBoundingRect(this.props.target.parentElement)
+                : getIframeAdjustedBoundingRect(this.props.target);
         this.overlayRect = {
             top: targetRect.top,
             left: targetRect.left,
@@ -36,16 +42,11 @@ export class TableDragDrop extends Component {
         // Compute bounding rects of rows or column cells
         this.itemRects =
             this.props.type === "row"
-                ? [...this.tableElement.rows].map((r) => r.getBoundingClientRect())
-                : [...this.props.target.parentElement.cells].map((c) => c.getBoundingClientRect());
+                ? [...this.tableElement.rows].map((r) => getIframeAdjustedBoundingRect(r))
+                : [...this.props.tableGrid[0]].map((c) => getIframeAdjustedBoundingRect(c));
 
-        useExternalListener(this.props.document, "pointermove", this.onPointerMove);
-        useExternalListener(this.props.document, "pointerup", this.onPointerUp);
-        if (this.props.document !== document) {
-            // Listen outside the iframe.
-            useExternalListener(document, "pointermove", this.onPointerMove);
-            useExternalListener(document, "pointerup", this.onPointerUp);
-        }
+        useCrossDocumentListener(this.props.document, "pointermove", this.onPointerMove);
+        useCrossDocumentListener(this.props.document, "pointerup", this.onPointerUp);
 
         onMounted(() => {
             this.props.editable.classList.add("o-we-table-dragging");
@@ -100,7 +101,38 @@ export class TableDragDrop extends Component {
 
         // Determine whether to insert before or after the target
         // Insert before if overlay middle is left, else after
-        return { targetIndex, insertBefore: overlayMiddle < targetMiddle };
+        return {
+            targetIndex,
+            insertBefore: overlayMiddle < targetMiddle,
+        };
+    }
+
+    getDropPosition() {
+        const { targetIndex, insertBefore } = this.getInsertPosition();
+        const { tableGrid, type } = this.props;
+        if (type === "row") {
+            const targetCell = tableGrid[targetIndex][0];
+            const referenceIndex = insertBefore
+                ? targetIndex
+                : tableGrid.map((row) => row[0]).lastIndexOf(targetCell);
+            const canDropRow = tableGrid[referenceIndex].every((cell, colIndex) => {
+                const column = tableGrid.map((row) => row[colIndex]);
+                const rowIndex = insertBefore ? column.indexOf(cell) : column.lastIndexOf(cell);
+                return rowIndex === referenceIndex;
+            });
+            return canDropRow ? { targetIndex: referenceIndex, insertBefore } : null;
+        } else {
+            const targetCell = tableGrid[0][targetIndex];
+            const referenceIndex = insertBefore
+                ? targetIndex
+                : tableGrid[0].lastIndexOf(targetCell);
+            const canDropColumn = tableGrid.every((row) => {
+                const cell = row[referenceIndex];
+                const rowIndex = insertBefore ? row.indexOf(cell) : row.lastIndexOf(cell);
+                return rowIndex === referenceIndex;
+            });
+            return canDropColumn ? { targetIndex: referenceIndex, insertBefore } : null;
+        }
     }
 
     onPointerMove(ev) {
@@ -115,58 +147,64 @@ export class TableDragDrop extends Component {
                 ? this.tableRect.bottom - this.overlayRect.height / 2 - OVERLAY_CLAMP_OFFSET
                 : this.tableRect.right - this.overlayRect.width / 2 - OVERLAY_CLAMP_OFFSET;
         // Update overlay position on pointer movement, clamped within min/max
+        const { clientX, clientY } = getIframeAdjustedClientCoords(ev);
         if (this.props.type === "row") {
             this.overlayRect.top = Math.min(
                 max,
-                Math.max(min, this.overlayRect.top + ev.clientY - this.pointerPos.y)
+                Math.max(min, this.overlayRect.top + clientY - this.pointerPos.y)
             );
         } else {
             this.overlayRect.left = Math.min(
                 max,
-                Math.max(min, this.overlayRect.left + ev.clientX - this.pointerPos.x)
+                Math.max(min, this.overlayRect.left + clientX - this.pointerPos.x)
             );
         }
-        this.clearBorderHighlights();
-        const { targetIndex, insertBefore } = this.getInsertPosition();
-        // Highlight the target row or column
-        if (this.props.type === "row") {
-            const targetRow = this.tableElement.rows[targetIndex];
-            targetRow.classList.add(insertBefore ? "tr-highlight-top" : "tr-highlight-bottom");
-        } else {
-            [...this.tableElement.rows].forEach((row) => {
-                const targetCell = row.cells[targetIndex];
-                targetCell.classList.add(insertBefore ? "td-highlight-left" : "td-highlight-right");
-            });
+        const dropPosition = this.getDropPosition();
+        if (dropPosition) {
+            this.clearBorderHighlights();
+            const { targetIndex, insertBefore } = dropPosition;
+            // Highlight the target row or column border
+            if (this.props.type === "row") {
+                const targetRow = this.tableElement.rows[targetIndex];
+                targetRow.classList.add(insertBefore ? "tr-highlight-top" : "tr-highlight-bottom");
+            } else {
+                // Apply highlight
+                this.props.tableGrid.forEach((row) => {
+                    const cell = row[targetIndex];
+                    cell.classList.add(insertBefore ? "td-highlight-left" : "td-highlight-right");
+                });
+            }
         }
         // Apply updated overlay position to the overlay element
         const overlayStyle = this.overlayRef.el.style;
         overlayStyle.top = `${this.overlayRect.top}px`;
         overlayStyle.left = `${this.overlayRect.left}px`;
         // Update stored pointer position for next move
-        this.pointerPos.x = ev.clientX;
-        this.pointerPos.y = ev.clientY;
+        this.pointerPos.x = clientX;
+        this.pointerPos.y = clientY;
     }
 
     onPointerUp() {
         this.clearBorderHighlights();
-
-        let { targetIndex, insertBefore } = this.getInsertPosition();
-        const draggedIndex =
-            this.props.type === "row"
-                ? getRowIndex(this.props.target.parentElement)
-                : getColumnIndex(this.props.target);
-        if (draggedIndex > targetIndex && !insertBefore) {
-            // Moving upward or leftward
-            targetIndex += 1;
-        } else if (draggedIndex < targetIndex && insertBefore) {
-            // Moving downward or rightward
-            targetIndex -= 1;
-        }
-
-        if (this.props.type === "row") {
-            this.props.moveRow(targetIndex, this.props.target.parentElement);
-        } else {
-            this.props.moveColumn(targetIndex, this.props.target);
+        const dropPosition = this.getDropPosition();
+        if (dropPosition) {
+            let { targetIndex, insertBefore } = dropPosition;
+            const draggedIndex =
+                this.props.type === "row"
+                    ? getRowIndex(this.props.target.parentElement)
+                    : getColumnIndex(this.props.target);
+            if (draggedIndex > targetIndex && !insertBefore) {
+                // Moving upward or leftward
+                targetIndex += 1;
+            } else if (draggedIndex < targetIndex && insertBefore) {
+                // Moving downward or rightward
+                targetIndex -= 1;
+            }
+            if (this.props.type === "row") {
+                this.props.moveRow(targetIndex, this.props.target.parentElement);
+            } else {
+                this.props.moveColumn(targetIndex, this.props.target);
+            }
         }
         // Close overlay after drop
         this.props.close();

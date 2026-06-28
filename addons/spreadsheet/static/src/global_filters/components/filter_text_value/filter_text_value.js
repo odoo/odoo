@@ -1,7 +1,7 @@
 /** @ts-check */
 
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { useChildRef } from "@web/core/utils/hooks";
 
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -13,21 +13,12 @@ export class TextFilterValue extends Component {
         BadgeTag,
         AutoComplete,
     };
-    static props = {
-        onValueChanged: Function,
-        value: { type: Array, optional: true },
-        options: {
-            type: Array,
-            element: {
-                type: Object,
-                shape: { value: String, formattedValue: String },
-                optional: true,
-            },
-        },
-    };
-    static defaultProps = {
-        value: [],
-    };
+    props = props({
+        onValueChanged: t.function(),
+        value: t.array().optional([]),
+        options: t.array(t.object({ value: t.string(), formattedValue: t.string() }).optional()),
+        placeholder: t.string().optional(),
+    });
 
     setup() {
         this.inputRef = useChildRef();
@@ -55,6 +46,10 @@ export class TextFilterValue extends Component {
                 this.props.onValueChanged(this.props.value.filter((v) => v !== value));
             },
         }));
+    }
+
+    get placeholder() {
+        return this.tags.length ? "" : this.props.placeholder;
     }
 
     get sources() {

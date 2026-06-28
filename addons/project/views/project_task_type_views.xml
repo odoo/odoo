@@ -35,9 +35,9 @@
                                 <field name="mail_template_id" placeholder="No email"
                                     context="{'default_model': 'project.task'}" invisible="user_id"/>
                                 <label for="rotting_threshold_days" string="Rotting in"/>
-                                <div class="o_input_box">
-                                    <field name="rotting_threshold_days"/>
-                                    <span class="o_input_box_overlay_end o_input_box_overlay_inline">days</span>
+                                <div>
+                                    <field name="rotting_threshold_days" class="oe_inline o_input_3ch px-1"/>
+                                    <span>days</span>
                                 </div>
                                 <field name="rating_active" widget="boolean_toggle"/>
                                 <field name="rating_status" invisible="not rating_active"/>
@@ -52,7 +52,6 @@
                                 <field name="project_ids" invisible="user_id" required="not user_id"
                                     widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'open_form'}"/>
                                 <field name="fold" string="Fold by Default" widget="boolean_toggle"/>
-                                <field name="color" widget="color_picker"/>
                                 <field name="sequence" groups="base.group_no_one"/>
                             </group>
                         </group>
@@ -71,7 +70,6 @@
                     <field name="rotting_threshold_days" optional="hide"/>
                     <field name="mail_template_id" optional="hide"/>
                     <field name="project_ids" required="1" optional="show" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
-                    <field name="color" optional="hide" widget="color_picker"/>
                     <field name="fold" optional="show"/>
                 </list>
             </field>
@@ -93,14 +91,11 @@
             <field name="name">project.task.type.kanban</field>
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
-                <kanban highlight_color="color" class="o_kanban_mobile" sample="1" default_group_by="project_ids">
+                <kanban class="o_kanban_mobile" sample="1" default_group_by="project_ids">
                     <templates>
-                        <t t-name="menu" t-if="!selection_mode" groups="base.group_user">
-                            <field name="color" widget="kanban_color_picker"/>
-                        </t>
                         <t t-name="card">
                             <field name="name" class="fw-bolder text-truncate"/>
-                            <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
+                            <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         </t>
                     </templates>
                 </kanban>

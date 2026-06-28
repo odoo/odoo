@@ -32,7 +32,7 @@ class CalendarAttendee(models.Model):
     event_id = fields.Many2one('calendar.event', 'Meeting linked', required=True, index=True, ondelete='cascade')
     recurrence_id = fields.Many2one('calendar.recurrence', related='event_id.recurrence_id')
     # attendee
-    partner_id = fields.Many2one('res.partner', 'Attendee', required=True, readonly=True, ondelete='cascade')
+    partner_id = fields.Many2one('res.partner', 'Attendee', required=True, index=True, readonly=True, ondelete='cascade')
     email = fields.Char('Email', related='partner_id.email')
     phone = fields.Char('Phone', related='partner_id.phone')
     common_name = fields.Char('Common name', compute='_compute_common_name', store=True)
@@ -95,6 +95,7 @@ class CalendarAttendee(models.Model):
             "email_from": "{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}",
             "email_to": False,
             "partner_to": False,
+            "partner_cc": False,
             "lang": "{{ object.partner_id.lang }}",
             "use_default_to": True,
         }
@@ -113,7 +114,8 @@ class CalendarAttendee(models.Model):
     def _send_invitation_emails(self):
         """ Hook to be able to override the invitation email sending process.
          Notably inside appointment to use a different mail template from the appointment type. """
-        self._notify_attendees(
+        now = fields.Datetime.now()
+        self.filtered(lambda attendee: attendee.event_id.start > now)._notify_attendees(
             self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False),
             force_send=True,
         )

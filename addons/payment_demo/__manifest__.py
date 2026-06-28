@@ -14,7 +14,7 @@
         "views/payment_token_views.xml",
         "views/payment_transaction_views.xml",
         "data/payment_method_data.xml",
-        "data/payment_provider_data.xml",  # Depends on `payment_method_demo`.
+        "data/payment_provider_data.xml",
     ],
     "post_init_hook": "post_init_hook",
     "uninstall_hook": "uninstall_hook",

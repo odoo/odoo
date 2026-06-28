@@ -8,26 +8,20 @@ from zoneinfo import ZoneInfo
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import ormcache, float_is_zero
+from odoo.tools import float_is_zero
 from odoo.tools.intervals import Intervals
 
 
 class HrVersion(models.Model):
     _inherit = 'hr.version'
 
-    work_entry_source = fields.Selection(string="Tracking Method", selection=[
-        ('calendar', 'Time Off'),
-    ], default=lambda self: self.env.company.sudo().work_entry_source, tracking=True, required=True, help='''
-            Defines the source for work entries generation
-
-            Working Schedule: Work entries will be generated from the working hours below.
-            Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)
-        ''', groups="base.group_system,hr.group_hr_manager")
-
-    # YTI Break ormcache + select country attendance entry type
-    @ormcache()
     def _get_default_work_entry_type_id(self):
-        attendance = self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
+        country_code = self.country_code
+        country_attendance = self.env['hr.work.entry.type'].search([
+            ('code', '=', 'WORK100'),
+            ('country_code', '=', country_code),
+        ], limit=1)
+        attendance = country_attendance or self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
         return attendance.id if attendance else False
 
     def _get_leave_work_entry_type_dates(self, leave, date_from, date_to, employee):
@@ -78,7 +72,7 @@ class HrVersion(models.Model):
     def _get_attendance_intervals(self, start_dt, end_dt):
         assert start_dt.tzinfo and end_dt.tzinfo, "function expects localized date"
         # {resource: intervals}
-        versions_with_calendar_work_entry_source = self.filtered(lambda version: version.work_entry_source == 'calendar')
+        versions_with_calendar_work_entry_source = self.filtered(lambda version: version.has_static_work_entries())
         result = dict()
         for calendar, versions in versions_with_calendar_work_entry_source.grouped('resource_calendar_id').items():
             fully_flex_versions = versions.filtered('is_fully_flexible')
@@ -103,10 +97,6 @@ class HrVersion(models.Model):
     def _get_valid_leave_intervals(self, attendances, interval):
         self.ensure_one()
         return [interval]
-
-    @api.model
-    def _get_whitelist_fields_from_template(self):
-        return super()._get_whitelist_fields_from_template() + ['work_entry_source']
 
     def _get_no_wet_or_wet_match(self, leave, leave_entry_type):
         return not leave[2].work_entry_type_id or leave[2].work_entry_type_id.id == leave_entry_type.id
@@ -204,15 +194,15 @@ class HrVersion(models.Model):
                     start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
                 real_leaves = (static_attendances & multi_day_leaves) | one_day_leaves
             elif version.has_static_work_entries() or not leaves:
-                real_leaves = expected_attendances & leaves
+                real_leaves = version._get_real_leaves_static(leaves, expected_attendances)
             else:
                 resources_per_tz = version._get_resources_per_tz()
                 static_attendances = calendar._attendance_intervals_batch(
                     start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
-                real_leaves = static_attendances & leaves
+                real_leaves = version._get_real_leaves_static_attendance(leaves, static_attendances)
 
-            real_worked_leaves = worked_leaves - real_leaves
-            real_attendances = self._get_real_attendances(expected_attendances, leaves, worked_leaves)
+            real_worked_leaves = version._get_real_worked_leaves(worked_leaves, real_leaves)
+            real_attendances = version._get_real_attendances(expected_attendances, leaves, worked_leaves)
 
             # A leave period can be linked to several resource.calendar.leave
             split_leaves = []
@@ -258,7 +248,7 @@ class HrVersion(models.Model):
                 for leave_interval in [(l[0], l[1], interval[2]) for l in leaves_over_interval]:
                     leave_entry_type = version._get_interval_leave_work_entry_type(leave_interval, leaves, bypassing_work_entry_type_codes)
                     # leaves don't have work_entry_type_id set if you create them before having hr_work_entry_installed
-                    interval_leaves = [leave for leave in leaves if self._get_no_wet_or_wet_match(leave, leave_entry_type)]
+                    interval_leaves = [leave for leave in leaves if version._get_no_wet_or_wet_match(leave, leave_entry_type)]
                     interval_start = leave_interval[0].astimezone(UTC).replace(tzinfo=None)
                     interval_stop = leave_interval[1].astimezone(UTC).replace(tzinfo=None)
                     version_vals += [dict([
@@ -274,6 +264,15 @@ class HrVersion(models.Model):
     # will override in attendance bridge to add overtime vals
     def _get_real_attendances(self, attendances, leaves, worked_leaves):
         return attendances - leaves - worked_leaves
+
+    def _get_real_leaves_static(self, leaves, expected_attendances):
+        return expected_attendances & leaves
+
+    def _get_real_leaves_static_attendance(self, leaves, static_attendances):
+        return static_attendances & leaves
+
+    def _get_real_worked_leaves(self, worked_leaves, real_leaves):
+        return worked_leaves - real_leaves
 
     def _get_work_entries_values(self, date_start, date_stop):
         """
@@ -296,10 +295,10 @@ class HrVersion(models.Model):
         return version_vals
 
     def has_static_work_entries(self):
-        # Static work entries as in the same are to be generated each month
-        # Useful to differentiate attendance based versions from regular ones
+        # True means this is calendar based, False it is attendance based.
+        # This function gets overridden in hr_work_entry_attendance to correctly check if it's attendance based
         self.ensure_one()
-        return self.work_entry_source == 'calendar'
+        return True
 
     def generate_work_entries(self, date_start, date_stop):
         # Generate work entries between 2 dates (datetime.date)
@@ -337,8 +336,8 @@ class HrVersion(models.Model):
 
         intervals_to_generate = defaultdict(lambda: self.env['hr.version'])
 
-        for tz, versions in self.grouped("tz").items():
-            tz = ZoneInfo(tz) if tz else UTC
+        for version_tz, versions in self.grouped(lambda v: v._get_tz()).items():
+            tz = ZoneInfo(version_tz) if version_tz else UTC
             for version in versions:
                 version_start = fields.Datetime.to_datetime(version.date_start).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                 version_stop = datetime.combine(fields.Datetime.to_datetime(version.date_end or date_stop),
@@ -374,6 +373,25 @@ class HrVersion(models.Model):
         :return: list of field names to aggregate
         """
         return []
+
+    @api.model
+    def _get_work_entry_merge_key(self, vals):
+        """
+        Returns a tuple key used to identify work entries that should be merged together.
+
+        By default, this includes the date, work_entry_type_id, employee_id, version_id, and company_id.
+        It can be extended to include other fields if necessary.
+
+        :param vals: dictionary of work entry values
+        :return: tuple key for merging
+        """
+        return (
+            vals['date'],
+            vals.get('work_entry_type_id', False),
+            vals['employee_id'],
+            vals['version_id'],
+            vals.get('company_id', False),
+        )
 
     @api.model
     def _generate_work_entries_postprocess_adapt_to_calendar(self, vals):
@@ -491,13 +509,7 @@ class HrVersion(models.Model):
         for vals in vals_list:
             if float_is_zero(vals['duration'], 3):
                 continue
-            key = (
-                vals['date'],
-                vals.get('work_entry_type_id', False),
-                vals['employee_id'],
-                vals['version_id'],
-                vals.get('company_id', False),
-            )
+            key = self._get_work_entry_merge_key(vals)
             if key in merged_vals:
                 merged_vals[key]['duration'] += vals.get('duration', 0.0)
                 source_fields = self._get_work_entry_source_fields()

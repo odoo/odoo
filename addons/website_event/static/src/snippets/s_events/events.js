@@ -36,3 +36,9 @@ registry
     .add("website_event.events", {
         Interaction: Events,
     });
+
+registry
+    .category("public.interactions.preview")
+    .add("website_event.events", {
+        Interaction: Events,
+    });

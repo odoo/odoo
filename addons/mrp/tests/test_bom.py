@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 from datetime import timedelta
 
 from odoo import exceptions, fields
@@ -1788,6 +1789,26 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(mo_1.is_outdated_bom, True,
             "Even if the BoM's changes don't imply actual changes for the MO, it should be marked as updated.")
 
+        # Updates the BoM again (change product template after marking it as outdated)
+        bom.product_tmpl_id = self.product_4.product_tmpl_id
+        self.assertEqual(mo_1.is_outdated_bom, False,
+            "if the BoM's product template changes MO's BoM should not be marked as outdated")
+        # Test with a new product (Sofa) and a new MO for that product.
+        bom.product_tmpl_id = self.product_7_template.id
+        mo_2 = self.env['mrp.production'].create({
+            'product_id': self.product_7_1.id,
+            'product_qty': 1.0,
+        })
+        self.assertEqual(mo_2.bom_id, bom)
+        mo_2.action_confirm()
+        # Mark BoM as outdated by modifying quantity on the BoM
+        bom.product_qty *= 2
+        self.assertTrue(mo_2.is_outdated_bom)
+        # Change the sofa variant to be specific to Blue on the BoM
+        bom.product_id = self.product_7_2
+        self.assertFalse(mo_2.is_outdated_bom,
+            "MO's BoM should no longer be outdated because this BoM is no longer for the Red Sofa.")
+
     def test_bom_updates_mo_with_different_uom(self):
         """ Creates a Manufacturing Order using a BoM and produces 1 dozen of the finished product,
         then modifies the BoM's component's quantity and update the MO.
@@ -1967,8 +1988,11 @@ class TestBoM(TestMrpCommon):
         mo_form.bom_id = self.bom_1
         mo_form.picking_type_id = self.picking_type_manu
         mo_1 = mo_form.save()
+        picking_type_manu_clone = self.picking_type_manu.copy({'sequence_code': 'NEW_CODE'})
+        mo_1.picking_type_id = picking_type_manu_clone
         mo_1.action_confirm()
         picking = mo_1.picking_ids
+        self.assertEqual(picking.origin, mo_1.name)
         self.assertRecordValues(picking.move_ids, [
             {'product_id': self.product_2.id, 'product_uom_qty': 2},
             {'product_id': self.product_1.id, 'product_uom_qty': 4},
@@ -2296,8 +2320,6 @@ class TestBoM(TestMrpCommon):
         mo = mo_form.save()
         mo.action_confirm()
 
-        move_consumed_in_op = mo.move_raw_ids.filtered(lambda m: m.bom_line_id == self.bom_2.bom_line_ids[0])
-        self.assertTrue(move_consumed_in_op.manual_consumption)
         self.bom_2.write({
             'bom_line_ids': [
                 Command.update(self.bom_2.bom_line_ids[0].id, {'operation_id': self.env['mrp.routing.workcenter'].id}),
@@ -2305,7 +2327,6 @@ class TestBoM(TestMrpCommon):
         })
         self.assertTrue(mo.is_outdated_bom)
         mo.action_update_bom()
-        self.assertFalse(move_consumed_in_op.manual_consumption)
 
         self.bom_2.operation_ids.write({
             'name': 'Painting',
@@ -2384,84 +2405,15 @@ class TestBoM(TestMrpCommon):
         self.assertFalse(bom.byproduct_ids.operation_id)
         self.assertFalse(operation_2.blocked_by_operation_ids)
 
-    def test_bom_document(self):
-        doc_product_bom = self.env['product.document'].create({
-            'name': 'doc_product_bom',
-            'attached_on_mrp': 'bom',
-            'res_id': self.product_4.id,
-            'res_model': 'product.product',
-        })
-
-        # ensures that the archived docs are not taken into account
-        self.env['product.document'].create({
-            'name': 'doc_product_bom_archived',
-            'active': False,
-            'attached_on_mrp': 'bom',
-            'res_id': self.product_4.id,
-            'res_model': 'product.product',
-        })
-
-        doc_template_bom = self.env['product.document'].create({
-            'name': 'doc_template_bom',
-            'attached_on_mrp': 'bom',
-            'res_id': self.product_4.product_tmpl_id.id,
-            'res_model': 'product.template',
-        })
-
-        attachments = doc_template_bom.ir_attachment_id + doc_product_bom.ir_attachment_id
-
-        bom = self.env['mrp.bom'].create({
-            'product_tmpl_id': self.product_4.product_tmpl_id.id,
-            'uom_id': self.product_4.product_tmpl_id.uom_id.id,
-            'product_qty': 1.0,
-            'type': 'normal',
-        })
-
-        # only the document linked to the product.template and visible at bom should be in the chatter
-        self.assertEqual(bom._get_extra_attachments(), doc_template_bom.ir_attachment_id)
-
-        bom.product_id = self.product_4
-        # the document linked to the product.template and product.product visible at bom should be in the chatter
-        self.assertEqual(bom._get_extra_attachments(), attachments)
-
-        bom = self.env['mrp.bom'].create({
-            'product_tmpl_id': self.product_5.product_tmpl_id.id,
-            'uom_id': self.product_5.product_tmpl_id.uom_id.id,
-            'product_qty': 1.0,
-            'type': 'normal',
-            'bom_line_ids': [
-                Command.create({
-                    'product_id': self.product_4.id,
-                    'product_qty': 1,
-                }),
-            ]
-        })
-
-        self.assertEqual(bom.bom_line_ids.attachments_count, 2)
-        action = bom.bom_line_ids.action_see_attachments()
-        # the filter is applied because there are attachements on the product.product
-        self.assertTrue(action['context']['search_default_context_variant'])
-
-        doc_product_bom.attached_on_mrp = 'hidden'
-        action = bom.bom_line_ids.action_see_attachments()
-        # the filter is not applied because there are attachements on the product.template but not on the product.product
-        self.assertFalse(action['context']['search_default_context_variant'])
-
-        doc_template_bom.attached_on_mrp = 'hidden'
-        action = bom.bom_line_ids.action_see_attachments()
-        # the filter is applied because there are attachements on the product.template and on the product.product
-        self.assertTrue(action['context']['search_default_context_variant'])
-
-    def test_compute_days_to_prepare_from_mo_if_unavailable(self):
-        """
-        Checks that a notification is sent when at least one component can not be resupplied.
+    def test_compute_json_popover_from_mo_if_unavailable(self):
+        """Test to ensure that the popover shows the correct information when at least one component can not be resupplied.
         """
         bom = self.bom_1
-        product = bom.product_id
-        product.route_ids = [Command.set([self.route_manufacture.id])]
-        notification = bom.action_compute_bom_days()
-        self.assertEqual(bom.days_to_prepare_mo, 0.0)
-        self.assertEqual((notification['type'], notification['tag']), ('ir.actions.client', 'display_notification'))
+        bom.product_id.route_ids = [Command.set([self.route_manufacture.id])]
+        popover_data = json.loads(bom.json_popover)
+        # The popover displays "Not Available: Missing route info for components." because the delay is not set on the BoM.
+        self.assertNotIn('delay', popover_data)
+        self.assertEqual(popover_data.get('bom_id'), bom._origin.id)
 
     def test_bom_never_attribute(self):
         # We create 4 bom lines, 4 operations and 4 byproducts, each with:

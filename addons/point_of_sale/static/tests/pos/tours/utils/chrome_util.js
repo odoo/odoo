@@ -91,10 +91,21 @@ export function doCashMove(amount, reason) {
         })),
         {
             isActive: ["mobile"],
-            trigger: ".o-overlay-item:nth-child(2) .modal-footer button:contains('Confirm')",
-            run: "click",
+            trigger: `.input-value:contains(${amount})`,
         },
-        Dialog.confirm(),
+        {
+            isActive: ["mobile"],
+            ...Dialog.proceed({ title: "Amount", button: "Confirm" }),
+        },
+        {
+            isActive: ["mobile"],
+            ...Dialog.isNot({ title: "Amount" }),
+        },
+        {
+            isActive: ["mobile"],
+            trigger: `.input-amount input:value(${amount})`,
+        },
+        Dialog.proceed({ button: "Confirm" }),
     ];
 }
 export function endTour() {
@@ -186,17 +197,11 @@ function _hasFloatingOrder(name, yes, click) {
 export function hasFloatingOrder(name) {
     return _hasFloatingOrder(name, true);
 }
-export function noFloatingOrder(name) {
-    return _hasFloatingOrder(name, false);
-}
 export function clickFloatingOrder(name) {
     return _hasFloatingOrder(name, true, true);
 }
 export function clickOrders() {
     return { trigger: ".pos-leftheader .orders-button", run: "click" };
-}
-export function clickPresetTimingSlot() {
-    return { trigger: ".pos-leftheader .preset-time-btn", run: "click" };
 }
 export function selectPresetTimingSlotHour({ title, hour } = {}) {
     return [
@@ -224,10 +229,15 @@ export function presetTimingSlotHourExists(hour) {
     return { trigger: `.modal button:contains('${hour}')` };
 }
 export function selectSlotDays(d) {
-    return {
-        trigger: `.modal .d-flex.w-100.flex-wrap.gap-2.mt-2 button:nth-of-type(${d})`,
-        run: "click",
-    };
+    return [
+        {
+            trigger: `.modal .preset_date_buttons:nth-of-type(${d})`,
+            run: "click",
+        },
+        {
+            trigger: `.modal .preset_date_buttons:nth-of-type(${d}).btn-primary`,
+        },
+    ];
 }
 export function selectPresetTimingSlotIndex(index) {
     return {
@@ -317,14 +327,6 @@ export function CustomerDisplayHasQRButton() {
         trigger: ".o_dialog .modal-body .container .btn-secondary:contains('Display QR')",
     };
 }
-export function ClickCustomerDisplayThisDeviceButton() {
-    return {
-        isActive: ["desktop"],
-        content: "Check that the customer display popup has a 'This device' button",
-        trigger: ".btn-primary:contains('This device')",
-        run: "click",
-    };
-}
 export function ClickCustomerDisplayQRButton() {
     return {
         isActive: ["desktop"],
@@ -380,13 +382,6 @@ if (sessionStorage.getItem("pos_test_frozen_time")) {
     DateTime.now = () => DateTime.fromMillis(millis);
 }
 
-export function selectPresetDateButton(formattedDate) {
-    return {
-        trigger: `.modal-body button:contains("${formattedDate}")`,
-        run: "click",
-    };
-}
-
 export function waitForOrdersSync() {
     return [
         {
@@ -397,6 +392,30 @@ export function waitForOrdersSync() {
                 await waitUntil(() => !posmodel.syncingOrders.size, { timeout: 10000 });
                 await new Promise((resolve) => setTimeout(resolve));
             },
+        },
+    ];
+}
+
+export function flushPendingOrdersSync() {
+    return [
+        {
+            trigger: "body",
+            content: "Flush pending PoS orders to the server (sync_all_orders)",
+            timeout: 15000,
+            async run() {
+                await posmodel.syncAllOrders({ force: true });
+            },
+        },
+    ];
+}
+
+export function closePrintingWarning() {
+    return [
+        {
+            content: "acknowledge printing error ( because we don't have printer in the test. )",
+            trigger: `.modal:has(.modal-header:contains(printing failed)) .modal-footer .btn-primary:contains(continue)`,
+            run: "click",
+            timeout: 15000,
         },
     ];
 }

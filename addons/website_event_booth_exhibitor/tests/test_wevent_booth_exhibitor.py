@@ -16,7 +16,7 @@ class TestWEventBoothExhibitorCommon(HttpCaseWithUserDemo, HttpCaseWithUserPorta
 
         transfer_provider = self.env.ref('payment.payment_provider_transfer')
         transfer_provider.write({
-            'state': 'enabled',
+            'is_live': True,
             'is_published': True,
         })
         transfer_provider._transfer_ensure_pending_msg_is_set()

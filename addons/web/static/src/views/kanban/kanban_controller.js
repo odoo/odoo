@@ -1,4 +1,4 @@
-import { render, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { render, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -25,9 +25,8 @@ import { KanbanRenderer } from "./kanban_renderer";
 import { useProgressBar } from "./progress_bar_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 
-import { Component, onMounted, onWillStart } from "@odoo/owl";
+import { Component, onMounted, onWillStart, props, proxy, t, useEffect } from "@odoo/owl";
 import { QuickCreateState } from "./kanban_record_quick_create";
-import { effect } from "@web/core/utils/reactive";
 
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
 
@@ -47,24 +46,20 @@ export class KanbanController extends Component {
         CogMenu: KanbanCogMenu,
         SelectionBox,
     };
-    static props = {
+    props = props({
         ...standardViewProps,
-        editable: { type: Boolean, optional: true },
-        forceGlobalClick: { type: Boolean, optional: true },
-        onSelectionChanged: { type: Function, optional: true },
-        readonly: { type: Boolean, optional: true },
-        Compiler: Function,
-        Model: Function,
-        Renderer: Function,
-        buttonTemplate: String,
-        archInfo: Object,
-    };
-
-    static defaultProps = {
-        createRecord: () => {},
-        forceGlobalClick: false,
-        selectRecord: () => {},
-    };
+        editable: t.boolean().optional(),
+        forceGlobalClick: t.boolean().optional(false),
+        onSelectionChanged: t.function().optional(),
+        readonly: t.boolean().optional(),
+        Compiler: t.function(),
+        Model: t.function(),
+        Renderer: t.function(),
+        buttonTemplate: t.string(),
+        archInfo: t.object(),
+        createRecord: t.function().optional(() => () => {}),
+        selectRecord: t.function().optional(() => () => {}),
+    });
 
     setup() {
         this.actionService = useService("action");
@@ -101,7 +96,7 @@ export class KanbanController extends Component {
             }
         }
 
-        this.model = useState(
+        this.model = proxy(
             useModelWithSampleData(KanbanSampleModel, this.modelParams, this.modelOptions)
         );
         if (archInfo.progressAttributes) {
@@ -116,15 +111,12 @@ export class KanbanController extends Component {
         this.headerButtons = archInfo.headerButtons;
 
         this.quickCreateState = new QuickCreateState(archInfo.quickCreateView);
-        effect(
-            ({ isOpen }) => {
-                if (isOpen && this.model.useSampleModel) {
-                    this.model.removeSampleDataInGroups();
-                    this.model.useSampleModel = false;
-                }
-            },
-            [this.quickCreateState]
-        );
+        useEffect(() => {
+            if (this.quickCreateState.isOpen && this.model.useSampleModel) {
+                this.model.removeSampleDataInGroups();
+                this.model.useSampleModel = false;
+            }
+        });
 
         this.rootRef = useRef("root");
         useViewButtons(this.rootRef, {
@@ -183,7 +175,7 @@ export class KanbanController extends Component {
                     }
                 }
             },
-            () => [this.model.isReady]
+            () => [this.model.isReady()]
         );
         usePager(() => {
             const root = this.model.root;
@@ -195,9 +187,8 @@ export class KanbanController extends Component {
                     total: count,
                     onUpdate: async ({ offset, limit }, hasNavigated) => {
                         await this.model.root.load({ offset, limit });
-                        await this.onUpdatedPager();
                         if (hasNavigated) {
-                            this.onPageChangeScroll();
+                            this.onPageChange();
                         }
                     },
                     updateTotal: hasLimitedCount ? () => root.fetchCount() : undefined,
@@ -357,7 +348,9 @@ export class KanbanController extends Component {
 
     getExportableFields() {
         return Object.keys(this.model.root.config.activeFields)
-            .map((e) => this.props.fields[e])
+            .map((e) => this.model.root.fields[e])
+            .filter(Boolean)
+            .filter((field) => field.exportable !== false)
             .filter((field) => field.type !== "properties");
     }
 
@@ -462,13 +455,19 @@ export class KanbanController extends Component {
     }
 
     get isNewButtonAvailableOffline() {
-        if (this.props.archInfo.activeActions.quickCreate) {
+        const { onCreate } = this.props.archInfo;
+        if (this.canQuickCreate && onCreate === "quick_create") {
             return this.offlineService.isAvailableOffline(
                 this.env.config.actionId,
                 "kanban_quick_create",
                 false
             );
         }
+
+        if (onCreate && onCreate !== "quick_create") {
+            return false;
+        }
+
         return this.offlineService.isAvailableOffline(this.env.config.actionId, "form", false);
     }
 
@@ -476,7 +475,7 @@ export class KanbanController extends Component {
         const { createGroup } = this.props.archInfo.activeActions;
         const list = this.model.root;
         return (
-            this.model.isReady &&
+            this.model.isReady() &&
             list.isGrouped &&
             list.groupByField.type === "many2one" &&
             list.groups.length === 0 &&
@@ -489,7 +488,7 @@ export class KanbanController extends Component {
         if (!activeActions.quickCreate) {
             return false;
         }
-        if (!this.model.isReady) {
+        if (!this.model.isReady()) {
             return false;
         }
 
@@ -510,7 +509,7 @@ export class KanbanController extends Component {
         }
     }
 
-    onPageChangeScroll() {
+    onPageChange() {
         if (this.rootRef && this.rootRef.el) {
             if (this.env.isSmall) {
                 this.rootRef.el.scrollTop = 0;
@@ -523,8 +522,6 @@ export class KanbanController extends Component {
     async beforeExecuteActionButton(clickParams) {}
 
     async afterExecuteActionButton(clickParams) {}
-
-    async onUpdatedPager() {}
 
     scrollTop() {
         this.rootRef.el.querySelector(".o_content").scrollTo({ top: 0 });

@@ -13,7 +13,15 @@ const DUMMY_CONTENT_ATTRS = ["data-oe-demo", "data-oe-expression-readable"];
 
 export class DynamicFieldPlugin extends Plugin {
     static id = "dynamicField";
-    static dependencies = ["selection", "history", "overlay", "dom", "toolbar", QWebPlugin.id];
+    static dependencies = [
+        "selection",
+        "domObserver",
+        "history",
+        "overlay",
+        "dom",
+        "toolbar",
+        QWebPlugin.id,
+    ];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -52,6 +60,7 @@ export class DynamicFieldPlugin extends Plugin {
             withSequence(20, {
                 categoryId: "dynamic_field_tools",
                 commandId: "insertField",
+                keywords: [_t("dynamic"), _t("placeholder"), _t("personalize")],
             }),
         ],
         on_selectionchange_handlers: withSequence(9, this.onSelectionChanged.bind(this)),
@@ -148,6 +157,7 @@ export class DynamicFieldPlugin extends Plugin {
                 path: initialPath,
                 label: initialLabel,
                 filter: this.filter.bind(this),
+                followRelation: this.followRelation.bind(this),
                 close: () => this.fieldPopover.close(),
                 validate: async ({ path, label, fieldInfo }) => {
                     if (path !== initialPath) {
@@ -165,7 +175,7 @@ export class DynamicFieldPlugin extends Plugin {
                     if (label !== initialLabel) {
                         target.setAttribute("data-oe-demo", label);
                         const prevText = target.textContent;
-                        this.dependencies.history.applyCustomMutation({
+                        this.dependencies.domObserver.applyCustomMutation({
                             apply: () => {
                                 target.textContent = "";
                                 this.normalizeQwebPlaceholders(target);
@@ -178,7 +188,7 @@ export class DynamicFieldPlugin extends Plugin {
                     }
 
                     if (path !== initialPath || label !== initialLabel) {
-                        this.dependencies.history.addStep();
+                        this.dependencies.history.commit();
                     }
                 },
             },
@@ -198,6 +208,7 @@ export class DynamicFieldPlugin extends Plugin {
             props: {
                 resModel,
                 filter: this.filter.bind(this),
+                followRelation: this.followRelation.bind(this),
                 close: () => this.fieldPopover.close(),
                 validate: async ({ path, label, fieldInfo }) => {
                     const doc = this.document;
@@ -209,7 +220,7 @@ export class DynamicFieldPlugin extends Plugin {
                     const fullPath = this.getFieldPath(target, path);
                     await this.setFieldAttributes(el, path, fullPath, fieldInfo);
                     el.setAttribute("data-oe-demo", label);
-                    el.innerText = label;
+                    el.textContent = label;
 
                     await this.config.dynamicFieldPostprocess?.({
                         path: fullPath,
@@ -221,11 +232,13 @@ export class DynamicFieldPlugin extends Plugin {
 
                     selection.restore();
                     this.dependencies.dom.insert(el);
-                    this.dependencies.history.addStep();
+                    this.dependencies.history.commit();
                 },
             },
         });
     }
+
+    followRelation({ fieldDef }) {}
 
     filter(fieldDef, path) {
         if (fieldDef.is_property && fieldDef.type === "separator") {
@@ -299,6 +312,7 @@ export class DynamicFieldPlugin extends Plugin {
             }
             return false;
         });
+        return node;
     }
 
     cleanQwebExpressionsForCopy(node) {
@@ -309,6 +323,7 @@ export class DynamicFieldPlugin extends Plugin {
                 }
             }
         );
+        return node;
     }
 
     cleanQwebExpressionsForSave(root) {
@@ -324,6 +339,7 @@ export class DynamicFieldPlugin extends Plugin {
             }
             return doChildren;
         });
+        return root;
     }
 }
 

@@ -1,10 +1,12 @@
-import { reactive } from "@web/owl2/utils";
-import { markRaw } from "@odoo/owl";
+import { markRaw, proxy } from "@odoo/owl";
 import { Model } from "@odoo/o-spreadsheet";
 import { registry } from "@web/core/registry";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { createDefaultCurrency } from "@spreadsheet/currency/helpers";
 import { _t } from "@web/core/l10n/translation";
+import { cookie } from "@web/core/browser/cookie";
+import { DashboardSearchModel } from "./dashboard_search_model";
+import { rpcBus } from "@web/core/network/rpc";
 
 /**
  * @type {{
@@ -28,6 +30,7 @@ export const Status = {
  * @property {string} status
  * @property {Model} [model]
  * @property {Error} [error]
+ * @property {DashboardSearchModel} searchModel
  *
  * @typedef DashboardGroupData
  * @property {number} id
@@ -41,7 +44,7 @@ export const Status = {
  *
  * @typedef {import("@web/env").OdooEnv} OdooEnv
  *
- * @typedef {import("@web/core/orm_service").ORM} ORM
+ * @typedef {import("@web/core/orm_plugin").ORM} ORM
  */
 
 export class DashboardLoader {
@@ -59,6 +62,7 @@ export class DashboardLoader {
         /** @private @type {Object<number, Dashboard>} */
         this.dashboards = {};
         this.geoJsonService = geoJsonService;
+        this.isInvalidated = false;
     }
 
     /**
@@ -72,6 +76,18 @@ export class DashboardLoader {
         this.groups = groups;
         this.dashboards = dashboards;
         this.activeDashboardId = activeDashboardId;
+
+        if (this.isInvalidated) {
+            this._markDashboardsStale();
+            this.isInvalidated = false;
+        }
+    }
+
+    _markDashboardsStale() {
+        Object.values(this.dashboards).forEach((dashboard) => {
+            dashboard.status = Status.NotLoaded;
+            delete dashboard.searchModel;
+        });
     }
 
     /**
@@ -223,6 +239,8 @@ export class DashboardLoader {
             dashboard.model = this._createSpreadsheetModel(snapshot, revisions, config);
             dashboard.status = Status.Loaded;
             dashboard.isSample = is_sample;
+            dashboard.searchModel = new DashboardSearchModel(this.env, this.orm, dashboard.model);
+            dashboard.searchModel.loadFavoritesForDashboard(dashboardId);
         } catch (error) {
             dashboard.error = error;
             dashboard.status = Status.Error;
@@ -275,6 +293,7 @@ export class DashboardLoader {
             mode: "dashboard",
             defaultCurrency: createDefaultCurrency(serverResult.default_currency),
             external: { geoJsonService: this.geoJsonService },
+            colorScheme: cookie.get("color_scheme"),
         };
     }
 }
@@ -286,7 +305,16 @@ const dashboardLoaderService = {
         env.bus.addEventListener("ACTION_MANAGER:UPDATE", () => {
             loader.clear();
         });
-        return reactive(loader);
+        rpcBus.addEventListener("RPC:RESPONSE", async (ev) => {
+            const { model, method } = ev.detail.data.params || {};
+            if (
+                model === "spreadsheet.dashboard.favorite.filters" &&
+                ["web_save", "action_archive", "unlink"].includes(method)
+            ) {
+                loader.isInvalidated = true;
+            }
+        });
+        return proxy(loader);
     },
 };
 

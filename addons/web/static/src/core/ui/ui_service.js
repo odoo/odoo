@@ -1,4 +1,4 @@
-import { reactive, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { throttleForAnimation } from "@web/core/utils/timing";
@@ -7,7 +7,7 @@ import { browser } from "@web/core/browser/browser";
 import { getTabableElements, isFocusable } from "@web/core/utils/ui";
 import { getActiveHotkey } from "../hotkeys/hotkey_service";
 
-import { EventBus } from "@odoo/owl";
+import { EventBus, proxy } from "@odoo/owl";
 
 export const SIZES = { XS: 0, SM: 1, MD: 2, LG: 3, XL: 4, XXL: 5 };
 
@@ -211,7 +211,19 @@ export const uiService = {
             }
         }
 
-        const ui = reactive({
+        const pointerQuery = window.matchMedia("(pointer: coarse)");
+
+        // Update the class on the body element when touch capability changes
+        const handlePointerChange = (event) => {
+            if (event.matches) {
+                document.body.classList.add("o_touch_device");
+            } else {
+                document.body.classList.remove("o_touch_device");
+            }
+        };
+        pointerQuery.addEventListener("change", handlePointerChange);
+
+        const ui = proxy({
             bus,
             size: utils.getSize(),
             get activeElement() {

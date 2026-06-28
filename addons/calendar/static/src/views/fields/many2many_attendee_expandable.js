@@ -1,10 +1,10 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Many2ManyAttendee, many2ManyAttendee } from "@calendar/views/fields/many2many_attendee";
 import { registry } from "@web/core/registry";
 
 export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {
     static template = "calendar.Many2ManyAttendeeExpandable";
-    state = useState({ expanded: false });
+    state = proxy({ expanded: false });
 
     setup() {
         super.setup();
@@ -14,7 +14,7 @@ export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {
         this.uncertainCount = this.attendeesCount - this.acceptedCount - this.declinedCount;
     }
 
-    get visibleItemsLimit() {
+    get tagLimit() {
         return this.state.expanded ? Number.POSITIVE_INFINITY : 5;
     }
 

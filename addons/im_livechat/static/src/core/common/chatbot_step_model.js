@@ -39,7 +39,7 @@ export class ChatbotStep extends Record {
             case "question_phone":
                 return createDocumentFragmentFromContent(this.rawAnswer).body.textContent;
             case "question_selection":
-                return this.selectedAnswer?.label;
+                return this.selectedAnswer?.name;
             default:
                 return "";
         }

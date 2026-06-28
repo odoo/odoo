@@ -9,13 +9,12 @@ class TestTheme(common.TransactionCase):
         Theme removal is also the first step during theme installation.
         """
         theme_common_module = self.env['ir.module.module'].search([('name', '=', 'theme_default')])
-        website = self.env['website'].get_current_website()
-        website.theme_id = theme_common_module.id
-        self.env['ir.module.module']._theme_remove(website)
+        self.env.ref('base.default_website').theme_id = theme_common_module.id
+        self.env['ir.module.module']._theme_remove(self.env.ref('base.default_website'))
 
     def test_02_disable_view(self):
         """This test ensure only one template header can be active at a time."""
-        website_id = self.env.ref('website.default_website')
+        website_id = self.env.ref('base.default_website')
         ThemeUtils = self.env['theme.utils'].with_context(website_id=website_id.id)
 
         ThemeUtils._reset_default_config()

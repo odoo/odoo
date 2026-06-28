@@ -7,7 +7,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_encode
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.urls import urljoin as url_join
 
@@ -88,14 +88,14 @@ class PaymentTransaction(models.Model):
         :raise UserError: If the phone number is missing or incorrect.
         """
         if not phone and self.tokenize:
-            raise ValidationError(_("The phone number is missing."))
+            raise ValidationError(self.env._("The phone number is missing."))
 
         try:
             phone = self._phone_format(
                 number=phone, country=self.partner_country_id, raise_exception=self.tokenize
             )
         except UserError as e:
-            msg = _("The phone number is invalid.")
+            msg = self.env._("The phone number is invalid.")
             raise UserError(msg) from e
         return phone
 
@@ -112,7 +112,9 @@ class PaymentTransaction(models.Model):
         try:
             order_data = self._send_api_request("POST", "orders", json=payload)
         except ValidationError as e:
-            self._set_error(str(e))
+            self.with_context(
+                payment_safe_write=True  # API request failed; safe to replay
+            )._set_error(str(e))
         return order_data
 
     def _razorpay_prepare_order_payload(self, customer_id=None):
@@ -216,8 +218,10 @@ class PaymentTransaction(models.Model):
             limit=1,
         )
         if earlier_pending_tx:
-            self._set_error(
-                _(
+            self.with_context(
+                payment_safe_write=True  # No API call was made; safe to replay
+            )._set_error(
+                self.env._(
                     "Your last payment %s will soon be processed. Please wait up to 24 hours before"
                     " trying again, or use another payment method.",
                     earlier_pending_tx.reference,
@@ -225,28 +229,24 @@ class PaymentTransaction(models.Model):
             )
             return
 
-        try:
-            order_data = self._razorpay_create_order()
-            phone = self._validate_phone_number(self.partner_phone)
-            customer_id, token_id = self.token_id.provider_ref.split(",")
-            payload = {
-                "email": self.partner_email,
-                "contact": phone,
-                "amount": order_data["amount"],
-                "currency": self.currency_id.name,
-                "order_id": order_data["id"],
-                "customer_id": customer_id,
-                "token": token_id,
-                "description": self.reference,
-                "recurring": "1",
-            }
-            recurring_payment_data = self._send_api_request(
-                "POST", "payments/create/recurring", json=payload
-            )
-        except ValidationError as e:
-            self._set_error(str(e))
-        else:
-            self._process("razorpay", recurring_payment_data)
+        order_data = self._razorpay_create_order()
+        phone = self._validate_phone_number(self.partner_phone)
+        customer_id, token_id = self.token_id.provider_ref.split(",")
+        payload = {
+            "email": self.partner_email,
+            "contact": phone,
+            "amount": order_data["amount"],
+            "currency": self.currency_id.name,
+            "order_id": order_data["id"],
+            "customer_id": customer_id,
+            "token": token_id,
+            "description": self.reference,
+            "recurring": "1",
+        }
+        recurring_payment_data = self._send_api_request(
+            "POST", "payments/create/recurring", json=payload
+        )
+        self._record(recurring_payment_data)
 
     def _send_refund_request(self):
         """Override of `payment` to send a refund request to Razorpay."""
@@ -267,7 +267,7 @@ class PaymentTransaction(models.Model):
             "POST", f"payments/{self.provider_reference}/refund", json=payload
         )
         response_content.update(entity_type="refund")
-        self._process("razorpay", response_content)
+        self._record(response_content)
 
     def _send_capture_request(self):
         """Override of `payment` to send a capture request to Razorpay."""
@@ -281,14 +281,16 @@ class PaymentTransaction(models.Model):
         )
 
         # Process the capture request response.
-        self._process("razorpay", response_content)
+        self._record(response_content)
 
     def _send_void_request(self):
         """Override of `payment` to explain that it is impossible to void a Razorpay transaction."""
         if self.provider_code != "razorpay":
             return super()._send_void_request()
 
-        raise UserError(_("Transactions processed by Razorpay can't be manually voided from Odoo."))
+        raise UserError(
+            self.env._("Transactions processed by Razorpay can't be manually voided from Odoo.")
+        )
 
     @api.model
     def _search_by_reference(self, provider_code, payment_data):
@@ -345,7 +347,7 @@ class PaymentTransaction(models.Model):
         refund_provider_reference = payment_data.get("id")
         amount_to_refund = payment_data.get("amount")
         if not refund_provider_reference or not amount_to_refund:
-            raise ValidationError(_("Received incomplete refund data."))
+            raise ValidationError(self.env._("Received incomplete refund data."))
 
         converted_amount = payment_utils.to_major_currency_units(
             amount_to_refund, source_tx.currency_id
@@ -353,18 +355,6 @@ class PaymentTransaction(models.Model):
         return source_tx._create_child_transaction(
             converted_amount, is_refund=True, provider_reference=refund_provider_reference
         )
-
-    def _extract_amount_data(self, payment_data):
-        """Override of payment to extract the amount and currency from the payment data."""
-        if self.provider_code != "razorpay":
-            return super()._extract_amount_data(payment_data)
-
-        # Amount and currency are not sent in the payment data when redirecting to the return route.
-        if "amount" not in payment_data or "currency" not in payment_data:
-            return None
-
-        amount = payment_utils.to_major_currency_units(payment_data["amount"], self.currency_id)
-        return {"amount": amount, "currency_code": payment_data["currency"]}
 
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
@@ -387,7 +377,7 @@ class PaymentTransaction(models.Model):
         # Update the provider reference.
         entity_id = entity_data.get("id")
         if not entity_id:
-            self._set_error(_("Received data with missing entity id."))
+            self._set_error(self.env._("Received data with missing entity id."))
             return
 
         # One reference can have multiple entity ids as Razorpay allows retry on payment failure.
@@ -400,7 +390,7 @@ class PaymentTransaction(models.Model):
         payment_method_type = entity_data.get("method", "")
         if payment_method_type == "card":
             payment_method_type = entity_data.get("card", {}).get("network", "").lower()
-        payment_method = self.env["payment.method"]._get_from_code(
+        payment_method = self.provider_id._get_pm_from_code(
             payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
         )
         if allowed_to_modify and payment_method:
@@ -409,7 +399,7 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         entity_status = entity_data.get("status")
         if not entity_status:
-            self._set_error(_("Received data with missing status."))
+            self._set_error(self.env._("Received data with missing status."))
 
         if entity_status in const.PAYMENT_STATUS_MAPPING["pending"]:
             self._set_pending()
@@ -437,7 +427,9 @@ class PaymentTransaction(models.Model):
                 entity_data.get("error_description"),
             )
             self._set_error(
-                _("An error occurred during the processing of your payment. Please try again.")
+                self.env._(
+                    "An error occurred during the processing of your payment. Please try again."
+                )
             )
         else:  # Classify unsupported payment status as the `error` tx state.
             _logger.warning(
@@ -446,8 +438,16 @@ class PaymentTransaction(models.Model):
                 entity_status,
             )
             self._set_error(
-                "Razorpay: " + _("Received data with invalid status: %s", entity_status)
+                "Razorpay: " + self.env._("Received data with invalid status: %s", entity_status)
             )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of payment to extract the amount and currency from the payment data."""
+        if self.provider_code != "razorpay":
+            return super()._extract_amount_data(payment_data)
+
+        amount = payment_utils.to_major_currency_units(payment_data["amount"], self.currency_id)
+        return {"amount": amount, "currency_code": payment_data["currency"]}
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on Razorpay data.

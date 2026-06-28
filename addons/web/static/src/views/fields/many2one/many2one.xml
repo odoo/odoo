@@ -4,7 +4,7 @@
     <t t-name="web.KanbanMany2One">
         <div>
             <t t-if="this.props.value">
-                <t t-slot="avatar"/>
+                <t t-call-slot="avatar"/>
             </t>
             <t t-elif="!this.props.readonly">
                 <span class="o_avatar o_m2o_avatar d-flex">
@@ -17,23 +17,27 @@
     </t>
 
     <t t-name="web.Many2One">
-        <div class="o_many2one o_input_box" t-att-class="this.props.cssClass">
+        <div class="o_many2one" t-att-class="this.props.cssClass">
             <t t-if="this.props.readonly">
                 <t t-if="this.props.value">
                     <t t-if="this.props.canOpen">
-                        <a class="o_form_uri text-truncate d-inline-block w-100 align-bottom" t-att-class="this.props.linkCssClass" t-att-href="this.linkHref" t-on-click.prevent.stop="() => this.openRecord('action')" t-out="this.displayName" t-att-title="this.displayName"/>
+                        <a class="o_form_uri text-truncate d-inline-block w-100 align-bottom" t-att-class="this.props.linkCssClass" t-att-href="this.linkHref" t-on-click.prevent.stop="() => this.openRecord('action')" t-out="this.displayName" t-att-data-tooltip="this.displayName"/>
                     </t>
                     <t t-else="">
-                        <span t-out="this.displayName" t-att-title="this.displayName" class="text-truncate d-inline-block w-100 align-bottom"/>
+                        <span t-out="this.displayName" t-att-data-tooltip="this.displayName" class="text-truncate d-inline-block w-100 align-bottom"/>
                     </t>
                 </t>
             </t>
             <t t-else="">
                 <div class="o_field_many2one_selection" t-custom-ref="root">
                     <Many2XAutocomplete t-props="this.many2XAutocompleteProps"/>
-                    <InternalLinkButton t-if="this.hasLinkButton" onClick.bind="(_, isMiddleClick) => this.openRecord(isMiddleClick ? 'tab' : this.env.inDialog ? 'dialog' : 'action')" />
+                    <t t-if="this.hasLinkButton">
+                        <button class="o_external_button btn btn-link text-action px-1 py-0" draggable="false" tabindex="-1" type="button" aria-label="Internal link" data-tooltip="Internal link" t-custom-click="(_, isMiddleClick) => this.openRecord(isMiddleClick ? 'tab' : this.env.inDialog ? 'dialog' : 'action')">
+                            <i class="oi" t-att-class="this.env.inDialog ? 'oi-launch' : 'oi-arrow-right'"/>
+                        </button>
+                    </t>
                     <t t-if="this.hasBarcodeButton">
-                        <button class="o_barcode o_input_box_overlay_end btn btn-secondary" draggable="false" tabindex="-1" type="button" aria-label="Scan barcode" data-tooltip="Scan barcode" t-on-click="() => this.openBarcodeScanner()"/>
+                        <button class="btn ms-3 o_barcode" draggable="false" tabindex="-1" type="button" aria-label="Scan barcode" data-tooltip="Scan barcode" t-on-click="() => this.openBarcodeScanner()"/>
                     </t>
                 </div>
             </t>

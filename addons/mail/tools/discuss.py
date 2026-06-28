@@ -4,19 +4,23 @@ import base64
 import math
 import os
 from collections import UserList, defaultdict
+from contextlib import suppress
 from datetime import date, datetime
 from functools import partial, wraps
 from itertools import product
+from typing import Generic, TypeVar
 
 from markupsafe import Markup
 
 import odoo
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import MissingError
-from odoo.http import Response, request, route
-from odoo.tools import OrderedSet, groupby
+from odoo.http import request, route
+from odoo.tools import OrderedSet
 
 from odoo.addons.bus.websocket import wsrequest
+
+T = TypeVar("T")
 
 
 def add_guest_to_context(func):
@@ -46,102 +50,8 @@ def add_guest_to_context(func):
     return add_guest_to_context__wrapper
 
 
-class StoreVersionInternal:
-    """Internal state used by the `@store_version` decorator."""
-    def __init__(self):
-        self._pending_bus_sends = []
-        self._snapshot_data = None
-        # Maps model names to record IDs to the set of updated field names.
-        self._written_fields_by_record = defaultdict(lambda: defaultdict(OrderedSet))
-
-    def enqueue_bus_notification(self, bus_channel, notification_type, payload):
-        """Enqueue a bus notification to be sent when the `@store_version` decorator
-        finishes, ensuring it includes the version metadata.
-        """
-        self._pending_bus_sends.append([bus_channel, notification_type, payload])
-
-    def mark_field_as_written(self, model_name, record_ids, fname):
-        """Mark field as written for the given records. Done automatically when using the
-        ORM, should be done manually otherwise.
-        """
-        for id_ in record_ids:
-            self._written_fields_by_record[model_name][id_].add(fname)
-
-    def _get_formatted_version(self, env):
-        """Get the version metadata, used by the client to determine if an incoming
-        store insert is newer than what it already knows.
-        """
-        if not self._snapshot_data:
-            env.flush_all()  # Ensure TX id is assigned, if the DB was modified, before building the version.
-            env.cr.execute("SELECT pg_current_snapshot(), pg_current_xact_id_if_assigned()")
-            snapshot_str, current_xact_id = env.cr.fetchone()
-            xmin_str, xmax_str, xips_str = snapshot_str.split(":")
-            xmin = int(xmin_str)
-            xmax = int(xmax_str)
-            xips = [int(x) for x in xips_str.split(",") if x]
-            bitmap = bytearray(math.ceil((xmax - xmin) / 8))
-            for x in xips:
-                offset = x - xmin
-                bitmap[offset // 8] |= 1 << (offset % 8)
-            self._snapshot_data = {
-                "xmin": str(xmin),
-                "xmax": str(xmax),
-                "xip_bitmap": base64.b64encode(bitmap).decode(),
-                "current_xact_id": current_xact_id,
-            }
-        elif not self._snapshot_data["current_xact_id"]:
-            env.flush_all()  # Ensure written fields are collected.
-            if self._written_fields_by_record:
-                # Snapshot was already fetched below in the stack, but fields have been
-                # updated since then. The snapshot is frozen at the beginning of the TX,
-                # but the current TX id is only assigned once the DB is modified. Update
-                # it now.
-                env.cr.execute("SELECT pg_current_xact_id_if_assigned()")
-                self._snapshot_data["current_xact_id"] = env.cr.fetchone()[0]
-        return {
-            "snapshot": self._snapshot_data.copy(),
-            "written_fields_by_record": {
-                model: {record_id: list(fnames) for record_id, fnames in recs.items()}
-                for model, recs in self._written_fields_by_record.items()
-            },
-        }
-
-    def _inject_version(self, version, payload):
-        """Add the version to the return value of `Store.get_result()`. Either the
-        payload itself, or one of the values of the payload.
-        """
-        if isinstance(payload, Store.Result) and "__store_version__" not in payload:
-            payload["__store_version__"] = version
-            return True
-        if isinstance(payload, dict):
-            return any(self._inject_version(version, v) for v in payload.values())
-        return False
-
-    def _add_version_to_response(self, version, response):
-        """Inject version metadata into the result returned by `Store.get_result()`,
-        which may be either an HTTP response from a controller or a dict returned by the
-        decorated function.
-        """
-        # Response is the result of `request.render()`, inject metadata inside the qweb context.
-        if isinstance(response, Response) and response.template:
-            self._inject_version(version, response.qcontext)
-        else:
-            self._inject_version(version, response)
-
-    def _send_bus_notifications(self, env, version):
-        """Send the notifications enqueued during the decorator method, alongside store
-        version metadata.
-        """
-        for target, n_type, msg in self._pending_bus_sends:
-            self._inject_version(version, msg)
-            env["bus.bus"].with_context(mail_store=None)._sendone(target, n_type, msg)
-        self._pending_bus_sends.clear()
-
-
-def store_version(func):
-    """Decorator to manage versioned updates in the store.
-
-    Store data is received from RPC and from the bus, and is applied directly to the
+class StoreVersion:
+    """Store data is received from RPC and from the bus, and is applied directly to the
     store. Without versioning, the order of arrival can cause outdated data to overwrite
     newer data, leading to incorrect store state.
 
@@ -154,61 +64,72 @@ def store_version(func):
     write transaction. The combination of xmin, xmax, xip and the current transaction id
     is enough to deduce it.
 
-    This decorator injects version metadata into the return value of `Store.get_result()`,
-    both in the value returned by the decorated function and in any bus notifications
-    emitted during its execution.
-
+    This class is a helper, used by the Store class to manage versioning, allowing written
+    fields to be observed and `Store.as_dict` to inject version metadata into its result.
     """
-    @wraps(func)
-    def store_version__wrapper(self, *args, **kwargs):
-        manager = self.env.context.get("mail_store")
-        should_cleanup = False
-        if not manager:
-            manager = StoreVersionInternal()
-            if isinstance(self, models.BaseModel):
-                self = self.with_context(mail_store=manager)
-            else:
-                # Clean up only if we inserted the manager in the request context;
-                # otherwise, the original decorator will handle it.
-                should_cleanup = True
-                req = request or wsrequest
-                req.update_context(mail_store=manager)
-        response = func(self, *args, **kwargs)
-        version = manager._get_formatted_version(self.env)
-        manager._add_version_to_response(version, response)
-        manager._send_bus_notifications(self.env, version)
-        if should_cleanup:
-            # Clean context to prevent side effects based on the presence of `mail_store`.
-            req.update_context(mail_store=None)
-        return response
-    return store_version__wrapper
+
+    def __init__(self, env):
+        self.__env = env
+        self.__version = None
+        self.__model_to_field_to_ids = defaultdict(lambda: defaultdict(OrderedSet))
+
+    def mark_field_as_written(self, model_name, record_ids, fname):
+        """Mark field as written for the given records. Done automatically when using the
+        ORM, should be done manually otherwise.
+        """
+        self.__model_to_field_to_ids[model_name][fname].update(record_ids)
+
+    def get_formatted_version(self):
+        """Get the version metadata, used by the client to determine if an incoming
+        store insert is newer than what it already knows.
+        """
+        if not self.__version:
+            self.__env.flush_all()  # Ensure TX id is assigned, if the DB was modified, before building the version.
+            self.__env.cr.execute("SELECT pg_current_snapshot(), pg_current_xact_id_if_assigned()")
+            snapshot_str, current_xact_id = self.__env.cr.fetchone()
+            xmin_str, xmax_str, xips_str = snapshot_str.split(":")
+            xmin = int(xmin_str)
+            xmax = int(xmax_str)
+            xips = [int(x) for x in xips_str.split(",") if x]
+            bitmap = bytearray(math.ceil((xmax - xmin) / 8))
+            for x in xips:
+                offset = x - xmin
+                bitmap[offset // 8] |= 1 << (offset % 8)
+            written_fields_by_record = defaultdict(lambda: defaultdict(list))
+            for model, field_to_record_ids in self.__model_to_field_to_ids.items():
+                for fname, record_ids in field_to_record_ids.items():
+                    for id_ in record_ids:
+                        written_fields_by_record[model][id_].append(fname)
+            self.__version = {
+                "snapshot": {
+                    "xmin": xmin_str,
+                    "xmax": xmax_str,
+                    "xip_bitmap": base64.b64encode(bitmap).decode(),
+                    "current_xact_id": current_xact_id,
+                },
+                "written_fields_by_record": written_fields_by_record,
+            }
+        return self.__version
+
+    @staticmethod
+    def ensure_version(env):
+        if "store__version" not in env.cr.cache:
+            env.cr.cache["store__version"] = StoreVersion(env)
+        return env.cr.cache["store__version"]
 
 
 def mail_route(*route_args, **route_kwargs):
-    """Thin wrapper around `route` that adds guest context and enables versioning.
-    HTTP route results that return a non-Response object will automatically be converted
-    into a proper HTTP JSON response using `request.make_json_response`.
+    """Thin wrapper around ``route`` that adds guest context.
 
-    This decorator is equivalent to applying, in order:
+    This decorator is equivalent to applying, in order::
+
         @route(*route_args, **route_kwargs)
-        @store_version
         @add_guest_to_context
     """
-    if "type" not in route_kwargs:
-        raise TypeError(_("mail_route() must be called with the `type` keyword argument."))
 
     def decorator(func):
         wrapped_func = add_guest_to_context(func)
-        wrapped_func = store_version(wrapped_func)
-
-        @wraps(func)
-        def mail_route__wrapper(*args, **kwargs):
-            result = wrapped_func(*args, **kwargs)
-            if route_kwargs["type"] == "http" and not isinstance(result, Response):
-                return request.make_json_response(result)  # nosemgrep: rules.requests-in-models
-            return result
-
-        return route(*route_args, **route_kwargs)(mail_route__wrapper)
+        return route(*route_args, **route_kwargs)(wrapped_func)
 
     return decorator
 
@@ -248,7 +169,6 @@ ids_by_model.update(
     {
         "DiscussApp": (),
         "mail.thread": ("model", "id"),
-        "MessageReactions": ("message", "content"),
         "Rtc": (),
         "Store": (),
     }
@@ -258,7 +178,7 @@ NO_VALUE = object()
 
 
 def store_enqueue(func):
-    """Wraps a Store method to postpone its execution until get_result()."""
+    """Wraps a Store method to postpone its execution until `Store._build_result()`."""
 
     @wraps(func)
     def store_enqueue__wrapper(store, *args, **kwargs):
@@ -274,38 +194,78 @@ def store_enqueue(func):
 
 class Store:
     """Helper to build a dict of data for sending to web client.
-    It supports merging of data from multiple sources, either through list extend or dict update.
-    The keys of data are the name of models as defined in mail JS code, and the values are any
-    format supported by store.insert() method (single dict or list of dict for each model name)."""
+    It supports merging of data from multiple sources, either through list extend or dict
+    update. The keys of data are the name of models as defined in mail JS code, and the
+    values are any format supported by store.insert() method (single dict or list of dict
+    for each model name).
 
-    def __init__(self, bus_channel=None, bus_subchannel=None):
+    The store instance is then transformed to a dictionnary to be sent either by the HTTP
+    or the bus stack. This dictionnary also includes information about the data version,
+    which will be used by the client to distinguish stale from new data.
+
+    If `bus_channel` is passed, the store will automatically be sent through the bus.
+    """
+
+    def __init__(
+        self,
+        bus_channel=None,
+        bus_subchannel=None,
+        *,
+        notification_type=None,
+        notification_payload=None,
+    ):
         self.add_depth = 0
         self.already_done = set()
-        self.data = {}
+        self.data = defaultdict(lambda: defaultdict(dict))
         self.data_id = None
         self.is_executing_operation_queue = False
         self.operation_queue = []
         self.target = Store.Target(bus_channel, bus_subchannel)
+        self._internal_store = None
+        self.__version = None
+        self._auto_send = True
+        self.__try_update_version_from_records(bus_channel)
+        assert bus_channel is not None or not (notification_payload or notification_type), (
+            "Notification parameters only make sense when a bus channel is passed."
+        )
+        if bus_channel:
+            type_ = notification_type or "mail.record/insert"
+            payload = (
+                self
+                if notification_payload is None
+                else {**notification_payload, "store_data": self}
+            )
+            bus_channel._bus_send(type_, payload, subchannel=bus_subchannel)
+            if bus_channel._name == "discuss.channel" and bus_subchannel != "internal_users":
+                self._internal_store = Store(bus_channel, bus_subchannel="internal_users")
+
+    def __try_update_version_from_records(self, records):
+        is_recordset = isinstance(records, models.Model)
+        assert not records or is_recordset, "Records must be a recordset or a falsy value."
+        if is_recordset and not self.__version:
+            self.__version = StoreVersion.ensure_version(records.env)
 
     @store_enqueue
-    def add(self, records, fields, *, as_thread=False, fields_params=None):
-        """Add records to the store. Data is coming from _to_store() method of the model if it is
-        defined, and fallbacks to _read_format() otherwise.
+    def add(self, records, fields, *, as_thread=False, fields_params=None, ignore_empty=False):
+        """Add records to the store.
+
         Fields can be defined in multiple ways:
+
         - as a string: the name of a method on the records that will be called with a Store.FieldList
           as first argument, and optional fields_params as other arguments.
         - as a callable: a function that will be called with a Store.FieldList as first argument.
-        - as a list: list of field names.
+        - as a list: list of field names. Data for fields are coming from _read_format().
         - as a dict: mapping of field names to static values.
+
         Relations are defined with StoreField.one() or StoreField.many() instead of a field name as
         string. Non-relation fields can also be defined with StoreField.attr() rather than simple
         string to provide extra parameters.
 
         Use case: to add records and their fields to store. This is the preferred method.
         """
+        self.__try_update_version_from_records(records)
         if not records:
             return self
-        assert isinstance(records, models.Model)
         # call _format_fields before checking identifier to always compare the final shape
         field_list = self._format_fields(fields, records, fields_params)
         identifier = Store._deep_freeze((records.env, records, field_list, as_thread))
@@ -314,10 +274,7 @@ class Store:
         self.already_done.add(identifier)
         self.add_depth += 1
         try:
-            if not as_thread and hasattr(records, "_to_store"):
-                records._to_store(self, field_list)
-            else:
-                self.add_records_fields(field_list, as_thread=as_thread)
+            self._add_field_list(field_list, as_thread=as_thread, ignore_empty=ignore_empty)
             return self
         finally:
             self.add_depth -= 1
@@ -331,11 +288,11 @@ class Store:
 
         Use case: to add global values."""
         assert not field_fn or not values
-        self.add_singleton_values("Store", field_fn or values)
+        self.add_model_values("Store", field_fn or values)
         return self
 
     @store_enqueue
-    def add_model_values(self, model_name, values):
+    def add_model_values(self, model_name, values, *, id_data=None, ignore_empty=False):
         """Add values to a model in the store.
 
         Use case: to add values to JS records that don't have a corresponding Python record.
@@ -345,61 +302,57 @@ class Store:
             return self
         data_list = []
         self._add_abstract_fields_value(self._format_fields(values), data_list)
-        index = self._get_record_index(model_name, data_list)
-        self._ensure_record_at_index(model_name, index)
+        index = self._get_record_index(model_name, [id_data or {}] + data_list)
         for data in data_list:
             self._add_values(data, model_name, index)
+        if id_data and (self.data[model_name][index] or not ignore_empty):
+            self._add_values(id_data, model_name, index)
         if "_DELETE" in self.data[model_name][index]:
             del self.data[model_name][index]["_DELETE"]
         return self
 
-    @store_enqueue
-    def add_records_fields(self, field_list, as_thread=False):
-        """Same as Store.add() but without calling _to_store().
-
-        Use case: to add fields from inside _to_store() methods to avoid recursive code.
-        Note: in all other cases, Store.add() should be called instead.
+    def _add_field_list(self, field_list, *, as_thread=False, ignore_empty):
+        """Add the given field list to the store. This is an internal implementation method.
+        In business code, Store.add() should be called instead.
         """
-        if not field_list or not field_list.records:
-            return self
-        for record, record_data_list in self._get_records_data_list(field_list).items():
-            for record_data in record_data_list:
-                if as_thread:
+        self.__try_update_version_from_records(field_list.records)
+        if field_list and field_list.records:
+            for record, record_data_list in self._get_records_data_list(
+                field_list,
+                ignore_empty=ignore_empty,
+            ).items():
+                for record_data in record_data_list:
+                    model_name = record._name
+                    id_data = {"id": record.id}
+                    if as_thread:
+                        model_name = "mail.thread"
+                        id_data["model"] = record._name
                     self.add_model_values(
-                        "mail.thread", {"id": record.id, "model": record._name, **record_data},
+                        model_name,
+                        record_data,
+                        id_data=id_data,
+                        ignore_empty=ignore_empty,
                     )
-                else:
-                    self.add_model_values(record._name, {"id": record.id, **record_data})
-        return self
-
-    @store_enqueue
-    def add_singleton_values(self, model_name, values):
-        """Add values to the store for a singleton model."""
-        if not values:
-            return self
-        data_list = []
-        self._add_abstract_fields_value(self._format_fields(values), data_list)
-        ids = ids_by_model[model_name]
-        assert not ids
-        if model_name not in self.data:
-            self.data[model_name] = {}
-        for data in data_list:
-            self._add_values(data, model_name)
+        if self._internal_store:
+            self._internal_store._add_field_list(
+                field_list._internal_field_list,
+                as_thread=as_thread,
+                ignore_empty=ignore_empty,
+            )
         return self
 
     @store_enqueue
     def delete(self, records, as_thread=False):
         """Delete records from the store."""
+        self.__try_update_version_from_records(records)
         if not records:
             return self
-        assert isinstance(records, models.Model)
         model_name = "mail.thread" if as_thread else records._name
         for record in records:
             values = (
                 {"id": record.id} if not as_thread else {"id": record.id, "model": record._name}
             )
             index = self._get_record_index(model_name, [values])
-            self._ensure_record_at_index(model_name, index)
             self._add_values(values, model_name, index)
             self.data[model_name][index]["_DELETE"] = True
         return self
@@ -408,15 +361,32 @@ class Store:
         """Gets client action to insert this store in the client."""
         return {
             "params": {
-                "store_values": self.get_result(),
+                "store_values": self,
                 "next_action": next_action,
             },
             "tag": "mail.store_insert",
             "type": "ir.actions.client",
         }
 
-    def get_result(self):
-        """Gets resulting data built from adding all data together."""
+    def as_dict(self):
+        """Hook for JSON serialization used by the `json_default` method. Do not call
+        directly. Returns a dictionary representing the aggregated result of all store
+        commands, versioned.
+        """
+        result = self._build_result(disable_auto_send=False)
+        if result and self.__version:
+            result["__store_version__"] = self.__version.get_formatted_version()
+        return result
+
+    def _build_result(self, disable_auto_send=True):
+        """Do not call directly. Executes pending operations and returns the aggregated
+        result, automatically invoked by `as_dict()`."""
+        if disable_auto_send:
+            # Disable auto send, as the result was built manually. Assuming that the
+            # caller doesn't want to send it.
+            self._auto_send = False
+            if self._internal_store:
+                self._internal_store._auto_send = False
         self.is_executing_operation_queue = True
         try:
             for func in self.operation_queue:
@@ -424,20 +394,15 @@ class Store:
             self.operation_queue.clear()
         finally:
             self.is_executing_operation_queue = False
-        res = Store.Result()
+        res = {}
         for model_name, records in sorted(self.data.items()):
-            if not ids_by_model[model_name]:  # singleton
-                res[model_name] = dict(sorted(records.items()))
-            else:
-                res[model_name] = [dict(sorted(record.items())) for record in records.values()]
+            if not ids_by_model[model_name]:
+                # singleton have a single item (the empty tuple), the wrapping list can be omitted
+                res[model_name] = dict(sorted(records[()].items()))
+            elif vals := [dict(sorted(record.items())) for record in records.values() if record]:
+                # skip empty records and empty models
+                res[model_name] = vals
         return res
-
-    def bus_send(self, notification_type="mail.record/insert", /):
-        assert self.target.channel is not None, (
-            "Missing `bus_channel`. Pass it to the `Store` constructor to use `bus_send`."
-        )
-        if res := self.get_result():
-            self.target.channel._bus_send(notification_type, res, subchannel=self.target.subchannel)
 
     @store_enqueue
     def resolve_data_request(self, values=None, *, data_id=None):
@@ -452,9 +417,9 @@ class Store:
             self.add_model_values("DataResponse", {"id": data_id, "_resolve": True, **data})
         return self
 
-    def _add_values(self, values, model_name, index=None):
+    def _add_values(self, values: dict, model_name: str, index: tuple):
         """Adds values to the store for a given model name and index."""
-        target = self.data[model_name][index] if index else self.data[model_name]
+        target = self.data[model_name][index]
         for key, val in values.items():
             assert key != "_DELETE", f"invalid key {key} in {model_name}: {values}"
             if isinstance(val, Store.Relation):
@@ -468,12 +433,6 @@ class Store:
             else:
                 target[key] = val
 
-    def _ensure_record_at_index(self, model_name, index):
-        if model_name not in self.data:
-            self.data[model_name] = {}
-        if index not in self.data[model_name]:
-            self.data[model_name][index] = {}
-
     def _format_fields(self, fields, records=None, fields_params=None):
         field_list = Store.FieldList(self, records)
         if isinstance(fields, str) and (method := Store._get_fields_method(records, fields)):
@@ -484,6 +443,8 @@ class Store:
             field_list.extend(Store.Attr(self, key, value) for key, value in fields.items())
         elif isinstance(fields, (list, tuple, Store.FieldList)):
             field_list.extend(fields)  # prevent mutation of original list
+            if isinstance(fields, Store.FieldList) and fields._internal_field_list:
+                field_list.extend(fields._internal_field_list, internal=True)
         else:
             raise TypeError(f"unexpected fields format: '{fields}' for records: '{records}'")
         return field_list
@@ -500,33 +461,27 @@ class Store:
             return getattr(records, method_name)
         return None
 
-    def _get_records_data_list(self, field_list):
+    def _get_records_data_list(self, field_list, *, ignore_empty):
         abstract_fields = [field for field in field_list if isinstance(field, (dict, Store.Attr))]
-        records_data_list = {
-            record: [data]
+        standard_fields = [f for f in field_list if f not in abstract_fields]
+        records_data_list = {record: [] for record in field_list.records}
+        if standard_fields or not ignore_empty:
             for record, data in zip(
                 field_list.records,
-                field_list.records._read_format(
-                    [f for f in field_list if f not in abstract_fields],
-                    load=False,
-                ),
-            )
-        }
+                field_list.records._read_format(standard_fields, load=False),
+            ):
+                records_data_list[record].append(data)
         for record, record_data_list in records_data_list.items():
             self._add_abstract_fields_value(abstract_fields, record_data_list, record)
         return records_data_list
 
     def _add_abstract_fields_value(self, abstract_fields, data_list, record=None):
         for field in abstract_fields:
-            if isinstance(field, dict):
-                data_list.append(field)
-            elif not field.predicate or field.predicate(record):
-                try:
-                    data_list.append(
-                        {field.field_name: field._get_value(record)},
-                    )
-                except MissingError:
-                    break
+            with suppress(MissingError):
+                if isinstance(field, dict):
+                    data_list.append(field)
+                elif not field.predicate or field.predicate(record):
+                    data_list.append({field.field_name: field._get_value(record)})
 
     def _get_record_index(self, model_name, data_list):
         # regroup indentifying fields into values as they might be spread accross data_list entries
@@ -561,7 +516,20 @@ class Store:
             return tuple(Store._deep_freeze(i) for i in obj)
         if isinstance(obj, set):
             return frozenset(Store._deep_freeze(i) for i in obj)
-        return obj
+        return obj.__code__ if hasattr(obj, "__code__") else obj
+
+    class LazyValue(Generic[T]):  # noqa: OLS01001
+        def __init__(self, fn):
+            """Helper to lazily compute a recordset, shared across multiple consumers
+            (e.g., stores) while avoiding redundant queries.
+            """
+            self._fn = fn
+            self._value = None
+
+        def get(self, env) -> T:
+            if self._value is None:
+                self._value = self._fn()
+            return self._value.with_env(env)
 
     class Stores(dict[object | tuple, "Store"]):
         """Lazy mapping to manage a list of Store indexed by bus target.
@@ -572,7 +540,7 @@ class Store:
             return self.setdefault(target, Store(bus_channel, bus_subchannel))
 
         def __getattr__(self, name):
-            if name not in {"add", "bus_send", "delete"}:
+            if name not in {"add", "delete"}:
                 raise AttributeError(f"'Stores' object has no attribute '{name}'")
 
             def stores_forward(*args, **kwargs):
@@ -598,12 +566,6 @@ class Store:
             )
             self.channel = channel
             self.subchannel = subchannel
-
-    class Result(dict):
-        """Marker class for dictionaries returned by `Store.get_result()`.
-        Used to distinguish store results from arbitrary dicts so version
-        metadata can be added (see `store_version` decorator).
-        """
 
     class Attr:
         """Attribute to be added for each record. The value can be a static value or a function
@@ -663,7 +625,10 @@ class Store:
             assert (
                 not records_or_field_name
                 or isinstance(records_or_field_name, (str, models.Model))
-            ), f"expected recordset, field name, or empty value for Relation: {records_or_field_name}"
+                or value is not NO_VALUE
+            ), (
+                f"expected recordset, field name, explicit value, or empty value for Relation: {records_or_field_name}"
+            )
             self.records = (
                 records_or_field_name if isinstance(records_or_field_name, models.Model) else None
             )
@@ -694,7 +659,8 @@ class Store:
             """Returns a new relation with the given records instead of the field name."""
             assert self.field_name and self.records is None
             assert not self.dynamic_fields or calling_record
-            if records:
+            is_fake_field = self.value is not NO_VALUE and not isinstance(records, models.Model)
+            if not is_fake_field and records:
                 field_list = self.store._format_fields(self.fields, records, self.fields_params)
                 if self.dynamic_fields:
                     if (
@@ -711,16 +677,22 @@ class Store:
                 field_list = []  # avoid calling field methods (which potentially does queries) on empty records
             return self.__class__(
                 self.store,
-                records,
+                None if is_fake_field else records,
                 field_list,
                 as_thread=self.as_thread,
                 fields_params=self.fields_params,
                 only_data=self.only_data,
+                value=records if is_fake_field else NO_VALUE,
             )
 
         def _add_to_store(self, store, target, key):
-            """Add the current relation to the given store at target[key]."""
-            store.add(self.records, self.fields, as_thread=self.as_thread)
+            """Add the current relation to the given store at target[key].
+
+            Don't explicitly add the target records to the store if there are no
+            fields to add for them to avoid top-level records with only ids.
+            This prevents duplication as the ids are already sent through the
+            relation itself if necessary."""
+            store.add(self.records, self.fields, as_thread=self.as_thread, ignore_empty=True)
 
         def _identity(self):
             return (
@@ -818,7 +790,10 @@ class Store:
         def _add_to_store(self, store: "Store", target, key):
             self._sort_records()
             super()._add_to_store(store, target, key)
-            if not self.only_data and (self.records or self.mode == "REPLACE"):
+            has_something_to_write = (
+                self.value is not NO_VALUE or self.records or self.mode == "REPLACE"
+            )
+            if not self.only_data and has_something_to_write:
                 rel_val = self._get_id()
                 if self.mode == "REPLACE" or key not in target:
                     target[key] = rel_val
@@ -829,16 +804,13 @@ class Store:
 
         def _get_id(self):
             """Return the ids that can be used to insert the current relation in the store."""
+            if self.value is not NO_VALUE:
+                return self._prepend_mode(self.value)
             self._sort_records()
-            if self.records._name == "mail.message.reaction":
-                res = [
-                    {"message": message.id, "content": content}
-                    for (message, content), _ in groupby(
-                        self.records, lambda r: (r.message_id, r.content)
-                    )
-                ]
-            else:
-                res = [Store._get_one_id(record, self.as_thread) for record in self.records]
+            res = [Store._get_one_id(record, self.as_thread) for record in self.records]
+            return self._prepend_mode(res)
+
+        def _prepend_mode(self, res):
             if self.mode == "ADD":
                 res = [("ADD", res)]
             elif self.mode == "DELETE":
@@ -856,42 +828,68 @@ class Store:
     class FieldList(UserList):
         """Helper to provide short syntax for building a list of field definitions for a specific
         store.add call (with given records and target)."""
+
         def __init__(self, store, records):
             super().__init__()
             # records for which the field list will apply. Useful to pre-compute values in batch.
             self.records = records
             self.store = store
+            self._internal_field_list = None
+            if store._internal_store:
+                self._internal_field_list = Store.FieldList(store._internal_store, records)
 
         @property
         def target(self):
             """Store.Target of the field list. Useful to adapt fields depending on the receivers."""
             return self.store.target
 
-        def attr(self, field_name, value=NO_VALUE, *, predicate=None, sudo=False):
+        def append(self, field, *, internal=False):
+            if not internal or self.is_for_internal_users():
+                super().append(field)
+            elif self._internal_field_list is not None:
+                self._internal_field_list.append(field)
+
+        def extend(self, fields, *, internal=False):
+            if not internal or self.is_for_internal_users():
+                super().extend(fields)
+            elif self._internal_field_list is not None:
+                self._internal_field_list.extend(fields)
+
+        def attr(self, field_name, value=NO_VALUE, *, predicate=None, sudo=False, internal=False):
             """Add an attribute to the field list."""
             if self.records is not None and value is NO_VALUE and predicate is None and not sudo:
-                self.append(field_name)
+                self.append(field_name, internal=internal)
             else:
                 self.append(
                     Store.Attr(self.store, field_name, value=value, predicate=predicate, sudo=sudo),
+                    internal=internal,
                 )
 
-        def from_method(self, method_name, **fields_params):
+        def from_method(self, method_name, *, internal=False, **fields_params):
             """Add fields coming from a method on the records to the field list."""
             if (method := Store._get_fields_method(self.records, method_name)):
-                method(self, **fields_params)
+                if not internal or self.is_for_internal_users():
+                    method(self, **fields_params)
+                elif self._internal_field_list is not None:
+                    method(self._internal_field_list, **fields_params)
             else:
                 raise TypeError(
                     f"unexpected method name format: '{method_name}' for records: '{self.records}'",
                 )
 
-        def one(self, record_or_field_name, fields, /, *args, **kwargs):
+        def one(self, record_or_field_name, fields, /, *args, internal=False, **kwargs):
             """Add a x2one relation to the field list."""
-            self.append(Store.One(self.store, record_or_field_name, fields, *args, **kwargs))
+            self.append(
+                Store.One(self.store, record_or_field_name, fields, *args, **kwargs),
+                internal=internal,
+            )
 
-        def many(self, records_or_field_name, fields, /, *args, **kwargs):
+        def many(self, records_or_field_name, fields, /, *args, internal=False, **kwargs):
             """Add a x2many relation to the field list."""
-            self.append(Store.Many(self.store, records_or_field_name, fields, *args, **kwargs))
+            self.append(
+                Store.Many(self.store, records_or_field_name, fields, *args, **kwargs),
+                internal=internal,
+            )
 
         def is_for_current_user(self):
             """Return whether the current target is the current user or guest of the given env.
@@ -954,7 +952,13 @@ class Store:
             return records if isinstance(records, env.registry["res.users"]) else env["res.users"]
 
         def _identity(self):
-            return ("FieldList", self.records.env, self.records, tuple(self))
+            return (
+                "FieldList",
+                self.records.env,
+                self.records,
+                tuple(self),
+                *(self._internal_field_list._identity() if self._internal_field_list is not None else ()),
+            )
 
     class FieldListManager:
         """Similar API as Store.FieldList but for multiple field lists at once.
@@ -963,11 +967,15 @@ class Store:
         record depending on the result of _bus_channels()."""
 
         def __init__(self, stores, records, bus_target):
-            """bus_target is expected in the following format:
-            - single bus_subchannel (which can be None), where bus_channel is implied as being the
-              record on which it is called.
-            - tuple of (field_name, bus_subchannel), where bus_channel is the record pointed by
-              field_name on the record on which it is called"""
+            """Initialize field lists by record for the given bus target.
+
+            ``bus_target`` is expected in the following format:
+
+            - single bus_subchannel (which can be ``None``), where bus_channel is implied as being
+              the record on which it is called.
+            - tuple of ``(field_name, bus_subchannel)``, where ``bus_channel`` is the record
+              pointed by ``field_name`` on the record on which it is called
+            """
             self._field_lists_by_record = {}
             if isinstance(bus_target, tuple):
                 field_name, bus_subchannel = bus_target

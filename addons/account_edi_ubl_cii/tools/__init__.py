@@ -1,3 +1,4 @@
+from . import partner_identifiers
 from . import ubl_21_common
 from . import ubl_21_invoice
 from . import ubl_21_credit_note

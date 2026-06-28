@@ -7,9 +7,8 @@ SUPPORTED_CURRENCIES = ["IDR", "MYR", "PHP", "THB", "VND"]
 # https://docs.xendit.co/payment-link/payment-channels
 CURRENCY_DECIMALS = {"IDR": 0, "MYR": 0, "PHP": 0, "THB": 0, "VND": 0}
 
-# The codes of the payment methods to activate when Xendit is activated.
+# The codes of the default primary payment methods to activate
 DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
     # ID
     "card",
     "dana",
@@ -25,10 +24,7 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     # VN
     "appota",
     "zalopay",
-    "vnptwallet"
-    # Brand payment methods.
-    "visa",
-    "mastercard",
+    "vnptwallet",
 }
 
 # FPX is an online payment method in Malaysia that allows customers to make payments directly from

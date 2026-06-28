@@ -30,17 +30,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
-"PO-Revision-Date: 2026-01-16 05:49+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"PO-Revision-Date: 2026-04-11 14:33+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
-"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-2/"
 "project/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
@@ -137,15 +137,10 @@ msgid "(due"
 msgstr "(förfallodatum"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "(last project update),"
-msgstr "(senaste projektuppdateringen),"
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/depend_on_ids_one2many/depend_on_ids_list_renderer.xml:0
 msgid "(other) tasks to which you do not have access."
-msgstr "(andra) uppgifter som du inte har tillgång till."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
@@ -196,8 +191,9 @@ msgid ""
 "            Please take a moment to rate our services related to the <strong "
 "t-out=\"object.name or ''\">Planning and budget</strong> task\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                assigned to <strong t-out=\"object._rating_get_operator()."
-"name or ''\">Mitchell Admin</strong>.<br/>\n"
+"                assigned to <strong t-"
+"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
+">\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -218,25 +214,22 @@ msgid ""
 "top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/5\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"Happy\" src=\"/rating/static/"
 "src/img/rating_5.png\" title=\"Happy\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/3\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"Neutral\" src=\"/rating/"
 "static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/1\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"Unhappy\" src=\"/rating/"
 "static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
 "                                </a>\n"
@@ -256,9 +249,10 @@ msgid ""
 "            </t>\n"
 "            <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
 "                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
-"color: #454748;\">This satisfaction survey is sent <b t-out=\"object."
-"stage_id.rating_status_period or ''\">weekly</b> as long as the task is in "
-"the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
+"color: #454748;\">This satisfaction survey is sent <b t-"
+"out=\"object.stage_id.rating_status_period or ''\">weekly</b> as long as the "
+"task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage."
+"</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br/>Best regards,</td></tr>\n"
@@ -270,14 +264,16 @@ msgid ""
 "            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
 "650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id."
-"email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object."
-"project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
-"                | <a t-attf-href=\"{{ object.project_id.company_id."
-"website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object."
-"project_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -332,6 +328,34 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<i class=\"d-none d-md-inline fa fa-fw fa-user me-2 fa fa-envelope\" "
+"title=\"Email\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<i class=\"d-none d-md-inline fa fa-fw fa-user me-2 fa fa-phone\" "
+"title=\"Phone\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<i class=\"d-none d-md-inline fa fa-fw fa-user me-2 fa fa-tag\" "
+"title=\"Tags\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<i class=\"d-none d-md-inline fa fa-fw fa-user me-2\" title=\"Customer\" "
+"name=\"partner_id\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" "
@@ -344,52 +368,31 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<i class=\"fa fa-lightbulb-o pe-2\" title=\"Info\"/>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "<i class=\"fa fa-lock\"/> Private"
 msgstr "<i class=\"fa fa-lock\"/> Privat"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<i class=\"fa fa-warning pe-2\" title=\"Warning\"/>"
+msgstr "<i class=\"fa fa-warning pe-2\" title=\"Varning\"/>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
-"<i class=\"fa o_button_icon fa-check text-success\" "
-"invisible=\"next_milestone_status == 'off_track'\" title=\"On Track\"/>\n"
+"<i class=\"fa o_button_icon fa-check\" invisible=\"next_milestone_status == "
+"False or next_milestone_status != 'on_track'\" title=\"On Track\"/>\n"
 "                            <i class=\"fa o_button_icon fa-check text-"
-"danger\" invisible=\"next_milestone_status == 'on_track'\" title=\"Off "
+"success\" invisible=\"next_milestone_status != 'next_track'\" title=\"On "
+"Track\"/>\n"
+"                            <i class=\"fa o_button_icon fa-check text-"
+"danger\" invisible=\"next_milestone_status != 'off_track'\" title=\"Off "
 "Track\"/>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<i class=\"o_input_box_overlay_start fa fa-envelope\" title=\"Email\"/>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
-"<i class=\"o_input_box_overlay_start fa fa-lightbulb-o\" title=\"Info\"/>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<i class=\"o_input_box_overlay_start fa fa-phone\" title=\"Phone\"/>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<i class=\"o_input_box_overlay_start fa fa-tag\" title=\"Tags\"/>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
-"<i class=\"o_input_box_overlay_start fa fa-user\" title=\"Customer\" "
-"name=\"partner_id\"/>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
-"<i class=\"o_input_box_overlay_start fa fa-warning\" title=\"Warning\"/>"
 msgstr ""
 
 #. module: project
@@ -432,6 +435,16 @@ msgstr ""
 "title=\"Domän Alias\"/>"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
+msgid "<span class=\"fa fa-fw fa-calendar me-1\" title=\"Date\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
+msgid "<span class=\"fa fa-fw fa-check me-1\" title=\"Tasks\"/>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid ""
 "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
@@ -449,27 +462,50 @@ msgid "<span class=\"fw-normal\"> Tasks</span>"
 msgstr "<span class=\"fw-normal\"> Uppgifter</span>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
-#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
-"<span class=\"o_input_box_overlay_end o_input_box_overlay_inline\">days</"
+"<span class=\"o_field_widget ps-1\" invisible=\"closed_task_count == 0\">(</"
 "span>"
 msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<span class=\"o_input_box_overlay_start\">@</span>"
+msgid "<span class=\"o_field_widget ps-1\">(</span>"
 msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<span class=\"o_stat_text\">Average Rating</span>"
+msgid ""
+"<span class=\"o_field_widget\" invisible=\"closed_task_count == 0\"> ) </"
+"span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<span class=\"o_field_widget\"> / 5 </span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<span class=\"o_field_widget\"> / </span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<span class=\"o_field_widget\">%)</span>"
 msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<span class=\"o_stat_text\">Blocked Tasks</span>"
 msgstr "<span class=\"o_stat_text\">Blockerade uppgifter</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<span class=\"o_stat_text\">Burndown</span>\n"
+"                                <span class=\"o_stat_text\">Chart</span>"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -488,6 +524,16 @@ msgid "<span class=\"o_stat_text\">Parent Task</span>"
 msgstr "<span class=\"o_stat_text\">Föräldrauppgift</span>"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<span class=\"o_stat_text\">Rating</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<span class=\"o_stat_text\">Status</span>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
 msgstr "<span class=\"o_stat_text\">Underarbetsuppgifter</span>"
@@ -499,24 +545,20 @@ msgid "<span>@</span>"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
-msgid "<span>Progress</span>"
-msgstr ""
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>Reporting</span>"
 msgstr "<span>Rapportering</span>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
-msgid "<span>Status</span>"
-msgstr ""
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>View</span>"
 msgstr "<span>Visa</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+msgid "<span>days</span>"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -542,11 +584,6 @@ msgstr "<strong>Projekt:</strong>"
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Milestones</u>"
 msgstr "<u>Milstolpar</u>"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "=&gt;"
-msgstr "=&gt;"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_defaults
@@ -578,8 +615,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_private_task_has_no_parent
-msgid "A private task cannot have a parent."
-msgstr "En privat uppgift kan inte ha en förälder."
+msgid "A private (non-template) task cannot have a parent."
+msgstr ""
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -707,8 +744,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
-"Lägg till kolumner för att organisera dina uppgifter i olika <b>steg</b>, t."
-"ex. <i>Ny - Pågår - Klar</i>."
+"Lägg till kolumner för att organisera dina uppgifter i olika <b>steg</b>, "
+"t.ex. <i>Ny - Pågår - Klar</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -812,6 +849,12 @@ msgid "All"
 msgstr "Alla"
 
 #. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
+msgid "All Projects"
+msgstr ""
+
+#. module: project
 #: model:ir.actions.act_window,name:project.action_view_all_task
 #: model:ir.ui.menu,name:project.menu_project_management_all_tasks
 msgid "All Tasks"
@@ -855,11 +898,6 @@ msgid ""
 "Analyze the progress of your projects and the performance of your employees."
 msgstr ""
 "Objekta hur dina projekt fortskrider och hur dina medarbetare presterar."
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_share_wizard__share_link
-msgid "Anyone with this link can access the project in read mode."
-msgstr "Alla som har den här länken kan komma åt projektet i läsläge."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__03_approved
@@ -1009,8 +1047,6 @@ msgid ""
 "Attach all documents or links to the task directly, to have all research "
 "information centralized."
 msgstr ""
-"Bifoga alla dokument eller länkar till uppgiften direkt, för att ha all "
-"forskningsinformation centraliserad."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -1050,10 +1086,10 @@ msgstr "Automatisk Kanban-status"
 msgid ""
 "Automatically modify the state when the customer replies to the feedback for "
 "this stage.\n"
-" * Good feedback from the customer will update the state to "
-"'Approved' (green bullet).\n"
-" * Neutral or bad feedback will set the kanban state to 'Changes "
-"Requested' (orange bullet).\n"
+" * Good feedback from the customer will update the state to 'Approved' "
+"(green bullet).\n"
+" * Neutral or bad feedback will set the kanban state to 'Changes Requested' "
+"(orange bullet).\n"
 msgstr ""
 "Ändra automatiskt status när kunden svarar på feedbacken för detta steg.\n"
 " * Bra feedback från kunden uppdaterar statusen till \"Godkänd\" (grön "
@@ -1162,7 +1198,6 @@ msgstr "Bugg"
 #: model:ir.embedded.actions,name:project.project_embedded_action_project_burndown_chart
 #: model:ir.embedded.actions,name:project.project_embedded_action_update_burndown_chart
 #: model:ir.model,name:project.model_project_task_burndown_chart_report
-#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_graph
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1172,6 +1207,7 @@ msgstr "Brinntidsdiagram"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_canceled
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__1_canceled
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__state__1_canceled
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__1_canceled
@@ -1179,8 +1215,17 @@ msgstr "Brinntidsdiagram"
 #: model:project.task.type,name:project.project_personal_stage_admin_6
 #: model:project.task.type,name:project.project_personal_stage_demo_6
 #: model:project.task.type,name:project.project_stage_3
+#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Cancelled"
 msgstr "Avbruten"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+msgid ""
+"Cannot convert back to regular task because the task has no project defined "
+"but has a parent or sub-tasks."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__02_changes_requested
@@ -1243,25 +1288,10 @@ msgid "Closed On"
 msgstr "Stängt på"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-msgid "Closed Tasks"
-msgstr "Avslutade uppgifter"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__is_closed
 msgid "Closed state"
 msgstr "Stängt tillstånd"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__closed
-msgid "Closed tasks"
-msgstr "Avslutade uppgifter"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_closed
-msgid "Closing Stage"
-msgstr "Avslutande scen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__partner_id
@@ -1305,14 +1335,6 @@ msgid ""
 "designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt."
 msgstr ""
-"Kommunicera med kunder om uppgiften med hjälp av e-postgatewayen. Bifoga "
-"logotypdesign till uppgiften så att informationen flödar från\n"
-"      från designers till de som trycker t-shirten."
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_task
-msgid "Communication history"
-msgstr "Kommuniktationshistorik"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -1340,11 +1362,6 @@ msgstr "Inställningar"
 #: model:ir.ui.menu,name:project.menu_project_config
 msgid "Configuration"
 msgstr "Konfiguration"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
-msgid "Configure Stages"
-msgstr "Konfigurera steg"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_unarchive_wizard
@@ -1601,6 +1618,7 @@ msgstr "URL till kundportal"
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
 #: model:ir.ui.menu,name:project.rating_rating_menu_project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Customer Ratings"
 msgstr "Kundbetyg"
 
@@ -1617,9 +1635,6 @@ msgid ""
 "you can\n"
 "      communicate on the task directly."
 msgstr ""
-"Kunderna skickar feedback via e-post; Odoo skapar uppgifter automatiskt och "
-"ni kan\n"
-"      kommunicera om uppgiften direkt."
 
 #. module: project
 #. odoo-python
@@ -1639,7 +1654,6 @@ msgstr "Dagligen"
 #: model:ir.model.fields,field_description:project.field_project_update__date
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_graph
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Date"
 msgstr "Datum"
@@ -1932,6 +1946,7 @@ msgstr "Visningsnamn"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_done
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__1_done
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__state__1_done
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__1_done
@@ -1939,6 +1954,7 @@ msgstr "Visningsnamn"
 #: model:project.task.type,name:project.project_personal_stage_admin_5
 #: model:project.task.type,name:project.project_personal_stage_demo_5
 #: model:project.task.type,name:project.project_stage_2
+#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Done"
 msgstr "Klar"
 
@@ -1949,7 +1965,6 @@ msgid "Draft"
 msgstr "Utkast"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Duplicate"
 msgstr "Duplicera"
@@ -2054,7 +2069,7 @@ msgstr "Fel! Du kan inte skapa en rekursiv hierarki av uppgifter."
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Everyone can propose ideas, and the Editor marks the best ones as"
-msgstr "Alla kan föreslå idéer, och redaktören markerar de bästa som"
+msgstr ""
 
 #. module: project
 #: model:project.tags,name:project.project_tags_02
@@ -2115,7 +2130,7 @@ msgstr "Vikt"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/chatter/portal_chatter_patch.xml:0
 msgid "Follow"
-msgstr "Följ"
+msgstr ""
 
 #. module: project
 #: model:portal.entry,description:project.portal_tasks
@@ -2226,8 +2241,6 @@ msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them "
 "in the chatter of the tasks."
 msgstr ""
-"Hantera din idéinsamling inom Tasks i ditt nya projekt och diskutera dem i "
-"chatten för Tasks."
 
 #. module: project
 #. odoo-javascript
@@ -2248,6 +2261,11 @@ msgstr "Lyckligt ansikte"
 #: model:ir.model.fields,field_description:project.field_project_update__has_message
 msgid "Has Message"
 msgstr "Har meddelande"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__has_project_template
+msgid "Has Project Template"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__has_template_ancestor
@@ -2498,11 +2516,6 @@ msgid "Invited internal users"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-msgid "Is Closed (Burn-up Chart)"
-msgstr "Är stängd (uppbränningsdiagram)"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
 #: model:ir.model.fields,field_description:project.field_project_task__message_is_follower
@@ -2745,7 +2758,7 @@ msgstr "Design av logotyp"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Look for the"
-msgstr "Leta efter"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
@@ -2761,9 +2774,6 @@ msgid ""
 "acquired projects,\n"
 "      assign them and use the"
 msgstr ""
-"Hantera livscykeln för ditt projekt med hjälp av kanban-vyn. Lägg till "
-"nyförvärvade projekt,\n"
-"      tilldela dem och använd"
 
 #. module: project
 #. odoo-javascript
@@ -3236,13 +3246,14 @@ msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
 msgstr "Endast jpeg-, png-, bmp- och tiff-bilder tillåts som bilagor."
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_open
+#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Open"
 msgstr "Öppna"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
-#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Open Tasks"
 msgstr "Öppna aktiviteter"
 
@@ -3251,11 +3262,6 @@ msgstr "Öppna aktiviteter"
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Open sub-tasks notebook section"
 msgstr "Öppna avsnitt i anteckningsboken för underuppgifter"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__open
-msgid "Open tasks"
-msgstr "Öppna uppgifter"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -3272,7 +3278,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Organize priorities amongst orders using the"
-msgstr "Prioritera bland beställningar med hjälp av"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3451,7 +3457,6 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Prioritize your tasks by marking important ones using the"
 msgstr ""
-"Prioritera dina uppgifter genom att markera viktiga uppgifter med hjälp av"
 
 #. module: project
 #. odoo-python
@@ -3472,25 +3477,17 @@ msgid "Private"
 msgstr "Privat"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-msgid "Private Tasks"
-msgstr "Privata uppgifter"
-
-#. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid ""
-"Private tasks cannot be converted into sub-tasks. Please set a project on "
-"the task to gain access to this feature."
+"Private (non-template) tasks cannot be converted into sub-tasks. Please set "
+"a project on the task to gain access to this feature."
 msgstr ""
-"Privata uppgifter kan inte omvandlas till underuppgifter. Ange ett projekt "
-"på uppgiften för att få tillgång till den här funktionen."
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "Private tasks cannot be converted into templates"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Private Tasks"
+msgstr "Privata uppgifter"
 
 #. module: project
 #: model:project.project,name:project.project_template_1
@@ -3709,6 +3706,11 @@ msgid "Project description..."
 msgstr "Projektbeskrivning..."
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Project name"
+msgstr ""
+
+#. module: project
 #: model:ir.model,name:project.model_project_template_role_to_users_map
 msgid "Project role to users mapping"
 msgstr ""
@@ -3810,11 +3812,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Properties"
 msgstr "Egenskaper"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
-msgid "Public Link"
-msgstr "Offentlig länk"
 
 #. module: project
 #. odoo-javascript
@@ -4146,7 +4143,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.xml:0
 msgid "SAVE"
-msgstr "SÄKERHET"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_sms_error
@@ -4342,6 +4339,11 @@ msgid "Settings"
 msgstr "Inställningar"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
+msgid "Share Link"
+msgstr ""
+
+#. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
@@ -4353,6 +4355,7 @@ msgstr "Dela Projekt"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.portal_share_action
+#: model:ir.actions.server,name:project.action_server_share_task
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Share Task"
 msgstr "Dela uppgift"
@@ -4360,7 +4363,8 @@ msgstr "Dela uppgift"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
-msgid "Sharing is not available for this project visibility setting."
+#: code:addons/project/models/project_task.py:0
+msgid "Sharing is not available with this project visibility setting."
 msgstr ""
 
 #. module: project
@@ -4397,11 +4401,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 msgid "Show to all companies"
 msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "Since"
-msgstr "Sedan"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_12
@@ -4450,10 +4449,6 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
-"Sortera dina uppgifter efter sprint med hjälp av milstolpar, taggar eller en "
-"särskild egenskap. I slutet av varje sprint väljer du bara ut de återstående "
-"uppgifterna i listan och flyttar dem alla på en gång till nästa sprint genom "
-"att redigera milstolpen, taggen eller egenskapen."
 
 #. module: project
 #. odoo-javascript
@@ -4487,15 +4482,11 @@ msgstr "Pågående sprint"
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__stage_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__stage_id
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Stage"
 msgstr "Läge"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-msgid "Stage (Burndown Chart)"
-msgstr "Steg (Burndown-diagram)"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
@@ -4542,12 +4533,6 @@ msgstr "Startdatum"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__state
 msgid "State"
 msgstr "Läge"
-
-#. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/components/project_task_state_selection/project_task_stage_state_selection/project_task_stage_with_state_selection.js:0
-msgid "State readonly"
-msgstr "Stat skrivskyddad"
 
 #. module: project
 #. odoo-python
@@ -4753,7 +4738,6 @@ msgstr "Uppgiftsstadier"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_task_template_dropdown.xml:0
-#: model_terms:ir.ui.view,arch_db:project.view_task_template_search_form
 msgid "Task Templates"
 msgstr ""
 
@@ -4776,8 +4760,8 @@ msgstr "Aktivitetstitel..."
 msgid ""
 "Task Transferred from Project %(source_project)s to %(destination_project)s"
 msgstr ""
-"Uppgift överförd från projekt  %(source_project)s till "
-"%(destination_project)s"
+"Uppgift överförd från projekt  %(source_project)s till %"
+"(destination_project)s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4808,6 +4792,12 @@ msgstr ""
 #: model:mail.message.subtype,description:project.mt_task_done
 msgid "Task done"
 msgstr "Task done"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+msgid "Task templates cannot be shared."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
@@ -4864,6 +4854,12 @@ msgstr "Aktivitetshantering"
 #: model_terms:ir.ui.view,arch_db:project.task_type_search
 msgid "Tasks Stages"
 msgstr "Aktivitetsetapper"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/views/components/project_task_template_dropdown.js:0
+msgid "Tasks Templates"
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -4936,11 +4932,6 @@ msgstr "Burndown-diagrammet måste grupperas efter datum"
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
 msgid "The current user's personal stage."
 msgstr "Den aktuella användarens personliga scen."
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
-msgid "The current user's personal task stage."
-msgstr "Den aktuella användarens personliga uppgiftssteg."
 
 #. module: project
 #. odoo-python
@@ -5044,12 +5035,8 @@ msgstr "Uppdragsbeskrivningen var då tom."
 #. module: project
 #. odoo-python
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
-msgid ""
-"The view must be grouped by date and by Stage - Burndown chart or Is Closed "
-"- Burnup chart"
+msgid "The view must be grouped by date and by Stage - Burndown chart"
 msgstr ""
-"Vyn måste vara grupperad efter datum och efter stadium - Burndown-diagram "
-"eller Är stängd - Burnup-diagram"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -5216,7 +5203,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/depend_on_ids_one2many/depend_on_ids_list_renderer.xml:0
 msgid "This task is currently blocked by"
-msgstr "Denna uppgift blockeras för närvarande av"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -5338,7 +5325,7 @@ msgstr "Dagens aktiviteter"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.xml:0
 msgid "Top Menu"
-msgstr "Huvudmeny"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5415,7 +5402,7 @@ msgstr "Ångra"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/chatter/portal_chatter_patch.xml:0
 msgid "Unfollow"
-msgstr "Avföljning"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -5521,7 +5508,7 @@ msgstr "Använd taggar för att kategorisera dina uppgifter."
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Use the"
-msgstr "Använd den"
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -5572,6 +5559,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "View"
 msgstr "Visa"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/views/components/project_task_template_dropdown.xml:0
+msgid "View More"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -5721,6 +5714,12 @@ msgstr "Vill du också avarkivera alla uppgifter som ingår i dessa steg?"
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/chatter/composer_patch.js:0
+msgid "Write a message…"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.js:0
 msgid "Write a task name"
 msgstr ""
@@ -5747,13 +5746,13 @@ msgstr "År"
 #: code:addons/project/models/project_project_stage.py:0
 msgid ""
 "You are not able to switch the company of this stage to %(company_name)s "
-"since it currently includes projects associated with "
-"%(project_company_name)s. Please ensure that this stage exclusively consists "
+"since it currently includes projects associated with %"
+"(project_company_name)s. Please ensure that this stage exclusively consists "
 "of projects linked to %(company_name)s."
 msgstr ""
 "Du kan inte byta företag för detta steg till %(company_name)s eftersom det "
-"för närvarande innehåller projekt som är associerade med "
-"%(project_company_name)s. Se till att denna etapp endast består av projekt "
+"för närvarande innehåller projekt som är associerade med %"
+"(project_company_name)s. Se till att denna etapp endast består av projekt "
 "som är kopplade till %(company_name)s."
 
 #. module: project
@@ -5862,7 +5861,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Your managers decide which feedback is accepted"
-msgstr "Dina chefer avgör vilken feedback som accepteras"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/views/analytic_account_form/analytic_account_form_controller.js:0
+#: code:addons/project/static/src/views/analytic_account_list/analytic_account_list_controller.js:0
+msgid "\\t- ${"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5878,7 +5884,7 @@ msgstr "objekt"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "and"
-msgstr "och"
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -5887,8 +5893,6 @@ msgid ""
 "and which feedback is\n"
 "      moved to the \"Refused\" column."
 msgstr ""
-"och vars återkoppling är\n"
-"      flyttad till kolumnen \"Avvisad\"."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
@@ -5899,7 +5903,7 @@ msgstr "tilldelade"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "button."
-msgstr "knapp."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_list
@@ -5971,7 +5975,7 @@ msgstr "t.ex: Produktlansering"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "icon to organize your daily activities."
-msgstr "ikon för att organisera dina dagliga aktiviteter."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -5980,15 +5984,12 @@ msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or cancelled, all of its dependencies will be unblocked."
 msgstr ""
-"ikonen för att se uppgifter som väntar på andra uppgifter. När en uppgift "
-"markeras som slutförd eller avbruten kommer alla dess beroenden att "
-"avblockeras."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "icon."
-msgstr "ikon."
+msgstr ""
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -6012,8 +6013,6 @@ msgstr "redo att markeras som uppnådd"
 msgid ""
 "state to indicate a request for changes or a need for discussion on a task."
 msgstr ""
-"för att ange en begäran om ändringar eller ett behov av diskussion om en "
-"uppgift."
 
 #. module: project
 #. odoo-javascript
@@ -6021,26 +6020,24 @@ msgstr ""
 msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
 msgstr ""
-"ange för att informera dina kollegor om att en uppgift är godkänd för nästa "
-"steg."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as cancelled."
-msgstr "för att markera uppgiften som avbruten."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as complete."
-msgstr "för att markera uppgiften som slutförd."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 msgid "sub-tasks)"
-msgstr "underuppgifter)"
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -6049,30 +6046,18 @@ msgid "task"
 msgstr "uppgift"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "the deadline for the following milestone has been updated:"
-msgstr "sluttiden för följande milstolpe har blivit uppdaterad:"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "the deadline for the following milestones has been updated:"
-msgstr "sluttiden för följande milstolpar har blivit uppdaterade:"
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid ""
 "to define if the project is\n"
 "      ready for the next step."
 msgstr ""
-"för att avgöra om projektet är redo\n"
-"      redo för nästa steg."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "to signalize what is the current status of your Idea."
-msgstr "för att signalera vad som är den aktuella statusen för din idé."
+msgstr ""
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -6101,7 +6086,13 @@ msgid "👤 Unassigned"
 msgstr "👤 Ej tilldelad"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "🔒 Private"
 msgstr "🔒 Privat"
+
+#~ msgid "Communication history"
+#~ msgstr "Kommuniktationshistorik"
+
+#~ msgid "State readonly"
+#~ msgstr "Stat skrivskyddad"

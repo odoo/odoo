@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 19:13+0000\n"
+"POT-Creation-Date: 2026-06-19 18:12+0000\n"
 "PO-Revision-Date: 2026-01-17 12:50+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1-l10n/"
@@ -34,11 +34,6 @@ msgstr ""
 "                            .company_header {\n"
 "                                .name_container {\n"
 "                                    color:"
-
-#. module: l10n_din5008
-#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
-msgid "/12345"
-msgstr "/12345"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.din5008_css
@@ -150,11 +145,6 @@ msgid "Company Document Layout"
 msgstr "Struttura documenti azienda"
 
 #. module: l10n_din5008
-#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__company_registry
-msgid "Company ID"
-msgstr "ID Azienda"
-
-#. module: l10n_din5008
 #: model:ir.model,name:l10n_din5008.model_res_config_settings
 msgid "Config Settings"
 msgstr "Impostazioni di configurazione"
@@ -176,6 +166,7 @@ msgstr "Data di consegna:"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__display_name
+#: model:ir.model.fields,field_description:l10n_din5008.field_ir_actions_report__display_name
 #: model:ir.model.fields,field_description:l10n_din5008.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_din5008.field_res_config_settings__display_name
 msgid "Display Name"
@@ -225,6 +216,7 @@ msgstr "Codice IBAN:"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__id
+#: model:ir.model.fields,field_description:l10n_din5008.field_ir_actions_report__id
 #: model:ir.model.fields,field_description:l10n_din5008.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_din5008.field_res_config_settings__id
 msgid "ID"
@@ -316,6 +308,11 @@ msgid "Reference:"
 msgstr "Riferimento:"
 
 #. module: l10n_din5008
+#: model:ir.model,name:l10n_din5008.model_ir_actions_report
+msgid "Report Action"
+msgstr ""
+
+#. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__report_footer
 msgid "Report Footer"
 msgstr "Piè di pagina report"
@@ -358,15 +355,6 @@ msgid "The country to use the tax reports from for this company"
 msgstr "Il paese da cui utilizzare i report fiscali per questa società"
 
 #. module: l10n_din5008
-#: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__company_registry
-msgid ""
-"The registry number of the company. Use it if it is different from the Tax "
-"ID. It must be unique across all partners of a same country"
-msgstr ""
-"Il numero di registro dell'azienda. Inseriscilo se è diverso dalla partita "
-"IVA. Deve essere unico per tutti i partner di una stessa nazione"
-
-#. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "VAT"
 msgstr "Partita IVA"
@@ -385,3 +373,13 @@ msgstr "Nota di credito del fornitore"
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__zip
 msgid "Zip"
 msgstr "CAP"
+
+#~ msgid "Company ID"
+#~ msgstr "ID Azienda"
+
+#~ msgid ""
+#~ "The registry number of the company. Use it if it is different from the "
+#~ "Tax ID. It must be unique across all partners of a same country"
+#~ msgstr ""
+#~ "Il numero di registro dell'azienda. Inseriscilo se è diverso dalla "
+#~ "partita IVA. Deve essere unico per tutti i partner di una stessa nazione"

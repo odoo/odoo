@@ -1,12 +1,14 @@
-import { useChildSubEnv, useState } from "@web/owl2/utils";
+import { useChildSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
+import { serializeDate } from "@web/core/l10n/dates";
+const { DateTime } = luxon;
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 
 import { StockValuationReportButtonsBar } from "../stock_valuation/buttons_bar/buttons_bar"
 import { StockValuationReportController } from "../stock_valuation/controller"
@@ -27,8 +29,8 @@ export class StockValuationReport extends Component {
     };
 
     setup() {
-        this.controller = useState(new StockValuationReportController(this.props.action));
-        this.state = useState({
+        this.controller = proxy(new StockValuationReportController(this.props.action));
+        this.state = proxy({
             displayInventoryValuationLine: false,
         })
         this.orm = useService("orm");
@@ -80,20 +82,22 @@ export class StockValuationReport extends Component {
     }
 
     // On Click Methods --------------------------------------------------------
-    openAccountMoves(accountMoves=false) {
-        const additionalContext = {};
-        const domain = [];
-        if (accountMoves) {
-            const ids = accountMoves.map((am) => am.id);
-            const names = accountMoves.map((am) => am.name);
-            additionalContext.search_default_name = names;
-            additionalContext.search_default_ids = ids;
-            domain.push(["id", "in", ids])
+    async openAccountMoves(accountIds=false) {
+        const action = await this.actionService.loadAction("account.action_account_moves_all");
+        const domain = [...(action.domain || [])];
+        if (accountIds) {
+            domain.push(['account_id', 'in', accountIds]);
         }
-        return this.actionService.doAction(
-            "account.action_move_journal_line",
-            { additionalContext, domain }
-        );
+        if (serializeDate(this.controller.state.date) !== serializeDate(DateTime.now())) {
+            domain.push(['date', '<=', serializeDate(this.controller.state.date)]);
+        }
+        action.domain = domain;
+        action.context = {
+            ...action.context,
+            search_default_group_by_account: 1,
+            search_default_groupby_date: 'month',
+        };
+        return this.actionService.doAction(action);
     }
 
     openStockMoveView(title, usage) {

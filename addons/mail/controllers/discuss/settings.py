@@ -27,7 +27,7 @@ class DiscussSettingsController(Controller):
             member.mute_until_dt = fields.Datetime.now() + relativedelta(minutes=minutes)
         else:
             member.mute_until_dt = False
-        member._notify_mute()
+        member._set_cron_for_unmute()
 
     @mail_route("/discuss/settings/custom_notifications", methods=["POST"], type="jsonrpc", auth="user")
     def discuss_custom_notifications(self, custom_notifications, channel_id=None):

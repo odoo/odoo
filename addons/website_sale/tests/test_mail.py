@@ -34,7 +34,7 @@ class TestWebsiteSaleMail(HttpCaseWithUserPortal):
             "mail_mobile.disable_redirect_firebase_dynamic_link", True
         )
 
-        main_website = self.env.ref("website.default_website")
+        main_website = self.env.ref("base.default_website")
         other_websites = self.env["website"].search([]) - main_website
 
         # We change the domain of the website to test that the email that
@@ -117,9 +117,7 @@ class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
         with patch.object(
             MailThread, "_message_create", autospec=True, side_effect=base_method
         ) as patcher:
-            self.cart.with_user(self.public_user).with_context(
-                tracking_disable=False, mail_no_track=False
-            ).sudo().action_confirm()
+            self.cart.with_user(self.public_user).sudo().action_confirm()
             patcher.assert_called()
 
             order, msg_values = None, {}
@@ -141,9 +139,7 @@ class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
         with patch.object(
             MailThread, "_message_create", autospec=True, side_effect=base_method
         ) as patcher:
-            portal_user_cart.with_user(user_portal).with_context(
-                tracking_disable=False, mail_no_track=False
-            ).sudo().action_confirm()
+            portal_user_cart.with_user(user_portal).sudo().action_confirm()
             patcher.assert_called()
 
             order, msg_values = None, {}

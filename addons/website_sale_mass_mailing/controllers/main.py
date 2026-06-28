@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.http import request
 
 from odoo.addons.website_mass_mailing.controllers.main import MassMailController
 from odoo.addons.website_sale.controllers.main import (
@@ -16,7 +15,7 @@ class WebsiteSale(WebsiteSaleController):
             MassMailController.subscribe_to_newsletter(
                 subscription_type='email',
                 value=address_values['email'],
-                list_id=request.website.newsletter_id,
+                list_id=self.env.website.newsletter_id,
                 fname='email',
                 address_name=address_values['name'],
             )

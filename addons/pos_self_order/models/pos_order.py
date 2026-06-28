@@ -3,7 +3,7 @@
 import logging
 
 from odoo import Command, models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError, LockError
 
 _logger = logging.getLogger(__name__)
 
@@ -90,16 +90,17 @@ class PosOrder(models.Model):
             'data': {
                 'pos.order': self.read(self._load_pos_self_data_fields(self.config_id), load=False),
                 'pos.order.line': self.lines.read(self.lines._load_pos_self_data_fields(self.config_id), load=False),
-            }
+                'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_self_data_fields(self.config_id), load=False),
+            },
         })
         if payment_result == 'Success':
             self._send_self_order_receipt()
             self._send_order()
 
     def _load_pos_self_data_fields(self, config):
-        return ['id', 'uuid', 'name', 'display_name', 'access_token', 'last_order_preparation_change', 'date_order', 'amount_total', 'amount_paid', 'amount_return', 'user_id', 'amount_tax', 'lines', 'pricelist_id', 'company_id', 'country_code', 'sequence_number', 'session_id',
+        return ['id', 'uuid', 'name', 'display_name', 'access_token', 'date_order', 'amount_total', 'amount_paid', 'amount_return', 'user_id', 'amount_tax', 'lines', 'pricelist_id', 'company_id', 'country_code', 'sequence_number', 'session_id',
                 'config_id', 'currency_id', 'currency_rate', 'is_refund', 'has_refundable_lines', 'state', 'account_move', 'preset_id', 'floating_order_name', 'general_customer_note', 'internal_note', 'nb_print', 'pos_reference', 'fiscal_position_id', 'payment_ids', 'to_invoice',
-                'shipping_date', 'preset_time', 'is_invoiced', 'is_tipped', 'tip_amount', 'ticket_code', 'tracking_number', 'email', 'mobile', 'table_id', 'course_ids',
+                'preset_time', 'is_invoiced', 'is_tipped', 'tip_amount', 'ticket_code', 'tracking_number', 'email', 'mobile', 'table_id', 'course_ids',
                 'table_stand_number', 'self_ordering_table_id', 'create_date', 'write_date', 'source', 'partner_id', 'customer_count']
 
     @api.model
@@ -117,7 +118,7 @@ class PosOrder(models.Model):
             product = pos_config.env['product.product'].browse(line_data.get('product_id'))
             tax_ids = fiscal_position_id.map_tax(product.taxes_id)
 
-            return [Command.CREATE, 0, {
+            return [line[0], 0 if line[0] == Command.CREATE else line[1], {
                 'combo_id': line_data.get('combo_id'),
                 'product_id': line_data.get('product_id'),
                 'tax_ids': tax_ids.ids,
@@ -131,13 +132,37 @@ class PosOrder(models.Model):
                 'full_product_name': line_data.get('full_product_name'),
                 'customer_note': line_data.get('customer_note'),
                 'uuid': line_data.get('uuid'),
-                'id': line_data.get('id'),
                 'order_id': existing_order.id if existing_order.exists() else None,
                 'combo_parent_id': line_data.get('combo_parent_id'),
                 'combo_item_id': line_data.get('combo_item_id'),
                 'combo_line_ids': [id for id in line_data.get('combo_line_ids', []) if isinstance(id, int)],
             }]
         return []
+
+    @api.model
+    def _check_pos_order_payment(self, device_type, order, payment):
+        if device_type != "kiosk" or not payment or len(payment) != 1 or len(payment[0]) != 3:
+            return []
+
+        command, payment_id = payment[0][0:2]
+        if command != Command.CREATE or payment_id != 0:
+            return []
+
+        payment_line = payment[0][2]
+        if "amount" not in payment_line or payment_line["amount"] != order.get("amount_total", 0):
+            return []
+
+        safe_fields = [
+            "payment_method_id", "card_type", "card_brand", "card_no", "cardholder_name",
+            "payment_ref_no", "payment_method_authcode", "payment_method_issuer_bank",
+            "payment_method_payment_mode", "qr_code", "transaction_id", "ticket", "uuid",
+        ] + self.env["pos.payment"]._get_additional_payment_fields()
+
+        return [[Command.CREATE, 0, {
+            'amount': order.get('amount_total'),
+            'payment_status': 'done',
+            **{field: payment_line.get(field) for field in safe_fields}
+        }]]
 
     @api.model
     def _check_pos_order(self, pos_config, order, device_type, table=None):
@@ -149,21 +174,41 @@ class PosOrder(models.Model):
         if not preset_id and pos_config.use_presets:
             raise UserError(_("Invalid preset"))
 
-        pos_reference, tracking_number = pos_config._get_next_order_refs()
-        prefix = f"K{pos_config.id}-" if device_type == "kiosk" else "S"
+        if not order['session_id'] or order['session_id'] != pos_config.current_session_id.id:
+            try:
+                pos_config.open_session_if_not_opened()  # Create a session after doing the necessary checks.
+            except ValidationError as e:
+                _logger.warning("pos_self_order: Error while opening a session for future orders: %s", e.args[0])
+                raise UserError(_("Impossible to create a new order."))
+            except LockError:
+                _logger.warning("pos_self_order: Lock not available while opening a session for future orders.")
+                raise UserError(_("Error while creating the order. Please try again."))
+            order['session_id'] = pos_config.current_session_id.id
+
+        existing_order = pos_config.env['pos.order']._get_open_order(order)
+        if not existing_order.exists():
+            pos_reference, tracking_number = pos_config._get_next_order_refs()
+            prefix = f"K{pos_config.id}-" if device_type == "kiosk" else "S"
+
+            if device_type == 'kiosk':
+                floating_order_name = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else tracking_number
+            elif not floating_order_name:
+                floating_order_name = f"Self-Order T {table.table_number}" if table else f"Self-Order {tracking_number}"
+
+            tracking_number = f"{prefix}{tracking_number}"
+        else:
+            pos_reference = existing_order.pos_reference
+            floating_order_name = existing_order.floating_order_name
+            tracking_number = existing_order.tracking_number
+
         fiscal_position_id = preset_id.fiscal_position_id if preset_id else pos_config.default_fiscal_position_id
         pricelist_id = preset_id.pricelist_id if preset_id else pos_config.pricelist_id
         lines = [self._check_pos_order_lines(pos_config, order, line, fiscal_position_id) for line in order.get('lines', [])]
+        lines = [line for line in lines if len(line)]
+        payment_lines = self._check_pos_order_payment(device_type, order, order.get("payment_ids"))
+        payment_lines = [line for line in payment_lines if len(line)]
         partner_id = order.get('partner_id')
         partner = pos_config.env['res.partner'].browse(partner_id) if partner_id else None
-
-        if device_type == 'kiosk':
-            floating_order_name = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else tracking_number
-
-        if not order.get('floating_order_name') and table:
-            floating_order_name = f"Self-Order T {table.table_number}"
-        elif not order.get('floating_order_name'):
-            floating_order_name = f"Self-Order {tracking_number}"
 
         return {
             'id': order.get('id'),
@@ -171,7 +216,6 @@ class PosOrder(models.Model):
             'access_token': order.get('access_token'),
             'customer_count': order.get('customer_count'),
             'self_ordering_table_id': table.id if table else False,
-            'last_order_preparation_change': order.get('last_order_preparation_change'),
             'date_order': str(fields.Datetime.now()),
             'amount_difference': order.get('amount_difference'),
             'amount_tax': order.get('amount_tax'),
@@ -186,7 +230,7 @@ class PosOrder(models.Model):
             'fiscal_position_id': fiscal_position_id.id if fiscal_position_id else False,
             'preset_id': preset_id.id if preset_id else False,
             'preset_time': order.get('preset_time'),
-            'tracking_number': f"{prefix}{tracking_number}",
+            'tracking_number': tracking_number,
             'source': 'kiosk' if device_type == 'kiosk' else 'mobile',
             'email': partner.email if partner else order.get('email'),
             'mobile': order.get('mobile'),
@@ -197,13 +241,13 @@ class PosOrder(models.Model):
             'nb_print': order.get('nb_print'),
             'pos_reference': pos_reference,
             'to_invoice': order.get('to_invoice'),
-            'shipping_date': order.get('shipping_date'),
             'is_tipped': order.get('is_tipped'),
             'tip_amount': order.get('tip_amount'),
             'ticket_code': order.get('ticket_code'),
             'uuid': order.get('uuid'),
             'has_deleted_line': order.get('has_deleted_line'),
             'lines': lines,
+            'payment_ids': payment_lines,
             'relations_uuid_mapping': order.get('relations_uuid_mapping', {}),
         }
 
@@ -211,11 +255,22 @@ class PosOrder(models.Model):
         self.ensure_one()
         company = self.company_id
 
-        for line in self.lines:
+        service_fee_lines = self.lines.filtered(
+            lambda line: line.product_id == self.preset_id.service_fee_product_id,
+        )
+        other_lines = self.lines - service_fee_lines
+
+        # First process regular lines so service fee can derive taxes from them
+        for line in other_lines:
             if len(line.combo_line_ids):
                 self._compute_combo_price(line)
+            elif line.product_id == self.preset_id.delivery_product_id:
+                self._compute_line_price(line, price=self.preset_id.delivery_product_price)
             elif not line.combo_parent_id:
                 self._compute_line_price(line)
+
+        # Then process service fee lines using the now-computed applicable lines
+        self._compute_service_fee_price()
 
         order_lines = self.lines
         base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
@@ -229,17 +284,80 @@ class PosOrder(models.Model):
         self.amount_tax = tax_totals['tax_amount_currency']
         self.amount_total = tax_totals['total_amount_currency']
 
-    def _compute_line_price(self, line):
+    def _compute_line_price(self, line, price=False):
         pricelist = self.pricelist_id
         selected_attributes = line.attribute_value_ids
         product = line.product_id.with_context(line.product_id._get_product_price_context(selected_attributes))
-        price = pricelist._get_product_price(product, 1.0, currency=self.currency_id)
+        price = price or pricelist._get_product_price(product, 1.0, currency=self.currency_id)
         line.price_unit = price
         line.tax_ids = line.product_id.taxes_id._filter_taxes_by_company(self.company_id)
         tax_ids_after_fiscal_position = self.fiscal_position_id.map_tax(line.tax_ids)
         taxes = tax_ids_after_fiscal_position.compute_all(price, self.currency_id, line.qty, product=product, partner=self.partner_id)
         line.price_subtotal = taxes['total_excluded']
         line.price_subtotal_incl = taxes['total_included']
+
+    def _compute_service_fee_price(self):
+        preset = self.preset_id
+        if not preset.service_fee:
+            return
+
+        service_fee_product = preset.service_fee_product_id
+        applicable_lines = self.lines.filtered(
+            lambda line: line.product_id != service_fee_product
+            and line.product_id != self.config_id.tip_product_id
+            and not line.combo_parent_id,
+        )
+
+        if not applicable_lines:
+            return
+
+        # Build base lines from applicable order lines to derive the correct taxes
+        base_lines = [line._prepare_base_line_for_taxes_computation() for line in applicable_lines]
+
+        # For 'pre_discount', ignore discounts when computing service fee
+        if preset.service_fee_based_on == 'pre_discount':
+            for bl in base_lines:
+                bl['discount'] = 0
+
+        self.env['account.tax']._add_tax_details_in_base_lines(base_lines, self.company_id)
+        self.env['account.tax']._round_base_lines_tax_details(base_lines, self.company_id)
+
+        amount = preset.service_fee_amount
+        if preset.service_fee_type == 'percent':
+            amount *= 100
+
+        # Group base lines individually (line by line) so each produces its own
+        # service fee contribution with the correct tax breakdown
+        def grouping_function(base_line):
+            return {'line_id': base_line['id']}
+
+        service_fee_base_lines = self.env['account.tax']._reduce_base_lines_to_target_amount(
+            base_lines=base_lines,
+            company=self.company_id,
+            amount_type=preset.service_fee_type,
+            amount=amount,
+            grouping_function=grouping_function,
+        )
+
+        # Update existing service fee lines: each gets the price_unit
+        # and tax_ids from its corresponding reduced base line
+        existing_service_fee_lines = self.lines.filtered(
+            lambda line: line.product_id == service_fee_product,
+        )
+        for service_fee_line, bl in zip(existing_service_fee_lines, service_fee_base_lines):
+            tax_ids = self.env['account.tax']
+            for tax_data in bl['tax_details']['taxes_data']:
+                tax_ids |= tax_data['tax']
+            tax_ids_after_fp = self.fiscal_position_id.map_tax(tax_ids)
+            taxes = tax_ids_after_fp.compute_all(
+                bl['price_unit'], self.currency_id, 1,
+                product=service_fee_product,
+                partner=self.partner_id,
+            )
+            service_fee_line.price_unit = bl['price_unit']
+            service_fee_line.tax_ids = tax_ids
+            service_fee_line.price_subtotal = taxes['total_excluded']
+            service_fee_line.price_subtotal_incl = taxes['total_included']
 
     def _compute_combo_price(self, parent_line):
         """
@@ -266,9 +384,10 @@ class PosOrder(models.Model):
             max_free = combo.qty_free
 
             for line in child_lines:
+                qty_per_line = line.qty / line.combo_parent_id.qty if line.combo_parent_id.qty else line.qty
                 qty_free = max(0, max_free - free_count)
-                free_qty = min(line.qty, qty_free)
-                extra_qty = line.qty - free_qty
+                free_qty = min(qty_per_line, qty_free)
+                extra_qty = qty_per_line - free_qty
 
                 if free_qty > 0:
                     child_line_free.append(line)
@@ -277,7 +396,13 @@ class PosOrder(models.Model):
                 if extra_qty > 0:
                     child_line_extra.append(line)
 
-        original_total = sum(line.combo_item_id.combo_id.base_price * line.qty for line in child_line_free if line.combo_item_id.combo_id.qty_free > 0)
+        original_total = sum(
+            line.combo_item_id.combo_id.base_price * (
+                line.qty / line.combo_parent_id.qty
+                if line.combo_parent_id.qty
+                else line.qty
+            ) for line in child_line_free if line.combo_item_id.combo_id.qty_free > 0
+        )
         remaining_total = parent_lst_price
 
         for index, child in enumerate(child_line_free):
@@ -285,19 +410,38 @@ class PosOrder(models.Model):
             combo = combo_item.combo_id
             unit_devision_factor = original_total or 1
             price_unit = currency.round(combo.base_price * parent_lst_price / unit_devision_factor)
-            remaining_total -= price_unit * child.qty
+            remaining_total -= price_unit * (child.qty / child.combo_parent_id.qty if child.combo_parent_id.qty else child.qty)
 
             if index == len(child_line_free) - 1:
                 price_unit += remaining_total
+                remaining_total = 0
 
             selected_attributes = child.attribute_value_ids
             price_extra = sum(attr.price_extra for attr in selected_attributes)
             total_price = price_unit + price_extra + child.combo_item_id.extra_price
             child.price_unit = total_price
 
-        for child in child_line_extra:
+        extra_original_total = 0
+        if remaining_total and child_line_extra:
+            extra_original_total = sum(
+                line.combo_item_id.combo_id.base_price * line.qty
+                for line in child_line_extra
+            ) or 1
+
+        for index, child in enumerate(child_line_extra):
             combo_item = child.combo_item_id
             price_unit = currency.round(combo_item.combo_id.base_price)
+
+            if extra_original_total:
+                remaining_proportion = currency.round(
+                    combo_item.combo_id.base_price * parent_lst_price / extra_original_total
+                )
+                price_unit += remaining_proportion
+                remaining_total -= remaining_proportion * child.qty
+
+                if index == len(child_line_extra) - 1:
+                    price_unit += remaining_total / child.qty
+
             selected_attributes = child.attribute_value_ids
             price_extra = sum(attr.price_extra for attr in selected_attributes)
             total_price = price_unit + price_extra + child.combo_item_id.extra_price

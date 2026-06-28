@@ -12,14 +12,14 @@ class AccountAnalyticAccount(models.Model):
     @api.depends('line_ids')
     def _compute_purchase_order_count(self):
         for account in self:
-            account.purchase_order_count = self.env['purchase.order'].search_count([
-                ('order_line.invoice_lines.analytic_line_ids.account_id', 'in', account.ids)
-            ])
+            account.purchase_order_count = (self.env['purchase.order'].search_count([
+                ('order_line.invoice_lines.analytic_line_ids.' + account.plan_id._column_name(), 'in', account.ids)
+            ]) if account.plan_id else 0)
 
     def action_view_purchase_orders(self):
         self.ensure_one()
         purchase_orders = self.env['purchase.order'].search([
-            ('order_line.invoice_lines.analytic_line_ids.account_id', '=', self.id)
+            ('order_line.invoice_lines.analytic_line_ids.' + self.plan_id._column_name(), '=', self.id)
         ])
         result = {
             "type": "ir.actions.act_window",

@@ -237,7 +237,7 @@ test("scheduledORM: inError", async () => {
                 changes: { name: "Cedric Lards Ennais", email: "cla@odoo.com" },
                 displayName: "Cedric Lards Ennais",
                 timeStamp: 40,
-                error: true,
+                error: "This is an error message",
             },
         }
     );
@@ -263,6 +263,7 @@ test("scheduledORM: inError", async () => {
     expect(queryAllTexts`.o-dropdown--menu .o-dropdown-item div.text-danger`).toEqual([
         "Cedric Lards Ennais",
     ]);
+    expect(`.o-dropdown--menu .o-dropdown-item div.text-danger`).toHaveAttribute("data-tooltip");
 });
 
 test.tags("mobile");

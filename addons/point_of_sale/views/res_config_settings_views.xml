@@ -217,6 +217,21 @@
                                 <setting id="margin_and_cost" string="Show margins &amp; costs" help="Show margins &amp; costs on product information">
                                     <field name="pos_is_margins_costs_accessible_to_every_user"/>
                                 </setting>
+                                <setting id="barcode_scanner" invisible="use_kiosk_mode">
+                                    <span class="o_form_label">Barcodes</span>
+                                    <i class="fa fa-info-circle me-1" title="This setting is common to all PoS." pos-data-toggle="tooltip"/>
+                                    <div class="text-muted">
+                                        Use barcodes to scan products, customer cards, etc.
+                                    </div>
+                                    <div class="content-group mt16 row">
+                                        <label for="barcode_nomenclature_id" string="Barcode Nomenclature" class="col-lg-3 o_light_label"/>
+                                        <field name="barcode_nomenclature_id"/>
+                                    </div>
+                                    <div class="content-group mt16 row">
+                                        <label for="pos_fallback_nomenclature_id" string="Fallback Nomenclature" class="col-lg-3 o_light_label"/>
+                                        <field name="pos_fallback_nomenclature_id"/>
+                                    </div>
+                                </setting>
                             </block>
                             <block title="Accounting" id="pos_accounting_section">
                                 <setting id="default_sales_tax_setting" title="This tax is applied to any new product created in the catalog." documentation="/applications/finance/accounting/taxation/taxes/default_taxes.html">
@@ -238,7 +253,7 @@
                                     <div class="text-muted">
                                         Intermediary account used for unidentified customers.
                                     </div>
-                                    <field name="account_default_pos_receivable_account_id" colspan="4" nolabel="1" domain="[('reconcile', '=', True), ('account_type', '=', 'asset_receivable')]"/>
+                                    <field name="account_default_pos_receivable_account_id" colspan="4" nolabel="1" domain="[('account_type', '=', 'asset_receivable')]"/>
                                 </setting>
                                 <setting id="order_edit_tracking" help="Store edited orders in the backend">
                                     <field name="pos_order_edit_tracking"/>
@@ -278,6 +293,9 @@
                                 </setting>
                                 <setting id="pos-avatax" help="Use automatic taxes mapping with Avatax">
                                     <field name="pos_module_pos_avatax" />
+                                </setting>
+                                <setting id="pos_download_invoice" help="The invoice will be downloaded on your device whenever you invoice an order">
+                                    <field name="pos_use_download_invoice" />
                                 </setting>
                             </block>
 
@@ -324,6 +342,10 @@
                                 <setting id="pos-loyalty" title="Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products." string="Promotions, Coupons, Gift Card &amp; Loyalty Program" help="Manage promotion that will grant customers discounts or gifts" documentation="/applications/sales/point_of_sale/pricing/loyalty.html">
                                     <field name="module_loyalty"/>
                                 </setting>
+                                <setting id="pos_uom_price_option_setting" string="Product Reference Price"
+                                         help="Add a reference price per UoM on products (e.g $/kg), in addition to the sale price">
+                                    <field name="group_show_uom_price"/>
+                                </setting>
                             </block>
 
                             <block title="Bills &amp; Receipts" id="pos_bills_and_receipts_section">
@@ -342,11 +364,6 @@
                                 </setting>
                                 <setting id="auto_printing" help="Print receipts automatically once the payment is registered" documentation="/applications/sales/point_of_sale/receipts_invoices.html">
                                     <field name="pos_iface_print_auto"/>
-                                    <div class="content-group mt16" invisible="not pos_iface_print_auto and not pos_other_devices">
-                                        <div>
-                                            <field name="pos_iface_print_skip_screen" class="oe_inline"/><span class="oe_inline"><b>Skip Preview Screen</b></span>
-                                        </div>
-                                    </div>
                                 </setting>
                                 <setting id="pos_sms" help="Send Text receipt Using sms">
                                     <field name="pos_module_pos_sms"/>
@@ -369,7 +386,7 @@
                                         </div>
                                     </div>
                                 </setting>
-                                <setting id="basic_receipt" help="Print basic ticket without prices. Can be used for gifts.">
+                                <setting id="basic_receipt" help="Print gift ticket without prices. Can be used for gifts.">
                                     <field name="pos_basic_receipt"/>
                                 </setting>
                                 <setting string="Early Receipt Printing" help="Allow to print receipt before payment" id="iface_printbill">
@@ -401,6 +418,13 @@
                                         <label for="pos_custom_logo" class="col-lg-3 o_light_label" string="Logo" invisible="pos_use_custom_receipt_info in [False,'']"/>
                                         <field name="pos_custom_logo" invisible="pos_use_custom_receipt_info in [False,'']" filename="pos_custom_logo_name" options="{'accepted_file_extensions': '.jpg,.jpeg,.png,.webp,.svg,.ico,.bmp,.svf,.tif,.tiff'}"/>
                                     </div>
+                                </setting>
+                            </block>
+
+                            <block id="pos_localization_section" title="Fiscalization" help="Those settings are used to comply with legal requirements in specific countries." invisible="country_code not in ('AT')">
+                                <setting id="austria_pos_localization" string="Austria Fiskaly" documentation="/applications/finance/fiscal_localizations/austria.html#point-of-sale" company_dependent="1" invisible="country_code != 'AT'"
+                                    help="Configure Fiskaly credentials required for Austrian RKSV fiscalization">
+                                    <field name="module_l10n_at_pos"/>
                                 </setting>
                             </block>
 
@@ -453,22 +477,17 @@
                                     <label for="pos_customer_display_bg_img" />
                                     <field name="pos_customer_display_bg_img" class="w-100" filename="pos_customer_display_bg_img_name"/>
                                 </setting>
-                                <setting string="Receipt Printers" help="Connect device to your PoS" id="pos_other_devices">
+                                <setting string="Receipt Printers" help="Connect printers to your PoS" id="pos_other_devices">
                                     <field name="pos_other_devices"/>
                                     <div class="content-group" invisible="not pos_other_devices">
                                         <div class="mt16 mb-1">
                                             <label string="Printers" for="pos_receipt_printer_ids" class="o_light_label me-2"/>
-                                            <field name="pos_receipt_printer_ids" widget="many2many_tags" context="{'default_use_type': 'receipt'}"/>
-                                        </div>
-                                        <div class="mt16 mb-1">
-                                            <label string="Default" for="pos_default_receipt_printer_id" class="o_light_label me-2"/>
-                                            <field name="pos_default_receipt_printer_id" domain="[('id', 'in', pos_receipt_printer_ids)]" required="pos_other_devices"/>
-                                        </div>
-                                        <div class="mt16 mb-1">
-                                            <label string="Link Cashdrawer" for="pos_iface_cashdrawer" class="o_light_label me-2"/>
-                                            <field name="pos_iface_cashdrawer"/>
+                                            <field name="pos_receipt_printer_ids" widget="many2many_tags" context="{'default_use_type': 'receipt'}" options="{'no_quick_create': True}"/>
                                         </div>
                                     </div>
+                                </setting>
+                                <setting string="USB Scale" help="Connect a compatible scale directly via USB to this device">
+                                    <widget name="point_of_sale_connect_web_serial_scale"/>
                                 </setting>
                             </block>
                             <block title="Preparation" id="pos_preparation_section">
@@ -494,7 +513,8 @@
                                                 <field name="pos_preparation_printer_ids"
                                                     class="w-100 pt-1"
                                                     widget="many2many_tags"
-                                                    context="{'default_use_type': 'preparation'}"/>
+                                                    context="{'default_use_type': 'preparation'}"
+                                                    options="{'no_quick_create': True}"/>
                                             </div>
                                             <div>
                                                 <button name="action_pos_printer_dialog"
@@ -509,47 +529,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </setting>
-                            </block>
-
-                            <block title="Inventory" id="pos_inventory_section">
-                                <setting title="Operation types show up in the Inventory dashboard." string="Operation Type" help="Used to record product pickings. Products are consumed from its default source location.">
-                                    <field name="pos_picking_type_id" domain="[('company_id', '=', company_id)]" required="pos_config_id"/>
-                                </setting>
-                                <setting id="ship_later" string="Allow Ship Later" help="Sell products and deliver them later.">
-                                    <field name="pos_ship_later"/>
-                                    <div class="content-group mt16" invisible="not pos_ship_later">
-                                        <div class="row">
-                                            <label for="pos_warehouse_id" string="Warehouse" class="col-lg-3 o_light_label"/>
-                                            <field name="pos_warehouse_id" required="pos_ship_later"/>
-                                        </div>
-                                        <div groups="stock.group_adv_location" class="row">
-                                            <label for="pos_route_id" string="Specific route" class="col-lg-3 o_light_label"/>
-                                            <field name="pos_route_id"/>
-                                        </div>
-                                        <div class="row">
-                                            <label for="pos_picking_policy" class="col-lg-3 o_light_label"/>
-                                            <field name="pos_picking_policy" required="pos_ship_later"/>
-                                        </div>
-                                    </div>
-                                </setting>
-                                <setting id="barcode_scanner">
-                                    <span class="o_form_label">Barcodes</span>
-                                    <i class="fa fa-info-circle me-1" title="This setting is common to all PoS." pos-data-toggle="tooltip"/>
-                                    <div class="text-muted">
-                                        Use barcodes to scan products, customer cards, etc.
-                                    </div>
-                                    <div class="content-group mt16 row">
-                                        <label for="barcode_nomenclature_id" string="Barcode Nomenclature" class="col-lg-3 o_light_label"/>
-                                        <field name="barcode_nomenclature_id"/>
-                                    </div>
-                                    <div class="content-group mt16 row">
-                                        <label for="pos_fallback_nomenclature_id" string="Fallback Nomenclature" class="col-lg-3 o_light_label"/>
-                                        <field name="pos_fallback_nomenclature_id"/>
-                                    </div>
-                                </setting>
-                                <setting id="update_quantities_stock_setting" groups="base.group_no_one" string="Inventory Management" company_dependent="1" help="Update quantities in stock">
-                                    <field name="update_stock_quantities" colspan="4" widget="radio"/>
                                 </setting>
                             </block>
                         </div>

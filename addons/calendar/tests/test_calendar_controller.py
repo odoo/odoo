@@ -11,25 +11,20 @@ class TestCalendarController(HttpCase):
         self.user = new_test_user(self.env, "test_user_1", email="test_user_1@nowhere.com", tz="UTC")
         self.other_user = new_test_user(self.env, "test_user_2", email="test_user_2@nowhere.com", password="P@ssw0rd!", tz="UTC")
         self.partner = self.user.partner_id
-        self.event = (
-            self.env["calendar.event"]
-            .create(
-                {
-                    "name": "Doom's day",
-                    "start": datetime(2019, 10, 25, 8, 0),
-                    "stop": datetime(2019, 10, 27, 18, 0),
-                    "partner_ids": [(4, self.partner.id)],
-                }
-            )
-            .with_context(mail_notrack=True)
-        )
+        self.event = self.env["calendar.event"].create({
+            "name": "Doom's day",
+            "start": datetime(2019, 10, 25, 8, 0),
+            "stop": datetime(2019, 10, 27, 18, 0),
+            "partner_ids": [(4, self.partner.id)],
+        })
 
     def test_accept_meeting_unauthenticated(self):
         self.event.write({"partner_ids": [(4, self.other_user.partner_id.id)]})
         attendee = self.event.attendee_ids.filtered(lambda att: att.partner_id.id == self.other_user.partner_id.id)
         token = attendee.access_token
         url = "/calendar/meeting/accept?token=%s&id=%d" % (token, self.event.id)
-        res = self.url_open(url)
+        self.authenticate(None, None)
+        res = self.url_open(url, method='POST', data={'csrf_token': self.csrf_token()})
 
         self.assertEqual(res.status_code, 200, "Response should = OK")
         self.env.invalidate_all()
@@ -41,7 +36,7 @@ class TestCalendarController(HttpCase):
         token = attendee.access_token
         url = "/calendar/meeting/accept?token=%s&id=%d" % (token, self.event.id)
         self.authenticate("test_user_2", "P@ssw0rd!")
-        res = self.url_open(url)
+        res = self.url_open(url, method='POST', data={'csrf_token': self.csrf_token()})
 
         self.assertEqual(res.status_code, 200, "Response should = OK")
         self.env.invalidate_all()

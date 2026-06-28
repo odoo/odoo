@@ -30,6 +30,7 @@ class BuckarooCommon(PaymentCommon):
             "brq_signature": "5d389aa4f563cd99666a2e6bef79da3d4a32eb50",
         }
 
+        cls.async_payment_data_signature = "fa3444e135c366a1d2660adb406fb47efdc28130"
         cls.async_payment_data = {
             "brq_transactions": "0123456789ABCDEF0123456789ABCDEF",
             "brq_transaction_method": "paypal",
@@ -40,5 +41,5 @@ class BuckarooCommon(PaymentCommon):
             "brq_currency": cls.currency.name,
             "brq_timestamp": "2022-01-01 12:00:00",
             "brq_transaction_type": "V010",
-            "brq_signature": "fa3444e135c366a1d2660adb406fb47efdc28130",
+            "brq_signature": cls.async_payment_data_signature,
         }

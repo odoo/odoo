@@ -18,6 +18,7 @@ class AccountPaymentWithholdingLine(models.Model):
     payment_id = fields.Many2one(
         comodel_name='account.payment',
         required=True,
+        index=True,
         ondelete='cascade',
     )
 
@@ -62,6 +63,28 @@ class AccountPaymentWithholdingLine(models.Model):
     def _compute_comodel_currency_id(self):
         for line in self:
             line.comodel_currency_id = line.payment_id.currency_id
+
+    @api.depends('payment_id.withhold', 'payment_id.amount')
+    def _compute_comodel_percentage_paid_factor(self):
+        """
+        Adjust the paid factor for withholding-only payments so that
+        withholding lines are prorated according to the payment amount.
+        """
+        for line in self:
+            payment = line.payment_id
+            if payment.withhold != 'withhold':
+                line.comodel_percentage_paid_factor = 1.0
+                continue
+            total_withholding = sum(
+                move.currency_id._convert(
+                    from_amount=move.withholding_total_amount_currency,
+                    to_currency=payment.currency_id,
+                    company=payment.company_id,
+                    date=payment.date,
+                )
+                for move in payment.invoice_ids
+            )
+            line.comodel_percentage_paid_factor = payment.amount / total_withholding if total_withholding else 0.0
 
     # -----------------------
     # CRUD, inherited methods

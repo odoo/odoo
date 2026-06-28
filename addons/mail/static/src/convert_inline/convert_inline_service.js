@@ -1,43 +1,37 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, xml } from "@odoo/owl";
+import { Component, onMounted, props, signal, types, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 const mainComponents = registry.category("main_components");
 
 export class ConvertInlineContainer extends Component {
-    static template = xml`<div class="o-convert-inline" t-ref="root"></div>`;
-    static props = { share: Object };
+    static template = xml`<div class="o-convert-inline" t-ref="this.props.rootRef"/>`;
 
     setup() {
-        this.root = useRef("root");
-        Object.assign(this.props.share, {
-            root: this.root,
+        this.props = props({
+            onMounted: types.function([]),
+            rootRef: types.signal(types.instanceOf(HTMLDivElement)),
         });
         onMounted(() => {
-            this.props.share.resolve();
+            this.props.onMounted();
         });
     }
 }
 
 export const convertInlineIframeService = {
     start() {
-        const { promise, resolve } = Promise.withResolvers();
-        const share = {
-            readyPromise: promise,
-            resolve,
-        };
-
+        const rootRef = signal.ref(HTMLDivElement);
+        const { promise: readyPromise, resolve } = Promise.withResolvers();
         mainComponents.add("ConvertInlineContainer", {
             Component: ConvertInlineContainer,
-            props: { share },
+            props: { onMounted: resolve, rootRef },
         });
-
-        const add = (iframe) => {
-            share.root.el.append(iframe);
-            return () => iframe.remove();
+        return {
+            add: (iframe) => {
+                rootRef().append(iframe);
+                return () => iframe.remove();
+            },
+            readyPromise,
         };
-
-        return { add, readyPromise: promise };
     },
 };
 

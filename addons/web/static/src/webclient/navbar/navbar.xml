@@ -8,13 +8,11 @@
         data-command-category="disabled"
       >
         <!-- Apps Menu -->
-        <t t-call="web.NavBar.AppsMenu">
-          <t t-set="apps" t-value="this.menuService.getApps()" />
-        </t>
+        <t t-call="web.NavBar.AppsMenu" apps="this.menuService.getApps()"/>
 
         <!-- App Brand -->
         <DropdownItem
-          t-if="!this.env.isSmall and this.currentApp"
+          t-if="!this.ui.isSmall and this.currentApp"
           t-out="this.currentApp.name"
           class="'o_menu_brand d-flex'"
           onSelected="() => this.onNavBarDropdownItemSelection(this.currentApp)"
@@ -23,11 +21,9 @@
 
         <div class="o_navbar_breadcrumbs d-contents"/>
 
-        <t t-if="!this.env.isSmall">
+        <t t-if="!this.ui.isSmall">
           <!-- Current App Sections -->
-          <t t-if="this.currentAppSections.length" t-call="web.NavBar.SectionsMenu">
-            <t t-set="sections" t-value="this.currentAppSections" />
-          </t>
+          <t t-if="this.currentAppSections.length" t-call="web.NavBar.SectionsMenu" sections="this.currentAppSections"/>
         </t>
 
         <!-- Systray -->
@@ -55,10 +51,7 @@
             t-att-data-menu-xmlid="section.xmlid" t-out="section.name"/>
         <ul class="list-unstyled ps-0">
             <t t-foreach="section.childrenTree" t-as="subSection" t-key="subSection_index">
-                <t t-call="web.SectionMenu">
-                    <t t-set="section" t-value="subSection"/>
-                    <t t-set="isNested" t-value="true"/>
-                </t>
+                <t t-call="web.SectionMenu" section="subSection" isNested="true"/>
             </t>
         </ul>
     </li>
@@ -73,9 +66,9 @@
   </t>
 
   <t t-name="web.NavBar.AppsMenu">
-    <t t-if="this.env.isSmall">
+    <t t-if="this.ui.isSmall">
       <a href="/odoo" class="o_menu_toggle border-0" t-att-class="{'hasImage': this.currentApp?.webIconData}" accesskey="h" t-custom-ref="menuApps" t-on-click.prevent="this._openAppMenuSidebar">
-        <t t-call="web.NavBar.AppsMenu.Sidebar"/>
+        <t t-call="web.NavBar.AppsMenu.Sidebar" apps="apps"/>
       </a>
     </t>
     <t t-else="">
@@ -121,9 +114,7 @@
                 <ul class="list-unstyled py-2 ps-0 mb-0">
                     <t t-if="!this.state.isAllAppsMenuOpened">
                       <t t-foreach="this.currentAppSections" t-as="subMenu" t-key="subMenu_index">
-                        <t t-call="web.SectionMenu">
-                            <t t-set="section" t-value="subMenu" />
-                        </t>
+                        <t t-call="web.SectionMenu" section="subMenu"/>
                       </t>
                     </t>
 
@@ -148,7 +139,7 @@
 
   <t t-name="web.NavBar.SectionsMenu">
     <div class="o_menu_sections d-flex flex-grow-1 flex-shrink-1 w-0" t-custom-ref="appSubMenus" role="menu">
-        <t t-if="!this.env.isSmall">
+        <t t-if="!this.ui.isSmall">
             <DropdownGroup>
                 <t t-foreach="sections" t-as="section" t-key="section.id">
                     <t
@@ -185,17 +176,15 @@
                                 <span t-out="section.name" t-att-data-section="section.id" />
                             </button>
                             <t t-set-slot="content">
-                                <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
-                                <t t-set="items" t-value="section.childrenTree" />
-                                <t t-set="decalage" t-value="20" />
-                                </t>
+                                <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot"
+                                    items="section.childrenTree"
+                                    decalage="20"/>
                             </t>
                         </Dropdown>
                     </t>
                 </t>
 
-                <t t-if="this.currentAppSectionsExtra.length" t-call="web.NavBar.SectionsMenu.MoreDropdown">
-                    <t t-set="sections" t-value="this.currentAppSectionsExtra" />
+                <t t-if="this.currentAppSectionsExtra.length" t-call="web.NavBar.SectionsMenu.MoreDropdown" sections="this.currentAppSectionsExtra">
                     <t t-if="sectionsVisibleCount lt 10">
                         <t t-set="hotkey" t-value="(sectionsVisibleCount + 1 % 10).toString()" />
                     </t>
@@ -228,10 +217,9 @@
 
       <t t-else="">
         <div class="dropdown-menu_group dropdown-header" t-att-style="style" t-out="item.name" />
-        <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
-          <t t-set="items" t-value="item.childrenTree" />
-          <t t-set="decalage" t-value="decalage + 12" />
-        </t>
+        <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot"
+            items="item.childrenTree"
+            decalage="decalage + 12"/>
       </t>
     </t>
   </t>
@@ -261,10 +249,9 @@
                 class="o_more_dropdown_section o_more_dropdown_section_group dropdown-header bg-100"
                 t-out="section.name"
               />
-              <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
-                <t t-set="items" t-value="section.childrenTree" />
-                <t t-set="decalage" t-value="20" />
-              </t>
+              <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot"
+                  items="section.childrenTree"
+                  decalage="20"/>
             </t>
           </t>
         </t>

@@ -1,11 +1,30 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { AttributeTranslateDialog } from "../../translation_components/attributeTranslateDialog";
 import { withSequence } from "@html_editor/utils/resource";
 import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+
+/**
+ * @typedef {Map<HTMLElement, ElementTranslationInfo} ElToTranslationInfoMap
+ *
+ * @typedef {{[attributeName: string]: AttributeTranslationInfo}} ElementTranslationInfo
+ *
+ * @typedef {Object} AttributeTranslationInfo
+ * @property {string} oeModel
+ * @property {string} oeId
+ * @property {string} oeField
+ * @property {string} oeTranslationState
+ * @property {string} oeTranslationSourceSha
+ * @property {string} translation
+ */
+
+/**
+ * @typedef {Object} TranslationShared
+ * @property {TranslationPlugin["getTranslationInfo"]} getTranslationInfo
+ * @property {TranslationPlugin["updateTranslationMap"]} updateTranslationMap
+ */
 
 /**
  * @typedef {((editableEls: HTMLElement[]) => void)[]} on_nodes_marked_translatable_handlers
@@ -49,12 +68,15 @@ function findOEditable(containerEl) {
 
 export class TranslationPlugin extends Plugin {
     static id = "translation";
-    static dependencies = ["history"];
+    static shared = ["getTranslationInfo", "updateTranslationMap"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         clean_for_save_processors: this.cleanForSave.bind(this),
         dirty_els_providers: this.getDirtyTranslations.bind(this),
+        on_replicated_handlers: ({ sourceEl, targetEl }) => {
+            targetEl.classList.toggle("o_dirty", sourceEl.classList.contains("o_dirty"));
+        },
         after_setup_editor_overrides: () => {
             const translationSavableEls = getTranslationAttributeEls(
                 this.services.website.pageDocument
@@ -141,7 +163,14 @@ export class TranslationPlugin extends Plugin {
                 sticky: false,
             });
         };
-        for (const translateEl of this.editableEls) {
+        // The TOC navbar lives under `.o_not_editable`, so its translation
+        // spans are excluded from `findOEditable`. Iterate them explicitly
+        // so `handleToC` can align their source SHA with the matching
+        // heading and tag them with `o_translation_without_style`.
+        const tocNavTranslationEls = this.editable.querySelectorAll(
+            ".s_table_of_content_navbar_wrap [data-oe-translation-source-sha]"
+        );
+        for (const translateEl of new Set([...this.editableEls, ...tocNavTranslationEls])) {
             this.handleToC(translateEl);
         }
         const savableInsideNotEditableEls = this.editable.querySelectorAll(
@@ -152,6 +181,7 @@ export class TranslationPlugin extends Plugin {
         }
         // Keep the original values of elToTranslationInfoMap so that we know
         // which translations have been updated.
+        /** @type {ElToTranslationInfoMap} */
         this.originalElToTranslationInfoMap = new Map();
         for (const [translateEl, translationInfo] of this.elToTranslationInfoMap) {
             this.originalElToTranslationInfoMap.set(
@@ -160,30 +190,48 @@ export class TranslationPlugin extends Plugin {
             );
         }
     }
-
     /**
      * Creates a map that links html elements to their attributes to translate.
-     * It has the form:
-     * {translateEl1: {
-     *     attribute1: {
-     *         oeModel: "ir.ui.view",
-     *         oeId: "5",
-     *         oeField: "arch_db",
-     *         oeTranslationState: "translated",
-     *         oeTranslationSourceSha: "123",
-     *         translation: "traduction",
-     *     },
-     * }};
+     * It has the form `Map<HTMLElement, ElementTranslationInfo>`:
+     *
+     *     Map(
+     *         translateEl1 => {
+     *             attribute1: {
+     *                 oeModel: "ir.ui.view",
+     *                 oeId: "5",
+     *                 oeField: "arch_db",
+     *                 oeTranslationState: "translated",
+     *                 oeTranslationSourceSha: "123",
+     *                 translation: "traduction",
+     *             },
+     *         }
+     *     );
      *
      * @param {HTMLElement[]} editableEls
      */
     buildTranslationInfoMap(editableEls) {
+        /** @type {ElToTranslationInfoMap} */
         this.elToTranslationInfoMap = new Map();
         const translatedAttrs = ["placeholder", "title", "alt", "value"];
         const translationRegex =
-            /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>(.*)<\/span>/;
+            /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>/;
         const isEmpty = (el) => !el.hasChildNodes() || el.innerHTML.trim() === "";
         const matchTag = (el) => el.matches("input, select, textarea, img");
+
+        // Placeholder attributes on non-form elements (i.e. not input, select,
+        // textarea) are intended for content editors, not visible text
+        // for end-users. For example, blog post title is such a placeholder.
+        const placeholderEls = editableEls.filter(
+            (el) =>
+                el.getAttribute("placeholder")?.includes("data-oe-translation-source-sha=") &&
+                !matchTag(el)
+        );
+        for (const el of placeholderEls) {
+            const translation = el.getAttribute("placeholder");
+            const match = translation.match(translationRegex);
+            el.setAttribute("placeholder", match[2]);
+        }
+
         for (const translatedAttr of translatedAttrs) {
             const filteredEditableEls = editableEls.filter(
                 (editableEl) =>
@@ -195,13 +243,18 @@ export class TranslationPlugin extends Plugin {
             );
             for (const filteredEditableEl of filteredEditableEls) {
                 const translation = filteredEditableEl.getAttribute(translatedAttr);
-                this.updateTranslationMap(filteredEditableEl, translation, translatedAttr);
+                this.setupTranslationMap(filteredEditableEl, translation, translatedAttr);
                 const match = translation.match(translationRegex);
                 filteredEditableEl.setAttribute(translatedAttr, match[2]);
                 if (translatedAttr === "value") {
                     filteredEditableEl.value = match[2];
                 }
                 filteredEditableEl.classList.add("o_translatable_attribute");
+                if (filteredEditableEl.matches("textarea, input")) {
+                    // We want those elements to be translated by the sidebar,
+                    // not by editing the input.
+                    filteredEditableEl.setAttribute("readonly", "");
+                }
             }
         }
         const textEditEls = editableEls.filter(
@@ -211,12 +264,15 @@ export class TranslationPlugin extends Plugin {
         );
         for (const textEditEl of textEditEls) {
             const translation = textEditEl.textContent;
-            this.updateTranslationMap(textEditEl, translation, "textContent");
+            this.setupTranslationMap(textEditEl, translation, "textContent");
             const match = translation.match(translationRegex);
             textEditEl.value = match[2];
             // Update the text content of textarea too
             textEditEl.innerText = match[2];
             textEditEl.classList.add("o_translatable_text");
+            // We want those elements to be translated by the sidebar,
+            // not by editing the input.
+            textEditEl.setAttribute("readonly", "");
             textEditEl.classList.remove("o_text_content_invisible");
         }
     }
@@ -274,7 +330,6 @@ export class TranslationPlugin extends Plugin {
                     translateEl.dataset.oeTranslationSourceSha =
                         headerEl.dataset.oeTranslationSourceSha;
                 }
-                // TODO: handle o_translation_without_style
                 translateEl.classList.add("o_translation_without_style");
             }
         }
@@ -294,16 +349,6 @@ export class TranslationPlugin extends Plugin {
                     );
                 }
             }
-            this.addDomListener(translateEl, "click", (ev) => {
-                const translateEl = ev.target;
-                const elToTranslationInfoMap = this.elToTranslationInfoMap;
-                this.dialogService.add(AttributeTranslateDialog, {
-                    node: translateEl,
-                    elToTranslationInfoMap: elToTranslationInfoMap,
-                    addStep: this.dependencies.history.addStep,
-                    applyCustomMutation: this.dependencies.history.applyCustomMutation,
-                });
-            });
         }
         this.trigger("on_nodes_marked_translatable_handlers", this.editableEls);
     }
@@ -313,8 +358,21 @@ export class TranslationPlugin extends Plugin {
             .parseFromString(translationHtml, "text/html")
             .querySelector("[data-oe-translation-source-sha]");
     }
-
-    updateTranslationMap(translateEl, translation, attrName) {
+    /**
+     * @param {HTMLElement} translateEl - the element whose attribute
+     * translations we want to get.
+     * @returns {ElementTranslationInfo} translationInfo
+     */
+    getTranslationInfo(translateEl) {
+        return this.elToTranslationInfoMap.get(translateEl);
+    }
+    /**
+     * @param {HTMLElement} translateEl - element on which the translatable
+     * attribute is
+     * @param {string} translation - current translation
+     * @param {string} attrName - attribute to translate
+     */
+    setupTranslationMap(translateEl, translation, attrName) {
         const translationEl = this.parseTranslationEl(translation);
         if (!this.elToTranslationInfoMap.get(translateEl)) {
             this.elToTranslationInfoMap.set(translateEl, {});
@@ -322,6 +380,20 @@ export class TranslationPlugin extends Plugin {
         this.elToTranslationInfoMap.get(translateEl)[attrName] = translationEl.dataset;
         this.elToTranslationInfoMap.get(translateEl)[attrName].translation =
             translationEl.innerHTML;
+    }
+    /**
+     * @param {HTMLElement} translateEl - element on which the translatable
+     * attribute is
+     * @param {string} translation - new translation
+     * @param {string} attrName - attribute to translate
+     */
+    updateTranslationMap(translateEl, translation, attrName) {
+        if (!this.elToTranslationInfoMap.get(translateEl)) {
+            throw new Error(
+                `Translation map was not set up: cannot update ${attrName} on ${translateEl.nodeName}`
+            );
+        }
+        this.elToTranslationInfoMap.get(translateEl)[attrName].translation = translation;
     }
 
     /**
@@ -358,6 +430,7 @@ export class TranslationPlugin extends Plugin {
             root.dataset.oeTranslationSourceSha = root.dataset.oeTranslationSaveSha;
             delete root.dataset.oeTranslationSaveSha;
         }
+        return root;
     }
 }
 

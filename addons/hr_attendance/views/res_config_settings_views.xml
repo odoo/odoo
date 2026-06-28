@@ -8,53 +8,65 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <app data-string="Attendances" string="Attendances" name="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
-                    <block title="Modes" name="kiosk_mode_setting_container">
-                        <setting string="Kiosk Mode" company_dependent="1" help="Define the way the user will be identified by the application.">
-                            <field name="attendance_kiosk_mode" required="1" class="w-75"/>
-                            <div>
-                                <a href="https://www.odoo.com/documentation/latest/applications/hr/attendances/hardware.html"
-                                    target="_blank"><i class="fa fa-fw fa-arrow-right"/>Installation Manual</a>
-                            </div>
-                        </setting>
-                        <setting string="Attendances from Backend" company_dependent="1" help="Allow Users to Check in/out from Odoo.">
-                            <field name="attendance_from_systray" required="1"/>
-                        </setting>
-                        <setting string="Automatic Check-Out" company_dependent="1" help="Automatically Check-Out Employees based on their working schedule with an additional tolerance. Does not apply to employees with a flexible working schedule.">
+                    <block title="Attendance Rules &amp; Enforcement">
+                        <setting string="Automatic Check-Out" company_dependent="1" help="Automatically check out employees based on their working schedule with an additional tolerance, or at a specific time each day. Does not apply to employees with a flexible working schedule.">
                             <field name="auto_check_out"/>
                             <div invisible="not auto_check_out">
-                                <span class="me-2">Tolerance</span><field name="auto_check_out_tolerance" class="text-center" style="width: 5ch;"/><span class="ms-2">Hours</span>
-                                <div class="mt-3 d-flex">
-                                    <field name="single_check_in" class="w-auto"/>
-                                    <div>
-                                        <label string="Single Check-In Attendance System" for="single_check_in"/><br/>
-                                        <span class="text-muted">When enabled, only the first check-in within the scheduled working hours (Including tolerance) is recorded. Further check-ins are allowed only after an automatic check-out.</span>
-                                    </div>
+                                <span class="me-2">Based on</span><field name="auto_check_out_mode" widget="radio" options="{'horizontal': true}"/>
+                            </div>
+                            <div invisible="not auto_check_out or auto_check_out_mode != 'tolerance'">
+                                <span class="me-2">Tolerance</span>
+                                <field name="auto_check_out_tolerance" class="text-center w-25"/>
+                                <span class="ms-2">Hours</span>
+                            </div>
+                            <div invisible="not auto_check_out or auto_check_out_mode != 'specific_time'">
+                                <span class="me-2">Time</span>
+                                <field name="auto_check_out_specific_time" class="text-center w-25" widget="float_time"/>
+                            </div>
+                            <div invisible="not auto_check_out or auto_check_out_mode != 'tolerance'" class="mt-3 d-flex">
+                                <field name="single_check_in" class="w-auto"/>
+                                <div>
+                                    <label string="Single Check-In Attendance System" for="single_check_in"/><br/>
+                                    <span class="text-muted">When enabled, only the first check-in within the scheduled working hours (including tolerance) is recorded. Further check-ins are allowed only after an automatic check-out.</span>
                                 </div>
                             </div>
                         </setting>
                         <setting string="Absence Management" company_dependent="1" help="If checked, days not covered by an attendance will be visible in the Report. Does not apply to employees with a flexible working schedule.">
                             <field name="absence_management"/>
                         </setting>
+                        <setting string="Attendances from Backend" company_dependent="1" help="Allow Users to Check in/out from Odoo.">
+                            <field name="attendance_from_systray" required="1"/>
+                        </setting>
                         <setting string="Device &amp; Location Tracking" company_dependent="1" help="Allow the collection of GPS location, IP address, and browser/device details used to track employee access and attendance">
                             <field name="attendance_device_tracking"/>
                         </setting>
+                        <setting string="Take Pictures on Check-In" company_dependent="1" help="Capture a photo at the time of check-in using the device camera (if available). Images are automatically optimized for performance and storage.">
+                            <field name="attendance_capture_check_in"/>
+                        </setting>
                     </block>
                     <block title="Kiosk Settings">
-                        <setting invisible="attendance_kiosk_mode == 'manual'" company_dependent="1" help="Define the camera used for the barcode scan.">
-                            <field name="attendance_barcode_source" required="1"/>
+                        <setting string="Kiosk Mode" company_dependent="1" help="Define the way the user will be identified by the application.">
+                            <field name="attendance_kiosk_mode" widget="radio" options="{'horizontal': True}"/>
+                            <div>
+                                <a href="https://www.odoo.com/documentation/latest/applications/hr/attendances/hardware.html"
+                                    target="_blank"><i class="fa fa-fw fa-arrow-right"/>Installation Manual</a>
+                            </div>
                         </setting>
                         <setting string="Display Time" company_dependent="1" help="Choose how long the greeting message will be displayed.">
                             <field name="attendance_kiosk_delay" required="1" class="text-center" style="width: 10%; min-width: 4rem;"/><span> seconds</span>
                         </setting>
-                        <setting title="Set PIN codes in the employee detail form (in HR Settings tab)." invisible="attendance_kiosk_mode == 'barcode'" help="Use PIN codes (defined on the Employee's profile) to check-in.">
-                            <field name="attendance_kiosk_use_pin"/>
+                        <setting invisible="attendance_kiosk_mode == 'manual'" company_dependent="1" help="Define the camera used for the barcode scan.">
+                            <field name="attendance_barcode_source" required="1"/>
                         </setting>
                         <setting title="Kiosk Mode Adress" help="Use this url to access your kiosk mode from any device.">
                             <field name="attendance_kiosk_url" class="o_hr_kiosk_url_media w-100" style="width:100% !important;" widget="CopyClipboardURL"/>
                             <button name="regenerate_kiosk_key" type="object" string="Generate new URL" class="btn-link" icon="fa-refresh"/>
                         </setting>
+                        <setting title="Set PIN codes in the employee detail form (in HR Settings tab)." invisible="attendance_kiosk_mode == 'barcode'" help="Use PIN codes (defined on the Employee's profile) to check-in.">
+                            <field name="attendance_kiosk_use_pin"/>
+                        </setting>
                     </block>
-                    <block title="Extra Hours" name="overtime_settings">
+                    <block title="Overtime Options" name="overtime_settings">
                         <!-- TODO: Remove the tolerance settings in master -->
                         <setting company_dependent="1" invisible="1">
                             <div class="mt16">
@@ -76,10 +88,10 @@
                                 <span class="me-2">Time Period </span><field name="overtime_employee_threshold" class="text-center" style="width: 5ch;"/><span> Minutes</span>
                             </div>
                         </setting>
-                        <setting title="Display Extra Hours." string="Display Extra Hours" company_dependent="1" help="Display Extra Hours in Kiosk mode and on User profile.">
+                        <setting title="Display Overtime" string="Display Overtime" company_dependent="1" help="Display Overtime in Kiosk mode and on User profile.">
                             <field name="hr_attendance_display_overtime"/>
                         </setting>
-                        <setting title="Extra Hours Validation" string="Extra Hours Validation" company_dependent="1" help="Can be converted as Time Off (cfr Time Off configuration).">
+                        <setting title="Overtime Validation" string="Overtime Validation" company_dependent="1" help="Can be converted as Time Off (cfr Time Off configuration).">
                             <field name="attendance_overtime_validation" widget="radio"/>
                         </setting>
                     </block>

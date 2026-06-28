@@ -104,15 +104,30 @@ export function getValueFromVar(value) {
     return value;
 }
 
-/**
- * Converts a value to a ratio.
- *
- * @param {string} value
- */
-export function toRatio(value) {
-    const inputValueAsNumber = Number(value);
-    const ratio = inputValueAsNumber >= 0 ? 1 + inputValueAsNumber : 1 / (1 - inputValueAsNumber);
-    return `${ratio.toFixed(2)}x`;
+export function ratioValueConverter() {
+    /**
+     * Converts a value to a ratio.
+     *
+     * @param {string} value
+     */
+    const toRatio = (value) => {
+        const inputValueAsNumber = Number(value);
+        const ratio =
+            inputValueAsNumber >= 0 ? 1 + inputValueAsNumber : 1 / (1 - inputValueAsNumber);
+        return Number(ratio.toFixed(2)).toString();
+    };
+    /**
+     * Converts a ratio to a value.
+     *
+     * @param {string} ratio
+     */
+    const toValue = (ratio) => {
+        const ratioValue = Number(ratio);
+        const value = ratioValue >= 1 ? ratioValue - 1 : 1 - 1 / ratioValue;
+        return Number(value.toFixed(2)).toString();
+    };
+
+    return { toRatio, toValue, ratioStep: 0.1 };
 }
 
 /**

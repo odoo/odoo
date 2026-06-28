@@ -1,5 +1,4 @@
-import { reactive } from "@web/owl2/utils";
-import { markup } from "@odoo/owl";
+import { markup, proxy } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 
@@ -23,10 +22,7 @@ export class DiscussCoreCommon {
             this._handleNotificationChannelDelete(channel, metadata);
         });
         this.busService.subscribe("discuss.channel/new_message", (payload, metadata) => {
-            // Insert should always be done before any async operation. Indeed,
-            // awaiting before the insertion could lead to overwritting newer
-            // state coming from more recent `mail.record/insert` notifications.
-            this.store.insert(payload.data);
+            this.store.insert(payload.store_data);
             this._handleNotificationNewMessage(payload, metadata);
         });
         this.busService.subscribe("discuss.channel/transient_message", (payload) => {
@@ -63,16 +59,17 @@ export class DiscussCoreCommon {
     async _handleNotificationChannelDelete(channel, metadata) {
         await channel.closeChatWindow();
         channel.messages.splice(0, channel.messages.length);
+        this.env.bus.trigger("discuss.channel/delete", { channel });
         channel.delete();
     }
 
     async _handleNotificationNewMessage(payload, { id: notifId }) {
-        const { data, id: channelId, silent, temporary_id } = payload;
+        const { store_data, id: channelId, silent, temporary_id } = payload;
         const channel = await this.store["discuss.channel"].getOrFetch(channelId);
         if (!channel) {
             return;
         }
-        const message = this.store["mail.message"].get(data["mail.message"][0]);
+        const message = this.store["mail.message"].get(store_data["mail.message"][0]);
         if (!message) {
             return;
         }
@@ -133,7 +130,7 @@ export const discussCoreCommon = {
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {
-        const discussCoreCommon = reactive(new DiscussCoreCommon(env, services));
+        const discussCoreCommon = proxy(new DiscussCoreCommon(env, services));
         discussCoreCommon.setup(env, services);
         return discussCoreCommon;
     },

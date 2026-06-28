@@ -2,20 +2,64 @@
 
 import logging
 
+from psycopg2.extras import Json
+
 from odoo import api, fields, models, modules, tools
 from odoo.api import SUPERUSER_ID
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import BinaryBytes, file_open, html2plaintext, ormcache
+from odoo.tools import SQL, BinaryBytes, file_open, html2plaintext
 from odoo.tools.image import image_process
 from odoo.tools.sql import table_columns
 
 _logger = logging.getLogger(__name__)
 
 
+def company_default_for(fname, target_model, target_fname):
+    """Return the attributes needed to sync a company field with `ir.default` for company dependent fields."""
+    def _compute_from_ir_default(self):
+        model = self.env[target_model]
+        field = model._fields[target_fname]
+        for company in self:
+            default = field.get_company_dependent_fallback(model.with_company(company))
+            if field.type == 'many2one':
+                default = default.exists()
+            company[fname] = default
+
+    def _inverse_to_ir_default(self):
+        # guard against invalidation
+        company_defaults = {company: self._fields[fname].convert_to_cache(company[fname], company) for company in self}
+        for company in self:
+            self.env['ir.default'].with_user(SUPERUSER_ID).set(target_model, target_fname, company_defaults[company], company_id=company.id)
+
+    def _compute_sql_ir_default(self, table):
+        model = self.env[target_model]
+        field = model._fields[target_fname]
+        data = {}
+        for company_id in self.env['res.company'].sudo()._cached_data()['id']:
+            model = model.with_company(company_id)
+            data[company_id] = field.convert_to_column(field.convert_to_write(field.get_company_dependent_fallback(model), model), model)
+        default_sql = SQL("(%s::jsonb->>%s::text)::%s", Json(data), table.id, field.sql_column_type)
+        if field.type == 'many2one':
+            related_alias = table._make_alias(fname)
+            table._query.add_join('LEFT JOIN', related_alias, self.env[field.comodel_name]._table, SQL("%s = %s", default_sql, related_alias.id))
+            return related_alias.id
+        return default_sql
+
+    return {
+        'company_default_for': (fname, target_model, target_fname),
+        'compute': _compute_from_ir_default,
+        'inverse': _inverse_to_ir_default,
+        'compute_sql': _compute_sql_ir_default,
+        'compute_sudo': True,
+        'write_sequence': -10,  # inverse before other fields to apply the company default
+    }
+
+
 class ResCompany(models.CachedModel):
     _name = 'res.company'
     _description = 'Company'
+    _explanation = "Represents a legal entity within the Odoo database. Odoo supports multi-company environments where each company has its own settings, chart of accounts, and business data."
     _order = 'sequence, name'
     _inherit = ['format.address.mixin', 'format.vat.label.mixin']
     _parent_store = True
@@ -71,8 +115,8 @@ class ResCompany(models.CachedModel):
     phone = fields.Char(related='partner_id.phone', store=True, readonly=False)
     website = fields.Char(related='partner_id.website', readonly=False)
     vat = fields.Char(related='partner_id.vat', string="Tax ID", readonly=False)
-    company_registry = fields.Char(related='partner_id.company_registry', string="Company ID", readonly=False)
-    company_registry_placeholder = fields.Char(related='partner_id.company_registry_placeholder')
+    additional_identifiers = fields.Json(related='partner_id.additional_identifiers', readonly=False)
+    available_additional_identifiers_metadata = fields.Json(related='partner_id.available_additional_identifiers_metadata')
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
     external_report_layout_id = fields.Many2one('ir.ui.view', 'Document Template')
     report_tables_id = fields.Selection([
@@ -99,9 +143,11 @@ class ResCompany(models.CachedModel):
             paperformat_euro = self.env.ref('base.paperformat_euro', False)
             if paperformat_euro:
                 company.write({'paperformat_id': paperformat_euro.id})
-        sup = super()
-        if hasattr(sup, 'init'):
-            sup.init()
+        if any(hasattr(f, 'company_default_for') for f in self._fields.values()):
+            def init_company_defaults(env):
+                env['res.company'].with_context(active_test=False).search([])._init_company_defaults()
+            self.pool.post_init(init_company_defaults, self.env)
+        super().init()
 
     def _get_company_root_delegated_field_names(self):
         """Get the set of fields delegated to the root company.
@@ -236,12 +282,13 @@ class ResCompany(models.CachedModel):
             company.uninstalled_l10n_module_ids = self.env['ir.module.module'].browse(mapping.get(company.country_id.id))
 
     def install_l10n_modules(self):
+        self.env.flush_all()
         uninstalled_modules = self.uninstalled_l10n_module_ids
         is_ready_and_not_test = (
             not tools.config['test_enable']
             and self.env.registry.ready
             and not modules.module.current_test
-            and not self.env.context.get('install_mode')  # due to savepoint when importing the file
+            and not self.env.context.get('install_mode') and not self.env.context.get('import_file')  # due to savepoint when importing the file
         )
         if uninstalled_modules and is_ready_and_not_test:
             return uninstalled_modules.button_immediate_install()
@@ -328,6 +375,7 @@ class ResCompany(models.CachedModel):
         if companies_needs_l10n:
             companies_needs_l10n.install_l10n_modules()
 
+        companies._init_company_defaults()
         return companies
 
     def write(self, vals):
@@ -349,7 +397,7 @@ class ResCompany(models.CachedModel):
         if any(self._ids) and not self._clear_asset_cache_on_fields.isdisjoint(vals):
             # this is used in the content of an asset (see asset_styles_company_report)
             # and thus needs to invalidate the assets cache when this is changed
-            self.env.registry.clear_cache('assets')  # not 100% it is useful a test is missing if it is the case
+            self.env.transaction.invalidate_ormcache('assets')  # not 100% it is useful a test is missing if it is the case
 
         # Archiving a company should also archive all of its branches
         if vals.get('active') is False:
@@ -414,7 +462,7 @@ class ResCompany(models.CachedModel):
 
         return main_company
 
-    @ormcache('tuple(self.env.companies.ids)', 'self.id', 'self.env.uid')
+    @api.ormcache('frozenset(self.env.companies.ids)', 'self.id', 'self.env.uid')
     def __accessible_branches(self):
         # Get branches of this company that the current user can use
         self.ensure_one()
@@ -476,6 +524,19 @@ class ResCompany(models.CachedModel):
                 'company_ids': [(6, 0, [self.id])],
             })
 
-    @ormcache()
-    def _get_company_partner_ids(self):
-        return tuple(self.env['res.company'].sudo().with_context(active_test=False).search([]).partner_id.ids)
+    def _valid_field_parameter(self, field, name):
+        if name == 'company_default_for':
+            assert field.name == field.company_default_for[0], f"{field.company_default_for[0]} is not {field.name}"
+            return True
+        return super()._valid_field_parameter(field, name)
+
+    def _init_company_defaults(self):
+        """Write ir.default entries for company_default_for fields that declare a default."""
+        for fname, field in self._fields.items():
+            if not hasattr(field, 'company_default_for') or not field.default:
+                continue
+            fname, target_model, target_fname = field.company_default_for
+            for company in self:
+                existing = self.env['ir.default'].with_user(SUPERUSER_ID).with_company(company)._get_model_defaults(target_model).get(target_fname)
+                if existing is None:
+                    company[fname] = field.default(company)

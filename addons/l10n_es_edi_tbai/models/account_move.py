@@ -21,10 +21,10 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     l10n_es_tbai_state = fields.Selection([
-            ('to_send', 'To Send'),
-            ('sent', 'Sent'),
-            ('cancelled', 'Cancelled'),
-        ],
+        ('to_send', 'To Send'),
+        ('sent', 'Sent'),
+        ('cancelled', 'Cancelled'),
+    ],
         string='TicketBAI status',
         compute='_compute_l10n_es_tbai_state',
     )
@@ -75,12 +75,18 @@ class AccountMove(models.Model):
         "Valor Añadido. Artículo 80. Modificación de la base imponible.",
         copy=False,
     )
+    l10n_es_tbai_original_invoice_date = fields.Date(
+        string="Original Invoice Date (TicketBAI)",
+        copy=False,
+    )
     l10n_es_tbai_reversed_ids = fields.Many2many(
         'account.move', 'account_move_tbai_reversed_moves', 'refund_id', 'reversed_move_id',
         string="Refunded Vendor Bills",
         domain="[('move_type', '=', 'in_invoice'), ('commercial_partner_id', '=', commercial_partner_id)]",
         help="In the case where a vendor refund has multiple original invoices, you can set them here. ",
     )
+
+    l10n_es_original_invoice_credited = fields.Char(string='Original Invoice Credited', store=True)
 
     # -------------------------------------------------------------------------
     # API-DECORATED & EXTENDED METHODS
@@ -147,7 +153,6 @@ class AccountMove(models.Model):
         if self.company_id.l10n_es_tbai_tax_agency == 'bizkaia' and self.is_purchase_document() and not self.ref:
             return _("You need to fill in the Reference field as the invoice number from your vendor.")
 
-
     def _l10n_es_tbai_get_attachment_name(self, cancel=False):
         return self.name + ('_post.xml' if not cancel else '_cancel.xml')
 
@@ -170,7 +175,8 @@ class AccountMove(models.Model):
                 test_suffix=test_suffix,
                 message=message,
             ),
-            attachment_ids=[self.l10n_es_tbai_post_document_id.xml_attachment_id.id] if not cancel else [self.l10n_es_tbai_cancel_document_id.xml_attachment_id.id],
+            attachment_ids=[self.l10n_es_tbai_post_document_id.xml_attachment_id.id] if not cancel else [
+                self.l10n_es_tbai_cancel_document_id.xml_attachment_id.id],
         )
 
     def _l10n_es_tbai_lock_move(self):
@@ -203,6 +209,8 @@ class AccountMove(models.Model):
 
     def l10n_es_tbai_cancel(self):
         for invoice in self:
+            if invoice.inalterable_hash:
+                raise UserError(_('You cannot reset to draft a locked journal entry.'))
             invoice._l10n_es_tbai_lock_move()
 
             if invoice.l10n_es_tbai_cancel_document_id and invoice.l10n_es_tbai_cancel_document_id.state == 'rejected':
@@ -305,19 +313,21 @@ class AccountMove(models.Model):
             **self._l10n_es_tbai_get_credit_note_values(),
             'origin': self.invoice_origin and self.invoice_origin[:250] or 'manual',
             'taxes': taxes,
-            'rate':  abs(self.amount_total / self.amount_total_signed) if self.amount_total else 1,
+            'rate': abs(self.amount_total / self.amount_total_signed) if self.amount_total else 1,
             'base_lines': base_lines,
             'nosujeto_causa': 'IE' if is_oss else 'RL',
             **({'post_doc': self.l10n_es_tbai_post_document_id} if cancel else {}),
         }
 
     def _l10n_es_tbai_get_credit_note_values(self):
+        reversed_entry = self.reversed_entry_id
+        fallback_refunded_name = self.l10n_es_original_invoice_credited
         return {
             'is_refund': self.move_type == 'out_refund',
             'refund_reason': self.l10n_es_tbai_refund_reason,
-            'refunded_doc': self.reversed_entry_id.l10n_es_tbai_post_document_id,
-            'refunded_doc_invoice_date': self.reversed_entry_id.invoice_date if self.reversed_entry_id else False,
-            'refunded_name': self.reversed_entry_id.name if self.reversed_entry_id else False,
+            'refunded_doc': reversed_entry.l10n_es_tbai_post_document_id,
+            'refunded_doc_invoice_date': reversed_entry.invoice_date if reversed_entry else self.l10n_es_tbai_original_invoice_date,
+            'refunded_name': reversed_entry.name if reversed_entry else fallback_refunded_name,
         }
 
     def _l10n_es_tbai_get_vendor_bill_values_batuz(self):
@@ -326,7 +336,7 @@ class AccountMove(models.Model):
             'ref': self.ref,
             'is_refund': self.move_type == 'in_refund',
             'invoice_date': self.invoice_date,
-             **self._l10n_es_tbai_get_vendor_bill_tax_values(),
+            **self._l10n_es_tbai_get_vendor_bill_tax_values(),
         }
         # Check if intracom
         mod_303_10 = self.env.ref('l10n_es.mod_303_casilla_10_balance')._get_matching_tags()
@@ -337,7 +347,7 @@ class AccountMove(models.Model):
         if intracom:
             values['regime_key'] = ['09']
         elif reagyp:
-            values['regime_key'] = ['19']
+            values['regime_key'] = ['02']
         else:
             values['regime_key'] = ['01']
         # Credit notes (factura rectificativa)
@@ -385,3 +395,15 @@ class AccountMove(models.Model):
         if self.l10n_es_tbai_is_required:
             return True
         return super()._refunds_origin_required()
+
+    def action_post(self):
+        for move in self:
+            if (move.move_type in ('in_refund', 'out_refund')
+                and move.company_id.l10n_es_tbai_is_enabled
+                and not move.reversed_entry_id
+                and not move.l10n_es_tbai_reversed_ids
+                and not move.l10n_es_original_invoice_credited):
+                raise UserError(
+                    _("Please create the credit note from the original invoice. "
+                      "If that's not possible, fill in the 'Original Invoice Credited' field."))
+        return super().action_post()

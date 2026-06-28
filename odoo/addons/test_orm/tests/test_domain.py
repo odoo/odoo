@@ -1,6 +1,7 @@
 from datetime import date, datetime
 from freezegun import freeze_time
 from itertools import combinations
+from unittest.mock import patch
 
 from odoo.fields import Command, Domain
 from odoo.tests import tagged, TransactionCase, users
@@ -352,12 +353,12 @@ class TestDomainComplement(TransactionExpressionCase):
     def test_inequalities_float(self):
         Model = self.env['test_orm.mixed']
         Model.create([{}])
-        Model.create([{'number2': n} for n in (-5, -3.3, 0.0, 0.1, 3, 4.5)])
-        self._search(Model, [('number2', '>', 2)])
-        self._search(Model, [('number2', '>', -2)])
-        self._search(Model, [('number2', '>', 3)])
-        self._search(Model, [('number2', '<', 1)])
-        self._search(Model, [('number2', '<=', 1)])
+        Model.create([{'float_precision': n} for n in (-5, -3.3, 0.0, 0.1, 3, 4.5)])
+        self._search(Model, [('float_precision', '>', 2)])
+        self._search(Model, [('float_precision', '>', -2)])
+        self._search(Model, [('float_precision', '>', 3)])
+        self._search(Model, [('float_precision', '<', 1)])
+        self._search(Model, [('float_precision', '<=', 1)])
 
     def test_inequalities_char(self):
         Model = self.env['test_orm.empty_char']
@@ -397,7 +398,7 @@ class TestDomainComplement(TransactionExpressionCase):
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDomainOptimize(TransactionCase):
-    number_domain = Domain('number', '>', 5)
+    number_domain = Domain('numeric', '>', 5)
 
     def test_bool_optimize(self):
         model = self.env['test_orm.mixed']
@@ -416,6 +417,36 @@ class TestDomainOptimize(TransactionCase):
 
         self.assertEqual(Domain('a', 'in', Domain.TRUE).operator, 'in')
         self.assertIsInstance(Domain('a', 'any', [('x', '>', 1)]).value, list)
+
+    def test_condition_methods(self):
+        dom = Domain.TRUE
+        conditions = list(dom.iter_conditions())
+        self.assertEqual(len(conditions), 0)
+        self.assertFalse(dom.is_condition())
+
+        dom = Domain('a', '>=', 1)
+        conditions = list(dom.iter_conditions())
+        self.assertEqual(len(conditions), 1)
+        self.assertIs(conditions[0], dom)
+        self.assertTrue(dom.is_condition())
+        self.assertTrue(dom.is_condition('a', '>='))
+        self.assertTrue(dom.is_condition(operator=('>=', 'in')))
+        self.assertTrue(dom.is_condition(value=int))
+        self.assertTrue(dom.is_condition(value=(int, float)))
+        self.assertFalse(dom.is_condition('b', '>='))
+        self.assertFalse(dom.is_condition(operator='='))
+        self.assertFalse(dom.is_condition(value=str))
+
+        dom = dom & Domain('b', '=', 1)
+        conditions = list(dom.iter_conditions())
+        self.assertEqual(len(conditions), 2)
+        self.assertFalse(dom.is_condition())
+        self.assertTrue(all(c.is_condition() for c in dom.iter_conditions()))
+
+        dom = Domain.custom(to_sql=lambda table: SQL(''))
+        conditions = list(dom.iter_conditions())
+        self.assertEqual(len(conditions), 0)
+        self.assertFalse(dom.is_condition())
 
     def test_condition_optimize_optimal(self):
         model = self.env['test_orm.mixed']
@@ -495,7 +526,7 @@ class TestDomainOptimize(TransactionCase):
 
     def test_condition_optimize_any_non_relational(self):
         model = self.env['test_orm.mixed']
-        domain = Domain('number', 'any', Domain('id', '>', 0))
+        domain = Domain('numeric', 'any', Domain('id', '>', 0))
         with self.assertRaises(ValueError):
             domain.optimize(model)
 
@@ -584,6 +615,12 @@ class TestDomainOptimize(TransactionCase):
             Domain('active', 'in', [True, False]).optimize_full(model),
             Domain.TRUE,
         )
+        with patch.object(model.__class__, '_search_has_important_sibling') as sib:
+            self.assertEqual(
+                Domain('has_important_sibling', 'in', [True, False]).optimize_full(model),
+                Domain.TRUE,
+            )
+            sib.assert_not_called()
 
     def test_condition_optimize_date(self):
         model = self.env['test_orm.mixed']
@@ -691,7 +728,7 @@ class TestDomainOptimize(TransactionCase):
         self.assertEqual(
             Domain('moment', '>=', '2024-01-01 10:00:00').optimize(model),
             Domain('moment', '>=', datetime(2024, 1, 1, 10)),
-            "Timezone should have no effect on datetime"
+            "Timezone should have no effect on moment"
         )
         self.assertEqual(
             Domain('moment', '>=', '2024-07-02').optimize(model),
@@ -735,14 +772,44 @@ class TestDomainOptimize(TransactionCase):
             Domain('moment', '>=', datetime(2024, 1, 5, 11, 6, 2)),
         )
 
+    def test_condition_optimize_selection(self):
+        model = self.env['test_orm.selection']
+        # no change for 'in'
+        self.assertEqual(
+            Domain('state', 'in', ['foo']).optimize_dynamic(model),
+            Domain('state', 'in', OrderedSet(['foo'])),
+        )
+        self.assertEqual(
+            Domain('state', 'in', ['foo', False]).optimize_dynamic(model),
+            Domain('state', 'in', OrderedSet(['foo', False])),
+        )
+        self.assertEqual(
+            Domain('state', 'in', [False]).optimize_dynamic(model),
+            Domain('state', 'in', OrderedSet([False])),
+        )
+        # 'not in' becomes 'in'
+        self.assertEqual(
+            Domain('state', 'not in', ['foo']).optimize_dynamic(model),
+            Domain('state', 'in', OrderedSet(['bar', False])),
+        )
+        self.assertEqual(
+            Domain('state', 'not in', ['foo', False]).optimize_dynamic(model),
+            Domain('state', 'in', OrderedSet(['bar'])),
+        )
+        # this one remains as is, and is translated to SQL "state IS NOT NULL"
+        self.assertEqual(
+            Domain('state', 'not in', [False]).optimize_dynamic(model),
+            Domain('state', 'not in', OrderedSet([False])),
+        )
+
     def test_condition_optimize_maybe_eq(self):
         model = self.env['test_orm.mixed']
         self.assertEqual(
-            Domain('number', '=?', 5).optimize(model),
-            Domain('number', '=', 5).optimize(model),
+            Domain('numeric', '=?', 5).optimize(model),
+            Domain('numeric', '=', 5).optimize(model),
         )
         self.assertEqual(
-            Domain('number', '=?', 0).optimize(model),
+            Domain('numeric', '=?', 0).optimize(model),
             Domain.TRUE,
         )
 
@@ -758,6 +825,113 @@ class TestDomainOptimize(TransactionCase):
             Domain('id', 'parent_of', categ_child.ids).optimize_full(model),
             Domain('id', 'in', OrderedSet([categ_child.id, categ.id])),
         )
+
+    def test_condition_optimize_access(self):
+        model = self.env['test_orm.mixed']
+        records = model.create([
+            {'numeric': 11},
+            {'numeric': 22},
+            {'numeric': 23, 'currency_id': self.env.ref('base.USD').id},
+        ])
+        user_group = self.ref('base.group_user')
+        elevated_group = self.ref('base.group_allow_export')
+        internal_user, elevated_user, portal_user = self.env['res.users'].create([{
+            'name': 'test internal user',
+            'login': 'test_user',
+            'group_ids': [(6, 0, [user_group])],
+        }, {
+            'name': 'test elevated user',
+            'login': 'test_user_more',
+            'group_ids': [(6, 0, [user_group, elevated_group])],
+        }, {
+            'name': 'test poral user',
+            'login': 'test_portal',
+            'group_ids': [(6, 0, [self.ref('base.group_portal')])],
+        }])
+        self.env['ir.access'].search(
+            [('model_id.name', 'in', [model._name, 'res.currency'])],
+        ).unlink()
+        self.env['ir.access'].create([{
+            'name': f"{model._name} user group",
+            'model_id': self.env['ir.model']._get_id(model._name),
+            'group_id': user_group,
+            'operation': 'crud',
+            'domain': str([('numeric', '>', 20)]),
+        }, {
+            'name': f"{model._name} elevated group",
+            'model_id': self.env['ir.model']._get_id(model._name),
+            'group_id': elevated_group,
+            'operation': 'crud',
+            'domain': str([]),
+        }, {
+            'name': 'res.currency user read',
+            'model_id': self.env['ir.model']._get_id('res.currency'),
+            'group_id': user_group,
+            'operation': 'r',
+        }, {
+            'name': 'res.currency user update',
+            'model_id': self.env['ir.model']._get_id('res.currency'),
+            'group_id': user_group,
+            'domain': str([('name', '=', 'EUR')]),
+            'operation': 'u',
+        }, {
+            'name': 'res.currency elevated read',
+            'model_id': self.env['ir.model']._get_id('res.currency'),
+            'group_id': elevated_group,
+            'operation': 'r',
+        }, {
+            'name': 'res.currency elevated updates',
+            'model_id': self.env['ir.model']._get_id('res.currency'),
+            'group_id': elevated_group,
+            'domain': str([('name', 'in', ['EUR', 'USD'])]),
+            'operation': 'cud',
+        }])
+
+        with self.assertRaises(ValueError):
+            # operator cannot be used with x2many
+            Domain('messages', 'access', 'read').optimize_dynamic(self.env['test_orm.discussion'])
+
+        for user in (internal_user, elevated_user, portal_user):
+            for su in (False, True):
+                with self.subTest("", user=user.display_name, su=su):
+                    env = self.env(user=user, su=su)
+                    self._test_condition_optimize_access(records.with_env(env))
+
+        self.assertEqual(
+            Domain('currency_id', 'access', 'read').optimize_dynamic(model),
+            Domain('currency_id', '!=', False).optimize_dynamic(model),
+        )
+
+    def _test_condition_optimize_access(self, records):
+        model = records.browse()
+        domain = Domain('id', 'access', 'read')
+        self.assertEqual(domain.optimize(model), domain)
+        domain_custom = domain.optimize_dynamic(model)
+        self.assertEqual(records.filtered_domain(domain_custom), records.sudo(False)._filtered_access('read'))
+
+        domain_full = domain_custom.optimize_full(model)
+        if model.sudo(False).has_access('read'):
+            access_rule = model.sudo(False)._access_domain('read').optimize_full(model)
+        else:
+            access_rule = Domain.FALSE
+        self.assertEqual(domain_full, access_rule)
+
+        domain = Domain('currency_id', 'access', 'write')
+        self.assertLessEqual(records.filtered_domain(domain), records.sudo().filtered('currency_id'), "Cannot return records without a currency")
+
+        domain_full = domain.optimize_full(model)
+        currency_model = model.env['res.currency']
+        if currency_model.sudo(False).has_access('write'):
+            comodel_rule = currency_model.sudo(False)._access_domain('write')
+            access_rule = Domain('currency_id', 'any!', comodel_rule).optimize_full(model)
+        else:
+            access_rule = Domain.FALSE
+        self.assertEqual(domain_full, access_rule)
+
+        with self.assertRaises(ValueError):
+            Domain('number', 'access', 'read').optimize_dynamic(model)
+        with self.assertRaises(ValueError):
+            Domain('currency_id', 'access', 'blabla').optimize_dynamic(model)
 
     def test_not_optimize(self):
         # optimizations are tested with nary
@@ -796,18 +970,18 @@ class TestDomainOptimize(TransactionCase):
         model = self.env['test_orm.mixed']
         self.assertEqual(
             Domain.AND([
-                Domain('number', '=', 5),
+                Domain('numeric', '=', 5),
                 Domain('date', 'like', "2024"),
                 Domain('date', '!=', False),
-                Domain('number', '<', 99),
-                Domain('comment1', 'like', 'ok'),
+                Domain('numeric', '<', 99),
+                Domain('html', 'like', 'ok'),
             ]).optimize(model),
             Domain.AND([
-                Domain('comment1', 'like', 'ok'),
                 Domain('date', 'not in', OrderedSet([False])),
                 Domain('date', 'like', "2024"),
-                Domain('number', 'in', OrderedSet([5])),
-                Domain('number', '<', 99),
+                Domain('html', 'like', 'ok'),
+                Domain('numeric', 'in', OrderedSet([5])),
+                Domain('numeric', '<', 99),
             ]),
             "Optimization sorts by field and operator",
         )
@@ -818,7 +992,7 @@ class TestDomainOptimize(TransactionCase):
         def domain(op, values):
             if not values:
                 return Domain.FALSE if op == 'in' else Domain.TRUE
-            return Domain('number', op, values)
+            return Domain('numeric', op, values)
 
         set123 = OrderedSet([1, 2, 3])
         set345 = OrderedSet([3, 4, 5])
@@ -870,7 +1044,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
         self.assertIsInstance(
-            (Domain('number', 'in', [1]) | Domain('number', 'in', [2])).optimize(model).value,
+            (Domain('numeric', 'in', [1]) | Domain('numeric', 'in', [2])).optimize(model).value,
             OrderedSet, "Check we can optimize something else than OrderedSet",
         )
 
@@ -994,3 +1168,58 @@ class TestDomainOptimize(TransactionCase):
             list(base_domain.optimize_full(model.sudo())),
             [('currency_id', 'not in', [2, False])],
         )
+
+    def subset_condition_optimize_properties_date(self, date_type='date'):
+        message_model = self.env['test_orm.message'].with_context(tz='UTC')
+        discussion_model = self.env['test_orm.discussion'].with_context(tz='UTC')
+
+        is_dt = date_type == 'datetime'
+        hour_str = ' 13:05:34' if is_dt else ''
+        discussion = self.env['test_orm.discussion'].create({
+            'name': 'Test Discussion',
+            'participants': [Command.link(self.env.user.id)],
+            'attributes_definition': [{
+                'name': 'mydate',
+                'string': 'Prop',
+                'type': date_type,
+            }],
+        })
+
+        message_model.create({
+            'discussion': discussion.id,
+            'name': 'Test Message',
+            'attributes': {
+                'mydate': f'2077-05-02{hour_str}',
+            },
+        })
+
+        with freeze_time(f'2027-05-02{hour_str}'):
+            self.assertEqual(
+                Domain('attributes.mydate', '=', '+50y').optimize_full(message_model),
+                Domain('attributes.mydate', 'in', OrderedSet([f'2077-05-02{hour_str}'])),
+            )
+
+            self.assertEqual(
+                Domain(
+                    'messages',
+                    'any',
+                    Domain.AND([
+                        Domain('attributes.mydate', '>=', 'today'),
+                        Domain('attributes.mydate', '<', '+60y'),
+                    ]),
+                ).optimize_full(discussion_model),
+                Domain(
+                    'messages',
+                    'any!',
+                    Domain.AND([
+                        Domain('attributes.mydate', '<', f'2087-05-02{hour_str}'),
+                        Domain('attributes.mydate', '>=', f"2027-05-02{' 00:00:00' if is_dt else ''}"),
+                    ]),
+                ),
+            )
+
+    def test_condition_optimize_properties_date(self):
+        self.subset_condition_optimize_properties_date("date")
+
+    def test_condition_optimize_properties_datetime(self):
+        self.subset_condition_optimize_properties_date("datetime")

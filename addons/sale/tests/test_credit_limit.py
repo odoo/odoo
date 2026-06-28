@@ -356,3 +356,40 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         company_a.invalidate_recordset()
         self.assertFalse(company_a.credit_to_invoice)
         self.assertEqual(company_a.credit, 1200.0)
+
+    def test_credit_limit_ignores_invoicing_closed_sale_orders(self):
+        """
+        Ensure sale orders with closed invoicing are excluded from the partner's
+        'credit_to_invoice' and no longer trigger credit warnings.
+
+        Use case: a delivered product is reimbursed without return. Closing the
+        invoicing should clear the partner's credit_to_invoice.
+        """
+        self.env.company.account_use_credit_limit = True
+        self.partner_a.credit_limit = 3000.0
+
+        self.empty_order.write({
+            "order_line": [
+                Command.create({
+                    "product_id": self.company_data["product_order_no"].id,
+                    "price_unit": 2000.0,
+                })
+            ]
+        })
+        self.empty_order.action_confirm()
+        sale_orders = self.empty_order + self.empty_order.copy()
+
+        self.assertRecordValues(self.partner_a, [{"credit": 0.0, "credit_to_invoice": 2000.0}])
+
+        self.assertEqual(
+            sale_orders[1].partner_credit_warning,
+            "partner_a has reached its credit limit of: $\xa03,000.00\n"
+            "Total amount due (including sales orders and this document): $\xa04,000.00",
+        )
+
+        sale_orders[0].action_close_invoicing()
+        self.partner_a.invalidate_recordset(["credit", "credit_to_invoice"])
+        self.assertRecordValues(self.partner_a, [{"credit": 0.0, "credit_to_invoice": 0.0}])
+
+        sale_orders[1].invalidate_recordset(["partner_credit_warning"])
+        self.assertFalse(sale_orders[1].partner_credit_warning)

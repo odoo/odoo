@@ -1,18 +1,20 @@
 from contextlib import closing
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.addons.account.models.company import SOFT_LOCK_DATE_FIELDS
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.mail.tests.common import MailCase
 from odoo.exceptions import UserError
 from odoo.tests import new_test_user, tagged
+from odoo.tools.misc import format_datetime
 
 
 @tagged('post_install', '-at_install')
-class TestAccountLockException(AccountTestInvoicingCommon):
+class TestAccountLockException(AccountTestInvoicingCommon, MailCase):
 
     @classmethod
     def setUpClass(cls):
@@ -346,32 +348,49 @@ class TestAccountLockException(AccountTestInvoicingCommon):
         for lock_date_field, move_type in self.soft_lock_date_info:
             with self.subTest(lock_date_field=lock_date_field, move_type=move_type), closing(self.cr.savepoint()):
                 self.company[lock_date_field] = fields.Date.to_date('2020-01-01')
+                self.env.cr.flush()
 
                 revoked_exception = self.env['account.lock_exception'].create({
                     'company_id': self.company.id,
                     'user_id': self.env.user.id,
-                    lock_date_field: fields.Date.to_date('2010-01-01'),
+                    lock_date_field: fields.Date.to_date('2010-03-01'),
                     'end_datetime': self.fakenow + timedelta(hours=24),
                     'reason': 'test_exception_recreated_on_lock_date_change revoked',
                 })
                 revoked_exception.action_revoke()
-                active_exception = self.env['account.lock_exception'].create({
-                    'company_id': self.company.id,
-                    'user_id': self.env.user.id,
-                    lock_date_field: fields.Date.to_date('2010-01-01'),
-                    'end_datetime': self.fakenow + timedelta(hours=24),
-                    'reason': 'test_exception_recreated_on_lock_date_change active',
+                with self.mock_mail_gateway(), self.mock_mail_app():
+                    active_exception = self.env['account.lock_exception'].create({
+                        'company_id': self.company.id,
+                        'user_id': self.env.user.id,
+                        lock_date_field: fields.Date.to_date('2010-03-01'),
+                        'end_datetime': self.fakenow + timedelta(hours=24),
+                        'reason': 'test_exception_recreated_on_lock_date_change active',
+                    })
+                    self.env.cr.flush()
+                self.assertEqual(len(self._new_msgs), 1, 'Should have generated one tracking message')
+                self.assertMessageFields(self._new_msgs, {
+                    'author_id': self.env.user.partner_id,
+                    'body': f'<a href="#" data-oe-model="{active_exception._name}" data-oe-id="{active_exception.id}">'
+                            f'Exception</a> for {self.env.user.name} valid until {format_datetime(self.env, self.fakenow + timedelta(hours=24))} for \'{active_exception.reason}\'.',
+                    'message_type': 'tracking',
+                    'model': self.env.company._name,
+                    'res_id': self.env.company.id,
+                    'subtype_id': self.env.ref('mail.mt_note'),
+                    'tracking_values': [(lock_date_field, 'date', datetime(2020, 1, 1, 0, 0, 0), datetime(2010, 3, 1, 0, 0, 0))],
                 })
 
                 # Check that the company lock date field was set correcyly on exception creation
+                self.assertEqual(self.company[lock_date_field], fields.Date.to_date('2020-01-01'))
                 self.assertEqual(revoked_exception.company_lock_date, fields.Date.to_date('2020-01-01'))
                 self.assertEqual(active_exception.company_lock_date, fields.Date.to_date('2020-01-01'))
 
-                # The lock date change should trigger the "recreation" proces
-                self.company[lock_date_field] = fields.Date.to_date('2021-01-01')
+                # The lock date change should trigger the "recreation" process
+                with self.mock_mail_gateway(), self.mock_mail_app():
+                    self.company[lock_date_field] = fields.Date.to_date('2021-01-01')
+                    self.env.cr.flush()
 
                 self.assertEqual(revoked_exception.company_lock_date, fields.Date.to_date('2020-01-01'))
-
+                self.assertEqual(self.company[lock_date_field], fields.Date.to_date('2021-01-01'))
                 self.assertEqual(active_exception.state, 'revoked')
 
                 exceptions = self.env['account.lock_exception'].with_context(active_test=False).search([])
@@ -381,12 +400,22 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                 self.assertRecordValues(new_exception, [{
                     'company_id': self.company.id,
                     'user_id': self.env.user.id,
-                    lock_date_field: fields.Date.to_date('2010-01-01'),
+                    lock_date_field: fields.Date.to_date('2010-03-01'),
                     'company_lock_date': fields.Date.to_date('2021-01-01'),
                     'end_datetime': self.env.cr.now() + timedelta(hours=24),
                     'reason': 'test_exception_recreated_on_lock_date_change active',
                 }])
-
+                self.assertEqual(len(self._new_msgs), 1, 'Should have generated one tracking message')
+                self.assertMessageFields(self._new_msgs, {
+                    'author_id': self.env.user.partner_id,
+                    'body': f'<a href="#" data-oe-model="{new_exception._name}" data-oe-id="{new_exception.id}">'
+                            f'Exception</a> for {self.env.user.name} valid until {format_datetime(self.env, self.fakenow + timedelta(hours=24))} for \'{new_exception.reason}\'.',
+                    'message_type': 'tracking',
+                    'model': self.env.company._name,
+                    'res_id': self.env.company.id,
+                    'subtype_id': self.env.ref('mail.mt_note'),
+                    'tracking_values': [(lock_date_field, 'date', datetime(2020, 1, 1, 0, 0, 0), datetime(2010, 3, 1, 0, 0, 0))],
+                })
 
     def test_user_exception_remove_lock_date(self):
         """

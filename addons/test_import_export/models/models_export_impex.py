@@ -1,41 +1,5 @@
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-
-
-def selection_fn(self):
-    return [(str(key), val) for key, val in enumerate([_("Corge"), _("Grault"), _("Wheee"), _("Moog")])]
-
-
-def compute_fn(records):
-    for record in records:
-        record.value = 3
-
-
-def inverse_fn(records):
-    pass
-
-
-MODELS = [
-    ('boolean', fields.Boolean()),
-    ('integer', fields.Integer(default=4)),
-    ('float', fields.Float()),
-    ('decimal', fields.Float(digits=(16, 3))),
-    ('string.bounded', fields.Char(size=16)),
-    ('string.required', fields.Char(size=None, required=True)),
-    ('string', fields.Char(size=None)),
-    ('date', fields.Date()),
-    ('datetime', fields.Datetime()),
-    ('text', fields.Text()),
-    ('selection', fields.Selection([('1', "Foo"), ('2', "Bar"), ('3', "Qux"), ('4', '')])),
-    ('selection.function', fields.Selection(selection_fn)),
-    # just relate to an integer
-    ('many2one', fields.Many2one('export.integer')),
-    ('one2many', fields.One2many('export.one2many.child', 'parent_id')),
-    ('many2many', fields.Many2many('export.many2many.other')),
-    ('function', fields.Integer(compute=compute_fn, inverse=inverse_fn)),
-    # related: specialization of fields.function, should work the same way
-    ('reference', fields.Reference([('export.integer', 'integer')], 'export.reference')),
-]
 
 
 def generic_compute_display_name(self):
@@ -58,17 +22,181 @@ def generic_search_display_name(self, operator, value):
     return [('value', 'in', ids)]
 
 
-for name, field in MODELS:
+#
+# The classes below inherit from this model and override the field 'value'.
+#
+class ExportGeneric(models.AbstractModel):
+    _name = 'export.generic'
+    _description = 'Export: generic'
+    _rec_name = 'value'
 
-    class NewModel(models.Model):
-        _name = f'export.{name}'
-        _description = f'Export: {name}'
-        _rec_name = 'value'
-        const = fields.Integer(default=4)
-        value = field
+    const = fields.Integer(default=4)
+    value = fields.Boolean()
 
-        _compute_display_name = generic_compute_display_name
-        _search_display_name = generic_search_display_name
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = f"{self._name}:{record.value}"
+
+    def _search_display_name(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        ids = [
+            int(id_str)
+            for v in value
+            if isinstance(v, str)
+            and (parts := v.split(':'))
+            and len(parts) == 2
+            and parts[0] == self._name
+            and (id_str := parts[1]).isdigit()
+        ]
+        return [('value', 'in', ids)]
+
+
+class ExportBoolean(models.Model):
+    _name = 'export.boolean'
+    _description = 'Export: boolean'
+    _inherit = ['export.generic']
+
+    value = fields.Boolean()
+
+
+class ExportInteger(models.Model):
+    _name = 'export.integer'
+    _description = 'Export: integer'
+    _inherit = ['export.generic']
+
+    value = fields.Integer(default=4)
+
+
+class ExportFloat(models.Model):
+    _name = 'export.float'
+    _description = 'Export: float'
+    _inherit = ['export.generic']
+
+    value = fields.Float()
+
+
+class ExportDecimal(models.Model):
+    _name = 'export.decimal'
+    _description = 'Export: decimal'
+    _inherit = ['export.generic']
+
+    value = fields.Float(digits=(16, 3))
+
+
+class ExportStringBounded(models.Model):
+    _name = 'export.string.bounded'
+    _description = 'Export: string.bounded'
+    _inherit = ['export.generic']
+
+    value = fields.Char(size=16)
+
+
+class ExportStringRequired(models.Model):
+    _name = 'export.string.required'
+    _description = 'Export: string.required'
+    _inherit = ['export.generic']
+
+    value = fields.Char(size=None, required=True)
+
+
+class ExportString(models.Model):
+    _name = 'export.string'
+    _description = 'Export: string'
+    _inherit = ['export.generic']
+
+    value = fields.Char(size=None)
+
+
+class ExportDate(models.Model):
+    _name = 'export.date'
+    _description = 'Export: date'
+    _inherit = ['export.generic']
+
+    value = fields.Date()
+
+
+class ExportDatetime(models.Model):
+    _name = 'export.datetime'
+    _description = 'Export: datetime'
+    _inherit = ['export.generic']
+
+    value = fields.Datetime()
+
+
+class ExportText(models.Model):
+    _name = 'export.text'
+    _description = 'Export: text'
+    _inherit = ['export.generic']
+
+    value = fields.Text()
+
+
+class ExportSelection(models.Model):
+    _name = 'export.selection'
+    _description = 'Export: selection'
+    _inherit = ['export.generic']
+
+    value = fields.Selection([('1', "Foo"), ('2', "Bar"), ('3', "Qux"), ('4', '')])
+
+
+class ExportSelectionFunction(models.Model):
+    _name = 'export.selection.function'
+    _description = 'Export: selection.function'
+    _inherit = ['export.generic']
+
+    def selection_fn(self):
+        return [(str(key), val) for key, val in enumerate([_("Corge"), _("Grault"), _("Wheee"), _("Moog")])]
+
+    value = fields.Selection(selection_fn)
+
+
+class ExportMany2one(models.Model):
+    _name = 'export.many2one'
+    _description = 'Export: many2one'
+    _inherit = ['export.generic']
+
+    # just relate to an integer
+    value = fields.Many2one('export.integer')
+
+
+class ExportOne2many(models.Model):
+    _name = 'export.one2many'
+    _description = 'Export: one2many'
+    _inherit = ['export.generic']
+
+    value = fields.One2many('export.one2many.child', 'parent_id')
+
+
+class ExportMany2many(models.Model):
+    _name = 'export.many2many'
+    _description = 'Export: many2many'
+    _inherit = ['export.generic']
+
+    value = fields.Many2many('export.many2many.other')
+
+
+class ExportFunction(models.Model):
+    _name = 'export.function'
+    _description = 'Export: function'
+    _inherit = ['export.generic']
+
+    value = fields.Integer(compute='_compute_value', inverse='_inverse_value')
+
+    def _compute_value(records):
+        for record in records:
+            record.value = 3
+
+    def _inverse_value(records):
+        pass
+
+
+class ExportReference(models.Model):
+    _name = 'export.reference'
+    _description = 'Export: reference'
+    _inherit = ['export.generic']
+
+    value = fields.Reference([('export.integer', 'integer')], 'export.reference')
 
 
 class ExportOne2manyChild(models.Model):

@@ -1,12 +1,6 @@
-import {
-    onRendered,
-    useComponent,
-    useLayoutEffect,
-    useRef,
-    useState,
-    useSubEnv,
-} from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
@@ -35,12 +29,24 @@ import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_men
 import { ButtonBox } from "./button_box/button_box";
 import { FormCompiler } from "./form_compiler";
 import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
-import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
+import {
+    FormStatusIndicator,
+    useStatusIndicator,
+} from "./form_status_indicator/form_status_indicator";
 import { FormCogMenu } from "./form_cog_menu/form_cog_menu";
 
-import { Component, onError, onMounted, onWillUnmount, status } from "@odoo/owl";
+import {
+    Component,
+    effect,
+    onError,
+    onMounted,
+    onWillDestroy,
+    onWillUnmount,
+    props,
+    proxy,
+    t,
+} from "@odoo/owl";
 import { FetchRecordError } from "@web/model/relational_model/errors";
-import { effect } from "@web/core/utils/reactive";
 
 const viewRegistry = registry.category("views");
 
@@ -117,6 +123,26 @@ export function useFormViewInDialog() {
 }
 // -----------------------------------------------------------------------------
 
+export const formControllerProps = {
+    ...standardViewProps,
+    discardRecord: t.function().optional(),
+    readonly: t.boolean().optional(false),
+    saveRecord: t.function().optional(),
+    removeRecord: t.function().optional(),
+    Model: t.function(),
+    Renderer: t.function(),
+    Compiler: t.function(),
+    archInfo: t.object(),
+    buttonTemplate: t.string(),
+    buttonDialogTemplate: t.string(),
+    preventCreate: t.boolean().optional(false),
+    preventEdit: t.boolean().optional(false),
+    onDiscard: t.function().optional(),
+    onSave: t.function().optional(() => () => {}),
+    offlineId: t.string().optional(),
+    updateActionState: t.function().optional(() => () => {}),
+};
+
 export class FormController extends Component {
     static template = `web.FormView`;
     static components = {
@@ -129,30 +155,7 @@ export class FormController extends Component {
         Widget,
     };
 
-    static props = {
-        ...standardViewProps,
-        discardRecord: { type: Function, optional: true },
-        readonly: { type: Boolean, optional: true },
-        saveRecord: { type: Function, optional: true },
-        removeRecord: { type: Function, optional: true },
-        Model: Function,
-        Renderer: Function,
-        Compiler: Function,
-        archInfo: Object,
-        buttonTemplate: String,
-        buttonDialogTemplate: String,
-        preventCreate: { type: Boolean, optional: true },
-        preventEdit: { type: Boolean, optional: true },
-        onDiscard: { type: Function, optional: true },
-        onSave: { type: Function, optional: true },
-        offlineId: { type: String, optional: true },
-    };
-    static defaultProps = {
-        preventCreate: false,
-        preventEdit: false,
-        readonly: false,
-        updateActionState: () => {},
-    };
+    props = props(formControllerProps);
 
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;
@@ -210,23 +213,21 @@ export class FormController extends Component {
             this.model.config.activeFields = activeFields;
             this.model.config.fields = fields;
         };
-        this.model = useState(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
+        this.model = proxy(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
         useSubEnv({ model: this.model });
+
+        let disposeEffect = () => {};
         onMounted(() => {
-            effect(
-                (model) => {
-                    if (status(this) === "mounted") {
-                        this.props.updateActionState({ resId: model.root.resId });
-                    }
-                },
-                [this.model]
-            );
+            disposeEffect = effect(() => {
+                this.props.updateActionState({ resId: this.model.root.resId });
+            });
         });
+        onWillDestroy(disposeEffect);
 
         onError((error) => {
-            const suggestedCompany = error.cause?.data?.context?.suggested_company;
+            const suggestedCompany = error.data?.context?.suggested_company;
             if (
-                error.cause?.data?.name === "odoo.exceptions.AccessError" &&
+                error.data?.name === "odoo.exceptions.AccessError" &&
                 suggestedCompany &&
                 !this.env.inDialog
             ) {
@@ -310,10 +311,6 @@ export class FormController extends Component {
             }
         });
 
-        onRendered(() => {
-            this.env.config.setDisplayName(this.displayName());
-        });
-
         const { disableAutofocus } = this.archInfo;
         if (!disableAutofocus) {
             useLayoutEffect(
@@ -342,8 +339,14 @@ export class FormController extends Component {
 
         this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
 
-        this.propertiesState = useState({
+        this.propertiesState = proxy({
             editable: false,
+        });
+        useSubEnv({ propertiesState: this.propertiesState });
+
+        this.statusIndicator = useStatusIndicator(this.model, {
+            save: () => this.saveButtonClicked(),
+            discard: () => this.discard(),
         });
     }
 
@@ -385,6 +388,7 @@ export class FormController extends Component {
                 onRecordSaved: this.onRecordSaved.bind(this),
                 onWillDisplayOnchangeWarning: this.onWillDisplayOnchangeWarning.bind(this),
                 onRootLoaded: this.onRootLoaded.bind(this),
+                onRootUpdated: this.onRootUpdated.bind(this),
             },
             useSendBeaconToSaveUrgently: true,
         };
@@ -397,10 +401,20 @@ export class FormController extends Component {
      */
     onWillLoadRoot() {
         this.duplicateId = undefined;
+        if (this.propertiesState.editable) {
+            // Reset properties edit mode
+            this.propertiesState.editable = false;
+            this.model.bus.trigger("PROPERTY_FIELD:EDIT", { editable: false });
+        }
     }
 
-    onRootLoaded() {
-        return this.model.root.setOfflineChanges(this.props.offlineId);
+    async onRootLoaded() {
+        await this.model.root.setOfflineChanges(this.props.offlineId);
+        this.env.config.setDisplayName(this.displayName());
+    }
+
+    onRootUpdated() {
+        this.env.config.setDisplayName(this.displayName());
     }
 
     onRecordChanged() {
@@ -503,6 +517,7 @@ export class FormController extends Component {
             } else {
                 await this.model.load({ resId: resIds[offset] });
             }
+            this.env.config.setDisplayName(this.displayName());
         } catch (e) {
             if (e instanceof FetchRecordError) {
                 this.model.load({
@@ -545,6 +560,9 @@ export class FormController extends Component {
     }
 
     async beforeUnload(ev) {
+        if (!this.model.root) {
+            return;
+        }
         const succeeded = await this.model.root.urgentSave();
         if (!succeeded) {
             ev.preventDefault();
@@ -578,6 +596,7 @@ export class FormController extends Component {
             },
             archive: {
                 isAvailable: () => this.archiveEnabled && this.model.root.isActive,
+                availableOffline: true,
                 sequence: 40,
                 description: _t("Archive"),
                 icon: "oi oi-archive",
@@ -587,6 +606,7 @@ export class FormController extends Component {
             },
             unarchive: {
                 isAvailable: () => this.archiveEnabled && !this.model.root.isActive,
+                availableOffline: true,
                 sequence: 45,
                 icon: "oi oi-unarchive",
                 description: _t("Unarchive"),
@@ -594,6 +614,7 @@ export class FormController extends Component {
             },
             delete: {
                 isAvailable: () => activeActions.delete && !this.model.root.isNew,
+                availableOffline: true,
                 sequence: 50,
                 icon: "fa fa-trash-o",
                 description: _t("Delete"),
@@ -684,7 +705,8 @@ export class FormController extends Component {
                 const params = { reload: !(this.env.inDialog && clickParams.close) };
                 saved = await record.save(params);
             }
-            if (saved !== false && this.props.onSave) {
+            if (saved !== false) {
+                this.env.config.setDisplayName(this.displayName());
                 this.props.onSave(record, clickParams);
             }
             return saved;
@@ -718,7 +740,8 @@ export class FormController extends Component {
                 ...params,
             });
         }
-        if (saved && this.props.onSave) {
+        if (saved) {
+            this.env.config.setDisplayName(this.displayName());
             this.props.onSave(record, params);
         }
         return saved;
@@ -755,6 +778,7 @@ export class FormController extends Component {
         if (this.props.className) {
             result[this.props.className] = true;
         }
+        result["o_field_highlight"] = size < SIZES.SM || hasTouch();
         return result;
     }
 }

@@ -2,6 +2,7 @@
 
 import logging
 import requests
+from odoo.addons.microsoft_account.models.microsoft_service import TIMEOUT
 from odoo.addons.microsoft_calendar.models.microsoft_sync import microsoft_calendar_token
 from datetime import datetime, timedelta
 
@@ -17,6 +18,7 @@ _logger = logging.getLogger(__name__)
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
+    microsoft_account_email = fields.Char(related='res_users_settings_id.microsoft_account_email', readonly=False, groups='base.group_system')
     microsoft_calendar_sync_token = fields.Char(related='res_users_settings_id.microsoft_calendar_sync_token', groups='base.group_system')
     microsoft_synchronization_stopped = fields.Boolean(related='res_users_settings_id.microsoft_synchronization_stopped', readonly=False, groups='base.group_system')
     microsoft_last_sync_date = fields.Datetime(related='res_users_settings_id.microsoft_last_sync_date', readonly=False, groups='base.group_system')
@@ -77,7 +79,6 @@ class ResUsers(models.Model):
 
     def _sync_microsoft_calendar(self):
         self.ensure_one()
-        self.sudo().microsoft_last_sync_date = datetime.now()
         if self._get_microsoft_sync_status() != "sync_active":
             return False
 
@@ -123,15 +124,20 @@ class ResUsers(models.Model):
                 _logger.exception("[%s] Calendar Synchro - Exception : %s!", user, exception_to_unicode(e))
                 self.env.cr.rollback()
 
+    @api.model
     def stop_microsoft_synchronization(self):
-        self.ensure_one()
-        self.sudo().microsoft_synchronization_stopped = True
-        self.sudo().microsoft_last_sync_date = None
+        self.env.user.microsoft_synchronization_stopped = True
+        self.env.user.microsoft_last_sync_date = None
+        self.env.user._set_microsoft_auth_tokens(False, False, 0)
+        self.env.user.sudo().write({
+            'microsoft_calendar_sync_token': False,
+            'microsoft_last_sync_date': False
+        })
 
+    @api.model
     def restart_microsoft_synchronization(self):
-        self.ensure_one()
-        self.sudo().microsoft_last_sync_date = datetime.now()
-        self.sudo().microsoft_synchronization_stopped = False
+        self.env.user.microsoft_last_sync_date = datetime.now()
+        self.env.user.microsoft_synchronization_stopped = False
         self.env['calendar.recurrence']._restart_microsoft_sync()
         self.env['calendar.event']._restart_microsoft_sync()
 
@@ -148,6 +154,10 @@ class ResUsers(models.Model):
         client_id = self.env['microsoft.service']._get_microsoft_client_id('calendar')
         client_secret = microsoft_service._get_microsoft_client_secret(ICP_sudo, 'calendar')
         return bool(client_id and client_secret)
+
+    @api.model
+    def get_calendar_sync_email(self):
+        return self.env.user.microsoft_account_email or super().get_calendar_sync_email()
 
     @api.model
     def check_calendar_credentials(self):
@@ -200,3 +210,18 @@ class ResUsers(models.Model):
             # Add one minute of time diff for avoiding write time delay conflicts with the next sync methods.
             if not any_calendar_synchronized:
                 ICP.set_str('microsoft_calendar.sync.first_synchronization_date', now - timedelta(minutes=1))
+
+    def _set_microsoft_auth_tokens(self, access_token, refresh_token, ttl):
+        super()._set_microsoft_auth_tokens(access_token, refresh_token, ttl)
+        self.microsoft_account_email = self._get_email_from_outlook(access_token) if access_token else False
+
+    def _get_email_from_outlook(self, token, timeout=TIMEOUT):
+        url = '/v1.0/me'
+        headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
+        try:
+            status, user_info, _ = self.env["microsoft.service"]._do_request(url, {}, headers, method='GET', timeout=timeout)
+        except requests.exceptions.HTTPError as e:
+            _logger.error('Error getting outlook email: %s', e)
+        else:
+            return user_info.get('mail') or user_info.get('userPrincipalName') if status == 200 else False
+        return False

@@ -18,7 +18,16 @@ export class HrLeave extends models.Model {
     work_entry_type_id = fields.Many2one({
         relation: "hr.work.entry.type",
     });
-    state = fields.Char();
+    state = fields.Selection({
+        type: "selection",
+        selection: [
+            ["confirm", "To Approve"],
+            ["refuse", "Refused"],
+            ["validate1", "Second Approval"],
+            ["validate", "Approved"],
+            ["cancel", "Cancelled"],
+        ],
+    });
     number_of_days = fields.Integer();
     number_of_hours = fields.Integer();
     work_entry_type_request_unit = fields.Selection({

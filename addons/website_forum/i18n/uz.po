@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
 "PO-Revision-Date: 2025-10-08 18:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -71,8 +71,8 @@ msgstr "# ko‘rishlar"
 msgid ""
 "%(link_start)sRead the guidelines to know how to gain karma.%(link_end)s"
 msgstr ""
-"%(link_start)sKarma qanday to‘planishini bilish uchun ko‘rsatmalarni o‘qing."
-"%(link_end)s"
+"%(link_start)sKarma qanday to‘planishini bilish uchun ko‘rsatmalarni o‘qing.%"
+"(link_end)s"
 
 #. module: website_forum
 #. odoo-javascript
@@ -104,14 +104,7 @@ msgstr "Postni yopish yoki qayta ochish uchun %d karma kerak."
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum_post.py:0
-#, fuzzy
-msgid "%d karma required to comment."
-msgstr "Izoh qoldirish uchun %d karma kerak."
-
-#. module: website_forum
-#. odoo-python
-#: code:addons/website_forum/models/forum_post.py:0
+#: code:addons/website_forum/models/forum_post_comment.py:0
 #, fuzzy
 msgid "%d karma required to convert a comment to an answer."
 msgstr "Izohni javobga aylantirish uchun %d karma kerak."
@@ -125,7 +118,7 @@ msgstr "Javobni izohga aylantirish uchun %d karma kerak."
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum_post.py:0
+#: code:addons/website_forum/models/forum_post_comment.py:0
 #, fuzzy
 msgid "%d karma required to convert your comment to an answer."
 msgstr "O‘z izohingizni javobga aylantirish uchun %d karma kerak."
@@ -217,6 +210,12 @@ msgstr "Postni ajratish uchun %d karma kerak."
 
 #. module: website_forum
 #. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+msgid "%d karma required to update a flagged post."
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 #, fuzzy
 msgid "%d karma required to upvote."
@@ -228,6 +227,24 @@ msgstr "Ijobiy ovoz berish uchun %d karma kerak."
 #, fuzzy
 msgid "%d karma required to validate a post."
 msgstr "Postni tasdiqlash uchun %d karma kerak."
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post_comment.py:0
+msgid "%i karma required to comment."
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post_comment.py:0
+msgid "%i karma required to delete a comment."
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post_comment.py:0
+msgid "%i karma required to edit a comment."
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
@@ -590,7 +607,7 @@ msgid "<i class=\"fa fa-font\"/> Text"
 msgstr "<i class=\"fa fa-font\"/> Matn"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.follow
+#: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 #, fuzzy
 msgid "<i class=\"fa fa-fw fa-check me-1\"/>Following"
 msgstr "<i class=\"fa fa-fw fa-check me-1\"/>Kuzatilmoqda"
@@ -974,8 +991,6 @@ msgstr "Ruxsat rad etildi"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_needaction
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_needaction
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_needaction
 #, fuzzy
 msgid "Action Needed"
 msgstr "Amal talab etiladi"
@@ -1060,6 +1075,7 @@ msgstr "%s ga javob"
 
 #. module: website_forum
 #. odoo-python
+#: code:addons/website_forum/controllers/website_forum.py:0
 #: code:addons/website_forum/models/forum_post.py:0
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
@@ -1078,6 +1094,12 @@ msgstr "Javob qabul qilindi"
 #, fuzzy
 msgid "Answer accepted with 15 or more votes"
 msgstr "15 yoki undan ortiq ovoz bilan qabul qilingan javob"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+msgid "Answer converted to comment in \"%s\""
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_downvote
@@ -1284,8 +1306,6 @@ msgstr "Ilova"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_attachment_count
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_attachment_count
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_attachment_count
 #, fuzzy
 msgid "Attachment Count"
 msgstr "Ilovalar soni"
@@ -1373,11 +1393,15 @@ msgid "Best Answer"
 msgstr "Eng yaxshi javob"
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_comment__body
+msgid "Body"
+msgstr ""
+
+#. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
-#, fuzzy
 msgid "By sharing you answer, you will get additional"
-msgstr "Javobingizni ulashish orqali qo‘shimcha imkoniyatga ega bo‘lasiz"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_accept
@@ -1468,6 +1492,18 @@ msgstr "To‘liq tahrirlovchidan foydalana oladi"
 #, fuzzy
 msgid "Can View"
 msgstr "Ko‘ra oladi"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post_comment.py:0
+msgid "Cannot change the post of a comment."
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+msgid "Cannot convert a question to a comment"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_retag
@@ -1618,6 +1654,11 @@ msgid "Commentator"
 msgstr "Sharhlovchi"
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__comment_ids
+msgid "Comments"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
 #, fuzzy
 msgid "Community Forums"
@@ -1648,6 +1689,11 @@ msgstr "Haqoratli yoki zararli fikrlar mavjud"
 #, fuzzy
 msgid "Content"
 msgstr "Tarkib"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__write_date_content
+msgid "Content Updated on"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_convert_all
@@ -1736,9 +1782,8 @@ msgstr "Yangi teglar yaratish"
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/website_forum_tags_wrapper.xml:0
-#, fuzzy
 msgid "Create option \""
-msgstr "\"\" variantini yaratish"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_32
@@ -1749,6 +1794,7 @@ msgstr "15 ta savolda ishlatiladigan teg yaratildi"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__create_uid
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__create_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_comment__create_uid
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__create_uid
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__create_uid
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__create_uid
@@ -1758,6 +1804,7 @@ msgstr "Muallif"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__create_date
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_comment__create_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__create_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__create_date
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post
@@ -1779,13 +1826,6 @@ msgstr "Ishonchli savol"
 #, fuzzy
 msgid "Critic"
 msgstr "Tanqidchi"
-
-#. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/website_builder/forum_searchbar_option_plugin.js:0
-#, fuzzy
-msgid "Date"
-msgstr "Sana"
 
 #. module: website_forum
 #. odoo-javascript
@@ -1879,8 +1919,6 @@ msgid "Deleted own post with 3 or more upvotes"
 msgstr "3 yoki undan ko‘p ijobiy ovoz olgan o‘z xabarini o‘chirdi"
 
 #. module: website_forum
-#. odoo-javascript
-#: code:addons/website_forum/static/src/website_builder/forum_searchbar_option_plugin.js:0
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__description
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -1935,12 +1973,15 @@ msgstr "Xabarni yopish"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__display_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__display_name
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_comment__display_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__display_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__display_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__display_name
 #: model:ir.model.fields,field_description:website_forum.field_gamification_challenge__display_name
 #: model:ir.model.fields,field_description:website_forum.field_gamification_karma_tracking__display_name
 #: model:ir.model.fields,field_description:website_forum.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:website_forum.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_forum.field_mail_thread__display_name
 #: model:ir.model.fields,field_description:website_forum.field_res_users__display_name
 #: model:ir.model.fields,field_description:website_forum.field_website__display_name
 #, fuzzy
@@ -2034,6 +2075,11 @@ msgstr "Muharrir"
 #, fuzzy
 msgid "Editor Features: image and links"
 msgstr "Muharrir xususiyatlari: rasm va havolalar"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_mail_thread
+msgid "Email Thread"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -2197,7 +2243,7 @@ msgid "Flagged by"
 msgstr "Belgilagan:"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.follow
+#: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 #, fuzzy
 msgid "Follow"
 msgstr "Kuzatish"
@@ -2216,16 +2262,14 @@ msgstr "Kuzatilgan teglar"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_follower_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_follower_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_follower_ids
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__follower_ids
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__follower_ids
 #, fuzzy
 msgid "Followers"
 msgstr "Kuzatuvchilar"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_partner_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_partner_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_partner_ids
 #, fuzzy
 msgid "Followers (Partners)"
 msgstr "Kuzatuvchilar (hamkorlar)"
@@ -2253,10 +2297,12 @@ msgstr ""
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/controllers/website_forum.py:0
+#: code:addons/website_forum/models/forum_forum.py:0
 #: code:addons/website_forum/models/website.py:0
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
 #: model:ir.model,name:website_forum.model_forum_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__forum_id
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_comment__forum_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__forum_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__forum_id
 #: model:ir.ui.menu,name:website_forum.menu_website_forum_global
@@ -2290,17 +2336,24 @@ msgstr "Forum nomi"
 
 #. module: website_forum
 #. odoo-javascript
-#: code:addons/website_forum/static/src/website_builder/forum_page_option_plugin.js:0
+#: code:addons/website_forum/static/src/website_builder/forum_page_option.xml:0
 #, fuzzy
 msgid "Forum Page"
 msgstr "Forum sahifasi"
 
 #. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
 #: model:ir.model,name:website_forum.model_forum_post
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
 #, fuzzy
 msgid "Forum Post"
 msgstr "Forum yozuvi"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_post_comment
+msgid "Forum Post Comment"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_action
@@ -2321,6 +2374,8 @@ msgid "Forum Tag"
 msgstr "Forum tegi"
 
 #. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_tag.py:0
 #: model:ir.actions.act_window,name:website_forum.forum_tag_action
 #, fuzzy
 msgid "Forum Tags"
@@ -2343,13 +2398,13 @@ msgid "Gamification Challenge"
 msgstr "Gamifikatsiya musobaqasi"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.follow
+#: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 #, fuzzy
 msgid "Get notified when there's activity on this post"
 msgstr "Bu postdagi faollik haqida xabar oling"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.follow
+#: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 #, fuzzy
 msgid "Get notified when this tag is used"
 msgstr "Bu teg ishlatilganda xabardor bo‘ling"
@@ -2447,6 +2502,16 @@ msgid "Guru (15)"
 msgstr "Ustoz (15)"
 
 #. module: website_forum
+#: model:ir.model,name:website_forum.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__can_access
+msgid "Has Access"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__uid_has_answered
 #, fuzzy
 msgid "Has Answered"
@@ -2454,8 +2519,6 @@ msgstr "Javob bergan"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__has_message
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__has_message
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag__has_message
 #, fuzzy
 msgid "Has Message"
 msgstr "Xabari bor"
@@ -2489,12 +2552,15 @@ msgstr "Imtiyozlar va karma darajasi ko‘rsatilgan jadval"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__id
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_comment__id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__id
 #: model:ir.model.fields,field_description:website_forum.field_gamification_challenge__id
 #: model:ir.model.fields,field_description:website_forum.field_gamification_karma_tracking__id
 #: model:ir.model.fields,field_description:website_forum.field_ir_attachment__id
+#: model:ir.model.fields,field_description:website_forum.field_ir_http__id
+#: model:ir.model.fields,field_description:website_forum.field_mail_thread__id
 #: model:ir.model.fields,field_description:website_forum.field_res_users__id
 #: model:ir.model.fields,field_description:website_forum.field_website__id
 #, fuzzy
@@ -2503,8 +2569,6 @@ msgstr "ID"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_needaction
-#: model:ir.model.fields,help:website_forum.field_forum_post__message_needaction
-#: model:ir.model.fields,help:website_forum.field_forum_tag__message_needaction
 #, fuzzy
 msgid "If checked, new messages require your attention."
 msgstr "Belgilansa, yangi xabarlar e'tiboringizni talab qiladi"
@@ -2512,10 +2576,6 @@ msgstr "Belgilansa, yangi xabarlar e'tiboringizni talab qiladi"
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_has_error
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_has_sms_error
-#: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error
-#: model:ir.model.fields,help:website_forum.field_forum_post__message_has_sms_error
-#: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error
-#: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_sms_error
 #, fuzzy
 msgid "If checked, some messages have a delivery error."
 msgstr "Belgilansa, ba'zi xabarlarda yetkazib berish xatosi bor"
@@ -2635,8 +2695,8 @@ msgstr "Sevimlimi"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_is_follower
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_is_follower
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_is_follower
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__is_follower
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__is_follower
 #, fuzzy
 msgid "Is Follower"
 msgstr "Kuzatuvchimi"
@@ -2744,6 +2804,7 @@ msgstr "Oxirgi yangilanish"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__write_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_comment__write_uid
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__write_uid
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__write_uid
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__write_uid
@@ -2753,6 +2814,7 @@ msgstr "Oxirgi yangilovchi"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__write_date
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_comment__write_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__write_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__write_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__write_date
@@ -2826,16 +2888,12 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_error
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error
 #, fuzzy
 msgid "Message Delivery error"
 msgstr "Xabar yetkazib berilmadi"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_ids
 #, fuzzy
 msgid "Messages"
 msgstr "Xabarlar"
@@ -2933,12 +2991,20 @@ msgid "Negative vote"
 msgstr "Salbiy ovoz"
 
 #. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/controllers/website_forum.py:0
 #: model:mail.message.subtype,description:website_forum.mt_answer_new
 #: model:mail.message.subtype,name:website_forum.mt_answer_new
 #: model:mail.message.subtype,name:website_forum.mt_forum_answer_new
 #, fuzzy
 msgid "New Answer"
 msgstr "Yangi javob"
+
+#. module: website_forum
+#: model:mail.message.subtype,description:website_forum.mt_comment_new
+#: model:mail.message.subtype,name:website_forum.mt_comment_new
+msgid "New Comment"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_forum_action_add
@@ -2953,12 +3019,20 @@ msgid "New Post"
 msgstr "Yangi xabar"
 
 #. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/controllers/website_forum.py:0
 #: model:mail.message.subtype,description:website_forum.mt_question_new
 #: model:mail.message.subtype,name:website_forum.mt_forum_question_new
 #: model:mail.message.subtype,name:website_forum.mt_question_new
 #, fuzzy
 msgid "New Question"
 msgstr "Yangi savol"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post_comment.py:0
+msgid "New comment in %s"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__create_date_desc
@@ -3031,8 +3105,6 @@ msgstr "E'tiborga molik savol"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_needaction_counter
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_needaction_counter
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_needaction_counter
 #, fuzzy
 msgid "Number of Actions"
 msgstr "Harakatlar soni"
@@ -3045,8 +3117,6 @@ msgstr "Xabarlar soni"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_error_counter
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error_counter
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error_counter
 #, fuzzy
 msgid "Number of errors"
 msgstr "Xatolar soni"
@@ -3059,16 +3129,12 @@ msgstr "Belgilangan xabarlar soni"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_needaction_counter
-#: model:ir.model.fields,help:website_forum.field_forum_post__message_needaction_counter
-#: model:ir.model.fields,help:website_forum.field_forum_tag__message_needaction_counter
 #, fuzzy
 msgid "Number of messages requiring action"
 msgstr "Harakat talab qiladigan xabarlar soni"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_has_error_counter
-#: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error_counter
-#: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error_counter
 #, fuzzy
 msgid "Number of messages with delivery error"
 msgstr "Yetkazib berishda xato bo‘lgan xabarlar soni"
@@ -3111,9 +3177,8 @@ msgstr "Haqoratli xabarlar"
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
-#, fuzzy
 msgid "On average,"
-msgstr "O‘rtacha hisobda,"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -3195,6 +3260,7 @@ msgid "Positive vote"
 msgstr "Ijobiy ovoz"
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_comment__post_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__post_id
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 #, fuzzy
@@ -3284,6 +3350,12 @@ msgid "Posting answer on a [Deleted] or [Closed] question is not possible."
 msgstr "[O‘chirilgan] yoki [Yopilgan] savolga javob yozish mumkin emas."
 
 #. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+msgid "Posting answer on a [Flagged] question is not possible."
+msgstr ""
+
+#. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_action_forum_main
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__post_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__post_ids
@@ -3354,7 +3426,14 @@ msgid "Question %s"
 msgstr "%s-savol"
 
 #. module: website_forum
+#: model:mail.message.subtype,description:website_forum.mt_ask_validation
+#: model:mail.message.subtype,name:website_forum.mt_ask_validation
+msgid "Question Ask Validation"
+msgstr ""
+
+#. module: website_forum
 #. odoo-python
+#: code:addons/website_forum/controllers/website_forum.py:0
 #: code:addons/website_forum/models/forum_post.py:0
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
@@ -3465,15 +3544,13 @@ msgstr "Darajalar"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__rating_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__rating_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag__rating_ids
 #, fuzzy
 msgid "Ratings"
 msgstr "Reytinglar"
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum_post.py:0
+#: code:addons/website_forum/models/forum_post_comment.py:0
 #, fuzzy
 msgid "Re: %s"
 msgstr "Javob: %s"
@@ -3618,8 +3695,6 @@ msgstr "SEO optimallashtirilgan"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_sms_error
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_sms_error
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_sms_error
 #, fuzzy
 msgid "SMS Delivery error"
 msgstr "SMS yuborishda xatolik yuz berdi"
@@ -3675,17 +3750,16 @@ msgid "Second Relevance Parameter"
 msgstr "Ikkinchi dolzarblik parametri"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
+msgid "See answer"
+msgstr ""
+
+#. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/res_users.py:0
 #, fuzzy
 msgid "See our Forum"
 msgstr "Forumimizni ko‘ring"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
-#, fuzzy
-msgid "See post"
-msgstr "Postni ko‘rish"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
@@ -3874,7 +3948,7 @@ msgid "Student"
 msgstr "Talaba"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.follow
+#: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 #, fuzzy
 msgid "Subscribe"
 msgstr "Obuna bo‘lish"
@@ -4242,7 +4316,7 @@ msgid "Undelete"
 msgstr "Qayta tiklash"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.follow
+#: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 #, fuzzy
 msgid "Unfollow"
 msgstr "Kuzatuvni bekor qilish"
@@ -4436,8 +4510,6 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_message_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__website_message_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_message_ids
 #, fuzzy
 msgid "Website Messages"
 msgstr "Veb-sayt xabarlari"
@@ -4452,8 +4524,6 @@ msgstr "Veb-sayt URL manzili"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_message_ids
-#: model:ir.model.fields,help:website_forum.field_forum_post__website_message_ids
-#: model:ir.model.fields,help:website_forum.field_forum_tag__website_message_ids
 #, fuzzy
 msgid "Website communication history"
 msgstr "Veb-sayt muloqot tarixi"
@@ -4537,6 +4607,12 @@ msgstr "XP"
 #, fuzzy
 msgid "You already have a pending post"
 msgstr "Sizning kutilayotgan xabaringiz mavjud"
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+msgid "You can post only one answer."
+msgstr ""
 
 #. module: website_forum
 #. odoo-javascript
@@ -4763,25 +4839,21 @@ msgstr "sababi:"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
-#, fuzzy
 msgid ""
-"has been posted and require your validation. Click here to access the "
+"has been posted and requires your validation. Click here to access the "
 "question :"
 msgstr ""
-"joylashtirildi va sizning tasdig‘ingizni talab qiladi. Savolga kirish uchun "
-"shu yerni bosing:"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
-#, fuzzy
-msgid "has been posted. Click here to access the post :"
-msgstr "joylashtirildi. Postga kirish uchun shu yerni bosing:"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 #, fuzzy
 msgid "has been posted. Click here to access the question :"
 msgstr "joylashtirildi. Savolga kirish uchun shu yerni bosing:"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
+msgid "has been posted. Click here to access the question:"
+msgstr ""
 
 #. module: website_forum
 #. odoo-javascript
@@ -4814,13 +4886,10 @@ msgstr "Odooni muayyan infratuzilmaga qanday o‘rnatish,"
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
-#, fuzzy
 msgid ""
 "if your\n"
 "        answer is selected as the right one. See what you can do with karma"
 msgstr ""
-"agar javobingiz to‘g‘ri deb tanlansa. Karma bilan nima qilish mumkinligini "
-"ko‘ring"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -4898,13 +4967,10 @@ msgstr "ustida"
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
-#, fuzzy
 msgid ""
 "on social networks get an answer within\n"
 "        5 hours. Questions shared on two social networks have"
 msgstr ""
-"ijtimoiy tarmoqlarda 5 soat ichida javob oling. Ikkita ijtimoiy tarmoqda "
-"ulashilgan savollar"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
@@ -5011,7 +5077,7 @@ msgid "your biography can be seen as tooltip"
 msgstr "tarjimai holingizni maslahat sifatida ko‘rish mumkin"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.follow
+#: model_terms:ir.ui.view,arch_db:website_forum.follow_button
 #, fuzzy
 msgid "your email..."
 msgstr "elektron pochtangiz..."

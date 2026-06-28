@@ -2,8 +2,10 @@
 
 import json
 import pprint
+import re
+import unicodedata
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.tools import urls
@@ -22,25 +24,25 @@ class PaymentProvider(models.Model):
         selection_add=[("authorize", "Authorize.Net")], ondelete={"authorize": "set default"}
     )
     authorize_login = fields.Char(
-        string="API Login ID",
+        string="Authorize API Login ID",
         help="The ID solely used to identify the account with Authorize.Net",
         required_if_provider="authorize",
         copy=False,
     )
     authorize_transaction_key = fields.Char(
-        string="API Transaction Key",
+        string="Authorize API Transaction Key",
         required_if_provider="authorize",
         copy=False,
         groups="base.group_system",
     )
     authorize_signature_key = fields.Char(
-        string="API Signature Key",
+        string="Authorize API Signature Key",
         required_if_provider="authorize",
         copy=False,
         groups="base.group_system",
     )
     authorize_client_key = fields.Char(
-        string="API Client Key",
+        string="Authorize API Client Key",
         help="The public client key. To generate directly from Odoo or from Authorize.Net backend.",
         copy=False,
     )
@@ -55,12 +57,12 @@ class PaymentProvider(models.Model):
 
     # Authorize.Net supports only one currency: "One gateway account is required for each currency"
     # See https://community.developer.authorize.net/t5/The-Authorize-Net-Developer-Blog/Authorize-Net-UK-Europe-Update/ba-p/35957
-    @api.constrains("available_currency_ids", "state")
+    @api.constrains("available_currency_ids")
     def _limit_available_currency_ids(self):
         for provider in self.filtered(lambda p: p.code == "authorize"):
-            if len(provider.available_currency_ids) > 1 and provider.state != "disabled":
+            if len(provider.available_currency_ids) > 1:
                 raise ValidationError(
-                    _("Only one currency can be selected by Authorize.Net account.")
+                    self.env._("Only one currency can be selected by Authorize.Net account.")
                 )
 
     # === COMPUTE METHODS === #
@@ -89,22 +91,21 @@ class PaymentProvider(models.Model):
         """Fetch the merchant details to update the client key and the account currency."""
         self.ensure_one()
 
-        if self.state == "disabled":
-            raise UserError(_("This action cannot be performed while the provider is disabled."))
-
         authorize_API = AuthorizeAPI(self)
 
         # Validate the API Login ID and Transaction Key
         res_content = authorize_API.test_authenticate()
         _logger.info("test_authenticate request response:\n%s", pprint.pformat(res_content))
         if res_content.get("err_msg"):
-            raise UserError(_("Failed to authenticate.\n%s", res_content["err_msg"]))
+            raise UserError(self.env._("Failed to authenticate.\n%s", res_content["err_msg"]))
 
         # Update the merchant details
         res_content = authorize_API.merchant_details()
         _logger.info("merchant_details request response:\n%s", pprint.pformat(res_content))
         if res_content.get("err_msg"):
-            raise UserError(_("Could not fetch merchant details:\n%s", res_content["err_msg"]))
+            raise UserError(
+                self.env._("Could not fetch merchant details:\n%s", res_content["err_msg"])
+            )
 
         currency = self.env["res.currency"].search([("name", "in", res_content.get("currencies"))])
         self.available_currency_ids = [Command.set(currency.ids)]
@@ -120,15 +121,21 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
-        if self.state == "disabled":
-            raise UserError(_("This action cannot be performed while the provider is disabled."))
-
         webhook_url = urls.urljoin(self.get_base_url(), const.WEBHOOK_ROUTE)
+        # Authorize.Net allows only letters, numbers, and underscores in webhook names.
+        webhook_name = re.sub(
+            r"[^\w]",
+            "",
+            unicodedata
+            .normalize("NFKD", self.company_id.name)
+            .encode("ascii", "ignore")
+            .decode("utf-8"),
+        ).ljust(3, "_")  # Ensure minimum length of 3.
         response = self._send_api_request(
             "POST",
             "/rest/v1/webhooks",
             json={
-                "name": self.company_id.name,
+                "name": webhook_name,
                 "url": webhook_url,
                 "eventTypes": list(const.HANDLED_WEBHOOK_EVENTS),
                 "status": "active",
@@ -170,7 +177,7 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         inline_form_values = {
-            "state": self.state,
+            "is_live": self.is_live,
             "login_id": self.authorize_login,
             "client_key": self.authorize_client_key,
         }
@@ -181,7 +188,7 @@ class PaymentProvider(models.Model):
         if self.code != "authorize":
             return super()._build_request_url(endpoint, **kwargs)
 
-        if self.state == "enabled":
+        if self.is_live:
             return f"https://api.authorize.net{endpoint}"
         return f"https://apitest.authorize.net{endpoint}"
 

@@ -1,7 +1,7 @@
 /** @ts-check */
 
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, props, t } from "@odoo/owl";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -13,15 +13,13 @@ export class SelectionFilterValue extends Component {
         BadgeTag,
         AutoComplete,
     };
-    static props = {
-        resModel: String,
-        field: String,
-        value: { type: Array, optional: true },
-        onValueChanged: Function,
-    };
-    static defaultProps = {
-        value: [],
-    };
+    props = props({
+        resModel: t.string(),
+        field: t.string(),
+        value: t.array().optional([]),
+        onValueChanged: t.function(),
+        placeholder: t.string().optional(),
+    });
 
     setup() {
         this.inputRef = useChildRef();
@@ -39,6 +37,10 @@ export class SelectionFilterValue extends Component {
         this.fields = useService("field");
         onWillStart(() => this._computeTagsAndSources(this.props));
         onWillUpdateProps((nextProps) => this._computeTagsAndSources(nextProps));
+    }
+
+    get placeholder() {
+        return this.tags.length ? "" : this.props.placeholder;
     }
 
     async _computeTagsAndSources(props) {

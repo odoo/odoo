@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { Component, props, proxy, t } from "@odoo/owl";
+import { Dropdown, dropdownProps } from "@web/core/dropdown/dropdown";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -27,16 +26,14 @@ export class SearchBarMenu extends Component {
         AccordionItem,
         PropertiesGroupByItem,
     };
-    static props = {
-        slots: {
-            type: Object,
-            optional: true,
-            shape: {
-                default: { optional: true },
-            },
-        },
-        dropdownState: { ...Dropdown.props.state },
-    };
+    props = props({
+        slots: t
+            .object({
+                default: t.any().optional(),
+            })
+            .optional(),
+        dropdownState: dropdownProps.state,
+    });
 
     setup() {
         this.facet_icons = FACET_ICONS;
@@ -51,7 +48,7 @@ export class SearchBarMenu extends Component {
         }
         this.fields = sortBy(fields, "string");
         // Favorite
-        this.state = useState({ sharedFavoritesExpanded: false });
+        this.state = proxy({ sharedFavoritesExpanded: false });
         useBus(this.env.searchModel, "update", this.render);
         this.dialogService = useService("dialog");
         this.notificationService = useService("notification");
@@ -69,7 +66,7 @@ export class SearchBarMenu extends Component {
     // Filter Panel
     get filterItems() {
         return this.env.searchModel.getSearchItems((searchItem) =>
-            ["filter", "dateFilter", "parentFilter"].includes(searchItem.type)
+            ["filter", "dateFilter", "parentFilter", "lazyParentFilter"].includes(searchItem.type)
         );
     }
 
@@ -88,6 +85,18 @@ export class SearchBarMenu extends Component {
         } else {
             this.env.searchModel.toggleSearchItem(itemId);
         }
+    }
+
+    async onToggle({ itemId, optionsParams }) {
+        if (optionsParams.toBeLoaded) {
+            await this.env.searchModel.loadLazyParentFilter(itemId);
+            this.render();
+        }
+    }
+
+    async onLoadMoreOptions({ itemId }) {
+        await this.env.searchModel.loadMoreOptions(itemId);
+        this.render();
     }
 
     // GroupBy Panel

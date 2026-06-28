@@ -1,5 +1,5 @@
 import { render } from "@web/owl2/utils";
-import { Component, xml } from "@odoo/owl";
+import { Component, t, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useRegistry } from "@web/core/registry_hook";
 import { ErrorHandler } from "@web/core/utils/components";
@@ -7,17 +7,19 @@ import { localization } from "@web/core/l10n/localization";
 
 const mainComponents = registry.category("main_components");
 
-mainComponents.addValidation({
-    Component: { validate: (c) => c.prototype instanceof Component },
-    props: { type: Object, optional: true }
-});
+mainComponents.addValidation(
+    t.object({
+        Component: t.component(),
+        props: t.object().optional(),
+    })
+);
 
 export class MainComponentsContainer extends Component {
     static components = { ErrorHandler };
     static props = {};
     static template = xml`
     <div class="o-main-components-container" t-att-class="{'o_rtl': this.isRTL}">
-        <t t-foreach="Components.entries" t-as="C" t-key="C[0]">
+        <t t-foreach="this.Components.entries" t-as="C" t-key="C[0]">
             <ErrorHandler onError="error => this.handleComponentError(error, C)">
                 <t t-component="C[1].Component" t-props="C[1].props"/>
             </ErrorHandler>

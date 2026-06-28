@@ -4,7 +4,7 @@ import json
 from datetime import timedelta
 from urllib.parse import urlencode
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, ValidationError
 from odoo.fields import Command
 from odoo.http import request
@@ -33,10 +33,6 @@ class PaymentProvider(models.Model):
         domain=[("code", "in", list(const.SUPPORTED_COUNTRIES))],
         required_if_provider="mercado_pago",
         copy=False,
-    )
-    # TODO anko remove in 19.1
-    mercado_pago_is_oauth_supported = fields.Boolean(
-        compute="_compute_mercado_pago_is_oauth_supported"
     )
 
     # OAuth fields
@@ -73,22 +69,35 @@ class PaymentProvider(models.Model):
             )
             provider.available_currency_ids = [Command.set(currency.ids)]
 
-    def _compute_mercado_pago_is_oauth_supported(self):
-        """Return current state of OAuth support by Odoo. To be removed in future versions."""
-        self.mercado_pago_is_oauth_supported = False
-
     # === CONSTRAINT METHODS === #
 
-    @api.constrains("state", "mercado_pago_access_token")
-    def _check_mercado_pago_credentials_are_set_before_enabling(self):
-        """Check that the Mercado Pago credentials are valid when the provider is enabled.
+    @api.constrains("available_currency_ids")
+    def _check_currency_is_supported(self):
+        for provider in self.filtered(lambda p: p.code == "mercado_pago"):
+            account_country = provider.mercado_pago_account_country_id
+            account_currency = const.CURRENCY_MAPPING.get(account_country.code)
+            if not account_country:
+                continue
+            if (
+                len(provider.available_currency_ids) != 1
+                or provider.available_currency_ids.name != account_currency
+            ):
+                raise ValidationError(
+                    self.env._(
+                        "Only the currency %s is available for this account.", account_currency
+                    )
+                )
+
+    @api.constrains("is_live", "mercado_pago_access_token")
+    def _check_mercado_pago_credentials_are_set_if_live(self):
+        """Check that the Mercado Pago credentials are valid when the provider is set in live mode.
 
         :raise ValidationError: If the Mercado Pago credentials are not set.
         """
-        for provider in self.filtered(lambda p: p.code == "mercado_pago" and p.state != "disabled"):
+        for provider in self.filtered(lambda p: p.code == "mercado_pago" and p.is_live):
             if not provider.mercado_pago_access_token:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         'Mercado Pago credentials are missing. Click the "Connect" button to set'
                         " up your account."
                     )
@@ -104,7 +113,7 @@ class PaymentProvider(models.Model):
             p.code == "mercado_pago" and p.allow_tokenization and not p.mercado_pago_public_key
             for p in self
         ):
-            raise ValidationError(_("Connect your account before enabling tokenization."))
+            raise ValidationError(self.env._("Connect your account before enabling tokenization."))
 
     # === CRUD METHODS === #
 
@@ -134,16 +143,18 @@ class PaymentProvider(models.Model):
 
         if self.company_id.country_id.code not in const.SUPPORTED_COUNTRIES:
             raise RedirectWarning(
-                _(
+                self.env._(
                     "Mercado Pago is not available in your country; please use another payment"
                     " provider."
                 ),
                 self.env.ref("payment.action_payment_provider").id,
-                _("Other Payment Providers"),
+                self.env._("Other Payment Providers"),
             )
 
         if not self.mercado_pago_account_country_id:
-            raise ValidationError(_("Set the account country before connecting the account."))
+            raise ValidationError(
+                self.env._("Set the account country before connecting the account.")
+            )
 
         # Encode the return URL parameters here rather than passing them in the 'state' parameter
         # from IAP, because Mercado Pago doesn't JSON dumps in that parameter.
@@ -153,7 +164,7 @@ class PaymentProvider(models.Model):
             "return_url": f"{return_url}?{urlencode(return_url_params)}",
             "account_country_code": self.mercado_pago_account_country_id.code.lower(),
         }
-        proxy_url = self._build_request_url("/authorize", is_proxy_request=True)
+        proxy_url = self._build_request_url("1/authorize", is_proxy_request=True)
         return {
             "type": "ir.actions.act_url",
             "url": f"{proxy_url}?{urlencode(proxy_url_params)}",
@@ -176,9 +187,9 @@ class PaymentProvider(models.Model):
     # === BUSINESS METHODS === #
 
     @api.model
-    def _get_compatible_providers(self, *args, is_validation=False, report=None, **kwargs):
+    def _find_available_providers(self, *args, is_validation=False, report=None, **kwargs):
         """Override of `payment` to filter out Mercado Pago providers for validation operations."""
-        providers = super()._get_compatible_providers(
+        providers = super()._find_available_providers(
             *args, is_validation=is_validation, report=report, **kwargs
         )
 
@@ -206,8 +217,28 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         partner = self.env["res.partner"].browse(partner_id).exists()
-        inline_form_values = {"email": partner.email, "public_key": self.mercado_pago_public_key}
+        inline_form_values = {
+            "email": partner.email,
+            "public_key": self.mercado_pago_public_key,
+            "locale": self._mercado_pago_get_locale(),
+        }
         return json.dumps(inline_form_values)
+
+    def _mercado_pago_get_locale(self):
+        """Return the Mercado Pago locale matching the active website language.
+
+        Note: `self.ensure_one()`
+
+        :return: The locale (e.g. `es-AR`), defaulting to `en-US` for unsupported languages.
+        :rtype: str
+        """
+        self.ensure_one()
+
+        # The locale is keyed by country;
+        # for "Spanish (Latin America)" (es_419), fall back on the company's country.
+        lang = self.env.context.get("lang") or ""
+        country_code = self.company_id.country_id.code if lang == "es_419" else lang.split("_")[-1]
+        return const.COUNTRY_LOCALES.get(country_code, "en-US")
 
     # === REQUEST HELPERS === #
 
@@ -217,7 +248,7 @@ class PaymentProvider(models.Model):
             return super()._build_request_url(endpoint, is_proxy_request=is_proxy_request, **kwargs)
 
         if is_proxy_request:
-            return urljoin(f"{const.PROXY_URL}/1", endpoint)
+            return urljoin(const.PROXY_URL, endpoint)
 
         return urljoin("https://api.mercadopago.com", endpoint)
 
@@ -265,13 +296,13 @@ class PaymentProvider(models.Model):
         ):
             return self.mercado_pago_access_token
 
-        proxy_payload = self._prepare_json_rpc_payload({
+        proxy_payload = {
             "refresh_token": self.mercado_pago_refresh_token,
             "account_country_code": self.mercado_pago_account_country_id.code.lower(),
-        })
+        }
         response_content = self._send_api_request(
             "POST",
-            "/refresh_access_token",
+            "2/refresh_access_token",
             json=proxy_payload,
             is_proxy_request=True,
             is_refresh_token_request=True,
@@ -287,14 +318,6 @@ class PaymentProvider(models.Model):
             "mercado_pago_refresh_token": response_content["refresh_token"],
         })
         return self.mercado_pago_access_token
-
-    def _parse_response_content(self, response, *, is_proxy_request=False, **kwargs):
-        """Override of `payment` to parse the response content."""
-        if self.code != "mercado_pago" or not is_proxy_request:
-            return super()._parse_response_content(
-                response, is_proxy_request=is_proxy_request, **kwargs
-            )
-        return self._parse_proxy_response(response)
 
     def _parse_response_error(self, response):
         """Override of `payment` to parse the error message."""

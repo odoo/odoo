@@ -84,7 +84,7 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {}, () => [
     run: "click",
 }, {
     content: 'Check if the Guru form is present',
-    trigger: ':iframe form',
+    trigger: ':iframe #wrap form',
     run: "click",
 },
 ...clickOnEditAndWaitEditMode(),
@@ -98,7 +98,7 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {}, () => [
     },
 }, {
     content: 'Make the department_id field visible',
-    trigger: ':iframe form',
+    trigger: ':iframe #wrap form',
     run() {
         const departmentEl = this.anchor.querySelector('input[name="department_id"]');
         departmentEl.value = 'FAKE_DEPARTMENT_ID_DEFAULT_VAL';

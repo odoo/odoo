@@ -44,7 +44,6 @@ class TestPoSProductsWithTax(TestPoSCommon):
             54.99,
             tax_ids=[self.taxes['tax_fixed006'].id, self.taxes['tax_fixed012'].id, self.taxes['tax21'].id],
         )
-        self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
 
     def test_orders_no_invoiced(self):
         """ Test for orders without invoice
@@ -171,7 +170,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             for t1, t2 in zip(sorted(manually_calculated_taxes), sorted(tax_lines.mapped('balance'))):
                 self.assertAlmostEqual(t1, t2, msg='Taxes should be correctly combined.')
 
-            base_amounts = (97.27, 445.46)  # computation does not include invoiced order.
+            base_amounts = (-97.27, -445.46)  # computation does not include invoiced order.
             self.assertAlmostEqual(sum(base_amounts), sum(tax_lines.mapped('tax_base_amount')))
 
         self._run_test({
@@ -693,7 +692,6 @@ class TestPoSProductsWithTax(TestPoSCommon):
             'group_ids': [
                 (4, self.env.ref('base.group_user').id),
                 (4, self.env.ref('point_of_sale.group_pos_user').id),
-                (4, self.env.ref('stock.group_stock_user').id),
             ],
             'tz': 'America/New_York',
             'company_id': branch_xx.id,
@@ -718,6 +716,34 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self.assertEqual(get_taxes_name_popup(product_no_branch_tax), ["Tax A", "Tax B"])
         self.assertEqual(get_taxes_name_popup(product_no_tax), [])
 
+    def test_get_product_info_pos_with_fiscal_position(self):
+        tax_15 = self.env['account.tax'].create({
+            'name': 'tax_15',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 15.0,
+        })
+        tax_30 = self.env['account.tax'].create({
+            'name': 'tax_30',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 30.0,
+            'original_tax_ids': [Command.set(tax_15.ids)],
+        })
+        fp = self.env['account.fiscal.position'].create({
+            'name': 'Maps 15 to 30',
+            'tax_ids': [Command.set(tax_30.ids)],
+        })
+        product = self.create_product('Product FP', self.categ_basic, 100.0, tax_ids=tax_15.ids)
+        template = product.product_tmpl_id
+
+        def get_display_info(fp_id=False):
+            info = template.with_context(fiscal_position_id=fp_id).get_product_info_pos(100.0, 1, self.config.id)['all_prices']
+            return (info['price_with_tax'], [t['name'] for t in info['tax_details']])
+
+        self.assertEqual(get_display_info(), (115.0, ['tax_15']))
+        self.assertEqual(get_display_info(fp.id), (130.0, ['tax_30']))
+
     def test_combo_product_variant_error(self):
         """This tests make sure that product containing variants cannot change type to combo"""
 
@@ -734,3 +760,25 @@ class TestPoSProductsWithTax(TestPoSCommon):
         with self.assertRaises(UserError):
             with Form(self.variant_product.product_tmpl_id) as product:
                 product.type = "combo"
+
+    def test_tax_change_blocked_when_open_pos_session(self):
+        """Changing a POS sale tax must be blocked when a POS session is open"""
+        tax = self.taxes['tax7']
+
+        self.open_new_session()
+        self.assertEqual(self.pos_session.state, 'opened')
+
+        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([
+            (self.product1, 1),
+        ])])
+
+        self.assertTrue(self.pos_session.order_ids)
+        self.assertTrue(self.env['pos.order.line'].search([
+            ('order_id.session_id', '=', self.pos_session.id),
+            ('tax_ids', 'in', tax.ids),
+        ], limit=1))
+
+        with self.assertRaises(UserError):
+            tax.write({
+                'price_include_override': 'tax_included',
+            })

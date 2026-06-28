@@ -9,32 +9,32 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 18:37+0000\n"
-"PO-Revision-Date: 2025-10-30 08:31+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"PO-Revision-Date: 2026-04-04 12:54+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-2/"
 "pos_discount/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: pos_discount
 #: model_terms:ir.ui.view,arch_db:pos_discount.pos_session_sales_details
 msgid "<strong>Amount of global discounts</strong>:"
-msgstr ""
+msgstr "<strong>Alennusten kokonaismäärä</strong>:"
 
 #. module: pos_discount
 #: model_terms:ir.ui.view,arch_db:pos_discount.pos_session_sales_details
 msgid "<strong>Number of global discounts</strong>:"
-msgstr ""
+msgstr "<strong>Alennusten lukumäärä</strong>:"
 
 #. module: pos_discount
 #. odoo-python
@@ -59,7 +59,6 @@ msgstr "Asetukset"
 #. module: pos_discount
 #. odoo-javascript
 #: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
-#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:product.template,name:pos_discount.product_product_consumable_product_template
 msgid "Discount"
 msgstr "Alennus"
@@ -82,6 +81,7 @@ msgid "Discount Product"
 msgstr "Alennustuote"
 
 #. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__display_name
 #: model:ir.model.fields,field_description:pos_discount.field_product_template__display_name
 #: model:ir.model.fields,field_description:pos_discount.field_report_point_of_sale_report_saledetails__display_name
@@ -90,12 +90,18 @@ msgid "Display Name"
 msgstr "Näyttönimi"
 
 #. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_account_move_line__id
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__id
 #: model:ir.model.fields,field_description:pos_discount.field_product_template__id
 #: model:ir.model.fields,field_description:pos_discount.field_report_point_of_sale_report_saledetails__id
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_account_move_line
+msgid "Journal Item"
+msgstr ""
 
 #. module: pos_discount
 #. odoo-javascript
@@ -107,7 +113,7 @@ msgstr "Alennustuotetta ei löytynyt"
 #. odoo-javascript
 #: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Oh snap !"
-msgstr ""
+msgstr "Voi rähmä!"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
@@ -117,17 +123,17 @@ msgstr "Tilauksen alennukset"
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Kassan asetukset"
+msgstr "Kassajärjestelmän asetukset"
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_report_point_of_sale_report_saledetails
 msgid "Point of Sale Details"
-msgstr ""
+msgstr "Kassajärjestelmän yksityiskohdat"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
 msgid "Pos Discount Product"
-msgstr "Kassan alennustuote"
+msgstr "Kassajärjestelmän alennustuote"
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_product_template

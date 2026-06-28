@@ -4,21 +4,6 @@ import { fields } from "@mail/model/misc";
 
 import { patch } from "@web/core/utils/patch";
 
-/** @type {typeof DiscussChannel} */
-const discussChannelStaticPatch = {
-    /** @override */
-    async getOrFetch() {
-        const channel = await super.getOrFetch(...arguments);
-        if (channel) {
-            return channel;
-        }
-        // wait for restore of livechatService.savedState as channel might be inserted from there
-        await this.store.isReady;
-        return super.getOrFetch(...arguments);
-    },
-};
-patch(DiscussChannel, discussChannelStaticPatch);
-
 /** @type {import("models").DiscussChannel} */
 const discussChannelPatch = {
     setup() {
@@ -38,13 +23,16 @@ const discussChannelPatch = {
             },
         });
         this.requested_by_operator = false;
-        this.storeAsActiveLivechats = fields.One("Store", {
+        this.storeAsActiveVisitorLivechats = fields.One("Store", {
+            /** @this {import("models").DiscussChannel} */
             compute() {
-                return this.channel_type === "livechat" && !this.livechat_end_dt
+                return this.channel_type === "livechat" &&
+                    !this.livechat_end_dt &&
+                    (this.self_member_id?.eq(this.livechatVisitorMember) || this.isTransient)
                     ? this.store
                     : null;
             },
-            inverse: "activeLivechats",
+            inverse: "activeVisitorLivechats",
         });
         this._toggleChatbot = fields.Attr(false, {
             compute() {
@@ -56,7 +44,7 @@ const discussChannelPatch = {
             },
             onUpdate() {
                 const shouldToggle = this._toggleChatbot;
-                this.isLoadedDeferred.then(() => {
+                this.isLoadedPromise.then(() => {
                     if (shouldToggle) {
                         this.channel.chatbot.start();
                     } else {
@@ -108,7 +96,7 @@ const discussChannelPatch = {
         return (
             super.composerHidden ||
             this.livechat_end_dt ||
-            (this.channel?.chatbot?.completed && !this.channel.chatbot.forwarded)
+            (this.channel?.chatbot?.completed && !this.channel.livechat_agent_history_ids.length)
         );
     },
 };

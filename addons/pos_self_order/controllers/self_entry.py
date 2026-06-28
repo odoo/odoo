@@ -22,8 +22,10 @@ class PosSelfKiosk(http.Controller):
                         },
                         "base_url": request.env['pos.session'].get_base_url(),
                         "db": request.env.cr.dbname,
-                    }
-                }
+                    },
+                    'pos_config_id': pos_config.id,
+                    'pos_session_id': pos_config.current_session_id.id if pos_config.has_active_session else 0,  # Use 0 when there's no active session; False becomes empty when rendered via t-out
+                },
             )
 
     @http.route("/pos-self/data/<config_id>", type='jsonrpc', auth='public', website=True)
@@ -68,9 +70,7 @@ class PosSelfKiosk(http.Controller):
         if not pos_config:
             raise werkzeug.exceptions.NotFound()
 
-        if pos_config and pos_config.has_active_session and pos_config.self_ordering_mode == 'mobile':
-            if config_access_token:
-                config_access_token = pos_config.access_token
+        if pos_config and pos_config.self_ordering_mode == 'mobile':
             table_sudo = table_identifier and (
                 request.env["restaurant.table"]
                 .sudo()
@@ -78,9 +78,9 @@ class PosSelfKiosk(http.Controller):
             )
             if table_sudo and table_sudo.parent_id:
                 table_sudo = table_sudo.parent_id
-        elif pos_config.self_ordering_mode == 'kiosk':
-            if config_access_token:
-                config_access_token = pos_config.access_token
+        # In mobile mode, always set config_access_token (needed for notification), even without an active session
+        if config_access_token and pos_config.self_ordering_mode in ['kiosk', 'mobile']:
+            config_access_token = pos_config.access_token
         else:
             config_access_token = ''
 

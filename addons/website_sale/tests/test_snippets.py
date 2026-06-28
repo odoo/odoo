@@ -45,36 +45,39 @@ class TestSnippets(HttpCase):
     def test_02_snippet_products_remove(self):
         Visitor = self.env["website.visitor"]
         user = self.env["res.users"].search([("login", "=", "admin")])
-        website_visitor = Visitor.search([("partner_id", "=", user.partner_id.id)])
-        if not website_visitor:
-            with MockRequest(
-                user.with_user(user).env, website=self.env["website"].get_current_website()
-            ):
-                website_visitor = Visitor.create({"partner_id": user.partner_id.id})
-        self.assertEqual(
-            website_visitor.name,
-            user.name,
-            "The visitor should be linked to the admin user, not OdooBot or anything.",
-        )
-        self.product = self.env["product.product"].create({
+        product = self.env["product.product"].create({
             "name": "Storage Box",
             "website_published": True,
             "image_512": b"/product/static/img/product_product_9-image.jpg",
             "display_name": "Bin",
             "description_sale": "Pedal-based opening system",
         })
-        before_tour_product_ids = website_visitor.product_ids.ids
-        website_visitor._add_viewed_product(self.product.id)
+
+        self.authenticate("admin", "admin")
+        self.url_open(
+            "/website/odoo_track",
+            headers={"referer": product.website_url},
+            json={"params": {"res_model": "product.product", "res_id": product.id}},
+        )
+        website_visitor = Visitor.search([("partner_id", "=", user.partner_id.id)])
+
+        self.assertEqual(
+            website_visitor.name,
+            user.name,
+            "The visitor should be linked to the admin user, not OdooBot or anything.",
+        )
+        self.assertIn(
+            product.id, website_visitor.product_ids.ids, "The product should be recently viewed"
+        )
 
         self.start_tour(
             self.env["website"].get_client_action_url("/", True),
             "website_sale.products_snippet_recently_viewed",
             login="admin",
         )
-        self.assertEqual(
-            before_tour_product_ids,
+        self.assertFalse(
             website_visitor.product_ids.ids,
-            "There shouldn't be any new product in recently viewed after this tour",
+            "There shouldn't be any product in recently viewed after this tour",
         )
 
     def test_website_category_url(self):
@@ -82,7 +85,7 @@ class TestSnippets(HttpCase):
         category = self.env["product.public.category"].create({"name": "Test Category"})
 
         self.env.company.website_id = False
-        website = self.env.ref("website.default_website")
+        website = self.env.ref("base.default_website")
         website.update({"domain": "http://www.example.com", "company_id": self.env.company.id})
 
         # Simulate a request with correct context
@@ -95,6 +98,7 @@ class TestSnippets(HttpCase):
                 ._prepare_category_list_data(parent_id=category.id)
             )
 
-        # Assert that the returned cover_image uses the mocked base URL
-        self.assertTrue(data[0]["cover_image"].startswith(original_get_base_url))
+        # Assert that the returned cover_image use absolute URL without domain
+        self.assertTrue(data[0]["cover_image"].startswith("/"))
+        self.assertNotIn(original_get_base_url, data[0]["cover_image"])
         self.assertNotIn(website.domain, data[0]["cover_image"])

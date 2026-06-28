@@ -49,4 +49,20 @@
         <field name="interval_type">hours</field>
         <field name="nextcall" eval="(DateTime.now() + timedelta(hours=12)).strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
+
+    <record id="ir_cron_nilvera_sync_ticarifatura_response" model="ir.cron">
+        <field name="name">Nilvera: Sync Commercial Invoice customer response</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+# Sync Nilvera TICARIFATURA customer responses.
+# Optional: pass limit (default 20) to control how many invoices are processed per run.
+# Example: model._cron_l10n_tr_nilvera_sync_ticarifatura_response(limit=30)
+model._cron_l10n_tr_nilvera_sync_ticarifatura_response()
+]]>
+        </field>
+        <field name="interval_number">12</field>
+        <field name="interval_type">hours</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(hours=12)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
 </odoo>

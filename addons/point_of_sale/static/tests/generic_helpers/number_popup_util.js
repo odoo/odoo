@@ -1,10 +1,16 @@
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 
-export function enterValue(keys) {
-    return Numpad.enterValue(keys).map((step) => ({
+export function enterValue(keys, check = true) {
+    const steps = Numpad.enterValue(keys).map((step) => ({
         ...step,
         trigger: `.modal ${step.trigger}`,
     }));
+    if (check && !isNaN(keys)) {
+        steps.push({
+            trigger: `.modal .input-value:contains(${keys})`,
+        });
+    }
+    return steps;
 }
 export function isShown(val = "") {
     return [

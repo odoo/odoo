@@ -224,7 +224,7 @@
       ],
       "cells": {
         "A4": "[Sessions by Agent](odoo://view/{\"viewType\":\"graph\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_channel_action\",\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"partner_id\"],\"graph_order\":null,\"graph_stacked\":true},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sessions by Agent\"})",
-        "A33": "[Top Agents](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_operator_action\",\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"__count\",\"time_to_answer\",\"duration\",\"rating\",\"number_of_calls\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Agents\"})",
+        "A33": "[Top Agents](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_operator_action\",\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"__count\",\"time_to_answer\",\"duration\",\"rating_percentage\",\"number_of_calls\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Agents\"})",
         "A34": "=_t(\"Agent\")",
         "A35": "=PIVOT.HEADER(3,\"#partner_id\", 1)",
         "A36": "=PIVOT.HEADER(3,\"#partner_id\",2)",
@@ -249,7 +249,7 @@
         "A63": "=PIVOT.HEADER(6,\"#partner_id\",9)",
         "A64": "=PIVOT.HEADER(6,\"#partner_id\",10)",
         "A73": "[Sessions by Day](odoo://view/{\"viewType\":\"graph\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_channel_action\",\"domain\":[],\"context\":{\"group_by\":[\"start_date:day\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"start_date:day\"],\"graph_order\":null,\"graph_stacked\":true},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sessions by Day\"})",
-        "A107": "[Sessions by Day of Week](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_operator_action\",\"domain\":[],\"context\":{\"group_by\":[\"day_number\"],\"pivot_measures\":[\"__count\",\"time_to_answer\",\"duration\",\"rating\",\"number_of_calls\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sessions by Day of Week\"})",
+        "A107": "[Sessions by Day of Week](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_operator_action\",\"domain\":[],\"context\":{\"group_by\":[\"day_number\"],\"pivot_measures\":[\"__count\",\"time_to_answer\",\"duration\",\"rating_percentage\",\"number_of_calls\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sessions by Day of Week\"})",
         "A126": "[Top Countries](odoo://view/{\"viewType\":\"graph\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_channel_action\",\"domain\":[],\"context\":{\"group_by\":[\"country_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"country_id\"],\"graph_order\":null,\"graph_stacked\":true},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Countries\"})",
         "A128": "=_t(\"Country\")",
         "A129": "=PIVOT.HEADER(9,\"#country_id\", 1)",
@@ -369,16 +369,16 @@
         "U43": "=PIVOT.VALUE(3,\"nbr_message:avg\",\"#partner_id\",9)",
         "U44": "=PIVOT.VALUE(3,\"nbr_message:avg\",\"#partner_id\",10)",
         "Y34": "=_t(\"Rating (%)\")",
-        "Y35": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",1)), MAX(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",1) - 1, 0) * 0.25, \"\")",
-        "Y36": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",2)), MAX(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",2) - 1, 0) * 0.25, \"\")",
-        "Y37": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",3)), MAX(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",3) - 1, 0) * 0.25, \"\")",
-        "Y38": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",4)), MAX(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",4) - 1, 0) * 0.25, \"\")",
-        "Y39": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",5)), MAX(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",5) - 1, 0) * 0.25, \"\")",
-        "Y40": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",6)), MAX(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",6) - 1, 0) * 0.25, \"\")",
-        "Y41": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",7)), MAX(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",7) - 1, 0) * 0.25, \"\")",
-        "Y42": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",8)), MAX(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",8) - 1, 0) * 0.25, \"\")",
-        "Y43": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",9)), MAX(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",9) - 1, 0) * 0.25, \"\")",
-        "Y44": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",10)), MAX(PIVOT.VALUE(3,\"rating:avg\",\"#partner_id\",10) - 1, 0) * 0.25, \"\")",
+        "Y35": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",1)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",1) / 100, \"\")",
+        "Y36": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",2)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",2) / 100, \"\")",
+        "Y37": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",3)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",3) / 100, \"\")",
+        "Y38": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",4)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",4) / 100, \"\")",
+        "Y39": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",5)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",5) / 100, \"\")",
+        "Y40": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",6)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",6) / 100, \"\")",
+        "Y41": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",7)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",7) / 100, \"\")",
+        "Y42": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",8)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",8) / 100, \"\")",
+        "Y43": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",9)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",9) / 100, \"\")",
+        "Y44": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",10)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",10) / 100, \"\")",
         "Z128": "=_t(\"Sessions\")",
         "Z129": "=PIVOT.VALUE(10,\"__count\",\"#lang_id\", 1)",
         "Z130": "=PIVOT.VALUE(10,\"__count\",\"#lang_id\",2)",
@@ -637,7 +637,6 @@
           "tag": "chart",
           "data": {
             "title": { "text": "" },
-            "background": "#FFFFFF",
             "legendPosition": "none",
             "metaData": {
               "groupBy": ["partner_id"],
@@ -847,7 +846,6 @@
           "tag": "chart",
           "data": {
             "title": { "text": "" },
-            "background": "#FFFFFF",
             "legendPosition": "none",
             "metaData": {
               "groupBy": ["start_date:day"],
@@ -890,7 +888,6 @@
           "tag": "chart",
           "data": {
             "title": { "text": "" },
-            "background": "#FFFFFF",
             "legendPosition": "none",
             "metaData": {
               "groupBy": ["day_number"],
@@ -933,7 +930,6 @@
           "tag": "chart",
           "data": {
             "title": { "text": "" },
-            "background": "#FFFFFF",
             "legendPosition": "none",
             "metaData": {
               "groupBy": ["start_hour"],
@@ -1009,7 +1005,7 @@
         "B2": "=PIVOT.VALUE(4,\"__count\")",
         "B3": "=PIVOT.VALUE(1, \"time_to_answer:avg\")",
         "B4": "=PIVOT.VALUE(1,\"duration:avg\")",
-        "B5": "=IF(ISNUMBER(PIVOT.VALUE(1,\"rating:avg\")), MAX(PIVOT.VALUE(1,\"rating:avg\") - 1, 0) * 100 / 4, \"\")",
+        "B5": "=IF(ISNUMBER(PIVOT.VALUE(1,\"rating_percentage:avg\")), PIVOT.VALUE(1,\"rating_percentage:avg\"), \"\")",
         "B6": "=PIVOT.VALUE(1,\"nbr_message:avg\")",
         "B7": "=PIVOT.VALUE(1, \"has_call:sum\")",
         "B8": "=IF(B2 > 0, B7/B2, 0)",
@@ -1123,7 +1119,7 @@
           "fieldName": "time_to_answer",
           "aggregator": "avg"
         },
-        { "id": "rating:avg", "fieldName": "rating", "aggregator": "avg" },
+        { "id": "rating_percentage:avg", "fieldName": "rating_percentage", "aggregator": "avg" },
         {
           "id": "nbr_message:avg",
           "fieldName": "nbr_message",
@@ -1173,7 +1169,7 @@
           "fieldName": "time_to_answer",
           "aggregator": "avg"
         },
-        { "id": "rating:avg", "fieldName": "rating", "aggregator": "avg" },
+        { "id": "rating_percentage:avg", "fieldName": "rating_percentage", "aggregator": "avg" },
         {
           "id": "nbr_message:avg",
           "fieldName": "nbr_message",
@@ -1226,7 +1222,7 @@
           "aggregator": "avg"
         },
         { "id": "duration:avg", "fieldName": "duration", "aggregator": "avg" },
-        { "id": "rating:avg", "fieldName": "rating", "aggregator": "avg" },
+        { "id": "rating_percentage:avg", "fieldName": "rating_percentage", "aggregator": "avg" },
         {
           "id": "nbr_message:avg",
           "fieldName": "nbr_message",

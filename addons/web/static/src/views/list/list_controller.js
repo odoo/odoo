@@ -1,15 +1,7 @@
-import {
-    render,
-    onWillRender,
-    useLayoutEffect,
-    useRef,
-    useState,
-    useSubEnv,
-} from "@web/owl2/utils";
+import { render, onWillRender, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
-import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { useSetupAction } from "@web/search/action_hook";
@@ -34,7 +26,7 @@ import { OfflineActionHelper } from "@web/views/offline_action_helper";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 
-import { Component, onWillPatch, onWillStart } from "@odoo/owl";
+import { Component, onWillPatch, onWillStart, props, proxy, t } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 
@@ -52,23 +44,19 @@ export class ListController extends Component {
         DropdownItem,
         SelectionBox,
     };
-    static props = {
+    props = props({
         ...standardViewProps,
-        allowSelectors: { type: Boolean, optional: true },
-        onSelectionChanged: { type: Function, optional: true },
-        readonly: { type: Boolean, optional: true },
-        allowOpenAction: { type: Boolean, optional: true },
-        Model: Function,
-        Renderer: Function,
-        buttonTemplate: String,
-        archInfo: Object,
-    };
-    static defaultProps = {
-        allowSelectors: true,
-        createRecord: () => {},
-        selectRecord: () => {},
-        allowOpenAction: true,
-    };
+        allowSelectors: t.boolean().optional(true),
+        onSelectionChanged: t.function().optional(),
+        readonly: t.boolean().optional(),
+        allowOpenAction: t.boolean().optional(true),
+        Model: t.function(),
+        Renderer: t.function(),
+        buttonTemplate: t.string(),
+        archInfo: t.object(),
+        createRecord: t.function().optional(() => () => {}),
+        selectRecord: t.function().optional(() => () => {}),
+    });
 
     setup() {
         this.actionService = useService("action");
@@ -82,7 +70,7 @@ export class ListController extends Component {
         this.onOpenFormView = this.openRecord.bind(this);
         this.editable = (!this.props.readonly && this.archInfo.editable) || false;
         this.hasOpenFormViewButton = this.editable ? this.archInfo.openFormView : false;
-        this.model = useState(
+        this.model = proxy(
             useModelWithSampleData(this.props.Model, this.modelParams, this.modelOptions)
         );
 
@@ -134,24 +122,31 @@ export class ListController extends Component {
                 };
             },
             getOrderBy: () => this.model.root.orderBy,
+            getContext: () => {
+                const optionalShow = Object.keys(this.optionalActiveFields).filter(
+                    (name) => this.optionalActiveFields[name]
+                );
+                return optionalShow.length ? { list_optional_show: optionalShow } : {};
+            },
         });
 
         useLayoutEffect(
             (isReady) => {
-                if (isReady) {
-                    if (this.env.isSmall) {
-                        setScrollFromState();
-                    } else {
-                        const { rendererScrollPositions } = this.props.state || {};
-                        if (rendererScrollPositions) {
-                            const renderer = this.rootRef.el.querySelector(".o_list_renderer");
-                            renderer.scrollLeft = rendererScrollPositions.left;
-                            renderer.scrollTop = rendererScrollPositions.top;
-                        }
+                if (!isReady) {
+                    return;
+                }
+                if (this.env.isSmall) {
+                    setScrollFromState();
+                } else {
+                    const { rendererScrollPositions } = this.props.state || {};
+                    if (rendererScrollPositions) {
+                        const renderer = this.rootRef.el.querySelector(".o_list_renderer");
+                        renderer.scrollLeft = rendererScrollPositions.left;
+                        renderer.scrollTop = rendererScrollPositions.top;
                     }
                 }
             },
-            () => [this.model.isReady]
+            () => [this.model.isReady()]
         );
 
         usePager(() => {
@@ -171,7 +166,7 @@ export class ListController extends Component {
                     }
                     await this.model.root.load({ limit, offset });
                     if (hasNavigated) {
-                        this.onPageChangeScroll();
+                        this.onPageChange();
                     }
                 },
                 updateTotal:
@@ -271,25 +266,39 @@ export class ListController extends Component {
     }
 
     get isNewButtonAvailableOffline() {
-        if (
-            !this.archInfo.editable &&
-            this.offlineService.isAvailableOffline(this.env.config.actionId, "form", false)
-        ) {
-            return true;
+        if (this.archInfo.editable && !this.model.root.isGrouped) {
+            return this.offlineService.isAvailableOffline(
+                this.env.config.actionId,
+                "list_quick_create",
+                false
+            );
         }
-        return false;
+        return this.offlineService.isAvailableOffline(this.env.config.actionId, "form", false);
     }
 
     getExportableFields() {
-        return unique(
+        const { activeFields, fields } = this.model.root;
+        // Columns currently visible in the list (not invisible and, if optional, toggled on).
+        const visibleColumns = new Set(
             this.props.archInfo.columns
                 .filter((col) => col.type === "field")
-                .filter((col) => !col.optional || this.optionalActiveFields[col.name])
                 .filter((col) => !evaluateBooleanExpr(col.column_invisible, this.props.context))
-                .map((col) => this.props.fields[col.name])
-                .filter((field) => field.exportable !== false)
-                .filter((field) => field.type !== "properties")
+                .filter((col) => !col.optional || this.optionalActiveFields[col.name])
+                .map((col) => col.name)
         );
+        return Object.keys(activeFields)
+            .map((fieldName) => fields[fieldName])
+            .filter(Boolean)
+            .filter((field) => {
+                // Export a sub-property only when its own optional
+                // column is currently shown.
+                if (field.relatedPropertyField) {
+                    return this.optionalActiveFields[field.name];
+                }
+                return visibleColumns.has(field.name);
+            })
+            .filter((field) => field.exportable !== false)
+            .filter((field) => field.type !== "properties");
     }
 
     async beforeLeave(ev) {
@@ -334,7 +343,7 @@ export class ListController extends Component {
     async onWillSaveRecord(record) {}
 
     async createRecord({ group } = {}) {
-        if (!this.model.isReady && !this.model.config.groupBy.length && this.editable) {
+        if (!this.model.isReady() && !this.model.config.groupBy.length && this.editable) {
             // If the view isn't grouped and the list is editable, a new record row will be added,
             // in edition. In this situation, we must wait for the model to be ready.
             await this.model.whenReady.promise;
@@ -418,7 +427,7 @@ export class ListController extends Component {
         );
     }
 
-    onPageChangeScroll() {
+    onPageChange() {
         if (this.rootRef && this.rootRef.el) {
             if (this.env.isSmall) {
                 this.rootRef.el.scrollTop = 0;
@@ -446,6 +455,7 @@ export class ListController extends Component {
             },
             archive: {
                 isAvailable: () => this.archiveEnabled,
+                availableOffline: true,
                 sequence: 40,
                 icon: "oi oi-archive",
                 description: _t("Archive"),
@@ -454,6 +464,7 @@ export class ListController extends Component {
             },
             unarchive: {
                 isAvailable: () => this.archiveEnabled,
+                availableOffline: true,
                 sequence: 45,
                 icon: "oi oi-unarchive",
                 description: _t("Unarchive"),
@@ -461,6 +472,7 @@ export class ListController extends Component {
             },
             delete: {
                 isAvailable: () => this.activeActions.delete,
+                availableOffline: true,
                 sequence: 50,
                 icon: "fa fa-trash-o",
                 description: _t("Delete"),

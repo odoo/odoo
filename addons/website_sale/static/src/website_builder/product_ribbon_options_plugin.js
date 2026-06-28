@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -7,7 +7,6 @@ import { registry } from "@web/core/registry";
 
 export class ProductsRibbonOptionPlugin extends Plugin {
     static id = 'productsRibbonOptionPlugin';
-    static dependencies = ['history'];
     static shared = [
         'getRibbonsObject',
         'setRibbonObject',
@@ -22,7 +21,7 @@ export class ProductsRibbonOptionPlugin extends Plugin {
         'loadInfo',
         'getCount',
     ];
-    count = reactive({ value: 0 });
+    count = proxy({ value: 0 });
 
     resources = {
         builder_actions: {
@@ -66,7 +65,7 @@ export class ProductsRibbonOptionPlugin extends Plugin {
                 [['assign', '=', 'manual']],
                 ['id', 'name', 'bg_color', 'text_color', 'position', 'style']
             );
-            this.ribbons = reactive(result);
+            this.ribbons = proxy(result);
         }
 
         this.ribbonsObject = this.ribbons.reduce((acc, ribbon) => {
@@ -340,7 +339,7 @@ export class CreateRibbonAction extends BuilderAction {
             templateId: productTemplateId,
             ribbonId: ribbonId,
         });
-        const ribbon = reactive({
+        const ribbon = proxy({
             serverId: null,
             id: ribbonId,
             name: 'Ribbon Name',

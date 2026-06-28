@@ -9,7 +9,7 @@ from typing import Any, Literal
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import config, ormcache, mute_logger, str2bool
+from odoo.tools import config, mute_logger, str2bool
 
 _logger = logging.getLogger(__name__)
 
@@ -128,7 +128,7 @@ class IrConfig_Parameter(models.Model):
             return default
         return value
 
-    @ormcache('key', 'type_', cache='stable')
+    @api.ormcache('key', 'type_', cache='stable')
     def _get(self, key: str, type_: Type_ = 'str') -> tuple[Any, int | None]:
         """
         Return a pair ``(value, id)`` with the value of the config parameter (or ``INVALID_VALUE`` if invalid) and

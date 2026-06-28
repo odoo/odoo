@@ -6,6 +6,7 @@ import re
 
 from odoo import api, fields, models, release
 from odoo.tools import LazyTranslate
+from odoo.tools.business_data import split_vat
 
 _lt = LazyTranslate(__name__)
 
@@ -165,4 +166,9 @@ class ResCompany(models.Model):
 
     def _l10n_es_freelancer(self):
         self.ensure_one()
-        return self.vat and re.fullmatch(r"(ES)?(\d{8}[A-Z]|[X-Z].*)", self.vat) or False
+        if not self.vat:
+            return False
+
+        vat = split_vat(self.vat, default_country_code='ES')[1]
+
+        return re.fullmatch(r"(\d{8}[TRWAGMYFPDXBNJZSQVHLCKE]|[XYZ]\d{7}[TRWAGMYFPDXBNJZSQVHLCKE]|E\d{7}[A-J0-9])", vat) or False

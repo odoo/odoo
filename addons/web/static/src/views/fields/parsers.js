@@ -4,7 +4,7 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { ArithmeticOperation } from "@web/model/relational_model/operation";
-import { durationUnitsRegex, normalizeTimeStr } from "../../core/l10n/time";
+import { durationUnitsRegex, normalizeTimeStr } from "@web/core/l10n/time";
 
 /**
  * @typedef Duration
@@ -73,6 +73,7 @@ function parseNumber(value, options = {}) {
 // -----------------------------------------------------------------------------
 
 export class InvalidNumberError extends Error {}
+export class DurationParseError extends Error {}
 
 /**
  * Try to extract a float from a string. The localization is considered in the process.
@@ -112,7 +113,13 @@ export function parseFloat(value, { allowOperation = false } = {}) {
  * @returns {number} a float
  */
 export function parseFloatTime(value, unit = "hours") {
-    const duration = parseDuration(value, unit);
+    let duration;
+    if (value.startsWith("=")) {
+        duration = { hours: 0, minutes: 0, seconds: 0 };
+        duration[unit] = evaluateMathematicalExpression(value.substring(1));
+    } else {
+        duration = parseDuration(value, unit);
+    }
 
     if (unit === "hours") {
         return duration.hours + duration.minutes / 60 + duration.seconds / 3600;
@@ -136,11 +143,14 @@ export function parseFloatTime(value, unit = "hours") {
  */
 function parseDuration(value, unit = "hours") {
     let isNegative;
+    const regexTimes = durationUnitsRegex();
     const duration = {
         hours: 0,
         minutes: 0,
         seconds: 0,
     };
+    const originalValue = value;
+    value = normalizeTimeStr(value, true);
 
     if (!value) {
         return duration;
@@ -153,13 +163,12 @@ function parseDuration(value, unit = "hours") {
 
     value = value.replaceAll(" ", "");
     value = value
-        .replaceAll(localization.decimalPoint, ".")
-        .replaceAll(localization.thousandsSep, "");
+        .replaceAll(localization.thousandsSep, "")
+        .replaceAll(localization.decimalPoint, ".");
 
     // Single number
     if (!isNaN(value)) {
         duration[unit] = Number(value);
-        value = "";
     }
 
     // 12:30:45 format
@@ -177,14 +186,14 @@ function parseDuration(value, unit = "hours") {
                 i++;
             }
         }
-        value = "";
     }
 
     // 12h 30m 45s format
-    else {
-        const regexTimes = durationUnitsRegex();
-
-        value = normalizeTimeStr(value, true);
+    else if (
+        value.match(regexTimes.hours) ||
+        value.match(regexTimes.minutes) ||
+        value.match(regexTimes.seconds)
+    ) {
         let temp;
         if ((temp = value.match(regexTimes.hours))) {
             duration.hours = parseInt(temp[1], 10);
@@ -198,6 +207,8 @@ function parseDuration(value, unit = "hours") {
         if ((temp = value.match(regexTimes.seconds) || value.match(/^(\d+)$/))) {
             duration.seconds = parseInt(temp[1], 10);
         }
+    } else {
+        throw new DurationParseError(`Couldn't parse '${originalValue}'.`);
     }
 
     if (isNegative) {

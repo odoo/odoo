@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests import common
 from odoo.tests import HttpCase, new_test_user, tagged, users
 
@@ -20,10 +21,10 @@ class TestMailMessage(common.MailCommon, HttpCase):
         self.env.user.group_ids -= self.env.ref("base.group_partner_manager")
         self.assertFalse(message.has_access("write"))
         self.make_jsonrpc_request(
-            "/mail/action", {"fetch_params": [["add_bookmark", {"message_id": message.id}]]},
+            "/mail/store", {"fetch_params": [["add_bookmark", {"message_id": message.id}]]},
         )
         self.assertIn(self.env.user.partner_id, message.bookmarked_partner_ids)
-        self.make_jsonrpc_request("/mail/action", {"fetch_params": ["remove_all_bookmarks"]})
+        self.make_jsonrpc_request("/mail/store", {"fetch_params": ["remove_all_bookmarks"]})
         self.assertNotIn(self.env.user.partner_id, message.bookmarked_partner_ids)
 
     def test_mail_message_read_inexisting(self):
@@ -37,6 +38,15 @@ class TestMailMessage(common.MailCommon, HttpCase):
         self.env['res.company'].invalidate_model(['name'])
         message_c1 = self._add_messages(self.env.company, "Company Note 1", author=self.user_employee.partner_id)
         message_c2 = self._add_messages(self.company_2, "Company Note 2", author=self.user_employee_c2.partner_id)
+        message_not_author_but_in_to = self._add_messages(
+            self.company_2, "Company Note 3",
+            author=self.user_employee_c2.partner_id, partner_ids=self.user_employee.partner_id)
+        message_not_author_but_in_cc = self._add_messages(
+            self.company_2, "Company Note 4",
+            author=self.user_employee_c2.partner_id, partner_cc_ids=self.user_employee.partner_id)
+        message_not_author_nor_in_recipients = self._add_messages(
+            self.company_2, "Company Note 5",
+            author=self.user_employee_c2.partner_id, partner_cc_ids=self.user_employee_c3.partner_id)
         search_result = (
             self.env["mail.message"]
             .with_context(allowed_company_ids=[self.env.company.id])
@@ -45,6 +55,9 @@ class TestMailMessage(common.MailCommon, HttpCase):
         )
         self.assertIn(message_c1, search_result)
         self.assertNotIn(message_c2, search_result)
+        self.assertIn(message_not_author_but_in_to, search_result)
+        self.assertIn(message_not_author_but_in_cc, search_result)
+        self.assertNotIn(message_not_author_nor_in_recipients, search_result)
 
     @users("employee")
     def test_unlink_failure_message_notify_author(self):
@@ -57,10 +70,9 @@ class TestMailMessage(common.MailCommon, HttpCase):
         self.assertEqual(message.notification_ids.res_partner_id, recipient.partner_id)
         self.assertEqual(message.notification_ids.author_id, self.env.user.partner_id)
         with self.assertBus(
-            [recipient, self.env.user],
             [
-                {"type": "mail.message/delete", "payload": {"message_ids": [message.id]}},
-                {"type": "mail.message/delete", "payload": {"message_ids": [message.id]}},
+                BusResult(recipient, "mail.message/delete", {"message_ids": [message.id]}),
+                BusResult(self.env.user, "mail.message/delete", {"message_ids": [message.id]}),
             ],
         ):
             message.unlink()

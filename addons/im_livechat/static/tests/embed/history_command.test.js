@@ -1,3 +1,5 @@
+import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
@@ -17,10 +19,12 @@ test("Handle livechat history command", async () => {
         expect.step(new URL(url).pathname);
         return true;
     });
-    await start({ authenticateAs: false });
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Composer-input").edit("Hello World!", { confirm: false });
+    const subscribed = waitUntilSubscribe();
     await press("Enter");
+    await subscribed;
     await waitFor(".o-mail-Message:contains(Hello World!)");
     const thread = Object.values(getService("mail.store")["mail.thread"].records).at(-1);
     const guestId = pyEnv.cookie.get("dgid");

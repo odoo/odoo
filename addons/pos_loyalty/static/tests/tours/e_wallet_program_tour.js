@@ -7,6 +7,7 @@ import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_li
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 
@@ -199,5 +200,36 @@ registry.category("web_tour.tours").add("EWalletLoyaltyHistory", {
             }),
             PosLoyalty.orderTotalIs("0.00"),
             PosLoyalty.finalizeOrder("Cash", "0"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("EWalletRefundCreditNoteQtyTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Ewal"),
+            ProductScreen.addOrderline("Whiteboard Pen", "1", "20", "20.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.clickNextOrder(),
+            ProductScreen.clickRefund(),
+            TicketScreen.filterIs("Paid"),
+            TicketScreen.selectOrder("Ewal"),
+            TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
+            PaymentScreen.clickBack(),
+            PosLoyalty.eWalletButtonState({
+                highlighted: true,
+                text: getEWalletText("Refund"),
+                click: true,
+            }),
+            PosLoyalty.orderTotalIs("0.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.isInvoiceButtonChecked(),
+            PaymentScreen.clickValidate(),
         ].flat(),
 });

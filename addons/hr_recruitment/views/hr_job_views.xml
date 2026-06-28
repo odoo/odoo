@@ -22,6 +22,7 @@
                 >
                 <field name="active"/>
                 <field name="alias_email"/>
+                <field name="company_id"/>
                 <templates>
                     <t t-name="menu" groups="hr_recruitment.group_hr_recruitment_user">
                         <div class="container">
@@ -276,7 +277,7 @@
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
             <xpath expr="//h1" position="attributes">
-                <attribute name="class" add="d-flex align-items-center" separator=" "/>
+                <attribute name="class" add="d-flex align-items-center gap-2" separator=" "/>
             </xpath>
             <xpath expr="//field[@name='name']" position="before">
                 <field name="is_favorite" widget="boolean_favorite" class="hr_recruitment_is_favorite_job" nolabel="1"/>
@@ -304,13 +305,11 @@
                     help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"
                 />
                 <div class="row">
-                    <div class="d-flex col-10 w-100">
+                    <div class="d-flex align-items-baseline gap-1">
                         <field name="alias_name" placeholder="e.g. jobs" class="o_field_highlight"/>
-                        <div class="o_input_box">
-                            <span class="o_input_box_overlay_start">@</span>
-                            <field name="alias_domain_id" placeholder="e.g. domain.com"
-                                   options="{'no_create': True, 'no_open': True}" class="o_field_highlight"/>
-                        </div>
+                        <span>@</span>
+                        <field name="alias_domain_id" placeholder="e.g. domain.com"
+                            options="{'no_create': True, 'no_open': True}" class="o_field_highlight"/>
                     </div>
                     <div class="col-2 p-0" invisible="not alias_email">
                         <field name="alias_email" widget="CopyClipboardButton"
@@ -369,8 +368,8 @@
                 </button>
             </div>
             <xpath expr="//page[@name='job_description_page']" position="after">
-                <page string="Trackers" name="trackers_page" groups="hr.group_hr_user">
-                    <field name="job_source_ids" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
+                <page string="Trackers" name="trackers_page" groups="hr_recruitment.group_hr_recruitment_user">
+                    <field name="job_source_ids" groups="hr_recruitment.group_hr_recruitment_user"/>
                 </page>
             </xpath>
             <xpath expr="//sheet" position="after">
@@ -423,10 +422,10 @@
         <field name="inherit_id" ref="hr.view_hr_job_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="department_id"/>
+                <field name="department_id" optional="hide"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="open_application_count" string="Open Applications" groups="hr_recruitment.group_hr_recruitment_interviewer" optional="hide"/>
-                <field name="no_of_recruitment" optional="hide"/>
+                <field name="no_of_recruitment"/>
             </field>
             <field name="no_of_employee" position="after">
                 <field name="expected_employees" optional="hide"

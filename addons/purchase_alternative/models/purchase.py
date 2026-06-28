@@ -126,9 +126,16 @@ class PurchaseOrder(models.Model):
                 product_to_best_price_unit[line.product_id] = line
             else:
                 price_subtotal = line.price_total_cc
-                price_unit = line.price_total_cc / line.product_qty
                 current_price_subtotal = product_to_best_price_line[line.product_id][0].price_total_cc
+
+                price_unit = line.uom_id._compute_price(line.price_total_cc / line.product_qty, line.product_id.uom_id)
+
                 current_price_unit = product_to_best_price_unit[line.product_id][0].price_total_cc / product_to_best_price_unit[line.product_id][0].product_qty
+                current_best_price_uom = product_to_best_price_unit[line.product_id][0].uom_id
+                current_price_unit = current_best_price_uom._compute_price(
+                                        current_price_unit,
+                                        line.product_id.uom_id
+                                    )
 
                 if current_price_subtotal > price_subtotal:
                     product_to_best_price_line[line.product_id] = line
@@ -155,10 +162,11 @@ class PurchaseOrder(models.Model):
             best_price_unit_ids.update(lines.ids)
         return list(best_price_ids), list(best_date_ids), list(best_price_unit_ids)
 
-    def _merge_alternative_po(self, rfqs):
+    def _merge_po_post_process(self, rfqs):
+        super()._merge_po_post_process(rfqs)
+        # Merge alternative purchase orders.
         if self.alternative_po_ids:
-            super()._merge_alternative_po(rfqs)
-            self.alternative_po_ids += rfqs.mapped('alternative_po_ids')
+            self.alternative_po_ids += rfqs.alternative_po_ids
 
 
 class PurchaseOrderLine(models.Model):

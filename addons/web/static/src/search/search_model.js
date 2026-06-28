@@ -66,8 +66,6 @@ const { DateTime } = luxon;
  * }} Search
  */
 
-const DEFAULT_GROUPBY_ID = -1;
-
 /** @todo rework doc */
 // interface SectionCommon { // check optional keys
 //     color: string;
@@ -689,11 +687,6 @@ export class SearchModel extends EventBus {
      * with given groupId.
      */
     deactivateGroup(groupId) {
-        if (groupId === DEFAULT_GROUPBY_ID) {
-            delete this.defaultGroupBy;
-            this._notify();
-            return;
-        }
         this.query = this.query.filter((queryElem) => {
             const searchItem = this.searchItems[queryElem.searchItemId];
             return searchItem.groupId !== groupId;
@@ -849,11 +842,7 @@ export class SearchModel extends EventBus {
             if (type === "favorite") {
                 const activeItemGroupBys = this._getSearchItemGroupBys(firstActiveItem);
                 let createNewGroupBys = Boolean(activeItemGroupBys.length);
-                if (
-                    createNewGroupBys &&
-                    this.defaultGroupBy &&
-                    this.env.config.viewType === "kanban"
-                ) {
+                if (createNewGroupBys && this.defaultGroupBy) {
                     const currentGroupBy = this._getGroupBy({ fallbackOnDefault: false });
                     if (JSON.stringify(currentGroupBy) === JSON.stringify(this.defaultGroupBy)) {
                         createNewGroupBys = false;
@@ -888,6 +877,68 @@ export class SearchModel extends EventBus {
         this.blockNotification = false;
 
         this._notify();
+    }
+
+    async loadLazyParentFilter(itemId) {
+        const searchItem = this.searchItems[itemId];
+        if (searchItem.optionsParams.fieldType === "selection") {
+            const field = this.searchViewFields[searchItem.optionsParams.fieldName];
+            const values = field.selection;
+            const options = searchItem.optionsParams.customOptions;
+            for (const val of values) {
+                options.push({
+                    description: val[1],
+                    domain: Domain.and([
+                        searchItem.domain,
+                        `[('${searchItem.optionsParams.fieldName}', '=', '${val[0]}')]`,
+                    ]).toString(),
+                    id: `custom_${val[1].toLowerCase()}_${searchItem.optionsParams.fieldName}`,
+                    type: "innerFilter",
+                });
+            }
+        }
+        if (["many2many", "many2one"].includes(searchItem.optionsParams.fieldType)) {
+            await this.loadMoreOptions(itemId);
+        }
+        delete searchItem.optionsParams.toBeLoaded;
+    }
+
+    async loadMoreOptions(itemId) {
+        const searchItem = this.searchItems[itemId];
+        const field = this.searchViewFields[searchItem.optionsParams.fieldName];
+        if (searchItem.optionsParams.limit) {
+            searchItem.optionsParams.limit *= 2;
+        } else {
+            searchItem.optionsParams.limit = 8;
+        }
+        const res = await this.orm
+            .cache({ type: "disk" })
+            .webSearchRead(
+                field.relation,
+                new Domain(searchItem.optionsParams.domain).toList(this.context),
+                {
+                    specification: {
+                        id: {},
+                        display_name: {},
+                    },
+                    limit: searchItem.optionsParams.limit,
+                }
+            );
+        searchItem.optionsParams.count = res.length;
+        const values = res.records.map((r) => [r.id, r.display_name]);
+        const options = [];
+        for (const val of values) {
+            options.push({
+                description: val[1],
+                domain: Domain.and([
+                    searchItem.domain,
+                    `[('${searchItem.optionsParams.fieldName}', '=', ${val[0]})]`,
+                ]).toString(),
+                id: `custom_${val[1].toLowerCase()}_${searchItem.optionsParams.fieldName}`,
+                type: "innerFilter",
+            });
+        }
+        searchItem.optionsParams.customOptions = options;
     }
 
     /**
@@ -941,6 +992,9 @@ export class SearchModel extends EventBus {
      */
     toggleSearchItem(searchItemId) {
         const searchItem = this.searchItems[searchItemId];
+        if (searchItem.isInvalid) {
+            return;
+        }
         switch (searchItem.type) {
             case "dateFilter":
             case "dateGroupBy":
@@ -1060,15 +1114,6 @@ export class SearchModel extends EventBus {
             discardButtonText: _t("Discard"),
             isDebugMode: this.isDebugMode,
         });
-    }
-
-    switchGroupBySort() {
-        if (this.orderByCount === "Desc") {
-            this.orderByCount = "Asc";
-        } else {
-            this.orderByCount = "Desc";
-        }
-        this._notify();
     }
 
     /**
@@ -1407,7 +1452,7 @@ export class SearchModel extends EventBus {
      */
     _createCategoryTree(sectionId, result) {
         const category = this.sections.get(sectionId);
-
+        delete category.errorMsg;
         let { error_msg, parent_field: parentField, values } = result;
         if (error_msg) {
             category.errorMsg = error_msg;
@@ -1450,7 +1495,7 @@ export class SearchModel extends EventBus {
      */
     _createFilterTree(sectionId, result) {
         const filter = this.sections.get(sectionId);
-
+        delete filter.errorMsg;
         let { error_msg, values } = result;
         if (error_msg) {
             filter.errorMsg = error_msg;
@@ -1586,6 +1631,7 @@ export class SearchModel extends EventBus {
                 );
                 break;
             case "parentFilter":
+            case "lazyParentFilter":
                 enrichSearchItem.options = _enrichOptions(
                     searchItem.optionsParams.customOptions,
                     queryElements.map((queryElem) => queryElem.generatorId)
@@ -1928,12 +1974,7 @@ export class SearchModel extends EventBus {
             if (type === "field") {
                 facet.title = title;
             } else {
-                if (type === "groupBy" && this.orderByCount) {
-                    facet.icon =
-                        FACET_ICONS[this.orderByCount === "Asc" ? "groupByAsc" : "groupByDesc"];
-                } else {
-                    facet.icon = FACET_ICONS[type];
-                }
+                facet.icon = FACET_ICONS[type];
                 facet.color = FACET_COLORS[type];
             }
             if (tooltip) {
@@ -1943,30 +1984,6 @@ export class SearchModel extends EventBus {
                 facet.domain = Domain.or(groupActiveItemDomains).toString();
             }
             facets.push(facet);
-        }
-        const hasAGroupByFacet = facets.some((f) => f.type === "groupBy");
-        if (
-            !hasAGroupByFacet &&
-            !this.globalGroupBy.length &&
-            this.defaultGroupBy &&
-            this.env.config.viewType !== "kanban"
-        ) {
-            facets.unshift({
-                groupId: DEFAULT_GROUPBY_ID,
-                type: "groupBy",
-                values: this.defaultGroupBy.map((gb) => {
-                    const [fieldName, interval] = gb.split(":");
-                    const { string } = this.searchViewFields[fieldName];
-                    if (interval) {
-                        const { description } = this._getIntervalOptionByIntervalId(interval);
-                        return `${string}:${description}`;
-                    }
-                    return string;
-                }),
-                separator: ">",
-                icon: FACET_ICONS.groupBy,
-                color: FACET_COLORS.groupBy,
-            });
         }
         return facets;
     }
@@ -2413,7 +2430,14 @@ export class SearchModel extends EventBus {
     _irFilterToFavorite(irFilter) {
         const userIds = irFilter.user_ids;
         const groupNumber = userIds.length === 1 ? FAVORITE_PRIVATE_GROUP : FAVORITE_SHARED_GROUP;
-        const context = evaluateExpr(irFilter.context, user.context);
+        let context;
+        let isInvalid = false;
+        try {
+            context = evaluateExpr(irFilter.context, user.context);
+        } catch {
+            context = {};
+            isInvalid = true;
+        }
         let groupBys = [];
         if (context.group_by) {
             groupBys = context.group_by;
@@ -2422,12 +2446,9 @@ export class SearchModel extends EventBus {
         let sort;
         try {
             sort = JSON.parse(irFilter.sort);
-        } catch (err) {
-            if (err instanceof SyntaxError) {
-                sort = [];
-            } else {
-                throw err;
-            }
+        } catch {
+            isInvalid = true;
+            sort = [];
         }
         const orderBy = sort.map((order) => {
             let fieldName;
@@ -2458,8 +2479,9 @@ export class SearchModel extends EventBus {
             serverSideId: irFilter.id,
             type: "favorite",
             userIds,
+            isInvalid,
         };
-        if (irFilter.is_default) {
+        if (irFilter.is_default && !isInvalid) {
             favorite.isDefault = irFilter.is_default;
         }
         return favorite;

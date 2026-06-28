@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_form_inherit_l10n_th" model="ir.ui.view">
+        <field name="name">account.payment.form.inherit.l10n_th</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="l10n_account_withholding_tax.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <button name="action_post" position="before">
+                <button name="action_l10n_th_print_50_tawi" string="Print 50 Tawi" type="object" class="btn-primary" invisible="state not in ['paid', 'reconciled'] or payment_type == 'inbound' or country_code != 'TH' or not withholding_line_ids"/>
+            </button>
+            <field name="withhold" position="after">
+                <!-- As it only affects the printed certificate, we can keep it editable -->
+                <field name="l10n_th_wth_condition" invisible="withhold == 'payment' or country_code != 'TH'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

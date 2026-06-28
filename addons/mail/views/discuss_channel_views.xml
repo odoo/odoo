@@ -8,9 +8,6 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <kanban default_order="last_interest_dt desc" action="open_chat_window_action" type="object">
-                    <field name="is_member"/>
-                    <field name="group_ids"/>
-                    <field name="active"/>
                     <templates>
                         <t t-name="menu">
                             <a type="open" class="dropdown-item" role="menuitem">Advanced Settings</a>
@@ -60,7 +57,7 @@
             <field name="model">discuss.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <form string="Mail Channel Form">
+                <form string="Mail Channel Form" duplicate="0">
                     <header>
                         <button type="object" invisible="not can_join" class="btn btn-primary" name="channel_join">
                             <i class="fa fa-sign-in" role="img"></i> Join
@@ -97,6 +94,9 @@
                                 <field name="channel_type" invisible="1"/>
                                 <field name="channel_member_ids" mode="list" context="{'active_test': False}" readonly="channel_type == 'chat'">
                                     <list string="Members" editable="bottom">
+                                        <control>
+                                            <delete invisible="not can_unlink"/>
+                                        </control>
                                         <field name="partner_id" readonly="id or guest_id" required="not guest_id"/>
                                         <field name="guest_id" readonly="id or partner_id" required="not partner_id"/>
                                     </list>

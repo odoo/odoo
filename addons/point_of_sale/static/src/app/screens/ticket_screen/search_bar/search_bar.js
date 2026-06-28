@@ -1,5 +1,5 @@
-import { useExternalListener, useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy, useListener } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 /**
@@ -36,13 +36,13 @@ export class SearchBar extends Component {
     setup() {
         this.ui = useService("ui");
         useAutofocus();
-        useExternalListener(window, "click", this._hideOptions);
+        useListener(window, "click", this._hideOptions.bind(this));
         this.filterOptionsList = [...this.props.config.filter.options.keys()];
         this.searchFieldsList = [...this.props.config.searchFields.keys()];
         const defaultSearchFieldId = this.searchFieldsList.indexOf(
             this.props.config.defaultSearchDetails.fieldName
         );
-        this.state = useState({
+        this.state = proxy({
             searchInput: this.props.config.defaultSearchDetails.searchTerm || "",
             selectedSearchFieldId: defaultSearchFieldId == -1 ? 0 : defaultSearchFieldId,
             showSearchFields: false,

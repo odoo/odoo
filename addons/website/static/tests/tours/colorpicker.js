@@ -4,6 +4,7 @@ import {
     clickOnEditAndWaitEditMode,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
+import { getIframeInput } from "@html_editor/../tests/tours/helpers/iframe_input";
 
 function selectColorpickerSwitchPanel(type) {
     return [
@@ -29,10 +30,14 @@ function checkBackgroundColorWithHEX(hexCode) {
     return [
         {
             content: "Check if the RGBA color matches the selected color",
-            trigger: ".o_popover .o_colorpicker_widget .o_hex_input",
-            run: function () {
-                const hex = this.anchor.value;
-                if (hex !== hexCode) {
+            trigger: ".o_popover .o_colorpicker_widget .o_hex_div iframe.o_hex_iframe",
+            async run({ waitUntil }) {
+                const input = await getIframeInput(
+                    this.anchor,
+                    "input[name='hex_input']",
+                    waitUntil
+                );
+                if (input.value !== hexCode) {
                     console.error("There may be a problem with the RGBA colorpicker");
                 }
             },

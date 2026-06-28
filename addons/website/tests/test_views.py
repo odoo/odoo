@@ -99,7 +99,7 @@ class TestCustomizeView(common.HttpCase):
         self.assertEqual(self.url_open(page.url).text, '<div><span>Default</span></div>')
 
     def test_disabled_optional_template_xpath(self):
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         View = self.env['ir.ui.view']
         template = View.create({
             'name': 'test_root',
@@ -239,7 +239,7 @@ class TestViewSaving(TestViewSavingCommon):
             'key': 'website.test_view',
             'arch': ET.tostring(self.arch, encoding='unicode')
         })
-        self.website_ctx = {'website_id': self.ref('website.default_website')}
+        self.website_ctx = {'website_id': self.ref('base.default_website')}
 
     def test_embedded_extraction(self):
         fields = self.env['ir.ui.view'].extract_embedded_fields(self.arch)
@@ -344,10 +344,10 @@ class TestViewSaving(TestViewSavingCommon):
             )
         ), encoding='unicode')
 
-        self.view_id.with_context(website_id=self.ref('website.default_website')).save(value=replacement, xpath='/div/div[2]')
+        self.view_id.with_context(website_id=self.ref('base.default_website')).save(value=replacement, xpath='/div/div[2]')
         self.assertFalse(imd.noupdate, "view's xml_id shouldn't be set to 'noupdate' in a website context as `save` method will COW")
         # remove newly created COW view so next `save()`` wont be redirected to COW view
-        self.env['website'].with_context(website_id=self.ref('website.default_website')).viewref(self.view_id.key).unlink()
+        self.env['website'].with_context(website_id=self.ref('base.default_website')).viewref(self.view_id.key).unlink()
 
         self.view_id.save(value=replacement, xpath='/div/div[2]')
 
@@ -505,6 +505,40 @@ class TestViewSaving(TestViewSavingCommon):
             )
         )
 
+    def test_save_view_delay_translations(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        view = self.env['ir.ui.view'].create({
+            'name': 'test_view',
+            'type': 'qweb',
+            'key': 'website.test_view',
+            'arch_db': '<span>Hello World</span>'
+        })
+        view.with_context(lang='fr_FR').arch = "<div>Bonjour Monde</div>"
+
+        # delayed translations are enabled by default (SavePlugin.saveView uses it by default)
+        view.with_context(delay_translations=True).save(value='<div>New World</div>', xpath='/div')
+        self.assertEqual(
+            view.with_context(lang='fr_FR').arch,
+            '<div>Bonjour Monde</div>',
+        )
+        delayed_translation = view.with_context(lang='fr_FR', edit_translations=True).arch
+        self.assertIn(
+            '<div><span class="o_delay_translation"',
+            delayed_translation,
+        )
+        self.assertIn(
+            '>New World</span></div>',
+            delayed_translation,
+        )
+
+        # delayed translations can be disabled thanks to ir.config_parameter
+        self.env['ir.config_parameter'].sudo().set_bool('website.disable_delay_translations', True)
+        view.with_context(delay_translations=True).save(value='<div>All New World</div>', xpath='/div')
+        self.assertEqual(
+            view.with_context(lang='fr_FR').arch,
+            '<div>All New World</div>',
+        )
+
 
 @tagged('-at_install', 'post_install')
 class TestCowViewSaving(TestViewSavingCommon, HttpCase):
@@ -527,7 +561,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
             'key': 'website.extension_view',
         })
         self.headers = {"Content-Type": "application/json"}
-        self.website_ctx = {'website_id': self.ref('website.default_website')}
+        self.website_ctx = {'website_id': self.ref('base.default_website')}
         self.website_domain = [('website_id', '=', self.website_ctx['website_id'])]
 
     def test_cow_on_base_after_extension(self):
@@ -538,7 +572,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         v3 = View.search([*self.website_domain, ('name', '=', 'Extension Specific')])
         v4 = self.inherit_view.copy({'name': 'Second Extension'})
         v5 = self.inherit_view.copy({'name': 'Third Extension (Specific)'})
-        v5.write({'website_id': self.ref('website.default_website')})
+        v5.write({'website_id': self.ref('base.default_website')})
 
         # id | name                        | website_id | inherit  | key
         # ------------------------------------------------------------------------
@@ -635,7 +669,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
 
         inherit_views = View.search([('key', '=', 'website.extension_view')])
         self.assertEqual(len(inherit_views), 2)
-        self.assertEqual(len(inherit_views.filtered(lambda v: v.website_id.id == self.ref('website.default_website'))), 1)
+        self.assertEqual(len(inherit_views.filtered(lambda v: v.website_id.id == self.ref('base.default_website'))), 1)
 
         arch = generic_base_view.with_context(load_all_views=True).get_combined_arch()
         self.assertEqual(arch, '<div>modified base content, extended content</div>')
@@ -833,7 +867,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         self.assertEqual(inherit_view.active, False, "_get_template_view should return the specific one")
 
         # Test get_related_views() return the inactive specific over active generic
-        # Note that we cannot test get_related_views without a website in context as it will fallback on a website with get_current_website()
+        # Note that we cannot test get_related_views without a website in context as it will fallback on a website
         views = View.with_context(**self.website_ctx).get_related_views(self.base_view.key)
         self.assertEqual(views.mapped('active'), [True, False], "get_related_views should return the specific child")
 
@@ -1144,14 +1178,14 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         """
         View = self.env['ir.ui.view']
 
-        self.inherit_view.website_id = self.ref('website.default_website')
+        self.inherit_view.website_id = self.ref('base.default_website')
         inherit_view_2 = View.create({
             'name': 'Extension 2',
             'mode': 'extension',
             'inherit_id': self.inherit_view.id,
             'arch': '<div position="inside">, extended content 2</div>',
             'key': 'website.extension_view_2',
-            'website_id': self.ref('website.default_website'),
+            'website_id': self.ref('base.default_website'),
         })
 
         total_views = View.search_count([])
@@ -1264,17 +1298,16 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         fr_BE = self.env['res.lang']._activate_lang('fr_BE')
         self.base_view.with_context(lang='en_US').arch_db = '<div>hello</div>'
         self.assertFalse(self.base_view.website_id)
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         website.default_lang_id = fr_BE
         self.base_view.with_context(**self.website_ctx).write({'active': True})
         specific_view = self.base_view._get_specific_views() - self.base_view
 
         # generic view without website_id but with website for request
-        with patch('odoo.addons.website.models.ir_http.get_request_website', lambda: website):
-            self.base_view.invalidate_recordset()
-            self.assertIn('to_translate', self.base_view.with_context(lang='en_US', edit_translations=True).arch)
-            self.assertIn('translated', self.base_view.with_context(lang='fr_BE', edit_translations=True).arch)
-            self.base_view.invalidate_recordset()
+        self.base_view.invalidate_recordset()
+        self.assertIn('to_translate', self.base_view.with_context(lang='en_US', edit_translations=True, website_id=website.id).arch)
+        self.assertIn('translated', self.base_view.with_context(lang='fr_BE', edit_translations=True, website_id=website.id).arch)
+        self.base_view.invalidate_recordset()
 
         # generic view without website_id
         self.assertIn('translated', self.base_view.with_context(lang='en_US', edit_translations=True).arch)
@@ -1286,6 +1319,34 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         # specific view with website_id
         self.assertIn('to_translate', specific_view.with_context(lang='en_US', edit_translations=True).arch)
         self.assertIn('translated', specific_view.with_context(lang='fr_BE', edit_translations=True).arch)
+
+    def test_view_to_translate_tag_render_template(self):
+        fr_BE = self.env['res.lang']._activate_lang('fr_BE')
+        self.base_view.with_context(lang='en_US').arch_db = '<t><div>hello</div> <div>world</div></t>'
+        self.assertFalse(self.base_view.website_id)
+
+        website = self.env['website'].search([], limit=1)
+        website.default_lang_id = fr_BE
+        self.base_view.with_context(website_id=website.id).write({'active': True})
+        specific_view = self.base_view._get_specific_views() - self.base_view
+
+        def render(view_id, website_id, lang, edit_translations):
+            return self.base_view.with_context(website_id=website_id, lang=lang, edit_translations=edit_translations)._render_template(view_id)
+
+        # generic view without website_id but with website in context
+        self.assertIn('to_translate', render(self.base_view.id, website.id, 'en_US', True))
+        self.assertIn('translated', render(self.base_view.id, website.id, 'fr_BE', True))
+
+        # generic view without website_id
+        self.assertIn('translated', render(self.base_view.id, None, 'en_US', True))
+        self.assertIn('to_translate', render(self.base_view.id, None, 'fr_BE', True))
+        self.base_view.update_field_translations('arch_db', {'fr_BE': {'hello': 'bonjour'}})
+        self.assertIn('translated', render(self.base_view.id, None, 'en_US', True))
+        self.assertIn('translated', render(self.base_view.id, None, 'fr_BE', True))
+
+        # specific view with website_id
+        self.assertIn('to_translate', render(specific_view.id, website.id, 'en_US', True))
+        self.assertIn('translated', render(specific_view.id, website.id, 'fr_BE', True))
 
     def test_load_module_terms_preserve_delayed_translation(self):
         self.env['res.lang']._activate_lang('fr_BE')
@@ -1409,7 +1470,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         french = self.env['res.lang']._activate_lang('fr_FR')
         self.env['ir.module.module']._load_module_terms(['website'], [french.code])
         # Make sure res.lang.get_installed is recomputed
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
 
         View = self.env['ir.ui.view'].with_context(lang=french.code, **self.website_ctx)
         old_specific_views = View.search([('website_id', '!=', None)])

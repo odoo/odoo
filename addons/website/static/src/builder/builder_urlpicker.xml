@@ -13,22 +13,22 @@
             <attribute name="t-att-data-attribute-action-value">this.info.attributeActionValue</attribute>
         </xpath>
         <xpath expr="//input[@t-custom-ref='input']" position="attributes">
-            <attribute name="t-attf-class" add="{{this.props.inputClass}}" separator=" "/>
+            <attribute name="t-attf-class" add="{{this.builderProps.inputClass}}" separator=" "/>
         </xpath>
     </t>
 
     <t t-inherit="html_builder.BuilderUrlPicker" t-inherit-mode="extension">
         <xpath expr="//BuilderTextInputBase" position="replace">
             <AutoCompleteBuilderUrlPicker
-                t-props="props"
-                sources="sources"
-                value="state.value or ''"
-                input="urlRef"
+                t-props="this.props"
+                sources="this.sources"
+                value="this.state.value or ''"
+                input="this.urlRef"
                 dropdown="true"
                 inputClass="'o-hb-input-base o_builder_url_input'"
-                onChange.bind="onChange"
+                onChange.bind="this.onChange"
             />
-            <button class="btn" title="Preview this URL in a new tab" t-on-click="openPreviewUrl">
+            <button class="btn" title="Preview this URL in a new tab" t-on-click="this.openPreviewUrl">
                 <i class="fa fa-fw fa-external-link"/>
             </button>
         </xpath>

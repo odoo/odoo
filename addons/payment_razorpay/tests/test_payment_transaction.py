@@ -26,7 +26,7 @@ class TestPaymentTransaction(RazorpayCommon):
         )
         tx = self._create_transaction("direct", currency_id=inr_currency.id)
         for tokenize in (False, True):
-            tx.tokenize = tokenize
+            self._update_transaction(tx, tokenize=tokenize)
             request_payload = tx._razorpay_prepare_order_payload(customer_id=self.customer_id)
             self.maxDiff = 10000  # Allow comparing large dicts.
             converted_amount = payment_utils.to_minor_currency_units(tx.amount, tx.currency_id)
@@ -74,7 +74,7 @@ class TestPaymentTransaction(RazorpayCommon):
             self._create_transaction("token", reference="INV123-1", token_id=different_token.id),
         ]
         for state in all_states:
-            tx1.state = state
+            self._update_transaction(tx1, state=state)
             for other_tx in other_txs:
                 converted_amount = payment_utils.to_minor_currency_units(
                     other_tx.amount, other_tx.currency_id
@@ -89,7 +89,7 @@ class TestPaymentTransaction(RazorpayCommon):
                     },
                 ):
                     self._assert_does_not_raise(UserError, other_tx._send_payment_request)
-                other_tx.state = "draft"
+                self._update_transaction(other_tx, state="draft")
 
     def test_search_by_reference_returns_refund_tx(self):
         """Test that the refund transaction is returned if it exists when processing refund
@@ -121,7 +121,7 @@ class TestPaymentTransaction(RazorpayCommon):
         """Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment."""
         tx = self._create_transaction("direct")
-        tx._apply_updates(self.payment_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
         self.assertEqual(tx.state, "done")
 
     @mute_logger("odoo.addons.payment.models.payment_transaction")
@@ -129,11 +129,11 @@ class TestPaymentTransaction(RazorpayCommon):
     def test_apply_updates_updates_reference_if_not_confirmed(self):
         """Test that the provider reference and payment method are not changed when the transaction
         is already confirmed. This can happen in case of multiple payment attempts."""
-        upi = self.env.ref("payment.payment_method_upi")
+        upi = self.provider._get_pm_from_code("upi")
         tx = self._create_transaction(
             "direct", state="done", provider_reference=self.payment_id, payment_method_id=upi.id
         )
-        tx._apply_updates(self.payment_fail_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_fail_data)
         self.assertEqual(
             tx.provider_reference,
             self.payment_id,
@@ -155,7 +155,6 @@ class TestPaymentTransaction(RazorpayCommon):
         )
 
     def test_token_values_not_extracted_if_token_already_exists(self):
-        tx = self._create_transaction("direct")
-        tx.token_id = self._create_token()
+        tx = self._create_transaction("direct", token_id=self._create_token().id)
         token_values = tx._extract_token_values(self.tokenize_payment_data)
         self.assertFalse(token_values)

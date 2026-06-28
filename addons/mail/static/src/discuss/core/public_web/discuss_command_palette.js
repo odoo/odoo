@@ -1,67 +1,32 @@
-import { useState } from "@web/owl2/utils";
-import { cleanTerm } from "@mail/utils/common/format";
+import { Component, props, proxy, t } from "@odoo/owl";
 
-import { Component } from "@odoo/owl";
-
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
+import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
+import { normalize } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { Dialog } from "@web/core/dialog/dialog";
-import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
-import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
+import { highlightText } from "@web/core/utils/html";
 
 const commandSetupRegistry = registry.category("command_setup");
 const commandProviderRegistry = registry.category("command_provider");
 
 const NEW_CHANNEL = "NEW_CHANNEL";
-const NEW_GROUP_CHAT = "NEW_GROUP_CHAT";
-
-class CreateChatDialog extends Component {
-    static components = { ChannelInvitation, Dialog };
-    static props = ["close", "name?"];
-    static template = "mail.CreateChatDialog";
-
-    setup() {
-        super.setup();
-        this.store = useService("mail.store");
-        this.invitePeopleState = useState({
-            selectablePartners: [],
-            selectedPartners: [],
-            searchStr: this.props.name,
-        });
-    }
-
-    get createText() {
-        if (this.invitePeopleState.selectedPartners.length === 1) {
-            return _t("Open Chat");
-        }
-        return _t("Create Group Chat");
-    }
-
-    onClickConfirm() {
-        const selectedPartnersId = this.invitePeopleState.selectedPartners.map((p) => p.id);
-        const partners_to = [
-            ...new Set([this.store.self_user?.partner_id.id, ...selectedPartnersId]),
-        ];
-        if (partners_to.length === 1) {
-            this.store.createGroupChat({ partners_to });
-        } else {
-            this.store.startChat(partners_to);
-        }
-        this.props.close();
-    }
-}
+const VIEW_HIDDEN = "VIEW_HIDDEN";
 
 class CreateChannelDialog extends Component {
     static components = { Dialog };
-    static props = ["close", "name?"];
     static template = "mail.CreateChannelDialog";
 
     setup() {
         super.setup();
+        this.props = props({
+            close: t.function([t.instanceOf(MouseEvent)]),
+            name: t.string().optional(),
+        });
         this.store = useService("mail.store");
         this.orm = useService("orm");
-        this.state = useState({
+        this.state = proxy({
             name: this.props.name || "",
             isInvalid: false,
             is_readonly: false,
@@ -90,25 +55,42 @@ class CreateChannelDialog extends Component {
     }
 }
 
-class DiscussCommand extends Component {
+export class DiscussCommand extends Component {
     static components = { DiscussAvatar };
     static template = "mail.DiscussCommand";
-    static props = {
-        counter: { type: Number, optional: true },
-        executeCommand: Function,
-        imgUrl: { type: String, optional: true },
-        name: String,
-        persona: { type: Object, optional: true },
-        channel: { type: Object, optional: true },
-        action: { type: Object, optional: true },
-        searchValue: String,
-        slots: Object,
-    };
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
         this.ui = useService("ui");
+        this.props = props({
+            action: t
+                .object({
+                    icon: t.string().optional(),
+                    searchValueSuffix: t.boolean().optional(),
+                })
+                .optional(),
+            channel: t.instanceOf(this.store["discuss.channel"].Class).optional(),
+            counter: t.number().optional(),
+            executeCommand: t.function([]),
+            name: t.string(),
+            persona: t
+                .or([
+                    t.instanceOf(this.store["res.partner"].Class),
+                    t.instanceOf(this.store["mail.guest"].Class),
+                ])
+                .optional(),
+            searchValue: t.string(),
+            slots: t.object().optional(),
+        });
+    }
+
+    get formattedEmail() {
+        return highlightText(this.props.searchValue, this.email, "fw-bolder text-primary");
+    }
+
+    get email() {
+        return this.props.persona?.email;
     }
 }
 
@@ -119,7 +101,7 @@ commandSetupRegistry.add("@", {
     debounceDelay: 200,
     emptyMessage: _t("No conversation found"),
     name: _t("conversations"),
-    placeholder: _t("Search a conversation"),
+    placeholder: _t("Search conversations"),
 });
 
 /**
@@ -130,7 +112,7 @@ async function makeNewChannel(name, store, is_readonly = false) {
     const { channel } = await store.fetchStoreData(
         "/discuss/create_channel",
         { name, group_id: store.internalUserGroupId, is_readonly },
-        { readonly: false, requestData: true }
+        { requestData: true }
     );
     channel.open({ focus: true, bypassCompact: true });
 }
@@ -151,7 +133,7 @@ export class DiscussCommandPalette {
         this.ui = env.services.ui;
         this.commands = [];
         this.options = options;
-        this.cleanedTerm = cleanTerm(this.options.searchValue);
+        this.cleanedTerm = normalize(this.options.searchValue);
     }
 
     async fetch() {
@@ -168,7 +150,8 @@ export class DiscussCommandPalette {
             partners = Object.values(this.store["res.partner"].records).filter(
                 (partner) =>
                     partner.main_user_id?.share === false &&
-                    cleanTerm(partner.displayName).includes(this.cleanedTerm) &&
+                    (normalize(partner.displayName || "").includes(this.cleanedTerm) ||
+                        normalize(partner.email || "").includes(this.cleanedTerm)) &&
                     (!filtered || !filtered.has(partner))
             );
             partners = this.suggestion
@@ -187,7 +170,8 @@ export class DiscussCommandPalette {
                 (channel) =>
                     channel.channel_type &&
                     channel.channel_type !== "chat" &&
-                    cleanTerm(channel.displayName).includes(this.cleanedTerm) &&
+                    channel.displayName &&
+                    normalize(channel.displayName).includes(this.cleanedTerm) &&
                     (!filtered || !filtered.has(channel))
             )
             .sort((c1, c2) => {
@@ -200,33 +184,28 @@ export class DiscussCommandPalette {
             })
             .slice(0, TOTAL_LIMIT);
         // balance remaining: half personas, half channels
-        const elligiblePersonas = [];
-        const elligibleChannels = [];
-        let i = 0;
-        while ((channels.length || partners.length) && i < remaining) {
-            const p = partners.shift();
-            const c = channels.shift();
-            if (p) {
-                elligiblePersonas.push(p);
-                i++;
-            }
-            if (i >= remaining) {
-                break;
-            }
-            if (c) {
-                elligibleChannels.push(c);
-                i++;
-            }
+        const numberOfChannels = Math.floor(remaining / 2);
+        const numberOfPersonas = numberOfChannels + (remaining % 2);
+        const elligiblePersonas = partners.slice(0, numberOfPersonas);
+        const elligibleChannels = channels.slice(0, numberOfChannels);
+        elligiblePersonas.push(
+            ...partners.slice(
+                numberOfPersonas,
+                numberOfPersonas + elligibleChannels.length - numberOfChannels
+            )
+        );
+        elligibleChannels.push(
+            ...channels.slice(
+                numberOfChannels,
+                numberOfChannels + elligiblePersonas.length - numberOfPersonas
+            )
+        );
+        const records = [...elligiblePersonas, ...elligibleChannels];
+        if (selfPartner && elligiblePersonas.length + elligibleChannels.length < remaining) {
+            records.push(selfPartner);
         }
-        for (const persona of elligiblePersonas) {
-            this.commands.push(this.makeDiscussCommand(persona));
-        }
-        for (const channel of elligibleChannels) {
-            this.commands.push(this.makeDiscussCommand(channel));
-        }
-        if (selfPartner && i < remaining) {
-            // put self persona as lowest priority item
-            this.commands.push(this.makeDiscussCommand(selfPartner));
+        for (const record of records) {
+            this.commands.push(this.makeDiscussCommand(record));
         }
     }
 
@@ -274,29 +253,24 @@ export class DiscussCommandPalette {
         if (channelOrPersona === NEW_CHANNEL) {
             return {
                 Component: DiscussCommand,
-                action: async () => {
-                    const name = this.options.searchValue.trim();
-                    if (name) {
-                        await makeNewChannel(name, this.store);
-                    } else {
-                        this.dialog.add(CreateChannelDialog);
-                    }
+                action: () => {
+                    this.dialog.add(CreateChannelDialog, {
+                        name: this.options.searchValue?.trim(),
+                    });
                 },
                 name: _t("Create Channel"),
                 className: "o-mail-DiscussCommand-createChannel d-flex",
                 props: { action: { icon: "fa fa-fw fa-hashtag", searchValueSuffix: true } },
             };
         }
-        if (channelOrPersona === NEW_GROUP_CHAT) {
-            const name = this.options.searchValue.trim();
+        if (channelOrPersona === VIEW_HIDDEN) {
             return {
                 Component: DiscussCommand,
+                name: _t("View hidden conversations"),
+                props: { action: {} },
                 action: () => {
-                    this.dialog.add(CreateChatDialog, { name });
+                    this.env.services.action.doAction("mail.discuss_my_conversations_action");
                 },
-                name: _t("Create Chat"),
-                className: "d-flex",
-                props: { action: { icon: "oi fa-fw oi-users" } },
             };
         }
         throw new Error(`Unsupported use of makeDiscussCommand("${channelOrPersona}")`);
@@ -311,15 +285,11 @@ commandProviderRegistry.add("find_or_start_conversation", {
         palette.buildResults();
         palette.commands.slice(0, 8);
         if (!palette.store.inPublicPage) {
-            palette.commands.push(palette.makeDiscussCommand(NEW_CHANNEL));
-            palette.commands.push(palette.makeDiscussCommand(NEW_GROUP_CHAT));
+            if (palette.cleanedTerm) {
+                palette.commands.push(palette.makeDiscussCommand(NEW_CHANNEL));
+            }
             if (palette.store.has_unpinned_channels) {
-                palette.commands.push({
-                    name: _t("View hidden conversations"),
-                    action: () => {
-                        env.services.action.doAction("mail.discuss_my_conversations_action");
-                    },
-                });
+                palette.commands.push(palette.makeDiscussCommand(VIEW_HIDDEN));
             }
         }
         return palette.commands;

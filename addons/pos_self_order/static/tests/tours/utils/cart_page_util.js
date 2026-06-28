@@ -47,6 +47,25 @@ export function selectTimeSlot() {
     ];
 }
 
+export function selectSpecificSlot(slotValue) {
+    return [
+        {
+            content: `Wait for time slot popup to appear`,
+            trigger: `.self_order_pills_selection_popup`,
+        },
+        {
+            content: `Select time slot ${slotValue}`,
+            trigger: `.self_order_pills_selection_popup .option-item:contains('${slotValue}')`,
+            run: "click",
+        },
+        {
+            content: `Click on 'Confirm' button`,
+            trigger: `.self_order_pills_selection_popup .btn-primary:contains('Confirm')`,
+            run: "click",
+        },
+    ];
+}
+
 export function selectRandomValueInInput(inputSelector) {
     return {
         content: `Select Random Value in Input`,
@@ -150,12 +169,14 @@ export function cancelOrder() {
 
 export function checkSlotUnavailable(slotValue) {
     return {
-        content: `Check that the first available slot is not ${slotValue}`,
-        trigger: ".slot-select",
+        content: `Check that the ${slotValue} slot is not available`,
+        trigger: `.self_order_pills_selection_popup`,
         run: () => {
-            const select = document.querySelector(".slot-select");
-            // select[0] and select[1] are header values
-            if (select[2].innerText === slotValue) {
+            const slots = Array.from(
+                document.querySelectorAll(".self_order_pills_selection_popup .option-item")
+            );
+            const firstSlotText = slots[0]?.textContent.trim();
+            if (firstSlotText === slotValue) {
                 throw new Error(`${slotValue} should not be available`);
             }
         },

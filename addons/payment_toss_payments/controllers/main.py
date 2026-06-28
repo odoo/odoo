@@ -1,7 +1,4 @@
-import hmac
 import pprint
-
-from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.exceptions import ValidationError
@@ -22,9 +19,7 @@ class TossPaymentsController(http.Controller):
         :param dict data: The payment data. Expected keys: orderId, paymentKey, amount.
         """
         _logger.info("Handling redirection from Toss Payments with data:\n%s", pprint.pformat(data))
-        tx_sudo = (
-            request.env["payment.transaction"].sudo()._search_by_reference("toss_payments", data)
-        )
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("toss_payments", data)
         if not tx_sudo:
             return request.redirect("/payment/status")
 
@@ -36,9 +31,12 @@ class TossPaymentsController(http.Controller):
             try:
                 payment_data = tx_sudo._send_api_request("POST", "/v1/payments/confirm", json=data)
             except ValidationError as e:
-                tx_sudo._set_error(str(e))
+                tx_sudo.with_context(
+                    # API request failed; no concurrent write is possible
+                    payment_safe_write=True
+                )._set_error(str(e))
             else:
-                tx_sudo._process("toss_payments", payment_data)
+                tx_sudo._record(payment_data)
 
         return request.redirect("/payment/status")
 
@@ -52,9 +50,7 @@ class TossPaymentsController(http.Controller):
         :param dict data: The payment data. Expected keys: access_token, code, message, orderId.
         """
         _logger.info("Handling redirection from Toss Payments with data:\n%s", pprint.pformat(data))
-        tx_sudo = (
-            request.env["payment.transaction"].sudo()._search_by_reference("toss_payments", data)
-        )
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("toss_payments", data)
         if not tx_sudo:
             return request.redirect("/payment/status")
 
@@ -64,7 +60,10 @@ class TossPaymentsController(http.Controller):
         ):
             return request.redirect("/payment/status")
 
-        tx_sudo._set_error(f"{data['message']} ({data['code']})")
+        tx_sudo.with_context(
+            # The webhook is not sent when the payment is failed; no concurrent write is possible
+            payment_safe_write=True
+        )._set_error(f"{data['message']} ({data['code']})")
 
         return request.redirect("/payment/status")
 
@@ -86,38 +85,19 @@ class TossPaymentsController(http.Controller):
         if event_type in const.HANDLED_WEBHOOK_EVENTS:
             payment_data = event_data.get("data")
             tx_sudo = (
-                request
+                self
                 .env["payment.transaction"]
                 .sudo()
                 ._search_by_reference("toss_payments", payment_data)
             )
             if tx_sudo:
-                self._verify_signature(payment_data, tx_sudo)
-                tx_sudo._process("toss_payments", payment_data)
+                # Expired events might not have a secret if we never initiated the payment flow.
+                # Also aborted events have a secret, but our implementation would not capture the
+                # secret in the case of API call validation error (see
+                # `_toss_payments_success_return`). In these two cases, we skip the verification.
+                if payment_data.get("status") not in const.VERIFICATION_EXEMPT_STATUSES:
+                    received_signature = payment_data.get("secret")
+                    expected_signature = tx_sudo.toss_payments_payment_secret or ""
+                    payment_utils.verify_signature(received_signature, expected_signature)
+                tx_sudo._record(payment_data)
         return request.make_json_response("")
-
-    @staticmethod
-    def _verify_signature(payment_data, tx_sudo):
-        """Check that the received payment data's secret key matches the transaction's secret key.
-
-        :param dict payment_data: The payment data.
-        :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
-        :rtype: None
-        :raise Forbidden: If the secret keys don't match.
-        """
-        # Expired events might not have a secret if we never initiated the payment flow. Also
-        # aborted events have a secret, but our implementation would not capture the secret in the
-        # case of API call validation error (see `_toss_payments_success_return`). In these two
-        # cases, we skip the verification.
-        if payment_data.get("status") in const.VERIFICATION_EXEMPT_STATUSES:
-            return
-
-        received_signature = payment_data.get("secret")
-        if not received_signature:
-            _logger.warning("Received notification with missing signature.")
-            raise Forbidden
-
-        expected_signature = tx_sudo.toss_payments_payment_secret or ""
-        if not hmac.compare_digest(received_signature, expected_signature):
-            _logger.warning("Received notification with invalid signature.")
-            raise Forbidden

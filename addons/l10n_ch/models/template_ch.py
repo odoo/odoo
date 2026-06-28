@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_ch_template_data(self):
         return {
             'code_digits': '4',
-            'property_account_receivable_id': 'ch_coa_1100',
-            'property_account_payable_id': 'ch_coa_2000',
         }
 
     @template('ch', 'res.company')
@@ -25,16 +23,20 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'ch_coa_1101',
                 'income_currency_exchange_account_id': 'ch_coa_3806',
                 'expense_currency_exchange_account_id': 'ch_coa_4906',
-                'account_journal_early_pay_discount_loss_account_id': 'ch_coa_4901',
-                'account_journal_early_pay_discount_gain_account_id': 'ch_coa_3801',
+                'account_journal_early_pay_discount_loss_account_id': 'ch_coa_4900',
+                'account_journal_early_pay_discount_gain_account_id': 'ch_coa_3800',
                 'default_cash_difference_expense_account_id': 'ch_coa_4991',
                 'default_cash_difference_income_account_id': 'ch_coa_4992',
+                'deferred_expense_account_id': 'ch_coa_1300',
+                'deferred_revenue_account_id': 'ch_coa_2301',
                 'account_sale_tax_id': 'vat_sale_81',
                 'account_purchase_tax_id': 'vat_purchase_81',
                 'external_report_layout_id': 'l10n_din5008.external_layout_din5008',
                 'paperformat_id': 'l10n_din5008.paperformat_euro_din',
                 'expense_account_id': 'ch_coa_4200',
                 'income_account_id': 'ch_coa_3200',
+                'receivable_account_id': 'ch_coa_1100',
+                'payable_account_id': 'ch_coa_2000',
                 'account_stock_valuation_id': 'ch_coa_1210',
             },
         }

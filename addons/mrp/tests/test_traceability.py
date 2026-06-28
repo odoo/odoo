@@ -128,9 +128,10 @@ class TestTraceability(TestMrpCommon):
             self.assertEqual(len(lines), 3, "There should be 3 lines. 1 for untracked, 1 for lot, and 1 for serial")
 
             for line in lines:
-                tracking = line['columns'][1].split(' ')[1]
+                columns = {column['name']: column['value'] for column in line['columns']}
+                tracking = columns['product'].split(' ')[1]
                 self.assertEqual(
-                    line['columns'][-1], "1.00 Units", 'Part with tracking type "%s", should have quantity = 1' % (tracking)
+                    columns['quantity'], "1.00 Units", 'Part with tracking type "%s", should have quantity = 1' % (tracking)
                 )
                 unfoldable = tracking in ['lot', 'serial']
                 self.assertEqual(
@@ -333,7 +334,7 @@ class TestTraceability(TestMrpCommon):
 
         unbuild_form = Form(self.env['mrp.unbuild'])
         unbuild_form.mo_id = mo
-        unbuild_form.lot_id = lot
+        unbuild_form.lot_ids = lot
         unbuild_form.save().action_unbuild()
 
         mo_form = Form(self.env['mrp.production'])
@@ -695,6 +696,25 @@ class TestTraceability(TestMrpCommon):
         third_serials_wizard = Form.from_action(self.env, third_mo.action_generate_serial())
         self.assertEqual(third_serials_wizard.lot_name, 'TEST0000006')
 
+    def test_split_and_assign_serials(self):
+        """ Confirm a MO for 3 serial numbers. generate 3 serial number and split the mo"""
+        mo, _, _, _, _ = self.generate_mo(tracking_final='serial', qty_final=3)
+        mo.action_confirm()
+
+        wizard = self.env['mrp.production.serials'].with_context(active_id=mo.id).create({
+            'production_id': mo.id,
+            'serial_numbers': 'SN001\nSN002\nSN003',
+        })
+        wizard.action_split_and_assign_serials()
+
+        split_mos = self.env['mrp.production'].search([('production_group_id', '=', mo.production_group_id.id)])
+        self.assertEqual(len(split_mos), 3)
+
+        serials = ['SN001', 'SN002', 'SN003']
+        for smo in split_mos:
+            self.assertIn(smo.lot_producing_ids.name, serials)
+            self.assertNotEqual(smo.state, 'done')
+
     @freeze_time('2024-02-03')
     def test_interpolation_in_batch_serials(self):
         """
@@ -909,7 +929,7 @@ class TestTraceability(TestMrpCommon):
 
         unbuild_form = Form(self.env['mrp.unbuild'])
         unbuild_form.mo_id = mo_produce_sn
-        unbuild_form.lot_id = sn
+        unbuild_form.lot_ids = sn
         unbuild_form.save().action_unbuild()
 
         self.env['stock.quant']._update_available_quantity(component, self.stock_location, 1, lot_id=sn)

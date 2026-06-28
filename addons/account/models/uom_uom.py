@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import fields, models, api
 
 UOM_TO_UNECE_CODE = {
@@ -55,5 +52,5 @@ class UomUom(models.Model):
     @api.model
     def _get_uom_from_unece_code(self, unece_code):
         unece_code_to_uom = {v: k for k, v in UOM_TO_UNECE_CODE.items()}
-        uom_xmlid = unece_code_to_uom.get(unece_code, 'uom.product_uom_unit')
+        uom_xmlid = unece_code_to_uom.get(unece_code.upper(), 'uom.product_uom_unit')
         return self.env.ref(uom_xmlid, raise_if_not_found=False)

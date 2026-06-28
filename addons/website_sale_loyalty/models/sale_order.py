@@ -185,7 +185,6 @@ class SaleOrder(models.Model):
             quantity <= 0
             and order_line.coupon_id
             and order_line.reward_id
-            and order_line.reward_id.reward_type == "discount"
         ):
             # When a reward line is deleted we remove it from the auto claimable rewards
             order_line = order_line.with_context(website_sale_loyalty_delete=True)
@@ -207,10 +206,15 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return self.order_line.filtered(lambda line: line.reward_id.reward_type == "shipping")
 
+    def _get_no_effect_on_threshold_lines(self):
+        lines = super()._get_no_effect_on_threshold_lines()
+        return lines + self.order_line.filtered("is_donation")
+
     def _allow_nominative_programs(self):
-        if not request or not hasattr(request, "website"):
+        website = self.env.website
+        if not website:
             return super()._allow_nominative_programs()
-        return not request.website.is_public_user() and super()._allow_nominative_programs()
+        return not website.is_public_user() and super()._allow_nominative_programs()
 
     @api.autovacuum
     def _gc_abandoned_coupons(self, *_args, **_kwargs):
@@ -242,6 +246,7 @@ class SaleOrder(models.Model):
         ])
         total_is_zero = self.currency_id.is_zero(self.amount_total)
         global_discount_reward = self._get_applied_global_discount()
+        today = fields.Date.context_today(self)
         for coupon in loyality_cards:
             points = self._get_real_points_for_coupon(coupon)
             for reward in coupon.program_id.reward_ids - self.order_line.reward_id:
@@ -253,7 +258,7 @@ class SaleOrder(models.Model):
                     continue
                 if reward.reward_type == "discount" and total_is_zero:
                     continue
-                if coupon.expiration_date and coupon.expiration_date < fields.Date.today():
+                if coupon.expiration_date and coupon.expiration_date < today:
                     continue
                 if points >= reward.required_points:
                     if coupon in res:
@@ -271,8 +276,151 @@ class SaleOrder(models.Model):
             .filtered(lambda sol: not sol.is_reward_line)
         )
 
-    def _recompute_cart(self):
-        """Recompute cart with loyalty programs and rewards applied."""
-        self._update_programs_and_rewards()
-        self._auto_apply_rewards()
-        super()._recompute_cart()
+    def _update_cart_taxes_and_prices(self, **kwargs):
+        """Override of `website_sale` to ensure rewards are up to date before paying."""
+        changed = super()._update_cart_taxes_and_prices(**kwargs)
+
+        # self._update_programs_and_rewards() is already called by self._recompute_prices()
+        if self._auto_apply_rewards():
+            self._add_warning_alert(
+                self.env._("Applied rewards have changed. Please review your cart.")
+            )
+            return True
+
+        return changed
+
+    def _get_promotion_progress_bars(self):
+        """Return progress data for auto-applied promotion programs whose only unmatched
+        condition is the minimum purchase amount.
+
+        A progress bar is shown when all other rule conditions (product, quantity) are
+        satisfied but the order total hasn't yet reached the rule's minimum amount threshold.
+        Already-applied programs are included as completed bars (progress=100) so the bar
+        persists after the promotion is claimed.
+
+        :return: A list of dicts with the following shape:
+
+            [{
+                "program_id": int,
+                "reward_name": str,       # e.g. "Free delivery"
+                "minimum_amount": float,  # required threshold in order currency
+                "progress": float,        # 0..100 (100 means the promotion is applied)
+            }]
+        :rtype: list[dict]
+        """
+        self.ensure_one()
+        if not self.website_id:
+            return []
+
+        programs = (
+            self
+            .env["loyalty.program"]
+            .search(
+                Domain.AND([
+                    self._get_program_domain(),
+                    [
+                        ("program_type", "=", "promotion"),
+                        ("trigger", "=", "auto"),
+                        ("rule_ids.mode", "=", "auto"),
+                    ],
+                ])
+            )
+            .filtered(lambda p: not p.limit_usage or p.total_order_count < p.max_usage)
+        )
+        if not programs:
+            return []
+
+        applied_programs = self._get_applied_programs()
+        unapplied_programs = programs - applied_programs
+        progress_bars = []
+
+        for program in programs & applied_programs:
+            for rule in program.rule_ids.sorted("minimum_amount"):
+                rule_amount = rule._compute_amount(self.currency_id)
+                if rule_amount:
+                    progress_bars.append({
+                        "program_id": program.id,
+                        # Use the actual reward that was claimed on this order
+                        "reward_name": (
+                            self.order_line
+                            .filtered(lambda line: line.reward_id.program_id == program)
+                            .reward_id[:1]
+                            .description
+                            or program.name
+                        ),
+                        "minimum_amount": rule_amount,
+                        "progress": 100,
+                    })
+                    break
+
+        if not unapplied_programs:
+            return progress_bars
+
+        # --- Compute order-line data only for unapplied programs ---
+        # Mirrors the logic in _program_check_compute_points.
+        order_lines = self._get_not_rewarded_order_lines()
+        products = order_lines.product_id
+        products_qties = dict.fromkeys(products, 0)
+        for line in order_lines:
+            products_qties[line.product_id] += line.product_uom_id._compute_quantity(
+                line.product_uom_qty, line.product_id.uom_id
+            )
+        products_per_rule = unapplied_programs._get_valid_products(products)
+
+        # Build per-rule line sets for amount computation, excluding lines that shouldn't
+        # count toward the threshold (discounts from auto programs, combo items).
+        so_products_per_rule = unapplied_programs._get_valid_products(self.order_line.product_id)
+        lines_per_rule = defaultdict(lambda: self.env["sale.order.line"])
+        for line in self.order_line - self._get_no_effect_on_threshold_lines():
+            is_discount = line.reward_id.reward_type == "discount"
+            reward_program = line.reward_id.program_id
+            if (is_discount and reward_program.trigger == "auto") or line.combo_item_id:
+                continue
+            for program in unapplied_programs:
+                if is_discount and reward_program == program:
+                    continue
+                for rule in program.rule_ids:
+                    if line.product_id in so_products_per_rule.get(rule, []):
+                        lines_per_rule[rule] |= line._get_lines_with_price()
+
+        # For each unapplied program, find the first rule (sorted by minimum_amount) where
+        # product/qty conditions pass but the amount condition doesn't.
+        for program in unapplied_programs:
+            bar = None
+            for rule in program.rule_ids.sorted("minimum_amount"):
+                if not products_per_rule.get(rule):
+                    continue
+                if sum(products_qties[p] for p in products_per_rule[rule]) < rule.minimum_qty:
+                    continue
+
+                rule_amount = rule._compute_amount(self.currency_id)
+                if not rule_amount:
+                    continue
+
+                untaxed = sum(lines_per_rule[rule].mapped("price_subtotal"))
+                tax = sum(lines_per_rule[rule].mapped("price_tax"))
+                current_amount = (
+                    (untaxed + tax) if rule.minimum_amount_tax_mode == "incl" else untaxed
+                )
+
+                if current_amount >= rule_amount:
+                    break
+
+                bar = {
+                    "program_id": program.id,
+                    # Fallback to program name if there are multiple rewards since we don't know
+                    # which one will be applied
+                    "reward_name": (
+                        program.reward_ids.description
+                        if len(program.reward_ids) == 1
+                        else program.name
+                    ),
+                    "minimum_amount": rule_amount,
+                    "progress": current_amount / rule_amount * 100,
+                }
+                break
+
+            if bar is not None:
+                progress_bars.append(bar)
+
+        return progress_bars

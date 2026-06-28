@@ -12,26 +12,27 @@
                         <h1><field name="name" placeholder="e.g. Schedule a meeting" options="{'line_breaks': False}" widget="text"/></h1>
                     </div>
                     <group>
-                        <group name="activity_details" string="Activity Settings">
+                        <group name="activity_details">
                             <field name="active" invisible="1"/>
                             <field name="category"/>
                             <field name="default_user_id" options="{'no_create': True}" domain="[('share', '=', False)]"
                                    widget="many2one_avatar_user"/>
+                            <field name="default_role_id" options="{'no_quick_create': True}" domain="[('user_ids', '!=', False)]"/>
                             <field name="res_model" invisible="context.get('default_res_model')"
                                 placeholder="Available everywhere"/>
-                            <field name="summary" placeholder="e.g. &quot;Discuss proposal&quot;"/>
+                            <field name="summary" placeholder="e.g. &quot;Discuss proposal&quot;" string="Summary"/>
                             <field name="icon" groups="base.group_no_one"/>
                             <field name="decoration_type" groups="base.group_no_one"/>
                             <label for="delay_count"/>
                             <div>
                                 <field class="oe_inline pe-1 o_input_3ch" name="delay_count"/>
                                 <field class="oe_inline ps-1 pe-2" name="delay_unit"/>
-                                <field class="oe_inline" name="delay_from"/>
+                                <field name="delay_from"/>
                             </div>
                             <field name="kpi_provider_visibility" groups="base.group_no_one"/>
                         </group>
-                        <group name="activity_planning" string="Next Activity" invisible="category == 'upload_file' and not res_model">
-                            <field name="suggested_next_type_id" string="Default Type" context="{'default_res_model': res_model}"
+                        <group name="activity_planning" invisible="category == 'upload_file' and not res_model">
+                            <field name="suggested_next_type_id" string="Next activity" context="{'default_res_model': res_model}"
                                 invisible="category == 'upload_file'"/>
                             <field name="mail_template_ids" widget="many2many_tags"
                                 domain="[('model_id.model', '=', res_model)]"
@@ -39,7 +40,7 @@
                                 context="{'default_model': res_model}"/>
                         </group>
                     </group>
-                    <label for="default_note" class="fw-bold"/>
+                    <label for="default_note" class="fw-bold" string="Note"/>
                     <field nolabel="1" name="default_note" placeholder="e.g. &quot;Go over the offer and discuss details&quot;" class="oe-bordered-editor"/>
                 </sheet>
             </form>
@@ -71,6 +72,8 @@
                 <field name="icon" groups="base.group_no_one"/>
                 <field name="suggested_next_type_id" optional="hide"
                     string="Suggested Next"/>
+                <field name="default_user_id"/>
+                <field name="default_role_id" optional="hide"/>
             </list>
         </field>
     </record>
@@ -141,16 +144,38 @@
                         <field name="res_model_id" invisible="1"/>
                         <field name="res_id" invisible="1"/>
                     </group>
-
-                    <group>
-                        <field name="activity_type_id" required="1" widget="badges_many2one" options="{'related_icon_field': 'icon'}" nolabel="1"/>
-                        <field name="summary" placeholder="e.g. Discuss Proposal" class="fs-3 pb-2"/>
-                        <group>
-                            <field name="date_deadline"/>
-                        </group>
-                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" options="{'no_create': True}"/>
-                    </group>
-                    <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..." widget="html_mail"/>
+                    <field name="activity_type_id"
+                        class="mb-3"
+                        required="1"
+                        widget="badges_many2one"
+                        options="{'related_icon_field': 'icon', 'badge_limit': 8}"
+                        nolabel="1"
+                    />
+                    <div name="activity_details" class="o_activity_details"> <!-- Aligned with mail_activity_schedule_view_form -->
+                        <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
+                            <i class="fa fa-tag" title="Summary"/>
+                            <field name="summary" nolabel="1" class="w-100" placeholder="Summary"/>
+                        </div>
+                        <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
+                            <i class="fa fa-calendar" title="Due date"/>
+                            <field name="date_deadline" nolabel="1" class="w-100" placeholder="Due on"/>
+                        </div>
+                        <div class="o_outlined d-flex align-items-center mb-2 gap-2">
+                            <i class="fa fa-user mb-2" title="Assigned to"/>
+                            <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" options="{'no_create': True}"
+                                nolabel="1" class="w-100" placeholder="Assigned to" required="not role_id and not res_model"/>
+                        </div>
+                        <div class="o_outlined d-flex align-items-center mb-2 gap-2">
+                            <i class="fa fa-users mb-2" role="img" title="Role" aria-label="Role"/>
+                            <field name="role_id" options="{'no_quick_create': True}" domain="[('user_ids', '!=', False)]"
+                                nolabel="1" class="w-100" placeholder="Role" required="not user_id"/>
+                        </div>
+                        <div class="o_outlined d-flex align-items-start mb-2 gap-2">
+                            <i class="fa fa-sticky-note pt-1" title="Note"/>
+                            <field name="note" class="oe-bordered-editor embedded-editor-height-4 w-100"
+                                placeholder="Log a note" options="{'no_move_node_plugin': 1, 'embedded_components': false}"/>
+                        </div>
+                    </div>
                     <footer>
                         <field name="id" invisible="1"/>
                         <button id="mail_activity_schedule" string="Schedule" close="1" name="action_close_dialog" type="object" class="btn-primary"
@@ -161,7 +186,7 @@
                             type="object" class="btn-secondary" data-hotkey="w"
                             context="{'mail_activity_quick_update': True}"/>
                         <button class="btn-secondary" special="cancel" data-hotkey="x"/>
-                        <button string="Delete" type="object" name="unlink" icon="fa-trash" class="btn-danger ms-auto" invisible="not id"/>
+                        <button string="Delete" type="object" name="unlink" icon="fa-trash" class="btn-secondary ms-auto" invisible="not id"/>
                     </footer>
                 </sheet>
             </form>
@@ -205,7 +230,7 @@
                             <field name="date_deadline"/>
                         </group>
                     </group>
-                    <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..." widget="html_mail"/>
+                    <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..." options="{'embedded_components': false}"/>
                 </sheet>
             </form>
         </field>
@@ -223,15 +248,21 @@
                 ]"/>
                 <field name="user_id"/>
                 <field name="activity_type_id"/>
-                <filter name="filter_user_id_uid" string="My Activities" domain="[('user_id', '=', uid)]"/>
+                <filter name="filter_activities_my" string="My Activities" domain="[('user_id', '=', uid)]"/>
+                <filter name="filter_role_my" string="To Assign" 
+                        domain="[
+                            ('user_id', '=', False),
+                            ('role_id.user_ids', '=', uid)
+                        ]"/>
+                <filter name="filter_requests_my" string="My Requests" domain="[('create_uid', '=', uid)]"/>
                 <filter name="filter_user_id_no_user" string="Unassigned Activities" domain="[('user_id', '=', False)]"/>
                 <separator/>
                 <separator invisible="1"/>
                 <filter string="Done" name="filter_archived" domain="[('active', '=', False)]"/>
-                <filter string="Overdue" name="filter_date_deadline_past"
+                <filter string="Overdue" name="activities_overdue"
                         domain="[('date_deadline', '&lt;', 'today')]"
                         help="Show all records whose next activity date is past"/>
-                <filter string="Today" name="filter_date_deadline_today"
+                <filter string="Today" name="activities_today"
                         domain="[('date_deadline', '=', 'today')]"/>
                 <filter string="Tomorrow" name="filter_date_deadline_tomorrow"
                         help="Show all records whose next action date is tomorrow"
@@ -242,7 +273,7 @@
                             ('date_deadline', '&gt;=', '=week_start'),
                             ('date_deadline', '&lt;', '=week_start +1w')
                         ]"/>
-                <filter string="Future" name="filter_date_deadline_future"
+                <filter string="Future" name="activities_upcoming_all"
                         domain="[('date_deadline', '&gt;', 'today')
                         ]"/>
                 <separator />
@@ -271,13 +302,17 @@
                     <button name="action_reschedule_nextweek" type="object" string="Next Week" icon="fa-calendar-o"/>
                 </header>
                 <field name="summary" string="Summary"/>
-                <field name="res_name" string="Linked to"/>
+                <field name="res_name" string="Document"/>
                 <field name="activity_type_id" optional="hide"/>
-                <field name="user_id" widget="many2one_avatar_user" optional="hide" options="{'no_create': True}"/>
-                <field name="date_deadline" widget="remaining_days"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show" options="{'no_create': True}"/>
+                <field name="role_id" optional="show" options="{'no_quick_create': True}"/>
+                <field name="date_deadline" widget="relative_date"/>
+                <field name="create_uid" widget="many2one_avatar_user" string="Requested By" optional="hide" options="{'no_create': True}"/>
+                <field name="create_date" string="Requested On" optional="hide" />
                 <field name="date_done" string="Done Date" optional="hide"/>
                 <field name="feedback" optional="hide"/>
-                <widget name="mail_activity_list_reschedule_dropdown"/>
+                <field name="res_model_name" optional="hide"/>
+                <widget name="mail_activity_list_reschedule_dropdown" invisible="not active"/>
                 <button name="action_done" type="object" string="Done" icon="fa-check" invisible="active == False"/>
             </list>
         </field>
@@ -342,7 +377,7 @@
                             <field class="text-truncate" name="summary" invisible="not res_name"/>
                             <footer class="align-items-center">
                                 <field name="user_id" widget="many2one_avatar_user" />
-                                <field name="date_deadline" widget="remaining_days" class="ms-2"/>
+                                <field name="date_deadline" widget="relative_date" class="ms-2"/>
                                 <button type="object" name="action_done" class="btn btn-link btn-sm ms-auto me-1" invisible="active == False">
                                     <i class="fa fa-check" /> Done
                                 </button>
@@ -438,9 +473,9 @@
         <!-- ensure pagination works even if _search removes records after fetching -->
         <field name="context">{
             'force_search_count': 1,
-            'search_default_filter_user_id_uid': 1,
-            'search_default_filter_date_deadline_past': 1,
-            'search_default_filter_date_deadline_today': 1,
+            'search_default_filter_activities_my': 1,
+            'search_default_activities_today': 1,
+            'search_default_activities_overdue': 1,
         }</field>
     </record>
 
@@ -477,6 +512,24 @@
         <field name="view_mode">graph</field>
         <field name="act_window_id" ref="mail.mail_activity_action_my"/>
         <field name="view_id" ref="mail.mail_activity_view_graph"/>
+    </record>
+
+    <record id="mail_activity_action_to_assign" model="ir.actions.act_window">
+        <field name="name">Activities to Assign</field>
+        <field name="res_model">mail.activity</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="mail.mail_activity_view_search"/>
+        <field name="context">{
+            'force_search_count': 1,
+            'search_default_filter_role_my': 1,
+        }</field>
+    </record>
+
+    <record id="mail_activity_action_to_assign_view_list" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="mail.mail_activity_view_tree_open_target"/>
+        <field name="act_window_id" ref="mail_activity_action_to_assign"/>
     </record>
 
 </odoo>

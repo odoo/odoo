@@ -1,3 +1,4 @@
+import { SIGNATURE_CLASS } from "@html_editor/main/user_signature_plugin";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 
 import { Composer } from "@mail/core/common/composer";
@@ -23,8 +24,9 @@ patch(Composer.prototype, {
         if (signature) {
             const signatureEl = renderToElement("html_editor.Signature", {
                 signature,
-                signatureClass: "o-signature-container",
+                signatureClass: SIGNATURE_CLASS,
             });
+            fragment.append(document.createElement("BR"));
             fragment.append(signatureEl);
         }
         const container = document.createElement("DIV");

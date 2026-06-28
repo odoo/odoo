@@ -17,8 +17,8 @@
             <div name="cashier_name" position="after">
                 <t t-set="show_title" t-value="false"/>
                 <t t-set="show_simplified_title" t-value="false"/>
-                <t t-if="conditions.get('l10n_gcc_dual_language_receipt') and show_title">
-                    <div class="text-center">
+                <t t-if="conditions.get('l10n_gcc_dual_language_receipt') and show_title and not conditions['basic_receipt']">
+                    <div class="pos-receipt-header text-center">
                         <t t-if="not show_simplified_title">
                             <t t-if="conditions.get('l10n_gcc_dual_language_receipt')">
                                 <span id="title_en">Tax Invoice</span>

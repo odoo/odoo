@@ -25,7 +25,7 @@ class TestAccountPayment(AccountPaymentCommon):
     def test_no_amount_available_for_refund_when_not_supported(self):
         self.provider.support_refund = 'none'
         tx = self._create_transaction('redirect', state='done')
-        tx._post_process()  # Create the payment
+        self._run_post_processing(tx)  # Create the payment
         self.assertEqual(
             tx.payment_id.amount_available_for_refund,
             0,
@@ -36,7 +36,7 @@ class TestAccountPayment(AccountPaymentCommon):
     def test_full_amount_available_for_refund_when_not_yet_refunded(self):
         self.provider.support_refund = 'full_only'  # Should simply not be False
         tx = self._create_transaction('redirect', state='done')
-        tx._post_process()  # Create the payment
+        self._run_post_processing(tx)  # Create the payment
         self.assertAlmostEqual(
             tx.payment_id.amount_available_for_refund,
             tx.amount,
@@ -51,7 +51,7 @@ class TestAccountPayment(AccountPaymentCommon):
             'support_manual_capture': 'partial',  # To create transaction in the 'authorized' state
         })
         tx = self._create_transaction('redirect', state='done')
-        tx._post_process()  # Create the payment
+        self._run_post_processing(tx)  # Create the payment
         for reference_index, state in enumerate(('draft', 'pending', 'authorized')):
             self._create_transaction(
                 'dummy',
@@ -72,15 +72,16 @@ class TestAccountPayment(AccountPaymentCommon):
     def test_no_amount_available_for_refund_when_fully_refunded(self):
         self.provider.support_refund = 'full_only'  # Should simply not be False
         tx = self._create_transaction('redirect', state='done')
-        tx._post_process()  # Create the payment
-        self._create_transaction(
+        self._run_post_processing(tx)  # Create the payment
+        refund_tx = self._create_transaction(
             'dummy',
             amount=-tx.amount,
             reference=f'R-{tx.reference}',
             state='done',
             operation='refund',  # Override the computed flow
             source_transaction_id=tx.id,
-        )._post_process()
+        )
+        self._run_post_processing(refund_tx)
         self.assertEqual(
             tx.payment_id.amount_available_for_refund,
             0,
@@ -91,15 +92,16 @@ class TestAccountPayment(AccountPaymentCommon):
     def test_no_full_amount_available_for_refund_when_partially_refunded(self):
         self.provider.support_refund = 'partial'
         tx = self._create_transaction('redirect', state='done')
-        tx._post_process()  # Create the payment
-        self._create_transaction(
+        self._run_post_processing(tx)  # Create the payment
+        refund_tx = self._create_transaction(
             'dummy',
             amount=-(tx.amount / 10),
             reference=f'R-{tx.reference}',
             state='done',
             operation='refund',  # Override the computed flow
             source_transaction_id=tx.id,
-        )._post_process()
+        )
+        self._run_post_processing(refund_tx)
         self.assertAlmostEqual(
             tx.payment_id.amount_available_for_refund,
             tx.payment_id.amount - (tx.amount / 10),
@@ -112,17 +114,17 @@ class TestAccountPayment(AccountPaymentCommon):
     def test_refunds_count(self):
         self.provider.support_refund = 'full_only'  # Should simply not be False
         tx = self._create_transaction('redirect', state='done')
-        tx._post_process()  # Create the payment
+        self._run_post_processing(tx)  # Create the payment
         for reference_index, operation in enumerate(
             ('online_redirect', 'online_direct', 'online_token', 'validation', 'refund')
         ):
-            self._create_transaction(
+            self._run_post_processing(self._create_transaction(
                 'dummy',
                 reference=f'R-{tx.reference}-{reference_index + 1}',
                 state='done',
                 operation=operation,  # Override the computed flow
                 source_transaction_id=tx.id,
-            )._post_process()
+            ))
 
         self.assertEqual(
             tx.payment_id.refunds_count,
@@ -135,7 +137,7 @@ class TestAccountPayment(AccountPaymentCommon):
         self.provider.support_refund = 'full_only'
 
         tx = self._create_transaction('redirect', state='done')
-        tx._post_process()
+        self._run_post_processing(tx)
 
         with patch.object(
             self.env.registry['account.payment'], 'message_post', autospec=True
@@ -144,6 +146,29 @@ class TestAccountPayment(AccountPaymentCommon):
             author_id = message_post_mock.call_args[1].get("author_id")
 
         self.assertEqual(author_id, self.user.partner_id.id)
+
+    def test_pending_tx_does_not_cancel_payment(self):
+        """When a token charge results in a 'pending' transaction (e.g SEPA),
+        the payment must stay in draft, and be posted once the tx becomes 'done'"""
+        payment_token = self._create_token()
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'amount': 100.0,
+            'currency_id': self.currency.id,
+            'partner_id': self.partner.id,
+            'journal_id': self.provider.journal_id.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+            'payment_token_id': payment_token.id,
+            'write_off_line_vals': [],
+        })
+
+        with patch.object(self.env.registry['payment.transaction'], '_send_payment_request',
+                          lambda tx: self._update_transaction(tx, state="pending")):
+            payment.with_context(payment_safe_write=True).action_post()
+
+        self.assertEqual(payment.payment_transaction_id.state, 'pending')
+        self.assertEqual(payment.state, 'paid')
 
     def test_action_post_calls_send_payment_request_only_once(self):
         payment_token = self._create_token()
@@ -164,14 +189,14 @@ class TestAccountPayment(AccountPaymentCommon):
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
             '._charge_with_token'
         ) as patched:
-            payment_without_token.action_post()
+            payment_without_token.with_context(payment_safe_write=True).action_post()
             patched.assert_not_called()
-            payment_with_token.action_post()
+            payment_with_token.with_context(payment_safe_write=True).action_post()
             patched.assert_called_once()
 
     def test_no_payment_for_validations(self):
         tx = self._create_transaction(flow='dummy', operation='validation')  # Overwrite the flow
-        tx._post_process()
+        self._run_post_processing(tx)
         payment_count = self.env['account.payment'].search_count(
             [('payment_transaction_id', '=', tx.id)]
         )
@@ -181,7 +206,7 @@ class TestAccountPayment(AccountPaymentCommon):
         self.provider.support_manual_capture = 'partial'
         source_tx = self._create_transaction(flow='direct', state='authorized')
         child_tx_1 = source_tx._create_child_transaction(100)
-        child_tx_1._set_done()
+        child_tx_1.with_context(payment_safe_write=True)._set_done()
         child_tx_2 = source_tx._create_child_transaction(source_tx.amount - 100)
         self.assertEqual(
             source_tx.state,
@@ -189,16 +214,16 @@ class TestAccountPayment(AccountPaymentCommon):
             msg="The source transaction should be authorized when the total processed amount of its"
                 " children is not equal to the source amount.",
         )
-        child_tx_2._set_canceled()
+        child_tx_2.with_context(payment_safe_write=True)._set_canceled()
         self.assertEqual(
             source_tx.state,
             'done',
             msg="The source transaction should be done when the total processed amount of its"
                 " children is equal to the source amount.",
         )
-        child_tx_1._post_process()
+        self._run_post_processing(child_tx_1)
         self.assertTrue(child_tx_1.payment_id, msg="Child transactions should create payments.")
-        source_tx._post_process()
+        self._run_post_processing(source_tx)
         self.assertFalse(
             source_tx.payment_id,
             msg="source transactions with done or cancel children should not create payments.",
@@ -208,7 +233,8 @@ class TestAccountPayment(AccountPaymentCommon):
         """ Deleting an account.payment.method.line that is related to a provider in 'test' or 'enabled' state
         should raise an error.
         """
-        self.assertEqual(self.dummy_provider.state, 'test')
+        self.assertFalse(self.dummy_provider.is_live)
+        self.dummy_provider.module_state = "installed"
         with self.assertRaises(UserError):
             self.dummy_provider.journal_id.inbound_payment_method_line_ids.unlink()
 
@@ -232,8 +258,6 @@ class TestAccountPayment(AccountPaymentCommon):
             # Test duplication of the provider.
             payment_method_line.payment_account_id = self.inbound_payment_method_line.payment_account_id
             copy_provider = self.provider.copy()
-            self.assertRecordValues(copy_provider, [{'journal_id': False}])
-            copy_provider.state = 'test'
             self.assertRecordValues(copy_provider, [{'journal_id': journal.id}])
             self.assertRecordValues(get_payment_method_line(copy_provider), [{
                 'journal_id': journal.id,
@@ -241,10 +265,6 @@ class TestAccountPayment(AccountPaymentCommon):
             }])
 
             # We are able to have both on the same journal...
-            with self.assertRaises(ValidationError):
-                # ...but not having both with the same name.
-                provider.journal_id = journal
-
             method_line = get_payment_method_line(copy_provider)
             method_line.name = "dummy (copy)"
             provider.journal_id = journal
@@ -310,7 +330,7 @@ class TestAccountPayment(AccountPaymentCommon):
             ),
             invoice_ids=[invoice.id],
             partner_id=self.partner.id,
-        )._create_payment()
+        ).with_context(payment_safe_write=True)._create_payment()
 
         self.assertNotEqual(self.partner.property_account_receivable_id, payment.destination_account_id)
         self.assertEqual(payment.destination_account_id, invoice.line_ids[-1].account_id)
@@ -391,9 +411,9 @@ class TestAccountPayment(AccountPaymentCommon):
             invoice_ids=[invoice.id],
         )
         invoice.button_cancel()
-        tx._set_done()
+        self._update_transaction(tx, state='done')
         # _post_process() shouldn't raise an error even though the invoice is cancelled
-        tx._post_process()
+        self._run_post_processing(tx)
         self.assertEqual(tx.payment_id.state, 'paid')
 
     def test_payment_token_for_invoice_partner_is_available(self):
@@ -460,3 +480,51 @@ class TestAccountPayment(AccountPaymentCommon):
                 self.env['account.move.send']._generate_and_send_invoices(move),
             )
             self.assertTrue(payment_qr_mock.called)
+
+    def test_partial_reconcile_with_payments_coming_from_provider(self):
+        """ Test that we not allow partial reconcile on payments coming from
+            payment provider.
+        """
+        provider = self.env['payment.provider'].create({
+            'name': 'Test',
+            'journal_id': self.company_data['default_journal_bank'].id,
+        })
+        payment_method = self.env["payment.method"].create({
+            "name": "Payment method",
+            "code": "unknown",
+            "provider_id": provider.id,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_line_ids': [
+                Command.create({
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100,
+                })
+            ]
+        })
+        payment_transaction = self.env['payment.transaction'].create({
+            'provider_id': provider.id,
+            'payment_method_id': payment_method.id,
+            'invoice_ids': [invoice.id],
+            'partner_id': self.partner_a.id,
+            'amount': 200,
+            'currency_id': invoice.currency_id.id,
+        })
+        payment_transaction.with_context(payment_safe_write=True)._create_payment(payment_method_line_id=self.company_data['default_journal_bank'].inbound_payment_method_line_ids[0].id)
+        self._run_post_processing(payment_transaction)
+        payment = payment_transaction.payment_id
+        invoice.action_post()
+        payment.action_post()
+        statement_line = self.env['account.bank.statement.line'].create({
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'date': '2026-01-01',
+            'partner_id': self.partner_a.id,
+            'amount': 100.0,
+        })
+        inv_line = payment.move_id.line_ids.filtered(lambda l: l.balance == 200)
+        self.assertFalse(statement_line._get_partial_amounts(-200, inv_line, -100, -100))

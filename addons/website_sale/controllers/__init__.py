@@ -5,6 +5,7 @@ from . import (
     combo_configurator,
     comparison,
     delivery,
+    donation,
     main,
     payment,
     product_configurator,

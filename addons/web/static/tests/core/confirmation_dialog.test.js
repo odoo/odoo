@@ -1,9 +1,12 @@
-import { expect, test, describe, destroy } from "@odoo/hoot";
-import { tick, Deferred } from "@odoo/hoot-mock";
-import { press } from "@odoo/hoot-dom";
-import { mountWithCleanup, contains, makeDialogMockEnv } from "@web/../tests/web_test_helpers";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { animationFrame, describe, expect, press, test, tick } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
+import {
+    contains,
+    getService,
+    makeDialogMockEnv,
+    mountWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 describe.current.tags("desktop");
 
@@ -261,7 +264,7 @@ test("can't click twice on 'Cancel'", async () => {
 });
 
 test("can't cancel (with escape) after confirm", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     const env = await makeDialogMockEnv();
     await mountWithCleanup(ConfirmationDialog, {
         env,
@@ -273,7 +276,7 @@ test("can't cancel (with escape) after confirm", async () => {
             },
             confirm: () => {
                 expect.step("Confirm action");
-                return def;
+                return def.promise;
             },
             cancel: () => {
                 throw new Error("should not cancel");
@@ -291,7 +294,7 @@ test("can't cancel (with escape) after confirm", async () => {
 });
 
 test("wait for confirm callback before closing", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     const env = await makeDialogMockEnv();
     await mountWithCleanup(ConfirmationDialog, {
         env,
@@ -303,7 +306,7 @@ test("wait for confirm callback before closing", async () => {
             },
             confirm: () => {
                 expect.step("Confirm action");
-                return def;
+                return def.promise;
             },
         },
     });
@@ -315,30 +318,24 @@ test("wait for confirm callback before closing", async () => {
 });
 
 test("Focus is correctly restored after confirmation", async () => {
-    const env = await makeDialogMockEnv();
-
     class Parent extends Component {
         static template = xml`<div class="my-comp"><input type="text" class="my-input"/></div>`;
-        static props = ["*"];
     }
 
-    await mountWithCleanup(Parent, { env });
+    await makeDialogMockEnv();
+    await mountWithCleanup(Parent);
+
     await contains(".my-input").focus();
     expect(".my-input").toBeFocused();
 
-    const dialog = await mountWithCleanup(ConfirmationDialog, {
-        env,
-        props: {
-            body: "Some content",
-            title: "Confirmation",
-            confirm: () => {},
-            close: () => {},
-        },
+    getService("dialog").add(ConfirmationDialog, {
+        body: "Some content",
+        title: "Confirmation",
     });
+    await animationFrame();
+
     expect(".modal-footer .btn-primary").toBeFocused();
     await contains(".modal-footer .btn-primary").click();
-    expect(document.body).toBeFocused();
-    destroy(dialog);
-    await Promise.resolve();
+
     expect(".my-input").toBeFocused();
 });

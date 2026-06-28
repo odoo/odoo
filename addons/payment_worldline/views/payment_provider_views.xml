@@ -6,36 +6,39 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <group name="provider_credentials" position='inside'>
-                <group invisible="code != 'worldline'">
-                    <field
-                        name="worldline_pspid"
-                        string="PSPID"
-                        required="code == 'worldline' and state != 'disabled'"
-                    />
-                    <field
-                        name="worldline_api_key"
-                        string="API Key"
-                        required="code == 'worldline' and state != 'disabled'"
-                    />
-                    <field
-                        name="worldline_api_secret"
-                        string="API Secret"
-                        required="code == 'worldline' and state != 'disabled'"
-                        password="True"
-                    />
-                    <field
-                        name="worldline_webhook_key"
-                        string="Webhook Key"
-                        required="code == 'worldline' and state != 'disabled'"
-                    />
-                    <field
-                        name="worldline_webhook_secret"
-                        string="Webhook Secret"
-                        required="code == 'worldline' and state != 'disabled'"
-                        password="True"
-                    />
-                </group>
+            <group name="provider_credentials" position="inside">
+                <field
+                    string="PSPID"
+                    name="worldline_pspid"
+                    invisible="code != 'worldline'"
+                    required="is_live"
+                />
+                <field
+                    string="API Key"
+                    name="worldline_api_key"
+                    invisible="code != 'worldline'"
+                    required="is_live"
+                />
+                <field
+                    string="API Secret"
+                    name="worldline_api_secret"
+                    invisible="code != 'worldline'"
+                    required="is_live"
+                    widget="password"
+                />
+                <field
+                    string="Webhook Key"
+                    name="worldline_webhook_key"
+                    invisible="code != 'worldline'"
+                    required="is_live"
+                />
+                <field
+                    string="Webhook Secret"
+                    name="worldline_webhook_secret"
+                    invisible="code != 'worldline'"
+                    required="is_live"
+                    widget="password"
+                />
             </group>
         </field>
     </record>

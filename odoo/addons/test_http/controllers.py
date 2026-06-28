@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
+import pprint
 
 import werkzeug
 from psycopg2.errorcodes import SERIALIZATION_FAILURE
@@ -9,12 +10,14 @@ from psycopg2.errors import SerializationFailure
 from odoo import http
 from odoo.exceptions import AccessError, ConcurrencyError, UserError
 from odoo.http import request
+from odoo.http.requestlib import fragment_to_query_string
 from odoo.http.session import touch
 from odoo.tools import replace_exceptions, str2bool
 
 from odoo.addons.web.controllers.utils import ensure_db
 
 _logger = logging.getLogger(__name__)
+_f2qs_logger = _logger.getChild('test_fragment_to_query_string')
 
 
 CT_JSON = {'Content-Type': 'application/json; charset=utf-8'}
@@ -52,14 +55,19 @@ class TestHttp(http.Controller):
         assert self.env.cr.readonly == str2bool(readonly)
         return "Tek'ma'te"
 
-    @http.route('/test_http/greeting-bearer', type='http', auth='bearer', readonly=_readonly)
+    @http.route('/test_http/greeting-bearer', type='http', auth='bearer', bearer_scope='rpc', readonly=_readonly)
     def greeting_bearer(self, readonly=True):
         assert self.env.user, "ORM should be initialized"
         assert self.env.cr.readonly == str2bool(readonly)
         return f"Tek'ma'te; user={self.env.user.login}"
 
+    @http.route('/test_http/greeting-bearer-other-scope', type='http', auth='bearer', bearer_scope='other_scope', readonly=True)
+    def greeting_bearer_other_scope(self):
+        return f"Tek'ma'te; user={self.env.user.login}"
+
     @http.route('/test_http/wsgi_environ', type='http', auth='none')
     def wsgi_environ(self):
+        _logger.debug("Full WSGI environ:\n%s", pprint.pformat(request.httprequest.environ))
         environ = {
             key: val for key, val in request.httprequest.environ.items()
             if (key.startswith(('HTTP_', 'REMOTE_', 'REQUEST_', 'SERVER_', 'werkzeug.proxy_fix.')) or key in WSGI_SAFE_KEYS)
@@ -67,7 +75,7 @@ class TestHttp(http.Controller):
 
         return request.make_response(
             json.dumps(environ, indent=4),
-            headers=list(CT_JSON.items())
+            headers=list(CT_JSON.items()),
         )
 
     @http.route('/test_http/raise-exception', type='http', auth='public')
@@ -112,7 +120,8 @@ class TestHttp(http.Controller):
         try:
             data = request.get_json_data()
         except ValueError as exc:
-            raise werkzeug.exceptions.BadRequest("Invalid JSON data") from exc
+            e = "Invalid JSON data"
+            raise werkzeug.exceptions.BadRequest(e) from exc
         return request.make_json_response(data)
 
     @http.route('/test_http/echo-json-null', type='jsonrpc', auth='none', readonly=True)
@@ -125,12 +134,13 @@ class TestHttp(http.Controller):
     @http.route('/test_http/<model("test_http.galaxy"):galaxy>', auth='public', readonly=True)
     def galaxy(self, galaxy):
         if not galaxy.exists():
-            raise UserError('The Ancients did not settle there.')
+            e = "The Ancients did not settle there."
+            raise UserError(e)
 
         return http.request.render('test_http.tmpl_galaxy', {
             'galaxy': galaxy,
             'stargates': http.request.env['test_http.stargate'].search([
-                ('galaxy_id', '=', galaxy.id)
+                ('galaxy_id', '=', galaxy.id),
             ]),
         })
 
@@ -144,7 +154,8 @@ class TestHttp(http.Controller):
     @http.route('/test_http/<model("test_http.galaxy"):galaxy>/<model("test_http.stargate"):gate>', auth='user', readonly=True)
     def stargate(self, galaxy, gate):
         if not gate.exists():
-            raise UserError("The goauld destroyed the gate")
+            e = "The goauld destroyed the gate"
+            raise UserError(e)
 
         return http.request.render('test_http.tmpl_stargate', {
             'gate': gate
@@ -220,29 +231,35 @@ class TestHttp(http.Controller):
 
     @http.route('/test_http/json_value_error', type='jsonrpc', auth='none')
     def json_value_error(self):
-        raise ValueError('Unknown destination')
+        e = "Unknown destination"
+        raise ValueError(e)
 
     @http.route('/test_http/hide_errors/decorator', type='http', auth='none')
     @replace_exceptions(AccessError, by=werkzeug.exceptions.NotFound())
     def hide_errors_decorator(self, error):
         if error == 'AccessError':
-            raise AccessError("Wrong iris code")
+            e = "Wrong iris code"
+            raise AccessError(e)
         if error == 'UserError':
-            raise UserError("Walter is AFK")
+            e = "Walter is AFK"
+            raise UserError(e)
 
     @http.route('/test_http/hide_errors/context-manager', type='http', auth='none')
     def hide_errors_context_manager(self, error):
         with replace_exceptions(AccessError, by=werkzeug.exceptions.NotFound()):
             if error == 'AccessError':
-                raise AccessError("Wrong iris code")
+                e = "Wrong iris code"
+                raise AccessError(e)
             if error == 'UserError':
-                raise UserError("Walter is AFK")
+                e = "Walter is AFK"
+                raise UserError(e)
 
     @http.route("/test_http/upload_file", methods=["POST"], type="http", auth="none", csrf=False)
     def upload_file_retry(self, ufile):
         global should_fail  # pylint: disable=W0603  # noqa: PLW0603
         if should_fail is None:
-            raise ValueError("should_fail should be set.")
+            e = f"The {(__name__ + '.should_fail')!r} global variable must be set."
+            raise ValueError(e)
 
         data = ufile.read()
         if should_fail:
@@ -277,3 +294,95 @@ class TestHttp(http.Controller):
     @http.route('/test_http/httprequest_environ', type='http', auth='none')
     def request_environ(self):
         return json.dumps(list(request.httprequest.environ.keys()))
+
+    # =====================================================
+    # fragment to query string
+    # =====================================================
+    @http.route('/test_http/f2qs/testing-api')
+    @fragment_to_query_string
+    def f2qs_testing_api(self, **kwargs):
+        return request.make_json_response(kwargs)
+
+    @http.route('/test_http/f2qs/step1/no-operation-to-perform', type='http', auth='none')
+    @fragment_to_query_string
+    def f2qs_test(self, **kwargs):
+        assert kwargs['race'] == 'Asgard', (
+            "?race=Asgard was ok, fragment_to_query_string shouldnt intervene!"
+        )
+        _f2qs_logger.info("step 1: passed")
+        step2 = '/test_http/f2qs/step2/1-var-in-fragment#race=Asgard'
+        return request.redirect(step2)
+
+    @http.route('/test_http/f2qs/step2/1-var-in-fragment', type='http', auth='none')
+    @fragment_to_query_string
+    def f2qs_test_simple_fragment(self, **kwargs):
+        assert kwargs['race'] == 'Asgard', (
+            'fragment_to_query_string should transform #race=Asgard into ?race=Asgard'
+        )
+        _f2qs_logger.info("step 2: passed")
+        # go to step 3 of test
+        step3 = '/test_http/f2qs/step3/3-var-in-fragment#race=Asgard&name=Thor&place=Orilla'
+        return request.redirect(step3)
+
+    @http.route('/test_http/f2qs/step3/3-var-in-fragment', type='http', auth='none')
+    @fragment_to_query_string
+    def f2qs_test_3_args_fragment(self, **kwargs):
+        assert (
+            kwargs['race'] == 'Asgard'
+            and kwargs['name'] == 'Thor'
+            and kwargs['place'] == 'Orilla'
+        ), (
+            "#race=Asgard&name=Thor&place=Orilla "
+            "should have been transformed into "
+            "?race=Asgard&name=Thor&place=Orilla"
+        )
+        _f2qs_logger.info("step 3: passed")
+        # go to step 4 of test
+        step4 = (
+            '/test_http/f2qs/step4/'
+            'empty-query-3-var-in-frag?#race=Asgard&name=Thor&place=Orilla'
+        )
+        return request.redirect(step4)
+
+    @http.route('/test_http/f2qs/step4/empty-query-3-var-in-frag', type='http', auth='none')
+    @fragment_to_query_string
+    def f2qs_test_empty_query_with_fragment(self, **kwargs):
+        assert (
+            kwargs['race'] == 'Asgard'
+            and kwargs['name'] == 'Thor'
+            and kwargs['place'] == 'Orilla'
+        ), (
+            "?#race=Asgard&name=Thor&place=Orilla "
+            "should have been transformed into "
+            "?race=Asgard&name=Thor&place=Orilla"
+        )
+        _f2qs_logger.info("step 4: passed")
+        step5 = '/test_http/f2qs/step5/debug-in-query-1-var-in-frag?debug=1#race=Asgard'
+        return request.redirect(step5)
+
+    @http.route('/test_http/f2qs/step5/debug-in-query-1-var-in-frag', type='http', auth='none')
+    @fragment_to_query_string
+    def f2qs_test_debug_in_query_with_fragment(self, **kwargs):
+        assert (
+            kwargs['race'] == 'Asgard'
+        ), (
+            "?debug=1#race=Asgard "
+            "should have been transformed into "
+            "?race=Asgard"
+        )
+        _f2qs_logger.info("step 5: passed")
+        step6 = '/test_http/f2qs/step6/ignore-in-query-1-var-in-frag?media=GNN#race=Asgard'
+        return request.redirect(step6)
+
+    @http.route('/test_http/f2qs/step6/ignore-in-query-1-var-in-frag', type='http', auth='none')
+    @fragment_to_query_string(ignore={'media'})
+    def f2qs_test_parameter_to_ignore_in_query_with_fragment(self, **kwargs):
+        assert (
+            kwargs['race'] == 'Asgard' and kwargs['media'] == 'GNN'
+        ), (
+            "?media=GNN#race=Asgard "
+            "should have been transformed into "
+            "?media=GNN&race=Asgard"
+        )
+        _f2qs_logger.info("step 6: passed")
+        return ''  # The end

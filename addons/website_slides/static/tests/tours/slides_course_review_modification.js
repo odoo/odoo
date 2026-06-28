@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("course_review_modification", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             trigger: "a:contains(Basics of Gardening - Test)",
@@ -49,7 +48,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "click #chatterRoot:shadow button[name='delete']",
         },
         {
-            trigger: "#chatterRoot:shadow button:contains(Delete)",
+            trigger: "#chatterRoot:shadow .modal button:contains(Delete)",
             run: "click",
         },
         {
@@ -57,7 +56,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
                 "#chatterRoot:shadow .o-mail-Chatter:not(:has(.o_website_rating_card_container))",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Thread:contains(The conversation is empty.)",
+            trigger: "#chatterRoot:shadow .o-mail-Thread:contains(No messages yet.)",
         },
         {
             trigger: ".o_wslides_course_header .o_website_rating_static[title='0 stars on 5']",
@@ -133,7 +132,11 @@ registry.category("web_tour.tours").add("course_review_modification", {
         {
             trigger:
                 "#chatterRoot:shadow .o-mail-Message:contains(Second review is edited in rating composer) .o_website_rating_static[title='2 stars on 5']",
-            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
+            run: "click #chatterRoot:shadow .o-mail-Message-moreMenu [name='edit']",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
@@ -196,7 +199,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "click #chatterRoot:shadow button[name='delete']",
         },
         {
-            trigger: "#chatterRoot:shadow button:contains(Delete)",
+            trigger: "#chatterRoot:shadow .modal button:contains(Delete)",
             run: "click",
         },
         {
@@ -218,7 +221,11 @@ registry.category("web_tour.tours").add("course_review_modification", {
         {
             trigger:
                 "#chatterRoot:shadow .o-mail-Message:not(:has(.o-mail-Message-body)) .o_website_rating_static[title='4 stars on 5']",
-            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
+            run: "click #chatterRoot:shadow .o-mail-Message-moreMenu [name='edit']",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
@@ -235,7 +242,11 @@ registry.category("web_tour.tours").add("course_review_modification", {
         {
             trigger:
                 "#chatterRoot:shadow .o-mail-Message .o-mail-Message-body:contains(Fill the message body)",
-            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
+            run: "click #chatterRoot:shadow .o-mail-Message-moreMenu [name='edit']",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
@@ -253,7 +264,6 @@ registry.category("web_tour.tours").add("course_review_modification", {
 });
 
 registry.category("web_tour.tours").add("course_review_modification_by_admin", {
-    undeterministicTour_doNotCopy: true,
     steps: () => [
         {
             trigger: "a:text(Basics of Gardening - Test)",
@@ -273,9 +283,8 @@ registry.category("web_tour.tours").add("course_review_modification_by_admin", {
             run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
         },
         {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Message:contains(Non admin user review) .o_website_rating_static[title='3 stars on 5']",
-            run: "hover && click #chatterRoot:shadow button[name='edit']",
+            trigger: "#chatterRoot:shadow button[name='edit']",
+            run: "click",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
@@ -318,7 +327,7 @@ registry.category("web_tour.tours").add("course_review_modification_by_admin", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow button:text(Delete)",
+            trigger: "#chatterRoot:shadow .modal button:text(Delete)",
             run: "click",
         },
         {
@@ -329,5 +338,42 @@ registry.category("web_tour.tours").add("course_review_modification_by_admin", {
         {
             trigger: ".o_rating_popup_composer span:text(Edit Review)",
         },
+        {
+            trigger: "a[id=home-tab]",
+            run: "click",
+        },
+        {
+            trigger: 'a.o_wslides_js_slides_list_slide_link:contains("Gardening: The Know-How")',
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            trigger: 'a[title="Exit Fullscreen"]',
+            run: "click",
+            expectUnloadPage: true,
+        },
+        { trigger: "a[href='#discuss'].active:text(Comments (4))" },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Composer-input",
+            run: "edit Test comment",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Composer-send:enabled",
+            run: "click",
+        },
+        { trigger: "a[href='#discuss']:text(Comments (5))" },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu [name='delete']",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .modal button:contains(Delete)",
+            run: "click",
+        },
+        { trigger: "a[href='#discuss']:text(Comments (4))" },
     ],
 });

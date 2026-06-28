@@ -1,25 +1,21 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
-/**
- * @typedef {Object} Props
- * @property {import("models").Activity} activity
- * @property {function} [onClickButtons]
- * @property {function} [onActivityChanged]
- * @extends {Component<Props, Env>}
- */
 export class ActivityMailTemplate extends Component {
-    static defaultProps = {
-        onClickButtons: () => {},
-    };
-    static props = ["activity", "onClickButtons?", "onActivityChanged?"];
     static template = "mail.ActivityMailTemplate";
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.props = props({
+            activity: t.instanceOf(this.store["mail.activity"].Class),
+            onActivityChanged: t
+                .function([t.instanceOf(this.store["mail.thread"].Class)])
+                .optional(),
+            onClickButtons: t.function([]).optional(() => () => {}),
+        });
     }
 
     /**

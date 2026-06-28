@@ -60,16 +60,14 @@
                             <div t-foreach="productList" t-as="product" t-key="product.id" class="o_self_product_box g-col-12 g-col-md-6 g-col-lg-3 rounded-4 p-3 p-lg-0 shadow-sm shadow-lg-none" t-att-class="{'g-col-kiosk-p-4': productList.length &lt;= 9 , 'g-col-kiosk-p-3': productList.length &gt; 9 }">
                                 <t t-set="snoozed" t-value="this.selfOrder.isProductSnoozed(product)" />
                                 <article role="button" t-on-click="(evt) => this.selectProduct(product, evt.target)" class="position-relative d-flex flex-row-reverse flex-lg-column align-items-start cursor-pointer" t-att-class="{'opacity-25' : snoozed}">
-                                    <div class="product_img ratio ratio-1x1 w-lg-100 flex-shrink-0 ms-2 ms-lg-0">
-                                        <img class="object-fit-cover rounded-4" t-attf-src="/web/image/product.template/#{product.id}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                    <div t-att-class="{'d-none d-lg-block': !product.showProductImageInSelf}" class="product_img ratio ratio-1x1 w-lg-100 flex-shrink-0 ms-2 ms-lg-0">
+                                        <img class="object-fit-scale rounded-4" t-attf-src="/web/image/product.template/#{product.id}/image_512?unique=#{product.write_date}" loading="lazy"/>
                                     </div>
                                     <div class="d-flex flex-column w-100 mt-lg-2 mt-kiosk-p-3 gap-lg-1 text-lg-center align-items-lg-center">
                                         <ProductNameWidget product="product"/>
-                                        <div t-if="snoozed" class="badge my-1 rounded-pill text-bg-danger w-auto me-auto mx-lg-auto">
-                                            <span>Unavailable</span>
-                                        </div>
+                                        <div t-if="snoozed" class="badge my-1 rounded-pill text-bg-danger w-auto me-auto mx-lg-auto">Out of stock</div>
                                         <span t-out="this.selfOrder.formatMonetary(this.selfOrder.getProductDisplayPrice(product))" class="o-so-tabular-nums fs-4 fw-bold text-primary"/>
-                                        <div class="product_descr d-lg-none mt-1 text-ellipsis text-muted small" t-if="product.public_description" t-out="product.productDescriptionMarkup"/>
+                                        <div class="product_descr o_line_clamp d-lg-none mt-1 text-muted small" t-if="product.public_description" t-out="product.productDescriptionMarkup"/>
                                     </div>
                                     <t t-set="qty" t-value="this.state.quantityByProductTmplId[product.id]" />
                                     <span t-if="qty" t-out="qty" class="badge position-absolute top-0 end-0 m-0 m-lg-2 rounded-4 fs-5 text-bg-primary fw-bold"/>

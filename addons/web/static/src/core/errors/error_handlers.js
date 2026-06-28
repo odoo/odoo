@@ -1,4 +1,4 @@
-import { RPCError } from "../network/rpc";
+import { RPCError, RequestEntityTooLargeError } from "../network/rpc";
 import { registry } from "../registry";
 import { session } from "@web/session";
 import { user } from "@web/core/user";
@@ -6,6 +6,7 @@ import {
     ClientErrorDialog,
     ErrorDialog,
     NetworkErrorDialog,
+    RequestEntityTooLargeErrorDialog,
     RPCErrorDialog,
 } from "./error_dialogs";
 import { UncaughtClientError, ThirdPartyScriptError, UncaughtPromiseError } from "./error_service";
@@ -78,6 +79,27 @@ export function rpcErrorHandler(env, error, originalError) {
 }
 
 errorHandlerRegistry.add("rpcErrorHandler", rpcErrorHandler, { sequence: 97 });
+
+// -----------------------------------------------------------------------------
+// Request entity too large errors
+// -----------------------------------------------------------------------------
+
+/**
+ * @param {OdooEnv} env
+ * @param {UncaughError} error
+ * @param {Error} originalError
+ * @returns {boolean}
+ */
+export function requestEntityTooLargeHandler(env, error, originalError) {
+    if (!(error instanceof UncaughtPromiseError)) {
+        return false;
+    }
+    if (originalError instanceof RequestEntityTooLargeError) {
+        env.services.dialog.add(RequestEntityTooLargeErrorDialog);
+        return true;
+    }
+}
+errorHandlerRegistry.add("requestEntityTooLargeHandler", requestEntityTooLargeHandler, { sequence: 99 });
 
 // -----------------------------------------------------------------------------
 // Default handler

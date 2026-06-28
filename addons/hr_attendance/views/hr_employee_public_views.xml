@@ -10,9 +10,8 @@
                         class="oe_stat_button"
                         icon="fa-clock-o"
                         type="object"
-                        groups="base.group_user"
-                        help="Worked hours this month"
-                        invisible="not is_user">
+                        invisible="not display_attendances"
+                        help="Worked hours this month">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value">
                                 <field name="hours_last_month" widget="float_time"/>

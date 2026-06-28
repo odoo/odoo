@@ -24,20 +24,6 @@ class WebsiteMenu(models.Model):
         menu = self.search([], limit=1, order="sequence DESC")
         return menu.sequence or 0
 
-    @api.depends('mega_menu_content')
-    def _compute_field_is_mega_menu(self):
-        for menu in self:
-            menu.is_mega_menu = bool(menu.mega_menu_content)
-
-    def _set_field_is_mega_menu(self):
-        for menu in self:
-            if menu.is_mega_menu:
-                if not menu.mega_menu_content:
-                    menu.mega_menu_content = self.env['ir.ui.view']._render_template('website.s_mega_menu_odoo_menu')
-            else:
-                menu.mega_menu_content = False
-                menu.mega_menu_classes = False
-
     name = fields.Char('Menu', required=True, translate=True)
     url = fields.Char("Url", compute="_compute_url", store=True, required=True, readonly=False, default="#", copy=True)
     page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade', index='btree_not_null')
@@ -52,9 +38,23 @@ class WebsiteMenu(models.Model):
     group_ids = fields.Many2many('res.groups', string='Visible Groups',
         groups='base.group_user',
         help="User needs to be at least in one of these groups to see the menu")
-    is_mega_menu = fields.Boolean(compute=_compute_field_is_mega_menu, inverse=_set_field_is_mega_menu)
+    is_mega_menu = fields.Boolean(compute='_compute_field_is_mega_menu', inverse='_inverse_field_is_mega_menu')
     mega_menu_content = fields.Html(translate=html_translate, sanitize=False, prefetch=True)
     mega_menu_classes = fields.Char()
+
+    @api.depends('mega_menu_content')
+    def _compute_field_is_mega_menu(self):
+        for menu in self:
+            menu.is_mega_menu = bool(menu.mega_menu_content)
+
+    def _inverse_field_is_mega_menu(self):
+        for menu in self:
+            if menu.is_mega_menu:
+                if not menu.mega_menu_content:
+                    menu.mega_menu_content = (menu.website_id or self.env.website).with_context(inherit_branding=False)._render_template('website.s_mega_menu_odoo_menu')
+            else:
+                menu.mega_menu_content = False
+                menu.mega_menu_classes = False
 
     @api.depends('website_id')
     @api.depends_context('display_website')
@@ -107,6 +107,15 @@ class WebsiteMenu(models.Model):
                 if record.child_id and (parent_menu.parent_id or record.child_id.child_id):
                     raise UserError(_("Menus with child menus cannot be added as a submenu."))
 
+    @api.constrains("mega_menu_content")
+    def _validate_mega_menu_content(self):
+        """
+        Checks that there is no editing branding in the html content.
+        """
+        for record in self:
+            if record.mega_menu_content and ' data-oe-model=' in record.mega_menu_content:
+                raise UserError(_("Presence of publishing branding in html content is forbidden"))
+
     @api.model_create_multi
     def create(self, vals_list):
         ''' In case a menu without a website_id is trying to be created, we duplicate
@@ -116,7 +125,7 @@ class WebsiteMenu(models.Model):
                   Be careful to return correct record for ir.model.data xml_id in case
                   of default main menus creation.
         '''
-        self.env.registry.clear_cache('templates')
+        self.env.transaction.invalidate_ormcache('templates')
         # Only used when creating website_data.xml default menu
         menus = self.env['website.menu']
         for vals in vals_list:
@@ -153,7 +162,7 @@ class WebsiteMenu(models.Model):
 
     def write(self, vals):
         if any(self._ids):
-            self.env.registry.clear_cache('templates')
+            self.env.transaction.invalidate_ormcache('templates')
         res = super().write(vals)
         if 'group_ids' in vals and not self.env.context.get("adding_designer_group_to_menu"):
             self.filtered("group_ids").with_context(
@@ -162,7 +171,7 @@ class WebsiteMenu(models.Model):
         return res
 
     def unlink(self):
-        self.env.registry.clear_cache('templates')
+        self.env.transaction.invalidate_ormcache('templates')
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         menus_to_remove = self
         for menu in self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id):
@@ -290,6 +299,8 @@ class WebsiteMenu(models.Model):
 
     @api.model
     def save(self, website_id, data):
+        WebsiteMenu = self.with_context(website_id=website_id)
+
         def replace_id(old_id, new_id):
             for menu in data['data']:
                 if menu['id'] == old_id:
@@ -298,15 +309,15 @@ class WebsiteMenu(models.Model):
                     menu['parent_id'] = new_id
         to_delete = data.get('to_delete')
         if to_delete:
-            self.browse(to_delete).unlink()
+            WebsiteMenu.browse(to_delete).unlink()
         for menu in data['data']:
             mid = menu['id']
             # new menu are prefixed by new-
             if isinstance(mid, str):
-                new_menu = self.create({'name': menu['name'], 'website_id': website_id})
+                new_menu = WebsiteMenu.create({'name': menu['name'], 'website_id': website_id})
                 replace_id(mid, new_menu.id)
         for menu in data['data']:
-            menu_id = self.browse(menu['id'])
+            menu_id = WebsiteMenu.browse(menu['id'])
             # Check if the url match a website.page (to set the m2o relation),
             # except if the menu url contains '#', we then unset the page_id
             if '#' in menu['url']:
@@ -324,11 +335,11 @@ class WebsiteMenu(models.Model):
                     referer_url = werkzeug.urls.url_parse(request.httprequest.headers.get('Referer', '')).path
                     menu['url'] = referer_url + menu['url']
             else:
-                domain = self.env["website"].browse(website_id).website_domain() & (
+                domain = WebsiteMenu.env["website"].browse(website_id).website_domain() & (
                     Domain("url", "=", menu["url"])
                     | Domain("url", "=", "/" + menu["url"])
                 )
-                page = self.env["website.page"].search(domain, limit=1)
+                page = WebsiteMenu.env["website.page"].search(domain, limit=1)
                 if page:
                     menu['page_id'] = page.id
                     menu['url'] = page.url
@@ -338,7 +349,7 @@ class WebsiteMenu(models.Model):
                 elif menu_id.page_id:
                     try:
                         # a page shouldn't have the same url as a controller
-                        self.env['ir.http']._match(menu['url'])
+                        WebsiteMenu.env['ir.http']._match(menu['url'])
                         menu_id.page_id = None
                     except werkzeug.exceptions.NotFound:
                         menu_id.page_id.write({'url': menu['url']})

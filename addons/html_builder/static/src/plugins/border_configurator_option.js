@@ -1,21 +1,19 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
+import { props, t } from "@odoo/owl";
 
 export class BorderConfigurator extends BaseOptionComponent {
     static template = "html_builder.BorderConfiguratorOption";
     static dependencies = ["builderActions"];
-    static props = {
-        label: { type: String },
-        direction: { type: String, optional: true },
-        withRoundCorner: { type: Boolean, optional: true },
-        withBSClass: { type: Boolean, optional: true },
-        action: { type: String, optional: true },
-    };
-    static defaultProps = {
-        withRoundCorner: true,
-        withBSClass: true, // TODO remove, and actually configure propertly in caller
-        action: "styleAction",
-    };
+    props = props({
+        label: t.string(),
+        direction: t.string().optional(),
+        withRoundCorner: t.boolean().optional(true),
+        // TODO remove, and actually configure propertly in caller
+        withBSClass: t.boolean().optional(true),
+        action: t.string().optional("styleAction"),
+        level: t.number().optional(),
+    });
 
     setup() {
         super.setup();

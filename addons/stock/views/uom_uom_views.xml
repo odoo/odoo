@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="product_uom_tree_view_inherit" model="ir.ui.view">
-        <field name="name">uom.uom.list.inherit</field>
+    <record id="uom_uom_view_list" model="ir.ui.view">
+        <field name="name">uom.uom.view.list.inherit.stock</field>
         <field name="model">uom.uom</field>
-        <field name="inherit_id" ref="uom.product_uom_tree_view"/>
+        <field name="inherit_id" ref="uom.uom_uom_view_list"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="package_type_id" groups="stock.group_tracking_lot"/>
@@ -11,10 +11,10 @@
         </field>
     </record>
 
-    <record id="product_uom_form_view_inherit" model="ir.ui.view">
-        <field name="name">uom.uom.form.inherit</field>
+    <record id="uom_uom_view_form" model="ir.ui.view">
+        <field name="name">uom.uom.view.form.inherit.stock</field>
         <field name="model">uom.uom</field>
-        <field name="inherit_id" ref="uom.product_uom_form_view"/>
+        <field name="inherit_id" ref="uom.uom_uom_view_form"/>
         <field name="arch" type="xml">
             <div name="relative_factor" position="after">
                 <field name="package_type_id"
@@ -26,6 +26,7 @@
                     invisible="not (context.get('product_id') and id)"
                     widget="many2many_barcode_tags"
                     options="{'no_create_edit': True, 'no_open': True}"
+                    domain="[('uom_id', '=', id), '|', ('product_id', '=', context.get('product_id')), ('product_id', 'in', context.get('product_ids'))]"
                     readonly="not context.get('product_id')"
                     force_save="1"
                     context="{'default_uom_id': id, 'default_product_id': context.get('product_id')}"/>

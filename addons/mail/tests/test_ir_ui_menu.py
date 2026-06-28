@@ -19,7 +19,8 @@ class TestMenuRootLookupByModel(MailCommon):
     """
     @classmethod
     def setUpClass(cls):
-        """ Setup data for the tests, especially this menu hierarchy:
+        """Setup data for the tests, especially this menu hierarchy:
+
         - Contacts
             - Contacts (res.partner)
         - Invoicing
@@ -147,13 +148,13 @@ class TestMenuRootLookupByModel(MailCommon):
     @users('user_portal', 'user_public')
     def test_look_for_existing_menu_root_user_no_access(self):
         Menu = self.env['ir.ui.menu']
-        with self.assertQueryCount(user_portal=2, user_public=2):
+        with self.assertQueryCount(user_portal=3, user_public=3):
             self.assertEqual(Menu._get_best_backend_root_menu_id_for_model('res.partner'), None)
-        with self.assertQueryCount(user_portal=1, user_public=1):
+        with self.assertQueryCount(user_portal=0, user_public=0):
             self.assertEqual(Menu._get_best_backend_root_menu_id_for_model('res.company'), None)
         with (self.patch_get_backend_root_menu_ids(
                 self.env['res.partner'], [self.menu_root_sales.id, self.menu_root_contact.id]),
-              self.assertQueryCount(user_portal=1, user_public=1)):
+              self.assertQueryCount(user_portal=0, user_public=0)):
             self.assertEqual(Menu._get_best_backend_root_menu_id_for_model('res.partner'), None)
 
     @warmup

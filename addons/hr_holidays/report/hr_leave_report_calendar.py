@@ -31,7 +31,7 @@ class HrLeaveReportCalendar(models.Model):
         ('validate', 'Approved')
     ], readonly=True)
     description = fields.Char("Description", readonly=True, groups='hr_holidays.group_hr_holidays_user')
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', readonly=True, string="Time Off Type",
+    work_entry_type_id = fields.Many2one('hr.work.entry.type', readonly=True, string="Time Type",
         groups='hr_holidays.group_hr_holidays_user')
 
     is_hatched = fields.Boolean('Hatched', readonly=True)
@@ -98,7 +98,7 @@ class HrLeaveReportCalendar(models.Model):
         for leave in self:
             leave.name = leave.employee_id.name
             if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-                # Include the time off type name
+                # Include the time type name
                 leave.name += f" {leave.leave_id.work_entry_type_id.display_code or leave.leave_id.work_entry_type_id.name}"
             # Include the time off duration.
             leave.name += f": {leave.sudo().leave_id.duration_display}"

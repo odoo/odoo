@@ -33,7 +33,7 @@ const READONLY_PROPERTIES = [
  * @param {OdooModuleFactory} factory
  */
 export function mockBrowserFactory(name, { fn }) {
-    return (...args) => {
+    return function mockBrowser(...args) {
         const browserModule = fn(...args);
         const properties = {
             location: {

@@ -1,4 +1,4 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useAutoresize } from "@web/core/utils/autoresize";
@@ -9,32 +9,29 @@ import { parseInteger } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t, useListener } from "@odoo/owl";
+
+export const textFieldProps = {
+    ...standardFieldProps,
+    lineBreaks: t.boolean().optional(true),
+    placeholder: t.string().optional(),
+    dynamicPlaceholder: t.boolean().optional(false),
+    dynamicPlaceholderModelReferenceField: t.string().optional(),
+    rowCount: t.number().optional(2),
+};
 
 export class TextField extends Component {
     static template = "web.TextField";
     static components = {
         TranslationButton,
     };
-    static props = {
-        ...standardFieldProps,
-        lineBreaks: { type: Boolean, optional: true },
-        placeholder: { type: String, optional: true },
-        dynamicPlaceholder: { type: Boolean, optional: true },
-        dynamicPlaceholderModelReferenceField: { type: String, optional: true },
-        rowCount: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        lineBreaks: true,
-        dynamicPlaceholder: false,
-        rowCount: 2,
-    };
+    props = props(textFieldProps);
 
     setup() {
         this.textareaRef = useRef("textarea");
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder(this.textareaRef);
-            useExternalListener(document, "keydown", this.dynamicPlaceholder.onKeydown);
+            useListener(document, "keydown", this.dynamicPlaceholder.onKeydown);
             useLayoutEffect(() =>
                 this.dynamicPlaceholder.updateModel(
                     this.props.dynamicPlaceholderModelReferenceField
@@ -65,8 +62,8 @@ export class TextField extends Component {
         return value;
     }
 
-    async onBlur() {
-        this.selectionStart = this.textareaRef.el.selectionStart;
+    onBlur() {
+        this.selectionStart = this.textareaRef.el?.selectionStart || 0;
     }
 
     async onDynamicPlaceholderOpen() {
@@ -106,7 +103,6 @@ export class TextField extends Component {
 }
 
 export const textField = {
-    additionalClasses: ["o_input_box"],
     component: TextField,
     displayName: _t("Multiline Text"),
     supportedOptions: [
@@ -137,10 +133,10 @@ export const textField = {
 registry.category("fields").add("text", textField);
 
 export class ListTextField extends TextField {
-    static defaultProps = {
-        ...super.defaultProps,
-        rowCount: 1,
-    };
+    props = props({
+        ...textFieldProps,
+        rowCount: t.number().optional(1),
+    });
 
     get minimumHeight() {
         return 0;

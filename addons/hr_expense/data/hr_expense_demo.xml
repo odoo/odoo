@@ -13,6 +13,14 @@
             <field name="implied_ids" eval="[(4, ref('hr_expense.group_hr_expense_manager'))]"/>
         </record>
 
+        <record id="base.partner_admin" model="res.partner">
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="base.partner_demo" model="res.partner">
+            <field name="company_id" eval="False"/>
+        </record>
+
         <record id="hr.employee_mit" model="hr.employee">
             <field name="private_email">douglas.fletcher51@example.com</field>
             <field name="private_phone">(132)-553-7242</field>

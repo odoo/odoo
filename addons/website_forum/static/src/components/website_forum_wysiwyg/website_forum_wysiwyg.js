@@ -1,25 +1,30 @@
 import { useExternalListener } from "@web/owl2/utils";
 import { removeClass } from "@html_editor/utils/dom";
-import { markup, onMounted } from "@odoo/owl";
+import { markup, onMounted, props, t } from "@odoo/owl";
 import { BASIC_PLUGINS, FULL_EDIT_PLUGINS } from "../../plugins/plugin_sets";
 import { useResizer } from "./resizer_hook";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 
 export class WebsiteForumWysiwyg extends Wysiwyg {
     static template = "website_forum.WebsiteForumWysiwyg";
-    static props = {
-        ...super.props,
-        textareaEl: HTMLElement,
-        fullEdit: Boolean,
-        getRecordInfo: Function,
-        resizable: { type: Boolean, optional: true },
-        height: { type: String, optional: true },
-    };
-    static defaultProps = {
-        ...super.defaultProps,
-        class: "odoo-editor",
-        contentClass: "note-editable",
-    };
+    props = props({
+        // Inlined from Wysiwyg (html_editor), which is not yet converted to
+        // the owl3 props schema.
+        config: t.object().optional(),
+        class: t.string().optional("odoo-editor"),
+        contentClass: t.string().optional("note-editable"), // on editable element
+        style: t.string().optional(),
+        iframe: t.boolean().optional(),
+        copyCss: t.boolean().optional(),
+        onLoad: t.function().optional(() => () => {}),
+        onBlur: t.function().optional(() => () => {}),
+        dynamicPlaceholder: t.boolean().optional(),
+        textareaEl: t.instanceOf(HTMLElement),
+        fullEdit: t.boolean(),
+        getRecordInfo: t.function(),
+        resizable: t.boolean().optional(),
+        height: t.string().optional(),
+    });
 
     /** @override */
     setup() {
@@ -67,7 +72,6 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
             },
             defaultLinkAttributes: { rel: "ugc noreferrer noopener", target: "_blank" },
             dropImageAsAttachment: true,
-            allowImageTransform: false,
             height: this.props.height,
             allowImageResize: false,
             allowFontFamily: false,
@@ -78,6 +82,7 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
         // float-start class messes up the post layout OPW 769721
         const classNames = ["o_we_selected_image", "float-start"];
         root.querySelectorAll("img").forEach((img) => removeClass(img, ...classNames));
+        return root;
     }
 
     getTextAreaContent() {

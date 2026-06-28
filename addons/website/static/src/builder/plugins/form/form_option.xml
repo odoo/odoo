@@ -11,20 +11,30 @@
         </BuilderSelect>
     </BuilderRow>
     <FormActionFieldsOption activeForm="this.state.activeForm"/>
-    <BuilderRow label.translate="Marked Fields">
+    <BuilderRow label.translate="Marked Fields" tooltip.translate="Add an icon to the labels of required or optional fields">
         <BuilderSelect id="'field_mark_select'" action="'updateLabelsMark'">
             <BuilderSelectItem classAction="''">None</BuilderSelectItem>
             <BuilderSelectItem classAction="'o_mark_required'" id="'form_required_opt'">Required</BuilderSelectItem>
             <BuilderSelectItem classAction="'o_mark_optional'" id="'form_optional_opt'">Optional</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Mark Text">
+    <BuilderRow label.translate="Marker" level="1">
         <BuilderTextInput action="'setMark'" default="''" t-if="this.isActiveItem('form_required_opt') || this.isActiveItem('form_optional_opt')"/>
     </BuilderRow>
-    <BuilderRow label.translate="Labels Width">
+    <BuilderRow t-if="this.canChangeFieldsLayout" label.translate="Labels Position">
+        <BuilderButtonGroup action="'selectLabelsPosition'">
+            <BuilderButton title.translate="Hide" actionValue="'none'" id="'label_position_hide_opt'">
+                <i class="fa fa-eye-slash"/>
+            </BuilderButton>
+            <BuilderButton title.translate="Top" actionValue="'top'" iconImg="'/website/static/src/img/snippets_options/pos_top.svg'" id="'label_position_top_opt'"/>
+            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" actionValue="'left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" actionValue="'right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow label.translate="Labels Width" level="1" t-if="!this.isActiveItem('label_position_hide_opt') and !this.isActiveItem('label_position_top_opt')">
         <BuilderNumberInput
             styleAction="'width'"
-            unit="'px'" applyTo="'.s_website_form_label'"/>
+            unit="'px'" applyTo="'[data-name=Field]:not(.s_website_form_dnone) .s_website_form_label'"/>
     </BuilderRow>
     <BuilderRow label.translate="On Success">
         <BuilderSelect preview="false" action="'onSuccess'">
@@ -49,7 +59,7 @@
 <t t-name="website.s_website_form_form_action_fields_option">
     <t t-if="this.state.formInfo.fields">
         <t t-foreach="this.state.formInfo.fields" t-as="field" t-key="field.name">
-            <BuilderRow t-if="field.type === 'many2one'" label="field.string" preview="false">
+            <BuilderRow t-if="field.type === 'many2one'" label="field.string" tooltip="field.help" preview="false">
                 <BuilderSelect actionParam="{ isSelect: true, fieldName: field.name }">
                     <BuilderSelectItem t-if="!field.required" action="'addActionField'" actionValue="'0'">
                         None
@@ -65,8 +75,7 @@
                     action="'promptSaveRedirect'" actionParam="field.createAction"
                 />
             </BuilderRow>
-            <!-- TODO className="'o_we_large'" -->
-            <BuilderRow t-if="field.type === 'char'" label="field.string">
+            <BuilderRow t-if="field.type === 'char'" label="field.string" tooltip="field.help">
                 <BuilderTextInput actionParam="{ fieldName: field.name }" action="'addActionField'" default="''"/>
             </BuilderRow>
         </t>
@@ -80,6 +89,19 @@
     >
         + Field
     </button>
+</t>
+
+<t t-name="website.s_website_form_form_option_add_snippet_dropdown">
+    <Dropdown menuClass="'o-hb-select-dropdown'">
+        <button class="btn btn-success pe-2" t-att-title="this.props.tooltip">+ New</button>
+        <t t-set-slot="content">
+            <t t-foreach="this.snippets" t-as="snippet" t-key="snippet.name">
+                <DropdownItem onSelected="() => this.addField(snippet)">
+                    <t t-out="snippet.name"/>
+                </DropdownItem>
+            </t>
+        </t>
+    </Dropdown>
 </t>
 
 <t t-name="website.s_website_form_field_option_redraw">
@@ -100,7 +122,7 @@
                 <BuilderSelectItem actionValue="'url'">Url</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'integer'">Number</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'float'">Decimal Number</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'boolean'">Checkbox</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'boolean'" id="'custom_field_boolean_opt'">Checkbox</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'one2many'">Multiple Checkboxes</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'selection'">Radio Buttons</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'many2one'">Selection</BuilderSelectItem>
@@ -126,7 +148,7 @@
             <BuilderSelectItem actionValue="'url'">Url</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Selection type" level="1">
+    <BuilderRow label.translate="Selection type">
         <BuilderSelect t-if="this.isExistingFieldSelectType and this.state.valueList"
             id="'existing_field_select_type_opt'" preview="false" action="'existingFieldSelectType'"
         >
@@ -148,23 +170,28 @@
     </BuilderRow>
     <BuilderRow label.translate="Label">
         <BuilderTextInput action="'setLabelText'" default="this.domState.fieldTranslatedName"/>
+        <BuilderButton title.translate="Hide" action="'toggleCheckboxLabel'" t-if="this.isActiveItem('custom_field_boolean_opt')" icon="'fa-eye-slash'" preview="false"/>
     </BuilderRow>
-    <BuilderRow label.translate="Position" level="1">
-        <BuilderButtonGroup action="'selectLabelPosition'">
-            <BuilderButton title.translate="Hide" actionValue="'none'">
-                <i class="fa fa-eye-slash"/>
-            </BuilderButton>
-            <BuilderButton title.translate="Top" actionValue="'top'" iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"/>
-            <BuilderButton title.translate="Left" actionValue="'left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
-            <BuilderButton title.translate="Right" actionValue="'right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
-        </BuilderButtonGroup>
+    <BuilderRow label.translate="Required">
+        <BuilderCheckbox t-if="!this.domState.elClassList.includes('s_website_form_model_required')"
+            id="'required_opt'" preview="false"
+            action="'toggleRequired'" actionParam="'s_website_form_required'"
+        />
     </BuilderRow>
     <BuilderRow label.translate="Link to country">
         <BuilderCheckbox action="'linkStateToCountry'" t-if="this.canLinkStateToCountry.value"
             id="'link_state_to_country_opt'" applyTo="'.s_website_form_input'"/>
     </BuilderRow>
-    <BuilderRow label.translate="Description">
-        <BuilderCheckbox action="'toggleDescription'" preview="false"/>
+    <BuilderRow label.translate="Description" tooltip.translate="Add a description on your field">
+        <!-- Use position options only when the target field is a "Checkbox" -->
+        <BuilderSelect t-if="this.isActiveItem('custom_field_boolean_opt')" action="'setDescription'">
+            <BuilderSelectItem actionValue="'none'">None</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'top'">Top (Inline)</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'center'">Center (Inline)</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'stacked'">Stacked</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'wrap'">Wrap</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderCheckbox t-else="" action="'setDescription'" preview="false"/>
     </BuilderRow>
     <BuilderRow label.translate="Placeholder" t-if="!this.isOtherOptionSupported">
         <BuilderTextInput attributeAction="'placeholder'"
@@ -189,18 +216,12 @@
             applyTo="'.s_website_form_date input'"
         />
     </BuilderRow>
-    <BuilderRow label.translate="Required">
-        <BuilderCheckbox t-if="!this.domState.elClassList.includes('s_website_form_model_required')"
-            id="'required_opt'" preview="false"
-            action="'toggleRequired'" actionParam="'s_website_form_required'"
-        />
-    </BuilderRow>
-    <t t-if="domStateCurrentFieldInput.nodeName === 'SELECT'">
+    <t t-if="this.domStateCurrentFieldInput.nodeName === 'SELECT'">
         <BuilderRow label.translate="Allow Empty">
             <BuilderCheckbox id="'allow_empty_opt'" action="'toggleAllowEmpty'"/>
         </BuilderRow>
         <BuilderRow label.translate="Placeholder" level="1">
-            <BuilderTextInput t-if="isActiveItem('allow_empty_opt')" action="'setEmptyPlaceholder'" placeholder.translate="Please choose any one option"/>
+            <BuilderTextInput t-if="this.isActiveItem('allow_empty_opt')" action="'setEmptyPlaceholder'" placeholder.translate="Please choose any one option"/>
         </BuilderRow>
     </t>
     <BuilderRow label.translate="Max # of Files">
@@ -229,13 +250,14 @@
                 <t t-out="this.state.valueList.title" />
             </p>
             <BuilderList
+                t-key="this.getFieldKey"
                 action="'setFormCustomFieldValueList'"
                 addItemTitle="this.state.valueList.addItemTitle"
                 itemShape="{ display_name: 'text', selected: this.state.valueList.checkType }"
                 default="{ display_name: this.state.valueList.defaultItemName, selected: false }"
                 defaultNewValue="{ id: this.state.valueList.defaultItemName }"
                 forbidLastItemRemoval="true"
-                records="this.state.valueList.availableRecords" />
+                records="this.state.valueList.availableRecords"/>
         </div>
     </BuilderRow>
     <BuilderRow label.translate="Add Other" t-if="this.isOtherOptionSupported" tooltip.translate="Allow people to add their own option">
@@ -247,6 +269,57 @@
     <BuilderRow label.translate="Placeholder" t-if="this.isActiveItem('otherOption')" level="1">
         <BuilderTextInput dataAttributeAction="'otherOptionPlaceholder'"/>
     </BuilderRow>
+    <t t-if="this.isTextField">
+        <BuilderRow label.translate="Character Limit">
+            <BuilderCheckbox
+                id="'character_limit_opt'"
+                action="'toggleCharacterLimit'"
+                applyTo="`input, textarea`"
+            />
+        </BuilderRow>
+        <t t-if="this.isActiveItem('character_limit_opt')">
+            <BuilderRow label.translate="Min Characters" level="1">
+                <BuilderNumberInput
+                    title.translate="The minimum number of characters required."
+                    attributeAction="'minlength'"
+                    max="this.domStateCurrentFieldInput.maxLength"
+                    applyTo="`input, textarea`"
+                />
+            </BuilderRow>   
+            <BuilderRow label.translate="Max Characters" level="1">
+                <BuilderNumberInput
+                    title.translate="The maximum number of characters allowed."
+                    attributeAction="'maxlength'"
+                    min="this.domStateCurrentFieldInput.minLength"
+                    applyTo="`input, textarea`"
+                />
+            </BuilderRow>
+        </t>
+    </t>
+    <BuilderRow label.translate="Restrict File Types">
+        <BuilderCheckbox
+            id="'restrict_file_types_opt'"
+            action="'toggleRestrictFileTypes'"
+            applyTo="`input[type='file']`"
+        />
+    </BuilderRow>
+    <t t-if="this.isActiveItem('restrict_file_types_opt')">
+        <BuilderRow label.translate="Only PDF" level="1" tooltip.translate="'.pdf files only'">
+            <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'application/pdf'" applyTo="`input[type='file']`"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Documents" level="1" tooltip.translate="'.doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf, etc.'">
+            <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'application/*'" applyTo="`input[type='file']`"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Images" level="1" tooltip.translate="'.jpg, .jpeg, .png, .gif, .svg, .webp, etc.'">
+            <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'image/*'" applyTo="`input[type='file']`"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Videos" level="1" tooltip.translate="'.mov, .mpeg, .avi, .mkv, .mp4, etc.'">
+            <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'video/*'" applyTo="`input[type='file']`"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Audios" level="1" tooltip.translate="'.mp3, .m4a, .aac, .wav, etc.'">
+            <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'audio/*'" applyTo="`input[type='file']`"/>
+        </BuilderRow>
+    </t>
     <BuilderRow label.translate="Requirement"
             t-if="this.domStateCurrentFieldInput.hasDateTimePicker or this.domStateCurrentFieldInput.isTextArea or this.canHaveTextValidationCondition.includes(this.domStateCurrentFieldInput.type)">
         <BuilderSelect id="'require_condition_text_opt'"
@@ -257,6 +330,7 @@
             <BuilderSelectItem id="'no_requirement_opt'" dataAttributeActionValue="''">None</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'substring'">Contains</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'!substring'">Doesn't contain</BuilderSelectItem>
+            <BuilderSelectItem t-if="this.domStateCurrentFieldInput.type === 'email'" dataAttributeActionValue="'domain'">Matches domain</BuilderSelectItem>
         </BuilderSelect>
         <BuilderSelect id="'require_condition_num_opt'"
                 t-elif="this.domStateCurrentFieldInput.type === 'number'"
@@ -284,7 +358,7 @@
         </BuilderSelect>
         <BuilderButton id="'error_message_opt'"
             t-if="!this.isActiveItem('no_requirement_opt')"
-            title.translate="Add predefined error message"
+            title.translate="Add custom error message"
             className="'fa ' + (this.isActiveItem('error_message_opt') ? 'fa-eye' : 'fa-eye-slash')"
             preview="false"
             action="'setCustomErrorMessage'"/>
@@ -292,36 +366,45 @@
     <BuilderRow label.translate="Conditions" level="1" t-if="this.isTextConditionForRequirementOptionVisible">
         <BuilderTextInput id="'require_condition_additional_text'"
             placeholder.translate="Enter requirement conditions"
-            dataAttributeAction="'requirementCondition'"
-            action="'setDefaultErrorMessage'"/>
+            dataAttributeAction="'requirementCondition'"/>
     </BuilderRow>
     <BuilderRow label.translate="Conditions" level="1" t-elif="this.domStateCurrentFieldInput.isFormDateTime and this.domState.elDataset.requirementComparator">
         <BuilderDateTimePicker id="'require_condition_additional_datetime_1'"
             placeholder.translate="Enter requirement conditions"
             dataAttributeAction="'requirementCondition'"
-            action="'setDefaultErrorMessage'"
             type="'datetime'"/>
     </BuilderRow>
     <BuilderRow label.translate="Conditions" level="1" t-elif="this.domStateCurrentFieldInput.isFormDate and this.domState.elDataset.requirementComparator">
         <BuilderDateTimePicker id="'require_condition_additional_date'"
             placeholder.translate="Enter requirement conditions"
             dataAttributeAction="'requirementCondition'"
-            action="'setDefaultErrorMessage'"
             type="'date'"/>
     </BuilderRow>
     <BuilderRow label.translate="Conditions" level="1" t-if="this.domStateCurrentFieldInput.isFormDateTime and ['between', '!between'].includes(this.domState.elDataset.requirementComparator)">
         <BuilderDateTimePicker id="'require_condition_additional_datetime_2'"
             placeholder.translate="Enter requirement conditions"
             dataAttributeAction="'requirementBetween'"
-            action="'setDefaultErrorMessage'"
             type="'datetime'"/>
     </BuilderRow>
     <BuilderRow label.translate="Conditions" level="1" t-elif="this.domStateCurrentFieldInput.isFormDate and ['between', '!between'].includes(this.domState.elDataset.requirementComparator)">
         <BuilderDateTimePicker id="'require_condition_additional_date_end'"
             placeholder.translate="Enter requirement conditions"
             dataAttributeAction="'requirementBetween'"
-            action="'setDefaultErrorMessage'"
             type="'date'"/>
+    </BuilderRow>
+    <BuilderRow t-if="this.isMultipleTextConditionForRequirementOptionVisible">
+        <div class="d-flex flex-column w-100">
+            <p class="hb-row-label mb-0 flex-basis-auto">
+                <t t-out="this.multiTextRequirementConfig.title"/>
+            </p>
+            <BuilderList
+                dataAttributeAction="'requirementCondition'"
+                addItemTitle.translate="Add"
+                itemShape="{ requirement_text: 'text'}"
+                defaultNewValue="{ requirement_text: this.multiTextRequirementConfig.defaultValue }"
+                sortable="false"
+            />
+        </div>
     </BuilderRow>
     <BuilderRow label.translate="Error Message" level="1" t-if="this.isActiveItem('error_message_opt')">
         <BuilderTextInput placeholder.translate="Write custom error message" id="'error_message_input_opt'" dataAttributeAction="'errorMessage'"/>
@@ -342,7 +425,7 @@
                     t-out="input.textContent"
                 />
             </BuilderSelect>
-            <BuilderSelect t-if="this.domStateDependency.isMultipleInputs || this.domStateDependency.nodeName === 'SELECT'"
+            <BuilderSelect t-if="this.domStateDependency.isRecordField || this.domStateDependency.isMultipleInputs || this.domStateDependency.nodeName === 'SELECT'"
                 id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
             >
                 <BuilderSelectItem dataAttributeActionValue="'selected'">Is equal to</BuilderSelectItem>
@@ -398,8 +481,7 @@
                 <BuilderSelectItem dataAttributeActionValue="'fileSet'">Is set</BuilderSelectItem>
                 <BuilderSelectItem dataAttributeActionValue="'!fileSet'">Is not set</BuilderSelectItem>
             </BuilderSelect>
-            <BuilderSelect t-if="this.domStateDependency.isRecordField ||
-                (!this.domStateDependency.isMultipleInputs and this.domStateDependency.type === 'checkbox')"
+            <BuilderSelect t-if="!this.domStateDependency.isMultipleInputs and this.domStateDependency.type === 'checkbox'"
                 id="'hidden_condition_record_opt'" dataAttributeAction="'visibilityComparator'" preview="false"
             >
                 <BuilderSelectItem dataAttributeActionValue="'selected'">Is equal to</BuilderSelectItem>
@@ -420,15 +502,6 @@
                 sortable="false"
                 isEditable="false"
                 itemShape="{ display_name: 'text', selected: 'boolean' }"/>
-            <BuilderSelect t-if="this.state.conditionValueList and this.domStateDependency.isRecordField"
-                id="'hidden_condition_record_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
-            >
-                <!-- checkbox, select, radio possible values -->
-                <BuilderSelectItem t-foreach="this.state.conditionValueList" t-as="record" t-key="record.value"
-                    dataAttributeActionValue="record.value"
-                    t-out="record.textContent"
-                />
-            </BuilderSelect>
             <BuilderTextInput t-if="this.isTextConditionValueVisible"
                 id="'hidden_condition_additional_text'" dataAttributeAction="'visibilityCondition'"
             />
@@ -451,9 +524,9 @@
 <t t-name="website.s_website_form_submit_option">
     <BuilderRow label.translate="Button Position">
         <BuilderSelect>
-            <BuilderSelectItem classAction="'text-start s_website_form_no_submit_label'">Left</BuilderSelectItem>
+            <BuilderSelectItem ltrRtlMapping="'left-right'" classAction="'text-start s_website_form_no_submit_label'">Left</BuilderSelectItem>
             <BuilderSelectItem classAction="'text-center s_website_form_no_submit_label'">Center</BuilderSelectItem>
-            <BuilderSelectItem classAction="'text-end s_website_form_no_submit_label'">Right</BuilderSelectItem>
+            <BuilderSelectItem ltrRtlMapping="'left-right'" classAction="'text-end s_website_form_no_submit_label'">Right</BuilderSelectItem>
             <BuilderSelectItem classAction="''">Input Aligned</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>

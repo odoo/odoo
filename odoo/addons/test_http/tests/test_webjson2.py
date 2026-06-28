@@ -36,7 +36,7 @@ class TestHttpWebJson_2(TestHttpBase):
             exc.add_note(response.text)
             raise
         self.assertIsInstance(body, dict, body)
-        self.assertEqual(list(body), ['name', 'message', 'arguments', 'context', 'debug'])
+        self.assertEqual(list(body), ['name', 'message', 'arguments', 'timestamp', 'context', 'debug'])
         self.assertEqual(submap(body, expected_error), expected_error)
 
     def test_webjson2_multi_db_no_header(self):
@@ -46,7 +46,7 @@ class TestHttpWebJson_2(TestHttpBase):
             headers=CT_JSON | self.bearer_header,
             dblist=(get_db_name(), 'another-database'),
         )
-        self.assertIn("URL was not found in the server-wide controllers.</p>", res.text)
+        self.assertIn("the requested URL is not server-wide", res.text)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         self.assertEqual(res.headers.get('Content-Type'), 'text/html; charset=utf-8')
 
@@ -59,7 +59,7 @@ class TestHttpWebJson_2(TestHttpBase):
             },
             dblist=(get_db_name(), 'another-database'),
         )
-        self.assertIn("URL was not found in the server-wide controllers.</p>", res.text)
+        self.assertIn("the requested URL is not server-wide", res.text)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         self.assertEqual(res.headers.get('Content-Type'), 'text/html; charset=utf-8')
 
@@ -306,7 +306,7 @@ class TestHttpWebJson_2(TestHttpBase):
             headers=self.bearer_header,
             json={
                 'key': key,
-                'scope': None,
+                'scope': 'rpc',
                 'name': 'Second key',
                 'expiration_date': in_ten_minutes.isoformat(sep=' '),
             },
@@ -317,7 +317,7 @@ class TestHttpWebJson_2(TestHttpBase):
         apikeys = self.env['res.users.apikeys'].search([('user_id', '=', self.jackoneill.id)])
         self.assertIn(apikey, apikeys)
         self.assertRecordValues(apikeys - apikey, [
-            {'name': 'Second key', 'scope': False, 'expiration_date': in_ten_minutes},
+            {'name': 'Second key', 'scope': 'rpc', 'expiration_date': in_ten_minutes},
         ])
 
         # the new key can be used to create a new one
@@ -326,7 +326,7 @@ class TestHttpWebJson_2(TestHttpBase):
             headers={'Authorization': f'Bearer {key2}'},
             json={
                 'key': key2,
-                'scope': 'api',
+                'scope': 'rpc',
                 'name': 'Third key',
                 'expiration_date': in_twenty_minutes.isoformat(sep=' '),
             },
@@ -358,5 +358,5 @@ class TestHttpWebJson_2(TestHttpBase):
         apikeys = self.env['res.users.apikeys'].search([('user_id', '=', self.jackoneill.id)])
         self.assertIn(apikey, apikeys)
         self.assertRecordValues(apikeys - apikey, [
-            {'name': 'Third key', 'scope': 'api', 'expiration_date': in_twenty_minutes},
+            {'name': 'Third key', 'scope': 'rpc', 'expiration_date': in_twenty_minutes},
         ])

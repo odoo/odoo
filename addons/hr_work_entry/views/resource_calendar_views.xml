@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <filter name="resource" position="after">
                 <field name="work_entry_type_id" groups="hr.group_hr_user"/>
-                <filter name="work_entry" string="Work Entry Type" context="{'group_by':'work_entry_type_id'}" groups="hr.group_hr_user"/>
+                <filter name="work_entry" string="Time Type" context="{'group_by':'work_entry_type_id'}" groups="hr.group_hr_user"/>
             </filter>
         </field>
     </record>
@@ -33,6 +33,33 @@
         </field>
     </record>
 
+    <record id="view_resource_calendar_multi_create_form" model="ir.ui.view">
+        <field name="name">resource.calendar.multi.create.form.inherit.hr.work.entry</field>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="inherit_id" ref="resource.view_resource_calendar_multi_create_form"/>
+        <field name="arch" type="xml">
+            <group position="before">
+                <field name="color" invisible="1"/>
+                <field name="display_code" invisible="1"/>
+            </group>
+            <field name="recurrency" position="before">
+                <field name="work_entry_type_id" widget="many2one_work_entry_type" placeholder="Attendance"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_resource_calendar_attendance_calendar" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.calendar.inherit.hr.work.entry</field>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="inherit_id" ref="resource.view_resource_calendar_attendance_calendar"/>
+        <field name="arch" type="xml">
+            <calendar position="attributes">
+                <attribute name="multi_create_view">hr_work_entry.view_resource_calendar_multi_create_form</attribute>
+                <attribute name="color">color</attribute>
+            </calendar>
+        </field>
+    </record>
+
     <record id="resource_calendar_leave_view_form" model="ir.ui.view">
         <field name="name">resource.calendar.leaves.form.inherit.hr.work.entry</field>
         <field name="model">resource.calendar.leaves</field>
@@ -50,7 +77,7 @@
         <field name="inherit_id" ref="resource.resource_calendar_leave_tree"/>
         <field name="arch" type="xml">
             <field name="date_to" position="after">
-                <field name="work_entry_type_id"/>
+                <field name="work_entry_type_id" required="1"/>
             </field>
         </field>
     </record>

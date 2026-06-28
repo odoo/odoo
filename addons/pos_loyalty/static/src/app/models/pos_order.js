@@ -162,16 +162,19 @@ patch(PosOrder.prototype, {
         const orderlines = super.getOrderlines(this, arguments);
         const rewardLines = [];
         const nonRewardLines = [];
+        const serviceFeeLines = [];
 
         for (const line of orderlines) {
             if (line.is_reward_line) {
                 rewardLines.push(line);
+            } else if (line.isServiceFeeLine()) {
+                serviceFeeLines.push(line);
             } else {
                 nonRewardLines.push(line);
             }
         }
 
-        return [...nonRewardLines, ...rewardLines];
+        return [...nonRewardLines, ...rewardLines, ...serviceFeeLines];
     },
     _get_reward_lines() {
         if (this.lines) {
@@ -505,6 +508,38 @@ patch(PosOrder.prototype, {
         // This method should be overriden in other modules
         return true;
     },
+    _getRefundedAmountForRule(rule) {
+        const validProducts = rule.validProductIds;
+        return this.refunded_order_id?.lines.reduce(
+            (acc, line) => {
+                const isValidForRule = rule.any_product || validProducts.has(line.product_id.id);
+                if (line.is_reward_line || !isValidForRule) {
+                    return acc;
+                }
+                const totalIncl = line.prices.total_included;
+                const totalExcl = line.prices.total_excluded;
+                const amount = rule.minimum_amount_tax_mode === "incl" ? totalIncl : totalExcl;
+                return {
+                    qty: acc.qty + line.getQuantity(),
+                    price: acc.price + amount,
+                };
+            },
+            {
+                qty: 0,
+                price: 0,
+            }
+        );
+    },
+    get _isOrderFullRefund() {
+        const lineQtyMap = this.lines.reduce((acc, l) => {
+            const refundedLineId = l.refunded_orderline_id?.id;
+            if (refundedLineId) {
+                acc[refundedLineId] = (acc[refundedLineId] || 0) + Math.abs(l.qty);
+            }
+            return acc;
+        }, {});
+        return !this.refunded_order_id?.lines.some((l) => l.qty !== lineQtyMap[l.id]);
+    },
     /**
      * Computes how much points each program gives.
      *
@@ -575,8 +610,16 @@ patch(PosOrder.prototype, {
                             : line.prices.total_excluded),
                     0
                 );
-                const amountCheck =
-                    (rule.minimum_amount_tax_mode === "incl" && amountWithTax) || amountWithoutTax;
+                let amountCheck = 0;
+                let refundedLinesSummary = {};
+                if (program.program_type === "loyalty" && this.isRefund) {
+                    refundedLinesSummary = this._getRefundedAmountForRule(rule);
+                    amountCheck = refundedLinesSummary?.price || 0;
+                } else {
+                    amountCheck =
+                        (rule.minimum_amount_tax_mode === "incl" && amountWithTax) ||
+                        amountWithoutTax;
+                }
                 if (rule.minimum_amount > amountCheck) {
                     continue;
                 }
@@ -622,7 +665,11 @@ patch(PosOrder.prototype, {
                         }
                     }
                 }
-                if (totalProductQty < rule.minimum_qty) {
+
+                if (
+                    (this.isRefund && refundedLinesSummary.qty < rule.minimum_qty) ||
+                    (!this.isRefund && totalProductQty < rule.minimum_qty)
+                ) {
                     // Should also count the points from negative quantities.
                     // For example, when refunding an ewallet payment. See TicketScreen override in this addon.
                     continue;
@@ -676,7 +723,10 @@ patch(PosOrder.prototype, {
                 } else {
                     // In this case we add on to the global point count
                     if (rule.reward_point_mode === "order") {
-                        points += rule.reward_point_amount;
+                        // For reward point mode 'order', refund points only for a full order refund; partial refunds do not deduct points.
+                        points +=
+                            rule.reward_point_amount *
+                            (this.isRefund && this._isOrderFullRefund ? -1 : this.isRefund ? 0 : 1);
                     } else if (rule.reward_point_mode === "money") {
                         // NOTE: unlike in sale_loyalty this performs a round half-up instead of round down
                         points += ProductPrice.round(rule.reward_point_amount * orderedProductPaid);

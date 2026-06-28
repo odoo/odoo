@@ -1,16 +1,13 @@
-import { registry } from "@web/core/registry";
+import { waitForMessage } from "@im_livechat/../tests/tours/livechat_tour_utils";
 
-const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat_chatbot_after_reload_tour", {
     steps: () => [
-        {
-            trigger: messagesContain("Hello! I'm a bot!"),
-            run: "click",
-        },
+        waitForMessage("Hello! I'm a bot!"),
         {
             content: "Reload the page",
-            trigger: messagesContain("How can I help you?"),
+            ...waitForMessage("How can I help you?"),
             run: () => location.reload(),
             expectUnloadPage: true,
         },
@@ -18,8 +15,6 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_after_reload_t
             trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
             run: "click",
         },
-        {
-            trigger: messagesContain("Hello! I'm a bot!"),
-        },
+        waitForMessage("Hello! I'm a bot!"),
     ],
 });

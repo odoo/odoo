@@ -8,4 +8,4 @@ class ResCountry(models.Model):
     @api.model
     def _load_pos_self_data_fields(self, config):
         fields = super()._load_pos_self_data_fields(config)
-        return fields + ["state_ids"]
+        return fields + ["state_ids", "phone_code"]

@@ -36,9 +36,7 @@
             <t t-if="!this.state.collapsed">
                 <div class="o_calendar_filter_items d-flex flex-column gap-1">
                     <t t-foreach="this.getSortedFilters()" t-as="filter" t-key="filter.value">
-                        <!-- TODO DYNAMIC TCALL -->
-                        <t t-set="filterId" t-value="this.nextFilterId"/>
-                        <t t-call="{{ this.constructor.subTemplates.filter }}"/>
+                        <t t-call="{{ this.constructor.subTemplates.filter }}" filterId="this.nextFilterId"/>
                     </t>
                 </div>
                 <AutoComplete t-if="this.section.canAddFilter" t-props="this.autoCompleteProps">
@@ -55,7 +53,7 @@
 
     <t t-name="web.CalendarFilterSection.filter">
         <div
-            class="o_calendar_filter_item o-checkbox form-check position-relative w-100 cursor-pointer"
+            class="o_calendar_filter_item o-checkbox form-check position-relative w-100"
             t-att-class="this.getFilterColor(filter)"
             t-att-data-value="filter.value"
         >
@@ -64,13 +62,13 @@
                 name="selection"
                 class="o_cw_filter_input_bg form-check-input"
                 t-att-style="filter.colorIndex and typeof filter.colorIndex !== 'number' ? `border-color: ${filter.colorIndex}; background-color: ${filter.colorIndex};` : ''"
-                t-attf-id="o_calendar_filter_item_{{this.filterId}}"
+                t-attf-id="o_calendar_filter_item_{{filterId}}"
                 t-att-checked="filter.active"
                 t-on-change="(ev) => this.onFilterInputChange(filter, ev)"
             />
             <label
-                class="d-flex align-items-center gap-1"
-                t-attf-for="o_calendar_filter_item_{{this.filterId}}"
+                class="d-flex align-items-center gap-1 cursor-pointer"
+                t-attf-for="o_calendar_filter_item_{{filterId}}"
             >
                 <t t-if="this.section.hasAvatar and filter.hasAvatar">
                     <img

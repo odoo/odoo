@@ -7,39 +7,41 @@
     "summary": "The payment engine used by payment provider modules.",
     "depends": ["onboarding", "portal"],
     "data": [
-        # Record data.
+        # Record data
         "data/ir_actions_server_data.xml",
-        "data/payment_method_data.xml",
+        "data/ir_cron_data.xml",
         "data/payment_provider_data.xml",
-        "data/payment_cron.xml",
         "data/portal_entry_data.xml",
-        # QWeb templates.
+        # Security
+        "security/ir.access.csv",
+        # QWeb templates
         "views/express_checkout_templates.xml",
         "views/payment_form_templates.xml",
         "views/portal_templates.xml",
-        # Model views.
+        # Model views
+        "views/payment_data_views.xml",
         "views/payment_provider_views.xml",
         "views/payment_method_views.xml",  # Depends on `action_payment_provider`.
         "views/payment_transaction_views.xml",
         "views/payment_token_views.xml",  # Depends on `action_payment_transaction_linked_to_token`.
         "views/res_partner_views.xml",
-        # Security.
-        "security/ir.model.access.csv",
-        "security/payment_security.xml",
-        # Wizard views.
+        # Wizard views
         "wizards/payment_capture_wizard_views.xml",
         "wizards/payment_link_wizard_views.xml",
     ],
     "assets": {
         "web.assets_frontend": [
-            "payment/static/src/**/*",
-            ("remove", "payment/static/src/js/payment_wizard_copy_clipboard_field.js"),
+            "payment/static/src/interactions/*",
+            "payment/static/src/scss/*",
+            "payment/static/src/xml/*",
         ],
         "web.assets_backend": [
             "payment/static/src/scss/payment_provider.scss",
             "payment/static/src/js/payment_wizard_copy_clipboard_field.js",
+            "payment/static/src/components/**/*",
         ],
         "web.assets_unit_tests_setup": [
+            "payment/static/src/interactions/express_checkout.js",
             "payment/static/src/interactions/payment_button.js",
             "payment/static/src/interactions/payment_form.js",
         ],

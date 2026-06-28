@@ -1,8 +1,9 @@
 /** @odoo-module */
 
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, signal, types as t, xml } from "@odoo/owl";
+import { Test } from "../core/test";
 import { createUrl, refresh } from "../core/url";
-import { callHootKey, useHootKey, useWindowListener } from "../hoot_utils";
+import { callHootKey, T_NULL, useHootKey, useWindowListener } from "../hoot_utils";
 import { HootButtons } from "./hoot_buttons";
 import { HootConfigMenu } from "./hoot_config_menu";
 import { HootDebugToolBar } from "./hoot_debug_toolbar";
@@ -11,11 +12,7 @@ import { HootReporting } from "./hoot_reporting";
 import { HootSearch } from "./hoot_search";
 import { HootSideBar } from "./hoot_side_bar";
 import { HootStatusPanel } from "./hoot_status_panel";
-
-/**
- * @typedef {{
- * }} HootMainProps
- */
+import { getConfigPlugin, getRunnerPlugin } from "./runner_plugin";
 
 //-----------------------------------------------------------------------------
 // Global
@@ -52,7 +49,6 @@ const HEADLESS_LINK_STYLE = ["color: #714b67", "text-decoration: underline"].joi
 // Exports
 //-----------------------------------------------------------------------------
 
-/** @extends {Component<HootMainProps, import("../hoot").Environment>} */
 export class HootMain extends Component {
     static components = {
         HootButtons,
@@ -64,14 +60,11 @@ export class HootMain extends Component {
         HootSideBar,
         HootStatusPanel,
     };
-
-    static props = {};
-
     static template = xml`
-        <t t-if="env.runner.headless">
+        <t t-if="this.runner.headless">
             <div style="${HEADLESS_CONTAINER_STYLE}">
                 Running in headless mode
-                <a style="${HEADLESS_LINK_STYLE}" t-att-href="createUrl({ headless: null })">
+                <a style="${HEADLESS_LINK_STYLE}" t-att-href="this.createUrl({ headless: null })">
                     Run with UI
                 </a>
             </div>
@@ -79,7 +72,7 @@ export class HootMain extends Component {
         <t t-else="">
             <main
                 class="${HootMain.name} flex flex-col w-full h-full bg-base relative"
-                t-att-class="{ 'hoot-animations': env.runner.config.fun }"
+                t-att-class="{ 'hoot-animations': this.config.fun() }"
             >
                 <header class="flex flex-col bg-gray-200 dark:bg-gray-800">
                     <nav class="hoot-controls py-1 px-2">
@@ -107,42 +100,45 @@ export class HootMain extends Component {
                     <HootReporting />
                 </div>
             </main>
-            <t t-if="state.debugTest">
-                <HootDebugToolBar test="state.debugTest" />
+            <t t-if="this.testToDebug()">
+                <HootDebugToolBar test="this.testToDebug()" />
             </t>
         </t>
     `;
 
+    // Props & plugins
+    config = getConfigPlugin();
+    runner = getRunnerPlugin();
+
+    // Reactive values
+    testToDebug = signal(null, { type: t.or([t.instanceOf(Test), T_NULL]) });
+
+    // Other members
     createUrl = createUrl;
     escapeKeyPresses = 0;
 
     setup() {
-        const { runner } = this.env;
-        this.state = useState({
-            debugTest: null,
-        });
-
-        runner.beforeAll(() => {
-            if (!runner.debug) {
+        this.runner.beforeAll(() => {
+            if (!this.runner.debug) {
                 return;
             }
-            if (runner.debug === true) {
-                this.state.debugTest = runner.state.tests[0];
+            if (this.runner.debug === true) {
+                this.testToDebug.set(this.runner.filteredTests()[0]);
             } else {
-                this.state.debugTest = runner.debug;
+                this.testToDebug.set(this.runner.debug);
             }
         });
-        runner.afterAll(() => {
-            this.state.debugTest = null;
+        this.runner.afterAll(() => {
+            this.testToDebug.set(null);
         });
 
         useWindowListener("resize", (ev) => this.onWindowResize(ev));
         useWindowListener("keydown", callHootKey, { capture: true });
-        useHootKey(["Enter"], this.manualStart);
-        useHootKey(["Escape"], this.abort);
+        useHootKey(["Enter"], this.manualStart.bind(this));
+        useHootKey(["Escape"], this.abort.bind(this));
 
-        if (!runner.config.headless) {
-            useHootKey(["Alt", "d"], this.toggleDebug);
+        if (!this.runner.headless) {
+            useHootKey(["Alt", "d"], this.toggleDebug.bind(this));
         }
     }
 
@@ -150,13 +146,12 @@ export class HootMain extends Component {
      * @param {KeyboardEvent} ev
      */
     abort(ev) {
-        const { runner } = this.env;
         this.escapeKeyPresses++;
         setTimeout(() => this.escapeKeyPresses--, 500);
 
-        if (runner.state.status === "running" && this.escapeKeyPresses >= 2) {
+        if (this.runner.status() === "running" && this.escapeKeyPresses >= 2) {
             ev.preventDefault();
-            runner.stop();
+            this.runner.stop();
         }
     }
 
@@ -164,22 +159,21 @@ export class HootMain extends Component {
      * @param {KeyboardEvent} ev
      */
     manualStart(ev) {
-        const { runner } = this.env;
-        if (runner.state.status !== "ready") {
+        if (this.runner.status() !== "ready") {
             return;
         }
 
         ev.preventDefault();
 
-        if (runner.config.manual) {
-            runner.manualStart();
+        if (this.config.manual()) {
+            this.runner.manualStart();
         } else {
             refresh();
         }
     }
 
     onWindowResize() {
-        this.env.runner.checkPresetForViewPort();
+        this.runner.checkPresetForViewPort();
     }
 
     /**
@@ -188,7 +182,6 @@ export class HootMain extends Component {
     toggleDebug(ev) {
         ev.preventDefault();
 
-        const { runner } = this.env;
-        runner.config.debugTest = !runner.config.debugTest;
+        this.config.debugTest.set(!this.config.debugTest());
     }
 }

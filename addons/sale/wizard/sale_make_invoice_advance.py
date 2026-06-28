@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # ruff: noqa: PLW0642
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tools import formatLang
@@ -26,6 +26,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
     count = fields.Integer(string="Order Count", compute="_compute_count")
     sale_order_ids = fields.Many2many(
         "sale.order", default=lambda self: self.env.context.get("active_ids")
+    )
+
+    allow_invoice_overages = fields.Boolean(compute="_compute_allow_invoice_overages")
+    invoice_overages = fields.Boolean(
+        compute="_compute_invoice_overages", inverse="_inverse_invoice_overages"
     )
 
     # Down Payment logic
@@ -68,6 +73,20 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _compute_count(self):
         for wizard in self:
             wizard.count = len(wizard.sale_order_ids)
+
+    def _compute_allow_invoice_overages(self):
+        for wizard in self:
+            wizard.allow_invoice_overages = any(
+                order.has_overages for order in wizard.sale_order_ids
+            )
+
+    def _compute_invoice_overages(self):
+        for wizard in self:
+            wizard.invoice_overages = wizard.allow_invoice_overages
+
+    def _inverse_invoice_overages(self):
+        for wizard in self:
+            wizard.sale_order_ids.invoice_overages = wizard.invoice_overages
 
     @api.depends("sale_order_ids")
     def _compute_has_down_payments(self):
@@ -118,7 +137,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
             if (wizard.advance_payment_method == "percentage" and wizard.amount <= 0.00) or (
                 wizard.advance_payment_method == "fixed" and wizard.fixed_amount <= 0.00
             ):
-                raise UserError(_("The value of the down payment amount must be positive."))
+                raise UserError(
+                    wizard.env._("The value of the down payment amount must be positive.")
+                )
 
     # === ACTION METHODS ===#
 
@@ -129,7 +150,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     def view_draft_invoices(self):
         return {
-            "name": _("Draft Invoices"),
+            "name": self.env._("Draft Invoices"),
             "type": "ir.actions.act_window",
             "view_mode": "list",
             "views": [(False, "list"), (False, "form")],
@@ -202,9 +223,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
             subtype_xmlid="mail.mt_note",
         )
 
-        title = _("Down payment invoice")
+        title = self.env._("Down payment invoice")
         order.with_user(poster).message_post(
-            body=_("%s has been created", invoice._get_html_link(title=title))
+            body=self.env._("%s has been created", invoice._get_html_link(title=title))
         )
 
         return invoice

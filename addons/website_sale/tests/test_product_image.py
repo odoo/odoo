@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import io
+import unittest
 
 from PIL import Image
 
@@ -21,8 +22,6 @@ def _create_image(color="black", dims=(1920, 1080), format="JPEG"):
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
-    # registry_test_mode = False  # uncomment to save the product to test in browser
-
     def test_01_admin_shop_zoom_tour(self):
         color_red = "#CD5C5C"
         name_red = "Indian Red"
@@ -326,6 +325,31 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
 
         # when there is a template image, the image must be obtained from the template
         self.assertEqual(template, template._get_image_holder())
+
+    @unittest.skip("test broke #271724 and we (rd-framework-py) couldn't fix it")
+    def test_03_shop_zoom_grid_image_order(self):
+        image_red = _create_image(color='#FF0000', dims=(1800, 1500))
+        image_green = _create_image(color='#00FF00')
+        image_blue = _create_image(color='#0000FF')
+        image_purple = _create_image(color='#FF00FF')
+
+        product = self.env['product.product'].create({
+            'name': 'A Colorful Image',
+            'image_1920': image_red,
+            'website_published': True,
+            'product_variant_image_ids': [
+                Command.create({'name': 'image 1', 'image_1920': image_green}),
+                Command.create({'name': 'image 2', 'image_1920': image_blue}),
+                Command.create({'name': 'image 3', 'image_1920': image_purple}),
+            ],
+        })
+
+        self.env.ref('base.default_website').write({
+            'product_page_image_layout': 'grid',
+            'product_page_image_ratio': 'auto',
+        })
+
+        self.start_tour(product.website_url, 'website_sale.zoom_grid_image_order')
 
 
 @tagged("post_install", "-at_install")

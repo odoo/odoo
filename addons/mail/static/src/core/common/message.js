@@ -1,4 +1,6 @@
-import { useChildSubEnv, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
+import { mountComponent } from "@html_editor/others/embedded_component_utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
@@ -15,7 +17,8 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 import { nbsp } from "@web/core/utils/strings";
 
-import { Component, onMounted, toRaw } from "@odoo/owl";
+import { Component, computed, props, proxy, signal, t, useApp, useEffect } from "@odoo/owl";
+import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -23,31 +26,22 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { createElementWithContent } from "@web/core/utils/html";
 import { getOrigin, url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
-import { useForwardRefsToParent, useLongPress } from "@mail/utils/common/hooks";
+import {
+    MessageSelectionState,
+    useForwardRefsToParent,
+    useLongPress,
+} from "@mail/utils/common/hooks";
 import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import { MessageContextMenu } from "@mail/core/common/message_context_menu";
 import { Priority } from "@mail/core/common/priority";
 
-/**
- * @typedef {Object} Props
- * @property {boolean} [hasActions=true]
- * @property {boolean} [highlighted]
- * @property {function} [onParentMessageClick]
- * @property {import("models").Message} message
- * @property {boolean} [squashed]
- * @property {import("models").Thread} [thread]
- * @property {ReturnType<import('@mail/utils/common/hooks').useMessageSelection>} [messageSelection]
- * @property {ReturnType<import('@mail/core/common/message_search_hook').useMessageSearch>} [messageSearch]
- * @property {String} [className]
- * @extends {Component<Props, Env>}
- */
 export class Message extends Component {
     // This is the darken version of #71639e
     static SHADOW_LINK_COLOR = "#66598f";
@@ -71,73 +65,84 @@ export class Message extends Component {
         NotificationMessage,
         Priority,
     };
-    static defaultProps = {
-        hasActions: true,
-        showDates: true,
-    };
-    static props = [
-        "asCard?",
-        "hasActions?",
-        "onParentMessageClick?",
-        "message",
-        "messageSelection?",
-        "messageRefs?",
-        "previousMessage?",
-        "squashed?",
-        "thread?",
-        "messageSearch?",
-        "className?",
-        "showDates?",
-        "isFirstMessage?",
-        "isReadOnly?",
-    ];
     static template = "mail.Message";
+
+    app = useApp();
+
+    /**
+     * @type {boolean} Whether the right-click drodpown is being closed.
+     * Useful to detect when close comes from another right-click on the same message,
+     * in order to show the browser right-click instead.
+     */
+    isRightClickDropdownOngoingClose = false;
 
     setup() {
         super.setup();
         this.nbsp = nbsp;
         this.store = useService("mail.store");
+        this.props = props({
+            asCard: t.boolean().optional(),
+            className: t.string().optional(),
+            hasActions: t.boolean().optional(true),
+            isFirstMessage: t.boolean().optional(),
+            isReadOnly: t.boolean().optional(),
+            message: t.instanceOf(this.store["mail.message"].Class),
+            messageRefs: t.instanceOf(Map).optional(),
+            messageSearch: t.instanceOf(MessageSearchState).optional(),
+            messageSelection: t.instanceOf(MessageSelectionState).optional(),
+            onParentMessageClick: t.function([]).optional(),
+            previousMessage: t.instanceOf(this.store["mail.message"].Class).optional(),
+            showDates: t.boolean().optional(true),
+            squashed: t.boolean().optional(),
+            thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
+        });
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
-        this.state = useState({
+        this.state = proxy({
             isHovered: false,
             isClicked: false,
             expandOptions: false,
             emailHeaderOpen: false,
         });
         this.rightClickDropdownState = useDropdownState({
-            onClose: () => this.props.messageSelection?.clearSelected(),
+            onClose: async () => {
+                if (this.isRightClickDropdownOngoingClose) {
+                    return; // onClose can be called more than once. Limiting to a single onClose to prevent race-condition in tests.
+                }
+                this.props.messageSelection?.clearSelected();
+                this.isRightClickDropdownOngoingClose = true;
+                await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
+                this.isRightClickDropdownOngoingClose = false;
+                delete this.rootRef().dataset.rightClicking;
+            },
         });
-        this.rightClickAnchor = useChildRef("rightClickAnchor");
-        /** @type {ShadowRoot} */
-        this.shadowRoot;
-        this.root = useRef("root");
+        this.rightClickAnchor = signal.ref();
+        this.rootRef = signal.ref(HTMLDivElement);
         if (isMobileOS()) {
-            useLongPress("root", {
+            useLongPress(this.rootRef, {
                 action: () => this.openMobileActions(),
                 predicate: () => !this.isEditing,
             });
         }
-        useForwardRefsToParent("messageRefs", (props) => props.message.id, this.root);
+        useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
         this.messageBody = useRef("body");
-        this.messageActions = useMessageActions({
-            message: () => this.message,
-            thread: () => this.props.thread,
-        });
-        this.shadowBody = useRef("shadowBody");
+        this.messageActions = useMessageActions(this.messageActionsParams);
+        this.shadowBody = signal.ref(HTMLDivElement);
+        this.shadowRoot = signal(null, { type: t.ref(ShadowRoot) });
         this.dialog = useService("dialog");
         this.ui = useService("ui");
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
+        this.isActive = computed(() => Boolean(this._isActive));
         useSubEnv({ inMessage: true });
         useChildSubEnv({
             message: this.props.message,
             alignedRight: this.isAlignedRight,
         });
-        onMounted(() => {
-            if (this.shadowBody.el) {
-                this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
+        useEffect(() => {
+            if (this.shadowBody()) {
+                this.shadowRoot.set(this.shadowBody().attachShadow({ mode: "open" }));
                 const color = this.store.isOdooWhiteTheme ? "dark" : "white";
-                loadCssFromBundle(this.shadowRoot, "mail.assets_message_email");
+                loadCssFromBundle(this.shadowRoot(), "mail.assets_message_email");
                 const shadowStyle = document.createElement("style");
                 shadowStyle.textContent = `
                     * {
@@ -155,7 +160,7 @@ export class Message extends Component {
                     }
                 `;
                 if (!this.store.isOdooWhiteTheme) {
-                    this.shadowRoot.appendChild(shadowStyle);
+                    this.shadowRoot().appendChild(shadowStyle);
                 }
                 const ellipsisStyle = document.createElement("style");
                 ellipsisStyle.textContent = `
@@ -180,42 +185,50 @@ export class Message extends Component {
                         }
                     }
                 `;
-                this.shadowRoot.appendChild(ellipsisStyle);
+                this.shadowRoot().appendChild(ellipsisStyle);
+            }
+        });
+        useEffect(() => {
+            const shadowRoot = this.shadowRoot();
+            if (shadowRoot) {
+                const bodyEl = createElementWithContent(
+                    "span",
+                    this.message.showTranslation
+                        ? this.message.richTranslationValue
+                        : (this.props.messageSearch?.highlight(this.message.richBody) ??
+                              this.message.richBody)
+                );
+                const roots = this.prepareMessageBody(bodyEl) ?? [];
+                shadowRoot.appendChild(bodyEl);
+                return () => {
+                    for (const root of roots) {
+                        root.destroy();
+                    }
+                    shadowRoot.removeChild(bodyEl);
+                };
             }
         });
         useLayoutEffect(
             () => {
-                if (this.shadowBody.el) {
-                    const bodyEl = createElementWithContent(
-                        "span",
-                        this.message.showTranslation
-                            ? this.message.richTranslationValue
-                            : this.props.messageSearch?.highlight(this.message.richBody) ??
-                                  this.message.richBody
-                    );
-                    this.prepareMessageBody(bodyEl);
-                    this.shadowRoot.appendChild(bodyEl);
-                    return () => {
-                        this.shadowRoot.removeChild(bodyEl);
-                    };
-                }
+                const roots = this.isEditing
+                    ? []
+                    : (this.prepareMessageBody(this.messageBody.el) ?? []);
+                return () => {
+                    for (const root of roots) {
+                        root.destroy();
+                    }
+                };
             },
-            () => [
-                this.message.showTranslation,
-                this.message.richTranslationValue,
-                this.props.messageSearch?.searchTerm,
-                this.message.richBody,
-                this.isEditing,
-            ]
+            () => [this.isEditing, this.message.richBody, this.props.messageSearch?.searchTerm]
         );
-        useLayoutEffect(
-            () => {
-                if (!this.isEditing) {
-                    this.prepareMessageBody(this.messageBody.el);
-                }
-            },
-            () => [this.isEditing, this.message.richBody]
-        );
+    }
+
+    get messageActionsParams() {
+        return {
+            message: () => this.message,
+            rootRef: this.rootRef,
+            thread: () => this.props.thread,
+        };
     }
 
     computeActions() {
@@ -231,7 +244,7 @@ export class Message extends Component {
                 ? allActions.slice(this.quickActionCount - 1)
                 : false;
         const moreAction = moreActions?.length
-            ? this.messageActions.more({
+            ? this.messageActions.more(this.messageActionsParams, {
                   actions: moreActions,
                   dropdownMenuClass: "o-mail-Message-moreMenu",
                   dropdownPosition: this.isAlignedRight
@@ -239,8 +252,8 @@ export class Message extends Component {
                           ? "left-end"
                           : "left-start"
                       : this.message.threadAsNewest
-                      ? "right-end"
-                      : "right-start",
+                        ? "right-end"
+                        : "right-start",
                   name: this.expandText,
               })
             : undefined;
@@ -315,7 +328,7 @@ export class Message extends Component {
         if (isMobileOS()) {
             return 1;
         }
-        return this.env.inChatWindow || this.env.inMeetingChat ? 2 : 4;
+        return 2;
     }
 
     get showSubtypeDescription() {
@@ -345,7 +358,8 @@ export class Message extends Component {
         return _t("Message");
     }
 
-    get isActive() {
+    /** The getter of the isActive. Meant to be patched */
+    get _isActive() {
         return (
             this.state.isHovered ||
             this.state.isClicked ||
@@ -427,8 +441,8 @@ export class Message extends Component {
         return true;
     }
 
-    async onClickAttachmentUnlink(attachment) {
-        await toRaw(attachment).remove();
+    onClickAttachmentUnlink(attachment) {
+        return attachment.remove();
     }
 
     /**
@@ -463,14 +477,21 @@ export class Message extends Component {
             // Mobile OS long press is handled with useLongPress()
             return;
         }
-        if (ev.target.tagName === "A" || !this.props.hasActions) {
+        if (
+            ev.composedPath()[0].closest("a") ||
+            !this.props.hasActions ||
+            this.isEditing ||
+            this.rightClickDropdownState.isOpen ||
+            this.isRightClickDropdownOngoingClose
+        ) {
             return;
         }
         this.showRightClickMessageActions(ev);
     }
 
     showRightClickMessageActions(ev) {
-        const el = this.rightClickAnchor.el;
+        this.rootRef().dataset.rightClicking = true;
+        const el = this.rightClickAnchor();
         el.style.left = ev.clientX + "px";
         el.style.top = ev.clientY + "px";
         this.rightClickDropdownState.open();
@@ -499,6 +520,47 @@ export class Message extends Component {
                 }
             }
         }
+        return this.renderEmbeddedCodeBlocks(bodyEl);
+    }
+
+    /** @param {HTMLElement} bodyEl */
+    renderEmbeddedCodeBlocks(bodyEl) {
+        const { name, Component, getProps } = readonlySyntaxHighlightingEmbedding;
+        const selector = `[data-embedded='${name}']`;
+        const embeddedElements = [...bodyEl.querySelectorAll(selector)];
+        if (bodyEl.matches(selector)) {
+            embeddedElements.unshift(bodyEl);
+        }
+        const roots = [];
+        for (const el of embeddedElements) {
+            if (el.dataset.embeddedMounted === "1") {
+                continue;
+            }
+            // getProps(el) for readonly syntax highlighting reads the current host content
+            // from the pre node. If call replaceChildren() first, that content is gone,
+            // so value becomes empty and highlighting loses the original code text.
+            const props = getProps(el);
+            const { root, mountPromise } = mountComponent(
+                this.app,
+                Component,
+                el,
+                props,
+                this.env,
+                {
+                    onBeforeComplete: () => {
+                        if (!el.isConnected) {
+                            return false;
+                        }
+                        el.dataset.embeddedMounted = "1";
+                    },
+                }
+            );
+            // Don't show mounting errors as they will happen often when the host
+            // is disconnected from the DOM because of a patch
+            mountPromise.catch();
+            roots.push(root);
+        }
+        return roots;
     }
 
     getAuthorAttClass() {
@@ -517,11 +579,10 @@ export class Message extends Component {
     }
 
     onClickNotification(ev) {
-        const message = toRaw(this.message);
-        if (message.failureNotifications.length > 0) {
+        if (this.message.failureNotifications.length > 0) {
             markEventHandled(ev, "Message.ClickFailure");
         }
-        this.popover.open(ev.target, { message });
+        this.popover.open(ev.target, { message: this.message });
     }
 
     /** @param {MouseEvent} [ev] */
@@ -537,7 +598,7 @@ export class Message extends Component {
         this.dialog.add(
             MessageReactionMenu,
             { message: this.props.message, initialReaction: reaction },
-            { context: this }
+            { rootRef: this.rootRef }
         );
     }
 

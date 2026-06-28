@@ -9,7 +9,8 @@
                 <field name="origin" position="after">
                     <field name="l10n_ar_delivery_guide_number"
                            string="Delivery Guide Number"
-                           invisible="country_code != 'AR'"/>
+                           invisible="country_code != 'AR'"
+                           readonly="state == 'done' or picking_type_code != 'incoming'"/>
                 </field>
                 <xpath expr="//header//button[@name='action_cancel']" position="after">
                     <button name="l10n_ar_action_create_delivery_guide"

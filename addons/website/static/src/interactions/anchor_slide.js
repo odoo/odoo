@@ -24,18 +24,30 @@ export class AnchorSlide extends Interaction {
 
     /**
      * @param {HTMLElement} el the element to scroll to.
-     * @param {string} [scrollValue='true'] scroll value
+     * @param {boolean} [shouldScroll=true] whether to apply animation on scroll
+     *                                      or jump instantly
      * @returns {Promise}
      */
-    scrollTo(el, scrollValue = "true") {
+    scrollTo(el, shouldScroll = true) {
         return scrollTo(el, {
-            duration: scrollValue === "true" ? 500 : 0,
+            duration: shouldScroll ? 500 : 0,
             extraOffset: this.computeExtraOffset(),
         });
     }
 
     computeExtraOffset() {
         return 0;
+    }
+
+    /**
+     * Returns whether the anchor scroll animation should be triggered for the
+     * given target element.
+     *
+     * @param {HTMLElement} anchorEl - The scroll target element.
+     * @returns {boolean}
+     */
+    shouldScroll(anchorEl) {
+        return !!anchorEl?.dataset.anchor;
     }
 
     /**
@@ -69,9 +81,9 @@ export class AnchorSlide extends Interaction {
         // Escape special characters to make the selector work.
         hash = "#" + CSS.escape(hash.substring(1));
         const anchorEl = this.el.ownerDocument.querySelector(hash);
-        const scrollValue = anchorEl?.dataset.anchor;
+        const shouldScroll = this.shouldScroll(anchorEl);
         // No need to scroll when target is _blank as it should open in new tab
-        if (!anchorEl || !scrollValue || this.el.target === "_blank") {
+        if (!anchorEl || !shouldScroll || this.el.target === "_blank") {
             return;
         }
 
@@ -90,22 +102,22 @@ export class AnchorSlide extends Interaction {
             this.addListener(
                 offcanvasEl,
                 "hidden.bs.offcanvas",
-                () => this.manageScroll(hash, anchorEl, scrollValue),
+                () => this.manageScroll(hash, anchorEl, shouldScroll),
                 // the listener must be automatically removed when invoked
                 { once: true }
             );
         } else {
             ev.preventDefault();
-            this.manageScroll(hash, anchorEl, scrollValue);
+            this.manageScroll(hash, anchorEl, shouldScroll);
         }
     }
 
     /**
      * @param {string} hash
      * @param {HTMLElement} anchorEl the element to scroll to.
-     * @param {string} [scrollValue='true'] scroll value
+     * @param {boolean} [shouldScroll=true]
      */
-    manageScroll(hash, anchorEl, scrollValue = "true") {
+    manageScroll(hash, anchorEl, shouldScroll = true) {
         if (hash === "#top" || hash === "#bottom") {
             // If the anchor targets #top or #bottom, directly call the
             // "scrollTo" function. The reason is that the header or the footer
@@ -115,7 +127,7 @@ export class AnchorSlide extends Interaction {
             // footer is removed from the DOM.
             this.scrollTo(hash);
         } else {
-            this.scrollTo(anchorEl, scrollValue);
+            this.scrollTo(anchorEl, shouldScroll);
         }
     }
 }

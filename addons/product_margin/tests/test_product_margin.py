@@ -271,3 +271,36 @@ class TestProductMargin(AccountTestInvoicingCommon):
         # 4. []
         res_all = result[3]
         self.assertEqual(res_all[0], (94200, 70500))
+
+    def test_sale_avg_price(self):
+        customer = self.customer
+        ipad = self.ipad
+        tax_exclude, tax_include = self.env['account.tax'].create([
+            {
+                'name': 'Tax Exclude',
+                'amount': 10.0,
+                'price_include_override': 'tax_excluded',
+            },
+            {
+                'name': 'Tax Include',
+                'amount': 10.0,
+                'price_include_override': 'tax_included',
+            },
+        ])
+        invoices = self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'partner_id': customer.id,
+                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 20.0, 'price_unit': 750.0, 'tax_ids': [(6, 0, tax_exclude.ids)]})],
+            },
+            {
+                'move_type': 'out_invoice',
+                'partner_id': customer.id,
+                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 10.0, 'price_unit': 110.0, 'tax_ids': [(6, 0, tax_include.ids)]})],
+            },
+        ])
+        invoices.invoice_date = invoices[0].date
+        invoices.action_post()
+        result = ipad._compute_product_margin_fields_values()
+        sale_avg_price = ((20.0 * 750.0) + (10.0 * 100)) / 30.0
+        self.assertEqual(result[ipad.id]['sale_avg_price'], sale_avg_price)

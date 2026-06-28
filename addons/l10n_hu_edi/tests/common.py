@@ -1,9 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-
+import contextlib
 import datetime
+import requests
+
+from unittest import mock
+
+from odoo import Command, tools
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
@@ -224,7 +228,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'currency_id': self.company_data['company'].currency_id.id,
             'company_id': False,
         })
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_company.id,
             'pricelist_id': pricelist_huf.id,
             'order_line': [
@@ -393,3 +397,60 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'reason': 'Some reason...',
         })
         return invoice, cancel_wizard
+
+    def _get_mocked_requests(self):
+        return ['manageInvoice', 'queryTaxpayer', 'tokenExchange', 'queryTransactionStatus', 'queryTransactionList', 'manageAnnulment']
+
+    def _get_request_file_name(self, service, data):
+        return f'{service}_request'
+
+    def _get_response_file_name(self, service, data):
+        return f'{service}_response'
+
+    @contextlib.contextmanager
+    def patch_post(self, responses=None):
+        """ Patch requests.Session in l10n_hu_edi.connection.
+
+        :param responses: If specified, a dict {service: response} that gives, for any service,
+                          bytes that should be served as response data, or an Exception that should be raised.
+                          Otherwise, will use the default responses stored under
+                          mocked_requests/{service}_response.xml
+        """
+        test_case = self
+
+        class MockedSession:
+            def post(self, url, data, headers, timeout=None):
+                prod_url = 'https://api.onlineszamla.nav.gov.hu/invoiceService/v3'
+                demo_url = 'https://api-test.onlineszamla.nav.gov.hu/invoiceService/v3'
+                folder_path = f'{test_case.test_module}/tests/mocked_requests'
+
+                base_url, __, service = url.rpartition('/')
+                if base_url not in (prod_url, demo_url) or service not in test_case._get_mocked_requests():
+                    test_case.fail(f'Invalid POST url: {url}')
+
+                request_file_name = test_case._get_request_file_name(service, data)
+                with tools.file_open(f'{folder_path}/{request_file_name}.xml', 'rb') as expected_request_file:
+                    test_case.assertXmlTreeEqual(
+                        test_case.get_xml_tree_from_string(data),
+                        test_case.get_xml_tree_from_string(expected_request_file.read()),
+                    )
+
+                mock_response = mock.Mock(spec=requests.Response)
+                mock_response.status_code = 200
+                mock_response.headers = ''
+
+                if responses and service in responses:
+                    if isinstance(responses[service], Exception):
+                        raise responses[service]
+                    mock_response.text = responses[service]
+                else:
+                    response_file_name = test_case._get_response_file_name(service, data)
+                    with tools.file_open(f'{folder_path}/{response_file_name}.xml', 'r') as response_file:
+                        mock_response.text = response_file.read()
+                return mock_response
+
+            def close(self):
+                pass
+
+        with mock.patch('odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection.requests.Session', side_effect=MockedSession, autospec=True):
+            yield

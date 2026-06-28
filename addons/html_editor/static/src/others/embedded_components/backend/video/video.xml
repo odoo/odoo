@@ -3,14 +3,14 @@
     <!-- video settings template -->
     <t t-name="html_editor.VideoSettings">
         <Dropdown state="this.props.dropdown">
-            <button t-custom-ref="menuRef" class="btn btn-light shadow border py-1 px-1 ms-1" title="More options">
+            <button t-custom-ref="menuRef" class="btn btn-light shadow border py-1 px-1 ms-1 video-options-button" title="More options">
                 <i class="oi oi-fw oi-ellipsis-v" />
             </button>
             <t t-set-slot="content">
-                <DropdownItem onSelected="props.replaceVideo">
+                <DropdownItem class="'video-replace-button'" onSelected="this.props.replaceVideo">
                     <i class="fa-fw fa fa-exchange me-1"></i>Replace
                 </DropdownItem>
-                <DropdownItem onSelected="props.removeVideo" class="'text-danger'">
+                <DropdownItem onSelected="this.props.removeVideo" class="'video-delete-button text-danger'">
                     <i class="fa fa-fw fa-trash me-1"></i>Remove
                 </DropdownItem>
             </t>

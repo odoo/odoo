@@ -1,7 +1,7 @@
+import { onRendered } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
-import { onRendered } from "@odoo/owl";
+import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import {
     contains,
     defineModels,
@@ -2521,7 +2521,7 @@ test("change mode, stacked, or order via the graph buttons does not reload datap
 
 test("concurrent reloads: add a filter, and directly toggle a measure", async () => {
     let def;
-    onRpc("formatted_read_group", () => def);
+    onRpc("formatted_read_group", () => def?.promise);
     const view = await mountView({
         type: "graph",
         resModel: "foo",
@@ -2543,7 +2543,7 @@ test("concurrent reloads: add a filter, and directly toggle a measure", async ()
     });
 
     // Set a domain (this reload is delayed)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("My Filter");
 
@@ -2572,7 +2572,7 @@ test("concurrent reloads: add a filter, and directly toggle a measure", async ()
 
 test("change graph mode while loading a filter", async () => {
     let def;
-    onRpc("formatted_read_group", () => def);
+    onRpc("formatted_read_group", () => def?.promise);
     const view = await mountView({
         type: "graph",
         resModel: "foo",
@@ -2595,7 +2595,7 @@ test("change graph mode while loading a filter", async () => {
     checkModeIs(view, "line");
 
     // Set a domain (this reload is delayed)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("My Filter");
 
@@ -2626,7 +2626,7 @@ test("change graph mode while loading a filter", async () => {
 
 test("only process most recent data for concurrent groupby", async () => {
     let def;
-    onRpc(() => def);
+    onRpc(() => def?.promise);
     const view = await mountView({
         type: "graph",
         resModel: "foo",
@@ -2647,7 +2647,7 @@ test("only process most recent data for concurrent groupby", async () => {
     checkLabels(view, ["xphone", "xpad"]);
     checkDatasets(view, "data", { data: [82, 157] });
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("Color");
     await toggleMenuItem("Color");
@@ -2995,8 +2995,8 @@ test("display the field's falsy_value_label for false group, if defined", async 
 
 test.tags("desktop");
 test("graph views make their control panel available directly", async () => {
-    const def = new Deferred();
-    onRpc("formatted_read_group", () => def);
+    const def = Promise.withResolvers();
+    onRpc("formatted_read_group", () => def?.promise);
     await mountView({
         type: "graph",
         resModel: "foo",
@@ -3052,4 +3052,113 @@ test("monetary chart rendering with multiple currencies", async () => {
     // should display the sum in the company currency, i.e. EUR
     checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "1,200.00 €" }] }, 0);
     checkTooltip(view, { title: "Amount", lines: [{ label: "true", value: "1,000.00 €" }] }, 1);
+});
+
+test("graph renders percentage widget measures", async () => {
+    Foo._fields.ratio = fields.Float({ string: "Ratio" });
+    Foo._records = [{ id: 1, ratio: 0.3333333 }];
+
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph>
+                <field name="ratio" type="measure" widget="percentage" />
+            </graph>
+        `,
+    });
+
+    expect(".o_graph_canvas_container canvas").toHaveCount(1);
+    checkMeasure("Ratio");
+    checkTooltip(view, { title: "Ratio", lines: [{ label: "Total", value: "33.33%" }] }, 0);
+});
+
+test.tags("desktop");
+test("monetary chart rendering with a single foreign currency", async () => {
+    // simulate that the company currency is EUR
+    serverState.companies[0].currency_id = 2;
+
+    onRpc("formatted_read_group", ({ kwargs }) => {
+        // FIXME: context.fill_temporal isn't handled in the MockServer
+        expect(kwargs.context.fill_temporal).toBe(true);
+        return [
+            {
+                "date:day": ["2016-01-01", "2016-01-01"],
+                __extra_domain: [
+                    ["date", ">=", "2016-01-01"],
+                    ["date", "<", "2016-01-02"],
+                ],
+                __count: 1,
+                "currency_id:array_agg_distinct": [1],
+                "amount:sum_currency": 300 * 0.8, // in eur
+                "amount:sum": 300,
+            },
+            {
+                "date:day": ["2016-01-02", "2016-01-02"],
+                __extra_domain: [
+                    ["date", ">=", "2016-01-02"],
+                    ["date", "<", "2016-01-03"],
+                ],
+                __count: 0,
+                "currency_id:array_agg_distinct": [],
+                "amount:sum_currency": 0,
+                "amount:sum": 0,
+            },
+            {
+                "date:day": ["2016-01-03", "2016-01-03"],
+                __extra_domain: [
+                    ["date", ">=", "2016-01-03"],
+                    ["date", "<", "2016-01-04"],
+                ],
+                __count: 1,
+                "currency_id:array_agg_distinct": [1],
+                "amount:sum_currency": 400 * 0.8, // in eur
+                "amount:sum": 400,
+            },
+        ];
+    });
+
+    onRpc("/web/domain/validate", () => true);
+    Foo._fields.amount = fields.Monetary({ currency_field: "currency_id" });
+    Foo._fields.currency_id = fields.Many2one({ relation: "res.currency", default: 1 });
+    Foo._records = [
+        {
+            id: 1,
+            foo: 3,
+            bar: true,
+            product_id: 100,
+            date: "2016-01-01",
+            revenue: 1,
+            color_ids: [2],
+            amount: 300,
+        },
+        {
+            id: 2,
+            foo: 53,
+            bar: true,
+            product_id: 100,
+            color_id: 2,
+            date: "2016-01-03",
+            revenue: 2,
+            color_ids: [1],
+            amount: 400,
+        },
+    ];
+
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        groupBy: ["date:day"],
+        arch: `
+            <graph>
+                <field name="bar" />
+                <field name="amount" type="measure" />
+            </graph>
+        `,
+    });
+
+    expect(".o_graph_canvas_container canvas").toHaveCount(1);
+    // should display the sum in the records currency, i.e. USD
+    checkTooltip(view, { title: "Amount", lines: [{ label: "2016-01-01", value: "$ 300.00" }] }, 0);
+    checkTooltip(view, { title: "Amount", lines: [{ label: "2016-01-03", value: "$ 400.00" }] }, 1);
 });

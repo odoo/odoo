@@ -1,6 +1,5 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import {
-    Deferred,
     advanceTime,
     animationFrame,
     click,
@@ -14,6 +13,7 @@ import {
 } from "@odoo/hoot-dom";
 import {
     contains,
+    getMockEnv,
     getService,
     mountWithCleanup,
     patchWithCleanup,
@@ -187,6 +187,8 @@ test("concurrency with custom debounce delay", async () => {
     expect(".o_command").toHaveCount(0);
     expect(".o_command_palette .o_namespace").toHaveCount(0);
 
+    // On mobile we need to focus the input
+    await click(".o_command_palette_search input");
     await fill("@");
     await animationFrame();
     expect(".o_command_palette .o_namespace").toHaveText("@");
@@ -237,6 +239,7 @@ test("custom placeholder", async () => {
     expect(".o_command_palette_search input").toHaveAttribute("placeholder", "@ placeholder");
 });
 
+test.tags("desktop");
 test("add a footer", async () => {
     await mountWithCleanup(MainComponentsContainer);
     const config = {
@@ -257,7 +260,7 @@ test("command with a Custom Component", async () => {
     class CustomComponent extends Component {
         static template = xml`
             <div class="o_command_custom">
-                <span t-out="props.name"/>
+                <span t-out="this.props.name"/>
             </div>
         `;
         static props = ["*"];
@@ -443,10 +446,10 @@ test("multi provider with the same namespace", async () => {
 
 test("check the concurrency during a research", async () => {
     await mountWithCleanup(MainComponentsContainer);
-    const imSearchDef = new Deferred();
+    const imSearchDef = Promise.withResolvers();
     const provide = async (env, options) => {
         if (options.searchValue) {
-            await imSearchDef;
+            await imSearchDef.promise;
         }
         return [
             {
@@ -530,6 +533,7 @@ test("open the command palette with a searchValue already in the searchbar", asy
     expect(queryAllTexts(".o_command")).toEqual(["Command1"]);
 });
 
+test.tags("desktop");
 test("command palette keeps the same top position when its content changes", async () => {
     await mountWithCleanup(MainComponentsContainer);
     const action = () => {};
@@ -564,12 +568,20 @@ test("command palette keeps the same top position when its content changes", asy
     await animationFrame();
     expect(".o_command_palette").toHaveCount(1);
     expect(".o_command").toHaveCount(4);
-    expect(".o_command_palette").toHaveRect({ top: 120 });
+    if (getMockEnv().isSmall) {
+        expect(".o_command_palette").toHaveRect({ top: 0 });
+    } else {
+        expect(".o_command_palette").toHaveRect({ top: 120 });
+    }
     await click(".o_command_palette_search input");
     await edit("z");
     await runAllTimers();
     expect(".o_command").toHaveCount(0);
-    expect(".o_command_palette").toHaveRect({ top: 120 });
+    if (getMockEnv().isSmall) {
+        expect(".o_command_palette").toHaveRect({ top: 0 });
+    } else {
+        expect(".o_command_palette").toHaveRect({ top: 120 });
+    }
 });
 
 test("open the command palette with a namespace already in the searchbar", async () => {
@@ -883,8 +895,8 @@ test("click on command", async () => {
     expect(".o_command_palette").toHaveCount(1);
     expect(".o_command").toHaveCount(2);
     expect(queryAllTexts(".o_command")).toEqual(["Command1", "Command2"]);
-    expect(".o_command.focused").toHaveText(commands[0].name);
-    await contains(".o_command.focused").click();
+    expect(".o_command:first").toHaveText(commands[0].name);
+    await contains(".o_command:first").click();
     expect.verifySteps(["C1"]);
 });
 
@@ -919,7 +931,7 @@ test("press enter on command", async () => {
     expect(".o_command_palette").toHaveCount(1);
     expect(".o_command").toHaveCount(2);
     expect(queryAllTexts(".o_command")).toEqual(["Command1", "Command2"]);
-    expect(".o_command.focused").toHaveText(commands[0].name);
+    expect(".o_command:first").toHaveText(commands[0].name);
     await press("arrowdown");
     await animationFrame();
     await press("enter");
@@ -928,6 +940,7 @@ test("press enter on command", async () => {
     expect.verifySteps(["C2"]);
 });
 
+test.tags("desktop");
 test("keyboard navigation scroll", async () => {
     await mountWithCleanup(MainComponentsContainer);
     const commands = [
@@ -1116,7 +1129,7 @@ test("multi level command", async () => {
     await runAllTimers();
     expect(".o_command").toHaveCount(1);
     expect(queryAllTexts(".o_command")).toEqual(["Command1"]);
-    expect(".o_command.focused").toHaveText(commands[0].name);
+    expect(".o_command:first").toHaveText(commands[0].name);
     await press("enter");
     await animationFrame();
     expect(".o_command").toHaveCount(1);
@@ -1149,6 +1162,7 @@ test("command palette dialog can be rendered and closed on outside click", async
     expect(".o_command_palette").toHaveCount(0);
 });
 
+test.tags("desktop");
 test("navigate in the command palette with the arrows", async () => {
     expect.assertions(6);
 
@@ -1503,14 +1517,14 @@ test("checks that href is correctly used", async () => {
 });
 
 test("searchValue must not change without edition", async () => {
-    const provideDef = new Deferred();
+    const provideDef = Promise.withResolvers();
 
     await mountWithCleanup(MainComponentsContainer);
     const providers = [
         {
             provide: async (env, { searchValue }) => {
                 if (searchValue === "abc") {
-                    await provideDef;
+                    await provideDef.promise;
                 }
                 return [
                     {
@@ -1545,7 +1559,7 @@ test("searchValue must not change without edition", async () => {
 });
 
 test("display spinner while loading results from providers", async () => {
-    const provideDef = new Deferred();
+    const provideDef = Promise.withResolvers();
     await mountWithCleanup(MainComponentsContainer);
     getService("dialog").add(CommandPalette, {
         config: {
@@ -1553,7 +1567,7 @@ test("display spinner while loading results from providers", async () => {
                 {
                     namespace: "?",
                     provide: async (env, { searchValue }) => {
-                        await provideDef;
+                        await provideDef.promise;
                         return [];
                     },
                 },

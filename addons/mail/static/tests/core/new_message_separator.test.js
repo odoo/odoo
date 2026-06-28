@@ -13,10 +13,16 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { click as hootClick, press, queryFirst } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
-import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    getService,
+    makeKwArgs,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -232,7 +238,7 @@ test("keep new message separator when switching between chat window and discuss 
     pyEnv["discuss.channel"].create({ channel_type: "channel", name: "General" });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click("button:text('General')");
+    await click(".o-mail-NotificationItem-name:text('General')");
     await insertText(".o-mail-Composer-input", "Very important message!");
     await triggerHotkey("Enter");
     await click(".o-mail-Message [title='Expand']");
@@ -317,9 +323,10 @@ test("show new message separator when message is received while chat window is c
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: messageId + 1 });
     setupChatHub({ opened: [channelId] });
-    listenStoreFetch("init_messaging");
+    listenStoreFetch(["init_messaging", "/discuss/channel/messages"]);
     await start();
-    await waitStoreFetch("init_messaging");
+    await waitStoreFetch(["init_messaging", "/discuss/channel/messages"]);
+
     await click(".o-mail-ChatWindow-header [title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     // send after init_messaging because bus subscription is done after init_messaging
@@ -377,4 +384,34 @@ test("only show new message separator in its thread", async () => {
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message:has(:text('@Mitchell Admin'))", {
         count: 0,
     });
+});
+
+test("new member's separator should be at the bottom of existing messages after being invited", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Hello",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const demoPartnerId = pyEnv["res.partner"].create({ name: "Newbie" });
+    await start();
+    await getService("mail.store").fetchStoreData("/discuss/channel/add_members", {
+        channel_id: channelId,
+        partner_ids: [demoPartnerId],
+    });
+    const [insertedMember] = pyEnv["discuss.channel.member"].search_read([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", demoPartnerId],
+    ]);
+    const [lastMessageId = 0] = pyEnv["mail.message"].search(
+        [
+            ["model", "=", "discuss.channel"],
+            ["res_id", "=", channelId],
+        ],
+        makeKwArgs({ limit: 1, order: "id DESC" })
+    );
+    expect(insertedMember.new_message_separator).toBe(lastMessageId + 1);
 });

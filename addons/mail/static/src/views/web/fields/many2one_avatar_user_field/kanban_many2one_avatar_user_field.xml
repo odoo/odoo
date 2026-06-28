@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 
-    <t t-name="mail.KanbanMany2OneAvatarUserField">
+    <t t-name="mail.CardMany2OneAvatarUserField">
         <t t-set="relation" t-value="this.props.record.fields[this.props.name].relation"/>
         <KanbanMany2One t-props="this.m2oProps">
             <t t-set-slot="avatar">
-                <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="this.value.id" uniqueId="this.uniqueId" noSpacing="true" displayName="this.displayName"/>
+                <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="this.value.id" uniqueId="this.uniqueId" noSpacing="!this.displayName?.length" displayName="this.displayName"/>
             </t>
             <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                 <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
                     <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.record.id}}/avatar_128"/>
-                    <span t-out="autoCompleteItemScope.label"/>
+                    <span class="text-truncate" t-out="autoCompleteItemScope.label"/>
                 </span>
             </t>
         </KanbanMany2One>

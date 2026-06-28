@@ -7,7 +7,7 @@ from datetime import date
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import ormcache, parse_date, SQL
+from odoo.tools import SQL, frozendict, parse_date
 
 _logger = logging.getLogger(__name__)
 
@@ -21,6 +21,7 @@ except ImportError:
 class ResCurrency(models.CachedModel):
     _name = 'res.currency'
     _description = "Currency"
+    _explanation = "Represents a monetary unit. Odoo uses this to handle multi-currency transactions, exchange rates, and financial reporting."
     _rec_names_search = ['name', 'full_name']
     _order = 'active desc, name'
     # invalidate cache for get_all_currencies
@@ -113,17 +114,42 @@ class ResCurrency(models.CachedModel):
         if self.env['res.company'].search_count([('currency_id', 'in', currencies.ids)], limit=1):
             raise UserError(self.env._("This currency is set on a company and therefore cannot be deactivated."))
 
-    def _get_rates_query(self, company, date, currency_ids=None):
-        """ Get the query to fetch all current rate/date by currency for a specific company/date. """
+    @api.model
+    def _current_rate_sql(self, table: models.TableSQL, currency_field: str) -> SQL:
+        company = self.env.company
+        today = fields.Date.context_today(self)
 
-        # _unique_name_per_day and _reversed_unique_name_per_day ensure that this query is optimal.
+        all_rates = self.browse()._get_rates(company, today)
+        company_currency_id = company.currency_id.id
+        company_rate = all_rates.get(company_currency_id, (1.0, False))[0]
+
+        sql_rates = {
+            c: r / company_rate
+            for c, (r, _) in all_rates.items()
+            if r != company_rate
+        }
+        if not sql_rates:
+            return SQL("1.0")
+        rates_query = SQL(
+            "(SELECT * FROM UNNEST(%s, %s) AS v(currency_id, rate))",
+            list(sql_rates.keys()), list(sql_rates.values())
+        )
+        alias = table._query.make_alias(table._alias, currency_field + "__rate")
+        table._query.add_join('LEFT JOIN LATERAL', alias, rates_query, SQL("%s = %s", SQL.identifier(alias, 'currency_id'), table[currency_field]))
+        return SQL("COALESCE(%s, 1.0)", SQL.identifier(alias, 'rate'))
+
+    def _get_rates(self, company, date: date) -> dict[int, tuple[float, (date | None)]]:
+        """ Return a mapping between currency_id and their rate with the date of this rate."""
+        company = company.root_id
+        currency_rates = self.env.cr.cache.setdefault('res.currency.rate.values', {})
+        key = (company.id, date)
+        if rates := currency_rates.get(key):
+            return rates
+
         Currency = self.env['res.currency'].sudo()
         Rate = self.env['res.currency.rate'].sudo()
 
-        currency_query = Currency._search(
-            [] if currency_ids is None else [('id', 'in', currency_ids)],
-            active_test=False,
-        )
+        currency_query = Currency._search([('id', 'in', self.ids)] if self else [], active_test=False)
         currency_id_field = currency_query.table.id
 
         rate_query = Rate._search(
@@ -143,21 +169,18 @@ class ResCurrency(models.CachedModel):
         rate_query_fallback = rate_query_fallback.subselect(rate_table_fallback.rate, rate_table_fallback.name)
         currency_query.add_join('LEFT JOIN LATERAL', 'after_rate', rate_query_fallback, SQL('TRUE'))
 
-        return currency_query.select(
-            SQL.identifier('res_currency', 'id'),
-            SQL('COALESCE("before_rate"."rate", "after_rate"."rate", 1.0) AS "rate"'),
-            SQL('COALESCE("before_rate"."name", "after_rate"."name") AS "name"'),
-        )
-
-    def _get_rates(self, company, date) -> dict[int, tuple[float, (date | None)]]:
-        """ Return a mapping between currency_id and their rate with the date of this rate."""
-        if not self.ids:
-            return {}
-        query = self._get_rates_query(company, date, currency_ids=self.ids)
-        return {
-            currency_id: (rate, rate_date)
-            for currency_id, rate, rate_date in self.env.execute_query(query)
+        rates = {
+            currency_id: (rate or 1.0, rate_date)
+            for currency_id, rate, rate_date in self.env.execute_query(currency_query.select(
+                SQL.identifier('res_currency', 'id'),
+                SQL('COALESCE("before_rate"."rate", "after_rate"."rate", 1.0) AS "rate"'),
+                SQL('COALESCE("before_rate"."name", "after_rate"."name") AS "name"'),
+            ))
         }
+        # store if querying all and return
+        if not self:
+            currency_rates[key] = frozendict(rates)
+        return rates
 
     @api.depends_context('company')
     def _compute_is_current_company_currency(self):
@@ -279,20 +302,24 @@ class ResCurrency(models.CachedModel):
         self.ensure_one()
         return tools.float_is_zero(amount, precision_rounding=self.rounding)
 
-    @ormcache(cache='stable')
     @api.model
+    @api.ormcache(cache='stable')
     def get_all_currencies(self):
-        currencies = self.sudo().browse(self._cached_data()['id'])
-        return {
+        """Info for all active currencies."""
+        currencies = self.sudo().get_all()
+        return frozendict({
             c.id: {'name': c.name, 'symbol': c.symbol, 'position': c.position, 'digits': [69, c.decimal_places]}
             for c in currencies
-        }
+            if c.active
+        })
 
     @api.model
     def _get_conversion_rate(self, from_currency, to_currency, company=None, date=None):
         if from_currency == to_currency:
             return 1
         company = company or self.env.company
+        if company.root_id in self.env['res.company'].browse(self.env.user._get_company_ids()).root_id:
+            from_currency = from_currency.sudo()
         date = date or fields.Date.context_today(self)
         return from_currency.with_company(company).with_context(to_currency=to_currency.id, date=str(date)).inverse_rate
 
@@ -347,7 +374,7 @@ class ResCurrencyRate(models.Model):
     rate = fields.Float(
         digits=0,
         aggregator="avg",
-        help='The rate of the currency to the currency of rate 1',
+        help="Exchange rate expressed as reference-currency units per 1 unit of this currency",
         string='Technical Rate'
     )
     company_rate = fields.Float(
@@ -355,14 +382,14 @@ class ResCurrencyRate(models.Model):
         compute="_compute_company_rate",
         inverse="_inverse_company_rate",
         aggregator="avg",
-        help="The currency of rate 1 to the rate of the currency.",
+        help="Value of 1 unit of this currency in the company currency",
     )
     inverse_company_rate = fields.Float(
         digits=0,
         compute="_compute_inverse_company_rate",
         inverse="_inverse_inverse_company_rate",
         aggregator="avg",
-        help="The rate of the currency to the currency of rate 1 ",
+        help="Exchange rate from the company currency to this currency",
     )
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, required=True, index=True, ondelete="cascade")
     company_id = fields.Many2one('res.company', string='Company',
@@ -390,13 +417,18 @@ class ResCurrencyRate(models.Model):
         return vals
 
     def write(self, vals):
-        self.env['res.currency'].invalidate_model(['inverse_rate'])
+        self._invalidate_rates()
         return super().write(self._sanitize_vals(vals))
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.env['res.currency'].invalidate_model(['inverse_rate'])
+        self._invalidate_rates()
         return super().create([self._sanitize_vals(vals) for vals in vals_list])
+
+    @api.ondelete(at_uninstall=False)
+    def _invalidate_rates(self):
+        self.env.cr.cache.pop('res.currency.rate.values', None)
+        self.env['res.currency'].invalidate_model(['inverse_rate'])
 
     def _get_latest_rate(self):
         # Make sure 'name' is defined when creating a new rate.
@@ -404,23 +436,18 @@ class ResCurrencyRate(models.Model):
             raise UserError(self.env._("The name for the current rate is empty.\nPlease set it."))
         return self.currency_id.rate_ids.sudo().filtered(lambda x: (
             x.rate
-            and x.company_id == (self.company_id or self.env.company.root_id)
-            and x.name < (self.name or fields.Date.today())
+            and (x.company_id in (self.company_id or self.env.company.root_id) or not x.company_id)
+            and x.name < (self.name or fields.Date.context_today(self))
         )).sorted('name')[-1:]
 
     def _get_last_rates_for_companies(self, companies):
         return {
             company: company.sudo().currency_id.rate_ids.filtered(lambda x: (
                 x.rate
-                and x.company_id == company or not x.company_id
+                and (x.company_id == company or not x.company_id)
             )).sorted('name')[-1:].rate or 1
             for company in companies
         }
-
-    @api.depends('currency_id', 'company_id', 'name')
-    def _compute_rate(self):
-        for currency_rate in self:
-            currency_rate.rate = currency_rate.rate or currency_rate._get_latest_rate().rate or 1.0
 
     @api.depends('rate', 'name', 'currency_id', 'company_id', 'currency_id.rate_ids.rate')
     @api.depends_context('company')

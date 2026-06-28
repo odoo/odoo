@@ -13,7 +13,7 @@ class TestHttpEndPoint(HttpCase):
         This test ensures that the rendering still works, even in this case.
         """
         homepage_view = self.env['ir.ui.view'].search([
-            ('website_id', '=', self.env.ref('website.default_website').id),
+            ('website_id', '=', self.env.ref('base.default_website').id),
             ('key', '=', 'website.homepage'),
         ])
         self.env['ir.ui.view'].create({
@@ -23,7 +23,7 @@ class TestHttpEndPoint(HttpCase):
             'inherit_id': homepage_view.id,
             'arch_db': """
                 <t t-call="website.layout" position="before">
-                    <t t-out="website.env.registry.clear_cache('routing')"/>
+                    <t t-out="website.env.transaction.invalidate_ormcache('routing')"/>
                 </t>
             """,
         })

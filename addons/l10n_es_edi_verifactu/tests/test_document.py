@@ -1,4 +1,6 @@
+import copy
 import datetime
+import json
 from freezegun import freeze_time
 from unittest import mock
 
@@ -17,6 +19,13 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         super().setUpClass()
         cls.fakenow = datetime.datetime(2024, 12, 5)
         cls.startClassPatcher(freeze_time(cls.fakenow))
+
+    @property
+    def _company_issuer(self):
+        return self.env['l10n_es_edi_verifactu.issuer'].sudo().search([
+            ('company_id', '=', self.company.id),
+            ('obligado_partner_id', '=', self.company.partner_id.id),
+        ], limit=1)
 
     def test_record_identifier(self):
         invoice = self._create_dummy_invoice(name='INV/2019/00006', invoice_date='2024-12-11')
@@ -155,7 +164,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         }
         self.assertDictEqual(info, expected_response_info | info)
 
-        self.assertFalse(self.company.l10n_es_edi_verifactu_next_batch_time)
+        self.assertFalse(self._company_issuer.next_batch_time)
 
         expected_document_values = {
             'document_type': 'submission',
@@ -194,7 +203,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         }
         self.assertDictEqual(info, expected_response_info | info)
 
-        self.assertFalse(self.company.l10n_es_edi_verifactu_next_batch_time)
+        self.assertFalse(self._company_issuer.next_batch_time)
 
         expected_document_values = {
             'document_type': 'submission',
@@ -232,7 +241,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         }
         self.assertDictEqual(info, expected_response_info | info)
 
-        self.assertEqual(self.company.l10n_es_edi_verifactu_next_batch_time,
+        self.assertEqual(self._company_issuer.next_batch_time,
                          datetime.datetime(2024, 12, 5, 0, 1, 0))
 
         expected_document_values = {
@@ -276,7 +285,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         }
         self.assertDictEqual(info, expected_response_info | info)
 
-        self.assertEqual(self.company.l10n_es_edi_verifactu_next_batch_time,
+        self.assertEqual(self._company_issuer.next_batch_time,
                          datetime.datetime(2024, 12, 5, 0, 1, 0))
 
         expected_document_values = {
@@ -319,7 +328,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         }
         self.assertDictEqual(info, expected_response_info | info)
 
-        self.assertEqual(self.company.l10n_es_edi_verifactu_next_batch_time,
+        self.assertEqual(self._company_issuer.next_batch_time,
                          datetime.datetime(2024, 12, 5, 0, 1, 0))
 
         expected_document_values = {
@@ -361,7 +370,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         }
         self.assertDictEqual(info, expected_response_info | info)
 
-        self.assertEqual(self.company.l10n_es_edi_verifactu_next_batch_time,
+        self.assertEqual(self._company_issuer.next_batch_time,
                          datetime.datetime(2024, 12, 5, 0, 1, 0))
 
         expected_document_values = {
@@ -404,7 +413,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         }
         self.assertDictEqual(info, expected_response_info | info)
 
-        self.assertEqual(self.company.l10n_es_edi_verifactu_next_batch_time,
+        self.assertEqual(self._company_issuer.next_batch_time,
                          datetime.datetime(2024, 12, 5, 0, 1, 0))
 
         expected_document_values = {
@@ -451,7 +460,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         }
         self.assertDictEqual(info, expected_response_info | info)
 
-        self.assertEqual(self.company.l10n_es_edi_verifactu_next_batch_time,
+        self.assertEqual(self._company_issuer.next_batch_time,
                          datetime.datetime(2024, 12, 5, 0, 1, 0))
 
         expected_document_values = {
@@ -493,7 +502,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         self.assertDictEqual(info, expected_response_info | info)
 
         # Since we received a "waiting time" we still update the time for the next batch
-        self.assertEqual(self.company.l10n_es_edi_verifactu_next_batch_time,
+        self.assertEqual(self._company_issuer.next_batch_time,
                          datetime.datetime(2024, 12, 5, 0, 1, 0))
 
         errors = [_("We could not find any information about the record in the linked batch document.")]
@@ -515,7 +524,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
     def test_mark_for_next_batch(self):
         # Check that we can send immediately
-        self.assertFalse(self.company.l10n_es_edi_verifactu_next_batch_time)
+        self.assertFalse(self._company_issuer.next_batch_time)
         mock_accept = self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json')
 
         invoice = self._create_dummy_invoice(name='INV/2019/00026', invoice_date='2024-12-30')
@@ -540,7 +549,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         # The last response indicated a waiting time of 60 seconds.
         # So the next batch should only be sent at self.fakenow + 60s
-        self.assertEqual(self.company.l10n_es_edi_verifactu_next_batch_time,
+        self.assertEqual(self._company_issuer.next_batch_time,
                          datetime.datetime(2024, 12, 5, 0, 1, 0))
 
         # Try to send another invoice. Now we should not be able to send immediately.
@@ -564,7 +573,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
     def test_response_issue(self):
         # We can send immediately
-        self.assertFalse(self.company.l10n_es_edi_verifactu_next_batch_time)
+        self.assertFalse(self._company_issuer.next_batch_time)
 
         # Note: The record identifier of `invoice` is different than the one found in the response
         invoice = self._create_dummy_invoice(name='INV/2019/00500', invoice_date='2024-12-17')
@@ -575,7 +584,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         # We failed to send the document and there was no waiting time in the response since we got an access denied error
         self.assertFalse(document.state)
-        self.assertFalse(self.company.l10n_es_edi_verifactu_next_batch_time)
+        self.assertFalse(self._company_issuer.next_batch_time)
         # So the cron has to be retriggered
         self.assertEqual(cron_trigger_result_dict['at'], datetime.datetime(2024, 12, 5, 0, 1, 0))
 
@@ -588,3 +597,91 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
             self.user.group_ids = self.env.ref(group)
             # Should not raise an error for accounting users
             move.with_user(self.user).read(['l10n_es_edi_verifactu_document_ids'])
+
+    def test_verifactu_sequence_with_prefix(self):
+        """Ensure a non-numeric sequence value surfaces a user-friendly error."""
+        issuer = self.env['l10n_es_edi_verifactu.issuer']._get_or_create(
+            self.env.company, self.env.company.partner_id
+        )
+        sequence = issuer._get_chain_sequence()
+
+        sequence.sudo().write({'prefix': 'F2T', 'suffix': False, 'padding': 6})
+        invoice = self._create_dummy_invoice(name='INV/2019/00027', invoice_date='2024-12-30')
+        document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
+        self.assertFalse(document.chain_index)
+        self.assertIn("prefix or suffix", document.errors)
+
+    # -----------------------------------------------------------------------
+    # Self-billing / mixed-obligado batch splitting
+    # -----------------------------------------------------------------------
+
+    def test_trigger_next_batch_mixed_obligados(self):
+        """Regression: when pending documents have different ObligadoEmision (e.g. one
+        INV and one self-billing BILL), trigger_next_batch must send them in separate SOAP
+        submissions — one per obligado — in strict chain_index order.
+
+        Before the fix, both documents were bundled in a single SOAP call using the
+        ObligadoEmision of self[0], causing the AEAT to reject whichever record had a
+        different IDEmisorFactura.
+        """
+        if self._company_issuer:
+            self._company_issuer.sudo().next_batch_time = False
+
+        # Create INV (obligado = company) and BILL (obligado = partner_b / vendor)
+        inv = self._create_dummy_invoice(name='INV/2019/00030')
+        bill = self._create_dummy_self_billing_invoice()
+
+        with self._mock_last_document(None):
+            doc_inv = inv._l10n_es_edi_verifactu_create_documents()[inv]
+            doc_bill = bill._l10n_es_edi_verifactu_create_documents()[bill]
+
+        # Each document must be the first in its own SIF chain.
+        # Cross-SIF chain_index comparison is meaningless: each SIF has an
+        # independent sequence, so both can be 1.
+        self.assertTrue(doc_inv.chain_index, "INV must have been chained")
+        self.assertTrue(doc_bill.chain_index, "BILL must have been chained")
+        self.assertNotEqual(
+            doc_inv.obligado_partner_id, doc_bill.obligado_partner_id,
+            "INV and BILL must belong to different SIFs (different obligado)",
+        )
+
+        # Mock the SOAP register call:
+        #   • capture the Cabecera of each call (to verify correct ObligadoEmision)
+        #   • return a no-wait 'accepted' response adapted to the submitted document
+        soap_calls = []
+        base_response = json.loads(
+            self.file_read('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json').content
+        )
+        base_response['TiempoEsperaEnvio'] = '0'  # no waiting time so the second group is sent immediately
+
+        def _mock_register(cabecera, registro_factura):
+            resp = copy.deepcopy(base_response)
+            # Adapt the response IDFactura to match the submitted document so that
+            # _send_batch can match the RespuestaLinea to the document record.
+            submitted_id = registro_factura[0]['RegistroAlta']['IDFactura']
+            resp['RespuestaLinea'][0]['IDFactura'].update(submitted_id)
+            soap_calls.append({'cabecera': cabecera, 'registro_factura': registro_factura})
+            return resp
+
+        with self._mock_get_zeep_operation(registration_return_value=_mock_register):
+            self.env['l10n_es_edi_verifactu.document'].trigger_next_batch()
+
+        # Two separate SOAP calls must have been made (one per obligado)
+        self.assertEqual(len(soap_calls), 2, "Expected two separate SOAP submissions (one per ObligadoEmision)")
+
+        company_nif = self.company.partner_id._l10n_es_edi_verifactu_get_values()['NIF']
+        vendor_nif = self.partner_b._l10n_es_edi_verifactu_get_values()['NIF']
+
+        # First submission: INV → company is the obligado
+        first_obligado = soap_calls[0]['cabecera']['ObligadoEmision']['NIF']
+        self.assertEqual(first_obligado, company_nif,
+                         f"First submission must use company NIF ({company_nif!r}) as ObligadoEmision, got {first_obligado!r}")
+
+        # Second submission: BILL (self-billing) → vendor (partner_b) is the obligado
+        second_obligado = soap_calls[1]['cabecera']['ObligadoEmision']['NIF']
+        self.assertEqual(second_obligado, vendor_nif,
+                         f"Second submission must use vendor NIF ({vendor_nif!r}) as ObligadoEmision, got {second_obligado!r}")
+
+        # Both documents must have been accepted
+        self.assertEqual(doc_inv.state, 'accepted')
+        self.assertEqual(doc_bill.state, 'accepted')

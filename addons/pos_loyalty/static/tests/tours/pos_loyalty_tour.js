@@ -241,15 +241,7 @@ registry.category("web_tour.tours").add("PosLoyaltyTour6", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
-            FeedbackScreen.checkTicketData({
-                cssRules: [
-                    {
-                        css: ".loyalty",
-                    },
-                ],
-            }),
-            FeedbackScreen.isShown(),
+            FeedbackScreen.isContinueEnabled(),
             FeedbackScreen.checkTicketData({
                 cssRules: [
                     {
@@ -357,7 +349,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour11.1", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyTour11.2", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -573,10 +564,10 @@ registry.category("web_tour.tours").add("PosRewardProductScan", {
 });
 
 registry.category("web_tour.tours").add("PosRewardProductScanGS1", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
+            ProductScreen.isShown(),
             scan_barcode("0195412427100283"),
             ProductScreen.selectedOrderlineHas("product_a", "1", "1,150.00"),
             PosLoyalty.hasRewardLine("50% on your order", "-575.00"),
@@ -597,18 +588,34 @@ registry.category("web_tour.tours").add("PosLoyaltyPromocodePricelist", {
 });
 
 registry.category("web_tour.tours").add("RefundRulesProduct", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("product_a"),
+            ProductScreen.clickDisplayedProduct("Gift Card"),
+            ProductScreen.clickDisplayedProduct("Top-up eWallet"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.clickPartner("AAAAAAA"),
             PosLoyalty.finalizeOrder("Cash", "1000"),
             ProductScreen.isShown(),
             ...ProductScreen.clickRefund(),
             TicketScreen.filterIs("Paid"),
             TicketScreen.selectOrder("001"),
             ProductScreen.clickNumpad("1"),
+            ProductScreen.clickNumpad("1"),
+            {
+                content: "Notification: not allowed to refund this product",
+                trigger:
+                    ".o_notification .o_notification_content:contains('Refunding a top up or reward product for an eWallet or gift card program is not allowed.')",
+            },
+            ProductScreen.clickLine("Top-up eWallet"),
+            ProductScreen.clickNumpad("1"),
+            {
+                content: "Notification: not allowed to refund this product",
+                trigger:
+                    ".o_notification .o_notification_content:contains('Refunding a top up or reward product for an eWallet or gift card program is not allowed.')",
+            },
             TicketScreen.confirmRefund(),
             PaymentScreen.isShown(),
         ].flat(),
@@ -635,7 +642,6 @@ registry.category("web_tour.tours").add("test_settle_dont_give_points_again", {
 });
 
 registry.category("web_tour.tours").add("test_refund_does_not_decrease_points", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -680,7 +686,6 @@ registry.category("web_tour.tours").add("test_scan_loyalty_card_select_customer"
 });
 
 registry.category("web_tour.tours").add("test_min_qty_points_awarded", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -692,6 +697,44 @@ registry.category("web_tour.tours").add("test_min_qty_points_awarded", {
             PosLoyalty.pointsTotalIs("90"),
             PosLoyalty.orderTotalIs("0.0"),
             PosLoyalty.finalizeOrder("Cash", "0.0"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosOrderAwardLoyaltyPointsToCustomer", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AA Partner"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            PosLoyalty.pointsAwardedAre("+3.2"),
+            PosLoyalty.pointsTotalIs("3.2"),
+            PosLoyalty.orderTotalIs("3.2"),
+            PosLoyalty.finalizeOrder("Cash", "3.2"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosOrderRefundLoyaltyPoints", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ...ProductScreen.clickRefund(),
+            TicketScreen.filterIs("Paid"),
+            TicketScreen.selectOrder("001"),
+            ProductScreen.clickNumpad("1"),
+            TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
+            PaymentScreen.clickBack(),
+            ProductScreen.isShown(),
+            PosLoyalty.pointsAwardedAre("-3.2"),
+            PosLoyalty.pointsTotalIs("0"),
+            PosLoyalty.orderTotalIs("3.2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });
 
@@ -819,5 +862,18 @@ registry.category("web_tour.tours").add("test_race_conditions_update_program", {
                     }
                 },
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_discount_count_sale_report", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Test Product 1", "1"),
+            ProductScreen.totalAmountIs("57.50"),
+            ProductScreen.clickNumpad("%", "5"),
+            ProductScreen.totalAmountIs("54.62"),
+            PosLoyalty.finalizeOrder("Cash", "54.62"),
         ].flat(),
 });

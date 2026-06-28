@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
 "PO-Revision-Date: 2025-12-03 14:28+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
@@ -97,7 +97,7 @@ msgstr "Stanowisko pracy"
 #. odoo-javascript
 #: code:addons/hr_recruitment_skills/static/src/fields/skill_match_gauge_field/skill_match_gauge_field.xml:0
 msgid "Job Position Matching"
-msgstr "Dopasowanie stanowiska pracy"
+msgstr ""
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__write_uid
@@ -116,6 +116,7 @@ msgstr "Liczba poziomów"
 
 #. module: hr_recruitment_skills
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.crm_case_tree_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_job_list_inherit_hr_recruitment_skills
 msgid "Matching"
 msgstr "Dopasowywanie"
 
@@ -124,11 +125,6 @@ msgstr "Dopasowywanie"
 #: code:addons/hr_recruitment_skills/models/hr_job.py:0
 msgid "Matching Applicants"
 msgstr "Pasujący kandydaci"
-
-#. module: hr_recruitment_skills
-#: model:ir.actions.act_window,name:hr_recruitment_skills.action_find_matching_job
-msgid "Matching Positions"
-msgstr "Pasujące stanowiska"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_score
@@ -142,18 +138,21 @@ msgstr "Pasujący wynik (%)"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_skill_ids
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__matching_applicant_skill_ids
 msgid "Matching Skills"
 msgstr "Pasujące umiejętności"
 
 #. module: hr_recruitment_skills
 #. odoo-javascript
 #: code:addons/hr_recruitment_skills/static/src/components/search_job_applicant_menu/search_job_applicant_menu.xml:0
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.view_hr_job_kanban
 msgid "Matching Talents"
 msgstr ""
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__missing_skill_ids
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__missing_applicant_skill_ids
 msgid "Missing Skills"
 msgstr "Brakujące umiejętności"
 
@@ -182,11 +181,6 @@ msgstr "Postęp"
 #: model:ir.model.fields,help:hr_recruitment_skills.field_hr_applicant_skill__level_progress
 msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
 msgstr "Postęp od zerowej wiedzy (0%) do pełnego opanowania (100%)."
-
-#. module: hr_recruitment_skills
-#: model:ir.actions.server,name:hr_recruitment_skills.action_applicant_search_applicant
-msgid "Search Matching Applicants"
-msgstr "Wyszukaj pasujących kandydatów"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__skill_ids

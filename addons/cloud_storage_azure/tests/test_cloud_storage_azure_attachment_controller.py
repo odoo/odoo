@@ -7,10 +7,11 @@ import odoo
 from odoo.tools.misc import file_open
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.cloud_storage_azure.tests.test_cloud_storage_azure import TestCloudStorageAzureCommon
+from odoo.addons.mail.tests.common import MailCommon
 
 
 @odoo.tests.tagged("-at_install", "post_install", "mail_controller")
-class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorageAzureCommon):
+class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorageAzureCommon, MailCommon):
     def test_cloud_storage_azure_attachment_upload(self):
         """Test uploading an attachment with azure cloud storage."""
         thread = self.env["res.partner"].create({"name": "Test"})
@@ -59,7 +60,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                         "data": {
                             "attachment_id": attachment.id,
                             "store_data": {
-                                "ir.attachment": [
+                                "ir.attachment": self._filter_attachments_fields(
                                     {
                                         "checksum": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
                                         "create_date": odoo.fields.Datetime.to_string(
@@ -79,8 +80,16 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                                         "type": "cloud_storage",
                                         "url": "[url]",
                                         "voice_ids": [],
+                                        "access_token": False,
+                                        "description": False,
+                                        "image_src": False,
+                                        "image_height": 0,
+                                        "image_width": 0,
+                                        "original_id": False,
+                                        "public": False,
+                                        "res_id": 0,
                                     }
-                                ],
+                                ),
                             }
                         },
                         "upload_info": {

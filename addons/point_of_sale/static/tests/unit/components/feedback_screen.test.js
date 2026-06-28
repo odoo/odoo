@@ -1,9 +1,8 @@
-import { test, expect, destroy } from "@odoo/hoot";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { setupPosEnv, getFilledOrder } from "../utils";
-import { definePosModels } from "../data/generate_model_definitions";
-import { queryOne } from "@odoo/hoot-dom";
+import { expect, test } from "@odoo/hoot";
 import { FeedbackScreen } from "@point_of_sale/app/screens/feedback_screen/feedback_screen";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { definePosModels } from "../data/generate_model_definitions";
+import { getFilledOrder, setupPosEnv } from "../utils";
 
 definePosModels();
 
@@ -11,20 +10,20 @@ test("Total on receipt always incl", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     order.config.iface_tax_included = "total";
-    const feedbackScreen = await mountWithCleanup(FeedbackScreen, {
+    await mountWithCleanup(FeedbackScreen, {
         props: { orderUuid: order.uuid },
     });
-    let total = queryOne(".feedback-screen .amount-container .amount");
-    expect(total).toHaveText("17.85");
-    destroy(feedbackScreen);
+    expect(".feedback-screen .amount-container .amount:only").toHaveText("$17.85");
+});
 
-    // create new feedback screen with tax excluded
+test("Total on receipt always incl with tax excluded", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
     order.config.iface_tax_included = "subtotal";
     await mountWithCleanup(FeedbackScreen, {
         props: { orderUuid: order.uuid },
     });
-    total = queryOne(".feedback-screen .amount-container .amount");
-    expect(total).toHaveText("17.85");
+    expect(".feedback-screen .amount-container .amount:only").toHaveText("$17.85");
 });
 
 test("canEditPayment", async () => {

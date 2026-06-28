@@ -23,9 +23,7 @@ class Im_LivechatChannel(models.Model):
     """
 
     _name = 'im_livechat.channel'
-    _inherit = ['rating.parent.mixin']
     _description = 'Livechat Channel'
-    _rating_satisfaction_days = 30  # include only last 30 days to compute satisfaction
 
     def _default_user_ids(self):
         return [(6, 0, [self.env.uid])]
@@ -69,7 +67,10 @@ class Im_LivechatChannel(models.Model):
         "Agents Connected", compute="_compute_available_operator_ids"
     )
     script_external = fields.Html('Script (external)', compute='_compute_script_external', store=False, readonly=True, sanitize=False)
+    script_external_text = fields.Char('Script (external) Text', compute='_compute_script_external')
     nbr_channel = fields.Integer('Number of conversations in the past 30 days', compute='_compute_nbr_channel', store=False, readonly=True)
+    rating_percentage_satisfaction = fields.Float("Rating Satisfaction", compute="_compute_rating_percentage_satisfaction")
+    rating_count = fields.Integer(string='# Ratings', compute="_compute_rating_percentage_satisfaction")
 
     # relationnal fields
     user_ids = fields.Many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string='Agents', default=_default_user_ids)
@@ -232,7 +233,9 @@ class Im_LivechatChannel(models.Model):
         for record in self:
             values["channel_id"] = record.id
             values["url"] = record.get_base_url()
-            record.script_external = self.env['ir.qweb']._render('im_livechat.external_loader', values) if record.id else False
+            script_external = self.env['ir.qweb']._render('im_livechat.external_loader', values) if record.id else False
+            record.script_external = script_external
+            record.script_external_text = str(script_external) if script_external else False
 
     def _compute_web_page_link(self):
         for record in self:
@@ -250,6 +253,37 @@ class Im_LivechatChannel(models.Model):
         for record in self:
             record.nbr_channel = count_by_channel.get(record, 0)
 
+    @api.depends("channel_ids.livechat_rating")
+    def _compute_rating_percentage_satisfaction(self):
+        read_group_data = (
+            self.env["discuss.channel"]
+            ._read_group(
+                [
+                    Domain("livechat_channel_id", "in", self.ids)
+                    & Domain("livechat_rating", "!=", False)
+                    & Domain("create_date", ">=", "-30d")
+
+                ],
+                ["livechat_channel_id", "livechat_rating"],
+                ["__count"],
+            )
+        )
+        ratings_count_by_channel = defaultdict(dict)
+        for livechat_channel, rating, count in read_group_data:
+            ratings_count_by_channel[livechat_channel.id][rating] = count
+        rating_to_percentage = self.env["discuss.channel"]._rating_selection_to_percentage
+        for channel in self:
+            count_by_rating = ratings_count_by_channel[channel.id]
+            rating_count = sum(count_by_rating.values())
+            channel.rating_count = rating_count
+            if not rating_count:
+                channel.rating_percentage_satisfaction = 0
+                continue
+            rating_sum = sum(
+                rating_to_percentage(rating) * count for rating, count in count_by_rating.items()
+            )
+            channel.rating_percentage_satisfaction = rating_sum / rating_count
+
     # --------------------------
     # Action Methods
     # --------------------------
@@ -259,13 +293,13 @@ class Im_LivechatChannel(models.Model):
             raise AccessError(_("Only Live Chat operators can join Live Chat channels"))
         # sudo: im_livechat.channel - operators can join channels
         self.sudo().user_ids = [Command.link(self.env.user.id)]
-        Store(bus_channel=self.env.user).add(self, ["are_you_inside", "name"]).bus_send()
+        Store(bus_channel=self.env.user).add(self, ["are_you_inside", "name"])
 
     def action_quit(self):
         self.ensure_one()
         # sudo: im_livechat.channel - users can leave channels
         self.sudo().user_ids = [Command.unlink(self.env.user.id)]
-        Store(bus_channel=self.env.user).add(self.sudo(), ["are_you_inside", "name"]).bus_send()
+        Store(bus_channel=self.env.user).add(self.sudo(), ["are_you_inside", "name"])
 
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the
@@ -317,17 +351,16 @@ class Im_LivechatChannel(models.Model):
                 Command.create({"livechat_member_type": "visitor", "guest_id": guest.id})
             )
         visitor_user = self.env["res.users"]
-        if not self.env.user._is_public():
+        if not self.env.user._is_public() and self.env.user != agent:
             visitor_user = self.env.user
-            if visitor_user and visitor_user != agent:
-                members_to_add.append(
-                    Command.create(
-                        {
-                            "livechat_member_type": "visitor",
-                            "partner_id": visitor_user.partner_id.id,
-                        }
-                    )
+            members_to_add.append(
+                Command.create(
+                    {
+                        "livechat_member_type": "visitor",
+                        "partner_id": visitor_user.partner_id.id,
+                    }
                 )
+            )
 
         channel_name = self._get_channel_name(
             visitor_user=visitor_user,
@@ -363,10 +396,11 @@ class Im_LivechatChannel(models.Model):
         if operator_model == 'chatbot.script':
             channel_name = chatbot_script.title
         else:
-            channel_name = ' '.join([
+            member_names = [
                 visitor_user.display_name if visitor_user else guest.name,
                 agent.sudo().livechat_username or agent.name
-            ])
+            ]
+            channel_name = " ".join(filter(None, member_names))
         return channel_name
 
     def _get_operator_info(self, /, *, lang, country_id, previous_operator_id=None, chatbot_script_id=None, **kwargs):
@@ -399,7 +433,8 @@ class Im_LivechatChannel(models.Model):
         return {'agent': agent, 'chatbot_script': chatbot_script, 'operator_partner': operator_partner, 'operator_model': operator_model}
 
     def _get_less_active_operator(self, operator_statuses, operators):
-        """ Retrieve the most available operator based on the following criteria:
+        """ Pick the most available operator from a set of candidates.
+
         - Lowest number of active chats.
         - Not in  a call.
         - If an operator is in a call and has two or more active chats, don't
@@ -409,10 +444,10 @@ class Im_LivechatChannel(models.Model):
         :param operator_statuses: list of dictionaries containing the operator's
             id, the number of active chats and a boolean indicating if the
             operator is in a call. The list is ordered by the number of active
-            chats (ascending) and whether the operator is in a call
-            (descending).
-        :param operators: recordset of :class:`ResUsers` operators to choose from.
-        :return: the :class:`ResUsers` record for the chosen operator
+            chats (ascending) and whether the operator is in a call (descending).
+        :param operators: recordset of :class:`ResUsers` operators to choose
+            from.
+        :returns: the :class:`ResUsers` record for the chosen operator
         """
         if not operators:
             return False
@@ -460,8 +495,8 @@ class Im_LivechatChannel(models.Model):
         :param expertises: preferred expertises for filtering operators.
         :param users: recordset of available users to use as candidates instead
             of the users of the livechat channel.
-        :return : user
-        :rtype : res.users
+        :returns: user
+        :rtype: res.users
         """
         self.ensure_one()
         # FIXME: remove inactive call sessions so operators no longer in call are available

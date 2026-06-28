@@ -13,7 +13,7 @@ import { useDomState } from "@html_builder/core/utils";
  *      activeItemEl: HTMLElement,
  *      itemEls: HTMLElement[],
  *      optionName: string
- * ) => void)[]} reorder_items_processors
+ * ) => HTMLElement)[]} reorder_items_processors
  */
 
 export class GalleryElementOption extends BaseOptionComponent {

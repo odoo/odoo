@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 import werkzeug
 import werkzeug.exceptions
 from odoo import _, api, fields, models, SUPERUSER_ID, tools
@@ -323,6 +321,9 @@ class ResPartnerBank(models.Model):
             or tools.config['test_enable']
         )
 
+    def action_open_business_doc(self):
+        return self._get_records_action()
+
     @api.model_create_multi
     def create(self, vals_list):
         # EXTENDS base res.partner.bank
@@ -354,21 +355,15 @@ class ResPartnerBank(models.Model):
         # EXTENDS base res.partner.bank
         if vals.get('account_number'):
             vals['account_number'] = format_account_number(self.env, vals['account_number'])
-        # Track and log changes to partner_id, heavily inspired from account_move
-        account_initial_values = defaultdict(dict)
-        # Get all tracked fields (without related fields because these fields must be managed on their own model)
-        tracking_fields = []
-        for field_name in vals:
-            field = self._fields[field_name]
-            if not (hasattr(field, 'related') and field.related) and hasattr(field, 'tracking') and field.tracking:
-                tracking_fields.append(field_name)
-        fields_definition = self.env['res.partner.bank'].fields_get(tracking_fields)
 
-        # Get initial values for each account
-        for account in self:
-            for field in tracking_fields:
-                # Group initial values by partner_id
-                account_initial_values[account][field] = account[field]
+        # track and log changes on partner_id
+        track_fnames = [fname for fname in self._track_get_fields() if fname in vals]
+        if track_fnames:
+            for account in self:
+                msg = _("Bank Account %s updated", account._get_html_link(title=f"#{account.id}"))
+                account.partner_id._track_record(account, track_fnames, body=msg)
+                if vals.get('partner_id'):
+                    account.env['res.partner'].browse(vals['partner_id'])._track_record(account, track_fnames, body=msg)
 
         # Some fields should not be editable based on conditions. It is enforced in the view, but not in python which
         # leaves them vulnerable to edits via the shell/... So we need to ensure that the user has the rights to edit
@@ -401,14 +396,6 @@ class ResPartnerBank(models.Model):
         if "allow_out_payment" in vals:
             self._check_allow_out_payment()
 
-        # Log changes to move lines on each move
-        for account, initial_values in account_initial_values.items():
-            tracking_value_ids = account._mail_track(fields_definition, initial_values)[1]
-            if tracking_value_ids:
-                msg = _("Bank Account %s updated", account._get_html_link(title=f"#{account.id}"))
-                account.partner_id._message_log(body=msg, tracking_value_ids=tracking_value_ids)
-                if 'partner_id' in initial_values:  # notify previous partner as well
-                    initial_values['partner_id']._message_log(body=msg, tracking_value_ids=tracking_value_ids)
         return res
 
     @api.model

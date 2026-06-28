@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { user } from "@web/core/user";
 
 export class SwitchCompanyItem extends Component {
@@ -12,7 +11,7 @@ export class SwitchCompanyItem extends Component {
     };
 
     setup() {
-        this.companySelector = useState(this.env.companySelector);
+        this.companySelector = proxy(this.env.companySelector);
     }
 
     get isCompanySelected() {

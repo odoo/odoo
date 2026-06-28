@@ -10,7 +10,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { Deferred, mockDate, animationFrame } from "@odoo/hoot-mock";
+import { mockDate, animationFrame } from "@odoo/hoot-mock";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 
@@ -124,14 +124,14 @@ test("create sub thread from existing message (slow network)", async () => {
         res_id: channelId,
         body: "<p>Selling a training session and selling the products after the training session is more efficient.</p>",
     });
-    const createSubChannelDef = new Deferred();
-    onRpcAfter("/discuss/channel/sub_channel/create", async () => await createSubChannelDef);
+    const { promise, resolve } = Promise.withResolvers();
+    onRpcAfter("/discuss/channel/sub_channel/create", async () => await promise);
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message-actions [title='Expand']");
     await click(".o-dropdown-item:contains('Create Thread')");
     await animationFrame();
-    createSubChannelDef.resolve();
+    resolve();
     await contains(".o-mail-DiscussContent-threadName", {
         value: "Selling a training session and",
     });
@@ -154,10 +154,9 @@ test("create sub thread from sub-thread list", async () => {
     await contains(".o-mail-DiscussContent-threadName", { value: "General" });
     await click(".o-mail-DiscussContent-header button[title='Threads']");
     await insertText(
-        ".o-mail-ActionPanel:has(.o-mail-SubChannelList) .o_searchview_input",
+        ".o-mail-ActionPanel:has(.o-mail-SubChannelList) .o-mail-SearchInput input",
         "MyEpicThread"
     );
-    await click("button[aria-label='Search button']");
     await contains(".o-mail-SubChannelList:text('No threads found.')");
     await click("button[aria-label='Create Thread']");
     await contains(".o-mail-DiscussContent-threadName", { value: "MyEpicThread" });

@@ -10,27 +10,19 @@
         <t t-if="o.state == 'purchase'">Purchase Order #<span t-field="o.name"/></t>
         <t t-if="o.state == 'cancel'">Cancelled Purchase Order #<span t-field="o.name"/></t>
     </t>
+    <t t-set="information_block" t-if="o.dest_address_id">
+        <strong class="d-block mt-3">Shipping address</strong>
+        <div t-field="o.dest_address_id"
+            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}' name="purchase_shipping_address"/>
+    </t>
     <t t-call="web.external_layout"
         address="address"
-        layout_document_title="layout_document_title">
+        layout_document_title="layout_document_title"
+        information_block="information_block">
         <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
-        <t t-if="o.dest_address_id">
-            <t t-set="information_block">
-                <strong class="d-block mt-3">Shipping address</strong>
-                <div t-if="o.dest_address_id">
-                    <div t-field="o.dest_address_id"
-                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}' name="purchase_shipping_address"/>
-                </div>
-
-            </t>
-        </t>
         <div class="page">
             <div class="oe_structure"/>
-
-            <div class="mt-4">
-            </div>
-
-            <div id="informations" class="row mb-4">
+            <div id="informations" class="row mb-4 mt-4">
                 <div t-if="o.user_id" class="col">
                     <strong>Buyer</strong>
                     <div t-field="o.user_id"/>
@@ -51,6 +43,14 @@
                     <strong>Expected Arrival:</strong>
                     <p t-field="o.date_planned" t-options="{'date_only': 'true'}" class="m-0"/>
                 </div>
+                <div t-if="o.incoterm_id" class="col-2 bm-2">
+                    <strong>Incoterm:</strong>
+                    <p t-if="o.incoterm_location">
+                        <span t-field="o.incoterm_id.code"/> <br/>
+                        <span t-field="o.incoterm_location"/>
+                    </p>
+                    <p t-else="" t-field="o.incoterm_id.code" class="m-0"/>
+                </div>
             </div>
 
             <table class="o_has_total_table table o_main_table table-borderless">
@@ -67,10 +67,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-set="current_subtotal" t-value="0"/>
                     <t t-foreach="o.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)" t-as="line">
-                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
-
                         <tr t-att-class="'fw-bolder o_line_section' if line.display_type == 'line_section' else 'fw-bold o_line_subsection' if line.display_type == 'line_subsection' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type">
                                 <td id="product" class="text-start">
@@ -99,11 +96,15 @@
                                 </td>
                             </t>
                             <t t-if="line.display_type in ('line_section', 'line_subsection')">
-                                <td colspan="99" id="section">
+                                <td colspan="5" id="section">
                                     <span t-field="line.name"/>
                                 </td>
-                                <t t-set="current_section" t-value="line"/>
-                                <t t-set="current_subtotal" t-value="0"/>
+                                <td class="text-end">
+                                    <span
+                                        t-out="line._get_section_totals()"
+                                        t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                    />
+                                </td>
                             </t>
                             <t t-if="line.display_type == 'line_note'">
                                 <td colspan="99" id="note">
@@ -111,17 +112,6 @@
                                 </td>
                             </t>
                         </tr>
-                        <t t-if="current_section and (line_last or o.order_line[line_index+1].display_type in ('line_section', 'line_subsection'))">
-                            <tr class="is-subtotal text-end">
-                                <td colspan="99" id="subtotal">
-                                    <strong class="mr16">Subtotal</strong>
-                                    <span
-                                        t-out="current_subtotal"
-                                        t-options='{"widget": "monetary", "display_currency": o.currency_id}'
-                                    />
-                                </td>
-                            </tr>
-                        </t>
                     </t>
                 </tbody>
             </table>

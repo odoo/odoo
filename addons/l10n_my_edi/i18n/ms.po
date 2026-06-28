@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 19:15+0000\n"
+"POT-Creation-Date: 2026-06-19 18:16+0000\n"
 "PO-Revision-Date: 2025-07-23 07:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -325,6 +325,21 @@ msgid ""
 msgstr ""
 
 #. module: l10n_my_edi
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.res_config_settings_view_form
+msgid ""
+"<span invisible=\"l10n_my_edi_parent_mode != 'test'\">• In Pre-Production "
+"mode Odoo will send the invoices to a non-production service.</span>"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.res_config_settings_view_form
+msgid ""
+"<span>Electronic invoicing is currently inactive.</span><br/>\n"
+"                        <span>These settings are managed by the parent "
+"company.</span>"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model,name:l10n_my_edi.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
 msgstr ""
@@ -617,6 +632,11 @@ msgid "E-Invoicing"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.res_config_settings_view_form
+msgid "E-invoicing-related settings are managed on the parent company."
+msgstr ""
+
+#. module: l10n_my_edi
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.view_partner_form_inherit_l10n_my_myinvois
 msgid "EI00000000020"
 msgstr ""
@@ -629,10 +649,7 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/myinvois_document.py:0
-msgid ""
-"Error when generating the documents' files:\n"
-"\n"
-"- %(errors)s"
+msgid "Error when generating the file."
 msgstr ""
 
 #. module: l10n_my_edi
@@ -688,6 +705,11 @@ msgid "I accept that Odoo will process my e-invoices."
 msgstr ""
 
 #. module: l10n_my_edi
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.res_config_settings_view_form
+msgid "I use my personal TIN for businesses"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_edi_proxy_client_user__id
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_edi_xml_ubl_myinvois_my__id
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_journal__id
@@ -708,6 +730,7 @@ msgstr ""
 
 #. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_res_company__l10n_my_identification_number
+#: model:ir.model.fields,field_description:l10n_my_edi.field_res_config_settings__l10n_my_edi_identification_number
 #: model:ir.model.fields,field_description:l10n_my_edi.field_res_partner__l10n_my_identification_number
 #: model:ir.model.fields,field_description:l10n_my_edi.field_res_users__l10n_my_identification_number
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.portal_my_details_fields
@@ -801,6 +824,12 @@ msgid "Invoice(s)"
 msgstr ""
 
 #. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
+msgid "Invoices Requiring Attention"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__is_consolidated_invoice
 msgid "Is Consolidated Invoice"
 msgstr ""
@@ -872,6 +901,17 @@ msgid "L10N My Edi Document"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model:ir.model.fields,field_description:l10n_my_edi.field_res_config_settings__l10n_my_edi_is_branch
+msgid "L10N My Edi Is Branch"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model.fields,field_description:l10n_my_edi.field_res_company__l10n_my_edi_is_sole_proprietor
+#: model:ir.model.fields,field_description:l10n_my_edi.field_res_config_settings__l10n_my_edi_is_sole_proprietor
+msgid "L10N My Edi Is Sole Proprietor"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_res_company__l10n_my_edi_mode
 #: model:ir.model.fields,field_description:l10n_my_edi.field_res_config_settings__l10n_my_edi_mode
 msgid "L10N My Edi Mode"
@@ -881,6 +921,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_my_edi.field_res_company__l10n_my_edi_proxy_user_id
 #: model:ir.model.fields,field_description:l10n_my_edi.field_res_config_settings__l10n_my_edi_proxy_user_id
 msgid "L10N My Edi Proxy User"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model.fields,field_description:l10n_my_edi.field_res_config_settings__l10n_my_edi_show_sole_proprietor
+msgid "L10N My Edi Show Sole Proprietor"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1131,6 +1176,11 @@ msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model:ir.model.fields,field_description:l10n_my_edi.field_res_config_settings__l10n_my_edi_parent_mode
+msgid "Parent MyInvois mode"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields.selection,name:l10n_my_edi.selection__res_partner__l10n_my_identification_type__passport
 msgid "Passport"
 msgstr ""
@@ -1141,6 +1191,14 @@ msgstr ""
 msgid ""
 "Permission to do this action has not been granted. Please ensure that Odoo "
 "has sufficient permissions on the MyInvois platform."
+msgstr ""
+
+#. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/account_edi_proxy_user.py:0
+msgid ""
+"Please fill the Business Registration Number of company \"%(company_name)s\" "
+"before enabling the integration with MyInvois."
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1392,8 +1450,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_my_edi/models/myinvois_document.py:0
 msgid ""
-"The api request limit has been reached. Please wait until "
-"%(limit_reset_datetime)s to try again."
+"The api request limit has been reached. Please wait until %"
+"(limit_reset_datetime)s to try again."
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1432,8 +1490,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
 msgid ""
-"The following partner's identification type or number is missing: "
-"%(partner_name)s"
+"The following partner's identification type or number is missing: %"
+"(partner_name)s"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1446,8 +1504,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
 msgid ""
-"The following partner's phone number should follow the E.164 format: "
-"%(partner_name)s"
+"The following partner's phone number should follow the E.164 format: %"
+"(partner_name)s"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1541,6 +1599,14 @@ msgstr ""
 msgid ""
 "The value set in this field will be used as TIN for the customer/supplier.\n"
 "If left empty, the Tax ID field will be used."
+msgstr ""
+
+#. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/res_company.py:0
+msgid ""
+"This company is a branch. E-invoicing registration is managed by the parent "
+"company."
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1644,13 +1710,9 @@ msgid "Vendor Credit Note"
 msgstr ""
 
 #. module: l10n_my_edi
-#: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: l10n_my_edi
-#: model:ir.model.fields,help:l10n_my_edi.field_myinvois_document__website_message_ids
-msgid "Website communication history"
+#. odoo-python
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
+msgid "View Invoices"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1758,6 +1820,19 @@ msgid ""
 "You must set a tax on the line : %(line_name)s.\n"
 "If taxes are not applicable, please set a 0%% tax with a tax type 'Not "
 "Applicable'."
+msgstr ""
+
+#. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
+msgid ""
+"You selected %(total)s invoices for submission.\n"
+"\n"
+"%(count)s invoices contain incomplete details or incorrect formatting "
+"required for LHDN e-Invoicing.\n"
+"\n"
+"Please click \"View Invoices\" below to review and update the information "
+"for these specific invoices."
 msgstr ""
 
 #. module: l10n_my_edi

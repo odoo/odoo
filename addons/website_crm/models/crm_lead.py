@@ -49,9 +49,9 @@ class CrmLead(models.Model):
                               self.sudo().default_get(['medium_id']).get('medium_id') or \
                               self.env['utm.mixin']._utm_ref('utm.utm_medium_website').id
         values['team_id'] = values.get('team_id') or \
-                            request.website.crm_default_team_id.id
+                            self.env.website.crm_default_team_id.id
         values['user_id'] = values.get('user_id') or \
-                            request.website.crm_default_user_id.id
+                            self.env.website.crm_default_user_id.id
         if not values['user_id'] and values['team_id'] and not self._is_rule_based_assignment_activated():
             values['user_id'] = self.env['crm.team'].sudo().browse([values['team_id']]).user_id.id
         if values.get('team_id'):

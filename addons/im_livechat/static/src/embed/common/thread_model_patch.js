@@ -3,26 +3,27 @@ import "@mail/discuss/core/common/thread_model_patch";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
 
 import { patch } from "@web/core/utils/patch";
-import { Deferred } from "@web/core/utils/concurrency";
 
 patch(Thread.prototype, {
     setup() {
         super.setup();
+        const { promise, resolve } = Promise.withResolvers();
         /**
-         * Deferred that resolves once a newly persisted thread is ready to swap
+         * Promise that resolves once a newly persisted thread is ready to swap
          * with its temporary counterpart (i.e. when the actions following the
          * persist call are done to avoid flickering).
          *
-         * @type {Deferred}
+         * @type {Promise<void>}
          */
-        this.readyToSwapDeferred = new Deferred();
+        this.readyToSwapPromise = promise;
+        this.resolveReadyToSwap = resolve;
         this._prevComposerDisabled = false;
     },
     /** @returns {Promise<import("models").Message} */
     async post(body, postData, extraData = {}) {
         if (
             this.channel?.chatbot &&
-            !this.channel.chatbot.forwarded &&
+            !this.channel.livechat_agent_history_ids.length &&
             this.channel.chatbot.currentStep?.step_type !== "free_input_multi"
         ) {
             this.channel.chatbot.isProcessingAnswer = true;
@@ -37,8 +38,10 @@ patch(Thread.prototype, {
                     "chatbot.script.answer"
                 ].get(extraData.selected_answer_id);
             }
+            const authorModelName = this.store.self?.Model.getName();
             const temporaryMsg = this.store["mail.message"].insert({
-                author_id: this.store.self,
+                author_id: authorModelName === "res.partner" ? this.store.self : undefined,
+                author_guest_id: authorModelName === "mail.guest" ? this.store.self : undefined,
                 body: await generateEmojisOnHtml(body, { allowEmojiLoading: false }),
                 id: this.store.getNextTemporaryId(),
                 model: "discuss.channel",
@@ -48,12 +51,16 @@ patch(Thread.prototype, {
             this.messages.push(temporaryMsg);
             this.channel.chatbot?._simulateTyping(2 ** 31 - 1);
             const channel = await this.store.env.services["im_livechat.livechat"].persist(this);
-            temporaryMsg.author_id = this.store.self; // Might have been created after persist.
+            if (this.store.self_partner) {
+                temporaryMsg.author_id = this.store.self_partner; // Might have been created after persist.
+            } else {
+                temporaryMsg.author_guest_id = this.store.self_guest;
+            }
             if (!channel) {
                 return;
             }
-            await channel.isLoadedDeferred;
-            return channel.post(...arguments).then(() => channel.readyToSwapDeferred.resolve());
+            await channel.isLoadedPromise;
+            return channel.post(...arguments).then(() => channel.resolveReadyToSwap());
         }
         const message = await super.post(...arguments);
         await this.channel?.chatbot?.processAnswer(message);
@@ -64,7 +71,7 @@ patch(Thread.prototype, {
         if (this.channel?.channel_type !== "livechat") {
             return super.computeComposerDisabled(...arguments);
         }
-        if (this.channel?.chatbot?.forwarded && !this.livechat_end_dt) {
+        if (this.channel?.livechat_agent_history_ids.length && !this.livechat_end_dt) {
             return false;
         }
         const step = this.channel?.chatbot?.currentStep;

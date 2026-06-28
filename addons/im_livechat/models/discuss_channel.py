@@ -5,12 +5,16 @@ from zoneinfo import ZoneInfo
 
 from markupsafe import Markup
 
-from odoo import api, fields, models, _, tools
+from odoo import _, api, fields, models, tools
+from odoo.exceptions import UserError
+from odoo.fields import Domain
+from odoo.tools import email_split, format_list, html2plaintext, is_html_empty
+from odoo.tools.mimetypes import get_extension
+from odoo.tools.sql import SQL
+from odoo.tools.translate import LazyTranslate
+
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tools import email_split, format_list, html2plaintext
-from odoo.tools.mimetypes import get_extension
-from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__)
 
@@ -31,7 +35,7 @@ class DiscussChannel(models.Model):
     """
 
     _name = 'discuss.channel'
-    _inherit = ['rating.mixin', 'discuss.channel']
+    _inherit = ['discuss.channel']
 
     channel_type = fields.Selection(selection_add=[("livechat", "Live Chat")], ondelete={"livechat": "cascade"})
     duration = fields.Float('Duration', compute='_compute_duration', help='Duration of the session in hours')
@@ -126,7 +130,7 @@ class DiscussChannel(models.Model):
         compute="_compute_livechat_looking_for_help_since_dt",
         help="Datetime when the chat entered the 'Looking for help' status.",
         string="Requested At",
-        store=True
+        store=True,
     )
     livechat_outcome = fields.Selection(
         [
@@ -139,7 +143,9 @@ class DiscussChannel(models.Model):
         store=True,
     )
     livechat_start_hour = fields.Float(
-        "Session Start Hour", compute="_compute_livechat_start_hour", store=True
+        "Session Start Hour",
+        compute="_compute_livechat_start_hour",
+        store=True,
     )
     livechat_week_day = fields.Selection(
         [
@@ -156,14 +162,15 @@ class DiscussChannel(models.Model):
         store=True,
     )
     livechat_matches_self_lang = fields.Boolean(
-        compute="_compute_livechat_matches_self_lang", search="_search_livechat_matches_self_lang"
+        compute="_compute_livechat_matches_self_lang",
+        search="_search_livechat_matches_self_lang",
     )
     livechat_matches_self_expertise = fields.Boolean(
         compute="_compute_livechat_matches_self_expertise",
         search="_search_livechat_matches_self_expertise",
     )
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
-    chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
+    chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages', groups='im_livechat.im_livechat_group_manager')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
     livechat_failure = fields.Selection(
         selection=[
@@ -174,7 +181,22 @@ class DiscussChannel(models.Model):
         string="Live Chat Session Failure",
     )
     livechat_is_escalated = fields.Boolean("Is session escalated", compute="_compute_livechat_is_escalated", store=True)
-    rating_last_text = fields.Selection(store=True)
+    livechat_rating = fields.Selection(
+        selection=[
+            ("1", "Unhappy"),
+            ("3", "Neutral"),
+            ("5", "Happy"),
+        ],
+        string="Livechat Rating Text",
+        falsy_value_label="Not Rated Yet",
+    )
+    livechat_rating_percentage = fields.Float(
+        string="Rating (%)",
+        aggregator="avg",
+        compute="_compute_livechat_rating_percentage",
+        compute_sql="_compute_sql_livechat_rating_percentage",
+        compute_sudo=True,
+    )
 
     _livechat_end_dt_status_constraint = models.Constraint(
         "CHECK(livechat_end_dt IS NULL or livechat_status IS NULL)",
@@ -191,18 +213,40 @@ class DiscussChannel(models.Model):
         """,
         "Looking for help date should only be set if the channel is looking for help and must be empty otherwise.",
     )
+    _livechat_rating_constraint = models.Constraint(
+        """
+        CHECK (
+            livechat_rating IS NULL
+            OR (channel_type = 'livechat' AND livechat_rating IN ('1', '3', '5'))
+        )
+        """,
+        """
+        Live chat rating should be either 1 (Unhappy), 3 (Neutral), 5 (Happy)
+        or empty and can only be set on live chat channels.
+        """,
+    )
     _livechat_end_dt_idx = models.Index("(livechat_end_dt) WHERE livechat_end_dt IS NULL")
     _livechat_failure_idx = models.Index(
-        "(livechat_failure) WHERE livechat_failure IN ('no_answer', 'no_agent')"
+        "(livechat_failure) WHERE livechat_failure IN ('no_answer', 'no_agent')",
     )
     _livechat_is_escalated_idx = models.Index(
-        "(livechat_is_escalated) WHERE livechat_is_escalated IS TRUE"
+        "(livechat_is_escalated) WHERE livechat_is_escalated IS TRUE",
     )
     _livechat_channel_type_create_date_idx = models.Index(
-        "(channel_type, create_date) WHERE channel_type = 'livechat'"
+        "(channel_type, create_date) WHERE channel_type = 'livechat'",
     )
 
     def write(self, vals):
+        if (
+            self.filtered(
+                lambda c: (
+                    "livechat_rating" in vals
+                    and c.livechat_rating != vals["livechat_rating"]
+                    and c.self_member_id.livechat_member_type != "visitor"
+                ),
+            )
+        ) and not self.env.user.has_group("base.group_system"):
+            raise UserError(self.env._("Only customers can rate a live chat conversation."))
         if "livechat_status" not in vals and "livechat_expertise_ids" not in vals:
             return super().write(vals)
         need_help_before = self.filtered(lambda c: c.livechat_status == "need_help")
@@ -214,7 +258,6 @@ class DiscussChannel(models.Model):
         store.add(need_help_before - need_help_after, ["livechat_status"])
         if "livechat_expertise_ids" in vals:
             store.add(need_help_after, lambda res: res.many("livechat_expertise_ids", ["name", "color"]))
-        store.bus_send()
         return result
 
     def channel_change_description(self, description):
@@ -240,6 +283,32 @@ class DiscussChannel(models.Model):
     def _compute_livechat_is_escalated(self):
         for channel in self:
             channel.livechat_is_escalated = len(channel.livechat_agent_history_ids) > 1
+
+    @api.model
+    def _rating_selection_to_percentage(self, rating):
+        if not rating:
+            return False
+        return (float(rating) - 1.0) * 100.0 / 4.0
+
+    @api.model
+    def _rating_selection_to_percentage_sql(self, rating_field):
+        return SQL(
+            "((%(rating_field)s::double precision) - 1.0) * 100.0 / 4.0",
+            rating_field=rating_field,
+        )
+
+    @api.depends("livechat_rating")
+    def _compute_livechat_rating_percentage(self):
+        for channel in self:
+            channel.livechat_rating_percentage = self._rating_selection_to_percentage(
+                channel.livechat_rating,
+            )
+
+    def _compute_sql_livechat_rating_percentage(self, table):
+        # This method allows to filter out non-rated sessions of the aggregation
+        return self._rating_selection_to_percentage_sql(
+            SQL.identifier(table._alias, "livechat_rating"),
+        )
 
     @api.depends("livechat_channel_member_history_ids.livechat_member_type")
     def _compute_livechat_agent_history_ids(self):
@@ -356,7 +425,8 @@ class DiscussChannel(models.Model):
         for channel in self:
             channel.livechat_agent_providing_help_history = (
                 channel.livechat_agent_history_ids.sorted(
-                    lambda h: (h.create_date, h.id), reverse=True
+                    lambda h: (h.create_date, h.id),
+                    reverse=True,
                 )[0]
                 if channel.livechat_is_escalated
                 else None
@@ -389,7 +459,7 @@ class DiscussChannel(models.Model):
     def _compute_livechat_matches_self_expertise(self):
         for channel in self:
             channel.livechat_matches_self_expertise = bool(
-                channel.livechat_expertise_ids & self.env.user.livechat_expertise_ids
+                channel.livechat_expertise_ids & self.env.user.livechat_expertise_ids,
             )
 
     def _search_livechat_matches_self_expertise(self, operator, value):
@@ -418,6 +488,7 @@ class DiscussChannel(models.Model):
     def _sync_field_names(self, res):
         super()._sync_field_names(res)
         res[None].attr("livechat_end_dt", predicate=is_livechat_channel)
+        res[None].one("chatbot_current_step_id", [], predicate=is_livechat_channel)
         res["internal_users"].attr("description", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_note", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_status", predicate=is_livechat_channel)
@@ -430,7 +501,6 @@ class DiscussChannel(models.Model):
 
     def _store_channel_fields(self, res: Store.FieldList):
         super()._store_channel_fields(res)
-        res.attr("chatbot_current_step")
         res.one("country_id", ["code", "name"], predicate=is_livechat_channel)
         res.attr("livechat_end_dt", predicate=is_livechat_channel)
         # sudo - visitor can access to the channel member history of an accessible channel
@@ -450,38 +520,44 @@ class DiscussChannel(models.Model):
             res.attr("livechat_looking_for_help_since_dt", predicate=is_livechat_channel)
             res.many("livechat_expertise_ids", ["name", "color"], predicate=is_livechat_channel)
 
-    def _to_store(self, store: Store, res: Store.FieldList):
-        """Extends the channel header by adding the livechat operator and the 'anonymous' profile"""
-        if add_current_step := "chatbot_current_step" in res:
-            res.remove("chatbot_current_step")
-        super()._to_store(store, res)
-        if not add_current_step:
-            return
         lang = self.env["chatbot.script"]._get_chatbot_language()
-        for channel in self.filtered(lambda channel: channel.chatbot_current_step_id):
+
+        def chatbot_data(channel):
+            if not channel.chatbot_current_step_id:
+                return False
             # sudo: chatbot.script.step - returning the current script/step of the channel
             current_step_sudo = channel.chatbot_current_step_id.sudo().with_context(lang=lang)
             chatbot_script = current_step_sudo.chatbot_script_id
             step_message = self.env["chatbot.message"]
             if current_step_sudo.step_type != "forward_operator":
                 step_message = channel.sudo().chatbot_message_ids.filtered(
-                    lambda m: m.script_step_id == current_step_sudo
-                    and m.mail_message_id.author_id == chatbot_script.operator_partner_id
+                    lambda m: (
+                        m.script_step_id == current_step_sudo
+                        and m.mail_message_id.author_id == chatbot_script.operator_partner_id
+                    ),
                 )[:1]
             current_step = {
                 "scriptStep": current_step_sudo.id,
                 "message": step_message.mail_message_id.id,
                 "operatorFound": current_step_sudo.step_type == "forward_operator"
-                and bool(channel.livechat_agent_partner_ids),
+                # sudo: discuss.channel - visitors/guests can check if an operator exists
+                and bool(channel.sudo().livechat_agent_partner_ids),
             }
-            store.add(current_step_sudo, "_store_script_step_fields")
-            store.add(chatbot_script, "_store_script_fields")
-            chatbot_data = {
+            return {
                 "script": chatbot_script.id,
                 "steps": [current_step],
                 "currentStep": current_step,
             }
-            store.add(channel, {"chatbot": chatbot_data})
+        res.attr("chatbot", chatbot_data, predicate=is_livechat_channel)
+        res.one(
+            "chatbot_current_step_id",
+            lambda res: (
+                res.from_method("_store_script_step_fields"),
+                res.one("chatbot_script_id", "_store_script_fields"),
+            ),
+            value=lambda c: c.chatbot_current_step_id.sudo().with_context(lang=lang),
+            predicate=is_livechat_channel,
+        )
 
     @api.autovacuum
     def _gc_empty_livechat_sessions(self):
@@ -530,10 +606,9 @@ class DiscussChannel(models.Model):
         """ Set deactivate the livechat channel and notify (the operator) the reason of closing the session."""
         self.ensure_one()
         if not self.livechat_end_dt:
-            member = self.channel_member_ids.filtered(lambda m: m.is_self)
-            if member:
+            if self.self_member_id:
                 # sudo: discuss.channel.rtc.session - member of current user can leave call
-                member.sudo()._rtc_leave_call()
+                self.self_member_id.sudo()._rtc_leave_call()
             # sudo: discuss.channel - visitor left the conversation, state must be updated
             self.sudo().livechat_end_dt = fields.Datetime.now()
             # avoid useless notification if the channel is empty
@@ -542,23 +617,29 @@ class DiscussChannel(models.Model):
             # Notify that the visitor has left the conversation
             # sudo: mail.message - posting visitor leave message is allowed
             self.sudo().message_post(
-                author_id=self.env.ref('base.partner_root').id,
+                author_id=self.env.ref("base.partner_root").id,
                 body=Markup('<div class="o_mail_notification o_hide_author">%s</div>') % message,
-                message_type='notification',
-                subtype_xmlid='mail.mt_comment'
+                message_type="notification",
+                subtype_xmlid="mail.mt_comment",
             )
 
-    # Rating Mixin
-
-    def _rating_get_parent_field_name(self):
-        return 'livechat_channel_id'
+    def _get_livechat_customer_timezone(self):
+        """Return the customer's timezone"""
+        self.ensure_one()
+        # sudo: discuss.channel - access partner's/guest's timezone from customer history.
+        tz_name = next(
+            (
+                tz
+                for customer in self.sudo().livechat_customer_history_ids
+                if (tz := customer.partner_id.tz or customer.guest_id.timezone)
+            ),
+            "UTC",
+        )
+        return ZoneInfo(tz_name)
 
     def _email_livechat_transcript(self, email):
         company = self.env.user.company_id
-        # sudo: discuss.channel - access partner's/guest's timezone
-        tz = next((tz
-                   for customer in self.sudo().livechat_customer_history_ids
-                   if (tz := customer.partner_id.tz or customer.guest_id.timezone)), "UTC")
+        tz = self._get_livechat_customer_timezone()
         lang = next((lang
                      for customer in self.sudo().livechat_customer_history_ids
                      if (lang := customer.partner_id.lang or customer.guest_id.lang)), self.env.lang)
@@ -566,13 +647,14 @@ class DiscussChannel(models.Model):
         correspondent_names = format_list(
             self.env,
             (self.sudo().livechat_agent_partner_ids or self.sudo().livechat_bot_partner_ids).mapped(
-                lambda p: p.user_livechat_username or p.name
-            )
+                lambda p: p.user_livechat_username or p.name,
+            ),
         )
         render_context = {
             "company": company,
             "channel": self,
-            "tz": ZoneInfo(tz),
+            "is_html_empty": is_html_empty,
+            "tz": tz,
             "correspondent_names": correspondent_names,
         }
         mail_body = self.env['ir.qweb'].with_context(lang=lang)._render(
@@ -626,12 +708,15 @@ class DiscussChannel(models.Model):
         self.ensure_one()
         parts = []
         previous_message_author = None
+        message_domain = Domain("message_type", "!=", "notification")
+        # sudo - chatbot.message: visitors can access messages on chats they have access to
+        if first_chatbot_message := self.sudo().chatbot_message_ids.sorted("id")[:1]:
+            message_domain &= Domain("id", ">=", first_chatbot_message.mail_message_id.id)
         # sudo - mail.message: getting empty/notification messages to exclude them is allowed.
-        messages = (
-            self.message_ids.sudo().filtered(lambda m: m.message_type != "notification")
-            - self.message_ids.sudo()._filter_empty()
-        )
-        for message in messages.sorted("id"):
+        filtered_messages = (
+            self.message_ids.sudo() - self.message_ids.sudo()._filter_empty()
+        ).filtered_domain(message_domain)
+        for message in filtered_messages.sorted("id"):
             # sudo - res.partner: accessing livechat username or name is allowed to visitor
             message_author = message.author_id.sudo() or message.author_guest_id
             if previous_message_author != message_author:
@@ -666,53 +751,39 @@ class DiscussChannel(models.Model):
         """
         self.ensure_one()
         user, guest = self.env["res.users"]._get_current_persona()
-        # sudo - rating.rating: live chat customers are allowed to update their rating
-        if rating_sudo := self.sudo().rating_ids[:1]:
-            rating_sudo.write({"rating": rate, "feedback": reason})
-        else:
-            # sudo: rating.rating - live chat customers can create ratings
-            rating_values = {
-                "rating": rate,
-                "consumed": True,
-                "feedback": reason,
-                "is_internal": False,
-                "res_id": self.id,
-                "res_model_id": self.env["ir.model"]._get_id("discuss.channel"),
-                # sudo: res.partner - visitor can access the agent record to add a rating
-                "rated_partner_id": self.sudo().livechat_agent_partner_ids[:1].id,
-                "partner_id": user.partner_id.id,
-            }
-            rating_sudo = self.env["rating.rating"].sudo().create(rating_values)
+        rated_partner = self.sudo().livechat_agent_partner_ids[:1]
+        # sudo: discuss.channel - visitor giving a rating to the session is allowed
+        self.sudo().write({"livechat_rating": str(rate)})
+        rating_url = f"/rating/static/src/img/rating_{rate}.png"
         rating_body = Markup(
             """<div class="o_mail_notification o_hide_author">"""
             """%(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/>%(reason)s"""
             """</div>""",
         ) % {
             "rating": self.env._("Rating"),
-            "rating_url": rating_sudo.rating_image_url,
+            "rating_url": rating_url,
             "reason": nl2br("\n" + reason) if reason else "",
         }
         # sudo: discuss.channel - live chat customers can post the rating message
         self.sudo().message_post(
             body=rating_body,
             message_type="notification",
-            rating_id=rating_sudo.id,
             subtype_xmlid="mail.mt_comment",
         )
-        if rating_sudo.rated_partner_id not in self.channel_member_ids.partner_id:
-            store = Store(bus_channel=rating_sudo.rated_partner_id.sudo().user_ids)
-            store.add(user, lambda res: res.one("partner_id", ["name"]))
-            store.add(guest, ["name"]).add(self, [])
-            store.add(rating_sudo, ["feedback", "rating_image_url"])
-            rating_sudo.rated_partner_id.sudo().user_ids._bus_send(
-                "livechat_rating_notification", {
+        if rated_partner not in self.channel_member_ids.partner_id:
+            store = Store(
+                rated_partner.sudo().user_ids,
+                notification_type="livechat_rating_notification",
+                notification_payload={
                     "guest_id": guest.id,
                     "user_id": user.id,
-                    "rating_id": rating_sudo.id,
+                    "feedback": reason,
+                    "rating_image_url": rating_url,
                     "channel_id": self.id,
-                    "store_data": store.get_result(),
                 },
             )
+            store.add(user, lambda res: res.one("partner_id", ["name"])).add(guest, ["name"])
+            store.add(self, [])
 
     # =======================
     # Chatbot
@@ -727,12 +798,11 @@ class DiscussChannel(models.Model):
             to fill, like : {'question_email': 'email_from', 'question_phone': 'mobile'}
         """
         values = {}
-        filtered_message_ids = self.chatbot_message_ids.filtered(
-            # sudo: chatbot.script.step - getting the type of the current step
-            lambda m: m.script_step_id.sudo().step_type in step_type_to_field
-        )
-        for message_id in filtered_message_ids:
-            field_name = step_type_to_field[message_id.script_step_id.step_type]
+        for message_id in self.sudo().chatbot_message_ids:
+            step_type = message_id.script_step_id.step_type
+            if step_type not in step_type_to_field:
+                continue
+            field_name = step_type_to_field[step_type]
             if not values.get(field_name):
                 values[field_name] = html2plaintext(message_id.user_raw_answer or '')
 
@@ -752,26 +822,34 @@ class DiscussChannel(models.Model):
             subtype_xmlid='mail.mt_comment',
         )
 
-    def _add_members(
-        self,
-        *,
-        guests=None,
-        partners=None,
-        users=None,
-        create_member_params=None,
-        invite_to_rtc_call=False,
-        post_joined_message=True,
-        inviting_partner=None,
-    ):
-        all_new_members = super()._add_members(
-            guests=guests,
-            partners=partners,
-            users=users,
-            create_member_params=create_member_params,
-            invite_to_rtc_call=invite_to_rtc_call,
-            post_joined_message=post_joined_message,
-            inviting_partner=inviting_partner,
-        )
+    def _add_members(self, **kwargs):
+        all_new_members = super()._add_members(**kwargs)
+        skip_chatbot_current_step_reset = kwargs.pop("skip_chatbot_current_step_reset", False)
+        if not skip_chatbot_current_step_reset and (
+            first_agents := all_new_members.filtered(
+                lambda m: m.livechat_member_type == "agent"
+                # sudo: discuss.channel - reading the current chatbot step
+                # when an agent joins is acceptable.
+                and m.channel_id.sudo().chatbot_current_step_id,
+            )
+
+        ):
+            store = Store.Stores()
+            for channel in first_agents.channel_id:
+                channel._notify_current_step_is_last(store[channel])
+            # Clearing the current step id to flag the end of the chatbot script
+            #
+            # In case of a concurrent step trigger of a chatbot and a new agent joining,
+            # - either the trigger is committed first, updating the current step id
+            #   the agent joining will fail to write the current step id,
+            #   and therefore fail to join, retry and be added to the channel.
+            #   any subsequent trigger will see the new agent and stop the script.
+            # - or the agent joining is committed first,
+            #   the trigger will fail, retry (with user action),
+            #   see the new agent and stop the script.
+            # sudo: discuss.channel - writing the current chatbot step
+            # when an agent joins is acceptable.
+            first_agents.channel_id.sudo().chatbot_current_step_id = False
         for channel in all_new_members.channel_id:
             # sudo: discuss.channel - accessing livechat_status in internal code is acceptable
             if channel.sudo().livechat_status == "need_help":
@@ -786,7 +864,7 @@ class DiscussChannel(models.Model):
             return self.env._("invited %s to the conversation", member._get_member_html_link())
         return super()._get_member_join_notification(member)
 
-    def _message_post_after_hook(self, message, msg_vals):
+    def _message_post_after_hook(self, message):
         """
         This method is called just before _notify_thread() method which is sending the message data.
         We need a 'chatbot.message' record before it happens to correctly display the message.
@@ -827,23 +905,25 @@ class DiscussChannel(models.Model):
                         "message": question_msg.mail_message_id.id,
                         "selectedAnswer": selected_answer.id,
                     },
-                ).bus_send()
+                )
 
             self.env["chatbot.message"].sudo().create(
                 {
                     "mail_message_id": message.id,
                     "discuss_channel_id": self.id,
                     "script_step_id": self.chatbot_current_step_id.id,
-                }
+                },
             )
 
         author_history = self.env["im_livechat.channel.member.history"]
         # sudo - discuss.channel: accessing history to update its state is acceptable
         if message.author_id or message.author_guest_id:
             author_history = self.sudo().livechat_channel_member_history_ids.filtered(
-                lambda h: h.partner_id == message.author_id
-                if message.author_id
-                else h.guest_id == message.author_guest_id
+                lambda h: (
+                    h.partner_id == message.author_id
+                    if message.author_id
+                    else h.guest_id == message.author_guest_id
+                ),
             )
         if author_history:
             if message.message_type not in ("notification", "user_notification"):
@@ -854,7 +934,7 @@ class DiscussChannel(models.Model):
             ).total_seconds() / 3600
         if not self.livechat_end_dt and author_history.livechat_member_type == "agent":
             self.livechat_failure = "no_failure"
-        return super()._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message)
 
     def _chatbot_restart(self, chatbot_script):
         # sudo: discuss.channel - visitor can clear current step to restart the script
@@ -907,17 +987,22 @@ class DiscussChannel(models.Model):
         return True
 
     def _forward_human_operator(self, chatbot_script_step=None, users=None):
-        """ Add a human operator to the conversation. The conversation with the chatbot (scripted chatbot or ai agent) is stopped
-        the visitor will continue the conversation with a real person.
+        """Hand the conversation off from the bot to a human operator.
 
-        In case we don't find any operator (e.g: no-one is available) we don't post any messages.
-        The chat with the chatbot will continue normally, which allows to add extra steps when it's the case
-        (e.g: ask for the visitor's email and create a lead).
+        The conversation with the chatbot (scripted chatbot or AI agent) is
+        stopped and the visitor continues with a real person. If no operator is
+        available, no message is posted and the chat with the bot continues
+        normally, which allows extra steps to run afterwards (e.g. asking for
+        the visitor's email and creating a lead).
 
-        :param chatbot_script_step: the forward to operator chatbot script step if the forwarding is done through
-        a scripted chatbot (not used if the forwarding is done through an AI Agent).
-        :param users: recordset of candidate operators, if not provided the currently available
-            users of the livechat channel are used as candidates instead.
+        :param chatbot_script_step: The "forward to operator" chatbot script
+            step, when forwarding is done through a scripted chatbot. Unused
+            when forwarding is done through an AI agent.
+        :type chatbot_script_step: chatbot.script.step or None
+        :param users: Recordset of candidate operators. If not provided, the
+            currently available users of the livechat channel are used as
+            candidates instead.
+        :type users: res.users or None
         """
 
         human_operator = False
@@ -945,10 +1030,11 @@ class DiscussChannel(models.Model):
             if chatbot_script_step.operator_expertise_ids:
                 create_member_params['agent_expertise_ids'] = chatbot_script_step.operator_expertise_ids.ids
                 channel_sudo.livechat_expertise_ids |= chatbot_script_step.operator_expertise_ids
-            channel_sudo._add_new_members_to_channel(
+            channel_sudo._add_members(
                 create_member_params=create_member_params,
                 inviting_partner=bot_partner_id,
                 users=human_operator,
+                skip_chatbot_current_step_reset=True,
             )
             channel_sudo._action_unfollow(partner=bot_partner_id, post_leave_message=False)
 
@@ -968,32 +1054,20 @@ class DiscussChannel(models.Model):
 
     def _get_human_operator(self, users, chatbot_script_step):
         operator_params = {
-            'lang': self.env.context.get("lang"),
-            'country_id': self.country_id.id,
-            'users': users
+            "lang": self.env.context.get("lang"),
+            "country_id": self.country_id.id,
+            "users": users,
         }
         if chatbot_script_step:
             operator_params['expertises'] = chatbot_script_step.operator_expertise_ids
         # sudo: res.users - visitor can access operator of their channel
-        human_operator = self.livechat_channel_id.sudo()._get_operator(**operator_params)
-        return human_operator
+        return self.livechat_channel_id.sudo()._get_operator(**operator_params)
 
     def _post_current_chatbot_step_message(self, chatbot_script_step):
         posted_message = self.env['mail.message']
         if chatbot_script_step and chatbot_script_step.message:
             posted_message = self._chatbot_post_message(chatbot_script_step.chatbot_script_id, chatbot_script_step.message)
         return posted_message
-
-    def _add_new_members_to_channel(self, create_member_params, inviting_partner, users=None, partners=None):
-        member_params = {
-            'create_member_params': create_member_params,
-            'inviting_partner': inviting_partner
-        }
-        if users:
-            member_params['users'] = users
-        if partners:
-            member_params['partners'] = partners
-        self._add_members(**member_params)
 
     def _update_forwarded_channel_data(self, /, *, livechat_failure, operator_name):
         self.write(
@@ -1004,10 +1078,10 @@ class DiscussChannel(models.Model):
                         self.env.user.display_name
                         if not self.env.user._is_public()
                         else self.sudo().self_member_id.guest_id.name,
-                        operator_name
-                    ]
-                )
-            }
+                        operator_name,
+                    ],
+                ),
+            },
         )
 
     def _add_next_step_message_to_store(self, chatbot_script_step):
@@ -1026,7 +1100,24 @@ class DiscussChannel(models.Model):
                     "message": step_message.id,
                     "operatorFound": True,
                 },
-            ).bus_send()
+            )
 
     def _allow_invite_by_email(self):
         return self.channel_type == "livechat" or super()._allow_invite_by_email()
+
+    def _notify_current_step_is_last(self, store):
+        self.ensure_one()
+        step_message = next((
+            # sudo - chatbot.message.id: visitor can access chat bot messages.
+            m.mail_message_id for m in self.sudo().chatbot_message_ids.sorted("id")
+            if m.script_step_id == self.chatbot_current_step_id
+        ), self.env["mail.message"])
+        store.add_model_values(
+            "ChatbotStep",
+            {
+                "id": (self.chatbot_current_step_id.id, step_message.id),
+                "scriptStep": self.chatbot_current_step_id.id,
+                "message": step_message.id,
+                "isLast": True,
+            },
+        )

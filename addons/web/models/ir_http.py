@@ -7,22 +7,6 @@ from odoo.tools import config
 from odoo.tools.func import deprecated
 from odoo.tools.misc import hmac, str2bool
 
-"""
-Debug mode is stored in session and should always be a string.
-It can be activated with an URL query string `debug=<mode>` where mode
-is either:
-- 'tests' to load tests assets
-- 'assets' to load assets non minified
-- any other truthy value to enable simple debug mode (to show some
-  technical feature, to show complete traceback in frontend error..)
-- any falsy value to disable debug mode
-
-You can use any truthy/falsy value from `str2bool` (eg: 'on', 'f'..)
-Multiple debug modes can be activated simultaneously, separated with a
-comma (eg: 'tests, assets').
-"""
-ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests']
-
 
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
@@ -42,12 +26,29 @@ class IrHttp(models.AbstractModel):
         if cids := cookies.get('cids'):
             cookies['cids'] = '-'.join(cids.split(','))
 
+    def _get_debug_modes(self):
+        """
+        Debug mode is stored in session and should always be a string.
+        It can be activated with an URL query string `debug=<mode>` where mode
+        is either:
+        - 'tests' to load tests assets
+        - 'assets' to load assets non minified
+        - any other truthy value to enable simple debug mode (to show some
+        technical feature, to show complete traceback in frontend error..)
+        - any falsy value to disable debug mode
+
+        You can use any truthy/falsy value from `str2bool` (eg: 'on', 'f'..)
+        Multiple debug modes can be activated simultaneously, separated with a
+        comma (eg: 'tests, assets').
+        """
+        return {'', '1', 'assets', 'tests'}
+
     @classmethod
     def _handle_debug(cls):
         debug = request.httprequest.args.get('debug')
         if debug is not None:
             request.session.debug = ','.join(
-                     mode if mode in ALLOWED_DEBUG_MODES
+                     mode if mode in request.env['ir.http']._get_debug_modes()
                 else '1' if str2bool(mode, mode)
                 else ''
                 for mode in (debug or '').split(',')

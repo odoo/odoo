@@ -1,10 +1,14 @@
 """ Implementation of "INVENTORY VALUATION TESTS" spreadsheet. """
 
-from odoo import Command
+from datetime import timedelta
+from freezegun import freeze_time
+
+from odoo import fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
+from odoo import Command
 
 
 class TestStockValuationStandard(TestStockValuationCommon):
@@ -165,16 +169,60 @@ class TestStockValuationStandard(TestStockValuationCommon):
         old_company = self.env.user.company_id
         try:
             self.env.user.company_id = new_company
-            warehouse = self.env['stock.warehouse'].search([('company_id', '=', new_company.id)])
             product = self.product.with_company(new_company)
             product.standard_price = 3
 
-            self._make_in_move(product, 0.5, location_dest_id=warehouse.lot_stock_id.id, picking_type_id=warehouse.in_type_id.id)
-            self._make_out_move(product, 0.5, location_id=warehouse.lot_stock_id.id, picking_type_id=warehouse.out_type_id.id)
+            self._make_in_move(product, 0.5, company=new_company)
+            self._make_out_move(product, 0.5, company=new_company)
 
             self.assertEqual(product.total_value, 0.0)
         finally:
             self.env.user.company_id = old_company
+
+    def test_multicompany(self):
+        """Standard: total_value = standard_price * qty, isolated per company.
+        Additional check: if the companies don't have same currency, the conversion is applied
+        when selecting both"""
+        self.product.with_company(self.company).standard_price = 10
+        self.product.with_company(self.other_company).standard_price = 50
+
+        # Company 1: receive 15 units at 10$
+        self._make_in_move(self.product, 15)
+        # Company 2: receive 100 units at 50$
+        self._make_in_move(self.product, 100, unit_cost=50, company=self.other_company)
+
+        # Company 1 only: 15 units @ 10$ = 150$
+        product_company_1 = self.product.with_company(self.company).with_context(allowed_company_ids=self.company.ids)
+        self.assertEqual(product_company_1.qty_available, 15)
+        self.assertEqual(product_company_1.total_value, 150)
+
+        # Company 2 only: 100 units @ 50$ = 5000$
+        product_company_2 = self.product.with_company(self.other_company).with_context(allowed_company_ids=self.other_company.ids)
+        self.assertEqual(product_company_2.qty_available, 100)
+        self.assertEqual(product_company_2.total_value, 5000)
+
+        # Both companies: 115 units, 5150$
+        # Invalidate so the ORM doesn't return the c1-keyed cached value (same
+        # cache key as with_company(c1) since depends_context('company') maps
+        # to env.company.id = first entry of allowed_company_ids).
+        self.product.invalidate_recordset(['total_value'])
+        product_both = self.product.with_context(allowed_company_ids=(self.company | self.other_company).ids)
+        self.assertEqual(product_both.qty_available, 115)
+        self.assertEqual(product_both.total_value, 5150)
+
+        other_currency = self.env['res.currency'].create({
+            'name': 'Other curr',
+            'symbol': 'O',
+            'rounding': 0.1,
+            'rate_ids': [
+                Command.create({'name': '2020-01-01', 'rate': 0.5}),
+            ],
+        })
+        self.other_company.currency_id = other_currency
+        self.product.invalidate_recordset(['total_value'])
+        # total value should now be 150 (from comp 1) + 10000 (5000 from comp 2 converted to 10000
+        # in the currency of comp 1 which is the main company selected) = 10150
+        self.assertEqual(product_both.total_value, 10150)
 
     def test_change_qty_and_locations_of_done_sml(self):
         sub_stock_loc = self.env['stock.location'].create({
@@ -292,15 +340,26 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product.total_value, 0)
         self.assertEqual(self.product.qty_available, 0)
 
+    @freeze_time("2026-03-10 10:00:00")
     def test_return_receipt_1(self):
+        """
+        Receive a product twice, return one unit and deliver the other one.
+        The total value should be 0 and the price should be (10+20)/2 = 15.
+        Return the delivery and set the original quantity to 0.
+        The total value should be 15.
+        """
         move1 = self._make_in_move(self.product, 1, unit_cost=10, create_picking=True)
         self._make_in_move(self.product, 1, unit_cost=20)
-        self._make_out_move(self.product, 1)
+        move2 = self._make_out_move(self.product, 1)
         self._make_return(move1, 1)
 
         self.assertEqual(self.product.total_value, 0)
         self.assertEqual(self.product.qty_available, 0)
         self.assertEqual(self.product.standard_price, 15)
+
+        self._make_return(move2, 1)
+        move2.quantity = 0
+        self.assertEqual(self.product.with_context(to_date=fields.Datetime.now() + timedelta(days=1)).total_value, 15.0)
 
     def test_return_delivery_1(self):
         self._make_in_move(self.product, 1, unit_cost=10)
@@ -339,9 +398,9 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self._make_in_move(self.product, 1, unit_cost=20)
         self._make_dropship_move(self.product, 1, unit_cost=10)
 
-        self.assertEqual(self.product.total_value, 30)
+        self.assertEqual(self.product.total_value, 26.67)
         self.assertEqual(self.product.qty_available, 2)
-        self.assertEqual(self.product.standard_price, 15)
+        self.assertAlmostEqual(self.product.standard_price, 13.33, places=2)
 
     def test_rounding_1(self):
         self._make_in_move(self.product, 1, unit_cost=1.00)
@@ -420,6 +479,31 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product.total_value, 10)
         self.assertEqual(self.product.qty_available, 10)
         self.assertEqual(self.product.standard_price, 1)
+
+    def test_multicompany(self):
+        """AVCO: standard_price auto-updates per company; total_value is isolated."""
+        self.category_avco.with_company(self.other_company).property_cost_method = 'average'
+
+        # Company 1: receive 15 units at 10$ → AVCO = 10, value = 150$
+        self._make_in_move(self.product, 15, unit_cost=10)
+        # Company 2: receive 100 units at 50$ → AVCO = 50, value = 5000$
+        self._make_in_move(self.product, 100, unit_cost=50, company=self.other_company)
+
+        # Company 1 only: 15 units @ 10$ = 150$
+        product_company_1 = self.product.with_company(self.company).with_context(allowed_company_ids=self.company.ids)
+        self.assertEqual(product_company_1.qty_available, 15)
+        self.assertEqual(product_company_1.total_value, 150)
+
+        # Company 2 only: 100 units @ 50$ = 5000$
+        product_company_2 = self.product.with_company(self.other_company).with_context(allowed_company_ids=self.other_company.ids)
+        self.assertEqual(product_company_2.qty_available, 100)
+        self.assertEqual(product_company_2.total_value, 5000)
+
+        # Both companies: 115 units, 5150$
+        self.product.invalidate_recordset(['total_value'])
+        product_both = self.product.with_context(allowed_company_ids=(self.company | self.other_company).ids)
+        self.assertEqual(product_both.qty_available, 115)
+        self.assertEqual(product_both.total_value, 5150)
 
     def test_return_delivery_rounding(self):
         self._make_in_move(self.product, 1, unit_cost=13.13)
@@ -609,10 +693,9 @@ class TestStockValuationFIFO(TestStockValuationCommon):
             self.env.user.company_id = new_company
             product = self.product.with_company(new_company)
             product.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-            warehouse = self.env['stock.warehouse'].search([('company_id', '=', new_company.id)])
 
-            self._make_in_move(product, 0.5, location_dest_id=warehouse.lot_stock_id.id, picking_type_id=warehouse.in_type_id.id, unit_cost=3)
-            self._make_out_move(product, 0.5, location_id=warehouse.lot_stock_id.id, picking_type_id=warehouse.out_type_id.id)
+            self._make_in_move(product, 0.5, company=new_company, unit_cost=3)
+            self._make_out_move(product, 0.5, company=new_company)
 
             self.assertEqual(product.total_value, 0.0)
         finally:
@@ -620,14 +703,52 @@ class TestStockValuationFIFO(TestStockValuationCommon):
 
     def test_fifo_avg_cost_fallback_zero_valued_qty(self):
         self.product.standard_price = 42.0
-        move = self._make_in_move(self.product, 1)
-        self._make_out_move(self.product, 1)
-        move.move_line_ids.owner_id = self.env['res.partner'].create({'name': 'External Owner'})
-        self.assertEqual(move._get_valued_qty(), 0.0)
-        self.product.invalidate_recordset(['total_value', 'avg_cost'])
-        self.product._compute_value()
+        move_in = self._make_in_move(self.product, 1)
+        move_out = self._make_out_move(self.product, 1)
+        move_in.move_line_ids.owner_id = self.env['res.partner'].create({'name': 'External Owner'})
+        self.assertEqual(move_in._get_valued_qty(), 0.0)
+        # The valued quantity is -1 since the out doesn't have an owne ter.
+        self.product.invalidate_recordset(['total_value', 'qty_available'])
+        self.assertEqual(self.product.total_value, -42.0)
+        self.assertEqual(self.product._with_valuation_context().qty_available, -1)
+
+        move_out.move_line_ids.owner_id = self.env['res.partner'].create({'name': 'External Owner'})
+        self.product.invalidate_recordset(['total_value', 'qty_available'])
         self.assertEqual(self.product.total_value, 0.0)
-        self.assertEqual(self.product.avg_cost, 0.0)
+        self.assertEqual(self.product.avg_cost, 42.0)
+
+    def test_multicompany(self):
+        """FIFO: value computed from each company's own move stack."""
+        self.category_fifo.with_company(self.other_company).property_cost_method = 'fifo'
+
+        # Company 1: receive 15 units at 10$
+        self._make_in_move(self.product, 15, unit_cost=10)
+        # Company 2: receive 100 units at 50$
+        self._make_in_move(self.product, 100, unit_cost=50, company=self.other_company)
+
+        # Company 1 only: 15 units @ 10$ = 150$
+        product_company_1 = self.product.with_company(self.company).with_context(allowed_company_ids=self.company.ids)
+        self.assertEqual(product_company_1.qty_available, 15)
+        self.assertEqual(product_company_1.total_value, 150)
+
+        # Company 2 only: 100 units @ 50$ = 5000$
+        product_company_2 = self.product.with_company(self.other_company).with_context(
+            allowed_company_ids=self.other_company.ids)
+        self.assertEqual(product_company_2.qty_available, 100)
+        self.assertEqual(product_company_2.total_value, 5000)
+        # Both companies: 115 units, 5150$
+        self.product.invalidate_recordset(['total_value'])
+        product_both = self.product.with_context(allowed_company_ids=(self.company | self.other_company).ids)
+        self.assertEqual(product_both.qty_available, 115)
+        self.assertEqual(product_both.total_value, 5150)
+
+    def test_fifo_consignment_valuation(self):
+        owner = self.env['res.partner'].create({'name': 'External Owner'})
+        self._make_in_move(self.product, 5, 10)
+        self._make_in_move(self.product, 5, 20, owner_id=owner.id)
+        self.assertEqual(self.product.total_value, 50.0)
+        self._make_out_move(self.product, 5)
+        self.assertEqual(self.product.total_value, 0.0)
 
 
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):

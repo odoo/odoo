@@ -21,6 +21,8 @@
                     </div>
                     <field name="street2" placeholder="Street 2..." class="o_address_street"
                            readonly="type == 'contact' and parent_id"/>
+                    <field name="city" placeholder="City" class="o_address_city"
+                           readonly="type == 'contact' and parent_id"/>
                     <field name="zip" placeholder="ZIP" class="o_address_zip"
                            readonly="type == 'contact' and parent_id"/>
                     <field name="country_id"
@@ -33,15 +35,5 @@
         </field>
     </record>
 
-        <record id="res_partner_view_form_inherit_l10n_cz" model="ir.ui.view">
-            <field name="name">res.partner.view.form.inherit.l10n.cz</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="account.view_partner_property_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='vat']" position="before">
-                    <field name="company_registry" invisible="country_code != 'CZ'"/>
-                </xpath>
-            </field>
-        </record>
     </data>
 </odoo>

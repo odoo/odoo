@@ -42,7 +42,7 @@ export function checkCarouselAutoPlaying() {
         trigger: `.carousel-item.active`,
         async run() {
             const firstSlideHtml = document.querySelector(".carousel-item.active")?.outerHTML;
-            await delay(150);
+            await delay(200);
             const currentSlideHtml = document.querySelector(".carousel-item.active")?.outerHTML;
             if (firstSlideHtml === currentSlideHtml) {
                 throw new Error(

@@ -55,12 +55,19 @@ class ProductCatalogMixin(models.AbstractModel):
         """
         lines = self[child_field].sorted('sequence')
 
+        # Default case : insert at the end
+        sequence = (lines and lines[-1].sequence + 1) or 10
         if section_id:
-            # Insert after the selected section line
-            sequence = lines.filtered_domain([
-                ('display_type', '=', 'line_section'),
-                ('id', '=', section_id),
-            ]).sequence + 1
+            # Insert after the last product of the selected section
+            section_found = False
+            for line in lines:
+                if line.display_type != 'line_section':
+                    continue
+                if section_found:
+                    sequence = line.sequence
+                    break
+                if line.id == section_id:
+                    section_found = True
         elif (
             section_lines := lines.filtered_domain([
                 ('display_type', '=', 'line_section'),
@@ -68,9 +75,6 @@ class ProductCatalogMixin(models.AbstractModel):
         ):
             # Insert before the first section (top of the order)
             sequence = section_lines[0].sequence
-        else:
-            # No sections exist, insert at the end
-            sequence = (lines and lines[-1].sequence + 1) or 10
 
         for line in lines.filtered_domain([('sequence', '>=', sequence)]):
             line.sequence += 1

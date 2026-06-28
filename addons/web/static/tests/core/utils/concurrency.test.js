@@ -1,20 +1,20 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
 
-import { Deferred, Mutex, KeepLast, Race } from "@web/core/utils/concurrency";
+import { Mutex, KeepLast, Race } from "@web/core/utils/concurrency";
 
 describe.current.tags("headless");
 
 describe("Deferred", () => {
     test("basic use", async () => {
-        const def1 = new Deferred();
-        def1.then((v) => expect.step(`ok (${v})`));
+        const def1 = Promise.withResolvers();
+        def1.promise.then((v) => expect.step(`ok (${v})`));
         def1.resolve(44);
         await tick();
         expect.verifySteps(["ok (44)"]);
 
-        const def2 = new Deferred();
-        def2.catch((v) => expect.step(`ko (${v})`));
+        const def2 = Promise.withResolvers();
+        def2.promise.catch((v) => expect.step(`ko (${v})`));
         def2.reject(44);
         await tick();
         expect.verifySteps(["ko (44)"]);
@@ -24,11 +24,11 @@ describe("Deferred", () => {
 describe("Mutex", () => {
     test("simple scheduling", async () => {
         const mutex = new Mutex();
-        const def1 = new Deferred();
-        const def2 = new Deferred();
+        const def1 = Promise.withResolvers();
+        const def2 = Promise.withResolvers();
 
-        mutex.exec(() => def1).then(() => expect.step("ok [1]"));
-        mutex.exec(() => def2).then(() => expect.step("ok [2]"));
+        mutex.exec(() => def1.promise).then(() => expect.step("ok [1]"));
+        mutex.exec(() => def2.promise).then(() => expect.step("ok [2]"));
         expect.verifySteps([]);
 
         def1.resolve();
@@ -42,11 +42,11 @@ describe("Mutex", () => {
 
     test("simple scheduling (2)", async () => {
         const mutex = new Mutex();
-        const def1 = new Deferred();
-        const def2 = new Deferred();
+        const def1 = Promise.withResolvers();
+        const def2 = Promise.withResolvers();
 
-        mutex.exec(() => def1).then(() => expect.step("ok [1]"));
-        mutex.exec(() => def2).then(() => expect.step("ok [2]"));
+        mutex.exec(() => def1.promise).then(() => expect.step("ok [1]"));
+        mutex.exec(() => def2.promise).then(() => expect.step("ok [2]"));
         expect.verifySteps([]);
 
         def2.resolve();
@@ -60,13 +60,13 @@ describe("Mutex", () => {
 
     test("reject", async () => {
         const mutex = new Mutex();
-        const def1 = new Deferred();
-        const def2 = new Deferred();
-        const def3 = new Deferred();
+        const def1 = Promise.withResolvers();
+        const def2 = Promise.withResolvers();
+        const def3 = Promise.withResolvers();
 
-        mutex.exec(() => def1).then(() => expect.step("ok [1]"));
-        mutex.exec(() => def2).catch(() => expect.step("ko [2]"));
-        mutex.exec(() => def3).then(() => expect.step("ok [3]"));
+        mutex.exec(() => def1.promise).then(() => expect.step("ok [1]"));
+        mutex.exec(() => def2.promise).catch(() => expect.step("ko [2]"));
+        mutex.exec(() => def3.promise).then(() => expect.step("ok [3]"));
         expect.verifySteps([]);
 
         def1.resolve();
@@ -84,21 +84,21 @@ describe("Mutex", () => {
 
     test("getUnlockedDef checks", async () => {
         const mutex = new Mutex();
-        const def1 = new Deferred();
-        const def2 = new Deferred();
+        const def1 = Promise.withResolvers();
+        const def2 = Promise.withResolvers();
 
         mutex.getUnlockedDef().then(() => expect.step("mutex unlocked (1)"));
         await tick();
         expect.verifySteps(["mutex unlocked (1)"]);
 
-        mutex.exec(() => def1).then(() => expect.step("ok [1]"));
+        mutex.exec(() => def1.promise).then(() => expect.step("ok [1]"));
         await tick();
         mutex.getUnlockedDef().then(function () {
             expect.step("mutex unlocked (2)");
         });
         expect.verifySteps([]);
 
-        mutex.exec(() => def2).then(() => expect.step("ok [2]"));
+        mutex.exec(() => def2.promise).then(() => expect.step("ok [2]"));
         await tick();
         expect.verifySteps([]);
 
@@ -130,9 +130,9 @@ describe("Mutex", () => {
 describe("KeepLast", () => {
     test("basic use", async () => {
         const keepLast = new KeepLast();
-        const def = new Deferred();
+        const def = Promise.withResolvers();
 
-        keepLast.add(def).then(() => expect.step("ok"));
+        keepLast.add(def.promise).then(() => expect.step("ok"));
         expect.verifySteps([]);
 
         def.resolve();
@@ -142,9 +142,9 @@ describe("KeepLast", () => {
 
     test("rejected promise", async () => {
         const keepLast = new KeepLast();
-        const def = new Deferred();
+        const def = Promise.withResolvers();
 
-        keepLast.add(def).catch(() => expect.step("ko"));
+        keepLast.add(def.promise).catch(() => expect.step("ko"));
         expect.verifySteps([]);
 
         def.reject();
@@ -154,13 +154,13 @@ describe("KeepLast", () => {
 
     test("two promises resolved in order", async () => {
         const keepLast = new KeepLast();
-        const def1 = new Deferred();
-        const def2 = new Deferred();
+        const def1 = Promise.withResolvers();
+        const def2 = Promise.withResolvers();
 
-        keepLast.add(def1).then(() => {
+        keepLast.add(def1.promise).then(() => {
             throw new Error("should not be executed");
         });
-        keepLast.add(def2).then(() => expect.step("ok [2]"));
+        keepLast.add(def2.promise).then(() => expect.step("ok [2]"));
         expect.verifySteps([]);
 
         def1.resolve();
@@ -174,13 +174,13 @@ describe("KeepLast", () => {
 
     test("two promises resolved in reverse order", async () => {
         const keepLast = new KeepLast();
-        const def1 = new Deferred();
-        const def2 = new Deferred();
+        const def1 = Promise.withResolvers();
+        const def2 = Promise.withResolvers();
 
-        keepLast.add(def1).then(() => {
+        keepLast.add(def1.promise).then(() => {
             throw new Error("should not be executed");
         });
-        keepLast.add(def2).then(() => expect.step("ok [2]"));
+        keepLast.add(def2.promise).then(() => expect.step("ok [2]"));
         expect.verifySteps([]);
 
         def2.resolve();
@@ -196,9 +196,9 @@ describe("KeepLast", () => {
 describe("Race", () => {
     test("basic use", async () => {
         const race = new Race();
-        const def = new Deferred();
+        const def = Promise.withResolvers();
 
-        race.add(def).then((v) => expect.step(`ok (${v})`));
+        race.add(def.promise).then((v) => expect.step(`ok (${v})`));
         expect.verifySteps([]);
 
         def.resolve(44);
@@ -208,11 +208,11 @@ describe("Race", () => {
 
     test("two promises resolved in order", async () => {
         const race = new Race();
-        const def1 = new Deferred();
-        const def2 = new Deferred();
+        const def1 = Promise.withResolvers();
+        const def2 = Promise.withResolvers();
 
-        race.add(def1).then((v) => expect.step(`ok (${v}) [1]`));
-        race.add(def2).then((v) => expect.step(`ok (${v}) [2]`));
+        race.add(def1.promise).then((v) => expect.step(`ok (${v}) [1]`));
+        race.add(def2.promise).then((v) => expect.step(`ok (${v}) [2]`));
         expect.verifySteps([]);
 
         def1.resolve(44);
@@ -226,11 +226,11 @@ describe("Race", () => {
 
     test("two promises resolved in reverse order", async () => {
         const race = new Race();
-        const def1 = new Deferred();
-        const def2 = new Deferred();
+        const def1 = Promise.withResolvers();
+        const def2 = Promise.withResolvers();
 
-        race.add(def1).then((v) => expect.step(`ok (${v}) [1]`));
-        race.add(def2).then((v) => expect.step(`ok (${v}) [2]`));
+        race.add(def1.promise).then((v) => expect.step(`ok (${v}) [1]`));
+        race.add(def2.promise).then((v) => expect.step(`ok (${v}) [2]`));
         expect.verifySteps([]);
 
         def2.resolve(44);
@@ -244,17 +244,17 @@ describe("Race", () => {
 
     test("multiple resolutions", async () => {
         const race = new Race();
-        const def1 = new Deferred();
-        const def2 = new Deferred();
-        const def3 = new Deferred();
+        const def1 = Promise.withResolvers();
+        const def2 = Promise.withResolvers();
+        const def3 = Promise.withResolvers();
 
-        race.add(def1).then((v) => expect.step(`ok (${v}) [1]`));
+        race.add(def1.promise).then((v) => expect.step(`ok (${v}) [1]`));
         def1.resolve(44);
         await tick();
         expect.verifySteps(["ok (44) [1]"]);
 
-        race.add(def2).then((v) => expect.step(`ok (${v}) [2]`));
-        race.add(def3).then((v) => expect.step(`ok (${v}) [3]`));
+        race.add(def2.promise).then((v) => expect.step(`ok (${v}) [2]`));
+        race.add(def3.promise).then((v) => expect.step(`ok (${v}) [3]`));
         def2.resolve(44);
         await tick();
         expect.verifySteps(["ok (44) [2]", "ok (44) [3]"]);
@@ -262,9 +262,9 @@ describe("Race", () => {
 
     test("catch rejected promise", async () => {
         const race = new Race();
-        const def = new Deferred();
+        const def = Promise.withResolvers();
 
-        race.add(def).catch((v) => expect.step(`not ok (${v})`));
+        race.add(def.promise).catch((v) => expect.step(`not ok (${v})`));
         expect.verifySteps([]);
 
         def.reject(44);
@@ -274,11 +274,11 @@ describe("Race", () => {
 
     test("first promise rejects first", async () => {
         const race = new Race();
-        const def1 = new Deferred();
-        const def2 = new Deferred();
+        const def1 = Promise.withResolvers();
+        const def2 = Promise.withResolvers();
 
-        race.add(def1).catch((v) => expect.step(`not ok (${v}) [1]`));
-        race.add(def2).catch((v) => expect.step(`not ok (${v}) [2]`));
+        race.add(def1.promise).catch((v) => expect.step(`not ok (${v}) [1]`));
+        race.add(def2.promise).catch((v) => expect.step(`not ok (${v}) [2]`));
         expect.verifySteps([]);
 
         def1.reject(44);
@@ -292,11 +292,11 @@ describe("Race", () => {
 
     test("second promise rejects after", async () => {
         const race = new Race();
-        const def1 = new Deferred();
-        const def2 = new Deferred();
+        const def1 = Promise.withResolvers();
+        const def2 = Promise.withResolvers();
 
-        race.add(def1).then((v) => expect.step(`ok (${v}) [1]`));
-        race.add(def2).then((v) => expect.step(`ok (${v}) [2]`));
+        race.add(def1.promise).then((v) => expect.step(`ok (${v}) [1]`));
+        race.add(def2.promise).then((v) => expect.step(`ok (${v}) [2]`));
         expect.verifySteps([]);
 
         def1.resolve(44);
@@ -310,11 +310,11 @@ describe("Race", () => {
 
     test("second promise rejects first", async () => {
         const race = new Race();
-        const def1 = new Deferred();
-        const def2 = new Deferred();
+        const def1 = Promise.withResolvers();
+        const def2 = Promise.withResolvers();
 
-        race.add(def1).catch((v) => expect.step(`not ok (${v}) [1]`));
-        race.add(def2).catch((v) => expect.step(`not ok (${v}) [2]`));
+        race.add(def1.promise).catch((v) => expect.step(`not ok (${v}) [1]`));
+        race.add(def2.promise).catch((v) => expect.step(`not ok (${v}) [2]`));
         expect.verifySteps([]);
 
         def2.reject(44);
@@ -328,11 +328,11 @@ describe("Race", () => {
 
     test("first promise rejects after", async () => {
         const race = new Race();
-        const def1 = new Deferred();
-        const def2 = new Deferred();
+        const def1 = Promise.withResolvers();
+        const def2 = Promise.withResolvers();
 
-        race.add(def1).then((v) => expect.step(`ok (${v}) [1]`));
-        race.add(def2).then((v) => expect.step(`ok (${v}) [2]`));
+        race.add(def1.promise).then((v) => expect.step(`ok (${v}) [1]`));
+        race.add(def2.promise).then((v) => expect.step(`ok (${v}) [2]`));
         expect.verifySteps([]);
 
         def2.resolve(44);
@@ -346,21 +346,21 @@ describe("Race", () => {
 
     test("getCurrentProm", async () => {
         const race = new Race();
-        const def1 = new Deferred();
-        const def2 = new Deferred();
-        const def3 = new Deferred();
+        const def1 = Promise.withResolvers();
+        const def2 = Promise.withResolvers();
+        const def3 = Promise.withResolvers();
         expect(race.getCurrentProm()).toBe(null);
 
-        race.add(def1);
+        race.add(def1.promise);
         race.getCurrentProm().then((v) => expect.step(`ok (${v})`));
         def1.resolve(44);
         await tick();
         expect.verifySteps(["ok (44)"]);
         expect(race.getCurrentProm()).toBe(null);
 
-        race.add(def2);
+        race.add(def2.promise);
         race.getCurrentProm().then((v) => expect.step(`ok (${v})`));
-        race.add(def3);
+        race.add(def3.promise);
         def3.resolve(44);
         await tick();
         expect.verifySteps(["ok (44)"]);

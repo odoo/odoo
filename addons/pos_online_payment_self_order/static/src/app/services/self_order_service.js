@@ -25,6 +25,12 @@ patch(SelfOrder.prototype, {
             }
         });
     },
+    createNewOrder() {
+        if (this.onlinePaymentStatus === "progress") {
+            this.onlinePaymentStatus = null;
+        }
+        return super.createNewOrder(...arguments);
+    },
     hasPaymentMethod() {
         if (
             this.config.self_ordering_mode === "mobile" &&

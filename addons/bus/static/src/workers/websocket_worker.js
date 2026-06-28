@@ -1,9 +1,9 @@
-import { debounce, Logger } from "@bus/workers/bus_worker_utils";
+import { BoundedSet, debounce, Logger } from "@bus/workers/bus_worker_utils";
 
 /**
  * Type of events that can be sent from the worker to its clients.
  *
- * @typedef { 'BUS:CONNECT' | 'BUS:RECONNECT' | 'BUS:DISCONNECT' | 'BUS:RECONNECTING' | 'BUS:NOTIFICATION' | 'BUS:INITIALIZED' | 'BUS:OUTDATED'| 'BUS:WORKER_STATE_UPDATED' | 'BUS:PROVIDE_LOGS' } WorkerEvent
+ * @typedef { 'BUS:CONNECT' | 'BUS:RECONNECT' | 'BUS:DISCONNECT' | 'BUS:RECONNECTING' | 'BUS:NOTIFICATION' | 'BUS:INITIALIZED' | 'BUS:OUTDATED'| BUS:LAST_ID_RESET | 'BUS:WORKER_STATE_UPDATED' | 'BUS:PROVIDE_LOGS' } WorkerEvent
  */
 
 /**
@@ -49,9 +49,18 @@ const logger = new Logger("bus_websocket_worker");
  * for SharedWorker and this class implements it.
  */
 export class WebsocketWorker {
+    static OUTGOING_BATCH_DELAY = 500;
     INITIAL_RECONNECT_DELAY = 1000;
     RECONNECT_JITTER = 1000;
     CONNECTION_CHECK_DELAY = 60_000;
+
+    /**
+     * @type {Set<number>} Notifications ids that were already received. Used to
+     * guaarantee at-most-once delivery.
+     */
+    seenNotificationIds = new BoundedSet(10_000);
+    /** Number of times the worker has opened a websocket connection */
+    connectCount = 0;
 
     constructor(name) {
         this.active = true;
@@ -65,6 +74,8 @@ export class WebsocketWorker {
         this.isWaitingForNewUID = true;
         this.lastChannelSubscription = null;
         this.lastNotificationId = 0;
+        /** @type {{force: boolean, minId: number}|null} */
+        this.nextSubscribeData = null;
         this.loggingEnabled = null;
         this.messageWaitQueue = [];
         this.name = name;
@@ -72,9 +83,10 @@ export class WebsocketWorker {
         this.state = WORKER_STATE.IDLE;
         this.websocketURL = "";
 
-        this._debouncedSendToServer = debounce(this._sendToServer, 300);
-        this._debouncedUpdateChannels = debounce(this._updateChannels, 300);
-        this._forceUpdateChannels = debounce(this._forceUpdateChannels, 300);
+        this._debouncedSendToServer = debounce(
+            this._sendToServer,
+            WebsocketWorker.OUTGOING_BATCH_DELAY
+        );
         this._onWebsocketClose = this._onWebsocketClose.bind(this);
         this._onWebsocketError = this._onWebsocketError.bind(this);
         this._onWebsocketMessage = this._onWebsocketMessage.bind(this);
@@ -173,7 +185,7 @@ export class WebsocketWorker {
             case "BUS:DELETE_CHANNEL":
                 return this._deleteChannel(client, data);
             case "BUS:FORCE_UPDATE_CHANNELS":
-                return this._forceUpdateChannels();
+                return this._scheduleUpdateChannels({ force: true });
             case "BUS:SET_LOGGING_ENABLED":
                 this.loggingEnabled = data;
                 break;
@@ -203,6 +215,29 @@ export class WebsocketWorker {
     }
 
     /**
+     * Handle an internal message, sent by the server to this worker.
+     *
+     * @param {{type: string, internal: true, payload: any}} param0
+     */
+    _onServerMessage({ type, payload }) {
+        switch (type) {
+            case "bus/subscription_outdated":
+                this.broadcast("BUS:OUTDATED", { unregisterMultiTab: false });
+                return;
+            case "bus/last_id_reset": {
+                const newLastSeenId = payload;
+                this.lastNotificationId = newLastSeenId;
+                this.seenNotificationIds = new BoundedSet(
+                    10_000,
+                    [...this.seenNotificationIds].filter((id) => id <= newLastSeenId)
+                );
+                this.broadcast("BUS:LAST_ID_RESET", newLastSeenId);
+                return;
+            }
+        }
+    }
+
+    /**
      * Add a channel for the given client. If this channel is not yet
      * known, update the subscription on the server.
      *
@@ -211,7 +246,7 @@ export class WebsocketWorker {
      */
     _addChannel(client, channel) {
         this.channelsByClient.get(client).push(channel);
-        this._debouncedUpdateChannels();
+        this._scheduleUpdateChannels();
     }
 
     /**
@@ -229,16 +264,8 @@ export class WebsocketWorker {
         const channelIndex = clientChannels.indexOf(channel);
         if (channelIndex !== -1) {
             clientChannels.splice(channelIndex, 1);
-            this._debouncedUpdateChannels();
+            this._scheduleUpdateChannels();
         }
-    }
-
-    /**
-     * Update the channels on the server side even if the channels on
-     * the client side are the same than the last time we subscribed.
-     */
-    _forceUpdateChannels() {
-        this._updateChannels({ force: true });
     }
 
     /**
@@ -250,7 +277,7 @@ export class WebsocketWorker {
      */
     _unregisterClient(client) {
         this.channelsByClient.delete(client);
-        this._debouncedUpdateChannels();
+        this._scheduleUpdateChannels();
     }
 
     /**
@@ -267,7 +294,7 @@ export class WebsocketWorker {
      *     - undefined: not available (e.g. livechat support page)
      * @param {Number} param0.startTs Timestamp of start of bus service sender.
      */
-    _initializeConnection(client, { db, debug, lastNotificationId, uid, websocketURL, startTs }) {
+    _initializeConnection(client, { db, lastNotificationId, uid, websocketURL, startTs }) {
         if (this.newestStartTs && this.newestStartTs > startTs) {
             this.sendToClient(client, "BUS:WORKER_STATE_UPDATED", this.state);
             this.sendToClient(client, "BUS:INITIALIZED");
@@ -275,7 +302,7 @@ export class WebsocketWorker {
         }
         this.newestStartTs = startTs;
         this.websocketURL = websocketURL;
-        this.lastNotificationId = lastNotificationId;
+        this.lastNotificationId = Math.max(this.lastNotificationId, lastNotificationId);
         const isCurrentUserKnown = uid !== undefined;
         if (this.isWaitingForNewUID && isCurrentUserKnown) {
             this.isWaitingForNewUID = false;
@@ -293,7 +320,7 @@ export class WebsocketWorker {
         this.sendToClient(client, "BUS:WORKER_STATE_UPDATED", this.state);
         this.sendToClient(client, "BUS:INITIALIZED");
         if (!this.active) {
-            this.sendToClient(client, "BUS:OUTDATED");
+            this.sendToClient(client, "BUS:OUTDATED", { unregisterMultiTab: true });
         }
     }
 
@@ -325,7 +352,7 @@ export class WebsocketWorker {
             if (reason === "OUTDATED_VERSION") {
                 console.warn("Worker deactivated due to an outdated version.");
                 this.active = false;
-                this.broadcast("BUS:OUTDATED");
+                this.broadcast("BUS:OUTDATED", { unregisterMultiTab: true });
             }
             // WebSocket was closed on purpose, do not try to reconnect.
             return;
@@ -365,10 +392,24 @@ export class WebsocketWorker {
      */
     _onWebsocketMessage(messageEv) {
         this._restartConnectionCheckInterval();
-        const notifications = JSON.parse(messageEv.data);
-        this._logDebug("_onWebsocketMessage", notifications);
-        this.lastNotificationId = notifications[notifications.length - 1].id;
-        this.broadcast("BUS:NOTIFICATION", notifications);
+        const messages = JSON.parse(messageEv.data);
+        this._logDebug("_onWebsocketMessage", messages);
+        const newNotifications = [];
+        for (const message of messages) {
+            if (message.internal) {
+                this._onServerMessage(message);
+                continue;
+            }
+            if (this.seenNotificationIds.has(message.id)) {
+                continue;
+            }
+            this.seenNotificationIds.add(message.id);
+            newNotifications.push(message);
+            this.lastNotificationId = Math.max(this.lastNotificationId, message.id);
+        }
+        if (newNotifications.length) {
+            this.broadcast("BUS:NOTIFICATION", newNotifications);
+        }
     }
 
     async _logDebug(title, ...args) {
@@ -391,10 +432,11 @@ export class WebsocketWorker {
      * the connection to open.
      */
     _onWebsocketOpen() {
+        this.connectCount++;
         this._logDebug("_onWebsocketOpen");
         this._updateState(WORKER_STATE.CONNECTED);
         this.broadcast(this.isReconnecting ? "BUS:RECONNECT" : "BUS:CONNECT");
-        this._debouncedUpdateChannels();
+        this._scheduleUpdateChannels();
         this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
         this.isReconnecting = false;
@@ -525,13 +567,12 @@ export class WebsocketWorker {
     }
 
     /**
-     * Update the channel subscription on the server. Ignore if the channels
-     * did not change since the last subscription.
-     *
-     * @param {boolean} force Whether or not we should update the subscription
-     * event if the channels haven't change since last subscription.
+     * Debounced execution of the channel subscription update. Intended to be called via
+     * `_scheduleUpdateChannels` only.
      */
-    _updateChannels({ force = false } = {}) {
+    _debouncedUpdateChannels = debounce(() => {
+        const { force, minId } = this.nextSubscribeData;
+        this.nextSubscribeData = null;
         const allTabsChannels = [
             ...new Set([].concat.apply([], [...this.channelsByClient.values()])),
         ].sort();
@@ -539,14 +580,39 @@ export class WebsocketWorker {
         const shouldUpdateChannelSubscription =
             allTabsChannelsString !== this.lastChannelSubscription;
         if (force || shouldUpdateChannelSubscription) {
+            // Do not check for outdated state on the first connection: `last_id` comes from
+            // storage, so GC may have already occurred, but this is safe since the page
+            // was actively loaded. Only check on the first subscribe, as notifications
+            // are streamed in real time and cannot be missed during an active connection
+            // (no `lastChannelSubscription`).
+            const check_outdated = this.connectCount > 1 && !this.lastChannelSubscription;
             this.lastChannelSubscription = allTabsChannelsString;
             this._sendToServer({
                 event_name: "subscribe",
-                data: { channels: allTabsChannels, last: this.lastNotificationId },
+                data: {
+                    channels: allTabsChannels,
+                    check_outdated,
+                    last: minId,
+                },
             });
             this.firstSubscribeResolver.resolve();
         }
+    }, WebsocketWorker.OUTGOING_BATCH_DELAY);
+
+    /**
+     * Schedule a channel subscription update. The operation is debounced and may be
+     * batched with other calls. The server will only be notified if the channel set has
+     * changed since the last subscription, unless `force` is true.
+     *
+     * @param {boolean} force If true, ensures a subscription event is sent even if the
+     * channel list has not changed.
+     */
+    _scheduleUpdateChannels({ force = false } = {}) {
+        this.nextSubscribeData ??= { minId: this.lastNotificationId };
+        this.nextSubscribeData.force ||= force;
+        this._debouncedUpdateChannels();
     }
+
     /**
      * Update the worker state and broadcast the new state to its clients.
      *

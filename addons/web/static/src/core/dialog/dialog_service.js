@@ -1,9 +1,9 @@
-import { reactive, useChildSubEnv } from "@web/owl2/utils";
-import { Component, markRaw, xml } from "@odoo/owl";
+import { useChildSubEnv } from "@web/owl2/utils";
+import { Component, markRaw, proxy, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 class DialogWrapper extends Component {
-    static template = xml`<t t-component="props.subComponent" t-props="props.subProps" />`;
+    static template = xml`<t t-component="this.props.subComponent" t-props="this.props.subProps" />`;
     static props = ["*"];
     setup() {
         useChildSubEnv({ dialogData: this.props.subEnv });
@@ -13,6 +13,7 @@ class DialogWrapper extends Component {
 /**
  *  @typedef {{
  *      onClose?(): void;
+ *      rootRef?: import("@odoo/owl").Signal<Node>;
  *  }} DialogServiceInterfaceAddOptions
  */
 /**
@@ -21,7 +22,7 @@ class DialogWrapper extends Component {
  *          Component: typeof import("@odoo/owl").Component,
  *          props: {},
  *          options?: DialogServiceInterfaceAddOptions
- *      ): () => void;
+ *      ): () => Promise<void>;
  *  }} DialogServiceInterface
  */
 
@@ -41,7 +42,7 @@ export const dialogService = {
         const add = (dialogClass, props, options = {}) => {
             const id = nextId++;
             const close = (params) => remove(params);
-            const subEnv = reactive({
+            const subEnv = proxy({
                 id,
                 close,
                 isActive: true,
@@ -84,7 +85,7 @@ export const dialogService = {
                             document.body.classList.remove("modal-open");
                         }
                     },
-                    rootId: options.context?.root?.el?.getRootNode()?.host?.id,
+                    rootId: options.rootRef?.()?.getRootNode()?.host?.id,
                 }
             );
 

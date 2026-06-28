@@ -5,7 +5,6 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { SEE_RECORDS_PIVOT, SEE_RECORDS_PIVOT_VISIBLE } from "./pivot_actions";
 import { PivotOdooCorePlugin } from "./plugins/pivot_odoo_core_plugin";
 import { PivotCoreViewGlobalFilterPlugin } from "./plugins/pivot_core_view_global_filter_plugin";
-import { PivotUIGlobalFilterPlugin } from "./plugins/pivot_ui_global_filter_plugin";
 
 const { coreTypes, invalidateEvaluationCommands } = spreadsheet;
 
@@ -34,8 +33,9 @@ cellMenuRegistry.add("pivot_see_records", {
         return SEE_RECORDS_PIVOT_VISIBLE(position, env.model.getters);
     },
     icon: "o-spreadsheet-Icon.SEE_RECORDS",
+    isEnabledOnLockedSheet: true,
 });
 
 inverseCommandRegistry.add("UPDATE_ODOO_PIVOT_DOMAIN", identity);
 
-export { PivotOdooCorePlugin, PivotCoreViewGlobalFilterPlugin, PivotUIGlobalFilterPlugin };
+export { PivotOdooCorePlugin, PivotCoreViewGlobalFilterPlugin };

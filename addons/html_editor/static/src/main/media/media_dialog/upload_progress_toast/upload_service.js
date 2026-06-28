@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { UploadProgressToast } from "./upload_progress_toast";
@@ -14,7 +14,7 @@ export const uploadService = {
     dependencies: ["notification"],
     start(env, { notification }) {
         let fileId = 0;
-        const progressToast = reactive({
+        const progressToast = proxy({
             files: {},
             isVisible: false,
         });

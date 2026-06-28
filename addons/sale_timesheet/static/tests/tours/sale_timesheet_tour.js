@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 import * as tourUtils from "@sale/js/tours/tour_utils";
 
-import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('sale_timesheet_tour', {
     steps: () => [
@@ -34,15 +33,11 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     isActive: ['button.o-kanban-button-new.dropdown'], // if the project template dropdown is active
     trigger: 'button.o-dropdown-item:contains("New Project")',
     content: 'Let\'s create a regular project.',
-    tooltipPosition: 'right',
     run: "click",
 }, {
     trigger: '.o_field_widget.o_project_name input',
     content: 'Select your project name (e.g. Project for Freeman)',
     run: "edit Project for Freeman",
-}, {
-    trigger: 'div[name="allow_billable"] input',
-    run: 'click',
 }, {
     trigger: 'button[name="action_view_tasks"]',
     content: 'Click on Create button to create and enter to this newest project.',
@@ -60,6 +55,9 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     run: "click",
 }, {
     trigger: ".nav-link:contains('Settings')",
+    run: "click",
+}, {
+    trigger: "div[name='allow_billable'] input",
     run: "click",
 }, {
     trigger: "div[name='allow_milestones'] input",
@@ -89,11 +87,10 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'button.o_kanban_edit',
     content: 'Click on Edit button to enter to the form view of the task.',
-    tooltipPosition: 'bottom',
     run: "click",
 }, {
     trigger: 'div[name="partner_id"] input',
-    content: markup('Select the customer of your Sales Order <i>(e.g. Brandon Freeman)</i>. Since we have a Sales Order for this customer with a prepaid service product which the remaining hours to deliver is greater than 0, the Sales Order Item in the task should be contain the Sales Order Item containing this prepaid service product.'),
+    content: 'Select the customer of your Sales Order (e.g. Brandon Freeman). Since we have a Sales Order for this customer with a prepaid service product which the remaining hours to deliver is greater than 0, the Sales Order Item in the task should be contain the Sales Order Item containing this prepaid service product.',
     run: "edit Brandon Freeman",
 }, {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
@@ -173,7 +170,6 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     isActive: ['button.o_list_button_add.dropdown'], // if the project template dropdown is active
     trigger: 'button.o-dropdown-item:contains("New Project")',
     content: 'Let\'s create a regular project.',
-    tooltipPosition: 'right',
     run: "click",
 },
 {
@@ -193,7 +189,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     }
 }, {
     trigger: 'div[name="partner_id"] input',
-    content: markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
+    content: 'Add the customer for this project to select an SO and SOL for this customer (e.g. Brandon Freeman).',
     run: "edit Brandon Freeman",
 }, {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
@@ -230,7 +226,6 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="sale_line_employee_ids"] div[name="sale_line_id"] input',
     content: 'Select the Sales Order Item to link to the timesheets of this employee.',
-    tooltipPosition: 'bottom',
     run: "edit S",
 }, {
     trigger: '[name=sale_line_id] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
@@ -252,7 +247,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     run: "click",
 }, {
     trigger: 'div[name="partner_id"] input',
-    content: markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
+    content: 'Add the customer for this project to select an SO and SOL for this customer (e.g. Brandon Freeman).',
     run: "edit Brandon Freeman",
 }, {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
@@ -310,11 +305,11 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 // "Form views in edition mode are automatically saved when the page is closed, which leads to stray network requests and inconsistencies."
 {
     trigger: '.o_back_button',
-    content: 'Go back to the kanban view and the project update will be added on that view',
+    content: 'Go back to the list view and the project update will be added on that view',
     run: "click",
 }, {
-    trigger: '.o_updates_controller',
-    content: 'Check the kanban view of project update is rendered to be sure the user leaves the form view and the project update is created',
+    trigger: '.o_list_view',
+    content: 'Check the list view of project update is rendered to be sure the user leaves the form view and the project update is created',
 },
 ...stepUtils.toggleHomeMenu(),
 ...stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),

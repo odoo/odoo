@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-import json
-from datetime import datetime
 from collections import defaultdict
 from uuid import uuid4
 from random import randrange
@@ -9,7 +7,7 @@ from pprint import pformat
 
 from markupsafe import Markup
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
 from odoo.tools import float_is_zero, float_round, float_repr, float_compare, formatLang
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Command, Domain
@@ -39,7 +37,7 @@ class PosOrder(models.Model):
                         order['amount_total'])
 
         open_session = PosSession.search([
-            ('state', 'not in', ('closed', 'closing_control')),
+            ('state', '=', 'opened'),
             ('config_id', '=', closed_session.config_id.id)
         ], limit=1)
 
@@ -125,7 +123,7 @@ class PosOrder(models.Model):
         self.ensure_one()
         if not draft and self.state != 'cancel':
             self.action_pos_order_paid()
-            self._create_order_picking()
+            self._set_product_qty_available()
             self._compute_total_cost_in_real_time()
 
         self._generate_order_invoice()
@@ -156,7 +154,8 @@ class PosOrder(models.Model):
 
     def _generate_order_invoice(self):
         if self.to_invoice and self.state == 'paid' and self.config_id.invoice_journal_id:
-            self._generate_pos_order_invoice()
+            should_generate_pdf = self.env.context.get('generate_pdf') or self.config_id.use_download_invoice
+            self.with_context(generate_pdf=should_generate_pdf)._generate_pos_order_invoice()
         elif not self.config_id.invoice_journal_id:
             _logger.warning('Trying to create an invoice without any journal configured')
             raise UserError(_('No invoice journal configured for this POS session.'))
@@ -175,10 +174,6 @@ class PosOrder(models.Model):
         if order.get('partner_id'):
             self.update_order_partner(order)
             existing_order.write({'partner_id': order.get('partner_id'), 'to_invoice': order.get('to_invoice', False)})
-        # update pickings
-        if order.get('shipping_date'):
-            existing_order.write({'shipping_date': order.get('shipping_date')})
-            existing_order.picking_ids.filtered(lambda p: p.state not in ['done', 'cancel']).write({'scheduled_date': order.get('shipping_date')})
         # payments
         if order.get('payment_ids'):
             self._update_lines(order, existing_order, ['lines', 'payment_ids'])
@@ -190,7 +185,8 @@ class PosOrder(models.Model):
         self.payment_ids.unlink()
 
     def _compute_amount_paid(self):
-        return sum(self.payment_ids.mapped('amount'))
+        paid_payment_ids = self.payment_ids.filtered(lambda p: not p.payment_status or p.payment_status == "done")
+        return sum(paid_payment_ids.mapped('amount'))
 
     def _process_payment_lines(self, pos_order, order, pos_session, draft):
         """Create account.bank.statement.lines from the dictionary given to the parent function.
@@ -306,15 +302,7 @@ class PosOrder(models.Model):
                 }))
         return invoice_lines
 
-    def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
-        moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
-            .mapped('picking_ids.move_ids')\
-            .filtered(lambda m: m.is_valued and m.product_id.valuation == 'real_time' and m.product_id.id == product.id)\
-            .sorted(lambda x: x.date)
-        return moves._get_price_unit()
-
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
-    last_order_preparation_change = fields.Char(string='Last preparation change', help="Last printed state of the order")
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
         comodel_name='res.users', string='Employee',
@@ -338,7 +326,7 @@ class PosOrder(models.Model):
     sequence_number = fields.Integer(string='Sequence Number', copy=False,
                                      help='A session-unique sequence number for the order. Negative if generated from the client')
     session_id = fields.Many2one('pos.session', string='Session', index=True, domain="[('state', '=', 'opened')]")
-    config_id = fields.Many2one('pos.config', compute='_compute_order_config_id', string="Point of Sale", readonly=False, store=True)
+    config_id = fields.Many2one('pos.config', compute='_compute_order_config_id', string="Point of Sale", readonly=False, store=True, index=True)
     currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency")
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=0, readonly=True,
         help='The rate of the currency to the currency of rate applicable at the date of the order')
@@ -349,16 +337,12 @@ class PosOrder(models.Model):
         'Status', readonly=True, copy=False, default='draft', index=True)
 
     account_move = fields.Many2one('account.move', string='Invoice', readonly=True, copy=False, index="btree_not_null")
-    picking_ids = fields.One2many('stock.picking', 'pos_order_id')
-    picking_count = fields.Integer(compute='_compute_picking_count')
-    failed_pickings = fields.Boolean(compute='_compute_picking_count')
-    picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type", readonly=False)
-    stock_reference_ids = fields.Many2many('stock.reference', 'stock_reference_pos_order_rel', 'pos_order_id', 'reference_id', string="Reference")
     preset_id = fields.Many2one('pos.preset', string='Preset')
     floating_order_name = fields.Char(string='Order Name')
     general_customer_note = fields.Text(string='General Customer Note')
     internal_note = fields.Text(string='Internal Note')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
+    print_history = fields.Json('Print History', copy=False)
     pos_reference = fields.Char(string='Receipt Number', readonly=True, copy=False, index=True)
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True, ondelete='restrict')
     fiscal_position_id = fields.Many2one(
@@ -368,7 +352,6 @@ class PosOrder(models.Model):
     payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments')
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice', copy=False)
-    shipping_date = fields.Date('Shipping Date')
     preset_time = fields.Datetime(string='Hour', help="Hour of the day for the order")
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
@@ -396,39 +379,13 @@ class PosOrder(models.Model):
         help="List of journal entries created when this POS order was reversed and invoiced after session close."
     )
     source = fields.Selection(string="Origin", selection=[('pos', 'Point of Sale')], default='pos')
+    defer_invoice_pdf = fields.Boolean(string="Defer Invoice PDF Generation", index=True)
 
+    prep_order_ids = fields.One2many('pos.prep.order', 'pos_order_id', string='Preparation orders')
     _unique_uuid = models.Constraint('unique (uuid)', 'An order with this uuid already exists')
 
     def ask_for_ticket_printing(self):
         self.config_id._notify("TICKET_PRINTING_REQUESTED", self.ids)
-
-    def get_preparation_change(self):
-        self.ensure_one()
-        return {
-            'last_order_preparation_change': self.last_order_preparation_change,
-        }
-
-    def _ensure_to_keep_last_preparation_change(self, vals):
-        for record in self:
-            if record.last_order_preparation_change:
-                change = json.loads(record.last_order_preparation_change)
-                if not change.get('metadata'):
-                    return
-
-                local_change = json.loads(vals.get('last_order_preparation_change', '{}'))
-                if not local_change.get('metadata'):
-                    vals['last_order_preparation_change'] = record.last_order_preparation_change
-                    return
-
-                server_date = fields.Datetime.from_string(change['metadata'].get('serverDate'))
-                local_date = fields.Datetime.from_string(local_change['metadata'].get('serverDate'))
-
-                if server_date > local_date:
-                    _logger.warning("Preparation changes were outdated, probably linked to a synching issue.")
-                    vals['last_order_preparation_change'] = record.last_order_preparation_change
-                else:
-                    local_change['metadata']['serverDate'] = fields.Datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    vals['last_order_preparation_change'] = json.dumps(local_change)
 
     @api.depends('account_move')
     def _compute_invoice_status(self):
@@ -458,12 +415,6 @@ class PosOrder(models.Model):
         for order in self:
             order.is_invoiced = bool(order.account_move)
 
-    @api.depends('picking_ids', 'picking_ids.state')
-    def _compute_picking_count(self):
-        for order in self:
-            order.picking_count = len(order.picking_ids)
-            order.failed_pickings = bool(order.picking_ids.filtered(lambda p: p.state != 'done'))
-
     @api.depends('date_order', 'company_id', 'currency_id', 'company_id.currency_id')
     def _compute_currency_rate(self):
         for order in self:
@@ -488,21 +439,12 @@ class PosOrder(models.Model):
         then the margin of said order is not computed (it will be computed when closing the session).
         """
         for order in self:
-            lines = order.lines
-            if not order._should_create_picking_real_time():
-                storable_fifo_avco_lines = lines.filtered(lambda l: l._is_product_storable_fifo_avco())
-                lines -= storable_fifo_avco_lines
-            stock_moves = order.picking_ids.move_ids
-            lines._compute_total_cost(stock_moves)
+            lines = order._get_total_cost_in_real_time_lines()
+            lines._compute_total_cost()
 
-    def _compute_total_cost_at_session_closing(self, stock_moves):
-        """
-        Compute the margin at the end of the session. This method should be called to compute the remaining lines margin
-        containing a storable product with a fifo/avco cost method and then compute the order margin
-        """
-        for order in self:
-            storable_fifo_avco_lines = order.lines.filtered(lambda l: l._is_product_storable_fifo_avco())
-            storable_fifo_avco_lines._compute_total_cost(stock_moves)
+    def _get_total_cost_in_real_time_lines(self):
+        self.ensure_one()
+        return self.lines
 
     @api.depends('lines.margin', 'is_total_cost_computed')
     def _compute_margin(self):
@@ -525,7 +467,7 @@ class PosOrder(models.Model):
     def _get_order_tax_totals(self):
         self.ensure_one()
         self.amount_paid = sum(payment.amount for payment in self.payment_ids)
-        self.amount_return = -sum((payment.amount < 0 and payment.amount) or 0 for payment in self.payment_ids)
+        self.amount_return = -sum(payment.amount for payment in self.payment_ids if payment.amount < 0 and not self.is_refund)
         base_lines = self.lines._prepare_tax_base_line_values()
         self.env['account.tax']._add_tax_details_in_base_lines(base_lines, self.company_id)
         self.env['account.tax']._round_base_lines_tax_details(base_lines, self.company_id)
@@ -550,7 +492,7 @@ class PosOrder(models.Model):
             if not order.currency_id:
                 raise UserError(_("You can't: create a pos order from the backend interface, or unset the pricelist, or create a pos.order in a python test with Form tool, or edit the form view in studio if no PoS order exist"))
             tax_totals = order._get_order_tax_totals()
-            refund_factor = -1 if (order.amount_total < 0.0) else 1
+            refund_factor = -1 if (order.is_refund or order.amount_total < 0.0) else 1
             order.amount_tax = refund_factor * tax_totals['tax_amount_currency']
             order.amount_total = refund_factor * tax_totals['total_amount_currency']
             order.amount_difference = order.amount_paid - order.amount_total
@@ -586,18 +528,22 @@ class PosOrder(models.Model):
 
     def _update_sequence_number(self, session, values):
         # Some localization needs orders to have a sequence number
-        values['sequence_number'] = (
-            session.config_id.order_seq_id
-            ._next()
-            .removeprefix(session.config_id.order_seq_id.prefix or '')
-            .removesuffix(session.config_id.order_seq_id.suffix or '')
-        )
+        seq_id = session.config_id.order_seq_id
+        prefix, suffix = seq_id._get_prefix_suffix()
+        seq_next = seq_id._next()
+        if prefix:
+            seq_next = seq_next.removeprefix(prefix)
+        if suffix:
+            seq_next = seq_next.removesuffix(suffix)
+        values['sequence_number'] = seq_next
 
     @api.model
     def _complete_values_from_session(self, session, values):
         values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         values.setdefault('fiscal_position_id', session.config_id.default_fiscal_position_id.id)
         values.setdefault('company_id', session.config_id.company_id.id)
+        if session.config_id.use_presets and session.config_id.default_preset_id:
+            values.setdefault('preset_id', session.config_id.default_preset_id.id)
 
         if not values.get('pos_reference'):
             reference, tracking_number = session.config_id._get_next_order_refs()
@@ -622,6 +568,8 @@ class PosOrder(models.Model):
             allowed_vals = ['paid', 'done', 'invoiced']
             if vals.get('state') and vals['state'] not in allowed_vals and order.state in allowed_vals:
                 raise UserError(_('This order has already been paid. You cannot set it back to draft or edit it.'))
+            if vals.get('state') and vals['state'] in ('cancel', 'paid', 'done') and order.print_history:
+                vals['print_history'] = False
 
         list_line = self._create_pm_change_log(vals)
         res = super().write(vals)
@@ -631,7 +579,7 @@ class PosOrder(models.Model):
                 totally_paid_or_more = order.currency_id.compare_amounts(order.amount_paid, order.amount_total)
                 if totally_paid_or_more < 0 and order.state in ['paid', 'done']:
                     raise UserError(_('The paid amount is different from the total amount of the order.'))
-                elif totally_paid_or_more > 0 and order.state == 'paid':
+                if totally_paid_or_more > 0 and order.state == 'paid':
                     list_line.append(_("Warning, the paid amount is higher than the total amount. (Difference: %s)", formatLang(self.env, order.amount_paid - order.amount_total, currency_obj=order.currency_id)))
                 if order.nb_print > 0 and any(command[0] in [0, 1] and command[2].get('payment_status') and command[2]['payment_status'] != 'cancelled' for command in vals.get('payment_ids')):
                     raise UserError(_('You cannot change the payment of a printed order.'))
@@ -706,26 +654,50 @@ class PosOrder(models.Model):
         body += Markup("</ul>")
         return body
 
+    def _get_order_name_from_pos_reference(self, session=None):
+        """Return the order name from the sequence prefix and the receipt reference (``pos_reference``)."""
+        self.ensure_one()
+        session = session or self.session_id
+        last_reference_part = self.get_reference_last_part()
+        seq_id = session.config_id.order_seq_id
+        prefix, suffix = seq_id._get_prefix_suffix()
+        if not prefix:
+            prefix = session.config_id.name
+        suffix = f" - {suffix}" if suffix else ''
+        return f"{prefix} - {last_reference_part}{suffix}"
+
     def _compute_order_name(self, session=None):
         session = session or self.session_id
         if self.refunded_order_id.exists():
             return _('%(refunded_order)s REFUND', refunded_order=self.refunded_order_id.name)
-        else:
-            last_reference_part = self.get_reference_last_part()
-            prefix = session.config_id.order_seq_id.prefix or session.config_id.name
-            suffix = f" - {session.config_id.order_seq_id.suffix}" if session.config_id.order_seq_id.suffix else ''
-            return f"{prefix} - {last_reference_part}{suffix}"
+        return self._get_order_name_from_pos_reference(session)
 
     def get_reference_last_part(self):
         return self.pos_reference.split('-')[-1]
 
-    def action_stock_picking(self):
-        self.ensure_one()
-        action = self.env['ir.actions.act_window']._for_xml_id('stock.action_picking_tree_ready')
-        action['display_name'] = _('Pickings')
-        action['context'] = {}
-        action['domain'] = [('id', 'in', self.picking_ids.ids)]
-        return action
+    @api.model
+    def _cron_process_pos_orders(self):
+        """
+        Entry point for the POS 5-minute cron.
+
+        This method acts as a central handler that runs various
+        PoS order-related background tasks (e.g., processing deferred
+        invoices, syncing orders, cleanup operations).
+
+        Each task should be implemented in its own dedicated method
+        and called from here to keep responsibilities well separated.
+        """
+        self._process_deferred_invoice_orders()
+
+    @api.model
+    def _process_deferred_invoice_orders(self):
+        orders = self.search([('defer_invoice_pdf', '=', True)])
+        for order in orders:
+            try:
+                order.account_move.with_context(skip_invoice_sync=True)._generate_and_send()
+            except (UserError, ValidationError) as e:
+                _logger.error("Error processing order %s: %s", order.name, e)
+            order.defer_invoice_pdf = False
 
     def action_view_invoice(self):
         invoices = self.account_move
@@ -815,7 +787,7 @@ class PosOrder(models.Model):
                 partner_bank_id = journal_bank
 
         # Case 3: fallback → company bank
-        elif amount_total >= 0 and self.company_id.partner_id.bank_ids:
+        if not partner_bank_id and amount_total >= 0 and self.company_id.partner_id.bank_ids:
             partner_bank_id = _first_allowed(self.company_id.partner_id.bank_ids)
 
         return partner_bank_id.id if partner_bank_id else False
@@ -831,7 +803,7 @@ class PosOrder(models.Model):
         amount_total = sum(order.amount_total for order in self)
         payment_total = sum(order.amount_paid for order in self)
 
-        if self.config_id.cash_rounding:
+        if self.config_id.cash_rounding and invoice.invoice_cash_rounding_id:
             line_ids_commands = []
             rate = invoice.invoice_currency_rate
             sign = invoice.direction_sign
@@ -922,7 +894,7 @@ class PosOrder(models.Model):
         fiscal_position = self.fiscal_position_id
         pos_config = self.config_id
         move_type = 'out_invoice' if not any(
-            order.is_refund or order.amount_total < 0 for order in self
+            order.is_refund or order.amount_total < 0.0 for order in self
         ) else 'out_refund'
         invoice_payment_term_id = (
             self.partner_id.property_payment_term_id.id
@@ -1046,33 +1018,6 @@ class PosOrder(models.Model):
                         'balance': balance,
                         'display_type': 'rounding',
                     })
-        # Stock.
-        if self.picking_ids.ids:
-            stock_moves = self.env['stock.move'].sudo().search([
-                ('picking_id', 'in', self.picking_ids.ids),
-                ('product_id.valuation', '=', 'real_time'),
-            ])
-            for stock_move in stock_moves:
-                product_accounts = stock_move.with_company(stock_move.company_id).product_id._get_product_accounts()
-                expense_account = product_accounts['expense']
-                stock_account = product_accounts['stock_valuation']
-                balance = stock_move.value if stock_move.is_out else -stock_move.value
-                aml_vals_list_per_nature['stock'].append({
-                    'name': _("Stock variation for %s", stock_move.product_id.name),
-                    'account_id': expense_account.id,
-                    'partner_id': commercial_partner.id,
-                    'currency_id': self.company_id.currency_id.id,
-                    'amount_currency': balance,
-                    'balance': balance,
-                })
-                aml_vals_list_per_nature['stock'].append({
-                    'name': _("Stock variation for %s", stock_move.product_id.name),
-                    'account_id': stock_account.id,
-                    'partner_id': commercial_partner.id,
-                    'currency_id': self.company_id.currency_id.id,
-                    'amount_currency': -balance,
-                    'balance': -balance,
-                })
 
         # sort self.payment_ids by is_split_transaction:
         for payment_id in self.payment_ids:
@@ -1166,14 +1111,17 @@ class PosOrder(models.Model):
             "target": "new",
         }
 
+    def action_invoice_download_pdf(self):
+        self.ensure_one()
+        if self.defer_invoice_pdf:
+            self.account_move.with_context(skip_invoice_sync=True)._generate_and_send()
+            self.defer_invoice_pdf = False
+        return self.account_move.action_invoice_download_pdf()
+
     def action_pos_order_invoice(self):
         self.ensure_one()
         if not (move := self.account_move):
-            is_picking_created = self._should_create_picking_real_time()
-            self.write({'to_invoice': True})
-            if not is_picking_created and self._should_create_picking_real_time() and self.session_id.state != 'closed':
-                self._create_order_picking()
-            move = self._generate_pos_order_invoice()
+            move = self._prepare_missing_invoice_moves()
         return {
             'name': _('Customer Invoice'),
             'view_mode': 'form',
@@ -1184,6 +1132,10 @@ class PosOrder(models.Model):
             'target': 'current',
             'res_id': move.id,
         }
+
+    def _prepare_missing_invoice_moves(self):
+        self.write({'to_invoice': True})
+        return self._generate_pos_order_invoice()
 
     def _get_invoice_post_context(self):
         return {"skip_invoice_sync": True}
@@ -1200,6 +1152,7 @@ class PosOrder(models.Model):
         invoice_vals = self._prepare_invoice_vals()
         invoice = self._create_invoice(invoice_vals)
         invoice.sudo().with_company(company).with_context(**self._get_invoice_post_context())._post()
+        invoice.sudo().with_context(skip_is_manually_modified=True).write({'review_state': 'no_review'})
 
         # invoice payments
         payment_moves_from_closed_sessions = {}
@@ -1221,22 +1174,28 @@ class PosOrder(models.Model):
 
         if self.env.context.get('generate_pdf', True):
             invoice.with_context(skip_invoice_sync=True)._generate_and_send()
+        else:
+            order.defer_invoice_pdf = True
 
         return invoice
 
     def _reconcile_invoice_payments(self, invoice, payment_moves):
         receivable_account = self.env["res.partner"]._find_accounting_partner(invoice.partner_id).with_company(self.company_id).property_account_receivable_id
-        if not receivable_account.reconcile:
-            return
         payment_receivable_lines = payment_moves.pos_payment_ids._get_receivable_lines_for_invoice_reconciliation(receivable_account)
         invoice_receivable_lines = invoice.line_ids.filtered(lambda line: line.account_id == receivable_account and not line.reconciled)
         (payment_receivable_lines | invoice_receivable_lines).sudo().with_company(invoice.company_id).reconcile()
 
+    def _post_cancel_message(self, author_id=None):
+        author_id = author_id or self.env.user.partner_id.id
+        for record in self:
+            record.message_post(body=_('Point of Sale Order cancelled'), author_id=author_id)
+
     def cancel_order_from_pos(self):
         draft_orders = self.filtered(lambda o: o.state == 'draft')
+        today = fields.Date.context_today(self)
         if self.env.context.get('active_ids'):
             orders = self.browse(self.env.context.get('active_ids'))
-            order_is_in_futur = any(order.preset_time and order.preset_time.date() > fields.Date.today() for order in orders)
+            order_is_in_futur = any(order.preset_time and order.preset_time.date() > today for order in orders)
             if order_is_in_futur:
                 raise UserError(_('The order delivery / pickup date is in the future. You cannot cancel it.'))
             if not draft_orders:
@@ -1244,6 +1203,8 @@ class PosOrder(models.Model):
 
         if draft_orders:
             draft_orders.write({'state': 'cancel'})
+            author_id = self.session_id._get_message_author().id
+            draft_orders._post_cancel_message(author_id=author_id)
             for config in draft_orders.mapped('config_id'):
                 config.notify_synchronisation(config.current_session_id.id, self.env.context.get('device_identifier', 0))
 
@@ -1254,13 +1215,19 @@ class PosOrder(models.Model):
     def action_pos_order_cancel(self):
         orders = self.browse(self.env.context.get('active_ids'))
         orders.write({'state': 'cancel'})
+        orders._post_cancel_message()
+        for config in orders.config_id:
+            config.notify_synchronisation(config.current_session_id.id, 0)
 
     def _get_open_order(self, order):
         return self.env["pos.order"].search([('uuid', '=', order.get('uuid'))], limit=1, order='id desc')
 
     @staticmethod
     def _get_order_log_representation(order):
-        return dict((k, order.get(k)) for k in ("name", "uuid"))
+        return {k: order.get(k) for k in ("name", "pos_reference", "uuid")}
+
+    def _should_log_order_data(self):
+        return self.env['ir.config_parameter'].sudo().get_bool('point_of_sale.log_order_data')
 
     @api.model
     def sync_from_ui(self, orders):
@@ -1281,7 +1248,8 @@ class PosOrder(models.Model):
 
         for order in orders:
             order_log_name = self._get_order_log_representation(order)
-            _logger.debug("PoS synchronisation #%d processing order %s order full data: %s", sync_token, order_log_name, pformat(order))
+            if self._should_log_order_data():
+                _logger.info("PoS synchronisation #%d processing order %s order full data:\n%s", sync_token, order_log_name, pformat(order))
 
             refunded_orders = self._get_refunded_orders(order)
             if len(refunded_orders) > 1:
@@ -1291,7 +1259,6 @@ class PosOrder(models.Model):
 
             existing_order = self._get_open_order(order)
             if existing_order and existing_order.state == 'draft':
-                existing_order._ensure_to_keep_last_preparation_change(order)
                 order_ids.append(self._process_order(order, existing_order))
                 _logger.info("PoS synchronisation #%d order %s updated pos.order #%d", sync_token, order_log_name, order_ids[-1])
             elif not existing_order:
@@ -1300,7 +1267,6 @@ class PosOrder(models.Model):
             else:
                 # In theory, this situation is unintended
                 # In practice it can happen when "Tip later" option is used
-                existing_order._ensure_to_keep_last_preparation_change(order)
                 # This will update the order if edited after payent from UI.
                 if existing_order.state == "paid" and not existing_order.nb_print:
                     self.process_saved_payments(order, existing_order)
@@ -1337,38 +1303,16 @@ class PosOrder(models.Model):
             'pos.session': [],
             'pos.payment': self.env['pos.payment']._load_pos_data_read(self.payment_ids, config) if config else [],
             'pos.order.line': self.env['pos.order.line']._load_pos_data_read(self.lines, config) if config else [],
-            'pos.pack.operation.lot': self.env['pos.pack.operation.lot']._load_pos_data_read(self.lines.pack_lot_ids, config) if config else [],
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_data_read(self.lines.custom_attribute_value_ids, config) if config else [],
             'account.move': self.env['account.move'].sudo()._load_pos_data_read(account_moves, config) if config else [],
+            'pos.prep.order': self.env['pos.prep.order']._load_pos_data_read(self.prep_order_ids, config) if config else [],
+            'pos.prep.line': self.env['pos.prep.line']._load_pos_data_read(self.prep_order_ids.prep_line_ids, config) if config else [],
         }
 
     @api.model
     def _get_refunded_orders(self, order):
         refunded_orderline_ids = [line[2]['refunded_orderline_id'] for line in order['lines'] if line[0] in [0, 1] and line[2].get('refunded_orderline_id')]
         return self.env['pos.order.line'].browse(refunded_orderline_ids).mapped('order_id')
-
-    def _should_create_picking_real_time(self):
-        return not self.session_id.update_stock_at_closing or self._force_create_picking_real_time()
-
-    def _force_create_picking_real_time(self):
-        return self.company_id.anglo_saxon_accounting and self.to_invoice
-
-    def _create_order_picking(self):
-        self.ensure_one()
-        if self.shipping_date:
-            self.sudo().lines._launch_stock_rule_from_pos_order_lines()
-        else:
-            if self._should_create_picking_real_time():
-                picking_type = self.config_id.picking_type_id
-                if self.partner_id.property_stock_customer:
-                    destination_id = self.partner_id.property_stock_customer.id
-                elif not picking_type or not picking_type.default_location_dest_id:
-                    destination_id = self.env['stock.warehouse']._get_partner_locations()[0].id
-                else:
-                    destination_id = picking_type.default_location_dest_id.id
-
-                pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(destination_id, self.lines, picking_type, self.partner_id)
-                pickings.write({'pos_session_id': self.session_id.id, 'pos_order_id': self.id, 'origin': self.name})
 
     def add_payment(self, data):
         """Create a new payment for the order"""
@@ -1427,12 +1371,10 @@ class PosOrder(models.Model):
             refund_order = order.copy(
                 order._prepare_refund_values(current_session)
             )
-            for line in order.lines.filtered(lambda l: l.refunded_qty < l.qty):
-                PosPackOperationLot = self.env['pos.pack.operation.lot']
-                for pack_lot in line.pack_lot_ids:
-                    PosPackOperationLot += pack_lot.copy()
-                refund_line = line.copy(line._prepare_refund_data(refund_order, PosPackOperationLot))
-                refund_line._onchange_amount_line_all()
+            for line in order.lines:
+                if line.refunded_qty < line.qty:
+                    refund_line = line.copy(line._prepare_refund_data(refund_order))
+                    refund_line._onchange_amount_line_all()
             refund_order._compute_prices()
             refund_orders |= refund_order
             refund_order.config_id.notify_synchronisation(current_session.id, 0)
@@ -1472,7 +1414,9 @@ class PosOrder(models.Model):
         mail_template_id = 'point_of_sale.email_template_pos_receipt'
         mail_template = self.env.ref(mail_template_id, raise_if_not_found=False)
         ticket_image = self.order_receipt_generate_image()
-        basic_image = self.order_receipt_generate_image(True)
+        basic_image = None
+        if self.config_id.basic_receipt:
+            basic_image = self.order_receipt_generate_image(True)
         if not mail_template:
             raise UserError(_("The mail template with xmlid %s has been deleted.", mail_template_id))
         mail_template.send_mail(
@@ -1540,10 +1484,17 @@ class PosOrder(models.Model):
         return orders.ids
 
     @api.model
-    def search_paid_order_ids(self, config_id, domain, limit, offset):
-        """Search for 'paid' orders that satisfy the given domain, limit and offset."""
+    def search_order_ids(self, config_id, domain, limit, offset, state_filter='paid'):
+        """Search for orders that satisfy the given domain, limit and offset.
+
+        state_filter: 'paid' for non-draft/non-cancelled orders, 'cancelled' for cancelled orders.
+        """
         pos_config = self.env['pos.config'].browse(config_id)
-        default_domain = Domain('state', '!=', 'draft') & Domain('state', '!=', 'cancel') & Domain('config_id', 'in', [config_id] + pos_config.trusted_config_ids.ids)
+        if state_filter == 'cancelled':
+            state_domain = Domain('state', '=', 'cancel')
+        else:
+            state_domain = Domain('state', '!=', 'draft') & Domain('state', '!=', 'cancel')
+        default_domain = state_domain & Domain('config_id', 'in', [config_id] + pos_config.trusted_config_ids.ids)
         real_domain = Domain(domain) & default_domain
         orders = self.search(real_domain, limit=limit, offset=offset, order='create_date desc')
         # We clean here the orders that does not have the same currency.
@@ -1557,7 +1508,7 @@ class PosOrder(models.Model):
         # orders that are not up-to-date.
         # The date of their last modification is either the last time one of its orderline has changed,
         # or the last time a refunded orderline related to it has changed.
-        orders_info = defaultdict(lambda: datetime.min)
+        orders_info = {order.id: order.write_date for order in orders}
         for orderline in orderlines:
             key_order = orderline.order_id.id if orderline.order_id in orders \
                             else orderline.refunded_orderline_id.order_id.id
@@ -1566,32 +1517,33 @@ class PosOrder(models.Model):
         totalCount = self.search_count(real_domain)
         return {'ordersInfo': list(orders_info.items())[::-1], 'totalCount': totalCount}
 
+    def _should_send_to_preparation(self):
+        """
+        Determine whether the order should be sent to preparation based
+        on its payment status and the config's payment method configuration.
+        """
+        return not self.config_id.has_valid_self_payment_method() or self.state == "paid"
+
     def _send_order(self):
-        # This function is made to be overriden by pos_self_order_preparation_display
-        pass
+        self.ensure_one()
+        if self._should_send_to_preparation():
+            self.env['pos.prep.order'].sudo().update_last_order_change(self.sudo())  # Will send to preparation display if installed.
 
     def _prepare_pos_log(self, body):
         return body
 
-
-class PosPackOperationLot(models.Model):
-    _name = 'pos.pack.operation.lot'
-    _description = "Specify product lot/serial number in pos order line"
-    _rec_name = "lot_name"
-    _inherit = ['pos.load.mixin']
-
-    pos_order_line_id = fields.Many2one('pos.order.line', index='btree_not_null')
-    order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id", readonly=False)
-    lot_name = fields.Char('Lot Name')
-    product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)
+    def _set_product_qty_available(self):
+        if not self._should_update_quantity_on_product():
+            return
+        for line in self.lines:
+            if line.product_id.is_storable:
+                line.product_id.sudo().qty_available -= line.qty
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']])]
-
-    @api.model
-    def _load_pos_data_fields(self, config):
-        return ['lot_name', 'pos_order_line_id', 'write_date']
+    def _should_update_quantity_on_product(self):
+        """ Overriden in pos_stock, as the quantity update is handled through the stock module.
+        """
+        return True
 
 
 class AccountCashRounding(models.Model):

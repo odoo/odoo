@@ -4,6 +4,8 @@ from odoo import _, models, Command
 from odoo.tools import html2plaintext
 from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.addons.account.tools import dict_to_xml
+from odoo.tools.partner_identifiers import get_tin_metadata_of_country
+
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
 from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
@@ -47,11 +49,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         # 3. Run constraints
         vals['document_node'] = document_node
+        nsmap = document_node['_nsmap'] = self._get_document_nsmap(vals)
         constraints = self._flatten_multilevel_constraints(self._export_invoice_constraints(invoice, vals))
         errors = [constraint for constraint in constraints.values() if constraint]
-
         template = self._get_document_template(vals)
-        nsmap = self._get_document_nsmap(vals)
 
         # 4. Render the XML
         xml_content = dict_to_xml(document_node, nsmap=nsmap, template=template)
@@ -161,7 +162,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         vals.update({
             'document_type': 'debit_note' if 'debit_origin_id' in self.env['account.move']._fields and invoice.debit_origin_id
-                else 'credit_note' if invoice.move_type == 'out_refund'
+                else 'credit_note' if invoice.move_type in ('out_refund', 'in_refund')
                 else 'invoice',
 
             'process_type': 'billing',
@@ -489,15 +490,27 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             self.add_invoice_line_optional_nodes(line_node, vals, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS)
 
     def add_invoice_line_optional_nodes(self, line_node, vals, optional_line_fields):
-        move_line = self.env['account.move.line'].browse(vals['base_line']['id'])
-        move_line_optional_fields = {key: move_line[key] for key in move_line._fields if key.startswith("x_studio_peppol") and move_line[key] and key in optional_line_fields}
+        base_line = vals['base_line']
+        record = base_line['record']
+        if not isinstance(record, models.Model) or record._name != 'account.move.line':
+            return
+
+        move_line_optional_fields = {
+            key: record[key]
+            for key in record._fields
+            if (
+                key.startswith("x_studio_peppol")
+                and record[key]
+                and key in optional_line_fields
+            )
+        }
         for field in move_line_optional_fields:
             node = line_node
             for tag in optional_line_fields[field]["path"]:
                 if tag not in node:
                     node[tag] = {}
                 node = node[tag]
-            node.update(optional_line_fields[field]["attrs"](move_line))
+            node.update(optional_line_fields[field]["attrs"](record))
 
     # -------------------------------------------------------------------------
     # EXPORT: Generic templates
@@ -971,7 +984,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         line_node.update({
             quantity_tag: {
                 '_text': base_line['quantity'],
-                'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
+                'unitCode': base_line['product_uom_id']._get_unece_code(),
             },
             'cbc:LineExtensionAmount': {
                 '_text': self.format_float(vals[f'total_excluded{currency_suffix}'], vals['currency_dp']),
@@ -1039,7 +1052,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             tax = tax_data['tax']
             allowance_charge_nodes.append({
                 'cbc:ChargeIndicator': {'_text': 'true' if tax_data[f'tax_amount{currency_suffix}'] > 0 else 'false'},
-                'cbc:AllowanceChargeReasonCode': {'_text': 'AEO'},
+                'cbc:AllowanceChargeReasonCode': {'_text': 'AEO' if tax_data[f'tax_amount{currency_suffix}'] > 0 else '100'},
                 'cbc:AllowanceChargeReason': {'_text': tax.name},
                 'cbc:Amount': {
                     '_text': self.format_float(
@@ -1102,12 +1115,19 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _import_retrieve_partner_vals(self, tree, role):
         """ Returns a dict of values that will be used to retrieve the partner """
+        vat = self._find_value(f'.//cac:{role}Party//cbc:CompanyID[string-length(text()) > 5]', tree)
+        country_code = self._find_value(f'.//cac:{role}Party//cac:PostalAddress/cac:Country/cbc:IdentificationCode', tree)
+        if not vat and country_code and (vat_scheme := get_tin_metadata_of_country(country_code).get('scheme')):
+            vat = self._find_value(f".//cac:{role}Party//cac:PartyIdentification/cbc:ID[@schemeID='{vat_scheme}']", tree)
+
         return {
-            'vat': self._find_value(f'.//cac:{role}Party//cbc:CompanyID[string-length(text()) > 5]', tree),
-            'phone': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:Telephone', tree),
-            'email': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:ElectronicMail', tree),
-            'name': self._find_value(f'.//cac:{role}Party//cbc:RegistrationName', tree) or
-                    self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:Name', tree),
+            'vat': vat,
+            'phone': self._find_value(f'.//cac:{role}Party//cac:Contact/cbc:Telephone', tree),
+            'email': self._find_value(f'.//cac:{role}Party//cac:Contact/cbc:ElectronicMail', tree),
+            'name': self._find_value(f'.//cac:{role}Party//cac:PartyTaxScheme/cbc:RegistrationName', tree) or
+                    self._find_value(f'.//cac:{role}Party//cac:PartyLegalEntity/cbc:RegistrationName', tree) or
+                    self._find_value(f'.//cac:{role}Party//cac:PartyName/cbc:Name', tree) or
+                    self._find_value(f'.//cac:{role}Party//cac:Contact/cbc:Name', tree),
             'postal_address': self._get_postal_address(tree, role),
         }
 
@@ -1141,7 +1161,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         # ==== ref, invoice_origin, narration, payment_reference ====
         ref = tree.findtext('./{*}ID')
-        if ref and invoice.is_sale_document(include_receipts=True) and invoice.quick_edit_mode:
+        if ref and invoice.is_sale_document(include_receipts=True) and invoice.document_sequence_editable:
             invoice_values['name'] = ref
         elif ref:
             invoice_values['ref'] = ref
@@ -1260,6 +1280,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             if percentage is None:
                 percentage = elem.find('.//{*}Percent')
             amount = elem.find('.//{*}TaxAmount')
+            # When multi-currency invoices have TaxSubtotal in multiple TaxTotal nodes (e.g. JP PINT),
+            # only correct using the document currency's TaxTotal to avoid overwriting with the wrong amount.
+            if amount is not None and amount.get('currencyID') != currency.name:
+                continue
             if (percentage is not None and percentage.text is not None) and (amount is not None and amount.text is not None):
                 tax_percent = float(percentage.text)
                 # Compare the result with our tax total on the invoice, and apply correction if needed.

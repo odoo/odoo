@@ -12,7 +12,7 @@ export class Attachment extends FileModelMixin(Record) {
     static new() {
         /** @type {import("models").Attachment} */
         const attachment = super.new(...arguments);
-        Record.onChange(attachment, ["extension", "name"], () => {
+        attachment.registerRecordOnChange(attachment, ["extension", "name"], () => {
             if (!attachment.extension && attachment.name) {
                 attachment.extension = attachment.name.split(".").pop();
             }
@@ -34,34 +34,76 @@ export class Attachment extends FileModelMixin(Record) {
     has_thumbnail = fields.Attr(undefined, {
         onUpdate() {
             if (
-                this.isPdf &&
+                (this.isPdf || this.isVideo) &&
                 !this.has_thumbnail &&
                 (this.ownership_token ||
                     // If related to a record, must have write access to it
                     ((!this.thread || this.thread.hasWriteAccess) &&
                         this.store.self_user?.share === false))
             ) {
-                this.setPdfThumbnail();
+                this.setThumbnail();
             }
         },
     });
-
     get thumbnailUrl() {
-        return imageUrl(
-            "ir.attachment",
-            this.id,
-            "thumbnail",
-            assignDefined(
-                {},
-                {
-                    access_token: this.thumbnail_access_token,
-                    crop: "top",
-                    height: 110,
-                    unique: this.checksum,
-                    width: 180,
-                }
-            )
+        const params = assignDefined(
+            {},
+            {
+                access_token: this.thumbnail_access_token,
+                crop: "top",
+                unique: this.checksum,
+            }
         );
+        // We don't force the size for video thumbnail to not alter the aspect
+        // ratio
+        if (this.isPdf) {
+            params.width = 180;
+            params.height = 110;
+        }
+        return imageUrl("ir.attachment", this.id, "thumbnail", params);
+    }
+    generateVideoThumbnail() {
+        return new Promise((resolve) => {
+            const video = document.createElement("video");
+            video.preload = "metadata";
+            video.src = this.defaultSource;
+            video.addEventListener(
+                "loadedmetadata",
+                () => {
+                    const thumbnailCanvas = document.createElement("canvas");
+                    const ratio = Math.min(320 / video.videoWidth, 196 / video.videoHeight);
+                    const width = video.videoWidth * ratio;
+                    const height = video.videoHeight * ratio;
+                    thumbnailCanvas.width = width;
+                    thumbnailCanvas.height = height;
+                    video.currentTime = video.duration / 2;
+                    video.addEventListener(
+                        "seeked",
+                        () => {
+                            thumbnailCanvas
+                                .getContext("2d")
+                                .drawImage(
+                                    video,
+                                    0,
+                                    0,
+                                    video.videoWidth,
+                                    video.videoHeight,
+                                    0,
+                                    0,
+                                    width,
+                                    height
+                                );
+                            const thumbnail = thumbnailCanvas
+                                .toDataURL("image/jpeg")
+                                .replace("data:image/jpeg;base64,", "");
+                            resolve(thumbnail);
+                        },
+                        { once: true }
+                    );
+                },
+                { once: true }
+            );
+        });
     }
 
     get gifPaused() {
@@ -112,14 +154,21 @@ export class Attachment extends FileModelMixin(Record) {
         return this.voice ? _t("Voice Message") : this.name || "";
     }
 
-    async setPdfThumbnail() {
-        const { isPdfValid, thumbnail } = await generatePdfThumbnail(
-            url(
-                `/mail/attachment/pdf_first_page/${this.id}`,
-                assignDefined({}, { access_token: this.ownership_token })
-            )
-        );
-        if (isPdfValid) {
+    async setThumbnail() {
+        let thumbnail;
+        if (this.isPdf) {
+            const pdfThumbnail = await generatePdfThumbnail(
+                url(
+                    `/mail/attachment/pdf_first_page/${this.id}`,
+                    assignDefined({}, { access_token: this.ownership_token })
+                )
+            );
+            thumbnail = pdfThumbnail.thumbnail;
+        }
+        if (this.isVideo) {
+            thumbnail = await this.generateVideoThumbnail();
+        }
+        if (thumbnail) {
             rpc(
                 `/mail/attachment/update_thumbnail`,
                 assignDefined(

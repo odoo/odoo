@@ -4,7 +4,8 @@ import { unique, zip } from "@web/core/utils/arrays";
 export const ERROR_INACCESSIBLE_OR_MISSING = Symbol("INACCESSIBLE OR MISSING RECORD ID");
 
 function isId(val) {
-    return Number.isInteger(val) && val >= 1;
+    // normally, ids are positive, but negative ids can happen in rare cases, such as merging records in migration
+    return Number.isInteger(val) && (val !== 0);
 }
 
 /**

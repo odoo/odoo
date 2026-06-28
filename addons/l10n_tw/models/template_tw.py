@@ -10,9 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_tw_template_data(self):
         return {
             'code_digits': '4',
-            'property_account_receivable_id': 'l10n_tw_account_1156',
-            'property_account_payable_id': 'l10n_tw_account_2171',
-            'property_stock_account_production_cost_id': 'l10n_tw_account_5101',
         }
 
     @template('tw', 'res.company')
@@ -39,10 +36,13 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'l10n_tw_tax_purchase_5_vat_pc_uid',
                 'expense_account_id': 'l10n_tw_account_5601',
                 'income_account_id': 'l10n_tw_account_4111',
+                'receivable_account_id': 'l10n_tw_account_1156',
+                'payable_account_id': 'l10n_tw_account_2171',
                 'account_production_wip_account_id': 'l10n_tw_account_1314',
                 'account_production_wip_overhead_account_id': 'l10n_tw_account_5601',
                 'tax_calculation_rounding_method': 'round_globally',
                 'account_stock_valuation_id': 'l10n_tw_account_1315',
+                'stock_account_production_cost_id': 'l10n_tw_account_5101',
             },
         }
 

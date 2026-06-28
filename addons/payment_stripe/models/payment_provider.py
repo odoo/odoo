@@ -4,7 +4,7 @@ import json
 
 from werkzeug.urls import url_encode, url_parse
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.urls import urljoin as url_join
 
@@ -55,26 +55,26 @@ class PaymentProvider(models.Model):
 
     # === CONSTRAINT METHODS === #
 
-    @api.constrains("state", "stripe_publishable_key", "stripe_secret_key")
-    def _check_state_of_connected_account_is_never_test(self):
-        """Check that the provider of a connected account can never been set to 'test'.
+    @api.constrains("is_live", "stripe_publishable_key", "stripe_secret_key")
+    def _check_connected_account_is_live(self):
+        """Check that the provider of a connected account is always in live mode.
 
         This constraint is defined in the present module to allow the export of the translation
         string of the `ValidationError` should it be raised by modules that would fully implement
         Stripe Connect.
 
-        Additionally, the field `state` is used as a trigger for this constraint to allow those
+        Additionally, the field `is_live` is used as a trigger for this constraint to allow those
         modules to indirectly trigger it when writing on custom fields. Indeed, by always writing on
-        `state` together with writing on those custom fields, the constraint would be triggered.
+        `is_live` together with writing on those custom fields, the constraint would be triggered.
 
         :return: None
-        :raise ValidationError: If the provider of a connected account is set in state 'test'.
+        :raise ValidationError: If the provider of a connected account is not in live mode.
         """
         for provider in self:
-            if provider.state == "test" and provider._stripe_has_connected_account():
+            if not provider.is_live and provider._stripe_has_connected_account():
                 raise ValidationError(
-                    _(
-                        "You cannot set the provider to Test Mode while it is linked with your"
+                    provider.env._(
+                        "You cannot set the provider to test mode while it is linked with your"
                         " Stripe account."
                     )
                 )
@@ -91,24 +91,24 @@ class PaymentProvider(models.Model):
         self.ensure_one()
         return False
 
-    @api.constrains("state")
-    def _check_onboarding_of_enabled_provider_is_completed(self):
-        """Check that the provider cannot be set to 'enabled' if the onboarding is ongoing.
+    @api.constrains("is_live")
+    def _check_onboarding_of_live_provider_is_completed(self):
+        """Check that the provider cannot be set to live mode if the onboarding is ongoing.
 
         This constraint is defined in the present module to allow the export of the translation
         string of the `ValidationError` should it be raised by modules that would fully implement
         Stripe Connect.
 
         :return: None
-        :raise ValidationError: If the provider of a connected account is set in state 'enabled'
-                                while the onboarding is not finished.
+        :raise ValidationError: If the provider of a connected account is set in live mode while the
+                                onboarding is not finished.
         """
         for provider in self:
-            if provider.state == "enabled" and provider._stripe_onboarding_is_ongoing():
+            if provider.is_live and provider._stripe_onboarding_is_ongoing():
                 raise ValidationError(
-                    _(
-                        "You cannot set the provider state to Enabled until your onboarding to"
-                        " Stripe is completed."
+                    provider.env._(
+                        "You cannot set the provider to live mode until your onboarding to Stripe"
+                        " is completed."
                     )
                 )
 
@@ -139,7 +139,7 @@ class PaymentProvider(models.Model):
         """Override of `payment` to create a Stripe Connect account and redirect the user to the
         next onboarding step.
 
-        If the provider is already enabled, close the current window. Otherwise, generate a Stripe
+        If the provider is already live, close the current window. Otherwise, generate a Stripe
         Connect onboarding link and redirect the user to it. If provided, the menu id is included in
         the URL the user is redirected to when coming back on Odoo after the onboarding. If the link
         generation failed, redirect the user to the provider form.
@@ -162,15 +162,15 @@ class PaymentProvider(models.Model):
             not in const.SUPPORTED_COUNTRIES
         ):
             raise RedirectWarning(
-                _(
+                self.env._(
                     "Stripe Connect is not available in your country, please use another payment"
                     " provider."
                 ),
                 self.env.ref("payment.action_payment_provider").id,
-                _("Other Payment Providers"),
+                self.env._("Other Payment Providers"),
             )
 
-        if self.state == "enabled":
+        if self.is_live:
             action = {"type": "ir.actions.act_window_close"}
         else:
             # Account creation
@@ -206,10 +206,12 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         if self.stripe_webhook_secret:
-            message = _("Your Stripe Webhook is already set up.")
+            message = self.env._("Your Stripe Webhook is already set up.")
             notification_type = "warning"
         elif not self.stripe_secret_key:
-            message = _("You cannot create a Stripe Webhook if your Stripe Secret Key is not set.")
+            message = self.env._(
+                "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
+            )
             notification_type = "danger"
         else:
             webhook = self._send_api_request(
@@ -222,7 +224,7 @@ class PaymentProvider(models.Model):
                 },
             )
             self.stripe_webhook_secret = webhook.get("secret")
-            message = _("You Stripe Webhook was successfully set up!")
+            message = self.env._("You Stripe Webhook was successfully set up!")
             notification_type = "info"
 
         return {
@@ -257,13 +259,13 @@ class PaymentProvider(models.Model):
         if not response_content["livemode"]:
             # If test keys are used to send the request, Stripe will respond with an HTTP 200 but
             # will not register the domain. Ask the user to use live credentials.
-            raise UserError(_("Please use live credentials to enable Apple Pay."))
+            raise UserError(self.env._("Please use live credentials to enable Apple Pay."))
 
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
-                "message": _("Your web domain was successfully verified."),
+                "message": self.env._("Your web domain was successfully verified."),
                 "type": "success",
             },
         }
@@ -373,10 +375,14 @@ class PaymentProvider(models.Model):
         :return: The connected account
         :rtype: dict
         """
-        proxy_payload = self._prepare_json_rpc_payload(
-            self._stripe_prepare_connect_account_payload()
+        payload = self._stripe_prepare_connect_account_payload()
+        proxy_payload = {
+            "payload": payload,
+            "proxy_data": self._stripe_prepare_proxy_data(stripe_payload=payload),
+        }
+        return self._send_api_request(
+            "POST", "2/accounts", json=proxy_payload, is_proxy_request=True
         )
-        return self._send_api_request("POST", "accounts", json=proxy_payload, is_proxy_request=True)
 
     def _stripe_prepare_connect_account_payload(self):
         """Prepare the payload for the creation of a connected account in Stripe format.
@@ -432,22 +438,15 @@ class PaymentProvider(models.Model):
             "refresh_url": f"{url_join(base_url, refresh_url)}?{url_encode(refresh_params)}",
             "type": "account_onboarding",
         }
-        proxy_payload = self._prepare_json_rpc_payload(payload)
+        proxy_payload = {
+            "payload": payload,
+            "proxy_data": self._stripe_prepare_proxy_data(stripe_payload=payload),
+        }
 
         account_link = self._send_api_request(
-            "POST", "account_links", json=proxy_payload, is_proxy_request=True
+            "POST", "2/account_links", json=proxy_payload, is_proxy_request=True
         )
         return account_link["url"]
-
-    def _prepare_json_rpc_payload(self, data):
-        res = super()._prepare_json_rpc_payload(data)
-        if self.code != "stripe":
-            return res
-        res["params"] = {
-            "payload": data,  # Stripe data.
-            "proxy_data": self._stripe_prepare_proxy_data(stripe_payload=data),
-        }
-        return res
 
     def _stripe_prepare_proxy_data(self, stripe_payload=None):  # noqa: ARG002
         """Prepare the contextual data passed to the proxy when making a request.
@@ -465,13 +464,11 @@ class PaymentProvider(models.Model):
 
     # === REQUEST HELPERS === #
 
-    def _build_request_url(self, endpoint, *, is_proxy_request=False, version=1, **kwargs):
+    def _build_request_url(self, endpoint, *, is_proxy_request=False, **kwargs):
         if self.code != "stripe":
-            return super()._build_request_url(
-                endpoint, is_proxy_request=is_proxy_request, version=version, **kwargs
-            )
+            return super()._build_request_url(endpoint, is_proxy_request=is_proxy_request, **kwargs)
         if is_proxy_request:
-            return url_join(const.PROXY_URL, f"{version}/{endpoint}")
+            return url_join(const.PROXY_URL, endpoint)
         return url_join("https://api.stripe.com/v1/", endpoint)
 
     def _build_request_headers(
@@ -502,13 +499,6 @@ class PaymentProvider(models.Model):
         if self.code != "stripe":
             return super()._parse_response_error(response)
         return response.json().get("error", {}).get("message", "")
-
-    def _parse_response_content(self, response, *, is_proxy_request=False, **kwargs):
-        if self.code != "stripe" or not is_proxy_request:
-            return super()._parse_response_content(
-                response, is_proxy_request=is_proxy_request, **kwargs
-            )
-        return self._parse_proxy_response(response)
 
     def _get_stripe_extra_request_headers(self):
         """Return the extra headers for the Stripe API request.

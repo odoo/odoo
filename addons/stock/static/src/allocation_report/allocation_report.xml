@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="stock.AllocationReport">
+        <div class="o_action">
+            <div class="o_allocation_report container-fluid justify-content-between">
+                <div class="o_allocation_report_header my-4">
+                    <h1>
+                        <t t-if="this.doc">
+                            <t t-set="partner" t-value="this.doc.source?.partner || this.doc.partner"/>
+                            <div>
+                                <a href="#" view-type="form" t-out="this.doc.name"
+                                    t-on-click.prevent="() => this.goBack(this.doc)"/>
+                                <t t-if="this.doc.source">
+                                    (<a href="#" view-type="form" t-out="this.doc.source.name"
+                                        t-on-click.prevent="() => this.openRecord(this.doc.source)"/>
+                                    <t t-if="partner">:
+                                        <a href="#" view-type="form" t-out="partner.display_name"
+                                           t-on-click.prevent="() => this.openRecord(partner)"/>
+                                    </t>)
+                                </t>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div>
+                                <a href="#" view-type="form"
+                                    t-on-click.prevent="() => this.goBack()">Allocation Report</a>
+                            </div>
+                            <span t-out="this.data.reason"/>
+                        </t>
+                    </h1>
+                    <div t-if="this.hasContent" class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none text-nowrap">
+                        <button t-on-click="() => this.onClickPrint()"
+                                type="button" class="btn btn-primary"
+                                title="Print">
+                            Print
+                        </button>
+                        <button t-on-click="() => this.onClickAssignAll()"
+                                class="btn btn-secondary"
+                                t-att-disabled="!this.canAssignAll()">
+                            Assign All
+                        </button>
+                        <button t-if="this.canPrintLabels()"
+                                t-on-click="() => this.onClickPrintLabels()"
+                                class="btn btn-secondary">
+                            Print Labels
+                        </button>
+                    </div>
+                </div>
+                <t t-if="this.hasContent">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Available</th>
+                                <th class="ps-3" style="min-width: 100px;">Quantity</th>
+                                <th class="text-center">Reserved</th>
+                                <th><i class="fa fa-star opacity-0 me-2"/>For</th>
+                                <th>Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-view">
+                            <t t-foreach="this.productLines" t-as="line" t-key="line.id">
+                                <ProductLine t-props="line"/>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+                <p t-else="">
+                    No allocation need found.
+                </p>
+            </div>
+        </div>
+    </t>
+</templates>

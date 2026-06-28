@@ -1,6 +1,12 @@
-import { App, blockDom, Component, markup } from "@odoo/owl";
-import { getTemplate } from "@web/core/templates";
+import { blockDom, markup, TemplateSet } from "@odoo/owl";
 import { appTranslateFn } from "@web/core/l10n/translation";
+import { getTemplate } from "@web/core/templates";
+
+const templateSet = new TemplateSet({
+    getTemplate,
+    translatableAttributes: ["data-tooltip"],
+    translateFn: appTranslateFn,
+});
 
 export function renderToElement(template, context = {}) {
     const el = render(template, context).firstElementChild;
@@ -33,24 +39,9 @@ export function renderToFragment(template, context = {}) {
 export function renderToString(template, context = {}) {
     return render(template, context).innerHTML;
 }
-let app;
-Object.defineProperty(renderToString, "app", {
-    get: () => {
-        if (!app) {
-            app = new App(Component, {
-                name: "renderToString",
-                getTemplate,
-                translatableAttributes: ["data-tooltip"],
-                translateFn: appTranslateFn,
-            });
-        }
-        return app;
-    },
-});
 
 function render(template, context = {}) {
-    const app = renderToString.app;
-    const templateFn = app.getTemplate(template);
+    const templateFn = templateSet.getTemplate(template);
     const ctx = Object.create(context);
     ctx.this = context;
     const bdom = templateFn(ctx, {});

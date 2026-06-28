@@ -1,40 +1,45 @@
-import { onWillRender, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { onWillRender, useRef } from "@web/owl2/utils";
+import { Component, onMounted, onWillUnmount, props, proxy, t, useApp } from "@odoo/owl";
 import { loadBundle, loadCSS } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { localization } from "@web/core/l10n/localization";
+import { _t } from "@web/core/l10n/translation";
 import { getFirstAndLastTabableElements } from "@web/core/ui/ui_service";
 import { cookie } from "@web/core/browser/cookie";
-import { useChildRef } from "@web/core/utils/hooks";
+import { useAutofocus, useChildRef, useService } from "@web/core/utils/hooks";
 import { SnippetViewer } from "./snippet_viewer";
 
 /**
- * @typedef {((arg: { iframe: HTMLIFrameElement }) => void)[]} snippet_preview_dialog_stylesheets_processors
+ * @typedef {((arg: { iframe: HTMLIFrameElement }) => { iframe: HTMLIFrameElement })[]} snippet_preview_dialog_stylesheets_processors
  * @typedef {string[]} snippet_preview_dialog_bundles
  */
 
 export class AddSnippetDialog extends Component {
     static template = "html_builder.AddSnippetDialog";
     static components = { Dialog };
-    static props = {
-        selectedSnippet: { type: Object },
-        selectSnippet: { type: Function },
-        snippetModel: { type: Object },
-        close: { type: Function },
-        installSnippetModule: { type: Function },
-        editor: { type: Object },
-    };
+    props = props({
+        title: t.string().optional(_t("Insert a block")),
+        selectedSnippet: t.object(),
+        selectSnippet: t.function(),
+        snippetModel: t.object(),
+        close: t.function(),
+        installSnippetModule: t.function(),
+        editor: t.object(),
+    });
 
     setup() {
+        useAutofocus();
+        this.hotkeyService = useService("hotkey");
         this.iframeRef = useRef("iframe");
         this.modalRef = useChildRef();
-        this.state = useState({
+        this.state = proxy({
             search: "",
             groupSelected: this.props.selectedSnippet.groupName,
             showIframe: false,
             hasNoSearchResults: false,
+            isMobilePreviewMode: false,
         });
         this.snippetViewerProps = {
             state: this.state,
@@ -52,6 +57,7 @@ export class AddSnippetDialog extends Component {
                 : "ltr",
         };
 
+        const app = useApp();
         let root;
         onMounted(async () => {
             const isFirefox = isBrowserFirefox();
@@ -76,7 +82,10 @@ export class AddSnippetDialog extends Component {
             iframeDocument.body.tabIndex = "-1";
             iframeDocument.addEventListener("keydown", this.onIframeDocumentKeydown.bind(this));
 
-            root = this.__owl__.app.createRoot(SnippetViewer, {
+            this.hotkeyService.registerIframe(this.iframeRef.el);
+
+            root = app.createRoot(SnippetViewer, {
+                env: Object.create(this.env),
                 props: this.snippetViewerProps,
             });
             root.mount(iframeDocument.body);
@@ -201,5 +210,14 @@ export class AddSnippetDialog extends Component {
             ev.preventDefault();
             ev.stopPropagation();
         }
+    }
+
+    toggleMobilePreview() {
+        this.state.isMobilePreviewMode = !this.state.isMobilePreviewMode;
+        // Hack to apply the new styles immediately, so that the content of the
+        // iframe (SnippetViewer) properly computes the matrix navigation.
+        // Ideally, it would be handled by OWL onPatched, but it doesn't work
+        // because both components are within different windows.
+        this.iframeRef.el.classList.toggle("o_is_mobile_preview");
     }
 }

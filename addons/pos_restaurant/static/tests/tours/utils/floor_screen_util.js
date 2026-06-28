@@ -2,8 +2,11 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
-export function table({ name, withClass = "", withoutClass, run = () => {}, numOfSeats }) {
+export function table({ name, withClass = "", withoutClass, run = () => {}, waitForSync = true }) {
     let trigger = `.o_fp_canvas .o_fp_table${withClass}`;
+    if (waitForSync) {
+        trigger += `:not(.syncing)`;
+    }
     if (withoutClass) {
         trigger += `:not(${withoutClass})`;
     }
@@ -16,7 +19,18 @@ export function table({ name, withClass = "", withoutClass, run = () => {}, numO
         run: typeof run === "string" ? run : (helpers) => run(helpers, trigger),
     };
 }
-export const clickTable = (name) => table({ name, run: "click" });
+export const clickTable = (name, badge) => [
+    table({ name, run: "click" }),
+    {
+        // Should find better way to check we are on the good table
+        trigger: `body:has(.pos-leftheader .badge:contains(${badge || name}))`,
+        async run() {
+            // Must wait a delay before to click on a product
+            // to avoid undeterministic behavior
+            await new Promise((r) => setTimeout(r, 500));
+        },
+    },
+];
 export const hasTable = (name) => table({ name });
 export const selectedTableIs = (name) => table({ name, withClass: ".selected" });
 export const ctrlClickTable = (name) =>
@@ -70,14 +84,6 @@ export function clickFloor(name) {
             content: `click '${name}' floor`,
             trigger: `.floor-selector .button-floor:contains("${name}")`,
             run: "click",
-        },
-    ];
-}
-export function hasFloor(name) {
-    return [
-        {
-            content: `has '${name}' floor`,
-            trigger: `.floor-selector .button-floor:contains("${name}")`,
         },
     ];
 }
@@ -159,6 +165,9 @@ export function goTo(name) {
     return [
         ...clickTableSelectorButton(),
         ...Numpad.enterValue(name),
+        {
+            trigger: `.input-value:contains(${name})`,
+        },
         {
             trigger: ".floor-screen .jump-button",
             run: "click",
@@ -276,8 +285,21 @@ export function isChildTable(child) {
         trigger: table({ name: child }).trigger + ` .opacity-50`,
     };
 }
-export function clickNewOrder() {
-    return { trigger: ".new-order", run: "click" };
+export function clickNewOrder(presetSelection = false) {
+    const steps = [
+        {
+            trigger: ".new-order",
+            run: "click",
+        },
+    ];
+    if (presetSelection) {
+        steps.push({
+            content: `click preset 'Eat in' from preset modal`,
+            trigger: `.modal-body button:contains("Eat in")`,
+            run: "click",
+        });
+    }
+    return steps;
 }
 
 export function clickEditPlan() {
@@ -285,7 +307,7 @@ export function clickEditPlan() {
 }
 
 export function addFloor(floorName) {
-    return [
+    const steps = [
         {
             trigger: ".o_fp_edit_toolbar .toolbar-floor-selector",
             run: "click",
@@ -294,13 +316,18 @@ export function addFloor(floorName) {
             trigger: ".toolbar-floor-selector-item:contains('Add Floor')",
             run: "click",
         },
-        {
-            trigger: ".modal-body textarea",
-            run: `edit ${floorName}`,
-        },
-        {
-            trigger: ".modal-footer button.btn-primary",
-            run: "click",
-        },
     ];
+    if (floorName) {
+        steps.push(
+            {
+                trigger: ".modal-body textarea",
+                run: `edit ${floorName}`,
+            },
+            {
+                trigger: ".modal-footer button.btn-primary",
+                run: "click",
+            }
+        );
+    }
+    return steps;
 }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2025-09-16 21:14+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
@@ -50,6 +50,21 @@ msgstr "Aktivno"
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_action__archive
 msgid "Archive"
 msgstr "Arhiv"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Archive Suggestion"
+msgstr ""
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Archive Suggestions"
+msgstr ""
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Archived"
+msgstr ""
 
 #. module: data_recycle
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_mode__automatic
@@ -121,16 +136,6 @@ msgstr "Delta"
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_delta_unit
 msgid "Delta Unit"
 msgstr "Enota Delta"
-
-#. module: data_recycle
-#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
-msgid "Discard"
-msgstr "Opusti"
-
-#. module: data_recycle
-#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
-msgid "Discarded"
-msgstr "Zavrženo"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__display_name
@@ -305,6 +310,12 @@ msgid "Recyle Records Rules"
 msgstr "Pravila recikliranja zapisov"
 
 #. module: data_recycle
+#. odoo-javascript
+#: code:addons/data_recycle/static/src/cog_menu/data_refresh_cog_menu.xml:0
+msgid "Refresh"
+msgstr ""
+
+#. module: data_recycle
 #: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules
 msgid "Rules"
 msgstr "Pravila"
@@ -329,13 +340,23 @@ msgstr "Pogostost obveščanja mora biti večja od 0"
 #: code:addons/data_recycle/models/data_recycle_model.py:0
 msgid "This model doesn't manage archived records. Only deletion is possible."
 msgstr ""
-"This model doesn't manage archived records. Only deletion is possible."
-"Izberite model za konfiguracijo dejanj recikliranja"
+"This model doesn't manage archived records. Only deletion is "
+"possible.Izberite model za konfiguracijo dejanj recikliranja"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_id
 msgid "Time Field"
 msgstr "Časovno polje"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Unarchive Suggestion"
+msgstr ""
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Unarchive Suggestions"
+msgstr ""
 
 #. module: data_recycle
 #. odoo-python
@@ -344,14 +365,6 @@ msgid "Undefined Name"
 msgstr "Nedoločeno ime"
 
 #. module: data_recycle
-#. odoo-javascript
-#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
-msgid "Unselect"
-msgstr "Prekliči izbor"
-
-#. module: data_recycle
-#. odoo-javascript
-#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
 msgid "Validate"
 msgstr "Potrditev"
@@ -381,3 +394,9 @@ msgstr "tukaj"
 #: model_terms:ir.ui.view,arch_db:data_recycle.notification
 msgid "records to clean with the '"
 msgstr "zapise za čiščenje z '"
+
+#~ msgid "Discard"
+#~ msgstr "Opusti"
+
+#~ msgid "Discarded"
+#~ msgstr "Zavrženo"

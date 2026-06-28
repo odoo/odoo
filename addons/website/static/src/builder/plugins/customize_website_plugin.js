@@ -42,7 +42,7 @@ export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
-    static dependencies = ["builderActions", "history", "savePlugin", "edit_interaction"];
+    static dependencies = ["builderActions", "domObserver", "savePlugin", "edit_interaction", "websiteBridge"];
     static shared = [
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
@@ -65,6 +65,7 @@ export class CustomizeWebsitePlugin extends Plugin {
     resources = {
         builder_actions: {
             CustomizeWebsiteVariableAction,
+            CustomizeWebsiteSubVariablesAction,
             CustomizeWebsiteColorAction,
             SwitchThemeAction,
             AddLanguageAction,
@@ -138,6 +139,10 @@ export class CustomizeWebsitePlugin extends Plugin {
         let tempValue = finalValue;
         while (tempValue) {
             finalValue = tempValue;
+            if (tempValue !== "" && Number.isFinite(Number(tempValue))) {
+                // the CSS variable value is a number and not a variable name.
+                break;
+            }
             tempValue = getCSSVariableValue(tempValue.replaceAll("'", ""), style);
             if (tempValue === finalValue) {
                 // the CSS variable value is identical to its name.
@@ -334,7 +339,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                     .finally(() => this.services.ui.unblock());
             };
             await blockedApply(value);
-            this.dependencies.history.addCustomMutation({
+            this.dependencies.domObserver.stageCustomMutation({
                 apply: () => blockedApply(value),
                 revert: () => blockedApply(oldValue),
             });
@@ -348,7 +353,8 @@ export class CustomizeWebsitePlugin extends Plugin {
             this.activeTemplateViews[key] = await this.services.orm.call(
                 "ir.ui.view",
                 "render_public_asset",
-                [`${key}`, {}]
+                [`${key}`, {}],
+                { context: this.dependencies.websiteBridge.getWebsiteContextLang() },
             );
         }
         return this.getTemplateKey(key);
@@ -485,7 +491,10 @@ export class AddLanguageAction extends BuilderAction {
 
 export class ToggleBodyBgImageAction extends BuilderAction {
     static id = "toggleBodyBgImage";
-    static dependencies = ["builderActions", "history", "customizeWebsite"];
+    static dependencies = ["builderActions", "domObserver", "customizeWebsite", "media"];
+    setup() {
+        this.canTimeout = false;
+    }
     isApplied() {
         return !!this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image");
     }
@@ -522,22 +531,27 @@ export class ToggleBodyBgImageAction extends BuilderAction {
     }
     async applyConfig(oldConfig, newConfig) {
         await this.applyConfigWithLoader(newConfig);
-        this.dependencies.history.addCustomMutation({
+        this.dependencies.domObserver.stageCustomMutation({
             apply: () => this.applyConfigWithLoader(newConfig),
             revert: () => this.applyConfigWithLoader(oldConfig),
         });
     }
     async apply({ editingElement: el } = {}) {
-        const getAction = this.dependencies.builderActions.getAction;
-        const { type: currentType, image: currentImage } = this.getCurrentConfig();
-        const oldConfig = { type: currentType, image: currentImage };
-
-        const imageEl = await getAction("replaceBgImage").load({ el });
-        if (!imageEl) {
-            return;
-        }
-        const newConfig = { type: currentType, image: imageEl.src };
-        await this.applyConfig(oldConfig, newConfig);
+        await this.dependencies.media.openMediaDialog(
+            this.getMediaDialogProps({ editingElement: el })
+        );
+    }
+    getMediaDialogProps({ editingElement }) {
+        return {
+            onlyImages: true,
+            node: editingElement,
+            save: async (imageEl) => {
+                const { type: currentType, image: currentImage } = this.getCurrentConfig();
+                const oldConfig = { type: currentType, image: currentImage };
+                const newConfig = { type: currentType, image: imageEl.src };
+                await this.applyConfig(oldConfig, newConfig);
+            },
+        };
     }
     async clean() {
         const { type: currentType, image: currentImage } = this.getCurrentConfig();
@@ -567,7 +581,7 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
     static id = "bodyBgPositionOverlay";
     static dependencies = [
         "overlayButtons",
-        "history",
+        "domObserver",
         "backgroundPositionOption",
         "customizeWebsite",
     ];
@@ -611,7 +625,7 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
                 this.dependencies.customizeWebsite.getWebsiteVariableValue(
                     "body-image-background-position"
                 ) || "";
-            this.dependencies.history.applyCustomMutation({
+            this.dependencies.domObserver.applyCustomMutation({
                 apply: () => setBackgroundPosition(bgPosition),
                 revert: () => setBackgroundPosition(currentPosition),
             });
@@ -805,7 +819,7 @@ export class WebsiteConfigAction extends BuilderAction {
 
 export class PreviewableWebsiteConfigAction extends BuilderAction {
     static id = "previewableWebsiteConfig";
-    static dependencies = ["customizeWebsite", "history"];
+    static dependencies = ["customizeWebsite", "domObserver"];
     getPriority({ params }) {
         return (params.previewClass || "")?.trim().split(/\s+/).filter(Boolean).length || 0;
     }
@@ -822,7 +836,7 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
         if (!isPreviewing) {
             const viewsToApply = params["views"] || [];
             let undoApplyCallback;
-            this.dependencies.history.applyCustomMutation({
+            this.dependencies.domObserver.applyCustomMutation({
                 apply: () => {
                     undoApplyCallback = this.dependencies.customizeWebsite.setViewsOnSave(
                         viewsToApply,
@@ -842,7 +856,7 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
         if (!isPreviewing) {
             const viewsToClean = params["views"] || [];
             let undoCleanCallback;
-            this.dependencies.history.applyCustomMutation({
+            this.dependencies.domObserver.applyCustomMutation({
                 apply: () => {
                     undoCleanCallback = this.dependencies.customizeWebsite.setViewsOnSave(
                         viewsToClean,
@@ -950,6 +964,57 @@ export class CustomizeWebsiteVariableAction extends BuilderAction {
             },
             nullValue
         );
+    }
+}
+
+export class CustomizeWebsiteSubVariablesAction extends CustomizeWebsiteVariableAction {
+    static id = "customizeWebsiteSubVariables";
+    getValue({ params: { mainParam: variable, subVariablesConfig = {} } }) {
+        const subVariables = subVariablesConfig[variable] || [];
+        // A global variable returns the common value of its sub-variables
+        // if they are all identical. Otherwise, it returns null. And each
+        // sub-variable always returns its own current value.
+        const currentValue = this._subVariablesValue([variable, ...subVariables]);
+        return currentValue;
+    }
+    async apply({
+        params: { mainParam: variable, nullValue = "null", subVariablesConfig = {} },
+        value,
+    }) {
+        // 1. A single variable with potential sub-variables: update all.
+        const variablesToUpdate = [variable, ...(subVariablesConfig[variable] || [])].map(
+            (name) => [name, value]
+        );
+        const allSubVariables = Object.values(subVariablesConfig)[0] || [];
+        const otherSubVariables = allSubVariables.filter((v) => v !== variable);
+        // 2. A sub-variable linked to a global one: update the sub-variable,
+        // then update the global variable based on the current values of all
+        // sub-variables.
+        if (allSubVariables.length === otherSubVariables.length + 1) {
+            variablesToUpdate.push([
+                Object.keys(subVariablesConfig)[0],
+                this._subVariablesValue(otherSubVariables) === value ? value : nullValue,
+            ]);
+        }
+        await this.dependencies.customizeWebsite.customizeWebsiteVariables(
+            Object.fromEntries(variablesToUpdate),
+            nullValue
+        );
+    }
+    /**
+     * Returns the shared value of a list of CSS variables, or `null`
+     * if they differ.
+     *
+     * @param {string[]} variables
+     */
+    _subVariablesValue(variables) {
+        const values = variables.map(
+            this.dependencies.customizeWebsite.getWebsiteVariableValue.bind(this)
+        );
+        if (new Set(values).size === 1) {
+            return values[0];
+        }
+        return null;
     }
 }
 

@@ -54,3 +54,20 @@ test("payment method helpers", async () => {
     expect(popupWithoutValid.validPms).toEqual([]);
     expect(popupWithoutValid.isOnePmUsed()).toBe(true);
 });
+
+test("validPms includes bank/cash methods with more than one payment", async () => {
+    // Regression: previously number == 1 was required, so PMs with number > 1 were excluded.
+    await setupPosEnv();
+
+    const paymentMethods = [
+        { id: 10, name: "Card A", type: "bank", number: 3, amount: 60 },
+        { id: 11, name: "Cash B", type: "cash", number: 2, amount: 30 },
+        { id: 12, name: "Later", type: "pay_later", number: 5, amount: 10 },
+    ];
+
+    const popup = await mountWithCleanup(ClosePosPopup, {
+        props: getProps({ non_cash_payment_methods: paymentMethods }),
+    });
+
+    expect(popup.validPms.map((pm) => pm.id)).toEqual([10, 11]);
+});

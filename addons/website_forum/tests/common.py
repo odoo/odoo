@@ -26,7 +26,7 @@ class TestForumCommon(common.TransactionCase):
         super(TestForumCommon, cls).setUpClass()
 
         # default base data
-        cls.base_website = cls.env.ref("website.default_website")
+        cls.base_website = cls.env.ref("base.default_website")
         cls.base_forum = cls.env.ref("website_forum.forum_help")
 
         Forum = cls.env['forum.forum']

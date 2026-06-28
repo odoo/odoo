@@ -4,7 +4,7 @@
     <t t-name="sale.SaleKanbanRenderer" t-inherit="account.FileUploadKanbanRenderer" t-inherit-mode="primary">
         <t t-if="this.showNoContentHelper" position="replace">
             <t t-if="this.showNoContentHelper">
-                <SaleActionHelper noContentHelp="props.noContentHelp"/>
+                <SaleActionHelper noContentHelp="this.props.noContentHelp"/>
             </t>
         </t>
     </t>

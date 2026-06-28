@@ -6,8 +6,8 @@
         &.o_kanban_ungrouped {
             .o_kanban_record {
                 width: 100%;
-                --KanbanRecord-padding-v: #{map-get($spacers, 2)} !important;
-                --KanbanRecord-padding-h: 0px !important;
+                --Card-padding-v: #{map-get($spacers, 2)} !important;
+                --Card-padding-h: 0px !important;
                 --Ribbon-font-size: 0.6rem;
                 --Ribbon-wrapper-width: 5rem;
                 --Ribbon-height: 1.9;
@@ -88,12 +88,6 @@
         &.o_kanban_grouped {
             .o_hr_recruitment_kanban_card_large_screen {
                 display: none;    
-            }
-        }
-
-        .o_dropdown_kanban {
-            @include media-breakpoint-down(xl) {
-                visibility: visible;
             }
         }
     }

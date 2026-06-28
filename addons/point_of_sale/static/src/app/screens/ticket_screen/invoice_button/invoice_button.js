@@ -26,20 +26,16 @@ export class InvoiceButton extends Component {
         return Boolean(this.props.order.raw.account_move);
     }
     get commandName() {
-        if (!this.props.order) {
-            return _t("Invoice");
-        } else {
-            return this.isAlreadyInvoiced ? _t("Reprint Invoice") : _t("Invoice");
-        }
+        return _t("Invoice");
     }
     async _downloadInvoice(orderId) {
         try {
-            const orders = await this.pos.data.loadServerOrders([["id", "=", orderId]]);
-            const order = orders[0];
-            const accountMoveId = order.raw.account_move;
-            if (accountMoveId) {
-                await this.invoiceService.downloadPdf(accountMoveId);
-            }
+            const downloadAction = await this.pos.data.call(
+                "pos.order",
+                "action_invoice_download_pdf",
+                [orderId]
+            );
+            await this.pos.action.doAction(downloadAction);
         } catch (error) {
             if (error instanceof Error) {
                 throw error;
@@ -100,6 +96,7 @@ export class InvoiceButton extends Component {
 
         // Part 3: Download invoice.
         await this._downloadInvoice(orderId);
+        await this.pos.data.loadServerOrders([["id", "=", orderId]]);
         this.props.onInvoiceOrder(orderId);
     }
     async click() {

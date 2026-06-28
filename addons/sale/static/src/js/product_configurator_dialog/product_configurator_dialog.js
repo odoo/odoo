@@ -1,67 +1,59 @@
-import { useState, useSubEnv } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, onMounted, onWillStart, onWillUnmount, props, proxy, t } from "@odoo/owl";
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { ProductList } from "../product_list/product_list";
 import { formatCurrency } from '@web/core/currency';
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+
+export const productConfiguratorDialogOptionsShape = {
+    canChangeVariant: t.boolean().optional(),
+    showQuantity: t.boolean().optional(),
+    showPrice: t.boolean().optional(),
+    showPackaging: t.boolean().optional(),
+};
+
+export const productConfiguratorDialogProps = {
+    productTemplateId: t.number(),
+    ptavIds: t.array(t.number()),
+    customPtavs: t.array(
+        t.object({
+            id: t.number(),
+            value: t.string(),
+        })
+    ),
+    quantity: t.number(),
+    productUOMId: t.number().optional(),
+    companyId: t.number().optional(),
+    pricelistId: t.number().optional(),
+    currencyId: t.number().optional(),
+    selectedComboItems: t
+        .array(
+            t.object({
+                name: t.string(),
+            })
+        )
+        .optional(),
+    soDate: t.string(),
+    size: t.selection(["sm", "md", "lg", "xl", "fs", "fullscreen"]).optional(),
+    edit: t.boolean().optional(false),
+    options: t.object(productConfiguratorDialogOptionsShape).optional(),
+    save: t.function(),
+    discard: t.function(),
+    close: t.function(), // This is the close from the env of the Dialog Component
+};
 
 export class ProductConfiguratorDialog extends Component {
     static components = { Dialog, ProductList};
     static template = 'sale.ProductConfiguratorDialog';
-    static props = {
-        productTemplateId: Number,
-        ptavIds: { type: Array, element: Number },
-        customPtavs: {
-            type: Array,
-            element: Object,
-            shape: {
-                id: Number,
-                value: String,
-            }
-        },
-        quantity: Number,
-        productUOMId: { type: Number, optional: true },
-        companyId: { type: Number, optional: true },
-        pricelistId: { type: Number, optional: true },
-        currencyId: { type: Number, optional: true },
-        selectedComboItems: {
-            type: Array,
-            element: Object,
-            shape: {
-                name: String,
-            },
-            optional: true,
-        },
-        soDate: String,
-        size: {
-            type: String,
-            optional: true,
-            validate: (s) => ["sm", "md", "lg", "xl", "fs", "fullscreen"].includes(s),
-        },
-        edit: { type: Boolean, optional: true },
-        options: {
-            type: Object,
-            optional: true,
-            shape: {
-                canChangeVariant: { type: Boolean, optional: true },
-                showQuantity : { type: Boolean, optional: true },
-                showPrice : { type: Boolean, optional: true },
-                showPackaging: { type: Boolean, optional: true },
-            },
-        },
-        save: Function,
-        discard: Function,
-        close: Function, // This is the close from the env of the Dialog Component
-    };
-    static defaultProps = {
-        edit: false,
-    }
+    static props = productConfiguratorDialogProps;
+    props = props(this.constructor.props);
 
     setup() {
         this.title = _t("Configure your product");
         this.env.dialogData.dismiss = !this.props.edit && this.props.discard.bind(this);
-        this.state = useState({
+        this.state = proxy({
             products: [],
             optionalProducts: [],
         });
@@ -72,6 +64,8 @@ export class ProductConfiguratorDialog extends Component {
         this.createProductUrl = '/sale/product_configurator/create_product';
         this.updateCombinationUrl = '/sale/product_configurator/update_combination';
         this.getOptionalProductsUrl = '/sale/product_configurator/get_optional_products';
+
+        useHotkey("enter", this.onEnterKeyPress.bind(this), { bypassEditableProtection: true });
 
         useSubEnv({
             mainProductTmplId: this.props.productTemplateId,
@@ -115,6 +109,9 @@ export class ProductConfiguratorDialog extends Component {
             // Use the currency id retrieved from the server if none was provided in the props.
             this.currency.id ??= currency_id;
         });
+
+        onMounted(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:ADD"));
+        onWillUnmount(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE"));
     }
 
     get totalMessage() {
@@ -283,11 +280,22 @@ export class ProductConfiguratorDialog extends Component {
         if (product.uom.id === uomId) {
             return false;
         }
-        const { price } = await this._updateCombination(product, product.quantity, uomId);
-        product.price = parseFloat(price);
-        product.uom = product.available_uoms.find((uom) => uom.id === uomId);
+        const combination = await this._updateCombination(product, product.quantity, uomId);
+        this._handleUnitOfMeasureUpdate(product, combination, uomId);
 
         return true;
+    }
+
+    /**
+     * Apply the update after changing the product uom.
+     *
+     * @param {Object} product - The product for which the uom was changed.
+     * @param {Object} combination - The result of the `_updateCombination`.
+     * @param {Number} uomId - The new uom of the product, as an `uom.uom` id.
+     */
+    _handleUnitOfMeasureUpdate(product, combination, uomId) {
+        product.price = parseFloat(combination.price);
+        product.uom = product.available_uoms.find((uom) => uom.id === uomId);
     }
 
     /**
@@ -315,6 +323,11 @@ export class ProductConfiguratorDialog extends Component {
         if (this._isPossibleCombination(product)) {
             const updatedValues = await this._updateCombination(product, product.quantity, product.uom.id);
             Object.assign(product, updatedValues);
+            if (product.available_uoms?.length) {
+                if (!product.available_uoms.find(uom => uom.id === product.uom.id)) {
+                    product.uom = product.available_uoms[0];
+                }
+            }
             // When a combination should exist but was deleted from the database, it should not be
             // selectable and considered as an exclusion.
             if (!product.id && product.attribute_lines.every(ptal => ptal.create_variant === "always")) {
@@ -489,6 +502,18 @@ export class ProductConfiguratorDialog extends Component {
             options,
         );
         this.props.close();
+    }
+
+    /**
+     * Confirm on pressing enter
+     */
+    onEnterKeyPress() {
+        const activeEl = document.activeElement;
+        if (activeEl && activeEl.tagName === "BUTTON") {
+            activeEl.click();
+        } else {
+            this.onConfirm({});
+        }
     }
 
     /**

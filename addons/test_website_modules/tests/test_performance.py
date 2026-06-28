@@ -23,12 +23,15 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
     def setUpClass(cls):
         super().setUpClass()
 
+        # Activate the price filter when testing the performance
+        cls.env.ref('website_sale.filter_products_price').active = True
+
         # Attachment needed for the replacement of images
         cls.env['ir.attachment'].create({
             'public': True,
             'name': 's_default_image.jpg',
             'type': 'url',
-            'url': f'{cls.base_url()}/web/image/website.s_banner_default_image.jpg',
+            'url': f'{cls.base_url()}/web/image/website.landscape_md_1.jpg',
         })
 
         cats = cls.env['product.public.category'].create([{
@@ -228,10 +231,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
 
         select_tables_perf = {
             # website queries
-            'orm_signaling_registry': 1,
             'ir_attachment': 1,
-            # website_livechat _post_process_response_from_cache queries
-            'website': 1,
             # website_crm_iap_reveal _serve_page queries
             'website_visitor': 1,
         }
@@ -255,10 +255,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         self.assertEqual(self._get_cart_quantity(), 1)
         select_tables_perf = {
             # website queries
-            'orm_signaling_registry': 1,
             'ir_attachment': 1,
-            # website_livechat _post_process_response_from_cache queries
-            'website': 1,
             # website_crm_iap_reveal _serve_page queries
             'website_visitor': 1,
         }
@@ -279,10 +276,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         self.assertEqual(self._get_cart_quantity(), 0)
         select_tables_perf = {
             # website queries
-            'orm_signaling_registry': 1,
             'ir_attachment': 1,
-            # website_livechat _post_process_response_from_cache queries
-            'website': 1,
             # website_crm_iap_reveal _serve_page queries
             'website_visitor': 1,
         }
@@ -295,24 +289,21 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
         self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
 
-        query_count = 49  # To increase this number you must ask the permission to al
+        # To add queries here you must ask the permission to al
         queries = {
-            'orm_signaling_registry': 1,
-            'website': 1,
             'res_company': 2,
             'product_pricelist': 4,
-            'product_template': 5,
+            'product_template': 3,
             'product_tag': 1,
-            'product_public_category': 5,
+            'product_public_category': 2,
             'product_product': 1,
-            'product_template_attribute_line': 3,
+            'product_template_attribute_line': 2,
             'res_users': 1,
             'res_partner': 2,
             'product_category': 1,
-            'product_pricelist_item': 2,
+            'product_pricelist_item': 1,
             'account_tax': 1,
             'res_currency': 1,
-            'account_account_tag': 1,
             'product_ribbon': 1,
             'product_attribute_value': 3,
             'product_attribute': 1,
@@ -326,46 +317,47 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
 
         addons = tuple(self.env.registry._init_modules) + (self.env.context.get('install_module'),)
         if 'website_helpdesk' in addons:
-            query_count += 1
             queries['helpdesk_team'] = 1
         if 'website_sale_subscription' in addons:
-            query_count += 1
             queries['product_product'] += 1
 
         tax = self.env.ref(f'account.{self.env.company.id}_sale_tax_template', raise_if_not_found=False)
         if tax and tax.name == '15%':
-            query_count += 2
             queries['account_tax_repartition_line'] = 2
 
         if self._has_demo_data():
-            query_count += 6
-            queries['product_template'] += 1
             queries['product_product'] += 2
             queries['ir_attachment'] += 1
             queries['product_ribbon'] += 1
             queries['res_company'] += 1
         else:
-            query_count += 3
             queries['product_template_attribute_value'] += 3
 
-        # To increase the query count you must ask the permission to al
-        return query_count, queries
+        if self.env['res.groups']._is_feature_enabled('uom.group_uom'):
+            queries['uom_uom'] = 1
+
+        # To add queries count you must ask the permission to al
+        return queries
 
     def _has_demo_data(self):
         return bool(self.env['ir.module.module'].search_count([('demo', '=', True)]))
 
     def test_perf_sql_queries_shop(self):
         # To increase the query count you must ask the permission to al
-        query_count, queries = self._get_queries_shop()
+        queries = self._get_queries_shop()
+
+        if self.env["res.groups"]._is_feature_enabled("product.group_show_uom_price"):
+            queries += 1
+            queries['product_product'] += 1
 
         if self._has_demo_data():
-            query_count += 4
             queries['account_tax'] += 1
-            queries['account_account_tag'] += 1
+            queries['account_account_tag'] = 1
+            queries['ir_attachment'] += -1
+            queries['product_ribbon'] += -1
             queries['product_template_attribute_value'] += 2
 
-        self.assertEqual(sum(queries.values()), query_count, 'Please learn to count.')
-        self._check_url_hot_query('/shop', query_count, queries)
+        self._check_url_hot_query('/shop', sum(queries.values()), queries)
 
 
 @tagged('post_install', '-at_install')
@@ -373,15 +365,16 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
 
     def test_perf_sql_queries_shop(self):
         # To increase the query count you must ask the permission to al
-        query_count, queries = self._get_queries_shop()
+        queries = self._get_queries_shop()
 
-        query_count += 2
         queries['account_tax'] += 1
-        queries['account_account_tag'] += 1
+        queries['account_account_tag'] = 2
+
+        if self.env['res.groups']._is_feature_enabled('uom.group_uom'):
+            queries['uom_uom'] += 1
 
         if self._has_demo_data():
-            query_count += 2
+            queries['ir_attachment'] += -1
             queries['product_template_attribute_value'] += 2
 
-        self.assertEqual(sum(queries.values()), query_count, 'Please learn to count.')
-        self._check_url_hot_query('/shop', query_count, queries)
+        self._check_url_hot_query('/shop', sum(queries.values()), queries)

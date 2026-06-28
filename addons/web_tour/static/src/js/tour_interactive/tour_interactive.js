@@ -110,12 +110,13 @@ export class TourInteractive {
     }
 
     updatePointer() {
-        pointerState.trigger = undefined;
         if (this.anchorEls.length) {
             pointerState.trigger = this.anchorEls[0];
             pointerState.content = this.currentAction.content;
             pointerState.position = this.currentAction.tooltipPosition;
             pointerState.isZone = this.currentAction.event === "drop";
+        } else {
+            pointerState.trigger = undefined;
         }
     }
 

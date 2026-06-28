@@ -88,6 +88,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
                     'price_unit': 1000.0,
                 })
             ],
+            'ref': '12345',
         })
 
     def _get_xml_value(self, xml_content, xpath):
@@ -115,6 +116,16 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             ae.args = (ae.args[0] + f"\nFile used for comparison: {filename}", )
             raise
 
+    def _assert_import_invoice(self, filename, expected_values):
+        path = f'l10n_pl_edi/tests/import_xmls/{filename}'
+        with tools.file_open(path, mode='rb') as fd:
+            invoice = self.env['account.move'].create(self.env['account.move'].l10n_pl_edi_get_ksef_bill_vals_from_xml(fd.read()))
+        try:
+            self.assertRecordValues(invoice.invoice_line_ids, expected_values)
+        except AssertionError as ae:
+            ae.args = (ae.args[0] + f"\nFile used for comparison: {filename}", )
+            raise
+
     @freeze_time('2026-01-23')
     def test_ksef_fa3_standard_vat(self):
         """
@@ -125,6 +136,26 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         """
         self.standard_invoice.action_post()
         self._assert_export_invoice(self.standard_invoice, "standert_fa3_format.xml")
+
+    @freeze_time('2026-01-23')
+    def test_p6_delivery_date_differs_from_invoice_date(self):
+        """
+        P_6 (delivery date) must be emitted when the delivery date differs from the
+        invoice issue date (invoice_date), regardless of the accounting date (date).
+        """
+        invoice = self._create_invoice(
+            partner_id=self.partner_pl,
+            invoice_date='2025-05-27',
+            date='2026-05-04',
+            delivery_date='2026-05-04',
+            post=True
+        )
+
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(
+            self._get_xml_value(xml, "//ns:Fa/ns:P_6"),
+            '2026-05-04',
+        )
 
     @freeze_time('2026-01-23')
     def test_scenario_correction_standard(self):
@@ -153,6 +184,33 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         credit_note.action_post()
 
         self._assert_export_invoice(credit_note, 'standerd_fa3_credit_note.xml')
+
+    @freeze_time('2026-01-23')
+    def test_ksef_fa3_reverse_charge(self):
+        invoice = self._create_invoice(
+                invoice_date=fields.Date.today(),
+                partner_id=self.partner_pl,
+                invoice_line_ids=[
+                    Command.create({
+                        'product_id': self.product.id,
+                        'price_unit': 1000.0,
+                        'tax_ids': [Command.set(self.env['account.chart.template'].ref('vs_dostu').ids)],
+                    }),
+                    Command.create({
+                        'product_id': self.product.id,
+                        'price_unit': 1000.0,
+                        'tax_ids': [Command.set(self.env['account.chart.template'].ref('vs_kraj_8').ids)],
+                    }),
+                ],
+                post=True,
+        )
+
+        self._assert_export_invoice(invoice, 'standard_fa3_format_invoice_reverse_charge.xml')
+
+        credit_note = invoice._reverse_moves()
+        credit_note.action_post()
+
+        self._assert_export_invoice(credit_note, 'standard_fa3_format_credit_note_reverse_charge.xml')
 
     @freeze_time('2026-01-23')
     def test_payment_logic_partial_mixed_methods(self):
@@ -389,6 +447,53 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         )
 
     @freeze_time('2026-01-23')
+    def test_invoice_in_foreign_currency(self):
+        self.env.ref('base.EUR').active = True
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_pl.id,
+            'invoice_date': fields.Date.today(),
+            'currency_id': self.env.ref('base.EUR').id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'price_unit': 10.0,
+            })],
+            'invoice_currency_rate': '2',
+        })
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'fa3_invoice_foreign_currency.xml')
+
+    @freeze_time('2026-01-23')
+    def test_prefiks_podatnika_for_eu_transactions(self):
+        """
+        Verification that PrefiksPodatnika ('PL') is included in Podmiot1 for invoices
+        documenting intra-Community supply of goods (K_21), EU B2B services (K_12),
+        or simplified triangular transactions (Triangular Sale), as required by
+        Art. 97 sec. 10 items 2-3 and Art. 136 sec. 1 item 3 of the Polish VAT Act.
+        """
+        invoices = self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_pl.id,
+                'invoice_date': fields.Date.today(),
+                'invoice_line_ids': [Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'tax_ids': self.env['account.chart.template'].ref(tax_ref).ids,
+                })],
+            } for tax_ref in ['vs_unia', 'vs_dostu', 'vs_unia_triangular']
+        ])
+        invoices.action_post()
+        for invoice in invoices:
+            xml = invoice._l10n_pl_edi_render_xml()
+            self.assertEqual(
+                self._get_xml_value(xml, "//ns:Podmiot1/ns:PrefiksPodatnika"),
+                'PL',
+            )
+
+    @freeze_time('2026-01-23')
     def test_scenario_correction_values_are_negative(self):
         """
         Verification of Negative Values for Corrections (Difference Method).
@@ -522,7 +627,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
 
         created_move = self.env['account.move'].search([('l10n_pl_edi_number', '=', '7492091229-20260210-0700A043714A-5E')])
         self.assertTrue(created_move)
-        self.assertEqual(created_move.partner_id.vat, '7492091229')
+        self.assertEqual(created_move.partner_id.vat, 'PL7492091229')
         self.assertEqual(len(created_move), 1)
         self.assertRecordValues(
             created_move, [
@@ -567,6 +672,14 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             ).ids,
         )
 
+        created_move_attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', '=', created_move.id),
+        ], limit=1)
+        self.assertTrue(created_move_attachment)
+        with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
+            self.assertEqual(bytes(created_move_attachment.raw), file.read())
+
     def test_l10n_pl_edi_download_bill_retry_after(self):
         """Test that when a rate limit error occurs the progress is preserved and the cron is rescheduled."""
 
@@ -605,6 +718,13 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
 
         bill_1 = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-BILL-001')])
         self.assertTrue(bill_1)
+        bill_1_attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', '=', bill_1.id),
+        ], limit=1)
+        self.assertTrue(bill_1_attachment)
+        with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
+            self.assertEqual(bytes(bill_1_attachment.raw), file.read())
 
         bill_2 = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-BILL-002')])
         self.assertFalse(bill_2)
@@ -612,3 +732,127 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertEqual(len(capt.records), cron_runs_before + 1)
         self.assertGreaterEqual(capt.records[-1].call_at, start + timedelta(seconds=120))
         self.assertLessEqual(capt.records[-1].call_at, start + timedelta(seconds=240))
+
+    def test_import_invoice_with_net_and_gross_unit_price(self):
+        self._assert_import_invoice('invoice_with_net_and_gross_unit_price.xml', [
+            {
+                'name': '[FURN_0006] Podstawka pod monitor',
+                'price_unit': 3.19,
+                'price_total': 3.92,
+                'tax_ids': self.env['account.chart.template'].ref('vz_kraj_23').ids,
+            },
+            {
+                'name': '[FOOD_0001] Chleb pszenny',
+                'price_unit': 5.0,
+                'price_total': 13.5,
+                'tax_ids': self.env['account.chart.template'].ref('vz_kraj_8').ids,
+            },
+            {
+                'name': '[BOOK_0001] Podręcznik szkolny',
+                'price_unit': 5.0,
+                'price_total': 21.0,
+                'tax_ids': self.env['account.chart.template'].ref('vz_kraj_5').ids,
+            },
+        ])
+
+    def test_import_invoice_with_zero_value_line_missing_unit_prices(self):
+        self._assert_import_invoice('invoice_with_zero_value_line_missing_unit_prices.xml', [
+            {
+                'name': '[FURN_0006] Podstawka pod monitor',
+                'price_unit': 3.19,
+                'price_total': 3.92,
+                'tax_ids': self.env['account.chart.template'].ref('vz_kraj_23').ids,
+            },
+            {
+                'name': '[ZERO] Transport',
+                'price_unit': 0.0,
+                'price_total': 0.0,
+                'tax_ids': self.env['account.chart.template'].ref('vz_kraj_zw').ids,
+            },
+        ])
+
+    def test_import_invoice_from_foreign_country_retrieve_correct_partner(self):
+        partner = self.env["res.partner"].create({
+            'name': "LU Company",
+            'vat': "PL7492091229",
+            'country_id': self.env.ref('base.lu').id,
+        })
+        self._assert_import_invoice('invoice_from_foreign_country.xml', [{
+            'partner_id': partner.id,
+        }])
+
+    def test_import_invoice_from_foreign_country_partner_correctly_created(self):
+        path = 'l10n_pl_edi/tests/import_xmls/invoice_from_foreign_country.xml'
+        with tools.file_open(path, mode='rb') as fd:
+            content = fd.read()
+            invoice_data = self.env['account.move'].l10n_pl_edi_get_ksef_bill_vals_from_xml(content)
+            invoice = self.env['account.move'].create(invoice_data)
+        self.assertEqual(invoice.partner_id.name, "LU Company")
+        self.assertIn("7492091229", invoice.partner_id.vat)
+
+    @freeze_time('2026-01-23')
+    def test_ksef_export_vat_without_country_code(self):
+        """ Ensure VAT numbers do not include the country code in NrVatUE/NrID fields """
+        # non-Polish VAT
+        foreign_partner = self.partner_a.copy({'vat': 'GB298357641'})
+        invoice = self._create_invoice(partner_id=foreign_partner.id, post=True)
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(self._get_xml_value(xml, "//ns:Podmiot2/ns:DaneIdentyfikacyjne/ns:NrID"), '298357641')
+
+        # Polish VAT
+        invoice = self._create_invoice(partner_id=self.partner_pl.id, post=True)
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(self._get_xml_value(xml, "//ns:Podmiot2/ns:DaneIdentyfikacyjne/ns:NIP"), '1111111111')
+
+    def test_cron_creates_empty_move_on_parsing_error(self):
+        """ Create empty journal entry for malformed XML """
+
+        def query_invoice_metadata(query_criteria, page_size=100, page_offset=0):
+            return {
+                'hasMore': False,
+                'invoices': [
+                    {
+                        'ksefNumber': 'GOOD'
+                    },
+                    {
+                        'ksefNumber': 'BAD'
+                    },
+                ],
+            }
+
+        def get_invoice_by_ksef_number(ksef_number):
+            return {'xml_content': b'<bad/>' if ksef_number == 'BAD' else b'<good/>'}
+
+        def mock_parse(self_obj, xml):
+            if xml == b'<bad/>':
+                raise UserError("Simulated error")
+            return {
+                'move_type': 'in_invoice',
+                'invoice_line_ids': [Command.create({'name': 'Test Line', 'price_unit': 100.0})],
+            }
+        with (
+            patch.object(KsefApiService, 'query_invoice_metadata', side_effect=query_invoice_metadata),
+            patch.object(KsefApiService, 'get_invoice_by_ksef_number', side_effect=get_invoice_by_ksef_number),
+            patch('odoo.addons.l10n_pl_edi.models.account_move.AccountMove.l10n_pl_edi_get_ksef_bill_vals_from_xml', mock_parse)
+        ):
+            self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
+
+        bad_invoice = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'BAD')])
+        good_invoice = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'GOOD')])
+
+        self.assertTrue(good_invoice, "Good invoice should be created")
+        self.assertTrue(bad_invoice, "Bad invoice should be created as empty fallback")
+        self.assertFalse(bad_invoice.invoice_line_ids, "Bad invoice should have no lines")
+        self.assertTrue(any("Simulated error" in body for body in bad_invoice.message_ids.mapped('body')))
+
+    def test_import_invoice_discount_is_correctly_set(self):
+        self._assert_import_invoice('invoice_with_discount.xml', [
+            {
+                "price_unit": 41.37,
+                "price_subtotal": 103.43
+            },
+            {
+                "price_unit": 118.3,
+                "price_subtotal": 1064.7
+            }
+        ])

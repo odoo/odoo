@@ -1,22 +1,26 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr } from "@web/core/py_js/py";
-import { floatField, FloatField } from "@web/views/fields/float/float_field";
-import { monetaryField, MonetaryField } from "@web/views/fields/monetary/monetary_field";
+import { floatField, FloatField, floatFieldProps } from "@web/views/fields/float/float_field";
+import {
+    monetaryField,
+    MonetaryField,
+    monetaryFieldProps,
+} from "@web/views/fields/monetary/monetary_field";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 const fieldRegistry = registry.category("fields");
 
 class StockActionField extends Component {
-    static props = {
-        ...FloatField.props,
-        ...MonetaryField.props,
-        actionName: { type: String, optional: false },
-        actionContext: { type: String, optional: true },
-        disabled: { type: String, optional: true },
-    };
+    props = props({
+        ...floatFieldProps,
+        ...monetaryFieldProps,
+        actionName: t.string(),
+        actionContext: t.string().optional(),
+        disabled: t.string().optional(),
+    });
     static components = {
         FloatField,
         MonetaryField,
@@ -62,7 +66,7 @@ const stockActionField = {
     ...monetaryField,
     component: StockActionField,
     supportedOptions: [
-        Object.values(
+        ...Object.values(
             Object.fromEntries(
                 [...floatField.supportedOptions, ...monetaryField.supportedOptions].map(
                     (option) => [option.name, option]

@@ -2,7 +2,7 @@
 
 import bisect
 
-from odoo import models
+from odoo import api, models
 from odoo.fields import Domain
 
 
@@ -28,3 +28,21 @@ class ProductProduct(models.Model):
             bisect.insort(domains, (14, Domain('barcode', '=', variant_barcode)))
 
         return domains
+
+    @api.model
+    def _import_retrieve_product_from_variant_default_code(self, product_values):
+        if variant_default_code := product_values.get('variant_default_code'):
+            return {'criteria': [{'domain': [('default_code', '=', variant_default_code)]}]}
+
+    @api.model
+    def _import_retrieve_product_from_variant_barcode(self, product_values):
+        if variant_barcode := product_values.get('variant_barcode'):
+            return {'criteria': [{'domain': [('barcode', '=', variant_barcode)]}]}
+
+    def _get_retrieval_product_search_plan(self):
+        search_plan = super()._get_retrieval_product_search_plan()
+        return [
+            *search_plan,
+            (12, self._import_retrieve_product_from_variant_default_code),
+            (14, self._import_retrieve_product_from_variant_barcode),
+        ]

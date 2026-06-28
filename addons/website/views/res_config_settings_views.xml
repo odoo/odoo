@@ -43,10 +43,14 @@
                         <setting string="Languages"
                                  title="Languages available on your website"
                                  documentation="/applications/websites/website/configuration/translate.html">
+                            <div class="text-muted mt-n3 mb16">
+                                <span invisible="website_language_count &lt; 2">Website visitors see the version matching their browser language, or the default if unavailable.</span>
+                                <span invisible="website_language_count &gt;= 2">Install multiple languages to enable translation across your website.</span>
+                            </div>
                             <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" required="website_id"/>
                             <div class="row mt8" invisible="website_language_count &lt; 2">
                                 <label class="col-lg-3" string="Default" for="website_default_lang_id"/>
-                                <field name="website_default_lang_id" options="{'no_open': True, 'no_create': True}" required="website_id"/>
+                                <field name="website_default_lang_id" options="{'no_open': True, 'no_create': True}" required="website_id" domain="[('id', 'in', language_ids)]"/>
                             </div>
                             <div class="mt8">
                                 <button type="action" name="%(base.action_view_base_language_install)d" string="Install new languages" class="btn-link" icon="oi-arrow-right"/>
@@ -85,6 +89,14 @@
                         </setting>
                         <setting id="livechat" string="Live Chat" help="Allows your visitors to chat with you">
                             <field name="module_website_livechat"/>
+                        </setting>
+                        <setting
+                            id="autocomplete_googleplaces_setting"
+                            string="Google Address Validation"
+                            help="Use Google Places API to validate addresses"
+                            documentation="/applications/websites/website/configuration/address_autocomplete.html"
+                        >
+                            <field name="module_website_address_autocomplete"/>
                         </setting>
                     </block>
                     <block title="Tracking &amp; SEO" id="website_settings" invisible="not website_id">
@@ -127,13 +139,13 @@
                         </setting>
                         <setting
                             id="google_analytics_setting"
-                            help="Track visits using Google Analytics or Google Tag Manager"
-                            documentation="/applications/websites/website/reporting/analytics.html#analytics-google-analytics"
+                            help="Track your users, using Google Analytics or Google Tag Manager"
+                            documentation="/applications/websites/website/reporting/analytics.html#google-tag-manager"
                         >
                             <field name="has_google_analytics"/>
                             <div class="content-group" invisible="not has_google_analytics">
                                 <div class="row mt16">
-                                    <label class="col-lg-3 o_light_label" string="Measurement ID or Tag" for="google_analytics_key"/>
+                                    <label class="col-lg-3 o_light_label" string="Identifier" for="google_analytics_key"/>
                                     <field name="google_analytics_key" placeholder="G-XXXXXXXXXX or GTM-XXXXXXX"
                                         required="has_google_analytics"/>
                                 </div>
@@ -142,8 +154,8 @@
                                 <widget
                                     class="oe_link"
                                     name="documentation_link"
-                                    path="/applications/websites/website/reporting/analytics.html#analytics-google-analytics"
-                                    label=" How to get my Measurement ID"
+                                    path="/applications/websites/website/reporting/analytics.html#google-tag-manager"
+                                    label=" How does GTM work?"
                                     icon="oi oi-arrow-right"
                                 />
                             </div>
@@ -187,7 +199,17 @@
                             help="If set, replaces the website logo as the default social share image."
                         >
                             <field name="has_default_share_image"/>
-                            <field name="social_default_image" widget="image" class="w-25 mt-2" invisible="not has_default_share_image"/>
+                            <field
+                                name="social_default_image"
+                                widget="image"
+                                class="w-25 mt-2"
+                                invisible="not has_default_share_image"
+                                options="{'accepted_file_extensions': '.png,.jpg,.jpeg,.gif,.webp'}"
+                            />
+                            <div class="text-muted mt-2">
+                                <i class="fa fa-info-circle me-1"/>
+                                Supported formats for social share images are PNG, JPG, WEBP, or GIF.
+                            </div>
                         </setting>
                         <setting
                             id="google_console_setting"
@@ -232,6 +254,15 @@
                                     <button type="object" name="action_open_blocked_third_party_domains"
                                         string="Add domains to the block list" class="btn-link"
                                         icon="fa-ban" noSaveDialog="true"/>
+                                </div>
+                                <div class="content-group" invisible="cookie_policy_id" groups="base.group_no_one">
+                                    <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to choose your Cookie Policy Configuration.</div>
+                                </div>
+                                <div class="content-group" invisible="not cookie_policy_id" groups="base.group_no_one" title="Select your custom cookie policy page">
+                                    <div class="row mt16">
+                                        <label class="col-lg-5 o_light_label" string="Cookie policy page" for="cookie_policy_id"/>
+                                        <field name="cookie_policy_id" options="{'no_create': True}" domain="[('website_id', '=', website_id)]"/>
+                                    </div>
                                 </div>
                             </div>
                         </setting>

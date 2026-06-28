@@ -5,14 +5,14 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@id='invoice_send_settings']" position="inside">
-                <div id="peppol_address" class="row" invisible="1"/> <!-- TODO remove in master -->
-                <field name="available_peppol_eas" invisible="1"/>
-                <field name="peppol_eas"
+                <field name="available_routing_schemes" invisible="1"/> <!-- Needed for routing_scheme > filterable_selection-->
+                <field name="routing_scheme"
                        nolabel="1"
+                       placeholder="Routing ID"
                        widget="filterable_selection"
-                       options="{'whitelist_fname': 'available_peppol_eas'}"
-                       class="o_field_peppol_eas_selection"/>
-                <field name="peppol_endpoint"/>
+                       options="{'whitelist_fname': 'available_routing_schemes'}"
+                       class="o_field_routing_scheme_selection"/>
+                <field name="routing_endpoint" nolabel="1"/>
             </xpath>
         </field>
     </record>

@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class ResCompany(models.Model):
@@ -17,18 +17,6 @@ class ResCompany(models.Model):
         string="Veri*Factu Test Environment",
         default=True,
         copy=False,
-    )
-    l10n_es_edi_verifactu_chain_sequence_id = fields.Many2one(
-        comodel_name='ir.sequence',
-        string="Veri*Factu Document Chain Sequence",
-        readonly=True,
-        copy=False,
-    )
-    l10n_es_edi_verifactu_next_batch_time = fields.Datetime(
-        string="Veri*Factu Next Batch Time",
-        readonly=True,
-        copy=False,
-        help="The Datetime at which the next submission to the AEAT can be made.",
     )
     l10n_es_edi_verifactu_special_vat_regime = fields.Selection(
         string="Veri*Factu VAT Regime",
@@ -71,28 +59,5 @@ class ResCompany(models.Model):
         return self.env['certificate.certificate'].search(
             [('company_id', '=', self.id), ('scope', '=', 'verifactu')],
             order='date_end desc',
-            limit=1,
-        )
-
-    def _l10n_es_edi_verifactu_get_chain_sequence(self):
-        self.ensure_one()
-        if not self.l10n_es_edi_verifactu_chain_sequence_id:
-            self_sudo = self.sudo()
-            self_sudo.l10n_es_edi_verifactu_chain_sequence_id = self_sudo.env['ir.sequence'].create({
-                'name': _("Veri*Factu Document Sequence for company %(name)s (%(id)s)", name=self.name, id=self.id),
-                'code': f'l10n_es_edi_verifactu.document.{self.id}',
-                'implementation': 'no_gap',
-                'company_id': self.id,
-            })
-        return self.l10n_es_edi_verifactu_chain_sequence_id
-
-    def _l10n_es_edi_verifactu_get_last_document(self):
-        self.ensure_one()
-        return self.env['l10n_es_edi_verifactu.document'].search(
-            [
-                ('chain_index', '!=', False),
-                ('company_id', '=', self.id),
-            ],
-            order='chain_index DESC',
             limit=1,
         )

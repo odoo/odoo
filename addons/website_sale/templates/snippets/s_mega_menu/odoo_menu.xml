@@ -18,12 +18,12 @@
                         <div class="col-12 col-lg-3 pt16 pb24">
                             <h4 class="h5 fw-bold mt-0">
                                 <a
-                                    t-att-href="'/shop/category/%s' % category.id"
+                                    t-att-href="category.website_url"
                                     class="nav-link p-0 text-black"
                                     t-out="category.name"
                                 />
                             </h4>
-                            <div class="s_hr pt4 pb16">
+                            <div class="s_hr pt4 pb16" data-snippet="s_hr" data-name="Separator">
                                 <hr class="w-100 mx-auto"
                                     style="border-top-width: 2px; border-top-color: var(--primary);"
                                 />
@@ -32,7 +32,7 @@
                                 <t t-foreach="category.child_id.filtered('has_published_products')"
                                    t-as="sub_category">
                                     <a
-                                        t-att-href="'/shop/category/%s' % sub_category.id"
+                                        t-att-href="sub_category.website_url"
                                         class="nav-link px-0"
                                         t-out="sub_category.name"/>
                                 </t>

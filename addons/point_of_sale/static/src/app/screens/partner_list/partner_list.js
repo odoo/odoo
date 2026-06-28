@@ -1,13 +1,13 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { normalize } from "@web/core/l10n/utils";
+import { localeCompare, normalize } from "@web/core/l10n/utils";
 import { debounce } from "@web/core/utils/timing";
 
 export class PartnerList extends Component {
@@ -29,7 +29,7 @@ export class PartnerList extends Component {
         this.dialog = useService("dialog");
         this.modalRef = useChildRef();
         this.modalContent = null;
-        this.state = useState({
+        this.state = proxy({
             initialPartners: this.pos.models["res.partner"].filter((p) => {
                 const par = p.property_account_receivable_id;
                 return !par || par.non_trade !== true;
@@ -146,7 +146,7 @@ export class PartnerList extends Component {
         );
 
         const availablePartners = searchWord
-            ? partners.filter((p) => regex.test(normalize(p.searchString)))
+            ? partners.filter((p) => regex.test(normalize(p.searchString))).slice(0, 50)
             : partners
                   .slice(0, 1000)
                   .toSorted((a, b) =>
@@ -154,10 +154,29 @@ export class PartnerList extends Component {
                           ? -1
                           : this.props.partner?.id === b.id
                           ? 1
-                          : (a.name || "").localeCompare(b.name || "")
+                          : localeCompare(a.name, b.name)
                   );
 
         return availablePartners;
+    }
+    _getSearchFields(query) {
+        if (query.includes("@")) {
+            return ["email"];
+        }
+        const stripped = query.replace(/[+\s()\-./]/g, "");
+        if (/^\d+$/.test(stripped) && stripped.length >= 3) {
+            return ["phone_mobile_search", "barcode", "vat", "zip"];
+        }
+        return [
+            "complete_name",
+            "ref",
+            "vat",
+            "street",
+            "zip",
+            "email",
+            "phone_mobile_search",
+            "barcode",
+        ];
     }
     get isBalanceDisplayed() {
         return false;
@@ -179,22 +198,10 @@ export class PartnerList extends Component {
             return [];
         }
         if (this.state.query) {
-            const search_fields = [
-                "name",
-                "parent_name",
-                "phone_mobile_search",
-                "email",
-                "barcode",
-                "street",
-                "zip",
-                "city",
-                "state_id",
-                "country_id",
-                "vat",
-            ];
+            const search_fields = this._getSearchFields(this.state.query);
             domain = [
                 ...Array(search_fields.length - 1).fill("|"),
-                ...search_fields.map((field) => [field, "ilike", this.state.query + "%"]),
+                ...search_fields.map((field) => [field, "ilike", this.state.query]),
             ];
         }
 

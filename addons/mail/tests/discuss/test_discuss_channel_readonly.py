@@ -105,7 +105,7 @@ class TestDiscussChannelReadonly(MailCommon, HttpCase):
         self.authenticate(self.test_user.login, self.test_user.login)
         message = self.test_channel.message_post(body="Message to star")
         self.make_jsonrpc_request(
-            "/mail/action", {"fetch_params": [["add_bookmark", {"message_id": message.id}]]},
+            "/mail/store", {"fetch_params": [["add_bookmark", {"message_id": message.id}]]},
         )
         self.assertIn(self.test_user.partner_id, message.bookmarked_partner_ids)
 

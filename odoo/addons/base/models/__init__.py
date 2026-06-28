@@ -3,6 +3,7 @@
 from . import assetsbundle
 
 from . import ir_model
+from . import ir_access
 from . import ir_sequence
 from . import ir_ui_menu
 from . import ir_ui_view
@@ -11,12 +12,12 @@ from . import ir_actions
 from . import ir_embedded_actions
 from . import ir_actions_report
 from . import ir_attachment
+from . import website
 from . import ir_binary
 from . import ir_cron
 from . import ir_filters
 from . import ir_default
 from . import ir_exports
-from . import ir_rule
 from . import ir_config_parameter
 from . import ir_autovacuum
 from . import ir_mail_server

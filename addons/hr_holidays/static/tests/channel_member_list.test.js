@@ -8,19 +8,22 @@ defineHrHolidaysModels();
 
 test("on leave members are categorised correctly in online/offline", async () => {
     const pyEnv = await startServer();
-    const [partnerId1, partnerId2, partnerId3] = pyEnv["res.partner"].create([
-        { name: "Online Partner", im_status: "online" },
-        { name: "On Leave Online", im_status: "online" },
-        { name: "On Leave Idle", im_status: "away" },
+    const [partnerId1, partnerId2, partnerId3, partnerId4] = pyEnv["res.partner"].create([
+        { name: "Online Partner" },
+        { name: "On Leave Online" },
+        { name: "On Leave Idle" },
+        { name: "On Leave Offline" },
     ]);
-    const [userId2, userId3] = pyEnv["res.users"].create([
-        { partner_id: partnerId2 },
-        { partner_id: partnerId3 },
+    const [, userId2, userId3, userId4] = pyEnv["res.users"].create([
+        { partner_id: partnerId1, im_status: "online" },
+        { partner_id: partnerId2, im_status: "online" },
+        { partner_id: partnerId3, im_status: "away" },
+        { partner_id: partnerId4, im_status: "offline" },
     ]);
     pyEnv["hr.employee"].create([
-        { user_id: serverState.userId, leave_date_to: "2023-01-02" },
         { user_id: userId2, leave_date_to: "2023-01-03" },
         { user_id: userId3, leave_date_to: "2023-01-04" },
+        { user_id: userId4, leave_date_to: "2023-01-05" },
     ]);
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
@@ -29,11 +32,12 @@ test("on leave members are categorised correctly in online/offline", async () =>
             Command.create({ partner_id: partnerId1 }),
             Command.create({ partner_id: partnerId2 }),
             Command.create({ partner_id: partnerId3 }),
+            Command.create({ partner_id: partnerId4 }),
         ],
         channel_type: "channel",
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-discuss-ChannelMemberList h6", { text: "Online - 3" });
+    await contains(".o-discuss-ChannelMemberList h6", { text: "Online - 4" });
     await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 1" });
 });

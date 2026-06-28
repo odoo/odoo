@@ -25,9 +25,9 @@ import {
     refresh,
 } from "@point_of_sale/../tests/generic_helpers/utils";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
+import * as Notification from "@point_of_sale/../tests/generic_helpers/notification_util";
 
 registry.category("web_tour.tours").add("pos_restaurant_sync", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -55,10 +55,13 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 { name: "Water", qty: 1 },
             ]),
             ProductScreen.clickOrderButton(),
+            FloorScreen.table({ name: "5", run: "click", waitForSync: false }),
+            Notification.has(
+                "This order is currently syncing, please wait a moment before loading it."
+            ),
             Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
-            checkPreparationTicketData([]),
             ProductScreen.totalAmountIs("4.40"),
 
             // Create 2nd order (paid)
@@ -94,9 +97,12 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             FloorScreen.clickTable("4"),
             ProductScreen.orderlinesHaveNoChange(),
             checkPreparationTicketData([]),
+            ProductScreen.orderLineHas("Desk Organizer", 1, 5.87),
             ProductScreen.totalAmountIs("5.87"),
             ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickPaymentMethod("Bank", true, {
+                amount: 5.87,
+            }),
             PaymentScreen.clickValidate(),
             FeedbackScreen.clickNextOrder(),
 
@@ -138,7 +144,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
  * This tour should be run after the first tour is done.
  */
 registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             // There is one draft synced order from the previous tour
@@ -268,8 +273,20 @@ registry.category("web_tour.tours").add("test_pos_restaurant_course", {
             },
             ProductScreen.fireCourseButton(),
             Chrome.closePrintingWarning(),
+            FloorScreen.table({ name: "5", run: "click", waitForSync: false }),
+            Notification.has(
+                "This order is currently syncing, please wait a moment before loading it."
+            ),
             FloorScreen.clickTable("5"),
             negateStep(ProductScreen.checkCourseAtIndex(2, "Course 3")),
+            // Check all courses are removed when all orderlines are deleted
+            ProductScreen.clickLine("Coca-Cola"),
+            ProductScreen.clickNumpad("⌫"),
+            ProductScreen.clickNumpad("⌫"),
+            ProductScreen.clickNumpad("⌫"),
+            ProductScreen.clickNumpad("⌫"),
+            ProductScreen.orderIsEmpty(),
+            negateStep(ProductScreen.checkCourseAtIndex(0, "Course 1")),
         ].flat(),
 });
 
@@ -287,19 +304,13 @@ registry.category("web_tour.tours").add("test_pos_restaurant_default_course", {
             negateStep(ProductScreen.checkCourseAtIndex(1, "Test - Main")),
             ProductScreen.clickDisplayedProduct("Bruschetta"),
             ProductScreen.checkCourseAtIndex(1, "Test - Main"),
-            ProductScreen.clickCourseButton(),
-            ProductScreen.clickDisplayedProduct("Wholemeal loaf"),
-            ProductScreen.checkCourseAtIndex(2, "Course 3"),
             ProductScreen.clickOrderButton(),
             Chrome.closePrintingWarning(),
             FloorScreen.clickTable("2"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.checkCourseAtIndex(0, "Test - Starter"),
-            ProductScreen.clickCourseButton(),
-            ProductScreen.clickDisplayedProduct("Wholemeal loaf"),
-            ProductScreen.checkCourseAtIndex(1, "Course 2"),
             ProductScreen.clickDisplayedProduct("Bruschetta"),
-            ProductScreen.checkCourseAtIndex(2, "Test - Main"),
+            ProductScreen.checkCourseAtIndex(1, "Test - Main"),
         ].flat(),
 });
 
@@ -332,11 +343,10 @@ registry.category("web_tour.tours").add("CategLabelCheck", {
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Test Multi Category Product"),
-            ProductScreen.OrderButtonNotContain("Drinks"),
+            ProductScreen.OrderButtonContain("Drinks"),
         ].flat(),
 });
 registry.category("web_tour.tours").add("OrderChangeTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -346,9 +356,12 @@ registry.category("web_tour.tours").add("OrderChangeTour", {
             ProductScreen.clickOrderButton(),
             Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
+            ProductScreen.isShown(),
             ProductScreen.orderlinesHaveNoChange(),
+            ProductScreen.orderLineHas("coca-cola", 1, 2.2),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.checkPaymentLines([{ name: "cash", amount: "2.20", selected: true }]),
             PaymentScreen.clickNumpad("+10"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
@@ -386,6 +399,7 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour1", {
             ProductScreen.isShown(),
             ProductScreen.clickOrderButton(),
             Chrome.closePrintingWarning(),
+            FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
             Chrome.clickPlanButton(),
         ].flat(),
@@ -409,6 +423,7 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour2", {
             ProductScreen.isShown(),
             ProductScreen.clickOrderButton(),
             Chrome.closePrintingWarning(),
+            FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
             Chrome.clickPlanButton(),
         ].flat(),
@@ -431,6 +446,7 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour3", {
             ProductScreen.isShown(),
             ProductScreen.clickOrderButton(),
             Chrome.closePrintingWarning(),
+            FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
             Chrome.clickPlanButton(),
         ].flat(),
@@ -442,7 +458,7 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
-            ProductScreen.clickControlButton("Guests"),
+            ProductScreen.clickControlButton("Guest"),
             NumberPopup.enterValue("5"),
             NumberPopup.isShown("5"),
             Dialog.confirm(),
@@ -679,7 +695,7 @@ registry.category("web_tour.tours").add("test_preset_delivery_restaurant", {
             Dialog.confirm("Open Register"),
             Dialog.isNot(),
             FloorScreen.clickTable("2"),
-            ProductScreen.clickCustomer("Partner Full"),
+            ProductScreen.clickCustomer("APartner Full"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickControlButton("Cancel Order"),
             Dialog.cancel({ title: "Existing orderlines" }),
@@ -697,7 +713,7 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
         [
             Chrome.freezeDateTime(1749981600000), // June 15, 2025 - 10:00
             Chrome.startPoS(),
-            FloorScreen.clickNewOrder(),
+            FloorScreen.clickNewOrder(true),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.selectPreset("Eat in", "Takeaway"),
             TextInputPopup.inputText("John"),
@@ -718,7 +734,7 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.selectPreset("Eat in", "Takeaway"),
-            Chrome.selectPresetDateButton("06/16/2025"),
+            Chrome.selectPresetTimingSlot("Tomorrow"),
             Chrome.presetTimingSlotHourExists("9:00am"),
             Chrome.selectPresetTimingSlotHour({ title: "takeaway", hour: "11:00am" }),
             Dialog.isNot(),
@@ -747,9 +763,8 @@ registry.category("web_tour.tours").add("test_open_register_with_preset_takeaway
             Dialog.isNot({ title: "Existing orderlines" }),
             FloorScreen.isShown(),
             Chrome.clickOrders(),
-            {
-                trigger: ".orders:contains(no orders found)",
-            },
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.checkStatus("001", "Cancelled"),
         ].flat(),
 });
 
@@ -759,12 +774,12 @@ registry.category("web_tour.tours").add("test_cancel_future_order", {
             Chrome.freezeDateTime(1739370000000),
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            FloorScreen.clickNewOrder(),
+            FloorScreen.clickNewOrder(true),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.selectPreset("Eat in", "Takeaway", false),
             TextInputPopup.inputText("John"),
             Dialog.confirm(),
-            Chrome.selectPresetTimingSlot("02/13/2025"),
+            Chrome.selectPresetTimingSlot("Tomorrow"),
             Chrome.selectPresetTimingSlot("3:00pm"),
             Chrome.presetTimingSlotIs("3:00pm"),
             Chrome.clickPlanButton(),
@@ -774,7 +789,8 @@ registry.category("web_tour.tours").add("test_cancel_future_order", {
             TicketScreen.deleteOrder("001"),
             Dialog.confirm(),
             refresh(),
-            negateStep(...TicketScreen.selectOrder("001")),
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.checkStatus("001", "Cancelled"),
         ].flat(),
 });
 
@@ -790,6 +806,12 @@ registry.category("web_tour.tours").add("RestaurantPresetEatInTour", {
             PaymentScreen.clickValidate(),
             FeedbackScreen.checkTicketData({
                 cashier_name: "test_user",
+                cssRules: [
+                    {
+                        css: ".preset-info",
+                        negation: true,
+                    },
+                ],
             }),
             Chrome.closePrintingWarning(),
             FeedbackScreen.clickNextOrder(),
@@ -824,17 +846,19 @@ registry.category("web_tour.tours").add("test_customer_alone_saved", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             Chrome.clickOrders(),
+            Chrome.waitRequest(),
             Chrome.clickRegister(),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Acme Corporation"),
+            ProductScreen.customerIsSelected("Acme Corporation"),
             Chrome.clickOrders(),
+            Chrome.waitRequest(),
             Chrome.clickRegister(),
             ProductScreen.customerIsSelected("Acme Corporation"),
         ].flat(),
 });
 
 registry.category("web_tour.tours").add("test_no_kitchen_confirmation_for_deposit_money", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -974,7 +998,6 @@ registry
     );
 
 registry.category("web_tour.tours").add("test_transfering_orders", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -1019,12 +1042,17 @@ registry.category("web_tour.tours").add("test_transfering_orders", {
             TicketScreen.loadSelectedOrder(),
             ProductScreen.clickControlButton("Transfer"),
             Chrome.clickOrders(),
-            TicketScreen.selectOrder("Water"),
+            {
+                trigger: `.ticket-screen .order-row:contains(Water)`,
+                run: "click",
+            },
             ProductScreen.isShown(),
             ProductScreen.clickLine("Coca-Cola", "3"),
             ProductScreen.clickLine("Water", "3"),
             Chrome.clickOrders(),
             TicketScreen.nbOrdersIs(3),
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.nbOrdersIs(1),
 
             // Transfering order from table 5 to table 4
             Chrome.clickPlanButton(),
@@ -1035,21 +1063,29 @@ registry.category("web_tour.tours").add("test_transfering_orders", {
             ProductScreen.clickLine("Coca-Cola", "3"),
             Chrome.clickOrders(),
             TicketScreen.nbOrdersIs(2),
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.nbOrdersIs(2),
 
             // Transfering order from table to floating order
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
             ProductScreen.clickControlButton("Transfer"),
             Chrome.clickOrders(),
-            TicketScreen.selectOrder("Water"),
+            {
+                trigger: `.ticket-screen .order-row:contains(Water)`,
+                run: "click",
+            },
             ProductScreen.isShown(),
             ProductScreen.clickLine("Coca-Cola", "6"),
             ProductScreen.clickLine("Water", "3"),
             ProductScreen.clickLine("Minute Maid", "3"),
             Chrome.clickOrders(),
             TicketScreen.nbOrdersIs(1),
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.nbOrdersIs(3),
 
             // Transfering floating order to empty table
+            TicketScreen.selectFilter("Active"),
             TicketScreen.selectOrder("Water"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.clickControlButton("Transfer"),
@@ -1059,13 +1095,23 @@ registry.category("web_tour.tours").add("test_transfering_orders", {
             ProductScreen.clickLine("Minute Maid", "3"),
             Chrome.clickPlanButton(),
             FloorScreen.orderCountSyncedInTableIs("5", "1"),
+            Chrome.clickOrders(),
+            TicketScreen.nbOrdersIs(1),
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.nbOrdersIs(3),
 
             // Create a new floating order and transfer it to filled table
+            Chrome.clickPlanButton(),
             FloorScreen.clickNewOrder(),
             ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.setTab("Water2"),
             Chrome.clickPlanButton(),
             Chrome.clickOrders(),
+            TicketScreen.nbOrdersIs(2),
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.nbOrdersIs(3),
+
+            TicketScreen.selectFilter("Active"),
             TicketScreen.selectOrder("Water2"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.clickControlButton("Transfer"),
@@ -1075,6 +1121,8 @@ registry.category("web_tour.tours").add("test_transfering_orders", {
             ProductScreen.clickLine("Minute Maid", "3"),
             Chrome.clickOrders(),
             TicketScreen.nbOrdersIs(1),
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.nbOrdersIs(4),
         ].flat(),
 });
 registry.category("web_tour.tours").add("test_direct_sales", {
@@ -1236,6 +1284,8 @@ registry.category("web_tour.tours").add("test_delete_line_release_table", {
             FloorScreen.clickTable("5"),
             Chrome.waitRequest(),
             negateStep(...Order.hasLine({ productName: "Coca-Cola" })),
+            Chrome.flushPendingOrdersSync(),
+            Chrome.clickPlanButton(),
         ].flat(),
 });
 
@@ -1322,5 +1372,99 @@ registry.category("web_tour.tours").add("test_futur_orders_are_not_cancelled", {
             Chrome.clickMenuOption("Close Register"),
             Dialog.confirm("Close Register"),
             Dialog.confirm("Cancel Orders", ".btn-secondary"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_apply_after_preparation", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Combo Product 2"),
+            ProductScreen.clickDisplayedProduct("Combo Product 4"),
+            ProductScreen.clickDisplayedProduct("Combo Product 6"),
+
+            Chrome.clickPlanButton(),
+
+            FloorScreen.clickTable("5"),
+            ...ProductScreen.clickApplyCombo(),
+
+            inLeftSide([
+                ...Order.hasLine({ productName: "Office Combo", quantity: "1" }),
+                ...Order.doesNotHaveLine({
+                    productName: "Combo Product 2",
+                    withoutClass: ".orderline-combo",
+                }),
+                ...Order.doesNotHaveLine({
+                    productName: "Combo Product 4",
+                    withoutClass: ".orderline-combo",
+                }),
+                ...Order.doesNotHaveLine({
+                    productName: "Combo Product 6",
+                    withoutClass: ".orderline-combo",
+                }),
+            ]),
+
+            refresh(),
+
+            inLeftSide([
+                ...Order.hasLine({ productName: "Office Combo", quantity: "1" }),
+                ...Order.doesNotHaveLine({
+                    productName: "Combo Product 2",
+                    withoutClass: ".orderline-combo",
+                }),
+                ...Order.doesNotHaveLine({
+                    productName: "Combo Product 4",
+                    withoutClass: ".orderline-combo",
+                }),
+                ...Order.doesNotHaveLine({
+                    productName: "Combo Product 6",
+                    withoutClass: ".orderline-combo",
+                }),
+            ]),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_floating_order_name_change_partner", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickNewOrder(true),
+
+            ProductScreen.selectPreset("Eat in", "Delivery", false),
+            ProductScreen.clickCustomer("Abigael"),
+            ProductScreen.customerIsSelected("Abigael"),
+
+            // Check that order name is Abigael in the ticket screen/order list
+            Chrome.clickOrders(),
+            TicketScreen.nthRowContains(1, "Abigael"),
+            Chrome.clickRegister(),
+
+            // Change partner
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.customerIsSelected("Deco Addict"),
+
+            // Check that order name updated to Deco Addict
+            Chrome.clickOrders(),
+            TicketScreen.nthRowContains(1, "Deco Addict"),
+            Chrome.clickRegister(),
+
+            // Clear partner
+            ProductScreen.clickPartnerButton(),
+            {
+                content: "click unselect partner",
+                trigger: ".unselect-tag",
+                run: "click",
+            },
+            ProductScreen.customerIsSelected("Customer"),
+
+            // Check that order name is reset (or just not the old partner)
+            Chrome.clickOrders(),
+            TicketScreen.nthRowNotContains(1, "Deco Addict"),
+            Chrome.clickRegister(),
         ].flat(),
 });

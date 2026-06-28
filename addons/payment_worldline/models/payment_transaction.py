@@ -2,8 +2,7 @@
 
 from werkzeug.urls import url_encode
 
-from odoo import _, api, models
-from odoo.exceptions import ValidationError
+from odoo import api, models
 from odoo.tools import urls
 
 from odoo.addons.payment import utils as payment_utils
@@ -168,20 +167,15 @@ class PaymentTransaction(models.Model):
             },
         }
 
-        try:
-            # Send the payment request to Worldline.
-            response_content = self._send_api_request(
-                "POST",
-                "payments",
-                json=payload,
-                idempotency_key=payment_utils.generate_idempotency_key(
-                    self, scope="payment_request_token"
-                ),
-            )
-        except ValidationError as e:
-            self._set_error(str(e))
-        else:
-            self._process("worldline", response_content)
+        response_content = self._send_api_request(
+            "POST",
+            "payments",
+            json=payload,
+            idempotency_key=payment_utils.generate_idempotency_key(
+                self, scope="payment_request_token"
+            ),
+        )
+        self._record(response_content)
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
@@ -193,22 +187,6 @@ class PaymentTransaction(models.Model):
         payment_result = payment_data.get("paymentResult", payment_data)
         payment_output = payment_result.get("payment", {}).get("paymentOutput", {})
         return payment_output.get("references", {}).get("merchantReference", "")
-
-    def _extract_amount_data(self, payment_data):
-        """Override of payment to extract the amount and currency from the payment data."""
-        if self.provider_code != "worldline":
-            return super()._extract_amount_data(payment_data)
-
-        # In case of failed payment, paymentResult could be given as a separate key
-        payment_result = payment_data.get("paymentResult", payment_data)
-        amount_of_money = (
-            payment_result.get("payment", {}).get("paymentOutput", {}).get("amountOfMoney", {})
-        )
-        amount = payment_utils.to_major_currency_units(
-            amount_of_money.get("amount", 0), self.currency_id
-        )
-        currency_code = amount_of_money.get("currencyCode")
-        return {"amount": amount, "currency_code": currency_code}
 
     def _apply_updates(self, payment_data):
         """Override of `payment' to process the transaction based on Worldline data.
@@ -231,7 +209,7 @@ class PaymentTransaction(models.Model):
         # Update the payment method.
         payment_method_data = self._worldline_extract_payment_method_data(payment_data)
         payment_method_code = payment_method_data.get("paymentProductId", "")
-        payment_method = self.env["payment.method"]._get_from_code(
+        payment_method = self.provider_id._get_pm_from_code(
             payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id
@@ -240,7 +218,7 @@ class PaymentTransaction(models.Model):
         status = payment_data.get("status")
         has_token_data = "token" in payment_method_data
         if not status:
-            self._set_error(_("Received data with missing payment state."))
+            self._set_error(self.env._("Received data with missing payment state."))
         elif status in const.PAYMENT_STATUS_MAPPING["pending"]:
             if status == "AUTHORIZATION_REQUESTED" and self.operation in (
                 "online_token",
@@ -263,14 +241,17 @@ class PaymentTransaction(models.Model):
                 error_code = errors[0].get("errorCode")
             if status in const.PAYMENT_STATUS_MAPPING["cancel"]:
                 self._set_canceled(
-                    _(
+                    self.env._(
                         "Transaction cancelled with error code %(error_code)s.",
                         error_code=error_code,
                     )
                 )
             elif status in const.PAYMENT_STATUS_MAPPING["declined"]:
                 self._set_error(
-                    _("Transaction declined with error code %(error_code)s.", error_code=error_code)
+                    self.env._(
+                        "Transaction declined with error code %(error_code)s.",
+                        error_code=error_code,
+                    )
                 )
             else:  # Classify unsupported payment status as the `error` tx state.
                 _logger.info(
@@ -279,13 +260,29 @@ class PaymentTransaction(models.Model):
                     {"status": status, "ref": self.reference},
                 )
                 self._set_error(
-                    _(
+                    self.env._(
                         "Received invalid transaction status %(status)s with error code"
                         " %(error_code)s.",
                         status=status,
                         error_code=error_code,
                     )
                 )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of payment to extract the amount and currency from the payment data."""
+        if self.provider_code != "worldline":
+            return super()._extract_amount_data(payment_data)
+
+        # In case of failed payment, paymentResult could be given as a separate key
+        payment_result = payment_data.get("paymentResult", payment_data)
+        amount_of_money = (
+            payment_result.get("payment", {}).get("paymentOutput", {}).get("amountOfMoney", {})
+        )
+        amount = payment_utils.to_major_currency_units(
+            amount_of_money.get("amount", 0), self.currency_id
+        )
+        currency_code = amount_of_money.get("currencyCode")
+        return {"amount": amount, "currency_code": currency_code}
 
     @staticmethod
     def _worldline_extract_payment_method_data(payment_data):

@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { rotate } from "@web/core/utils/arrays";
@@ -117,7 +117,7 @@ export class PowerboxPlugin extends Plugin {
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
         this.overlay = this.dependencies.overlay.createOverlay(Powerbox);
 
-        this.state = reactive({});
+        this.state = proxy({});
         this.overlayProps = {
             document: this.document,
             close: () => this.overlay.close(),

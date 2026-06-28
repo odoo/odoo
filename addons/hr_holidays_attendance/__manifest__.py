@@ -9,7 +9,6 @@ Convert employee's extra hours to leave allocations.
     'depends': ['hr_attendance', 'hr_holidays'],
     'auto_install': True,
     'data': [
-        'security/ir.model.access.csv',
         'views/hr_leave_allocation_views.xml',
         'views/hr_work_entry_type_views.xml',
         'views/hr_leave_views.xml',
@@ -18,6 +17,7 @@ Convert employee's extra hours to leave allocations.
         'views/hr_leave_attendance_report_views.xml',
         'views/hr_attendance_overtime_views.xml',
         'data/hr_holidays_attendance_data.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [
@@ -27,6 +27,7 @@ Convert employee's extra hours to leave allocations.
             'hr_holidays_attendance/static/tests/tours/*.js',
         ],
     },
+    'post_init_hook': '_assign_compensable_as_leave_to_overtime',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

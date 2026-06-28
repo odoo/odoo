@@ -18,6 +18,7 @@
                     </div>
                     <field name="answer_ids">
                         <list editable="bottom" create="true" delete="true">
+                            <field name="display_name" column_invisible="True"/> <!-- 'display_name' is necessary for the many2many_tags to work on slide_slide_views -->
                             <field name="text_value"/>
                             <field name="is_correct"/>
                             <field name="comment"/>

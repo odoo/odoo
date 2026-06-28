@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!-- Outer template: renders 4 copies per group of pickings with different languages -->
+        <template id="report_cmr">
+            <t t-call="web.html_container">
+                <t t-foreach="pickings_data" t-as="data">
+                    <t t-call="stock_fleet.report_cmr_picking_copies"/>
+                </t>
+            </t>
+        </template>
+
+        <!-- Sub-template: 4 copies for a group of pickings, similar in consignee_id and carrier_id -->
+        <template id="report_cmr_picking_copies">
+            <t t-set="should_compress_goods_rows" t-value="data['should_compress_goods_rows']"/>
+            <t t-set="sender_id" t-value="data['sender_id']"/>
+            <t t-set="consignee_id" t-value="data['consignee_id']"/>
+            <t t-set="carrier_id" t-value="data['carrier_id']"/>
+            <t t-set="delivery_address" t-value="data['delivery_address']"/>
+            <t t-set="warehouse_id" t-value="data['warehouse_id']"/>
+
+            <div class="article">
+                <t t-set="copy_lang_code" t-value="consignee_id.lang or 'en_US'"/>
+
+                <t t-set="copy_label" t-value="'copy_sender'"/>
+                <t t-call="stock_fleet.report_cmr_document"/>
+
+                <t t-set="copy_label" t-value="'copy_consignee'"/>
+                <t t-call="stock_fleet.report_cmr_document"/>
+
+                <t t-set="copy_label" t-value="'copy_carrier'"/>
+                <t t-call="stock_fleet.report_cmr_document"/>
+
+                <t t-set="copy_label" t-value="'copy_extra'"/>
+                <t t-call="stock_fleet.report_cmr_document"/>
+            </div>
+        </template>
+
+        <!-- Helper: renders a translated label below the English label for non-English copies -->
+        <template id="report_cmr_translated_label">
+            <span class="cmr-translated">
+                <t t-if="label_key == 'copy_sender'">Copy for the sender</t>
+                <t t-elif="label_key == 'copy_consignee'">Copy for the consignee</t>
+                <t t-elif="label_key == 'copy_carrier'">Copy for the carrier</t>
+                <t t-elif="label_key == 'box1'">Sender (name, address, country)</t>
+                <t t-elif="label_key == 'box2'">Consignee (name, address, country)</t>
+                <t t-elif="label_key == 'box3'">Place of delivery of the goods (place, country)</t>
+                <t t-elif="label_key == 'box4'">Place and date of taking over the goods (place, country, date)</t>
+                <t t-elif="label_key == 'box5'">Annexed documents</t>
+                <t t-elif="label_key == 'box6'">Marks and Nos.</t>
+                <t t-elif="label_key == 'box7'">Number of packages</t>
+                <t t-elif="label_key == 'box8'">Method of packing</t>
+                <t t-elif="label_key == 'box9'">Nature of the goods</t>
+                <t t-elif="label_key == 'box10'">Statistical No.</t>
+                <t t-elif="label_key == 'box11'">Gross weight kg</t>
+                <t t-elif="label_key == 'box12'">Volume m³</t>
+                <t t-elif="label_key == 'box13'">Sender's instructions (customs and other formalities)</t>
+                <t t-elif="label_key == 'box14'">Directions as to freight payment</t>
+                <t t-elif="label_key == 'box15'">Cash on delivery</t>
+                <t t-elif="label_key == 'box16'">Carrier (name, address, country)</t>
+                <t t-elif="label_key == 'box17'">Successive carriers (name, address, country)</t>
+                <t t-elif="label_key == 'box18'">Carrier's reservations and observations</t>
+                <t t-elif="label_key == 'box19'">Special agreements</t>
+                <t t-elif="label_key == 'box20'">To be paid by</t>
+                <t t-elif="label_key == 'box21'">Established in / on</t>
+                <t t-elif="label_key == 'box22'">Signature and stamp of the sender</t>
+                <t t-elif="label_key == 'box23'">Signature and stamp of the carrier</t>
+                <t t-elif="label_key == 'box24'">Signature and stamp of the consignee</t>
+                <t t-elif="label_key == 'name'">Name</t>
+                <t t-elif="label_key == 'address'">Address</t>
+                <t t-elif="label_key == 'date'">Date</t>
+                <t t-elif="label_key == 'cmr_title'">CMR INTERNATIONAL CONSIGNMENT NOTE</t>
+                <t t-elif="label_key == 'cmr_desc'">This carriage is subject notwithstanding any clause to the contrary, to the convention on the contact for the international carriage of goods by road (CMR)</t>
+                <t t-elif="label_key == 'time_of_arrival'">Time of arrival</t>
+                <t t-elif="label_key == 'time_of_departure'">Time of departure</t>
+                <t t-elif="label_key == 'freight_paid'">Freight paid</t>
+                <t t-elif="label_key == 'freight_to_be_paid'">Freight to be paid</t>
+                <t t-elif="label_key == 'tractor'">Tractor licence plate</t>
+                <t t-elif="label_key == 'trailer'">Trailer licence plate</t>
+                <t t-elif="label_key == 'class'">Class</t>
+                <t t-elif="label_key == 'number'">Number</t>
+                <t t-elif="label_key == 'letter'">Letter</t>
+                <t t-elif="label_key == 'sender'">Sender</t>
+                <t t-elif="label_key == 'consignee'">Consignee</t>
+                <t t-elif="label_key == 'carriage_charges'">Carriage charges</t>
+                <t t-elif="label_key == 'reductions'">Reductions</t>
+                <t t-elif="label_key == 'balance'">Balance</t>
+                <t t-elif="label_key == 'supplement_charges'">Supplement charges</t>
+                <t t-elif="label_key == 'miscellaneous'">Miscellaneous</t>
+                <t t-elif="label_key == 'total_to_be_paid'">Total to be paid</t>
+                <t t-elif="label_key == 'loading_list'">See the attached loading list of products</t>
+                <t t-elif="label_key == 'loading_list_title'">Loading list of products</t>
+            </span>
+        </template>
+
+        <!-- Sub-template: goods table -->
+        <template id="report_cmr_goods_table">
+            <table>
+                <thead class="text-center fw-bold py-3">
+                    <tr>
+                        <th>
+                            <div class="cmr-label"><t t-translation="off">6. Marks and Nos.</t></div>
+                            <t t-if="not copy_lang_code.startswith('en')"><t t-set="label_key" t-value="'box6'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>
+                        </th>
+                        <th>
+                            <div class="cmr-label"><t t-translation="off">7. Number of packages</t></div>
+                            <t t-if="not copy_lang_code.startswith('en')"><t t-set="label_key" t-value="'box7'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>
+                        </th>
+                        <th>
+                            <div class="cmr-label"><t t-translation="off">8. Method of packing</t></div>
+                            <t t-if="not copy_lang_code.startswith('en')"><t t-set="label_key" t-value="'box8'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>
+                        </th>
+                        <th>
+                            <div class="cmr-label"><t t-translation="off">9. Nature of the goods</t></div>
+                            <t t-if="not copy_lang_code.startswith('en')"><t t-set="label_key" t-value="'box9'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>
+                        </th>
+                        <th>
+                            <div class="cmr-label"><t t-translation="off">10. Statistical No.</t></div>
+                            <t t-if="not copy_lang_code.startswith('en')"><t t-set="label_key" t-value="'box10'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>
+                        </th>
+                        <th>
+                            <div class="cmr-label"><t t-translation="off">11. Gross weight kg</t></div>
+                            <t t-if="not copy_lang_code.startswith('en')"><t t-set="label_key" t-value="'box11'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>
+                        </th>
+                        <th>
+                            <div class="cmr-label"><t t-translation="off">12. Volume m³</t></div>
+                            <t t-if="not copy_lang_code.startswith('en')"><t t-set="label_key" t-value="'box12'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <t t-if="should_compress_goods_rows">
+                        <tr>
+                            <td/><td/><td/>
+                            <td><div>See the attached loading list of products</div><t t-if="not copy_lang_code.startswith('en')"><t t-set="label_key" t-value="'loading_list'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t></td>
+                            <td/><td/><td/>
+                        </tr>
+                    </t>
+                    <t t-else="">
+                        <t t-foreach="data['goods_rows']" t-as="row">
+                            <tr>
+                                <td class="align-middle"><div t-out="row['package_name']"/></td>
+                                <t t-if="row_first">
+                                    <td t-att-rowspan="len(data['goods_rows'])" class="align-middle">
+                                        <t t-out="data['outermost_packages_count'] or False"/>
+                                    </td>
+                                </t>
+                                <td class="align-middle"><t t-out="row['packing_method']"/></td>
+                                <td class="align-middle">
+                                    <t t-foreach="row['products']" t-as="prod_qty">
+                                        <t t-out="'%g' % prod_qty[0]"/><t t-if="prod_qty[1]"> <t t-out="prod_qty[1]"/> of</t> <t t-translation="off" t-out="prod_qty[2]"/><br/>
+                                    </t>
+                                </td>
+                                <td class="align-middle">
+                                    <t t-foreach="row['hs_codes']" t-as="hs">
+                                        <t t-out="hs"/><br/>
+                                    </t>
+                                </td>
+                                <td class="align-middle"><t t-out="'%g' % row['weight'] if row['weight'] else False"/></td>
+                                <td class="align-middle"><t t-out="'%g' % row['volume'] if row['volume'] else False"/></td>
+                            </tr>
+                        </t>
+                    </t>
+                </tbody>
+                <tbody class="fw-bold">
+                    <tr>
+                        <td>Class<t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'class'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t></td>
+                        <td>Number<t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'number'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t></td>
+                        <td>Letter<t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'letter'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t></td>
+                        <td>ADR</td>
+                        <td>&#8721;</td>
+                        <td class="text-center"><t t-out="'%g' % kg_uom_id.round(sum(row['weight'] for row in data['goods_rows']))"/></td>
+                        <td class="text-center"><t t-out="'%g' % m3_uom_id.round(sum(row['volume'] for row in data['goods_rows']))"/></td>
+                    </tr>
+                </tbody>
+            </table>
+        </template>
+
+        <!-- CMR document basic template -->
+        <template id="report_cmr_document">
+            <div t-attf-class="o_report_cmr page cmr-copy-{{copy_label}}">
+                    <table class="border-top-0">
+                        <tbody>
+                            <tr>
+                                <td class="w-50 fw-bold border-top-0">
+                                    <span t-if="copy_label == 'copy_sender'">Copy for the sender</span>
+                                    <span t-if="copy_label == 'copy_consignee'">Copy for the consignee</span>
+                                    <span t-if="copy_label == 'copy_carrier'">Copy for the carrier</span>
+                                    <t t-if="not copy_lang_code.startswith('en')">
+                                        / <t t-set="label_key" t-value="copy_label"/>
+                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                    </t>
+                                </td>
+                                <td class="fw-bold border-top-0">Reference No. <t t-out="data['reference']"/></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="cmr-label"><t t-translation="off">1. Sender (name, address, country)</t></div>
+                                    <t t-if="not copy_lang_code.startswith('en')">
+                                        <t t-set="label_key" t-value="'box1'"/>
+                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                    </t>
+                                    <div class="mt-2">
+                                        <span class="cmr-field-label"><t t-translation="off">Name</t><t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'name'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>: </span>
+                                        <span t-field="sender_id.name"/>
+                                    </div>
+                                    <div class="mt-2">
+                                        <span class="cmr-field-label"><t t-translation="off">Address</t><t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'address'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>: </span>
+                                        <t t-if="sender_id">
+                                            <span t-field="sender_id.street"/><br/>
+                                            <span class="fw-bold invisible">Address: </span>
+                                            <span t-field="sender_id.zip"/> <span t-field="sender_id.city"/>, <span t-field="sender_id.state_id.name"/>, <span t-field="sender_id.country_id.name"/>
+                                        </t>
+                                    </div>
+                                </td>
+                                <td class="text-center p-1">
+                                    <span class="d-block">CMR INTERNATIONAL CONSIGNMENT NOTE</span>
+                                    <span class="d-block">This carriage is subject notwithstanding any clause to the contrary, to the convention on the contact for the international carriage of goods by road (CMR)</span>
+                                    <br/>
+                                    <t t-if="not copy_lang_code.startswith('en')">
+                                        <div>
+                                            <t t-set="label_key" t-value="'cmr_title'"/>
+                                            <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                        </div>
+                                        <div>
+                                            <t t-set="label_key" t-value="'cmr_desc'"/>
+                                            <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                        </div>
+                                    </t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="cmr-label"><t t-translation="off">2. Consignee (name, address, country)</t></div>
+                                    <t t-if="not copy_lang_code.startswith('en')">
+                                        <t t-set="label_key" t-value="'box2'"/>
+                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                    </t>
+                                    <div class="mt-2">
+                                        <span class="cmr-field-label"><t t-translation="off">Name</t><t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'name'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>: </span>
+                                        <span t-out="consignee_id.name"/>
+                                    </div>
+                                    <div class="mt-2">
+                                        <span class="cmr-field-label"><t t-translation="off">Address</t><t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'address'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>: </span>
+                                        <t t-if="consignee_id">
+                                            <span t-out="consignee_id.street"/><br/>
+                                            <span class="fw-bold invisible">Address: </span>
+                                            <span t-out="consignee_id.zip"/> <span t-out="consignee_id.city"/>, <span t-field="consignee_id.state_id.name"/>, <span t-out="consignee_id.country_id.name"/>
+                                        </t>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="cmr-label"><t t-translation="off">16. Carrier (name, address, country)</t></div>
+                                    <t t-if="not copy_lang_code.startswith('en')">
+                                        <t t-set="label_key" t-value="'box16'"/>
+                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                    </t>
+                                    <div class="mt-2">
+                                        <span class="cmr-field-label"><t t-translation="off">Name</t><t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'name'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>: </span>
+                                        <t t-if="carrier_id">
+                                            <span t-out="carrier_id.name"/>
+                                        </t>
+                                    </div>
+                                    <div class="mt-2">
+                                        <span class="cmr-field-label"><t t-translation="off">Address</t><t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'address'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>: </span>
+                                        <t t-if="carrier_id and carrier_id.company_id">
+                                            <span t-out="carrier_id.company_id.street"/><br/>
+                                            <span class="fw-bold invisible">Address: </span>
+                                            <span t-out="carrier_id.company_id.zip"/> <span t-out="carrier_id.company_id.city"/>, <span t-field="carrier_id.state_id.name"/>, <span t-out="carrier_id.company_id.country_id.name"/>
+                                        </t>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="cmr-label"><t t-translation="off">3. Place of delivery of the goods (place, country)</t></div>
+                                    <t t-if="not copy_lang_code.startswith('en')">
+                                        <t t-set="label_key" t-value="'box3'"/>
+                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                    </t>
+                                    <div class="mt-2">
+                                        <span class="cmr-field-label"><t t-translation="off">Address</t><t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'address'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>: </span>
+                                        <t t-if="delivery_address">
+                                            <span t-field="delivery_address.street"/><br/>
+                                            <span class="fw-bold invisible">Address: </span>
+                                            <span t-field="delivery_address.zip"/> <span t-field="delivery_address.city"/>, <span t-field="delivery_address.state_id.name"/>, <span t-field="delivery_address.country_id.name"/>
+                                        </t>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="cmr-label"><t t-translation="off">17. Successive carriers (name, address, country)</t></div>
+                                    <t t-if="not copy_lang_code.startswith('en')">
+                                        <t t-set="label_key" t-value="'box17'"/>
+                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                    </t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-0">
+                                    <table class="border-0 m-0">
+                                        <tbody>
+                                            <tr>
+                                                <td class="border-0">
+                                                    <div class="cmr-label"><t t-translation="off">4. Place and date of taking over the goods (place, country, date)</t></div>
+                                                    <t t-if="not copy_lang_code.startswith('en')">
+                                                        <t t-set="label_key" t-value="'box4'"/>
+                                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                    </t>
+                                                    <t t-set="warehouse_partner_id" t-value="warehouse_id.partner_id"/>
+                                                    <div class="mt-2">
+                                                        <span class="cmr-field-label"><t t-translation="off">Address</t><t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'address'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>: </span>
+                                                        <t t-if="warehouse_partner_id">
+                                                            <span t-field="warehouse_partner_id.street"/><br/>
+                                                            <span class="fw-bold invisible">Address: </span>
+                                                            <span t-field="warehouse_partner_id.zip"/> <span t-field="warehouse_partner_id.city"/>, <span t-field="warehouse_partner_id.state_id.name"/>, <span t-field="warehouse_partner_id.country_id.name"/><br/>
+                                                        </t>
+                                                        <span class="cmr-field-label"><t t-translation="off">Date</t><t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'date'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>: </span><br/>
+                                                        <div class="overflow-hidden">
+                                                            <div class="float-start w-50"><span class="cmr-field-label"><t t-translation="off">Time of arrival</t></span><t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'time_of_arrival'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>:</div>
+                                                            <div class="float-start w-50"><span class="cmr-field-label"><t t-translation="off">Time of departure</t></span><t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'time_of_departure'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>:</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="pb-4">
+                                                    <div class="cmr-label"><t t-translation="off">5. Annexed documents</t></div>
+                                                    <t t-if="not copy_lang_code.startswith('en')">
+                                                        <t t-set="label_key" t-value="'box5'"/>
+                                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                    </t>
+                                                    <t t-if="should_compress_goods_rows">
+                                                        <div class="mt-2">See the attached loading list of products<t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'loading_list'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t></div>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td class="border-bottom-0 border-start-0">
+                                    <div class="cmr-label"><t t-translation="off">18. Carrier's reservations and observations</t></div>
+                                    <t t-if="not copy_lang_code.startswith('en')">
+                                        <t t-set="label_key" t-value="'box18'"/>
+                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                    </t>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Goods table -->
+                    <t t-call="stock_fleet.report_cmr_goods_table"/>
+
+                    <table>
+                        <colgroup>
+                            <col class="w-50"/>
+                            <col class="w-50"/>
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <td class="p-0">
+                                    <table class="border-0 m-0">
+                                        <tbody>
+                                            <tr>
+                                                <td class="border-top-0 border-start-0 border-end-0 pb-4">
+                                                    <div class="cmr-label"><t t-translation="off">13. Sender's instructions (customs and other formalities)</t></div>
+                                                    <t t-if="not copy_lang_code.startswith('en')">
+                                                        <t t-set="label_key" t-value="'box13'"/>
+                                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                    </t>
+                                                    <div class="mt-2" t-out="data['notes']"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border-start-0 border-end-0 pb-5">
+                                                    <div class="pb-2">
+                                                        <div class="cmr-label"><t t-translation="off">14. Directions as to freight payment</t></div>
+                                                        <t t-if="not copy_lang_code.startswith('en')">
+                                                            <t t-set="label_key" t-value="'box14'"/>
+                                                            <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                        </t>
+                                                    </div>
+                                                    <span class="d-inline-block me-3">
+                                                        <span class="fs-6 me-1 align-middle">&#9744;</span>Freight paid
+                                                        <t t-if="not copy_lang_code.startswith('en')">
+                                                            / <t t-set="label_key" t-value="'freight_paid'"/>
+                                                            <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                        </t>
+                                                    </span>
+                                                    <span class="d-inline-block me-3">
+                                                        <span class="fs-6 me-1 align-middle">&#9744;</span>Freight to be paid
+                                                        <t t-if="not copy_lang_code.startswith('en')">
+                                                            / <t t-set="label_key" t-value="'freight_to_be_paid'"/>
+                                                            <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                        </t>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border-bottom-0 border-start-0 border-end-0 pb-5">
+                                                    <div class="cmr-label"><t t-translation="off">21. Established in / on</t></div>
+                                                    <t t-if="not copy_lang_code.startswith('en')">
+                                                        <t t-set="label_key" t-value="'box21'"/>
+                                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                    </t>
+                                                    <div class="mt-2 overflow-hidden">
+                                                        <div class="float-start w-50"><b>In:</b> <span t-field="warehouse_id.partner_id.city"/>, <span t-field="warehouse_id.partner_id.state_id.name"/>, <span t-field="warehouse_id.partner_id.country_id.name"/></div>
+                                                        <div class="float-start w-50"><b>on:</b></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td class="p-0">
+                                    <table class="border-0 m-0">
+                                        <tbody>
+                                            <tr>
+                                                <td class="border-top-0 border-start-0 border-end-0 pb-5">
+                                                    <div class="cmr-label"><t t-translation="off">19. Special agreements</t></div>
+                                                    <t t-if="not copy_lang_code.startswith('en')">
+                                                        <t t-set="label_key" t-value="'box19'"/>
+                                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border-start-0 border-end-0 p-0">
+                                                    <table class="fw-bold m-0">
+                                                        <colgroup>
+                                                            <col class="w-50"/>
+                                                            <col class="w-25"/>
+                                                            <col class="w-25"/>
+                                                        </colgroup>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>
+                                                                    <div class="p-2">
+                                                                        <div class="cmr-label"><t t-translation="off">20. To be paid by</t></div>
+                                                                        <t t-if="not copy_lang_code.startswith('en')">
+                                                                            <t t-set="label_key" t-value="'box20'"/>
+                                                                            <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                                        </t>
+                                                                    </div>
+                                                                </th>
+                                                                <th>
+                                                                    <div class="p-2">
+                                                                        <div class="cmr-label"><t t-translation="off">Sender</t></div>
+                                                                        <t t-if="not copy_lang_code.startswith('en')">
+                                                                            <t t-set="label_key" t-value="'sender'"/>
+                                                                            <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                                        </t>
+                                                                    </div>
+                                                                </th>
+                                                                <th>
+                                                                    <div class="p-2">
+                                                                        <div class="cmr-label"><t t-translation="off">Consignee</t></div>
+                                                                        <t t-if="not copy_lang_code.startswith('en')">
+                                                                            <t t-set="label_key" t-value="'consignee'"/>
+                                                                            <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                                        </t>
+                                                                    </div>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="pb-1">
+                                                                        <div class="cmr-field-label"><t t-translation="off">Carriage charges</t></div>
+                                                                        <t t-if="not copy_lang_code.startswith('en')">
+                                                                            <t t-set="label_key" t-value="'carriage_charges'"/>
+                                                                            <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                                        </t>
+                                                                    </div>
+                                                                </td>
+                                                                <td/>
+                                                                <td/>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="pb-1">
+                                                                        <div class="cmr-field-label"><t t-translation="off">Reductions</t></div>
+                                                                        <t t-if="not copy_lang_code.startswith('en')">
+                                                                            <t t-set="label_key" t-value="'reductions'"/>
+                                                                            <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                                        </t>
+                                                                    </div>
+                                                                </td>
+                                                                <td/>
+                                                                <td/>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="pb-1">
+                                                                        <div class="cmr-field-label"><t t-translation="off">Balance</t></div>
+                                                                        <t t-if="not copy_lang_code.startswith('en')">
+                                                                            <t t-set="label_key" t-value="'balance'"/>
+                                                                            <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                                        </t>
+                                                                    </div>
+                                                                </td>
+                                                                <td/>
+                                                                <td/>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="pb-1">
+                                                                        <div class="cmr-field-label"><t t-translation="off">Supplement charges</t></div>
+                                                                        <t t-if="not copy_lang_code.startswith('en')">
+                                                                            <t t-set="label_key" t-value="'supplement_charges'"/>
+                                                                            <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                                        </t>
+                                                                    </div>
+                                                                </td>
+                                                                <td/>
+                                                                <td/>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="pb-1">
+                                                                        <div class="cmr-field-label"><t t-translation="off">Miscellaneous</t></div>
+                                                                        <t t-if="not copy_lang_code.startswith('en')">
+                                                                            <t t-set="label_key" t-value="'miscellaneous'"/>
+                                                                            <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                                        </t>
+                                                                    </div>
+                                                                </td>
+                                                                <td/>
+                                                                <td/>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="pb-1">
+                                                                        <div class="cmr-field-label"><t t-translation="off">Total to be paid</t></div>
+                                                                        <t t-if="not copy_lang_code.startswith('en')">
+                                                                            <t t-set="label_key" t-value="'total_to_be_paid'"/>
+                                                                            <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                                        </t>
+                                                                    </div>
+                                                                </td>
+                                                                <td/>
+                                                                <td/>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border-bottom-0 border-start-0 border-end-0 pb-3">
+                                                    <div class="cmr-label"><t t-translation="off">15. Cash on delivery</t></div>
+                                                    <t t-if="not copy_lang_code.startswith('en')">
+                                                        <t t-set="label_key" t-value="'box15'"/>
+                                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="cmr-label"><t t-translation="off">22. Signature and stamp of the sender</t></div>
+                                    <t t-if="not copy_lang_code.startswith('en')">
+                                        <t t-set="label_key" t-value="'box22'"/>
+                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                    </t>
+                                </td>
+                                <td class="px-0 pb-5">
+                                    <div class="px-1">
+                                        <div class="cmr-label"><t t-translation="off">23. Signature and stamp of the carrier</t></div>
+                                        <t t-if="not copy_lang_code.startswith('en')">
+                                            <t t-set="label_key" t-value="'box23'"/>
+                                            <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                        </t>
+                                    </div>
+                                    <table class="mt-3 mb-5">
+                                        <tbody>
+                                            <tr>
+                                                <td class="pb-4 lh-1">
+                                                    <div>Tractor licence plate</div>
+                                                    <t t-if="not copy_lang_code.startswith('en')">
+                                                        <t t-set="label_key" t-value="'tractor'"/>
+                                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                    </t>
+                                                </td>
+                                                <td class="pb-4 lh-1">
+                                                    <div>Trailer licence plate</div>
+                                                    <t t-if="not copy_lang_code.startswith('en')">
+                                                        <t t-set="label_key" t-value="'trailer'"/>
+                                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>
+                                    <div class="cmr-label"><t t-translation="off">24. Signature and stamp of the consignee</t></div>
+                                    <t t-if="not copy_lang_code.startswith('en')">
+                                        <t t-set="label_key" t-value="'box24'"/>
+                                        <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
+                                    </t>
+                                    <div class="mt-2">
+                                        <span class="cmr-field-label"><t t-translation="off">Address: </t></span><br/>
+                                        <span class="fw-bold invisible">Address: </span><br/>
+                                        <span class="cmr-field-label"><t t-translation="off">Date: </t></span><br/>
+                                        <div class="overflow-hidden">
+                                            <div><span class="cmr-field-label"><t t-translation="off">Time of arrival</t></span><t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'time_of_arrival'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>:</div>
+                                            <div><span class="cmr-field-label"><t t-translation="off">Time of departure</t></span><t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'time_of_departure'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t>:</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </div>
+            <!-- Loading list page: appended after main CMR when goods rows exceed hard coded value set in report_picking_cmr.py -->
+            <t t-if="should_compress_goods_rows">
+                <div t-attf-class="o_report_cmr page cmr-copy-{{copy_label}}">
+                    <div class="fw-bold p-1">
+                        <span>Loading list of products<t t-if="not copy_lang_code.startswith('en')"> / <t t-set="label_key" t-value="'loading_list_title'"/><t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/></t></span>
+                    </div>
+                    <t t-set="should_compress_goods_rows" t-value="False"/>
+                    <t t-call="stock_fleet.report_cmr_goods_table"/>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

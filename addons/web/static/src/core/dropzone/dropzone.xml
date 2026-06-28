@@ -10,7 +10,7 @@
         t-on-drop="this.props.onDrop"
         t-custom-ref="root"
     >
-        <t t-slot="default">
+        <t t-call-slot="default">
             <h4>Drag Files Here <i class="fa fa-download"/></h4>
         </t>
     </div>

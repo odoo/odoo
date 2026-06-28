@@ -1,16 +1,13 @@
+import { props, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { floatField, FloatField } from "../float/float_field";
+import { floatField, FloatField, floatFieldProps } from "../float/float_field";
 import { _t } from "@web/core/l10n/translation";
 
 export class FloatFactorField extends FloatField {
-    static props = {
-        ...FloatField.props,
-        factor: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        ...FloatField.defaultProps,
-        factor: 1,
-    };
+    props = props({
+        ...floatFieldProps,
+        factor: t.number().optional(1),
+    });
 
     parse(value) {
         return super.parse(value) / this.props.factor;

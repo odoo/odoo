@@ -9,7 +9,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, setInputFiles, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
+import { press, rightClick } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 import { getService, mockService, serverState } from "@web/../tests/web_test_helpers";
@@ -21,7 +21,7 @@ test("Messages are received cross-tab", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await contains(`${env1.selector} .o-mail-Thread:contains('Welcome to #General!')`); // wait for loaded and focus in input
@@ -40,7 +40,7 @@ test("Thread rename", async () => {
         name: "General",
     });
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await insertText(`${env1.selector} .o-mail-DiscussContent-threadName:enabled`, "Sales", {
@@ -59,7 +59,7 @@ test("Thread description update", async () => {
         name: "General",
     });
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await insertText(
@@ -97,8 +97,9 @@ test.skip("Channel subscription is renewed when channel is added from invite", a
     });
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel");
-    getService("orm").call("discuss.channel", "add_members", [[channelId]], {
-        partner_ids: [serverState.partnerId],
+    getService("mail.store").fetchStoreData("/discuss/channel/add_members", {
+        channel_id: channelId,
+        user_ids: [serverState.userId],
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
     await expect.waitForSteps(["update-channels"]); // FIXME: sometimes 1 or 2 update-channels
@@ -114,13 +115,14 @@ test("Adding attachments", async () => {
         message_type: "comment",
     });
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     const file = new File(["file content"], "test.txt", { type: "text/plain" });
     await contains(`${env1.selector} .o-mail-Message:contains('Hello world!')`);
     await contains(`${env2.selector} .o-mail-Message:contains('Hello world!')`);
-    await click(`${env1.selector} .o-mail-Message button[title='Edit']`);
+    await click(`${env1.selector} .o-mail-Message button[title='Expand']`);
+    await click(`${env1.selector} .o-dropdown-item:text('Edit')`);
     await click(`${env1.selector} .o-mail-Message .o-mail-Composer button[title='More Actions']`);
     await click(`${env1.selector} .o_popover button[name='upload-files']`);
     await click(`${env1.selector} .o-mail-Message .o-mail-Composer .o_input_file`);
@@ -150,7 +152,7 @@ test("Remove attachment from message", async () => {
         res_id: channelId,
     });
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await contains(`${env1.selector} .o-mail-AttachmentCard:has(:text('test.txt'))`);
@@ -178,7 +180,9 @@ test("Message (hard) delete notification", async () => {
     });
     await start();
     await openDiscuss("mail.box_inbox");
-    await click("[title='Bookmark']");
+    await contains(".o-mail-Message");
+    await rightClick(".o-mail-Message");
+    await click(".o-dropdown-item:contains('Bookmark')");
     await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge:text('1')"] });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
@@ -187,5 +191,5 @@ test("Message (hard) delete notification", async () => {
     });
     await contains(".o-mail-Message", { count: 0 });
     await contains("button:has(:text('Inbox'))", { contains: [".badge", { count: 0 }] });
-    await contains("button:has(:text('Bookmarks'))", { contains: [".badge", { count: 0 }] });
+    await contains("button:has(:text('Bookmarks'))", { count: 0 });
 });

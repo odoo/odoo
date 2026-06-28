@@ -6,6 +6,7 @@ import json
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
+from odoo.addons.web.controllers.utils import clean_action
 
 
 class StockPicking(models.Model):
@@ -21,7 +22,7 @@ class StockPicking(models.Model):
     carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
     allowed_carrier_ids = fields.Many2many('delivery.carrier', compute='_compute_allowed_carrier_ids')
-    carrier_id = fields.Many2one("delivery.carrier", string="Carrier", domain="[('id', 'in', allowed_carrier_ids)]", check_company=True)
+    carrier_id = fields.Many2one("delivery.carrier", string="Carrier", domain="[('id', 'in', allowed_carrier_ids)]", check_company=True, index='btree_not_null', tracking=True)
     weight = fields.Float(compute='_cal_weight', digits='Stock Weight', store=True, help="Total weight of the products in the picking.", compute_sudo=True)
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
@@ -182,7 +183,7 @@ class StockPicking(models.Model):
             if not delivery_lines:
                 delivery_lines = sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
             vals = self._prepare_sale_delivery_line_vals()
-            delivery_lines[0].write(vals)
+            delivery_lines[0].with_context(allow_delivery_cost_update=True).write(vals)
 
     def open_website_url(self):
         self.ensure_one()
@@ -226,3 +227,59 @@ class StockPicking(models.Model):
     def _should_generate_commercial_invoice(self):
         self.ensure_one()
         return self.picking_type_id.warehouse_id.partner_id.country_id != self.partner_id.country_id
+
+    def _create_return(self):
+        # Prevent copy of the carrier and carrier price when generating return picking
+        # (we have no integration of returns for now)
+        new_picking = super()._create_return()
+        self._reset_carrier_id(new_picking)
+        return new_picking
+
+    def _reset_carrier_id(self, picking):
+        """ Prevent copy of the carrier and carrier price when generating return picking
+        (we have no integration of returns for now).
+        """
+        picking.write({
+            'carrier_id': False,
+            'carrier_price': 0.0,
+        })
+
+    def _get_carrier_name(self):
+        """Return the carrier name used by the shipping provider."""
+        self.ensure_one()
+        if not self.carrier_id:
+            return None
+        carrier_key = self.carrier_id._get_delivery_type()
+        if carrier_key in ("fixed", "base_on_rule"):
+            carrier_key = self.carrier_id.name
+        return carrier_key
+
+    def _get_autoprint_report_actions(self):
+        report_actions = []
+        shipping_labels_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_carrier_labels)
+        if shipping_labels_to_print:
+            action = self.env.ref("stock_delivery.action_report_shipping_labels").report_action(shipping_labels_to_print.ids, config=False)
+            clean_action(action, self.env)
+            report_actions.append(action)
+        shipping_documents_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_export_documents)
+        if shipping_documents_to_print:
+            action = self.env.ref("stock_delivery.action_report_shipping_docs").report_action(shipping_documents_to_print.ids, config=False)
+            clean_action(action, self.env)
+            report_actions.append(action)
+        return report_actions + super()._get_autoprint_report_actions()
+
+
+class StockPickingType(models.Model):
+    _inherit = "stock.picking.type"
+
+    auto_print_carrier_labels = fields.Boolean(
+        "Auto Print Carrier Labels",
+        help="Automatically print the carrier labels of the picking when they are created.",
+    )
+    auto_print_export_documents = fields.Boolean(
+        "Auto Print Export Documents",
+        help=(
+            "Automatically print the export documents of the picking when they are created. "
+            "Availability of export documents depends on the carrier and the destination."
+        ),
+    )

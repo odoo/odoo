@@ -16,7 +16,7 @@ import {
     getSnippetView,
 } from "@html_builder/../tests/helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { animationFrame, queryText, tick } from "@odoo/hoot-dom";
+import { animationFrame, queryText, tick, click } from "@odoo/hoot-dom";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -397,4 +397,83 @@ test("Use the sidebar 'target' button", async () => {
         ".o_customize_tab .options-container[data-container-title='Banner'] button[title='Select only this block']"
     ).click();
     expect(".options-container").toHaveCount(1);
+});
+
+test("Custom snippet appears in block and inner content on save and is removed on delete", async () => {
+    const mapSnippetDesc = {
+        name: "Map",
+        groupName: "geo",
+        structureContent: `
+            <section data-snippet="s_map" data-name="Map">
+                <div class="o_map">Map</div>
+            </section>
+        `,
+        innerContent: `<div data-snippet="s_map" class="o_snippet_drop_in_only">Map</div>`,
+    };
+
+    const snippets = {
+        snippet_groups: [
+            "<div name='Custom' data-o-snippet-group='custom'><section data-snippet='s_snippet_group'></section></div>",
+            "<div name='Geo' data-o-snippet-group='geo'><section data-snippet='s_snippet_group'></section></div>",
+        ],
+        snippet_structure: [
+            getSnippetStructure({
+                name: mapSnippetDesc.name,
+                groupName: mapSnippetDesc.groupName,
+                content: mapSnippetDesc.structureContent,
+            }),
+        ],
+        snippet_content: [
+            getInnerContent({
+                name: mapSnippetDesc.name,
+                content: mapSnippetDesc.innerContent,
+            }),
+        ],
+        snippet_custom: [],
+    };
+
+    const snippetWithMap = `
+        <section data-snippet="s_map" data-name="Map">
+            <div class="o_map">Map content</div>
+        </section>
+    `;
+
+    await setupWebsiteBuilder(snippetWithMap, { snippets });
+
+    onRpc("ir.ui.view", "save_snippet", ({ kwargs }) => {
+        expect.step("save snippet");
+        const { name, arch } = kwargs;
+        const customSnippet = `<div name="${name}">${arch}</div>`;
+        snippets.snippet_custom.push(customSnippet);
+        return name;
+    });
+    onRpc("ir.ui.view", "delete_snippet", () => {
+        expect.step("delete snippet");
+        snippets.snippet_custom.length = 0;
+        return true;
+    });
+    onRpc("ir.ui.view", "render_public_asset", () => getSnippetView(snippets));
+
+    // Save the snippet and check that it appears in the sidebar.
+    await contains(":iframe section[data-snippet='s_map']").click();
+    await contains(".oe_snippet_save").click();
+    expect.verifySteps(["save snippet"]);
+    await contains(".o-snippets-tabs button:contains(Blocks)").click();
+    expect(
+        ".o-snippets-menu div:contains('Custom Inner Content') div[name='Custom Map']"
+    ).toHaveCount(1);
+    expect(".o-snippets-menu .o_snippet[data-snippet-group='custom']").toHaveCount(1);
+
+    // Delete the custom snippet and check that it is removed from the sidebar.
+    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
+    await waitForSnippetDialog();
+    await contains(
+        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe button:has(.fa-trash)"
+    ).click();
+    await contains(".o_dialog .btn:contains('Delete Block')").click();
+    expect.verifySteps(["delete snippet"]);
+    expect(
+        ".o-snippets-menu div:contains('Custom Inner Content') div[name='Custom Map']"
+    ).toHaveCount(0);
+    expect(".o-snippets-menu .o_snippet[data-snippet-group='custom']").toHaveCount(0);
 });

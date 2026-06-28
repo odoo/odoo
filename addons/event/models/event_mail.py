@@ -238,6 +238,7 @@ class EventMail(models.Model):
             ("mail_registration_ids", "not in", self.env["event.mail.registration"]._search(
                 [('scheduler_id', 'in', self.ids)]
             )),
+            ('main_registration_id', '=', False),
         ]
         if context_registrations:
             new_attendee_domain += [

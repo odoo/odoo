@@ -36,6 +36,8 @@ $o-social-colors: (
     "threads": #000000,
 );
 
+$o-we-contrast-border-color: mix(white, $o-we-color-accent, 40%) !default;
+
 // Needed to be changed to be high enough to not overflow when a user
 // has a page with a lot of content (10000px was proven to be too small)
 $o-we-handles-offset-to-hide: 100000px !default;
@@ -45,12 +47,31 @@ $o-we-handles-accent-color-preview: $o-enterprise-color !default;
 $o-we-handle-edge-size: $o-we-handles-btn-size !default;
 $o-we-handle-border-width: 2px !default;
 $o-we-handle-inside-line-width: 3px !default;
+$o-we-handle-contrast-border: 1px solid $o-we-contrast-border-color !default;
+
+$o-we-hover-overlay-color: $o-we-contrast-border-color !default;
 
 $o-we-dropzone-size: 30px !default; // $grid-gutter-width (todo: allow to use the variable)
-$o-we-dropzone-border-width: 2px !default;
-$o-we-dropzone-border: $o-we-dropzone-border-width dashed $o-brand-odoo !default;
+$o-we-dropzone-border-width: 1px !default;
+$o-we-dropzone-border: $o-we-dropzone-border-width dashed $o-we-contrast-border-color !default;
+$o-we-dropzone-border-radius: 3px !default;
 $o-we-dropzone-accent-color: $o-we-color-accent !default;
 $o-we-dropzone-bg-color: rgba($o-we-dropzone-accent-color, .5) !default;
+$o-we-dropzone-z-index: 1029 !default;
+$o-we-dropzone-font-size: 18px !default;
+$o-we-dropzone-text-color: white !default;
+$o-we-dropzone-sanitized-color: rgba(#646464, .5) !default;
+
+$o-we-inner-content-dropzone-size: 4px !default;
+$o-we-inner-content-dropzone-border: $o-we-inner-content-dropzone-size/2 solid $o-we-contrast-border-color, !default;
+
+@mixin o-we-dropzone-base-style {
+    background: $o-we-dropzone-bg-color;
+    outline: $o-we-dropzone-border;
+    outline-offset: -$o-we-dropzone-border-width;
+    border: 1px solid $o-we-dropzone-accent-color;
+    border-radius: $o-we-dropzone-border-radius;
+}
 
 $o-we-toolbar-height: 40px !default;
 $o-we-toolbar-color-accent: #018597 !default;
@@ -271,6 +292,14 @@ $o_shape_angular_size_regular: 15rem !default;
 $o_shape_wavy_size_regular: 15rem !default;
 $o_shape_pattern_size_tiny: o-to-rem(200px) !default;
 $o_shape_pattern_size_regular: o-to-rem(800px) !default;
+$o_shape_miscellaneous_size_tiny: MAX(6rem, 5vw) !default;
+$o_shape_miscellaneous_size_regular: 10rem !default;
+$o_shape_miscellaneous_size_big: 50rem !default;
+$o_shape_nature_size_tiny: 10rem !default;
+$o_shape_nature_size_regular: MAX(130px, 15vw) !default;
+$o_shape_nature_size_big: MAX(200px, 20vw) !default;
+$o_shape_travel_size_regular: 10rem !default;
+$o_shape_travel_size_big: MAX(800px, 100vw) !default;
 
 .o_we_shape {
     --ShapeConnections--size-tiny: #{$o_shape_connection_size_tiny};
@@ -280,6 +309,14 @@ $o_shape_pattern_size_regular: o-to-rem(800px) !default;
     --ShapeWavy--size-regular: #{$o_shape_wavy_size_regular};
     --ShapePattern--size-tiny: #{$o_shape_pattern_size_tiny};
     --ShapePattern--size-regular: #{$o_shape_pattern_size_regular};
+    --ShapeMiscellaneous--size-tiny: #{$o_shape_miscellaneous_size_tiny};
+    --ShapeMiscellaneous--size-regular: #{$o_shape_miscellaneous_size_regular};
+    --ShapeMiscellaneous--size-big: #{$o_shape_miscellaneous_size_big};
+    --ShapeNature--size-tiny: #{$o_shape_nature_size_tiny};
+    --ShapeNature--size-regular: #{$o_shape_nature_size_regular};
+    --ShapeNature--size-big: #{$o_shape_nature_size_big};
+    --ShapeTravel--size-regular: #{$o_shape_travel_size_regular};
+    --ShapeTravel--size-big: #{$o_shape_travel_size_big};
 }
 
 .o_we_shape_btn_content .o_we_shape {
@@ -290,6 +327,14 @@ $o_shape_pattern_size_regular: o-to-rem(800px) !default;
     --ShapePattern--size-regular: 100%;
     --ShapePattern--size-tiny: 50%;
     --ShapeWavy--size-regular: 100%;
+    --ShapeMiscellaneous--size-tiny: 50%;
+    --ShapeMiscellaneous--size-regular: 75%;
+    --ShapeMiscellaneous--size-big: 200%;
+    --ShapeNature--size-tiny: 50%;
+    --ShapeNature--size-regular: 75%;
+    --ShapeNature--size-big: 100%;
+    --ShapeTravel--size-regular: 75%;
+    --ShapeTravel--size-big: 200%;
 }
 
 // Regroups bg shapes available in the Web editor
@@ -340,6 +385,8 @@ $o-bg-shapes-current: (
     'Blurry/04': ('position': top, 'size': 100% auto, 'colors': (1,2,3)),
     'Blurry/05': ('position': center, 'size': 100% 100%, 'colors': (1,2,4)),
     'Blurry/06': ('position': center, 'size': 100% 100%, 'colors': (1,4)),
+    'Blurry/07': ('position': top, 'size': 100% auto, 'colors': (1,2,3)),
+    'Blurry/08': ('position': center, 'size': 100% 100%, 'colors': (1,2)),
     'Bold/01_001': ('position': top, 'size': 100% auto, 'colors': (5)),
     'Bold/13': ('position': bottom, 'size': 100% 50%, 'colors': (5)),
     'Bold/14': ('position': center, 'size': 100%, 'colors': (1, 5)),
@@ -400,6 +447,19 @@ $o-bg-shapes-current: (
     'Grids/06': ('position': center, 'size': 100% 100%, 'colors': (5)),
     'Grids/07': ('position': right center, 'size': auto 100%, 'colors': (5)),
     'Grids/08': ('position': bottom, 'size': 100% auto, 'colors': (5)),
+    'Miscellaneous/01': ('position': center, 'size': 100% auto, 'colors': (1)),
+    'Miscellaneous/02': ('position': bottom, 'size': auto var(--ShapeMiscellaneous--size-regular), 'colors': (1), 'repeat-x': true),
+    'Miscellaneous/03': ('position': bottom, 'size': auto var(--ShapeMiscellaneous--size-tiny), 'colors': (1,4), 'repeat-x': true),
+    'Miscellaneous/04': ('position': left center, 'size': 100% auto, 'colors': (1)),
+    'Miscellaneous/05': ('position': bottom, 'size': auto var(--ShapeMiscellaneous--size-big), 'colors': (3,4), 'repeat-x': true),
+    'Nature/01': ('position': bottom, 'size': auto var(--ShapeNature--size-regular), 'colors': (1)),
+    'Nature/02': ('position': bottom right, 'size': auto var(--ShapeNature--size-big), 'colors': (1)),
+    'Nature/03': ('position': bottom, 'size': auto var(--ShapeNature--size-tiny), 'colors': (1)),
+    'Nature/04': ('position': bottom, 'size': auto var(--ShapeNature--size-tiny), 'colors': (1), 'repeat-x': true),
+    'Nature/05': ('position': bottom, 'size': auto var(--ShapeNature--size-tiny), 'colors': (1), 'repeat-x': true),
+    'Nature/06': ('position': bottom, 'size': auto var(--ShapeNature--size-tiny), 'colors': (1,3,5), 'repeat-x': true),
+    'Nature/07': ('position': right center, 'size': auto 100%, 'colors': (1)),
+    'Nature/08': ('position': right center, 'size': auto 100%, 'colors': (1,2,5)),
     'Patterns/01': ('position': top, 'size': var(--ShapePattern--size-regular) auto, 'colors': (5), 'repeat-y': true, 'repeat-x': true),
     'Patterns/02': ('position': top, 'size': var(--ShapePattern--size-regular) auto, 'colors': (5), 'repeat-y': true, 'repeat-x': true),
     'Patterns/03': ('position': top, 'size': var(--ShapePattern--size-regular) auto, 'colors': (5), 'repeat-y': true, 'repeat-x': true),
@@ -412,6 +472,12 @@ $o-bg-shapes-current: (
     'Rainy/08_001': ('position': top, 'size': 100% auto, 'colors': (1, 4)),
     'Rainy/09_001': ('position': top, 'size': 100% auto, 'colors': (1)),
     'Rainy/10': ('position': center, 'size': 100% auto, 'colors': (1, 3)),
+    'Travel/01': ('position': bottom, 'size': auto var(--ShapeTravel--size-regular), 'colors': (1), 'repeat-x': true),
+    'Travel/02': ('position': bottom, 'size': auto var(--ShapeTravel--size-regular), 'colors': (1,3,5), 'repeat-x': true),
+    'Travel/03': ('position': bottom right, 'size': var(--ShapeTravel--size-big), 'colors': (1,3,5)),
+    'Travel/04': ('position': bottom right, 'size': var(--ShapeTravel--size-big), 'colors': (1,3,5)),
+    'Travel/05': ('position': bottom, 'size': 100% auto, 'colors': (1,2,4)),
+    'Travel/06': ('position': top, 'size': 100% auto, 'colors': (1,4)),
     'Wavy/03': ('position': top, 'size': 100% auto, 'colors': (1, 2)),
     'Wavy/04': ('position': bottom, 'size': 100% auto, 'colors': (1, 5)),
     'Wavy/08_001': ('position': top, 'size': 100% auto, 'colors': (5)),
@@ -602,5 +668,43 @@ $o-bg-shapes: (
     &:focus, &:focus-within {
         border-color: var(--o-hb-input-active-border, #{$o-we-sidebar-content-field-input-border-color});
         color: var(--o-hb-row-color-active, #{$o-we-fg-lighter});
+    }
+}
+
+$-editor-messages-margin-x: 2%;
+
+@mixin o-editor-messages {
+    @include o-we-dropzone-base-style;
+    min-height: $o-we-dropzone-size;
+    text-align: center;
+
+    &, &.text-muted {
+        color: $o-we-dropzone-text-color !important;
+    }
+
+    &:before {
+        content: attr(data-editor-message);
+        display: block;
+        font-size: $o-we-dropzone-font-size;
+         // Required to prevent the theme font family from being applied.
+        font-family: $o-we-font-family;
+    }
+
+    // Show the default editor message only for "empty" elements
+    &:not(:empty) {
+        &[data-editor-message-default]:before {
+            content: none;
+        }
+    }
+
+    &:after {
+        content: attr(data-editor-sub-message);
+        display: block;
+        font-size: $o-we-dropzone-font-size - 2;
+        font-family: $o-we-font-family;
+    }
+
+    &::before, &::after {
+        text-shadow: 0 0 5px $o-we-dropzone-accent-color;
     }
 }

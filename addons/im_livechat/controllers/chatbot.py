@@ -15,7 +15,7 @@ class LivechatChatbotScriptController(http.Controller):
         chatbot_language = chatbot._get_chatbot_language()
         message = discuss_channel.with_context(lang=chatbot_language)._chatbot_restart(chatbot)
         store = Store().add(message, "_store_message_fields")
-        return {"message_id": message.id, "store_data": store.get_result()}
+        return {"message_id": message.id, "store_data": store}
 
     @mail_route("/chatbot/answer/save", type="jsonrpc", auth="public")
     def chatbot_save_answer(self, channel_id, message_id, selected_answer_id):
@@ -39,15 +39,26 @@ class LivechatChatbotScriptController(http.Controller):
         if not discuss_channel:
             return None
 
+        user, guest = self.env["res.users"]._get_current_persona()
+        store = Store(bus_channel=user or guest)
+        store.data_id = data_id
+        # sudo: discuss.channel - checking whether there is an agent is allowed
+        if discuss_channel.sudo().livechat_agent_partner_ids:
+            # sudo: im_livechat.channel.member.history - visitor can access members history of their channel
+            store.add(
+                discuss_channel,
+                lambda res: res.many(
+                    "livechat_channel_member_history_ids",
+                    "_store_member_history_fields",
+                    sudo=True,
+                ),
+            )
+            discuss_channel._notify_current_step_is_last(store)
+            store.resolve_data_request()
+            return None
+
         next_step = False
-        # sudo: chatbot.script.step - visitor can access current step of the script
         if current_step := discuss_channel.sudo().chatbot_current_step_id:
-            if (
-                current_step.step_type == "forward_operator"
-                # sudo: discuss.channel - checking whether there is an agent is allowed
-                and discuss_channel.sudo().livechat_agent_partner_ids
-            ):
-                return None
             chatbot = current_step.chatbot_script_id
             domain = [
                 ("author_id", "!=", chatbot.operator_partner_id.id),
@@ -61,9 +72,6 @@ class LivechatChatbotScriptController(http.Controller):
             chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id).with_context(lang=chatbot_language)
             if chatbot.exists():
                 next_step = chatbot.script_step_ids[:1]
-        user, guest = self.env["res.users"]._get_current_persona()
-        store = Store(bus_channel=user or guest)
-        store.data_id = data_id
         if not next_step:
             # sudo - discuss.channel: marking the channel as closed as part of the chat bot flow
             discuss_channel.sudo().livechat_end_dt = fields.Datetime.now()
@@ -83,10 +91,16 @@ class LivechatChatbotScriptController(http.Controller):
                 ),
             )
             store.resolve_data_request()
-            store.bus_send()
-            return store.get_result()
+            return None
         # sudo: discuss.channel - updating current step on the channel is allowed
         discuss_channel.sudo().chatbot_current_step_id = next_step.id
+        # Send the current step on the awaited response store as well: it is otherwise
+        # only broadcast by the channel write() over a separate bus channel that the
+        # client chatbot flow does not await, so it may not have arrived yet when the
+        # next step trigger fails and the client reads it to decide whether to show the
+        # retry banner.
+        # sudo: chatbot.script.step - visitor can access the current step of their channel
+        store.add(discuss_channel.sudo(), ["chatbot_current_step_id"])
         step_data = next_step._process_step(discuss_channel)
         posted_message = step_data["message"]
         store.add(posted_message, "_store_message_fields")
@@ -113,7 +127,7 @@ class LivechatChatbotScriptController(http.Controller):
                 res.attr("steps", [("ADD", [chatbot_next_step])]),
             ),
         )
-        store.bus_send()
+        return None
 
     @mail_route("/chatbot/step/validate_contact_info", type="jsonrpc", auth="public")
     def chatbot_validate_contact_info(self, channel_id):
@@ -151,5 +165,5 @@ class LivechatChatbotScriptController(http.Controller):
                         value=posted_message,
                     ),
                 )
-                result["data"] = store.get_result()
+                result["data"] = store
         return result

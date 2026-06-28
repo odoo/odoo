@@ -11,6 +11,7 @@ from . import mail_alias_mixin_optional
 from . import mail_alias_mixin
 from . import mail_render_mixin
 from . import mail_composer_mixin
+from . import mail_track_mixin
 from . import mail_thread
 from . import mail_thread_blacklist
 from . import mail_thread_main_attachment
@@ -43,7 +44,6 @@ from . import mail_presence
 from . import mail_push
 from . import mail_push_device
 from . import mail_scheduled_message
-from . import mail_tracking_value
 from . import mail_template
 
 # discuss
@@ -53,6 +53,7 @@ from . import res_users_settings
 from . import res_users_settings_volumes
 
 # odoo models
+from . import ir_access
 from . import ir_action_act_window
 from . import ir_actions_server
 from . import ir_attachment
@@ -74,6 +75,7 @@ from . import res_users
 from . import update
 
 # after mail specifically as discuss module depends on mail
+from . import mail_call_artifact
 from . import discuss
 
 # discuss_channel_member must be loaded first

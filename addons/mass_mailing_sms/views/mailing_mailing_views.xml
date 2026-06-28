@@ -59,12 +59,6 @@
                     </button>
                 </div>
             </xpath>
-            <xpath expr="//span[@name='canceled_text']" position="attributes">
-                <attribute name="invisible">mailing_type != 'mail'</attribute>
-            </xpath>
-            <xpath expr="//span[@name='canceled_text']" position="after">
-                <span name="canceled_text_sms" invisible="mailing_type != 'sms'">SMS Text Message have been cancelled and will not be sent.</span>
-            </xpath>
             <xpath expr="//span[@name='scheduled_text']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail'</attribute>
             </xpath>
@@ -76,18 +70,6 @@
             </xpath>
             <xpath expr="//span[@name='process_text']" position="after">
                 <span name="process_text_sms" invisible="mailing_type != 'sms'">SMS Text Messages are being processed.</span>
-            </xpath>
-            <xpath expr="//span[@name='sent']" position="attributes">
-                <attribute name="invisible">mailing_type != 'mail'</attribute>
-            </xpath>
-            <xpath expr="//span[@name='sent']" position="after">
-                <span name="sent_sms" invisible="mailing_type != 'sms'">SMS Text Messages have been sent.</span>
-            </xpath>
-            <xpath expr="//span[@name='failed_text']" position="attributes">
-                <attribute name="invisible">mailing_type != 'mail'</attribute>
-            </xpath>
-            <xpath expr="//span[@name='failed_text']" position="after">
-                <span name="failed_text_sms" invisible="mailing_type != 'sms'">SMS Text Messages could not be delivered.</span>
             </xpath>
             <xpath expr="//span[@name='next_departure_text']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail'</attribute>

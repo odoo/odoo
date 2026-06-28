@@ -48,7 +48,7 @@ class IrModuleModule(models.Model):
             which would be confusing for the user.
         """
         for module in self:
-            module.is_installed_on_current_website = module == self.env['website'].get_current_website().theme_id
+            module.is_installed_on_current_website = module == self.env.website.theme_id
 
     def write(self, vals):
         """
@@ -89,8 +89,8 @@ class IrModuleModule(models.Model):
 
                     if module.state == 'to upgrade' and request:
                         Website = self.env['website']
-                        current_website = Website.get_current_website()
-                        websites_to_update = current_website if current_website in websites_to_update else Website
+                        website = request.env.website
+                        websites_to_update = website if website in websites_to_update else Website
 
                     for website in websites_to_update:
                         module._theme_load(website)
@@ -408,7 +408,8 @@ class IrModuleModule(models.Model):
             :return: dict with the next action to execute
         """
         self.ensure_one()
-        website = self.env['website'].get_current_website()
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
+        website.ensure_one()
 
         self._theme_remove(website)
 
@@ -417,16 +418,15 @@ class IrModuleModule(models.Model):
 
         # this will install 'self' if it is not installed yet
         if request:
-            request.update_context(apply_new_theme=True)
-        self._theme_upgrade_upstream()
+            request.update_context(website_id=website.id, apply_new_theme=True)
+        self.with_context(website_id=website.id, apply_new_theme=True)._theme_upgrade_upstream()
 
         result = website.button_go_website()
         return result
 
     def button_remove_theme(self):
         """Remove the current theme of the current website."""
-        website = self.env['website'].get_current_website()
-        self._theme_remove(website)
+        self._theme_remove(self.env.website)
 
     def button_refresh_theme(self):
         """
@@ -435,8 +435,7 @@ class IrModuleModule(models.Model):
             To refresh it, we only need to upgrade the modules.
             Indeed the (re)loading of the theme will be done automatically on ``write``.
         """
-        website = self.env['website'].get_current_website()
-        website.theme_id._theme_upgrade_upstream()
+        self.env.website.theme_id._theme_upgrade_upstream()
 
     @api.model
     def update_list(self):
@@ -681,18 +680,33 @@ class IrModuleModule(models.Model):
         # ------------------------------------------------------------
 
         configurator_snippets = dict(manifest.get('configurator_snippets', {}))
-        addons = manifest.get('configurator_snippets_addons', {})
         installed_modules = self.env['ir.module.module']._installed()
 
-        # Add addon snippets to the main snippet list for batch generation
-        for module_name, pages in addons.items():
-            # generate snippet only if the module is installed
-            if module_name not in installed_modules and module_name != self.name:
-                continue
-            for page, snippets_to_insert in pages.items():
-                snippets = configurator_snippets.setdefault(page, [])
-                dynamic_snippets = [snippet for snippet, *_ in snippets_to_insert]
-                configurator_snippets[page] = list(dict.fromkeys(snippets + dynamic_snippets))
+        def add_addons_snippets(addons):
+            """ Add installable addon snippets to the configurator snippets. """
+            for module_name, pages in addons.items():
+                # A snippet such as `website_sale.x` can only be generated
+                # once `website_sale` exists, or while installing it.
+                if module_name not in installed_modules and module_name != self.name:
+                    continue
+                for page, snippets_to_insert in pages.items():
+                    snippets = configurator_snippets.setdefault(page, [])
+                    dynamic_snippets = [snippet for snippet, *_ in snippets_to_insert]
+                    configurator_snippets[page] = list(dict.fromkeys(snippets + dynamic_snippets))
+
+        # This covers themes being installed while optional addon modules such
+        # as `website_sale` are already installed.
+        add_addons_snippets(manifest.get('configurator_snippets_addons', {}))
+
+        theme = self.env['website'].get_current_website().theme_id
+        if theme and theme.name != self.name:
+            # Another module is being installed after the theme was selected.
+            # Only include the theme addon snippets targeting this module.
+            theme_manifest = Manifest.for_addon(theme.name)
+            if theme_manifest:
+                theme_addons = theme_manifest.get('configurator_snippets_addons', {})
+                addons = {self.name: theme_addons.get(self.name, {})}
+                add_addons_snippets(addons)
 
         # Generate general configurator snippet templates
         create_values = []

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Chatter">
-    <div t-if="this.state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column bg-inherit" t-att-class="{ 'overflow-auto o-scrollbar-thin': this.props.isChatterAside, 'o-chatter-disabled': this.props.threadId === false }" t-on-scroll="this.onScrollDebounced" t-custom-ref="root">
+    <div t-if="this.state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column bg-inherit" t-att-class="{ 'overflow-auto o-scrollbar-thin': this.webChatterProps.isChatterAside, 'o-chatter-disabled': this.props.threadId === false }" t-on-scroll="this.onScrollDebounced" t-ref="this.rootRef">
         <div class="o-mail-Chatter-top d-print-none position-sticky top-0" t-att-class="{ 'shadow-sm': this.state.isTopStickyPinned }" t-custom-ref="top">
             <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 overflow-x-auto o-gap-0_5">
                 <div t-if="this.state.isSearchOpen" class="flex-grow-1">
@@ -22,7 +22,7 @@
                     }" t-att-disabled="!this.state.thread.canPostMessage and this.props.threadId and this.props.threadId" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
                         Log note
                     </button>
-                    <button t-if="this.props.has_activities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap my-2"
+                    <button t-if="this.webChatterProps.has_activities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap my-2"
                             t-att-disabled="!this.state.thread.canPostMessage and this.props.threadId"
                             data-hotkey="shift+a" t-on-click="this.scheduleActivity">
                         <span>Activity</span>
@@ -35,10 +35,10 @@
                 <button t-if="this.hasPinnedMessages" class="btn btn-link text-action p-1" aria-label="Pinned Messages" title="Pinned Messages" t-on-click="this.onClickPinnedMessages" t-att-disabled="this.state.isSearchOpen">
                     <i class="fa fa-fw fa-thumb-tack" role="img"/>
                 </button>
-                <button t-if="this.props.hasAttachmentPreview and this.state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action px-1" t-on-click="this.popoutAttachment">
+                <button t-if="this.webChatterProps.hasAttachmentPreview and this.state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action px-1" t-on-click="this.popoutAttachment">
                     <i class="fa fa-window-restore fa-fw" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
                 </button>
-                <FileUploader t-if="this.attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" multiUpload="true" onUploaded.bind="this.onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
+                <FileUploader t-if="this.attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" showUploadingText="false" multiUpload="true" onUploaded="this.onUploaded({ thread: this.state.thread })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="this.state.thread.localId">
                     <t t-set-slot="toggler">
                         <t t-call="mail.Chatter.attachFiles"/>
                     </t>
@@ -81,7 +81,7 @@
                             attachments="this.attachments"
                             unlinkAttachment.bind="this.unlinkAttachment"
                         />
-                        <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="this.onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
+                        <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded="this.onUploaded({ thread: this.state.thread })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="this.state.thread.localId">
                             <t t-set-slot="toggler">
                                 <button class="btn btn-link px-1" type="button" t-att-disabled="!this.state.thread.canPostMessage">
                                     <i class="fa fa-plus-square"/>
@@ -101,7 +101,7 @@
                         <MessageCardList messages="this.state.thread.pinnedMessages" thread="this.state.thread" mode="'pin'"/>
                     </div>
                 </div>
-                <t t-if="this.props.has_activities and this.activities.length and !this.messageSearch.searching and !this.messageSearch.searched">
+                <t t-if="this.webChatterProps.has_activities and this.activities.length and !this.messageSearch.searching and !this.messageSearch.searched">
                     <t t-call="mail.ActivityList"/>
                 </t>
                 <t t-if="this.scheduledMessages.length">

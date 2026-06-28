@@ -88,6 +88,6 @@ class IyzicoController(http.Controller):
                     "token": token,
                 },
             )
-            tx_sudo._process("iyzico", verified_payment_data)
+            tx_sudo._record(verified_payment_data)
         except ValidationError:
             _logger.error("Unable to process the payment data.")

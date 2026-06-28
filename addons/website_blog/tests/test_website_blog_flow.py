@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 
-from odoo.exceptions import UserError
-from odoo.tests.common import users, HttpCase, tagged
+from odoo.exceptions import UserError, ValidationError
+from odoo.tests.common import users, HttpCase, tagged, TransactionCase
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 from odoo.addons.mail.controllers.thread import ThreadController
@@ -120,6 +120,31 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
         self.assertFalse(self.env['mail.message'].sudo().search(
             [('model', '=', 'blog.post'), ('attachment_ids', 'in', second_attachment.ids)]))
 
+    def test_blog_notification_website_domain(self):
+        backend_domain = 'https://backend.example'
+        self.env['ir.config_parameter'].sudo().set_str('web.base.url', backend_domain)
+        rendered_html = self.env['ir.qweb']._render(
+            'website_blog.blog_post_template_new_post',
+            {
+                'post': self.test_blog_post,
+                'object': self.test_blog,
+            }
+        )
+        self.assertIn(f'href="{backend_domain}/blog/', rendered_html)
+
+        frontend_domain = 'https://frontend.example'
+        website = self.env['website'].search([], limit=1)
+        website.domain = frontend_domain
+        self.test_blog.website_id = website
+        rendered_html = self.env['ir.qweb']._render(
+            'website_blog.blog_post_template_new_post',
+            {
+                'post': self.test_blog_post,
+                'object': self.test_blog,
+            }
+        )
+        self.assertIn(f'href="{frontend_domain}/blog/', rendered_html)
+
     def test_website_blog_teaser_content(self):
         """ Make sure that the content of the post is correctly rendered in
             proper plain text. """
@@ -198,7 +223,7 @@ class TestWebsiteBlogTranslationFlow(HttpCase, TestWebsiteBlogCommon):
         br_lang = self.env['res.lang']._activate_lang('pt_BR')
         en_lang = self.env['res.lang']._activate_lang('en_US')
 
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         website.language_ids += br_lang
         website.default_lang_id = br_lang
 
@@ -240,3 +265,112 @@ class TestWebsiteBlogTranslationFlow(HttpCase, TestWebsiteBlogCommon):
         })
         response = self.url_open('/blog/tag/demo')
         self.assertEqual(response.status_code, 200)
+
+    def test_cannot_delete_field_used_in_website_blog(self):
+        self.partner_model = self.env['ir.model'].search([('model', '=', 'res.partner')])
+        self.test_field = self.env['ir.model.fields'].create({
+            'name': 'x_test_field',
+            'model_id': self.partner_model.id,
+            'ttype': 'char',
+            'field_description': 'test',
+        })
+        self.env['blog.post'].create({
+            'name': 'Test Blog',
+            'content': f'''
+                <form data-model_name="res.partner">
+                    <input name="{self.test_field.name}">
+                </form>
+            ''',
+        })
+        with self.assertRaisesRegex(ValidationError, f"The field '{self.test_field.name}' cannot be deleted because it is referenced in a website view."):
+            self.test_field.unlink()
+
+        self.assertTrue(self.test_field.exists())
+
+
+@tagged("-at_install", "post_install")
+class TestBlogSearch(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.website = self.env.ref("base.default_website")
+        # Blog
+        self.blog = self.env['blog.blog'].create({
+            'name': 'Test Blog',
+        })
+        # Categories
+        self.cat_a = self.env['blog.tag.category'].create({'name': 'Cat A'})
+        self.cat_b = self.env['blog.tag.category'].create({'name': 'Cat B'})
+        # Tags
+        self.tag_a1 = self.env['blog.tag'].create({
+            'name': 'A1',
+            'category_id': self.cat_a.id,
+        })
+        self.tag_a2 = self.env['blog.tag'].create({
+            'name': 'A2',
+            'category_id': self.cat_a.id,
+        })
+        self.tag_b1 = self.env['blog.tag'].create({
+            'name': 'B1',
+            'category_id': self.cat_b.id,
+        })
+        # Posts
+        self.post_a1 = self.env['blog.post'].create({
+            'name': 'Post A1',
+            'blog_id': self.blog.id,
+            'tag_ids': [(6, 0, [self.tag_a1.id])],
+            'website_published': True,
+        })
+        self.post_a2 = self.env['blog.post'].create({
+            'name': 'Post A2',
+            'blog_id': self.blog.id,
+            'tag_ids': [(6, 0, [self.tag_a2.id])],
+            'website_published': True,
+        })
+        self.post_a1_b1 = self.env['blog.post'].create({
+            'name': 'Post A1 B1',
+            'blog_id': self.blog.id,
+            'tag_ids': [(6, 0, [self.tag_a1.id, self.tag_b1.id])],
+            'website_published': True,
+        })
+
+    def test_tag_same_category_or(self):
+        """A1 + A2 => OR logic"""
+        options = {
+            "tag": f"{self.tag_a1.id},{self.tag_a2.id}",
+        }
+        results_count, details, _ = self.website._search_with_fuzzy(
+            "blog_post", "", 0, 10, "name asc", options
+        )
+        results = details[0].get('results', [])
+        self.assertEqual(results_count, 3, "Should return all posts with A1 or A2")
+        self.assertIn(self.post_a1, results)
+        self.assertIn(self.post_a2, results)
+        self.assertIn(self.post_a1_b1, results)
+
+    def test_tag_cross_category_and(self):
+        """A1 + B1 => AND logic"""
+        options = {
+            "tag": f"{self.tag_a1.id},{self.tag_b1.id}",
+        }
+        results_count, details, _ = self.website._search_with_fuzzy(
+            "blog_post", "", 0, 10, "name asc", options
+        )
+        results = details[0].get('results', [])
+        self.assertEqual(results_count, 1, "Should return only posts matching both categories")
+        self.assertNotIn(self.post_a1, results)
+        self.assertNotIn(self.post_a2, results)
+        self.assertIn(self.post_a1_b1, results)
+
+    def test_tag_single(self):
+        options = {
+            "tag": f"{self.tag_a1.id}",
+        }
+        results_count, details, _ = self.website._search_with_fuzzy(
+            "blog_post", "", 0, 10, "name asc", options
+        )
+        results = details[0].get('results', [])
+        self.assertEqual(results_count, 2)
+        self.assertIn(self.post_a1, results)
+        self.assertNotIn(self.post_a2, results)
+        self.assertIn(self.post_a1_b1, results)

@@ -66,7 +66,8 @@ class WebsiteSnippetFilter(models.Model):
         if search_domain is None:
             search_domain = []
 
-        if self.website_id and self.env['website'].get_current_website() != self.website_id:
+        website = self.env.website
+        if self.website_id and website != self.website_id:
             return ''
 
         if self.model_name and self.model_name.replace('.', '_') not in template_key:
@@ -78,7 +79,9 @@ class WebsiteSnippetFilter(models.Model):
             records = self._prepare_sample(limit, res_model=res_model)
         content = self.env['ir.qweb'].with_context(inherit_branding=False)._render(template_key, dict(
             records=records,
+            website=website,
             is_sample=is_sample,
+            is_view_active=website.is_view_active,
             **custom_template_data,
         ))
         return [etree.tostring(el, encoding='unicode', method='html') for el in html.fromstring('<root>%s</root>' % str(content)).getchildren()]
@@ -88,6 +91,13 @@ class WebsiteSnippetFilter(models.Model):
         self and self.ensure_one()
 
         model_name = options.get('res_model') or self.filter_id.sudo().model_id
+        website_filter_models = list({
+            website_filter.action_server_id.model_id.model if website_filter.action_server_id
+            else website_filter.filter_id.model_id
+            for website_filter in self.env['website.snippet.filter'].search([])
+        })
+        if model_name and model_name not in website_filter_models:
+            return []
         res_id = options.get('res_id')
         # The "limit" field is there to prevent loading an arbitrary number of
         # records asked by the client side. This here makes sure you can always
@@ -102,10 +112,9 @@ class WebsiteSnippetFilter(models.Model):
                 filter_sudo = self.filter_id.sudo()
                 domain = Domain(filter_sudo._get_eval_domain())
                 if 'website_id' in self.env[model_name]:
-                    domain &= self.env['website'].get_current_website().website_domain()
+                    domain &= self.env.website.website_domain()
                 if 'company_id' in self.env[model_name]:
-                    website = self.env['website'].get_current_website()
-                    domain &= Domain('company_id', 'in', [False, website.company_id.id])
+                    domain &= Domain('company_id', 'in', [False, self.env.website.company_id.id])
                 if 'is_published' in self.env[model_name]:
                     domain &= Domain('is_published', '=', True)
                 if search_domain:
@@ -116,7 +125,7 @@ class WebsiteSnippetFilter(models.Model):
                     domain,
                     order=','.join(literal_eval(filter_sudo.sort)) or None,
                     limit=limit
-                ) if not single_record_filter else self.env[model_name].browse([res_id])
+                ) if not single_record_filter else self.env[model_name].sudo(False).search([('id', '=', res_id)], limit=1)
                 return self._filter_records_to_values(records.sudo(), res_model=model_name)
             except MissingError:
                 if not single_record_filter:
@@ -260,7 +269,7 @@ class WebsiteSnippetFilter(models.Model):
                 field = model._fields.get(field_name)
                 if field and field.type in ('binary', 'image'):
                     if options.get('is_sample'):
-                        data[field_name] = record[field_name].to_base64() if field_name in record else '/web/image'
+                        data[field_name] = record[field_name].decode() if field_name in record else '/web/image'
                     else:
                         data[field_name] = Website.image_url(record, field_name)
                 elif field_widget == 'monetary':
@@ -274,8 +283,7 @@ class WebsiteSnippetFilter(models.Model):
                         data[field_name] = model_currency._convert(
                             record[field_name],
                             website_currency,
-                            Website.get_current_website().company_id,
-                            fields.Date.today()
+                            self.env.website.company_id,
                         )
                     else:
                         data[field_name] = record[field_name]
@@ -289,5 +297,5 @@ class WebsiteSnippetFilter(models.Model):
 
     @api.model
     def _get_website_currency(self):
-        company = self.env['website'].get_current_website().company_id
+        company = self.env.website.company_id
         return company.currency_id

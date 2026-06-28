@@ -1,5 +1,5 @@
 from odoo import api, models
-from odoo.addons.iap import jsonrpc
+from odoo.addons.iap.tools import iap_tools
 
 DEFAULT_IAP_ENDPOINT = "https://l10n-in-edi.api.odoo.com"
 DEFAULT_IAP_TEST_ENDPOINT = "https://l10n-in-edi-demo.api.odoo.com"
@@ -27,4 +27,4 @@ class IapAccount(models.Model):
             default_endpoint = DEFAULT_IAP_ENDPOINT if is_production else DEFAULT_IAP_TEST_ENDPOINT
         endpoint = IrConfigParam.get_str(config_parameter) or default_endpoint
         url = "%s%s" % (endpoint, url_path)
-        return jsonrpc(url, params=params, timeout=timeout)
+        return iap_tools.iap_jsonrpc(url, params=params, timeout=timeout)

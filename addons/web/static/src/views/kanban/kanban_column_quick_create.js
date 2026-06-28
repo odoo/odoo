@@ -1,8 +1,8 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
-import { Component, onPatched } from "@odoo/owl";
+import { Component, onPatched, proxy, useListener } from "@odoo/owl";
 
 export class KanbanColumnQuickCreate extends Component {
     static template = "web.KanbanColumnQuickCreate";
@@ -16,7 +16,7 @@ export class KanbanColumnQuickCreate extends Component {
     setup() {
         this.dialog = useService("dialog");
         this.root = useRef("root");
-        this.state = useState({
+        this.state = proxy({
             hasInputFocused: false,
         });
 
@@ -24,15 +24,18 @@ export class KanbanColumnQuickCreate extends Component {
         this.inputRef = useRef("autofocus");
 
         // Close on outside click
-        useExternalListener(window, "mousedown", (/** @type {MouseEvent} */ ev) => {
+        useListener(window, "mousedown", (/** @type {MouseEvent} */ ev) => {
             // This target is kept in order to impeach close on outside click behavior if the click
             // has been initiated from the quickcreate root element (mouse selection in an input...)
             this.mousedownTarget = ev.target;
         });
-        useExternalListener(
+        useListener(
             window,
             "click",
             (/** @type {MouseEvent} */ ev) => {
+                if (!this.root.el) {
+                    return;
+                }
                 const target = this.mousedownTarget || ev.target;
                 const gotClickedInside = this.root.el.contains(target);
                 if (!gotClickedInside) {

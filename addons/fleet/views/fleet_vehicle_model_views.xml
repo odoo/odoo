@@ -35,7 +35,7 @@
                             <field name="active" invisible="1"/>
                             <field name="vehicle_type"/>
                             <field name="category_id" options="{'no_create_edit': True}"/>
-                            <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
+                            <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all" domain="[('id', 'in', allowed_company_ids)]"/>
                         </group>
                     </group>
                     <notebook>
@@ -45,8 +45,6 @@
                                     <field name="model_year"/>
                                     <field name="seats"/>
                                     <field name="doors"/>
-                                    <field name="color"/>
-                                    <field name="trailer_hook"/>
                                 </group>
                                 <group id="vehicle_information" string="Model" invisible="vehicle_type != 'bike'">
                                     <field name="model_year"/>

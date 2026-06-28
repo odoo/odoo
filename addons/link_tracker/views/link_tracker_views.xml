@@ -7,7 +7,7 @@
             <field name="model">link.tracker</field>
             <field name="arch" type="xml">
                 <search string="Links">
-                    <field name="url" string="Link Tracker" filter_domain="['|', ('title', 'ilike', self), ('url', 'ilike', self)]"/>
+                    <field name="url" filter_domain="['|', ('title', 'ilike', self), ('url', 'ilike', self)]"/>
                     <field name="label"/>
                     <field name="campaign_id"/>
                     <field name="medium_id"/>

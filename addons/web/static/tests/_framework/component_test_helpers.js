@@ -1,16 +1,12 @@
-import { after, destroy, getFixture, queryFirst, queryOne } from "@odoo/hoot";
-import { App, Component, xml } from "@odoo/owl";
-import { appTranslateFn } from "@web/core/l10n/translation";
+import { after, getFixture, queryFirst, queryOne } from "@odoo/hoot";
+import { App, Component, onWillDestroy, xml } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { getPopoverForTarget } from "@web/core/popover/popover";
-import { getTemplate as defaultGetTemplate } from "@web/core/templates";
-import { isIterable } from "@web/core/utils/arrays";
 import { patch } from "@web/core/utils/patch";
-import {
-    customDirectives as defaultCustomDirectives,
-    globalValues as defaultGlobalValues,
-} from "@web/env";
-import { getMockEnv, makeMockEnv } from "./env_test_helpers";
+import { assignEnvToApp, getMockEnv, getTestApp, makeMockEnv } from "./app_test_helpers";
+import { patchWithCleanup } from "./patch_test_helpers";
+
+import { makeMockServer, MockServer } from "./mock_server/mock_server";
 
 /**
  * @typedef {import("@odoo/hoot").Target} Target
@@ -26,23 +22,17 @@ import { getMockEnv, makeMockEnv } from "./env_test_helpers";
  * @typedef {import("@odoo/owl").ComponentConstructor<P, E>} ComponentConstructor
  */
 
-/**
- * @param {ComponentConstructor} ComponentClass
- * @param {HTMLElement | ShadowRoot} targetEl
- * @param {AppConfig} config
- */
-const mountComponentWithCleanup = (ComponentClass, targetEl, config) => {
-    const app = new App(ComponentClass, config);
-    after(() => destroy(app));
-    return app.mount(targetEl);
-};
-
 patch(MainComponentsContainer.prototype, {
     setup() {
         super.setup();
 
         hasMainComponent = true;
-        after(() => (hasMainComponent = false));
+        onWillDestroy(() => {
+            hasMainComponent = false;
+        });
+        after(() => {
+            hasMainComponent = false;
+        });
     },
 });
 
@@ -53,13 +43,19 @@ let hasMainComponent = false;
 //-----------------------------------------------------------------------------
 
 /**
- * @param {App | Component} parent
+ * @param {App | Component} appOrComponent
  * @param {(component: Component) => boolean} predicate
  * @returns {Component | null}
  */
-export function findComponent(parent, predicate) {
-    const rootNode = parent instanceof App ? parent.root : parent.__owl__;
-    const queue = [rootNode, ...Object.values(rootNode.children)];
+export function findComponent(appOrComponent, predicate) {
+    let compNode;
+    if (appOrComponent instanceof App) {
+        const [firstRoot] = appOrComponent.roots;
+        compNode = firstRoot?.node;
+    } else {
+        compNode = appOrComponent.__owl__;
+    }
+    const queue = [compNode, ...Object.values(compNode.children)];
     while (queue.length) {
         const { children, component } = queue.pop();
         if (predicate(component)) {
@@ -104,7 +100,6 @@ export function getDropdownMenu(togglerSelector) {
  * @param {AppConfig & {
  *  componentEnv?: Partial<OdooEnv>;
  *  containerEnv?: Partial<OdooEnv>;
- *  fixtureClassName?: string | string[] | null;
  *  env?: E;
  *  noMainContainer?: boolean;
  *  props?: P;
@@ -112,102 +107,75 @@ export function getDropdownMenu(togglerSelector) {
  * }} [options]
  */
 export async function mountWithCleanup(ComponentClass, options) {
-    const {
-        componentEnv,
-        containerEnv,
-        customDirectives = defaultCustomDirectives,
-        env,
-        fixtureClassName = "o_web_client",
-        getTemplate = defaultGetTemplate,
-        globalValues = defaultGlobalValues,
-        noMainContainer,
-        props,
-        target,
-        templates,
-        translatableAttributes,
-        translateFn = appTranslateFn,
-    } = options || {};
-
-    // Common component configuration
-    const commonConfig = {
-        customDirectives,
-        getTemplate,
-        globalValues,
-        templates,
-        translatableAttributes,
-        translateFn,
-        // The following keys are forced to ensure validation of all tested components
-        dev: false,
-        test: true,
-        warnIfNoStaticProps: true,
-    };
+    const { componentEnv, containerEnv, env, name, noMainContainer, props, target } = options || {};
 
     // Fixture
     const fixture = getFixture();
     const targetEl = target ? queryOne(target) : fixture;
-    if (fixtureClassName) {
-        const list = isIterable(fixtureClassName) ? fixtureClassName : [fixtureClassName];
-        fixture.classList.add(...list);
-    }
+    fixture.classList.add("o_web_client");
 
     if (typeof ComponentClass === "string") {
         // Convert templates to components (if needed)
         ComponentClass = class extends Component {
             static name = "anonymous component";
-            static props = {};
             static template = xml`${ComponentClass}`;
         };
     }
 
-    const commonEnv = env || getMockEnv() || (await makeMockEnv());
-    const componentConfig = {
-        ...commonConfig,
-        env: Object.assign(Object.create(commonEnv), componentEnv),
-        name: `TEST: ${ComponentClass.name}`,
-        props,
-    };
+    if (!MockServer.current) {
+        // need a mock server before starting app (which starts plugins which
+        // may need network)
+        await makeMockServer();
+    }
 
+    const app = getTestApp({ name: name || `TEST: ${ComponentClass.name}` });
+    const commonEnv = env || getMockEnv() || (await makeMockEnv());
+
+    assignEnvToApp(commonEnv, app);
+
+    const componentRoot = app.createRoot(ComponentClass, {
+        env: Object.assign(Object.create(commonEnv), componentEnv),
+        props,
+    });
     /** @type {InstanceType<C>} */
-    const component = await mountComponentWithCleanup(ComponentClass, targetEl, componentConfig);
+    const component = await componentRoot.mount(targetEl);
 
     if (!noMainContainer && !hasMainComponent) {
-        const containerConfig = {
-            ...commonConfig,
+        const mainContainerRoot = app.createRoot(MainComponentsContainer, {
             env: Object.assign(Object.create(commonEnv), containerEnv),
-            name: `TEST: ${ComponentClass.name} (main container)`,
             props: {},
-        };
-        await mountComponentWithCleanup(MainComponentsContainer, targetEl, containerConfig);
+        });
+        await mainContainerRoot.mount(targetEl);
     }
 
     return component;
 }
 
-export async function waitUntilIdle(apps = [...App.apps]) {
-    const isOwlIdle = () => apps.every((app) => app.scheduler.tasks.size === 0);
+/**
+ * @param {App | Component} appOrComponent
+ */
+export async function waitUntilIdle(appOrComponent) {
+    function isIdle() {
+        return scheduler.tasks.size === 0;
+    }
 
-    if (isOwlIdle()) {
-        return Promise.resolve();
+    const { scheduler } =
+        appOrComponent instanceof App ? appOrComponent : appOrComponent.__owl__.app;
+
+    if (isIdle()) {
+        return Promise.resolve(true);
     }
 
     return new Promise((resolve) => {
-        function cleanup() {
-            for (const cb of unpatch) {
-                cb();
-            }
-            unpatch = [];
-        }
-        after(cleanup);
-        let unpatch = apps.map((app) =>
-            patch(app.scheduler, {
-                processTasks() {
-                    super.processTasks();
-                    if (isOwlIdle()) {
-                        cleanup();
-                        resolve();
-                    }
-                },
-            })
-        );
+        const unpatch = patchWithCleanup(scheduler, {
+            processTasks() {
+                const result = super.processTasks(...arguments);
+                if (isIdle()) {
+                    unpatch();
+                    resolve(true);
+                }
+                return result;
+            },
+        });
     });
 }

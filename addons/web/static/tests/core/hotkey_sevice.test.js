@@ -1,9 +1,21 @@
-import { destroy, expect, getFixture, onError, test } from "@odoo/hoot";
-import { keyDown, keyUp, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
-import { animationFrame, mockUserAgent, tick } from "@odoo/hoot-mock";
-import { Component, useRef, useState, xml } from "@odoo/owl";
+import {
+    animationFrame,
+    expect,
+    getFixture,
+    keyDown,
+    keyUp,
+    mockUserAgent,
+    onError,
+    press,
+    queryAllTexts,
+    queryOne,
+    test,
+    tick,
+} from "@odoo/hoot";
+import { Component, proxy, signal, xml } from "@odoo/owl";
 import {
     contains,
+    destroyApp,
     getService,
     makeMockEnv,
     mountWithCleanup,
@@ -12,7 +24,7 @@ import {
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { getActiveHotkey, hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { useActiveElement } from "@web/core/ui/ui_service";
-import { Deferred } from "@web/core/utils/concurrency";
+import { useRef } from "@web/owl2/utils";
 
 const getOverlays = () => queryAllTexts(".o_web_hotkey_overlay");
 
@@ -117,7 +129,7 @@ test("[accesskey] attrs replaced by [data-hotkey]", async () => {
 
 test("[accesskey] attrs replaced by [data-hotkey], part 2", async () => {
     class UIOwnershipTakerComponent extends Component {
-        static template = xml`<p class="owner" t-ref="bouh"><button>a</button></p>`;
+        static template = xml`<p class="owner" t-custom-ref="bouh"><button>a</button></p>`;
         static props = ["*"];
         setup() {
             useActiveElement("bouh");
@@ -127,13 +139,13 @@ test("[accesskey] attrs replaced by [data-hotkey], part 2", async () => {
         static components = { UIOwnershipTakerComponent };
         static template = xml`
             <main>
-                <UIOwnershipTakerComponent t-if="state.foo" />
+                <UIOwnershipTakerComponent t-if="this.state.foo" />
                 <div t-on-click="() => { this.step('click'); }" accesskey="a">foo</div>
             </main>
         `;
         static props = ["*"];
         setup() {
-            this.state = useState({ foo: true });
+            this.state = proxy({ foo: true });
             this.step = expect.step.bind();
         }
     }
@@ -187,7 +199,7 @@ test("data-hotkey", async () => {
     class MyComponent extends Component {
         static template = xml`
             <div>
-                <button t-on-click="onClick" data-hotkey="b">a</button>
+                <button t-on-click="this.onClick" data-hotkey="b">a</button>
             </div>
         `;
         static props = ["*"];
@@ -200,13 +212,13 @@ test("data-hotkey", async () => {
     await press(strokes);
     expect.verifySteps([]);
 
-    const comp = await mountWithCleanup(MyComponent);
+    await mountWithCleanup(MyComponent);
 
     await press(strokes);
     await tick();
     expect.verifySteps(["click"]);
 
-    destroy(comp);
+    destroyApp();
 
     await press(strokes);
     expect.verifySteps([]);
@@ -216,7 +228,7 @@ test("invisible data-hotkeys are not enabled. ", async () => {
     class MyComponent extends Component {
         static template = xml`
             <div>
-                <button t-on-click="onClick" data-hotkey="b" class="myButton">a</button>
+                <button t-on-click="this.onClick" data-hotkey="b" class="myButton">a</button>
             </div>
         `;
         static props = ["*"];
@@ -254,12 +266,12 @@ test("hook", async () => {
     await press(key);
     expect.verifySteps([]);
 
-    const comp = await mountWithCleanup(TestComponent);
+    await mountWithCleanup(TestComponent);
 
     await press(key);
     expect.verifySteps([key]);
 
-    destroy(comp);
+    destroyApp();
 
     await press(key);
     expect.verifySteps([]);
@@ -298,8 +310,8 @@ test("the overlay of hotkeys is correctly displayed", async () => {
     class MyComponent extends Component {
         static template = xml`
             <div>
-            <button t-on-click="onClick" data-hotkey="b">b</button>
-            <button t-on-click="onClick" data-hotkey="c">c</button>
+            <button t-on-click="this.onClick" data-hotkey="b">b</button>
+            <button t-on-click="this.onClick" data-hotkey="c">c</button>
             </div>
         `;
         static props = ["*"];
@@ -330,8 +342,8 @@ test("the overlay of hotkeys is correctly displayed on MacOs", async () => {
     class MyComponent extends Component {
         static template = xml`
             <div>
-                <button t-on-click="onClick" data-hotkey="b">b</button>
-                <button t-on-click="onClick" data-hotkey="c">c</button>
+                <button t-on-click="this.onClick" data-hotkey="b">b</button>
+                <button t-on-click="this.onClick" data-hotkey="c">c</button>
             </div>
         `;
         static props = ["*"];
@@ -418,7 +430,7 @@ test("MacOS usability", async () => {
 test("[data-hotkey] alt is required", async () => {
     const key = "a";
     class TestComponent extends Component {
-        static template = xml`<div><button t-on-click="onClick" data-hotkey="${key}">a</button></div>`;
+        static template = xml`<div><button t-on-click="this.onClick" data-hotkey="${key}">a</button></div>`;
         static props = ["*"];
         onClick() {
             expect.step(key);
@@ -473,7 +485,7 @@ test("registration allows repeat if specified", async () => {
 test("[data-hotkey] never allow repeat", async () => {
     const key = "a";
     class TestComponent extends Component {
-        static template = xml`<div><button t-on-click="onClick" data-hotkey="${key}">a</button></div>`;
+        static template = xml`<div><button t-on-click="this.onClick" data-hotkey="${key}">a</button></div>`;
         static props = ["*"];
         onClick() {
             expect.step(key);
@@ -507,7 +519,7 @@ test("hotkeys evil 👹", async () => {
 
 test("component can register many hotkeys", async () => {
     class MyComponent extends Component {
-        static template = xml`<div><button t-on-click="onClick" data-hotkey="c">c</button></div>`;
+        static template = xml`<div><button t-on-click="this.onClick" data-hotkey="c">c</button></div>`;
         static props = ["*"];
         setup() {
             useHotkey("a", () => expect.step("callback:a"));
@@ -531,8 +543,8 @@ test("many components can register same hotkeys (call order matters)", async () 
         const Comp = class extends Component {
             static template = xml`
                 <div>
-                    <button t-on-click="onClick" data-hotkey="c">c</button>
-                    <button t-on-click="onClick" data-hotkey="z">z</button>
+                    <button t-on-click="this.onClick" data-hotkey="c">c</button>
+                    <button t-on-click="this.onClick" data-hotkey="z">z</button>
                 </div>
             `;
             static props = ["*"];
@@ -578,8 +590,7 @@ test("many components can register same hotkeys (call order matters)", async () 
 
 test("registrations and elements belong to the correct UI owner", async () => {
     class MyComponent1 extends Component {
-        static template = xml`<div><button data-hotkey="b" t-on-click="onClick">b</button></div>`;
-        static props = ["*"];
+        static template = xml`<div><button data-hotkey="b" t-on-click="this.onClick">b</button></div>`;
         setup() {
             useHotkey("a", () => expect.step("MyComponent1 subscription"));
         }
@@ -589,8 +600,7 @@ test("registrations and elements belong to the correct UI owner", async () => {
     }
 
     class MyComponent2 extends Component {
-        static template = xml`<div t-ref="active"><button data-hotkey="b" t-on-click="onClick">b</button></div>`;
-        static props = ["*"];
+        static template = xml`<div t-custom-ref="active"><button data-hotkey="b" t-on-click="this.onClick">b</button></div>`;
         setup() {
             useHotkey("a", () => expect.step("MyComponent2 subscription"));
             useActiveElement("active");
@@ -600,20 +610,33 @@ test("registrations and elements belong to the correct UI owner", async () => {
         }
     }
 
-    await mountWithCleanup(MyComponent1);
+    class Parent extends Component {
+        static components = { MyComponent1, MyComponent2 };
+        static template = xml`
+            <MyComponent1 />
+            <MyComponent2 t-if="this.showSecond()" />
+        `;
+
+        showSecond = showSecond;
+    }
+
+    const showSecond = signal(false);
+
+    await mountWithCleanup(Parent);
     await press("a");
     await press(["alt", "b"]);
     await tick();
     expect.verifySteps(["MyComponent1 subscription", "MyComponent1 [data-hotkey]"]);
 
-    const comp2 = await mountWithCleanup(MyComponent2);
+    showSecond.set(true);
+    await animationFrame();
     await press("a");
     await press(["alt", "b"]);
     await tick();
     expect.verifySteps(["MyComponent2 subscription", "MyComponent2 [data-hotkey]"]);
 
-    destroy(comp2);
-    await Promise.resolve();
+    showSecond.set(false);
+    await animationFrame();
     await press("a");
     await press(["alt", "b"]);
     await tick();
@@ -624,7 +647,7 @@ test("replace the overlayModifier for non-MacOs", async () => {
     class MyComponent extends Component {
         static template = xml`
             <div>
-                <button t-on-click="onClick" data-hotkey="b">b</button>
+                <button t-on-click="this.onClick" data-hotkey="b">b</button>
             </div>
         `;
         static props = ["*"];
@@ -651,7 +674,7 @@ test("replace the overlayModifier for MacOs", async () => {
     class MyComponent extends Component {
         static template = xml`
             <div>
-            <button t-on-click="onClick" data-hotkey="b">b</button>
+            <button t-on-click="this.onClick" data-hotkey="b">b</button>
             </div>
         `;
         static props = ["*"];
@@ -765,10 +788,10 @@ test("within iframes", async () => {
     // Append an iframe to target and wait until it is fully loaded.
     const iframe = document.createElement("iframe");
     iframe.srcdoc = "<button>Hello world!</button>";
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     iframe.onload = def.resolve;
     getFixture().appendChild(iframe);
-    await def;
+    await def.promise;
 
     // Dispatch an hotkey from within the iframe
     await contains("iframe:iframe button").focus();
@@ -811,7 +834,7 @@ test("operating area can be restricted", async () => {
     class A extends Component {
         static template = xml`
             <div class="one" tabindex="0">one</div>
-            <div class="two" tabindex="0" t-ref="area">two</div>
+            <div class="two" tabindex="0" t-custom-ref="area">two</div>
         `;
         static props = ["*"];
         setup() {
@@ -841,7 +864,7 @@ test("operating area can be restricted", async () => {
 test("operating area and UI active element", async () => {
     expect.assertions(5);
     class UIOwnershipTakerComponent extends Component {
-        static template = xml`<p class="owner" t-ref="bouh"><button>a</button></p>`;
+        static template = xml`<p class="owner" t-custom-ref="bouh"><button>a</button></p>`;
         static props = ["*"];
         setup() {
             useActiveElement("bouh");
@@ -851,14 +874,14 @@ test("operating area and UI active element", async () => {
         static components = { UIOwnershipTakerComponent };
         static template = xml`
             <main>
-                <UIOwnershipTakerComponent t-if="state.foo" />
+                <UIOwnershipTakerComponent t-if="this.state.foo" />
                 <div class="one" tabindex="0">one</div>
-                <div class="two" tabindex="0" t-ref="area">two</div>
+                <div class="two" tabindex="0" t-custom-ref="area">two</div>
             </main>
         `;
         static props = ["*"];
         setup() {
-            this.state = useState({ foo: false });
+            this.state = proxy({ foo: false });
             const areaRef = useRef("area");
             useHotkey(
                 "space",
@@ -936,7 +959,7 @@ test("operation area with validating option", async () => {
     class A extends Component {
         static template = xml`
             <div class="one" tabindex="0">one</div>
-            <div class="two" tabindex="0" t-ref="area">two</div>
+            <div class="two" tabindex="0" t-custom-ref="area">two</div>
         `;
         static props = ["*"];
         setup() {
@@ -977,7 +1000,7 @@ test("operation area with validating option", async () => {
 
 test("mixing hotkeys with and without operation area", async () => {
     class A extends Component {
-        static template = xml`<div class="root" tabindex="0" t-ref="area">root</div>`;
+        static template = xml`<div class="root" tabindex="0" t-custom-ref="area">root</div>`;
         static props = ["*"];
         setup() {
             const areaRef = useRef("area");

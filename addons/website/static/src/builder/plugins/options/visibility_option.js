@@ -4,11 +4,11 @@ import { registry } from "@web/core/registry";
 export class VisibilityOption extends BaseOptionComponent {
     static id = "visibility_option";
     static template = "website.VisibilityOption";
-    static dependencies = ["websiteSession"];
+    static dependencies = ["websiteBridge"];
 
     setup() {
         super.setup();
-        this.websiteSession = this.dependencies.websiteSession.getSession();
+        this.websiteSession = this.dependencies.websiteBridge.getSession();
     }
 }
 

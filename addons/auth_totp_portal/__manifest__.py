@@ -4,8 +4,8 @@
     'depends': ['portal', 'auth_totp'],
     'auto_install': True,
     'data': [
-        'security/security.xml',
         'views/templates.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_frontend': [

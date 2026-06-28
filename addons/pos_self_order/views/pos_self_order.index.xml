@@ -14,6 +14,8 @@
                         access_token: '<t t-out="access_token" />',
                         debug: "<t t-out="debug"/>",
                         __session_info__: <t t-out="json.dumps(session_info)"/>,
+                        pos_config_id: <t t-out="pos_config_id"/>,
+                        pos_session_id: <t t-out="pos_session_id"/>,
                     };
                 </script>
                 <t t-call-assets="pos_self_order.assets" />

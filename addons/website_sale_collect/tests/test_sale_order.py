@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import ValidationError
+import json
+from unittest import skip
+
 from odoo.fields import Command
 from odoo.tests import tagged
 
@@ -23,20 +25,35 @@ class TestSaleOrder(ClickAndCollectCommon):
 
     def test_setting_pickup_location_assigns_warehouse(self):
         so = self._create_in_store_delivery_order()
-        so._set_pickup_location('{"id":' + str(self.warehouse.id) + "}")
+        pickup_location_data = json.dumps({
+            "id": self.warehouse.id,
+            "name": "Test Pickup",
+            "street": "Test Street",
+            "city": "Test City",
+            "zip_code": "12345",
+            "country_code": "US",
+        })
+        so.set_pickup_location(pickup_location_data)
         self.assertEqual(so.warehouse_id, self.warehouse)
 
+    @skip("To improve later to adapt for Click&Collect")
     def test_warehouse_is_not_reset_on_public_user_checkout(self):
         warehouse_2 = self._create_warehouse()
         so = self._create_in_store_delivery_order(partner_id=self.public_user.partner_id.id)
-        so._set_pickup_location('{"id":' + str(warehouse_2.id) + "}")
+        so.set_pickup_location('{"id":' + str(warehouse_2.id) + "}")
         # change the partner_id as would happen in a checkout
         so.partner_id = self.partner.id
         self.assertEqual(so.warehouse_id, warehouse_2)
 
     def test_warehouse_is_computed_based_on_pickup_location(self):
         warehouse_2 = self._create_warehouse()
-        so = self._create_in_store_delivery_order(pickup_location_data={"id": warehouse_2.id})
+        warehouse2_shipping_partner = self.env["res.partner"].create({
+            "name": "Warehouse 2 Shipping Partner",
+            "pickup_location_data": {"id": warehouse_2.id},
+        })
+        so = self._create_in_store_delivery_order(
+            partner_shipping_id=warehouse2_shipping_partner.id
+        )
         self.assertEqual(so.warehouse_id, warehouse_2)
 
     def test_fiscal_position_id_is_computed_from_pickup_location_partner(self):
@@ -47,10 +64,11 @@ class TestSaleOrder(ClickAndCollectCommon):
         })
         self.default_partner.country_id = self.country_us
         self.warehouse.partner_id.country_id = self.country_be
-        so = self._create_in_store_delivery_order(
-            partner_shipping_id=self.default_partner.id,
-            pickup_location_data={"id": self.warehouse.id},
-        )
+        warehouse_shipping_partner = self.env["res.partner"].create({
+            "name": "Warehouse Shipping Partner",
+            "pickup_location_data": {"id": self.warehouse.id},
+        })
+        so = self._create_in_store_delivery_order(partner_shipping_id=warehouse_shipping_partner.id)
         self.assertEqual(so.fiscal_position_id, fp_be)
 
     def test_setting_pickup_location_assigns_correct_fiscal_position(self):
@@ -63,7 +81,15 @@ class TestSaleOrder(ClickAndCollectCommon):
         self.default_partner.country_id = self.country_be
         warehouse = self._create_warehouse()
         warehouse.partner_id = self.default_partner
-        so._set_pickup_location('{"id":' + str(warehouse.id) + "}")
+        pickup_location_data = json.dumps({
+            "id": warehouse.id,
+            "name": "Test Pickup",
+            "street": "Test Street",
+            "city": "Brussels",
+            "zip_code": "1000",
+            "country_code": "BE",
+        })
+        so.set_pickup_location(pickup_location_data)
         self.assertEqual(so.fiscal_position_id, fp_be)
 
     def test_selecting_not_in_store_dm_resets_fiscal_position(self):
@@ -73,41 +99,24 @@ class TestSaleOrder(ClickAndCollectCommon):
             "auto_apply": True,
         })
         so = self._create_in_store_delivery_order()
-        so.fiscal_position_id = fp_us
+        pickup_location_data = json.dumps({
+            "id": self.warehouse.id,
+            "name": "Test Pickup",
+            "street": "Test Street",
+            "city": "New York",
+            "zip_code": "10001",
+            "country_code": "US",
+        })
+        so.set_pickup_location(pickup_location_data)
         so._set_delivery_method(self.free_delivery)
         self.assertNotEqual(so.fiscal_position_id, fp_us)
-
-    def test_free_qty_calculated_from_max_in_store_wh_if_no_dm_on_order(self):
-        """Test that if no delivery method is set on the order, the free quantity is the
-        maximum available in all warehouses associated with the in-store delivery method.
-        """
-        warehouse_2 = self._create_warehouse()
-        self._add_product_qty_to_wh(self.storable_product.id, 15, warehouse_2.lot_stock_id.id)
-        self.in_store_dm.warehouse_ids = [Command.link(warehouse_2.id)]
-        # Ensure website has a warehouse and in-store DM is published
-        self.website.warehouse_id = self.warehouse
-        self.in_store_dm.is_published = True
-        # Create an order without a carrier.
-        so = self._create_so()
-        free_qty = so._get_free_qty(self.storable_product)
-        # Should be max(10 [WH1], 15 [WH2]) -> 15
-        self.assertEqual(free_qty, 15)
-
-    def test_free_qty_calculated_from_order_wh_if_dm_is_in_store(self):
-        self.warehouse_2 = self._create_warehouse()
-        self.website.warehouse_id = self.warehouse_2
-        so = self._create_in_store_delivery_order()
-        so.warehouse_id = self.warehouse
-        free_qty = so._get_free_qty(self.storable_product)
-        self.assertEqual(free_qty, 10)
 
     def test_prevent_buying_out_of_stock_products(self):
         cart = self._create_in_store_delivery_order(
             order_line=[Command.create({"product_id": self.product_2.id, "product_uom_qty": 5.0})]
         )
         cart.warehouse_id = self.warehouse
-        with self.assertRaises(ValidationError):
-            cart._check_cart_is_ready_to_be_paid()
+        self.assertFalse(cart._is_cart_ready_for_payment())
 
     def test_product_in_stock_is_available(self):
         cart = self._create_in_store_delivery_order(
@@ -201,3 +210,58 @@ class TestSaleOrder(ClickAndCollectCommon):
         )
         insufficient_stock_data = cart._get_insufficient_stock_data(self.warehouse_2.id)
         self.assertIn(cart.order_line, insufficient_stock_data)
+
+    def test_fiscal_position_correctly_set_in_multi_company_setup(self):
+        company_2 = self.env["res.company"].create({"name": "Company 2"})
+        self.website.company_id = company_2
+        warehouse_2 = self._create_warehouse(company_id=company_2.id)
+        self.in_store_dm.warehouse_ids = [Command.link(warehouse_2.id)]
+        _, fp_company_2 = self.env["account.fiscal.position"].create([
+            {
+                "name": "Company 1 fiscal position",
+                "country_id": warehouse_2.partner_id.country_id.id,
+                "auto_apply": True,
+            },
+            {
+                "name": "Company 2 fiscal position",
+                "country_id": warehouse_2.partner_id.country_id.id,
+                "company_id": company_2.id,
+                "auto_apply": True,
+            },
+        ])
+        so = self._create_in_store_delivery_order(warehouse_id=warehouse_2.id)
+        pickup_location_data = json.dumps({
+            "id": warehouse_2.id,
+            "name": "Test Pickup",
+            "street": "Test Street",
+            "city": "Test City",
+            "zip_code": "12345",
+            "country_code": "US",
+        })
+        so.set_pickup_location(pickup_location_data)
+        self.assertEqual(so.fiscal_position_id, fp_company_2)
+
+    def test_partner_email_confirmation(self):
+        """Partner receives email confirmation for in_store delivery."""
+        self.company.stock_move_email_validation = True
+        wh_partner = self.warehouse.partner_id
+        new_so = self._create_in_store_delivery_order()
+        new_so.set_pickup_location(
+            json.dumps({
+                "id": self.warehouse.id,
+                "name": wh_partner.name,
+                "street": "New test street",
+                "zip_code": wh_partner.zip,
+                "city": "New test city",
+                "state": wh_partner.state_id.code,
+                "country_code": wh_partner.country_code,
+            })
+        )
+        new_so.action_confirm()
+        new_so.picking_ids.button_validate()
+        self.assertTrue(
+            any(
+                partner.email == self.partner.email
+                for partner in new_so.picking_ids.message_ids.notified_partner_ids
+            )
+        )

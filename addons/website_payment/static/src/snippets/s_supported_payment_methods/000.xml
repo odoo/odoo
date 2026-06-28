@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="website_payment.s_supported_payment_methods.icons">
-        <div name="container" class="d-flex flex-wrap gap-1">
+        <div name="container" t-attf-class="d-flex flex-wrap gap-1 #{alignmentClass}">
             <t t-foreach="payment_methods" t-as="pm" t-key="pm.id">
                 <!-- The `image` field on the payment method has a max height of 64px. -->
                 <img

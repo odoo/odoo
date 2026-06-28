@@ -152,7 +152,8 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                         # already received the email)
                         'notified_partner_ids': internal_followers,
                         # deduced from 'To' and 'Cc' (recognized only)
-                        'partner_ids': self.partner_1 + self.partner_2,
+                        'partner_ids': self.partner_1,
+                        'partner_cc_ids': self.partner_2,
                         'parent_id': self.env['mail.message'],
                         'reply_to': formataddr((
                             self.user_portal.name,
@@ -234,7 +235,8 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                                 # already received the email)
                                 'notified_partner_ids': internal_followers,
                                 # deduced from 'To' and 'Cc' (recognized partners)
-                                'partner_ids': self.partner_1 + self.partner_2,
+                                'partner_ids': self.partner_1,
+                                'partner_cc_ids': self.partner_2,
                                 'parent_id': self.env['mail.message'],
                                 'reply_to': formataddr((author.name, self.project_followers_alias.alias_full_name)),
                                 'subject': f'Test from {author.email_formatted}',
@@ -306,6 +308,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                             'email': 'new.author@test.agrolait.com',
                             'name': 'New Author',
                             'partner_id': author.id,  # already created by project upon initial email reception
+                            'recipient_type': 'to',
                         }
                     ]
                 elif test_user == self.user_portal:
@@ -315,6 +318,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                             'email': self.user_portal.email_normalized,
                             'name': self.user_portal.name,
                             'partner_id': self.user_portal.partner_id.id,
+                            'recipient_type': 'to',
                         }
                     ]
                 expected_all += [
@@ -323,12 +327,14 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                         'email': 'new.customer@test.agrolait.com',
                         'name': 'New Customer',
                         'partner_id': new_partner_customer.id,
+                        'recipient_type': 'to',
                     },
                     {  # Email CC without a partner
                         'create_values': {},
                         'email': 'new.cc@test.agrolait.com',
                         'name': 'New Cc',
                         'partner_id': new_partner_cc.id,
+                        'recipient_type': 'cc',
                     },
                     # other CC (partner_2) and customer (partner_id) already follower
                 ]
@@ -435,7 +441,8 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                                 'notified_partner_ids': internal_followers,
                                 'parent_id': responsible_answer,
                                 # same reasoning as email_to/cc
-                                'partner_ids': external_partners + self.partner_3,
+                                'partner_ids': external_partners,
+                                'partner_cc_ids': self.partner_3,
                                 'reply_to': formataddr((author.name, self.project_followers_alias.alias_full_name)),
                                 'subject': f'Re: Re: {task.name}',
                                 'subtype_id': self.env.ref('mail.mt_comment'),
@@ -744,4 +751,15 @@ Content-Type: text/html;
             f'/odoo/all-tasks/{task_private.id}',
             action['url'],
             "URL should point to the all-tasks route",
+        )
+
+        # 4. Portal User + Project Sharing -> Project Sharing Link
+        project_portal.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
+        project_portal._add_collaborators(self.user_portal.partner_id)
+        action = task_portal.with_user(self.user_portal)._get_access_action()
+        self.assertEqual(action['type'], 'ir.actions.act_url')
+        self.assertIn(
+            f'/my/projects/{project_portal.id}/project_sharing/{task_portal.id}',
+            action['url'],
+            "Portal user with edit access should get a link to project sharing",
         )

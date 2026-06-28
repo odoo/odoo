@@ -1,6 +1,6 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import { queryAllTexts, scroll } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
+import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import { SELECTORS } from "@web/../tests/core/domain_selector/domain_selector_helpers";
 import {
@@ -589,8 +589,8 @@ test("domain field: does not wait for the count to render", async function () {
         },
     ];
 
-    const def = new Deferred();
-    onRpc("search_count", () => def);
+    const def = Promise.withResolvers();
+    onRpc("search_count", () => def.promise);
 
     await mountView({
         type: "form",
@@ -934,9 +934,9 @@ test("invalid value in domain field with 'inDialog' options", async function () 
 test("edit domain button is available even while loading records count", async function () {
     Partner._fields.name.default = "[]";
     serverState.debug = "1";
-    const searchCountDeffered = new Deferred();
+    const searchCountDeffered = Promise.withResolvers();
     onRpc("/web/domain/validate", () => true);
-    onRpc("search_count", () => searchCountDeffered);
+    onRpc("search_count", () => searchCountDeffered.promise);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -1022,7 +1022,7 @@ test("quick check on save if domain has been edited via the debug input", async 
     await contains(SELECTORS.debugArea).edit("[['id', '!=', False]]");
     await contains("button.o_form_button_save").click();
     await animationFrame();
-    expect.verifySteps(["validate model", "validate model"]);
+    expect.verifySteps(["validate model"]);
     expect(".o_domain_show_selection_button").toHaveText("4 record(s)");
 });
 test("domain field can be foldable", async function () {
@@ -1168,9 +1168,9 @@ test("folded domain field with any operator", async function () {
 
 test("foldable domain, search_count delayed", async function () {
     Partner._records[0].foo = '[("id", "=", 1)]';
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("search_count", async () => {
-        await def;
+        await def.promise;
     });
 
     await mountView({
@@ -1236,7 +1236,7 @@ test("allow_expressions = true", async function () {
         context: { path: "name", name: "name" },
     });
 
-    await contains(SELECTORS.debugArea).edit(`[("name", "=", [name])]`);
+    await contains(SELECTORS.debugArea).edit(`[("name", "=", name)]`);
     await animationFrame();
     expect(".o_field_domain").not.toHaveClass("o_field_invalid");
     expect.verifySteps(["The domain involves non-literals. Their evaluation might fail."]);
@@ -1270,7 +1270,7 @@ test("allow_expressions = false (default)", async function () {
         context: { path: "name", name: "name" },
     });
 
-    await contains(SELECTORS.debugArea).edit(`[("name", "=", [name])]`);
+    await contains(SELECTORS.debugArea).edit(`[("name", "=", name)]`);
     await animationFrame();
     expect(".o_field_domain").toHaveClass("o_field_invalid");
     expect.verifySteps(["The domain should not involve non-literals"]);

@@ -7,6 +7,7 @@ from datetime import datetime, UTC
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import partition, SQL
+from odoo.tools.misc import clean_context
 
 _logger = logging.getLogger(__name__)
 
@@ -285,6 +286,12 @@ class MailActivityMixin(models.AbstractModel):
         my_next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
         my_next_activity.action_reschedule_nextweek()
 
+    # Reschedules next my activity to specified date.
+    def action_reschedule_my_next_customdate(self, date_deadline):
+        self.ensure_one()
+        my_next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+        my_next_activity.action_reschedule_customdate(date_deadline)
+
     def activity_send_mail(self, template_id):
         """ Automatically send an email based on the given mail.template, given
         its ID. """
@@ -341,10 +348,10 @@ class MailActivityMixin(models.AbstractModel):
         will have their "automated" field set to True.
 
         :param date_deadline: the day the activity must be scheduled on
-        the timezone of the user must be considered to set the correct deadline
+          the timezone of the user must be considered to set the correct deadline
         :param activity_user_id_fname: name of the user field on the record to use
-        as responsible for the activity. Can be a related field path.
-        Useless if 'user_id' is already provided in act_values.
+          as responsible for the activity. Can be a related field path.
+          Useless if 'user_id' is already provided in act_values.
         :type activity_user_id_fname: str
         """
         if self.env.context.get('mail_activity_automation_skip'):
@@ -383,7 +390,7 @@ class MailActivityMixin(models.AbstractModel):
                 'res_id': record.id,
             }
             create_vals.update(act_values)
-            if not create_vals.get('user_id') and activity_user_id_fname:
+            if not create_vals.get('user_id') and not create_vals.get('role_id') and activity_user_id_fname:
                 try:
                     user = record.mapped(activity_user_id_fname)
                 except Exception:  # noqa: BLE001
@@ -399,15 +406,17 @@ class MailActivityMixin(models.AbstractModel):
                     )
                 if user:
                     create_vals['user_id'] = user.ids[0]
-            if not create_vals.get('user_id') and activity_type.default_user_id:
+            if not create_vals.get('user_id') and not create_vals.get('role_id') and activity_type.default_user_id:
                 create_vals['user_id'] = activity_type.default_user_id.id
             create_vals_list.append(create_vals)
-        return self.env['mail.activity'].create(create_vals_list)
+        return self.env['mail.activity'].with_context(clean_context(self.env.context)).create(create_vals_list)
 
     def _activity_schedule_with_view(self, act_type_xmlid='', date_deadline=None, summary='', views_or_xmlid='', render_context=None, **act_values):
         """ Helper method: Schedule an activity on each record of the current record set.
-        This method allow to the same mecanism as `activity_schedule`, but provide
+
+        This method allows to the same mecanism as ``activity_schedule``, but provides
         2 additionnal parameters:
+
         :param views_or_xmlid: record of ir.ui.view or string representing the xmlid
             of the qweb template to render
         :type views_or_xmlid: string or recordset

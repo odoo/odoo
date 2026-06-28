@@ -1,4 +1,3 @@
-import { reactive } from "@web/owl2/utils";
 import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
 import {
     attClassObjectToString,
@@ -7,19 +6,21 @@ import {
 } from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
 
+import { proxy } from "@odoo/owl";
+
+import { browser } from "@web/core/browser/browser";
+import { cookie } from "@web/core/browser/cookie";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { Deferred, Mutex } from "@web/core/utils/concurrency";
+import { Mutex } from "@web/core/utils/concurrency";
 import { renderToElement } from "@web/core/utils/render";
 import { debounce } from "@web/core/utils/timing";
-import { session } from "@web/session";
-import { loader } from "@web/core/emoji_picker/emoji_picker";
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import { getOrigin } from "@web/core/utils/urls";
-import { browser } from "@web/core/browser/browser";
-import { cookie } from "@web/core/browser/cookie";
+import { session } from "@web/session";
+import { isMarkup, createDocumentFragmentFromContent } from "@web/core/utils/html";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -38,13 +39,14 @@ export class Store extends BaseStore {
     bookmarkBox = fields.One("mail.thread");
     history = fields.One("mail.thread");
     inbox = fields.One("mail.thread");
-    isReady = new Deferred();
+    isReadyPromise = new Promise((resolve) => (this._resolveIsReady = resolve));
     self_guest = fields.One("mail.guest");
     self_user = fields.One("res.users");
     /** This is the current logged partner / guest */
     get self() {
         return this.self_user?.partner_id || this.self_guest;
     }
+    initialized = false;
     /**
      * Indicates whether the current user is using the application through the
      * public page.
@@ -71,14 +73,20 @@ export class Store extends BaseStore {
          * @param {import("models").Failure} f1
          * @param {import("models").Failure} f2
          */
-        sort: (f1, f2) => f2.lastMessage?.id - f1.lastMessage?.id,
+        sort: (f1, f2) => {
+            if (f1.lastMessage?.id && !f2.lastMessage?.id) {
+                return -1;
+            }
+            if (!f1.lastMessage?.id && f2.lastMessage?.id) {
+                return 1;
+            }
+            return f2.lastMessage?.id - f1.lastMessage?.id || f2.id - f1.id;
+        },
     });
     settings = fields.One("Settings");
-    emojiLoader = loader;
 
     /** @type {[[string, any, import("models").DataResponse]]} */
     fetchParams = [];
-    fetchReadonly = true;
     fetchSilent = true;
 
     cannedReponses = this.makeCachedFetchData("mail.canned.response");
@@ -89,7 +97,14 @@ export class Store extends BaseStore {
             label: "everyone",
             channel_types: ["channel", "group"],
             displayName: "Everyone",
-            description: _t("Notify everyone"),
+            description: _t("Notify all members of this conversation"),
+        },
+        {
+            isSpecial: true,
+            label: "here",
+            channel_types: ["channel", "group"],
+            displayName: "Here",
+            description: _t("Notify all members of this conversation who are online"),
         },
     ];
 
@@ -150,6 +165,18 @@ export class Store extends BaseStore {
     }
 
     /**
+     * Ensure `initialize` is executed exactly once. Exposed as a separate function to
+     * allow overriding store initialization.
+     */
+    ensureInitialized() {
+        if (this.initialized) {
+            return;
+        }
+        this.initialized = true;
+        this.initialize();
+    }
+
+    /**
      * @param {string} name
      * @param {any} params
      * @param {Object} [options={}]
@@ -158,34 +185,69 @@ export class Store extends BaseStore {
      *  RPC or a bus notification for example). When set to false (the default), the return promise
      *  will resolve as soon as the RPC is done. This is intended to be true only for requests that
      *  will be resolved server side with `resolve_data_request`.
-     * @param {boolean} [options.readonly=true] when set to false, the server will open a read-write
-     *  cursor to process this request which is necessary if the request is expected to change data.
      * @param {boolean} [options.silent=true]
      */
-    async fetchStoreData(
-        name,
-        params,
-        { requestData = false, readonly = true, silent = true } = {}
-    ) {
+    async fetchStoreData(name, params, { requestData = false, silent = true } = {}) {
         /** @type {import("models").DataResponse} */
         const dataRequest = this.DataResponse.createRequest();
         dataRequest._autoResolve = !requestData;
         this.fetchParams.push([name, params, dataRequest]);
-        this.fetchReadonly = this.fetchReadonly && readonly;
         this.fetchSilent = this.fetchSilent && silent;
         this._fetchStoreDataDebounced();
         return dataRequest._resultResolvers.promise;
     }
 
-    /** Import data received from init_messaging */
-    async initialize() {
-        await this.fetchStoreData("init_messaging");
-        this.isReady.resolve();
+    /**
+     * Initialize the store by fetching the required data for the messaging system.
+     * Override to add data to be fetched. Do not call directly: use `ensureInitialized`
+     * to ensure the store is only initialized once.
+     */
+    initialize() {
+        this.fetchStoreData("init_messaging").then(() => {
+            this._resolveIsReady();
+        });
+    }
+
+    /**
+     * Called after the store is fully set up. Override to add listeners or set default field values.
+     * This avoids issues with the dummy store created during setup, which would cause computes to
+     * crash and listeners to be registered twice.
+     */
+    onStarted() {
+        this.isOdooWhiteTheme = cookie.get("color_scheme") !== "dark" || this.inPublicPage;
+        navigator.serviceWorker?.addEventListener("message", ({ data = {} }) => {
+            const { type, payload } = data;
+            if (type === "notification-display-request") {
+                const { correlationId, model, res_id } = payload;
+                const thread = this["mail.thread"].get({ model, id: res_id });
+                let isTabFocused;
+                try {
+                    isTabFocused = parent.document.hasFocus();
+                } catch {
+                    // assumes tab not focused: parent.document from iframe triggers CORS error
+                }
+                // Prevent duplicate inbox push notifications since they're already handled by
+                // `mail.message/inbox` bus notifications, and the `modelsHandleByPush` heuristic
+                // in `out_of_focus_service.js` isn't reliable enough to detect these cases.
+                const isInbox =
+                    this.store.self.main_user_id?.notification_type === "inbox" &&
+                    model !== "discuss.channel";
+                if ((isTabFocused && thread?.channel?.isDisplayed) || isInbox) {
+                    navigator.serviceWorker.controller?.postMessage({
+                        type: "notification-display-response",
+                        payload: { correlationId },
+                    });
+                }
+            }
+            if (type === "notification-displayed") {
+                this.onPushNotificationDisplayed(payload);
+            }
+        });
     }
 
     /**
      * Create a cacheable version of the `fetchStoreData` method. The result of the
-     * request is cached once acquired. In case of failure, the deferred is
+     * request is cached once acquired. In case of failure, the promise is
      * rejected and the cache is reset allowing to retry the request when
      * calling the function again.
      *
@@ -197,26 +259,26 @@ export class Store extends BaseStore {
      * }}
      */
     makeCachedFetchData(name, params) {
-        let def = null;
-        const r = reactive({
+        let promWithResolvers = null;
+        const r = proxy({
             status: "not_fetched",
             fetch: () => {
                 if (["fetching", "fetched"].includes(r.status)) {
-                    return def;
+                    return promWithResolvers.promise;
                 }
                 r.status = "fetching";
-                def = new Deferred();
+                promWithResolvers = Promise.withResolvers();
                 this.fetchStoreData(name, params).then(
                     (result) => {
                         r.status = "fetched";
-                        def.resolve(result);
+                        promWithResolvers.resolve(result);
                     },
                     (error) => {
                         r.status = "not_fetched";
-                        def.reject(error);
+                        promWithResolvers.reject(error);
                     }
                 );
-                return def;
+                return promWithResolvers.promise;
             },
         });
         return r;
@@ -258,13 +320,12 @@ export class Store extends BaseStore {
             }
         );
         this.fetchParams = [];
-        this.fetchReadonly = true;
         this.fetchSilent = true;
     }
 
     _fetchStoreDataRpc(fetchParams) {
         return rpc(
-            this.fetchReadonly ? "/mail/data" : "/mail/action",
+            "/mail/store",
             { fetch_params: fetchParams, context: user.context },
             { silent: this.fetchSilent }
         );
@@ -274,13 +335,13 @@ export class Store extends BaseStore {
         /** @type {import("models").DiscussChannel} */
         const channel = await this.createGroupChat({
             default_display_mode: "video_full_screen",
-            partners_to: [this.self.id],
+            users_to: [this.self_user.id],
         });
         await this.chatHub.initPromise;
         channel.chatWindow?.update({ autofocus: 0 });
         await this.env.services["discuss.rtc"].toggleCall(channel, { camera: true });
         if (this.rtc.selfSession) {
-            this.rtc.enterFullscreen({ autoOpenAction: "invite-people" });
+            this.rtc.enterFullscreen();
         }
     }
 
@@ -379,39 +440,6 @@ export class Store extends BaseStore {
         );
     }
 
-    /** Provides an override point for when the store service has started. */
-    onStarted() {
-        this.isOdooWhiteTheme = cookie.get("color_scheme") !== "dark" || this.inPublicPage;
-        navigator.serviceWorker?.addEventListener("message", ({ data = {} }) => {
-            const { type, payload } = data;
-            if (type === "notification-display-request") {
-                const { correlationId, model, res_id } = payload;
-                const thread = this["mail.thread"].get({ model, id: res_id });
-                let isTabFocused;
-                try {
-                    isTabFocused = parent.document.hasFocus();
-                } catch {
-                    // assumes tab not focused: parent.document from iframe triggers CORS error
-                }
-                // Prevent duplicate inbox push notifications since they're already handled by
-                // `mail.message/inbox` bus notifications, and the `modelsHandleByPush` heuristic
-                // in `out_of_focus_service.js` isn't reliable enough to detect these cases.
-                const isInbox =
-                    this.store.self.main_user_id?.notification_type === "inbox" &&
-                    model !== "discuss.channel";
-                if ((isTabFocused && thread?.channel?.isDisplayed) || isInbox) {
-                    navigator.serviceWorker.controller?.postMessage({
-                        type: "notification-display-response",
-                        payload: { correlationId },
-                    });
-                }
-            }
-            if (type === "notification-displayed") {
-                this.onPushNotificationDisplayed(payload);
-            }
-        });
-    }
-
     onPushNotificationDisplayed(payload) {
         if (["mail.thread", "discuss.channel"].includes(payload.model)) {
             this.env.services["mail.out_of_focus"]._playSound();
@@ -464,7 +492,7 @@ export class Store extends BaseStore {
 
     fillPartnersMentionToken(postData) {
         postData.partner_ids_mention_token ||= {};
-        for (const pid of postData.partner_ids) {
+        for (const pid of [...postData.partner_ids, ...(postData.partner_cc_ids || [])]) {
             const partner = this["res.partner"].get(pid);
             if (partner?.mention_token) {
                 postData.partner_ids_mention_token[pid] = partner.mention_token;
@@ -494,23 +522,28 @@ export class Store extends BaseStore {
         }
     }
 
-    getMentionsFromText(
-        body,
-        { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [], thread } = {}
-    ) {
+    getMentionsFromText(body, { mentionedPartners = [], mentionedRoles = [], thread } = {}) {
         const validMentions = {};
-        validMentions.channels = mentionedChannels.filter((channel) => {
-            if (channel.parent_channel_id) {
-                return body.includes(`#${channel.parent_channel_id.fullNameWithParent}`);
-            }
-            return body.includes(`#${channel.displayName}`);
-        });
+        const segments = isMarkup(body)
+            ? Array.from(
+                  createDocumentFragmentFromContent(body).querySelectorAll("a"),
+                  (a) => a.textContent
+              )
+            : [body];
         validMentions.partners = mentionedPartners.filter((partner) =>
-            body.includes(`@${thread?.getPersonaName(partner) ?? partner.name}`)
+            segments.some((segment) => {
+                const name = thread?.getPersonaName(partner) ?? partner.displayName;
+                return Boolean(
+                    (name && segment.includes(`@${name}`)) ||
+                        (partner.email && segment.includes(`@${partner.email}`))
+                );
+            })
         );
-        validMentions.roles = mentionedRoles.filter((role) => body.includes(`@${role.name}`));
+        validMentions.roles = mentionedRoles.filter((role) =>
+            segments.some((segment) => segment.includes(`@${role.name}`))
+        );
         validMentions.specialMentions = this.specialMentions
-            .filter((special) => body.includes(`@${special.label}`))
+            .filter((special) => segments.some((segment) => segment.includes(`@${special.label}`)))
             .map((special) => special.label);
         return validMentions;
     }
@@ -523,50 +556,56 @@ export class Store extends BaseStore {
             attachments,
             cannedResponseIds,
             emailAddSignature,
+            isCcEnabled,
             isNote,
-            mentionedChannels,
             mentionedPartners,
             mentionedRoles,
             subject,
         } = postData;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.getMentionsFromText(body, {
-            mentionedChannels,
             mentionedPartners,
             mentionedRoles,
             thread,
         });
-        const partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
-        const role_ids = validMentions?.roles.map((role) => role.id) ?? [];
-        const recipientEmails = [];
-        if (!isNote) {
-            const allRecipients = [...thread.suggestedRecipients, ...thread.additionalRecipients];
-            const recipientIds = allRecipients
-                .filter((recipient) => recipient.persona)
-                .map((recipient) => recipient.persona.id);
-            allRecipients
-                .filter((recipient) => !recipient.persona)
-                .forEach((recipient) => {
-                    recipientEmails.push(recipient.email);
-                });
-            partner_ids.push(...recipientIds);
-        }
         postData = {
             body: await generateEmojisOnHtml(body),
             email_add_signature: emailAddSignature,
             message_type: "comment",
+            partner_cc_emails: [],
+            partner_cc_ids: [],
+            partner_emails: [],
+            partner_ids: validMentions?.partners.map((partner) => partner.id) ?? [],
+            role_ids: validMentions?.roles.map((role) => role.id) ?? [],
             subtype_xmlid: subtype,
             subject,
         };
+        if (!isNote) {
+            for (const recipient of [
+                ...thread.suggestedRecipients,
+                ...thread.additionalRecipients,
+            ]) {
+                if (!isCcEnabled && recipient.recipient_type === "cc") {
+                    continue;
+                }
+                if (recipient.persona) {
+                    if (recipient.recipient_type === "cc") {
+                        postData.partner_cc_ids.push(recipient.persona.id);
+                    } else {
+                        postData.partner_ids.push(recipient.persona.id);
+                    }
+                } else {
+                    if (recipient.recipient_type === "cc") {
+                        postData.partner_cc_emails.push(recipient.email);
+                    } else {
+                        postData.partner_emails.push(recipient.email);
+                    }
+                }
+            }
+        }
+        this.fillPartnersMentionToken(postData);
         if (attachments.length) {
             postData.attachment_ids = attachments.map(({ id }) => id);
-        }
-        if (partner_ids.length) {
-            Object.assign(postData, { partner_ids });
-            this.fillPartnersMentionToken(postData);
-        }
-        if (role_ids.length) {
-            Object.assign(postData, { role_ids });
         }
         if (thread.channel && validMentions?.specialMentions.length) {
             postData.special_mentions = validMentions.specialMentions;
@@ -576,8 +615,18 @@ export class Store extends BaseStore {
                 (attachment) => attachment.ownership_token
             );
         }
-        if (recipientEmails.length) {
-            postData.partner_emails = recipientEmails;
+        // Clean empty fields
+        for (const field of [
+            "partner_ids",
+            "partner_ids_mention_token",
+            "partner_cc_ids",
+            "partner_emails",
+            "partner_cc_emails",
+            "role_ids",
+        ]) {
+            if (Object.prototype.hasOwnProperty.call(postData, field) && !postData[field].length) {
+                delete postData[field];
+            }
         }
         const params = {
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually
@@ -589,6 +638,12 @@ export class Store extends BaseStore {
             params.canned_response_ids = cannedResponseIds;
         }
         return params;
+    }
+
+    notifySendFromMailbox(recordName) {
+        this.env.services.notification.add(_t('Message posted on "%s"', recordName), {
+            type: "info",
+        });
     }
 
     getNextTemporaryId() {
@@ -606,7 +661,7 @@ export class Store extends BaseStore {
         const { channel } = await this.fetchStoreData(
             "/discuss/get_or_create_chat",
             { partners_to: [id] },
-            { readonly: false, requestData: true }
+            { requestData: true }
         );
         if (forceOpen) {
             channel.open({ focus: true });
@@ -617,15 +672,6 @@ export class Store extends BaseStore {
     async openChat(person) {
         const chat = await this.getChat(person);
         chat?.open({ focus: true });
-    }
-
-    openDocument({ id, model }) {
-        this.env.services.action.doAction({
-            type: "ir.actions.act_window",
-            res_model: model,
-            views: [[false, "form"]],
-            res_id: id,
-        });
     }
 
     /**
@@ -682,7 +728,6 @@ export const storeService = {
          */
         store.self_guest ??= { id: -1 };
         store.settings ??= {};
-        store.initialize();
         store.onStarted();
         return store;
     },

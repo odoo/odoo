@@ -19,14 +19,16 @@
     ],
     "data": [
         # Security
-        "security/ir.model.access.csv",
-        "security/ir_rules.xml",
+        "security/ir_access.xml",
         "security/res_groups.xml",
         # Record data
         "data/mail_template_data.xml",
         "data/data.xml",  # Needs mail_template_data
         "data/digest_data.xml",  # Needs mail_template_data
+        "data/donation_data.xml",
+        "data/ir_actions_server_data.xml",
         "data/ir_cron_data.xml",
+        "data/product_attribute_data.xml",
         "data/product_ribbon_data.xml",
         "data/tour.xml",
         "data/website_checkout_step_data.xml",
@@ -68,7 +70,6 @@
         "views/product_views.xml",
         "views/res_config_settings_views.xml",
         "views/sale_order_views.xml",
-        "views/website_base_unit_views.xml",
         "views/website_sale_menus.xml",
         "views/website_sale_visitor_views.xml",
         "views/website_views.xml",
@@ -76,6 +77,7 @@
         "templates/snippets/snippets.xml",
         "templates/snippets/product_snippet_template_data.xml",
         "templates/snippets/s_add_to_cart.xml",
+        "templates/snippets/s_donation.xml",
         "templates/snippets/s_dynamic_snippet_products.xml",
         "templates/snippets/s_dynamic_snippet_categories.xml",
         "templates/snippets/s_dynamic_snippet_products_preview_data.xml",
@@ -91,6 +93,7 @@
         "templates/snippets/s_mega_menu/thumbnails.xml",
         "templates/snippets/snippet_category_template_data.xml",
         "templates/generate_primary_template.xml",
+        "security/ir.access.csv",
     ],
     "demo": [
         "data/demo.xml",
@@ -125,10 +128,11 @@
             "website_sale/static/src/js/website_sale_utils.js",
             "website_sale/static/src/js/wishlist_utils.js",
             "website_sale/static/src/js/comparison_utils.js",
-            "website_sale/static/src/xml/website_sale_utils.xml",
             "website/static/lib/multirange/multirange_custom.js",
             "website/static/src/interactions/multirange_input.js",
             "website_sale/static/src/xml/website_sale_image_viewer.xml",
+            "website_sale/static/src/xml/website_sale_product_availability.xml",
+            "website_sale/static/src/js/components/alert_banner/*",
             "website_sale/static/src/js/components/website_sale_image_viewer.js",
             "website_sale/static/src/js/cart_notification/item_added_notification/item_added_notification.js",
             "website_sale/static/src/js/cart_notification/item_added_notification/item_added_notification.xml",
@@ -155,10 +159,6 @@
             # comparison
             "website_sale/static/src/js/product_row/*",
             "website_sale/static/src/js/product_comparison_bottom_bar/*",
-            # Location selector components are defined in `delivery` to share the codebase with the
-            # backend.
-            "delivery/static/src/js/location_selector/**/*",
-            "website_sale/static/src/js/location_selector/**/*",
         ],
         "web._assets_primary_variables": ["website_sale/static/src/scss/primary_variables.scss"],
         "web.assets_backend": [
@@ -177,7 +177,6 @@
         ],
         "web.assets_web_dark": ["website_sale/static/src/js/dashboard/**/*.dark.scss"],
         "website.website_builder_assets": [
-            "website_sale/static/src/js/website_sale_form_editor.js",
             "website_sale/static/src/website_builder/**/*",
             "website_sale/static/src/js/website_sale_utils.js",
             ("remove", "website_sale/static/src/**/*.edit.*"),
@@ -188,7 +187,6 @@
         ],
         "website.assets_editor": [
             "website_sale/static/src/js/systray_items/*.js",
-            "website_sale/static/src/xml/website_sale_utils.xml",
             "website_sale/static/src/xml/website_sale_editor_previews.xml",
         ],
         "website.assets_inside_builder_iframe": [
@@ -205,7 +203,6 @@
             "website_sale/static/tests/builder/**/*",
         ],
         "web.assets_unit_tests_setup": [
-            "delivery/static/src/js/location_selector/**/*",
             "website_sale/static/src/interactions/**/*",
             "website_sale/static/src/js/product_row/*",
             "website_sale/static/src/js/product_comparison_bottom_bar/*",
@@ -213,12 +210,14 @@
             "website_sale/static/src/js/comparison_utils.js",
             "website_sale/static/src/js/wishlist_utils.js",
             "website_sale/static/src/js/website_sale_utils.js",
+            "website_sale/static/src/js/components/alert_banner/*",
             "website_sale/static/src/js/components/website_sale_image_viewer.js",
             # TODO Find out why these do not work:
             #'website_sale/static/src/snippets/**/*.js',
             # TODO Re-activate when testing edit mode
             # ('remove', 'website_sale/static/src/snippets/**/*.edit.js'),
         ],
+        "html_builder.iframe_add_dialog": ["website_sale/static/src/snippets/**/*.preview.scss"],
     },
     "author": "Odoo S.A.",
     "license": "LGPL-3",

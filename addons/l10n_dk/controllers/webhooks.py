@@ -12,7 +12,7 @@ class NemhandelWebhookController(http.Controller):
         csrf=False,
     )
     def webhook_nemhandel_new_message(self, token):
-        edi_client = request.env['account_edi_proxy_client.user']._get_nemhandel_user_from_token(token, url=request.httprequest.url)
+        edi_client = request.env['account_edi_proxy_client.user'].sudo()._get_nemhandel_user_from_token(token, url=request.httprequest.url)
 
         cron = request.env.ref(
             'l10n_dk.ir_cron_nemhandel_get_new_documents',
@@ -31,7 +31,7 @@ class NemhandelWebhookController(http.Controller):
         csrf=False,
     )
     def webhook_nemhandel_message_update(self, token):
-        edi_client = request.env['account_edi_proxy_client.user']._get_nemhandel_user_from_token(token, url=request.httprequest.url)
+        edi_client = request.env['account_edi_proxy_client.user'].sudo()._get_nemhandel_user_from_token(token, url=request.httprequest.url)
 
         cron = request.env.ref(
             'l10n_dk.ir_cron_nemhandel_get_message_status',
@@ -50,7 +50,7 @@ class NemhandelWebhookController(http.Controller):
         csrf=False,
     )
     def webhook_nemhandel_user_update(self, token):
-        edi_client = request.env['account_edi_proxy_client.user']._get_nemhandel_user_from_token(token, url=request.httprequest.url)
+        edi_client = request.env['account_edi_proxy_client.user'].sudo()._get_nemhandel_user_from_token(token, url=request.httprequest.url)
 
         cron = request.env.ref(
             'l10n_dk.ir_cron_nemhandel_get_participant_status',

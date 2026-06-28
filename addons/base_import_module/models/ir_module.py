@@ -16,11 +16,10 @@ from os.path import join as opj
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.fields import Domain
-from odoo.http import request
 from odoo.modules.module import MANIFEST_NAMES, Manifest
 from odoo.release import major_version
 from odoo.tools import BinaryBytes, SQL, convert_file
-from odoo.tools import file_open, file_path, file_open_temporary_directory, ormcache
+from odoo.tools import file_open, file_path, file_open_temporary_directory
 from odoo.tools.misc import OrderedSet, topological_sort
 from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT, CodeTranslations, TranslationImporter, get_base_langs
 
@@ -48,7 +47,7 @@ class IrModuleModule(models.Model):
     )
 
     @api.model
-    @ormcache(cache='stable')
+    @api.ormcache(cache='stable')
     def _get_imported_module_names(self):
         return OrderedSet(self.sudo().search_fetch([('imported', '=', True), ('state', '=', 'installed')], ['name']).mapped('name'))
 
@@ -111,9 +110,6 @@ class IrModuleModule(models.Model):
         # Do not involve specific website during import by resetting
         # information used by website's get_current_website.
         self = self.with_context(website_id=None)  # noqa: PLW0642
-        force_website_id = None
-        if request and request.session.get('force_website_id'):
-            force_website_id = request.session.pop('force_website_id')
 
         known_mods = self.search([])
         known_mods_names = {m.name: m for m in known_mods}
@@ -143,7 +139,10 @@ class IrModuleModule(models.Model):
                 err = _("Unknown module dependencies:") + "\n - " + "\n - ".join(wrong_dependencies)
                 raise UserError(err)
             to_install = known_mods.filtered(lambda mod: mod.name in unmet_dependencies)
+            _logger.info("Unmet dependencies during import of %s: %s", module, to_install.mapped('name'))
             to_install.button_immediate_install()
+            # Rebrowse to use the new registry
+            return self.env[self._name].browse(self._ids)._import_module(module, path, force=force, with_demo=with_demo)
         elif 'web_studio' not in installed_mods and _is_studio_custom(path):
             raise UserError(_("Studio customizations require the Odoo Studio app."))
 
@@ -318,11 +317,8 @@ class IrModuleModule(models.Model):
             article_record.write({'body': body})
 
         mod._update_from_terp(terp)
+        self.env.cr.flush()
         _logger.info("Successfully imported module '%s'", module)
-
-        if force_website_id:
-            # Restore neutralized website_id.
-            request.session['force_website_id'] = force_website_id
 
         return True
 
@@ -381,12 +377,14 @@ class IrModuleModule(models.Model):
                     if is_data_file or is_static or is_translation:
                         z.extract(file, module_dir)
 
+                env_sudo = self.sudo().env
                 for mod_name in sorted_dirs:
                     module_names.append(mod_name)
                     try:
                         # assert mod_name.startswith('theme_')
                         path = opj(module_dir, mod_name)
-                        self.sudo()._import_module(mod_name, path, force=force, with_demo=with_demo)
+                        # call import module after rebinding to the new registry
+                        env_sudo[self._name]._import_module(mod_name, path, force=force, with_demo=with_demo)
                     except Exception as e:
                         raise UserError(_(
                             "Error while importing module '%(module)s'.\n\n %(error_message)s \n\n",
@@ -446,10 +444,13 @@ class IrModuleModule(models.Model):
     def _get_modules_from_apps(self, fields, module_type, module_name, domain=None, limit=None, offset=None):
         if 'name' not in fields:
             fields = fields + ['name']
+        domain_obj = Domain(domain or []).optimize(self)
+        fields_from_domain = {cond.field_expr for cond in domain_obj.iter_conditions()}
+        fields_to_ask = list(set(fields) | fields_from_domain)
         payload = {
             'params': {
                 'series': major_version,
-                'module_fields': fields,
+                'module_fields': fields_to_ask,
                 'module_type': module_type,
                 'module_name': module_name,
                 'domain': domain,
@@ -461,30 +462,43 @@ class IrModuleModule(models.Model):
         try:
             resp = self._call_apps(json.dumps(payload))
             resp.raise_for_status()
-            modules_list = resp.json().get('result', [])
-            for mod in modules_list:
-                module_name = mod['name']
-                existing_mod = self.search([('name', '=', module_name), ('state', '=', 'installed')])
-                mod['id'] = existing_mod.id if existing_mod else -1
-                if 'icon' in fields:
-                    mod['icon'] = f"{APPS_URL}{mod['icon']}"
-                if 'state' in fields:
-                    if existing_mod:
-                        mod['state'] = 'installed'
-                    else:
-                        mod['state'] = 'uninstalled'
-                if 'module_type' in fields:
-                    mod['module_type'] = module_type
-                if 'website' in fields:
-                    mod['website'] = f"{APPS_URL}/apps/modules/{major_version}/{module_name}/"
-            return modules_list
         except requests.exceptions.HTTPError:
             raise UserError(_('The list of industry applications cannot be fetched. Please try again later'))
         except requests.exceptions.ConnectionError:
             raise UserError(_('Connection to %s failed The list of industry modules cannot be fetched') % APPS_URL)
 
+        modules_list = resp.json().get('result', [])
+        existing_modules = self.search_fetch(
+            [('name', 'in', [mod['name'] for mod in modules_list])], ['name']
+        )
+        existing_module_names = set(existing_modules.mapped('name'))
+        all_modules = existing_modules
+        appstore_ids = {}
+        for mod in modules_list:
+            module_name = mod['name']
+            if module_name in existing_module_names:
+                continue
+            mod['icon'] = f"{APPS_URL}{mod.get('icon')}"
+            mod['state'] = 'uninstalled'
+            mod['module_type'] = module_type
+            mod['website'] = f"{APPS_URL}/apps/modules/{major_version}/{module_name}/"
+            appstore_ids[mod['name']] = mod['id']
+            all_modules += self.env['ir.module.module'].new(mod)
+
+        # removes category from the domain, since it does not work (categories are different) and
+        # was already applied on appstore call
+        domain_without_category = domain_obj.map_conditions(
+            lambda c: Domain.TRUE if c.field_expr == 'category_id' else c
+        )
+        results = all_modules.filtered_domain(domain_without_category).read(fields)
+        for r in results:
+            # need to handle some fields that are not defined with new()
+            r['id'] = r['id'] if r['id'] in all_modules.ids else -appstore_ids[r['name']]
+            r['icon_image'] = mod.get('icon_image')
+        return results
+
     @api.model
-    @ormcache('payload')
+    @api.ormcache('payload')
     def _call_apps(self, payload):
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         import requests  # noqa: PLC0415
@@ -496,7 +510,7 @@ class IrModuleModule(models.Model):
             )
 
     @api.model
-    @ormcache()
+    @api.ormcache()
     def _get_industry_categories_from_apps(self):
         import requests  # noqa: PLC0415
         try:
@@ -613,7 +627,7 @@ class IrModuleModule(models.Model):
         return super().search_panel_select_range(field_name, **kwargs)
 
     @api.model
-    @ormcache('module', 'lang', cache='stable')
+    @api.ormcache('module', 'lang', cache='stable')
     def _get_imported_module_translations_for_webclient(self, module, lang):
         if not lang:
             lang = self.env.context.get("lang") or 'en_US'

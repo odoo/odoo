@@ -7,6 +7,7 @@ from odoo import fields, models
 class CrmRecurringPlan(models.Model):
     _name = 'crm.recurring.plan'
     _description = "CRM Recurring Revenue Plan"
+    _explanation = "Defines billing intervals for recurring revenues (e.g., Monthly, Yearly). Applied to leads/opportunities to estimate future subscription income."
     _order = "sequence"
 
     name = fields.Char('Plan Name', required=True, translate=True)

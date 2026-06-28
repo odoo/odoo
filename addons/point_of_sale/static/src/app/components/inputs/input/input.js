@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { onPatched } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { onPatched, props, proxy, t } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 import { TModelInput } from "@point_of_sale/app/components/inputs/t_model_input";
@@ -9,44 +9,30 @@ import { TModelInput } from "@point_of_sale/app/components/inputs/t_model_input"
  *   Optional props allow handling debouncing, toggling between mobile and desktop views,
  *   autofocus, validation, and more.
  */
+export const inputProps = {
+    tModel: t.array(),
+    isSmall: t.boolean().optional(false),
+    debounceMillis: t.number().optional(0),
+    icon: t.object({ type: t.string().optional(), value: t.string().optional() }).optional({}),
+    getRef: t.function().optional(),
+    autofocus: t.boolean().optional(false),
+    autofocusMobile: t.boolean().optional(false),
+    iconOnLeftSide: t.boolean().optional(true),
+    isValid: t.function().optional(() => () => true),
+    placeholder: t.string().optional(""),
+    class: t.string().optional(""),
+    callback: t.function().optional(),
+    isOpenCallback: t.function().optional(),
+    readonly: t.boolean().optional(false),
+    onBlur: t.function().optional(),
+    onClick: t.function().optional(),
+};
+
 export class Input extends TModelInput {
     static template = "point_of_sale.input";
-    static props = {
-        ...super.props,
-        isSmall: { type: Boolean, optional: true },
-        debounceMillis: { type: Number, optional: true },
-        icon: {
-            type: Object,
-            optional: true,
-            shape: { type: String, value: String },
-        },
-        getRef: { type: Function, optional: true },
-        autofocus: { type: Boolean, optional: true },
-        autofocusMobile: { type: Boolean, optional: true },
-        iconOnLeftSide: { type: Boolean, optional: true },
-        isValid: { type: Function, optional: true },
-        placeholder: { type: String, optional: true },
-        class: { type: String, optional: true },
-        callback: { type: Function, optional: true },
-        isOpenCallback: { type: Function, optional: true },
-        readonly: { type: Boolean, optional: true },
-        onBlur: { type: Function, optional: true },
-        onClick: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        class: "",
-        isSmall: false,
-        debounceMillis: 0,
-        icon: {},
-        placeholder: "",
-        autofocus: false,
-        autofocusMobile: false,
-        iconOnLeftSide: true,
-        isValid: () => true,
-        readonly: false,
-    };
+    props = props(inputProps);
     setup() {
-        this.state = useState({ isOpen: false });
+        this.state = proxy({ isOpen: false });
         // Bind setValue to ensure that 'this' remains the component instance.
         this.setValue = debounce(this.setValue.bind(this), this.props.debounceMillis);
         const ref =

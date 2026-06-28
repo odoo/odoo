@@ -11,6 +11,10 @@
         .o-autocomplete, .o_input {
             height: 100%;
         }
+
+        .o_input {
+            border: none;
+        }
     }
 
     .dropdown-item-selected > a {
@@ -27,6 +31,12 @@
             .o_field_widget.o_field_many2many_tags_avatar .o_quick_assign {
                 visibility: visible;
             }
+        }
+    }
+    .o_field_many2many_tags_avatar{
+        .o_m2m_avatar_empty {
+            padding: 5px; 
+            border-radius: 6px !important;
         }
     }
 }

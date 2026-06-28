@@ -37,15 +37,11 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
         # the correct quantity.
         order.write({
             "order_line": [
-                (
-                    0,
-                    False,
-                    {
-                        "product_id": self.product_B.id,
-                        "name": "2 Product B",
-                        "product_uom_qty": 1.0,
-                    },
-                )
+                Command.create({
+                    "product_id": self.product_B.id,
+                    "name": "2 Product B",
+                    "product_uom_qty": 1.0,
+                })
             ]
         })
         order._update_programs_and_rewards()
@@ -58,7 +54,9 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
 
         # Test case 3 (2 A 1 B): Assert that the reward is given as the product B is now in the
         # order.
-        order.write({"order_line": [(1, order.order_line[0].id, {"product_uom_qty": 2.0})]})
+        order.write({
+            "order_line": [Command.update(order.order_line[0].id, {"product_uom_qty": 2.0})]
+        })
         order._update_programs_and_rewards()
         self._claim_reward(order, self.immediate_promotion_program)
         self.assertEqual(
@@ -69,7 +67,9 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
 
         # Test case 4 (1 A 1 B): Assert that the reward is removed as we don't buy 2 products B
         # anymore.
-        order.write({"order_line": [(1, order.order_line[0].id, {"product_uom_qty": 1.0})]})
+        order.write({
+            "order_line": [Command.update(order.order_line[0].id, {"product_uom_qty": 1.0})]
+        })
         order._update_programs_and_rewards()
         self._claim_reward(order, self.immediate_promotion_program)
         self.assertEqual(
@@ -86,12 +86,7 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
 
         # Test case 5 (1 B): Assert that the reward is removed when the order is modified and
         # doesn't match the rules anymore.
-        order.write({
-            "order_line": [
-                (1, order.order_line[0].id, {"product_uom_qty": 2.0}),
-                (2, order.order_line[0].id, False),
-            ]
-        })
+        order.write({"order_line": [Command.delete(order.order_line[0].id)]})
         order._update_programs_and_rewards()
         self._claim_reward(order, self.immediate_promotion_program)
         self.assertEqual(

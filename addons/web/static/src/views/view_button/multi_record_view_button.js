@@ -1,7 +1,12 @@
-import { ViewButton } from "./view_button";
+import { props, t } from "@odoo/owl";
+import { ViewButton, viewButtonProps } from "./view_button";
 
 export class MultiRecordViewButton extends ViewButton {
-    static props = [...ViewButton.props, "list", "domain"];
+    props = props({
+        ...viewButtonProps,
+        list: t.any(),
+        domain: t.any(),
+    });
 
     async onClick(ev, newWindow) {
         const { clickParams, list } = this.props;

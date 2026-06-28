@@ -1,16 +1,22 @@
-.o-filter-values{
+.o_dashboard_filter_list {
     min-width: 600px;
-
-    .o-filter-clear {
-        width: 8%;
-        height: 36px;
-    }
 }
 
-.o_bottom_sheet .o-filter-values {
-    min-width: unset;
-    .o-filter-item  .o-autocomplete .dropdown-item {
-        --dropdown-item-padding-y: 3px;
-        font-weight: 400;
+.o_bottom_sheet .o_bottom_sheet_sheet{
+    .o_dashboard_filter_list {
+        min-width: 100%;
+    }
+
+    .o_search_bar_menu {
+        max-width: 100%;
+        padding: 8px;
+    }
+
+    .o_favorite_item.selected i {
+        visibility: visible;
+    }
+
+    .o_bottom_sheet_body:not(.o_custom_bottom_sheet) .dropdown-item{
+        --dropdown-item-padding-y: 4px;
     }
 }

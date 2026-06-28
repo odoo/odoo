@@ -112,6 +112,7 @@
         'social_twitter': res_company.social_twitter,
         'social_linkedin': res_company.social_linkedin,
         'social_tiktok': res_company.social_tiktok,
+        'social_youtube': res_company.social_youtube,
     }"/>
     <t t-set="base_social_links" t-value="{
         'social_facebook': 'https://www.facebook.com/odoo',
@@ -119,6 +120,7 @@
         'social_twitter': 'https://x.com/Odoo',
         'social_linkedin': 'https://www.linkedin.com/company/odoo',
         'social_tiktok': 'https://www.tiktok.com/@odoo',
+        'social_youtube': 'https://www.youtube.com/@Odoo',
     }"/>
     <t t-set="updated_links" t-value="{key: social_links.get(key) or val for key, val in base_social_links.items()}"/>
     <t t-foreach="updated_links.items() if fillSocialLinks else []" t-as="link">
@@ -127,6 +129,19 @@
             <i t-attf-style="{{optionalTextStyle}}" t-attf-class="fa fa-{{platform}} {{ optionalIconLayout or 'fa-stack'}} o_editable_media"></i>
         </a>
     </t>
+</template>
+
+<template id="s_mail_company_logo">
+    <img t-if="company_id.logo or user_id.company_id.logo"
+        t-att-class="class"
+        t-att-style="style"
+        t-attf-src="/web/image/res.company/{{ company_id.id if company_id.logo else user_id.company_id.id }}/logo"
+        t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.logo else user_id.company_id.id }}/logo" />
+    <img t-else=""
+        t-att-class="class"
+        t-attf-style="width: 33% !important; {{style}}"
+        t-attf-src="/web/image/res.company/{{ company_id.id }}/logo"
+        t-attf-data-original-src="/web/image/res.company/{{ company_id.id }}/logo" />
 </template>
 
 <!-- Assets -->

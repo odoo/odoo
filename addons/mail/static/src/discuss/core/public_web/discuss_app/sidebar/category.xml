@@ -11,8 +11,8 @@
             </t>
         </Dropdown>
         <t t-else="" t-call="mail.DiscussSidebarCategory.main"/>
-        <div class="o-mail-DiscussSidebarCategory-channels bg-inherit">
-            <t t-if="this.category.is_open">
+        <div class="o-mail-DiscussSidebarCategory-channels bg-inherit" t-att-class="{ 'd-flex flex-column gap-1': this.store.discuss.isSidebarCompact }">
+            <t t-if="this.isOpen">
                 <DiscussSidebarChannel t-foreach="this.category.channels.filter((channel) => channel.isDisplayInSidebar)" t-as="channel" t-key="channel.localId" channel="channel"/>
             </t>
             <DiscussSidebarChannel t-elif="this.store.discuss.thread?.channel?.in(this.category.channels)" channel="this.store.discuss.thread.channel"/>
@@ -25,8 +25,8 @@
             <button t-att-disabled="this.isToggleFoldDisabled" class="o-mail-DiscussSidebarCategory-toggler btn btn-link text-reset flex-grow-1 d-flex p-0 text-start" t-att-class="{ 'align-items-baseline o-gap-0_5': !this.store.discuss.isSidebarCompact, 'align-items-center justify-content-center border-0 o-compact gap-1': this.store.discuss.isSidebarCompact }" t-on-click="() => this.toggle()" name="toggler">
                 <t t-if="this.store.discuss.isSidebarCompact">
                     <i class="o-mail-DiscussSidebarCategory-chevronCompact position-absolute fa-fw o-xxsmaller o-mt-0_5" t-att-class="{
-                        'oi oi-chevron-down': !this.isToggleFoldDisabled and this.category.is_open,
-                        'oi oi-chevron-right': this.isToggleFoldDisabled or !this.category.is_open,
+                        'oi oi-chevron-down': !this.isToggleFoldDisabled and this.isOpen,
+                        'oi oi-chevron-right': this.isToggleFoldDisabled or !this.isOpen,
                     }"/>
                     <span class="rounded p-1"><i t-if="this.store.channels.status === 'fetching'" class="fa fa-fw fa-circle-o-notch fa-spin"/><i t-else="" class="fa-fw fa-lg" t-att-class="this.category.icon ?? 'fa fa-user'"/></span>
                 </t>
@@ -36,11 +36,11 @@
                         <t name="titleText" t-out="this.category.name"/>
                     </span>
                     <span t-if="this.store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa fa-fw fa-circle-o-notch fa-spin opacity-50 ps-1"/></span>
-                    <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa-fw align-self-center ps-1" t-att-class="(!this.isToggleFoldDisabled and this.category.is_open) ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
+                    <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa-fw align-self-center ps-1" t-att-class="(!this.isToggleFoldDisabled and this.isOpen) ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
                 </t>
             </button>
             <t t-if="this.actions.length and !this.store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarCategory.actions"/>
-            <div t-if="!this.category.is_open and this.category.channelsWithCounter.length > 0" class="o-mail-DiscussSidebar-badge shadow-sm badge rounded-pill o-discuss-badge fw-bold" t-att-class="{ 'position-absolute o-compact': this.store.discuss.isSidebarCompact, 'me-1': !this.store.discuss.isSidebarCompact }">
+            <div t-if="!this.isOpen and this.category.channelsWithCounter.length > 0" class="o-mail-DiscussSidebar-badge shadow-sm badge rounded-pill o-discuss-badge fw-bold" t-att-class="{ 'position-absolute o-compact': this.store.discuss.isSidebarCompact, 'me-1': !this.store.discuss.isSidebarCompact }">
                 <t t-out="this.category.channelsWithCounter.length"/>
             </div>
         </div>

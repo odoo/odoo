@@ -98,7 +98,8 @@ class GeoIP(Mapping):
         try:
             return _geoip_country_db().country(self.ip)
         except geoip2.errors.AddressNotFoundError:
-            return GEOIP_EMPTY_COUNTRY
+            # just try the city record
+            return self._city_record
 
     @property
     def country_name(self):

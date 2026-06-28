@@ -3,12 +3,12 @@
 
 
 <t t-name="html_builder.InvisibleElementsPanel">
-    <div class="o_we_invisible_el_panel d-contents" t-if="state.invisibleEntries.length">
+    <div class="o_we_invisible_el_panel d-contents" t-if="this.state.invisibleEntries.length">
         <div class="o_panel_header">
             Invisible Elements
         </div>
-        <t t-foreach="state.invisibleEntries" t-as="invisibleEntry" t-key="invisibleEntry_index">
-            <t t-call="html_builder.invisibleSnippetEntry" t-call-context="{'entry': invisibleEntry, 'toggleElementVisibility': toggleElementVisibility.bind(this)}"/>
+        <t t-foreach="this.state.invisibleEntries" t-as="invisibleEntry" t-key="invisibleEntry_index">
+            <t t-call="html_builder.invisibleSnippetEntry" t-call-context="{'entry': invisibleEntry, 'toggleElementVisibility': this.toggleElementVisibility.bind(this)}"/>
         </t>
     </div>
 </t>
@@ -23,7 +23,7 @@
     <ul t-if="entry.isVisible and entry.children.length > 0">
         <t t-foreach="entry.children" t-as="child" t-key="child_index">
             <li>
-                <t t-call="html_builder.invisibleSnippetEntry" t-call-context="{'entry': child, toggleElementVisibility}"/>
+                <t t-call="html_builder.invisibleSnippetEntry" t-call-context="{'entry': child, toggleElementVisibility: toggleElementVisibility}"/>
             </li>
         </t>
     </ul>

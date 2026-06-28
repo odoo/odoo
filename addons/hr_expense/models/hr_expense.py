@@ -3,6 +3,7 @@
 import re
 
 from markupsafe import Markup
+import ast
 import logging
 import werkzeug
 
@@ -58,7 +59,7 @@ class HrExpense(models.Model):
         compute='_compute_name', precompute=True, store=True, readonly=False,
         copy=True,
     )
-    date = fields.Date(string="Expense Date", default=fields.Date.context_today)
+    date = fields.Date(string="Date", default=fields.Date.context_today)
     employee_id = fields.Many2one(
         comodel_name='hr.employee',
         string="Employee",
@@ -88,16 +89,18 @@ class HrExpense(models.Model):
         comodel_name='res.company',
         string="Company",
         required=True,
+        index=True,
         readonly=True,
         default=lambda self: self.env.company,
     )
     # product_id is not required to allow to create an expense without product via mail alias, but should be required on the view.
     product_id = fields.Many2one(
         comodel_name='product.product',
-        string="Category",
+        string="Product",
         tracking=True,
         check_company=True,
         domain=[('can_be_expensed', '=', True)],
+        index=True,
         ondelete='restrict',
     )
     product_description = fields.Html(compute='_compute_product_description')
@@ -151,6 +154,7 @@ class HrExpense(models.Model):
         string="Origin Split Expense",
         help="Original expense from a split.",
     )
+    split_expense_count = fields.Integer(string="Number of Split Expenses", compute='_compute_split_expense_count')
     # Amount fields
     tax_amount_currency = fields.Monetary(
         string="Tax amount in Currency",
@@ -231,10 +235,29 @@ class HrExpense(models.Model):
     payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
         string="Payment Method",
-        compute='_compute_payment_method_line_id', store=True, readonly=False,
+        compute='_compute_payment_method_line_id', store=True, index=True, readonly=False,
         domain="[('id', 'in', selectable_payment_method_line_ids)]",
         help="The payment method used when the expense is paid by the company.",
     )
+    has_existing_bill = fields.Boolean(
+        help=""" - When a bill already exists, the payment will use the supplier payable account so it can be matched with the bill.
+                 - When no bill exists, the payment will be recorded directly on the expense account, as usual.
+            """
+    )
+
+    existing_bill_id = fields.Many2one(
+        string="Existing Bill",
+        comodel_name='account.move',
+        domain="""[
+            ('company_id', '=', company_id),
+            ('move_type', '=', 'in_invoice'),
+            ('state', 'in', ['posted', 'draft']),
+            ('amount_residual', '>', 0),
+            '|', ('partner_id', '=', vendor_id), (not vendor_id, '=', True),
+        ]""",
+        copy=False,
+    )
+
     account_move_id = fields.Many2one(
         string="Journal Entry",
         comodel_name='account.move',
@@ -244,10 +267,10 @@ class HrExpense(models.Model):
     )
     payment_mode = fields.Selection(
         selection=[
-            ('own_account', "Employee (to reimburse)"),
-            ('company_account', "Company")
+            ('own_account', "Employee"),
+            ('company_account', "None (company)")
         ],
-        string="Paid By",
+        string="Reimbursement",
         default='own_account',
         required=True,
         tracking=True,
@@ -259,7 +282,8 @@ class HrExpense(models.Model):
         compute='_compute_account_id', precompute=True, store=True, readonly=False,
         check_company=True,
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))]",
-        help="An expense account is expected",
+        help="An expense account is expected for employee paid expenses and company paid expenses without a matched bill.\n"
+             "For company paid expenses with a matched bill, the account needs to be the payable account of the bill.",
     )
     tax_ids = fields.Many2many(
         comodel_name='account.tax',
@@ -286,17 +310,17 @@ class HrExpense(models.Model):
     # --------------------------------------------
 
     @api.constrains('state', 'name', 'product_id', 'total_amount', 'total_amount_currency')
-    def _check_required_fields_if_not_draft(self):
+    def _check_required_fields(self):
         for expense in self.filtered(lambda expense: expense.state != 'draft'):
             errors = []
 
             # Check for required fields 'name' and 'product_id'
-            if not expense.name and not expense.product_id:
-                errors.append(self.env._("Enter a description and select a category to proceed."))
+            if not expense.name and not expense.product_id and expense.state != 'refused':
+                errors.append(self.env._("Enter a description and select a product to proceed."))
             elif not expense.name:
                 errors.append(self.env._("Enter a description to proceed."))
-            elif not expense.product_id:
-                errors.append(self.env._("Select a category to proceed."))
+            elif not expense.product_id and expense.state != 'refused':
+                errors.append(self.env._("Select a product to proceed."))
 
             # Check for non-zero amounts
             total_amount_is_zero = expense.company_currency_id.is_zero(expense.total_amount)
@@ -587,6 +611,22 @@ class HrExpense(models.Model):
             # taxes only from the same company
             expense.tax_ids = expense.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(expense.company_id))
 
+    @api.depends('split_expense_origin_id')
+    def _compute_split_expense_count(self):
+        if not self.split_expense_origin_id:
+            self.split_expense_count = 0
+            return
+        count_per_expense_origin_id = {
+            expense.id: count
+            for expense, count in self.env['hr.expense']._read_group(
+                domain=[('split_expense_origin_id', 'in', self.split_expense_origin_id.ids)],
+                groupby=['split_expense_origin_id'],
+                aggregates=['__count'],
+            )
+        }
+        for expense in self:
+            expense.split_expense_count = count_per_expense_origin_id.get(expense.split_expense_origin_id.id, 0)
+
     @api.depends('total_amount_currency', 'tax_ids')
     def _compute_tax_amount_currency(self):
         """
@@ -689,16 +729,33 @@ class HrExpense(models.Model):
                     ('journal_id.active', '=', True),
                 ])
 
-    @api.depends('product_id', 'company_id')
+    @api.onchange('has_existing_bill')
+    def _onchange_has_existing_bill(self):
+        if not self.has_existing_bill:
+            self.existing_bill_id = False
+
+    @api.onchange('existing_bill_id')
+    def _onchange_existing_bill_id(self):
+        if self.existing_bill_id:
+            self.vendor_id = self.existing_bill_id.partner_id
+
+    @api.depends('product_id', 'company_id', 'has_existing_bill', 'existing_bill_id', 'vendor_id')
     def _compute_account_id(self):
         for _expense in self:
             expense = _expense.with_company(_expense.company_id)
-            if not expense.product_id:
-                expense.account_id = _expense.company_id.expense_account_id
-                continue
-            account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
-            if account:
-                expense.account_id = account
+            account = False
+
+            if expense.existing_bill_id:
+                payable_line = expense.existing_bill_id.line_ids.filtered(lambda l: l.account_type == 'liability_payable')
+                account = payable_line[:1].account_id
+
+            elif expense.has_existing_bill:
+                account = expense.vendor_id.commercial_partner_id.property_account_payable_id or expense.company_id.payable_account_id
+
+            elif expense.product_id:
+                account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
+
+            expense.account_id = account or expense.company_id.expense_account_id
 
     @api.depends('company_id')
     def _compute_employee_id(self):
@@ -991,10 +1048,10 @@ class HrExpense(models.Model):
             }
         return ""
 
-    def _track_subtype(self, init_values):
+    def _track_log_get_default_subtype(self, track_init_values):
         self.ensure_one()
-        if 'state' not in init_values:
-            return super()._track_subtype(init_values)
+        if 'state' not in track_init_values:
+            return super()._track_log_get_default_subtype(track_init_values)
 
         match self.state:
             case 'draft':
@@ -1004,12 +1061,12 @@ class HrExpense(models.Model):
             case 'paid':
                 return self.env.ref('hr_expense.mt_expense_paid')
             case 'approved':
-                if init_values['state'] in {'posted', 'in_payment', 'paid'}:  # Reverting state
+                if track_init_values['state'] in {'posted', 'in_payment', 'paid'}:  # Reverting state
                     subtype = 'hr_expense.mt_expense_entry_draft' if self.account_move_id else 'hr_expense.mt_expense_entry_delete'
                     return self.env.ref(subtype)
                 return self.env.ref('hr_expense.mt_expense_approved')
             case _:
-                return super()._track_subtype(init_values)
+                return super()._track_log_get_default_subtype(track_init_values)
 
     def update_activities_and_mails(self):
         """ Update the "Review this expense" activity with the new state of the expense, also sends mail to approver to ask them to act """
@@ -1215,7 +1272,9 @@ class HrExpense(models.Model):
     def action_refuse(self):
         """ Refuse an expense with a reason """
         self._check_can_refuse()
-        return self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_refuse_wizard_action')
+        refuse_wizard = self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_refuse_wizard_action')
+        refuse_wizard['context'] = dict(ast.literal_eval(refuse_wizard['context']), default_expense_ids=self.ids)
+        return refuse_wizard
 
     def action_post(self):
         """
@@ -1230,6 +1289,19 @@ class HrExpense(models.Model):
         employee_expenses = self - company_expenses
         if len(employee_expenses.company_id) > 1:
             raise UserError(_("You can't post simultaneously employee-paid expenses belonging to different companies"))
+
+        # For company-paid expenses using SEPA Credit Transfer, the vendor must be set
+        # because SEPA XML generation requires a creditor name (partner).
+        expenses_missing_vendor = company_expenses.filtered(
+            lambda exp: exp.payment_method_line_id.code == 'sepa_ct' and not exp.vendor_id
+        )
+        if expenses_missing_vendor:
+            expense_names = ', '.join(expenses_missing_vendor.mapped('name'))
+            raise UserError(_(
+                "The vendor is required for expenses using SEPA Credit Transfer as the payment method."
+                "\nPlease set a vendor on the following expenses: %s",
+                expense_names
+            ))
 
         if company_expenses:
             company_expenses._create_company_paid_moves()
@@ -1294,6 +1366,13 @@ class HrExpense(models.Model):
             name=_("Expenses with a similar receipt to %(other_expense_name)s", other_expense_name=self.name),
         )
 
+    def action_show_duplicate_expense_ids(self):
+        self.ensure_one()
+        duplicate_expenses = self.duplicate_expense_ids - self
+        return duplicate_expenses._get_records_action(
+            name=_("Expenses similar to %(other_expense_name)s", other_expense_name=self.name),
+        )
+
     @api.model
     def get_expense_dashboard(self):
         expense_state = {
@@ -1323,7 +1402,7 @@ class HrExpense(models.Model):
             [
                 ('employee_id', 'in', self.env.user.employee_ids.ids),
                 '|', ('state', 'in', ('draft', 'submitted')),
-                     '&', ('payment_mode', '=', 'own_account'), ('state', '=', 'approved')
+                     '&', ('payment_mode', '!=', 'company_account'), ('state', '=', 'approved')
             ], ['state'], ['total_amount:sum'])
         for state, total_amount_sum in fetched_expenses:
             expense_state[state]['amount'] += total_amount_sum
@@ -1363,12 +1442,12 @@ class HrExpense(models.Model):
 
     def action_open_account_move(self):
         self.ensure_one()
-        if self.payment_mode == 'own_account':
-            res_model = 'account.move'
-            record_id = self.account_move_id
-        else:
+        if self.payment_mode == 'company_account':
             res_model = 'account.payment'
             record_id = self.account_move_id.origin_payment_id
+        else:
+            res_model = 'account.move'
+            record_id = self.account_move_id
 
         return {
             'type': 'ir.actions.act_window',
@@ -1457,7 +1536,7 @@ class HrExpense(models.Model):
             raise UserError(_("You can only generate an accounting entry for approved expense(s)."))
 
         if False in self.mapped('payment_mode'):
-            raise UserError(_("Please specify if the expenses were paid by the company, or the employee."))
+            raise UserError(self.env._("Please specify if the expenses were paid by the company, reimbursed to the employee directly, or in a payslip."))
 
     def _do_approve(self, check=True):
         if check:
@@ -1556,34 +1635,8 @@ class HrExpense(models.Model):
             'res_model': 'hr.expense.post.wizard',
             'res_id': self.env['hr.expense.post.wizard'].create({}).id,
             'target': 'new',
-            'context': self.with_context(active_ids=self.ids).env.context,
+            'context': self.with_context(active_ids=self.ids, validate_analytic=True).env.context,
         }
-
-    def _post_without_wizard(self):
-        """ Post an employee expense without any direct call for the wizard, should never be called unless in very specific flows """
-        # When a move has been deleted
-        self._check_can_create_move()
-        today = fields.Date.context_today(self)
-        employee_expenses = self.filtered(lambda expense: expense.payment_mode == 'own_account')
-
-        for company, expenses in employee_expenses.grouped('company_id').items():
-            expenses = expenses.with_company(company)
-            company_domain = self.env['account.journal']._check_company_domain(company)
-            journal = (
-                    company.expense_journal_id
-                    or expenses.env['account.journal'].search([*company_domain, ('type', '=', 'purchase')], limit=1))
-            expense_receipt_vals_list = [
-                {
-                    **new_receipt_vals,
-                    'journal_id': journal.id,
-                    'invoice_date': today,
-                }
-                for new_receipt_vals in expenses._prepare_receipts_vals()
-            ]
-            moves = self.env['account.move'].sudo().create(expense_receipt_vals_list)
-            for move in moves:
-                move._message_set_main_attachment_id(move.attachment_ids, force=True, filter_xml=False)
-            moves.action_post()
 
     def _create_company_paid_moves(self):
         """
@@ -1592,38 +1645,50 @@ class HrExpense(models.Model):
         """
         self = self.with_context(clean_context(self.env.context))  # remove default_*
         company_account_expenses = self.filtered(lambda expense: expense.payment_mode == 'company_account')
-        moves_sudo = self.env['account.move'].sudo()
+        moves = self.env['account.move']
 
         if company_account_expenses:
             move_vals_list, payment_vals_list = zip(*[expense._prepare_payments_vals() for expense in company_account_expenses])
 
-            payment_moves_sudo = self.env['account.move'].sudo().create(move_vals_list)
-            for payment_vals, move in zip(payment_vals_list, payment_moves_sudo):
+            payment_moves = self.env['account.move'].create(move_vals_list)
+            for payment_vals, move in zip(payment_vals_list, payment_moves):
                 payment_vals['move_id'] = move.id
 
             payments_sudo = self.env['account.payment'].sudo().create(payment_vals_list)
-            for payment_sudo, move_sudo in zip(payments_sudo, payment_moves_sudo):
-                move_sudo.update({
-                    'origin_payment_id': payment_sudo.id,
+            for payment, move in zip(payments_sudo, payment_moves):
+                move.update({
+                    'origin_payment_id': payment.id,
                     # We need to put the journal_id because editing origin_payment_id triggers a re-computation chain
                     # that voids the company_currency_id of the lines
-                    'journal_id': move_sudo.journal_id.id,
+                    'journal_id': move.journal_id.id,
                 })
 
-            moves_sudo |= payment_moves_sudo
+                expense = move.expense_ids
+                if expense.existing_bill_id:
+                    expense._reconcile_expense_with_bill()
 
-        # returning the move with the superuser flag set back as it was at the origin of the call
-        return moves_sudo.sudo(self.env.su)
+            moves |= payment_moves
+
+        return moves
+
+    def _reconcile_expense_with_bill(self):
+        self.ensure_one()
+        if not self.existing_bill_id:
+            return
+
+        bill_payable_lines = self.existing_bill_id.line_ids.filtered(lambda l: l.account_id.account_type == 'liability_payable')
+        expense_payable_lines = self.account_move_id.line_ids.filtered(lambda l: l.account_id.account_type == 'liability_payable')
+
+        if bill_payable_lines and expense_payable_lines:
+            (bill_payable_lines + expense_payable_lines).reconcile()
 
     def _prepare_receipts_vals(self):
-        attachments_data = []
-        for attachment in self.attachment_ids:
-            attachments_data.append(
-                Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
-            )
-
         return_vals = []
         for employee_sudo, expenses_sudo in self.sudo().grouped('employee_id').items():
+            attachments_data = [
+                Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
+                for attachment in expenses_sudo.attachment_ids
+            ]
             multiple_expenses_name = _("Expenses of %(employee)s", employee=employee_sudo.name)
             move_ref = expenses_sudo.name if len(expenses_sudo) == 1 else multiple_expenses_name
             return_vals.append({
@@ -1633,6 +1698,7 @@ class HrExpense(models.Model):
                 'partner_id': employee_sudo.work_contact_id.id,
                 'commercial_partner_id': employee_sudo.user_partner_id.id,
                 'currency_id': expenses_sudo.company_currency_id.id,
+                'company_id': expenses_sudo.company_id.id,
                 'line_ids': [Command.create(expense_sudo._prepare_move_lines_vals()) for expense_sudo in expenses_sudo],
                 'partner_bank_id': employee_sudo.primary_bank_account_id.id,
                 'attachment_ids': attachments_data,
@@ -1646,6 +1712,9 @@ class HrExpense(models.Model):
         payment_method_line = self.payment_method_line_id
         if not payment_method_line:
             raise UserError(_("You need to add a manual payment method on the journal (%s)", journal.name))
+
+        if self.has_existing_bill:
+            return self._prepare_linked_bill_payment_vals()
 
         AccountTax = self.env['account.tax']
         rate = abs(self.total_amount_currency / self.total_amount) if self.total_amount else 0.0
@@ -1715,11 +1784,63 @@ class HrExpense(models.Model):
             'journal_id': journal.id,
             'partner_id': self.vendor_id.id,
             'currency_id': self.currency_id.id,
+            'company_id': self.company_id.id,
             'line_ids': [Command.create(line) for line in move_lines],
             'attachment_ids': [
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
                 for attachment in self.attachment_ids]
         }
+        return move_vals, payment_vals
+
+    def _prepare_linked_bill_payment_vals(self):
+        self.ensure_one()
+
+        move_lines = [
+            # Debit: The Payable Account (neutralizing the debt of the original bill)
+            {
+                'name': self._get_move_line_name(),
+                'account_id': self.account_id.id,
+                'expense_id': self.id,
+                'amount_currency': self.total_amount_currency,
+                'balance': self.total_amount,
+                'currency_id': self.currency_id.id,
+                'partner_id': self.vendor_id.id,
+            },
+            # Credit: Outstanding Payments
+            {
+                'name': self._get_move_line_name(),
+                'account_id': self._get_expense_account_destination(),
+                'amount_currency': -self.total_amount_currency,
+                'balance': -self.total_amount,
+                'currency_id': self.currency_id.id,
+                'partner_id': self.vendor_id.id,
+            }
+        ]
+
+        payment_vals = {
+            'date': self.date,
+            'memo': self.name,
+            'journal_id': self.journal_id.id,
+            'amount': self.total_amount_currency,
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'partner_id': self.vendor_id.id,
+            'currency_id': self.currency_id.id,
+            'payment_method_line_id': self.payment_method_line_id.id,
+            'company_id': self.company_id.id,
+        }
+
+        move_vals = {
+            **self._prepare_move_vals(),
+            'date': self.date or fields.Date.context_today(self),
+            'ref': self.name,
+            'journal_id': self.journal_id.id,
+            'partner_id': self.vendor_id.id,
+            'currency_id': self.currency_id.id,
+            'company_id': self.company_id.id,
+            'line_ids': [Command.create(line) for line in move_lines],
+        }
+
         return move_vals, payment_vals
 
     def _prepare_move_vals(self):

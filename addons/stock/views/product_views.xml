@@ -13,16 +13,19 @@
                         icon="fa-random" name="%(category_open_putaway)d" type="action"
                         groups="stock.group_stock_multi_locations"/>
                 </div>
-                <group name="first" position="after">
-                    <group>
-                        <group name="logistics" string="Logistics">
-                            <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
-                            <field name="parent_route_ids" widget="many2many_tags" groups="stock.group_adv_location" invisible="not parent_route_ids"/>
-                            <field name="removal_strategy_id" options="{'no_create': True}"/>
-                            <field name="packaging_reserve_method" widget="radio" groups="uom.group_uom"/>
+                <notebook position="inside">
+                    <page name="stock" string="Logistics">
+                        <group>
+                            <group>
+                                <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
+                                <field name="parent_route_ids" widget="many2many_tags" groups="stock.group_adv_location" invisible="not parent_route_ids"/>
+                                <label for="removal_strategy_id" class="text-nowrap mr4"/>
+                                <field name="removal_strategy_id" nolabel="1" class="oe_inline"/>
+                                <field name="packaging_reserve_method" widget="radio" groups="uom.group_uom"/>
+                            </group>
                         </group>
-                    </group>
-                </group>
+                    </page>
+                </notebook>
             </field>
         </record>
 
@@ -90,24 +93,26 @@
                 <xpath expr="//field[@name='qty_available']" position='attributes'>
                     <attribute name="groups">stock.group_stock_user</attribute>
                 </xpath>
+                <xpath expr="//field[@name='free_qty']" position="replace"/>
                 <xpath expr="//field[@name='virtual_available']" position='attributes'>
                     <attribute name="groups">stock.group_stock_user</attribute>
                 </xpath>
+                <field name="virtual_available" position="after">
+                    <button
+                        title="View Forecast"
+                        name="action_product_forecast_report"
+                        type="object"
+                        icon="fa-area-chart"
+                        invisible="not is_storable"
+                        groups="stock.group_stock_user"
+                    />
+                </field>
             </field>
         </record>
 
         <!-- Disable variant qty editing not using quants -->
         <record id="product.product_view_list_qty" model="ir.ui.view">
             <field name="active" eval="False"/>
-        </record>
-
-        <record id="stock_variant_easy_edit_view" model="ir.ui.view">
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_variant_easy_edit_view"></field>
-            <field name="arch" type="xml">
-                <xpath expr="//label[@for='qty_available']" position="replace"/>
-                <xpath expr="//div[@name='no_stock_variant_qty_edit']" position="replace"/>
-            </field>
         </record>
 
         <record id="view_stock_product_template_tree" model="ir.ui.view">
@@ -122,10 +127,22 @@
                     <attribute name="invisible">not show_on_hand_qty_status_button</attribute>
                     <attribute name="groups">stock.group_stock_user</attribute>
                 </xpath>
+                <xpath expr="//field[@name='free_qty']" position="replace"/>
                 <xpath expr="//field[@name='virtual_available']" position="attributes">
                     <attribute name="invisible">not show_on_hand_qty_status_button</attribute>
                     <attribute name="groups">stock.group_stock_user</attribute>
                 </xpath>
+                <field name="virtual_available" position="after">
+                    <button
+                        title="View Forecast"
+                        name="action_product_tmpl_forecast_report"
+                        type="object"
+                        icon="fa-area-chart"
+                        invisible="not show_on_hand_qty_status_button"
+                        context="{'default_product_tmpl_id': id}"
+                        groups="stock.group_stock_user"
+                    />
+                </field>
                 <field name="default_code" position="after">
                     <field name="responsible_id" widget="many2one_avatar_user" optional="hide" groups="stock.group_stock_user"/>
                 </field>
@@ -175,7 +192,7 @@
         </record>
 
         <!-- view common to both template and product -->
-        <record id="view_template_property_form" model="ir.ui.view">
+        <record id="product_template_form_view_stock" model="ir.ui.view">
             <field name="name">product.template.stock.property.form.inherit</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
@@ -187,28 +204,26 @@
                     <!-- Replace the single line tacking + qty without stock with 2 individual lines with stock (tracking + tracking method // qty) -->
                     <field name="tracking" placeholder="None" invisible="type != 'consu'" groups="stock.group_production_lot"/>
                     <!-- Qty line if storable -->
-                    <label for="qty_available" invisible="not is_storable or not tracking" groups="stock.group_stock_user"/>
-                    <div name="qty_available_with_stock" class="o_input_box" invisible="not is_storable or not tracking" groups="stock.group_stock_user">
+                    <label for="qty_available" class="oe_inline" invisible="not is_storable or not tracking" groups="stock.group_stock_user"/>
+                    <div name="qty_available_with_stock" class="o_row" invisible="not is_storable or not tracking" groups="stock.group_stock_user">
                         <a type="object" name="action_open_quants"
                            invisible="not show_qty_update_button" groups="stock.group_stock_manager">
                             <field name="qty_available" readonly="True"/>
                         </a>
-                        <field name="qty_available" invisible="show_qty_update_button" groups="stock.group_stock_manager"/>
-                        <field name="qty_available" readonly="True" groups="!stock.group_stock_manager"/>
-                        <field groups="uom.group_uom" name="uom_name" class="o_input_box_overlay_end"/>
+                        <field name="qty_available" invisible="show_qty_update_button" groups="stock.group_stock_manager" style="max-width: fit-content;"/>
+                        <field name="qty_available" readonly="True" groups="!stock.group_stock_manager" style="max-width: fit-content;"/>
+                        <span name="uom_span" groups="uom.group_uom">
+                            <field name="uom_name" class="oe_inline"/>
+                        </span>
                     </div>
                 </xpath>
+                <xpath expr="//label[@id='free_qty_no_stock']" position="replace"/>
+                <xpath expr="//div[@name='free_qty_no_stock']" position="replace"/>
                 <xpath expr="//field[@name='is_storable']" position="attributes">
                     <attribute name="groups">!stock.group_production_lot</attribute>
                     <attribute name="widget">boolean_toggle</attribute>
-                    <attribute name="invisible"></attribute>
-                </xpath>
-                <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
-                    <label for="sale_delay" invisible="not sale_ok"/>
-                    <div class="o_input_box" invisible="not sale_ok">
-                        <field name="sale_delay"/>
-                        <span class="o_input_box_overlay_end o_input_box_overlay_inline">days</span>
-                    </div>
+                    <attribute name="options">{'autosave': False}</attribute>
+                    <attribute name="invisible">type != 'consu'</attribute>
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="before">
                     <field name="has_available_route_ids" invisible="1"/>
@@ -225,9 +240,9 @@
                 <xpath expr="//group[@name='group_lots_and_weight']" position="after">
                     <group string="Traceability" name="traceability" groups="stock.group_production_lot" invisible="tracking not in ['lot', 'serial']">
                         <label for="serial_prefix_format" string="Custom Lot/Serial"/>
-                        <div class="o_input_box">
-                            <field name="serial_prefix_format"/>
-                            <field class="o_input_box_overlay_end o_input_box_overlay_inline" name="next_serial"/>
+                        <div class="d-flex">
+                            <field name="serial_prefix_format" style="max-width: 150px;"/>
+                            <field name="next_serial" style="max-width: 150px;"/>
                         </div>
                     </group>
                      <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">
@@ -262,9 +277,13 @@
                 <xpath expr="//kanban" position="inside">
                     <field name="show_on_hand_qty_status_button" groups="stock.group_stock_user"/>
                 </xpath>
-                <xpath expr="//span[@name='on_hand_qty_kanban']" position="replace">
-                    <div groups="stock.group_stock_user" t-if="record.show_on_hand_qty_status_button.raw_value">
-                        On hand: <field name="qty_available"/> <field name="uom_id" groups="uom.group_uom"/>
+                <xpath expr="//div[@name='on_hand_qty_kanban']" position="replace">
+                    <div groups="stock.group_stock_user" t-if="record.show_on_hand_qty_status_button.raw_value" class="d-flex gap-1 align-items-baseline">
+                        <strong>
+                            <field name="qty_available" digits="[16, 0]"/> 
+                        </strong>
+                        <field name="uom_id" groups="uom.group_uom"/> 
+                        <span class="text-muted">On Hand</span>
                     </div>
                 </xpath>
             </field>
@@ -654,17 +673,8 @@
             </field>
         </record>
 
-        <record id="stock_product_normal_action" model="ir.actions.act_window">
-            <field name="name">Product Variants</field>
-            <field name="res_model">product.product</field>
-            <field name="view_mode">list,form,kanban</field>
-            <field name="search_view_id" ref="stock_product_search_form_view"/>
-        </record>
-
         <menuitem id="menu_product_variant_config_stock" name="Products" action="product_template_action_product"
             parent="stock.menu_stock_inventory_control" sequence="1"/>
-        <menuitem id="product_product_menu" name="Product Variants" action="stock_product_normal_action"
-            parent="menu_stock_inventory_control" sequence="2" groups="product.group_product_variant"/>
         <menuitem id="menu_product_stock" name="Stock" action="stock.action_product_stock_view"
         parent="stock.menu_warehouse_report" sequence="5"/>
 

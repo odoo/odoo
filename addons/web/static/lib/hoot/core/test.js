@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { markup, reactive } from "@odoo/owl";
+import { markup, signal, types as t } from "@odoo/owl";
 import { HootError, stringify } from "../hoot_utils";
 import { Job } from "./job";
 import { Tag } from "./tag";
@@ -48,16 +48,19 @@ export class Test extends Job {
     static ABORTED = 3;
 
     formatted = false;
-    logs = reactive({
+    logs = {
         error: 0,
         warn: 0,
-    });
-    /** @type {import("./expect").CaseResult[]} */
-    results = reactive([]);
+    };
+    // FIXME: cannot import on CaseResult for proper validation
+    /** @type {import("@odoo/owl").Signal<import("./expect").CaseResult[]>} */
+    results = signal.Array([], { type: t.object() });
     /** @type {() => MaybePromise<void> | null} */
     run = null;
     runFnString = "";
-    status = Test.SKIPPED;
+    status = signal(Test.SKIPPED, {
+        type: t.selection([Test.SKIPPED, Test.PASSED, Test.FAILED, Test.ABORTED]),
+    });
 
     get code() {
         if (!this.formatted) {
@@ -76,12 +79,12 @@ export class Test extends Job {
     }
 
     get duration() {
-        return this.results.reduce((acc, result) => acc + result.duration, 0);
+        return this.results().reduce((acc, result) => acc + result.duration, 0);
     }
 
     /** @returns {import("./expect").CaseResult | null} */
     get lastResults() {
-        return this.results.at(-1);
+        return this.results().at(-1);
     }
 
     cleanup() {
@@ -141,7 +144,7 @@ export class Test extends Job {
         this.setRunFn(null);
         this.runFnString = "";
         this.logs = SHARED_LOGS;
-        this.results = SHARED_RESULTS;
+        this.results.set(SHARED_RESULTS);
     }
 
     reset() {

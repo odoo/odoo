@@ -40,6 +40,14 @@
         // Keep it in CSS for better transition.
         border: none !important;
     }
+
+    .o-website-discard-save-buttons {
+        max-width: $o-we-sidebar-width / 2;
+
+        button {
+            min-width: 40%;
+        }
+    }
 }
 
 .o_main_navbar {
@@ -101,6 +109,6 @@
     pointer-events: none;
 }
 
-body:has(.o_builder_sidebar_open) .o_notification_manager {
+body.o_builder_open .o_notification_manager {
     @include o-position-absolute($top: map-get($spacers, 2), $right: calc(#{$o-we-sidebar-width} + 0.5rem));
 }

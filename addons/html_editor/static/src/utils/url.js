@@ -33,39 +33,6 @@ export function isImageUrl(url) {
 }
 
 /**
- * @param {string} platform
- * @param {string} videoId
- * @param {Object} params
- * @throws {Error} if the given video config is not recognized
- * @returns {URL}
- */
-export function getVideoUrl(platform, videoId, params) {
-    let url;
-    switch (platform) {
-        case "youtube":
-            url = new URL(`https://www.youtube.com/embed/${videoId}`);
-            break;
-        case "vimeo":
-            url = new URL(`https://player.vimeo.com/video/${videoId}`);
-            break;
-        case "dailymotion":
-            url = new URL(`https://www.dailymotion.com/embed/video/${videoId}`);
-            break;
-        case "instagram":
-            url = new URL(`https://www.instagram.com/p/${videoId}/embed`);
-            break;
-        case "facebook":
-            url = new URL(`https://www.facebook.com/plugins/video.php`);
-            params.href = `https://www.facebook.com/facebook/videos/${videoId}/`;
-            break;
-        default:
-            throw new Error(`Unsupported platform: ${platform}`);
-    }
-    url.search = new URLSearchParams(params);
-    return url;
-}
-
-/**
  * Checks if the given URL is using the domain where the content being
  * edited is reachable, i.e. if this URL should be stripped of its domain
  * part and converted to a relative URL if put as a link in the content.

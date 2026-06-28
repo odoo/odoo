@@ -63,7 +63,7 @@ export class SetupEditorPlugin extends Plugin {
         for (const el of dragAndDropSavableEls) {
             if (!el.hasAttribute("data-editor-message")) {
                 el.setAttribute("data-editor-message-default", true);
-                el.setAttribute("data-editor-message", _t("DRAG BUILDING BLOCKS HERE"));
+                el.setAttribute("data-editor-message", _t("Drag blocks here"));
             }
         }
     }
@@ -72,6 +72,7 @@ export class SetupEditorPlugin extends Plugin {
         for (const savableEl of selectElements(root, ".o_savable")) {
             savableEl.classList.remove("o_savable");
         }
+        return root;
     }
 
     /**

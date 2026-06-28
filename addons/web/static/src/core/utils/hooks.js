@@ -1,7 +1,7 @@
-import { useComponent, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 
-import { status, onWillUnmount, toRaw, onMounted, onPatched } from "@odoo/owl";
+import { status, onWillUnmount, t, toRaw, onMounted, onPatched, proxy } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
 
 /**
@@ -27,18 +27,30 @@ import { router } from "@web/core/browser/router";
 // useAutofocus
 // -----------------------------------------------------------------------------
 
+/** Params accepted by {@link useAutofocus}. */
+export const autofocusParamsType = t.object({
+    mobile: t.boolean().optional(),
+    ref: t.signal(t.instanceOf(HTMLElement)).optional(),
+    refName: t.string().optional(),
+    selectAll: t.boolean().optional(),
+});
+
 /**
  * Focus an element referenced by a t-ref="autofocus" in the active component
  * as soon as it appears in the DOM and if it was not displayed before.
  * If it is an input/textarea, set the selection at the end.
  * @param {Object} [params]
  * @param {string} [params.refName] override the ref name "autofocus"
+ * @param {Ref | import("@odoo/owl").Signal<HTMLElement>} [params.ref] use this ref
+ *  directly instead of looking one up by name. Accepts both a legacy `.el` ref and
+ *  an Owl 3 signal ref.
  * @param {boolean} [params.selectAll] if true, will select the entire text value.
  * @param {boolean} [params.mobile] if true, will force autofocus on touch devices.
- * @returns {Ref} the element reference
+ * @returns {Ref | import("@odoo/owl").Signal<HTMLElement>} the element reference
  */
-export function useAutofocus({ refName, selectAll, mobile } = {}) {
-    const ref = useRef(refName || "autofocus");
+export function useAutofocus({ refName, ref, selectAll, mobile } = {}) {
+    ref ||= useRef(refName || "autofocus");
+    const getEl = () => ("el" in ref ? ref.el : ref());
     const uiService = useService("ui");
 
     // Prevent autofocus on touch devices to avoid the virtual keyboard from popping up unexpectedly
@@ -70,7 +82,7 @@ export function useAutofocus({ refName, selectAll, mobile } = {}) {
                 }
             }
         },
-        () => [ref.el]
+        () => [getEl()]
     );
     return ref;
 }
@@ -161,7 +173,7 @@ export function useService(serviceName) {
         }
     }
     if (toRaw(service) !== service) {
-        return useState(service);
+        return proxy(service);
     }
     return service;
 }
@@ -219,20 +231,21 @@ export function useSpellCheck({ refName } = {}) {
  *  child ref, but can otherwise be used as a normal ref object
  */
 export function useChildRef() {
-    let defined = false;
     let value;
-    return function ref(v) {
+    function ref(v) {
         value = v;
-        if (defined) {
-            return;
-        }
-        Object.defineProperty(ref, "el", {
-            get() {
-                return value.el;
-            },
-        });
-        defined = true;
-    };
+    }
+    // Define `el` eagerly (rather than on the first assignment) so that the ref
+    // is recognizable as a ref-like object (`"el" in ref` is always true) even
+    // before it has been forwarded a child ref. The optional chaining keeps it
+    // null-safe: reading `.el` before mount (or while detached) yields
+    // `undefined` instead of throwing "Cannot read properties of undefined".
+    Object.defineProperty(ref, "el", {
+        get() {
+            return value?.el;
+        },
+    });
+    return ref;
 }
 /**
  * Forwards the given refName to the parent by calling the corresponding

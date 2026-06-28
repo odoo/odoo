@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="mail.NotificationMessage">
-        <div class="o-mail-NotificationMessage text-break mx-auto px-3 text-center smaller position-relative" t-on-click="this.onClickNotificationMessage" t-custom-ref="root">
+        <div class="o-mail-NotificationMessage text-break mx-auto px-3 text-center smaller position-relative" t-on-click="this.onClickNotificationMessage" t-ref="this.rootRef">
             <div class="o-mail-Message-jumpTarget position-absolute top-0 pe-none"/>
             <i t-if="this.message.notificationIcon" t-attf-class="{{ this.message.notificationIcon }} me-1 text-muted"/>
             <t t-if="this.message.notificationType === 'call'">

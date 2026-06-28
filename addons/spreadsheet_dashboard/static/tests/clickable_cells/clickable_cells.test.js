@@ -28,7 +28,7 @@ test("Invalid pivot/list formulas should not be clickable", async () => {
             {
                 cells: {
                     A1: '=PIVOT.VALUE("1", "measure")',
-                    A2: '=ODOO.LIST("1", 1, "name")',
+                    A2: '=ODOO.LIST.VALUE("1", 1, "name")',
                 },
             },
         ],
@@ -44,7 +44,7 @@ test("pivot/list formulas should be clickable", async () => {
             {
                 cells: {
                     A1: { content: '=PIVOT.VALUE("1", "probability", "bar", "false")' },
-                    A2: { content: '=ODOO.LIST(1, 1, "foo")' },
+                    A2: { content: '=ODOO.LIST.VALUE(1, 1, "foo")' },
                 },
             },
         ],
@@ -81,37 +81,61 @@ test("list sorting clickable cell", async () => {
             {
                 cells: {
                     A1: '=ODOO.LIST.HEADER(1, "foo")',
-                    A2: '=ODOO.LIST(1, 1, "foo")',
+                    A2: '=ODOO.LIST.VALUE(1, 1, "foo")',
+                    A3: "=ODOO.LIST(1, 1)",
                 },
             },
         ],
         lists: {
             1: {
                 id: 1,
-                columns: [],
+                columns: [{ name: "foo", string: "Foo" }],
                 domain: [],
                 model: "partner",
                 orderBy: [],
             },
         },
+        version: "19.3.10",
     };
     const { model } = await createDashboardActionWithData(data);
     expect(getCellIcons(model, "A1")).toHaveLength(0);
-    expect(".o-dashboard-clickable-cell .sorting-icon .o-icon").toHaveCount(1);
+    expect(".o-dashboard-clickable-cell .sorting-icon .o-icon").toHaveCount(2);
 
     await click(queryFirst(".o-dashboard-clickable-cell .sorting-icon"));
     expect(model.getters.getListDefinition(1).orderBy).toEqual([{ name: "foo", asc: true }]);
     await animationFrame();
     expect(getCellIcons(model, "A1")).toMatchObject([{ type: "list_dashboard_sorting_asc" }]);
+    expect(getCellIcons(model, "A3")).toMatchObject([{ type: "list_dashboard_sorting_asc" }]);
 
     await click(queryFirst(".o-dashboard-clickable-cell"));
     expect(model.getters.getListDefinition(1).orderBy).toEqual([{ name: "foo", asc: false }]);
     await animationFrame();
     expect(getCellIcons(model, "A1")).toMatchObject([{ type: "list_dashboard_sorting_desc" }]);
+    expect(getCellIcons(model, "A3")).toMatchObject([{ type: "list_dashboard_sorting_desc" }]);
 
     await click(queryFirst(".o-dashboard-clickable-cell"));
-    expect(getCellIcons(model, "A1")).toHaveLength(0);
     expect(model.getters.getListDefinition(1).orderBy).toEqual([]);
+    await animationFrame();
+    expect(getCellIcons(model, "A1")).toHaveLength(0);
+    expect(getCellIcons(model, "A3")).toHaveLength(0);
+
+    await click(queryAll(".o-dashboard-clickable-cell .sorting-icon")[1]);
+    expect(model.getters.getListDefinition(1).orderBy).toEqual([{ name: "foo", asc: true }]);
+    await animationFrame();
+    expect(getCellIcons(model, "A1")).toMatchObject([{ type: "list_dashboard_sorting_asc" }]);
+    expect(getCellIcons(model, "A3")).toMatchObject([{ type: "list_dashboard_sorting_asc" }]);
+
+    await click(queryAll(".o-dashboard-clickable-cell")[2]);
+    expect(model.getters.getListDefinition(1).orderBy).toEqual([{ name: "foo", asc: false }]);
+    await animationFrame();
+    expect(getCellIcons(model, "A1")).toMatchObject([{ type: "list_dashboard_sorting_desc" }]);
+    expect(getCellIcons(model, "A3")).toMatchObject([{ type: "list_dashboard_sorting_desc" }]);
+
+    await click(queryAll(".o-dashboard-clickable-cell")[2]);
+    expect(model.getters.getListDefinition(1).orderBy).toEqual([]);
+    await animationFrame();
+    expect(getCellIcons(model, "A1")).toHaveLength(0);
+    expect(getCellIcons(model, "A3")).toHaveLength(0);
 });
 
 test("list sort multiple fields", async () => {
@@ -176,7 +200,7 @@ test("Clickable ignores spill and empty cells for list sorting", async () => {
                     B1: "bar",
                     // spill cells
                     A2: "=ODOO.LIST.HEADER(1, A1:B1)",
-                    A3: '=ODOO.LIST(1, sequence(2), "foo")',
+                    A3: '=ODOO.LIST.VALUE(1, sequence(2), "foo")',
                 },
             },
         ],

@@ -30,29 +30,37 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
 
         Task = cls.env['project.task']
         readable_fields, writeable_fields = Task._portal_accessible_fields()
+
+        # html_field_history is always silently ignored.
+        field_exception = {"html_field_history"}
+
         cls.read_protected_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k in readable_fields
+            if k in readable_fields and k not in field_exception
         ])
         cls.write_protected_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k in writeable_fields
+            if k in writeable_fields and k not in field_exception
         ])
         cls.readonly_protected_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k in readable_fields and k not in writeable_fields
+            if k in readable_fields and k not in writeable_fields and k not in field_exception
         ])
         cls.other_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k not in readable_fields
+            if k not in readable_fields and k not in field_exception
         ])
 
     def test_mention_suggestions(self):
-        data = self.task_portal.with_user(self.user_portal).get_mention_suggestions(search="")
+        data = (
+            self.task_portal.with_user(self.user_portal)
+            .get_mention_suggestions(search="")
+            ._build_result()
+        )
         suggestion_ids = {partner.get("id") for partner in data.get("res.partner")}
         self.assertEqual(
             suggestion_ids,
@@ -144,6 +152,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
                 task.write({field: dummy_value(field)})
 
     def test_wizard_confirm(self):
+        self.env['ir.config_parameter'].set_str('web.base.url', "gopher://example.org")
         partner_portal_no_user = self.env['res.partner'].create({
             'name': 'NoUser portal',
             'email': 'no@user.portal',
@@ -167,5 +176,5 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         project_share_wizard_confirmation.action_send_mail()
         mail_partner = self.env['mail.message'].search([('partner_ids', '=', partner_portal_no_user.id)], limit=1)
         self.assertTrue(mail_partner, 'A mail should have been sent to the non portal user')
-        self.assertIn(f'href="http://localhost:{config["http_port"]}/web/signup', str(mail_partner.body), 'The message link should contain the url to register to the portal')
+        self.assertIn('href="gopher://example.org/web/signup', str(mail_partner.body), 'The message link should contain the url to register to the portal')
         self.assertIn('token=', str(mail_partner.body), 'The message link should contain a personalized token to register to the portal')

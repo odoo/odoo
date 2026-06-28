@@ -159,7 +159,7 @@ class TestEquipmentMulticompany(TransactionCase):
         MaintenanceRequest.with_user(user).create({
             'name': 'Some keys are not working',
             'company_id': company_b.id,
-            'user_id': user.id,
+            'user_ids': [user.id],
             'owner_user_id': user.id,
         })
 
@@ -167,7 +167,7 @@ class TestEquipmentMulticompany(TransactionCase):
         MaintenanceRequest.with_user(equipment_manager).create({
             'name': 'Battery drains fast',
             'company_id': company_a.id,
-            'user_id': equipment_manager.id,
+            'user_ids': [equipment_manager.id],
             'owner_user_id': equipment_manager.id,
         })
 

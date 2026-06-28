@@ -2,8 +2,10 @@
 
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+
+from odoo.addons.sale.models.res_company import SALE_INVOICE_POLICY
 
 
 class ProductTemplate(models.Model):
@@ -25,7 +27,7 @@ class ProductTemplate(models.Model):
     )
     sale_line_warn_msg = fields.Text(string="Sales Order Line Warning")
     reinvoice_policy = fields.Selection(
-        selection=[("no", "No"), ("cost", "At cost"), ("sales_price", "Sales price")],
+        selection=[("no", "No"), ("cost", "At cost"), ("sales_price", "At Sales price")],
         string="Re-Invoice Costs",
         default="no",
         compute="_compute_reinvoice_policy",
@@ -39,12 +41,13 @@ class ProductTemplate(models.Model):
     )
     sales_count = fields.Float(string="Sold", compute="_compute_sales_count", digits="Product Unit")
     invoice_policy = fields.Selection(
-        selection=[("order", "Ordered quantities"), ("delivery", "Delivered quantities")],
+        selection=SALE_INVOICE_POLICY,
         string="Invoicing Policy",
         compute="_compute_invoice_policy",
         precompute=True,
         store=True,
         readonly=False,
+        required=True,
         tracking=True,
         help="Ordered Quantity: Invoice quantities ordered by the customer.\n"
         "Delivered Quantity: Invoice quantities delivered to the customer.",
@@ -59,6 +62,13 @@ class ProductTemplate(models.Model):
         "whenever the customer hits *Add to Cart* (cross-sell strategy, "
         "e.g. for computers: warranty, software, etc.).",
         check_company=True,
+    )
+    sale_delay = fields.Integer(
+        "Delivery Time",
+        default=0,
+        company_dependent=True,
+        help="Delivery lead time, in days. It's the number of days, promised to the customer,"
+        " between the confirmation of the sales order and the delivery.",
     )
 
     @api.depends("invoice_policy", "sale_ok", "service_tracking")
@@ -82,9 +92,9 @@ class ProductTemplate(models.Model):
 
     def _prepare_invoicing_tooltip(self):
         if self.invoice_policy == "delivery" and self.type != "consu":
-            return _("Invoice after delivery, based on quantities delivered, not ordered.")
+            return self.env._("Invoice after delivery, based on quantities delivered, not ordered.")
         if self.invoice_policy == "order" and self.type == "service":
-            return _("Invoice ordered quantities as soon as this service is sold.")
+            return self.env._("Invoice ordered quantities as soon as this service is sold.")
         return ""
 
     def _prepare_service_tracking_tooltip(self):
@@ -98,7 +108,9 @@ class ProductTemplate(models.Model):
     @api.depends("purchase_ok", "sale_ok")
     def _compute_visible_reinvoice_policy(self):
         self.visible_reinvoice_policy = False
-        if self.env.user.has_group("analytic.group_analytic_accounting"):
+        if self.env.user.has_group("analytic.group_analytic_accounting") or self.env.user.has_group(
+            "sale.group_services_and_material"
+        ):
             self.filtered(lambda pt: pt.purchase_ok or pt.sale_ok).visible_reinvoice_policy = True
 
     @api.depends("sale_ok")
@@ -151,7 +163,7 @@ class ProductTemplate(models.Model):
             if so_lines:
                 used_products = [sol["product_id"][1] for sol in so_lines]
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The following products cannot be restricted to the company"
                         " %(company)s because they have already been used in quotations or "
                         "sales orders in another company:\n%(used_products)s\n"
@@ -182,8 +194,8 @@ class ProductTemplate(models.Model):
         res = super()._onchange_type()
         if self._origin and self.sales_count > 0:
             res["warning"] = {
-                "title": _("Warning"),
-                "message": _(
+                "title": self.env._("Warning"),
+                "message": self.env._(
                     "You cannot change the product's type because it is already used in sales"
                     " orders."
                 ),
@@ -196,7 +208,11 @@ class ProductTemplate(models.Model):
 
     @api.depends("type")
     def _compute_invoice_policy(self):
-        self.filtered(lambda t: t.type == "consu" or not t.invoice_policy).invoice_policy = "order"
+        for template in self:
+            if not template.invoice_policy:
+                template.invoice_policy = self.env.company.sale_invoice_policy
+            elif template.type == "consu":
+                template.invoice_policy = "order"
 
     def _get_backend_root_menu_ids(self):
         return super()._get_backend_root_menu_ids() + [self.env.ref("sale.sale_menu_root").id]
@@ -208,7 +224,7 @@ class ProductTemplate(models.Model):
             if self.env.user.has_group("product.group_product_pricelist"):
                 return [
                     {
-                        "label": _("Import Template for Products"),
+                        "label": self.env._("Import Template for Products"),
                         "template": "/product/static/xls/products_import_template.xlsx",
                     }
                 ]
@@ -239,7 +255,7 @@ class ProductTemplate(models.Model):
             incompatible_fields = [f for f in incompatible_types if val[f]]
             if len(incompatible_fields) > 1:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The product (%(product)s) has incompatible values: %(value_list)s",
                         product=val["name"],
                         value_list=[field_descriptions[v] for v in incompatible_fields],

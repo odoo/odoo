@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields, http
+from odoo import fields
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -66,7 +66,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_event_tour', login='admin')
 
     def test_website_event_pages_seo(self):
-        website = self.env['website'].get_current_website()
+        website = self.env.ref('base.default_website')
         event = self.env['event.event'].create({
             'name': 'Event With Menu',
             'website_menu': True,
@@ -201,13 +201,12 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.start_tour('/event', 'test_website_event_search', login='admin')
 
     def test_website_event_social_image(self):
-        website = self.env['website'].get_current_website()
         event = self.env['event.event'].create({
             'name': 'Event With Menu',
             'website_menu': True,
-            'website_id': website.id,
+            'website_id': self.env.ref('base.default_website').id,
         })
-        with MockRequest(self.env, website=website, url_root='http://example.com'):
+        with MockRequest(self.env, website=self.env.ref('base.default_website'), url_root='http://example.com'):
             event.cover_properties = """{"background-image": "url('/1.jpg')"}"""
             meta = event.get_website_meta()
             self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/1.jpg')
@@ -325,7 +324,7 @@ class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
     @users('user_portal')
     def test_check_search_in_address(self):
         ret = self.env['event.event']._search_get_detail(
-            self.website, order=None, options={'displayDescription':'', 'displayDetail':''}
+            self.website, order=None, options={}
         )
         result = ret['search_extra'](self.env, 'Turlock')[0][-1].get_result_ids()
         self.assertEqual(*result, self.events[0].id, 'Event should exist for the searched term')

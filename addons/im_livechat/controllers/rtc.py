@@ -8,7 +8,7 @@ from odoo.addons.mail.tools.discuss import mail_route
 
 
 class LivechatRtcController(RtcController):
-    @mail_route(type="jsonrpc")
+    @mail_route()
     def channel_call_join(self, channel_id, check_rtc_session_ids=None, camera=False):
         # sudo: discuss.channel - visitor can check if there is an ongoing call
         if not request.env.user._is_internal() and request.env["discuss.channel"].sudo().search([

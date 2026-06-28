@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
+import { formatList } from "@web/core/l10n/utils";
 import { post } from "@web/core/network/http_service";
 import { user } from "@web/core/user";
 import { delay } from "@web/core/utils/concurrency";
@@ -282,21 +283,9 @@ export class Form extends Interaction {
 
                 // In general, we want the data-for and prefill values to
                 // take priority over set default values. The 'email_to'
-                // field is however treated as an exception at the moment
-                // so that values set by users are always used.
-                if (
-                    name === "email_to" &&
-                    fieldEl.value &&
-                    // The following value is the default value that
-                    // is set if the form is edited in any way. (see the
-                    // @website/js/form_editor_registry module in editor
-                    // assets bundle).
-                    // TODO that value should probably never be forced
-                    // unless explicitely manipulated by the user or on
-                    // custom form addition but that seems risky to
-                    // change as a stable fix.
-                    fieldEl.value !== "info@yourcompany.example.com"
-                ) {
+                // field is however treated as an exception so that values
+                // explicitly set by users are always used.
+                if (name === "email_to" && fieldEl.value) {
                     continue;
                 }
 
@@ -606,8 +595,28 @@ export class Form extends Interaction {
                 } else if (inputEl.type === "file" && !this.isFileInputValid(inputEl)) {
                     return true;
                 } else if (this.requirementFunction(fieldEl) === false) {
-                    this.updateStatusInline(fieldEl.dataset.errorMessage, inputEl);
+                    this.updateStatusInline(
+                        fieldEl.dataset.errorMessage || this.defaultMessage(fieldEl),
+                        inputEl
+                    );
                     return true;
+                } else if (inputEl.hasAttribute("maxlength") && inputEl.hasAttribute("minlength")) {
+                    const maxChars = inputEl.maxLength;
+                    const minChars = inputEl.minLength;
+                    const valueLength = inputEl.value.length;
+                    if (
+                        (valueLength || inputEl.required) &&
+                        (valueLength > maxChars || valueLength < minChars)
+                    ) {
+                        this.updateStatusInline(
+                            _t(
+                                "Value of this field does not lie within character limit.(Min: %(minChars)s, Max: %(maxChars)s)",
+                                { maxChars, minChars }
+                            ),
+                            inputEl
+                        );
+                        return true;
+                    }
                 }
 
                 // Note that checkValidity also takes care of the case where
@@ -663,7 +672,7 @@ export class Form extends Interaction {
         const resultEl = this.el.querySelector("#s_website_form_result, #o_website_form_result"); // !compatibility
 
         if (status === "error" && !message) {
-            message = _t("An error has occured, the form has not been sent.");
+            message = _t("An error has occurred, the form has not been sent.");
         }
 
         const renderedEls = this.renderAt(
@@ -755,6 +764,43 @@ export class Form extends Interaction {
                 }
             }
         }
+        // Checking the files type.
+        const allowedMimetypes = inputEl.accept ? inputEl.accept.split(",") : [];
+        if (allowedMimetypes.length) {
+            const allowedMimeTypesLabels = {
+                "image/*": "Image files",
+                "application/pdf": "PDF files",
+                "application/*": "Document files",
+                "video/*": "Video files",
+                "audio/*": "Audio files",
+            };
+            const invalidFiles = Object.values(inputEl.files)
+                .map((file) => {
+                    const mimetype = file.type;
+                    if (
+                        mimetype &&
+                        !allowedMimetypes.includes(mimetype) &&
+                        !allowedMimetypes.includes(mimetype.split("/")[0] + "/*")
+                    ) {
+                        return file.name; // return invalid file name
+                    }
+                    return null;
+                })
+                .filter(Boolean);
+            if (invalidFiles.length) {
+                const errorMessage = _t(
+                    "The following file(s) have invalid type: %(fileNames)s. Allowed type(s): %(allowedMimeTypesLabels)s.",
+                    {
+                        fileNames: invalidFiles,
+                        allowedMimeTypesLabels: allowedMimetypes.map(
+                            (mimetype) => allowedMimeTypesLabels[mimetype]
+                        ),
+                    }
+                );
+                this.updateStatusInline(errorMessage, inputEl);
+                return false;
+            }
+        }
         return true;
     }
 
@@ -771,7 +817,7 @@ export class Form extends Interaction {
      * Compares the value with the comparable (and the between) with
      * comparator as a means to compare
      *
-     * @param {string} comparator The way that $value and $comparable have
+     * @param {string} comparator The way that value and comparable have
      *      to be compared
      * @param {string} [value] The value of the field
      * @param {string} [comparable] The value to compare
@@ -804,9 +850,29 @@ export class Form extends Interaction {
             case "!contains":
                 return !isContains(comparable, value);
             case "substring":
-                return value.includes(comparable);
-            case "!substring":
-                return !value.includes(comparable);
+            case "!substring": {
+                const words = JSON.parse(comparable).map(({ requirement_text }) =>
+                    requirement_text.trim().toLowerCase()
+                );
+                // Pass if no words.
+                if (!words.length) {
+                    return true;
+                }
+                // substring: at least one word must be included.
+                // !substring: no word must be included.
+                return comparator === "substring"
+                    ? words.some((w) => value.trim().toLowerCase().includes(w))
+                    : words.every((w) => !value.trim().toLowerCase().includes(w));
+            }
+            case "domain": {
+                const domains = JSON.parse(comparable).map(({ requirement_text }) =>
+                    requirement_text.trim().toLowerCase()
+                );
+                if (!domains.length) {
+                    return true;
+                }
+                return domains.some((domain) => value.toLowerCase().endsWith("@" + domain));
+            }
             case "equal":
             case "selected":
                 return value === comparable;
@@ -885,11 +951,13 @@ export class Form extends Interaction {
             `.s_website_form_input[name="${dependencyName}"]`
         );
         const visibilityCondition = fieldEl.dataset.visibilityCondition;
+        const containerEl = dependencyEl.closest(".s_website_form_field");
 
         const isMultiValueDependency =
             ["contains", "!contains"].includes(comparator) &&
             (["checkbox", "radio"].includes(dependencyEl.type) ||
-                dependencyEl.nodeName === "SELECT");
+                dependencyEl.nodeName === "SELECT" ||
+                containerEl?.dataset.type === "record");
 
         return () => {
             // To be visible, at least one field with the dependency name must be visible.
@@ -945,7 +1013,7 @@ export class Form extends Interaction {
             requirementComparator: comparator,
             requirementBetween: between,
         } = fieldEl.dataset;
-        const value = fieldEl.querySelector(".s_website_form_input").value;
+        let value = fieldEl.querySelector(".s_website_form_input").value;
         if (!condition && comparator) {
             return true;
         }
@@ -954,6 +1022,9 @@ export class Form extends Interaction {
         }
         if (!value.trim()) {
             return true;
+        }
+        if (fieldEl.dataset.type === "email" && ["substring", "!substring"].includes(comparator)) {
+            value = value.split("@")[0];
         }
         return this.compareTo(comparator, value, condition, between);
     }
@@ -1122,6 +1193,92 @@ export class Form extends Interaction {
         this.el.querySelectorAll(".s_website_form_custom_error").forEach((error) => {
             error.remove();
         });
+    }
+    /**
+     * Generates an error message for requirement set on field if validation fails.
+     * @param {HTMLElement} fieldEl The field for which the error message needs
+     * to be generated.
+     *
+     * @returns {string} The default error message.
+     */
+    defaultMessage(fieldEl) {
+        let {
+            requirementComparator: comparator,
+            requirementCondition: condition,
+            requirementBetween: between,
+            type,
+        } = fieldEl.dataset;
+        if (["substring", "!substring", "domain"].includes(comparator)) {
+            condition = JSON.parse(condition).map(({ requirement_text }) => {
+                if (comparator == "domain") {
+                    return "@" + requirement_text.trim().toLowerCase();
+                }
+                return requirement_text.trim().toLowerCase();
+            });
+            condition = formatList(condition, { style: "or" });
+        }
+        const textMessages = {
+            contains: _t("This field must include keyword %s.", condition),
+            "!contains": _t("This field must not include keyword %s.", condition),
+            substring: _t("This field must contain one of the keyword(s): '%s'", condition),
+            "!substring": _t("This field must not include the keyword(s): '%s'", condition),
+            greater: _t("Invalid: field is not greater than %s.", condition),
+            less: _t("Invalid: field is not less than %s.", condition),
+            "greater or equal": _t("Invalid: field is not greater than or equal to %s.", condition),
+            "less or equal": _t("Invalid: field is not less than or equal to %s.", condition),
+            domain: _t("This field must have one of these email domain(s): %s.", condition),
+        };
+
+        if (condition && textMessages[comparator]) {
+            return textMessages[comparator];
+        }
+
+        if (["date", "datetime"].includes(type)) {
+            const format = type === "date" ? localization.dateFormat : localization.dateTimeFormat;
+            const start = formatDate(DateTime.fromSeconds(parseInt(condition)), { format });
+            const end = formatDate(DateTime.fromSeconds(parseInt(between)), { format });
+
+            const dateMessages = {
+                dateEqual: _t(
+                    "Entered date or time is not correct! It must be %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                "date!equal": _t(
+                    "Entered date or time is not correct! It must not be %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                before: _t(
+                    "Entered date or time is not correct! It must be before %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                after: _t(
+                    "Entered date or time is not correct! It must be after %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                "equal or before": _t(
+                    "Entered date or time is not correct! It must be before or equal to %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                "equal or after": _t(
+                    "Entered date or time is not correct! It must be after or equal to %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                between: _t(
+                    "Entered date or time is not correct! It must be within %(start)s and %(end)s (%(format)s).",
+                    { start, end, format }
+                ),
+                "!between": _t(
+                    "Entered date or time is not correct! It must not be within %(start)s and %(end)s (%(format)s).",
+                    { start, end, format }
+                ),
+            };
+
+            if (condition && dateMessages[comparator]) {
+                return dateMessages[comparator];
+            }
+        }
+
+        return _t("An error has occurred, the form has not been sent.");
     }
 }
 

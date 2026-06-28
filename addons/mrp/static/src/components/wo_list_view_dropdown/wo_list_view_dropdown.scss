@@ -4,11 +4,21 @@
     height: 100%;
 }
 span.o_wo_status {
-  border-radius: 50%;
-  height: 20px;
-  width: 20px;
-}
+    line-height: inherit;
 
+    &.o_wo_bubble {
+        border-radius: 50%;
+        height: 20px;
+        width: 20px;
+    }
+
+    .o_wo_title & {
+        height: 30px;
+        width: auto;
+        min-width: 60px;
+        font-size: 1em;
+    }
+}
 td.o_data_cell:has(> div.o_widget_mo_view_list_dropdown) {
     overflow: visible !important;
 }

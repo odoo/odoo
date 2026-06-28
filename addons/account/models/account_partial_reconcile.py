@@ -57,7 +57,7 @@ class AccountPartialReconcile(models.Model):
     # ==== Other fields ====
     company_id = fields.Many2one(
         comodel_name='res.company',
-        string="Company", store=True, readonly=False,
+        string="Company", store=True, readonly=False, index=True,
         precompute=True,
         compute='_compute_company_id')
     max_date = fields.Date(
@@ -232,7 +232,8 @@ class AccountPartialReconcile(models.Model):
             return {}
 
         for partial in self:
-            for move in {partial.debit_move_id.move_id, partial.credit_move_id.move_id}:
+            for field, counterpart_field in (('debit', 'credit'), ('credit', 'debit')):
+                move, counterpart_move = partial[f'{field}_move_id'].move_id, partial[f'{counterpart_field}_move_id'].move_id
 
                 # Collect data about cash basis.
                 if move.id in tax_cash_basis_values_per_move:
@@ -322,6 +323,7 @@ class AccountPartialReconcile(models.Model):
                     'percentage': percentage,
                     'payment_rate': payment_rate,
                     'both_move_posted': partial.debit_move_id.move_id.state == 'posted' and partial.credit_move_id.move_id.state == 'posted',
+                    'counterpart_move': counterpart_move,
                 }
 
                 # Add partials.
@@ -582,6 +584,8 @@ class AccountPartialReconcile(models.Model):
                         # Base line.
 
                         cb_line_vals = self._prepare_cash_basis_base_line_vals(line, balance, amount_currency)
+                        cb_line_vals['name'] = ' - '.join(filter(None, (line.move_id.name, partial_values['counterpart_move'].name)))
+
                         grouping_key = self._get_cash_basis_base_line_grouping_key_from_vals(cb_line_vals)
 
                     if grouping_key in partial_lines_to_create:
@@ -632,9 +636,8 @@ class AccountPartialReconcile(models.Model):
                         counterpart_line_vals = self._prepare_cash_basis_counterpart_tax_line_vals(tax_line, line_vals)
                         counterpart_line_vals['sequence'] = sequence + 1
 
-                        if tax_line.account_id.reconcile:
-                            move_index = len(moves_to_create_and_post) + len(moves_to_create_in_draft)
-                            to_reconcile_after.append((tax_line, move_index, counterpart_line_vals['sequence']))
+                        move_index = len(moves_to_create_and_post) + len(moves_to_create_in_draft)
+                        to_reconcile_after.append((tax_line, move_index, counterpart_line_vals['sequence']))
 
                     else:
                         # Base line.

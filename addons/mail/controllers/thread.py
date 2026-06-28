@@ -1,17 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+
 from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
-from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools.misc import verify_limited_field_access_token
-from odoo.addons.mail.tools.discuss import mail_route, Store
+
+from odoo.addons.mail.controllers.store import StoreController
+from odoo.addons.mail.tools.discuss import Store, mail_route
 
 
-class ThreadController(http.Controller):
+class ThreadController(StoreController):
 
     # access helpers
     # ------------------------------------------------------------
@@ -79,7 +81,12 @@ class ThreadController(http.Controller):
                 reply_discussion=True, no_create=False,
             )
         return [
-            {'id': info['partner_id'], 'email': info['email'], 'name': info['name']}
+            {
+                'email': info['email'],
+                'id': info['partner_id'],
+                'name': info['name'],
+                'recipient_type': info['recipient_type'],
+            }
             for info in suggested if info['partner_id']
         ]
 
@@ -111,7 +118,10 @@ class ThreadController(http.Controller):
 
     @mail_route("/mail/read_subscription_data", methods=["POST"], type="jsonrpc", auth="user")
     def read_subscription_data(self, follower_id):
-        """Computes:
+        """Get subscription data for a follower.
+
+        Computes:
+
         - message_subtype_data: data about document subtypes: which are
             available, which are followed if any"""
         # limited to internal, who can read all followers
@@ -121,9 +131,11 @@ class ThreadController(http.Controller):
         record.check_access("read")
         # find current model subtypes, add them to a dictionary
         subtypes = record._mail_get_message_subtypes()
+        if follower.partner_id.partner_share:
+            subtypes = subtypes.filtered(lambda subtype: not subtype.internal)
         store = Store().add(subtypes, ["name"]).add(follower, ["subtype_ids"])
         return {
-            "store_data": store.get_result(),
+            "store_data": store,
             "subtype_ids": subtypes.sorted(
                 key=lambda s: (
                     s.parent_id.res_model or "",
@@ -152,16 +164,12 @@ class ThreadController(http.Controller):
             # User input is HTML string, so it needs to be in a Markup.
             # It will be sanitized by the field itself when writing on it.
             res["body"] = Markup(post_data["body"]) if post_data["body"] else post_data["body"]
-        partner_ids = post_data.get("partner_ids")
+        partners = request.env["res.partner"].browse(map(int, post_data.get("partner_ids") or []))
+        partners_cc = request.env["res.partner"].browse(map(int, post_data.get("partner_cc_ids") or []))
         partner_emails = post_data.get("partner_emails")
+        partner_cc_emails = post_data.get("partner_cc_emails")
         role_ids = post_data.get("role_ids")
-        if partner_ids is not None or partner_emails is not None or role_ids is not None:
-            partners = request.env["res.partner"].browse(map(int, partner_ids or []))
-            if partner_emails:
-                partners |= thread._partner_find_from_emails_single(
-                    partner_emails,
-                    no_create=not request.env.user.has_group("base.group_partner_manager"),
-                )
+        if partners or partner_emails or partners_cc or partner_cc_emails or role_ids is not None:
             if role_ids:
                 # sudo - res.users: getting partners linked to the role is allowed.
                 partners |= (
@@ -170,17 +178,28 @@ class ThreadController(http.Controller):
                     .search_fetch([("role_ids", "in", role_ids)], ["partner_id"])
                     .partner_id
                 )
-            res["partner_ids"] = partners.filtered(
-                lambda p: (not self.env.user.share and p.has_access("read"))
-                or (
-                    verify_limited_field_access_token(
-                        p,
-                        "id",
-                        post_data.get("partner_ids_mention_token", {}).get(str(p.id), ""),
-                        scope="mail.message_mention",
-                    )
-                ),
-            ).ids
+            if partner_emails:
+                partners |= thread._partner_find_from_emails_single(
+                    partner_emails,
+                    no_create=not request.env.user.has_group("base.group_partner_manager"),
+                )
+            if partner_cc_emails:
+                partners_cc |= thread._partner_find_from_emails_single(
+                    partner_cc_emails,
+                    no_create=not request.env.user.has_group("base.group_partner_manager"),
+                )
+            for source, target in ((partners, 'partner_ids'), (partners_cc, 'partner_cc_ids')):
+                res[target] = source.filtered(
+                    lambda p: (not self.env.user.share and p.has_access("read"))
+                    or (
+                        verify_limited_field_access_token(
+                            p,
+                            "id",
+                            post_data.get("partner_ids_mention_token", {}).get(str(p.id), ""),
+                            scope="mail.message_mention",
+                        )
+                    ),
+                ).ids
         res.setdefault("message_type", "comment")
         return res
 
@@ -210,11 +229,11 @@ class ThreadController(http.Controller):
         if not self._get_thread_with_access(thread_model, thread_id, mode="write"):
             thread = thread.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False)
         # sudo: mail.thread - users can post on accessible threads
-        message = thread.sudo().message_post(
+        message = thread.sudo().with_context(mail_post_check_concurrency=True).message_post(
             **self._prepare_message_data(post_data, thread=thread, from_create=True, **kwargs),
         )
-        store.add(message, "_store_message_fields")
-        return {"store_data": store.get_result(), "message_id": message.id}
+        store.add(message, "_store_message_fields", fields_params={"chatter_fields": True})
+        return {"store_data": store, "message_id": message.id}
 
     @mail_route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
     def mail_message_update_content(self, message_id, update_data, **kwargs):
@@ -228,7 +247,7 @@ class ThreadController(http.Controller):
             message,
             **self._prepare_message_data(update_data, thread=thread, from_create=False, **kwargs),
         )
-        return Store().add(message, "_store_message_fields").get_result()
+        return Store().add(message, "_store_message_fields")
 
     # side check for access
     # ------------------------------------------------------------
@@ -241,13 +260,13 @@ class ThreadController(http.Controller):
     def mail_thread_unsubscribe(self, res_model, res_id, partner_ids):
         thread = self.env[res_model].browse(res_id)
         thread.message_unsubscribe(partner_ids)
-        return Store().add(thread, self._store_thread_follow_fields, as_thread=True).get_result()
+        return Store().add(thread, self._store_thread_follow_fields, as_thread=True)
 
     @mail_route("/mail/thread/subscribe", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_subscribe(self, res_model, res_id, partner_ids):
         thread = self.env[res_model].browse(res_id)
         thread.message_subscribe(partner_ids)
-        return Store().add(thread, self._store_thread_follow_fields, as_thread=True).get_result()
+        return Store().add(thread, self._store_thread_follow_fields, as_thread=True)
 
     @classmethod
     def _store_thread_follow_fields(cls, res: Store.FieldList):

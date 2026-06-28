@@ -157,17 +157,10 @@ class TestWarehouse(TestStockCommon):
 
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', self.stock_location.id)])
         self.assertEqual(len(quant), 1)
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=picking_out.ids, active_id=picking_out.ids[0],
-            active_model='stock.picking'))
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking.product_return_moves.quantity = 1.0
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick = picking_out._create_return()
+        return_pick.move_ids.product_uom_qty = 1.0
         return_pick.action_assign()
-        return_pick.move_ids.quantity = 1
-        return_pick.move_ids.picked = True
-        return_pick._action_done()
+        return_pick.button_validate()
 
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', self.stock_location.id)])
         self.assertEqual(sum(quant.mapped('quantity')), 0)
@@ -947,3 +940,38 @@ class TestWarehouse(TestStockCommon):
         ]:
             res = self.env['stock.warehouse.orderpoint'].search([('qty_to_order', op, 0)])
             self.assertEqual(res, expected, "Error with operator %s" % op)
+
+
+@tagged('-at_install', 'post_install')
+class TestWarehousePostInstall(TestStockCommon):
+    def test_manual_resupply_from_wh_partner_propagation(self):
+        """
+        Check that the warehouse destination is set as delivery address
+        when a product is manually resupplied from an other warehouse.
+        """
+        warehouse_2 = self.env['stock.warehouse'].create({
+            'name': 'Warehouse 2',
+            'company_id': self.env.company.id,
+            'code': 'WHC2',
+            'resupply_wh_ids': [Command.set(self.warehouse_1.ids)],
+            'partner_id': self.partner.id,
+        })
+        self.product.route_ids = warehouse_2.resupply_route_ids
+        product_replenish = Form(self.env['product.replenish'].with_context(default_product_id=self.product.id))
+        product_replenish.warehouse_id = warehouse_2
+        product_replenish.save().launch_replenishment()
+        replenishment_pickings = self.env['stock.picking'].search([('origin', '=', 'Manual Replenishment'), ('product_id', 'in', self.product.ids)]).sorted('id')
+        self.assertRecordValues(replenishment_pickings, [
+            {
+                'picking_type_id': self.warehouse_1.out_type_id.id,
+                'location_id': self.warehouse_1.lot_stock_id.id,
+                'location_dest_id': self.env.company.internal_transit_location_id.id,
+                'partner_id': warehouse_2.partner_id.id,
+            },
+            {
+                'picking_type_id': warehouse_2.in_type_id.id,
+                'location_id': self.env.company.internal_transit_location_id.id,
+                'location_dest_id': warehouse_2.lot_stock_id.id,
+                'partner_id': self.warehouse_1.partner_id.id,
+            },
+        ])

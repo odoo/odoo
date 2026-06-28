@@ -1,10 +1,11 @@
-import { App, EventBus } from "@odoo/owl";
+import { App, EventBus, t } from "@odoo/owl";
 import { SERVICES_METADATA } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { getTemplate } from "@web/core/templates";
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { session } from "@web/session";
 import { isMacOS } from "@web/core/browser/feature_detection";
+import { services } from "@web/core/services";
 
 // -----------------------------------------------------------------------------
 // Types
@@ -50,12 +51,13 @@ export function makeEnv() {
 
 const serviceRegistry = registry.category("services");
 
-serviceRegistry.addValidation({
-    start: Function,
-    dependencies: { type: Array, element: String, optional: true },
-    async: { type: [{ type: Array, element: String }, { value: true }], optional: true },
-    "*": true,
-});
+serviceRegistry.addValidation(
+    t.object({
+        start: t.function(),
+        dependencies: t.array(t.string()).optional(),
+        async: t.or([t.literal(true), t.array(t.string())]).optional(),
+    })
+);
 
 let startServicesPromise = null;
 
@@ -66,12 +68,9 @@ let startServicesPromise = null;
  * @param {OdooEnv} env
  * @returns {Promise<void>}
  */
-export async function startServices(env) {
-    // Wait for all synchronous code so that if new services that depend on
-    // one another are added to the registry, they're all present before we
-    // start them regardless of the order they're added to the registry.
-    await Promise.resolve();
-
+export async function startServices(env, app) {
+    // we start all plugins first (in particular the localization plugin)
+    await app.pluginManager.ready;
     const toStart = new Map();
     serviceRegistry.addEventListener("UPDATE", async (ev) => {
         // Wait for all synchronous code so that if new services that depend on
@@ -89,15 +88,15 @@ export async function startServices(env) {
             const namedService = Object.assign(Object.create(service), { name });
             toStart.set(name, namedService);
         } else {
-            await _startServices(env, toStart);
+            await _startServices(env, toStart, app);
         }
     });
-    await _startServices(env, toStart);
+    await _startServices(env, toStart, app);
 }
 
-async function _startServices(env, toStart) {
+async function _startServices(env, toStart, app) {
     if (startServicesPromise) {
-        return startServicesPromise.then(() => _startServices(env, toStart));
+        return startServicesPromise.then(() => _startServices(env, toStart, app));
     }
     const services = env.services;
     for (const [name, service] of serviceRegistry.getEntries()) {
@@ -111,24 +110,26 @@ async function _startServices(env, toStart) {
     async function start() {
         let service = null;
         const proms = [];
-        while ((service = findNext())) {
-            const name = service.name;
-            toStart.delete(name);
-            const entries = (service.dependencies || []).map((dep) => [dep, services[dep]]);
-            const dependencies = Object.fromEntries(entries);
-            if (name in services) {
-                continue;
+        app.pluginManager.run(() => {
+            while ((service = findNext())) {
+                const name = service.name;
+                toStart.delete(name);
+                const entries = (service.dependencies || []).map((dep) => [dep, services[dep]]);
+                const dependencies = Object.fromEntries(entries);
+                if (name in services) {
+                    continue;
+                }
+                const value = service.start(env, dependencies);
+                if ("async" in service) {
+                    SERVICES_METADATA[name] = service.async;
+                }
+                proms.push(
+                    Promise.resolve(value).then((val) => {
+                        services[name] = val || null;
+                    })
+                );
             }
-            const value = service.start(env, dependencies);
-            if ("async" in service) {
-                SERVICES_METADATA[name] = service.async;
-            }
-            proms.push(
-                Promise.resolve(value).then((val) => {
-                    services[name] = val || null;
-                })
-            );
-        }
+        });
         await Promise.all(proms);
         if (proms.length) {
             return start();
@@ -227,22 +228,24 @@ export async function mountComponent(component, target, appConfig = {}) {
     let { env } = appConfig;
     const isRoot = !env;
     if (isRoot) {
-        env = await makeEnv();
-        await startServices(env);
+        env = makeEnv();
     }
-    const app = new App(component, {
+    const app = new App({
         env,
         getTemplate,
         dev: env.debug || session.test_mode,
-        warnIfNoStaticProps: !session.test_mode,
         name: component.constructor.name,
         translatableAttributes: ["data-tooltip"],
         translateFn: appTranslateFn,
         customDirectives,
+        plugins: services,
         globalValues,
         ...appConfig,
     });
-    const root = await app.mount(target);
+    if (isRoot) {
+        await startServices(env, app);
+    }
+    const root = await app.createRoot(component, { ...appConfig, env }).mount(target);
     if (isRoot) {
         odoo.__WOWL_DEBUG__ = { root };
     }

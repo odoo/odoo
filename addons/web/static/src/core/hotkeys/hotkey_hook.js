@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -11,8 +11,9 @@ import { useService } from "@web/core/utils/hooks";
  */
 export function useHotkey(hotkey, callback, options = {}) {
     const hotkeyService = useService("hotkey");
-    useLayoutEffect(
-        () => hotkeyService.add(hotkey, callback, options),
-        () => []
-    );
+    let cleanup;
+    onMounted(() => {
+        cleanup = hotkeyService.add(hotkey, callback, options);
+    });
+    onWillUnmount(() => cleanup());
 }

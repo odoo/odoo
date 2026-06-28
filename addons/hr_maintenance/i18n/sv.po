@@ -10,21 +10,22 @@
 # Simon S, 2022
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 21:18+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
-"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"PO-Revision-Date: 2026-04-30 13:43+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-3/"
 "hr_maintenance/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: hr_maintenance
 #. odoo-python
@@ -37,12 +38,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_maintenance/models/hr_employee_departure.py:0
 msgid "1 equipment has been unassigned from %s"
-msgstr ""
-
-#. module: hr_maintenance
-#: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_departure_view_form
-#: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_view_form
-msgid "<span>Unassign Equipment</span>"
 msgstr ""
 
 #. module: hr_maintenance
@@ -78,7 +73,6 @@ msgstr "Avdelning"
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_departure__display_name
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_public__display_name
-#: model:ir.model.fields,field_description:hr_maintenance.field_hr_version__display_name
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__display_name
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__display_name
 msgid "Display Name"
@@ -95,11 +89,6 @@ msgid "Employee"
 msgstr "Anställd"
 
 #. module: hr_maintenance
-#: model:ir.model,name:hr_maintenance.model_hr_version
-msgid "Employee Contract"
-msgstr ""
-
-#. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_hr_employee_departure
 msgid "Employee Departure"
 msgstr ""
@@ -108,7 +97,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_maintenance.equipment_action
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_ids
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__equipment_id
-#: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_departure_view_form
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_view_form
 msgid "Equipment"
@@ -118,7 +106,7 @@ msgstr "Utrustning"
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_count
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_public__equipment_count
 msgid "Equipment Count"
-msgstr "Räkning av utrustning"
+msgstr "Antal utrustning"
 
 #. module: hr_maintenance
 #. odoo-python
@@ -127,17 +115,9 @@ msgid "Equipment unassigned due to the end of collaboration with %s"
 msgstr ""
 
 #. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__departure_do_unassign_equipment
-#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_departure__do_unassign_equipment
-#: model:ir.model.fields,field_description:hr_maintenance.field_hr_version__departure_do_unassign_equipment
-msgid "Free Equiments"
-msgstr "Gratis utrustning"
-
-#. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_departure__id
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_public__id
-#: model:ir.model.fields,field_description:hr_maintenance.field_hr_version__id
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__id
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__id
 msgid "ID"
@@ -146,29 +126,22 @@ msgstr "ID"
 #. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_maintenance_equipment
 msgid "Maintenance Equipment"
-msgstr "Utrustning att underhålla"
+msgstr "Utrustning för underhåll"
 
 #. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_maintenance_request
 msgid "Maintenance Request"
-msgstr "Underhållsbegäran"
+msgstr "Underhållsförfrågan"
 
 #. module: hr_maintenance
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
 msgid "My Maintenances"
-msgstr "Mitt underhåll"
+msgstr "Mina underhåll"
 
 #. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
-
-#. module: hr_maintenance
-#: model:ir.model.fields,help:hr_maintenance.field_hr_employee__departure_do_unassign_equipment
-#: model:ir.model.fields,help:hr_maintenance.field_hr_employee_departure__do_unassign_equipment
-#: model:ir.model.fields,help:hr_maintenance.field_hr_version__departure_do_unassign_equipment
-msgid "Unassign Employee from Equipments"
-msgstr "Ta bort anställd från utrustning"
+msgstr "Offentlig anställd"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__equipment_assign_to

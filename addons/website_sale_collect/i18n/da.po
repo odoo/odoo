@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-22 17:48+0000\n"
 "PO-Revision-Date: 2025-09-14 21:16+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
@@ -39,30 +39,16 @@ msgid ""
 msgstr ""
 
 #. module: website_sale_collect
-#: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
-msgid ""
-"<i>Your order has been confirmed.</i><br>Please come to the store to pay for "
-"your products."
-msgstr ""
-"<i>Din ordre er bekræftet.</i><br>Du bedes komme til butikken og betale for "
-"dine produkter."
-
-#. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "<span class=\"small\">|</span>"
 msgstr ""
-
-#. module: website_sale_collect
-#: model_terms:ir.ui.view,arch_db:website_sale_collect.payment_confirmation_status
-msgid "<span class=\"text-muted\"> (In-store pickup)</span>"
-msgstr "<span class=\"text-muted\"> (Afhentning i butik)</span>"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 msgid "Available"
-msgstr "Til rådighed"
+msgstr ""
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -95,7 +81,7 @@ msgstr "Brugerdefineret tilstand"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Delivery"
-msgstr "Levering"
+msgstr ""
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_delivery_carrier
@@ -146,7 +132,7 @@ msgstr "Leveringsmetode \"I butik\""
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Not available"
-msgstr "Ikke tilgængelig"
+msgstr ""
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__opening_hours
@@ -157,7 +143,7 @@ msgstr "Åbningstider"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 msgid "Out of stock"
-msgstr "Ikke på lager"
+msgstr ""
 
 #. module: website_sale_collect
 #: model:payment.provider,name:website_sale_collect.payment_provider_on_site
@@ -200,6 +186,7 @@ msgstr "Produkt"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__delivery_type
+#: model:ir.model.fields,field_description:website_sale_collect.field_sale_order__delivery_type
 msgid "Provider"
 msgstr "Udbyder"
 
@@ -308,6 +295,18 @@ msgid ""
 msgstr "Hvis du vælger \"Afhentning i butik\", skal du betale i butikken."
 
 #. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/payment_transaction.py:0
+msgid "Your order will be ready on %s."
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/payment_transaction.py:0
+msgid "Your order will be ready soon."
+msgstr ""
+
+#. module: website_sale_collect
 #: model_terms:payment.provider,auth_msg:website_sale_collect.payment_provider_on_site
 msgid "Your payment has been authorized."
 msgstr "Din betaling er blevet godkendt."
@@ -316,6 +315,11 @@ msgstr "Din betaling er blevet godkendt."
 #: model_terms:payment.provider,cancel_msg:website_sale_collect.payment_provider_on_site
 msgid "Your payment has been cancelled."
 msgstr "Din betaling er blevet annulleret."
+
+#. module: website_sale_collect
+#: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
+msgid "Your payment has been processed but is waiting for approval."
+msgstr ""
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,done_msg:website_sale_collect.payment_provider_on_site

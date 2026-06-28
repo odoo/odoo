@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    inputFiles,
     openFormView,
     patchUiSize,
     scroll,
@@ -10,6 +11,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { onRpc, pagerNext, pagerPrevious } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -235,4 +237,46 @@ test("removing the last attachment should close the attachment box", async () =>
     // Confirm the deletion
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentBox", { count: 0 });
+});
+
+test("attachment should be uploaded on the correct record when using the pager navigation", async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { display_name: "first partner" },
+        { display_name: "second partner" },
+    ]);
+    await start();
+    await openFormView("res.partner", partnerId_1, {
+        arch: `
+            <form>
+                <sheet><field name="display_name"/></sheet>
+                <div class="oe_chatter"><chatter/></div>
+            </form>`,
+        resIds: [partnerId_1, partnerId_2],
+    });
+    // First upload
+    let uploadDeferred = Promise.withResolvers();
+    onRpc("/mail/attachment/upload", () => uploadDeferred.promise);
+    await click(".o-mail-Chatter-attachFiles");
+    let uploadPromise = inputFiles(".o_input_file", [new File(["image"], "A.jpeg")]);
+    await pagerNext();
+    uploadDeferred.resolve();
+    await uploadPromise;
+    await contains("button[aria-label='Attach files']:not(:has(sup))");
+    await pagerPrevious();
+    await click("button[aria-label='Attach files']", { text: "1" });
+    await contains(".o-mail-AttachmentCard", { text: "A.jpeg" });
+    // Second upload
+    uploadDeferred = Promise.withResolvers();
+    await click("button[aria-label='Attach files']");
+    await click("button", { text: "Attach files" });
+    uploadPromise = inputFiles(".o_input_file", [new File(["image"], "B.jpeg")]);
+    await pagerNext();
+    uploadDeferred.resolve();
+    await uploadPromise;
+    await contains("button[aria-label='Attach files']:not(:has(sup))");
+    await pagerPrevious();
+    await click("button[aria-label='Attach files']", { text: "2" });
+    await contains(".o-mail-AttachmentCard", { text: "A.jpeg" });
+    await contains(".o-mail-AttachmentCard", { text: "B.jpeg" });
 });

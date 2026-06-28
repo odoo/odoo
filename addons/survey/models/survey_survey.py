@@ -130,13 +130,15 @@ class SurveySurvey(models.Model):
         domain="[('model', '=', 'survey.user_input')]",
         help="Automated email sent to the user when they succeed the certification, containing their certification document.")
     certification_report_layout = fields.Selection([
-        ('modern_purple', 'Modern Purple'),
-        ('modern_blue', 'Modern Blue'),
-        ('modern_gold', 'Modern Gold'),
-        ('classic_purple', 'Classic Purple'),
-        ('classic_blue', 'Classic Blue'),
-        ('classic_gold', 'Classic Gold')],
-        string='Certification template', default='modern_purple')
+        ('modern_company', 'Modern'),
+        ('modern_black', 'Modern Black'),
+        ('minimal_company', 'Minimal'),
+        ('minimal_black', 'Minimal Black'),
+        ('classic-1_company', 'Classic #1'),
+        ('classic-1_black', 'Classic #1 Black'),
+        ('classic-2_company', 'Classic #2'),
+        ('classic-2_black', 'Classic #2 Black')],
+        string='Certification template', default='modern_company')
     # Certification badge
     #   certification_badge_id_dummy is used to have two different behaviours in the form view :
     #   - If the certification badge is not set, show certification_badge_id and only display create option in the m2o
@@ -1196,6 +1198,7 @@ class SurveySurvey(models.Model):
         return '/s/%s' % self.access_token[:6]
 
     def get_print_url(self):
+        self.check_access('read')  # avoid cache pollution
         return '/survey/print/%s' % self.access_token
 
     # ------------------------------------------------------------

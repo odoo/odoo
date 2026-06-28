@@ -121,7 +121,6 @@ class TestAccountPaymentDuplicateMoves(AccountTestInvoicingCommon):
             'name': 'Outstanding Payment Account B',
             'code': 'OPAB',
             'account_type': 'asset_current',
-            'reconcile': True,
         })
         # Create new payments in the second journal
         payment_in_2 = payment_in_1.copy(default={'date': payment_in_1.date})

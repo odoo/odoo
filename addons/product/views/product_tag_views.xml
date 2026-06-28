@@ -7,17 +7,19 @@
         <field name="arch" type="xml">
             <form string="Product Tag">
                 <sheet>
-                    <field
-                        name="image"
-                        widget="image"
-                        class="oe_avatar"
-                        invisible="not visible_to_customers"
-                    />
-                    <div name="product_tag_form_div" class="oe_title">
-                        <label for="name" string="Tag"/>
-                        <h1>
-                            <field name="name"/>
-                        </h1>
+                    <div class="d-flex flex-column flex-md-row align-items-center gap-3">
+                        <field
+                            name="image"
+                            widget="image"
+                            class="oe_avatar"
+                            invisible="not visible_to_customers"
+                        />
+                        <div name="product_tag_form_div" class="oe_title w-100">
+                            <label for="name" string="Tag"/>
+                            <h1 class="o_outlined">
+                                <field name="name"/>
+                            </h1>
+                        </div>
                     </div>
                     <group>
                         <field name="visible_to_customers" widget="boolean_toggle"/>

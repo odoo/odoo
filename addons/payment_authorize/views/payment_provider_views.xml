@@ -6,56 +6,73 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <group name="provider_credentials" position='inside'>
-                <group invisible="code != 'authorize'">
-                    <field name="authorize_login" required="code == 'authorize' and state != 'disabled'"/>
-                    <field name="authorize_transaction_key" password="True" required="code == 'authorize' and state != 'disabled'"/>
-                    <field name="authorize_signature_key" password="True" required="code == 'authorize' and state != 'disabled'"/>
-                    <label for="authorize_client_key"/>
-                    <div class="o_row" col="2">
-                        <field name="authorize_client_key"/>
-                        <button
-                            string="Generate Client Key"
-                            type="object"
-                            name="action_update_merchant_details"
-                            invisible="state == 'disabled'"
-                            class="oe_link"
-                            icon="fa-refresh"
-                        />
-                    </div>
-                    <label
-                        for="authorize_webhook_id"
-                        invisible="not (authorize_login and authorize_transaction_key and authorize_signature_key)"
+            <group name="provider_credentials" position="inside">
+                <field
+                    string="API Login ID"
+                    name="authorize_login"
+                    invisible="code != 'authorize'"
+                    required="is_live"
+                />
+                <field
+                    string="API Transaction Key"
+                    name="authorize_transaction_key"
+                    widget="password"
+                    invisible="code != 'authorize'"
+                    required="is_live"
+                />
+                <field
+                    string="API Signature Key"
+                    name="authorize_signature_key"
+                    widget="password"
+                    invisible="code != 'authorize'"
+                    required="is_live"
+                />
+                <label
+                    string="API Client Key"
+                    for="authorize_client_key"
+                    invisible="code != 'authorize'"
+                />
+                <div class="o_row" col="2" invisible="code != 'authorize'">
+                    <field name="authorize_client_key"/>
+                    <button
+                        string="Generate Client Key"
+                        type="object"
+                        name="action_update_merchant_details"
+                        class="oe_link"
+                        icon="fa-refresh"
                     />
-                    <div
-                        class="o_row"
-                        invisible="not (authorize_login and authorize_transaction_key and authorize_signature_key)"
-                    >
-                        <field string="Webhook ID" name="authorize_webhook_id"/>
-                        <button
-                            string="Generate Your Webhook"
-                            name="action_authorize_create_webhook"
-                            type="object"
-                            class="btn-primary"
-                            invisible="authorize_webhook_id or state == 'disabled'"
-                        />
-                        <button
-                            string="Re-generate Your Webhook"
-                            name="action_authorize_create_webhook"
-                            type="object"
-                            class="btn-secondary"
-                            invisible="not authorize_webhook_id or state == 'disabled'"
-                        />
-                    </div>
-                    <widget colspan="2" name="documentation_link" path="/applications/finance/payment_providers/authorize.html" label="How to get paid with Authorize.Net"/>
-                </group>
+                </div>
+                <label
+                    for="authorize_webhook_id"
+                    invisible="not (authorize_login and authorize_transaction_key and authorize_signature_key) or code != 'authorize'"
+                />
+                <div
+                    class="o_row"
+                    invisible="not (authorize_login and authorize_transaction_key and authorize_signature_key) or code != 'authorize'"
+                >
+                    <field string="Webhook ID" name="authorize_webhook_id" widget="password"/>
+                    <button
+                        string="Generate Your Webhook"
+                        type="object"
+                        name="action_authorize_create_webhook"
+                        invisible="authorize_webhook_id"
+                        class="btn-primary"
+                    />
+                    <button
+                        string="Re-generate Your Webhook"
+                        type="object"
+                        name="action_authorize_create_webhook"
+                        invisible="not authorize_webhook_id"
+                        class="btn-secondary"
+                    />
+                </div>
             </group>
             <div name="available_currencies" position="inside">
                 <button
                     string="Set Account Currency"
                     type="object"
                     name="action_update_merchant_details"
-                    invisible="code != 'authorize' or state == 'disabled'"
+                    invisible="code != 'authorize'"
                     icon="fa-refresh"
                     class="oe_link"
                 />

@@ -4,9 +4,12 @@ import json
 import time
 from http import HTTPStatus
 
+import requests.exceptions
+
 from odoo.http.session import SESSION_ROTATION_INTERVAL
 from odoo.tests import Like, new_test_user, tagged
 from odoo.tools import mute_logger
+from odoo.tools.misc import submap
 
 from .test_common import TestHttpBase
 from odoo.addons.test_http.controllers import CT_JSON
@@ -183,6 +186,33 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, "{'race': 'Asgard', 'commander': 'Thor'}")
 
+    def test_echohttp9_post_chunked(self):
+        self.env['ir.config_parameter'].sudo().set_int('web.max_file_upload_size', 10)
+
+        with self.subTest(name="short body"):
+            short_body = iter('""')
+            res = self.db_url_open('/test_http/echo-json-over-http', data=short_body, headers=CT_JSON)
+            req = res.request
+            res.raise_for_status()
+            self.assertEqual(req.headers.get('Transfer-Encoding'), 'chunked')
+            self.assertEqual(res.text, '""')
+            self.assertFalse(list(short_body), "the body should had been sent fully")
+            self.assertEqual(res.status_code, 200)
+
+        with self.subTest(name="long body"):
+            long_body = iter('"this text is too long"')
+            try:
+                res = self.db_url_open('/test_http/echo-json-over-http', data=long_body, headers=CT_JSON)
+            except requests.exceptions.ConnectionError:
+                pass
+            else:
+                self.assertEqual(res.status_code, 400)
+
+            # It depends on the OS buffers and thus isn't reliable.
+            # We could implement is a deterministic way but we would
+            # need to send much more data and we don't want that either.
+            # self.assertTrue(list(long_body), "the body shouldn't had been sent fully")
+
 
 @tagged('post_install', '-at_install')
 class TestHttpEchoReplyJsonWithDB(TestHttpBase):
@@ -222,21 +252,16 @@ class TestHttpEchoReplyJsonWithDB(TestHttpBase):
         self.assertEqual(res.headers.get('Accept'), "application/json, application/json-rpc")
 
     def test_echojson3_context_db(self):
-        payload = json.dumps({
-            "jsonrpc": "2.0",
-            "id": 0,
-            "params": {
-                "context": {
-                    "name": "Thor"
-                },
-                "race": "Asgard",
-            },
-        })
-        res = self.db_url_open("/test_http/echo-json-context", data=payload, headers=CT_JSON)
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.text, '{"jsonrpc": "2.0", "id": 0, "result": '
-            f'{{"lang": "en_US", "tz": false, "uid": {self.jackoneill.id}}}'
-            '}')
+        res = self.make_jsonrpc_request(
+            '/test_http/echo-json-context',
+            params={'context': {'name': 'Thor'}},
+        )
+        expected = {
+            'lang': 'en_US',
+            'tz': False,
+            'uid': self.jackoneill.id,
+        }
+        self.assertEqual(submap(res, expected), expected)
 
     def test_echojson3_bad_json(self):
         payload = 'some non json garbage'

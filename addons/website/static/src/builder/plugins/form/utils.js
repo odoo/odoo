@@ -1,8 +1,11 @@
 import { _t } from "@web/core/l10n/translation";
+import { localeCompare } from "@web/core/l10n/utils";
 import { renderToElement } from "@web/core/utils/render";
 import { generateHTMLId } from "@web/core/utils/strings";
 import { isSmallInteger } from "@html_builder/utils/utils";
+import { markup } from "@odoo/owl";
 
+const DESCRIPTION_POSITION_PREFIX = "s_website_form_description_";
 export const VISIBILITY_DATASET = [
     "visibilityDependency",
     "visibilityCondition",
@@ -61,6 +64,8 @@ export function getDefaultFormat(el) {
         requiredMark: isRequiredMark(el),
         optionalMark: isOptionalMark(el),
         mark: getMark(el),
+        textPosition: getFieldType(el) === "boolean" ? "top" : "stacked",
+        labelInvisible: false,
     };
 }
 
@@ -108,8 +113,17 @@ export function renderField(field, resetId = false) {
     if (field.custom && !field.string) {
         params.field.string = field.name;
     }
+    if (field.string_in_website_lang && !field.modelRequired) {
+        // avoid changing strings in the original form definition
+        params.field.string = field.string_in_website_lang;
+    }
     if (field.description) {
-        params.default_description = _t("Describe your field here.");
+        params.default_description =
+            field.type === "boolean"
+                ? markup`<span>${_t(
+                      "I agree to the"
+                  )} <a class="o_translate_inline" href="#bottom" target="_blank">Terms & Conditions</a></span>`
+                : _t("Describe your field here.");
     } else if (["email_cc", "email_to"].includes(field.name)) {
         params.default_description = _t("Separate email addresses with a comma.");
     }
@@ -189,6 +203,11 @@ export function getFieldFormat(fieldEl) {
         requiredMark: requiredMark,
         optionalMark: optionalMark,
         mark: mark && mark.textContent,
+        textPosition:
+            getFieldType(fieldEl) == "boolean" ? getDescriptionPosition(fieldEl) : "stacked",
+        labelInvisible:
+            !!fieldEl.querySelector(".s_website_form_label")?.classList.contains("invisible") ||
+            getLabelPosition(fieldEl) === "none",
     };
     return format;
 }
@@ -209,7 +228,7 @@ export function isFieldCustom(fieldEl) {
  * @param {HTMLElement} fieldEl
  * @returns {string}
  */
-export function getFieldName(fieldEl = this.$target[0]) {
+export function getFieldName(fieldEl) {
     const multipleName = fieldEl.querySelector(".s_website_form_multiple");
     return multipleName
         ? multipleName.dataset.name
@@ -244,11 +263,20 @@ export function setActiveProperties(fieldEl, field) {
     if (input) {
         // textarea value has no attribute,  date/datetime timestamp property is formated
         field.value = input.getAttribute("value") || input.value;
+        if (input.hasAttribute("minLength")) {
+            field.minLength = parseInt(input.getAttribute("minLength"));
+        }
+        if (input.hasAttribute("maxLength")) {
+            field.maxLength = parseInt(input.getAttribute("maxLength"));
+        }
     } else if (field.type === "boolean") {
         field.value = !!fieldEl.querySelector('input[type="checkbox"][checked]');
     } else if (fileInputEl) {
         field.maxFilesNumber = fileInputEl.dataset.maxFilesNumber;
         field.maxFileSize = fileInputEl.dataset.maxFileSize;
+        if (fileInputEl.hasAttribute("accept")) {
+            field.accept = fileInputEl.getAttribute("accept");
+        }
     } else if (selectInputEl) {
         const emptyOptionEl = selectInputEl.querySelector(".s_website_form_empty_option");
         field.allowEmpty = !!emptyOptionEl;
@@ -500,7 +528,7 @@ export function getFormCacheKey(formEl) {
     const propertyOrigins = {};
     const parts = [model];
     for (const hiddenInputEl of [...formEl.querySelectorAll("input[type=hidden]")].sort(
-        (firstEl, secondEl) => firstEl.name.localeCompare(secondEl.name)
+        (firstEl, secondEl) => localeCompare(firstEl.name, secondEl.name)
     )) {
         // Pushing using the name order to avoid being impacted by the
         // order of hidden fields within the DOM.
@@ -566,4 +594,22 @@ export function rerenderField(fieldEl, fields) {
     delete field.id;
     const newFieldEl = renderField(field);
     replaceFieldElement(fieldEl, newFieldEl);
+}
+
+/**
+ * Returns the field description layout (currently used for checkbox fields).
+ *
+ * @param {HTMLElement} fieldEl
+ */
+export function getDescriptionPosition(fieldEl) {
+    if (!fieldEl.querySelector(".s_website_form_field_description")) {
+        return "none";
+    } else {
+        const descriptionPositionClass = [...fieldEl.classList].find((cls) =>
+            cls.startsWith(DESCRIPTION_POSITION_PREFIX)
+        );
+        return descriptionPositionClass
+            ? descriptionPositionClass.replace(DESCRIPTION_POSITION_PREFIX, "")
+            : "stacked";
+    }
 }

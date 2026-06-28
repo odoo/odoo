@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, EventBus, onWillDestroy, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -36,18 +35,33 @@ export class CheckIdentityForm extends Component {
         };
 
         this.checkIdentityService = useService("check_identity");
-        this.checkIdentityService.bus.trigger("start");
-        this.state = useState({
+
+        if (!this.checkIdentityService.identityCheckPromise) {
+            // The form is mounted directly into an HTTP page (bypassing the dialog service)
+            const { promise, resolve } = Promise.withResolvers();
+            this.checkIdentityService.identityCheckPromise = promise;
+
+            this.checkIdentityService.identityCheckCleanUp = () => {
+                this.close();
+                resolve();
+                this.checkIdentityService.identityCheckPromise = null;
+                this.checkIdentityService.identityCheckCleanUp = null;
+            };
+        }
+
+        this.state = proxy({
             error: false,
             authMethod: null,
         });
+
         onWillStart(async () => {
             const data = await this.checkIdentityService.getInitData();
 
             // Attempting to verify the identity of the device using its fingerprint
-            if (data.fingerprint_check && await this.checkIdentityService.updateFingerprint()) {
+            if (data.fingerprint_check && (await this.checkIdentityService.updateFingerprint())) {
                 // There is no need to re-authenticate the user explicitly via the form
-                this.checkIdentityService.checkSignaling();
+                this.checkIdentityService.identityCheckCleanUp();
+                this.checkIdentityService.channel.postMessage("identityChecked");
             }
 
             this.user = {
@@ -55,12 +69,6 @@ export class CheckIdentityForm extends Component {
                 name: data.login,
             };
             this.setAuthMethods(data.auth_methods);
-        });
-        onWillDestroy(() => {
-            this.checkIdentityService.bus.trigger("stop");
-        });
-        this.checkIdentityService.bus.addEventListener("identityChecked", () => {
-            this.close();
         });
     }
 
@@ -108,7 +116,6 @@ export class CheckIdentityForm extends Component {
             redirect(this.props.redirect);
         }
     }
-
 }
 
 /**
@@ -133,52 +140,49 @@ export class CheckIdentityDialog extends Component {
             close: this.props.close,
         };
         this.env.dialogData.dismiss = async () => {
-            const url = await post('/web/session/logout', { csrf_token: odoo.csrf_token }, "url");
+            const url = await post("/web/session/logout", { csrf_token: odoo.csrf_token }, "url");
             redirect(url);
         };
     }
 }
 
 export class CheckIdentity {
-
     constructor(env, services) {
         this.env = env;
         this.setup(env, services);
     }
 
     setup(env, services) {
-        this.bus = new EventBus();
-        this.channel = new BroadcastChannel("check_identity");
         this.dialogService = services["dialog"];
-        this.started = false;
         this.fingerprint = null;
 
-        this.bus.addEventListener("start", () => { this.started = true; });
-        this.bus.addEventListener("stop", () => { this.started = false; });
+        this.identityCheckPromise = null;
+        this.identityCheckCleanUp = null;
+
+        // Multi-tab sync: if another tab verified the identity, clean up locally
+        this.channel = new BroadcastChannel("check_identity");
         this.channel.addEventListener("message", (event) => {
-            if (event.data === "identityChecked") {
-                this.bus.trigger("identityChecked");
+            if (event.data === "identityChecked" && this.identityCheckCleanUp) {
+                this.identityCheckCleanUp();
             }
         });
 
-        registry.category("error_handlers").add(
-            "verifyUserErrorHandler",
-            this.verifyUserErrorHandler.bind(this),
-            { force: true },
-        );
+        registry
+            .category("error_handlers")
+            .add("verifyUserErrorHandler", this.verifyUserErrorHandler.bind(this), { force: true });
 
         // Check the fingerprint each time webclient is loaded
         // Only for internal user
         env.bus.addEventListener("WEB_CLIENT_READY", () => {
             if (session.device_salt) {
                 this.updateFingerprint()
-                    .then(result => !result && this.run())
+                    .then((result) => !result && this.run())
                     .catch(() => {});
-                    // Swallows the error because the goal is to update backend
-                    // information. If we have already continued the flow (page
-                    // change or other), the request will be closed on the
-                    // client side and the error will be `TypeError: Failed to
-                    // fetch`. This is a false positive.
+                // Swallows the error because the goal is to update backend
+                // information. If we have already continued the flow (page
+                // change or other), the request will be closed on the
+                // client side and the error will be `TypeError: Failed to
+                // fetch`. This is a false positive.
             }
         });
     }
@@ -189,7 +193,7 @@ export class CheckIdentity {
         }
         // Ask the machine to generate an image (canvas).
         const canvas = new OffscreenCanvas(325, 25);
-        const context = canvas.getContext('2d');
+        const context = canvas.getContext("2d");
         const txt = session.device_salt;
         context.textBaseline = "top";
         context.font = "14px 'Arial'";
@@ -198,8 +202,8 @@ export class CheckIdentity {
         const txtX = 2;
         const txtY = 15;
         context.fillStyle = "#f60";
-        context.fillRect(2 + txtWidth / 2, 1, txtWidth / 2, 20);  // X, Y, width, height
-        context.rotate(0.0174533);  // 1 * Math.PI / 180
+        context.fillRect(2 + txtWidth / 2, 1, txtWidth / 2, 20); // X, Y, width, height
+        context.rotate(0.0174533); // 1 * Math.PI / 180
         context.fillStyle = "rgba(0, 100, 0, 0.6)";
         context.fillText(txt, txtX + 1, txtY + 1);
         context.fillStyle = "#069";
@@ -213,7 +217,7 @@ export class CheckIdentity {
         try {
             hashBuffer = await window.crypto.subtle.digest("SHA-256", buffer);
         } catch {
-            return this.fingerprint;  // `null` by default
+            return this.fingerprint; // `null` by default
         }
 
         try {
@@ -221,7 +225,7 @@ export class CheckIdentity {
         } catch {
             // Fallback if `Uint8Array` is not available.
             const uint16array = new Uint16Array(hashBuffer);
-            let binary = '';
+            let binary = "";
             for (let i = 0; i < uint16array.length; i++) {
                 const value = uint16array[i];
                 binary += String.fromCharCode(value & 0xff, value >> 8);
@@ -234,11 +238,13 @@ export class CheckIdentity {
 
     async getInitData() {
         return await rpc("/web/session/identity/check");
-    };
+    }
 
     async updateFingerprint() {
         const fingerprint = await this.getFingerprint();
-        if (!fingerprint) return false;
+        if (!fingerprint) {
+            return false;
+        }
 
         const response = await fetch("/web/session/fingerprint/check", {
             method: "POST",
@@ -246,7 +252,7 @@ export class CheckIdentity {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
             body: new URLSearchParams({ fingerprint: fingerprint }),
-        })
+        });
         return response.ok;
     }
 
@@ -255,24 +261,37 @@ export class CheckIdentity {
         if (result?.mfa) {
             return { success: false, mfa: result.mfa, auth_methods: result.auth_methods };
         }
-        this.checkSignaling();
-    };
-
-    checkSignaling() {
-        this.bus.trigger("identityChecked");
+        this.identityCheckCleanUp();
         this.channel.postMessage("identityChecked");
     }
 
-    async run() {
-        if (!this.started) {
-            this.dialogService.add(CheckIdentityDialog);
+    async checkIdentity() {
+        if (!this.identityCheckPromise) {
+            const { promise, resolve } = Promise.withResolvers();
+            this.identityCheckPromise = promise;
+            const closeDialog = this.dialogService.add(CheckIdentityDialog);
+
+            this.identityCheckCleanUp = () => {
+                closeDialog();
+                resolve();
+                this.identityCheckPromise = null;
+                this.identityCheckCleanUp = null;
+            };
         }
-        // Empty the current view, to not let any confidential data displayed
-        // not even inspecting the dom or through the console using Javascript.
-        this.env.services.action && this.env.bus.trigger("ACTION_MANAGER:UPDATE", {});
-        await new Promise((resolve) => {
-            this.bus.addEventListener("identityChecked", resolve, { once: true });
-        });
+        return this.identityCheckPromise;
+    }
+
+    async run() {
+        // If there is an action service (i.e. backend), empty the current view
+        // so confidential data is no longer displayed, even when inspecting the
+        // DOM or using the browser console. In frontend-only contexts, there is
+        // no action service.
+        if (this.env.services.action) {
+            this.env.bus.trigger("ACTION_MANAGER:UPDATE", {});
+        }
+
+        await this.checkIdentity();
+
         // Reload the view to display back the data that was displayed before.
         if (this.env.services.action) {
             if (this.env.services.action.currentController) {
@@ -286,7 +305,7 @@ export class CheckIdentity {
                 this.env.services.action.doAction("reload");
             }
         }
-    };
+    }
 
     verifyUserErrorHandler(env, error, originalError) {
         if (originalError instanceof RPCError) {
@@ -295,7 +314,7 @@ export class CheckIdentity {
                 return true;
             }
         }
-    };
+    }
 }
 
 /**
@@ -321,3 +340,26 @@ export const checkIdentityService = {
 
 registry.category("public_components").add("web.check_identity_form", CheckIdentityForm);
 registry.category("services").add("check_identity", checkIdentityService);
+registry.category("services").addEventListener("CLEANUP", function restorOriginalRpc() {
+    if (rpc._originalRpc) {
+        rpc._rpc = rpc._originalRpc;
+        delete rpc._originalRpc;
+    }
+});
+
+// Patch RPC to replay it automatically when the identity is verified
+const originalRpc = rpc._rpc;
+rpc._originalRpc = originalRpc;
+rpc._rpc = function (...args) {
+    const originalPromise = originalRpc(...args);
+    const promise = originalPromise.catch((error) => {
+        if (error.data?.name === "odoo.http.session.CheckIdentityException") {
+            return odoo.__WOWL_DEBUG__.root.env.services["check_identity"]
+                .checkIdentity()
+                .then(() => originalRpc(...args));
+        }
+        throw error;
+    });
+    promise.abort = originalPromise.abort;
+    return promise;
+};

@@ -47,15 +47,14 @@
                         </div>
                     </span>
 
-                    <h2>How many leads would you like?</h2>
-
                     <group name="requests">
-                        <group>
-                            <div  class="o_row py-3">
-                                <field name="lead_number" readonly="state == 'done'" nolabel="1" class="oe_inline pe-2 o_input_3ch o_field_highlight"/>
-                                <field name="search_type" widget="selection" readonly="state == 'done'" nolabel="1" class="oe_inline o_field_highlight"/>
-                            </div>
-                        </group>
+                        <div class="oe_title">
+                            <label for="lead_number" string="I want to order" colspan="2" invisible="state != 'draft'"/>
+                            <h1>
+                                <field name="lead_number" readonly="state == 'done'" nolabel="1" class="text-center oe_inline pe-2 o_input_3ch o_field_highlight"/>
+                                <span class="fw-normal o_stat_text o_translate_inline">Leads</span>
+                            </h1>
+                        </div>
                     </group>
 
                     <group>
@@ -67,16 +66,6 @@
                                 readonly="state == 'done'"
                                 domain="[('id', 'in', available_state_ids)]" options="{'no_create': True, 'no_open': True}"/>
                             <field name="industry_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" class="o_industry o_field_highlight" required="1" readonly="state == 'done'"/>
-                            <field name="filter_on_size" readonly="state == 'done'"/>
-                            <label for="company_size_min" invisible="not filter_on_size"/>
-                            <div invisible="not filter_on_size">
-                                From
-                                <field name="company_size_min" class="oe_inline px-2 o_input_5ch" readonly="state == 'done'" required="filter_on_size"/>
-                                to
-                                <field name="company_size_max" class="oe_inline px-2 o_input_7ch" readonly="state == 'done'" required="filter_on_size"/>
-                                employees
-                            </div>
-
                         </group>
                         <group name="lead_info">
                             <field name="lead_type" groups="crm.group_use_lead" invisible="context.get('is_modal')" readonly="state == 'done'"/>
@@ -85,21 +74,31 @@
                             <field name="tag_ids" string="Default Tags" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}" readonly="state == 'done'"/>
                         </group>
                     </group>
+                    <group>
+                        <div class="align-items-center d-flex flex-wrap">
+                            <div class="text-nowrap">
+                                <label for="filter_on_size" class="mb-1 text-nowrap fw-bold"/>
+                                <field name="filter_on_size" widget="boolean_toggle" nolabel="1" class="p-1 mx-3" readonly="state == 'done'"/>
+                            </div>
 
-                    <group name="contacts" invisible="search_type != 'people'">
-                        <div colspan="2" class="py-3">
-                             <field name="contact_number" readonly="state == 'done'" required="search_type == 'people'" nolabel="1" class="oe_inline pe-2 col-md-1 o_input_2ch"/>
-                             <span class="col-md-6">Extra contacts per Company</span>
+                            <div class="d-flex flex-wrap">
+                                <div class="text-nowrap" invisible="not filter_on_size">
+                                    <label for="company_size_min" class="fw-normal" string="From"/>
+                                    <field name="company_size_min" nolabel="1" class="mx-2 o_input_5ch" readonly="state == 'done'" required="filter_on_size"/>
+                                </div>
+
+                                <div class="text-nowrap" invisible="not filter_on_size">
+                                    <label for="company_size_max" class="fw-normal" string="to"/>
+                                    <field name="company_size_max" nolabel="1" class="mx-2 o_input_7ch" readonly="state == 'done'" required="filter_on_size"/>
+                                </div>
+
+                                <div class="text-nowrap" invisible="not filter_on_size">
+                                    <span class="o_form_label fw-normal">employees</span>
+                                </div>
+                            </div>
                         </div>
                     </group>
-                    <group invisible="search_type != 'people'">
-                        <group>
-                            <field name="contact_filter_type" widget="radio" readonly="state == 'done'" options="{'horizontal': true}"/>
-                            <field name="preferred_role_id" options="{'no_create_edit': True, 'no_quick_create': True, 'no_open': True}" invisible="contact_filter_type != 'role'" readonly="state == 'done'" required="search_type == 'people' and contact_filter_type == 'role'"/>
-                            <field name="role_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True, 'no_quick_create': True}" invisible="not preferred_role_id or contact_filter_type != 'role'" readonly="state == 'done'"/>
-                            <field name="seniority_id" options="{'no_create_edit': True, 'no_quick_create': True, 'no_open': True}" invisible="contact_filter_type != 'seniority'" readonly="state == 'done'" required="search_type == 'people' and contact_filter_type == 'seniority'"/>
-                        </group>
-                    </group>
+
                     <footer>
                         <button string="Generate Leads" name="action_submit" type="object" default_focus="1" class="btn-primary" invisible="not context.get('is_modal')" data-hotkey="q"/>
                         <button class="btn-secondary" special="cancel" data-hotkey="x" invisible="not context.get('is_modal')"/>
@@ -116,7 +115,6 @@
             <list>
                 <field name="name" decoration-bf="1"/>
                 <field name="lead_number" string="Number of Leads"/>
-                <field name="search_type"/>
                 <field name="country_ids" widget="many2many_tags"/>
                 <field name="industry_ids" widget="many2many_tags"/>
                 <field name="team_id" optional="hide"/>

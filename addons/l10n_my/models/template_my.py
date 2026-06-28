@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('my')
     def _get_my_template_data(self):
         return {
-            'property_account_receivable_id': 'l10n_my_1240',
-            'property_account_payable_id': 'l10n_my_2211',
             'code_digits': '6',
         }
 
@@ -29,6 +27,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_sale_tax_id': 'l10n_my_tax_sale_10',
                 'income_account_id': 'l10n_my_41',
                 'expense_account_id': 'l10n_my_51',
+                'receivable_account_id': 'l10n_my_1240',
+                'payable_account_id': 'l10n_my_2211',
                 'tax_calculation_rounding_method': 'round_per_line',
                 'account_stock_valuation_id': 'l10n_my_1270',
             },

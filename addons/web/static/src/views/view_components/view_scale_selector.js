@@ -19,4 +19,7 @@ export class ViewScaleSelector extends Component {
     get scales() {
         return Object.entries(this.props.scales).map(([key, value]) => ({ key, ...value }));
     }
+    get isWeekendButtonDisabled() {
+        return this.props.currentScale === "day";
+    }
 }

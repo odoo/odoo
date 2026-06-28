@@ -1,13 +1,11 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, computed, onPatched, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
-import { CharField } from "@web/views/fields/char/char_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { ListTextField, TextField } from "@web/views/fields/text/text_field";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
-import { ListRenderer } from "@web/views/list/list_renderer";
+import { ListRenderer, listRendererProps } from "@web/views/list/list_renderer";
 
 const SHOW_ALL_ITEMS_TOOLTIP = _t("Some lines can be on the next page, display them to unlock actions on section.");
 const DISABLED_MOVE_DOWN_ITEM_TOOLTIP = _t("Some lines of the next section can be on the next page, display them to unlock the action.");
@@ -17,11 +15,6 @@ const DISPLAY_TYPES = {
     SECTION: "line_section",
     SUBSECTION: "line_subsection",
 };
-
-export function getParentSectionRecord(list, record) {
-    const { sectionIndex } = getRecordsUntilSection(list, record, false, record.data.display_type !== DISPLAY_TYPES.SUBSECTION);
-    return list.records[sectionIndex];
-}
 
 function getPreviousSectionRecords(list, record) {
     const { sectionRecords } = getRecordsUntilSection(list, record, false);
@@ -76,13 +69,13 @@ function getRecordsUntilSection(list, record, asc, subSection) {
 export class SectionAndNoteListRenderer extends ListRenderer {
     static template = "account.SectionAndNoteListRenderer";
     static recordRowTemplate = "account.SectionAndNoteListRenderer.RecordRow";
-    static props = [
-        ...super.props,
-        "aggregatedFields",
-        "subsections",
-        "hidePrices",
-        "hideComposition",
-    ];
+    props = props({
+        ...listRendererProps,
+        aggregatedFields: t.any(),
+        subsections: t.any(),
+        hidePrices: t.any(),
+        hideComposition: t.any(),
+    });
 
     /**
      * The purpose of this extension is to allow sections and notes in the one2many list
@@ -96,11 +89,14 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         this.priceColumns = [...this.props.aggregatedFields, "price_unit"];
         // invisible fields to force copy when duplicating a section
         this.copyFields = ["display_type", "collapse_composition", "collapse_prices"];
-        useLayoutEffect(
-            (editedRecord) => this.focusToName(editedRecord),
-            () => [this.editedRecord]
-        );
+        onPatched(() => {
+            this.focusToName(this.editedRecord());
+        });
     }
+
+    parentSectionMap = computed(() =>
+        this.buildParentSectionMap(this.props.list.records)
+    );
 
     get disabledMoveDownItemTooltip() {
         return DISABLED_MOVE_DOWN_ITEM_TOOLTIP;
@@ -130,6 +126,26 @@ export class SectionAndNoteListRenderer extends ListRenderer {
 
     get sectionColumns() {
         return [...this.props.aggregatedFields, 'section_state'];
+    }
+
+    buildParentSectionMap(records) {
+        const parentSectionMap = new Map();
+        let lastSection = null;
+        let lastSubSection = null;
+
+        for (const record of records) {
+            if (record.data.display_type === DISPLAY_TYPES.SECTION) {
+                lastSection = record;
+                lastSubSection = null;
+                parentSectionMap.set(record, null);
+            } else if (record.data.display_type === DISPLAY_TYPES.SUBSECTION) {
+                lastSubSection = record;
+                parentSectionMap.set(record, lastSection);
+            } else {
+                parentSectionMap.set(record, lastSubSection ?? lastSection);
+            }
+        }
+        return parentSectionMap;
     }
 
     async toggleCollapse(record, fieldName) {
@@ -209,7 +225,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     async deleteSection(record) {
-        if (this.editedRecord && this.editedRecord !== record) {
+        if (this.editedRecord() && this.editedRecord() !== record) {
             const left = await this.props.list.leaveEditMode({ canAbandon: false });
             if (!left) {
                 return;
@@ -334,7 +350,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
      * @returns {boolean}
      */
     shouldCollapse(record, fieldName, checkSection = false) {
-        const parentSection = getParentSectionRecord(this.props.list, record);
+        const parentSection = this.parentSectionMap().get(record);
 
         // --- For sections ---
         if (this.isSection(record) && checkSection) {
@@ -358,7 +374,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
 
         // --- For regular lines ---
         if (this.isSubSection(parentSection)) {
-            const grandParent = getParentSectionRecord(this.props.list, parentSection);
+            const grandParent = this.parentSectionMap().get(parentSection);
             return parentSection.data[fieldName] || grandParent?.data[fieldName];
         }
 
@@ -486,7 +502,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         await super.sortDrop(dataRowId, dataGroupId, options);
 
         const record = this.props.list.records.find(r => r.id === dataRowId);
-        const parentSection = getParentSectionRecord(this.props.list, record);
+        const parentSection = this.parentSectionMap().get(record);
         const commands = [];
 
         if (this.resetOnResequence(record, parentSection)) {
@@ -544,15 +560,13 @@ export class SectionAndNoteText extends Component {
     static props = { ...standardFieldProps };
 
     get componentToUse() {
-        return this.props.record.data.display_type === "line_section" ? CharField : TextField;
+        return TextField;
     }
 }
 
 export class ListSectionAndNoteText extends SectionAndNoteText {
     get componentToUse() {
-        return this.props.record.data.display_type !== "line_section"
-            ? ListTextField
-            : super.componentToUse;
+        return ListTextField;
     }
 }
 

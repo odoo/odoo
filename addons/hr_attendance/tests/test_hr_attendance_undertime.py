@@ -173,7 +173,7 @@ class TestHrAttendanceUndertime(HttpCase):
         self.assertFalse(overtime, 'No overtime record should exist for that employee')
 
         checkin_am.write({'check_out': datetime(2021, 1, 4, 12, 0)})
-        overtime = checkin_am._linked_overtimes()
+        overtime = checkin_am.linked_overtime_ids
         self.assertTrue(overtime, 'An overtime record should be created')
         self.assertEqual(overtime.duration, -4)
 
@@ -181,7 +181,7 @@ class TestHrAttendanceUndertime(HttpCase):
             'employee_id': self.employee.id,
             'check_in': datetime(2021, 1, 4, 13, 0),
         })
-        overtime = checkin_pm._linked_overtimes()
+        overtime = checkin_pm.linked_overtime_ids
         self.assertFalse(overtime.exists(), 'Overtime duration should not exist when an attendance has not been checked out.')
         checkin_pm.write({'check_out': datetime(2021, 1, 4, 18, 0)})
         overtime = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 4))])
@@ -216,7 +216,7 @@ class TestHrAttendanceUndertime(HttpCase):
         })
 
         self.assertEqual(attendance.overtime_hours, -3.0)
-        overtime = attendance._linked_overtimes()
+        overtime = attendance.linked_overtime_ids
         self.assertEqual(len(overtime), 1, 'Only one overtime record should be created')
         self.assertEqual(overtime.duration, -3.0)
 
@@ -249,7 +249,7 @@ class TestHrAttendanceUndertime(HttpCase):
         })
 
         self.assertEqual(attendance.overtime_hours, -3.0)
-        overtime = attendance._linked_overtimes()
+        overtime = attendance.linked_overtime_ids
         self.assertEqual(len(overtime), 1, 'Only one overtime record should be created')
         self.assertEqual(overtime.duration, -3.0)
 
@@ -498,10 +498,10 @@ class TestHrAttendanceUndertime(HttpCase):
             'check_out': datetime(2023, 1, 4, 18, 0),
         })
         # The hours will now be recomputed
-        # But they should have the 'to_approve' status
-        self.assertEqual(attendance.linked_overtime_ids.status, 'to_approve', "Record should be flagged for approval")
+        # But they should have the 'approved' status since it is on a different day and there is only daily rules
+        self.assertEqual(attendance.linked_overtime_ids.status, 'approved')
         self.assertAlmostEqual(attendance.linked_overtime_ids.duration, -1.0, 2, "Math should be reset to -1.0")
-        self.assertEqual(attendance.validated_overtime_hours, 0.0, "Validated hours should be 0 until approved")
+        self.assertEqual(attendance.validated_overtime_hours, -1.5, "Validated hours should be -1.5 as it was already approved")
 
     def test_overtime_employee_tolerance(self):
         self.ruleset.rule_ids[0].employee_tolerance = 10 / 60
@@ -535,7 +535,7 @@ class TestHrAttendanceUndertime(HttpCase):
             'check_out': datetime(2021, 1, 9, 3, 0),  # Saturday 0-3 AM overtime (3 hours)
         })
 
-        overtime = attendance._linked_overtimes()
+        overtime = attendance.linked_overtime_ids
         self.assertEqual(len(overtime), 2, 'There should be 2 overtime records for that attendance.')
         self.assertEqual(sum(overtime.mapped('duration')), 11, 'There should be a total of 11 hours of overtime for that attendance.')
 
@@ -543,7 +543,7 @@ class TestHrAttendanceUndertime(HttpCase):
             'check_out': datetime(2021, 1, 8, 20, 0),
         })
 
-        overtime = attendance._linked_overtimes()
+        overtime = attendance.linked_overtime_ids
         self.assertEqual(len(overtime), 1, 'There should have only 1 overtime for that attendance after modification.')
         self.assertEqual(sum(overtime.mapped('duration')), 4, 'There should be a total of 4 hours of overtime for that attendance after modification.')
 

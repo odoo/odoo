@@ -9,7 +9,7 @@ import {
     resize,
     unload,
 } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, mockSendBeacon, mockTouch, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, mockSendBeacon, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickModalButton,
     clickSave,
@@ -30,8 +30,6 @@ import {
     patchWithCleanup,
     serverState,
     stepAllNetworkCalls,
-    swipeLeft,
-    swipeRight,
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -176,12 +174,15 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     );
 
     await editSearch("Hello there");
+    await runAllTimers(); // for skipping the debounce delay
     expect(".o_searchview input").toHaveValue("Hello there", {
         message: "input value should be updated",
     });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 
     await editSearch("b");
+    expect(".highlighter").toHaveCount(0, { message: "search is debounce" });
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryFirst(".highlighter")).toHaveText("B", { message: "b word highlighted" });
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Bar", "Big BAZ"],
@@ -193,46 +194,23 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
-    await editSearch("Big");
-    expect(queryAllTexts(".o_settings_container  .o_setting_box .o_form_label")).toEqual(
-        ["Big BAZ"],
-        { message: "Only 'Big Baz' is shown" }
-    );
-    expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual(["Title of group Bar"], {
-        message: "The title of group Bar is also selected",
-    });
-    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
-
-    await editSearch("Manage Us");
-    expect(queryFirst(".highlighter")).toHaveText("Manage Us", {
-        message: "Manage Us word highlighted",
-    });
-    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(["Bar"], {
-        message: "Foo is not shown",
-    });
-    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
-
     await editSearch("group Bar");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Bar", "Big BAZ"],
         { message: "When searching a title, all group is shown" }
     );
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
-    await editSearch("different");
-    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
-        ["Personalize setting"],
-        { message: "When searching a title, all group is shown" }
-    );
-    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
-
     await editSearch("bx");
+    await runAllTimers(); // for skipping the debounce delay
     await animationFrame();
     expect(".o_nocontent_help").toBeVisible({ message: "record not found message shown" });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 
-    await editSearch("Fo");
-    expect(queryFirst(".highlighter")).toHaveText("Fo", { message: "Fo word highlighted" });
+    await editSearch("Foo");
+    await runAllTimers(); // for skipping the debounce delay
+    expect(queryFirst(".highlighter")).toHaveText("Foo", { message: "Foo word highlighted" });
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Foo", "Personalize setting"],
         { message: "only settings in group Foo is shown" }
@@ -240,6 +218,7 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("Hide");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual([], {
         message: "Hide settings should not be shown",
     });
@@ -247,6 +226,49 @@ test("change setting on nav bar click in base settings on desktop", async () => 
         message: "Hide settings should not be shown",
     });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
+});
+
+test("Search setting on multiple apps", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <block title="Title of group Foo">
+                        <setting>
+                            <field name="foo"/>
+                        </setting>
+                    </block>
+                </app>
+                <app string="DRM" name="drm">
+                    <block title="Title of group Foo">
+                        <setting>
+                            <field name="foo"/>
+                        </setting>
+                    </block>
+                </app>
+                <app string="ERM" name="erm">
+                    <block title="Title of group Foo">
+                        <setting>
+                            <field name="foo"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>
+        `,
+    });
+
+    await editSearch("Fo");
+    expect(".o_searchview input").toHaveValue("Fo", {
+        message: "input value should be updated",
+    });
+    await runAllTimers(); // for skipping the debounce delay
+    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual([
+        "Foo",
+        "Foo",
+        "Foo",
+    ]);
 });
 
 test.tags("mobile");
@@ -291,7 +313,7 @@ test("change setting on nav bar click in base settings on mobile", async () => {
         `,
     });
 
-    expect(".selected").toHaveAttribute("data-key", "crm", { message: "crm setting selected" });
+    expect(queryAllTexts(".settings_tab")).toEqual(["CRM"], { message: "crm setting selected" });
     expect(".settings .app_settings_block").toBeVisible({
         message: "res.config.settings settings show",
     });
@@ -326,12 +348,14 @@ test("change setting on nav bar click in base settings on mobile", async () => {
     );
 
     await editSearch("Hello there");
+    await runAllTimers(); // for skipping the debounce delay
     expect(".o_searchview input").toHaveValue("Hello there", {
         message: "input value should be updated",
     });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 
     await editSearch("b");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryFirst(".highlighter")).toHaveText("B", { message: "b word highlighted" });
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Bar", "Big BAZ"],
@@ -343,46 +367,23 @@ test("change setting on nav bar click in base settings on mobile", async () => {
     });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
-    await editSearch("Big");
-    expect(queryAllTexts(".o_settings_container  .o_setting_box .o_form_label")).toEqual(
-        ["Big BAZ"],
-        { message: "Only 'Big Baz' is shown" }
-    );
-    expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual(["Title of group Bar"], {
-        message: "The title of group Bar is also selected",
-    });
-    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
-
-    await editSearch("Manage Us");
-    expect(queryFirst(".highlighter")).toHaveText("Manage Us", {
-        message: "Manage Us word highlighted",
-    });
-    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(["Bar"], {
-        message: "Foo is not shown",
-    });
-    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
-
     await editSearch("group Bar");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Bar", "Big BAZ"],
         { message: "When searching a title, all group is shown" }
     );
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
-    await editSearch("different");
-    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
-        ["Personalize setting"],
-        { message: "When searching a title, all group is shown" }
-    );
-    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
-
     await editSearch("bx");
+    await runAllTimers(); // for skipping the debounce delay
     await animationFrame();
     expect(".o_nocontent_help").toBeVisible({ message: "record not found message shown" });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 
-    await editSearch("Fo");
-    expect(queryFirst(".highlighter")).toHaveText("Fo", { message: "Fo word highlighted" });
+    await editSearch("Foo");
+    await runAllTimers(); // for skipping the debounce delay
+    expect(queryFirst(".highlighter")).toHaveText("Foo", { message: "Foo word highlighted" });
     expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(
         ["Foo", "Personalize setting"],
         { message: "only settings in group Foo is shown" }
@@ -390,6 +391,7 @@ test("change setting on nav bar click in base settings on mobile", async () => {
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
 
     await editSearch("Hide");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryAllTexts(".settings h2:not(.d-none)")).toEqual([], {
         message: "Hide settings should not be shown",
     });
@@ -493,7 +495,8 @@ test("edit header field", async () => {
     expect("[name='foo_text'] input").toHaveValue("Hello again");
 });
 
-test("Warn when unset required field", async () => {
+test.tags("desktop");
+test("Warn when unset required field desktop", async () => {
     ResConfigSettings._fields.woof = fields.Char();
     await mountView({
         type: "form",
@@ -530,6 +533,48 @@ test("Warn when unset required field", async () => {
     expect(".settings_tab a:eq(0)").not.toHaveClass("o_page_invalid");
 });
 
+test.tags("mobile");
+test("Warn when unset required field mobile", async () => {
+    ResConfigSettings._fields.woof = fields.Char();
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form js_class="base_settings">
+                <app string="Some App" name="someApp">
+                    <setting id="setting_id">
+                        <field name="woof" required="1"/>
+                    </setting>
+                </app>
+                <app string="Some Other App" name="someOtherApp">
+                    <setting id="setting_id"/>
+                </app>
+            </form>
+        `,
+    });
+    expect(".o_field_char[name=woof]").toHaveCount(1);
+
+    // Change page
+    await contains(".settings_tab .o-dropdown").click();
+    await animationFrame(); // await the dropdown to be opened
+    expect(".o-dropdown-item").toHaveCount(2);
+    expect(".o-dropdown-item:eq(0)").not.toHaveClass("text-danger");
+    await contains(".o-dropdown-item:eq(1)").click();
+    await animationFrame();
+
+    // Save
+    await clickSave();
+    await animationFrame();
+    await contains(".settings_tab .o-dropdown").click();
+    await animationFrame(); // await the dropdown to be opened
+    expect(".o-dropdown-item:eq(0)").toHaveClass("text-danger");
+
+    // Discard
+    await click(".o_form_button_cancel");
+    await animationFrame();
+    expect(".o-dropdown-item:eq(0)").not.toHaveClass("text-danger");
+});
+
 test("don't show noContentHelper if no search is done", async () => {
     await mountView({
         type: "form",
@@ -544,36 +589,6 @@ test("don't show noContentHelper if no search is done", async () => {
             </form>`,
     });
     expect(".o_nocontent_help").not.toHaveCount();
-});
-
-test("unhighlight section not matching anymore", async () => {
-    await mountView({
-        type: "form",
-        resModel: "res.config.settings",
-        arch: /* xml */ `
-            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                <app string="CRM" name="crm">
-                    <block title="Baz">
-                        <field name="baz" class="o_light_label" widget="radio"/>
-                    </block>
-                </app>
-            </form>
-        `,
-    });
-    expect(".selected").toHaveAttribute("data-key", "crm", { message: "crm setting selected" });
-    expect(".settings .app_settings_block").toBeVisible({ message: "project settings show" });
-
-    await editSearch("trea");
-    await runAllTimers();
-    await animationFrame();
-    expect(".highlighter").toHaveCount(2, { message: "should have 2 options highlighted" });
-    expect(queryAllTexts(":has(>.highlighter)")).toEqual(["treads", "treats"]);
-
-    await editSearch("tread");
-    await runAllTimers();
-    await animationFrame();
-    expect(".highlighter").toHaveCount(1, { message: "should have only one highlighted" });
-    expect(queryAllTexts(":has(>.highlighter)")).toEqual(["treads"]);
 });
 
 test("hide / show setting tips properly", async () => {
@@ -1478,7 +1493,8 @@ test("clicking on a button with noSaveDialog will not show discard warning", asy
     expect(".o_list_view").toHaveCount(1, { message: "should be open list view" });
 });
 
-test("settings view does not display o_not_app settings", async () => {
+test.tags("desktop");
+test("settings view does not display o_not_app settings - Desktop", async () => {
     await mountView({
         type: "form",
         resModel: "res.config.settings",
@@ -1506,6 +1522,37 @@ test("settings view does not display o_not_app settings", async () => {
     expect(queryAllTexts(".app_name")).toEqual(["CRM"]);
 
     expect(queryAllTexts(".settings .o_form_label")).toEqual(["Bar"]);
+});
+
+test.tags("mobile");
+test("settings view does not display o_not_app settings - mobile", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <block title="CRM">
+                        <setting help="this is bar">
+                            <field name="bar"/>
+                        </setting>
+                    </block>
+                </app>
+                <app notApp="1" string="Other App" name="otherapp">
+                    <h2>Other app tab</h2>
+                    <block>
+                        <setting help="this is bar">
+                            <field name="bar"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>
+        `,
+    });
+
+    await contains(".settings_tab .o-dropdown").click();
+    await animationFrame(); // await the dropdown to be opened
+    expect(queryAllTexts(".o-dropdown-item")).toEqual(["CRM"]);
 });
 
 test("settings view shows a message if there are changes", async () => {
@@ -1615,7 +1662,7 @@ test("execute action from settings view with several actions in the breadcrumb",
 
     let def;
     onRpc("web_save", async () => {
-        await def; // slow down reload of settings view
+        await def.promise; // slow down reload of settings view
     });
 
     await mountWithCleanup(WebClient);
@@ -1626,7 +1673,7 @@ test("execute action from settings view with several actions in the breadcrumb",
     await getService("action").doAction(2);
     expect(".o_breadcrumb").toHaveText("First action\nSettings");
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     await click('button[name="3"]');
     await animationFrame();
     expect(".o_breadcrumb").toHaveText("First action\nSettings");
@@ -1778,99 +1825,6 @@ test("Discard button clean the settings view", async () => {
     expect.verifySteps(["onchange"]);
 });
 
-test("Settings Radio widget: show and search", async () => {
-    ResConfigSettings._fields.product_id = fields.Many2one({
-        relation: "product",
-    });
-    class Product extends models.Model {
-        name = fields.Char();
-
-        _records = [
-            {
-                id: 37,
-                name: "xphone",
-            },
-            {
-                id: 41,
-                name: "xpad",
-            },
-        ];
-    }
-    defineModels([Product]);
-
-    await mountView({
-        type: "form",
-        resModel: "res.config.settings",
-        arch: /* xml */ `
-            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                <app string="CRM" name="crm">
-                    <block>
-                        <setting>
-                            <label for="product_id"/>
-                            <div class="content-group">
-                                <div class="mt16">
-                                    <field name="product_id" class="o_light_label" widget="radio"/>
-                                </div>
-                            </div>
-                        </setting>
-                    </block>
-                </app>
-            </form>
-        `,
-    });
-
-    expect(queryAllTexts(".o_radio_item:has(label)")).toEqual(["xphone", "xpad"]);
-    await editSearch("xp");
-    await runAllTimers();
-    expect(".highlighter").toHaveCount(2, { message: "should have 2 options highlighted" });
-    expect(queryAllTexts(":has(>.highlighter)")).toEqual(["xphone", "xpad"]);
-
-    await editSearch("xph");
-    await runAllTimers();
-    expect(".highlighter").toHaveCount(1, { message: "should have only one highlighted" });
-    expect(queryAllTexts(":has(>.highlighter)")).toEqual(["xphone"]);
-});
-
-test("Settings with createLabelFromField", async () => {
-    ResConfigSettings._fields.baz = fields.Selection({
-        string: "Zab",
-        selection: [
-            [1, "treads"],
-            [2, "treats"],
-        ],
-    });
-
-    await mountView({
-        type: "form",
-        resModel: "res.config.settings",
-        arch: /* xml */ `
-            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                <app string="CRM" name="crm">
-                    <block title="Title of group Bar">
-                        <setting>
-                            <label for="baz"/>
-                            <field name="baz"/>
-                        </setting>
-                    </block>
-                </app>
-            </form>
-        `,
-    });
-
-    await editSearch("__comp__.props.record");
-    await runAllTimers();
-    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual([]);
-
-    await editSearch("baz");
-    await runAllTimers();
-    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual([]);
-
-    await editSearch("zab");
-    await runAllTimers();
-    expect(".highlighter").toHaveText("Zab", { message: "Zab word highlighted" });
-    expect(queryAllTexts(".o_settings_container .o_setting_box .o_form_label")).toEqual(["Zab"]);
-});
-
 test("standalone field labels with string inside a settings page", async () => {
     let compiled = undefined;
     patchWithCleanup(SettingsFormCompiler.prototype, {
@@ -1907,69 +1861,6 @@ test("standalone field labels with string inside a settings page", async () => {
                 </SettingsApp>
             </SettingsPage>`;
     expect(compiled.firstChild).toHaveInnerHTML(expectedCompiled);
-});
-
-test("field and artificial label inside a settings page", async () => {
-    ResConfigSettings._fields.count = fields.Integer();
-    await mountView({
-        type: "form",
-        resModel: "res.config.settings",
-        arch: /* xml */ `
-            <form js_class="base_settings">
-                <app string="CRM" name="crm">
-                    <setting id="setting_id">
-                        <field name="count" />
-                        <span class="o_form_label">
-                            items
-                        </span>
-                    </setting>
-                </app>
-            </form>
-        `,
-    });
-    expect(".o_field_integer[name=count]").toHaveCount(1);
-    expect("span.o_form_label").toHaveInnerHTML(
-        `<span searchabletext="\n                            items\n                        ">\n                            items\n                        </span>`
-    );
-});
-
-test("highlight Element with inner html/fields", async () => {
-    let compiled = undefined;
-    patchWithCleanup(SettingsFormCompiler.prototype, {
-        compile() {
-            const _compiled = super.compile(...arguments);
-            compiled = _compiled;
-            return _compiled;
-        },
-    });
-
-    await mountView({
-        type: "form",
-        resModel: "res.config.settings",
-        arch: /* xml */ `
-            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                <app string="CRM" name="crm">
-                    <block title="Title of group Bar">
-                        <setting>
-                            <field name="bar"/>
-                            <div class="text-muted">this is Baz value: <field name="baz" readonly="1"/> and this is the after text</div>
-                        </setting>
-                    </block>
-                </app>
-            </form>
-        `,
-    });
-
-    expect(".o_setting_right_pane .text-muted").toHaveText(
-        "this is Baz value: treads and this is the after text"
-    );
-    const expectedCompiled = /* xml */ `
-            <HighlightText originalText="\`this is Baz value: \`"/>
-            <Field id="'baz_0'" name="'baz'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['baz_0']" readonly="__comp__.props.readonly"/>
-            <HighlightText originalText="\` and this is the after text\`"/>`;
-    expect(queryFirst("SearchableSetting div.text-muted", { root: compiled })).toHaveInnerHTML(
-        expectedCompiled
-    );
 });
 
 test.tags("desktop", "focus required");
@@ -2151,7 +2042,7 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
 
     // Testing the download button in the field
     // We must avoid the browser to download the file effectively
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     const onDownloadClick = (ev) => {
         if (ev.target.tagName === "A" && "download" in ev.target.attributes) {
             ev.preventDefault();
@@ -2160,7 +2051,7 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
     };
     after(on(document, "click", onDownloadClick));
     await click(".fa-download");
-    await def;
+    await def.promise;
 
     await click(".o_field_binary .o_clear_file_button");
     await animationFrame();
@@ -2174,7 +2065,8 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
     });
 });
 
-test("Open settings from url, with app anchor", async () => {
+test.tags("desktop");
+test("Open settings from url, with app anchor - Desktop", async () => {
     defineActions([
         {
             id: 1,
@@ -2210,6 +2102,44 @@ test("Open settings from url, with app anchor", async () => {
     expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual(["Foo"]);
 });
 
+test.tags("mobile");
+test("Open settings from url, with app anchor - mobile", async () => {
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            path: "settings",
+            res_model: "res.config.settings",
+            views: [[false, "form"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+        <form string="Settings" js_class="base_settings">
+            <app string="Not CRM" name="not_crm">
+                <block>
+                    <setting help="this is bar">
+                        <field name="bar"/>
+                    </setting>
+                </block>
+            </app>
+            <app string="CRM" name="crm">
+                <block>
+                    <setting help="this is foo">
+                        <field name="foo"/>
+                    </setting>
+                </block>
+            </app>
+        </form>
+    `;
+
+    redirect("/odoo/settings#crm");
+    await mountWithCleanup(WebClient);
+    await animationFrame();
+    expect(queryAllTexts(".settings_tab")).toEqual(["CRM"], { message: "crm setting selected" });
+    expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual(["Foo"]);
+});
+
+test.tags("desktop");
 test("Open settings from url, with setting id anchor", async () => {
     defineActions([
         {
@@ -2250,76 +2180,43 @@ test("Open settings from url, with setting id anchor", async () => {
 });
 
 test.tags("mobile");
-test("swipe settings in mobile", async () => {
-    mockTouch(true);
-    await mountView({
-        type: "form",
-        resModel: "project",
-        arch: `
-            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                <app string="CRM" name="crm">
-                    <block>
-                        <setting help="this is bar">
-                            <field name="bar"/>
-                        </setting>
-                    </block>
-                </app>
-                <app string="Project" name="project">
-                    <block>
-                        <setting help="this is foo">
-                            <field name="foo"/>
-                        </setting>
-                    </block>
-                </app>
-            </form>`,
-    });
+test("Open settings from url, with setting id anchor - mobile", async () => {
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            path: "settings",
+            res_model: "res.config.settings",
+            views: [[false, "form"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+        <form string="Settings" js_class="base_settings">
+            <app string="Not CRM" name="not_crm">
+                <block>
+                    <setting help="this is bar">
+                        <field name="bar"/>
+                    </setting>
+                </block>
+            </app>
+            <app string="CRM" name="crm">
+                <block>
+                    <setting help="this is foo" id="setting_id">
+                        <field name="foo"/>
+                    </setting>
+                </block>
+            </app>
+        </form>
+    `;
 
-    await swipeLeft(".settings");
+    redirect("/odoo/settings#setting_id");
+    await mountWebClient();
+    expect(queryAllTexts(".settings_tab")).toEqual(["CRM"], { message: "crm setting selected" });
+    expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual(["Foo"]);
+    expect(".o_setting_highlight").toHaveCount(1);
+    expect(queryAllTexts(".settings .o_setting_highlight .o_form_label")).toEqual(["Foo"]);
     await runAllTimers();
-    await animationFrame();
-    expect(".selected").toHaveAttribute("data-key", "project", {
-        message: "current setting should be project",
-    });
-
-    await swipeRight(".settings");
-    await runAllTimers();
-    await animationFrame();
-    expect(".selected").toHaveAttribute("data-key", "crm", {
-        message: "current setting should be crm",
-    });
-});
-
-test.tags("desktop");
-test("swipe settings on larger screen sizes has no effect", async () => {
-    mockTouch(true);
-    await mountView({
-        type: "form",
-        resModel: "project",
-        arch: `
-            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
-                <app string="CRM" name="crm">
-                    <block>
-                        <setting help="this is bar">
-                            <field name="bar"/>
-                        </setting>
-                    </block>
-                </app>
-                <app string="Project" name="project">
-                    <block>
-                        <setting help="this is foo">
-                            <field name="foo"/>
-                        </setting>
-                    </block>
-                </app>
-            </form>`,
-    });
-
-    await swipeLeft(".settings");
-    await runAllTimers();
-    await animationFrame();
-    expect(".selected").toHaveAttribute("data-key", "crm", {
-        message: "current setting should be crm",
-    });
+    expect(".o_setting_highlight").toHaveCount(0);
 });
 
 test("Don't cache settings data", async () => {
@@ -2377,9 +2274,7 @@ test("settings search is accent-insensitive", async () => {
                             <field name="bar"/>
                             <button name="buttonName" icon="oi-arrow-right" type="action" string="Manage Users" class="btn-link"/>
                         </setting>
-                        <setting>
-                            <label string="Big BÄZ" for="baz"/>
-                            <div class="text-muted">this is a báz</div>
+                        <setting string="Big BÄZ" help="this is a báz">
                             <field name="baz"/>
                             <label>label with content</label>
                         </setting>
@@ -2389,8 +2284,10 @@ test("settings search is accent-insensitive", async () => {
         `,
     });
     await editSearch("bar");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryAllTexts(".highlighter")).toEqual(["Bâr", "Bar", "bàr"]);
     await editSearch("àz");
+    await runAllTimers(); // for skipping the debounce delay
     expect(queryAllTexts(".highlighter")).toEqual(["ÄZ", "áz"]);
 });
 
@@ -2413,7 +2310,9 @@ test("settings search does not highlight escaped characters when highlighting th
     });
 
     await editSearch("a");
-    expect(queryAllTexts(".highlighter")).toEqual(["a", "a", "a", "a", "a"]);
+    await runAllTimers(); // for skipping the debounce delay
+    expect(queryAllTexts(".highlighter")).toEqual(["a", "a", "a"]);
     await editSearch("&");
-    expect(queryAllTexts(".highlighter")).toEqual(["&", "&", "&"]);
+    await runAllTimers(); // for skipping the debounce delay
+    expect(queryAllTexts(".highlighter")).toEqual(["&", "&"]);
 });

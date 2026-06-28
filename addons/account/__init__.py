@@ -7,7 +7,7 @@ def _set_fiscal_country(env):
     on existing records by the ORM when installing the module, so doing that by hand
     ensures existing records will get a value for it if needed.
     """
-    env['res.company'].search([]).compute_account_tax_fiscal_country()
+    env['res.company'].search([])._compute_account_tax_fiscal_country()
 
 
 def _account_post_init(env):

@@ -3,7 +3,6 @@
 import re
 
 from difflib import SequenceMatcher, unified_diff
-from bs4 import BeautifulSoup
 
 
 # ------------------------------------------------------------
@@ -27,7 +26,7 @@ PATCH_OPERATIONS = dict(
     replace=PATCH_OPERATION_REPLACE,
 )
 
-HTML_ATTRIBUTES_TO_REMOVE = ["data-last-history-steps"]
+HTML_ATTRIBUTES_TO_REMOVE = ["data-last-history-commits"]
 HTML_TAG_ISOLATION_REGEX = r"^([^>]*>)(.*)$"
 ADDITION_COMPARISON_REGEX = r"\1<added>\2</added>"
 ADDITION_1ST_REPLACE_COMPARISON_REGEX = r"added>\2</added>"
@@ -80,7 +79,7 @@ def apply_patch(initial_content, patch):
         # We need to remove PATCH_OPERATION_CONTENT char from lines_index_range.
         lines_index_range = lines_index_range.split(PATCH_OPERATION_CONTENT)[0]
         indexes = lines_index_range.split(",")
-        start_index = int(indexes[0])
+        start_index = int(indexes[0]) if len(indexes) else 0
         end_index = int(indexes[1]) if len(indexes) > 1 else start_index
 
         # We need to insert lines from last to the first
@@ -134,7 +133,7 @@ def generate_comparison(new_content, old_content):
         lines_index_range = metadata_split[1] if len(metadata_split) > 1 else ""
         lines_index_range = lines_index_range.split(PATCH_OPERATION_CONTENT)[0]
         indexes = lines_index_range.split(",")
-        start_index = int(indexes[0])
+        start_index = int(indexes[0]) if len(indexes) else 0
         end_index = int(indexes[1]) if len(indexes) > 1 else start_index
 
         # If the operation is a replace, we need to flag the changes that
@@ -324,6 +323,7 @@ def _indent(content):
     :return: string: the indented content
     """
     content = "<document>" + _remove_html_attribute(content, HTML_ATTRIBUTES_TO_REMOVE) + "</document>"
+    from bs4 import BeautifulSoup  # noqa: PLC0415
     soup = BeautifulSoup(content, 'html.parser')
     return soup.prettify()
 

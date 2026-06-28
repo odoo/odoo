@@ -2,7 +2,7 @@
 
 from werkzeug import urls
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
 from odoo.tools.urls import urljoin
@@ -30,7 +30,10 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "xendit":
             return super()._get_specific_processing_values(processing_values)
 
-        return {"rounded_amount": self._get_rounded_amount()}
+        return {
+            "rounded_amount": self._get_rounded_amount(),
+            "access_token": payment_utils.generate_access_token(self.reference),
+        }
 
     def _get_specific_rendering_values(self, processing_values):
         """Override of `payment` to return Xendit-specific rendering values.
@@ -138,9 +141,11 @@ class PaymentTransaction(models.Model):
                 "POST", "credit_card_charges", json=payload
             )
         except ValidationError as error:
-            self._set_error(str(error))
+            self.with_context(
+                payment_safe_write=True  # API request failed; safe to replay
+            )._set_error(str(error))
         else:
-            self._process("xendit", charge_payment_data)
+            self._record(charge_payment_data)
 
     def _get_rounded_amount(self):
         decimal_places = const.CURRENCY_DECIMALS.get(
@@ -155,26 +160,14 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("external_id")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of payment to extract the amount and currency from the payment data."""
-        if self.provider_code != "xendit":
-            return super()._extract_amount_data(payment_data)
-
-        amount = payment_data.get("amount") or payment_data.get("authorized_amount")
-        currency_code = payment_data.get("currency")
-        return {
-            "amount": float(amount),
-            "currency_code": currency_code,
-            "precision_digits": const.CURRENCY_DECIMALS.get(currency_code),
-        }
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "xendit":
             return super()._apply_updates(payment_data)
 
         # Update the provider reference.
-        self.provider_reference = payment_data.get("id")
+        if provider_reference := payment_data.get("id"):
+            self.provider_reference = provider_reference
 
         # Update payment method.
         # If it's one of FPX Methods, assign the payment method as FPX automatically
@@ -182,7 +175,7 @@ class PaymentTransaction(models.Model):
         if payment_method_code in const.FPX_METHODS:
             payment_method_code = "fpx"
 
-        payment_method = self.env["payment.method"]._get_from_code(
+        payment_method = self.provider_id._get_pm_from_code(
             payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id
@@ -198,12 +191,25 @@ class PaymentTransaction(models.Model):
         elif payment_status in const.PAYMENT_STATUS_MAPPING["error"]:
             failure_reason = payment_data.get("failure_reason")
             self._set_error(
-                _(
+                self.env._(
                     "An error occurred during the processing of your payment (%s). Please try"
                     " again.",
                     failure_reason,
                 )
             )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of payment to extract the amount and currency from the payment data."""
+        if self.provider_code != "xendit":
+            return super()._extract_amount_data(payment_data)
+
+        amount = payment_data.get("amount") or payment_data.get("authorized_amount")
+        currency_code = payment_data.get("currency")
+        return {
+            "amount": float(amount),
+            "currency_code": currency_code,
+            "precision_digits": const.CURRENCY_DECIMALS.get(currency_code),
+        }
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on Xendit data.

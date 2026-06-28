@@ -16,17 +16,29 @@ class DigestDigest(models.Model):
 
     def _compute_kpi_livechat_rating_value(self):
         self._raise_if_not_member_of('im_livechat.im_livechat_group_manager')
-        channels = self.env['discuss.channel'].search([('channel_type', '=', 'livechat')])
         start, end, __ = self._get_kpi_compute_parameters()
         domain = [
-            ('create_date', '>=', start),
-            ('create_date', '<', end),
+            ("channel_type", "=", "livechat"),
+            ("livechat_rating", "!=", False),
+            ("create_date", ">=", start),
+            ("create_date", "<", end),
         ]
-        ratings = channels.rating_get_grades(domain)
-        self.kpi_livechat_rating_value = (
-            ratings['great'] * 100 / sum(ratings.values())
-            if sum(ratings.values()) else 0
+        count_by_rating = dict(
+            self.env["discuss.channel"]._read_group(
+                domain,
+                ["livechat_rating"],
+                ["__count"],
+            )
         )
+        total_count = sum(count_by_rating.values())
+        if not total_count:
+            self.kpi_livechat_rating_value = 0
+            return
+        rating_to_percentage = self.env["discuss.channel"]._rating_selection_to_percentage
+        total_sum = sum(
+            rating_to_percentage(rating) * count for rating, count in count_by_rating.items()
+        )
+        self.kpi_livechat_rating_value = total_sum / total_count
 
     def _compute_kpi_livechat_conversations_value(self):
         self._raise_if_not_member_of('im_livechat.im_livechat_group_manager')

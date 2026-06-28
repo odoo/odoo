@@ -15,13 +15,6 @@ class CustomerPortalExtended(CustomerPortal):
         })
         return rendering_values
 
-    def _get_mandatory_address_fields(self, country_sudo):
-        mandatory_fields = super()._get_mandatory_address_fields(country_sudo)
-        if country_sudo._enforce_city_choice():
-            mandatory_fields.add('city_id')
-            mandatory_fields.remove('city')
-        return mandatory_fields
-
     def _parse_form_data(self, form_data):
         address_values, extra_form_data = super()._parse_form_data(form_data)
         country_id = address_values.get('country_id')

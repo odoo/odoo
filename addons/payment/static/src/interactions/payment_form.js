@@ -227,9 +227,17 @@ export class PaymentForm extends Interaction {
         const paymentOptionId = this._getPaymentOptionId(radio);
         const paymentMethodCode = this._getPaymentMethodCode(radio);
         const flow = this._getPaymentFlow(radio);
-        await this.waitFor(this._prepareInlineForm(
-            providerId, providerCode, paymentOptionId, paymentMethodCode, flow
-        ));
+        try {
+            await this.waitFor(this._prepareInlineForm(
+                providerId, providerCode, paymentOptionId, paymentMethodCode, flow
+            ));
+        } catch {
+            this._displayErrorDialog(
+                _t("Payment method unavailable"),
+                _t("Please choose another payment method."),
+            );
+            return;
+        }
 
         // Adapt the payment button's label based on the selected payment method.
         this._adaptSubmitButtonLabel(paymentMethodCode);
@@ -414,10 +422,7 @@ export class PaymentForm extends Interaction {
                 this.paymentContext['transactionRoute'], this._prepareTransactionRouteParams()
             ));
             if (processingValues.state === 'error') {
-                this._displayErrorDialog(
-                    _t("Payment processing failed"), processingValues.state_message
-                );
-                this._enableButton(); // The button has been disabled before initiating the flow.
+                this._handlePaymentProcessingError(processingValues);
                 return;
             }
             if (flow === 'redirect') {
@@ -472,6 +477,18 @@ export class PaymentForm extends Interaction {
             });
         }
         return transactionRouteParams;
+    }
+
+    /**
+     * Handle the processing values if the transaction creation failed by displaying a dialog and
+     * re-enabling the payment button.
+     *
+     * @param {Object} processingValues - The response values returned at the transaction creation
+     * @param {string} processingValues.state_message - The error message to display to the user
+     */
+    _handlePaymentProcessingError(processingValues) {
+        this._displayErrorDialog(_t("Payment processing failed"), processingValues.state_message);
+        this._enableButton(); // The button has been disabled before initiating the flow.
     }
 
     /**
@@ -641,14 +658,14 @@ export class PaymentForm extends Interaction {
     }
 
     /**
-     * Determine and return the state of the provider of the selected payment option.
+     * Determine and return whether the provider of the selected payment option is in live mode.
      *
      * @private
      * @param {HTMLElement} radio - The radio button linked to the payment option.
-     * @return {string} The state of the provider of the selected payment option.
+     * @return {string} Whether the provider of the selected payment option is in live mode.
      */
-    _getProviderState(radio) {
-        return radio.dataset['providerState'];
+    _getProviderIsLive(radio) {
+        return radio.dataset['providerIsLive'];
     }
 
 }

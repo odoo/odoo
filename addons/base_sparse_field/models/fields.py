@@ -3,6 +3,7 @@
 import json
 
 from odoo import fields
+from odoo.tools.json import json_default
 
 
 def monkey_patch(cls):
@@ -86,7 +87,7 @@ class Serialized(fields.Field):
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: json.dumps(value) or None
-        return json.dumps(value) if isinstance(value, dict) else (value or None)
+        return json.dumps(value, default=json_default) if isinstance(value, dict) else (value or None)
 
     def convert_to_record(self, value, record):
         return json.loads(value or "{}")

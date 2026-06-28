@@ -13,7 +13,7 @@ class ReportStockQuantity(models.Model):
         'product.product': ['product_tmpl_id'],
         'product.template': ['type'],
         'stock.location': ['parent_path'],
-        'stock.move': ['company_id', 'date', 'location_dest_id', 'location_final_id', 'location_id', 'product_id', 'product_qty', 'state'],
+        'stock.move': ['company_id', 'date', 'location_dest_id', 'forecasted_location_id', 'location_id', 'product_id', 'product_qty', 'state'],
         'stock.quant': ['company_id', 'location_id', 'product_id', 'quantity'],
         'stock.warehouse': ['view_location_id'],
     }
@@ -58,15 +58,19 @@ WITH
             OR sl.parent_path LIKE concat(w.view_location_id, '/%%')
     ),
     existing_sm (id, product_id, tmpl_id, product_qty, quantity, date, state, company_id, whs_id, whd_id) AS (
-        SELECT m.id, m.product_id, pt.id, m.product_qty, m.quantity, m.date, m.state, m.company_id, source.w_id, dest.w_id
+        SELECT m.id, m.product_id, pt.id, m.product_qty,
+            m.quantity * move_uom.factor / pt_uom.factor AS quantity,
+            m.date, m.state, m.company_id, source.w_id, dest.w_id
         FROM stock_move m
         LEFT JOIN warehouse_cte source ON source.sl_id = m.location_id
         LEFT JOIN warehouse_cte dest ON dest.sl_id = CASE
-            WHEN m.state != 'done' THEN COALESCE(m.location_final_id, m.location_dest_id)
+            WHEN m.state != 'done' THEN COALESCE(m.forecasted_location_id, m.location_dest_id)
             ELSE m.location_dest_id
         END
         LEFT JOIN product_product pp on pp.id=m.product_id
         LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
+        LEFT JOIN uom_uom pt_uom ON pt_uom.id = pt.uom_id
+        LEFT JOIN uom_uom move_uom ON move_uom.id = m.uom_id
         WHERE pt.is_storable = true AND
             source.w_id IS DISTINCT FROM dest.w_id AND
             m.product_qty != 0 AND

@@ -19,6 +19,8 @@ The actual till still requires one user but an unlimited number of employees can
         'views/pos_order_report_view.xml',
         'views/single_employee_sales_report.xml',
         'views/res_config_settings_views.xml',
+        'views/point_of_sale_dashboard.xml',
+        'views/pos_session_view.xml',
         'wizard/pos_daily_sales_reports.xml',
     ],
     'auto_install': True,
@@ -35,4 +37,5 @@ The actual till still requires one user but an unlimited number of employees can
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'uninstall_hook': 'uninstall_hook',
 }

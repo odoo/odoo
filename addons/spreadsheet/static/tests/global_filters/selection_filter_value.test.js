@@ -1,19 +1,10 @@
-import { describe, expect, test, getFixture } from "@odoo/hoot";
-import { makeMockEnv, contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
-import { getTemplate } from "@web/core/templates";
 import { SelectionFilterValue } from "@spreadsheet/global_filters/components/selection_filter_value/selection_filter_value";
+import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineSpreadsheetModels();
-
-/**
- *
- * @param {{ model: Model, filter: object}} props
- */
-async function mountSelectionFilterValue(env, props) {
-    await mountWithCleanup(SelectionFilterValue, { props, env, getTemplate });
-}
 
 /**
  * res.currency.position is a selection field with 2 options:
@@ -22,14 +13,15 @@ async function mountSelectionFilterValue(env, props) {
  */
 
 test("basic selection filter value", async function () {
-    const env = await makeMockEnv();
-    await mountSelectionFilterValue(env, {
-        value: [],
-        resModel: "res.currency",
-        field: "position",
-        onValueChanged: (values) => {
-            expect(values).toEqual(["after"]);
-            expect.step("onValueChanged");
+    await mountWithCleanup(SelectionFilterValue, {
+        props: {
+            value: [],
+            resModel: "res.currency",
+            field: "position",
+            onValueChanged: (values) => {
+                expect(values).toEqual(["after"]);
+                expect.step("onValueChanged");
+            },
         },
     });
     expect.verifySteps([]);
@@ -43,12 +35,13 @@ test("basic selection filter value", async function () {
 });
 
 test("Autocomplete only provide values that are not selected", async function () {
-    const env = await makeMockEnv();
-    await mountSelectionFilterValue(env, {
-        value: ["after"],
-        resModel: "res.currency",
-        field: "position",
-        onValueChanged: () => {},
+    await mountWithCleanup(SelectionFilterValue, {
+        props: {
+            value: ["after"],
+            resModel: "res.currency",
+            field: "position",
+            onValueChanged: () => {},
+        },
     });
     await contains("input").click();
     const options = getFixture().querySelectorAll(".o-autocomplete a");
@@ -57,14 +50,15 @@ test("Autocomplete only provide values that are not selected", async function ()
 });
 
 test("Can click on delete", async function () {
-    const env = await makeMockEnv();
-    await mountSelectionFilterValue(env, {
-        value: ["after", "before"],
-        resModel: "res.currency",
-        field: "position",
-        onValueChanged: (values) => {
-            expect(values).toEqual(["before"]);
-            expect.step("onValueChanged");
+    await mountWithCleanup(SelectionFilterValue, {
+        props: {
+            value: ["after", "before"],
+            resModel: "res.currency",
+            field: "position",
+            onValueChanged: (values) => {
+                expect(values).toEqual(["before"]);
+                expect.step("onValueChanged");
+            },
         },
     });
     expect.verifySteps([]);

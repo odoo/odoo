@@ -15,9 +15,9 @@ class TestRecordCache(TransactionCaseWithUserDemo):
     def test_cache(self):
         """ Check the record cache object. """
         env = self.env
-        Model = self.env['res.partner']
+        Model = env['test_orm.partner']
         name = Model._fields['name']
-        ref = Model._fields['ref']
+        email = Model._fields['email']
 
         def check1(record, field, value):
             # value is None means no value in cache
@@ -26,10 +26,10 @@ class TestRecordCache(TransactionCaseWithUserDemo):
             if value is not None:
                 self.assertEqual(field_cache.get(record.id), value)
 
-        def check(record, name_val, ref_val):
-            """ check the values of fields 'name' and 'ref' on record. """
+        def check(record, name_val, email_val):
+            """ check the values of fields 'name' and 'email' on record. """
             check1(record, name, name_val)
-            check1(record, ref, ref_val)
+            check1(record, email, email_val)
 
         foo1, bar1 = Model.browse([1, 2])
         foo2, bar2 = Model.with_user(self.user_demo).browse([1, 2])
@@ -47,44 +47,44 @@ class TestRecordCache(TransactionCaseWithUserDemo):
 
         # set values in one environment only
         name._update_cache(foo1, 'FOO1_NAME')
-        ref._update_cache(foo1, 'FOO1_REF')
+        email._update_cache(foo1, 'FOO1_EMAIL')
         name._update_cache(bar1, 'BAR1_NAME')
-        ref._update_cache(bar1, 'BAR1_REF')
-        check(foo1, 'FOO1_NAME', 'FOO1_REF')
-        check(foo2, 'FOO1_NAME', 'FOO1_REF')
-        check(bar1, 'BAR1_NAME', 'BAR1_REF')
-        check(bar2, 'BAR1_NAME', 'BAR1_REF')
+        email._update_cache(bar1, 'BAR1_EMAIL')
+        check(foo1, 'FOO1_NAME', 'FOO1_EMAIL')
+        check(foo2, 'FOO1_NAME', 'FOO1_EMAIL')
+        check(bar1, 'BAR1_NAME', 'BAR1_EMAIL')
+        check(bar2, 'BAR1_NAME', 'BAR1_EMAIL')
         self.assertCountEqual(name._cache_missing_ids(foo1 + bar1), [])
         self.assertCountEqual(name._cache_missing_ids(foo2 + bar2), [])
 
         # set values in both environments
         name._update_cache(foo2, 'FOO2_NAME')
-        ref._update_cache(foo2, 'FOO2_REF')
+        email._update_cache(foo2, 'FOO2_EMAIL')
         name._update_cache(bar2, 'BAR2_NAME')
-        ref._update_cache(bar2, 'BAR2_REF')
-        check(foo1, 'FOO2_NAME', 'FOO2_REF')
-        check(foo2, 'FOO2_NAME', 'FOO2_REF')
-        check(bar1, 'BAR2_NAME', 'BAR2_REF')
-        check(bar2, 'BAR2_NAME', 'BAR2_REF')
+        email._update_cache(bar2, 'BAR2_EMAIL')
+        check(foo1, 'FOO2_NAME', 'FOO2_EMAIL')
+        check(foo2, 'FOO2_NAME', 'FOO2_EMAIL')
+        check(bar1, 'BAR2_NAME', 'BAR2_EMAIL')
+        check(bar2, 'BAR2_NAME', 'BAR2_EMAIL')
         self.assertCountEqual(name._cache_missing_ids(foo1 + bar1), [])
         self.assertCountEqual(name._cache_missing_ids(foo2 + bar2), [])
 
         # remove value in one environment
         del name._get_cache(foo1.env)[foo1.id]
-        check(foo1, None, 'FOO2_REF')
-        check(foo2, None, 'FOO2_REF')
-        check(bar1, 'BAR2_NAME', 'BAR2_REF')
-        check(bar2, 'BAR2_NAME', 'BAR2_REF')
+        check(foo1, None, 'FOO2_EMAIL')
+        check(foo2, None, 'FOO2_EMAIL')
+        check(bar1, 'BAR2_NAME', 'BAR2_EMAIL')
+        check(bar2, 'BAR2_NAME', 'BAR2_EMAIL')
         self.assertCountEqual(name._cache_missing_ids(foo1 + bar1), [1])
         self.assertCountEqual(name._cache_missing_ids(foo2 + bar2), [1])
 
         # partial invalidation
         name._invalidate_cache(env)
-        ref._invalidate_cache(env, foo1.ids)
+        email._invalidate_cache(env, foo1.ids)
         check(foo1, None, None)
         check(foo2, None, None)
-        check(bar1, None, 'BAR2_REF')
-        check(bar2, None, 'BAR2_REF')
+        check(bar1, None, 'BAR2_EMAIL')
+        check(bar2, None, 'BAR2_EMAIL')
 
         # total invalidation
         env.transaction.invalidate_field_data()
@@ -100,18 +100,16 @@ class TestRecordCache(TransactionCaseWithUserDemo):
     def test_memory(self):
         """ Check memory consumption of the cache. """
         NB_RECORDS = 100000
-        MAX_MEMORY = 100
+        MAX_MEMORY = 32  # The exact MAX_MEMORY value is 29.
 
-        model = self.env['res.partner']
-        records = [model.new() for index in range(NB_RECORDS)]
+        model = self.env['test_orm.partner']
+        records = [model.new() for _ in range(NB_RECORDS)]
 
         process = psutil.Process(os.getpid())
         rss0 = process.memory_info().rss
 
-        char_names = [
-            'name', 'display_name', 'email', 'website', 'phone',
-            'street', 'street2', 'city', 'zip', 'vat', 'ref',
-        ]
+        char_names = ['name', 'display_name', 'email', 'website', 'vat']
+
         for name in char_names:
             field = model._fields[name]
             for record in records:

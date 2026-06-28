@@ -5,6 +5,8 @@
     'depends': ['l10n_ar', 'stock_account'],
     'data': [
         # data
+        'data/ir_actions_server_data.xml',
+        'data/ir_cron_data.xml',
         'data/mail_template_data.xml',
         # Views
         'views/stock_picking_type_views.xml',

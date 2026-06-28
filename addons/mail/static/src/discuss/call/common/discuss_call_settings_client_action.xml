@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.DiscussCallSettingsClientAction">
-        <div class="o-mail-DiscussCallSettingsClientAction mx-3 my-2">
-            <CallSettings withActionPanel="false"/>
+        <div class="o-mail-DiscussCallSettingsClientAction">
+            <CallSettings initialTab="this.props.action.context.initialTab" withActionPanel="false"/>
         </div>
     </t>
 </templates>

@@ -18,8 +18,8 @@ import { toRawValue } from "@mail/utils/common/local_storage";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { describe, expect, test, waitFor } from "@odoo/hoot";
-import { animationFrame, drag, press, queryFirst } from "@odoo/hoot-dom";
-import { Deferred, mockDate } from "@odoo/hoot-mock";
+import { animationFrame, drag, press, queryFirst, rightClick } from "@odoo/hoot-dom";
+import { mockDate } from "@odoo/hoot-mock";
 import { Command, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
@@ -203,7 +203,7 @@ test("Category fold is crosstab synced", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     setDiscussSidebarCategoryFoldState("channels", true);
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(undefined, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
     await contains(
@@ -245,7 +245,7 @@ test("default thread rendering", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    pyEnv["discuss.channel"].create([
+    const channelIds = pyEnv["discuss.channel"].create([
         { name: "General", channel_type: "channel" },
         { name: "MyGroup", channel_type: "group" },
         {
@@ -256,19 +256,23 @@ test("default thread rendering", async () => {
             channel_type: "chat",
         },
     ]);
+    pyEnv["mail.message"].create({
+        body: "Bookmarked message",
+        bookmarked_partner_ids: [serverState.partnerId],
+        model: "discuss.channel",
+        res_id: channelIds[0],
+    });
     await start();
     await openDiscuss("mail.box_inbox");
     await contains("button:text('Inbox')");
-    await contains("button:text('Bookmarks')");
+    await contains("button:has(:text('Bookmarks'))");
     await contains("button:text('History')");
     await contains(".o-mail-DiscussSidebar-item:has(:text('General'))");
     await contains("button.o-active:text('Inbox')");
     await contains(".o-mail-Thread:text('You're all caught up!')");
-    await click("button:text('Bookmarks')");
-    await contains("button.o-active:text('Bookmarks')");
-    await contains(
-        ".o-mail-Thread:text('Bookmark important messages Save messages here to easily keep track of them.')"
-    );
+    await click("button:has(:text('Bookmarks'))");
+    await contains("button.o-active:has(:text('Bookmarks'))");
+    await contains(".o-mail-Message", { text: "Bookmarked message" });
     await click("button:text('History')");
     await contains("button.o-active:text('History')");
     await contains(
@@ -359,10 +363,8 @@ test("sidebar: open channel and leave it", async () => {
 test.tags("focus required");
 test("chat - channel should count unread message", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({
-        name: "Demo",
-        im_status: "offline",
-    });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId, im_status: "offline" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ message_unread_counter: 1, partner_id: serverState.partnerId }),
@@ -784,10 +786,8 @@ test("chat - states: the active category item should be visible even if the cate
 
 test("chat - avatar: should have correct avatar", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({
-        name: "Demo",
-        im_status: "offline",
-    });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId, im_status: "offline" });
     const partner = pyEnv["res.partner"].search_read([["id", "=", partnerId]])[0];
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
@@ -856,7 +856,6 @@ test("Can unpin chat channel", async () => {
     await click("[title='Chat Actions']");
     await click(".o-dropdown-item:text('Hide Until New Message')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')", { count: 0 });
-    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))");
 });
 
 test("No 'Hide Until New Message' on conversation with self in call", async () => {
@@ -922,20 +921,21 @@ test("opening a hidden channel re-pins it", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-DiscussSidebarChannel:has(:text('InitialChannel'))");
-    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')", { count: 0 });
-    await click("input[placeholder='Search conversations']");
-    await insertText("input[placeholder='Search a conversation']", "Mitchell Admin");
+    await click("input[placeholder='Search']");
+    await insertText(
+        ".o_command_palette_search input[placeholder='Search conversations']",
+        "Mitchell Admin"
+    );
     await click(".o-mail-DiscussCommand-nameContainer:text('Mitchell Admin')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')");
-    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))");
-    await click("input[placeholder='Search conversations']");
-    await insertText("input[placeholder='Search a conversation']", "General");
+    await click("input[placeholder='Search']");
+    await insertText(
+        ".o_command_palette_search input[placeholder='Search conversations']",
+        "General"
+    );
     await click(".o-mail-DiscussCommand-nameContainer:text('General')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')");
-    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))", {
-        count: 0,
-    });
 });
 
 test("Can leave channel", async () => {
@@ -1047,7 +1047,7 @@ test("Update channel data via bus notification", async () => {
         create_uid: serverState.userId,
     });
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await contains(`${env1.selector} .o-mail-DiscussSidebarChannel-itemName:text('Sales')`);
@@ -1058,11 +1058,11 @@ test("Update channel data via bus notification", async () => {
 
 test("sidebar: show loading on initial opening", async () => {
     // This could load a lot of data (all pinned conversations)
-    const def = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     listenStoreFetch("channels_as_member", {
         async onRpc() {
             expect.step("before channels_as_member");
-            await def;
+            await promise;
         },
     });
     const pyEnv = await startServer();
@@ -1074,7 +1074,7 @@ test("sidebar: show loading on initial opening", async () => {
     );
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')", { count: 0 });
     await expect.waitForSteps(["before channels_as_member"]);
-    def.resolve();
+    resolve();
     await waitStoreFetch("channels_as_member");
     await contains(
         ".o-mail-DiscussSidebarCategory:contains('Channels') .fa.fa-circle-o-notch.fa-spin",
@@ -1138,7 +1138,7 @@ test("Sidebar compact is crosstab synced", async () => {
         name: "General",
     });
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await contains(`${env1.selector} .o-mail-DiscussSidebar:not(.o-compact)`);
@@ -1173,7 +1173,9 @@ test("Redirect to the thread containing the bookmark and highlight the message",
     await start();
     await openDiscuss("mail.box_inbox");
     await click(".o-mail-DiscussSidebarChannel-itemName:text('General')");
-    await click(".o-mail-Message [title='Bookmark']");
+    await contains(".o-mail-Message");
+    await rightClick(".o-mail-Message");
+    await click(".o-dropdown-item:contains('Bookmark')");
     await click("button:has(:text('Bookmarks'))", { contains: [".badge"] });
     await click(".o-mail-Message-header a:text('#General')");
     await contains(".o-mail-DiscussSidebarChannel.o-active:text('General')");

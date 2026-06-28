@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { loadBundle } from "@web/core/assets";
+import { convertCSSColorToRgba } from "@web/core/utils/colors";
 
 export class Chart extends Interaction {
     static selector = ".s_chart";
@@ -11,6 +12,7 @@ export class Chart extends Interaction {
         this.chart = null;
         this.noAnimation = false;
         this.style = window.getComputedStyle(document.documentElement);
+        this.chartBlockStyle = window.getComputedStyle(this.el);
     }
 
     async willStart() {
@@ -23,7 +25,12 @@ export class Chart extends Interaction {
             el.backgroundColor = this.convertToCSS(el.backgroundColor);
             el.borderColor = this.convertToCSS(el.borderColor);
             el.borderWidth = this.el.dataset.borderWidth;
+            el.color = this.convertToCSS(el.color);
         });
+
+        const colorRgba = convertCSSColorToRgba(this.chartBlockStyle.color);
+        const textColor = `rgba(${colorRgba.red}, ${colorRgba.green}, ${colorRgba.blue}, ${colorRgba.opacity})`;
+        const cartesianColor = `rgba(${colorRgba.red}, ${colorRgba.green}, ${colorRgba.blue}, 0.25)`;
 
         const radialAxis = {
             beginAtZero: true,
@@ -35,11 +42,23 @@ export class Chart extends Interaction {
             beginAtZero: true,
             min: parseInt(this.el.dataset.ticksMin),
             max: parseInt(this.el.dataset.ticksMax),
+            grid: {
+                color: cartesianColor,
+            },
+            ticks: {
+                color: textColor,
+            },
         };
 
         const categoryAxis = {
             type: "category",
             stacked: this.el.dataset.stacked === "true",
+            grid: {
+                color: cartesianColor,
+            },
+            ticks: {
+                color: textColor,
+            },
         };
 
         const chartData = {
@@ -50,6 +69,9 @@ export class Chart extends Interaction {
                     legend: {
                         display: this.el.dataset.legendPosition !== "none",
                         position: this.el.dataset.legendPosition,
+                        labels: {
+                            color: textColor,
+                        },
                     },
                     tooltip: {
                         enabled: this.el.dataset.tooltipDisplay === "true",
@@ -58,6 +80,7 @@ export class Chart extends Interaction {
                     title: {
                         display: !!this.el.dataset.title,
                         text: this.el.dataset.title,
+                        color: textColor,
                     },
                 },
                 scales: {

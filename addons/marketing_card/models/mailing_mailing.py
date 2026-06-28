@@ -1,11 +1,22 @@
+import re
+
 from odoo import _, api, exceptions, fields, models
 from odoo.fields import Domain
+
+from odoo.addons.marketing_card.wizards.mail_compose_message import CARD_IMAGE_URL, CARD_PREVIEW_URL
 
 
 class MailingMailing(models.Model):
     _inherit = 'mailing.mailing'
 
-    mailing_model_id = fields.Many2one(compute="_compute_mailing_model_id", store=True, readonly=False)
+    @api.model
+    def _lang_get(self):
+        return self.env['res.lang'].get_installed()
+
+    card_lang = fields.Selection(
+        string='Card Language', help="Language in which the cards will be rendered",
+        selection=_lang_get, compute='_compute_card_lang', store=True, readonly=False,
+    )
     card_requires_sync_count = fields.Integer(compute="_compute_card_requires_sync_count")
     card_campaign_id = fields.Many2one('card.campaign', index='btree_not_null')
 
@@ -19,12 +30,30 @@ class MailingMailing(models.Model):
                         model_name=self.env['ir.model']._get(mailing.card_campaign_id.res_model).display_name
                     ))
 
+    @api.constrains('card_campaign_id', 'card_lang')
+    def _check_mailing_lang(self):
+        missing_lang_mailings = self.filtered(lambda mailing: mailing.card_campaign_id and not mailing.card_lang)
+        if missing_lang_mailings:
+            raise exceptions.ValidationError(_(
+                'Missing target language for card campaign mailings:\n\t- %(mailing_names)s',
+                mailing_names=_('\n\t- ').join(mailing.display_name for mailing in missing_lang_mailings),
+            ))
+
     @api.depends('card_campaign_id')
     def _compute_mailing_model_id(self):
+        super()._compute_mailing_model_id()
         for mailing in self.filtered('card_campaign_id'):
             mailing.mailing_model_id = self.env['ir.model']._get_id(mailing.card_campaign_id.res_model)
 
     @api.depends('card_campaign_id')
+    def _compute_card_lang(self):
+        for mailing in self:
+            if not mailing.card_campaign_id:
+                mailing.card_lang = False
+            elif not mailing.card_lang:
+                mailing.card_lang = self.env.lang
+
+    @api.depends('card_campaign_id', 'card_lang')
     def _compute_card_requires_sync_count(self):
         """Check if there's any missing or outdated card."""
         self.card_requires_sync_count = 0
@@ -35,9 +64,17 @@ class MailingMailing(models.Model):
             out_of_date_count = self.env['card.card'].search_count([
                 ('campaign_id', '=', mailing.card_campaign_id.id),
                 ('res_id', 'in', recipients.ids),
-                ('requires_sync', '=', False)
+                ('lang', '=', mailing.card_lang or 'en_US'),
+                ('requires_sync', '=', False),
             ])
             mailing.card_requires_sync_count = len(recipients) - out_of_date_count
+
+    @api.onchange('card_campaign_id')
+    def _onchange_card_campaign_id(self):
+        """Update body_arch preview image url to match the selected campaign."""
+        for mailing in self.filtered('body_arch').filtered('card_campaign_id'):
+            mailing.body_arch = re.sub(CARD_IMAGE_URL, f'src="/web/image/card.campaign/{mailing.card_campaign_id.id}/image_preview"', mailing.body_arch)
+            mailing.body_arch = re.sub(CARD_PREVIEW_URL, f'href="/cards/{mailing.card_campaign_id.id}/preview"', mailing.body_arch)
 
     def action_put_in_queue(self):
         """Detect mismatches before scheduling."""
@@ -61,7 +98,7 @@ class MailingMailing(models.Model):
     def action_update_cards(self):
         """Update the cards in batches, commiting after each batch."""
         for campaign in self.filtered(lambda mailing: mailing.state == 'draft').card_campaign_id:
-            campaign._update_cards(self._parse_mailing_domain(), auto_commit=True)
+            campaign._update_cards(self._parse_mailing_domain(), self.card_lang, auto_commit=True)
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'mailing.mailing',
@@ -74,6 +111,9 @@ class MailingMailing(models.Model):
         """Domain with an additional condition that the card must exist for the records."""
         domain = Domain(super()._get_recipients_domain())
         if self.card_campaign_id:
-            res_ids = self.env['card.card'].search_fetch([('campaign_id', '=', self.card_campaign_id.id)], ['res_id']).mapped('res_id')
+            res_ids = self.env['card.card'].search_fetch([
+                ('campaign_id', '=', self.card_campaign_id.id),
+                ('lang', '=', self.card_lang or 'en_US')
+            ], ['res_id']).mapped('res_id')
             domain &= Domain('id', 'in', res_ids)
         return domain

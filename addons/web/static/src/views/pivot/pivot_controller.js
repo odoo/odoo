@@ -43,7 +43,7 @@ export class PivotController extends Component {
                     setScrollFromState();
                 }
             },
-            () => [this.model.isReady]
+            () => [this.model.isReady()]
         );
         this.searchBarToggler = useSearchBarToggler();
     }

@@ -4,15 +4,14 @@ import {
     makeDialogMockEnv,
     mountWithCleanup,
     patchWithCleanup,
+    onRpc,
 } from "@web/../tests/web_test_helpers";
 import { animationFrame, tick, waitFor, waitUntil } from "@odoo/hoot-dom";
-import { Deferred } from "@odoo/hoot-mock";
-import { expect, destroy } from "@odoo/hoot";
+import { expect } from "@odoo/hoot";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { patch } from "@web/core/utils/patch";
 import { onMounted } from "@odoo/owl";
 import { user } from "@web/core/user";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const { DateTime } = luxon;
 
@@ -28,12 +27,15 @@ export const setupPosEnv = async () => {
     };
 
     await makeDialogMockEnv();
+    onRpc("/css", () => "");
     const store = getService("pos");
     store.setCashier(store.user);
     patchWithCleanup(user, {
         // Needed for the allowProductCreation method
+        // and for product reorder in the frontend
         checkAccessRight: (model, operation) =>
-            operation === "create" && model === "product.product",
+            (operation === "create" && model === "product.product") ||
+            (operation === "write" && model === "product.template"),
     });
     return store;
 };
@@ -68,6 +70,18 @@ export const getFilledOrder = async (store, data = {}) => {
     return order;
 };
 
+export const makeOrder = (store, overrides = {}) => {
+    const order = store.createNewOrder();
+    Object.assign(order, {
+        state: "draft",
+        date_order: DateTime.now(),
+        pos_reference: "Order 00001",
+        getScreenData: () => ({ name: "ProductScreen" }),
+        ...overrides,
+    });
+    return order;
+};
+
 export async function waitUntilOrdersSynced(store, options) {
     await waitUntil(() => !store.syncingOrders.size, options);
     await tick();
@@ -77,13 +91,13 @@ export const mountPosDialog = async (component, props) => {
     patchDialogComponent(component);
     const dialog = getService("dialog");
     const root = await mountWithCleanup(MainComponentsContainer);
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
 
     const getComponentInstance = (root) => {
         const flattenedChildren = (comp, acc = {}) => {
             const array = Object.values(comp.children);
             for (const child of array) {
-                acc[child.name] = child;
+                acc[child.componentName] = child;
                 flattenedChildren(child, acc);
             }
             return acc;
@@ -99,11 +113,18 @@ export const mountPosDialog = async (component, props) => {
             deferred.resolve(dialogComponent.component);
         },
     });
-    return await deferred;
+    return await deferred.promise;
 };
 
 export const patchDialogComponent = (component) => {
-    component.props = [...component.props, "onMounted?"];
+    if (Array.isArray(component.props)) {
+        component.props = [...component.props, "onMounted?"];
+    } else {
+        component.props = {
+            ...component.props,
+            onMounted: { optional: true },
+        };
+    }
     patch(component.prototype, {
         setup() {
             super.setup();
@@ -154,19 +175,7 @@ export const createPaymentLine = (store, order, paymentMethod, data = {}) =>
     });
 
 export const activateMountingDialogs = async (env) => {
-    const dialog = await mountWithCleanup(ConfirmationDialog, {
-        env,
-        props: {
-            title: "Title",
-            body: "Body",
-            confirm: () => false,
-            cancel: () => true,
-            dismiss: () => false,
-            close: () => {},
-        },
-    });
-    destroy(dialog);
-    await animationFrame();
+    await mountWithCleanup(MainComponentsContainer, { env });
 };
 
 export const normalizeFunctionsInObject = (obj) =>

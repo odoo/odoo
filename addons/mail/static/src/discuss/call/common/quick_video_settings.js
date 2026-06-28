@@ -8,7 +8,6 @@ import { isBrowserSafari } from "@web/core/browser/feature_detection";
 
 export class QuickVideoSettings extends Component {
     static template = "discuss.QuickVideoSettings";
-    static props = [];
     static components = { DeviceSelect };
 
     setup() {
@@ -19,6 +18,6 @@ export class QuickVideoSettings extends Component {
     }
 
     onClickVideoSettings() {
-        this.dialogService.add(CallSettingsDialog, {});
+        this.dialogService.add(CallSettingsDialog, { initialTab: "video" });
     }
 }

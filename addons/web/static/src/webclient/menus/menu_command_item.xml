@@ -7,9 +7,9 @@
       <div t-else="" class="me-2 o_app_icon d-flex align-items-center justify-content-center">
         <i t-att-class="`${this.props.webIcon.iconClass} fa-2x`" t-attf-style="color:{{this.props.webIcon.color}}"></i>
       </div>
-      <t t-slot="name"/>
+      <t t-call-slot="name"/>
       <span class="ms-auto flex-shrink-0">
-        <t t-slot="focusMessage"/>
+        <t t-call-slot="focusMessage"/>
       </span>
     </div>
   </t>

@@ -184,6 +184,9 @@ class TestMailingListMerge(MassMailCommon):
             len(contacts_duplicate_optout_dst[1][0] + contacts_dst_duplicates_one_optout[1][0]),
         )
 
+        result_list = src_list.action_mailing_lists_merge()
+        self.assertEqual(result_list['res_id'], src_list.id, "Merging with no list should do nothing")
+
         original_dst_list_members = dst_list.contact_ids
         result_list = (src_list + dst_list).action_mailing_lists_merge()
 

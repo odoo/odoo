@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, markup, reactive, useState, xml } from "@odoo/owl";
+import { Component, markup, xml, proxy } from "@odoo/owl";
 import {
     contains,
     editAce,
@@ -11,7 +11,7 @@ import {
     preventResizeObserverError,
 } from "@web/../tests/web_test_helpers";
 
-import { CodeEditor } from "@web/core/code_editor/code_editor";
+import { CodeEditor, useCodeEditorState } from "@web/core/code_editor/code_editor";
 import { pick } from "@web/core/utils/objects";
 import { debounce } from "@web/core/utils/timing";
 
@@ -90,15 +90,15 @@ test("CodeEditor shouldn't accepts markup values", async () => {
 
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor value="props.value" />`;
+        static template = xml`<CodeEditor value="this.props.value" />`;
         static props = ["*"];
     }
     class GrandParent extends Component {
         static components = { Parent };
-        static template = xml`<Parent value="state.value"/>`;
+        static template = xml`<Parent value="this.state.value"/>`;
         static props = ["*"];
         setup() {
-            this.state = useState({ value: `<div>Some Text</div>` });
+            this.state = proxy({ value: `<div>Some Text</div>` });
         }
     }
 
@@ -108,14 +108,13 @@ test("CodeEditor shouldn't accepts markup values", async () => {
     codeEditor.state.value = textMarkup;
     await animationFrame();
 
-    expect.verifyErrors(["Invalid props for component 'CodeEditor': 'value' is not valid"]);
-    expect.verifySteps(["[Owl] Unhandled error. Destroying the root component"]);
+    expect.verifyErrors(["value is not a string"]);
 });
 
 test("onChange props called when code is edited", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor maxLines="10" onChange.bind="onChange" />`;
+        static template = xml`<CodeEditor maxLines="10" onChange.bind="this.onChange" />`;
         static props = ["*"];
         onChange(value) {
             expect.step(value);
@@ -132,13 +131,13 @@ test("onChange props not called when value props is updated", async () => {
         static components = { CodeEditor };
         static template = xml`
             <CodeEditor
-                value="state.value"
+                value="this.state.value"
                 maxLines="10"
-                onChange.bind="onChange"
+                onChange.bind="this.onChange"
             />
         `;
         static props = ["*"];
-        state = useState({ value: "initial value" });
+        state = proxy({ value: "initial value" });
         onChange(value) {
             expect.step(value || "__emptystring__");
         }
@@ -165,14 +164,14 @@ test("Default value correctly set and updates", async () => {
         static template = xml`
             <CodeEditor
                 mode="'xml'"
-                value="state.value"
-                onChange.bind="onChange"
+                value="this.state.value"
+                onChange.bind="this.onChange"
                 maxLines="200"
             />
         `;
         static props = ["*"];
         setup() {
-            this.state = useState({ value: textA });
+            this.state = proxy({ value: textA });
             this.onChange = debounce(this.onChange.bind(this));
         }
         onChange(value) {
@@ -222,10 +221,10 @@ test("Mode props update imports the mode", async () => {
 
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor maxLines="10" mode="state.mode" />`;
+        static template = xml`<CodeEditor maxLines="10" mode="this.state.mode" />`;
         static props = ["*"];
         setup() {
-            this.state = useState({ mode: "xml" });
+            this.state = proxy({ mode: "xml" });
         }
         setMode(newMode) {
             this.state.mode = newMode;
@@ -260,10 +259,10 @@ test("Theme props updates imports the theme", async () => {
 
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor maxLines="10" theme="state.theme" />`;
+        static template = xml`<CodeEditor maxLines="10" theme="this.state.theme" />`;
         static props = ["*"];
         setup() {
-            this.state = useState({ theme: "" });
+            this.state = proxy({ theme: "" });
         }
         setTheme(newTheme) {
             this.state.theme = newTheme;
@@ -310,10 +309,17 @@ test("initial value cannot be undone", async () => {
     expect.verifySteps(["ace undo"]);
 });
 
-test("code editor can take an initial cursor position", async () => {
+test.tags("focus required");
+test("code editor can set cursor position", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor maxLines="2" value="value" initialCursorPosition="initialPosition" onChange="onChange"/>`;
+        static template = xml`
+            <CodeEditor
+                maxLines="2"
+                value="this.value"
+                cursorPosition="this.state.cursorPosition"
+                onCursorPositionChange="this.onCursorPositionChange"
+            />`;
         static props = ["*"];
 
         setup() {
@@ -325,14 +331,16 @@ test("code editor can take an initial cursor position", async () => {
             5
             `.replace(/^\s*/gm, ""); // simple dedent
 
-            this.initialPosition = { row: 3, column: 2 };
+            this.state = proxy({
+                cursorPosition: { row: 3, column: 2 },
+            });
         }
 
-        onChange(value, startPosition) {
-            expect.step({ value, startPosition });
+        onCursorPositionChange(cursor) {
+            expect.step(cursor);
         }
     }
-    await mountWithCleanup(Parent);
+    const comp = await mountWithCleanup(Parent);
     await animationFrame();
 
     const editor = window.ace.edit(queryOne(".ace_editor"));
@@ -344,28 +352,24 @@ test("code editor can take an initial cursor position", async () => {
     await contains(".ace_editor textarea", { displayed: true, visible: false }).edit("new\nvalue", {
         instantly: true,
     });
+    await animationFrame();
     expect.verifySteps([
         {
-            startPosition: {
-                column: 0,
-                row: 0,
-            },
-            value: "",
-        },
-        {
-            startPosition: {
-                column: 0,
-                row: 0,
-            },
-            value: "new\nvalue",
+            column: 5,
+            row: 1,
         },
     ]);
+
+    comp.state.cursorPosition = { row: 0, column: 2 };
+    await animationFrame();
+    expect.verifySteps([]);
+    expect(editor.getCursorPosition()).toEqual({ row: 0, column: 2 });
 });
 
 test("qweb mode readonly attributes", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor maxLines="10" mode="props.state.mode" value="props.state.value" modeOptions="props.state.modeOptions" initialCursorPosition="props.state.initialCursorPosition"/>`;
+        static template = xml`<CodeEditor maxLines="10" mode="this.props.state.mode" value="this.props.state.value" modeOptions="this.props.state.modeOptions" cursorPosition="this.props.state.cursorPosition"/>`;
         static props = ["*"];
     }
 
@@ -375,7 +379,7 @@ test("qweb mode readonly attributes", async () => {
         </form>
         `.replace(/^\s*/gm, ""); // simple dedent;
 
-    const state = reactive({
+    const state = proxy({
         value: initialValue,
         mode: "qweb",
         modeOptions: {
@@ -383,7 +387,7 @@ test("qweb mode readonly attributes", async () => {
                 readonlyAttributes: ["lock-id"],
             },
         },
-        initialCursorPosition: { column: 17, row: 0 },
+        cursorPosition: { column: 17, row: 0 },
     });
 
     await mountWithCleanup(Parent, {
@@ -428,4 +432,32 @@ test("qweb mode readonly attributes", async () => {
         </form>
         `.replace(/^\s*/gm, "")
     );
+});
+
+test("get undo/redo state using editorState prop", async () => {
+    class Parent extends Component {
+        static components = { CodeEditor };
+        static template = xml`<CodeEditor value="'my first string'" editorState="this.editorState"/>`;
+        static props = ["*"];
+        setup() {
+            this.editorState = useCodeEditorState();
+        }
+    }
+
+    const comp = await mountWithCleanup(Parent);
+    await animationFrame();
+
+    expect(comp.editorState.canUndo).toBe(false);
+    expect(comp.editorState.canRedo).toBe(false);
+
+    await editAce("Some Text");
+
+    expect(comp.editorState.canUndo).toBe(true);
+    expect(comp.editorState.canRedo).toBe(false);
+
+    comp.editorState.undo();
+    await animationFrame();
+
+    expect(comp.editorState.canUndo).toBe(false);
+    expect(comp.editorState.canRedo).toBe(true);
 });

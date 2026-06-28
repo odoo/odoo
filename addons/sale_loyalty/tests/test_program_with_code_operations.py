@@ -77,22 +77,18 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         # Test now on a valid sales order
         order = self._create_so(
             order_line=[
-                (
-                    0,
-                    False,
-                    {
-                        "product_id": self.product_A.id,
-                        "name": "1 Product A",
-                        "product_uom_qty": 1.0,
-                    },
-                )
+                Command.create({
+                    "product_id": self.product_A.id,
+                    "name": "1 Product A",
+                    "product_uom_qty": 1.0,
+                })
             ]
         )
         self._apply_promo_code(order, coupon.code)
         self.assertEqual(len(order.order_line.ids), 2)
 
         # Remove the product A from the sale order
-        order.write({"order_line": [(2, order.order_line[0].id, False)]})
+        order.write({"order_line": [Command.delete(order.order_line[0].id)]})
         order._update_programs_and_rewards()
         self.assertEqual(len(order.order_line.ids), 0)
 
@@ -118,15 +114,11 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
 
         sale_order_a.write({
             "order_line": [
-                (
-                    0,
-                    False,
-                    {
-                        "product_id": self.product_A.id,
-                        "name": "1 Product A",
-                        "product_uom_qty": 1.0,
-                    },
-                )
+                Command.create({
+                    "product_id": self.product_A.id,
+                    "name": "1 Product A",
+                    "product_uom_qty": 1.0,
+                })
             ]
         })
         self._apply_promo_code(sale_order_a, coupon.code)
@@ -136,15 +128,11 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
 
         sale_order_b.write({
             "order_line": [
-                (
-                    0,
-                    False,
-                    {
-                        "product_id": self.product_A.id,
-                        "name": "1 Product A",
-                        "product_uom_qty": 1.0,
-                    },
-                )
+                Command.create({
+                    "product_id": self.product_A.id,
+                    "name": "1 Product A",
+                    "product_uom_qty": 1.0,
+                })
             ]
         })
         self._apply_promo_code(sale_order_b, coupon.code)
@@ -170,17 +158,13 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         first_pricelist = self.env["product.pricelist"].create({
             "name": "First pricelist",
             "item_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "compute_price": "percentage",
-                        "base": "list_price",
-                        "percent_price": 10,
-                        "applied_on": "3_global",
-                        "name": "First discount",
-                    },
-                )
+                Command.create({
+                    "compute_price": "percentage",
+                    "base": "list_price",
+                    "percent_price": 10,
+                    "applied_on": "3_global",
+                    "name": "First discount",
+                })
             ],
         })
 
@@ -231,18 +215,14 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
             "program_type": "promotion",
             "applies_on": "future",
             "trigger": "auto",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 10,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                })
             ],
         })
         # 3.
@@ -322,15 +302,11 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self.product_A.lst_price = 700
         order.write({
             "order_line": [
-                (
-                    0,
-                    False,
-                    {
-                        "product_id": self.product_A.id,
-                        "name": "1 Product A",
-                        "product_uom_qty": 1.0,
-                    },
-                )
+                Command.create({
+                    "product_id": self.product_A.id,
+                    "name": "1 Product A",
+                    "product_uom_qty": 1.0,
+                })
             ]
         })
         self._apply_promo_code(order, "free_B_on_next_order", no_reward_fail=False)
@@ -342,15 +318,11 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         order_bis = self._create_so(order_line=[])
         order_bis.write({
             "order_line": [
-                (
-                    0,
-                    False,
-                    {
-                        "product_id": self.product_B.id,
-                        "name": "1 Product B",
-                        "product_uom_qty": 1.0,
-                    },
-                )
+                Command.create({
+                    "product_id": self.product_B.id,
+                    "name": "1 Product B",
+                    "product_uom_qty": 1.0,
+                })
             ]
         })
         with self.assertRaises(ValidationError):
@@ -516,18 +488,14 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
             "name": "Promo fixed amount",
             "trigger": "auto",
             "program_type": "promotion",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 10,
-                        "discount_mode": "per_point",
-                        "discount_applicability": "order",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "per_point",
+                    "discount_applicability": "order",
+                })
             ],
         })
         # 2.
@@ -697,3 +665,27 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         msg = "The new coupon discount should be greater than the applied coupon discount"
         with self.assertRaises(ValidationError, msg=msg):
             self._apply_promo_code(order, coupon_2.code)
+
+    def test_re_apply_not_claimed_coupon_code(self):
+        promo_code_program = self.env["loyalty.program"].create({
+            "name": "promo code program",
+            "program_type": "promo_code",
+            "applies_on": "current",
+            "trigger": "with_code",
+            "rule_ids": [Command.create({"mode": "with_code", "code": "10%_discount"})],
+            "reward_ids": [Command.create({"reward_type": "discount", "discount": 10})],
+        })
+        order = self._create_so(order_line=[Command.create({"product_id": self.product_A.id})])
+        coupon_wizard = self.env["sale.loyalty.coupon.wizard"].create({
+            "order_id": order.id,
+            "coupon_code": "10%_discount",
+        })
+        reward_wizard_action = coupon_wizard.action_apply()
+        self.assertIn(
+            promo_code_program.reward_ids.id, reward_wizard_action["context"]["default_reward_ids"]
+        )
+        # retry the same code, should work since the reward is not claimed but discarded
+        reward_wizard_action = coupon_wizard.action_apply()
+        self.assertIn(
+            promo_code_program.reward_ids.id, reward_wizard_action["context"]["default_reward_ids"]
+        )

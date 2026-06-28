@@ -1,4 +1,4 @@
-import { cleanTerm } from "@mail/utils/common/format";
+import { localeCompare, normalize } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 
 /**
@@ -20,6 +20,7 @@ partnerCompareRegistry.add(
         if (!p2active && p1active) {
             return -1;
         }
+        return undefined;
     },
     { sequence: 5 }
 );
@@ -35,8 +36,28 @@ partnerCompareRegistry.add(
         if (!isSelf1 && isSelf2) {
             return -1;
         }
+        return undefined;
     },
     { sequence: 7 }
+);
+
+partnerCompareRegistry.add(
+    "mail.recent-authors",
+    function recentAuthors(p1, p2, { context: { latestMessageIdByAuthorId } }) {
+        const p1MessageId = latestMessageIdByAuthorId.get(p1.id);
+        const p2MessageId = latestMessageIdByAuthorId.get(p2.id);
+        if (p1MessageId !== undefined && p2MessageId === undefined) {
+            return -1;
+        }
+        if (p1MessageId === undefined && p2MessageId !== undefined) {
+            return 1;
+        }
+        if (p1MessageId !== undefined && p2MessageId !== undefined && p1MessageId !== p2MessageId) {
+            return p2MessageId - p1MessageId;
+        }
+        return undefined;
+    },
+    { sequence: 10 }
 );
 
 partnerCompareRegistry.add(
@@ -50,6 +71,7 @@ partnerCompareRegistry.add(
         if (!isAInternalUser && isBInternalUser) {
             return 1;
         }
+        return undefined;
     },
     { sequence: 35 }
 );
@@ -57,41 +79,53 @@ partnerCompareRegistry.add(
 partnerCompareRegistry.add(
     "mail.followers",
     function followers(p1, p2, { thread }) {
-        if (thread) {
-            const followerList = [...thread.followers];
-            if (thread.selfFollower) {
-                followerList.push(thread.selfFollower);
-            }
-            const isFollower1 = followerList.some((follower) => p1.eq(follower.partner_id));
-            const isFollower2 = followerList.some((follower) => p2.eq(follower.partner_id));
-            if (isFollower1 && !isFollower2) {
-                return -1;
-            }
-            if (!isFollower1 && isFollower2) {
-                return 1;
-            }
+        if (!thread) {
+            return undefined;
         }
+        const followerList = [...thread.followers];
+        if (thread.selfFollower) {
+            followerList.push(thread.selfFollower);
+        }
+        const isFollower1 = followerList.some((follower) => p1.eq(follower.partner_id));
+        const isFollower2 = followerList.some((follower) => p2.eq(follower.partner_id));
+        if (isFollower1 && !isFollower2) {
+            return -1;
+        }
+        if (!isFollower1 && isFollower2) {
+            return 1;
+        }
+        return undefined;
     },
     { sequence: 25 }
 );
 
 partnerCompareRegistry.add(
     "mail.name",
-    function name(p1, p2, { searchTerm }) {
-        const cleanedName1 = cleanTerm(p1.name);
-        const cleanedName2 = cleanTerm(p2.name);
-        if (cleanedName1.startsWith(searchTerm) && !cleanedName2.startsWith(searchTerm)) {
+    function name(p1, p2, { searchTerm, thread }) {
+        const name1 = thread?.getPersonaName(p1) ?? p1.displayName;
+        const name2 = thread?.getPersonaName(p2) ?? p2.displayName;
+        // no names to compare: not applicable.
+        if (!name1 && !name2) {
+            return undefined;
+        }
+        // 1. prioritize partners with a name over those without
+        if (name1 && !name2) {
             return -1;
         }
-        if (!cleanedName1.startsWith(searchTerm) && cleanedName2.startsWith(searchTerm)) {
+        if (!name1 && name2) {
             return 1;
         }
-        if (cleanedName1 < cleanedName2) {
+        const normalizedName1 = normalize(name1);
+        const normalizedName2 = normalize(name2);
+        // 2. partners whose name starts with the search terms
+        if (normalizedName1.startsWith(searchTerm) && !normalizedName2.startsWith(searchTerm)) {
             return -1;
         }
-        if (cleanedName1 > cleanedName2) {
+        if (!normalizedName1.startsWith(searchTerm) && normalizedName2.startsWith(searchTerm)) {
             return 1;
         }
+        // 3. locale-sensitive alphabetical order
+        return localeCompare(name1, name2) || undefined;
     },
     { sequence: 50 }
 );
@@ -99,20 +133,28 @@ partnerCompareRegistry.add(
 partnerCompareRegistry.add(
     "mail.email",
     function email(p1, p2, { searchTerm }) {
-        const cleanedEmail1 = cleanTerm(p1.email);
-        const cleanedEmail2 = cleanTerm(p2.email);
-        if (cleanedEmail1.startsWith(searchTerm) && !cleanedEmail1.startsWith(searchTerm)) {
+        // no emails to compare: not applicable
+        if (!p1.email && !p2.email) {
+            return undefined;
+        }
+        // 1. prioritize partners with an email over those without
+        if (p1.email && !p2.email) {
             return -1;
         }
-        if (!cleanedEmail2.startsWith(searchTerm) && cleanedEmail2.startsWith(searchTerm)) {
+        if (!p1.email && p2.email) {
             return 1;
         }
-        if (cleanedEmail1 < cleanedEmail2) {
+        const normalizedEmail1 = normalize(p1.email);
+        const normalizedEmail2 = normalize(p2.email);
+        // 2. partners whose email starts with the search terms
+        if (normalizedEmail1.startsWith(searchTerm) && !normalizedEmail2.startsWith(searchTerm)) {
             return -1;
         }
-        if (cleanedEmail1 > cleanedEmail2) {
+        if (!normalizedEmail1.startsWith(searchTerm) && normalizedEmail2.startsWith(searchTerm)) {
             return 1;
         }
+        // 3. locale-sensitive alphabetical order
+        return localeCompare(p1.email, p2.email) || undefined;
     },
     { sequence: 55 }
 );

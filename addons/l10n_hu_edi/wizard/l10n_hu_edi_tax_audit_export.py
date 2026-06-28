@@ -54,7 +54,7 @@ class L10n_Hu_EdiTax_Audit_Export(models.TransientModel):
             if not date_from:
                 first_invoice = self.env['account.move'].search(domain, order='date', limit=1)
                 date_from = first_invoice.date
-            date_to = self.date_to or fields.Date.today()
+            date_to = self.date_to or fields.Date.context_today(self)
             self.filename = f'export_{date_from}_{date_to}.zip'
 
         else:

@@ -10,7 +10,7 @@ from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import Response
-from odoo.tools import SQL, escape_psql
+from odoo.tools.sql import SQL, escape_like_value
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.website.tools import text_from_html
@@ -37,6 +37,11 @@ class WebsitePage(models.Model):
     # for how long a cache entry is considered valid (in seconds)
     _CACHE_DURATION = 3600
 
+    name = fields.Char(
+        string="Page Name",
+        compute='_compute_name', inverse='_inverse_name', store=True,
+        translate=True,
+    )
     url = fields.Char('Page URL', required=True)
     view_id = fields.Many2one('ir.ui.view', string='View', required=True, index=True, ondelete="cascade")
 
@@ -56,7 +61,16 @@ class WebsitePage(models.Model):
 
     # don't use mixin website_id but use website_id on ir.ui.view instead
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
-    arch = fields.Text(related='view_id.arch', readonly=False, depends_context=('website_id',))
+    arch = fields.Text(related='view_id.arch', readonly=False)
+
+    @api.depends('view_id.name')
+    def _compute_name(self):
+        for page in self.with_context(lang='en_US'):
+            page.name = page.view_id.name
+
+    def _inverse_name(self):
+        for page in self.with_context(lang='en_US'):
+            page.view_id.name = page.name
 
     @api.constrains('parent_id')
     def _compute_parent_ids(self):
@@ -147,7 +161,7 @@ class WebsitePage(models.Model):
             url = '/' + self.env['ir.http']._slugify(page_name, max_length=1024, path=True)
             copy_param['url'] = self.env['website'].get_unique_path(url)
 
-        new_page = page.copy(copy_param)
+        new_page = page.with_context(check_translations=True).copy(copy_param)
         # Should not clone menu if the page was cloned from one website to another
         # Eg: Cloning a generic page (no website) will create a page with a website, we can't clone menu (not same container)
         if clone_menu and new_page.website_id == page.website_id:
@@ -171,39 +185,52 @@ class WebsitePage(models.Model):
 
         # Make sure website.is_menu_cache_disabled() will be recomputed
         if self:
-            self.env.registry.clear_cache('templates')
+            self.env.transaction.invalidate_ormcache('templates')
         return super().unlink()
 
     def write(self, vals):
-        for page in self:
-            website_id = False
-            if vals.get('website_id') or page.website_id:
-                website_id = vals.get('website_id') or page.website_id.id
+        if name_in_vals := ('name' in vals):
+            old_en_names = self.with_context(lang='en_US').mapped('name')
 
-            # If URL has been edited, slug it
-            if 'url' in vals:
-                url = vals['url'] or ''
-                url = '/' + self.env['ir.http']._slugify(url, max_length=1024, path=True)
-                if page.url != url:
-                    url = self.env['website'].with_context(website_id=website_id).get_unique_path(url)
-                    page.menu_ids.write({'url': url})
-                    # Sync website's homepage URL
-                    website = self.env['website'].get_current_website()
-                    page_url_normalized = {'homepage_url': page.url}
-                    website._handle_homepage_url(page_url_normalized)
-                    if website.homepage_url == page_url_normalized['homepage_url']:
-                        website.homepage_url = url
-                vals['url'] = url
+        if url_in_vals := ('url' in vals):
+            vals_url = vals.pop('url')
+            url = vals_url or ''
+            url = '/' + self.env['ir.http']._slugify(url, max_length=1024, path=True)
+            vals_url = url
 
-            # If name has changed, check for key uniqueness
-            if 'name' in vals and page.name != vals['name']:
-                vals['key'] = self.env['website'].with_context(website_id=website_id).get_unique_key(self.env['ir.http']._slugify(vals['name'] or ''))
-            if 'visibility' in vals:
-                if vals['visibility'] != 'restricted_group':
-                    vals['group_ids'] = False
+        if 'visibility' in vals:
+            if vals['visibility'] != 'restricted_group':
+                vals['group_ids'] = False
+
         # write on page == write on view
         # the view will invalidate the 'templates' cache
-        return super().write(vals)
+        res = super().write(vals)
+
+        if url_in_vals:
+            for page in self:
+                if vals_url == page.url:
+                    continue
+                # If URL has been edited, slug it
+                url = self.env['website'].with_context(website_id=page.website_id.id).get_unique_path(vals_url)
+                page.menu_ids.write({'url': url})
+                # Sync website's homepage URL
+                website = self.env['website'].get_current_website()
+                page_url_normalized = {'homepage_url': page.url}
+                website._handle_homepage_url(page_url_normalized)
+                if website.homepage_url == page_url_normalized['homepage_url']:
+                    website.homepage_url = url
+                super(WebsitePage, page).write({'url': url})
+
+        if name_in_vals:
+            # If name has changed, check for key uniqueness
+            for page_en, old_en_name in zip(self.with_context(lang='en_US'), old_en_names, strict=True):
+                if old_en_name == page_en.name:
+                    continue
+                key = self.env['ir.http']._slugify(page_en.name or '')
+                key = self.env['website'].with_context(website_id=page_en.website_id.id).get_unique_key(key)
+                super(WebsitePage, page_en).write({'key': key})
+
+        return res
 
     def get_website_meta(self):
         self.ensure_one()
@@ -211,7 +238,6 @@ class WebsitePage(models.Model):
 
     @api.model
     def _search_get_detail(self, website, order, options):
-        with_description = options['displayDescription']
         # Read access on website.page requires sudo.
         requires_sudo = True
         domain = [website.website_domain()]
@@ -229,16 +255,13 @@ class WebsitePage(models.Model):
                 [('group_ids', '=', False)], [('group_ids', 'in', self.env.user.group_ids.ids)]
             ]))
 
-        search_fields = ['name', 'url']
-        fetch_fields = ['id', 'name', 'url']
+        search_fields = ['name', 'url', 'arch_db']
+        fetch_fields = ['id', 'name', 'url', 'arch']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'url', 'type': 'text', 'truncate': False},
+            'description': {'name': 'arch', 'type': 'text', 'html': True, 'match': True}
         }
-        if with_description:
-            search_fields.append('arch_db')
-            fetch_fields.append('arch')
-            mapping['description'] = {'name': 'arch', 'type': 'text', 'html': True, 'match': True}
         return {
             'model': 'website.page',
             'base_domain': domain,
@@ -247,11 +270,12 @@ class WebsitePage(models.Model):
             'fetch_fields': fetch_fields,
             'mapping': mapping,
             'icon': 'fa-file-o',
+            'group_name': self.env._("Pages"),
+            'sequence': 10,
         }
 
     @api.model
-    def _search_fetch(self, search_detail, search, limit, order):
-        with_description = 'description' in search_detail['mapping']
+    def _search_fetch(self, search_detail, search, offset, limit, order):
         # Cannot rely on the super's _search_fetch because the search must be
         # performed among the most specific pages only.
         fields = search_detail['search_fields']
@@ -261,7 +285,7 @@ class WebsitePage(models.Model):
             domain=base_domain, order=order
         )
 
-        if with_description and search and most_specific_pages:
+        if search and most_specific_pages:
             # Perform search in translations
             # TODO Remove when domains will support xml_translate fields
             custom_view_domain = Domain.custom(
@@ -269,7 +293,7 @@ class WebsitePage(models.Model):
                     "%(name)s ILIKE %(search)s OR %(arch_db)s ILIKE %(search)s",
                     name=table.name,
                     arch_db=table.arch_db,
-                    search=f"%{escape_psql(search)}%",
+                    search=f"%{escape_like_value(search)}%",
                 )
             )
             # most_specific_pages is already filtered and ordered
@@ -282,13 +306,12 @@ class WebsitePage(models.Model):
         results = most_specific_pages.filtered_domain(domain)  # already sudo
 
         def filter_page(search, page, all_pages):
-            # Exclude pages that do not pass ACL.
-            Rule = page.env['ir.rule'].sudo(False)
-            if not page.filtered_domain(Rule._compute_domain('website.page', 'read')):
-                return False
-            if not page.view_id.filtered_domain(Rule._compute_domain('ir.ui.view', 'read')):
-                return False
-            if search and with_description:
+            if not page.website_published:
+                # Exclude pages that do not pass ACL.
+                page_user = page.sudo(False)
+                if not (page_user.has_access('read') and page_user.view_id.has_access('read')):
+                    return False
+            if search:
                 # Search might have matched words in the xml tags and parameters therefore we make
                 # sure the terms actually appear inside the text.
                 text = '%s %s %s' % (page.name, page.url, text_from_html(page.arch))
@@ -296,7 +319,9 @@ class WebsitePage(models.Model):
                 return re.findall('(%s)' % pattern, text, flags=re.I) if pattern else False
             return True
         results = results.filtered(lambda result: filter_page(search, result, results))
-        return results[:limit], len(results)
+        start = offset
+        end = offset + limit
+        return results[start:end], len(results)
 
     def action_page_debug_view(self):
         return {
@@ -328,6 +353,15 @@ class WebsitePage(models.Model):
         """
         return True
 
+    def _get_extra_tracking_values(self, **kwargs):
+        extra_tracking_values = super()._get_extra_tracking_values(**kwargs)
+        if (
+            kwargs.get('res_model') == self._name
+            and (res_id := kwargs.get('res_id'))
+        ):
+            extra_tracking_values['page_id'] = res_id
+        return extra_tracking_values
+
     @api.model
     def _post_process_response_from_cache(self, request, response) -> None:
         """ A hook called after a response is retrieved from the cache. This
@@ -351,7 +385,7 @@ class WebsitePage(models.Model):
         the cache serves the correct version of a page based on specific
         parameters like user language or currency.
         """
-        return (request.website.id, request.lang.code, request.httprequest.path, request.session.debug)
+        return (self.env.context.get('website_id'), self.env.context.get('lang'), request.httprequest.path, request.session.debug)
 
     def _get_response(self, request):
         """ Returns the response corresponding to the request.
@@ -402,7 +436,7 @@ class WebsitePage(models.Model):
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('self._get_cache_key(request)', cache='templates.cached_values'),
+        api.ormcache('self._get_cache_key(request)', cache='templates.cached_values'),
     )
     def _get_response_cached(self, request) -> tuple[Response, int, str]:
         """ Returns the response corresponding to the request.
@@ -439,6 +473,8 @@ class WebsitePage(models.Model):
         fields_to_fetch = [name for name, field in self.view_id._fields.items() if field.prefetch]
         self.view_id.fetch(fields_to_fetch)
 
+        website = self.env["website"].get_current_website()
+
         if (
             (self.env.user.has_group('website.group_website_designer') or self.is_visible)
             and (
@@ -446,7 +482,7 @@ class WebsitePage(models.Model):
                 # page received a URL change, it should not let you access the
                 # generic page anymore, despite having a different URL.
                 self.website_id
-                or self.view_id.id == self.env['ir.ui.view'].with_context(website_id=request.website.id)._get_cached_template_info(self.view_id.key)['id']
+                or self.view_id.id == self.env['ir.ui.view'].with_context(website_id=website.id)._get_cached_template_info(self.view_id.key)['id']
             )
         ):
             _, ext = os.path.splitext(req_page)
@@ -460,25 +496,33 @@ class WebsitePage(models.Model):
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('(request.httprequest.path, self.env.context.get("website_id"))', cache='templates.cached_values'),
+        api.ormcache(
+            'request.httprequest.path',
+            'self.env.context.get("website_id") or None',
+            'self.env.context.get("host_id") or None',
+            cache='templates.cached_values'
+        ),
     )
     @api.model
     def _get_page_info(self, request) -> dict | None:
         req_page = request.httprequest.path
 
+        website = self.env.website
+
         # specific page first
-        page_domain = Domain('url', '=', req_page) & request.website.website_domain()
+        page_domain = Domain('url', '=', req_page) & website.website_domain()
         page = self.sudo().search_fetch(page_domain, order='website_id asc', limit=1)
 
         # case insensitive search
         if not page:
-            page_domain = Domain('url', '=ilike', req_page) & request.website.website_domain()
+            page_domain = Domain('url', '=ilike', req_page) & website.website_domain()
             page = self.sudo().search_fetch(page_domain, order='website_id asc', limit=1)
 
         if page:
             return {
                 'id': page.id,
                 'url': page.url,
+                'website_id': page.website_id.id,
                 'view_id': page.view_id.id,
                 'group_ids': page.group_ids.ids,
             }

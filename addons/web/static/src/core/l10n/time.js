@@ -298,9 +298,9 @@ export const durationUnitsRegex = memoize(() => {
         });
 
     const regexTimes = {
-        hours: new RegExp("(\\d+)" + durationUnits.hour),
-        minutes: new RegExp("(\\d+)" + durationUnits.minute),
-        seconds: new RegExp("(\\d+)" + durationUnits.second),
+        hours: new RegExp("(\\d+)" + durationUnits.hour, "i"),
+        minutes: new RegExp("(\\d+)" + durationUnits.minute, "i"),
+        seconds: new RegExp("(\\d+)" + durationUnits.second, "i"),
     };
 
     return regexTimes;

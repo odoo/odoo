@@ -21,7 +21,7 @@ class PurchaseOrder(models.Model):
             purchase.mrp_production_count = len(purchase._get_mrp_productions())
 
     def _get_mrp_productions(self, **kwargs):
-        return self.reference_ids.production_ids
+        return (self.order_line.move_dest_ids | self.order_line.move_ids.move_dest_ids).raw_material_production_id
 
     def action_view_mrp_productions(self):
         self.ensure_one()
@@ -80,14 +80,14 @@ class PurchaseOrderLine(models.Model):
         invoiced_qties.update(kit_invoiced_qties)
         return invoiced_qties
 
-    def _prepare_stock_moves(self, picking):
+    def _prepare_stock_moves(self, picking=False):
         res = super()._prepare_stock_moves(picking)
         if len(self.order_id.reference_ids.move_ids.production_group_id) == 1:
             for re in res:
                 re['production_group_id'] = self.order_id.reference_ids.move_ids.production_group_id.id
         sale_line_product = self._get_sale_order_line_product()
         if sale_line_product:
-            bom = self.env['mrp.bom']._bom_find(self.env['product.product'].browse(sale_line_product.id), company_id=picking.company_id.id, bom_type='phantom')
+            bom = self.env['mrp.bom']._bom_find(self.env['product.product'].browse(sale_line_product.id), company_id=self.order_id.company_id.id, bom_type='phantom')
             # Was a kit sold?
             bom_kit = bom.get(sale_line_product)
             if bom_kit:

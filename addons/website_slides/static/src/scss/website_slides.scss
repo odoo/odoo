@@ -12,27 +12,13 @@ $o-wslides-color-dark2: #1f262d;
 $o-wslides-color-dark3: #101216;
 $o-wslides-fs-side-width: 300px;
 
-// Truncate text descriptions to a specific number of lines.
-// If '-webkit-line-clamp' is not supported, a less effective
-// 'line-height' fallback will be used instead.
-$truncate-limits: 2, 3, 10;
-$line-height-truncate: 1.5em;
-
-@each $limit in $truncate-limits {
-    .o_wslides_desc_truncate_#{$limit} {
-        max-height: $limit * $line-height-truncate;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: normal;
-        line-height: $line-height-truncate;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: $limit;
-    }
-    .o_wslides_desc_truncate_#{$limit}_badges {
-        @extend .o_wslides_desc_truncate_#{$limit};
-        max-height: $limit * $line-height-truncate * 1.2;
-    }
+:root {
+    // Border color
+    // Let borders color adapt according to body and CCs. Also, set a fallback
+    // value for browsers that don't support the color-mix function (used by
+    // 'fade-currentColor').
+    --o-border-color: #{o-color('300')};
+    --o-border-color: #{fade-currentColor()};
 }
 
 // Common to new slides pages
@@ -257,22 +243,6 @@ $line-height-truncate: 1.5em;
 .o_wslides_course_nav {
     @include o-position-absolute(0,0,auto,0);
     border-width: 1px 0;
-
-    &, .o_wslides_course_nav_search {
-        background-color: rgba(white, 0.05);
-        border-color: rgba(white, 0.1);
-        border-style: solid;
-    }
-
-    .o_wslides_course_nav_search {
-        border-width: 0 1px;
-
-        button, button:hover, input, input::placeholder {
-            // Resolves into the color chosen for slide channel description through cover customization
-            color: inherit;
-            opacity: 0.8;
-        }
-    }
 
     .breadcrumb-item {
         --max-lines: 2;

@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 from unittest.mock import patch
 from odoo.tests import tagged, TransactionCase
 
@@ -27,13 +28,19 @@ class TestSInvoiceSymbol(TransactionCase):
         })
 
     def _mock_api_fetch_symbols(self, symbols):
-        """Helper to build a mock API response."""
-        return {'template': [{'invoiceSeri': code, 'templateCode': name} for code, name in symbols]}, None
+        """Helper to build a mock API response matching SInvoiceService.get_all_invoice_templates() return format."""
+        return [{'invoiceSeri': code, 'templateCode': name} for code, name in symbols], None
+
+    @contextmanager
+    def _patch_sinvoice(self, mock_templates):
+        """Patch _l10n_vn_edi_lookup_symbols. Pass a callable(company) for per-company control, or a fixed value."""
+        kwargs = {'side_effect': mock_templates} if callable(mock_templates) else {'return_value': mock_templates}
+        with patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice.L10n_Vn_Edi_ViettelSinvoiceSymbol._l10n_vn_edi_lookup_symbols', **kwargs):
+            yield
 
     def test_fetch_symbols_creates_new_symbols(self):
         """Fetching symbols from the API should create new symbol records."""
-        request_response = self._mock_api_fetch_symbols([('C23TSA', '1/001'), ('C23TSB', '1/002')])
-        with patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice.L10n_Vn_Edi_ViettelSinvoiceSymbol._l10n_vn_edi_lookup_symbols', return_value=request_response):
+        with self._patch_sinvoice(self._mock_api_fetch_symbols([('C23TSA', '1/001'), ('C23TSB', '1/002')])):
             self.env['l10n_vn_edi_viettel.sinvoice.symbol'].with_company(self.company_vn_1).action_fetch_symbols()
 
         symbols = self.env['l10n_vn_edi_viettel.sinvoice.symbol'].search([('company_id', '=', self.company_vn_1.id)])
@@ -45,8 +52,7 @@ class TestSInvoiceSymbol(TransactionCase):
 
     def test_fetch_symbols_no_duplicates_on_refetch(self):
         """Fetching the same symbols multiple times should not create duplicates."""
-        request_response = self._mock_api_fetch_symbols([('C23TSA', '1/001')])
-        with patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice.L10n_Vn_Edi_ViettelSinvoiceSymbol._l10n_vn_edi_lookup_symbols', return_value=request_response):
+        with self._patch_sinvoice(self._mock_api_fetch_symbols([('C23TSA', '1/001')])):
             self.env['l10n_vn_edi_viettel.sinvoice.symbol'].with_company(self.company_vn_1).action_fetch_symbols()
             self.env['l10n_vn_edi_viettel.sinvoice.symbol'].with_company(self.company_vn_1).action_fetch_symbols()
 
@@ -55,12 +61,10 @@ class TestSInvoiceSymbol(TransactionCase):
 
     def test_fetch_symbols_archives_removed_symbols(self):
         """Symbols no longer returned by the API should be archived."""
-        request_response = self._mock_api_fetch_symbols([('C23TSA', '1/001'), ('C23TSB', '1/002')])
-        with patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice.L10n_Vn_Edi_ViettelSinvoiceSymbol._l10n_vn_edi_lookup_symbols', return_value=request_response):
+        with self._patch_sinvoice(self._mock_api_fetch_symbols([('C23TSA', '1/001'), ('C23TSB', '1/002')])):
             self.env['l10n_vn_edi_viettel.sinvoice.symbol'].with_company(self.company_vn_1).action_fetch_symbols()
 
-        request_response = self._mock_api_fetch_symbols([('C23TSA', '1/001')])
-        with patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice.L10n_Vn_Edi_ViettelSinvoiceSymbol._l10n_vn_edi_lookup_symbols', return_value=request_response):
+        with self._patch_sinvoice(self._mock_api_fetch_symbols([('C23TSA', '1/001')])):
             self.env['l10n_vn_edi_viettel.sinvoice.symbol'].with_company(self.company_vn_1).action_fetch_symbols()
 
         symbols = self.env['l10n_vn_edi_viettel.sinvoice.symbol'].with_context(active_test=False).search([
@@ -80,7 +84,7 @@ class TestSInvoiceSymbol(TransactionCase):
 
         multicompany_env = self.env(context={**self.env.context, 'allowed_company_ids': (self.company_vn_1 | self.company_vn_2 | self.company_us).ids})
 
-        with patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice.L10n_Vn_Edi_ViettelSinvoiceSymbol._l10n_vn_edi_lookup_symbols', side_effect=mock_lookup):
+        with self._patch_sinvoice(mock_lookup):
             multicompany_env['l10n_vn_edi_viettel.sinvoice.symbol'].action_fetch_symbols()
 
         symbols_1 = self.env['l10n_vn_edi_viettel.sinvoice.symbol'].search([('company_id', '=', self.company_vn_1.id)])
@@ -95,16 +99,15 @@ class TestSInvoiceSymbol(TransactionCase):
         """Archiving symbols for one company should not affect another company's symbols."""
         multicompany_env = self.env(context={**self.env.context, 'allowed_company_ids': (self.company_vn_1 | self.company_vn_2).ids})
 
-        request_response = self._mock_api_fetch_symbols([('C23TSA', '1/001')])
-        with patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice.L10n_Vn_Edi_ViettelSinvoiceSymbol._l10n_vn_edi_lookup_symbols', return_value=request_response):
+        with self._patch_sinvoice(self._mock_api_fetch_symbols([('C23TSA', '1/001')])):
             multicompany_env['l10n_vn_edi_viettel.sinvoice.symbol'].action_fetch_symbols()
 
         def mock_lookup_after(company):
             if company == self.company_vn_1:
-                return self._mock_api_fetch_symbols([])  # C23TSA dropped for company 1
+                return self._mock_api_fetch_symbols([('C23TSB', '1/002')])  # C23TSA replaced by C23TSB for company 1
             return self._mock_api_fetch_symbols([('C23TSA', '1/001')])  # Still present for company 2
 
-        with patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice.L10n_Vn_Edi_ViettelSinvoiceSymbol._l10n_vn_edi_lookup_symbols', side_effect=mock_lookup_after):
+        with self._patch_sinvoice(mock_lookup_after):
             multicompany_env['l10n_vn_edi_viettel.sinvoice.symbol'].action_fetch_symbols()
 
         symbols = self.env['l10n_vn_edi_viettel.sinvoice.symbol'].with_context(active_test=False).search([
@@ -113,4 +116,5 @@ class TestSInvoiceSymbol(TransactionCase):
         self.assertRecordValues(symbols, [
             {'company_id': self.company_vn_1.id, 'name': 'C23TSA', 'active': False},
             {'company_id': self.company_vn_2.id, 'name': 'C23TSA', 'active': True},
+            {'company_id': self.company_vn_1.id, 'name': 'C23TSB', 'active': True},
         ])

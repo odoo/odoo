@@ -201,9 +201,8 @@ class TestJoEdiPosTypes(JoEdiPosCommon):
                 },
             ],
         }
-        order = self._l10n_jo_create_order(order_vals)
-        cash_pm = order.config_id.payment_method_ids.filtered(lambda pm: pm.l10n_jo_edi_pos_is_cash)[0]
-        self.make_payment(order, cash_pm, 100)
+        cash_pm = self.main_pos_config.payment_method_ids.filtered(lambda pm: pm.l10n_jo_edi_pos_is_cash)[0]
+        order = self._l10n_jo_create_order(order_vals, [(cash_pm, 132)], default_payment=False)
 
         expected_file = self._read_xml_test_file('type_7')
         generated_file = self.env['pos.edi.xml.ubl_21.jo']._export_pos_order(order)[0]
@@ -311,15 +310,61 @@ class TestJoEdiPosTypes(JoEdiPosCommon):
 
         self.assertGreater(int(xml_tree.findall('./{*}InvoiceLine')[-1].findtext('{*}ID')), 4)
 
-    def test_different_payment_methods(self):
-        def get_xml_order_type(order, amount_cash, amount_bank):
-            cash_pm = order.config_id.payment_method_ids.filtered(lambda pm: pm.l10n_jo_edi_pos_is_cash)[0]
-            bank_pm = order.config_id.payment_method_ids.filtered(lambda pm: not pm.l10n_jo_edi_pos_is_cash)[0]
+    def test_credit_notes_lines_matching_2(self):
+        self.company.l10n_jo_edi_taxpayer_type = 'income'
+        self.company.l10n_jo_edi_sequence_income_source = '4419618'
 
-            if amount_cash:
-                self.make_payment(order, cash_pm, amount_cash)
-            if amount_bank:
-                self.make_payment(order, bank_pm, amount_bank)
+        order_vals = {
+            'name': 'EIN00017',
+            'lines': [
+                {  # id = 1
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'qty': 1,
+                },
+                {  # id = 2
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'qty': 3,
+                },
+                {  # id = 3
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'qty': 2,
+                },
+            ],
+        }
+        refund_vals = {
+            'name': 'EIN998833',
+            'lines': [
+                {  # id = 3
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'qty': 2,
+                    'name': '3',  # label should not affect matching
+                },
+                {  # id = 1
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'qty': 1,
+                    'name': '1',
+                },
+                {  # id = 2
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'qty': 2,
+                    'name': '2',
+                },
+            ],
+        }
+        refund = self._l10n_jo_create_order_refund(order_vals, refund_vals)
+        xml_string = self.env['pos.edi.xml.ubl_21.jo']._export_pos_order(refund)[0]
+        xml_tree = self.get_xml_tree_from_string(xml_string)
+        for xml_line, expected_line_id in zip(xml_tree.findall('./{*}InvoiceLine'), [3, 1, 2]):
+            self.assertEqual(int(xml_line.findtext('{*}ID')), expected_line_id)
+
+    def test_different_payment_methods(self):
+        def get_xml_order_type(order):
             if order._l10n_jo_validate_fields():  # conflicting payment methods
                 return False
 
@@ -330,10 +375,39 @@ class TestJoEdiPosTypes(JoEdiPosCommon):
         self.company.l10n_jo_edi_taxpayer_type = 'income'
         self.company.l10n_jo_edi_sequence_income_source = '4419618'
 
-        for (cash_amount, bank_amount, expected_type) in [
-            (100, 0, '011'),
-            (0, 100, '021'),
-            (50, 50, False),
+        cash_pm1, cash_pm2, bank_pm1, bank_pm2 = self.env['pos.payment.method'].create([
+            {
+                'name': 'Cash 1',
+                'l10n_jo_edi_pos_is_cash': True,
+            },
+            {
+                'name': 'Cash 2',
+                'l10n_jo_edi_pos_is_cash': True,
+            },
+            {
+                'name': 'Bank 1',
+                'l10n_jo_edi_pos_is_cash': False,
+            },
+            {
+                'name': 'Bank 2',
+                'l10n_jo_edi_pos_is_cash': False,
+            },
+        ])
+        self.main_pos_config.write({
+            'payment_method_ids': [
+                Command.link(cash_pm1.id),
+                Command.link(cash_pm2.id),
+                Command.link(bank_pm1.id),
+                Command.link(bank_pm2.id),
+            ],
+        })
+        for (payments, expected_type) in [
+            ([(cash_pm1, 100)], '011'),
+            ([(bank_pm1, 100)], '021'),
+            ([(cash_pm1, 50), (bank_pm1, 50)], False),
+            ([], False),
+            ([(cash_pm1, 50), (cash_pm2, 50)], '011'),
+            ([(bank_pm1, 50), (bank_pm2, 50)], '021'),
         ]:
             order_vals = {
                 'name': 'EIN/998833/0',
@@ -349,6 +423,63 @@ class TestJoEdiPosTypes(JoEdiPosCommon):
                     },
                 ],
             }
-            order = self._l10n_jo_create_order(order_vals)
-            order_type = get_xml_order_type(order, cash_amount, bank_amount)
+            order = self._l10n_jo_create_order(order_vals, payments=payments, default_payment=False)
+            order_type = get_xml_order_type(order)
             self.assertEqual(order_type, expected_type)
+
+    def test_mandatory_customer(self):
+        self.company.l10n_jo_edi_taxpayer_type = 'income'
+        self.company.l10n_jo_edi_sequence_income_source = '4419618'
+        cash_pm, bank_pm = self.env['pos.payment.method'].create([
+            {
+                'name': 'Cash',
+                'l10n_jo_edi_pos_is_cash': True,
+            },
+            {
+                'name': 'Bank',
+                'l10n_jo_edi_pos_is_cash': False,
+            },
+        ])
+        self.main_pos_config.write({
+            'payment_method_ids': [
+                Command.link(cash_pm.id),
+                Command.link(bank_pm.id),
+            ],
+        })
+        # The rate is 1 USD = 2 JOD
+        for currency_id, has_partner, amount_total, payment_method, is_valid in [
+            (self.jod,   True,        100,          cash_pm,        True),
+            (self.jod,   True,        10_000,       cash_pm,        True),
+            (self.jod,   True,        10_001,       cash_pm,        True),
+            (self.jod,   False,       100,          cash_pm,        True),
+            (self.jod,   False,       10_000,       cash_pm,        True),
+            (self.jod,   False,       10_001,       cash_pm,        False),
+            (self.jod,   False,       20_000,       cash_pm,        False),
+            (self.usd,   False,       5000.1,       cash_pm,        False),
+            (self.usd,   False,       5000,         cash_pm,        True),
+            (self.jod,   True,        100,          bank_pm,        True),
+            (self.jod,   True,        10_000,       bank_pm,        True),
+            (self.jod,   True,        10_001,       bank_pm,        True),
+            (self.jod,   False,       100,          bank_pm,        False),
+            (self.usd,   False,       100,          bank_pm,        False),
+            (self.jod,   False,       10_000,       bank_pm,        False),
+            (self.jod,   False,       10_001,       bank_pm,        False),
+        ]:
+            order_vals = {
+                'name': 'EIN/998833/0',
+                'partner_id': self.partner_jo.id if has_partner else False,
+                'currency_id': currency_id,
+                'date_order': '2022-09-27',
+                'general_customer_note': 'ملاحظات 2',
+                'lines': [
+                    {
+                        'product_id': self.product_a.id,
+                        'price_unit': amount_total,
+                        'qty': 1,
+                        'discount': 0,
+                        'tax_ids': [Command.clear()],
+                    },
+                ],
+            }
+            order = self._l10n_jo_create_order(order_vals, payments=[(payment_method, amount_total)], default_payment=False)
+            self.assertEqual(bool(order._l10n_jo_validate_fields()), not is_valid)

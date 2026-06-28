@@ -7,20 +7,26 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position="inside">
-                <group invisible="code != 'flutterwave'"
-                       name="flutterwave_credentials">
-                    <field name="flutterwave_public_key"
-                           string="Public Key"
-                           required="code == 'flutterwave' and state != 'disabled'"/>
-                    <field name="flutterwave_secret_key"
-                           string="Secret Key"
-                           required="code == 'flutterwave' and state != 'disabled'"
-                           password="True"/>
-                    <field name="flutterwave_webhook_secret"
-                           string="Webhook Secret"
-                           required="code == 'flutterwave' and state != 'disabled'"
-                           password="True"/>
-                </group>
+                <field
+                    string="Public Key"
+                    name="flutterwave_public_key"
+                    invisible="code != 'flutterwave'"
+                    required="is_live"
+                />
+                <field
+                    string="Secret Key"
+                    name="flutterwave_secret_key"
+                    invisible="code != 'flutterwave'"
+                    required="is_live"
+                    widget="password"
+                />
+                <field
+                    string="Webhook Secret"
+                    name="flutterwave_webhook_secret"
+                    invisible="code != 'flutterwave'"
+                    required="is_live"
+                    widget="password"
+                />
             </group>
         </field>
     </record>

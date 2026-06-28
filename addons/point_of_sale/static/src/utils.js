@@ -1,9 +1,13 @@
 /* global QRCode */
 
 import { session } from "@web/session";
-import { getDataURLFromFile } from "@web/core/utils/urls";
+import { cookie } from "@web/core/browser/cookie";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { Time } from "@web/core/l10n/time";
+import { _t } from "@web/core/l10n/translation";
+
+const { DateTime } = luxon;
+
 /*
  * comes from o_spreadsheet.js
  * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -173,13 +177,41 @@ export function isValidEmail(email) {
     return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-export const LONG_PRESS_DURATION = session.test_mode ? 100 : 500;
+// Checks whether an ip address is on the local network. So one of the ranges:
+// 10.0.0.0 - 10.255.255.255
+// 127.0.0.0 - 127.255.255.255
+// 172.16.0.0 - 172.31.255.255
+// 169.254.0.0 - 169.254.255.255
+// 192.168.0.0 - 192.168.255.255
+export function isPrivateIp(ip) {
+    if (!ip || typeof ip !== "string") {
+        return false;
+    }
+    const blocks = ip.split(".");
+    if (blocks.length !== 4) {
+        return false;
+    }
 
-export async function getImageDataUrl(imageUrl) {
-    const res = await fetch(imageUrl);
-    const blob = await res.blob();
-    return await getDataURLFromFile(blob);
+    const [a, b, c, d] = blocks.map(Number);
+    const invalidBlock = blocks.some(
+        (b, i) => isNaN([a, b, c, d][i]) || [a, b, c, d][i] < 0 || [a, b, c, d][i] > 255
+    );
+
+    if (invalidBlock) {
+        return false;
+    }
+
+    return (
+        a === 10 ||
+        a === 127 ||
+        (a === 172 && b >= 16 && b <= 31) ||
+        (a === 192 && b === 168) ||
+        (a === 169 && b === 254)
+    );
 }
+
+export const LONG_PRESS_DURATION = session.test_mode ? 100 : 500;
+export const TOUCH_DELAY = session.test_mode ? 50 : 300;
 
 export function orderUsageUTCtoLocalUtil(data) {
     const result = {};
@@ -195,6 +227,10 @@ export function getTimeUtil(date) {
     return Time.from(date).toString();
 }
 
+export function getColorScheme() {
+    return cookie.get("pos_color_scheme") || "light";
+}
+
 /**
  * Generates a QR code as a data URL in SVG format for a given URL.
  *
@@ -204,15 +240,32 @@ export function getTimeUtil(date) {
  * @param {number} [options.height=150] - The height of the QR code.
  * @param {number} [options.correctLevel=QRCode.CorrectLevel.L] - The error correction level for the QR code.
  * @param {boolean} [options.useSVG=true] - Whether to generate the QR code as SVG.
+ * @param {boolean} [options.useThemeQr=false] - Generates the QR code based on the active PoS theme.
+ *   DANGER: Do NOT use this option for receipt QR codes.
+ *   In dark mode, it generates a white QR code, which will become invisible on printed receipts.
  * @param {Object} [options.rest] - Additional options to pass to the QRCode constructor.
  * @returns {string} The QR code as a data URL in SVG format.
  */
 export function generateQRCodeDataUrl(
     url,
-    { width = 150, height = 150, correctLevel = QRCode.CorrectLevel.L, ...rest } = {}
+    {
+        width = 150,
+        height = 150,
+        correctLevel = QRCode.CorrectLevel.L,
+        useThemeQr = false,
+        ...rest
+    } = {}
 ) {
     const tempDiv = document.createElement("div");
-    const options = { width, height, correctLevel, ...rest };
+    let themeOptions = {};
+    if (useThemeQr) {
+        const colorScheme = getColorScheme();
+        themeOptions = {
+            colorDark: colorScheme === "light" ? "black" : "white",
+            colorLight: "transparent",
+        };
+    }
+    const options = { width, height, correctLevel, ...themeOptions, ...rest };
 
     new QRCode(tempDiv, { text: url, useSVG: true, ...options });
 
@@ -238,4 +291,25 @@ export function imageDataUri(base64Source) {
     }
     const imageType = FILETYPE_BY_MAGIC_CHAR[base64Source.charAt(0)] || "png";
     return `data:image/${imageType};base64,${base64Source}`;
+}
+
+export function getDisplayDateInfo(sqlDate) {
+    const dateTime = deserializeDateTime(sqlDate);
+    if (!dateTime.isValid) {
+        return {
+            dayLabel: "",
+            monthDayLabel: "",
+            isTodayOrTomorrow: false,
+        };
+    }
+
+    const today = DateTime.now().startOf("day");
+    const isToday = dateTime.hasSame(today, "day");
+    const isTomorrow = !isToday && dateTime.hasSame(today.plus({ days: 1 }), "day");
+
+    return {
+        isTodayOrTomorrow: isToday || isTomorrow,
+        dayLabel: isToday ? _t("Today") : isTomorrow ? _t("Tomorrow") : dateTime.toFormat("cccc"),
+        monthDayLabel: dateTime.toLocaleString({ month: "long", day: "numeric" }),
+    };
 }

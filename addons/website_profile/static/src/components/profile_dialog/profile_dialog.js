@@ -1,6 +1,6 @@
-import { reactive, useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { Component, markup, onMounted, onWillStart } from "@odoo/owl";
+import { Component, markup, onMounted, onWillStart, props, proxy, t, useEffect } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
@@ -19,21 +19,13 @@ export class ProfileDialog extends Component {
         FileUploader,
         Wysiwyg,
     };
-    static props = {
-        close: Function,
-        confirm: { type: Function, optional: true },
-        focusWebsiteDescription: {
-            type: Boolean,
-            optional: true,
-        },
-        userId: { type: Number },
-        canEditCountry: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        confirm: () => {},
-        focusWebsiteDescription: false,
-        canEditCountry: true,
-    };
+    props = props({
+        close: t.function(),
+        confirm: t.function().optional(() => () => {}),
+        focusWebsiteDescription: t.boolean().optional(false),
+        userId: t.number(),
+        canEditCountry: t.boolean().optional(true),
+    });
 
     setup() {
         super.setup();
@@ -41,7 +33,7 @@ export class ProfileDialog extends Component {
         this.upload = useRef("upload");
         this.profileImg = useRef("profileImg");
         this.profileImgData = null;
-        this.state = useState({
+        this.state = proxy({
             isProcessing: false,
             hasError: false,
             emailHasError: false,
@@ -49,6 +41,16 @@ export class ProfileDialog extends Component {
         });
         const websiteDescriptionClass = "website_profile_profile_dialog_website_description";
         useAutofocus({ refName: "name" });
+
+        this.user = proxy({});
+        let isUserInitialized = false;
+        useEffect(() => {
+            this.user; // trigger effect when user is updated
+            if (!isUserInitialized) {
+                return;
+            }
+            this.validate();
+        });
 
         onWillStart(async () => {
             const [users, countries] = await Promise.all([
@@ -70,7 +72,8 @@ export class ProfileDialog extends Component {
             const userData = users[0];
             userData.country_id = userData.country_id && userData.country_id[0]; // keep only id
             userData.website_description = markup(userData.website_description || "");
-            this.user = reactive(userData, () => this.validate());
+            isUserInitialized = true;
+            Object.assign(this.user, userData);
             this.countries = countries;
             const isInternalUser = await user.hasGroup("base.group_user");
             this.descriptionWysiwygConfig = {

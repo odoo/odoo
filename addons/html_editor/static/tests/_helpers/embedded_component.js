@@ -1,3 +1,4 @@
+import { useRef } from "@web/owl2/utils";
 import {
     applyObjectPropertyDifference,
     getEmbeddedProps,
@@ -5,14 +6,14 @@ import {
     useEmbeddedState,
     StateChangeManager,
 } from "@html_editor/others/embedded_component_utils";
-import { Component, useRef, useState, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 
 export class Counter extends Component {
     static props = ["*"];
     static template = xml`
-        <span t-ref="root" class="counter" t-on-click="increment">Counter:<t t-out="state.value"/></span>`;
+        <span t-custom-ref="root" class="counter" t-on-click="this.increment">Counter:<t t-out="this.state.value"/></span>`;
 
-    state = useState({ value: 0 });
+    state = proxy({ value: 0 });
     ref = useRef("root");
 
     increment() {
@@ -23,7 +24,7 @@ export class Counter extends Component {
 export const EmbeddedWrapperMixin = (editableDescendantName) =>
     class extends Component {
         static props = ["*"];
-        static template = xml`<t><div class="${editableDescendantName}" t-ref="${editableDescendantName}"/></t>`;
+        static template = xml`<t><div class="${editableDescendantName}" t-custom-ref="${editableDescendantName}"/></t>`;
 
         setup() {
             useEditableDescendants(this.props.host);
@@ -34,20 +35,20 @@ export class EmbeddedWrapper extends Component {
     static props = ["*"];
     static template = xml`
         <t>
-            <div t-if="editableDescendants.shallow" class="shallow" t-ref="shallow"/>
-            <div t-if="!state.switch">
-                <div class="deep" t-ref="deep"/>
+            <div t-if="this.editableDescendants.shallow" class="shallow" t-custom-ref="shallow"/>
+            <div t-if="!this.state.switch">
+                <div class="deep" t-custom-ref="deep"/>
             </div>
             <div t-else="">
                 <div class="switched">
-                    <div class="deep" t-ref="deep"/>
+                    <div class="deep" t-custom-ref="deep"/>
                 </div>
             </div>
         </t>`;
 
     setup() {
         this.editableDescendants = useEditableDescendants(this.props.host);
-        this.state = useState({
+        this.state = proxy({
             switch: false,
         });
     }
@@ -56,11 +57,11 @@ export class EmbeddedWrapper extends Component {
 export class OffsetCounter extends Component {
     static props = ["*"];
     static template = xml`
-        <span class="counter" t-on-click="increment">Counter:<t t-out="counterValue"/></span>`;
+        <span class="counter" t-on-click="this.increment">Counter:<t t-out="this.counterValue"/></span>`;
 
     setup() {
         this.embeddedState = useEmbeddedState(this.props.host);
-        this.state = useState({
+        this.state = proxy({
             value: 0,
         });
     }
@@ -94,7 +95,7 @@ export const offsetCounter = {
 export class SavedCounter extends Component {
     static props = ["*"];
     static template = xml`
-        <span class="counter" t-on-click="increment">Counter:<t t-out="counterValue"/></span>`;
+        <span class="counter" t-on-click="this.increment">Counter:<t t-out="this.counterValue"/></span>`;
 
     setup() {
         this.embeddedState = useEmbeddedState(this.props.host);
@@ -122,7 +123,7 @@ export const savedCounter = {
 export class CollaborativeObject extends Component {
     static props = ["*"];
     static template = xml`
-        <div class="obj"><t t-out="collaborativeObject"/></div>`;
+        <div class="obj"><t t-out="this.collaborativeObject"/></div>`;
 
     setup() {
         this.embeddedState = useEmbeddedState(this.props.host);
@@ -154,7 +155,7 @@ export const collaborativeObject = {
 export class NamedCounter extends Component {
     static props = ["*"];
     static template = xml`
-        <span class="counter" t-on-click="increment"><t t-out="props.name"/>:<t t-out="counterValue"/></span>`;
+        <span class="counter" t-on-click="this.increment"><t t-out="this.props.name"/>:<t t-out="this.counterValue"/></span>`;
 
     setup() {
         this.embeddedState = useEmbeddedState(this.props.host);

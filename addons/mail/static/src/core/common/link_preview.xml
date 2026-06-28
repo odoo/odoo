@@ -9,13 +9,13 @@
 
     <t t-name="mail.LinkPreviewCard.content">
         <span t-if="this.linkPreview.og_site_name" class="text-muted smaller" t-out="this.linkPreview.og_site_name"/>
-        <p class="o-mail-LinkPreviewCard-title mb-0" t-att-class="{ 'me-4': !this.linkPreview.og_site_name }">
+        <p class="o-mail-LinkPreviewCard-title o_line_clamp mb-0" t-att-class="{ 'me-4': !this.linkPreview.og_site_name }">
             <a t-att-href="this.linkPreview.source_url" target="_blank" t-out="this.linkPreview.og_title"/>
         </p>
-        <p t-if="this.linkPreview.og_description" class="o-mail-LinkPreviewCard-description mt-1 mb-0 text-muted smaller" t-out="this.linkPreview.og_description"/>
+        <p t-if="this.linkPreview.og_description" class="o-mail-LinkPreviewCard-description o_line_clamp o_line_clamp_3 mt-1 mb-0 text-muted smaller" t-out="this.linkPreview.og_description"/>
     </t>
     <t t-name="mail.LinkPreviewCard">
-        <div class="o-mail-LinkPreviewCard card mb-1 rounded bg-view shadow-sm overflow-hidden" t-att-class="{ 'o-mail-LinkPreviewCard-noImage': !this.linkPreview.og_image, 'w-100': this.ui.isSmall or this.env.inChatWindow }" t-attf-class="{{ className }}">
+        <div class="o-mail-LinkPreviewCard card mb-1 rounded bg-view shadow-sm overflow-hidden" t-att-class="{ 'o-mail-LinkPreviewCard-noImage': !this.linkPreview.og_image, 'w-100': this.ui.isSmall or this.env.inChatWindow }" t-attf-class="{{ this.className }}">
             <t t-if="this.linkPreview.og_image and this.linkPreview.hasSquarishCardImage and this.linkPreview.og_description">
                 <div class="d-flex align-items-center px-2 o-pt-0_5 pb-1 w-100">
                     <div class="flex-grow-1 pe-1">
@@ -26,9 +26,8 @@
                             <img t-custom-ref="image" class="o-mail-LinkPreviewCardImage-squarish rounded object-fit-contain" t-att-src="this.linkPreview.og_image" t-att-alt="this.linkPreview.og_title" t-on-load="this.onImageLoaded"/>
                         </a>
                     </div>
-                    <t t-call="mail.LinkPreview.aside">
-                        <t t-set="className" t-value="'btn btn-dark btn-sm mt-1 me-1 rounded opacity-75 opacity-100-hover py-0 px-1'"/>
-                    </t>
+                    <t t-call="mail.LinkPreview.aside"
+                        className="'btn btn-dark btn-sm mt-1 me-1 rounded opacity-75 opacity-100-hover py-0 px-1'"/>
                 </div>
             </t>
             <t t-elif="this.linkPreview.og_image">
@@ -42,45 +41,42 @@
                         </a>
                     </div>
                 </div>
-                <t t-call="mail.LinkPreview.aside">
-                    <t t-set="className" t-value="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
-                </t>
+                <t t-call="mail.LinkPreview.aside"
+                    className="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
             </t>
             <t t-else="">
                 <div class="border-start border-4 px-2 py-1">
                     <t t-call="mail.LinkPreviewCard.content"/>
-                    <t t-call="mail.LinkPreview.aside">
-                        <t t-set="className" t-value="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
-                    </t>
+                    <t t-call="mail.LinkPreview.aside"
+                        className="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
                 </div>
             </t>
         </div>
     </t>
 
     <t t-name="mail.LinkPreviewImage">
-        <div class="o-mail-LinkPreviewImage mb-2 rounded" t-att-class="{ 'me-2': this.env.inChatter }" t-attf-class="{{ className }}">
+        <div class="o-mail-LinkPreviewImage mb-2 rounded" t-att-class="{ 'me-2': this.env.inChatter }" t-attf-class="{{ this.className }}">
             <div class="position-relative d-inline-block">
                 <a t-if="this.linkPreview.imageUrl" t-att-href="this.linkPreview.imageUrl" target="_blank">
                     <Gif t-if="this.linkPreview.isGif" paused="this.props.messageLinkPreview.gifPaused" class="'h-auto w-auto rounded'" src="this.linkPreview.imageUrl" onLoad.bind="this.onImageLoaded"/>
                     <img t-else="" class="h-auto w-auto rounded" t-att-src="this.linkPreview.imageUrl" t-on-load="this.onImageLoaded"/>
                 </a>
-                <t t-call="mail.LinkPreview.aside">
-                    <t t-set="className" t-value="'btn btn-sm btn-dark mt-2 me-2 rounded opacity-75 opacity-100-hover'"/>
-                </t>
+                <t t-call="mail.LinkPreview.aside"
+                    className="'btn btn-sm btn-dark mt-2 me-2 rounded opacity-75 opacity-100-hover'"/>
             </div>
         </div>
     </t>
 
     <t t-name="mail.LinkPreviewVideo">
-        <div class="o-mail-LinkPreviewVideo card position-relative w-100 mb-2 rounded bg-view shadow-sm overflow-hidden" t-att-data-provider="this.linkPreview.videoProvider" t-att-class="{ 'me-2': this.env.inChatter, 'o-mail-LinkPreviewVideo-embed': this.linkPreview.videoURL, 'o-mail-LinkPreviewVideo-started': this.state.startVideo }" t-attf-class="{{ className }}">
+        <div class="o-mail-LinkPreviewVideo card position-relative w-100 mb-2 rounded bg-view shadow-sm overflow-hidden" t-att-data-provider="this.linkPreview.videoProvider" t-att-class="{ 'me-2': this.env.inChatter, 'o-mail-LinkPreviewVideo-embed': this.linkPreview.videoURL, 'o-mail-LinkPreviewVideo-started': this.state.startVideo }" t-attf-class="{{ this.className }}">
             <div class="row g-0 flex-row-reverse">
                 <div class="col min-w-0" t-att-class="{ 'd-flex align-items-center': !this.linkPreview.og_description }">
                     <div class="d-flex flex-column gap-1 px-3 py-1 bg-view">
                         <p t-if="this.linkPreview.og_site_name" class="mb-0 card-text text-muted smaller overflow-hidden" t-out="this.linkPreview.og_site_name"></p>
-                        <h6 class="o-mail-LinkPreviewVideo-title card-title mb-0 me-2" t-attf-class="{{ this.linkPreview.og_description ? 'text-truncate' : 'o-mail-LinkPreviewVideo-hasDescription overflow-hidden' }}">
+                        <h6 class="o-mail-LinkPreviewVideo-title card-title mb-0 me-2" t-attf-class="{{ this.linkPreview.og_description ? 'text-truncate' : 'o-mail-LinkPreviewVideo-hasDescription o_line_clamp o_line_clamp_3' }}">
                             <a t-att-href="this.linkPreview.source_url" target="_blank" t-out="this.linkPreview.og_title"/>
                         </h6>
-                        <p t-if="this.linkPreview.og_description" class="o-mail-LinkPreviewVideo-description o-mail-LinkPreviewVideo-hasDescription card-text mb-0 text-muted small overflow-hidden" t-out="this.linkPreview.og_description"></p>
+                        <p t-if="this.linkPreview.og_description" class="o-mail-LinkPreviewVideo-description o-mail-LinkPreviewVideo-hasDescription o_line_clamp card-text mb-0 text-muted small" t-out="this.linkPreview.og_description"></p>
                     </div>
                 </div>
                 <div t-if="!this.linkPreview.videoURL" class="col-4 d-block">
@@ -91,9 +87,8 @@
                 <div t-if="!this.state.videoLoaded" class="o-mail-LinkPreviewVideo-videoWrap h-100 w-100" t-on-click="() => this.state.startVideo = true"><t t-call="mail.LinkPreviewVideo.preview"/></div>
                 <iframe t-if="this.state.startVideo" t-att-src="this.linkPreview.videoURL" class="h-100 w-100 rounded" t-att-class="{'d-none': !this.state.videoLoaded}" allow="autoplay" frameborder="0" allowFullScreen="true" t-custom-ref="video"/>
             </div>
-            <t t-call="mail.LinkPreview.aside">
-                <t t-set="className" t-value="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
-            </t>
+            <t t-call="mail.LinkPreview.aside"
+                className="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
         </div>
     </t>
 

@@ -22,6 +22,7 @@ class TestRefundFlows(StripeCommon, PaymentHttpCommon):
             return_value=self.refund_object,
         ):
             source_tx._refund()
+        self._run_processing()
         refund_tx = self.env["payment.transaction"].search([
             ("source_transaction_id", "=", source_tx.id)
         ])
@@ -42,8 +43,27 @@ class TestRefundFlows(StripeCommon, PaymentHttpCommon):
         with (
             patch("odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature"),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_json_request(url, data=self.canceled_refund_payment_data)
-        self.assertEqual(process_mock.call_count, 1)
+        self.assertEqual(record_mock.call_count, 1)
+
+    @mute_logger(
+        "odoo.addons.payment_stripe.controllers.main",
+        "odoo.addons.payment_stripe.models.payment_transaction",
+    )
+    def test_void_webhook_notification_does_not_trigger_processing(self):
+        self.provider.payment_method_ids.active = False  # TODO VCHU: remove in master
+        self.provider.capture_manually = True
+        tx = self._create_transaction("direct", state="authorized")
+        url = self._build_url(StripeController._webhook_url)
+        with (
+            patch("odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature"),
+            patch(
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as process_mock,
+        ):
+            self._make_json_request(url, data=self.void_payment_data)
+        self.assertEqual(process_mock.call_count, 0)
+        self.assertFalse(tx.child_transaction_ids)

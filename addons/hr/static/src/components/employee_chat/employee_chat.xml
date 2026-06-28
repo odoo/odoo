@@ -4,7 +4,7 @@
         <a t-if="this.props.record.data.user_id and this.props.record.resId"
             title="Chat"
             icon="fa-comments"
-            t-on-click.prevent="() => this.openChat(this.props.record.resId)"
+            t-on-click.prevent="() => this.store.openChat({ employeeId: this.props.record.resId })"
             href="#"
             class="ml8 o_employee_chat_btn"
             role="button">

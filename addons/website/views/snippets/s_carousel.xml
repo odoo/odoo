@@ -4,12 +4,29 @@
 <template id="s_carousel" name="Carousel">
     <section class="s_carousel_wrapper p-0" data-vxml="001" data-vcss="001">
         <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
-        <div t-attf-id="myCarousel{{uniq}}" class="s_carousel s_carousel_default carousel slide" data-bs-ride="true" data-bs-interval="10000">
+        <div t-attf-id="myCarousel{{uniq}}" class="s_carousel s_carousel_default carousel slide d-flex flex-column-reverse" data-bs-ride="true" data-bs-interval="10600" role="region" aria-roledescription="carousel">
+            <!-- Controls and indicators are set before the content so that they
+                 are focused in priority when navigating the page with tab. -->
+            <!-- Controls -->
+            <button class="carousel-control-prev o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarousel{{uniq}}" t-attf-aria-controls="myCarousel{{uniq}}_inner" data-bs-slide="prev" aria-label="Previous slide" title="Previous slide">
+                <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                <span class="visually-hidden">Previous slide</span>
+            </button>
+            <button class="carousel-control-next o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarousel{{uniq}}" t-attf-aria-controls="myCarousel{{uniq}}_inner" data-bs-slide="next" aria-label="Next slide" title="Next slide">
+                <span class="carousel-control-next-icon" aria-hidden="true"/>
+                <span class="visually-hidden">Next slide</span>
+            </button>
+            <!-- Indicators -->
+            <div class="carousel-indicators o_not_editable" role="tablist">
+                <button type="button" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide-to="0" class="active" aria-label="Slide 1 of 3" role="tab" t-attf-aria-controls="myCarousel{{uniq}}_1" aria-selected="true"/>
+                <button type="button" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide-to="1" aria-label="Slide 2 of 3" role="tab" t-attf-aria-controls="myCarousel{{uniq}}_2" aria-selected="false"/>
+                <button type="button" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide-to="2" aria-label="Slide 3 of 3" role="tab" t-attf-aria-controls="myCarousel{{uniq}}_3" aria-selected="false"/>
+            </div>
             <!-- Content -->
-            <div class="carousel-inner">
+            <div class="carousel-inner" t-attf-id="myCarousel{{uniq}}_inner" aria-live="off">
                 <!-- #01 -->
-                <div class="carousel-item active oe_img_bg o_bg_img_center o_cc o_cc5 pt152 pb152" style="background-image: url('/web/image/website.s_carousel_default_image_1');" data-name="Slide">
-                    <div class="o_we_bg_filter bg-black-25"/>
+                <div class="carousel-item active oe_img_bg o_bg_img_center o_cc o_cc5 pt152 pb152" style="background-image: url('/web/image/website.ultrawide_lg_5');" data-name="Slide" t-attf-id="myCarousel{{uniq}}_1" role="tabpanel" aria-roledescription="slide">
+                    <div class="o_we_bg_filter bg-black-50"/>
                     <div class="container oe_unremovable">
                         <div class="row">
                             <div class="carousel-content col-lg-6">
@@ -23,7 +40,8 @@
                     </div>
                 </div>
                 <!-- #02 -->
-                <div class="carousel-item oe_img_bg o_bg_img_center pt96 pb96" style="background-image: url('/web/image/website.s_carousel_default_image_2');" data-name="Slide">
+                <div class="carousel-item oe_img_bg o_bg_img_center pt96 pb96" style="background-image: url('/web/image/website.ultrawide_lg_3');" data-name="Slide" t-attf-id="myCarousel{{uniq}}_2" role="tabpanel" aria-roledescription="slide">
+                    <div class="o_we_bg_filter bg-black-50"/>
                     <div class="container oe_unremovable">
                         <div class="row">
                             <div class="carousel-content col-lg-8 offset-lg-2 text-center pt48 pb40">
@@ -38,7 +56,8 @@
                     </div>
                 </div>
                 <!-- #03 -->
-                <div class="carousel-item oe_img_bg o_bg_img_center pt128 pb128 o_cc o_cc5" style="background-image: url('/web/image/website.s_carousel_default_image_3');" data-name="Slide">
+                <div class="carousel-item oe_img_bg o_bg_img_center pt128 pb128 o_cc o_cc5" style="background-image: url('/web/image/website.ultrawide_lg_4');" data-name="Slide" t-attf-id="myCarousel{{uniq}}_3" role="tabpanel" aria-roledescription="slide">
+                    <div class="o_we_bg_filter bg-black-50"/>
                     <div class="container oe_unremovable">
                         <div class="row">
                             <div class="carousel-content col-lg-6 offset-lg-6 pb24 pt24">
@@ -50,21 +69,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Controls -->
-            <button class="carousel-control-prev o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide="prev" aria-label="Previous" title="Previous">
-                <span class="carousel-control-prev-icon" aria-hidden="true"/>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide="next" aria-label="Next" title="Next">
-                <span class="carousel-control-next-icon" aria-hidden="true"/>
-                <span class="visually-hidden">Next</span>
-            </button>
-            <!-- Indicators -->
-            <div class="carousel-indicators o_not_editable">
-                <button type="button" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide-to="0" class="active" aria-label="Carousel indicator"/>
-                <button type="button" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide-to="1" aria-label="Carousel indicator"/>
-                <button type="button" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide-to="2" aria-label="Carousel indicator"/>
             </div>
         </div>
     </section>

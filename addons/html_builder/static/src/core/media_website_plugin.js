@@ -98,10 +98,19 @@ export class MediaWebsitePlugin extends Plugin {
         const sel = this.dependencies.selection.getEditableSelection();
         const editableEl =
             closestElement(mediaEl || sel.startContainer, ".o_savable") || this.editable;
-        const params = this.processThrough("replace_media_dialog_params_processors", {
-            node: mediaEl,
-        });
+        const closestSnippetEl = closestElement(mediaEl, "[data-snippet]");
+        const params = this.processThrough(
+            "replace_media_dialog_params_processors",
+            this.getMediaDialogProps({ mediaEl, closestSnippetEl, editableEl })
+        );
         await this.dependencies.media.openMediaDialog(params, editableEl);
+    }
+
+    getMediaDialogProps({ mediaEl, closestSnippetEl, editableEl }) {
+        return {
+            node: mediaEl,
+            closestSnippetEl,
+        };
     }
 
     /**
@@ -112,9 +121,16 @@ export class MediaWebsitePlugin extends Plugin {
     openImageTooltip(mediaEl) {
         // Remove the displayed tooltip if any first.
         this.removeCurrentTooltip();
-        this.removeCurrentTooltip = this.popover.add(mediaEl, Tooltip, {
-            tooltip: _t("Double-click to edit"),
-        });
+        this.removeCurrentTooltip = this.popover.add(
+            mediaEl,
+            Tooltip,
+            {
+                tooltip: _t("Double-click to edit"),
+            },
+            {
+                sequence: 0,
+            }
+        );
         setTimeout(this.removeCurrentTooltip, 3000);
     }
 

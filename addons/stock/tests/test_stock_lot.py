@@ -267,11 +267,7 @@ class TestLotSerial(TestStockCommon):
         picking1.with_company(branch_a)._action_done()
         self.assertTrue(move.move_line_ids.lot_id)
         self.assertEqual(move.state, 'done')
-        # Creating a new lot with only "Branch X" in the context
-        sn_form = Form(
-            self.env['stock.lot'].with_company(branch_a)
-            .with_context(allowed_company_ids=[branch_a.id])
-        )
+        sn_form = Form(self.env['stock.lot'].with_context(allowed_company_ids=branch_a.ids))
         sn_form.name = 'sn_test_2'
         sn_form.product_id = self.productB
         sn = sn_form.save()

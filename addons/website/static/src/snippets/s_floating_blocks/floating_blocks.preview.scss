@@ -5,13 +5,17 @@
 // a preview.
 .o_snippet_preview_wrap {
     [data-snippet="s_floating_blocks"] {
-        height: 750px;
+        height: 750px !important;
 
         // Needed to avoid that inner blocks overflows while translating
         overflow: hidden;
 
         .s_floating_blocks_block {
             opacity: 1;
+
+            @include media-breakpoint-down(md) {
+                max-height: 550px !important;
+            }
 
             &:nth-child(1) {
                 transition: all .3s;
@@ -33,5 +37,9 @@
     &:is(:hover, :focus-visible) [data-snippet="s_floating_blocks"] .s_floating_blocks_block:nth-child(1) {
         margin: 3% 0 -30%;
         transform: scale(.95);
+
+        @include media-breakpoint-down(md) {
+            margin: 3% 0 -100%;
+        }
     }
 }

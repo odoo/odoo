@@ -4,15 +4,14 @@ import operator as py_operator
 from ast import literal_eval
 from collections import defaultdict
 from collections.abc import Iterable
+from datetime import date, datetime, time
 from dateutil.relativedelta import relativedelta
-from datetime import datetime
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import SQL
 from odoo.tools.barcode import check_barcode_encoding
-from odoo.tools.mail import html2plaintext, is_html_empty
 
 PY_OPERATORS = {
     '<': py_operator.lt,
@@ -159,9 +158,12 @@ class ProductProduct(models.Model):
         domain_quant = [('product_id', 'in', self.ids)] + domain_quant_loc
         dates_in_the_past = False
         # only to_date as to_date will correspond to qty_available
+        original_value = to_date
         to_date = fields.Datetime.to_datetime(to_date)
-        if to_date and to_date.time() == datetime.min.time():
-            to_date = datetime.combine(to_date, datetime.max.time())
+        if (isinstance(original_value, date) and not isinstance(original_value, datetime)) or \
+            (isinstance(original_value, str) and len(original_value) == 10):
+            to_date = datetime.combine(to_date.date(), time.max)
+
         if to_date and to_date < fields.Datetime.now():
             dates_in_the_past = True
 
@@ -169,6 +171,8 @@ class ProductProduct(models.Model):
         domain_move_out = [('product_id', 'in', self.ids)] + domain_move_out_loc
         if lot_id is not None:
             domain_quant += [('lot_id', '=', lot_id)]
+            domain_move_in += [('move_line_ids.lot_id', '=', lot_id)]
+            domain_move_out += [('move_line_ids.lot_id', '=', lot_id)]
         if owner_id is not None:
             domain_quant += [('owner_id', '=', owner_id)]
             domain_move_in += [('restrict_partner_id', '=', owner_id)]
@@ -206,7 +210,7 @@ class ProductProduct(models.Model):
         quants_res = {product.id: (quantity, reserved_quantity) for product, quantity, reserved_quantity in Quant._read_group(domain_quant, ['product_id'], ['quantity:sum', 'reserved_quantity:sum'])}
         expired_unreserved_quants_res = {}
         if self.env.context.get('with_expiration'):
-            max_date = self.env.context['to_date'] if self.env.context.get('to_date') else self.env.context['with_expiration']
+            max_date = self.env.context['to_date'] if self.env.context.get('to_date') and self.env.context.get('fresh_qty_forecast') else self.env.context['with_expiration']
             domain_quant += [('removal_date', '<=', max_date)]
             expired_unreserved_quants_res = {product.id: quantity - reserved_quantity for product, quantity, reserved_quantity in Quant._read_group(domain_quant, ['product_id'], ['quantity:sum', 'reserved_quantity:sum'])}
         moves_in_res_past = defaultdict(float)
@@ -282,13 +286,15 @@ class ProductProduct(models.Model):
         incoming_moves = self.env['stock.move.line']._read_group([
                 ('product_id', 'in', self.ids),
                 ('state', '=', 'done'),
-                ('picking_code', '=', 'incoming'),
+                ('location_id.warehouse_id', '=', False),
+                ('location_dest_id.warehouse_id', '!=', False),
                 ('date', '>=', fields.Datetime.now() - relativedelta(years=1))
             ], ['product_id'], ['__count'])
         outgoing_moves = self.env['stock.move.line']._read_group([
                 ('product_id', 'in', self.ids),
                 ('state', '=', 'done'),
-                ('picking_code', '=', 'outgoing'),
+                ('location_id.warehouse_id', '!=', False),
+                ('location_dest_id.warehouse_id', '=', False),
                 ('date', '>=', fields.Datetime.now() - relativedelta(years=1))
             ], ['product_id'], ['__count'])
         res_incoming = {product.id: count for product, count in incoming_moves}
@@ -301,21 +307,19 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return self.ids
 
-    def get_total_routes(self):
-        # Extend the total routes in other modules
-        return self.env['stock.route']
+    def get_routes_actions(self):
+        """Return the route action types expected for this product.
 
-    def _get_description(self, picking_type_id):
-        """
-            Return product description based on the picking type:
-            * For outgoing pickings, we always use the product name.
-            * For all other pickings, we try to use the product description (if one has been set),
-              otherwise we fall back to the product name.
+        Installed modules can extend this list based on the product's relevant
+        field values, such as vendors or bills of materials.
         """
         self.ensure_one()
-        if picking_type_id.code == 'outgoing':
-            return self.display_name
-        return html2plaintext(self.description) if not is_html_empty(self.description) else self.display_name
+        return []
+
+    def _get_description(self, picking_type_id):
+        """ Hook function meant to be overridden. """
+        self.ensure_one()
+        return self.display_name
 
     def _get_picking_description(self, picking_type_id):
         """
@@ -394,25 +398,34 @@ class ProductProduct(models.Model):
             dest_loc_domain_out = Domain('location_dest_id', 'not in', locations.ids)
             dest_loc_domain_done = dest_loc_domain
         elif locations:
-            paths_query = models.Query(locations)
-            paths_query.add_where(SQL(
-                """EXISTS (
-                    SELECT 1
-                      FROM stock_location parent
-                     WHERE parent.id IN %s
-                       AND %s LIKE parent.parent_path || '%%'
-                )""",
-                tuple(locations.ids),
-                paths_query.table.parent_path,
-            ))
-            loc_domain = Domain('location_id', 'in', paths_query)
+            descendants_query = SQL(
+                    """
+                    (
+                        WITH RECURSIVE descendants AS (
+                            SELECT id
+                            FROM stock_location
+                            WHERE id IN %s
+
+                            UNION
+
+                            SELECT sl.id
+                            FROM stock_location sl
+                            JOIN descendants d
+                                ON sl.location_id = d.id
+                        )
+                        SELECT id FROM descendants
+                    )
+                    """,
+                    tuple(locations.ids),
+            )
+            loc_domain = Domain('location_id', 'in', descendants_query)
             # The condition should be split for done and not-done moves as the final_dest_id only make sense
             # for the part of the move chain that is not done yet.
-            dest_loc_domain_done = Domain('location_dest_id', 'in', paths_query)
+            dest_loc_domain_done = Domain('location_dest_id', 'in', descendants_query)
             dest_loc_domain_in_progress = Domain([
                 '|',
-                    '&', ('location_final_id', '!=', False), ('location_final_id', 'in', paths_query),
-                    '&', ('location_final_id', '=', False), ('location_dest_id', 'in', paths_query),
+                    '&', ('forecasted_location_id', '!=', False), ('forecasted_location_id', 'in', descendants_query),
+                    '&', ('forecasted_location_id', '=', False), ('location_dest_id', 'in', descendants_query),
             ])
             dest_loc_domain = Domain([
                 '|',
@@ -650,6 +663,8 @@ class ProductProduct(models.Model):
 
     def action_product_forecast_report(self):
         self.ensure_one()
+        if not self.env.user._get_default_warehouse_id():
+            self.env['stock.warehouse']._warehouse_redirect_warning()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_forecasted_product_product_action")
         return action
 
@@ -789,19 +804,16 @@ class ProductTemplate(models.Model):
         'stock.location', "Inventory Adjustment",
         company_dependent=True, check_company=True, domain="[('usage', '=', 'inventory'), '|', ('company_id', '=', False), ('company_id', '=', allowed_company_ids[0])]",
         help="This location will be used as the source location for stock moves generated by an inventory adjustment.")
-    sale_delay = fields.Integer(
-        'Customer Lead Time', default=0, company_dependent=True,
-        help="Delivery lead time, in days. It's the number of days, promised to the customer, between the confirmation of the sales order and the delivery.")
     tracking = fields.Selection([
-        ('serial', 'By Unique Serial Number'),
+        ('none', 'By Quantity'),
         ('lot', 'By Lots'),
-        ('none', 'By Quantity')],
+        ('serial', 'By Unique Serial Number')],
         string="Tracking",
         compute='_compute_tracking', inverse='_set_tracking', store=True, readonly=False, precompute=True,
         help="Ensure the traceability of a storable product in your warehouse.")
     lot_sequence_id = fields.Many2one(
         'ir.sequence', 'Serial/Lot Numbers Sequence', default=lambda self: self.env.ref('stock.sequence_production_lots', raise_if_not_found=False),
-        help='Technical Field: The Ir.Sequence record that is used to generate serial/lot numbers for this product')
+        help='Technical Field: The Ir.Sequence record that is used to generate serial/lot numbers for this product', index='btree_not_null')
     serial_prefix_format = fields.Char(
         'Custom Lot/Serial', compute='_compute_serial_prefix_format', inverse='_inverse_serial_prefix_format',
         help=SERIAL_PREFIX_FORMAT_HELP_TEXT)
@@ -821,7 +833,7 @@ class ProductTemplate(models.Model):
         default=lambda self: self.env['stock.route'].search_count([('product_selectable', '=', True)]))
     route_ids = fields.Many2many(
         'stock.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
-        domain=[('product_selectable', '=', True)], depends_context=['company', 'allowed_companies'],
+        domain=[('product_selectable', '=', True)],
         help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, replenished on order, etc.")
     nbr_moves_in = fields.Integer(compute='_compute_nbr_moves', compute_sudo=False, help="Number of incoming stock moves in the past 12 months")
     nbr_moves_out = fields.Integer(compute='_compute_nbr_moves', compute_sudo=False, help="Number of outgoing stock moves in the past 12 months")
@@ -908,13 +920,15 @@ class ProductTemplate(models.Model):
         incoming_moves = self.env['stock.move.line']._read_group([
                 ('product_id.product_tmpl_id', 'in', self.ids),
                 ('state', '=', 'done'),
-                ('picking_code', '=', 'incoming'),
+                ('location_id.warehouse_id', '=', False),
+                ('location_dest_id.warehouse_id', '!=', False),
                 ('date', '>=', fields.Datetime.now() - relativedelta(years=1))
             ], ['product_id'], ['__count'])
         outgoing_moves = self.env['stock.move.line']._read_group([
                 ('product_id.product_tmpl_id', 'in', self.ids),
                 ('state', '=', 'done'),
-                ('picking_code', '=', 'outgoing'),
+                ('location_id.warehouse_id', '!=', False),
+                ('location_dest_id.warehouse_id', '=', False),
                 ('date', '>=', fields.Datetime.now() - relativedelta(years=1))
             ], ['product_id'], ['__count'])
         for product, count in incoming_moves:
@@ -999,7 +1013,7 @@ class ProductTemplate(models.Model):
 
     def _set_tracking(self):
         for template in self:
-            template.write({'is_storable': bool(template.tracking)})
+            template.write({'is_storable': bool(template.tracking) and template.type == 'consu'})
 
     @api.onchange('type')
     def _onchange_type(self):
@@ -1053,13 +1067,48 @@ class ProductTemplate(models.Model):
                     raise UserError(_("This product's company cannot be changed as long as there are quantities of it belonging to another company."))
 
         clean_inventory = False
+        templates_to_reset = self.env['product.template']
         if 'is_storable' in vals and any(vals['is_storable'] != prod_tmpl.is_storable and not prod_tmpl.is_storable for prod_tmpl in self):
             clean_inventory = True
+            if vals['is_storable']:
+                templates_to_reset = self.filtered(lambda tmpl: not tmpl.is_storable)
 
         res = super().write(vals)
         if clean_inventory:
             self.env['stock.quant'].sudo()._clean_reservations()
+            templates_to_reset._reset_inventory()
         return res
+
+    def _reset_inventory(self):
+        """
+        This methods create quants to match the move history of products that become storable
+        and make inventory adjustments to resets their inventory quantities.
+
+        These adjustments are necessary to ensure the integrity of the product valuation.
+        """
+        move_line_domain = Domain([
+            ('product_id', 'in', self.product_variant_ids.ids),
+            ('state', '=', 'done'),
+            '|',
+                ('location_usage', 'in', ('internal', 'transit')),
+                ('location_dest_usage', 'in', ('internal', 'transit')),
+        ])
+        move_lines_to_match = self.env['stock.move.line'].search_fetch(domain=move_line_domain, field_names=('product_id', 'location_id', 'quantity_product_uom'))
+        inventory_ledger = defaultdict(float)
+        for move_line in move_lines_to_match:
+            if move_line.location_usage in ('internal', 'transit'):
+                inventory_ledger[move_line.product_id, move_line.location_id] -= move_line.quantity_product_uom
+            if move_line.location_dest_usage in ('internal', 'transit'):
+                inventory_ledger[move_line.product_id, move_line.location_dest_id] += move_line.quantity_product_uom
+        quants_to_reset = self.env['stock.quant'].create([
+            {
+                'product_id': product.id,
+                'location_id': location.id,
+                'quantity': quantity,
+                'inventory_quantity': 0.0,
+            } for (product, location), quantity in inventory_ledger.items() if not product.uom_id.is_zero(quantity)
+        ])
+        quants_to_reset._apply_inventory()
 
     def copy(self, default=None):
         new_products = super().copy(default=default)

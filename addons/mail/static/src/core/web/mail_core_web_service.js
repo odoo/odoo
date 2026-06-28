@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 
@@ -42,7 +42,7 @@ export class MailCoreWeb {
             /** @type {import("models").Message} */
             const message = this.store["mail.message"].get(messageId);
             this.addMessageToInbox(message, notifId);
-            if (!this.store.self?.im_status?.includes("busy")) {
+            if (this.store.self_user?.im_status !== "busy") {
                 this.store.env.services["mail.out_of_focus"].notify(message);
             }
         });
@@ -116,7 +116,7 @@ export const mailCoreWeb = {
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {
-        const mailCoreWeb = reactive(new MailCoreWeb(env, services));
+        const mailCoreWeb = proxy(new MailCoreWeb(env, services));
         mailCoreWeb.setup();
         return mailCoreWeb;
     },

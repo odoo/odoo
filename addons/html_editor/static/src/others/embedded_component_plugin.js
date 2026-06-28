@@ -1,13 +1,19 @@
-import { nodeToTree } from "@html_editor/core/history_plugin";
+import { nodeToTree } from "@html_editor/core/dom_reference_map_plugin";
+import { mountComponent } from "@html_editor/others/embedded_component_utils";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { memoize } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
+import { NATIVE_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 
 /**
  * @typedef { Object } EmbeddedComponentShared
  * @property { EmbeddedComponentPlugin['renderBlueprintToElement'] } renderBlueprintToElement
+ */
+
+/**
+ * @typedef { import("@html_editor/core/dom_observer_plugin").SerializedMutation<"attributes"> } SerializedAttributesMutation
  */
 
 /**
@@ -21,18 +27,27 @@ import { renderToElement } from "@web/core/utils/render";
  */
 export class EmbeddedComponentPlugin extends Plugin {
     static id = "embeddedComponents";
-    static dependencies = ["history", "protectedNode", "selection"];
+    static dependencies = [
+        "history",
+        "domObserver",
+        "domReferenceMap",
+        "protectedNode",
+        "selection",
+    ];
     static shared = ["renderBlueprintToElement"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
-        on_attribute_changed_handlers: this.onChangeAttribute.bind(this),
         on_savepoint_restored_handlers: () => this.handleComponents(this.editable),
         on_history_reset_handlers: () => this.handleComponents(this.editable),
-        on_history_reset_from_steps_handlers: () => this.handleComponents(this.editable),
-        on_step_added_handlers: ({ stepCommonAncestor }) =>
-            this.handleComponents(stepCommonAncestor),
-        on_external_step_added_handlers: () => this.handleComponents(this.editable),
+        on_history_rebased_handlers: () => this.handleComponents(this.editable),
+        on_committed_to_history_handlers: (commit) => {
+            const root =
+                this.dependencies.domObserver.getMutationsCommonAncestor(
+                    commit.data.mutations || []
+                ) || this.editable;
+            this.handleComponents(root);
+        },
 
         /** Processors */
         clean_for_save_processors: (root) => this.cleanForSave(root),
@@ -40,10 +55,10 @@ export class EmbeddedComponentPlugin extends Plugin {
         before_sanitize_processors: this.preProcessSanitizedElem.bind(this),
         after_sanitize_processors: this.postProcessSanitizedElem.bind(this),
         serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
-        attribute_change_processors: this.onChangeAttribute.bind(this),
+        attributes_mutation_value_processors: this.processAttributesMutationValue.bind(this),
 
         /** Predicates */
-        is_mutation_record_savable_predicates: this.isMutationRecordSavable.bind(this),
+        is_mutation_savable_predicates: this.isMutationSavable.bind(this),
 
         /** Selectors */
         move_node_whitelist_selectors: "[data-embedded]",
@@ -66,15 +81,19 @@ export class EmbeddedComponentPlugin extends Plugin {
             }
             return result;
         });
-        // First mount is done during on_history_reset_handlers which happens
+        // First mount is done during on_will_reset_history_handlers which happens
         // when on_editor_started_handlers are called.
     }
 
-    isMutationRecordSavable(record) {
+    /**
+     * @param {import("@html_editor/core/dom_observer_plugin").NativeMutation} mutation
+     * @returns {boolean | undefined}
+     */
+    isMutationSavable(mutation) {
         if (
-            this.nodeMap.get(record.target) &&
-            record.type === "attributes" &&
-            record.attributeName === "data-embedded-props"
+            this.nodeMap.get(mutation.target) &&
+            mutation.type === NATIVE_MUTATION_TYPES.ATTRIBUTES &&
+            mutation.attributeName === "data-embedded-props"
         ) {
             // This attribute is determined independently for each user
             // through `data-embedded-state` attribute mutations.
@@ -83,7 +102,7 @@ export class EmbeddedComponentPlugin extends Plugin {
     }
 
     /**
-     * @typedef {import("@html_editor/core/history_plugin").Tree} Tree
+     * @typedef {import("@html_editor/core/dom_reference_map_plugin").Tree} Tree
      *
      * @param {Tree[]} serializableDescendants
      * @param {Node} elem
@@ -130,36 +149,36 @@ export class EmbeddedComponentPlugin extends Plugin {
 
     /**
      * Apply an embedded state change received from `data-embedded-state`
-     * attribute. In some cases (undo/redo/revertStepsUntil history operations),
+     * attribute. In some cases (undo/redo/revertCommitsUntil history operations),
      * the attribute has to be set to a new value, computed by the
      * stateChangeManager.
      *
-     * @param {Object} attributeChange @see HistoryPlugin
+     * @param { string } value
      * @param { Object } options
-     * @param { boolean } options.forNewStep whether the mutation is being used
-     *        to create a new step
-     * @returns {string} new attribute value to set on the node, which might be
-     *        unchanged
+     * @param { SerializedAttributesMutation } options.mutation
+     * @param { boolean } [options.ensureNewMutations = false] whether the mutation is being used
+     *        to create a new commit and requires to ensure new mutations are generated
+     * @param { boolean } [options.wasReversed = false] whether the change was reversed
+     * @returns {string} new attribute value to set on the node, which might be unchanged
      */
-    onChangeAttribute(attributeChange, { forNewStep = false } = {}) {
-        const attributeValue = attributeChange.value;
-        let newAttributeValue;
-        if (attributeChange.attributeName === "data-embedded-state") {
-            const attrState = attributeChange.reverse
-                ? attributeChange.oldValue
-                : attributeChange.value;
-            const stateChangeManager = this.getStateChangeManager(attributeChange.target);
-            if (stateChangeManager) {
-                // onStateChanged returns undefined if no change is needed for
-                // the attribute value
-                newAttributeValue = stateChangeManager.onStateChanged(attrState, {
-                    reverse: attributeChange.reverse,
-                    forNewStep,
-                });
-            }
+    processAttributesMutationValue(
+        value,
+        { mutation, ensureNewMutations = false, wasReversed = false }
+    ) {
+        if (mutation.attributeName === "data-embedded-state") {
+            const attrState = wasReversed ? mutation.oldValue : value;
+            const target = this.dependencies.domReferenceMap.getNodeById(mutation.nodeId);
+            // onStateChanged returns undefined if no change is needed for
+            // the attribute value
+            return (
+                this.getStateChangeManager(target)?.onStateChanged(attrState, {
+                    reverse: wasReversed,
+                    ensureNewMutations,
+                }) ?? value
+            );
+        } else {
+            return value;
         }
-        attributeChange.value = newAttributeValue || attributeValue;
-        return attributeChange;
     }
 
     getStateChangeManager(host) {
@@ -170,7 +189,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         if (!this.hostToStateChangeManagerMap.has(host)) {
             const config = {
                 host,
-                commitStateChanges: () => this.dependencies.history.addStep(),
+                commitStateChanges: () => this.dependencies.history.commit(),
             };
             const stateChangeManager = embedding.getStateChangeManager(config);
             stateChangeManager.setup();
@@ -197,21 +216,9 @@ export class EmbeddedComponentPlugin extends Plugin {
             });
         }
         this.trigger("on_will_mount_component_handlers", { name, env, props });
-        const root = this.app.createRoot(Component, {
-            props,
-            env,
+        const { root } = mountComponent(this.app, Component, host, props, env, {
+            onAfterComplete: () => this.trigger("on_component_mounted_handlers"),
         });
-        root.mount(host);
-        // Patch mount fiber to hook into the exact call stack where root is
-        // mounted (but before). This will remove host children synchronously
-        // just before adding the root rendered html.
-        const fiber = root.node.fiber;
-        const fiberComplete = fiber.complete;
-        fiber.complete = () => {
-            host.replaceChildren();
-            fiberComplete.call(fiber);
-            this.trigger("on_component_mounted_handlers");
-        };
         const onComponentInserted = this.extractOnComponentInserted(host);
         if (onComponentInserted) {
             // If a pending operation should be executed after the first mount
@@ -229,7 +236,7 @@ export class EmbeddedComponentPlugin extends Plugin {
     destroyRemovedComponents(infos) {
         // Avoid registering mutations if removed hosts are handled in
         // the same microtask as when they were removed.
-        this.dependencies.history.ignoreDOMMutations(() => {
+        this.dependencies.domObserver.ignore(() => {
             for (const info of infos) {
                 if (!this.editable.contains(info.host)) {
                     const host = info.host;
@@ -324,6 +331,7 @@ export class EmbeddedComponentPlugin extends Plugin {
                 this.dependencies.protectedNode.setProtectingNode(editableDescendant, false);
             }
         });
+        return elem;
     }
 
     cleanForSave(clone) {
@@ -339,6 +347,7 @@ export class EmbeddedComponentPlugin extends Plugin {
             delete host.dataset.oeProtected;
             delete host.dataset.embeddedState;
         });
+        return clone;
     }
 
     preProcessSanitizedElem(elem) {

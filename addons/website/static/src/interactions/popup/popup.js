@@ -1,19 +1,25 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
+import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
-import { utils as uiUtils, SIZES } from "@web/core/ui/ui_service";
+import { generateHTMLId } from "@web/core/utils/strings";
 import { getTabableElements } from "@web/core/utils/ui";
+import { utils as uiUtils, SIZES } from "@web/core/ui/ui_service";
 
 export class Popup extends Interaction {
-    static selector = ".s_popup:not(#website_cookies_bar)";
+    static selector = ".s_popup:not(#website_cookies_bar):not(.s_age_verification_popup)";
     dynamicContent = {
         ".js_close_popup": {
             "t-on-click": this.onCloseClick,
         },
         ".btn-primary": {
             "t-on-click": this.onBtnPrimaryClick,
+        },
+        "[aria-modal='true']": {
+            "t-att-aria-labelledby": this.getAriaLabelledById,
+            "t-att-aria-label": () => (!this.getAriaLabelledById() ? _t("Popup") : false),
         },
         _root: {
             "t-on-hide.bs.modal": this.onHideModal,
@@ -160,10 +166,14 @@ export class Popup extends Interaction {
             previouslyFocusedEl = document.activeElement || document.body;
         }
         if (tabableEls.length) {
-            tabableEls[0].focus();
+            // If the popup contains two or more focusable elements, the first
+            // one is assumed to be the close button. In that case, the second
+            // element is focused instead.
+            const focusTarget = tabableEls[1] ?? tabableEls[0];
+            focusTarget.focus();
             this.el.querySelector(".modal").scrollTop = 0;
         } else {
-            this.el.focus();
+            this.el.querySelector(".modal").focus();
         }
         // The focus should stay free for no backdrop popups.
         if (this.el.querySelector(".s_popup_no_backdrop")) {
@@ -243,6 +253,30 @@ export class Popup extends Interaction {
     onBackdropModalClick(ev) {
         if (ev.target === ev.currentTarget) {
             this.hidePopup();
+        }
+    }
+
+    /**
+     * Returns the ID of the accessible label target for the popup.
+     *
+     * Chooses the highest-priority heading within the popup content (h1-h6).
+     * When multiple matching elements exist at the same level (e.g.: two h1),
+     * the first match is used.
+     *
+     * If the chosen element does not already have an ID, a unique one is
+     * generated and assigned before returning it.
+     *
+     * @returns {string | undefined}
+     *   ID of the labeling element, or `undefined` if no suitable element is found.
+     */
+    getAriaLabelledById() {
+        const headingTags = ["h1", "h2", "h3", "h4", "h5", "h6"];
+        for (const tag of headingTags) {
+            const el = this.el.querySelector(tag);
+            if (el) {
+                el.id ||= generateHTMLId();
+                return el.id;
+            }
         }
     }
 }

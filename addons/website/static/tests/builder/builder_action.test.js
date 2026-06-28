@@ -19,7 +19,12 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import {
+    addPlugin,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+    toggleMobilePreview,
+} from "./website_helpers";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 
 beforeEach(defineWebsiteModels);
@@ -27,7 +32,7 @@ beforeEach(defineWebsiteModels);
 test("trigger mobile view", async () => {
     await setupWebsiteBuilder(`<h1> Homepage </h1>`);
     expect(".o_website_preview.o_is_mobile").toHaveCount(0);
-    await contains("button[data-action='mobile']").click();
+    await toggleMobilePreview();
     expect(".o_website_preview.o_is_mobile").toHaveCount(1);
 });
 

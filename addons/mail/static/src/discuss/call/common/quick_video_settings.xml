@@ -2,26 +2,26 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.QuickVideoSettings">
-        <div class="o-discuss-QuickVideoSettings d-flex flex-column gap-1">
-            <label class="btn border-transparent d-flex flex-column align-items-baseline cursor-default">
-                <span class="flex-shrink-0 pe-2">
-                    Camera
-                </span>
-                <div class="flex-grow-1"/>
-                <DeviceSelect kind="'videoinput'"/>
-            </label>
-            <div t-if="!this.isBrowserSafari()" class="btn border-transparent d-flex gap-2" t-on-click="() => this.store.settings.useBlur = !this.store.settings.useBlur">
-                <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer gap-2">
-                    <i class="fa fa-fw fa-photo"/><span class="text-truncate text-wrap">Blur Background</span>
-                </label>
-                <div class="flex-grow-1"/>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" t-att-checked="this.store.settings?.useBlur ? 'checked' : ''"/>
+        <div class="o-discuss-QuickVideoSettings d-flex flex-column">
+            <DeviceSelect label.translate="Camera" kind="'videoinput'"/>
+            <t t-if="!this.isBrowserSafari()">
+                <hr class="mx-2 my-1 o-discuss-separator"/>
+                <div class="btn border-transparent d-flex align-items-center px-2 py-1" t-on-click="() => this.store.settings.useBlur = !this.store.settings.useBlur">
+                    <span class="text-truncate text-wrap">Blur Background</span>
+                    <div class="flex-grow-1"/>
+                    <div class="form-check form-switch ms-2">
+                        <input class="form-check-input mx-0" type="checkbox" role="switch" t-att-checked="this.store.settings?.useBlur ? 'checked' : ''"/>
+                    </div>
                 </div>
-            </div>
-            <button class="btn border-transparent d-flex align-items-center gap-2" t-on-click="this.onClickVideoSettings">
-                <i class="fa fa-fw fa-gear"/><span>Advanced Settings</span>
-            </button>
+            </t>
+            <t t-if="!this.env.pipWindow">
+                <hr class="mx-2 my-1 o-discuss-separator"/>
+                <button class="btn border-transparent d-flex align-items-center px-2 py-1" t-on-click="this.onClickVideoSettings">
+                    <span>Advanced Settings</span>
+                    <div class="flex-grow-1"/>
+                    <i class="fa fa-fw fa-gear o-fs-small opacity-75"/>
+                </button>
+            </t>
         </div>
     </t>
 

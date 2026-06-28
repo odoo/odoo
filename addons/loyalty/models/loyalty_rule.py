@@ -2,7 +2,7 @@
 
 import ast
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -35,9 +35,9 @@ class LoyaltyRule(models.Model):
         #  and makes sure to display the currency related to the program instead of the company's.
         symbol = self.env.context.get("currency_symbol", self.env.company.currency_id.symbol)
         return [
-            ("order", _("per order")),
-            ("money", _("per %s spent", symbol)),
-            ("unit", _("per unit paid")),
+            ("order", self.env._("per order")),
+            ("money", self.env._("per %s spent", symbol)),
+            ("unit", self.env._("per unit paid")),
         ]
 
     active = fields.Boolean(default=True)
@@ -54,7 +54,9 @@ class LoyaltyRule(models.Model):
     product_domain = fields.Char(default="[]")
 
     product_ids = fields.Many2many(string="Products", comodel_name="product.product")
-    product_category_id = fields.Many2one(string="Categories", comodel_name="product.category")
+    product_category_id = fields.Many2one(
+        string="Categories", comodel_name="product.category", check_company=True
+    )
     product_tag_id = fields.Many2one(string="Product Tag", comodel_name="product.tag")
 
     reward_point_amount = fields.Float(string="Reward", default=1)
@@ -101,7 +103,7 @@ class LoyaltyRule(models.Model):
                 rule.program_id.applies_on == "both" or rule.program_id.program_type == "ewallet"
             ):
                 raise ValidationError(
-                    _("Split per unit is not allowed for Loyalty and eWallet programs.")
+                    rule.env._("Split per unit is not allowed for Loyalty and eWallet programs.")
                 )
 
     @api.constrains("code", "active")
@@ -114,13 +116,13 @@ class LoyaltyRule(models.Model):
             ("id", "not in", self.ids),
             ("active", "=", True),
         ]):
-            raise ValidationError(_("The promo code must be unique."))
+            raise ValidationError(self.env._("The promo code must be unique."))
         # Prevent coupons and programs from sharing a code
         if self.env["loyalty.card"].search_count([
             ("code", "in", mapped_codes),
             ("active", "=", True),
         ]):
-            raise ValidationError(_("A coupon with the same code was found."))
+            raise ValidationError(self.env._("A coupon with the same code was found."))
 
     @api.depends("mode")
     def _compute_code(self):
@@ -163,8 +165,5 @@ class LoyaltyRule(models.Model):
     def _compute_amount(self, currency_to):
         self.ensure_one()
         return self.currency_id._convert(
-            self.minimum_amount,
-            currency_to,
-            self.company_id or self.env.company,
-            fields.Date.today(),
+            self.minimum_amount, currency_to, self.company_id or self.env.company
         )

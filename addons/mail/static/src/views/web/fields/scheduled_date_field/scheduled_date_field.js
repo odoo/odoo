@@ -2,9 +2,9 @@ import { ScheduledDateDialog } from "./scheduled_date_dialog";
 import { deserializeDateTime, serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { Record } from "@web/model/relational_model/record";
 
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 
 /**
  * Widgets used to display and select the scheduled date in the composer (in monocomment mode)
@@ -14,11 +14,11 @@ import { Component } from "@odoo/owl";
  */
 
 class ScheduledDateFieldCommon extends Component {
-    static props = standardFieldProps;
     static template = "mail.ScheduledDateField";
 
     setup() {
         super.setup();
+        this.props = props({ name: types.string(), record: types.instanceOf(Record) });
         this.dialog = useService("dialog");
         this.dateTimeFormat = {
             day: "numeric",

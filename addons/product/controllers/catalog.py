@@ -17,12 +17,16 @@ class ProductCatalogController(Controller):
         :return: A dict with the following structure:
             {
                 product.id: {
-                    'productId': int
+                    'price': float,
+                    'uomDisplayName': string,
+                    'uomId': int,
+                    'productUomFactor': float (optional),
+                    'sellerUomFactor': float (optional),
                     'quantity': float (optional)
-                    'price': float
-                    'uomDisplayName': string
-                    'code': string (optional)
-                    'readOnly': bool (optional)
+                    'productType': string,
+                    'productUomDisplayName': string (optional),
+                    'code': string (optional),
+                    'readOnly': bool (optional),
                 }
             }
         """
@@ -32,7 +36,7 @@ class ProductCatalogController(Controller):
         )
 
     @route('/product/catalog/update_order_line_info', auth='user', type='jsonrpc')
-    def product_catalog_update_order_line_info(self, res_model, order_id, product_id, quantity=0, **kwargs):
+    def product_catalog_update_order_line_info(self, res_model, order_id, product_id, quantity=0, uom_id=False, **kwargs):
         """ Update order line information on a given order for a given product.
 
         :param string res_model: The order model.
@@ -43,6 +47,8 @@ class ProductCatalogController(Controller):
         :rtype: float
         """
         order = request.env[res_model].browse(order_id)
+        product = request.env['product.product'].browse(product_id)
+        uom = request.env['uom.uom'].browse(uom_id) or product.uom_id
         return order.with_company(order.company_id)._update_order_line_info(
-            product_id, quantity, **kwargs,
+            product, quantity, uom, **kwargs,
         )

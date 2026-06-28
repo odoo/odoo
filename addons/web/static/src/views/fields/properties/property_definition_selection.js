@@ -1,8 +1,8 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { uuid } from "@web/core/utils/strings";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
 export class PropertyDefinitionSelection extends Component {
@@ -22,7 +22,7 @@ export class PropertyDefinitionSelection extends Component {
         // when we create a new option, it's added in the state
         // when we have finished to edit it (blur / enter) we propagate
         // the new value in the props
-        this.state = useState({
+        this.state = proxy({
             newOption: null,
         });
 

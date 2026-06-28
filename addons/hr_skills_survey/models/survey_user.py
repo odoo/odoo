@@ -20,12 +20,23 @@ class SurveyUser_Input(models.Model):
 
         certification_user_inputs = self.filtered(lambda user_input: user_input.survey_id.certification and user_input.scoring_success)
         user_inputs_by_partner = certification_user_inputs.grouped('partner_id')
-        employees = self.env['hr.employee'].search(
-            [('user_id.partner_id', 'in', certification_user_inputs.partner_id.ids)])
+        employees = self.env['hr.employee'].search([
+            '|',
+            ('work_contact_id', 'in', certification_user_inputs.partner_id.ids),
+            ('user_id.partner_id', 'in', certification_user_inputs.partner_id.ids),
+        ])
+        employee_user_inputs = {
+            employee: self.env['survey.user_input'].concat([
+                user_inputs_by_partner.get(partner, self.env['survey.user_input'])
+                for partner in employee._get_related_partners()
+            ])
+            for employee in employees
+        }
+
         resume_lines = self.env['hr.resume.line'].search(
             Domain.OR(
                 Domain('employee_id', '=', employee.id)
-                & Domain('survey_id', 'in', user_inputs_by_partner[employee.user_id.partner_id].survey_id.ids)
+                & Domain('survey_id', 'in', employee_user_inputs.get(employee, self.env['survey.user_input']).survey_id.ids)
                 for employee in employees
             ))
         resume_survey_by_ids = resume_lines.grouped(
@@ -33,10 +44,10 @@ class SurveyUser_Input(models.Model):
         line_type = self.env.ref('hr_skills_survey.resume_type_certification', raise_if_not_found=False)
 
         lines_to_create = []
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         for employee in employees:
-            for user_input in user_inputs_by_partner[employee.user_id.partner_id]:
-                survey = user_input.survey_id
+            user_inputs = employee_user_inputs.get(employee, self.env['survey.user_input'])
+            for survey in user_inputs.survey_id:
                 date_start = today
                 validity_month = survey.certification_validity_months
                 resume_line_vals = {

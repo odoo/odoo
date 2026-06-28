@@ -4,32 +4,61 @@
 <template id="s_image_gallery" name="Image Gallery">
     <section class="s_image_gallery o_slideshow pt24 pb24 s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_right s_image_gallery_indicators_dots s_image_gallery_arrows_default o_image_popup" data-vcss="002" data-vjs="001" data-columns="3">
         <div class="o_container_small overflow-hidden">
-            <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="carousel" data-bs-interval="0" style="margin: 0 12px;">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_08" data-name="Image" data-index="0" alt=""/>
-                    </div>
-                    <div class="carousel-item">
-                        <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_03" data-name="Image" data-index="1" alt=""/>
-                    </div>
-                    <div class="carousel-item">
-                        <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_02" data-name="Image" data-index="2" alt=""/>
-                    </div>
-                </div>
+            <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="carousel" data-bs-interval="1600" style="margin: 0 12px;" role="region" aria-roledescription="carousel">
+                <!-- Controls and indicators are set before the content so that they
+                     are focused in priority when navigating the page with tab. -->
                 <div class="o_carousel_controllers">
-                    <button class="carousel-control-prev o_not_editable" contenteditable="false" t-attf-data-bs-target="#slideshow_sample" data-bs-slide="prev" aria-label="Previous" title="Previous">
+                    <button class="carousel-control-prev o_not_editable" contenteditable="false" data-bs-target="#slideshow_sample" aria-controls="slideshow_sample_inner" data-bs-slide="prev" aria-label="Previous slide" title="Previous slide">
                         <span class="carousel-control-prev-icon" aria-hidden="true"/>
-                        <span class="visually-hidden">Previous</span>
+                        <span class="visually-hidden">Previous slide</span>
                     </button>
-                    <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" style="background-image: url(/web/image/website.library_image_08)" class="active" aria-label="Carousel indicator"/>
-                        <button type="button" style="background-image: url(/web/image/website.library_image_03)" data-bs-target="#slideshow_sample" data-bs-slide-to="1" aria-label="Carousel indicator"/>
-                        <button type="button" style="background-image: url(/web/image/website.library_image_02)" data-bs-target="#slideshow_sample" data-bs-slide-to="2" aria-label="Carousel indicator"/>
+                    <div class="carousel-indicators" role="tablist">
+                        <button type="button"
+                                data-bs-target="#slideshow_sample"
+                                data-bs-slide-to="0"
+                                class="o_not_editable d-flex overflow-hidden active"
+                                role="tab"
+                                aria-controls="slideshow_sample_1"
+                                aria-selected="true">
+                            <span class="visually-hidden">Slide 1 of 3</span>
+                            <img class="object-fit-cover w-100 h-100" src="/web/image/website.landscape_md_5" aria-hidden="true"/>
+                        </button>
+                        <button type="button"
+                                data-bs-target="#slideshow_sample"
+                                data-bs-slide-to="1"
+                                class="o_not_editable d-flex overflow-hidden"
+                                role="tab"
+                                aria-controls="slideshow_sample_2"
+                                aria-selected="false">
+                            <span class="visually-hidden">Slide 2 of 3</span>
+                            <img class="object-fit-cover w-100 h-100" src="/web/image/website.landscape_md_4" aria-hidden="true"/>
+                        </button>
+                        <button type="button"
+                                data-bs-target="#slideshow_sample"
+                                data-bs-slide-to="2"
+                                class="o_not_editable d-flex overflow-hidden"
+                                role="tab"
+                                aria-controls="slideshow_sample_3"
+                                aria-selected="false">
+                            <span class="visually-hidden">Slide 3 of 3</span>
+                            <img class="object-fit-cover w-100 h-100" src="/web/image/website.landscape_md_7" aria-hidden="true"/>
+                        </button>
                     </div>
-                    <button class="carousel-control-next o_not_editable" contenteditable="false" t-attf-data-bs-target="#slideshow_sample" data-bs-slide="next" aria-label="Next" title="Next">
+                    <button class="carousel-control-next o_not_editable" contenteditable="false" data-bs-target="#slideshow_sample" aria-controls="slideshow_sample_inner" data-bs-slide="next" aria-label="Next slide" title="Next slide">
                         <span class="carousel-control-next-icon" aria-hidden="true"/>
-                        <span class="visually-hidden">Next</span>
+                        <span class="visually-hidden">Next slide</span>
                     </button>
+                </div>
+                <div class="carousel-inner" id="slideshow_sample_inner" aria-live="off">
+                    <div class="carousel-item active" id="slideshow_sample_1" role="tabpanel" aria-roledescription="slide">
+                        <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.landscape_md_5" data-name="Image" data-index="0" alt=""/>
+                    </div>
+                    <div class="carousel-item" id="slideshow_sample_2" role="tabpanel" aria-roledescription="slide">
+                        <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.landscape_md_4" data-name="Image" data-index="1" alt=""/>
+                    </div>
+                    <div class="carousel-item" id="slideshow_sample_3" role="tabpanel" aria-roledescription="slide">
+                        <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.landscape_md_7" data-name="Image" data-index="2" alt=""/>
+                    </div>
                 </div>
             </div>
         </div>
@@ -41,16 +70,16 @@
         <div class="container">
             <div class="row s_nb_column_fixed">
                 <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
-                    <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_03" data-index="0" data-name="Image" alt=""/>
-                    <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_10" data-index="3" data-name="Image" alt=""/>
+                    <img class="img img-fluid d-block rounded" src="/web/image/website.set_2_square_md_1" data-index="0" data-name="Image" alt=""/>
+                    <img class="img img-fluid d-block rounded" src="/web/image/website.set_2_square_md_3" data-index="3" data-name="Image" alt=""/>
                 </div>
                 <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
-                    <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_13" data-index="1" data-name="Image" alt=""/>
-                    <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_05" data-index="4" data-name="Image" alt=""/>
+                    <img class="img img-fluid d-block rounded" src="/web/image/website.landscape_md_7" data-index="1" data-name="Image" alt=""/>
+                    <img class="img img-fluid d-block rounded" src="/web/image/website.set_2_square_md_4" data-index="4" data-name="Image" alt=""/>
                 </div>
                 <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
-                    <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_14" data-index="2" data-name="Image" alt=""/>
-                    <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_16" data-index="5" data-name="Image" alt=""/>
+                    <img class="img img-fluid d-block rounded" src="/web/image/website.set_2_square_md_6" data-index="2" data-name="Image" alt=""/>
+                    <img class="img img-fluid d-block rounded" src="/web/image/website.set_2_square_md_2" data-index="5" data-name="Image" alt=""/>
                 </div>
             </div>
         </div>

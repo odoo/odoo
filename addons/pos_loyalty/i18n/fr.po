@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:36+0000\n"
-"PO-Revision-Date: 2026-02-28 13:46+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"PO-Revision-Date: 2026-04-11 14:24+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
 "pos_loyalty/fr/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_identifier_code
@@ -46,6 +46,8 @@ msgid ""
 "%s: %s\n"
 "Balance: %s"
 msgstr ""
+"%s : %s\n"
+"Solde : %s"
 
 #. module: pos_loyalty
 #: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
@@ -94,13 +96,13 @@ msgstr "Activer des cartes de fidélité"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.xml:0
 msgid "Add Balance"
-msgstr "Ajouter le solde"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.xml:0
 msgid "Add existing Gift Card"
-msgstr "Ajouter une carte cadeau existante"
+msgstr ""
 
 #. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
@@ -153,8 +155,8 @@ msgid "Available rewards"
 msgstr "Récompenses disponibles"
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
+#. odoo-python
+#: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
 msgid "Balance:"
 msgstr "Solde :"
 
@@ -193,7 +195,7 @@ msgstr "Créer un client"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
 msgid "Current Balance:"
-msgstr "Solde actuel :"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -214,6 +216,7 @@ msgid "Discount & Loyalty"
 msgstr "Remise & Fidélité"
 
 #. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__display_name
@@ -234,7 +237,6 @@ msgstr "Nom d'affichage"
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Enter Code"
 msgstr "Saisir un code"
 
@@ -292,6 +294,7 @@ msgstr ""
 "Combien de points cette récompense coûte sur le montant du bon de réduction."
 
 #. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__id
@@ -347,6 +350,11 @@ msgstr "Programme de carte-cadeau invalide. Plus d'une règle."
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__is_reward_line
 msgid "Is Reward Line"
 msgstr "Est une ligne de récompense"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_account_move_line
+msgid "Journal Item"
+msgstr "Écriture comptable"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_mail
@@ -539,12 +547,6 @@ msgstr ""
 "de e-wallet ou de carte-cadeau n'est pas autorisé."
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
-msgid "Reset Programs"
-msgstr "Réinitialiser les programmes"
-
-#. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_config_ids
 msgid ""
 "Restrict publishing to those shops. Note: A program will only be used in the "
@@ -554,8 +556,6 @@ msgstr ""
 "utilisé que dans les boutiques ayant la même devise que celle du programme."
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_id
 msgid "Reward"
 msgstr "Récompense"
@@ -599,10 +599,8 @@ msgstr ""
 "ont été mis à jour. Veuillez vérifier la commande."
 
 #. module: pos_loyalty
-#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
-#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Spent:"
 msgstr "Dépensé :"
 
@@ -826,6 +824,11 @@ msgid "Unpaid gift card rejected."
 msgstr "Carte-cadeau non payée rejetée."
 
 #. module: pos_loyalty
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.pos_order_receipt
+msgid "Until:"
+msgstr ""
+
+#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Use eWallet to pay"
@@ -848,10 +851,8 @@ msgid "Whether this line is part of a reward or not."
 msgstr "Que cette ligne fasse partie d'une récompense ou non."
 
 #. module: pos_loyalty
-#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
-#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Won:"
 msgstr "Gagné :"
 
@@ -906,3 +907,17 @@ msgstr "Remboursement avec e-wallet"
 #: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
 msgid "eWallet requires a customer to be selected"
 msgstr "Le e-wallet nécessite qu'un client soit sélectionné"
+
+#. module: pos_loyalty
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.pos_order_receipt
+msgid "no expiration"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
+msgid "used"
+msgstr ""
+
+#~ msgid "Reset Programs"
+#~ msgstr "Réinitialiser les programmes"

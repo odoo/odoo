@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
@@ -30,12 +30,14 @@ export class FooterOptionPlugin extends Plugin {
         builder_actions: {
             WebsiteConfigFooterAction,
         },
+        auto_unfold_container_providers: { selector: "#footer > section", target: "footer" },
         on_prepare_drag_handlers: this.prepareDrag.bind(this),
         is_node_removable_predicates: (node) => {
             if (node.id === "o_footer_scrolltop") {
                 return false;
             }
         },
+        immutable_link_selectors: [".o_cookie_policy_link_container a.oe_unremovable"],
         footer_templates_providers: [
             () =>
                 [
@@ -80,7 +82,7 @@ export class FooterOptionPlugin extends Plugin {
     }
 
     getFooterTemplates() {
-        const templates = reactive([]);
+        const templates = proxy([]);
 
         // we don't wait for all promises to resolve and show the ones available
         // as soon as they are (and keep them in the order of the providers)

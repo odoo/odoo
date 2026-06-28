@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { range } from "@web/core/utils/numbers";
 
 const HOURS = range(24).map((hour) => [hour, String(hour)]);
@@ -24,7 +23,7 @@ export class FloatTimeSelectionPopover extends Component {
     setup() {
         this.availableHours = HOURS;
         this.availableMinutes = MINUTES;
-        this.state = useState({
+        this.state = proxy({
             selectedHours: this.props.timeValues.hours,
             selectedMinutes: this.props.timeValues.minutes,
         });

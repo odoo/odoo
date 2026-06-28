@@ -16,6 +16,8 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _install_demo(self, companies):
+        if not isinstance(companies, models.BaseModel):
+            companies = self.env['res.company'].browse(companies)
         in_without_state = companies.filtered(lambda c: c.chart_template == "in" and not c.state_id)
         if in_without_state:
             _logger.warning('Error while loading Indian-Accounting demo data in the companies "%s". State is not set in the company.', companies.mapped('name'))
@@ -26,20 +28,11 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             self.env.company.id: {
                 'account_use_credit_limit': True,
+                'account_credit_limit': 10000,
                 'l10n_in_is_gst_registered': True,
                 'l10n_in_tcs_feature': True,
                 'l10n_in_tds_feature': True,
                 'l10n_in_edi_production_env': False,
-            },
-        }
-
-    @template(template='in', model='ir.default', demo=True)
-    def _l10n_in_ir_default_demo(self):
-        return {
-            'sales_credit_limit': {
-                'field_id': 'account.field_res_partner__credit_limit',
-                'company_id': self.env.company.id,
-                'json_value': '10000',
             },
         }
 

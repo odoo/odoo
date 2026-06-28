@@ -1,4 +1,5 @@
-import { AvatarEmployee } from "@hr/components/avatar_employee/avatar_employee";
+import { Avatar } from "@mail/views/web/fields/avatar/avatar";
+
 import { Component, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -11,9 +12,9 @@ import {
     Many2OneField,
 } from "@web/views/fields/many2one/many2one_field";
 
-export class KanbanMany2OneAvatarEmployeeField extends Component {
-    static template = "hr.KanbanMany2OneAvatarEmployeeField";
-    static components = { AvatarEmployee, KanbanMany2One };
+export class CardMany2OneAvatarEmployeeField extends Component {
+    static template = "hr.CardMany2OneAvatarEmployeeField";
+    static components = { Avatar, KanbanMany2One };
     static props = {
         ...Many2OneField.props,
         displayAvatarName: { type: Boolean, optional: true },
@@ -54,8 +55,8 @@ export class KanbanMany2OneAvatarEmployeeField extends Component {
 
 /** @type {import("registries").FieldsRegistryItemShape} */
 const fieldDescr = {
-    ...buildM2OFieldDescription(KanbanMany2OneAvatarEmployeeField),
-    additionalClasses: ["o_field_many2one_avatar_kanban", "o_field_many2one_avatar_user"],
+    ...buildM2OFieldDescription(CardMany2OneAvatarEmployeeField),
+    additionalClasses: ["o_field_many2one_avatar_user"],
     relatedFields: [{ name: "write_date", type: "datetime" }],
     extractProps(staticInfo, dynamicInfo) {
         return {
@@ -76,4 +77,4 @@ const fieldDescr = {
 };
 
 registry.category("fields").add("activity.many2one_avatar_employee", fieldDescr);
-registry.category("fields").add("kanban.many2one_avatar_employee", fieldDescr);
+registry.category("fields").add("card.many2one_avatar_employee", fieldDescr);

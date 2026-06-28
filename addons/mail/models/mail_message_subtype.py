@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
+from odoo import api, exceptions, fields, models, tools, _
 
 
 class MailMessageSubtype(models.Model):
@@ -43,7 +43,7 @@ class MailMessageSubtype(models.Model):
     track_recipients = fields.Boolean('Track Recipients',
                                       help="Whether to display all the recipients or only the important ones.")
 
-    @tools.ormcache('model_name')
+    @api.ormcache('model_name')
     def _get_auto_subscription_subtypes(self, model_name):
         """ Return data related to auto subscription based on subtype matching.
         Here model_name indicates child model (like a task) on which we want to
@@ -90,10 +90,58 @@ class MailMessageSubtype(models.Model):
         subtype_ids, internal_ids, external_ids = self._default_subtypes(model_name)
         return self.browse(subtype_ids), self.browse(internal_ids), self.browse(external_ids)
 
-    @tools.ormcache('self.env.uid', 'self.env.su', 'model_name')
+    @api.ormcache('self.env.uid', 'self.env.su', 'model_name')
     def _default_subtypes(self, model_name):
         domain = [('default', '=', True),
                   '|', ('res_model', '=', model_name), ('res_model', '=', False)]
         subtypes = self.search(domain)
         internal = subtypes.filtered('internal')
         return subtypes.ids, internal.ids, (subtypes - internal).ids
+
+    def write(self, vals):
+        # Protect some master types against model change when they are used
+        # as default in apps, in business flows, plans, ...
+        protected = self.browse()
+        model_info = self._get_model_info_by_xmlid()
+        protected_fnames = {fname for required_values in model_info.values() for fname in required_values}
+        if protected_fnames & vals.keys():
+            for xml_id, required_values in model_info.items():
+                subtype = self.env.ref(xml_id, raise_if_not_found=False)
+                if not subtype or subtype not in self:
+                    continue
+                for fname in required_values:
+                    # beware '' and False for void res_model
+                    if fname in vals and (vals[fname] or False) != (required_values[fname] or False):
+                        protected += subtype
+                        continue
+            if protected:
+                raise exceptions.UserError(
+                    _('You cannot modify %(subtype_names)s as their configuration are required in various apps.',
+                      subtype_names=tools.format_list(self.env, protected.mapped('name'), style="standard"),
+                ))
+        return super().write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_protected(self):
+        """ Prevent from removing master data, as defined by '_get_model_info_by_xmlid' """
+        master_data = self.browse()
+        for xml_id in self._get_model_info_by_xmlid():
+            subtype = self.env.ref(xml_id, raise_if_not_found=False)
+            if subtype and subtype in self:
+                master_data += subtype
+        if master_data:
+            raise exceptions.UserError(
+                _('You cannot delete %(subtype_names)s as they are required in various apps.',
+                  subtype_names=tools.format_list(self.env, master_data.mapped('name'), style="standard"),
+            ))
+
+    @api.model
+    def _get_model_info_by_xmlid(self):
+        """ Get model info based on xml ids for master subtypes """
+        return {
+            # comment / note: generic master types for send a message / log a note
+            'mail.mt_comment': {'internal': False, 'res_model': False},
+            'mail.mt_note': {'internal': True, 'res_model': False},
+            # activity log: less critical but helper anyway
+            'mail.mt_activities': {'res_model': False},
+        }

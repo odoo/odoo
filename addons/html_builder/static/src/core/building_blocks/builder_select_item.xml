@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.BuilderSelectItem">
+<t t-name="html_builder.BuilderSelectItemInternal">
     <BuilderComponent>
         <div
-            t-attf-class="o-hb-select-dropdown-item d-flex flex-column cursor-pointer o-dropdown-item dropdown-item o-navigable #{ props.className }"
+            t-attf-class="o-hb-select-dropdown-item d-flex flex-column cursor-pointer o-dropdown-item dropdown-item o-navigable #{ this.props.className }"
             t-att-class="{'active': this.state.isActive}"
-            t-att-data-action-id="info.actionId"
-            t-att-data-action-param="info.actionParam"
-            t-att-data-action-value="info.actionValue"
-            t-att-data-class-action="info.classAction"
-            t-att-data-style-action="info.styleAction"
-            t-att-data-style-action-value="info.styleActionValue"
-            t-att-data-attribute-action="info.attributeAction"
-            t-att-data-attribute-action-value="info.attributeActionValue"
-            t-att-title="props.title"
+            t-att-data-action-id="this.info.actionId"
+            t-att-data-action-param="this.info.actionParam"
+            t-att-data-action-value="this.info.actionValue"
+            t-att-data-class-action="this.info.classAction"
+            t-att-data-style-action="this.info.styleAction"
+            t-att-data-style-action-value="this.info.styleActionValue"
+            t-att-data-attribute-action="this.info.attributeAction"
+            t-att-data-attribute-action-value="this.info.attributeActionValue"
+            t-att-data-data-attribute-action="this.info.dataAttributeAction"
+            t-att-data-data-attribute-action-value="this.info.dataAttributeActionValue"
+            t-att-title="this.props.title"
             t-on-click="this.onClick"
             t-on-pointerenter="this.onPointerEnter"
             t-on-pointerleave="this.onPointerLeave"
@@ -23,7 +25,7 @@
             t-custom-ref="item"
             role="menuitem"
             tabindex="0">
-            <t t-slot="default" />
+            <t t-call-slot="default" />
         </div>
     </BuilderComponent>
 </t>

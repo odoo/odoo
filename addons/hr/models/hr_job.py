@@ -35,13 +35,13 @@ class HrJob(models.Model):
         domain=_recruiter_domain,
         check_company=True,
         default=lambda self: self.env.user.employee_id,
-        groups="hr.group_hr_user",
         tracking=True,
+        index=True,
         help="The Recruiter will be the default value for all Applicants in this job \
             position. The Recruiter is automatically added to all meetings with the Applicant.",
     )
     department_id = fields.Many2one('hr.department', string='Department', check_company=True, tracking=True, index='btree_not_null')
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, tracking=True)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, tracking=True, required=True, index=True)
     employee_type_id = fields.Many2one('hr.employee.type', string='Employee Type', tracking=True)
     company_country_code = fields.Char(related='company_id.country_id.code', depends=["company_id.country_id"])
 

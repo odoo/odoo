@@ -4,6 +4,7 @@ import { getElementsWithOption } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
+import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 
 export class CountdownOption extends BaseOptionComponent {
     static id = "countdown_option";
@@ -25,6 +26,7 @@ export class CountdownOptionPlugin extends Plugin {
             PreviewEndMessageAction,
             SetLayoutAction,
             SelectCountdownInlineTemplateAction,
+            SetCountdownTitlePositionAction,
         },
         on_cloned_handlers: ({ cloneEl }) => {
             const countdownEls = getElementsWithOption(cloneEl, ".s_countdown");
@@ -190,6 +192,28 @@ export class SelectCountdownInlineTemplateAction extends BuilderAction {
 
     clean(action) {
         return this.getAction("selectTemplate").clean(action);
+    }
+}
+
+class SetCountdownTitlePositionAction extends ClassAction {
+    static id = "setCountdownTitlePosition";
+
+    apply({ editingElement }) {
+        super.apply(...arguments);
+        // Compatibility for old snippets (without a title element).
+        if (!editingElement.querySelector(".s_countdown_title")) {
+            const wrapperEl = editingElement.querySelector(".s_countdown_canvas_wrapper");
+            const titleEl = renderToElement("website.s_countdown.title");
+            wrapperEl.insertAdjacentElement("beforebegin", titleEl);
+        }
+    }
+
+    isApplied({ editingElement }) {
+        // Compatibility for old snippets: no title is considered as hidden.
+        if (!editingElement.querySelector(".s_countdown_title")) {
+            return "s_countdown_title_hidden";
+        }
+        return super.isApplied(...arguments);
     }
 }
 

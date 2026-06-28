@@ -13,7 +13,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         cls.company_data["company"].country_id = cls.env.ref("base.es").id
         cls.company_data["company"].currency_id = cls.env.ref("base.EUR").id
         cls.company_data["company"].vat = "ESA12345674"
+        cls.company_data["company"].street = "Fake Street 123"
+        cls.company_data["company"].city = "Barcelona"
         cls.company_data["company"].state_id = cls.env.ref("base.state_es_ba").id
+        cls.company_data["company"].zip = "08001"
         return cls.company_data["company"]
 
     def test_spanish_pos(self):
@@ -78,7 +81,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'amount_tax': 0.0,
             'amount_return': 0.0,
             'to_invoice': True,
-            'last_order_preparation_change': '{}'
         })
 
         payment_context = {"active_ids": order.ids, "active_id": order.id}

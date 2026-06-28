@@ -6,7 +6,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { Store } from "@mail/../tests/mock_server/store";
 
 import { describe, test } from "@odoo/hoot";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
@@ -108,15 +108,17 @@ test("mark channel as seen from the bus", async () => {
     pyEnv["bus.bus"]._sendone(
         channel,
         "mail.record/insert",
-        new mailDataHelpers.Store(
-            DiscussChannelMember.browse(
-                DiscussChannelMember.search([
-                    ["channel_id", "=", channelId],
-                    ["partner_id", "=", partnerId],
-                ])
-            ),
-            { seen_message_id: messageId }
-        ).get_result()
+        new Store()
+            .add(
+                DiscussChannelMember.browse(
+                    DiscussChannelMember.search([
+                        ["channel_id", "=", channelId],
+                        ["partner_id", "=", partnerId],
+                    ])
+                ),
+                { seen_message_id: messageId }
+            )
+            .as_dict()
     );
     await contains(".o-mail-MessageSeenIndicator[title='Seen by test']");
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 2 });
@@ -149,15 +151,17 @@ test("should display message indicator when message is seen", async () => {
     pyEnv["bus.bus"]._sendone(
         channel,
         "mail.record/insert",
-        new mailDataHelpers.Store(
-            DiscussChannelMember.browse(
-                DiscussChannelMember.search([
-                    ["channel_id", "=", channelId],
-                    ["partner_id", "=", partnerId],
-                ])
-            ),
-            { seen_message_id: messageId }
-        ).get_result()
+        new Store()
+            .add(
+                DiscussChannelMember.browse(
+                    DiscussChannelMember.search([
+                        ["channel_id", "=", channelId],
+                        ["partner_id", "=", partnerId],
+                    ])
+                ),
+                { seen_message_id: messageId }
+            )
+            .as_dict()
     );
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 2 });
 });
@@ -449,6 +453,40 @@ test("Show seen indicator on message with only attachment", async () => {
     pyEnv["discuss.channel.member"].write([memberId_1], {
         seen_message_id: messageId,
     });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-MessageSeenIndicator");
+    await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 2 });
+});
+
+test("show seen indicator on previous message when last message is notification", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const [, notificationMessageId] = pyEnv["mail.message"].create([
+        {
+            author_id: serverState.partnerId,
+            body: "<p>Hello</p>",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "<p>Call started</p>",
+            message_type: "notification",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+    pyEnv["discuss.channel.member"].write(memberIds, { seen_message_id: notificationMessageId });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-MessageSeenIndicator");

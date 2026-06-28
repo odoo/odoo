@@ -20,7 +20,7 @@
         <xpath expr="//div[@id='card_body']" position="inside">
             <div class="container" t-if="timesheets and allow_timesheets and show_portal_timesheets">
                 <h5 id="task_timesheets" class="mt-2 mb-2" data-anchor="true">Timesheets</h5>
-                <t t-call="hr_timesheet.portal_timesheet_table"/>
+                <t t-call="hr_timesheet.portal_timesheet_table_with_total"/>
             </div>
         </xpath>
         <xpath expr="//div[@name='portal_my_task_allocated_hours']" position="after">

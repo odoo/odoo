@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.1a1+e\n"
+"Project-Id-Version: Odoo Server 19.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:02+0000\n"
-"PO-Revision-Date: 2025-12-16 19:02+0000\n"
+"POT-Creation-Date: 2026-06-19 18:11+0000\n"
+"PO-Revision-Date: 2026-06-19 18:11+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -75,6 +75,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_payment_withholding_line.py:0
 msgid "All withholding lines in self must have the same payment."
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__amount_residual
+msgid "Amount Due"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
@@ -152,12 +157,20 @@ msgid "Currency"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
+#. odoo-javascript
+#: code:addons/l10n_account_withholding_tax/static/src/components/account_payment.xml:0
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.report_invoice_document
+msgid "Deducted on"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__withholding_default_account_id
 msgid "Default Account"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__display_name
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__display_name
@@ -210,6 +223,7 @@ msgstr ""
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__id
@@ -223,10 +237,15 @@ msgid "ID"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
-#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_tax__is_withholding_tax_on_payment
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_tax__is_withholding_tax
 msgid ""
-"If enabled, this tax will not affect your accounts until the registration of"
-" payments."
+"If enabled, this tax will not affect the amount due until applied via the "
+"Pay button."
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model,name:l10n_account_withholding_tax.model_account_move
+msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
@@ -242,8 +261,20 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__withholding_net_amount
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__withholding_net_amount
 msgid "Net Amount"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.account_move_view_form_inherit_l10n_account_withholding_tax
+msgid "Net Due"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_net_residual_amount_currency
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__withholding_net_residual_amount_currency
+msgid "Net Due Amount"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
@@ -299,6 +330,12 @@ msgid "Payment Account"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
+#: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment__withhold__payment
+#: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment_register__withhold__payment
+msgid "Payment Only"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__payment_register_id
 msgid "Payment Register"
 msgstr ""
@@ -330,7 +367,7 @@ msgstr ""
 #. module: l10n_account_withholding_tax
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_withholding_line.py:0
-msgid "Please enter the withholding number for the tax %(tax_name)s"
+msgid "Please enter the sequence number for the tax %(tax_name)s"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
@@ -431,9 +468,46 @@ msgid "The account \"%(account_name)s\" is not valid to use on withholding lines
 msgstr ""
 
 #. module: l10n_account_withholding_tax
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_payment__withholding_net_amount
+msgid ""
+"The amount that will actually be paid after deducting withholding taxes."
+msgstr ""
+
+#. module: l10n_account_withholding_tax
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_withholding_line.py:0
 msgid "The base amount of a withholding tax line must be above 0."
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_net_residual_amount_currency
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_move__withholding_net_residual_amount_currency
+msgid "The net amount due after deducting the remaining withholding amount."
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_residual_amount_currency
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_move__withholding_residual_amount_currency
+msgid "The remaining withholding amount to be deducted."
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_move__amount_residual
+msgid ""
+"The total amount due, including the amount to be paid and the withholding "
+"due."
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_deducted_amount_currency
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_move__withholding_deducted_amount_currency
+msgid "The total withholding amount already deducted."
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_total_amount_currency
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_move__withholding_total_amount_currency
+msgid "The total withholding amount to be deducted."
 msgstr ""
 
 #. module: l10n_account_withholding_tax
@@ -495,25 +569,45 @@ msgid "Withheld Amount"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
-#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_tax__is_withholding_tax_on_payment
-msgid "Withhold On Payment"
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__withhold
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__withhold
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_tax__is_withholding_tax
+msgid "Withhold"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
-#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__should_withhold_tax
-#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__should_withhold_tax
-msgid "Withhold Tax Amounts"
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.account_move_view_form_inherit_l10n_account_withholding_tax
+msgid "Withhold Due"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
-#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_payment__should_withhold_tax
-msgid "Withhold tax amounts from the payment amount."
+#: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment__withhold__withhold
+#: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment_register__withhold__withhold
+msgid "Withhold Only"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment__withhold__withhold_pay
+#: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment_register__withhold__withhold_pay
+msgid "Withhold and Pay"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_register_form
 msgid "Withholding"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__withholding_amount
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_tree
+msgid "Withholding Amount"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_deducted_amount_currency
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__withholding_deducted_amount_currency
+msgid "Withholding Deducted Amount Currency"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
@@ -537,6 +631,12 @@ msgid ""
 msgstr ""
 
 #. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_residual_amount_currency
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__withholding_residual_amount_currency
+msgid "Withholding Residual Amount Currency"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__withholding_sequence_id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__withholding_sequence_id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_tax__withholding_sequence_id
@@ -548,6 +648,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_res_company__withholding_tax_base_account_id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_res_config_settings__withholding_tax_base_account_id
 msgid "Withholding Tax Base"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_total_amount_currency
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__withholding_total_amount_currency
+msgid "Withholding Total Amount Currency"
 msgstr ""
 
 #. module: l10n_account_withholding_tax

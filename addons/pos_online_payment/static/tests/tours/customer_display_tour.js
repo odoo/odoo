@@ -12,19 +12,18 @@ registry.category("web_tour.tours").add("CustomerDisplayTourOnlinePayment", {
             CustomerDisplay.amountIs("Total", "2,972.75"),
             CustomerDisplay.postMessage(CustomerDisplay.PAY_ONLINE, "pay with cash"),
             {
-                trigger: `.modal-content img[alt='QR Code to pay'][src='${CustomerDisplay.QR_URL}']`,
+                trigger: `.qr-payment-card .qr-image[alt='QR Code'][src='${CustomerDisplay.QR_URL}']`,
             },
             CustomerDisplay.postMessage(CustomerDisplay.PAID, "payment approved"),
             CustomerDisplay.postMessage(CustomerDisplay.ORDER_IS_FINALIZED, "order is finalized"),
             negateStep(Dialog.is()),
             {
-                content: "Check that we are now on the 'Thank you' screen",
-                trigger: "div:contains('Thank you.')",
-                run: "click",
+                content: "Verify feedback summary screen is displayed",
+                trigger: ".feedback-summary",
             },
             CustomerDisplay.postMessage(CustomerDisplay.NEW_ORDER, "new order"),
             {
-                trigger: "div:contains('Welcome.')",
+                trigger: "div:contains('Welcome')",
             },
             Order.doesNotHaveLine({}),
             CustomerDisplay.amountIs("Total", "0.00"),
@@ -35,7 +34,7 @@ registry.category("web_tour.tours").add("CustomerDisplayTourOnlinePayment", {
             CustomerDisplay.amountIs("Total", "2,972.75"),
             CustomerDisplay.postMessage(CustomerDisplay.PAY_ONLINE, "pay with cash"),
             {
-                trigger: `.modal-content img[alt='QR Code to pay'][src='${CustomerDisplay.QR_URL}']`,
+                trigger: `.qr-payment-card .qr-image[alt='QR Code'][src='${CustomerDisplay.QR_URL}']`,
             },
         ].flat(),
 });

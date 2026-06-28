@@ -1,5 +1,5 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, useListener } from "@odoo/owl";
 
 export class ApiKeyModal extends Component {
     static template = "web.DocApiKeyModal";
@@ -10,13 +10,13 @@ export class ApiKeyModal extends Component {
     setup() {
         this.modalRef = useRef("modalRef");
 
-        useExternalListener(window, "keydown", (event) => {
+        useListener(window, "keydown", (event) => {
             if (event.key === "Escape") {
                 this.cancel();
             }
         });
 
-        useExternalListener(window, "click", (event) => {
+        useListener(window, "click", (event) => {
             if (!this.modalRef.el.contains(event.target)) {
                 this.cancel();
             }

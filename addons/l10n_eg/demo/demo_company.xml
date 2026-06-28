@@ -15,6 +15,7 @@
     <record id="base.demo_company_eg" model="res.company" forcecreate="1">
         <field name="name">EG Company</field>
         <field name="partner_id" ref="base.partner_demo_company_eg"/>
+        <field name="tax_exigibility" eval="True"/>
     </record>
 
     <function model="res.company" name="_onchange_country_id">

@@ -2,6 +2,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
+from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
 
 
@@ -54,37 +55,45 @@ class MailTrackingDurationMixinCase(MailCommon):
             for idx in range(count)
         ])
 
-    def _update_mock_timing(self, records, records_trackings, minutes, new_stage=False):
+    def _update_mock_timing(self, records, expected_trackings, minutes, new_stage=False):
         """ Updates the mock duration_tracking field for multiple records based
         on the provided minutes. If new_stage is given, the stage of the
         records is updated as well. """
-        self.assertEqual(len(records), len(records_trackings))
-        for record, tracking_dict in records_trackings.items():
-            tracking_dict[str(record[self.track_duration_field].id) if record[self.track_duration_field].id else '0'] += minutes * 60
+        self.assertEqual(len(records), len(expected_trackings))
+
+        for record in records:
+            tracking_dict = expected_trackings[record]
+
+            # udpate record -> now tracking is updated only when stage is updated
             if new_stage is not False:
-                tracking_dict[str(new_stage.id) if new_stage.id else '0'] += 0
+                stage_id = tracking_dict.get('s') or record[self.track_duration_field].id or '0'
+                tracking_dict[str(stage_id)] += minutes
+
                 record[self.track_duration_field] = new_stage
+                # update expected trackings
+                tracking_dict['d'] = fields.Datetime.to_string(self.env.cr.now())
+                tracking_dict['s'] = new_stage.id if new_stage else 0
                 self.flush_tracking()
 
         # check computed value matches mock stored values
-        self.assertTrackingDuration(records, records_trackings)
+        self.assertTrackingDuration(records, expected_trackings)
 
-    def assertTrackingDuration(self, records, records_trackings):
+    def assertTrackingDuration(self, records, expected_trackings):
         """ Assert content of records's duration_tracking value. """
-        records.invalidate_recordset(fnames=['duration_tracking'])
         for record in records:
-            tracking_dict = records_trackings[record]
-            self.assertDictEqual(record.duration_tracking, dict(tracking_dict))
+            self.assertDictEqual(record.duration_tracking, dict(expected_trackings[record]))
 
     def _test_record_duration_tracking(self):
         """ Moves a record's many2one field through several values and asserts
         the duration spent in that value each time.
 
         Total time: 1: 5+ // 2: 10+50+55+ // 3: 50+20+ // 4: 20+200 // No: 30"""
+        records = (self.rec_1 + self.rec_2).with_env(self.env)
         with patch.object(self.env.cr, 'now', return_value=self.mock_start_time) as now:
-            records = (self.rec_1 + self.rec_2).with_env(self.env)
-            records_trackings = {record: defaultdict(lambda: 0) for record in records}
+            expected_trackings = {record: defaultdict(lambda: 0) for record in records}
 
+            last_stage_update_on = False
+            minutes_since_stage_write = 0
             for additional_time, stage in [
                 (5, self.stage_2),
                 (10, False),
@@ -96,32 +105,28 @@ class MailTrackingDurationMixinCase(MailCommon):
                 (30, self.stage_3),
                 (20, False),
             ]:
+                minutes_since_stage_write += additional_time
                 with self.subTest(additional_time=additional_time, stage=stage):
                     now.return_value += timedelta(minutes=additional_time)
-                    self._update_mock_timing(records, records_trackings, additional_time, new_stage=stage)
+                    self._update_mock_timing(records, expected_trackings, minutes_since_stage_write, new_stage=stage)
+
+                    # reset accumulated time since last update, to correctly update
+                    # mocked tracking values (since only time between updates are counted)
+                    if stage is not False:
+                        minutes_since_stage_write = 0
+                        last_stage_update_on = now.return_value
+
             for record in records:
+                current_stage_minutes = int((now.return_value - last_stage_update_on) / timedelta(minutes=1))
                 self.assertDictEqual(
                     record.duration_tracking, {
-                        '0': 30 * 60,  # no stage tracking
-                        str(self.stage_1.id): 5 * 60,
-                        str(self.stage_2.id): 115 * 60,
-                        str(self.stage_3.id): 70 * 60,
-                        str(self.stage_4.id): 220 * 60,
+                        '0': 30,
+                        str(self.stage_1.id): 5,
+                        str(self.stage_2.id): 115,
+                        # now we compute current stage time from d in JS, stored data updated at write only
+                        str(self.stage_3.id): 70 - current_stage_minutes,
+                        str(self.stage_4.id): 220,
+                        'd': str(last_stage_update_on),
+                        's': self.stage_3.id,
                     }
                 )
-
-    def _test_queries_batch_duration_tracking(self, query_count=2):
-        """ The MailTrackingDuration mixin is only supposed to add 3 queries """
-        batch = self.rec_1 | self.rec_2 | self.rec_3 | self.rec_4
-        batch[self.track_duration_field] = self.stage_2.id
-        self.flush_tracking()
-        batch[self.track_duration_field] = self.stage_4.id
-        self.flush_tracking()
-        batch[self.track_duration_field] = self.stage_1.id
-        self.flush_tracking()
-        batch[self.track_duration_field] = self.stage_3.id
-        self.flush_tracking()
-        batch[self.track_duration_field] = self.stage_2.id
-
-        with self.assertQueryCount(query_count):
-            batch._compute_duration_tracking()

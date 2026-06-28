@@ -1,8 +1,17 @@
-import { describe, destroy, expect, getFixture, test } from "@odoo/hoot";
-import { click, tick } from "@odoo/hoot-dom";
-import { Deferred, advanceTime, animationFrame, microTick, runAllTimers } from "@odoo/hoot-mock";
+import {
+    advanceTime,
+    animationFrame,
+    click,
+    describe,
+    expect,
+    getFixture,
+    microTick,
+    runAllTimers,
+    test,
+    tick,
+} from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { destroyApp, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import {
     batched,
@@ -198,10 +207,10 @@ describe("debounce", () => {
     });
 
     test("debounce on an async function", async () => {
-        const imSearchDef = new Deferred();
+        const imSearchDef = Promise.withResolvers();
         const myFunc = () => {
             expect.step("myFunc");
-            return imSearchDef;
+            return imSearchDef.promise;
         };
         const myDebouncedFunc = debounce(myFunc, 3000);
         myDebouncedFunc().then(() => {
@@ -362,7 +371,7 @@ describe("throttleForAnimation", () => {
 
 describe("throttleForAnimationScrollEvent", () => {
     test("scroll loses target", async () => {
-        let throttled = new Deferred();
+        let throttled = Promise.withResolvers();
         const throttledFn = throttleForAnimation((val, targetEl) => {
             // In Chrome, the currentTarget of scroll events is lost after the
             // event was handled, it is therefore null here.
@@ -380,7 +389,7 @@ describe("throttleForAnimationScrollEvent", () => {
         el.style = "position: absolute; overflow: scroll; height: 100px; width: 100px;";
         const childEl = document.createElement("div");
         childEl.style = "height: 200px; width: 200px;";
-        let scrolled = new Deferred();
+        let scrolled = Promise.withResolvers();
         el.appendChild(childEl);
         el.addEventListener("scroll", (ev) => {
             expect.step("before scroll");
@@ -391,8 +400,8 @@ describe("throttleForAnimationScrollEvent", () => {
         getFixture().appendChild(el);
         el.scrollBy(1, 1);
         el.scrollBy(2, 2);
-        await scrolled;
-        await throttled;
+        await scrolled.promise;
+        await throttled.promise;
 
         expect.verifySteps([
             "before scroll",
@@ -400,16 +409,16 @@ describe("throttleForAnimationScrollEvent", () => {
             "after scroll",
         ]);
 
-        throttled = new Deferred();
-        scrolled = new Deferred();
+        throttled = Promise.withResolvers();
+        scrolled = Promise.withResolvers();
         el.scrollBy(3, 3);
-        await scrolled;
+        await scrolled.promise;
         expect.verifySteps([
             "before scroll",
             // Further call is delayed.
             "after scroll",
         ]);
-        await throttled;
+        await throttled.promise;
         expect.verifySteps(["throttled function called with null in event, but DIV in parameter"]);
         el.remove();
     });
@@ -418,13 +427,13 @@ describe("throttleForAnimationScrollEvent", () => {
 describe("useDebounced", () => {
     test("cancels on component destroy", async () => {
         class TestComponent extends Component {
-            static template = xml`<button class="c" t-on-click="debounced">C</button>`;
+            static template = xml`<button class="c" t-on-click="this.debounced">C</button>`;
             static props = ["*"];
             setup() {
                 this.debounced = useDebounced(() => expect.step("debounced"), 1000);
             }
         }
-        const component = await mountWithCleanup(TestComponent);
+        await mountWithCleanup(TestComponent);
         expect.verifySteps([]);
         expect("button.c").toHaveCount(1);
 
@@ -439,7 +448,7 @@ describe("useDebounced", () => {
         await advanceTime(900);
         expect.verifySteps([]);
 
-        destroy(component);
+        destroyApp();
         await advanceTime(200);
         expect.verifySteps([]);
     });
@@ -454,7 +463,7 @@ describe("useDebounced", () => {
                 });
             }
         }
-        const component = await mountWithCleanup(TestComponent);
+        await mountWithCleanup(TestComponent);
         expect.verifySteps([]);
         expect(`button.c`).toHaveCount(1);
 
@@ -469,13 +478,13 @@ describe("useDebounced", () => {
         await advanceTime(900);
         expect.verifySteps([]);
 
-        destroy(component);
+        destroyApp();
         expect.verifySteps(["debounced: hello"]);
     });
 
     test("execBeforeUnmount option (callback resolved before component destroy)", async () => {
         class TestComponent extends Component {
-            static template = xml`<button class="c" t-on-click="debounced">C</button>`;
+            static template = xml`<button class="c" t-on-click="this.debounced">C</button>`;
             static props = ["*"];
             setup() {
                 this.debounced = useDebounced(() => expect.step("debounced"), 1000, {
@@ -483,7 +492,7 @@ describe("useDebounced", () => {
                 });
             }
         }
-        const component = await mountWithCleanup(TestComponent);
+        await mountWithCleanup(TestComponent);
         expect.verifySteps([]);
         expect(`button.c`).toHaveCount(1);
 
@@ -494,7 +503,7 @@ describe("useDebounced", () => {
         await advanceTime(200);
         expect.verifySteps(["debounced"]);
 
-        destroy(component);
+        destroyApp();
         await advanceTime(1000);
         expect.verifySteps([]);
     });
@@ -503,13 +512,13 @@ describe("useDebounced", () => {
 describe("useThrottleForAnimation", () => {
     test("cancels on component destroy", async () => {
         class TestComponent extends Component {
-            static template = xml`<button class="c" t-on-click="throttled">C</button>`;
+            static template = xml`<button class="c" t-on-click="this.throttled">C</button>`;
             static props = ["*"];
             setup() {
                 this.throttled = useThrottleForAnimation(() => expect.step("throttled"), 1000);
             }
         }
-        const component = await mountWithCleanup(TestComponent);
+        await mountWithCleanup(TestComponent);
         expect.verifySteps([]);
         expect(`button.c`).toHaveCount(1);
 
@@ -534,7 +543,7 @@ describe("useThrottleForAnimation", () => {
         await click(`button.c`);
         expect.verifySteps([]);
 
-        destroy(component);
+        destroyApp();
         await animationFrame();
         expect.verifySteps([]);
     });

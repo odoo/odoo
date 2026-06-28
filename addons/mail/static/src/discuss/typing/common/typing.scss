@@ -1,7 +1,14 @@
 .o-discuss-Typing-dot {
-    animation: o_mail_Typing_animation 1.5s linear infinite;
-    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, .25));
     background-color: $gray-500;
+
+    .o-discuss-Typing-icon:not(.o-isBrowserSafari) & {
+        // Safari bug: some CSS style in foreignobject like opacity / transform / filter reset the position of foreignobject to (0, 0)
+        // https://github.com/bkrem/react-d3-tree/issues/284
+        // https://bugs.webkit.org/show_bug.cgi?id=23113
+        // We disable animation and better contrast in Safari to avoid this bug
+        animation: o_mail_Typing_animation 1.5s linear infinite;
+        filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, .25));
+    }
 
     .o-mail-ImStatus &, .o-mail-ThreadIcon & {
         background-color: #fff;

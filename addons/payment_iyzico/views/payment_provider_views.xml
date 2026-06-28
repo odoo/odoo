@@ -7,19 +7,19 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position="inside">
-                <group name="iyzico_credentials" invisible="code != 'iyzico'">
-                    <field
-                        string="API Key"
-                        name="iyzico_key_id"
-                        required="code == 'iyzico' and state != 'disabled'"
-                    />
-                    <field
-                        string="Secret Key"
-                        name="iyzico_key_secret"
-                        required="code == 'iyzico' and state != 'disabled'"
-                        password="True"
-                    />
-                </group>
+                <field
+                    string="API Key"
+                    name="iyzico_key_id"
+                    invisible="code != 'iyzico'"
+                    required="is_live"
+                />
+                <field
+                    string="Secret Key"
+                    name="iyzico_key_secret"
+                    invisible="code != 'iyzico'"
+                    required="is_live"
+                    widget="password"
+                />
             </group>
         </field>
     </record>

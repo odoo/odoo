@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from psycopg2 import OperationalError
 
 from odoo import SUPERUSER_ID, api
+from odoo.fields import Command
 from odoo.modules.registry import Registry
 from odoo.tests import tagged
 from odoo.tests.common import BaseCase, get_db_name
@@ -27,18 +28,14 @@ class TestConcurrencyPromoCode(BaseCase):
                 "program_type": "promo_code",
                 "limit_usage": True,
                 "max_usage": 1,
-                "rule_ids": [(0, 0, {"minimum_qty": 0, "code": cls.promo_code})],
+                "rule_ids": [Command.create({"minimum_qty": 0, "code": cls.promo_code})],
                 "reward_ids": [
-                    (
-                        0,
-                        0,
-                        {
-                            "reward_type": "discount",
-                            "discount_mode": "percent",
-                            "discount_applicability": "order",
-                            "discount": 100.0,
-                        },
-                    )
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount_mode": "percent",
+                        "discount_applicability": "order",
+                        "discount": 100.0,
+                    })
                 ],
             })
 

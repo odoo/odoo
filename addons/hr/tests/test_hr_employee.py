@@ -5,6 +5,7 @@ from psycopg2.errors import UniqueViolation
 from freezegun import freeze_time
 
 from odoo import fields, Command
+from odoo.addons.phone_validation.tools import phone_validation
 from odoo.fields import Domain
 from odoo.tests import Form, users, new_test_user, HttpCase, tagged, TransactionCase
 from odoo.addons.hr.tests.common import TestHrCommon
@@ -62,15 +63,15 @@ class TestHrEmployee(TestHrCommon):
             'company_id': company_B.id
         })
 
-        partner.with_company(company_A)._compute_employees_count()
+        partner.with_context(allowed_company_ids=[company_A.id])._compute_employees_count()
         self.assertEqual(partner.employees_count, 1)
-        partner.with_company(company_B)._compute_employees_count()
+        partner.with_context(allowed_company_ids=[company_B.id])._compute_employees_count()
         self.assertEqual(partner.employees_count, 1)
-        single_company_action = partner.with_company(company_B).action_open_employees()
+        single_company_action = partner.with_context(allowed_company_ids=[company_B.id]).action_open_employees()
         self.assertEqual(single_company_action.get('view_mode'), 'form')
-        partner.with_company(company_A).with_company(company_B)._compute_employees_count()
+        partner.with_context(allowed_company_ids=[company_A.id, company_B.id])._compute_employees_count()
         self.assertEqual(partner.employees_count, 2)
-        multi_company_action = partner.with_company(company_A).with_company(company_B).action_open_employees()
+        multi_company_action = partner.with_context(allowed_company_ids=[company_A.id, company_B.id]).action_open_employees()
         self.assertEqual(multi_company_action.get('view_mode'), 'kanban')
 
     def test_employee_linked_partner(self):
@@ -87,6 +88,19 @@ class TestHrEmployee(TestHrCommon):
         employee_form.work_email = 'raoul@example.com'
         employee = employee_form.save()
         self.assertEqual(employee.tz, 'Europe/Brussels')
+
+    def test_compute_user_company_employee(self):
+        test_user = new_test_user(self.env, login='test_user', groups='base.group_user', name='testuser', email='test@user.com')
+        test_user.action_create_employee()
+        employee = test_user.employee_id
+        multiple_users = self.user_without_image + test_user
+
+        multiple_users.invalidate_recordset(['employee_id'])
+
+        multiple_users.with_user(test_user).employee_id  # trigger the compute in batch and in non-sudo
+
+        self.assertEqual(test_user.with_user(test_user).employee_id, employee)
+        self.assertEqual(test_user.with_user(test_user).sudo().employee_id, employee)
 
     def test_employee_timezone(self):
         self.res_users_hr_officer.tz = "Africa/Cairo"
@@ -312,7 +326,7 @@ class TestHrEmployee(TestHrCommon):
             'name': 'Test employee',
             'user_id': user.id,
         }])
-        user_fields = ['email', 'phone', 'im_status']
+        user_fields = ['email', 'phone']
         for field in user_fields:
             self.assertEqual(employee[field], user[field])
 
@@ -673,6 +687,98 @@ class TestHrEmployee(TestHrCommon):
         self.assertNotEqual(partner.email, second_employee.work_email)
         self.assertNotEqual(partner.email, first_employee.work_email)
 
+    def test_work_phone_companion_fields_are_invalidated(self):
+        country = self.env.ref('base.be')
+        company = self.env['res.company'].create({
+            'name': 'Belgian Company',
+            'country_id': country.id,
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Phone Employee',
+            'company_id': company.id,
+        })
+
+        first_phone = '0456998877'
+        employee.work_phone = first_phone
+        first_sanitized = phone_validation.phone_format(
+            first_phone, country.code, country.phone_code, force_format='E164'
+        )
+        self.assertEqual(employee.work_phone_sanitized, first_sanitized)
+        self.assertEqual(
+            employee.work_phone_formatted,
+            phone_validation.phone_format(
+                first_sanitized, country.code, country.phone_code, force_format='INTERNATIONAL'
+            ),
+        )
+
+        second_phone = '0456112233'
+        employee.work_phone = second_phone
+        second_sanitized = phone_validation.phone_format(
+            second_phone, country.code, country.phone_code, force_format='E164'
+        )
+        self.assertEqual(employee.work_phone_sanitized, second_sanitized)
+        self.assertEqual(
+            employee.work_phone_formatted,
+            phone_validation.phone_format(
+                second_sanitized, country.code, country.phone_code, force_format='INTERNATIONAL'
+            ),
+        )
+
+    def test_restricted_phone_companion_fields(self):
+        """emergency_phone / private_phone expose sanitized + formatted
+        companions and keep their raw value (formatting is display-only)."""
+        country = self.env.ref('base.be')
+        company = self.env['res.company'].create({
+            'name': 'Belgian Company',
+            'country_id': country.id,
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Phone Employee',
+            'company_id': company.id,
+        })
+
+        for fname in ('emergency_phone', 'private_phone'):
+            raw = '0456998877'
+            employee[fname] = raw
+            sanitized = phone_validation.phone_format(
+                raw, country.code, country.phone_code, force_format='E164'
+            )
+            # raw value is preserved; only the companions hold the formatted forms
+            self.assertEqual(employee[fname], raw)
+            self.assertEqual(employee[f'{fname}_sanitized'], sanitized)
+            self.assertEqual(
+                employee[f'{fname}_formatted'],
+                phone_validation.phone_format(
+                    sanitized, country.code, country.phone_code, force_format='INTERNATIONAL'
+                ),
+            )
+
+            # changing the number re-computes the companions
+            new_raw = '0456112233'
+            employee[fname] = new_raw
+            new_sanitized = phone_validation.phone_format(
+                new_raw, country.code, country.phone_code, force_format='E164'
+            )
+            self.assertEqual(employee[f'{fname}_sanitized'], new_sanitized)
+
+    def test_restricted_phone_not_reformatted_in_form(self):
+        """Editing emergency/private phone in a form must keep the raw value:
+        the INTERNATIONAL-formatting onchange has been removed."""
+        country = self.env.ref('base.be')
+        company = self.env['res.company'].create({
+            'name': 'Belgian Company',
+            'country_id': country.id,
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Phone Employee',
+            'company_id': company.id,
+        })
+        with Form(employee) as form:
+            form.emergency_phone = '0456998877'
+            form.private_phone = '0456112233'
+        self.assertEqual(employee.emergency_phone, '0456998877')
+        self.assertEqual(employee.private_phone, '0456112233')
+
     @freeze_time('2025-12-01 09-00-00')
     def test_presence_state_groupby(self):
         present_user_a, present_user_b, absent_user = self.env['res.users'].create([
@@ -705,27 +811,24 @@ class TestHrEmployee(TestHrCommon):
             'contract_date_start': date(2025, 1, 1)
         })
 
-        archived_emp, out_working_emp = self.env['hr.employee'].create([
-            {'name': 'Archived Employee', 'active': False},
-            {'name': 'Out of Office Employee', 'contract_date_start': False, 'contract_date_end': False},
-        ])
+        out_working_emp = self.env['hr.employee'].create(
+            {'name': 'Out of Office Employee', 'contract_date_start': False, 'contract_date_end': False}
+        )
 
         self.env["mail.presence"]._update_presence(present_user_a)
         self.env["mail.presence"]._update_presence(present_user_b)
 
         employee_per_presence_state = self.env['hr.employee'].with_context(active_test=False)._read_group(
-            domain=[('id', 'in', (present_user_a.employee_ids + present_user_b.employee_ids + absent_user.employee_ids + archived_emp + out_working_emp).ids)],
+            domain=[('id', 'in', (present_user_a.employee_ids + present_user_b.employee_ids + absent_user.employee_ids + out_working_emp).ids)],
             groupby=['hr_presence_state'],
             aggregates=['id:recordset'],
         )
-        self.assertEqual(len(employee_per_presence_state), 4)
+        self.assertEqual(len(employee_per_presence_state), 3)
         for presence_state, employees in employee_per_presence_state:
             if presence_state == 'present':
                 self.assertEqual(employees.ids, [present_user_a.employee_ids.id, present_user_b.employee_ids.id])
             if presence_state == 'absent':
                 self.assertEqual(employees.ids, [absent_user.employee_ids.id])
-            if presence_state == 'archive':
-                self.assertEqual(employees.ids, [archived_emp.id])
             if presence_state == 'out_of_working_hour':
                 self.assertEqual(employees.ids, [out_working_emp.id])
 

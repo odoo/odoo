@@ -1,11 +1,15 @@
+import { props, t } from "@odoo/owl";
 import { useLayoutEffect } from "@web/owl2/utils";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import {
+    ConfirmationDialog,
+    confirmationDialogProps,
+} from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class InputConfirmationDialog extends ConfirmationDialog {
-    static props = {
-        ...ConfirmationDialog.props,
-        onInput: { type: Function, optional: true },
-    };
+    props = props({
+        ...confirmationDialogProps,
+        onInput: t.function().optional(),
+    });
     static template = "portal.InputConfirmationDialog";
 
     setup() {

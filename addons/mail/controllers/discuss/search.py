@@ -27,4 +27,4 @@ class SearchController(http.Controller):
             channels |= channels.browse(query)
         store.add(channels, "_store_channel_fields")
         request.env["res.partner"]._search_for_channel_invite(store, search_term=term, limit=limit)
-        return store.get_result()
+        return store

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.tools import urls
 
 from odoo.addons.payment.logging import get_payment_logger
@@ -51,15 +51,6 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("brq_invoicenumber")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "buckaroo":
-            return super()._extract_amount_data(payment_data)
-
-        amount = payment_data.get("brq_amount")
-        currency_code = payment_data.get("brq_currency")
-        return {"amount": float(amount), "currency_code": currency_code}
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "buckaroo":
@@ -69,7 +60,7 @@ class PaymentTransaction(models.Model):
         # Update the provider reference.
         transaction_keys = payment_data.get("brq_transactions")
         if not transaction_keys:
-            self._set_error(_("Received data with missing transaction keys"))
+            self._set_error(self.env._("Received data with missing transaction keys"))
             return
         # BRQ_TRANSACTIONS can hold multiple, comma-separated, tx keys. In practice, it holds only
         # one reference. So we split for semantic correctness and keep the first transaction key.
@@ -77,7 +68,7 @@ class PaymentTransaction(models.Model):
 
         # Update the payment method.
         payment_method_code = payment_data.get("brq_payment_method")
-        payment_method = self.env["payment.method"]._get_from_code(
+        payment_method = self.provider_id._get_pm_from_code(
             payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id
@@ -91,10 +82,12 @@ class PaymentTransaction(models.Model):
         elif status_code in const.STATUS_CODES_MAPPING["cancel"]:
             self._set_canceled()
         elif status_code in const.STATUS_CODES_MAPPING["refused"]:
-            self._set_error(_("Your payment was refused (code %s). Please try again.", status_code))
+            self._set_error(
+                self.env._("Your payment was refused (code %s). Please try again.", status_code)
+            )
         elif status_code in const.STATUS_CODES_MAPPING["error"]:
             self._set_error(
-                _(
+                self.env._(
                     "An error occurred during processing of your payment (code %s). Please try"
                     " again.",
                     status_code,
@@ -106,4 +99,13 @@ class PaymentTransaction(models.Model):
                 status_code,
                 self.reference,
             )
-            self._set_error(_("Unknown status code: %s.", status_code))
+            self._set_error(self.env._("Unknown status code: %s.", status_code))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "buckaroo":
+            return super()._extract_amount_data(payment_data)
+
+        amount = payment_data.get("brq_amount")
+        currency_code = payment_data.get("brq_currency")
+        return {"amount": float(amount), "currency_code": currency_code}

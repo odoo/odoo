@@ -33,8 +33,7 @@ class TestStockNotificationProduct(WebsiteSaleStockCommon, HttpCase):
 
         self._add_product_qty_to_wh(self.macbook.id, 10.0, self.warehouse.lot_stock_id.id)
 
-        website = self.env['website'].get_current_website()
-        website.company_id.partner_id.email = "test@test.com"
+        self.env.ref('base.default_website').company_id.partner_id.email = "test@test.com"
         with self.setup_cron_env() as env:
             env["product.product"]._send_availability_email()
 
@@ -56,3 +55,15 @@ class TestStockNotificationProduct(WebsiteSaleStockCommon, HttpCase):
                 yield env(cr=cr)
         finally:
             env.invalidate_all()
+
+    def test_partner_email_confirmation(self):
+        """Partner receives email confirmation for a delivery if the setting is enabled."""
+        self.company.stock_move_email_validation = True
+        self.partner.email = 'test@example.com'
+        new_so = self._create_so()
+        new_so._validate_order()
+        new_so.picking_ids.button_validate()
+        self.assertTrue(
+            any(partner.email == self.partner.email
+            for partner in new_so.picking_ids.message_ids.notified_partner_ids
+        ))

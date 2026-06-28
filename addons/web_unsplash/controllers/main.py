@@ -7,11 +7,15 @@ import werkzeug.utils
 from werkzeug.urls import url_encode
 
 from odoo import http, modules, _
-from odoo.http import request
 from odoo.tools.image import image_process
 from odoo.tools.mimetypes import guess_mimetype
 
-from odoo.addons.html_editor.controllers.main import HTML_Editor
+from odoo.addons.html_editor.controllers.main import attachment_create
+from odoo.addons.web_unsplash import utils as unsplash_utils
+from odoo.addons.web_unsplash.utils import (
+    UNSPLASH_ACCESS_KEY_ICP,
+    UNSPLASH_APP_ID_ICP,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +24,7 @@ class Web_Unsplash(http.Controller):
 
     def _get_access_key(self):
         """ Use this method to get the key, needed for internal reason """
-        return request.env['ir.config_parameter'].sudo().get_str('unsplash.access_key')
+        return unsplash_utils.get_unsplash_access_key(self.env['ir.config_parameter'])
 
     def _notify_download(self, url):
         ''' Notifies Unsplash from an image download. (API requirement)
@@ -108,12 +112,15 @@ class Web_Unsplash(http.Controller):
 
             attachment_data = {
                 'name': '_'.join(url_frags),
-                'url': '/' + '/'.join(url_frags),
                 'data': image,
                 'res_id': res_id,
                 'res_model': res_model,
             }
-            attachment = HTML_Editor._attachment_create(self, **attachment_data)
+            attachment = attachment_create(self.env['ir.attachment'], **attachment_data)
+            # Creating an attachment with binary type and URL is normally forbidden
+            # See `_check_serving_attachments`
+            # However, we want to bypass this protection for unsplash images
+            attachment.sudo().url = '/' + '/'.join(url_frags)
             if value.get('description'):
                 attachment.description = value.get('description')
             attachment.generate_access_token()
@@ -126,29 +133,16 @@ class Web_Unsplash(http.Controller):
 
     @http.route("/web_unsplash/fetch_images", type='jsonrpc', auth="user")
     def fetch_unsplash_images(self, **post):
-        access_key = self._get_access_key()
-        app_id = self.get_unsplash_app_id()
-        if not access_key or not app_id:
-            if not request.env.user._can_manage_unsplash_settings():
-                return {'error': 'no_access'}
-            return {'error': 'key_not_found'}
-        post['client_id'] = access_key
-        response = requests.get('https://api.unsplash.com/search/photos/', params=url_encode(post))
-        if response.status_code == requests.codes.ok:
-            return response.json()
-        else:
-            if not request.env.user._can_manage_unsplash_settings():
-                return {'error': 'no_access'}
-            return {'error': response.status_code}
+        return self.env['ir.attachment']._fetch_unsplash_images(**post)
 
     @http.route("/web_unsplash/get_app_id", type='jsonrpc', auth="public")
     def get_unsplash_app_id(self, **post):
-        return request.env['ir.config_parameter'].sudo().get_str('unsplash.app_id')
+        return unsplash_utils.get_unsplash_app_id(self.env['ir.config_parameter'])
 
     @http.route("/web_unsplash/save_unsplash", type='jsonrpc', auth="user")
     def save_unsplash(self, **post):
-        if request.env.user._can_manage_unsplash_settings():
-            request.env['ir.config_parameter'].sudo().set_str('unsplash.app_id', post.get('appId'))
-            request.env['ir.config_parameter'].sudo().set_str('unsplash.access_key', post.get('key'))
+        if self.env.user._can_manage_unsplash_settings():
+            self.env['ir.config_parameter'].sudo().set_str(UNSPLASH_APP_ID_ICP, post.get('appId'))
+            self.env['ir.config_parameter'].sudo().set_str(UNSPLASH_ACCESS_KEY_ICP, post.get('key'))
             return True
         raise werkzeug.exceptions.NotFound()

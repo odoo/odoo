@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -32,7 +32,12 @@ class ProductRibbon(models.Model):
     )
     assign = fields.Selection(
         string="Assign",
-        selection=[("manual", "Manually"), ("sale", "On Sale"), ("new", "When New")],
+        selection=[
+            ("manual", "Manually"),
+            ("sale", "On Sale"),
+            ("new", "When New"),
+            ("out_of_stock", "When out of stock"),
+        ],
         required=True,
         default="manual",
         help=(
@@ -40,6 +45,7 @@ class ProductRibbon(models.Model):
             "- Manually: You assign the ribbon manually to products.\n"
             "- Sale: Applied when the product is visibly on sale.\n"
             "- New: Applied based on the New period you will define.\n"
+            "- Out Of Stock: Applied when the product is out of stock."
         ),
     )
     new_period = fields.Integer(default=30)
@@ -58,7 +64,7 @@ class ProductRibbon(models.Model):
                 )
                 if existing_ribbons:
                     raise ValidationError(
-                        _(
+                        ribbon.env._(
                             "Only one ribbon with the assign %s is allowed.",
                             dict(self._fields["assign"].selection).get(ribbon.assign),
                         )
@@ -120,6 +126,14 @@ class ProductRibbon(models.Model):
         if (  # noqa: SIM103
             self.assign == "new"
             and self.new_period >= (fields.Datetime.today() - product.publish_date).days
+        ):
+            return True
+        # Check if the product is out of stock
+        if (  # noqa: SIM103
+            product
+            and self.assign == "out_of_stock"
+            and not product.product_tmpl_id.allow_out_of_stock_order
+            and product._is_sold_out()
         ):
             return True
         return False

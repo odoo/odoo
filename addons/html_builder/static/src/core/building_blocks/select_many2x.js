@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, onWillDestroy } from "@odoo/owl";
+import { Component, onWillUpdateProps, onWillDestroy, props, proxy, t } from "@odoo/owl";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useCachedModel } from "@html_builder/core/cached_model_utils";
 import { _t } from "@web/core/l10n/translation";
@@ -27,30 +26,20 @@ class SelectMany2XCreate extends Component {
 
 export class SelectMany2X extends Component {
     static template = "html_builder.SelectMany2X";
-    static props = {
-        model: String,
-        fields: { type: Array, element: String, optional: true },
-        domain: { type: Array, optional: true },
-        limit: { type: Number, optional: true },
-        selected: {
-            type: Array,
-            element: { type: Object, shape: { id: [Number, String], "*": true } },
-        },
-        select: Function,
-        preview: { type: Function, optional: true },
-        revert: { type: Function, optional: true },
-        closeOnEnterKey: { type: Boolean, optional: true },
-        message: { type: String, optional: true },
-        create: { type: Function, optional: true },
-        nullText: { type: String, optional: true },
-    };
-    static defaultProps = {
-        fields: [],
-        domain: [],
-        limit: 5,
-        closeOnEnterKey: true,
-        message: _t("Choose a record..."),
-    };
+    props = props({
+        model: t.string(),
+        fields: t.array(t.string()).optional([]),
+        domain: t.array().optional([]),
+        limit: t.number().optional(5),
+        selected: t.array(t.object({ id: t.or([t.number(), t.string()]) })),
+        select: t.function(),
+        preview: t.function().optional(),
+        revert: t.function().optional(),
+        closeOnEnterKey: t.boolean().optional(true),
+        message: t.string().optional(_t("Choose a record...")),
+        create: t.function().optional(),
+        nullText: t.string().optional(),
+    });
     static components = { SelectMenu, SelectMany2XCreate };
 
     setup() {
@@ -58,7 +47,7 @@ export class SelectMany2X extends Component {
         this.cachedModel = useCachedModel();
         this.prevSelectedIds = undefined;
         this.prevSearchValue = undefined;
-        this.state = useState({
+        this.state = proxy({
             nameToCreate: "",
             searchResults: [],
             limit: this.props.limit,
@@ -101,7 +90,9 @@ export class SelectMany2X extends Component {
     }
     async search(searchValue) {
         const domain = Object.values(this.props.domain).filter((item) => item !== null);
-        const selectedIds = this.props.selected.map((e) => e.id);
+        const selectedIds = this.props.selected
+            .map((e) => e.id)
+            .filter((value) => typeof value === "number");
         if (selectedIds.length) {
             domain.push(["id", "not in", selectedIds]);
         }

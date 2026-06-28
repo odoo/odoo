@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillDestroy, onWillStart } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, props, proxy, signal, t } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -8,27 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { isBrowserChrome } from "@web/core/browser/feature_detection";
 
-const deviceKind = new Set(["audioinput", "videoinput", "audiooutput"]);
-
 export class DeviceSelect extends Component {
-    static props = {
-        menuClass: {
-            type: String,
-            optional: true,
-        },
-        kind: {
-            type: String,
-            validate: (string) => deviceKind.has(string),
-        },
-        icon: {
-            type: String,
-            optional: true,
-        },
-        permissionDialogConfiguration: {
-            type: Object,
-            optional: true,
-        },
-    };
     static components = { Dropdown, DropdownItem };
     static template = "discuss.CallDeviceSelect";
     CLICK_TO_ACTIVATE = _t("Click to Activate");
@@ -36,9 +15,23 @@ export class DeviceSelect extends Component {
 
     setup() {
         super.setup();
+        this.props = props({
+            icon: t.string().optional(),
+            kind: t.selection(["audioinput", "videoinput", "audiooutput"]),
+            label: t.string().optional(),
+            menuClass: t.string().optional(),
+            permissionDialogConfiguration: t
+                .object({
+                    props: t.record().optional(),
+                    options: t.record().optional(),
+                })
+                .optional(),
+        });
         this.store = useService("mail.store");
         this.notification = useService("notification");
-        this.state = useState({
+        /** @type {import("@odoo/owl").Signal<Element>} */
+        this.rootRef = signal();
+        this.state = proxy({
             userDevices: [],
             selectedDevice: undefined,
         });
@@ -90,10 +83,14 @@ export class DeviceSelect extends Component {
     }
 
     showPermissionDialog(kind) {
-        this.store.rtc.showMediaPermissionDialog(
-            kind === "videoinput" ? "camera" : "microphone",
-            this.props.permissionDialogConfiguration
-        );
+        const config = this.props.permissionDialogConfiguration;
+        this.store.rtc.showMediaPermissionDialog(kind === "videoinput" ? "camera" : "microphone", {
+            ...config,
+            options: {
+                ...config?.options,
+                rootRef: this.rootRef,
+            },
+        });
     }
 
     isSelected(id) {

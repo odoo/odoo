@@ -24,7 +24,6 @@ class TestPoSEventSaleReport(TestUi):
             "lines": [
                 Command.create({
                     "discount": 0,
-                    "pack_lot_ids": [],
                     "price_unit": 100.0,
                     "product_id": self.product_event.id,
                     "price_subtotal": 100.0,
@@ -55,7 +54,6 @@ class TestPoSEventSaleReport(TestUi):
                     }),
             ],
             "uuid": "12345-123-1234",
-            "last_order_preparation_change": "{}",
             "user_id": self.env.uid,
             "to_invoice": False,
         }

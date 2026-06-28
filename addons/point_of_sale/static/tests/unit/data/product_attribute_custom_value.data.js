@@ -9,6 +9,7 @@ export class ProductAttributeCustomValue extends models.ServerModel {
             "custom_product_template_attribute_value_id",
             "pos_order_line_id",
             "write_date",
+            "uuid",
         ];
     }
 }

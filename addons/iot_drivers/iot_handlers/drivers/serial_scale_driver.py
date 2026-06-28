@@ -44,21 +44,31 @@ class ScaleDriver(SerialDriver):
     def __init__(self, identifier: str, device: dict):
         super().__init__(identifier, device)
         self.device_type = "scale"
-        self.device_manufacturer = "Toledo"
         self._actions["read_once"] = self._read_once
+        self.net_weight_char = b'N'
+        self.tare_mode = False
 
-    def _read_once(self, _):
+    def _read_once(self, data: dict):
         """Reads the scale current weight value and pushes it to the frontend."""
         self.last_sent_value = self._read_weight()
+        if data.get("detailed_response"):
+            return {
+                "weight": self.last_sent_value,
+                "tare_mode": self.tare_mode,
+            }
         return self.last_sent_value
 
     def _read_weight(self) -> float:
         """Asks for a new weight from the scale, checks if it is valid
         and, if it is, makes it the current value."""
         self._connection.write(self._protocol.measureCommand + self._protocol.commandTerminator)
-        answer = self._get_raw_response()
+        answer = self._get_raw_response(self._connection)
         match = re.search(self._protocol.measureRegexp, answer)
         if match:
+            if self.net_weight_char and self.net_weight_char in answer:
+                self.tare_mode = True
+            else:
+                self.tare_mode = False
             return float(match.group(1))
         return self._read_status(answer)
 
@@ -89,7 +99,10 @@ class ScaleDriver(SerialDriver):
         except serial.serialutil.SerialTimeoutException:
             pass
         except Exception:
-            _logger.exception('Error while probing %s with protocol %s', device, protocol.name)
+            _logger.warning(
+                "Error while probing %s with protocol %s",
+                device, protocol.name, exc_info=True, stack_info=True,
+            )
         return False
 
     @staticmethod
@@ -121,7 +134,10 @@ class ScaleDriver(SerialDriver):
             status_char = status_match.group(1).decode()  # Example: b'D' extracted from b'\x02?D\r'
             binary_status_char = format(ord(status_char), '08b')  # Example: '00001101'
             for index, bit in enumerate(binary_status_char[1:][::-1]):  # Read the bits in reverse order (LSB is at the last char) + ignore the first "parity" bit
-                if int(bit):
+                if index == 5:
+                    # Index 5 is Net Weight status
+                    self.tare_mode = bool(bit)
+                elif int(bit):
                     _logger.debug(
                         "Scale error: %s. Status string: %s. Scale answer: %s.",
                         status_char_error_bits[index], binary_status_char, answer

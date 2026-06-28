@@ -8,13 +8,19 @@
     pre, textarea.o_prism_source {
         direction: ltr #{"/*rtl:ignore*/"};
         margin: 0;
-        padding: 8px 16px;
+        padding: 20px 16px 8px 16px;
     }
 
     pre {
         font: inherit;
         tab-size: inherit;
         white-space: pre;
+        user-select: none;
+        &::-webkit-scrollbar {
+            // Because we have two scrollbars on top of each others
+            // we hide the pre one.
+            opacity: 0;
+        }
     }
 
     textarea.o_prism_source {
@@ -36,6 +42,20 @@
         &:focus::placeholder {
             opacity: 1;
         }
+
+        &::-webkit-scrollbar {
+            height: 8px;
+        }
+    
+        &::-webkit-scrollbar-thumb {
+            border-radius: 4px;
+            background: #888;
+            cursor: default;
+
+            &:hover {
+                background: #{rgba($body-color, 0.8)};
+            }
+        }
     }
 
     .o_code_toolbar {
@@ -53,7 +73,7 @@
             align-items: center;
             height: 20px;
             padding: 0 3px 0 0;
-            font-size: 12px;
+            font-size: 12px !important;
             --btn-hover-bg: #{$o-gray-200};
         }
     }
@@ -63,6 +83,12 @@
     &:focus-within {
         .o_code_toolbar {
             display: flex;
+        }
+    }
+
+    &.o-code-wrap {
+        pre, textarea {
+            white-space: pre-wrap !important;
         }
     }
 }

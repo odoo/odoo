@@ -1,33 +1,33 @@
-import { useState } from "@web/owl2/utils";
+import { proxy, t } from "@odoo/owl";
 import { patch } from '@web/core/utils/patch';
 import { SelectMenu } from '@web/core/select_menu/select_menu';
 import { _t } from '@web/core/l10n/translation';
 
 import {
-    LocationSelectorDialog
-} from '@delivery/js/location_selector/location_selector_dialog/location_selector_dialog';
+    LocationSelectorDialog,
+    locationSelectorDialogProps,
+} from '@website_sale_stock/js/location_selector/location_selector_dialog/location_selector_dialog';
 
 patch(LocationSelectorDialog, {
     components: {
         ...LocationSelectorDialog.components,
         SelectMenu,
     },
-    props: {
-        ...LocationSelectorDialog.props,
-        productId: { type: Number, optional: true },
-        isProductPage: { type: Boolean, optional: true },
-        uomId: { type: Number, optional: true },
-        countryCode: { type: String, optional: true},
-        deliveryMethodId: Number,
-        deliveryMethodType: String,
-    },
+});
+
+Object.assign(locationSelectorDialogProps, {
+    productId: t.number().optional(),
+    isProductPage: t.boolean().optional(),
+    uomId: t.number().optional(),
+    countryCode: t.string().optional(),
+    deliveryMethodType: t.string().optional(),
 });
 
 patch(LocationSelectorDialog.prototype, {
     setup() {
         super.setup();
         if (this.isClickAndCollect) {
-            this.state = useState({
+            this.state = proxy({
                 ...this.state,
                 countries: [],
                 selectedCountryData: {},
@@ -102,7 +102,7 @@ patch(LocationSelectorDialog.prototype, {
     /**
      * Filter locations by selected country for Click & Collect.
      *
-     * @override method from `@delivery/static/src/js/location_selector_dialog`
+     * @override method from `@website_sale_stock/static/src/js/location_selector_dialog`
      */
     get locations() {
         if (this.isClickAndCollect && this.state.selectedCountryData.code) {
@@ -117,7 +117,7 @@ patch(LocationSelectorDialog.prototype, {
      * Set the countries on the location selector and set the first one as the selected country if
      * no country was selected previously for Click & Collect in checkout page.
      *
-     * @override method from `@delivery/static/src/js/location_selector_dialog`
+     * @override method from `@website_sale_stock/static/src/js/location_selector_dialog`
      */
     _updateLocations(locations) {
         if (!this.isClickAndCollect) {

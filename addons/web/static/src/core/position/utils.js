@@ -302,6 +302,8 @@ export function reposition(popper, target, options) {
             existingMaxHeight !== "none"
                 ? `min(${existingMaxHeight}, ${maxHeight}px)`
                 : `${maxHeight}px`;
+        // Prevent content overflow if the popover has a max height
+        popper.style.overflowY = "auto";
     }
 
     return solution;

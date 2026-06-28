@@ -10,6 +10,11 @@ registry.category("web_tour.tours").add("hr_employee_multiple_bank_accounts_tour
             run: "click",
         },
         {
+            content: "Open Management menu",
+            trigger: '[data-menu-xmlid="hr.menu_hr_employee_payroll"]',
+            run: "click",
+        },
+        {
             content: "Open an Employee Profile",
             trigger: ".o_kanban_record:contains('Johnny H.')",
             run: "click",

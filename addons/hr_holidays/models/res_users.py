@@ -2,14 +2,14 @@
 
 from odoo import api, fields, models, Command, _
 from odoo.tools import format_date
-from odoo.addons.hr.models.res_users import field_employee
+from odoo.addons.hr.models.res_users import related_employee_field
 from odoo.addons.mail.tools.discuss import Store
 
 
 class ResUsers(models.Model):
     _inherit = "res.users"
 
-    leave_date_to = field_employee(fields.Date, 'leave_date_to')
+    leave_date_to = fields.Date(**related_employee_field('leave_date_to'))
 
     def _clean_leave_responsible_users(self):
         # self = old bunch of leave responsibles
@@ -46,5 +46,6 @@ class ResUsers(models.Model):
 
     def _store_main_user_fields(self, res: Store.FieldList):
         super()._store_main_user_fields(res)
-        if res.is_for_internal_users():
-            res.many("employee_ids", ["leave_date_to"])
+        res.many(
+            "all_employee_ids", ["active", "company_id", "leave_date_to", "user_id"], internal=True,
+        )

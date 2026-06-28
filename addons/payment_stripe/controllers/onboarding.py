@@ -38,6 +38,6 @@ class OnboardingController(http.Controller):
         :param str menu_id: The menu from which the user started the onboarding step, as an
                             `ir.ui.menu` id
         """
-        stripe_provider = request.env["payment.provider"].browse(int(provider_id))
+        stripe_provider = self.env["payment.provider"].browse(int(provider_id))
         account_link = stripe_provider._stripe_create_account_link(account_id, int(menu_id))
         return request.redirect(account_link, local=False)

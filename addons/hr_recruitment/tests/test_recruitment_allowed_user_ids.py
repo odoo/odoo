@@ -7,8 +7,6 @@ class TestRecruitmentAllowedRecruiters(TransactionCase):
     def setUp(self):
         super().setUp()
 
-        self.env = self.env(context=dict(self.env.context, tracking_disable=True))
-
         self.company_a = self.env['res.company'].create({'name': 'Company A'})
         self.company_b = self.env['res.company'].create({'name': 'Company BBS'})
 

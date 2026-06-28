@@ -306,7 +306,7 @@ test("StateSelectionField in editable list view", async () => {
     // Click on the third status button to make the dropdown appear
     await click(".o_state_selection_cell .o_field_state_selection span.o_status:eq(2)");
     await animationFrame();
-    expect(".o-dropdown--menu").toHaveCount(1, "there should be a dropdown".msg);
+    expect(".o-dropdown--menu").toHaveCount(1, { message: "there should be a dropdown" });
     expect(".o-dropdown--menu .dropdown-item").toHaveCount(3, {
         message: "there should be three options in the dropdown",
     });
@@ -481,54 +481,6 @@ test("works when required in a readonly view", async () => {
     expect(".o_field_state_selection span").toHaveClass("o_status_green");
 });
 
-test("StateSelectionField - auto save record when field toggled", async () => {
-    onRpc("web_save", ({ method }) => expect.step(method));
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: /* xml */ `
-            <form>
-                <sheet>
-                    <group>
-                        <field name="selection" widget="state_selection"/>
-                    </group>
-                </sheet>
-            </form>
-        `,
-        resId: 1,
-    });
-
-    await click(".o_field_widget.o_field_state_selection .o_status");
-    await animationFrame();
-    await click(".dropdown-menu .dropdown-item:last-child");
-    await animationFrame();
-    expect.verifySteps(["web_save"]);
-});
-
-test("StateSelectionField -  prevent auto save with autosave option", async () => {
-    onRpc("write", ({ method }) => expect.step(method));
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: /* xml */ `
-            <form>
-                <sheet>
-                    <group>
-                        <field name="selection" widget="state_selection" options="{'autosave': False}"/>
-                    </group>
-                </sheet>
-            </form>
-        `,
-        resId: 1,
-    });
-
-    await click(".o_field_widget.o_field_state_selection .o_status");
-    await animationFrame();
-    await click(".dropdown-menu .dropdown-item:last-child");
-    await animationFrame();
-    expect.verifySteps([]);
-});
-
 test("StateSelectionField - hotkey handling when there are more than 3 options available", async () => {
     Partner._fields.selection = fields.Selection({
         string: "Selection",
@@ -549,7 +501,7 @@ test("StateSelectionField - hotkey handling when there are more than 3 options a
             <form>
                 <sheet>
                     <group>
-                        <field name="selection" widget="state_selection" options="{'autosave': False}"/>
+                        <field name="selection" widget="state_selection"/>
                     </group>
                 </sheet>
             </form>

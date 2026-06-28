@@ -451,4 +451,10 @@ describe("link creation by shortcut", () => {
             '<p><a href="https://test.com">li[]nk</a></p>'
         );
     });
+    test("should not create a link via shortcut for partial selection inside contenteditable false", async () => {
+        await setupEditor(`<p contenteditable="false">T[e]st</p>`);
+        await press(["ctrl", "k"]);
+        await animationFrame();
+        expect('.o_command span[title="Create link"]').toHaveCount(0);
+    });
 });

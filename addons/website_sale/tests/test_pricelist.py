@@ -333,9 +333,9 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         self.assertEqual(product_template.standard_price, 5)
         with self.mock_request(website_sale_current_pl=pricelist.id) as request:
             self.assertEqual(request.pricelist, pricelist)
-            price = product_template._get_sales_prices(self.website)[product_template.id][
-                "price_reduce"
-            ]
+            price = product_template._get_sales_prices(
+                request.pricelist, request.fiscal_position, self.website
+            )[product_template.id]["price_reduce"]
             msg = "Template has no variants, the price should be computed based on the template's"
             " cost."
             self.assertEqual(price, 4.5, msg)
@@ -350,18 +350,18 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             self.assertEqual(product_template.standard_price, 0, msg)
             self.assertEqual(product_template.product_variant_ids[0].standard_price, 0)
 
-            price = product_template._get_sales_prices(self.website)[product_template.id][
-                "price_reduce"
-            ]
+            price = product_template._get_sales_prices(
+                request.pricelist, request.fiscal_position, self.website
+            )[product_template.id]["price_reduce"]
             msg = "Template has variants, the price should be computed based on the 1st variant's"
             " cost."
             self.assertEqual(price, 0, msg)
 
             product_template.product_variant_ids[0].standard_price = 20
 
-            price = product_template._get_sales_prices(self.website)[product_template.id][
-                "price_reduce"
-            ]
+            price = product_template._get_sales_prices(
+                request.pricelist, request.fiscal_position, self.website
+            )[product_template.id]["price_reduce"]
             self.assertEqual(price, 18, msg)
 
     def test_base_price_with_discount_on_pricelist_tax_included(self):
@@ -397,7 +397,9 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         })
         with self.mock_request(website_sale_current_pl=self.pricelist.id) as request:
             self.assertEqual(request.pricelist, self.pricelist)
-            res = product_tmpl._get_sales_prices(self.website)
+            res = product_tmpl._get_sales_prices(
+                request.pricelist, request.fiscal_position, self.website
+            )
             self.assertEqual(res[product_tmpl.id]["base_price"], 75)
 
     def test_pricelist_item_validity_period(self):
@@ -487,14 +489,14 @@ class TestWebsitePriceList(WebsiteSaleCommon):
 
 def simulate_frontend_context(self, website_id=None):
     if website_id is None:
-        website_id = self.env.ref('website.default_website').id
+        website_id = self.ref("base.default_website")
 
     # Mock this method will be enough to simulate frontend context in most methods
-    def get_request_website():
+    def get_current_website(fallback=None):  # noqa: ARG001
         return self.env["website"].browse(website_id)
 
     patcher = patch(
-        "odoo.addons.website.models.ir_http.get_request_website", wraps=get_request_website
+        "odoo.addons.website.models.website.Website.get_current_website", wraps=get_current_website
     )
     self.startPatcher(patcher)
 
@@ -643,7 +645,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
                     id_text=str(self.env.user.partner_id.id),
                 )
             )
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
 
         # set different country groups on pricelists
         c_EUR = self.env.ref("base.europe")
@@ -859,7 +861,7 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         self.demo_user.company_ids += self.company2
         # Set company2 as current company for demo user
         Website = self.env["website"]
-        self.website = self.env.ref("website.default_website")
+        self.website = self.env.ref("base.default_website")
         self.website.company_id = self.company2
         self.website2 = Website.create({"name": "Website 2", "company_id": self.company1.id})
 
@@ -965,7 +967,7 @@ class TestWebsiteSaleSession(HttpCaseWithUserPortal):
         self.env.user.write({
             "group_ids": [Command.link(self.env.ref("product.group_product_pricelist").id)]
         })
-        website = self.env.ref("website.default_website")
+        website = self.env.ref("base.default_website")
         test_user = self.env["res.users"].create({
             "name": "Toto",
             "login": "toto",

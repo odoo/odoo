@@ -27,7 +27,7 @@ async function makeDomainSelectorDialog(params = {}) {
 
     class Parent extends Component {
         static components = { DomainSelectorDialog };
-        static template = xml`<DomainSelectorDialog t-props="domainSelectorProps"/>`;
+        static template = xml`<DomainSelectorDialog t-props="this.domainSelectorProps"/>`;
         static props = ["*"];
         setup() {
             this.domainSelectorProps = {

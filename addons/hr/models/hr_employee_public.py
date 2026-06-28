@@ -27,10 +27,15 @@ class HrEmployeePublic(models.Model):
     address_id = fields.Many2one('res.partner', readonly=True)
     mobile_phone = fields.Char(readonly=True)
     work_phone = fields.Char(readonly=True)
+    phone_sanitized = fields.Char(readonly=True)
+    phone_formatted = fields.Char(related='employee_id.phone_formatted')
+    work_phone_sanitized = fields.Char(related='employee_id.work_phone_sanitized')
+    work_phone_formatted = fields.Char(related='employee_id.work_phone_formatted')
+    mobile_phone_sanitized = fields.Char(related='employee_id.mobile_phone_sanitized')
+    mobile_phone_formatted = fields.Char(related='employee_id.mobile_phone_formatted')
     work_email = fields.Char(readonly=True)
     share = fields.Boolean(related='employee_id.share')
     phone = fields.Char(related='employee_id.phone')
-    im_status = fields.Char(related='employee_id.im_status')
     email = fields.Char(related='employee_id.email')
     work_contact_id = fields.Many2one('res.partner', readonly=True)
     work_location_id = fields.Many2one('hr.work.location', readonly=True)
@@ -43,7 +48,6 @@ class HrEmployeePublic(models.Model):
     hr_presence_state = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-        ('archive', 'Archived'),
         ('out_of_working_hour', 'Off-Hours')], compute='_compute_presence_state', default='out_of_working_hour')
     hr_icon_display = fields.Selection(
         selection='_get_selection_hr_icon_display',
@@ -111,12 +115,13 @@ class HrEmployeePublic(models.Model):
     @api.depends('user_id')
     def _compute_last_activity(self):
         for employee in self:
+            today = fields.Date.context_today(self)
             tz = employee.tz
             # sudo: res.users - can access presence of accessible user
             if last_presence := employee.user_id.sudo().presence_ids.last_presence:
                 last_activity_datetime = last_presence.replace(tzinfo=UTC).astimezone(ZoneInfo(tz)).replace(tzinfo=None)
                 employee.last_activity = last_activity_datetime.date()
-                if employee.last_activity == fields.Date.today():
+                if employee.last_activity == today:
                     employee.last_activity_time = format_time(self.env, last_presence, time_format='short')
                 else:
                     employee.last_activity_time = False
@@ -235,15 +240,5 @@ class HrEmployeePublic(models.Model):
         )""" % (self._table, self._get_fields()))
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
-        res.one("department_id", ["name"])
-        res.one(
-            "user_id",
-            lambda res: (
-                res.attr("share"),
-                res.one("partner_id", ["tz"]),
-                res.from_method("_store_im_status_fields"),
-            ),
-        )
-        res.one("work_location_id", ["location_type", "name"])
-        res.extend(["company_id", "hr_icon_display", "job_title", "name", "show_hr_icon_display"])
-        res.extend(["work_email", "work_phone"])
+        # sudo: hr.public.employee - reading _store_avatar_card_fields of accessible public employee is acceptable
+        res.one("employee_id", "_store_avatar_card_fields", sudo=True)

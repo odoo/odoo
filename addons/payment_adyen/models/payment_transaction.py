@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models, release
+from odoo import api, models, release
 from odoo.tools import format_amount
 
 from odoo.addons.payment import utils as payment_utils
@@ -102,7 +102,7 @@ class PaymentTransaction(models.Model):
                 self, scope="payment_request_token"
             ),
         )
-        self._process("adyen", response_content)
+        self._record(response_content)
 
     def _send_capture_request(self):
         """Override of `payment` to send a capture request to Adyen."""
@@ -118,53 +118,53 @@ class PaymentTransaction(models.Model):
             "amount": {"value": converted_amount, "currency": self.currency_id.name},
             "reference": self.reference,
         }
-
         response_content = self._send_api_request(
-            "POST", "/payments/{}/captures", json=data, endpoint_param=self.provider_reference
+            "POST",
+            "/payments/{}/captures",
+            json=data,
+            endpoint_param=self.source_transaction_id.provider_reference,
         )
+        self._record(response_content)
 
-        # Process the capture request response.
+        # Notify the user that the deferred request has been sent and the response will come later
         status = response_content.get("status")
-        formatted_amount = format_amount(self.env, self.amount, self.currency_id)
         if status == "received":
+            formatted_amount = format_amount(self.env, self.amount, self.currency_id)
             self._log_message_on_linked_documents(
-                _(
+                self.env._(
                     "The capture request of %(amount)s for transaction %(ref)s has been sent.",
                     amount=formatted_amount,
                     ref=self.reference,
                 )
             )
 
-        # The PSP reference associated with this capture request is different from the PSP
-        # reference associated with the original payment request.
-        self.provider_reference = response_content.get("pspReference")
-
     def _send_void_request(self):
         """Override of `payment` to send a void request to Adyen."""
         if self.provider_code != "adyen":
             return super()._send_void_request()
 
+        # Send the void request to Adyen
         data = {
             "merchantAccount": self.provider_id.adyen_merchant_account,
             "reference": self.reference,
         }
         response_content = self._send_api_request(
-            "POST", "/payments/{}/cancels", json=data, endpoint_param=self.provider_reference
+            "POST",
+            "/payments/{}/cancels",
+            json=data,
+            endpoint_param=self.source_transaction_id.provider_reference,
         )
+        self._record(response_content)
 
-        # Process the void request response.
+        # Notify the user that the deferred request has been sent and the response will come later
         status = response_content.get("status")
         if status == "received":
             self._log_message_on_linked_documents(
-                _(
+                self.env._(
                     "A request was sent to void the transaction %(reference)s.",
                     reference=self.reference,
                 )
             )
-
-        # The PSP reference associated with this void request is different from the PSP
-        # reference associated with the original payment request.
-        self.provider_reference = response_content.get("pspReference")
 
     def _send_refund_request(self):
         """Override of `payment` to send a refund request to Adyen."""
@@ -188,16 +188,9 @@ class PaymentTransaction(models.Model):
             json=data,
             endpoint_param=self.source_transaction_id.provider_reference,
         )
+        self._record(response_content)
 
-        # Process the refund request response.
-        psp_reference = response_content.get("pspReference")
-        status = response_content.get("status")
-        if psp_reference and status == "received":
-            # The PSP reference associated with this /refunds request is different from the psp
-            # reference associated with the original payment request.
-            self.provider_reference = psp_reference
-
-    # === BUSINESS METHODS - PROCESSING === #
+    # === BUSINESS METHODS - PAYLOAD RECEPTION === #
 
     @api.model
     def _search_by_reference(self, provider_code, payment_data):
@@ -220,11 +213,13 @@ class PaymentTransaction(models.Model):
             # The capture/void may be initiated from Adyen, so we can't trust the reference.
             # We find the transaction based on the original provider reference since Adyen will have
             # two different references: one for the original transaction and one for the capture or
-            # void. We keep the second one only for child transactions. For full capture/void, no
-            # child transaction are created. Thus, we first look for the source transaction before
-            # checking if we need to find/create a child transaction.
+            # void. We keep the second one only for child transactions.
             source_tx = self.search([
                 ("provider_reference", "=", source_reference),
+                ("provider_code", "=", "adyen"),
+            ])
+            tx = self.search([
+                ("provider_reference", "=", provider_reference),
                 ("provider_code", "=", "adyen"),
             ])
             if source_tx:
@@ -234,31 +229,26 @@ class PaymentTransaction(models.Model):
                     source_tx.currency_id,
                     arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
                 )
-                if source_tx.amount == converted_notification_amount:  # Full capture/void.
-                    tx = source_tx
-                else:  # Partial capture/void; we search for the child transaction instead.
-                    tx = self.search([
-                        ("provider_reference", "=", provider_reference),
-                        ("provider_code", "=", "adyen"),
-                    ])
-                    if tx and tx.amount != converted_notification_amount:
-                        # If the void was requested expecting a certain amount but, in the meantime,
-                        # others captures that Odoo was unaware of were done, the amount voided will
-                        # be different from the amount of the existing transaction.
-                        tx._set_error(
-                            _(
-                                "The amount processed by Adyen for the transaction %s is different"
-                                " than the one requested. Another transaction is created with the"
-                                " correct amount.",
-                                tx.reference,
-                            )
+                if tx and tx.amount != converted_notification_amount:
+                    # If the void was requested expecting a certain amount but, in the meantime,
+                    # others captures that Odoo was unaware of were done, the amount voided will
+                    # be different from the amount of the existing transaction.
+                    tx.with_context(
+                        payment_safe_write=True  # No API call was made; safe to replay
+                    )._set_error(
+                        self.env._(
+                            "The amount processed by Adyen for the transaction %s is different than"
+                            " the one requested. Another transaction is created with the correct"
+                            " amount.",
+                            tx.reference,
                         )
-                        tx = self.env["payment.transaction"]
-                    if not tx:  # Partial capture/void initiated from Adyen or with a wrong amount.
-                        # Manually create a child transaction with a new reference. The reference of
-                        # the child transaction was personalized from Adyen and could be identical
-                        # to that of an existing transaction.
-                        tx = self._adyen_create_child_tx(source_tx, payment_data)
+                    )
+                    tx = self.env["payment.transaction"]
+                if not tx:  # Capture/void initiated from Adyen or with a wrong amount.
+                    # Manually create a child transaction with a new reference. The reference of
+                    # the child transaction was personalized from Adyen and could be identical
+                    # to that of an existing transaction.
+                    tx = self._adyen_create_child_tx(source_tx, payment_data)
             else:  # The capture/void was initiated for an unknown source transaction
                 pass  # Don't do anything with the capture/void notification
         else:  # 'REFUND'
@@ -310,37 +300,13 @@ class PaymentTransaction(models.Model):
             converted_amount, is_refund=is_refund, provider_reference=provider_reference
         )
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "adyen":
-            return super()._extract_amount_data(payment_data)
-
-        # Redirection payments and 3DS challenges don't have the amount or currency in their
-        # payment_data, but processing them results in a pending transaction anyway, neither
-        # does payment refusal response which will result in an error transaction.
-        if (
-            payment_data.get("action", {}).get("type") in ["redirect", "threeDS2"]
-            or payment_data.get("resultCode") in const.RESULT_CODES_MAPPING["refused"]
-        ):
-            return None  # Skip the validation
-
-        amount_data = payment_data.get("amount", {})
-        amount = payment_utils.to_major_currency_units(
-            amount_data.get("value", 0),
-            self.currency_id,
-            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
-        )
-        currency_code = amount_data.get("currency")
-        return {
-            "amount": amount,
-            "currency_code": currency_code,
-            "precision_digits": const.CURRENCY_DECIMALS.get(self.currency_id.name),
-        }
+    # === BUSINESS METHODS - PROCESSING === #
 
     def _apply_updates(self, payment_data):
         """Override of payment to update the transaction based on the payment data."""
         if self.provider_code != "adyen":
-            return super()._apply_updates(payment_data)
+            super()._apply_updates(payment_data)
+            return
 
         # Extract or assume the event code. If none is provided, the feedback data originate from a
         # direct payment request whose feedback data share the same payload as an 'AUTHORISATION'
@@ -353,27 +319,31 @@ class PaymentTransaction(models.Model):
             self.provider_reference = payment_data.get("pspReference")
 
         # Update the payment method.
-        payment_method_data = payment_data.get("paymentMethod", "")
+        payment_method_data = payment_data.get("paymentMethod")
         if isinstance(payment_method_data, dict):  # Not from webhook: the data contain the PM code.
             payment_method_type = payment_method_data["type"]
             if payment_method_type == "scheme":  # card
                 payment_method_code = payment_method_data["brand"]
             else:
                 payment_method_code = payment_method_type
-        else:  # Sent from the webhook: the PM code is directly received as a string.
+        elif isinstance(payment_method_data, str):  # Sent from the webhook
             payment_method_code = payment_method_data
+        else:  # No payment method code available when processing a capture, void, or refund
+            payment_method_code = None
 
-        payment_method = self.env["payment.method"]._get_from_code(
-            payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
-        )
-        self.payment_method_id = payment_method or self.payment_method_id
+        if payment_method_code:
+            payment_method = self.provider_id._get_pm_from_code(
+                payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
+            )
+            self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
         payment_state = payment_data.get("resultCode")
         refusal_reason = payment_data.get("refusalReason") or payment_data.get("reason")
-        if not payment_state:
-            self._set_error(_("Received data with missing payment state."))
-        elif payment_state in const.RESULT_CODES_MAPPING["pending"]:
+        if not payment_state:  # No state available when processing a capture, void, or refund
+            return
+
+        if payment_state in const.RESULT_CODES_MAPPING["pending"]:
             self._set_pending()
         elif payment_state in const.RESULT_CODES_MAPPING["done"]:
             if not self.provider_id.capture_manually:
@@ -399,7 +369,9 @@ class PaymentTransaction(models.Model):
                     refusal_reason,
                 )
                 self._set_error(
-                    _("An error occurred during the processing of your payment. Please try again.")
+                    self.env._(
+                        "An error occurred during the processing of your payment. Please try again."
+                    )
                 )
             elif event_code == "CANCELLATION":
                 _logger.warning(
@@ -408,10 +380,12 @@ class PaymentTransaction(models.Model):
                     refusal_reason,
                 )
                 if self.source_transaction_id:  # child tx => The event can't be retried.
-                    self._set_error(_("The void of the transaction %s failed.", self.reference))
+                    self._set_error(
+                        self.env._("The void of the transaction %s failed.", self.reference)
+                    )
                 else:  # source tx with failed void stays in its state, could be voided again
                     self._log_message_on_linked_documents(
-                        _("The void of the transaction %s failed.", self.reference)
+                        self.env._("The void of the transaction %s failed.", self.reference)
                     )
             else:  # 'CAPTURE', 'CAPTURE_FAILED'
                 _logger.warning(
@@ -420,16 +394,18 @@ class PaymentTransaction(models.Model):
                     refusal_reason,
                 )
                 if self.source_transaction_id:  # child_tx => The event can't be retried.
-                    self._set_error(_("The capture of the transaction %s failed.", self.reference))
+                    self._set_error(
+                        self.env._("The capture of the transaction %s failed.", self.reference)
+                    )
                 else:  # source tx with failed capture stays in its state, could be captured again
                     self._log_message_on_linked_documents(
-                        _("The capture of the transaction %s failed.", self.reference)
+                        self.env._("The capture of the transaction %s failed.", self.reference)
                     )
         elif payment_state in const.RESULT_CODES_MAPPING["refused"]:
             _logger.warning(
                 "the transaction %s was refused. reason: %s", self.reference, refusal_reason
             )
-            self._set_error(_("Your payment was refused. Please try again."))
+            self._set_error(self.env._("Your payment was refused. Please try again."))
         else:  # Classify unsupported payment state as `error` tx state
             _logger.warning(
                 "received data for transaction %s with invalid payment state: %s",
@@ -437,8 +413,27 @@ class PaymentTransaction(models.Model):
                 payment_state,
             )
             self._set_error(
-                "Adyen: " + _("Received data with invalid payment state: %s", payment_state)
+                "Adyen: "
+                + self.env._("Received data with invalid payment state: %s", payment_state)
             )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "adyen":
+            return super()._extract_amount_data(payment_data)
+
+        amount_data = payment_data.get("amount", {})
+        amount = payment_utils.to_major_currency_units(
+            amount_data.get("value", 0),
+            self.currency_id,
+            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
+        )
+        currency_code = amount_data.get("currency")
+        return {
+            "amount": amount,
+            "currency_code": currency_code,
+            "precision_digits": const.CURRENCY_DECIMALS.get(self.currency_id.name),
+        }
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""

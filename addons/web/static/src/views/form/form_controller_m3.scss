@@ -1,0 +1,145 @@
+// Specific CSS rules for M3 style
+
+.o_form_view {
+    @include media-breakpoint-down(md) {
+        --field-spacing-unit: 8px;
+        --o-field-box-border-color: var(--gray-300);
+
+        %-o-field-box {
+            border-radius: calc(.5 * var(--field-spacing-unit));
+            border: 1px solid var(--o-field-box-border-color);
+            padding: var(--field-spacing-unit) calc(1.5 * var(--field-spacing-unit));
+
+            &:has(.o_required_modifier):not(:has(.o_readonly_modifier, .o_field_invalid, :focus-within)) {
+                --o-field-box-border-color: var(--gray-600);
+            }
+            &:has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))) {
+                background-color: rgba($body-color, .04);
+            }
+            &:has(.o_field_invalid):not(:has(:focus-within)) {
+                --o-field-box-border-color: #{o-text-color('danger')};
+                background-color: #{$o-input-invalid-bg};
+            }
+            &:focus-within {
+                --o-field-box-border-color: #{$o-action};
+            }
+
+            .o_input {
+                --o-input-background-color: transparent;
+                border-width: 0;
+            }
+
+            h1, h2, h3, h4, h5, h6 {
+                all: unset;
+            }
+        }
+
+        %-o-field-label {
+            display: block !important;
+            width: max-content !important;
+            transform: translate(calc(var(--field-spacing-unit)), calc(-.5 * var(--field-spacing-unit)));
+            padding: 0 calc(var(--field-spacing-unit) / 2) !important;
+            border-radius: var(--field-spacing-unit);
+            margin-bottom: calc(-1 * var(--body-font-size)) !important;
+
+            // Hide the border of the adjacent sibling box that is under the label
+            background: linear-gradient(0deg, transparent 0%, $o-view-background-color 45%, $o-view-background-color 55%, transparent 100%);
+
+            font-size: $font-size-sm !important;
+            font-weight: $font-weight-bold !important;
+
+            // Avoid overflowing outside the viewport
+            max-width: calc(100% - 5%);
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+
+            & * {
+                color: inherit !important;
+                font-size: inherit !important;
+                line-height: inherit !important;
+                font-weight: inherit !important;
+            }
+
+            sup {
+                color: $o-action !important;
+                position: static;
+            }
+        }
+
+        .o_inner_group {
+            :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)) {
+                @extend %-o-field-box;
+
+                a:has(i.fa), button.fa, .o_external_button {
+                    height: calc(3 * var(--field-spacing-unit));
+                    min-width: calc(3 * var(--field-spacing-unit));
+                    color: var(--body-color);
+                    background: var(--secondary-bg) !important;
+                    padding: 0 !important;
+                    border-radius: calc(1.5 * var(--field-spacing-unit));
+                    justify-content: center;
+                }
+            }
+
+            .o_wrap_label:has(+ .o_cell:not(.o_no_box)) {
+                display: contents;
+
+                .o_form_label {
+                    @extend %-o-field-label;
+                }
+
+                &:has(+ * .o_field_invalid) .o_form_label {
+                    color: o-text-color('danger');
+                }
+
+                &:has(+ .o_cell:focus-within) .o_form_label {
+                    color: $o-action;
+                }
+
+                // For o_readonly_modifier input label
+                span.o_form_label {
+                    display: inline-block;
+                }
+            }
+
+            .o_wrap_field_inline .o_form_label {
+                margin-inline-start: calc(1.5 * var(--field-spacing-unit));
+                font-weight: $font-weight-bold;
+            }
+
+            .o_property_field.o_wrap_label {
+                display: contents;
+
+                .o_property_field_value {
+                    @extend %-o-field-box;
+                    margin-bottom: map-get($spacers, 3);
+                }
+
+                label {
+                    @extend %-o-field-label;
+
+                    &:has(+ *:focus-within) {
+                        color: $o-action;
+                    }
+                }
+            }
+        }
+
+        .o_outlined {
+            @extend %-o-field-box;
+
+            &:is(h1, h2, h3, h4, h5, h6), :is(h1, h2, h3, h4, h5, h6) {
+                font-size: inherit;
+            }
+
+            .o_field_widget {
+                --fieldWidget-margin-bottom: 0px;
+            }
+        }
+
+        .o_form_label:has(+ .o_outlined) {
+            @extend %-o-field-label;
+        }
+    }
+}

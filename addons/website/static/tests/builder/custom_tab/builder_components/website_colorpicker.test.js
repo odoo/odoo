@@ -3,6 +3,7 @@ import { animationFrame, click } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { addBuilderOption, waitForEndOfOperation } from "@html_builder/../tests/helpers";
 import { contains } from "@web/../tests/web_test_helpers";
+import { getIframeInput } from "@html_editor/../tests/_helpers/iframe_input";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -71,10 +72,30 @@ test("should work with color transition", async () => {
 
     await contains(":iframe .test-options-target").click();
     await contains(".we-bg-options-container .o_we_color_preview").click();
-    await contains(".o_colorpicker_widget .o_hex_input").edit("#0000FF");
+    const hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    await contains(hexInputEl).edit("#0000FF");
     await waitForEndOfOperation();
     expect(":iframe .test-options-target").toHaveStyle("color: rgb(0, 0, 255)");
     await contains(".we-bg-options-container .o_we_color_preview").click();
     await waitForEndOfOperation();
     expect(":iframe .test-options-target").toHaveStyle("color: rgb(0, 0, 255)");
+});
+
+test("should support colors defined using the color function", async () => {
+    addBuilderOption({
+        selector: ".test-color",
+        template: xml`<BuilderColorPicker enabledTabs="['custom']" styleAction="'background-color'" />`,
+    });
+    await setupWebsiteBuilder(
+        `<div class="test-color" style="background-color: color(srgb 0.4 0.2 0.8 / 0.4);">Test Color</div>`
+    );
+    await contains(":iframe .test-color").click();
+    expect(".options-container button.o_we_color_preview").toHaveStyle({
+        backgroundColor: "rgba(102, 50, 205, 0.4)",
+    });
+    await contains(".options-container button.o_we_color_preview").click();
+    expect(".o_colorpicker_section button.o_color_button[data-color='#6632CD66']").toHaveCount(1);
 });

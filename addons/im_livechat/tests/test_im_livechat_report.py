@@ -69,7 +69,9 @@ class TestImLivechatReport(TestImLivechatCommon):
         self.assertEqual(int(report.duration), 195)
 
     def test_im_livechat_report_operator(self):
-        result = self.env["im_livechat.report.channel"].formatted_read_group([], aggregates=["time_to_answer:avg", "duration:avg"])
+        result = self.env["im_livechat.report.channel"].formatted_read_group(
+            [], aggregates=["time_to_answer:avg", "duration:avg"]
+        )
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0]["time_to_answer:avg"], 7800 / 3600)
         self.assertEqual(int(result[0]['duration:avg']), 195)
@@ -79,9 +81,19 @@ class TestImLivechatReport(TestImLivechatCommon):
         self.make_jsonrpc_request(
             "/im_livechat/feedback", {"channel_id": rated_channel_id, "rate": 5},
         )
-        self._create_message(self.env["discuss.channel"].browse(rated_channel_id), self.operator, "2023-03-18 11:00:00")
-        result = self.env["im_livechat.report.channel"].formatted_read_group([], aggregates=["rating:avg"])
-        self.assertEqual(result[0]["rating:avg"], 5, "Rating average should be 5, excluding unrated sessions")
+        self._create_message(
+            self.env["discuss.channel"].browse(rated_channel_id),
+            self.operator,
+            "2023-03-18 11:00:00",
+        )
+        result = self.env["im_livechat.report.channel"].formatted_read_group(
+            [], aggregates=["rating_percentage:avg"]
+        )
+        self.assertEqual(
+            result[0]["rating_percentage:avg"],
+            100.0,
+            "Rating percentage should be 100%, excluding unrated sessions",
+        )
 
     @classmethod
     def _create_message(cls, channel, author, date):

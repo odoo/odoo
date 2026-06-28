@@ -4,28 +4,31 @@ import {
     StateChangeManager,
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
-import { getVideoUrl } from "@html_editor/utils/url";
-import {
-    Component,
-    onMounted,
-    onWillDestroy,
-    onWillUnmount,
-} from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, onWillUnmount, useListener } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { ReadonlyEmbeddedVideoComponent } from "../../core/video/readonly_video";
+import { ReadonlyEmbeddedVideoComponent } from "@html_editor/others/embedded_components/core/video/readonly_video";
+import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
 
 export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
     static template = "html_editor.EmbeddedVideo";
     static props = {
-        platform: { type: String },
-        videoId: { type: String },
+        // The embedded video can be initialized either with:
+        // the platform and videoId props
+        //  OR
+        // the src prop
+        platform: { type: String, optional: true },
+        videoId: { type: String, optional: true },
+        // 'src' should be 'embedUrl' to keep consistency,
+        // but we can't to ensure retro compatibility.
+        src: { type: String, optional: true },
+        baseUrl: { type: String, optional: true },
         params: { type: Object, optional: true },
         host: { type: HTMLElement },
         createOverlay: { type: Function, optional: true },
         focusEditable: { type: Function, optional: true },
-        addStep: { type: Function, optional: true },
+        commit: { type: Function, optional: true },
         openVideoSelectorDialog: { type: Function, optional: true },
     };
 
@@ -33,6 +36,23 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
         super.setup();
         this.videoBlock = this.props.host;
         this.state = useEmbeddedState(this.videoBlock);
+
+        if (!this.state.platform || !this.state.videoId) {
+            if (!this.props.src) {
+                console.error("Video data missing to mount video embedded Component");
+                return;
+            }
+            const videoData = this.getVideoDataFromSrc(this.props.src);
+            if (videoData) {
+                this.state.platform = videoData.platform;
+                this.state.videoId = videoData.videoId;
+                this.state.baseUrl = videoData.baseUrl;
+                this.state.params = videoData.options;
+            } else {
+                console.error("Provided src is not a valid url or supported platform");
+            }
+        }
+
         this.dropdown = useDropdownState();
 
         this.videoSettingsOverlay = this.props.createOverlay(VideoSettings, {
@@ -57,7 +77,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
                     },
                     removeVideo: () => {
                         this.videoBlock.remove();
-                        this.props.addStep();
+                        this.props.commit();
                     },
                     focusEditable: this.props.focusEditable,
                     dropdown: this.dropdown,
@@ -77,13 +97,9 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
         });
     }
 
-    get url() {
-        const urlParams = Object.fromEntries(
-            Object.entries(this.state.params).filter(([key]) => key !== "isVertical")
-        );
-        return decodeURIComponent(
-            getVideoUrl(this.state.platform, this.state.videoId, urlParams).toString()
-        );
+    get embedUrl() {
+        const platFormClass = PLATFORMS[this.state.platform];
+        return platFormClass.getEmbedUrl(this.state.videoId, this.state.params);
     }
 
     /**
@@ -91,10 +107,12 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
      * @param {Object} media
      */
     replaceVideo(media) {
-        this.state.videoId = media.videoId;
+        this.state.baseUrl = media.baseUrl;
+        this.state.embedUrl = media.embedUrl;
         this.state.platform = media.platform;
-        this.state.params = media.params;
-        const isVertical = media.params.isVertical;
+        this.state.videoId = media.videoId;
+        this.state.params = media.options;
+        const isVertical = !!media.options?.isVertical;
         if (isVertical) {
             this.videoBlock.dataset.isVertical = "true";
         } else {
@@ -135,7 +153,7 @@ export class VideoSettings extends Component {
             });
         });
 
-        useExternalListener(document, "pointerdown", (ev) => {
+        useListener(document, "pointerdown", (ev) => {
             if (this.props.dropdown.isOpen) {
                 return;
             }

@@ -4,9 +4,10 @@ from datetime import datetime
 from functools import partial
 from unittest.mock import patch
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import HttpCase, JsonRpcException, tagged
+from odoo.tools.misc import mute_logger
 
 from odoo.addons.product.tests.common import ProductVariantsCommon
 from odoo.addons.website_sale.controllers.cart import Cart
@@ -14,13 +15,12 @@ from odoo.addons.website_sale.controllers.combo_configurator import (
     WebsiteSaleComboConfiguratorController,
 )
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website_sale.controllers.payment import PaymentPortal
 from odoo.addons.website_sale.models.product_template import ProductTemplate
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged("post_install", "-at_install")
-class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
+class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -121,10 +121,11 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
             ),
             self.mock_request() as request,
         ):
-            request.website._create_cart()
+            request.env.website._create_cart()
             # service_tracking 'no' should not raise error
             request.cart._cart_add(product_id=product_service.id, quantity=1)
 
+    @mute_logger("odoo.http")
     def test_update_cart_before_payment(self):
         with self.mock_request() as request:
             self.WebsiteSaleCartController.add_to_cart(
@@ -140,22 +141,34 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
                 product_id=self.product.id,
                 quantity=1,
             )
-            # Try processing payment with the old amount
-            with self.assertRaises(UserError):
-                PaymentPortal().shop_payment_transaction(
-                    sale_order.id, sale_order.access_token, amount=old_amount
-                )
 
+        self.partner.write(self.dummy_partner_address_values.copy())
+        sale_order.partner_id = self.partner
+        sale_order._set_delivery_method(self.free_delivery)
+
+        # Try processing payment with the old amount
+        with self.assertRaises(JsonRpcException, msg="odoo.exceptions.ValidationError"):
+            self.make_jsonrpc_request(
+                f"/shop/payment/transaction/{sale_order.id}",
+                {"access_token": sale_order._portal_ensure_token(), "amount": old_amount},
+            )
+
+    @mute_logger("odoo.http")
     def test_check_order_delivery_before_payment(self):
-        with self.mock_request():
-            sale_order = self.env["sale.order"].create({
-                "partner_id": self.public_user.partner_id.id,
-                "order_line": [Command.create({"product_id": self.product.id})],
-                "access_token": "test_token",
-            })
-            # Try processing payment with a storable product and no carrier_id
-            with self.assertRaises(ValidationError):
-                PaymentPortal().shop_payment_transaction(sale_order.id, sale_order.access_token)
+        self.cart.write({
+            "order_line": [Command.clear(), Command.create({"product_id": self.product.id})],
+            "carrier_id": False,
+        })
+        self.partner.write(self.dummy_partner_address_values.copy())
+
+        # Try processing payment with a storable product and no carrier_id
+        result = self.make_jsonrpc_request(
+            f"/shop/payment/transaction/{self.cart.id}",
+            {"access_token": self.cart._portal_ensure_token()},
+        )
+
+        self.assertEqual(result["state"], "error")
+        self.assertIn("No delivery method is selected.", result["state_message"])
 
     def test_update_cart_zero_qty(self):
         # Try to remove a product that has already been removed
@@ -423,7 +436,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
             "sale_ok": True,
             "website_published": True,
         })
-        with self.mock_request() as request:
+        with self.mock_request(path="/shop/cart") as request:
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=product.product_tmpl_id, product_id=product.id, quantity=1
             )
@@ -445,8 +458,8 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
         it is not removed when opening the order in the cart.
         """
         # Arrange
-        with self.mock_request() as request:
-            order = request.website._create_cart()
+        with self.mock_request(path="/shop/cart") as request:
+            order = request.env.website._create_cart()
             order.order_line = [Command.create({"name": "Note", "display_type": "line_note"})]
 
             # pre-condition: the order contains only a note line
@@ -461,16 +474,16 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
     def test_checkout_no_delivery_method_available(self):
         portal_user = self.user_portal
         portal_user.write(self.dummy_partner_address_values)
-        self.carrier.country_ids = [Command.set(self.env.ref('base.be').ids)]
+        self.carrier.country_ids = [Command.set(self.env.ref("base.be").ids)]
         self.product.type = "consu"
         with (
-            self.mock_request(user=portal_user) as request,
+            self.mock_request(user=portal_user, path="/shop/checkout") as request,
             patch(
                 "odoo.addons.website_sale.models.sale_order.SaleOrder._get_preferred_delivery_method",
                 return_value=self.env["delivery.carrier"],
             ),
         ):
-            order = request.website._create_cart()
+            order = request.env.website._create_cart()
             order.order_line = [
                 Command.create({"product_id": self.product.id, "product_uom_qty": 1.0})
             ]

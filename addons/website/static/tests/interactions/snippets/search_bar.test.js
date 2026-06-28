@@ -16,13 +16,17 @@ const searchTemplate = /* html */ `
             <input type="search" name="search" class="search-query form-control oe_search_box o_translatable_attribute" placeholder="Search..."
                     data-search-type="test"
                     data-limit="3"
-                    data-display-image="false"
-                    data-display-description="false"
-                    data-display-extra-link="true"
-                    data-display-detail="false"
                     data-order-by="name asc"
                     autocomplete="off"/>
             <button type="submit" aria-label="Search" title="Search" class="btn oe_search_button border border-start-0 px-4 bg-o-color-4">
+                <span class="o_search_spinner d-none spinner-border spinner-border-sm text-500"
+                      style="--spinner-border-width: 0.1em;"
+                      role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </span>
+                <small class="o_search_found_results d-none">
+                    <span class="o_search_count"></span>
+                </small>
                 <i class="oi oi-search"></i>
             </button>
         </div>
@@ -37,34 +41,40 @@ function supportAutocomplete() {
         expect(json.params.term).toBe("xyz");
         expect(json.params.order).toBe("test desc");
         expect(json.params.limit).toBe(3);
-        expect(json.params.options.displayImage).toBe(false);
-        expect(json.params.options.displayDescription).toBe(false);
-        expect(json.params.options.displayExtraLink).toBe(true);
-        expect(json.params.options.displayDetail).toBe(false);
-        return {
-            results: [
-                {
-                    _fa: "fa-file-o",
-                    name: "Xyz 1",
-                    website_url: "/website/test/xyz-1",
-                },
-                {
-                    _fa: "fa-file-o",
-                    name: "Xyz 2",
-                    website_url: "/website/test/xyz-2",
-                },
-                {
-                    _fa: "fa-file-o",
-                    name: "Xyz 3",
-                    website_url: "/website/test/xyz-3",
-                },
-            ],
-            results_count: 3,
-            parts: {
-                name: true,
-                website_url: true,
+        const data = [
+            {
+                _fa: "fa-file-o",
+                name: "Xyz 1",
+                website_url: "/website/test/xyz-1",
             },
-            fuzzy_search: false,
+            {
+                _fa: "fa-file-o",
+                name: "Xyz 2",
+                website_url: "/website/test/xyz-2",
+            },
+            {
+                _fa: "fa-file-o",
+                name: "Xyz 3",
+                website_url: "/website/test/xyz-3",
+            },
+        ];
+        return {
+            results: data
+                .map(
+                    (item) =>
+                        `<li class="o_search_result_item rounded">
+                            <a class="o_search_result_link d-flex gap-2 p-2 text-decoration-none text-muted" href="${item.website_url}">
+                                <i class="o_search_result_image flex-shrink-0 align-content-center rounded-2 fs-6 text-center text-muted fa ${item._fa}"></i>
+                                <div class="o_search_result_content d-flex flex-grow-1">
+                                    <div>
+                                        <h3 class="h6 mb-0 d-inline">${item.name}</h3>
+                                    </div>
+                                    <div class="o_search_result_description d-empty-none w-100 w-md-50"></div>
+                                </div>
+                            </a>
+                        </li>`
+                )
+                .join(""),
         };
     });
 }
@@ -92,7 +102,7 @@ test("searchbar selects first result on cursor down", async () => {
     await press("y");
     await press("z");
     await advanceTime(400);
-    const resultEls = queryAll("form a:has(.o_search_result_item)");
+    const resultEls = queryAll("form a.o_search_result_link");
     expect(resultEls).toHaveLength(3);
     expect(document.activeElement).toBe(inputEl);
     await press("down");
@@ -108,7 +118,7 @@ test("searchbar selects last result on cursor up", async () => {
     await press("y");
     await press("z");
     await advanceTime(400);
-    const resultEls = queryAll("form a:has(.o_search_result_item)");
+    const resultEls = queryAll("form a.o_search_result_link");
     expect(resultEls).toHaveLength(3);
     expect(document.activeElement).toBe(inputEl);
     await press("up");
@@ -123,7 +133,7 @@ test("searchbar removes results on escape", async () => {
     await press("y");
     await press("z");
     await advanceTime(400);
-    expect(queryAll("form a:has(.o_search_result_item)")).toHaveLength(3);
+    expect(queryAll("form a.o_search_result_link")).toHaveLength(3);
     await press("escape");
-    expect(queryAll("form a:has(.o_search_result_item)")).toHaveLength(0);
+    expect(queryAll("form a.o_search_result_link")).toHaveLength(0);
 });

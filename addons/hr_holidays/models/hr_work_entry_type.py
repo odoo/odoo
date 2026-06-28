@@ -38,9 +38,9 @@ class HrWorkEntryType(models.Model):
         taken = work_entry_type.leaves_taken > 0
         return -1 * work_entry_type.sequence, not work_entry_type.employee_requests and remaining, work_entry_type.employee_requests and remaining, taken
 
-    create_calendar_meeting = fields.Boolean(string="Display Time Off in Calendar", default=True)
-    color = fields.Integer(string='Color', help="The color selected here will be used in every screen with the time off type.")
-    hide_on_dashboard = fields.Boolean(default=False, string="Hide On Dashboard", help="Non-visible allocations can still be selected when taking a leave, but will simply not be displayed on the leave dashboard.")
+    create_calendar_meeting = fields.Boolean(string="Display Time Off in Calendar", default=True, tracking=True)
+    color = fields.Integer(string='Color', help="The color selected here will be used in every screen with the time type.")
+    hide_on_dashboard = fields.Boolean(default=False, string="Hide On Dashboard", tracking=True, help="Non-visible allocations can still be selected when taking a leave, but will simply not be displayed on the leave dashboard.")
 
     # employee specific computed data
     max_leaves = fields.Float(compute='_compute_leaves', string='Maximum Allowed', search='_search_max_leaves',
@@ -59,22 +59,25 @@ class HrWorkEntryType(models.Model):
     is_used = fields.Boolean(compute="_compute_is_used")
     country_id = fields.Many2one('res.country', string='Country',
                                  default=lambda self: self.env.company.country_id,
+                                 tracking=True,
                                  domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)])
     country_code = fields.Char(related='country_id.code', depends=['country_id'], readonly=True)
     leave_validation_type = fields.Selection([
-        ('no_validation', 'None needed'),
+        ('no_validation', 'None'),
         ('hr', 'By Time Off Officer'),
         ('manager', "By Employee's Approver"),
-        ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Time Off Validation')
-    requires_allocation = fields.Boolean(default=True, required=True, string='Requires Allocation')
+        ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Time Off Validation', tracking=True)
+    requires_allocation = fields.Boolean(default=True, required=True, string='Requires Allocation', tracking=True)
     employee_requests = fields.Boolean(default=False, required=True, string="Allow Employee Requests",
+        tracking=True,
         help="""Extra Days Requests Allowed: User can request an allocation for himself.\n
         Not Allowed: User cannot request an allocation.""")
     allocation_validation_type = fields.Selection([
-        ('no_validation', 'None needed'),
+        ('no_validation', 'None'),
         ('hr', 'By Time Off Officer'),
         ('manager', "By Employee's Approver"),
         ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Approval',
+        tracking=True,
         help="""Select the level of approval needed in case of request by employee
             #     - No validation needed: The employee's request is automatically approved.
             #     - Approved by Time Off Officer: The employee's request need to be manually approved
@@ -85,28 +88,40 @@ class HrWorkEntryType(models.Model):
         ('day', 'Full Day'),
         ('half_day', 'Half-Day'),
         ('hour', 'Custom Hours')], default='day', string='Duration Type', required=True,
-        help="Define the minimum time off duration in which an employee can take when requesting a leave")
+        tracking=True,
+        help="""Define the minimum time off duration in which an employee can take when requesting a leave""")
     unit_of_measure = fields.Selection([('hour', 'Hours'), ('day', 'Days')], default="hour", string="Unit of measure", required=True,
-                                       help="Define if the time off type will be allocated/accrued in hours or days")
-    unpaid = fields.Boolean('Is Unpaid', default=False)
-    include_public_holidays_in_duration = fields.Boolean('Ignore Public Holidays', default=False, help="Public holidays should be counted in the leave duration when applying for leaves")
-    leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
-    allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
-    support_document = fields.Boolean(string='Supporting Document')
+                                       tracking=True,
+                                       help="Define if the time type will be allocated/accrued in hours or days")
+    unpaid = fields.Boolean('Is Unpaid', default=False, tracking=True)
+    include_public_holidays_in_duration = fields.Boolean('Ignore Public Holidays', default=False, tracking=True, help="Public holidays should be counted in the leave duration when applying for leaves")
+    leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', tracking=True, default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
+    allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', tracking=True, default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
+    support_document = fields.Boolean(string='Supporting Document', tracking=True)
     allow_request_on_top = fields.Boolean(string='Allow Request on Top', default=False,
+        tracking=True,
         help="If checked, users can request another leave on top of the ones of this type.")
     elligible_for_accrual_rate = fields.Boolean(string='Eligible for Accrual Rate', compute="_compute_eligible_for_accrual_rate", store=True, readonly=False,
-        help="If checked, this time off type will be taken into account for accruals computation.")
+        tracking=True,
+        help="If checked, this time type will be taken into account for accruals computation.")
+    count_days_as = fields.Selection([
+        ('working', 'Working Days'),
+        ('calendar', 'Calendar Days'),
+        ], string='Count Days as', default='working',
+        help="If you take a leave on the whole week, worked days will result in a various number based on the working hours of the employee, calendar days will result in 7 in every case.")
     # negative time off
-    allows_negative = fields.Boolean(string='Allow Negative Cap',
+    allows_negative = fields.Boolean(string='Allow Negative',
+        tracking=True,
         help="If checked, users request can exceed the allocated days and balance can go in negative.")
     max_allowed_negative = fields.Integer(string="Maximum Excess Amount",
+        tracking=True,
         help="Define the maximum level of negative days this kind of time off can reach. Value must be at least 1.")
 
     _check_negative = models.Constraint(
         'CHECK(NOT allows_negative OR max_allowed_negative > 0)',
         'The maximum excess amount should be greater than 0. If you want to set 0, disable the negative cap instead.'
     )
+    time_off_selectable = fields.Boolean(string="Selectable in Time Off", default=True, tracking=True)
 
     @api.model
     def _search_valid(self, operator, value):
@@ -126,7 +141,7 @@ class HrWorkEntryType(models.Model):
             date_to = fields.Date.context_today(self, default_date_to_dt)
 
         else:
-            current_year = fields.Date.today().year
+            current_year = fields.Date.context_today(self).year
             date_from = date(current_year, 1, 1)
             date_to = date(current_year, 12, 31)
 
@@ -184,7 +199,17 @@ class HrWorkEntryType(models.Model):
 
                 if leave_from_date <= public_holiday_to_date and leave_to_date >= public_holiday_from_date:
                     raise ValidationError(_("You cannot modify the 'Public Holiday Included' setting since one or more leaves for that \
-                        time off type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."))
+                        time type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."))
+
+    @api.constrains('count_days_as')
+    def _check_leaves_for_count_days_as(self):
+        leave_count = self.env['hr.leave'].search_count([
+            ('work_entry_type_id', 'in', self.ids),
+            ('state', 'in', ('validate', 'validate1', 'confirm')),
+        ], limit=1)
+        if leave_count:
+            raise ValidationError(self.env._("You cannot modify the 'Duration Count' setting because one or more leaves have already \
+                been taken for this time off type. Changing it now would affect existing employee balances."))
 
     def get_work_entry_types_with_valid_allocations(self, date_from, date_to, employee_id):
         allocation_by_work_entry_type = dict(self.env['hr.leave.allocation']._read_group(
@@ -205,7 +230,7 @@ class HrWorkEntryType(models.Model):
                 allocations = allocation_by_work_entry_type.get(work_entry_type, self.env['hr.leave.allocation'])
                 allowed_excess = work_entry_type.max_allowed_negative if work_entry_type.allows_negative else 0
                 allocations = allocations.filtered(lambda alloc:
-                    alloc.allocation_type == 'accrual'
+                    alloc.accrual_plan_id
                     or (alloc.max_leaves > 0 and alloc.virtual_remaining_leaves > -allowed_excess)
                 )
                 if allocations:
@@ -231,7 +256,7 @@ class HrWorkEntryType(models.Model):
     @api.constrains('requires_allocation')
     def check_allocation_requirement_edit_validity(self):
         if not self.env.context.get('install_mode') and self.env['hr.leave'].search_count([('work_entry_type_id', 'in', self.ids)], limit=1):
-            raise UserError(_("The allocation requirement of a time off type cannot be changed once leaves of that type have been taken. You should create a new time off type instead."))
+            raise UserError(_("The allocation requirement of a time type cannot be changed once leaves of that type have been taken. You should create a new time type instead."))
 
     def _search_max_leaves(self, operator, value):
         op = PY_OPERATORS.get(operator)
@@ -271,7 +296,7 @@ class HrWorkEntryType(models.Model):
         target_date = self.env.context.get('leave_date_from') or self.env.context.get('default_date_from')
         data_days = self.get_allocation_data(employee, target_date)[employee]
         for work_entry_type in self:
-            result = [item for item in data_days if item[0] == work_entry_type.name]
+            result = [item for item in data_days if item[3] == work_entry_type.id]
             work_entry_type_tuple = result[0] if result else ('', {})
             work_entry_type.max_leaves = work_entry_type_tuple[1].get('max_leaves', 0)
             work_entry_type.leaves_taken = work_entry_type_tuple[1].get('leaves_taken', 0)
@@ -344,13 +369,14 @@ class HrWorkEntryType(models.Model):
     def requested_display_name(self):
         return self.env.context.get('work_entry_type_display_name', True) and self.env.context.get('employee_id')
 
-    @api.depends('requires_allocation', 'virtual_remaining_leaves', 'max_leaves', 'unit_of_measure')
-    @api.depends_context('work_entry_type_display_name', 'employee_id')
+    @api.depends('requires_allocation', 'virtual_remaining_leaves', 'max_leaves', 'unit_of_measure', 'country_id')
+    @api.depends_context('work_entry_type_display_name', 'employee_id', 'company')
     def _compute_display_name(self):
-        if not self.requested_display_name():
-            # leave counts is based on employee_id, would be inaccurate if not based on correct employee
-            return super()._compute_display_name()
         for record in self:
+            if not record.requested_display_name():
+                # leave counts is based on employee_id, would be inaccurate if not based on correct employee
+                record.display_name = f"{record.name} ({record.country_id.name or self.env._("Generic")})"
+                continue
             name = record.name
             if record.requires_allocation and self.env.context.get('default_date_from'):
                 remaining_time = float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0
@@ -360,7 +386,7 @@ class HrWorkEntryType(models.Model):
                     name = self.env._("%(name)s (%(time)g remaining out of %(maximum)g hours)", name=record.name, time=remaining_time, maximum=maximum)
                 else:
                     name = self.env._("%(name)s (%(time)g remaining out of %(maximum)g days)", name=record.name, time=remaining_time, maximum=maximum)
-            record.display_name = name
+            record.display_name = f"{name} ({record.country_id.name or self.env._("Generic")})"
         return None
 
     @api.depends('count_as')
@@ -431,11 +457,22 @@ class HrWorkEntryType(models.Model):
         return bool(self.env['hr.leave.allocation'].search_count([
             ('employee_id', '=', employee.id),
             ('state', '=', 'validate'),
-            ('allocation_type', '=', 'accrual'),
+            ('accrual_plan_id', '!=', False),
             '|',
             ('date_to', '>', date.today()),
             ('date_to', '=', False),
-        ]))
+        ], limit=1))
+
+    @api.model
+    def has_future_allocation(self):
+        employee = self.env['hr.employee']._get_contextual_employee()
+        if not employee:
+            return False
+        return bool(self.env['hr.leave.allocation'].search_count([
+            ('employee_id', '=', employee.id),
+            ('state', '=', 'validate'),
+            ('date_from', '>', date.today()),
+        ], limit=1))
 
     @api.model
     def get_allocation_data_request(self, target_date=None, hidden_allocations=True):
@@ -466,12 +503,13 @@ class HrWorkEntryType(models.Model):
         elif target_date and isinstance(target_date, datetime):
             target_date = target_date.date()
         elif not target_date:
-            target_date = fields.Date.today()
+            target_date = fields.Date.context_today(self)
 
         allocations_leaves_consumed, extra_data = employees.with_context(
             ignored_leave_ids=self.env.context.get('ignored_leave_ids')
         )._get_consumed_leaves(self, target_date)
 
+        today = fields.Date.context_today(self)
         for employee in employees:
             for work_entry_type in self:
                 lt_info = (
@@ -522,7 +560,6 @@ class HrWorkEntryType(models.Model):
                 for allocation, data in allocations_leaves_consumed[employee][work_entry_type].items():
                     # We only need the allocation that are valid at the given date
                     if allocation:
-                        today = fields.Date.today()
                         if allocation.date_from <= today and (not allocation.date_to or allocation.date_to >= today):
                             # we get each allocation available now to indicate visually if
                             # the future evaluation holds changes compared to now
@@ -576,7 +613,7 @@ class HrWorkEntryType(models.Model):
                 holds_changes = (lt_info[1]['accrual_bonus'] > 0
                     or bool(allocations_date - allocations_now)
                     or bool(allocations_now - allocations_date))\
-                    and target_date != fields.Date.today()
+                    and target_date != today
                 lt_info[1].update({
                     'closest_allocation_remaining': closest_allocation_remaining,
                     'closest_allocation_expire': closest_allocation_expire,
@@ -644,8 +681,8 @@ class HrWorkEntryType(models.Model):
     def _get_carried_over_days_expiration_data(self, allocations, target_date):
         fake_allocations = self.env['hr.leave.allocation']
         for allocation in allocations:
-            fake_allocations |= self.env['hr.leave.allocation'].with_context(default_date_from=target_date).new(origin=allocation)
-        fake_allocations.sudo().with_context(default_date_from=target_date)._process_accrual_plans(target_date, log=False)
+            fake_allocations |= self.env['hr.leave.allocation'].new(origin=allocation)
+        fake_allocations.sudo()._process_accrual_plans(target_date, log=False)
         carried_over_days_expiration_data = {
             fake_allocation._origin:
             {

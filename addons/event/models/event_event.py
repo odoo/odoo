@@ -7,7 +7,6 @@ from datetime import datetime, timedelta, UTC
 from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
-from markupsafe import escape
 from urllib.parse import urlparse
 
 from odoo import _, api, Command, fields, models, tools
@@ -81,7 +80,7 @@ class EventEvent(models.Model):
     company_id = fields.Many2one(
         'res.company', string='Company', change_default=True,
         default=lambda self: self.env.company,
-        required=False)
+        required=False, index='btree_not_null')
     organizer_id = fields.Many2one(
         'res.partner', string='Organizer', tracking=True,
         default=lambda self: self.env.company.partner_id,
@@ -169,7 +168,8 @@ class EventEvent(models.Model):
     address_id = fields.Many2one(
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
         check_company=True,
-        tracking=True
+        tracking=True,
+        index=True,
     )
     address_search = fields.Many2one(
         'res.partner', string='Address', compute='_compute_address_search', search='_search_address_search')
@@ -798,24 +798,25 @@ class EventEvent(models.Model):
             return _('next month')
         return _('on %(date)s', date=format_date(self.env, datetime, lang_code=lang_code, date_format='medium'))
 
-    def _get_external_description(self):
+    def _get_ics_description(self):
         """
         Description of the event shortened to maximum 1900 characters to
         leave some space for addition by sub-modules.
         Meant to be used for external content (ics/icalc/Gcal).
 
         Reference Docs for URL limit -: https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
+        :return: a plain string, crucially not markup nor html-safe (expected sanitized by calendar clients)
         """
         self.ensure_one()
         description = ''
         if self.event_share_url:
-            description = f'<a href="{escape(self.event_share_url)}">{escape(self.name)}</a>\n'
+            description = f'<a href="{self.event_share_url}">{self.name}</a>\n'
         description += textwrap.shorten(html_to_inner_content(self.description), 1900)
         return description
 
     def _get_external_description_url_encoded(self):
         """Get a url-encoded version of the description for mail templates."""
-        return urllib.parse.quote_plus(self._get_external_description())
+        return urllib.parse.quote_plus(self._get_ics_description())
 
     def _get_ics_file(self, slot=False):
         """ Returns iCalendar file for the event invitation.
@@ -829,8 +830,8 @@ class EventEvent(models.Model):
         for event in self:
             cal = vobject.iCalendar()
             cal_event = cal.add('vevent')
-            start = slot.start_datetime or event.date_begin
-            end = slot.end_datetime or event.date_end
+            start = slot.start_datetime if slot else event.date_begin
+            end = slot.end_datetime if slot else event.date_end
 
             # vobject does *not* like datetime.UTC (this was fixed by
             # py-vobject/vobject#88 which isn't even in 0.9.9, current release
@@ -839,7 +840,11 @@ class EventEvent(models.Model):
             cal_event.add('dtstart').value = start.astimezone(ZoneInfo(event.date_tz))
             cal_event.add('dtend').value = end.astimezone(ZoneInfo(event.date_tz))
             cal_event.add('summary').value = event.name
-            cal_event.add('description').value = event._get_external_description()
+            external_description = event._get_ics_description()
+            cal_event.add('description').value = external_description
+            xalt = cal_event.add('X-ALT-DESC')
+            xalt.value = external_description
+            xalt.params['FMTTYPE'] = ['text/html']
             if event.address_id:
                 cal_event.add('location').value = event.contact_address_inline or event.address_id.name
 

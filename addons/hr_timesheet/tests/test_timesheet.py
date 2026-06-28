@@ -86,6 +86,12 @@ class TestCommonTimesheet(TransactionCase):
             'email': 'useremployee2@test.com',
             'group_ids': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_user').id])],
         })
+        cls.user_approver = cls.env['res.users'].create({
+            'name': 'User Approver',
+            'login': 'user_timesheet_approver',
+            'email': 'userapprover@test.com',
+            'group_ids': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_approver').id])],
+        })
         cls.user_manager = cls.env['res.users'].create({
             'name': 'User Officer',
             'login': 'user_manager',
@@ -130,14 +136,7 @@ class TestTimesheet(TestCommonTimesheet):
     def setUp(self):
         super().setUp()
         # Make sure to clean the plan fields
-        self.env.registry._setup_models__(self.env.cr)
-
-        # Crappy hack to disable the rule from timesheet grid, if it exists
-        # The registry doesn't contain the field timesheet_manager_id.
-        # but there is an ir.rule about it, crashing during its evaluation
-        rule = self.env.ref('timesheet_grid.timesheet_line_rule_user_update-unlink', raise_if_not_found=False)
-        if rule:
-            rule.active = False
+        self.env.transaction.will_change_registry()
 
     def test_log_timesheet(self):
         """ Test when log timesheet: check analytic account, user and employee are correctly set. """
@@ -206,6 +205,10 @@ class TestTimesheet(TestCommonTimesheet):
             'employee_id': self.empl_employee2.id,
         })
         self.assertEqual(timesheet1.user_id, self.user_employee2, 'Changing timesheet employee should change the related user')
+
+    def test_timesheet_search_rights_on_version_fields(self):
+        """ Check that a user with no rights on Employee can still search on hr.version fields. """
+        self.env['account.analytic.line'].with_user(self.user_approver).search([('employee_id.department_id', '!=', False)])
 
     def test_create_unlink_project(self):
         """ Check project creation, and if necessary the analytic account generated when project should track time. """
@@ -1061,3 +1064,111 @@ class TestTimesheet(TestCommonTimesheet):
             'user_id': self.user_manager.id,
         })
         self.assertEqual(timesheet.company_id, self.env.company)
+
+    def test_sub_task_remaining_hours(self):
+        parent_task = self.env['project.task'].create({
+            'name': 'Parent Task',
+            'project_id':  self.project_customer.id,
+            'child_ids': [Command.create({'name': 'subtask'})],
+        })
+        sub_task = parent_task.child_ids[0]
+
+        # Case 1: project = 50h, task = 0h → task negative
+        self.project_customer.allocated_hours = 50
+        parent_task.allocated_hours = 0
+
+        self.env['account.analytic.line'].create({
+            'name': 'TS',
+            'task_id': parent_task.id,
+            'unit_amount': 5,
+            'employee_id': self.empl_employee.id,
+        })
+
+        self.assertEqual(
+            parent_task.remaining_hours, -5,
+            "Task remaining hours should be negative when project has allocated hours but task has none.",
+        )
+
+        # Case 2: project = 50h, task = 20h → no change
+        self.project_customer.allocated_hours = 50
+        parent_task.allocated_hours = 20
+
+        self.assertEqual(
+            parent_task.remaining_hours, 15,
+            "Task remaining hours should be unchanged when project and task both has allocated hours.",
+        )
+
+        # Case 3: project = 50h, parent = 20h, sub = 0h
+        # → parent unchanged, sub negative
+        self.project_customer.allocated_hours = 50
+        parent_task.allocated_hours = 20
+        sub_task.allocated_hours = 0
+
+        self.env['account.analytic.line'].create({
+            'name': 'TS',
+            'task_id': sub_task.id,
+            'unit_amount': 5,
+            'employee_id': self.empl_employee.id,
+        })
+
+        self.assertEqual(
+            parent_task.remaining_hours, 10,
+            "Task remaining hours should be unchanged when project and task both has allocated hours.",
+        )
+
+        self.assertEqual(
+            sub_task.remaining_hours, -5,
+            "Subtask remaining hours should be negative when parent task has allocated hours but subtask has none.",
+        )
+
+        # At this point:
+        # - 5h logged on parent (case 1)
+        # - 5h logged on subtask (case 3)
+        # => total effective on parent = 10h
+
+        # Case 4: project = 50h, parent = 0h, sub = 0h
+        # → parent negative, sub unchanged
+        self.project_customer.allocated_hours = 50
+        parent_task.allocated_hours = 0
+        sub_task.allocated_hours = 0
+
+        self.assertEqual(
+            parent_task.remaining_hours, -10,
+            "Task remaining hours should be negative when project has allocated hours but task has none.",
+        )
+
+        self.assertEqual(
+            sub_task.remaining_hours, 0,
+            "Subtask remaining hours should be 0 when parent task has no allocated hours.",
+        )
+
+        # Case 5: project = 0h, parent = 0h, sub = 0h → no changes
+        self.project_customer.allocated_hours = 0
+        parent_task.allocated_hours = 0
+        sub_task.allocated_hours = 0
+
+        self.assertEqual(
+            parent_task.remaining_hours, 0,
+            "Task remaining hours should be 0 when project and task both have no allocated hours",
+        )
+
+        self.assertEqual(
+            sub_task.remaining_hours, 0,
+            "Subtask remaining hours should be 0 when parent task has no allocated hours.",
+        )
+
+        # Case 6: project = 0h, parent = 20h, sub = 0h
+        # → parent unchanged, sub negative
+        self.project_customer.allocated_hours = 0
+        parent_task.allocated_hours = 20
+        sub_task.allocated_hours = 0
+
+        self.assertEqual(
+            parent_task.remaining_hours, 10,
+            "Task remaining hours should be unchanged when the task itself has allocated hours.",
+        )
+
+        self.assertEqual(
+            sub_task.remaining_hours, -5,
+            "Subtask remaining hours should be negative when parent task has allocated hours.",
+        )

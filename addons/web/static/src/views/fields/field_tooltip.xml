@@ -72,6 +72,10 @@
                     <span class="o-tooltip--technical--title">Relation:</span>
                     <t t-out="field.relation"/>
                 </li>
+                <li t-if="field.related" data-item="related">
+                    <span class="o-tooltip--technical--title">Related:</span>
+                    <t t-out="field.related"/>
+                </li>
                 <li t-if="field.selection" data-item="selection">
                     <span class="o-tooltip--technical--title">Selection:</span>
                     <ul class="o-tooltip--technical">

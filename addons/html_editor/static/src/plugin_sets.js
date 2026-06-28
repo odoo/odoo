@@ -1,3 +1,4 @@
+import { LegacyCompatibilityPlugin } from "./core/legacy_compatibility_plugin";
 import { BaseContainerPlugin } from "./core/base_container_plugin";
 import { ClipboardPlugin } from "./core/clipboard_plugin";
 import { CommentPlugin } from "./core/comment_plugin";
@@ -19,14 +20,16 @@ import { SplitPlugin } from "./core/split_plugin";
 import { UserCommandPlugin } from "./core/user_command_plugin";
 import { AlignPlugin } from "./main/align/align_plugin";
 import { BannerPlugin } from "./main/banner_plugin";
-import { ChatGPTTranslatePlugin } from "./main/chatgpt/chatgpt_translate_plugin";
+import { CodeBlockPlugin } from "./main/code_block_plugin";
 import { ColumnPlugin } from "./main/column_plugin";
 import { EmojiPlugin } from "./main/emoji_plugin";
 import { ColorPlugin } from "./main/font/color_plugin";
 import { ColorUIPlugin } from "./main/font/color_ui_plugin";
 import { FeffPlugin } from "./main/feff_plugin";
-import { FontPlugin } from "./main/font/font_plugin";
+import { FontSizePlugin } from "./main/font/font_size_plugin";
+import { FontTypePlugin } from "./main/font/font_type_plugin";
 import { FontFamilyPlugin } from "./main/font/font_family_plugin";
+import { TranslatePlugin } from "./main/translate/translate_plugin";
 import { HintPlugin } from "./main/hint_plugin";
 import { InlineCodePlugin } from "./main/inline_code";
 import { LinkPastePlugin } from "./main/link/link_paste_plugin";
@@ -51,13 +54,11 @@ import { SearchPowerboxPlugin } from "./main/powerbox/search_powerbox_plugin";
 import { StarPlugin } from "./main/star_plugin";
 import { TableAlignPlugin } from "./main/table/table_align_plugin";
 import { TablePlugin } from "./main/table/table_plugin";
-import { TableResizePlugin } from "./main/table/table_resize_plugin";
 import { TableUIPlugin } from "./main/table/table_ui_plugin";
 import { TabulationPlugin } from "./main/tabulation_plugin";
 import { TextDirectionPlugin } from "./main/text_direction_plugin";
 import { ToolbarPlugin } from "./main/toolbar/toolbar_plugin";
-import { VideoPlugin } from "./main/media/video_plugin";
-import { YoutubePlugin } from "./main/youtube_plugin";
+import { VideoPlugin } from "./main/media/video/video_plugin";
 import { PlaceholderPlugin } from "./main/placeholder_plugin";
 import { CollaborationOdooPlugin } from "./others/collaboration/collaboration_odoo_plugin";
 import { CollaborationPlugin } from "./others/collaboration/collaboration_plugin";
@@ -67,7 +68,6 @@ import { EmbeddedComponentPlugin } from "./others/embedded_component_plugin";
 import { TableOfContentPlugin } from "@html_editor/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin";
 import { ToggleBlockPlugin } from "@html_editor/others/embedded_components/plugins/toggle_block_plugin/toggle_block_plugin";
 import { EmbeddedVideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/embedded_video_plugin";
-import { EmbeddedYoutubePlugin } from "./others/embedded_components/plugins/video_plugin/embedded_youtube_plugin";
 import { CaptionPlugin } from "@html_editor/others/embedded_components/plugins/caption_plugin/caption_plugin";
 import { SyntaxHighlightingPlugin } from "@html_editor/others/embedded_components/plugins/syntax_highlighting_plugin/syntax_highlighting_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
@@ -77,8 +77,14 @@ import { DoubleClickImagePreviewPlugin } from "./main/media/dblclick_image_previ
 import { StylePlugin } from "./core/style_plugin";
 import { ContentEditablePlugin } from "./core/content_editable_plugin";
 import { SelectionPlaceholderPlugin } from "./main/selection_placeholder_plugin";
+import { ResizePlugin } from "./main/resize_plugin";
+import { UserSignaturePlugin } from "./main/user_signature_plugin";
+import { DomReferenceMapPlugin } from "./core/dom_reference_map_plugin";
+import { DomObserverPlugin } from "./core/dom_observer_plugin";
+import { TableBorderPlugin } from "./main/table/table_border_plugin";
 
 export const CORE_PLUGINS = [
+    LegacyCompatibilityPlugin,
     BaseContainerPlugin,
     ClipboardPlugin,
     CommentPlugin,
@@ -87,6 +93,8 @@ export const CORE_PLUGINS = [
     DomPlugin,
     FormatPlugin,
     HistoryPlugin,
+    DomReferenceMapPlugin,
+    DomObserverPlugin,
     InputPlugin,
     LineBreakPlugin,
     NoInlineRootPlugin,
@@ -103,12 +111,13 @@ export const CORE_PLUGINS = [
 export const MAIN_PLUGINS = [
     ...CORE_PLUGINS,
     BannerPlugin,
-    ChatGPTTranslatePlugin,
+    CodeBlockPlugin,
     ColorPlugin,
     ColorUIPlugin,
     SeparatorPlugin,
     ColumnPlugin,
     EmojiPlugin,
+    TranslatePlugin,
     HintPlugin,
     AlignPlugin,
     ListPlugin,
@@ -120,11 +129,13 @@ export const MAIN_PLUGINS = [
     MediaUrlPastePlugin,
     StarPlugin,
     TablePlugin,
+    TableBorderPlugin,
     TableAlignPlugin,
     TableUIPlugin,
     TabulationPlugin,
     ToolbarPlugin,
-    FontPlugin, // note: if before ListPlugin, there are a few split tests that fails
+    FontTypePlugin,
+    FontSizePlugin, // note: if before ListPlugin, there are a few split tests that fails
     FontFamilyPlugin,
     IconPlugin,
     IconColorPlugin,
@@ -143,10 +154,11 @@ export const MAIN_PLUGINS = [
     PositionPlugin,
     TextDirectionPlugin,
     InlineCodePlugin,
-    TableResizePlugin,
     FilePlugin,
+    UserSignaturePlugin,
     PlaceholderPlugin,
     SelectionPlaceholderPlugin,
+    ResizePlugin,
 ];
 
 export const COLLABORATION_PLUGINS = [
@@ -161,12 +173,11 @@ export const EMBEDDED_COMPONENT_PLUGINS = [
     TableOfContentPlugin,
     ToggleBlockPlugin,
     EmbeddedVideoPlugin,
-    EmbeddedYoutubePlugin,
     CaptionPlugin,
     SyntaxHighlightingPlugin,
 ];
 
-export const NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS = [VideoPlugin, YoutubePlugin];
+export const NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS = [VideoPlugin];
 
 export const EXTRA_PLUGINS = [
     ...COLLABORATION_PLUGINS,
@@ -176,4 +187,4 @@ export const EXTRA_PLUGINS = [
     QWebPlugin,
 ];
 
-export const TOUCH_EXCLUDED_PLUGINS = [MoveNodePlugin];
+export const TOUCH_EXCLUDED_PLUGINS = [MoveNodePlugin, ResizePlugin];

@@ -91,7 +91,7 @@ class TestMrpByProduct(common.TransactionCase):
         self.assertEqual(consume_move_c.product_uom_qty, 4, "Wrong consumed quantity of product c.")
         self.assertEqual(by_product_move.product_uom_qty, 2, "Wrong produced quantity of sub product.")
 
-        mnf_product_a._post_inventory()
+        mnf_product_a.button_mark_done()
 
         # I see that stock moves of External Hard Disk including Headset USB are done now.
         self.assertFalse(any(move.state != 'done' for move in moves), 'Moves are not done!')
@@ -351,7 +351,7 @@ class TestMrpByProduct(common.TransactionCase):
         mo_form.qty_producing = 2.00
         mo = mo_form.save()
 
-        mo._post_inventory()
+        mo.button_mark_done()
         byproduct_move_line = mo.move_byproduct_ids.move_line_ids
         finished_move_line = mo.move_finished_ids.filtered(lambda m: m.product_id == self.product_a).move_line_ids
         self.assertEqual(byproduct_move_line.location_dest_id, shelf2_location)
@@ -447,49 +447,6 @@ class TestMrpByProduct(common.TransactionCase):
         self.assertEqual(picking.state, 'assigned')
         byproduct_move = picking.move_ids.filtered(lambda m: m.product_id == self.bom_byproduct.byproduct_ids.product_id)
         self.assertEqual(byproduct_move.product_qty, 1.0)
-
-    def test_byproducts_bom_document(self):
-        self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')
-        doc_product_bom = self.env['product.document'].create({
-            'name': 'doc_product_bom',
-            'attached_on_mrp': 'bom',
-            'res_id': self.product_a.id,
-            'res_model': 'product.product',
-        })
-
-        # ensures that the archived docs are not taken into account
-        self.env['product.document'].create({
-            'name': 'doc_product_bom_archived',
-            'active': False,
-            'attached_on_mrp': 'bom',
-            'res_id': self.product_a.id,
-            'res_model': 'product.product',
-        })
-
-        doc_template_bom = self.env['product.document'].create({
-            'name': 'doc_template_bom',
-            'attached_on_mrp': 'bom',
-            'res_id': self.product_a.product_tmpl_id.id,
-            'res_model': 'product.template',
-        })
-
-        attachments = doc_template_bom.ir_attachment_id + doc_product_bom.ir_attachment_id
-
-        bom = self.env['mrp.bom'].create({
-            'product_tmpl_id': self.product_b.product_tmpl_id.id,
-            'uom_id': self.product_b.product_tmpl_id.uom_id.id,
-            'product_qty': 1.0,
-            'type': 'normal',
-            'byproduct_ids': [
-                Command.create({
-                    'product_id': self.product_a.id,
-                    'product_qty': 1
-                }),
-            ]
-        })
-
-        # the two docs linked to the byproduct should be in the chatter
-        self.assertEqual(bom._get_extra_attachments(), attachments)
 
     def test_3_steps_byproduct(self):
         """ Test that non-bom byproducts are correctly pushed from

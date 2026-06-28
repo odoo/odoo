@@ -1,9 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-
-from odoo.addons.website.models import ir_http
 
 
 class ProductPricelist(models.Model):
@@ -49,7 +47,7 @@ class ProductPricelist(models.Model):
         for record in self.filtered(lambda pl: pl.website_id and pl.company_id):
             if record.website_id.company_id != record.company_id:
                 raise ValidationError(
-                    _(
+                    record.env._(
                         "Only the company's websites are allowed."
                         "\nLeave the Company field empty or select a website from that company."
                     )
@@ -73,14 +71,14 @@ class ProductPricelist(models.Model):
 
     def _get_partner_pricelist_multi_search_domain_hook(self, company_id):
         domain = super()._get_partner_pricelist_multi_search_domain_hook(company_id)
-        website = ir_http.get_request_website()
+        website = self.env["website"].get_current_website(fallback=False)
         if website:
             domain += self._get_website_pricelists_domain(website)
         return domain
 
     def _get_partner_pricelist_multi_filter_hook(self):
         res = super()._get_partner_pricelist_multi_filter_hook()
-        website = ir_http.get_request_website()
+        website = self.env.website
         if website:
             res = res.filtered(lambda pl: pl._is_available_on_website(website))
         return res

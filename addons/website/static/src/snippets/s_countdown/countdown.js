@@ -107,10 +107,12 @@ export class Countdown extends Interaction {
             }
         } else if (this.endAction === "message" || this.endAction === "message_no_countdown") {
             this.el.querySelector(".s_countdown_end_message")?.classList.remove("d-none");
+            this.el.querySelector(".s_countdown_title")?.classList.add("d-none");
         }
-        this.registerCleanup(() =>
-            this.el.querySelector(".s_countdown_end_message")?.classList.add("d-none")
-        );
+        this.registerCleanup(() => {
+            this.el.querySelector(".s_countdown_end_message")?.classList.add("d-none");
+            this.el.querySelector(".s_countdown_title")?.classList.remove("d-none");
+        });
     }
 
     getDelta() {

@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_et_template_data(self):
         return {
             'code_digits': '6',
-            'property_account_receivable_id': 'l10n_et2211',
-            'property_account_payable_id': 'l10n_et3002',
         }
 
     @template('et', 'res.company')
@@ -31,5 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'id_tax08',
                 'expense_account_id': 'l10n_et2301',
                 'income_account_id': 'l10n_et1100',
+                'receivable_account_id': 'l10n_et2211',
+                'payable_account_id': 'l10n_et3002',
             },
         }

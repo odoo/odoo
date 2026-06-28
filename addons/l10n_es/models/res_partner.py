@@ -1,4 +1,5 @@
 from odoo import models
+from odoo.tools.business_data import split_vat
 
 
 class ResPartner(models.Model):
@@ -43,8 +44,27 @@ class ResPartner(models.Model):
         """
         super()._compute_is_company()
         for partner in self:
-            country_code, vat_number = self._split_vat(partner.vat or '')
-            if country_code in ('ES', '') and len(vat_number) == 9\
-                and vat_number[0].upper() in 'ABCDEFGHJNPQRSUVW'\
+            country_code, vat_number = split_vat(partner.vat)
+            if partner.commercial_partner_id == partner\
+                and country_code in ('ES', '') and len(vat_number) == 9\
+                and vat_number[0] in 'ABCDEFGHJNPQRSUVW'\
                 and vat_number[1:-1].isdigit():
                 partner.is_company = True
+
+    def _get_mandatory_billing_address_fields(self, country_sudo, **kwargs):
+        """Require VAT/NIF for Spanish customers in billing addresses on Spanish e-commerce."""
+        field_names = super()._get_mandatory_billing_address_fields(country_sudo, **kwargs)
+
+        if self.env.company.country_code == country_sudo.code == 'ES':
+            field_names.add('vat')
+
+        return field_names
+
+    def _get_mandatory_address_fields(self, country_sudo, **kwargs):
+        """Require State for Spanish customers on Spanish e-commerce."""
+        field_names = super()._get_mandatory_address_fields(country_sudo, **kwargs)
+
+        if self.env.company.country_code == country_sudo.code == 'ES':
+            field_names.add('state_id')
+
+        return field_names

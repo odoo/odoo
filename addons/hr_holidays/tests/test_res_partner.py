@@ -62,14 +62,14 @@ class TestPartner(TransactionCase):
         self.leaves.write({'state': 'validate'})
         store_1 = Store().add(self.partner, "_store_partner_fields")
         self.assertEqual(
-            store_1.get_result()["hr.employee"][0]["leave_date_to"],
+            store_1._build_result()["hr.employee"][0]["leave_date_to"],
             "2024-06-07",
             "Return date is the return date of the main user of the partner",
         )
         self.leaves[0].action_refuse()
         store_2 = Store().add(self.partner, "_store_partner_fields")
         self.assertEqual(
-            store_2.get_result()["hr.employee"][0]["leave_date_to"],
+            store_2._build_result()["hr.employee"][0]["leave_date_to"],
             False,
             "Partner is not considered out of office if their main user is not on holiday",
         )
@@ -81,7 +81,7 @@ class TestPartner(TransactionCase):
         partner = self.partner.with_user(self.user_no_hr_access)
         store = Store().add(partner, "_store_partner_fields")
         self.assertEqual(
-            store.get_result()["hr.employee"][0]["leave_date_to"],
+            store._build_result()["hr.employee"][0]["leave_date_to"],
             "2024-06-07",
             "Return date is the return date of the main user of the partner, "
             "even if the user has no access to the company",

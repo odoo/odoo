@@ -21,6 +21,7 @@ export class CarouselSlidesOptionPlugin extends Plugin {
                 return true;
             }
         },
+        anchor_excluded_selectors: ".carousel *",
     };
 
     /**
@@ -40,6 +41,7 @@ export class CarouselSlidesOptionPlugin extends Plugin {
         for (const slideEl of noLinkSlideEls) {
             slideEl.classList.remove("clickable-slide");
         }
+        return root;
     }
 }
 

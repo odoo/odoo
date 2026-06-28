@@ -4,10 +4,10 @@ import logging
 from unittest import skipIf
 
 import odoo.tests
+from odoo import tools
+from odoo.exceptions import UserError
 
-from odoo.tools import file_open
-from odoo.addons.base.models.ir_actions_report import _split_table
-from lxml import etree
+from odoo.addons.base.tests.files import PDF_RAW
 
 try:
     from pdfminer.converter import PDFPageAggregator
@@ -88,10 +88,11 @@ class TestReports(odoo.tests.TransactionCase):
         })
 
         pdf_text = "0"
-        def _run_wkhtmltopdf(*args, **kwargs):
+
+        def _run_pdf_engine_without_processing(*args, **kwargs):
             return bytes(pdf_text, "utf-8")
 
-        self.patch(type(Report), "_run_wkhtmltopdf", _run_wkhtmltopdf)
+        self.patch(type(Report), "_run_pdf_engine_without_processing", _run_pdf_engine_without_processing)
 
         # sanity check: the report is not set to save attachment
         # assert that there are no pre-existing attachment
@@ -119,6 +120,43 @@ class TestReports(odoo.tests.TransactionCase):
 
         self.assertEqual(attach_1.raw.content, b"1")
         self.assertEqual(pdf[0], b"2")
+
+    def test_merge_pdfs(self):
+        report = self.env['ir.actions.report'].create({
+            'name': 'Test Merge PDFs',
+            'report_name': 'test_report.test_merge_pdfs',
+            'model': 'res.partner',
+        })
+
+        minimal_pdf_content = io.BytesIO(PDF_RAW)
+        malformed_pdf_content = io.BytesIO(b'not a pdf')
+
+        with self.assertRaises(UserError, msg="Odoo is unable to merge the generated PDFs."):
+            report._merge_pdfs([malformed_pdf_content])
+
+        with self.assertRaises(UserError, msg="Odoo is unable to merge the generated PDFs."):
+            report._merge_pdfs([minimal_pdf_content, malformed_pdf_content])
+
+        failed_streams = []
+
+        # The reason we have the merge_pdf is to allows merging pdfs even if some of them fail.
+        # Bellow we test that the failed streams are correctly handled.
+        def handled_failed_streams(error=None, error_stream=None):
+            failed_streams.append((error, error_stream))
+
+        merged_pdf = report._merge_pdfs([minimal_pdf_content, malformed_pdf_content, minimal_pdf_content], handle_error=handled_failed_streams)
+
+        self.assertEqual(len(failed_streams), 1, "Expecting one failed stream")
+        self.assertEqual(failed_streams[0][1], malformed_pdf_content, "Expecting the failed stream to be the malformed pdf")
+
+        minimal_file = tools.pdf.OdooPdfFileReader(minimal_pdf_content)
+        merged_file = tools.pdf.OdooPdfFileReader(merged_pdf)
+
+        self.assertEqual(
+            len(minimal_file.pages) * 2,
+            len(merged_file.pages),
+            "Expecting the merged pdf to have twice the number of pages as the original pdf"
+        )
 
 
 # Some paper format examples
@@ -731,27 +769,3 @@ class TestAggregatePdfReports(odoo.tests.HttpCase):
 
 def cleanup_string(s):
     return ''.join(s.split())
-
-
-class TestSplitTable(odoo.tests.TransactionCase):
-    def test_split_table(self):
-        # NOTE: All the tests's xml are in split_table/ relative to this file
-        CASES = (
-            ("Table's len is equal to max_rows and should not be split", "simple", "simple", 3),
-            ("Table's len is greater to max_rows and should not be split", "simple", "simple", 4),
-            ("max_rows is 1 and every table should be split", "simple", "simple.split1", 1),
-            ("max_row is 2 and the table should be split", "simple", "simple.split2", 2),
-            ("Nested tables should be split", "nested", "nested.split2", 2),
-            ("Nested tables at the start should be split", "first_nested", "first_nested.split2", 2),
-            ("Attributes should be copied", "copy_attributes", "copy_attributes.split1", 1),
-        )
-
-        for description, actual, expected, max_rows in CASES:
-            with self.subTest(description), \
-                file_open(f"base/tests/split_table/{actual}.xml") as actual, \
-                file_open(f"base/tests/split_table/{expected}.xml") as expected:
-
-                tree = etree.fromstring(actual.read())
-                _split_table(tree, max_rows)
-                processed = etree.tostring(tree, encoding='unicode')
-                self.assertEqual(cleanup_string(processed), cleanup_string(expected.read()))

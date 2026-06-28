@@ -1,43 +1,31 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { Message } from "@mail/core/common/message";
+import { MessageSearchState } from "@mail/core/common/message_search_hook";
 import { useVisible } from "@mail/utils/common/hooks";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-/**
- * @typedef {Object} Props
- * @property {string} [emptyText]
- * @property {import("@mail/core/common/message_model").Message[]} messages
- * @property {ReturnType<import('@mail/core/common/message_search_hook').useMessageSearch>} [messageSearch]
- * @property {function} [loadMore]
- * @property {string} mode
- * @property {function} [onClickJump]
- * @property {function} [onLoadMoreVisible]
- * @property {boolean} [showEmpty]
- * @property {import("@mail/core/common/thread_model").Thread} thread
- * @extends {Component<Props, Env>}
- */
 export class MessageCardList extends Component {
     static components = { Message };
-    static props = [
-        "emptyText?",
-        "messages",
-        "messageSearch?",
-        "loadMore?",
-        "mode",
-        "onClickJump?",
-        "onLoadMoreVisible?",
-        "showEmpty?",
-        "thread",
-    ];
     static template = "mail.MessageCardList";
 
     setup() {
         super.setup();
-        this.ui = useService("ui");
         this.store = useService("mail.store");
+        this.props = props({
+            emptyText: t.string().optional(),
+            loadMore: t.boolean().optional(),
+            messageSearch: t.instanceOf(MessageSearchState).optional(),
+            messages: t.array(t.instanceOf(this.store["mail.message"].Class)),
+            mode: t.string(),
+            onClickJump: t.function([]).optional(),
+            onLoadMoreVisible: t.function([]).optional(),
+            showEmpty: t.boolean().optional(),
+            thread: t.instanceOf(this.store["mail.thread"].Class),
+        });
+        this.ui = useService("ui");
         useSubEnv({ messageCard: true });
         useVisible("load-more", (isVisible) => {
             if (isVisible) {

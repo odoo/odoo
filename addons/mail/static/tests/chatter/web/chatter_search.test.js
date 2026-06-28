@@ -10,7 +10,6 @@ import {
     scroll,
     start,
     startServer,
-    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { serverState } from "@web/../tests/web_test_helpers";
@@ -36,8 +35,8 @@ test("Click on the search icon should open the search form", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
-    await contains(".o_searchview");
-    await contains(".o_searchview_input");
+    await contains(".o-mail-SearchMessageInput");
+    await contains(".o-mail-SearchInput input");
 });
 
 test("Search in chatter", async () => {
@@ -52,8 +51,8 @@ test("Search in chatter", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
-    await contains(".o-mail-SearchMessageInput .o_searchview_input");
-    await editInput(document.body, ".o_searchview_input", "empty");
+    await contains(".o-mail-SearchMessageInput .o-mail-SearchInput input");
+    await editInput(document.body, ".o-mail-SearchInput input", "empty");
     await contains(".o-mail-SearchMessageResult .o-mail-Message");
     await click(".o-mail-MessageCard-jump");
     await contains(".o-mail-Message.o-highlighted .o-mail-Message-content:text('not empty')");
@@ -71,8 +70,7 @@ test("Close button should close the search panel", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Chatter-topbar [title='Search Messages']");
-    await insertText(".o_searchview_input", "empty");
-    triggerHotkey("Enter");
+    await insertText(".o-mail-SearchInput input", "empty");
     await contains(".o-mail-SearchMessageResult .o-mail-Message");
     await click(".o-mail-SearchMessageInput [title='Close']");
     await contains(".o-mail-SearchMessageInput", { count: 0 });
@@ -101,7 +99,7 @@ test("opening search in chatter hides files and pinned messages panels", async (
     await contains(".o-mail-AttachmentBox");
     await contains(".o-mail-pinnedMessages");
     await click("[title='Search Messages']");
-    await contains(".o_searchview");
+    await contains(".o-mail-SearchMessageInput");
     await contains(".o-mail-AttachmentBox", { count: 0 });
     await contains(".o-mail-pinnedMessages", { count: 0 });
 });
@@ -118,8 +116,7 @@ test("Search in chatter should be hightligted", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
-    await insertText(".o_searchview_input", "empty");
-    triggerHotkey("Enter");
+    await insertText(".o-mail-SearchInput input", "empty");
     await contains(`.o-mail-SearchMessageResult .o-mail-Message .${HIGHLIGHT_CLASS}`);
 });
 
@@ -140,8 +137,7 @@ test("Scrolling bottom in non-aside chatter should load more searched message", 
     await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
-    await insertText(".o_searchview_input", "message");
-    triggerHotkey("Enter");
+    await insertText(".o-mail-SearchInput input", "message");
     await contains(".o-mail-SearchMessageResult .o-mail-Message", { count: 30 });
     await scroll(".o_content", "bottom");
     await contains(".o-mail-SearchMessageResult .o-mail-Message", { count: 60 });

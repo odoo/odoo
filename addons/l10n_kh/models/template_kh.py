@@ -10,9 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_kh_template_data(self):
         return {
             'code_digits': '5',
-            'property_account_receivable_id': 'l10n_kh_account_10500',
-            'property_account_payable_id': 'l10n_kh_account_20300',
-            'property_stock_valuation_account_id': 'l10n_kh_account_10200',
         }
 
     @template('kh', 'res.company')
@@ -38,6 +35,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_revenue_account_id': 'l10n_kh_account_20500',
                 'expense_account_id': 'l10n_kh_account_50100',
                 'income_account_id': 'l10n_kh_account_40100',
+                'receivable_account_id': 'l10n_kh_account_10500',
+                'payable_account_id': 'l10n_kh_account_20300',
+                'account_stock_valuation_id': 'l10n_kh_account_10200',
             },
         }
 

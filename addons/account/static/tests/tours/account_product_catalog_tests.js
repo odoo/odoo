@@ -1,4 +1,4 @@
-import { addSectionFromProductCatalog, showProductColumn } from "@account/js/tours/tour_utils";
+import { addSectionFromProductCatalog } from "@account/js/tours/tour_utils";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("test_use_product_catalog_on_invoice", {
@@ -11,7 +11,13 @@ registry.category("web_tour.tours").add("test_use_product_catalog_on_invoice", {
         {
             content: "Add a Product",
             trigger: ".o_kanban_record:contains(Test Product)",
-            run: "click",
+            run: function () {
+                setTimeout(() => {
+                    [...document.querySelectorAll('.o_kanban_record')].find(el =>
+                        el.textContent.includes('Test Product')
+                    )?.click();
+                }, 1000);
+            },
         },
         {
             content: "Wait for it",
@@ -22,7 +28,6 @@ registry.category("web_tour.tours").add("test_use_product_catalog_on_invoice", {
             trigger: ".o-kanban-button-back",
             run: "click",
         },
-        ...showProductColumn(),
         {
             content: "Ensure product is added",
             trigger: ".o_field_product_label_section_and_note_cell:contains(Test Product)",

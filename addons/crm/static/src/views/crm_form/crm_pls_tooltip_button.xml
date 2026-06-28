@@ -44,12 +44,11 @@
                     <span>Top Positives</span>
                     <span t-if="isSampleData" class="text-primary fw-normal ms-2">(sample data)</span>
                 </h5>
-                <t t-call="crm.PlsTooltipSectionContent">
-                    <t t-set="iconClasses" t-value="'oi oi-arrow-up-right text-success'"/>
-                    <t t-set="sectionEntries" t-value="this.props.top3Data"/>
-                    <t t-set="teamName" t-value="this.props.teamName"/>
-                    <t t-set="useDefault" t-value="positiveDefault"/>
-                </t>
+                <t t-call="crm.PlsTooltipSectionContent"
+                    iconClasses="'oi oi-arrow-up-right text-success'"
+                    sectionEntries="this.props.top3Data"
+                    teamName="this.props.teamName"
+                    useDefault="positiveDefault"/>
             </div>
             <div t-if="negativeDefault || this.props.low3Data?.length"
                 t-attf-class="mb-3 {{isSampleData ? 'o_crm_pls_tooltip_section_sample' : ''}}">
@@ -57,12 +56,11 @@
                     <span>Top Negatives</span>
                     <span t-if="isSampleData" class="text-primary fw-normal ms-2">(sample data)</span>
                 </h5>
-                <t t-call="crm.PlsTooltipSectionContent">
-                    <t t-set="iconClasses" t-value="'oi oi-arrow-down-right text-danger'"/>
-                    <t t-set="sectionEntries" t-value="this.props.low3Data"/>
-                    <t t-set="teamName" t-value="this.props.teamName"/>
-                    <t t-set="useDefault" t-value="negativeDefault"/>
-                </t>
+                <t t-call="crm.PlsTooltipSectionContent"
+                    iconClasses="'oi oi-arrow-down-right text-danger'"
+                    sectionEntries="this.props.low3Data"
+                    teamName="this.props.teamName"
+                    useDefault="negativeDefault"/>
             </div>
             <div class="o_crm_pls_tooltip_footer d-flex justify-content-between text-muted fs-xs mt-3 px-2">
                 <span t-if="isSampleData" class="text-primary fw-bold">Close opportunities to get insights.</span>

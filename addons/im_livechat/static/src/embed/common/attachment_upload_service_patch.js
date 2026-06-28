@@ -10,7 +10,7 @@ patch(AttachmentUploadService.prototype, {
                 return;
             }
             thread = channel.thread;
-            thread.readyToSwapDeferred.resolve();
+            thread.resolveReadyToSwap();
             composer = thread.composer;
         }
         return super.upload(thread, composer, file, options);

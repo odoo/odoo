@@ -1,13 +1,29 @@
 export function createNewSalesOrder() {
     return [
         {
-            trigger: '.o_sale_order',
-        }, {
+            trigger: ".o_list_view",
+        },
+        {
             content: "Create new order",
             trigger: '.o_list_button_add',
-            run: 'click',
+            run: async function ({ anchor, queryFirst }) {
+                // sale_management adds dropdown to the button if there are accessible templates
+                // we need this util to work out of the box without needing to care about templates
+                if (anchor.classList.contains("dropdown")) {
+                    anchor.click();
+                    await new Promise((resolve) =>
+                        requestAnimationFrame(() => setTimeout(resolve))
+                    );
+                    const newQuotationButton = queryFirst(
+                        "div.o_popover:has(.o_sale_management_template) > button.o-dropdown-item:not(.o_sale_management_template)"
+                    );
+                    newQuotationButton?.click();
+                } else {
+                    anchor.click();
+                }
+            },
         },
-    ]
+    ];
 }
 
 export function selectCustomer(customerName) {
@@ -42,7 +58,7 @@ export function addProduct(productName, rowNumber=1) {
     return [
         {
             content: `Add product ${productName}`,
-            trigger: 'button:contains("Add a product")',
+            trigger: 'button:contains("Add Line")',
             run: 'click',
         },
         {
@@ -50,7 +66,7 @@ export function addProduct(productName, rowNumber=1) {
             trigger: `.o_data_row:nth-child(${rowNumber})`,
         },
         {
-            trigger: 'div[name="product_template_id"] input',  // TODO VFE o_selected_row
+            trigger: '.o_selected_row textarea.o_input',
             run: `edit ${productName}`,
         },
         {
@@ -77,25 +93,28 @@ export function clickSomewhereElse() {
 
 export function checkSOLDescriptionContains(productName, text) {
     // TODO in the future: look directly into the textarea value
-    let trigger = '.o_field_product_label_section_and_note_cell';
+    let trigger = '.o_field_sol_label_text';
     if (productName) {
-        trigger = `${trigger}:has(:contains("${productName}"), input:value("${productName}"))`;
+        trigger += `:contains("${productName}")`;
     }
     if (text) {
-        trigger = `${trigger} .o_input`;
+        // for checking multiline comments
+        for (const line of text.split("\n")) {
+            trigger += `:contains("${line}")`;
+        }
     }
     return { trigger };
 }
 
 export function editLineMatching(productName, text) {
-    let base_step = checkSOLDescriptionContains(productName, text);
+    const base_step = checkSOLDescriptionContains(productName, text);
     base_step['run'] = 'click';
     return base_step;
 }
 
-export function editConfiguration() {
+export function editConfiguration(lineName) {
     return {
-        trigger: '[name=product_template_id] button.fa-pencil',
-        run: 'click',
-    }
+        trigger: `div[name="account_label_text_readonly"]:contains(${lineName})`,
+        run: "hover && click button.fa-pencil",
+    };
 }

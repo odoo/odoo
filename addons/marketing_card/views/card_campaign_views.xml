@@ -71,7 +71,8 @@
                 <group>
                     <group>
                         <field name="preview_record_ref" string="Recipients" placeholder="Preview on..." options="{'no_create': True}"/>
-                        <field name="target_url" placeholder="Your Home Page"/>
+                        <field name="target_url_placeholder" invisible="1"/><!--used in char field options-->
+                        <field name="target_url" options="{'placeholder_field': 'target_url_placeholder'}"/>
                         <field name="res_model" invisible="1"/><!--Get the default model for field pickers-->
                         <field name="res_model" groups="base.group_no_one"/>
                         <field name="post_suggestion" placeholder="Join me at this event!" widget="text_emojis"/>
@@ -87,34 +88,34 @@
                         <group>
                             <field name="content_background" widget="image" class="w-25"/>
                             <label for="content_header"/>
-                            <div class="o_input_box">
-                                <field name="content_header_dyn" title="Dynamic Field?" class="o_input_box_overlay_start"/>
+                            <div class="d-flex align-items-center gap-1">
+                                <field name="content_header_dyn" title="Dynamic Field?"/>
                                 <field name="content_header" invisible="content_header_dyn" placeholder="e.g. Join Odoo Experience 2024"/>
                                 <field name="content_header_path" invisible="not content_header_dyn" placeholder="Select a field" widget="field_selector" options="{'model': 'res_model'}"/>
-                                <field name="content_header_color" widget="color"  class="o_input_box_overlay_end" />
+                                <field name="content_header_color" widget="color" class="ms-auto" style="min-width: 40px; max-width: 40px;"/>
                             </div>
                             <label for="content_sub_header"/>
-                            <div class="o_input_box">
-                                <field name="content_sub_header_dyn" class="o_input_box_overlay_start"/>
+                            <div class="d-flex align-items-center gap-1">
+                                <field name="content_sub_header_dyn"/>
                                 <field name="content_sub_header" invisible="content_sub_header_dyn" placeholder="e.g. Aug 24, Brussels Expo"/>
                                 <field name="content_sub_header_path" invisible="not content_sub_header_dyn" placeholder="Select a field" widget="field_selector" options="{'model': 'res_model'}"/>
-                                <field name="content_sub_header_color" widget="color" class="o_input_box_overlay_end"/>
+                                <field name="content_sub_header_color" widget="color" class="ms-auto" style="min-width: 40px; max-width: 40px;"/>
                             </div>
                             <label for="content_section"/>
-                            <div class="o_input_box">
-                                <field name="content_section_dyn" class="o_input_box_overlay_start"/>
+                            <div class="d-flex align-items-center gap-1">
+                                <field name="content_section_dyn"/>
                                 <field name="content_section" invisible="content_section_dyn" placeholder="e.g. Sample Talk"/>
                                 <field name="content_section_path" invisible="not content_section_dyn" placeholder="Select a field" widget="field_selector" options="{'model': 'res_model'}"/>
                             </div>
                             <label for="content_sub_section1"/>
-                            <div class="o_input_box">
-                                <field name="content_sub_section1_dyn" class="o_input_box_overlay_start"/>
+                            <div class="d-flex align-items-center gap-1">
+                                <field name="content_sub_section1_dyn"/>
                                 <field name="content_sub_section1" invisible="content_sub_section1_dyn" placeholder="e.g. By Lionel Messy"/>
                                 <field name="content_sub_section1_path" invisible="not content_sub_section1_dyn" placeholder="Select a field" widget="field_selector" options="{'model': 'res_model'}"/>
                             </div>
                              <label for="content_sub_section2"/>
-                            <div class="o_input_box">
-                                <field name="content_sub_section2_dyn" class="o_input_box_overlay_start"/>
+                            <div class="d-flex align-items-center gap-1">
+                                <field name="content_sub_section2_dyn"/>
                                 <field name="content_sub_section2" invisible="content_sub_section2_dyn" placeholder="e.g. CFO Chief Football Officer"/>
                                 <field name="content_sub_section2_path" invisible="not content_sub_section2_dyn" placeholder="Select a field" widget="field_selector" options="{'model': 'res_model'}"/>
                             </div>

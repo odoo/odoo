@@ -13,7 +13,7 @@ patch(AttachmentUploadService.prototype, {
         );
     },
 
-    _processLoaded(thread, composer, { data, upload_info }, tmpId, def) {
+    _processLoaded(thread, composer, { data, upload_info }, tmpId, resolveUpload) {
         if (!upload_info) {
             super._processLoaded(...arguments);
             return;
@@ -45,7 +45,7 @@ patch(AttachmentUploadService.prototype, {
                     { type: "danger" }
                 );
                 removeAttachment();
-                def.resolve();
+                resolveUpload();
                 this._cleanupUploading(tmpId);
                 return;
             }
@@ -53,7 +53,7 @@ patch(AttachmentUploadService.prototype, {
             if (xhr.status !== upload_info.response_status) {
                 this.notificationService.add(_t("Cloud storage error"), { type: "danger" });
                 removeAttachment();
-                def.resolve();
+                resolveUpload();
                 this._cleanupUploading(tmpId);
                 return;
             }

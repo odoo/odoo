@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-29 17:39+0000\n"
 "PO-Revision-Date: 2026-01-15 20:30+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s19-1/hr/hi/"
@@ -21,18 +21,6 @@ msgstr ""
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__departure_do_archive_user
-#: model:ir.model.fields,help:hr.field_hr_employee_departure__do_archive_user
-#: model:ir.model.fields,help:hr.field_hr_version__departure_do_archive_user
-msgid ""
-"\n"
-"            If checked, the related user will be removed from the system.\n"
-"            The user will however not be removed if they still have an "
-"employee in any other company after this departure.\n"
-"        "
-msgstr ""
-
-#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid " Records"
@@ -43,11 +31,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email_amount
 msgid "# emails to send"
 msgstr "# भेजे जाने वाले ईमेल"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__eligible_employee_count
-msgid "#Employees"
-msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -181,52 +164,63 @@ msgstr ""
 "सलाह दे सकता हूं?"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
-msgid ""
-"<i class=\"d-none d-md-inline-flex fa fa-envelope fa-fw "
-"o_input_box_overlay_start\" title=\"Work Email\"/>"
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+msgid "<i class=\"d-none d-md-block fa fa-envelope\" title=\"Work Email\"/>"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid ""
-"<i class=\"d-none d-md-inline-flex fa fa-envelope "
-"o_input_box_overlay_start\" title=\"Work Email\"/>"
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+msgid "<i class=\"d-none d-md-block fa fa-mobile\" title=\"Work Mobile\"/>"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
-msgid ""
-"<i class=\"d-none d-md-inline-flex fa fa-mobile fa-fw "
-"o_input_box_overlay_start\" title=\"Work Mobile\"/>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid ""
-"<i class=\"d-none d-md-inline-flex fa fa-mobile o_input_box_overlay_start\" "
-"title=\"Work Mobile\"/>"
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+msgid "<i class=\"d-none d-md-block fa fa-phone\" title=\"Work Phone\"/>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 msgid ""
-"<i class=\"d-none d-md-inline-flex fa fa-phone fa-fw "
-"o_input_box_overlay_start\" title=\"Work Phone\"/>"
+"<i class=\"d-none d-md-inline-flex fa fa-envelope fa-fw\" title=\"Work "
+"Email\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Work Email\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid ""
+"<i class=\"d-none d-md-inline-flex fa fa-mobile fa-fw\" title=\"Work "
+"Mobile\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"<i class=\"d-none d-md-inline-flex fa fa-mobile\" title=\"Work Mobile\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid ""
+"<i class=\"d-none d-md-inline-flex fa fa-phone fa-fw\" title=\"Work Phone\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Work Phone\"/>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid ""
-"<i class=\"d-none d-md-inline-flex fa fa-phone o_input_box_overlay_start\" "
-"title=\"Work Phone\"/>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid ""
-"<i class=\"d-none d-md-inline-flex fa fa-tags o_input_box_overlay_start\" "
-"title=\"Tags\"/>"
+msgid "<i class=\"d-none d-md-inline-flex fa fa-tags\" title=\"Tags\"/>"
 msgstr ""
 
 #. module: hr
@@ -234,12 +228,6 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
 "title=\"Company\"/>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
-msgid ""
-"<i class=\"fa fa-envelope o_input_box_overlay_start\" title=\"Work Email\"/>"
 msgstr ""
 
 #. module: hr
@@ -274,18 +262,6 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
-msgid ""
-"<i class=\"fa fa-mobile o_input_box_overlay_start\" title=\"Work Mobile\"/>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
-msgid ""
-"<i class=\"fa fa-phone o_input_box_overlay_start\" title=\"Work Phone\"/>"
-msgstr ""
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
 "<i class=\"fa fa-share-alt fa-rotate-90 ms-1 mt-1\" role=\"img\" aria-"
@@ -302,28 +278,10 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
-msgid ""
-"<i class=\"o_input_box_overlay_start fa fa-envelope\" title=\"Work Email\"/>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
-msgid ""
-"<i class=\"o_input_box_overlay_start fa fa-mobile\" title=\"Work Mobile\"/>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
-msgid ""
-"<i class=\"o_input_box_overlay_start fa fa-phone\" title=\"Work Phone\"/>"
-msgstr ""
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
 "<i class=\"oi oi-arrow-right ms-1\"/>\n"
-"                                                        Cancel Departure"
+"                                            Cancel Departure"
 msgstr ""
 
 #. module: hr
@@ -448,11 +406,6 @@ msgid "<span class=\"o_stat_text\">Contacts</span>"
 msgstr "<span class=\"o_stat_text\">संपर्क</span>"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
-msgid "<span class=\"o_stat_text\">Eligible Employees</span>"
-msgstr ""
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
 msgid "<span class=\"o_stat_text\">Employee</span>"
 msgstr "<span class=\"o_stat_text\">कर्मचारी</span>"
@@ -508,12 +461,6 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "<span>Archive</span>"
-msgstr ""
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span>Contract Overview</span>"
 msgstr ""
@@ -527,16 +474,6 @@ msgstr "<span>दिन</span>"
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>Reporting</span>"
 msgstr "<span>रिपोर्टिंग</span>"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "<span>Set Contract End Date</span>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
-msgid "<span>Set Contracts End Date</span>"
-msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -735,7 +672,7 @@ msgstr "कई काम संभालने की क्षमता"
 
 #. module: hr
 #. odoo-javascript
-#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+#: code:addons/hr/static/src/core/web/avatar_card/avatar_card_patch.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__absent
@@ -760,14 +697,6 @@ msgstr "हर महीने की सेल्स के लक्ष्य 
 #: model:ir.model.fields,field_description:hr.field_hr_version__message_needaction
 msgid "Action Needed"
 msgstr "कार्रवाई की ज़रूरत है"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_action_at_departure
-#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__action_at_departure
-#: model:ir.model.fields,field_description:hr.field_hr_version__departure_action_at_departure
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Action at"
-msgstr ""
 
 #. module: hr
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
@@ -870,14 +799,6 @@ msgid "Activity schedule plan Wizard"
 msgstr "ऐक्टिविटी शेड्यूल प्लान विज़ॉर्ड"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid ""
-"Add more details about the reason to end the collaboration with this "
-"employee."
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__departure_description
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_description
@@ -900,6 +821,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_res_users__additional_note
 msgid "Additional Note"
 msgstr "अतिरिक्त नोट"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Additional information"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -945,12 +872,6 @@ msgstr "उपनाम संपर्क सुरक्षा"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_employee_all_activities
 msgid "All activities"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "All selected actions have been executed on"
 msgstr ""
 
 #. module: hr
@@ -1019,15 +940,7 @@ msgid "Apply Immediately"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_action_other_date
-#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__action_other_date
-#: model:ir.model.fields,field_description:hr.field_hr_version__departure_action_other_date
-msgid "Apply date"
-msgstr ""
-
-#. module: hr
-#: model:hr.contract.type,name:hr.contract_type_apprenticeship
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__apprenticeship
+#: model:hr.employee.type,name:hr.contract_type_apprenticeship
 msgid "Apprenticeship"
 msgstr "अप्रेन्टस्शिप"
 
@@ -1047,23 +960,15 @@ msgid "Archive"
 msgstr "संग्रहित करें"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_do_archive_employee
-#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__do_archive_employee
-#: model:ir.model.fields,field_description:hr.field_hr_version__departure_do_archive_employee
-msgid "Archive Employee"
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_action_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__action_date
+#: model:ir.model.fields,field_description:hr.field_hr_version__departure_action_date
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Archive Employee On"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_do_archive_user
-#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__do_archive_user
-#: model:ir.model.fields,field_description:hr.field_hr_version__departure_do_archive_user
-msgid "Archive Related User"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_archive
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__archive
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__archive
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
@@ -1094,33 +999,33 @@ msgstr "प्रोजेक्ट के हर दिन के कामो�
 
 #. module: hr
 #. odoo-javascript
-#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+#: code:addons/hr/static/src/core/web/avatar_card/avatar_card_patch.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_home
 msgid "At Home"
 msgstr ""
 
 #. module: hr
 #. odoo-javascript
-#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+#: code:addons/hr/static/src/core/web/avatar_card/avatar_card_patch.xml:0
 msgid "At Home - Present"
 msgstr ""
 
 #. module: hr
 #. odoo-javascript
-#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+#: code:addons/hr/static/src/core/web/avatar_card/avatar_card_patch.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_office
 msgid "At Office"
 msgstr ""
 
 #. module: hr
 #. odoo-javascript
-#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+#: code:addons/hr/static/src/core/web/avatar_card/avatar_card_patch.xml:0
 msgid "At Office - Present"
 msgstr ""
 
 #. module: hr
 #. odoo-javascript
-#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+#: code:addons/hr/static/src/core/web/avatar_card/avatar_card_patch.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_other
 msgid "At Other"
 msgstr ""
@@ -1134,7 +1039,6 @@ msgid "Attachment Count"
 msgstr "अटैचमेंट की संख्या"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Attendance PIN"
 msgstr ""
@@ -1329,8 +1233,14 @@ msgid "Boolean display as radio field with translatable labels"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#. odoo-javascript
+#: code:addons/hr/static/src/js/departure_conflict_dialog.js:0
 msgid "Cancel Departure"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Cancel End of Collaboration"
 msgstr ""
 
 #. module: hr
@@ -1423,7 +1333,7 @@ msgid "Coach"
 msgstr "कोच"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_contract_type__code
+#: model:ir.model.fields,field_description:hr.field_hr_employee_type__code
 msgid "Code"
 msgstr "कोड"
 
@@ -1461,8 +1371,6 @@ msgstr "कंपनियां"
 #: model:ir.model.fields,field_description:hr.field_hr_department__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__company_id
-#: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__company_id
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__company_id
@@ -1482,7 +1390,7 @@ msgid "Company Country Code"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__company_executive
+#: model:hr.employee.type,name:hr.contract_type_company_executive
 msgid "Company Executive"
 msgstr ""
 
@@ -1634,24 +1542,6 @@ msgid "Contract Templates"
 msgstr "कॉन्ट्रैक्ट टेंप्लेट"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr.field_hr_employee__contract_type_id
-#: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
-#: model:ir.model.fields,field_description:hr.field_hr_version__contract_type_id
-#: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
-msgid "Contract Type"
-msgstr "कॉन्ट्रैक्ट टाइप"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.hr_contract_type_action
-#: model:ir.ui.menu,name:hr.menu_view_hr_contract_type
-#: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
-msgid "Contract Types"
-msgstr "कॉन्ट्रैक्ट टाइप"
-
-#. module: hr
 #: model:mail.message.subtype,description:hr.mt_contract_pending
 #: model:mail.message.subtype,description:hr.mt_department_contract_pending
 msgid "Contract about to expire"
@@ -1668,18 +1558,8 @@ msgid "Contract to Renew"
 msgstr "रिन्यू करने के लिए कॉन्ट्रैक्ट"
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__contractor
-msgid "Contractor"
-msgstr "कॉन्ट्रैक्टर"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
-msgid "Contracts"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_contract_type__country_id
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__country_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_type__country_id
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__country_id
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1691,6 +1571,8 @@ msgstr "देश"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_code
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__country_code
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__country_code
+#: model:ir.model.fields,field_description:hr.field_hr_employee_type__country_code
+#: model:ir.model.fields,field_description:hr.field_hr_job__company_country_code
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__country_code
 #: model:ir.model.fields,field_description:hr.field_hr_version__country_code
 msgid "Country Code"
@@ -1713,11 +1595,6 @@ msgid "Create Employee"
 msgstr "कर्मचारी बनाएं"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__create_uid
-msgid "Create Uid"
-msgstr ""
-
-#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model:ir.actions.server,name:hr.action_hr_employee_create_users
@@ -1737,15 +1614,15 @@ msgid "Create a Job Position"
 msgstr "जॉब पोज़िशन बनाएं"
 
 #. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
-msgid "Create a new contract type"
-msgstr ""
-
-#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
 #: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
 msgid "Create a new department"
 msgstr "नया विभाग बनाएं"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
+msgid "Create a new employee type"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
@@ -1780,7 +1657,6 @@ msgstr "कर्मचारी बनाएं"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__create_uid
-#: model:ir.model.fields,field_description:hr.field_hr_contract_type__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee__create_uid
@@ -1788,6 +1664,7 @@ msgstr "कर्मचारी बनाएं"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_type__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_version__create_uid
@@ -1798,24 +1675,19 @@ msgstr "इन्होंने बनाया"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__create_date
-#: model:ir.model.fields,field_description:hr.field_hr_contract_type__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_type__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_version__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__create_date
 msgid "Created on"
 msgstr "इस तारीख को बनाया गया"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__creation_date
-msgid "Creation Date"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__currency_id
@@ -1872,8 +1744,11 @@ msgid "Date Start"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__departure_action_date
 #: model:ir.model.fields,help:hr.field_hr_employee__departure_date
+#: model:ir.model.fields,help:hr.field_hr_employee_departure__action_date
 #: model:ir.model.fields,help:hr.field_hr_employee_departure__departure_date
+#: model:ir.model.fields,help:hr.field_hr_version__departure_action_date
 #: model:ir.model.fields,help:hr.field_hr_version__departure_date
 msgid "Date at which the departure actually takes place."
 msgstr ""
@@ -1942,7 +1817,13 @@ msgstr ""
 
 #. module: hr
 #. odoo-javascript
-#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
+#: code:addons/hr/static/src/fields/boolean_radio.js:0
+msgid "Defines which values comes first."
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/web/avatar_card/avatar_card_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__department_id
@@ -1994,7 +1875,6 @@ msgstr "विभाग"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view_enhanced
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Departure"
 msgstr "नौकरी छोड़कर जाना"
 
@@ -2002,6 +1882,7 @@ msgstr "नौकरी छोड़कर जाना"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__departure_date
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_date
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Departure Date"
 msgstr "जाने की तारीख"
 
@@ -2017,9 +1898,9 @@ msgid "Departure Reasons"
 msgstr "जाने की वजहें"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Departure date"
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Departure already configured"
 msgstr ""
 
 #. module: hr
@@ -2035,12 +1916,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_version__children
 #: model:ir.model.fields,field_description:hr.field_res_users__children
 msgid "Dependent Children"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Detailed Reason"
 msgstr ""
 
 #. module: hr
@@ -2095,6 +1970,7 @@ msgstr "डायरेक्टरी"
 
 #. module: hr
 #. odoo-javascript
+#: code:addons/hr/static/src/js/departure_conflict_dialog.js:0
 #: code:addons/hr/static/src/xml/contract_template_button.xml:0
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
 msgid "Discard"
@@ -2126,7 +2002,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_discuss_channel__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__display_name
-#: model:ir.model.fields,field_description:hr.field_hr_contract_type__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee__display_name
@@ -2134,8 +2009,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
-#: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__display_name
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_type__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_mixin__display_name
@@ -2191,6 +2065,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
 msgid "Driving License"
 msgstr "ड्राइविंग लाइसेंस"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license_name
+msgid "Driving License Name"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -2262,14 +2141,6 @@ msgid "Element to observe"
 msgstr ""
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_export_mixin.py:0
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__eligible_employee_line_ids
-#: model_terms:ir.ui.view,arch_db:hr.hr_export_employee_mixin_list_view
-msgid "Eligible Employees"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__email
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__email
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2297,8 +2168,9 @@ msgstr ""
 
 #. module: hr
 #. odoo-python
+#: code:addons/hr/models/hr_employee_type.py:0
 #: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
-#: model:hr.contract.type,name:hr.contract_type_employee
+#: model:hr.employee.type,name:hr.contract_type_employee
 #: model:ir.model,name:hr.model_hr_employee
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__employee_id
@@ -2306,17 +2178,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_id
-#: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__employee_id
 #: model:ir.model.fields,field_description:hr.field_res_partner__employee
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_id
 #: model:ir.model.fields,field_description:hr.field_res_users__employee
 #: model:ir.model.fields,field_description:hr.field_resource_resource__employee_id
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__employee
 #: model:ir.model.fields.selection,name:hr.selection__mail_activity_plan_template__responsible_type__employee
 #: model:ir.ui.menu,name:hr.menu_config_employee
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view_enhanced
@@ -2411,11 +2280,23 @@ msgid "Employee Tags"
 msgstr "कर्मचारियों के लिए टैग"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type
-#: model:ir.model.fields,field_description:hr.field_hr_version__employee_type
+#: model:ir.model,name:hr.model_hr_employee_type
+#: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type_id
+#: model:ir.model.fields,field_description:hr.field_hr_job__employee_type_id
+#: model:ir.model.fields,field_description:hr.field_hr_version__employee_type_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Employee Type"
 msgstr "कर्मचारी का प्रकार"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_contract_type_action
+#: model:ir.ui.menu,name:hr.menu_view_hr_contract_type
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
+msgid "Employee Types"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_ids
@@ -2428,6 +2309,14 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Employee development is a core focus"
 msgstr "कर्मचारियों को बेहतर बनाना और उनकी तरक्की करवाना सबसे ज़रूरी काम है"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"Employee is already configured in a Departure process. \n"
+"Cancel it before configurating a new End of Collaboration."
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
@@ -2471,11 +2360,12 @@ msgstr "कर्मचारी की महीने की कुल सै�
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__employee_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_type__employees_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
 #: model:ir.model.fields,field_description:hr.field_res_partner__employee_ids
-#: model:ir.ui.menu,name:hr.menu_hr_employee_payroll
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:res.groups.privilege,name:hr.res_groups_privilege_employees
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_hierarchy_view
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_list_activites_view
@@ -2541,6 +2431,7 @@ msgstr "ट्रायल पीरियड खत्म होने की �
 
 #. module: hr
 #: model:ir.actions.server,name:hr.action_hr_employee_departure
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "End of Collaboration"
 msgstr ""
 
@@ -2663,26 +2554,6 @@ msgid "Expiring Work Permit"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__export_id
-msgid "Export"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_list_view
-msgid "Export Employee"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__export_file
-msgid "Export File"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__export_filename
-msgid "Export Filename"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__share
 #: model:ir.model.fields,help:hr.field_hr_employee_public__share
 msgid ""
@@ -2769,6 +2640,19 @@ msgid "First Contract Date"
 msgstr ""
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/fields/boolean_radio.js:0
+msgid "First Element"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__fixed_term
+#: model:ir.model.fields,field_description:hr.field_hr_version__fixed_term
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Fixed Term"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Flexible"
 msgstr ""
@@ -2817,11 +2701,6 @@ msgid "Foster innovation and new solutions"
 msgstr "इनोवेशन और समस्याओं को हल करने के नए तरीकों को प्रोत्साहित करें"
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__freelance
-msgid "Freelancer"
-msgstr "फ्रीलांसर"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__friday_location_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__friday_location_id
 msgid "Friday"
@@ -2840,11 +2719,6 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Fruit, coffee and <br>snacks provided."
 msgstr "फल, कॉफ़ी और <br>स्नैक्स दिए जाएंगे।"
-
-#. module: hr
-#: model:hr.contract.type,name:hr.contract_type_full_time
-msgid "Full-Time"
-msgstr "फ़ुल-टाइम"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
@@ -2866,11 +2740,6 @@ msgstr "लिंग"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Generate"
 msgstr "जनरेट करे"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
-msgid "Generate Export File"
-msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -2914,21 +2783,6 @@ msgid "HR Employee: Update Current Version"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
-msgid "HR Export"
-msgstr ""
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_export_employee_mixin
-msgid "HR Export Employee"
-msgstr ""
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_export_mixin
-msgid "HR Export Mixin"
-msgstr ""
-
-#. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 msgid "HR Presence Status"
@@ -2943,11 +2797,6 @@ msgstr "एचआर रिस्पॉन्सिबल"
 #. module: hr
 #: model:ir.actions.server,name:hr.ir_cron_apply_departure_ir_actions_server
 msgid "HR: Apply employee departures"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__has_country_contract_type
-msgid "Has Country Contract Type"
 msgstr ""
 
 #. module: hr
@@ -2968,13 +2817,6 @@ msgstr "मैसेज है"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_multiple_bank_accounts
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_has_multiple_bank_accounts
 msgid "Has Multiple Bank Accounts"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_has_selected_actions
-#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__has_selected_actions
-#: model:ir.model.fields,field_description:hr.field_hr_version__departure_has_selected_actions
-msgid "Has Selected Actions"
 msgstr ""
 
 #. module: hr
@@ -3086,7 +2928,6 @@ msgstr "ह्यूमन रिसोर्स मैनेजर"
 #: model:ir.model.fields,field_description:hr.field_discuss_channel__id
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__id
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__id
-#: model:ir.model.fields,field_description:hr.field_hr_contract_type__id
 #: model:ir.model.fields,field_description:hr.field_hr_department__id
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__id
@@ -3094,8 +2935,7 @@ msgstr "ह्यूमन रिसोर्स मैनेजर"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
-#: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__id
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_type__id
 #: model:ir.model.fields,field_description:hr.field_hr_job__id
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__id
 #: model:ir.model.fields,field_description:hr.field_hr_mixin__id
@@ -3131,12 +2971,6 @@ msgid "ID used for employee identification."
 msgstr "कर्मचारी की पहचान के लिए इस्तेमाल की गई आईडी।"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__im_status
-#: model:ir.model.fields,field_description:hr.field_hr_employee_public__im_status
-msgid "IM Status"
-msgstr "आईएम स्टेटस"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_exception_icon
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_icon
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_exception_icon
@@ -3150,6 +2984,11 @@ msgstr "आइकॉन"
 #: model:ir.model.fields,help:hr.field_hr_version__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "एक छोटा निशान जो बताता है कि कुछ अलग या असामान्य हुआ है।"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__id_card_name
+msgid "Id Card Name"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
@@ -3219,12 +3058,6 @@ msgid "Image 512"
 msgstr "इमेज 512"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Immediately"
-msgstr ""
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "In Contract"
 msgstr ""
@@ -3242,6 +3075,13 @@ msgid "Indefinite"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__split_legal_name
+msgid ""
+"Indicates whether the legal name is split into first and last name fields "
+"based on the employee's country."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__child_all_count
 msgid "Indirect Subordinates Count"
 msgstr ""
@@ -3253,12 +3093,12 @@ msgid "Indirect subordinates"
 msgstr ""
 
 #. module: hr
-#: model:hr.contract.type,name:hr.contract_type_interim
+#: model:hr.employee.type,name:hr.contract_type_interim
 msgid "Interim"
 msgstr "अन्तरिम"
 
 #. module: hr
-#: model:hr.contract.type,name:hr.contract_type_intern
+#: model:hr.employee.type,name:hr.contract_type_intern
 msgid "Intern"
 msgstr "इंटर्न"
 
@@ -3455,7 +3295,6 @@ msgstr "आखिरी बार बदलाव किया गया:"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__write_uid
-#: model:ir.model.fields,field_description:hr.field_hr_contract_type__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee__write_uid
@@ -3463,6 +3302,7 @@ msgstr "आखिरी बार बदलाव किया गया:"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_type__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_version__write_uid
@@ -3473,7 +3313,6 @@ msgstr "इन्होंने आखिरी बार अपडेट क�
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__write_date
-#: model:ir.model.fields,field_description:hr.field_hr_contract_type__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee__write_date
@@ -3481,6 +3320,7 @@ msgstr "इन्होंने आखिरी बार अपडेट क�
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_type__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_version__write_date
@@ -3640,6 +3480,7 @@ msgstr "तकनीक के बजट और संसाधनों को 
 
 #. module: hr
 #: model:hr.department,name:hr.dep_management
+#: model:ir.ui.menu,name:hr.menu_hr_employee_payroll
 msgid "Management"
 msgstr "मैनेजमेंट"
 
@@ -3814,8 +3655,8 @@ msgid "My Activity Deadline"
 msgstr "मेरी गतिविधि की डेडलाइन"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_contract_type__name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_type__name
 #: model:ir.model.fields,field_description:hr.field_hr_version__name
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_list_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
@@ -3966,6 +3807,11 @@ msgid "Note"
 msgstr "ध्यान दें"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Notice Period"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__11
 msgid "November"
 msgstr ""
@@ -4035,13 +3881,18 @@ msgid "Number of new employees you expect to recruit."
 msgstr "नए कर्मचारियों की संख्या जिन्हें आप भर्ती करने की उम्मीद करते हैं।"
 
 #. module: hr
+#: model:hr.employee.type,name:hr.contract_type_seasonal
+msgid "Occasional / Seasonal"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__10
 msgid "October"
 msgstr ""
 
 #. module: hr
 #. odoo-javascript
-#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+#: code:addons/hr/static/src/core/web/avatar_card/avatar_card_patch.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__out_of_working_hour
@@ -4092,12 +3943,6 @@ msgstr ""
 "है.                        जांच करें कि सब सही मैनेजर को रिपोर्ट कर रहे हैं।"
 
 #. module: hr
-#. odoo-javascript
-#: code:addons/hr/static/src/core/web/thread_actions.js:0
-msgid "Open Profile"
-msgstr "ओपन प्रोफ़ाइल"
-
-#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_department.py:0
 msgid "Operation not Supported."
@@ -4122,12 +3967,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__other
 msgid "Other"
 msgstr "अन्य"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Other date"
-msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4182,11 +4021,6 @@ msgid "Parent Path"
 msgstr "पैरंट पाथ"
 
 #. module: hr
-#: model:hr.contract.type,name:hr.contract_type_part_time
-msgid "Part-Time"
-msgstr ""
-
-#. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Participate in team meetings and discussions"
 msgstr "टीम की मीटिंग और चर्चाओं में भाग लें"
@@ -4235,16 +4069,6 @@ msgid "Perfect written English"
 msgstr "एकदम सही अंग्रेज़ी"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__period_start
-msgid "Period Start"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__period_stop
-msgid "Period Stop"
-msgstr ""
-
-#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -4252,11 +4076,6 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Perks"
 msgstr "फ़ायदे"
-
-#. module: hr
-#: model:hr.contract.type,name:hr.contract_type_permanent
-msgid "Permanent"
-msgstr "स्थायी"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__hr_responsible_id
@@ -4330,12 +4149,6 @@ msgstr ""
 "कर सकती, क्योंकि इसका इस्तेमाल सिर्फ़ कर्मचारियों की योजनाओं के लिए होता है।"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Planned Actions"
-msgstr ""
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 msgid "Plans"
 msgstr "प्लान"
@@ -4372,11 +4185,6 @@ msgstr ""
 "- फ़ॉलोअर्स: सिर्फ़ संबंधित दस्तावेज़ के फ़ॉलोअर्स या फ़ॉलो किए गए चैनल के सदस्य ही पोस्ट करें\n"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
-msgid "Populate"
-msgstr ""
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_simple_modif
 msgid "Preferences"
 msgstr "प्राथमिकताएं"
@@ -4403,7 +4211,7 @@ msgstr "उपस्थिति रिपोर्टिंग स्क्र�
 
 #. module: hr
 #. odoo-javascript
-#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+#: code:addons/hr/static/src/core/web/avatar_card/avatar_card_patch.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_present
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__present
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__present
@@ -4592,6 +4400,8 @@ msgstr "तेज़ी से बढ़ती हुई कंपनी में 
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__name
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Reason"
 msgstr "ठीक है"
 
@@ -4633,6 +4443,7 @@ msgstr "संबंधित संपर्क"
 
 #. module: hr
 #. odoo-python
+#: code:addons/hr/models/hr_employee_type.py:0
 #: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
 msgid "Related Employees"
 msgstr "संबंधित कर्मचारी"
@@ -4643,9 +4454,7 @@ msgid "Related Partners Count"
 msgstr "जुड़े हुए पार्टनर की संख्या"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_list_activites_view
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Related User"
 msgstr "संबंधित उपयोगकर्ता"
 
@@ -4663,6 +4472,11 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_res_partner__employee_ids
 msgid "Related employees based on their private address"
 msgstr "निजी पते के आधार पर संबंधित कर्मचारी"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__all_employee_ids
+msgid "Related employees from all companies"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
@@ -4816,11 +4630,6 @@ msgid "Search employee..."
 msgstr ""
 
 #. module: hr
-#: model:hr.contract.type,name:hr.contract_type_seasonal
-msgid "Seasonal"
-msgstr "मौसमी"
-
-#. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "See All"
@@ -4834,6 +4643,12 @@ msgid ""
 msgstr ""
 "एक कॉन्ट्रैक्ट टेंप्लेट चुनें, जिससे फ़ॉर्म में पहले से तय की गई जानकारी अपने-आप भर जाएगी. टेंप्लेट "
 "का इस्तेमाल करने के बाद भी, आप अपनी ज़रूरत के हिसाब से किसी भी जानकारी को बदल सकते हैं।"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Select employee type"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__coach_id
@@ -4857,16 +4672,10 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__sequence
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__sequence
+#: model:ir.model.fields,field_description:hr.field_hr_employee_type__sequence
 #: model:ir.model.fields,field_description:hr.field_hr_job__sequence
 msgid "Sequence"
 msgstr "सीक्वेंस"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_do_set_date_end
-#: model:ir.model.fields,field_description:hr.field_hr_employee_departure__do_set_date_end
-#: model:ir.model.fields,field_description:hr.field_hr_version__departure_do_set_date_end
-msgid "Set Contract End Date"
-msgstr "कॉन्ट्रैक्ट के खत्म होने की तारीख सेट करें"
 
 #. module: hr
 #. odoo-javascript
@@ -4878,15 +4687,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Set default company schedule to manage your employees working time"
 msgstr "अपने कर्मचारियों के काम करने के समय को मैनेज करने के लिए डिफ़ॉल्ट कंपनी शेड्यूल सेट करें"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__departure_do_set_date_end
-#: model:ir.model.fields,help:hr.field_hr_employee_departure__do_set_date_end
-#: model:ir.model.fields,help:hr.field_hr_version__departure_do_set_date_end
-msgid ""
-"Set the departure date as the contract end date and delete all future "
-"versions."
-msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -4952,6 +4752,11 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__split_legal_name
+msgid "Split Legal Name"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -5013,12 +4818,6 @@ msgstr ""
 "प्लान्ड: जो काम भविष्य में करने हैं।"
 
 #. module: hr
-#: model:hr.contract.type,name:hr.contract_type_statutory
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__statutory
-msgid "Statutory"
-msgstr "वैधानिक"
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Street 2..."
@@ -5051,8 +4850,7 @@ msgstr ""
 "                    छुट्टियों और भर्ती जैसी चीज़ों की पूरी जानकारी रखें।"
 
 #. module: hr
-#: model:hr.contract.type,name:hr.contract_type_student
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__student
+#: model:hr.employee.type,name:hr.contract_type_student
 msgid "Student"
 msgstr "छात्र"
 
@@ -5150,11 +4948,6 @@ msgid "Template for Employees"
 msgstr ""
 
 #. module: hr
-#: model:hr.contract.type,name:hr.contract_type_temporary
-msgid "Temporary"
-msgstr "अस्थाई"
-
-#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid ""
@@ -5179,6 +4972,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__country_code
 #: model:ir.model.fields,help:hr.field_hr_employee__nationality_country_code
 #: model:ir.model.fields,help:hr.field_hr_employee_departure__country_code
+#: model:ir.model.fields,help:hr.field_hr_employee_type__country_code
+#: model:ir.model.fields,help:hr.field_hr_job__company_country_code
 #: model:ir.model.fields,help:hr.field_hr_payroll_structure_type__country_code
 #: model:ir.model.fields,help:hr.field_hr_version__country_code
 msgid ""
@@ -5243,10 +5038,21 @@ msgid "The date of the first contract of the employee in the company."
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "The day after departure"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "The default working hours are set in configuration."
 msgstr "डिफ़ॉल्ट कामकाजी घंटे कॉन्फ़िगरेशन में सेट किए गए हैं।"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "The departure process has been completed on"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -5277,6 +5083,12 @@ msgid ""
 msgstr ""
 "फ़ील्ड “%s”, जिसे आप पढ़ने की कोशिश कर रहे हैं, वह कर्मचारी की सार्वजनिक प्रोफ़ाइल के लिए "
 "उपलब्ध नहीं है।"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "The following employees have the same work email address: %s"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -5335,7 +5147,7 @@ msgid "There is no valid version starting before the departure date for %s."
 msgstr ""
 
 #. module: hr
-#: model:hr.contract.type,name:hr.contract_type_thesis
+#: model:hr.employee.type,name:hr.contract_type_thesis
 msgid "Thesis"
 msgstr "थीसिस"
 
@@ -5351,6 +5163,16 @@ msgstr ""
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This employee already has an user."
 msgstr "इस कर्मचारी के पास पहले से ही एक उपयोगकर्ता है।"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_type.py:0
+msgid ""
+"This employee type is used in another company, you can't modify the country "
+"where it's applicable for now.\n"
+"Change the employee type on the employees of the other company to be able to "
+"modify this."
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -5471,7 +5293,6 @@ msgstr ""
 
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__trainee
 msgid "Trainee"
 msgstr "ट्रेनी"
 
@@ -5757,6 +5578,17 @@ msgid "View"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
+msgid "View Employees"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/core/web/thread_actions.js:0
+msgid "View Profile"
+msgstr ""
+
+#. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "View employee"
@@ -5780,7 +5612,6 @@ msgstr "वीज़ा नंबर"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
-#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Visible to all"
 msgstr "सभी को दिखेगा"
 
@@ -5927,7 +5758,7 @@ msgstr "ऑफ़िस का ईमेल"
 
 #. module: hr
 #. odoo-javascript
-#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
+#: code:addons/hr/static/src/core/web/avatar_card/avatar_card_patch.xml:0
 #: model:ir.model,name:hr.model_hr_work_location
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_id
@@ -6025,11 +5856,6 @@ msgid "Work location"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__worker
-msgid "Worker"
-msgstr "वर्कर"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__default_resource_calendar_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__resource_calendar_id
@@ -6093,6 +5919,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid ""
+"You can't end the collaboration of an employee without contract, archive it "
+"instead."
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
 "You can't modify the departure of an employee that has already departed."
 msgstr ""
 
@@ -6125,12 +5959,6 @@ msgstr ""
 #: code:addons/hr/models/hr_employee.py:0
 msgid "You do not have access to this document."
 msgstr "आपके पास इस दस्तावेज़ को ऐक्सेस करने का अधिकार नहीं है।"
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_export_mixin.py:0
-msgid "You must be logged in a %(country_code)s company to use this feature"
-msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -6351,8 +6179,8 @@ msgid "other"
 msgstr ""
 
 #. module: hr
-#. odoo-javascript
-#: code:addons/hr/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_hierarchy_view
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_hierarchy_view
 msgid "people"
 msgstr ""
 

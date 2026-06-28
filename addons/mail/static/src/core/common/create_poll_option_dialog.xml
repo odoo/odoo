@@ -4,7 +4,7 @@
         <div class="o-mail-CreatePollOptionDialog d-flex gap-2 mb-3">
             <div class=" input-group">
                 <button class="btn btn-outline-secondary" type="button" t-custom-ref="picker"><i class="fa fa-lg fa-smile-o"/></button>
-                <input type="text" t-custom-model="this.props.model.label" class="form-control rounded" placeholder="Type your option" t-custom-ref="root"/>
+                <input type="text" t-model.proxy="this.props.model.label" class="form-control rounded" placeholder="Type your option" t-custom-ref="root"/>
             </div>
             <button t-if="this.props.deletable" class="btn btn-primary" title="Delete option" t-on-click="this.props.onClickRemove"><i class="fa fa-trash"/></button>
         </div>

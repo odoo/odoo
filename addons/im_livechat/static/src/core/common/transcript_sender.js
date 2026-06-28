@@ -1,6 +1,6 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { isValidEmail } from "@im_livechat/core/common/misc";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 
@@ -22,7 +22,7 @@ export class TranscriptSender extends Component {
 
     setup() {
         this.isValidEmail = isValidEmail;
-        this.state = useState({
+        this.state = proxy({
             email: this.props.thread.channel?.livechatVisitorMember?.persona.email,
             status: this.STATUS.IDLE,
         });

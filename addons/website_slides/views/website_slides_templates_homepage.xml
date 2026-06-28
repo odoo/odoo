@@ -170,32 +170,6 @@
                     <a href="/slides" class="btn btn-light">Clear Filters</a>
                 </div>
             </div>
-            <!-- Search Modal for Mobile -->
-            <div
-                id="o_wslides_search_modal"
-                class="modal fade css_editable_mode_hidden"
-                aria-hidden="true"
-                tabindex="-1"
-            >
-                <div class="modal-dialog modal-lg pt-5">
-                    <div class="modal-content mt-5 bg-transparent border-0">
-                        <div class="o_container_small">
-                            <t t-call="website.website_search_box_input"
-                                default_style.f="true"
-                                search_type.f="slides"
-                                _classes.f="input-group rounded o_cc o_cc1 mb-1"
-                                _input_classes.f="border-0 p-3"
-                                _submit_classes.f="px-4"
-                                placeholder.translate="Search courses"
-                                search="original_search or search_term">
-                                <input type="hidden" name="my" t-attf-value="#{1 if search_my else 0}"/>
-                                <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
-                                <input type="hidden" name="prevent_redirect" value="True"/>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </t>
 </template>
@@ -203,7 +177,9 @@
 <template id="courses_search_bar">
     <!-- Navbar dynamically composed using displayed channel tag groups. -->
     <div class="d-flex flex-wrap align-items-md-center gap-2 mt-4 mb-3">
-        <h1 class="h4 mb-0 me-auto">Courses</h1>
+        <div class="flex-grow-1">
+            <h1 class="h4 mb-0">Courses</h1>
+        </div>
         <div class="d-flex gap-2 flex-grow-1 flex-md-grow-0 align-items-start">
             <!-- Desktop tag groups -->
             <div id="navbarTagGroups" class="d-none d-lg-block">
@@ -231,11 +207,9 @@
             </div>
             <div class="d-flex gap-2 align-items-center ms-auto">
                 <t t-call="website.website_search_box_input"
-                    _classes.f="d-none d-md-flex"
+                    _form_classes.f="d-none d-md-flex"
                     search_type.f="slides"
-                    display_description.f="true"
-                    display_detail.f="false"
-                    placeholder.translate="Search courses"
+                    placeholder.translate="Search courses..."
                     search="original_search or search_term">
                     <!-- No action: remain on same URL -->
                     <input type="hidden" name="my" t-attf-value="#{1 if search_my else 0}"/>
@@ -243,16 +217,16 @@
                     <input type="hidden" name="prevent_redirect" value="True"/>
                 </t>
                 <!-- Mobile Search button -->
-                <a
-                    class="btn o_not_editable d-md-none btn-light"
-                    data-bs-target="#o_wslides_search_modal"
-                    data-bs-toggle="modal"
-                    role="button"
-                    title="Search Courses"
-                    href="#"
-                >
-                    <i class="oi oi-search" role="img"/>
-                </a>
+                <t t-call="website.website_search_box_input"
+                    search_type.f="slides"
+                    placeholder.translate="Search courses..."
+                    search="original_search or search_term"
+                    _simple_button_layout="True"
+                    _simple_button_classes.f="d-md-none btn-light">
+                    <input type="hidden" name="my" t-attf-value="#{1 if search_my else 0}"/>
+                    <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
+                    <input type="hidden" name="prevent_redirect" value="True"/>
+                </t>
                 <!-- Mobile Filter button -->
                 <button class="o_not_editable btn btn-light position-relative d-lg-none"
                     data-bs-toggle="offcanvas"
@@ -348,7 +322,7 @@
             <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" class="o_line_clamp card-title h6" t-field="channel.name"/>
             <div class="card-text d-flex flex-column flex-grow-1 mt-1">
                 <div class="o_line_clamp small" t-field="channel.description_short"/>
-                <div t-if="channel_frontend_tags" class="small o_wslides_desc_truncate_2_badges">
+                <div t-if="channel_frontend_tags" class="small o_line_clamp">
                     <t t-foreach="channel_frontend_tags" t-as="tag">
                         <t t-if="search_tags">
                             <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"

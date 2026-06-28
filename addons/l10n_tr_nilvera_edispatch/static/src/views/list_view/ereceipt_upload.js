@@ -71,7 +71,7 @@ export class L10nTrEreceiptUploader extends Component {
                 if (result.skipped_xmls) {
                     this.notification.add(
                         _t(
-                            "Error occured in reading following XML file(s): %s",
+                            "Error occurred in reading following XML file(s): %s",
                             result.skipped_xmls.join(", ")
                         ),
                         { type: "danger", title: "e-Receipt(s) were not imported", sticky: true }

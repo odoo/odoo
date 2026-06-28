@@ -14,6 +14,7 @@ import { getContent, setContent, setSelection } from "./_helpers/selection";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { processThroughCleanForSave } from "./_helpers/dispatch";
+import { expectElementCount } from "./_helpers/ui_expectations";
 
 const config = { Plugins: [...MAIN_PLUGINS, QWebPlugin] };
 describe("qweb picker", () => {
@@ -50,7 +51,7 @@ describe("qweb picker", () => {
 
     test("plugin's dom markers are not savable", async () => {
         const resources = {
-            on_new_records_handled_handlers: () => {
+            on_pending_mutations_staged_handlers: () => {
                 expect.step("handleNewRecords");
             },
         };
@@ -250,7 +251,7 @@ describe("qweb picker", () => {
     });
 });
 
-test("select text inside t-out", async () => {
+test("show t-out expression in picker on click", async () => {
     const { el } = await setupEditor(`<div><t t-out="test">Hello</t></div>`, {
         config,
     });
@@ -259,24 +260,26 @@ test("select text inside t-out", async () => {
             `<div><t t-out="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t></div>` +
             '<p data-selection-placeholder=""><br></p>'
     );
-
-    setSelection({ anchorNode: el.querySelector("t[t-out]").childNodes[0], anchorOffset: 1 });
-
-    await tick();
-    expect(getContent(el)).toBe(
-        '<p data-selection-placeholder=""><br></p>' +
-            `<div><t t-out="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">H[]ello</t></div>` +
-            '<p data-selection-placeholder=""><br></p>'
-    );
-    await dblclick("t");
-    expect(getContent(el)).toBe(
-        '<p data-selection-placeholder=""><br></p>' +
-            `<div>[<t t-out="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t>]</div>` +
-            '<p data-selection-placeholder=""><br></p>'
-    );
+    await click(queryOne(`[t-out]`));
+    await expectElementCount(".o-we-qweb-picker", 1);
+    expect(queryOne(".o-we-qweb-picker div")).toHaveText("t-out: test");
 });
 
-test("select text inside t-esc", async () => {
+test("show t-field expression in picker on click", async () => {
+    const { el } = await setupEditor(`<div><t t-field="test">Hello</t></div>`, {
+        config,
+    });
+    expect(getContent(el)).toBe(
+        '<p data-selection-placeholder=""><br></p>' +
+            `<div><t t-field="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t></div>` +
+            '<p data-selection-placeholder=""><br></p>'
+    );
+    await click(queryOne(`[t-field]`));
+    await expectElementCount(".o-we-qweb-picker", 1);
+    expect(queryOne(".o-we-qweb-picker div")).toHaveText("t-field: test");
+});
+
+test("select text inside t-out", async () => {
     const { el } = await setupEditor(`<div><t t-out="test">Hello</t></div>`, {
         config,
     });
@@ -388,9 +391,9 @@ test("formatting toolbar items are disabled on t-att-class and t-att-style (and 
     expect(`button[name="italic"]`).not.toHaveAttribute("disabled");
     expect(`button[name="underline"]`).not.toHaveAttribute("disabled");
     expect(`button[name="strikethrough"]`).not.toHaveAttribute("disabled");
-    expect(`button[name="font"]`).not.toHaveAttribute("disabled");
+    expect(`button[name="font_type"]`).not.toHaveAttribute("disabled");
     expect(`button[name="font_family"]`).not.toHaveAttribute("disabled");
-    expect(`button[name="font_size_selector"]`).not.toHaveAttribute("disabled");
+    expect(`button[name="font_size"]`).not.toHaveAttribute("disabled");
     expect(`button[title="Apply Font Color"]`).not.toHaveAttribute("disabled");
     expect(`button[title="Apply Background Color"]`).not.toHaveAttribute("disabled");
     expect(`button[name="link"]`).not.toHaveAttribute("disabled");
@@ -400,9 +403,8 @@ test("formatting toolbar items are disabled on t-att-class and t-att-style (and 
     await runAllTimers();
     await waitFor("button[name=remove_format]");
 
-    expect(`button[name="font"]`).toHaveAttribute("disabled");
+    expect(`button[name="font_type"]`).toHaveAttribute("disabled");
     expect(`button[name="font_family"]`).toHaveAttribute("disabled");
-    expect(`button[name="font_size_selector"]`).toHaveAttribute("disabled");
     expect(`button[title="Apply Font Color"]`).toHaveAttribute("disabled");
     expect(`button[title="Apply Background Color"]`).toHaveAttribute("disabled");
     expect(`button[name="link"]`).toHaveAttribute("disabled");
@@ -412,4 +414,5 @@ test("formatting toolbar items are disabled on t-att-class and t-att-style (and 
     expect(`button[name="italic"]`).toHaveCount(0);
     expect(`button[name="underline"]`).toHaveCount(0);
     expect(`button[name="strikethrough"]`).toHaveCount(0);
+    expect(`button[name="font_size"]`).toHaveCount(0);
 });

@@ -1,13 +1,13 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Gif } from "@mail/core/common/gif";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { rpc } from "@web/core/network/rpc";
-import { PICKER_PROPS, usePicker } from "@web/core/emoji_picker/emoji_picker";
+import { usePicker } from "@web/core/emoji_picker/emoji_picker";
 
 export function useGifPicker(...args) {
     return usePicker(GifPicker, ...args);
@@ -21,45 +21,38 @@ export function useGifPicker(...args) {
  * @property {string} name
  */
 
-/**
- * @typedef {Object} TenorMediaFormat
- * @property {string} url
- * @property {number} duration
- * @property {string} preview
- * @property {number[]} dims
- * @property {number} size
- */
+const tenorMediaFormatType = t.object({
+    url: t.string(),
+    duration: t.number(),
+    preview: t.string(),
+    dims: t.array(t.number()),
+    size: t.number(),
+});
 
-/**
- * @typedef {Object} TenorGif
- * @property {string} id
- * @property {string} title
- * @property {number} created
- * @property {string} content_description
- * @property {string} itemurl
- * @property {string} url
- * @property {string[]} tags
- * @property {string[]} flags
- * @property {boolean} hasaudio
- * @property {{ tinygif: TenorMediaFormat }} media_formats
- */
-
-/**
- * @typedef {Object} Props
- * @property {function} onSelect Callback to use when the gif is selected
- * @property {string} [className]
- * @property {function} [close]
- * @property {Object} [state]
- * @extends {Component<Props, Env>}
- */
+const tenorGifType = t.object({
+    id: t.string(),
+    title: t.string(),
+    created: t.number(),
+    content_description: t.string(),
+    itemurl: t.string(),
+    url: t.string(),
+    tags: t.array(t.string()),
+    flags: t.array(t.string()),
+    hasaudio: t.boolean(),
+    media_formats: t.object({ tinygif: tenorMediaFormatType }),
+});
+/** @typedef {import("@odoo/owl").StripType<typeof tenorGifType>} TenorGif */
 
 export class GifPicker extends Component {
     static template = "discuss.GifPicker";
-    static props = PICKER_PROPS;
     static components = { Gif };
 
     setup() {
         super.setup();
+        this.props = props({
+            close: t.function([]).optional(),
+            onSelect: t.function([tenorGifType, t.boolean()]),
+        });
         this.orm = useService("orm");
         this.store = useService("mail.store");
         this.sequential = useSequential();
@@ -80,7 +73,7 @@ export class GifPicker extends Component {
         this.next = "";
         this.showFavorite = false;
         this.offset = 0;
-        this.state = useState({
+        this.state = proxy({
             favorites: {
                 /** @type {TenorGif[]} */
                 gifs: [],
@@ -117,9 +110,6 @@ export class GifPicker extends Component {
         }
         useLayoutEffect(
             () => {
-                if (this.props.state?.picker !== this.props.PICKERS?.GIF) {
-                    return;
-                }
                 this.clear();
                 this.search();
                 if (this.searchTerm) {
@@ -128,7 +118,7 @@ export class GifPicker extends Component {
                     this.openCategories();
                 }
             },
-            () => [this.searchTerm, this.props.state?.picker]
+            () => [this.searchTerm]
         );
     }
 
@@ -137,15 +127,11 @@ export class GifPicker extends Component {
     }
 
     get searchTerm() {
-        return this.props.state ? this.props.state.searchTerm : this.state.searchTerm;
+        return this.state.searchTerm;
     }
 
     set searchTerm(value) {
-        if (this.props.state) {
-            this.props.state.searchTerm = value;
-        } else {
-            this.state.searchTerm = value;
-        }
+        this.state.searchTerm = value;
     }
 
     async loadCategories() {

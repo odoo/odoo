@@ -30,7 +30,6 @@ from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
 from functools import lru_cache, reduce, wraps
 from itertools import islice, groupby as itergroupby
-from operator import itemgetter
 from types import MappingProxyType
 from zoneinfo import ZoneInfo
 
@@ -63,11 +62,11 @@ __all__ = [
     'babel_locale_parse',
     'clean_context',
     'consteq',
-    'discardattr',
     'exception_to_unicode',
     'file_open',
     'file_open_temporary_directory',
     'file_path',
+    'find_circular_dependency',
     'find_in_path',
     'formatLang',
     'format_amount',
@@ -372,6 +371,39 @@ def topological_sort[T](elems: Mapping[T, Collection[T]]) -> list[T]:
     return result
 
 
+def find_circular_dependency[T](elems: Mapping[T, Collection[T]]) -> list[T]:
+    """
+    Check for circular dependencies in the given mapping.
+
+    Uses procedural DFS implementation.
+
+    :param elems: Mapping of elements to their dependencies. See also :func:`topological_sort`.
+    :return: List representing the circular dependency chain if found, empty list otherwise
+    """
+    visited: set[T] = set()
+    path: list[T] = []
+    deps_iters = [iter(elems)]
+
+    while True:
+        node = next(deps_iters[-1], SENTINEL)
+
+        if node is SENTINEL:  # Backtrack
+            if not path:
+                return []
+
+            path.pop()
+            deps_iters.pop()
+
+        elif node in visited:
+            if node in path:  # Cycle found
+                return path[path.index(node):] + [node]
+
+        else:  # Traverse
+            visited.add(node)
+            path.append(node)
+            deps_iters.append(iter(elems.get(node, ())))
+
+
 def merge_sequences[T](*iterables: Iterable[T]) -> list[T]:
     """ Merge several iterables into a list. The result is the union of the
         iterables, ordered following the partial order given by the iterables,
@@ -632,13 +664,6 @@ def split_every[T](n: int, iterable: Iterable[T], piece_maker=tuple):
         piece = piece_maker(islice(iterator, n))
 
 
-def discardattr(obj: object, key: str) -> None:
-    """ Perform a ``delattr(obj, key)`` but without crashing if ``key`` is not present. """
-    try:
-        delattr(obj, key)
-    except AttributeError:
-        pass
-
 # ---------------------------------------------
 # String management
 # ---------------------------------------------
@@ -768,7 +793,7 @@ class MungedTracebackLogRecord(logging.LogRecord):
 
 def stripped_sys_argv(*strip_args):
     """Return sys.argv with some arguments stripped, suitable for reexecution or subprocesses"""
-    strip_args = sorted(set(strip_args) | set(['-s', '--save', '-u', '--update', '-i', '--init', '--i18n-overwrite']))
+    strip_args = sorted(set(strip_args) | {'--save', '-u', '--update', '-i', '--init', '--i18n-overwrite'})
     assert all(config.parser.has_option(s) for s in strip_args)
     takes_value = dict((s, config.parser.get_option(s).takes_value()) for s in strip_args)
 
@@ -1004,6 +1029,9 @@ class OrderedSet[T](MutableSet[T]):
     def __iter__(self):
         return iter(self._map)
 
+    def __reversed__(self):
+        return reversed(self._map)
+
     def __len__(self):
         return len(self._map)
 
@@ -1026,12 +1054,22 @@ class OrderedSet[T](MutableSet[T]):
     def intersection(self, *others):
         return reduce(OrderedSet.__and__, others, self)
 
+    def copy(self):
+        new_set = OrderedSet()
+        new_set._map = self._map.copy()  # Atomic dict copy
+        return new_set
+
 
 class LastOrderedSet[T](OrderedSet[T]):
     """ A set collection that remembers the elements last insertion order. """
     def add(self, elem):
         self.discard(elem)
         super().add(elem)
+
+    def copy(self):
+        new_set = LastOrderedSet()
+        new_set._map = self._map.copy()  # Atomic dict copy
+        return new_set
 
 
 class Callbacks:
@@ -1412,7 +1450,8 @@ def format_datetime(
     :param env:
     :param str|datetime value: naive datetime to format either in string or in datetime
     :param str tz: name of the timezone  in which the given datetime should be localized
-    :param str dt_format: one of “full”, “long”, “medium”, or “short”, or a custom date/time pattern compatible with `babel` lib
+    :param str dt_format: “medium”, or “short” to use res.lang format with or without the
+        seconds. Or a custom date/time pattern compatible with `babel` lib
     :param str lang_code: ISO code of the language to use to render the given datetime
     :rtype: str
     """
@@ -1439,12 +1478,13 @@ def format_datetime(
         date_format = posix_to_ldml(lang.date_format, locale=locale)
         time_format = posix_to_ldml(lang.time_format, locale=locale)
         dt_format = '%s %s' % (date_format, time_format)
+    elif dt_format == 'short':
+        date_format = posix_to_ldml(lang.date_format, locale=locale)
+        time_format = posix_to_ldml(lang.time_format.replace(':%S', ''), locale=locale)
+        dt_format = '%s %s' % (date_format, time_format)
 
     # Babel allows to format datetime in a specific language without change locale
     # So month 1 = January in English, and janvier in French
-    # Be aware that the default value for format is 'medium', instead of 'short'
-    #     medium:  Jan 5, 2016, 10:20:31 PM |   5 janv. 2016 22:20:31
-    #     short:   1/5/16, 10:20 PM         |   5/01/16 22:20
     # Formatting available here : http://babel.pocoo.org/en/latest/dates.html#date-fields
     return babel.dates.format_datetime(localized_datetime, dt_format, locale=locale)
 
@@ -1460,9 +1500,10 @@ def format_time(
 
         :param env:
         :param value: the time to format
-        :type value: `datetime.time` instance. Could be timezoned to display tzinfo according to format (e.i.: 'full' format)
+        :type value: `datetime.time` instance. Could be timezoned to display tzinfo according to format
         :param tz: name of the timezone  in which the given datetime should be localized
-        :param time_format: one of “full”, “long”, “medium”, or “short”, or a custom time pattern
+        :param str time_format: “medium”, or “short” to use res.lang format with or without the
+            seconds. Or a custom time pattern compatible with `babel` lib
         :param lang_code: ISO
 
         :rtype str
@@ -1489,6 +1530,8 @@ def format_time(
     locale = babel_locale_parse(lang.code)
     if not time_format or time_format == 'medium':
         time_format = posix_to_ldml(lang.time_format, locale=locale)
+    elif time_format == 'short':
+        time_format = posix_to_ldml(lang.time_format.replace(':%S', ''), locale=locale)
 
     return babel.dates.format_time(localized_time, format=time_format, locale=locale)
 
@@ -1915,11 +1958,6 @@ def get_flag(country_code: str) -> str:
     This emoji is composed of the two regional indicator emoji of the country code.
     """
     return "".join(chr(int(f"1f1{ord(c)+165:02x}", base=16)) for c in country_code)
-
-
-def format_frame(frame) -> str:
-    code = frame.f_code
-    return f'{code.co_name} {code.co_filename}:{frame.f_lineno}'
 
 
 def named_to_positional_printf(string: str, args: Mapping) -> tuple[str, tuple]:

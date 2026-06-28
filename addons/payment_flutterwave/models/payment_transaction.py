@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+import re
+
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
 
@@ -84,7 +86,7 @@ class PaymentTransaction(models.Model):
             "customer": {
                 "email": self.partner_email,
                 "name": self.partner_name,
-                "phonenumber": self.partner_phone,
+                "phonenumber": re.sub(r"[^\d]", "", (self.partner_phone or "").replace("+", "00")),
             },
             "customizations": {
                 "title": self.company_id.name,
@@ -123,12 +125,8 @@ class PaymentTransaction(models.Model):
             "redirect_url": urls.urljoin(base_url, FlutterwaveController._auth_return_url),
         }
 
-        try:
-            response_content = self._send_api_request("POST", "tokenized-charges", json=data)
-        except ValidationError as error:
-            self._set_error(str(error))
-        else:
-            self._process("flutterwave", response_content)
+        response_content = self._send_api_request("POST", "tokenized-charges", json=data)
+        self._record(response_content)
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
@@ -136,15 +134,6 @@ class PaymentTransaction(models.Model):
         if provider_code != "flutterwave":
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("tx_ref") or payment_data.get("txRef")
-
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "flutterwave":
-            return super()._extract_amount_data(payment_data)
-
-        amount = payment_data.get("amount")
-        currency_code = payment_data.get("currency")
-        return {"amount": float(amount), "currency_code": currency_code}
 
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
@@ -158,7 +147,7 @@ class PaymentTransaction(models.Model):
         payment_method_type = payment_data.get("payment_type", "")
         if payment_method_type == "card":
             payment_method_type = payment_data.get("card", {}).get("type").lower()
-        payment_method = self.env["payment.method"]._get_from_code(
+        payment_method = self.provider_id._get_pm_from_code(
             payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id
@@ -177,7 +166,7 @@ class PaymentTransaction(models.Model):
             self._set_canceled()
         elif payment_status in const.PAYMENT_STATUS_MAPPING["error"]:
             self._set_error(
-                _(
+                self.env._(
                     "An error occurred during the processing of your payment (status %s). Please"
                     " try again.",
                     payment_status,
@@ -189,7 +178,16 @@ class PaymentTransaction(models.Model):
                 payment_status,
                 self.reference,
             )
-            self._set_error(_("Unknown payment status: %s", payment_status))
+            self._set_error(self.env._("Unknown payment status: %s", payment_status))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "flutterwave":
+            return super()._extract_amount_data(payment_data)
+
+        amount = payment_data.get("amount")
+        currency_code = payment_data.get("currency")
+        return {"amount": float(amount), "currency_code": currency_code}
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""

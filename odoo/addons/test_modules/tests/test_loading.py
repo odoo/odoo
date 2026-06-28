@@ -32,7 +32,6 @@ def test_isolated_install(env):
 
     # make sure to reset the transaction
     env.cr.rollback()
-    env.transaction.reset()
 
     # check the presence of the cron
     cron = env['ir.cron'].search([('cron_name', '=', 'test_install_auto_cron')])

@@ -641,3 +641,56 @@ describe("bottom", () => {
         });
     });
 });
+
+describe("override !important class", () => {
+    test("should align start even if a class sets text-align with !important", async () => {
+        await testEditor({
+            contentBefore: '<p class="text-center">a[]b</p>',
+            styleContent: ".text-center { text-align: center !important; }",
+            stepFunction: alignStart,
+            contentAfterEdit:
+                '<p class="text-center" style="text-align: start !important;">a[]b</p>',
+            contentAfter: '<p class="text-center" style="text-align: start !important;">a[]b</p>',
+        });
+    });
+
+    test("should align center even if a class sets text-align with !important", async () => {
+        await testEditor({
+            contentBefore: '<p class="text-start">a[]b</p>',
+            styleContent: ".text-start { text-align: start !important; }",
+            stepFunction: alignCenter,
+            contentAfterEdit:
+                '<p class="text-start" style="text-align: center !important;">a[]b</p>',
+            contentAfter: '<p class="text-start" style="text-align: center !important;">a[]b</p>',
+        });
+    });
+
+    test("should align end even if a class sets text-align with !important", async () => {
+        await testEditor({
+            contentBefore: '<p class="text-center">a[]b</p>',
+            styleContent: ".text-center { text-align: center !important; }",
+            stepFunction: alignEnd,
+            contentAfterEdit: '<p class="text-center" style="text-align: end !important;">a[]b</p>',
+            contentAfter: '<p class="text-center" style="text-align: end !important;">a[]b</p>',
+        });
+    });
+
+    test("should justify even if a class sets text-align with !important", async () => {
+        await testEditor({
+            contentBefore: '<p class="text-center">a[]b</p>',
+            styleContent: ".text-center { text-align: center !important; }",
+            stepFunction: justify,
+            contentAfterEdit:
+                '<p class="text-center" style="text-align: justify !important;">a[]b</p>',
+            contentAfter: '<p class="text-center" style="text-align: justify !important;">a[]b</p>',
+        });
+    });
+
+    test("should not use !important when no class overrides text-align", async () => {
+        await testEditor({
+            contentBefore: "<p>a[]b</p>",
+            stepFunction: alignCenter,
+            contentAfter: '<p style="text-align: center;">a[]b</p>',
+        });
+    });
+});

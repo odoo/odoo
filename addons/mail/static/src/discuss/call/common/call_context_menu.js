@@ -1,8 +1,8 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, proxy, types } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 
 import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
@@ -10,7 +10,6 @@ import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
 const PROTOCOLS_TEXT = { host: "HOST", srflx: "STUN", prflx: "STUN", relay: "TURN" };
 
 export class CallContextMenu extends Component {
-    static props = ["rtcSession", "close?"];
     static template = "discuss.CallContextMenu";
 
     updateStatsTimeout;
@@ -21,8 +20,11 @@ export class CallContextMenu extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.props = props({
+            rtcSession: types.instanceOf(this.store["discuss.channel.rtc.session"].Class),
+        });
         this.rtc = useService("discuss.rtc");
-        this.state = useState({
+        this.state = proxy({
             downloadStats: {},
             uploadStats: {},
             producerStats: {},
@@ -41,6 +43,57 @@ export class CallContextMenu extends Component {
 
     get isSelf() {
         return this.rtc.selfSession?.eq(this.props.rtcSession);
+    }
+
+    get channel() {
+        return this.props.rtcSession.channel;
+    }
+
+    /** @returns {boolean} whether this participant is pinned to the main window. */
+    get isPinned() {
+        return this.props.rtcSession.eq(this.channel?.pinnedRtcSession);
+    }
+
+    /** @returns {boolean} whether this participant is muted locally, for the current user only. */
+    get isLocallyMuted() {
+        return this.props.rtcSession.isLocallyMuted;
+    }
+
+    /** @returns {string} label for the volume-icon mute toggle, reflecting the current state. */
+    get muteLabel() {
+        return this.isLocallyMuted ? _t("Unmute") : _t("Mute");
+    }
+
+    /**
+     * @returns {boolean} whether the current user may remove other participants from the call, i.e.
+     *  is the channel owner/admin or a system administrator.
+     */
+    get canModerate() {
+        const role = this.channel?.self_member_id?.channel_role;
+        return Boolean(this.store.self_user?.is_admin || role === "owner" || role === "admin");
+    }
+
+    onClickRemoveFromCall() {
+        const channelId = this.channel.id;
+        const memberId = this.props.rtcSession.channel_member_id.id;
+        rpc("/mail/rtc/channel/remove_member_from_call", {
+            channel_id: channelId,
+            member_id: memberId,
+        });
+        this.env.inCallDropdown?.close();
+    }
+
+    togglePin() {
+        if (this.isPinned) {
+            this.channel?.unpin();
+        } else {
+            this.channel?.pin(this.props.rtcSession);
+        }
+        this.env.inCallDropdown?.close();
+    }
+
+    toggleLocallyMute() {
+        this.props.rtcSession.isLocallyMuted = !this.props.rtcSession.isLocallyMuted;
     }
 
     get inboundConnectionTypeText() {

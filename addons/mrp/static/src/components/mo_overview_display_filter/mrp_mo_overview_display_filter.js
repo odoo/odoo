@@ -1,31 +1,25 @@
+import { props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { BomOverviewDisplayFilter } from "../bom_overview_display_filter/mrp_bom_overview_display_filter";
 
-export const SHOW_OPTIONS = {
-    type: Object,
-    shape: {
-        uom: Boolean,
-        replenishments: Boolean,
-        availabilities: Boolean,
-        receipts: Boolean,
-        unitCosts: Boolean,
-        moCosts: Boolean,
-        bomCosts: Boolean,
-        realCosts: Boolean,
-    },
-};
+export const SHOW_OPTIONS = t.object({
+    uom: t.boolean(),
+    replenishments: t.boolean(),
+    availabilities: t.boolean(),
+    receipts: t.boolean(),
+    unitCosts: t.boolean(),
+    moCosts: t.boolean(),
+    bomCosts: t.boolean(),
+    realCosts: t.boolean(),
+});
 
 export class MoOverviewDisplayFilter extends BomOverviewDisplayFilter {
-    static props = {
+    props = props({
         showOptions: SHOW_OPTIONS,
-        changeDisplay: Function,
-        limited: { type: Boolean, optional: true },
-        isProductionDraft: { type: Boolean, optional: true},
-    };
-    static defaultProps = {
-        limited: false,
-        isProductionDraft: false,
-    };
+        changeDisplay: t.function(),
+        limited: t.boolean().optional(false),
+        isProductionDraft: t.boolean().optional(false),
+    });
 
     setup() {
         this.displayOptions = {

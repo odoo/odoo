@@ -10,7 +10,7 @@ import { markEventHandled } from "@web/core/utils/misc";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
 export const discussSidebarChannelIndicatorsRegistry = registry.category(
@@ -19,7 +19,6 @@ export const discussSidebarChannelIndicatorsRegistry = registry.category(
 
 export class DiscussSidebarChannel extends Component {
     static template = "mail.DiscussSidebarChannel";
-    static props = ["channel"];
     static components = {
         CountryFlag,
         DiscussAvatar,
@@ -32,6 +31,9 @@ export class DiscussSidebarChannel extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.props = props({
+            channel: types.instanceOf(this.store["discuss.channel"].Class),
+        });
         this.hover = useHover(["root"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
@@ -73,7 +75,7 @@ export class DiscussSidebarChannel extends Component {
 
     get attClassContainer() {
         return {
-            "border border-dark rounded-2 o-bordered": this.bordered,
+            "border border-dark o-rounded-bubble o-bordered": this.bordered,
             "o-compact": this.store.discuss.isSidebarCompact,
         };
     }
@@ -94,9 +96,6 @@ export class DiscussSidebarChannel extends Component {
             "o-unread o-fw-600":
                 this.channel.self_member_id?.message_unread_counter > 0 &&
                 !this.channel.self_member_id?.mute_until_dt,
-            "opacity-75 opacity-100-hover":
-                this.channel.self_member_id?.message_unread_counter === 0 ||
-                this.channel.self_member_id?.mute_until_dt,
         };
     }
 

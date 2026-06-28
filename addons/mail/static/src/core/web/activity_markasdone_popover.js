@@ -1,27 +1,27 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, props, signal, t, useListener } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 export class ActivityMarkAsDone extends Component {
     static template = "mail.ActivityMarkAsDone";
-    static props = [
-        "activity",
-        "close?",
-        "hasHeader?",
-        "onClickDoneAndScheduleNext?",
-        "onActivityChanged",
-    ];
-    static defaultProps = {
-        hasHeader: false,
-    };
 
     setup() {
         super.setup();
+        this.store = useService("mail.store");
+        this.props = props({
+            activity: t.instanceOf(this.store["mail.activity"].Class),
+            close: t.function([t.instanceOf(MouseEvent)]).optional(),
+            hasHeader: t.boolean().optional(false),
+            onActivityChanged: t.function([t.instanceOf(this.store["mail.thread"].Class)]),
+            onClickDone: t.function([]).optional(),
+            onClickDoneAndScheduleNext: t.function([]).optional(),
+        });
         this.textArea = useRef("textarea");
-        this.state = useState({ disableDoneButton: false });
+        this.disableDoneButton = signal(false);
         onMounted(() => {
             this.textArea.el.focus();
         });
-        useExternalListener(window, "keydown", this.onKeydown);
+        useListener(window, "keydown", (ev) => this.onKeydown(ev));
     }
 
     onKeydown(ev) {
@@ -31,7 +31,7 @@ export class ActivityMarkAsDone extends Component {
     }
 
     async onClickDone() {
-        if (this.state.disableDoneButton) {
+        if (this.disableDoneButton()) {
             return;
         }
         const { res_id, res_model } = this.props.activity;
@@ -39,13 +39,16 @@ export class ActivityMarkAsDone extends Component {
             model: res_model,
             id: res_id,
         });
-        this.state.disableDoneButton = true;
+        this.disableDoneButton.set(true);
         try {
+            if (this.props.onClickDone) {
+                this.props.onClickDone();
+            }
             await this.props.activity.markAsDone();
             this.props.onActivityChanged(thread);
             await thread.fetchNewMessages();
         } finally {
-            this.state.disableDoneButton = false;
+            this.disableDoneButton.set(false);
         }
     }
 

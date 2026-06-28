@@ -35,6 +35,7 @@
                     <tr>
                         <th scope="col">File Column</th>
                         <th scope="col">Odoo Field</th>
+                        <th t-if="this.hasMultipleLanguages" class="o-translation" scope="col">Language</th>
                         <th scope="col"/>
                     </tr>
                 </thead>
@@ -87,9 +88,21 @@
                                     </t>
                                 </SelectMenu>
                             </td>
+                            <td t-if="this.hasMultipleLanguages">
+                                <SelectMenu
+                                    t-if="column.fieldInfo?.translate"
+                                    value="column.language"
+                                    choices="this.getLanguages()"
+                                    onSelect="(language) => this.setLanguage(column, language)"
+                                    searchPlaceholder.translate="Search a language..."
+                                >
+                                    <span t-if="column.language" t-out="this.getLanguagesLabel(column.language)" />
+                                    <span t-else="" class="text-muted" t-out="this.getLanguagesLabel(this.userLanguage)"/>
+                                </SelectMenu>
+                            </td>
                             <td>
                                 <t t-foreach="column.comments" t-as="comment" t-key="comment_index">
-                                    <p class="m-0 p-2 alert" t-att-class="this.getCommentClass(column, comment, comment_index)"><t t-out="comment.content" /> <b t-if="comment.fieldName" t-out="comment.fieldName"/></p>
+                                    <p class="m-0 p-2 alert" t-att-class="this.getCommentClass(column, comment, comment_index)"><t t-out="comment.content" /> <b t-if="comment.fieldName" t-out="comment.fieldName"/> <t t-if="this.hasMultipleLanguages and comment.lang"><br/>Lang: <b t-out="comment.lang"/></t></p>
                                 </t>
                                 <ImportDataColumnError t-if="column.errors.length" errors="column.errors" resultNames="column.resultNames" fieldInfo="column.fieldInfo" />
                                 <ImportDataOptions t-if="column.errors.length or column.importOptions" importOptions="column.importOptions" fieldInfo="column.fieldInfo" onOptionChanged="this.props.onOptionChanged" />

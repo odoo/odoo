@@ -12,7 +12,12 @@
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
         Hello <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,<br/><br/>
-        We are glad to inform you that your order has been shipped.
+        <t t-if="hasattr(object, 'delivery_type') and object.delivery_type == 'in_store'">
+            Your order has been collected.
+        </t>
+        <t t-else="">
+            We are glad to inform you that your order has been shipped.
+        </t>
         <t t-if="hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref">
             Your tracking reference is
             <strong>

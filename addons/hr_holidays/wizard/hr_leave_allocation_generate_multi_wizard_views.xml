@@ -8,21 +8,21 @@
                         <field name="employee_ids" widget="many2many_avatar_employee" placeholder="All Employees"/>
                         <div class="o_td_label" name="validity_label">
                             <label for="date_from" string="Validity Period"
-                                invisible="allocation_type == 'accrual'"/>
-                            <label for="date_from" string="Start Date" invisible="allocation_type == 'regular'"/>
+                                invisible="accrual_plan_id"/>
+                            <label for="date_from" string="Start Date" invisible="not accrual_plan_id"/>
                         </div>
                         <div class="o_row" name="validity">
                             <field name="date_from" nolabel="1"/>
-                            <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" invisible="allocation_type == 'accrual'"/>
-                            <label class="mx-2" for="date_to" string="Run until" invisible="allocation_type == 'regular'"/>
+                            <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" invisible="accrual_plan_id"/>
+                            <label class="mx-2" for="date_to" string="Run until" invisible="not accrual_plan_id"/>
                             <field name="date_to" nolabel="1" placeholder="No Limit"/>
                             <div id="no_limit_label" class="oe_read_only" invisible="date_to">No limit</div>
                         </div>
-                        <field name="allocation_type" widget="radio"/>
-                        <field name="accrual_plan_id"
-                            invisible="allocation_type == 'regular'"
-                            required="allocation_type == 'accrual'"/>
-                        <field name="work_entry_type_id"/>
+                        <field name="accrual_plan_id" placeholder="Regular allocation"/>
+                        <field name="work_entry_type_id"
+                            domain="[
+                                ('id','in', allowed_work_entry_type_ids),
+                            ]"/>
                         <div class="o_td_label">
                             <label for="duration"/>
                         </div>

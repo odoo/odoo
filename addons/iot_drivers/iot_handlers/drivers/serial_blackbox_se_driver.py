@@ -244,7 +244,10 @@ class SwedishBlackBoxDriver(SerialDriver):
                     _logger.error("Received error: %s", ErrorCode.get(response[4]))
                     _logger.error("Sent request: %s received NACK.", packet)
             except Exception:  # noqa: BLE001
-                _logger.error("sent request: %s without receiving response.", packet)
+                _logger.warning(
+                    "sent request: %s without receiving response.",
+                    packet, exc_info=True, stack_info=True,
+                )
 
             retries += 1
 
@@ -275,3 +278,7 @@ class SwedishBlackBoxDriver(SerialDriver):
         message += lrc + "\r"
 
         return message.encode("utf-8")
+
+
+class SkattedosanBlackBoxDriver(SwedishBlackBoxDriver):
+    _protocol = SwedishBlackboxProtocol._replace(baudrate=57600)

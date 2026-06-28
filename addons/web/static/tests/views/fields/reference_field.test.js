@@ -1,8 +1,9 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { click, edit, press, queryAllValues, queryFirst, select } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickSave,
+    contains,
     defineModels,
     fields,
     mockService,
@@ -285,9 +286,9 @@ test("reference in form view", async () => {
     `;
 
     onRpc(({ args, method, model }) => {
-        if (method === "get_formview_action") {
+        if (method === "get_record_default_action") {
             expect(args[0]).toEqual([37], {
-                message: "should call get_formview_action with correct id",
+                message: "should call get_record_default_action with correct id",
             });
             return {
                 res_id: 17,
@@ -927,9 +928,9 @@ test("model selector is displayed only when it should be", async () => {
 test("reference field should await fetch model before render", async () => {
     Partner._records[0].model_id = 20;
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("ir.model", "read", async () => {
-        await def;
+        await def.promise;
     });
     mountView({
         type: "form",
@@ -984,4 +985,22 @@ test("reference char with list view pager navigation", async () => {
     await click(".o_pager_next");
     await animationFrame();
     expect(".o_field_reference").toHaveText("xpad");
+});
+
+test("ReferenceField preserves the original model even if emptied", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `<form><field name="reference" options="{'hide_model': True}"/></form>`,
+    });
+    expect(".o_field_reference input").toHaveValue("xphone");
+    // remove the value, to make the field use the initial value of the model
+    await contains(".o_field_reference input").clear();
+    expect(".o_field_reference input").toBeVisible();
+    await click(".o_field_reference input");
+    await animationFrame();
+    await click(".ui-autocomplete .ui-menu-item:nth-child(2)");
+    await animationFrame();
+    expect(".o_field_reference input").toHaveValue("xpad");
 });

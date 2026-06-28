@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class Many2ManyPackageTagsField extends Many2ManyTagsField {
     setup() {
+        super.setup();
         this.hasNoneTag = this.props.record.data?.has_lines_without_result_package || false;
     }
 

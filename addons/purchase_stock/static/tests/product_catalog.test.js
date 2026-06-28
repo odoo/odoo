@@ -59,6 +59,7 @@ const purchaseOrderLineInfo = {
         price: 35.0,
         productType: "consu",
         uomDisplayName: "Units",
+        uomId: 1,
     },
     2: {
         quantity: 0,
@@ -67,6 +68,7 @@ const purchaseOrderLineInfo = {
         price: 35.0,
         productType: "consu",
         uomDisplayName: "Units",
+        uomId: 1,
     },
     3: {
         quantity: 0,
@@ -75,6 +77,7 @@ const purchaseOrderLineInfo = {
         price: 35.0,
         productType: "consu",
         uomDisplayName: "Units",
+        uomId: 1,
     },
     4: {
         quantity: 0,
@@ -83,6 +86,7 @@ const purchaseOrderLineInfo = {
         price: 35.0,
         productType: "consu",
         uomDisplayName: "Units",
+        uomId: 1,
     },
 };
 

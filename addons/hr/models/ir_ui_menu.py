@@ -8,9 +8,7 @@ class IrUiMenu(models.Model):
 
     def _load_menus_blacklist(self):
         res = super()._load_menus_blacklist()
-        if self.env.user.has_group('hr.group_hr_user') and (emp_menu := self.env.ref('hr.menu_hr_employee', raise_if_not_found=False)):
-            res.append(emp_menu.id)
-        else:
+        if not self.env.user.has_group('hr.group_hr_user'):
             is_department_manager = bool(self.env["hr.department"].search_count([
                 ('manager_id', 'in', self.env.user.employee_ids.ids)
             ], limit=1))

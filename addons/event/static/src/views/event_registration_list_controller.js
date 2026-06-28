@@ -27,7 +27,8 @@ export class EventRegistrationListController extends ListController {
                 {
                     model: this.model,
                     registration: result
-                }
+                },
+                { onClose: () => this.model.load() }
             );
         } else {
             return super.openRecord(record);

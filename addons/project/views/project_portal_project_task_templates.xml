@@ -14,7 +14,7 @@
         />
     </template>
     <template id="portal_my_tasks_badge_widget_template" name="badge Widget Template">
-        <span t-attf-class="badge rounded-pill o_tag o_badge_color_#{task.stage_id_color}"
+        <span t-attf-class="badge rounded-pill o_tag o_badge_color_#{task.color}"
             t-attf-title="#{task.stage_id.name}" t-out="task.stage_id.name"
         />
     </template>
@@ -300,7 +300,6 @@
 
                     <hr/>
                     <div id="task_chat" data-anchor="true">
-                        <h3>Communication history</h3>
                         <t t-call="portal.message_thread" token="task.access_token"/>
                     </div>
                 </div>

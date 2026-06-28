@@ -147,14 +147,12 @@ class CtypesTerminalDriver(Driver, ABC):
         self.device_type = 'payment'
         self.device_connection = 'network'
         self.cid = None
-        self.owner = None
         self.queue_actions = Queue()
         self.terminal_busy = False
 
         self._actions[''] = self._action_default
 
-        self.device_manufacturer = manufacturer
-        self.device_name = f"{self.device_manufacturer} terminal {self.device_identifier}"
+        self.device_name = f"{manufacturer} terminal {self.device_identifier}"
         self.terminal = device["terminal"]
         self.manager = device["manager"]
 
@@ -221,8 +219,6 @@ class CtypesTerminalDriver(Driver, ABC):
                 request_data=transaction
             )
             return False
-
-        self.send_status(stage='WaitingForCard', request_data=transaction)
         return True
 
     @abstractmethod

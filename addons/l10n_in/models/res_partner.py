@@ -2,8 +2,10 @@ import logging
 import re
 from stdnum.in_ import pan
 
+from requests import RequestException
+
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, AccessError, ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
 from odoo.tools.misc import clean_context
 
@@ -30,6 +32,7 @@ class ResPartner(models.Model):
     l10n_in_pan_entity_id = fields.Many2one(
         comodel_name='l10n_in.pan.entity',
         string="PAN",
+        index='btree_not_null',
         ondelete='restrict',
         help="PAN enables the department to link all transactions of the person with the department.\n"
              "These transactions include taxpayments, TDS/TCS credits, returns of income/wealth/gift/FBT,"
@@ -146,7 +149,7 @@ class ResPartner(models.Model):
                 '/iap/l10n_in_reports/1/public/search',
                 "l10n_in.endpoint"
             )
-        except AccessError:
+        except RequestException:
             raise UserError(_("Unable to connect with GST network"))
         if response.get('error') and any(e.get('code') == 'no-credit' for e in response['error']):
             return self.env.user._bus_send("iap_notification",
@@ -201,7 +204,7 @@ class ResPartner(models.Model):
             )
         self.write({
             "l10n_in_gstin_verified_status": l10n_in_gstin_verified_status,
-            "l10n_in_gstin_verified_date": fields.Date.today(),
+            "l10n_in_gstin_verified_date": fields.Date.context_today(self),
         })
         return {
             "type": "ir.actions.client",

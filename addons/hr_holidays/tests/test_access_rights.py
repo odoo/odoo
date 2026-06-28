@@ -96,7 +96,7 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
             'request_date_from': request_date_from,
             'request_date_to': request_date_from + relativedelta(days=number_of_days - 1),
         })
-        return self.env['hr.leave'].with_user(user_id).create(values)
+        return self.env['hr.leave'].with_user(user_id).with_context(leave_fast_create=True).create(values)
 
 @tests.tagged('access_rights', 'access_rights_create')
 class TestAccessRightsCreate(TestHrHolidaysAccessRightsCommon):
@@ -290,7 +290,7 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
     def test_leave_hr_to_validate_by_manager(self):
         """ Manager validate its own leaves """
         leave_start = date_utils.start_of(date.today() + relativedelta(days=15), 'week')
-        manager_leave = self.env['hr.leave'].with_user(self.user_hrmanager_id).create({
+        manager_leave = self.env['hr.leave'].with_user(self.user_hrmanager_id).with_context(leave_fast_create=True).create({
             'name': 'Hol manager',
             'work_entry_type_id': self.work_entry_type.id,
             'employee_id': self.employee_hrmanager_id,

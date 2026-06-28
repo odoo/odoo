@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ class DecimalPrecision(models.Model):
     )
 
     @api.model
-    @tools.ormcache('application', cache='stable')
+    @api.ormcache('application', cache='stable')
     def precision_get(self, application):
         self.flush_model(['name', 'digits'])
         self.env.cr.execute('select digits from decimal_precision where name=%s', (application,))

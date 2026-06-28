@@ -28,9 +28,6 @@ You need to configure your certificate and the tax agency.
         'data/template_LROE_bizkaia.xml',
         'data/ir_config_parameter.xml',
 
-        'security/ir.model.access.csv',
-        'security/l10n_es_edi_tbai_security.xml',
-
         'views/account_move_view.xml',
         'views/l10n_es_edi_tbai_certificate_views.xml',
         'views/report_invoice.xml',
@@ -38,6 +35,7 @@ You need to configure your certificate and the tax agency.
         'views/res_company_views.xml',
 
         'wizards/account_move_reversal_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_certificate.xml',

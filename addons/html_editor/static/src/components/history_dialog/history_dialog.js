@@ -1,9 +1,9 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { memoize } from "@web/core/utils/functions";
-import { Component, onMounted, markup, onWillStart } from "@odoo/owl";
+import { Component, onMounted, markup, onWillStart, props, proxy, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
@@ -19,27 +19,21 @@ const { DateTime } = luxon;
 export class HistoryDialog extends Component {
     static template = "html_editor.HistoryDialog";
     static components = { Dialog, HtmlViewer };
-    static props = {
-        recordId: Number,
-        recordModel: String,
-        close: Function,
-        restoreRequested: Function,
-        historyMetadata: Array,
-        versionedFieldName: String,
-        title: { type: String, optional: true },
-        noContentHelper: { type: String, optional: true }, //Markup
-        embeddedComponents: { type: Array, optional: true },
-    };
+    props = props({
+        recordId: t.number(),
+        recordModel: t.string(),
+        close: t.function(),
+        restoreRequested: t.function(),
+        historyMetadata: t.array(),
+        versionedFieldName: t.string(),
+        title: t.string().optional(_t("History")),
+        noContentHelper: t.string().optional(markup("")), //Markup
+        embeddedComponents: t.array().optional([...READONLY_MAIN_EMBEDDINGS]),
+    });
 
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
 
-    static defaultProps = {
-        title: _t("History"),
-        noContentHelper: markup(""),
-        embeddedComponents: [...READONLY_MAIN_EMBEDDINGS],
-    };
-
-    state = useState({
+    state = proxy({
         revisionsData: [],
         currentView: "content", // "content" or "comparison"
         isComparisonSplit: false, // true for side-by-side, false for unified diff
@@ -77,10 +71,9 @@ export class HistoryDialog extends Component {
             );
             revisionData.push({
                 revision_id: revisionId,
-                create_date: DateTime.fromFormat(
-                    record[0]["create_date"],
-                    "yyyy-MM-dd HH:mm:ss"
-                ).toISO(),
+                create_date: DateTime.fromFormat(record[0]["create_date"], "yyyy-MM-dd HH:mm:ss", {
+                    zone: "utc",
+                }).toISO(),
                 create_uid: record[0]["create_uid"][0],
                 create_user_name: record[0]["create_uid"][1],
             });

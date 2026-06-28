@@ -15,11 +15,6 @@ patch(AttendeeCalendarController.prototype, {
     },
 
     async onGoogleSyncCalendar() {
-        await this.orm.call(
-            "res.users",
-            "restart_google_synchronization",
-            [[user.userId]],
-        );
         const syncResult = await this.model.syncGoogleCalendar();
         if (syncResult.status === "need_auth") {
             window.location.assign(syncResult.url);
@@ -45,13 +40,15 @@ patch(AttendeeCalendarController.prototype, {
     },
 
     async onStopGoogleSynchronization() {
-        await this.orm.call(
-            "res.users",
-            "stop_google_synchronization",
-            [[user.userId]],
-        );
+        await this.orm.call("res.users", "stop_google_synchronization");
+        this.model._loaded = false;
         await this.model.load();
         render(this, true);
+    },
+
+    async onRetryGoogleSync() {
+        await this.orm.call("res.users", "stop_google_synchronization");
+        await this.onGoogleSyncCalendar();
     },
 
     async onUnpauseGoogleSynchronization() {
@@ -60,7 +57,8 @@ patch(AttendeeCalendarController.prototype, {
             "unpause_google_synchronization",
             [[user.userId]],
         );
-        await this.onStopGoogleSynchronization();
+        this.model._loaded = false;
+        await this.model.load();
         render(this, true);
     }
 });

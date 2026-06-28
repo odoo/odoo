@@ -11,7 +11,6 @@ e-invoicing for Croatia
     'data': [
         'data/cron.xml',
         'data/l10n_hr.kpd.category.csv',
-        'security/ir.model.access.csv',
         'data/l10n_hr_tax_category.xml',
         'views/account_journal_views.xml',
         'views/account_move_views.xml',
@@ -22,6 +21,7 @@ e-invoicing for Croatia
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         'wizard/l10n_hr_edi_mojeracun_reject_wizard_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',

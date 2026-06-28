@@ -1,4 +1,4 @@
-import { after, Deferred, mockWorker } from "@odoo/hoot";
+import { after, mockWorker } from "@odoo/hoot";
 import { MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { WebsocketWorker } from "@bus/workers/websocket_worker";
@@ -18,7 +18,7 @@ function cleanupWebSocketWorker() {
         clearTimeout(currentWebSocketWorker.connectTimeout);
     }
 
-    currentWebSocketWorker.firstSubscribeResolver = new Deferred();
+    currentWebSocketWorker.firstSubscribeResolver = Promise.withResolvers();
     currentWebSocketWorker.websocket = null;
     currentWebSocketWorker = null;
 }

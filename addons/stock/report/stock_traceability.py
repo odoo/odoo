@@ -156,6 +156,12 @@ class StockTraceabilityReport(models.TransientModel):
             'res_model': res_model}]
         return data
 
+    def _make_column(self, name, value):
+        return {
+            'name': name,
+            'value': value,
+        }
+
     @api.model
     def _final_vals_to_lines(self, final_vals, level):
         lines = []
@@ -176,13 +182,15 @@ class StockTraceabilityReport(models.TransientModel):
                 'picking_type_code': data.get('picking_type_code', False),
                 'res_id': data.get('res_id', False),
                 'res_model': data.get('res_model', False),
-                'columns': [data.get('reference_id', False),
-                            data.get('product_id', False),
-                            format_datetime(self.env, data.get('date', False), tz=False, dt_format=False),
-                            data.get('lot_name', False),
-                            data.get('location_source', False),
-                            data.get('location_destination', False),
-                            data.get('product_qty_uom', 0)],
+                'columns': [
+                    self._make_column('reference', data.get('reference_id', False)),
+                    self._make_column('product', data.get('product_id', False)),
+                    self._make_column('date', format_datetime(self.env, data.get('date', False), tz=False, dt_format=False)),
+                    self._make_column('lot_name', data.get('lot_name', False)),
+                    self._make_column('location_source', data.get('location_source', False)),
+                    self._make_column('location_destination', data.get('location_destination', False)),
+                    self._make_column('quantity', data.get('product_qty_uom', 0)),
+                ],
                 'level': level,
                 'unfoldable': data['unfoldable'],
             })
@@ -243,7 +251,9 @@ class StockTraceabilityReport(models.TransientModel):
         header = self.env['ir.actions.report']._render_template("web.internal_layout", values=rcontext)
         header = self.env['ir.actions.report']._render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=Markup(header.decode())))
 
-        return self.env['ir.actions.report']._run_wkhtmltopdf(
+        report_service = self.env['ir.actions.report']
+        return report_service._run_pdf_engine_without_processing(
+            report_service._get_pdf_engine(),
             [body],
             header=header.decode(),
             landscape=True,

@@ -132,13 +132,13 @@ class WebsiteCustomer(GoogleMap):
             url += '/industry/%s' % industry.id
         if country:
             url += '/country/%s' % country.id
-        pager = request.website.pager(
+        pager = self.env.website.pager(
             url=url, total=partner_count, page=page, step=self._references_per_page,
             scope=7, url_args=post
         )
 
         partners = Partner.sudo().search(domain, offset=pager['offset'], limit=self._references_per_page)
-        google_maps_api_key = request.website.google_maps_api_key
+        google_maps_api_key = self.env.website.google_maps_api_key
 
         tags = Tag.search([('website_published', '=', True), ('partner_ids', 'in', partners.ids)], order='classname, name ASC')
         tag = tag_id and Tag.browse(tag_id) or False

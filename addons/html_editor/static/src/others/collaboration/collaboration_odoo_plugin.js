@@ -6,10 +6,11 @@ import { debounce } from "@web/core/utils/timing";
 import { PeerToPeer, RequestError } from "./PeerToPeer";
 import { ancestors } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex } from "@html_editor/utils/position";
+import { localeCompare } from "@web/core/l10n/utils";
 
 /**
  * @typedef {Object} CollaborationSelection
- * @property {import("@html_editor/core/history_plugin").SerializedSelection} selection
+ * @property {import("@html_editor/core/selection_plugin").SerializedSelection} selection
  * @property {string} color
  * @property {string} peerId
  */
@@ -29,7 +30,7 @@ import { childNodeIndex } from "@html_editor/utils/position";
 // const PTP_PEER_DISCONNECTED_STATES = ["failed", "closed", "disconnected"];
 
 // Time in ms to wait when trying to aggregate snapshots from other peers and
-// potentially recover from a missing step before trying to apply those
+// potentially recover from a missing commit before trying to apply those
 // snapshots or recover from the server.
 const PTP_MAX_RECOVERY_TIME = 500;
 
@@ -45,7 +46,7 @@ let ICE_SERVERS = null;
 
 export class CollaborationOdooPlugin extends Plugin {
     static id = "collaborationOdoo";
-    static dependencies = ["baseContainer", "history", "collaboration", "selection"];
+    static dependencies = ["baseContainer", "history", "domObserver", "collaboration", "selection"];
     static shared = ["getPeerMetadata"];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -59,10 +60,9 @@ export class CollaborationOdooPlugin extends Plugin {
             );
         }, 50),
         clean_for_save_processors: (root) => this.attachHistoryIds(root),
-        on_history_missing_parent_step_handlers: this.onHistoryMissingParentStep.bind(this),
-        on_history_reset_handlers: this.onReset.bind(this),
-        on_step_added_handlers: ({ step }) =>
-            this.ptp?.notifyAllPeers("oe_history_step", step, { transport: "rtc" }),
+        on_history_missing_parent_commit_handlers: this.onHistoryMissingParentCommit.bind(this),
+        on_committed_to_history_handlers: (commit) =>
+            this.ptp?.notifyAllPeers("oe_history_commit", commit, { transport: "rtc" }),
     };
 
     setup() {
@@ -78,12 +78,18 @@ export class CollaborationOdooPlugin extends Plugin {
         // responses from previous resets.
         this.lastCollaborationResetId = 0;
 
-        // The ID is the latest step ID that the server knows through
-        // `data-last-history-steps`. We cannot save to the server if we do not
+        // The ID is the latest commit ID that the server knows through
+        // `data-last-history-commits`. We cannot save to the server if we do not
         // have that ID in our history ids as it means that our version is
         // stale.
-        this.serverLastStepId =
-            this.config.content && this.getLastHistoryStepId(this.config.content);
+        this.serverLastCommitId =
+            this.config.content && this.getLastHistoryCommitId(this.config.content);
+
+        // This ID correspond to the peer that initiated the document and set
+        // the initial oid for all nodes in the tree. It is not the same as
+        // document that had a commit id at some point. If a commit comes from a
+        // different history, we should not apply it.
+        this.historyShareId = Math.floor(Math.random() * Math.pow(2, 52)).toString();
 
         this.setupCollaboration(this.config.collaboration.collaborationChannel);
 
@@ -99,7 +105,7 @@ export class CollaborationOdooPlugin extends Plugin {
             this.editable.addEventListener("focus", this.joinPeerToPeer);
         }
 
-        stripHistoryIds(this.editable);
+        this.handleHistoryIds();
     }
     destroy() {
         this.collaborationStopBus && this.collaborationStopBus();
@@ -122,9 +128,8 @@ export class CollaborationOdooPlugin extends Plugin {
     }
 
     getCurrentCollaborativeSelection() {
-        const selection = this.dependencies.selection.getEditableSelection();
         return {
-            selection: this.dependencies.history.serializeSelection(selection),
+            selection: this.dependencies.selection.serializeEditableSelection(),
             peerId: this.config.collaboration.peerId,
         };
     }
@@ -143,7 +148,7 @@ export class CollaborationOdooPlugin extends Plugin {
         }
 
         this.collaborationChannelName = channelName;
-        this.historyStepsBuffer = [];
+        this.historyCommitsBuffer = [];
         // Wysiwyg.activeCollaborationChannelNames.add(channelName);
 
         const collaborationBusListener = (payload) => {
@@ -153,7 +158,7 @@ export class CollaborationOdooPlugin extends Plugin {
                 payload.res_id === resId
             ) {
                 if (payload.notificationName === "html_field_write") {
-                    this.onServerLastIdUpdate(payload.notificationPayload.last_step_id);
+                    this.onServerLastIdUpdate(payload.notificationPayload.last_commit_id);
                 } else if (this.ptpJoined) {
                     this.peerToPeerLoading.then(() => this.ptp.handleNotification(payload));
                 }
@@ -251,20 +256,20 @@ export class CollaborationOdooPlugin extends Plugin {
                 ),
             onRequest: {
                 get_peer_metadata: this.getMetadata.bind(this),
-                get_missing_steps: (params) =>
-                    this.dependencies.collaboration.historyGetMissingSteps(params.requestPayload),
+                get_missing_commits: (params) =>
+                    this.dependencies.collaboration.historyGetMissingCommits(params.requestPayload),
                 get_history_from_snapshot: () => this.getHistorySnapshot(),
                 get_collaborative_selection: () => this.getCurrentCollaborativeSelection(),
                 recover_document: (params) => {
-                    const { serverDocumentId, fromStepId } = params.requestPayload;
+                    const { serverDocumentId, fromCommitId } = params.requestPayload;
                     if (
                         !this.dependencies.collaboration.getBranchIds().includes(serverDocumentId)
                     ) {
                         return;
                     }
                     return {
-                        missingSteps: this.dependencies.collaboration.historyGetMissingSteps({
-                            fromStepId,
+                        missingCommits: this.dependencies.collaboration.historyGetMissingCommits({
+                            fromCommitId,
                         }),
                         snapshot: this.getHistorySnapshot(),
                     };
@@ -320,24 +325,24 @@ export class CollaborationOdooPlugin extends Plugin {
                                 }
                             }
                         } else {
-                            // Make both send their last step to each other to
+                            // Make both send their last commit to each other to
                             // ensure they are in sync.
                             this.ptp.notifyAllPeers(
-                                "oe_history_step",
-                                this.dependencies.history.getHistorySteps().at(-1),
+                                "oe_history_commit",
+                                this.dependencies.history.getCommits().at(-1),
                                 { transport: "rtc" }
                             );
                             this.resetCollaborativeSelection(fromPeerId);
                         }
                         break;
                     }
-                    case "oe_history_step":
+                    case "oe_history_commit":
                         if (this.historySyncFinished) {
-                            this.dependencies.collaboration.onExternalHistorySteps([
+                            this.dependencies.collaboration.insertRemoteHistoryCommits([
                                 notificationPayload,
                             ]);
                         } else {
-                            this.historyStepsBuffer.push(notificationPayload);
+                            this.historyCommitsBuffer.push(notificationPayload);
                         }
                         break;
                     case "oe_history_set_selection": {
@@ -346,7 +351,7 @@ export class CollaborationOdooPlugin extends Plugin {
                             return;
                         }
                         const selection = notificationPayload;
-                        this.onExternalMultiselectionUpdate(selection);
+                        this.onRemoteMultiselectionUpdate(selection);
                         break;
                     }
                 }
@@ -362,7 +367,7 @@ export class CollaborationOdooPlugin extends Plugin {
     /**
      * @param {CollaborationSelection} selection
      */
-    onExternalMultiselectionUpdate(selection) {
+    onRemoteMultiselectionUpdate(selection) {
         this.trigger("on_collaborative_selection_updated_handlers", selection);
     }
 
@@ -386,11 +391,11 @@ export class CollaborationOdooPlugin extends Plugin {
         return metadatas;
     }
     /**
-     * Update the server document last step id and recover from a stale document
-     * if this peer does not have that step in its history.
+     * Update the server document last commit id and recover from a stale document
+     * if this peer does not have that commit in its history.
      */
-    onServerLastIdUpdate(last_step_id) {
-        this.serverLastStepId = last_step_id;
+    onServerLastIdUpdate(last_commit_id) {
+        this.serverLastCommitId = last_commit_id;
         // Check if the current document is stale.
         this.isDocumentStale = this.isLastDocumentStale();
         if (this.isDocumentStale && this.ptpJoined) {
@@ -421,10 +426,10 @@ export class CollaborationOdooPlugin extends Plugin {
         }
     }
     isLastDocumentStale() {
-        if (!this.serverLastStepId) {
+        if (!this.serverLastCommitId) {
             return false;
         }
-        return !this.dependencies.collaboration.getBranchIds().includes(this.serverLastStepId);
+        return !this.dependencies.collaboration.getBranchIds().includes(this.serverLastCommitId);
     }
 
     /**
@@ -434,7 +439,7 @@ export class CollaborationOdooPlugin extends Plugin {
      *
      * 1.  Try to get a converging document from the other peers.
      *
-     * 1.1 By recovery from missing steps: it is the best possible case of
+     * 1.1 By recovery from missing commits: it is the best possible case of
      *     retrieval.
      *
      * 1.2 By recovery from snapshot: it reset the whole editor (destroying
@@ -479,8 +484,8 @@ export class CollaborationOdooPlugin extends Plugin {
                     peerId,
                     "recover_document",
                     {
-                        serverDocumentId: this.serverLastStepId,
-                        fromStepId: this.dependencies.collaboration.getBranchIds().at(-1),
+                        serverDocumentId: this.serverLastCommitId,
+                        fromCommitId: this.dependencies.collaboration.getBranchIds().at(-1),
                     },
                     { transport: "rtc" }
                 ).then((response) => {
@@ -497,7 +502,7 @@ export class CollaborationOdooPlugin extends Plugin {
                         }
                         return;
                     }
-                    this.processMissingSteps(response.missingSteps);
+                    this.processMissingCommits(response.missingCommits);
                     this.isDocumentStale = this.isLastDocumentStale();
                     snapshots.push(response.snapshot);
                     if (nbPendingResponses < 1) {
@@ -508,7 +513,7 @@ export class CollaborationOdooPlugin extends Plugin {
 
             // Only process the snapshots after having received a response from all
             // the peers or after PTP_MAX_RECOVERY_TIME in order to try to recover
-            // from missing steps.
+            // from missing commits.
             const processSnapshots = async () => {
                 this.isDocumentStale = this.isLastDocumentStale();
                 if (!this.isDocumentStale) {
@@ -559,8 +564,8 @@ export class CollaborationOdooPlugin extends Plugin {
         return peers.sort((a, b) => (isPeerFirst(a, b) ? -1 : 1));
     }
 
-    getLastHistoryStepId(value) {
-        const matchId = value.match(/data-last-history-steps="[0-9,]*?([0-9]+)"/);
+    getLastHistoryCommitId(value) {
+        const matchId = value.match(/data-last-history-commits="[0-9,]*?([0-9]+)"/);
         return matchId && matchId[1];
     }
 
@@ -584,11 +589,11 @@ export class CollaborationOdooPlugin extends Plugin {
 
         const content =
             record[this.config.collaboration.collaborationChannel.collaborationFieldName];
-        const lastHistoryId = content && this.getLastHistoryStepId(content);
+        const lastHistoryId = content && this.getLastHistoryCommitId(content);
         // If a change was made in the document while retrieving it, the
         // lastHistoryId will be different if the odoo bus did not have time to
         // notify the user.
-        if (this.serverLastStepId !== lastHistoryId) {
+        if (this.serverLastCommitId !== lastHistoryId) {
             // todo: instrument it to ensure it never happens
             throw new Error(
                 "Concurency detected while recovering from a stale document. The last history id of the server is different from the history id received by the html_field_write event."
@@ -602,10 +607,10 @@ export class CollaborationOdooPlugin extends Plugin {
         } else {
             this.editable.replaceChildren(this.dependencies.baseContainer.createBaseContainer());
         }
-        stripHistoryIds(this.editable);
+        this.handleHistoryIds();
         this.processThrough("normalize_processors", this.editable);
 
-        this.dependencies.history.reset(content);
+        this.dependencies.history.reset();
 
         // After resetting from the server, try to resynchronise with a peer as
         // if it was the first time connecting to a peer in order to retrieve a
@@ -626,53 +631,50 @@ export class CollaborationOdooPlugin extends Plugin {
         );
         return true;
     }
-    onReset(content) {
-        // This ID correspond to the peer that initiated the document and set
-        // the initial oid for all nodes in the tree. It is not the same as
-        // document that had a step id at some point. If a step comes from a
-        // different history, we should not apply it.
-        this.historyShareId = Math.floor(Math.random() * Math.pow(2, 52)).toString();
-
-        const lastStepId = content && content.match(/data-last-history-steps="([\d,]+)"/)?.[1];
-        if (lastStepId) {
-            this.dependencies.collaboration.setInitialBranchStepId(lastStepId);
+    handleHistoryIds() {
+        const lastCommitId = this.editable.innerHTML.match(
+            /data-last-history-commits="([\d,]+)"/
+        )?.[1];
+        if (lastCommitId) {
+            this.dependencies.collaboration.setInitialBranchCommitId(lastCommitId);
         }
+        stripHistoryIds(this.editable);
     }
 
     /**
-     * Process missing steps received from a peer.
+     * Process missing commits received from a peer.
      *
      * @private
-     * @param {Array<Object>|-1} missingSteps
-     * @return {Promise<boolean>} true if missing steps have been processed
+     * @param {Array<Object>|-1} missingCommits
+     * @return {Promise<boolean>} true if missing commits have been processed
      */
-    async processMissingSteps(missingSteps) {
-        // If missing steps === -1, it means that either:
-        // - the step.peerId has a stale document
-        // - the step.peerId has a snapshot and does not includes the step in
+    async processMissingCommits(missingCommits) {
+        // If missing commits === -1, it means that either:
+        // - the commit.data.peerId has a stale document
+        // - the commit.data.peerId has a snapshot and does not includes the commit in
         //   its history
         // - if another share history id
-        //   - because the step.peerId has reset from the server and
-        //     step.peerId is not synced with this peer
-        //   - because the step.peerId is in a network partition
-        if (missingSteps === -1 || !missingSteps.length) {
+        //   - because the commit.data.peerId has reset from the server and
+        //     commit.data.peerId is not synced with this peer
+        //   - because the commit.data.peerId is in a network partition
+        if (missingCommits === -1 || !missingCommits.length) {
             return false;
         }
-        this.dependencies.collaboration.onExternalHistorySteps(missingSteps);
+        this.dependencies.collaboration.insertRemoteHistoryCommits(missingCommits);
         return true;
     }
     applySnapshot(snapshot) {
-        const { steps, historyIds, historyShareId } = snapshot;
-        // If there is no serverLastStepId, it means that we use a document
+        const { commits, historyIds, historyShareId } = snapshot;
+        // If there is no serverLastCommitId, it means that we use a document
         // that is not versionned yet.
         const isStaleDocument =
-            this.serverLastStepId && !historyIds.includes(this.serverLastStepId);
+            this.serverLastCommitId && !historyIds.includes(this.serverLastCommitId);
         if (isStaleDocument) {
             return;
         }
         this.historyShareId = historyShareId;
         this.historySyncAtLeastOnce = true;
-        this.dependencies.collaboration.resetFromSteps(steps, historyIds);
+        this.dependencies.collaboration.resetFromCommits(commits, historyIds);
 
         // todo: ensure that if the selection was not in the editable before the
         // reset, it remains where it was after applying the snapshot.
@@ -703,14 +705,14 @@ export class CollaborationOdooPlugin extends Plugin {
     }
 
     getHistorySnapshot() {
-        return Object.assign({}, this.dependencies.collaboration.getSnapshotSteps(), {
+        return Object.assign({}, this.dependencies.collaboration.getSnapshotCommits(), {
             historyShareId: this.historyShareId,
         });
     }
 
     async resetFromPeer(fromPeerId, resetCollabCount) {
         this.historySyncFinished = false;
-        this.historyStepsBuffer = [];
+        this.historyCommitsBuffer = [];
         const snapshot = await this.requestPeer(
             fromPeerId,
             "get_history_from_snapshot",
@@ -749,10 +751,10 @@ export class CollaborationOdooPlugin extends Plugin {
             });
         }
         this.historySyncFinished = true;
-        // In case there are steps received in the meantime, process them.
-        if (this.historyStepsBuffer.length) {
-            this.dependencies.collaboration.onExternalHistorySteps(this.historyStepsBuffer);
-            this.historyStepsBuffer = [];
+        // In case there are commits received in the meantime, process them.
+        if (this.historyCommitsBuffer.length) {
+            this.dependencies.collaboration.insertRemoteHistoryCommits(this.historyCommitsBuffer);
+            this.historyCommitsBuffer = [];
         }
         this.editable.dispatchEvent(new CustomEvent("onHistoryResetFromPeer"));
         this.resetCollaborativeSelection(fromPeerId);
@@ -769,27 +771,27 @@ export class CollaborationOdooPlugin extends Plugin {
             return;
         }
         if (remoteSelection) {
-            this.onExternalMultiselectionUpdate(remoteSelection);
+            this.onRemoteMultiselectionUpdate(remoteSelection);
         }
     }
-    async onHistoryMissingParentStep({ step, fromStepId }) {
+    async onHistoryMissingParentCommit({ commit, fromCommitId }) {
         if (!this.ptp) {
             return;
         }
-        const missingSteps = await this.requestPeer(
-            step.peerId,
-            "get_missing_steps",
+        const missingCommits = await this.requestPeer(
+            commit.data.peerId,
+            "get_missing_commits",
             {
-                fromStepId: fromStepId,
-                toStepId: step.id,
+                fromCommitId,
+                toCommitId: commit.id,
             },
             { transport: "rtc" }
         );
-        if (missingSteps === REQUEST_ERROR) {
+        if (missingCommits === REQUEST_ERROR) {
             return;
         }
-        this.processMissingSteps(
-            Array.isArray(missingSteps) ? missingSteps.concat(step) : missingSteps
+        this.processMissingCommits(
+            Array.isArray(missingCommits) ? missingCommits.concat(commit) : missingCommits
         );
     }
     async getCurrentRecord() {
@@ -804,8 +806,9 @@ export class CollaborationOdooPlugin extends Plugin {
         const historyIds = this.dependencies.collaboration.getBranchIds().join(",");
         const firstChild = editable.children[0];
         if (firstChild) {
-            firstChild.setAttribute("data-last-history-steps", historyIds);
+            firstChild.setAttribute("data-last-history-commits", historyIds);
         }
+        return editable;
     }
 
     /**
@@ -838,7 +841,7 @@ export class CollaborationOdooPlugin extends Plugin {
  */
 function isPeerFirst(peerA, peerB) {
     if (peerA.startTime === peerB.startTime) {
-        return peerA.id.localeCompare(peerB.id) === -1;
+        return localeCompare(peerA.id, peerB.id) < 0;
     }
     if (peerA.startTime === undefined || peerB.startTime === undefined) {
         return Boolean(peerA.startTime);
@@ -849,6 +852,6 @@ function isPeerFirst(peerA, peerB) {
 
 export function stripHistoryIds(element) {
     element
-        .querySelectorAll("[data-last-history-steps]")
-        .forEach((el) => el.removeAttribute("data-last-history-steps"));
+        .querySelectorAll("[data-last-history-commits]")
+        .forEach((el) => el.removeAttribute("data-last-history-commits"));
 }

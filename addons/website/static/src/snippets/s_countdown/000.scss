@@ -138,3 +138,24 @@
         }
     }
 }
+
+.s_countdown.s_countdown_title_hidden {
+    .s_countdown_title {
+        display: none !important;
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    .s_countdown_title_left {
+        > .container, > .container-fluid, > .o_container_small {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .s_countdown_title {
+            width: 25%;
+            padding-right: 0.5rem;
+        }
+    }
+}

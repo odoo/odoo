@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 from odoo.fields import Command
 
 
@@ -27,11 +27,6 @@ class SaleOrder(models.Model):
             lambda line: line.is_delivery or line.reward_id.reward_type == "shipping"
         )
 
-    def _get_not_rewarded_order_lines(self):
-        """Exclude delivery lines from consideration for reward points."""
-        order_line = super()._get_not_rewarded_order_lines()
-        return order_line.filtered(lambda line: not line.is_delivery)
-
     def _get_reward_values_free_shipping(self, reward, coupon, **_kwargs):
         delivery_line = self.order_line.filtered(lambda line: line.is_delivery)[:1]
         taxes = delivery_line.product_id.taxes_id._filter_taxes_by_company(self.company_id)
@@ -39,7 +34,7 @@ class SaleOrder(models.Model):
         max_discount = reward.discount_max_amount or float("inf")
         return [
             {
-                "name": _("Free Shipping - %s", reward.description),
+                "name": self.env._("Free Shipping - %s", reward.description),
                 "reward_id": reward.id,
                 "coupon_id": coupon.id,
                 "points_cost": reward.required_points

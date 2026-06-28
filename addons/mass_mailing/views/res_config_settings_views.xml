@@ -26,6 +26,7 @@
                                 <div class="content-group" invisible="not mass_mailing_outgoing_mail_server">
                                     <div class="mt16">
                                         <field name="mass_mailing_mail_server_id" options="{'no_create': True, 'no_open': True}"
+                                                domain="[('owner_user_id', '=', False)]"
                                                 placeholder="Default Server"/>
                                     </div>
                                     <div class="mt8">

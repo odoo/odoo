@@ -32,6 +32,16 @@ ALL_DEV_MODE = ['access', 'qweb', 'reload', 'xml']
 DEFAULT_SERVER_WIDE_MODULES = ['base', 'rpc', 'web']
 REQUIRED_SERVER_WIDE_MODULES = ['base', 'web']
 
+DEFAULT_COLOR_SPEC = {
+    'pid': 'never',
+    'loglevel': 'auto',
+    'session_id': 'never',
+    'http_request_line': 'auto',
+    'http_response_body': 'auto',
+    'perf': 'auto',
+    'cursor_mode': 'auto',
+}
+
 
 class _Empty:
     def __repr__(self):
@@ -194,6 +204,9 @@ class configmanager:
         # list of nargs='?' options, indexed by short/long option (-x, --xx)
         self.optional_options = {}
 
+        # optional [colors] options, no color until we load_color_options()
+        self.colors: dict[str, bool] = dict.fromkeys(DEFAULT_COLOR_SPEC, False)
+
         # map old name -> new name
         self.aliases = {
             "import_image_maxbytes": "import_file_maxbytes",
@@ -231,7 +244,7 @@ class configmanager:
         group = optparse.OptionGroup(parser, "Common options")
         group.add_option("-c", "--config", dest="config", type='path', file_loadable=False, env_name='ODOO_RC',
                          help="specify alternate config file")
-        group.add_option("-s", "--save", action="store_true", dest="save", my_default=False, file_loadable=False,
+        group.add_option("--save", action="store_true", dest="save", my_default=False, file_loadable=False,
                          help="save configuration to ~/.odoorc (or to ~/.openerp_serverrc if it exists)")
         group.add_option("-i", "--init", dest="init", type='comma', metavar="MODULE,...", my_default=[], file_loadable=False,
                          help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
@@ -338,7 +351,7 @@ class configmanager:
         group.add_option("--logfile", dest="logfile", type='path', my_default='',
                          help="file where the server log will be stored")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False,
-                         help="Send the log to the syslog server")
+                         help="Send the log to the syslog server (deprecated)")
         group.add_option('--log-handler', action="append", type='comma', my_default=[':INFO'], metavar="MODULE:LEVEL",
                          help='setup a handler at LEVEL for a given MODULE. An empty MODULE indicates the root logger. '
                               'This option can be repeated. Example: "odoo.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
@@ -348,6 +361,9 @@ class configmanager:
                          help='shortcut for --log-handler=odoo.sql_db:DEBUG')
         group.add_option('--log-db', dest='log_db', help="Logging database", my_default='')
         group.add_option('--log-db-level', dest='log_db_level', my_default='warning', help="Logging database level")
+        group.add_option('--log-config', dest='log_config', type='path', my_default='',
+                         help="JSON logging configuration file, in dictconfig format ("
+                              "https://docs.python.org/3/library/logging.config.html#logging-config-dictschema).")
         # For backward-compatibility, map the old log levels to something
         # quite close.
         levels = [
@@ -536,14 +552,23 @@ class configmanager:
             f'/var/lib/{release.product_name}'
         )
 
-        if os.name == 'nt':
+        default_config_dir = (
+            appdirs.user_config_dir(release.product_name, release.author)
+            if os.path.isdir(os.path.expanduser('~')) else
+            appdirs.site_config_dir(release.product_name, release.author)
+        )
+        default_config_file = os.path.join(default_config_dir, 'odoo.conf')
+
+        if os.path.isfile(default_config_file):
+            rcfilepath = default_config_file
+        elif os.name == 'nt':
             rcfilepath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'odoo.conf')
         elif os.path.isfile(rcfilepath := os.path.expanduser('~/.odoorc')):
             pass
         elif os.path.isfile(rcfilepath := os.path.expanduser('~/.openerp_serverrc')):
             self._warn("Since ages ago, the ~/.openerp_serverrc file has been replaced by ~/.odoorc", DeprecationWarning)
         else:
-            rcfilepath = '~/.odoorc'
+            rcfilepath = default_config_file
         self._default_options['config'] = self._normalize(rcfilepath)
 
     _log_entries = []   # helpers for log() and warn(), accumulate messages
@@ -590,6 +615,7 @@ class configmanager:
         opt = self._parse_config(args)
         if setup_logging is not False:
             netsvc.init_logger()
+            self.load_color_options()
             # warn after having done setup, so it has a chance to show up
             # (mostly once this warning is bumped to DeprecationWarning proper)
             if setup_logging is None:
@@ -618,7 +644,7 @@ class configmanager:
             self.parser.error(f"unrecognized parameters: {' '.join(unknown_args)}")
 
         if not opt.save and opt.config and not os.access(opt.config, os.R_OK):
-            self.parser.error(f"the config file {opt.config!r} selected with -c/--config doesn't exist or is not readable, use -s/--save if you want to generate it")
+            self.parser.error(f"the config file {opt.config!r} selected with -c/--config doesn't exist or is not readable, use --save if you want to generate it")
 
         # Even if they are not exposed on the CLI, cli un-loadable variables still show up in the opt, remove them
         for option_name in list(vars(opt).keys()):
@@ -667,6 +693,57 @@ class configmanager:
         if opt.log_handler:
             self._cli_options['log_handler'] = [handler for comma in opt.log_handler for handler in comma]
 
+    def load_color_options(self):
+        if os.getenv('NO_COLOR'):
+            self.colors = dict.fromkeys(DEFAULT_COLOR_SPEC, False)
+            return
+
+        if os.getenv('FORCE_COLOR'):
+            self.colors = dict.fromkeys(DEFAULT_COLOR_SPEC, True)
+            return
+
+        color2bool = {'always': True, 'never': False, 'auto': any(
+            isinstance(handler, logging.StreamHandler)
+            and hasattr(handler.stream, 'fileno')
+            and os.isatty(handler.stream.fileno())
+            for handler in logging.getLogger().handlers
+        )}
+
+        if color := os.getenv('ODOO_PY_COLORS'):
+            try:
+                value = color2bool[color]
+            except KeyError:
+                try:
+                    value = self._check_bool(..., ..., color)  # backward compat
+                except optparse.OptionValueError:
+                    e = f"environ['ODOO_PY_COLORS'] is not always/never/auto: {color!r}"
+                    raise optparse.OptionValueError(e) from None
+
+            self.colors = dict.fromkeys(DEFAULT_COLOR_SPEC, value)
+            return
+
+        self.colors = {
+            name: color2bool[value]
+            for name, value in DEFAULT_COLOR_SPEC.items()
+        }
+
+        p = ConfigParser.RawConfigParser()
+        try:
+            p.read([self['config']])
+            file_options = p.items('colors')
+        except (OSError, ConfigParser.NoSectionError):
+            pass
+        else:
+            for name, value in file_options:
+                if name not in DEFAULT_COLOR_SPEC:
+                    self._log(logging.WARNING, "unknown color option: %r, skipped", name)
+                    continue
+                try:
+                    self.colors[name] = color2bool[value]
+                except KeyError:
+                    e = f"color option {name}: invalid value: {value!r}"
+                    raise optparse.OptionValueError(e) from None
+
     def _postprocess_options(self):
         self._runtime_options.clear()
 
@@ -691,6 +768,13 @@ class configmanager:
         # ensure default http_interface is set
         if not self['http_interface']:
             self._runtime_options['http_interface'] = '127.0.0.1'
+
+        # check here some envvar options that are exposed as property
+        try:
+            self.http_socket_activation
+            self.max_http_threads
+        except ValueError as exc:
+            self.parser.error(exc.args[0])
 
         # accumulate all log_handlers
         self._runtime_options['log_handler'] = list(_deduplicate_loggers([
@@ -803,6 +887,9 @@ class configmanager:
     def _check_addons_path(cls, option, opt, value):
         ad_paths = []
         for path in map(cls._normalize, cls._check_comma(option, opt, value)):
+            if glob.has_magic(path):
+                ad_paths.extend(sorted(p for p in glob.glob(path) if os.path.isdir(p) and cls._is_addons_path(p)))
+                continue
             if not os.path.isdir(path):
                 cls._log(logging.WARNING, "option %s, no such directory %r, skipped", opt, path)
                 continue
@@ -810,7 +897,6 @@ class configmanager:
                 cls._log(logging.WARNING, "option %s, invalid addons directory %r, skipped", opt, path)
                 continue
             ad_paths.append(path)
-
         return ad_paths
 
     @classmethod
@@ -949,16 +1035,33 @@ class configmanager:
             p.read([self['config']])
         if not p.has_section('options'):
             p.add_section('options')
+        if not p.has_section('colors'):
+            p.add_section('colors')
         for opt in sorted(self.options):
             option = self.options_index.get(opt)
             if keys is not None and opt not in keys:
                 continue
-            if opt == 'version' or (option and not option.file_exportable):
+            if opt == 'version':
                 continue
+            if option:
+                if option.file_exportable:
+                    pass
+                elif option.file_loadable and self.options[opt] != self._default_options[opt]:
+                    # Persist the option if we can load it from the file
+                    # and that it is different from the default value.
+                    # Even if it was marked "file_exportable=False", we
+                    # just don't want to export the default value.
+                    pass
+                else:
+                    continue
             if option:
                 p.set('options', opt, self.format(opt, self.options[opt]))
             else:
                 p.set('options', opt, self.options[opt])
+
+        for color, value in DEFAULT_COLOR_SPEC.items():
+            if color not in p['colors']:  # ignored unless keys are given
+                p['colors'][color] = value
 
         # try to create the directories and write the file
         try:
@@ -1052,6 +1155,14 @@ class configmanager:
             and os.getenv('LISTEN_FDS') == '1'
             and os.getenv('LISTEN_PID') == str(os.getpid())
         )
+
+    @property
+    def max_http_threads(self):
+        mht = os.getenv('ODOO_MAX_HTTP_THREADS', str(2 * os.cpu_count() + 1))
+        if not (mht.isdecimal() and mht.isascii()):
+            e = f"ODOO_MAX_HTTP_THREADS={mht} but it is not a positive integer"
+            raise ValueError(e)
+        return int(mht)
 
     @classmethod
     def _normalize(cls, path):

@@ -65,7 +65,6 @@ class DiscussChannelMember(models.Model):
                     sudo=True,
                 ),
             )
-        stores.bus_send()
         return members
 
     @api.depends("livechat_member_history_ids.livechat_member_type")
@@ -88,6 +87,8 @@ class DiscussChannelMember(models.Model):
             member.agent_expertise_ids = member.livechat_member_history_ids.agent_expertise_ids
 
     def _create_or_update_history(self, values_by_member):
+        if self.channel_id.livechat_end_dt:
+            return
         members_without_history = self.filtered(lambda m: not m.livechat_member_history_ids)
         history_domain = Domain.OR(
             [
@@ -155,10 +156,8 @@ class DiscussChannelMember(models.Model):
         ])
         sessions_to_be_unpinned = members.filtered(lambda m: m.message_unread_counter == 0)
         sessions_to_be_unpinned.channel_id.livechat_end_dt = fields.Datetime.now()
-        stores = Store.Stores()
-        for member, store in sessions_to_be_unpinned._get_member_store_list(stores):
+        for member, store in sessions_to_be_unpinned._get_member_store_list():
             store.add(member.channel_id, {"close_chat_window": True})
-        stores.bus_send()
         sessions_to_be_unpinned.unpin_dt = fields.Datetime.now()
 
     def _store_member_fields(self, res: Store.FieldList):
@@ -180,9 +179,9 @@ class DiscussChannelMember(models.Model):
         partner_res.from_method("_store_livechat_username_fields")
         partner_res.from_method("_store_mention_fields")
         if self.livechat_member_type == "visitor":
-            partner_res.extend(["offline_since", "email"])
-        if partner_res.is_for_internal_users():
-            partner_res.from_method("_store_im_status_fields")
+            partner_res.attr("email")
+            partner_res.many("user_ids", ["offline_since"])
+        partner_res.from_method("_store_im_status_fields", internal=True)
 
     def _store_guest_dynamic_fields(self, guest_res: Store.FieldList):
         super()._store_guest_dynamic_fields(guest_res)
@@ -191,7 +190,8 @@ class DiscussChannelMember(models.Model):
         guest_res.clear()
         guest_res.one("country_id", ["code", "name"])
         guest_res.attr("offline_since")
-        guest_res.from_method("_store_guest_fields")
+        guest_res.from_method("_store_avatar_fields")
+        guest_res.from_method("_store_im_status_fields", internal=True)
 
     def _get_rtc_invite_members_domain(self, *a, **kw):
         domain = super()._get_rtc_invite_members_domain(*a, **kw)

@@ -98,50 +98,7 @@ according to the enabled options.
             <t t-foreach="posts" t-as="blog_post">
                 <!-- Assign 'colWidth': 'col-12' is default for List-View and mobile -->
                 <div t-attf-class="pb-4 col-12 #{colWidth}">
-                    <article t-attf-class="o_wblog_post position-relative #{'card h-100' if opt_blog_cards_design else ''}" name="blog_post">
-                        <!-- List-View Design -->
-                        <t t-if="opt_blog_list_view">
-                            <div t-att-class="opt_blog_cards_design and 'card-body py-3'">
-                                <t t-call="website_blog.post_heading"/>
-                            </div>
-                            <div t-if="not opt_blog_cards_design" class="py-2">
-                                <t t-call="website_blog.post_info"/>
-                            </div>
-                            <div t-if="opt_posts_loop_show_cover">
-                                <t t-call="website_blog.post_cover_image"/>
-                            </div>
-                            <div t-if="is_view_active('website_blog.opt_posts_loop_show_teaser')" t-att-class="opt_blog_cards_design and 'card-body pt-0'">
-                                <t t-call="website_blog.post_teaser"/>
-                            </div>
-                            <div t-if="opt_blog_cards_design" t-att-class="opt_blog_cards_design and 'card-body pt-0 pb-2'">
-                                <t t-call="website_blog.post_info"/>
-                            </div>
-                            <div t-else="" class="mt-3">
-                                <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="btn btn-primary">
-                                    Read more <i class="oi oi-chevron-right ms-2"/>
-                                </a>
-                            </div>
-                        </t>
-                        <!-- Grid-View Design -->
-                        <t t-if="not opt_blog_list_view">
-                            <t t-if="opt_posts_loop_show_cover" t-call="website_blog.post_cover_image"/>
-                            <div t-att-class="opt_blog_cards_design and 'card-body px-2 py-0 mb-2'">
-                                <t t-call="website_blog.post_heading"/>
-                                <div t-if="is_view_active('website_blog.opt_posts_loop_show_teaser')">
-                                    <t t-call="website_blog.post_teaser"/>
-                                </div>
-                            </div>
-                            <div t-attf-class="o_wblog_normalize_font #{'card-footer px-2 pb-2' if opt_blog_cards_design else 'pe-2 pb-2'}">
-                                <t t-call="website_blog.post_info"/>
-                            </div>
-                        </t>
-                        <!-- Add 'unpublished' or 'scheduled' badge -->
-                        <t t-if="blog_post.publish_on" t-set="badge" t-value="'Scheduled'"/>
-                        <t t-elif="not blog_post.website_published" t-set="badge" t-value="'Unpublished'"/>
-                        <t t-else="" t-set="badge" t-value="False"/>
-                        <span t-if="badge" style="top:0; right:0;" t-out="badge"
-                            t-attf-class="small py-1 px-2 position-absolute o_not_editable {{ 'bg-warning' if badge == 'Scheduled' else 'bg-danger' }}"/>
-                    </article>
+                    <t t-call="website_blog.blog_post_card"/>
                 </div>
                 <!-- List-View Design, add <hr> after post -->
                 <div t-if="opt_blog_list_view and not blog_post_last" class="col-12 mt-2 mb-5 px-2"><hr/></div>
@@ -150,6 +107,54 @@ according to the enabled options.
     </div>
 </template>
 
+<!-- ====== Blog Post Card Template ======================= -->
+<template id="blog_post_card" name="Blog Post Card">
+    <t t-set="opt_posts_loop_show_cover" t-value="opt_posts_loop_show_cover or is_view_active('website_blog.opt_posts_loop_show_cover')"/>
+    <article t-attf-class="o_wblog_post position-relative #{'card h-100' if opt_blog_cards_design else ''}" name="blog_post">
+        <!-- List-View Design -->
+        <t t-if="opt_blog_list_view">
+            <div t-att-class="opt_blog_cards_design and 'card-body py-3'">
+                <t t-call="website_blog.post_heading"/>
+            </div>
+            <div t-if="not opt_blog_cards_design" class="py-2">
+                <t t-call="website_blog.post_info"/>
+            </div>
+            <div t-if="opt_posts_loop_show_cover">
+                <t t-call="website_blog.post_cover_image"/>
+            </div>
+            <div t-if="is_view_active('website_blog.opt_posts_loop_show_teaser')" t-att-class="opt_blog_cards_design and 'card-body pt-0'">
+                <t t-call="website_blog.post_teaser"/>
+            </div>
+            <div t-if="opt_blog_cards_design" t-att-class="opt_blog_cards_design and 'card-body pt-0 pb-2'">
+                <t t-call="website_blog.post_info"/>
+            </div>
+            <div t-else="" class="mt-3">
+                <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="btn btn-primary">
+                    Read more <i class="oi oi-chevron-right ms-2"/>
+                </a>
+            </div>
+        </t>
+        <!-- Grid-View Design -->
+        <t t-if="not opt_blog_list_view">
+            <t t-if="opt_posts_loop_show_cover" t-call="website_blog.post_cover_image"/>
+            <div t-att-class="opt_blog_cards_design and 'card-body px-2 py-0 mb-2'">
+                <t t-call="website_blog.post_heading"/>
+                <div t-if="is_view_active('website_blog.opt_posts_loop_show_teaser')">
+                    <t t-call="website_blog.post_teaser"/>
+                </div>
+            </div>
+            <div t-attf-class="o_wblog_normalize_font #{'card-footer px-2 pb-2' if opt_blog_cards_design else 'pe-2 pb-2'}">
+                <t t-call="website_blog.post_info"/>
+            </div>
+        </t>
+        <!-- Add 'unpublished' or 'scheduled' badge -->
+        <t t-if="blog_post.publish_on" t-set="badge" t-value="'Scheduled'"/>
+        <t t-elif="not blog_post.website_published" t-set="badge" t-value="'Unpublished'"/>
+        <t t-else="" t-set="badge" t-value="False"/>
+        <span t-if="badge" style="top:0; right:0;" t-out="badge"
+            t-attf-class="small py-1 px-2 position-absolute o_not_editable {{ 'bg-warning' if badge == 'Scheduled' else 'bg-danger' }}"/>
+    </article>
+</template>
 
 <!-- ======   Sub-Template: Posts list : Posts Heading  =================== -->
 <template id="post_heading">
@@ -205,8 +210,8 @@ according to the enabled options.
 <!-- ======   Sub-Template: Posts list : Posts Teaser + Tags  ============= -->
 <template id="post_teaser">
     <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="text-reset text-decoration-none">
-        <div t-if="opt_blog_list_view" t-field="blog_post.teaser" class="mt-2 o_wblog_read_text"/>
-        <div t-else="" t-field="blog_post.teaser" t-attf-class="mt-2 #{opt_blog_readable and 'o_wblog_normalize_font'}"/>
+        <div t-if="opt_blog_list_view" t-field="blog_post.teaser" class="o_blog_post_teaser mt-2 o_wblog_read_text"/>
+        <div t-else="" t-field="blog_post.teaser" t-attf-class="o_blog_post_teaser mt-2 #{opt_blog_readable and 'o_wblog_normalize_font'}"/>
     </a>
 
     <!-- Tags -->

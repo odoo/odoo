@@ -120,13 +120,22 @@ const addField = function (
             run: `edit ${display.condition} && press Tab`,
         });
     }
-    if (required) {
-        testText += ".s_website_form_required";
+    const addToggleRequiredStep = (required = true) =>
         ret.push({
-            content: "Mark the field as required",
+            content: `Mark the field as ${required ? "" : "non-"}required`,
             trigger: ".o_customize_tab div[data-action-id='toggleRequired'] input[type='checkbox']",
             run: "click",
         });
+    if (required) {
+        testText += ".s_website_form_required";
+        if (name !== "boolean") {
+            addToggleRequiredStep();
+        }
+    } else {
+        if (name === "boolean") {
+            // Checkbox fields are "required" by default.
+            addToggleRequiredStep(false);
+        }
     }
     if (label) {
         testText += `:has(label:contains(${label}))`;
@@ -158,12 +167,14 @@ const addExistingField = function (name, type, label, required, display) {
 const compareIds = ({ content, firstElSelector, secondElSelector, errorMessage }) => ({
     content,
     trigger: `:iframe ${firstElSelector}`,
-    run: function () {
-        const firstEl = this.anchor;
-        const secondEl = firstEl.ownerDocument.querySelector(secondElSelector);
-        if (firstEl.id === secondEl.id) {
-            console.error(errorMessage);
-        }
+    async run({ anchor, waitUntil }) {
+        await waitUntil(
+            () => {
+                const secondEl = anchor.ownerDocument.querySelector(secondElSelector);
+                return secondEl && anchor.id !== secondEl.id;
+            },
+            { message: errorMessage }
+        );
     },
 });
 
@@ -239,10 +250,11 @@ registerWebsitePreviewTour(
             trigger: ':iframe input[name="phone"]',
             run: "click",
         },
+        ...unfoldOptionsGroup("Form"),
         {
-            content: "Change the label position of the phone field",
+            content: "Change the label position of all fields",
             trigger:
-                ".o_customize_tab div[data-label='Position'] button[data-action-value='right']",
+                ".o_customize_tab div[data-label='Labels Position'] button[data-action-value='right']",
             run: "click",
         },
         ...addCustomField("char", "text", "Conditional Visibility Check 1", false),
@@ -536,7 +548,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe #wrapwrap",
             run() {
                 const editor = editorsWeakMap.get(this.anchor.ownerDocument);
-                editor.shared.history.addStep();
+                editor.shared.history.commit();
             },
         },
         // Edit the submit button using linkDialog.
@@ -809,7 +821,7 @@ registerWebsitePreviewTour(
         ...unfoldOptionsGroup("Form"),
         {
             content: "Change the Recipient Email",
-            trigger: '[data-label="Recipient Email"] input',
+            trigger: '[data-label="Recipient Emails"] input',
             run: "edit test@test.test",
         },
         // Test a field visibility when it's tied to another Date [Time] field
@@ -886,7 +898,7 @@ registerWebsitePreviewTour(
 
         // Ensure that the description option is working as wanted.
         ...addCustomField("char", "text", "Check description option", false),
-        changeOption("Field", "[data-action-id='toggleDescription'] input"),
+        changeOption("Field", "[data-action-id='setDescription'] input"),
         {
             content: "Ensure that the description has correctly been added on the field",
             trigger:
@@ -927,7 +939,7 @@ registerWebsitePreviewTour(
             ...unfoldOptionsGroup("Form"),
             {
                 content: "Change the Recipient Email",
-                trigger: "div[data-label='Recipient Email'] input",
+                trigger: "div[data-label='Recipient Emails'] input",
                 run: "edit test@test.test",
             },
         ])
@@ -948,7 +960,7 @@ registerWebsitePreviewTour(
             {
                 content: "Check that the recipient email is correct",
                 trigger:
-                    "div[data-label='Recipient Email'] input:value('website_form_contactus_edition_no_email@mail.com')",
+                    "div[data-label='Recipient Emails'] input:value('website_form_contactus_edition_no_email@mail.com')",
             },
         ])
 );
@@ -956,7 +968,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_form_conditional_required_checkboxes",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [
@@ -1133,7 +1144,6 @@ registerWebsitePreviewTour(
     () => [
         {
             trigger: ".o-website-builder_sidebar .o_snippets_container .o_snippet",
-            noPrepend: true,
         },
         {
             trigger:
@@ -1221,7 +1231,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_form_special_characters",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [

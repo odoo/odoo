@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2026-02-28 13:48+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -111,22 +111,15 @@ msgstr "Tehtävä"
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid ""
 "The default project used when automatically generating timesheets via time "
-"off requests. You can specify another project on each time off type "
-"individually."
+"off requests. You can specify another project on each time type individually."
 msgstr ""
-"Oletusprojekti, jota käytetään, kun työaikakirjauksia luodaan "
-"automaattisesti vapaapyyntöjen kautta. Voit määrittää toisen projektin "
-"kullekin vapaa-aikatyypille erikseen."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid ""
 "The default task used when automatically generating timesheets via time off "
-"requests. You can specify another task on each time off type individually."
+"requests. You can specify another task on each time type individually."
 msgstr ""
-"Oletustehtävä, jota käytetään, kun työaikakirjauksia luodaan automaattisesti "
-"vapaapyyntöjen kautta. Voit määrittää toisen tehtävän kullekin vapaatyypille "
-"erikseen."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -152,8 +145,28 @@ msgstr "Vapaa-aika Tehtävä"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
-msgid "Time Off Types Count"
-msgstr "Vapaa-ajan tyyppien määrä"
+msgid "Time Types Count"
+msgstr ""
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid "Timesheets linked to public holidays cannot be deleted."
+msgstr ""
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid "Timesheets linked to public holidays cannot be modified."
+msgstr ""
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid ""
+"Timesheets related to time off cannot be created or modified. Please manage "
+"your requests in the Time Off app instead."
+msgstr ""
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_project_task__display_name
@@ -192,39 +205,11 @@ msgstr "Näytä vapaa-aika"
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid ""
-"You cannot create timesheets for a task that is linked to a time off type. "
-"Please use the Time Off application to request new time off instead."
-msgstr ""
-"Et voi luoda työaikakirjauksia tehtävälle, joka on liitetty vapaatyyppiin. "
-"Käytä sen sijaan Time Off -sovellusta uusien vapaiden pyytämiseen."
-
-#. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
-msgid "You cannot delete timesheets that are linked to global time off."
-msgstr ""
-"Et voi poistaa työaikakirjauksia, jotka on linkitetty yleiseen vapaa-aikaan."
-
-#. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
-msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
 "Et voi poistaa työaikakirjauksia, jotka on liitetty vapaapyyntöihin. Peruuta "
 "sen sijaan vapaata koskeva pyyntö vapaa-aikasovelluksesta."
-
-#. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
-msgid ""
-"You cannot modify timesheets that are linked to time off requests. Please "
-"use the Time Off application to modify your time off requests instead."
-msgstr ""
-"Et voi muokata työaikakirjauksia, jotka on liitetty vapaata koskeviin "
-"pyyntöihin. Käytä sen sijaan Time Off -sovellusta muokkaamaan "
-"vapaapyyntöjäsi."
 
 #. module: project_timesheet_holidays
 #. odoo-python

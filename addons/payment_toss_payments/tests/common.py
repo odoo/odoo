@@ -25,12 +25,13 @@ class TossPaymentsCommon(PaymentCommon):
             "currency": "KRW",
             "totalAmount": 750,
         }
+        cls.webhook_data_signature = "test-secret"
         cls.webhook_data = {
             "eventType": "PAYMENT_STATUS_CHANGED",
             "data": {
                 "orderId": cls.reference,
                 "paymentKey": "test-pk",
-                "secret": "test-secret",
+                "secret": cls.webhook_data_signature,
                 "status": "DONE",
                 "currency": "KRW",
                 "totalAmount": 750,

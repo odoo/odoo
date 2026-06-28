@@ -33,12 +33,12 @@
                                 groups="mass_mailing.group_mass_mailing_campaign"
                                 column_invisible="parent.ab_testing_mailings_count == 0"/>
                             <field name="campaign_id" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign" optional="hide"/>
-                            <field name="received_ratio" string="Delivered (%)" avg="Average of Delivered"/>
-                            <field name="opened_ratio" string="Opened (%)" avg="Average of Opened"/>
-                            <field name="bounced_ratio" string="Bounced (%)" optional="hide" avg="Average of Bounced"/>
-                            <field name="clicks_ratio" string="Clicked (%)" avg="Average of Clicked"/>
-                            <field name="replied_ratio" string="Replied (%)" avg="Average of Replied"/>
-                            <field name="state" decoration-info="state in ('draft', 'in_queue')" decoration-success="state in ('sending', 'done')" widget="badge"/>
+                            <field name="received_ratio" widget="full_range_percentage" string="Delivered"/>
+                            <field name="opened_ratio" widget="full_range_percentage" string="Opened"/>
+                            <field name="bounced_ratio" widget="full_range_percentage" string="Bounced" optional="hide"/>
+                            <field name="clicks_ratio" widget="full_range_percentage" string="Clicked"/>
+                            <field name="replied_ratio" widget="full_range_percentage" string="Replied"/>
+                            <field name="state" decoration-info="state in ('in_queue')" decoration-success="state in ('sending', 'done')" widget="badge"/>
                             <button name="action_duplicate" type="object" string="Duplicate"/>
                         </list>
                     </field>

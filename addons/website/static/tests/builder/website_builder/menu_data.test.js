@@ -1,4 +1,4 @@
-import { describe, expect, test, beforeEach, Deferred, animationFrame } from "@odoo/hoot";
+import { describe, expect, test, beforeEach, animationFrame } from "@odoo/hoot";
 import { waitFor, waitForNone, click, queryOne } from "@odoo/hoot-dom";
 import {
     defineWebsiteModels,
@@ -423,23 +423,21 @@ describe("EditMenuDialog", () => {
                     super.setup();
                     this.website.pageDocument = builder.getEditableContent().ownerDocument;
                 },
-                onClickOk() {
+                getUrl() {
                     // little lie to avoid calling `toRelativeIfSameDomain`,
                     // so that we still have the absolute url (see NOTE above)
-                    this.props.isMegaMenu = true;
-                    super.onClickOk();
-                    this.props.isMegaMenu = false;
+                    return this.state.url;
                 },
             });
 
             await contains("a:contains('Add Menu Item')").click();
 
-            const deferred = new Deferred();
+            const deferred = Promise.withResolvers();
             onRpc("/website/check_existing_link", async (request) => {
                 const { params } = await request.json();
                 expect(params.link).toEqual("/top-menu-url");
                 expect.step("check existing");
-                await deferred;
+                await deferred.promise;
                 return false;
             });
 

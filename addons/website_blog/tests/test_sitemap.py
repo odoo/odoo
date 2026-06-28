@@ -10,7 +10,7 @@ class TestSitemap(HttpCase):
         super().setUp()
 
         # Set up a website in French
-        self.website = self.env.ref('website.default_website')
+        self.website = self.env.ref('base.default_website')
         self.lang_fr = self.env['res.lang']._activate_lang('fr_FR')
         self.website.language_ids = self.env.ref('base.lang_en') + self.lang_fr
         self.website.default_lang_id = self.env.ref('base.lang_en')

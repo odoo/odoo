@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 import { uniqueId } from "@web/core/utils/functions";
@@ -6,7 +7,7 @@ import { Interaction } from "@web/public/interaction";
 export class Gallery extends Interaction {
     static selector = ".s_image_gallery.o_image_popup";
     dynamicContent = {
-        img: {
+        "img:not(.o_carousel_controllers img)": {
             "t-on-click": this.onClickImg,
         },
     };
@@ -71,6 +72,8 @@ export class Gallery extends Interaction {
             ride: !milliseconds ? "false" : "carousel",
             id: uniqueId("slideshow_"),
             shouldShowControls: this.hasMultipleImages,
+            getIndicatorLabel: (itemPosition, total) =>
+                _t("Slide %(itemPosition)s of %(total)s", { itemPosition, total }),
         })[0];
         this.insert(this.modalEl, document.body);
         new Modal(this.modalEl, { keyboard: true }).show();

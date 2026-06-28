@@ -402,8 +402,16 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         test_customer = self.test_customers[0].with_env(self.env)
         move_template = self.move_template.with_env(self.env)
 
-        extra_dynamic_report = self.env.ref('account.action_account_original_vendor_bill')
-        move_template.report_template_ids += extra_dynamic_report
+        extra_dynamic_report = self.env.ref('account.action_account_original_vendor_bill').sudo().copy({
+            'name': 'Invoice PDF 2',
+            'print_report_name': "'CUSTOM_%s' % object.name",
+        })
+
+        extra_dynamic_report_no_filename = self.env.ref('account.action_account_original_vendor_bill').sudo().copy({
+            'name': 'Invoice PDF 3'
+        })
+
+        move_template.report_template_ids += (extra_dynamic_report + extra_dynamic_report_no_filename)
 
         composer = self.env['account.move.send.wizard'].with_context(active_model='account.move', active_ids=test_move.ids).create({
             'sending_methods': ['email'],
@@ -425,7 +433,8 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                     {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
                     {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
                     {'name': f'{test_move.name}.pdf', 'type': 'application/pdf'},
-                    {'name': f'{extra_dynamic_report.name.lower()}_{test_move.name}.pdf', 'type': 'application/pdf'},
+                    {'name': 'CUSTOM_INVOICE_00.pdf', 'type': 'application/pdf'},
+                    {'name': 'invoice pdf 3_INVOICE_00.pdf', 'type': 'application/pdf'},
                 ],
                 'body_content': f'TemplateBody for {test_move.name}',
                 'email_from': self.user_account_other.email_formatted,
@@ -478,6 +487,17 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             content='access_token=',
         )
 
+    def test_invoice_email_subtitle_from_sale_order(self):
+        """ Test email notification subtitle for Invoice created from Sale Order. """
+        self.ensure_installed('sale')
+        self.product_a.taxes_id = False
+        self.env.user.group_ids |= self.env.ref('sales_team.group_sale_salesman')
+        sale_order = self._create_sale_order_one_line(product_id=self.product_a.id, partner_id=self.partner_a.id)
+        invoice = sale_order._create_invoices()
+        context = invoice._notify_by_email_prepare_rendering_context(message=self.env['mail.message'])
+        self.assertEqual(context.get('subtitles')[0], f"{invoice.display_name} - {self.partner_a.name}")
+        self.assertIn('1,000', context.get('subtitles')[1])
+
 
 class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
 
@@ -501,7 +521,7 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
                 {k: v for k, v in expected_values.items() if not check_id_needed and k != 'id'},
             )
 
-    def create_send_and_print(self, invoices, default=False, *, as_user=None, **kwargs):
+    def create_send_and_print(self, invoices, default=False, *, as_user=None, no_invoice_reminder=False, **kwargs):
         invoices.with_user(as_user).action_send_and_print()
         if len(invoices) == 1:
             if not default and not kwargs.get('sending_methods'):
@@ -509,7 +529,7 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
                 # Therefore by default we deactivate sending methods, unless default parameter is set to True,
                 # or they are explicitly given.
                 kwargs['sending_methods'] = []
-            return self._create_account_move_send_wizard_single(invoices, as_user=as_user, **kwargs)
+            return self._create_account_move_send_wizard_single(invoices, as_user=as_user, no_invoice_reminder=no_invoice_reminder, **kwargs)
         else:
             return self._create_account_move_send_wizard_multi(invoices, as_user=as_user, **kwargs)
 
@@ -573,7 +593,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue(self._get_mail_message(invoice))
 
         # Send it again. The PDF must not be created again.
-        wizard = self.create_send_and_print(invoice, sending_methods=['email', 'manual'])
+        wizard = self.create_send_and_print(invoice, no_invoice_reminder=True, sending_methods=['email', 'manual'])
         with patch('odoo.addons.account.models.account_move_send.AccountMoveSend._hook_invoice_document_after_pdf_report_render') as mocked_method:
             results = wizard.action_send_and_print()
             mocked_method.assert_not_called()
@@ -841,7 +861,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         ])
 
         # Resend.
-        wizard = self.create_send_and_print(invoice, sending_methods=['email'])
+        wizard = self.create_send_and_print(invoice, no_invoice_reminder=True, sending_methods=['email'])
         pdf_report_values['id'] = invoice.invoice_pdf_report_id.id
         self._assert_mail_attachments_widget(wizard, [
             pdf_report_values,
@@ -1261,3 +1281,23 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
                 'name': attachments_data[0][2]['name'],
                 'raw': attachments_data[0][2]['raw'],
             }])
+
+    def test_invoice_send_reply_to_persistence(self):
+        """ Test that the reply_to set on the mail template is correctly
+        propagated through the wizard to the final mail message. """
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        custom_reply_to = "custom_reply_address@example.com"
+
+        template = self.env.ref('account.email_template_edi_invoice')
+        template.reply_to = custom_reply_to
+
+        wizard = self.create_send_and_print(
+            invoice,
+            sending_methods=['email'],
+            template_id=template.id
+        )
+
+        wizard.action_send_and_print()
+
+        message = self._get_mail_message(invoice)
+        self.assertEqual(message.reply_to, custom_reply_to)

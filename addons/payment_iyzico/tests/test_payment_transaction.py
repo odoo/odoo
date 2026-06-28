@@ -88,33 +88,33 @@ class TestPaymentTransaction(IyzicoCommon, PaymentHttpCommon):
     def test_apply_updates_sets_provider_reference(self):
         """Test that the provider reference is set when processing the payment data."""
         tx = self._create_transaction(flow="redirect")
-        tx._apply_updates(self.payment_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
         self.assertEqual(tx.provider_reference, self.payment_data["paymentId"])
 
     def test_apply_updates_sets_card_payment_method(self):
         """Test that the card payment method brand is updated from the payment data."""
         self.payment_data.update({"cardType": "CREDIT_CARD", "cardAssociation": "MASTER_CARD"})
         tx = self._create_transaction(flow="redirect")
-        tx._apply_updates(self.payment_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
         self.assertEqual(tx.payment_method_id.code, "mastercard")
 
     def test_apply_updates_sets_bank_transfer_payment_method(self):
         """Test that the bank transfer payment method is set if found in the payment data."""
         self.payment_data.update({"bankName": "dummy"})
         tx = self._create_transaction(flow="redirect")
-        tx._apply_updates(self.payment_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
         self.assertEqual(tx.payment_method_id.code, "bank_transfer")
 
     def test_apply_updates_confirms_transaction(self):
         """Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment."""
         tx = self._create_transaction(flow="redirect")
-        tx._apply_updates(self.payment_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
         self.assertEqual(tx.state, "done")
 
     def test_apply_updates_fails_transaction(self):
         """Test that the transaction state is set to 'error' when the payment data indicate a
         payment failure."""
         tx = self._create_transaction(flow="redirect")
-        tx._apply_updates({"paymentStatus": "FAILURE"})
+        tx.with_context(payment_safe_write=True)._apply_updates({"paymentStatus": "FAILURE"})
         self.assertEqual(tx.state, "error")

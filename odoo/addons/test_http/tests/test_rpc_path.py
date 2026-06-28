@@ -18,7 +18,7 @@ class TestRpcPath(HttpCaseWithUserDemo):
         self.opener.cookies['session_id'] = self.session.sid
 
     def test_rpc_path_call_button(self):
-        with self.assertLogs('werkzeug', logging.INFO) as capture:
+        with self.assertLogs('odoo.http.server', logging.INFO) as capture:
             self.make_jsonrpc_request('/web/dataset/call_button', {
                 'model': 'res.users',
                 'method': 'read',
@@ -30,7 +30,7 @@ class TestRpcPath(HttpCaseWithUserDemo):
         ])
 
     def test_rpc_path_call_kw(self):
-        with self.assertLogs('werkzeug', logging.INFO) as capture:
+        with self.assertLogs('odoo.http.server', logging.INFO) as capture:
             self.make_jsonrpc_request('/web/dataset/call_kw', {
                 'model': 'res.users',
                 'method': 'read',
@@ -42,7 +42,7 @@ class TestRpcPath(HttpCaseWithUserDemo):
         ])
 
     def test_rpc_path_call_kw_with_path(self):
-        with self.assertLogs('werkzeug', logging.INFO) as capture:
+        with self.assertLogs('odoo.http.server', logging.INFO) as capture:
             self.make_jsonrpc_request('/web/dataset/call_kw/res.users.read', {
                 'model': 'res.users',
                 'method': 'read',
@@ -55,7 +55,7 @@ class TestRpcPath(HttpCaseWithUserDemo):
 
     @mute_logger('odoo.addons.rpc.controllers.jsonrpc')
     def test_rpc_path_jsonrpc(self):
-        with self.assertLogs('werkzeug', logging.INFO) as capture:
+        with self.assertLogs('odoo.http.server', logging.INFO) as capture:
             self.make_jsonrpc_request('/jsonrpc', {
                 'service': 'object',
                 'method': 'execute_kw',
@@ -70,7 +70,7 @@ class TestRpcPath(HttpCaseWithUserDemo):
 
     @mute_logger('odoo.addons.rpc.controllers.xmlrpc')
     def test_rpc_path_xmlrpc(self):
-        with self.assertLogs('werkzeug', logging.INFO) as capture:
+        with self.assertLogs('odoo.http.server', logging.INFO) as capture:
             self.xmlrpc_object.execute_kw(
                 get_db_name(), self.user_demo.id, 'demo',
                'res.users', 'read', [self.user_demo.id, ['login']]

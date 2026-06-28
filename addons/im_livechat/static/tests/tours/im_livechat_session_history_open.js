@@ -1,4 +1,4 @@
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patch } from "@web/core/utils/patch";
 import { registry } from "@web/core/registry";
 
 let firstChannelId;
@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add("im_livechat_session_history_open", {
             trigger: ".o_switch_view[data-tooltip='List']",
             async run() {
                 const busService = odoo.__WOWL_DEBUG__.root.env.services.bus_service;
-                patchWithCleanup(busService, {
+                patch(busService, {
                     addChannel(channel) {
                         document.body.classList.add(`o-bus-channel-${channel}`);
                         return super.addChannel(...arguments);

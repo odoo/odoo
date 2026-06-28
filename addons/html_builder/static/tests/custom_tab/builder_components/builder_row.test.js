@@ -150,7 +150,7 @@ const collapseOptionTemplate = ({
             }>A</BuilderButton>
             <t t-set-slot="collapse">
                 <BuilderRow level="1" label="'B'" ${
-                    dependency ? "t-if=\"isActiveItem('test_opt')\"" : ""
+                    dependency ? "t-if=\"this.isActiveItem('test_opt')\"" : ""
                 }>
                     <BuilderButton classAction="'b'">B</BuilderButton>
                 </BuilderRow>
@@ -220,10 +220,10 @@ describe("BuilderRow with collapse content", () => {
                         <BuilderSelectItem classAction="'c'" id="'random_opt'">C</BuilderSelectItem>
                     </BuilderSelect>
                     <t t-set-slot="collapse">
-                        <BuilderRow level="1" t-if="isActiveItem('test_opt')" label="'B'">
+                        <BuilderRow level="1" t-if="this.isActiveItem('test_opt')" label="'B'">
                             <BuilderButton classAction="'b'">B</BuilderButton>
                         </BuilderRow>
-                        <BuilderRow level="1" t-if="isActiveItem('random_opt')" label="'D'">
+                        <BuilderRow level="1" t-if="this.isActiveItem('random_opt')" label="'D'">
                             <BuilderButton classAction="'d'">D</BuilderButton>
                         </BuilderRow>
                     </t>
@@ -373,6 +373,23 @@ describe("HTML builder tests", () => {
         const label = queryOne("[data-label='Supercalifragilisticexpalidocious'] .text-truncate");
         expect(label.scrollWidth).toBeGreaterThan(label.clientWidth); // the text is longer than the available width.
         expect(".o-tooltip").toHaveText("Supercalifragilisticexpalidocious");
+
+        await contains(":iframe .test-options-target").hover();
+        expect(".o-tooltip").toHaveCount(0);
+    });
+    test("show row label before tooltip when label is truncated and hovering on wrapper", async () => {
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderRow label="'Supercalifragilisticexpalidocious'" tooltip="'my tooltip'">Palais chatouille</BuilderRow>`,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await hover("[data-label='Supercalifragilisticexpalidocious'] .hb-row-label div");
+        await advanceTime(OPEN_DELAY);
+        await waitFor(".o-tooltip");
+        const label = queryOne("[data-label='Supercalifragilisticexpalidocious'] .text-truncate");
+        expect(label.scrollWidth).toBeGreaterThan(label.clientWidth); // the text is longer than the available width.
+        expect(".o-tooltip").toHaveText("Supercalifragilisticexpalidocious : my tooltip");
 
         await contains(":iframe .test-options-target").hover();
         expect(".o-tooltip").toHaveCount(0);

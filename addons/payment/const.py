@@ -539,13 +539,13 @@ CURRENCY_MINOR_UNITS = {
 }
 
 REPORT_REASONS_MAPPING = {
-    "exceed_min_or_max_amount": _lt("minimum or maximum amount exceeded"),
-    "express_checkout_not_supported": _lt("express checkout not supported"),
-    "incompatible_country": _lt("incompatible country"),
-    "incompatible_currency": _lt("incompatible currency"),
-    "incompatible_website": _lt("incompatible website"),
-    "manual_capture_not_supported": _lt("manual capture not supported"),
-    "provider_not_available": _lt("no supported provider available"),
-    "tokenization_not_supported": _lt("tokenization not supported"),
-    "validation_not_supported": _lt("tokenization without payment no supported"),
+    "duplicate_code": _lt("Payment method with duplicate code"),
+    "exceed_min_or_max_amount": _lt("Minimum or maximum amount exceeded"),
+    "express_checkout_not_supported": _lt("Express checkout not supported"),
+    "incompatible_country": _lt("Incompatible country"),
+    "incompatible_currency": _lt("Incompatible currency"),
+    "incompatible_website": _lt("Incompatible website"),
+    "manual_capture_not_supported": _lt("Manual capture not supported"),
+    "tokenization_not_supported": _lt("Tokenization not supported"),
+    "validation_not_supported": _lt("Tokenization without payment no supported"),
 }

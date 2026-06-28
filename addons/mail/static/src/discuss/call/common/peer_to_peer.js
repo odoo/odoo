@@ -1,5 +1,4 @@
 import { rpc } from "@web/core/network/rpc";
-import { Deferred } from "@web/core/utils/concurrency";
 import { browser } from "@web/core/browser/browser";
 
 export const STREAM_TYPE = Object.freeze({
@@ -115,7 +114,7 @@ export class Peer {
         this.hasPriority = hasPriority;
         this.connectRetryDelay = connectRetryDelay;
         this.sequence = sequence;
-        this.ready = new Deferred();
+        this.isReadyPromise = new Promise((resolve) => (this._resolveIsReady = resolve));
     }
 
     disconnect() {
@@ -136,7 +135,7 @@ export class Peer {
                 }
             }
         }
-        this.ready.resolve?.();
+        this._resolveIsReady(false);
         this.connection?.close();
         this.connection = undefined;
         this.dataChannel?.close();
@@ -326,7 +325,7 @@ export class PeerToPeer extends EventTarget {
             return peer;
         }
         const newPeer = this._createPeer(id, options);
-        await newPeer.ready;
+        await newPeer.isReadyPromise;
         return newPeer;
     }
     removePeer(id) {
@@ -426,7 +425,7 @@ export class PeerToPeer extends EventTarget {
      * @param {STREAM_TYPE[keyof STREAM_TYPE]} streamType
      * @param {MediaStreamTrack | null} [track] track to be sent to the other call participants
      */
-    async updateUpload(streamType, track) {
+    updateUpload(streamType, track) {
         this._tracks[streamType] = track || null;
         this.updateInfo({
             isScreenSharingOn: Boolean(this._tracks[STREAM_TYPE.SCREEN]),
@@ -434,9 +433,9 @@ export class PeerToPeer extends EventTarget {
         });
         const proms = [];
         for (const peer of this.peers.values()) {
-            proms.push(peer.ready.then(() => this._updateRemote(peer, streamType)));
+            proms.push(peer.isReadyPromise.then(() => this._updateRemote(peer, streamType)));
         }
-        await Promise.all(proms);
+        return Promise.all(proms);
     }
     /**
      * @param {Info} info
@@ -485,7 +484,7 @@ export class PeerToPeer extends EventTarget {
                     name: UPDATE_EVENT.BROADCAST,
                     payload: { senderId: id, message: payload },
                 });
-                peer.ready.resolve(true);
+                peer._resolveIsReady(true);
                 break;
             }
             case INTERNAL_EVENT.DISCONNECT: {
@@ -900,7 +899,7 @@ export class PeerToPeer extends EventTarget {
                 return;
             }
             peer.medias[streamType].track = track;
-            if (!(await peer.ready)) {
+            if (!(await peer.isReadyPromise)) {
                 return;
             }
             this._emitUpdate({

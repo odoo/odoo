@@ -75,7 +75,7 @@ class TestMailPerformance(FullBaseMailPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=110):  # test_mail_full: 108
+        with self.assertQueryCount(employee=102):  # test_mail_full: ??
             new_message = record_ticket.message_post(
                 attachment_ids=attachments.ids,
                 body=Markup('<p>Test Content</p>'),
@@ -232,7 +232,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_norating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=10):
+        with self.assertQueryCount(employee=11):
             # res = messages_all.portal_message_format(options=None)
             res = messages_all.portal_message_format(options={'rating_include': False})
 
@@ -247,21 +247,25 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                     {
                         'checksum': message.attachment_ids[0].checksum,
                         'filename': 'Test file 1',
+                        'has_thumbnail': False,
                         'id': message.attachment_ids[0].id,
                         'mimetype': 'text/plain',
                         'name': 'Test file 1',
                         'raw_access_token': message.attachment_ids[0]._get_raw_access_token(),
                         'res_id': record.id,
                         'res_model': record._name,
+                        'thumbnail_access_token': message.attachment_ids[0]._get_thumbnail_token(),
                     }, {
                         'checksum': message.attachment_ids[1].checksum,
                         'filename': 'Test file 0',
+                        'has_thumbnail': False,
                         'id': message.attachment_ids[1].id,
                         'mimetype': 'text/plain',
                         'name': 'Test file 0',
                         'raw_access_token': message.attachment_ids[1]._get_raw_access_token(),
                         'res_id': record.id,
                         'res_model': record._name,
+                        'thumbnail_access_token': message.attachment_ids[1]._get_thumbnail_token(),
                     }
                 ]
             )
@@ -285,7 +289,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_rating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=25):  # 24, sometimes +1
+        with self.assertQueryCount(employee=26):  # 25, sometimes +1
             res = messages_all.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), len(messages_all))
@@ -307,7 +311,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_monorecord(self):
         message = self.messages_all[0].with_user(self.env.user)
 
-        with self.assertQueryCount(employee=16):  # randomness: 15+1
+        with self.assertQueryCount(employee=17):  # randomness: 16+1
             res = message.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), 1)
@@ -320,6 +324,8 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
             {
                 "attachment_ids": [Command.create({"name": "test attachment"})],
                 "author_id": self.user_employee.partner_id.id,
+                "model": self.user_employee.partner_id._name,
+                "res_id": self.user_employee.partner_id.id,
             }
         )
         res = message.portal_message_format()
@@ -415,25 +421,25 @@ class TestRatingPerformance(FullBaseMailPerformance):
     @users('employee')
     @warmup
     def test_rating_last_value_perfs(self):
-        with self.assertQueryCount(employee=314):  # tmf: 274
+        with self.assertQueryCount(employee=334):  # tmf: 274
             self.create_ratings('mail.test.rating.thread')
 
-        with self.assertQueryCount(employee=323):  # tmf: 283
+        with self.assertQueryCount(employee=343):  # tmf: 283
             self.apply_ratings(1)
 
-        with self.assertQueryCount(employee=282):  # tmf: 242
+        with self.assertQueryCount(employee=302):  # tmf: 242
             self.apply_ratings(5)
 
     @users('employee')
     @warmup
     def test_rating_last_value_perfs_with_rating_mixin(self):
-        with self.assertQueryCount(employee=357):  # tmf: 297
+        with self.assertQueryCount(employee=377):  # tmf: 297
             self.create_ratings('mail.test.rating')
 
-        with self.assertQueryCount(employee=364):  # tmf: 325
+        with self.assertQueryCount(employee=384):  # tmf: 325
             self.apply_ratings(1)
 
-        with self.assertQueryCount(employee=343):  # tmf: 304
+        with self.assertQueryCount(employee=363):  # tmf: 304
             self.apply_ratings(5)
 
         with self.assertQueryCount(employee=1):

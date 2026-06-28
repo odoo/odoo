@@ -1,75 +1,61 @@
 /** @odoo-module */
 
-import { Component, useRef, useState, xml } from "@odoo/owl";
+import { Component, props, signal, t, xml } from "@odoo/owl";
 import { useAutofocus, useHootKey, useWindowListener } from "../hoot_utils";
-
-/**
- * @typedef {{
- *  buttonClassName?: string:
- *  className?: string:
- *  slots: Record<string, any>;
- * }} HootDropdownProps
- */
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
-/** @extends {Component<HootDropdownProps, import("../hoot").Environment>} */
 export class HootDropdown extends Component {
     static template = xml`
-        <div class="${HootDropdown.name} relative" t-att-class="props.className" t-ref="root">
+        <div class="${HootDropdown.name} relative" t-att-class="this.props.className" t-ref="this.rootRef">
             <button
-                t-ref="toggler"
+                t-ref="this.togglerRef"
                 class="flex rounded p-2 transition-colors"
-                t-att-class="props.buttonClassName"
+                t-att-class="this.props.buttonClassName"
             >
-                <t t-slot="toggler" open="state.open" />
+                <t t-call-slot="toggler" open="this.isOpen()" />
             </button>
-            <t t-if="state.open">
+            <t t-if="this.isOpen()">
                 <div
                     class="
                         hoot-dropdown absolute animate-slide-down
                         flex flex-col end-0 p-3 gap-2
                         bg-base text-base mt-1 shadow rounded z-2"
                 >
-                    <button class="fixed end-2 top-2 p-1 text-rose sm:hidden" t-on-click="() => state.open = false">
+                    <button class="fixed end-2 top-2 p-1 text-rose sm:hidden" t-on-click="() => this.isOpen.set(false)">
                         <i class="fa fa-times w-5 h-5" />
                     </button>
-                    <t t-slot="menu" open="state.open" />
+                    <t t-call-slot="menu" open="this.isOpen()" />
                 </div>
             </t>
         </div>
     `;
-    static props = {
-        buttonClassName: { type: String, optional: true },
-        className: { type: String, optional: true },
-        slots: {
-            type: Object,
-            shape: {
-                toggler: Object,
-                menu: Object,
-            },
-        },
-    };
+
+    // Props & plugins
+    props = props({
+        buttonClassName: t.string().optional(),
+        className: t.string().optional(),
+        slots: t.object(["toggler", "menu"]),
+    });
+
+    // Reactive values
+    isOpen = signal(false, { type: t.boolean() });
+    rootRef = signal(null, { type: t.ref(HTMLDivElement) });
+    togglerRef = signal(null, { type: t.ref(HTMLButtonElement) });
 
     setup() {
-        this.rootRef = useRef("root");
-        this.togglerRef = useRef("toggler");
-        this.state = useState({
-            open: false,
-        });
-
         useAutofocus(this.rootRef);
-        useHootKey(["Escape"], this.close);
+        useHootKey(["Escape"], this.close.bind(this));
         useWindowListener(
             "click",
             (ev) => {
                 const path = ev.composedPath();
-                if (!path.includes(this.rootRef.el)) {
-                    this.state.open = false;
-                } else if (path.includes(this.togglerRef.el)) {
-                    this.state.open = !this.state.open;
+                if (!path.includes(this.rootRef())) {
+                    this.isOpen.set(false);
+                } else if (path.includes(this.togglerRef())) {
+                    this.isOpen.set(!this.isOpen());
                 }
             },
             { capture: true }
@@ -80,9 +66,9 @@ export class HootDropdown extends Component {
      * @param {KeyboardEvent} ev
      */
     close(ev) {
-        if (this.state.open) {
+        if (this.isOpen()) {
             ev.preventDefault();
-            this.state.open = false;
+            this.isOpen.set(false);
         }
     }
 }

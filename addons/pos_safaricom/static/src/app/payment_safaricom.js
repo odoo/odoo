@@ -72,11 +72,16 @@ export class PaymentSafaricom extends PaymentInterface {
 
         line.setPaymentStatus("waitingCard");
 
+        // Ensure we have a valid account reference
+        const accountRef = order.name && order.name !== "/" ? order.name : order.uuid;
+        const transDesc =
+            order.name && order.name !== "/" ? `Payment for ${order.name}` : "POS Payment";
+
         const data = {
             amount: Math.round(line.amount),
             phone_number: phoneNumber,
-            account_reference: order.name || order.uuid,
-            transaction_desc: `Payment for ${order.name || "Order"}`,
+            account_reference: accountRef,
+            transaction_desc: transDesc,
             checkout_request_id: line.uuid,
         };
 
@@ -155,7 +160,7 @@ export class PaymentSafaricom extends PaymentInterface {
         line.setPaymentStatus("waitingCard");
 
         const qrData = {
-            ref: order.uuid,
+            ref: order.session_id.id + "-" + order.sequence_number,
             amount: line.amount.toString(),
         };
         const qrCode = await this._call_safaricom(qrData, "generate_qr_code");
@@ -193,6 +198,7 @@ export class PaymentSafaricom extends PaymentInterface {
             }
             line.setAmount(transaction.amount);
             line.transaction_id = transaction.id;
+            line.safaricom_transaction_id = transaction.trans_id;
             line.card_type = "M-Pesa";
             line.cardholder_name = transaction.phone;
             line.setPaymentStatus("done");

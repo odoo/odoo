@@ -12,7 +12,7 @@
                         <block title="Expenses" name="expenses_setting_container">
                             <setting id="create_expense_setting" string="Incoming Emails"
                                      help="Create expenses from incoming emails"
-                                     title="Send an email to this email alias with the receipt in attachment to create an expense in one click. If the first word of the mail subject contains the category's internal reference or the category name, the corresponding category will automatically be set. Type the expense amount in the mail subject to set it on the expense too.">
+                                     title="Send an email to this email alias with the receipt in attachment to create an expense in one click. If the first word of the mail subject contains the product's internal reference or the product name, the corresponding product will automatically be set. Type the expense amount in the mail subject to set it on the expense too.">
                                 <field name="hr_expense_use_mailgateway"/>
                                 <div class="content-group" invisible="not hr_expense_use_mailgateway or not alias_domain_id">
                                     <div class="mt16 d-flex align-items-start" dir="ltr">
@@ -50,7 +50,8 @@
                         <block title="Accounting">
                             <setting company_dependent="1" help="Default accounting journal for expenses paid by employees."
                                      string="Employee Expense Journal">
-                                <field name="expense_journal_id"/>
+                                <field name="expense_journal_id"
+                                       context="{'default_type': 'purchase', 'from_expense_employee_journal': True}"/>
                             </setting>
                             <setting company_dependent="1" string="Payment methods"
                                      help="Payment method allowed for expenses paid by company.">
@@ -59,6 +60,17 @@
                             </setting>
                         </block>
                     </app>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_journal_view_form_inherit_hr_expense" model="ir.ui.view">
+            <field name="name">account.journal.form.inherit.hr.expense</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type']" position="attributes">
+                    <attribute name="readonly">context.get('from_expense_employee_journal')</attribute>
                 </xpath>
             </field>
         </record>

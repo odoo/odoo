@@ -36,9 +36,6 @@ class TestSaleMatrixUi(TestMatrixCommon):
         cls.env.company.currency_id = cls.currency
 
     def test_sale_matrix_ui(self):
-        self.env.ref('base.group_user').implied_ids += (
-            self.env.ref('sale_management.group_sale_order_template')
-        )
         # While we check the untaxed amounts, the view requires taxes to be present
         # on the sale order to display the untaxed amount line.
         self.env['account.tax'].search([]).write({'active': False})

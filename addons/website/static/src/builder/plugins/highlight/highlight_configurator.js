@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
-import { ColorPicker } from "@web/core/color_picker/color_picker";
+import { Component, onWillStart, proxy } from "@odoo/owl";
+import { ColorPicker } from "@html_editor/components/color_picker/color_picker";
 import { HighlightPicker } from "./highlight_picker";
 import { normalizeColor } from "@html_builder/utils/utils_css";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
@@ -48,7 +47,7 @@ export class HighlightConfigurator extends Component {
     };
 
     setup() {
-        this.state = useState(this.props.getHighlightState());
+        this.state = proxy(this.props.getHighlightState());
         this.highlightIdToName = highlightIdToName;
         onWillStart(() => {
             if (!this.state.highlightId) {

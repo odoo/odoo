@@ -3,7 +3,7 @@
 
 from odoo.exceptions import AccessDenied
 
-from odoo import api, models, SUPERUSER_ID
+from odoo import models
 from odoo.modules.registry import Registry
 
 
@@ -49,16 +49,16 @@ class ResUsers(models.Model):
                         }
             raise
 
-    @api.model
-    def change_password(self, old_passwd, new_passwd):
+    def _change_password(self, new_passwd):
         if new_passwd:
             Ldap = self.env['res.company.ldap']
             for conf in Ldap._get_ldap_dicts():
-                changed = Ldap._change_password(conf, self.env.user.login, old_passwd, new_passwd)
+                changed = Ldap._change_password(conf, self.login, new_passwd)
                 if changed:
-                    self.env.user._set_empty_password()
+                    self._log_change_password("LDAP password")
+                    self._set_empty_password()
                     return True
-        return super().change_password(old_passwd, new_passwd)
+        return super()._change_password(new_passwd)
 
     def _set_empty_password(self):
         self.flush_recordset(['password'])

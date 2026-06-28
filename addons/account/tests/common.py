@@ -15,6 +15,7 @@ import re
 import difflib
 import pprint
 import requests
+from collections import defaultdict
 from contextlib import contextmanager
 from functools import wraps
 from itertools import count
@@ -458,6 +459,7 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     def python_tax(self, formula, **kwargs):
         self.ensure_installed('account_tax_python')
+
         self.tax_number += 1
         return self.env['account.tax'].create({
             'name': f"code_({self.tax_number})",
@@ -471,7 +473,6 @@ class AccountTestInvoicingCommon(ProductCommon):
     def setup_armageddon_tax(cls, tax_name, company_data, **kwargs):
         type_tax_use = kwargs.get('type_tax_use', 'sale')
         cash_basis_transition_account = company_data['default_account_tax_sale'] and company_data['default_account_tax_sale'].copy()
-        cash_basis_transition_account.reconcile = True
         return cls.env['account.tax'].create({
             'name': '%s (group)' % tax_name,
             'amount_type': 'group',
@@ -765,10 +766,10 @@ class AccountTestInvoicingCommon(ProductCommon):
         )
 
     @classmethod
-    def _create_account_move_send_wizard_single(cls, move, *, as_user=None, **kwargs):
+    def _create_account_move_send_wizard_single(cls, move, *, as_user=None, no_invoice_reminder=False, **kwargs):
         return cls.env['account.move.send.wizard']\
             .with_user(as_user)\
-            .with_context(active_model='account.move', active_ids=move.ids)\
+            .with_context(active_model='account.move', active_ids=move.ids, no_invoice_reminder=no_invoice_reminder)\
             .create(kwargs)
 
     @classmethod
@@ -1319,7 +1320,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                 for i in range(len(ignore_schema)):
                     cls._apply_json_ignore_schema(data[i], ignore_schema[i])
 
-    def assert_json(self, content_to_assert: dict | list, test_name: str, subfolder=''):
+    def assert_json(self, content_to_assert: dict | list, test_name: str, subfolder='', force_save=False):
         """
         Helper to save/assert a dictionary to a JSON file located in the corresponding module `test_files`.
         By default, this method will assert the dictionary with the JSON content.
@@ -1332,26 +1333,35 @@ class AccountTestInvoicingCommon(ProductCommon):
         :param content_to_assert: dictionary | list to save or assert to the corresponding test file
         :param test_name: the test file name
         :param subfolder: the test file subfolder(s), separated by `/` if there is more than one
+        :param force_save: force the assert method to save the XML to the test file instead of asserting it
         """
         json_path = self._get_test_file_path(f"{test_name}.json", subfolder=subfolder)
         content_to_assert = json.loads(json.dumps(content_to_assert))
         if json_ignore_schema := self._get_json_ignore_schema(subfolder):
             self._apply_json_ignore_schema(content_to_assert, json_ignore_schema)
 
-        if 'SAVE_JSON' in config['test_tags']:
+        if 'SAVE_JSON' in (config['test_tags'] or '').split(',') or force_save:
             with file_open(json_path, 'w') as f:
                 f.write(json.dumps(content_to_assert, indent=4))
             _logger.info("Saved the generated JSON content to %s", json_path)
         else:
             with file_open(json_path, 'rb') as f:
                 expected_content = json.loads(f.read())
-            self.assertDictEqual(content_to_assert, expected_content)
+            try:
+                self.assertDictEqual(content_to_assert, expected_content)
+            except AssertionError:
+                if not force_save and 'SAVE_JSON_ON_FAIL' in config['test_tags']:
+                    self.assert_json(content_to_assert=content_to_assert, test_name=test_name, subfolder=subfolder, force_save=True)
+                else:
+                    raise
 
     def assert_xml(
             self,
             xml_element: str | bytes | BinaryValue | etree._Element,
             test_name: str,
             subfolder='',
+            xpath_to_apply='',
+            force_save=False,
     ):
         """
         Helper to save/assert an XML element/string/bytes to an XML file.
@@ -1368,6 +1378,8 @@ class AccountTestInvoicingCommon(ProductCommon):
         :param xml_element: the _Element/str/bytes content to be saved or asserted
         :param test_name: the test file name
         :param subfolder: the test file subfolder(s), separated by `/` if there is more than one
+        :param xpath_to_apply: optional `xpath` string to be applied on the expected file
+        :param force_save: force the assert method to save the XML to the test file instead of asserting it
         :return:
         """
         file_name = f"{test_name}.xml"
@@ -1379,7 +1391,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         if isinstance(xml_element, bytes):
             xml_element = etree.fromstring(xml_element)
 
-        if 'SAVE_XML' in config['test_tags']:
+        if 'SAVE_XML' in (config['test_tags'] or '').split(',') or force_save:
             # Save the XML to tmp folder before modifying some elements with `___ignore___`
             etree.indent(xml_element, space='\t')
             with patch.object(re, 'fullmatch', lambda _arg1, _arg2: True):
@@ -1417,7 +1429,103 @@ class AccountTestInvoicingCommon(ProductCommon):
                 expected_xml_str = f.read()
 
             expected_xml_tree = etree.fromstring(expected_xml_str)
-            self.assertXmlTreeEqual(xml_element, expected_xml_tree)
+            if xpath_to_apply:
+                expected_xml_tree = self.with_applied_xpath(expected_xml_tree, xpath_to_apply)
+            try:
+                self.assertXmlTreeEqual(xml_element, expected_xml_tree)
+            except AssertionError:
+                if not force_save and 'SAVE_XML_ON_FAIL' in config['test_tags']:
+                    self.assert_xml(
+                        xml_element=xml_element,
+                        test_name=test_name,
+                        subfolder=subfolder,
+                        xpath_to_apply=xpath_to_apply,
+                        force_save=True,
+                    )
+                else:
+                    raise
+
+    def _assert_iap_valid_xml(self, xml_element: str | bytes | etree._Element):
+        """
+        Helper to validate the xml_element against xsd and schematron files on the IAP server.
+        This function can only be run in EXTERNAL_MODE!
+
+        :param xml_element: the _Element/str/bytes content to be validated
+        :return:
+        """
+        assert 'EXTERNAL_MODE' in config['test_tags'], "Can only be run in EXTERNAL_MODE"
+
+        def format_errors(errors: list[str] | dict[str, list[str]]) -> str:
+            if not errors:
+                return ''
+
+            if isinstance(errors, list):
+                return ' - ' + '\n - '.join(errors)
+
+            return '\n'.join(
+                f'{group}\n{format_errors(group_errors)}\n' for group, group_errors in errors.items()
+            )
+
+        if isinstance(xml_element, etree._Element):
+            xml_element = etree.tostring(xml_element, encoding='UTF-8')
+        if isinstance(xml_element, bytes):
+            xml_element = xml_element.decode('utf-8')
+
+        common_payload = {
+            'jsonrpc': '2.0',
+            'method': 'call',
+            'params': {
+                'file_content': xml_element,
+            },
+        }
+
+        # Get file details
+        details_response = requests.post(url='https://iap-services.odoo.com/file_validator/get/details', json=common_payload, timeout=5)
+        self.assertEqual(details_response.status_code, 200)
+        details_json = details_response.json()['result']
+
+        # XSD validation
+        xsd_payload = {
+            **common_payload,
+            'params': {
+                **common_payload['params'],
+                'xsd_name': details_json['xsd_name'],
+            },
+        }
+
+        xsd_response = requests.post(url='https://iap-services.odoo.com/file_validator/validate/xsd', json=xsd_payload, timeout=5)
+        self.assertEqual(xsd_response.status_code, 200)
+        xsd_json = xsd_response.json()['result']
+        self.assertFalse(bool(xsd_json['errors']), f"Call to xsd validator failed:\n\n{format_errors(xsd_json['errors'])}")
+        self.assertFalse(bool(xsd_json['xsd_errors']), f"XSD validation failed with following error(s):\n\n{format_errors(xsd_json['xsd_errors'])}")
+
+        # Schematron validation
+        schematron_payload = {
+            **common_payload,
+            'params': {
+                **common_payload['params'],
+                'script_name': 'lxml',
+            },
+        }
+
+        schematron_validation_errors = defaultdict(list)
+        fail_on_warning = 'EXTERNAL_MODE_FAIL_ON_WARNING' in config['test_tags']
+        with requests.Session() as session:
+            for schematron_name in details_json['schematrons']:
+                schematron_payload['params']['schematron_name'] = schematron_name
+
+                schematron_response = session.post(url='https://iap-services.odoo.com/file_validator/validate/schematron', json=schematron_payload, timeout=5)
+                self.assertEqual(schematron_response.status_code, 200, f"Schematron call failed for '{schematron_name}'")
+                schematron_json = schematron_response.json()['result']
+
+                self.assertFalse(bool(schematron_json['errors']), f"Error for schematron '{schematron_name}': \n\n{format_errors(schematron_json['errors'])}")
+
+                if schematron_json['fatals']:
+                    schematron_validation_errors[schematron_name].extend(schematron_json['fatals'])
+                if fail_on_warning and schematron_json['warnings']:
+                    schematron_validation_errors[schematron_name].extend(schematron_json['warnings'])
+
+        self.assertFalse(bool(schematron_validation_errors), f"Schematron validation failed with following error(s):\n\n{format_errors(schematron_validation_errors)}")
 
     @classmethod
     def _turn_node_as_dict_hierarchy(cls, node, path=''):

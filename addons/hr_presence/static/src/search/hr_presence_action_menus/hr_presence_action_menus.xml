@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="hr_presence.actionmenu" t-inherit="web.ActionMenus" t-inherit-mode="primary">
-        <xpath expr="//div[@t-if='this.props.items.print?.length']" position="before">
+    <t t-name="hr_presence.actionmenu" t-inherit="hr.actionmenu" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_cp_action_menus')]" position="before">
             <t t-if="this.PresenceActionItems.length" class="d-inline-block">
-                <t t-call="hr_presence.menu">
-                    <t t-set="is_actionmenu" t-value="'True'"/>
-                </t>
+                <t t-call="hr_presence.PresenceCogMenu" is_actionmenu="true"/>
             </t>
         </xpath>
     </t>

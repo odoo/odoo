@@ -19,7 +19,7 @@ class TestUi(HttpCase):
             'website_published': True,
         })
         # set current company's fiscal country to Taiwan
-        website = self.env['website'].get_current_website()
+        website = self.env.ref('base.default_website')
         website.company_id.write({
             'l10n_tw_edi_ecpay_staging_mode': True,
             'l10n_tw_edi_ecpay_merchant_id': '1234',

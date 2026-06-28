@@ -51,6 +51,7 @@ export function _makeUser(session) {
         partner_write_date: writeDate,
         user_companies: userCompanies,
         groups = {},
+        bundle_params: bundleParams,
     } = session;
     const settings = user_settings || {};
 
@@ -162,7 +163,7 @@ export function _makeUser(session) {
     const getAccessRightCacheKey = (model, operation, ids) =>
         JSON.stringify([model, operation, ids]);
     const accessRightCache = new Cache(getAccessRightCacheValue, getAccessRightCacheKey);
-    const lang = pyToJsLocale(context?.lang);
+    const lang = pyToJsLocale(context?.lang || bundleParams?.lang);
 
     return {
         name,

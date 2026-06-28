@@ -1,5 +1,6 @@
-import { useExternalListener, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
-import { Component, onWillDestroy, xml } from "@odoo/owl";
+import { useExternalListener, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useCrossDocumentListener } from "../utils/hooks";
+import { Component, onWillDestroy, props, t, xml, proxy } from "@odoo/owl";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { getIFrame } from "@web/core/position/utils";
@@ -7,33 +8,28 @@ import { useActiveElement } from "@web/core/ui/ui_service";
 
 export class EditorOverlay extends Component {
     static template = xml`
-        <div t-custom-ref="root" class="overlay" t-att-class="props.className" t-on-pointerdown.stop="() => {}">
-            <t t-component="props.Component" t-props="props.props"/>
+        <div t-custom-ref="root" class="overlay" t-att-class="this.props.className" t-on-pointerdown.stop="() => {}">
+            <t t-component="this.props.Component" t-props="this.props.props"/>
         </div>`;
 
-    static props = {
-        target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE, optional: true },
-        initialSelection: { type: Object, optional: true },
-        Component: Function,
-        props: { type: Object, optional: true },
-        editable: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
-        bus: Object,
-        shared: Object,
-        close: Function,
-        isOverlayOpen: Function,
+    props = props({
+        target: t.customValidator(t.any(), (el) => el.nodeType === Node.ELEMENT_NODE).optional(),
+        initialSelection: t.object().optional(),
+        Component: t.function(),
+        props: t.object().optional(),
+        editable: t.customValidator(t.any(), (el) => el.nodeType === Node.ELEMENT_NODE),
+        bus: t.object(),
+        shared: t.object(),
+        close: t.function(),
+        isOverlayOpen: t.function(),
+        getCustomRect: t.function().optional(),
 
         // Props from createOverlay
-        positionOptions: { type: Object, optional: true },
-        className: { type: String, optional: true },
-        closeOnPointerdown: { type: Boolean, optional: true },
-        hasAutofocus: { type: Boolean, optional: true },
-    };
-
-    static defaultProps = {
-        className: "",
-        closeOnPointerdown: true,
-        hasAutofocus: false,
-    };
+        positionOptions: t.object().optional(),
+        className: t.string().optional(""),
+        closeOnPointerdown: t.boolean().optional(true),
+        hasAutofocus: t.boolean().optional(false),
+    });
 
     setup() {
         this.lastSelection = this.props.initialSelection;
@@ -78,12 +74,7 @@ export class EditorOverlay extends Component {
                     this.props.close();
                 }
             };
-            const editableDocument = this.props.editable.ownerDocument;
-            useExternalListener(editableDocument, "pointerdown", clickAway);
-            // Listen to pointerdown outside the iframe
-            if (editableDocument !== document) {
-                useExternalListener(document, "pointerdown", clickAway);
-            }
+            useCrossDocumentListener(this.props.editable.ownerDocument, "pointerdown", clickAway);
         }
 
         if (this.props.hasAutofocus) {
@@ -95,6 +86,12 @@ export class EditorOverlay extends Component {
         const resizeObserver = new ResizeObserver(() => position.unlock());
         resizeObserver.observe(container);
         onWillDestroy(() => resizeObserver.disconnect());
+        if (scrollContainer === editable) {
+            // rangeElement is a sibling of the editable, so position_hook's scroll
+            // listener won't detect editable.contains(rangeElement) as true. Listen
+            // directly so scrolling within the editable still triggers repositioning.
+            useExternalListener(editable, "scroll", () => position.unlock());
+        }
         const positionOptions = {
             position: "bottom-start",
             container: container,
@@ -106,7 +103,7 @@ export class EditorOverlay extends Component {
         };
         position = usePosition("root", getTarget, positionOptions);
 
-        this.overlayState = useState({ isOverlayVisible: true });
+        this.overlayState = proxy({ isOverlayVisible: true });
         useSubEnv({ overlayState: this.overlayState });
     }
 
@@ -130,12 +127,15 @@ export class EditorOverlay extends Component {
             }
             range = this.lastSelection.range;
         }
-        let rect = range.getBoundingClientRect();
+        let rect =
+            this.props.getCustomRect?.() ||
+            this.lastSelection.rect ||
+            range.getBoundingClientRect();
         if (rect.x === 0 && rect.width === 0 && rect.height === 0) {
             // Attention, ignoring DOM mutations is always dangerous (when we add or remove nodes)
             // because if another mutation uses the target that is not observed, that mutation can never be applied
             // again (when undo/redo and in collaboration).
-            this.props.shared.ignoreDOMMutations(() => {
+            this.props.shared.ignoreDomMutations(() => {
                 const clonedRange = range.cloneRange();
                 const shadowCaret = doc.createTextNode("|");
                 clonedRange.insertNode(shadowCaret);

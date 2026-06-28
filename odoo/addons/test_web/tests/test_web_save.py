@@ -75,21 +75,21 @@ class TestWebSave(TransactionCase):
     def test_web_save_multi(self):
         Model = self.env['test_orm.mixed']
         records = Model.create([
-            {'foo': 'Record 1', 'count': 100, 'number': 2.5},
-            {'foo': 'Record 2', 'count': 200, 'number': 3.5},
+            {'char': 'Record 1', 'integer': 100, 'number': 2.5},
+            {'char': 'Record 2', 'integer': 200, 'number': 3.5},
         ])
 
         vals = [
-            {"foo": "Updated 1", "count": 150, "number": 1.1},
-            {"count": 250, "number": 1.1},
+            {"char": "Updated 1", "integer": 150, "number": 1.1},
+            {"integer": 250, "number": 1.1},
         ]
         specification = {
-            "foo": {},
-            "count": {},
+            "char": {},
+            "integer": {},
         }
         result = records.web_save_multi(vals, specification)
 
         self.assertEqual(result, [
-            {'id': records[0].id, 'foo': 'Updated 1', 'count': 150},
-            {'id': records[1].id, 'foo': 'Record 2', 'count': 250},
+            {'id': records[0].id, 'char': 'Updated 1', 'integer': 150},
+            {'id': records[1].id, 'char': 'Record 2', 'integer': 250},
         ])

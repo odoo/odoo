@@ -1,10 +1,14 @@
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
-function buildTrigger({ title, body } = {}) {
+function buildTrigger({ title, body, header } = {}) {
     let selector = `.modal:not(.o_inactive_modal)`;
 
     if (title) {
         selector += `:has(.modal-title:contains("${title}"))`;
+    }
+
+    if (header) {
+        selector += `:has(.modal-header:contains("${header}"))`;
     }
 
     if (body) {

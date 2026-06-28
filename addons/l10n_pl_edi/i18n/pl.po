@@ -1,20 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_pl_edi
+# * l10n_pl_edi
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 19:25+0000\n"
-"PO-Revision-Date: 2026-02-06 19:23+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: \n"
+"POT-Creation-Date: 2026-06-19 18:16+0000\n"
+"PO-Revision-Date: 2026-06-13 11:31+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-master-l10n/"
+"l10n_pl_edi/pl/>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -24,8 +28,9 @@ msgstr ""
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields.selection,name:l10n_pl_edi.selection__account_move__l10n_pl_edi_status__accepted
+#, fuzzy
 msgid "Accepted"
-msgstr ""
+msgstr "Zaakceptowane"
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_config_settings__l10n_pl_edi_register
@@ -52,18 +57,21 @@ msgstr ""
 
 #. module: l10n_pl_edi
 #: model:ir.model,name:l10n_pl_edi.model_res_company
+#, fuzzy
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: l10n_pl_edi
 #: model:ir.model,name:l10n_pl_edi.model_res_config_settings
+#, fuzzy
 msgid "Config Settings"
-msgstr ""
+msgstr "Konfiguracja ustawień"
 
 #. module: l10n_pl_edi
 #: model:ir.model,name:l10n_pl_edi.model_res_partner
+#, fuzzy
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -81,8 +89,9 @@ msgstr ""
 
 #. module: l10n_pl_edi
 #: model:ir.model,website_form_label:l10n_pl_edi.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Utwórz klienta"
 
 #. module: l10n_pl_edi
 #: model_terms:ir.ui.view,arch_db:l10n_pl_edi.fa3_xml_template
@@ -95,8 +104,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_partner__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Nazwa wyświetlana"
 
 #. module: l10n_pl_edi
 #: model_terms:ir.ui.view,arch_db:l10n_pl_edi.fa3_xml_template
@@ -205,13 +215,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_config_settings__id
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_partner__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: l10n_pl_edi
 #: model:ir.model,name:l10n_pl_edi.model_account_move
+#, fuzzy
 msgid "Journal Entry"
-msgstr ""
+msgstr "Zapis dziennika"
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -234,8 +246,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_pl_edi/tools/ksef_api_service.py:0
 msgid ""
-"KSeF Authentication failed with status %(status_code)s: "
-"%(status_description)s"
+"KSeF Authentication failed with status %(status_code)s: %"
+"(status_description)s"
 msgstr ""
 
 #. module: l10n_pl_edi
@@ -248,6 +260,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_company__l10n_pl_edi_certificate
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_config_settings__l10n_pl_edi_certificate
 msgid "KSeF Certificate"
+msgstr ""
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid "KSeF Fetched Invoice XML"
 msgstr ""
 
 #. module: l10n_pl_edi
@@ -375,6 +393,12 @@ msgstr ""
 
 #. module: l10n_pl_edi
 #. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid "KSeF XML failed. The bill was created empty. Reason: %s"
+msgstr ""
+
+#. module: l10n_pl_edi
+#. odoo-python
 #: code:addons/l10n_pl_edi/models/res_config_settings.py:0
 msgid "KSeF certificate and private key are not set."
 msgstr ""
@@ -427,7 +451,13 @@ msgstr ""
 
 #. module: l10n_pl_edi
 #: model_terms:ir.ui.view,arch_db:l10n_pl_edi.fa3_xml_template
+#, fuzzy
 msgid "Odoo"
+msgstr "Odoo"
+
+#. module: l10n_pl_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pl_edi.fa3_xml_template
+msgid "PL"
 msgstr ""
 
 #. module: l10n_pl_edi
@@ -453,6 +483,11 @@ msgid "Polish eInvoice: Download vendor bills from KSeF"
 msgstr ""
 
 #. module: l10n_pl_edi
+#: model:ir.actions.server,name:l10n_pl_edi.cron_l10n_pl_edi_refresh_tokens_ir_actions_server
+msgid "Polish eInvoice: Refresh KSeF tokens"
+msgstr ""
+
+#. module: l10n_pl_edi
 #: model:ir.actions.server,name:l10n_pl_edi.cron_auto_checks_the_polish_invoice_status_ir_actions_server
 msgid "Polish eInvoice: automatically check the status of the invoice in ksef"
 msgstr ""
@@ -472,8 +507,9 @@ msgstr ""
 
 #. module: l10n_pl_edi
 #: model:ir.model.fields.selection,name:l10n_pl_edi.selection__account_move__l10n_pl_edi_status__rejected
+#, fuzzy
 msgid "Rejected"
-msgstr ""
+msgstr "Odrzucone"
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -499,7 +535,16 @@ msgstr ""
 
 #. module: l10n_pl_edi
 #: model:ir.model,name:l10n_pl_edi.model_account_move_send
+#, fuzzy
 msgid "Shared Send Invoice Wizard Functions"
+msgstr "Wspólne funkcje kreatora wysyłania faktur"
+
+#. module: l10n_pl_edi
+#. odoo-python
+#: code:addons/l10n_pl_edi/models/account_move.py:0
+msgid ""
+"Tax corresponding to '%s' required to derive the net unit price from gross "
+"price during KSeF import was not found in the mapping."
 msgstr ""
 
 #. module: l10n_pl_edi
@@ -583,8 +628,9 @@ msgstr ""
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
+#, fuzzy
 msgid "accepted"
-msgstr ""
+msgstr "zaakceptowano"
 
 #. module: l10n_pl_edi
 #. odoo-python
@@ -600,17 +646,20 @@ msgstr ""
 #. module: l10n_pl_edi
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_partner__invoice_edi_format
 #: model:ir.model.fields,field_description:l10n_pl_edi.field_res_users__invoice_edi_format
+#, fuzzy
 msgid "eInvoice format"
-msgstr ""
+msgstr "format eFaktury"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
+#, fuzzy
 msgid "rejected"
-msgstr ""
+msgstr "odrzucony"
 
 #. module: l10n_pl_edi
 #. odoo-python
 #: code:addons/l10n_pl_edi/models/account_move.py:0
+#, fuzzy
 msgid "sent"
-msgstr ""
+msgstr "Wysłane"

@@ -11,6 +11,11 @@
             'pos_glory_cash/static/src/**/*',
             ('remove', 'pos_glory_cash/static/src/app/**/*'),
         ],
+        'point_of_sale.payment_terminals': [
+            'pos_glory_cash/static/src/**/*',
+            ('remove', 'pos_glory_cash/static/src/backend/**/*'),
+            ('remove', 'pos_glory_cash/static/src/app/screens/**/*'),
+        ],
         'point_of_sale._assets_pos': [
             'pos_glory_cash/static/src/**/*',
             ('remove', 'pos_glory_cash/static/src/backend/**/*'),

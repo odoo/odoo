@@ -11,20 +11,37 @@ _logger = logging.getLogger(__name__)
 
 class Interface(Thread):
     _loop_delay = 3  # Delay (in seconds) between calls to get_devices or 0 if it should be called only once
-    connection_type = ''
     allow_unsupported = False
 
     def __init__(self):
         super().__init__(daemon=True)
         self._detected_devices = set()
-        self.drivers = sorted([d for d in drivers if d.connection_type == self.connection_type], key=lambda d: d.priority, reverse=True)
+        old_linkage = hasattr(self, 'connection_type')  # TODO: remove when v19.0 is deprecated
+        if old_linkage:
+            _logger.warning(
+                "DEPRECATION (%s): 'connection_type' will be removed in v20.0, set 'interface = %s' in "
+                "the corresponding drivers instead.",
+                self.__class__.__name__,
+                self.__class__.__name__,
+            )
+        self.drivers = sorted(
+            [
+                d for d in drivers
+                if (
+                    (old_linkage and d.connection_type == self.connection_type)
+                    or d.interface == self.__class__
+                )
+            ],
+            key=lambda d: d.priority,
+            reverse=True,
+        )
 
     def __init_subclass__(cls):
         super().__init_subclass__()
         interfaces[cls.__name__] = cls
 
     def run(self):
-        while self.connection_type and self.drivers:
+        while self.drivers:
             self.update_iot_devices(self.get_devices())
             if not self._loop_delay:
                 break
@@ -50,11 +67,13 @@ class Interface(Thread):
             d.start()
         elif self.allow_unsupported and identifier not in unsupported_devices:
             _logger.info('Unsupported device %s is now connected', identifier)
+            device_type = self.__class__.__name__.lower().replace('interface', '')
             unsupported_devices[identifier] = {
-                'name': f'Unknown device ({self.connection_type})',
-                'identifier': identifier,
-                'type': 'unsupported',
-                'connection': 'direct' if self.connection_type == 'usb' else self.connection_type,
+                "name": f"Unknown device ({device_type})",
+                "identifier": identifier,
+                "type": "unsupported",
+                # Only "serial" and "usb" allow unsupported
+                "connection": "direct" if device_type == "usb" else device_type,
             }
 
     def remove_device(self, identifier):

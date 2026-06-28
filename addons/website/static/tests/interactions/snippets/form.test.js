@@ -9,8 +9,9 @@ import {
     queryOne,
     select,
     setInputFiles,
+    edit,
 } from "@odoo/hoot-dom";
-import { advanceTime } from "@odoo/hoot-mock";
+import { advanceTime, runAllTimers } from "@odoo/hoot-mock";
 
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
@@ -31,6 +32,13 @@ function checkField(inputEl, isVisible, hasError) {
     hasError
         ? expect(fieldEl).toHaveClass("o_has_error")
         : expect(fieldEl).not.toHaveClass("o_has_error");
+}
+
+async function fillAndSubmitForm(el, value) {
+    await click(el);
+    await edit(value);
+    await runAllTimers();
+    await click("a.s_website_form_send");
 }
 
 const formTemplate = /* html */ `
@@ -90,6 +98,129 @@ const formTemplate = /* html */ `
                                 </label>
                                 <div class="col-sm">
                                     <input type="hidden" class="form-control s_website_form_input o_translatable_attribute" name="email_to" value="info@yourcompany.example.com"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                            <div style="width: 200px;" class="s_website_form_label"></div>
+                            <span id="s_website_form_result"></span>
+                            <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+`;
+
+const formWithRestrictedFieldsTemplate = /* html */ `
+    <div id="wrapwrap">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+                <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+                    <div class="s_website_form_rows row s_col_no_bgcolor">
+                        <div data-name="Field" data-requirement-comparator="substring" data-requirement-condition="[{&quot;requirement_text&quot;:&quot;hello&quot;,&quot;_id&quot;:&quot;0&quot;,&quot;id&quot;:&quot;hello&quot;},{&quot;requirement_text&quot;:&quot;noway&quot;,&quot;_id&quot;:&quot;1&quot;,&quot;id&quot;:&quot;noway&quot;}]" data-error-message="This field must contain one of the keyword(s): 'hello and noway'" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char" data-translated-name="Your Name">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="o5vq2ntfwjaw">
+                                    <span class="s_website_form_label_content">Your Name</span>
+                                    <span class="s_website_form_mark">  *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input" type="text" name="name" required="" placeholder="" id="o5vq2ntfwjaw" data-fill-with="name">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email" data-translated-name="Your Email" data-requirement-comparator="domain" data-requirement-condition="[{&quot;requirement_text&quot;:&quot;gmail.com&quot;,&quot;_id&quot;:&quot;0&quot;,&quot;id&quot;:&quot;gmail.com&quot;},{&quot;requirement_text&quot;:&quot;icloud.com&quot;,&quot;_id&quot;:&quot;1&quot;,&quot;id&quot;:&quot;icloud.com&quot;}]" data-error-message="This field must have one of these email domain(s): gmail.com and icloud.com.">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="odfcbsocir26">
+                                    <span class="s_website_form_label_content">Your Email</span>
+                                    <span class="s_website_form_mark">  *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input" type="email" name="email_from" required="" placeholder="" id="odfcbsocir26" data-fill-with="email">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" data-requirement-comparator="!substring" data-requirement-condition="[{&quot;requirement_text&quot;:&quot;football&quot;,&quot;_id&quot;:&quot;0&quot;,&quot;id&quot;:&quot;football&quot;},{&quot;requirement_text&quot;:&quot;cricket&quot;,&quot;_id&quot;:&quot;1&quot;,&quot;id&quot;:&quot;cricket&quot;}]" data-error-message="This field must not include the keyword(s): 'football and cricket'" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="char" data-translated-name="Subject">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ogrut2y7e6ld">
+                                    <span class="s_website_form_label_content">Subject</span>
+                                    <span class="s_website_form_mark">  *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input" type="text" name="subject" required="" value="" placeholder="" id="ogrut2y7e6ld" data-fill-with="undefined">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                            <div style="width: 200px;" class="s_website_form_label"></div>
+                            <span id="s_website_form_result"></span>
+                            <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+`;
+
+const formWithCharacterLimitRuleTemplate = /* html */ `
+    <div id="wrapwrap">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+                <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+                    <div class="s_website_form_rows row s_col_no_bgcolor">
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char" data-translated-name="Your Name">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ok0ney2v8rwf">
+                                    <span class="s_website_form_label_content">Your Name</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input" type="text" name="name" required="" value="" placeholder="" id="ok0ney2v8rwf" data-fill-with="name" maxlength="21" minlength="6">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                            <div style="width: 200px;" class="s_website_form_label"></div>
+                            <span id="s_website_form_result"></span>
+                            <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+`;
+
+const formWithRestrictedFileTypesTemplate = /* html */ `  
+    <div id="wrapwrap">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+                <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+                    <div class="s_website_form_rows row s_col_no_bgcolor">
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email" data-translated-name="Your Email">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ooas5l5yuhg">
+                                    <span class="s_website_form_label_content">Your Email</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input" type="email" name="email_from" required="" value="" placeholder="" id="ooas5l5yuhg" data-fill-with="email">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="binary" data-translated-name="Photo">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="onfhvm7weawe">
+                                    <span class="s_website_form_label_content">Photo</span>
+                                </label>
+                                <div class="col-sm">
+                                    <div class="o_files_zone row gx-1"></div>
+                                    <input type="file" class="form-control s_website_form_input" name="photo" id="onfhvm7weawe" data-max-files-number="1" data-max-file-size="64" data-fill-with="undefined" accept="image/*">
+                                    <div class="s_website_form_field_description small form-text text-muted">
+                                        Describe your field here.
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -726,4 +857,66 @@ test("should make 'Other' input fields required when 'Other' option is selected"
     });
     await click("a.s_website_form_send");
     expect.verifySteps(["Valid Radio Value", "Valid Select Value"]);
+});
+
+test("check multi value restrictions on email and text fields.", async () => {
+    const { core } = await startInteractions(formWithRestrictedFieldsTemplate);
+    expect(core.interactions).toHaveLength(1);
+    const nameEl = queryOne("input[name=name]");
+    const subjectEl = queryOne("input[name=subject]");
+    const emailEl = queryOne("input[name=email_from]");
+    // Fill name with a value that doesn't meet the requirement.
+    await fillAndSubmitForm(nameEl, "John Doe");
+    checkField(nameEl, true, true);
+    // Fill name with a value that meets the requirement.
+    await fillAndSubmitForm(nameEl, "hello world");
+    checkField(nameEl, true, false);
+    // Fill subject with a value that doesn't meet the requirement.
+    await fillAndSubmitForm(subjectEl, "Good game of football");
+    checkField(subjectEl, true, true);
+    // Fill subject with a value that meets the requirement.
+    await fillAndSubmitForm(subjectEl, "This is a long enough subject");
+    checkField(subjectEl, true, false);
+    // Fill email with a value that doesn't meet the requirement.
+    await fillAndSubmitForm(emailEl, "example@yahoo.com");
+    checkField(emailEl, true, true);
+    // Fill email with a value that meets the requirement.
+    await fillAndSubmitForm(emailEl, "example@icloUd.com"); // 'U' to check case insensitivity.
+    checkField(emailEl, true, false);
+});
+
+test("checks character limit on (name) input fields", async () => {
+    const { core } = await startInteractions(formWithCharacterLimitRuleTemplate);
+    expect(core.interactions).toHaveLength(1);
+    const nameEl = queryOne("input[name=name]");
+    // Fill name with a value that doesn't meet the requirement.
+    await fillAndSubmitForm(nameEl, "This name is definitely way too long to be accepted");
+    checkField(nameEl, true, true);
+    // Fill name with a value that meets the requirement.
+    await fillAndSubmitForm(nameEl, "Between the limit");
+    checkField(nameEl, true, false);
+    // Fill name with a value that doesn't meet the requirement.
+    await fillAndSubmitForm(nameEl, "short");
+    checkField(nameEl, true, true);
+});
+
+test("validates file input against allowed filetypes", async () => {
+    const { core } = await startInteractions(formWithRestrictedFileTypesTemplate);
+    expect(core.interactions).toHaveLength(1);
+    const fileEl = queryOne("input[name=photo]");
+    // Try to upload a file with a non allowed mimetype.
+    const invalidFile = new File(["I am file"], "fake_file.txt", { type: "text/plain" });
+    await contains("input[name=photo]").click();
+    await setInputFiles([invalidFile]);
+    await runAllTimers();
+    await click("a.s_website_form_send");
+    checkField(fileEl, true, true);
+    // Try to upload a file with an allowed mimetype.
+    await click(".o_file_delete");
+    const validFile = new File(["I am file"], "valid_image.jpeg", { type: "image/jpeg" });
+    await contains("input[name=photo]").click();
+    await setInputFiles([validFile]);
+    await runAllTimers();
+    await click("a.s_website_form_send");
+    checkField(fileEl, true, false);
 });

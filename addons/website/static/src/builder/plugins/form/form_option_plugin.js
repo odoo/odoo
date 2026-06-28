@@ -1,10 +1,13 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Cache } from "@web/core/utils/cache";
 import { Plugin } from "@html_editor/plugin";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { redirect } from "@web/core/utils/urls";
-import { FormOptionAddFieldButton } from "./form_option_add_field_button";
+import {
+    FormOptionAddFieldButton,
+    FormOptionAddContentDropdown,
+} from "./form_option_add_field_button";
 import {
     deleteConditionalVisibility,
     findCircular,
@@ -32,16 +35,18 @@ import {
     setVisibilityDependency,
     rerenderField,
     getFormCacheKey,
+    getDescriptionPosition,
 } from "./utils";
 import { SyncCache } from "@html_builder/utils/sync_cache";
 import { _t } from "@web/core/l10n/translation";
+import { omit } from "@web/core/utils/objects";
 import { renderToElement } from "@web/core/utils/render";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { isSmallInteger } from "@html_builder/utils/utils";
-import { localization } from "@web/core/l10n/localization";
-import { formatDate } from "@web/core/l10n/dates";
 import { getParsedDataFor } from "@website/js/utils";
+import { isTargetVisible } from "@html_builder/core/visibility_plugin";
+import { nodeSize } from "@html_editor/utils/position";
 
 /**
  * @typedef { Object } FormOptionShared
@@ -57,18 +62,27 @@ import { getParsedDataFor } from "@website/js/utils";
  * @property { FormOptionPlugin['prepareConditionInputs'] } prepareConditionInputs
  * @property { FormOptionPlugin['setLabelsMark'] } setLabelsMark
  * @property { FormOptionPlugin['clearValidationDataset'] } clearValidationDataset
- * @property { FormOptionPlugin['defaultMessage'] } defaultMessage
  * @property { FormOptionPlugin['fetchModels'] } fetchModels
  */
 
-const { DateTime } = luxon;
-const DEFAULT_EMAIL_TO_VALUE = "info@yourcompany.example.com";
+export const INNER_SNIPPETS_EXCLUDED_FROM_FORMS = [
+    ".s_accordion",
+    ".s_add_to_cart",
+    ".s_chart",
+    ".s_countdown",
+    ".o_facebook_page",
+    ".s_instagram_page",
+    ".s_online_appointment",
+    ".s_rental_search",
+];
+
 export class FormOptionPlugin extends Plugin {
     static id = "websiteFormOption";
-    static dependencies = ["builderActions", "builderOptions", "savePlugin"];
+    static dependencies = ["builderActions", "builderOptions", "savePlugin", "websiteBridge"];
     static shared = [
         "prepareFormModel",
         "getModelsCache",
+        "getVisibilityConditionCache",
         "applyFormModel",
         "addHiddenField",
         "fetchAuthorizedFields",
@@ -79,7 +93,6 @@ export class FormOptionPlugin extends Plugin {
         "prepareConditionInputs",
         "setLabelsMark",
         "clearValidationDataset",
-        "defaultMessage",
         "fetchModels",
     ];
     /** @type {import("plugins").WebsiteResources} */
@@ -95,14 +108,18 @@ export class FormOptionPlugin extends Plugin {
                 },
             },
             {
-                Component: FormOptionAddFieldButton,
+                Component: FormOptionAddContentDropdown,
                 selector: ".s_website_form_field",
                 exclude: ".s_website_form_dnone",
                 props: {
-                    addField: (fieldEl) => this.addFieldAfterField(fieldEl),
-                    tooltip: _t("Add a new field after this one"),
+                    addField: (fieldEl, config) => this.addSnippetAfterField(fieldEl, config),
+                    tooltip: _t("Add some content after this field"),
                 },
             },
+        ],
+        auto_unfold_container_providers: [
+            { selector: ".s_website_form_submit", target: ".s_website_form" },
+            { selector: ".s_website_form_send", target: ".s_website_form_submit" },
         ],
         clone_disabled_reason_providers: (el) => {
             if (
@@ -119,13 +136,13 @@ export class FormOptionPlugin extends Plugin {
                 const model = models?.find((model) => model.model === modelName);
                 const fieldName = getFieldName(el);
                 return model
-                        ? _t(
-                              'The field "%(fieldName)s" is mandatory for the action "%(actionName)s".',
-                              { fieldName, actionName: model.website_form_label }
-                          )
-                        : _t("The field “%(fieldName)s” is mandatory for the selected action.", {
-                              fieldName,
-                          });
+                    ? _t(
+                          'The field "%(fieldName)s" is mandatory for the action "%(actionName)s".',
+                          { fieldName, actionName: model.website_form_label }
+                      )
+                    : _t("The field “%(fieldName)s” is mandatory for the selected action.", {
+                          fieldName,
+                      });
             }
         },
         builder_actions: {
@@ -149,8 +166,8 @@ export class FormOptionPlugin extends Plugin {
             ExistingFieldSelectTypeAction,
             MultiCheckboxDisplayAction,
             SetLabelTextAction,
-            SelectLabelPositionAction,
-            ToggleDescriptionAction,
+            SelectLabelsPositionAction,
+            SetDescriptionAction,
             SelectTextareaValueAction,
             ToggleRequiredAction,
             SetVisibilityAction,
@@ -159,11 +176,14 @@ export class FormOptionPlugin extends Plugin {
             PropertyAction,
             SetDependencyValueListAction,
             SetCustomErrorMessageAction,
-            SetDefaultErrorMessageAction,
             SetRequirementComparatorAction,
             SetMultipleFilesAction,
             ToggleAllowEmptyAction,
             SetEmptyPlaceholderAction,
+            ToggleCheckboxLabel,
+            ToggleCharacterLimitAction,
+            SetAllowedFileTypesAction,
+            ToggleRestrictFileTypesAction,
         },
         content_not_editable_selectors: ".s_website_form form",
         content_editable_selectors: [
@@ -174,21 +194,33 @@ export class FormOptionPlugin extends Plugin {
         ].map((selector) => `.s_website_form form ${selector}`),
         clean_for_save_processors: (rootEl) => {
             this.removeSuccessMessagePreviews(rootEl);
+            return rootEl;
+        },
+        on_will_save_handlers: async (rootEl) => {
+            await this.applyDefaultValues(rootEl);
         },
         dropzone_selectors: [
             {
-                selector: ".s_website_form",
+                selector: [".s_website_form", ...INNER_SNIPPETS_EXCLUDED_FROM_FORMS].join(", "),
                 excludeAncestor: "form",
             },
             {
-                selector: ".s_website_form_field, .s_website_form_submit",
+                selector:
+                    ".s_website_form_field, .s_website_form_submit, .s_website_form_inner_content",
                 exclude: ".s_website_form_dnone",
-                dropNear: ".s_website_form_field",
+                dropNear: ".s_website_form_field, .s_website_form_inner_content",
                 dropLockWithin: "form",
             },
         ],
-        so_content_addition_selectors: [".s_website_form"],
+        so_content_addition_selectors: [
+            ".s_website_form, .s_website_form_field, .s_website_form_inner_content",
+        ],
+        submit_button_selectors: [".s_website_form_send", ".s_website_form_submit"],
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        on_element_dropped_handlers: ({ droppedEl }) => this.wrapFormElement(droppedEl),
+        on_snippet_over_dropzone_handlers: this.onSnippetOverDropzone.bind(this),
+        on_snippet_out_dropzone_handlers: ({ dragState }) =>
+            this.clearEmptyWrappersAfterDrag(dragState),
         on_cloned_handlers: this.onCloned.bind(this),
         is_unremovable_selectors: ".s_website_form_send, .s_website_form_submit",
         immutable_link_selectors: [".s_website_form_send"],
@@ -204,6 +236,8 @@ export class FormOptionPlugin extends Plugin {
             this._getVisibilityConditionCachedRecords.bind(this),
             JSON.stringify
         );
+        this.website_t = this.dependencies.websiteBridge._t;
+        this.website_registry = this.dependencies.websiteBridge.getRegistry();
     }
     destroy() {
         super.destroy();
@@ -211,6 +245,9 @@ export class FormOptionPlugin extends Plugin {
         this.fieldRecordsCache.invalidate();
         this.authorizedFieldsCache.invalidate();
         this.visibilityConditionCachedRecords.invalidate();
+    }
+    getVisibilityConditionCache() {
+        return this.visibilityConditionCachedRecords;
     }
     getModelsCache(formEl) {
         // Through a method so that it can be overridden.
@@ -266,14 +303,15 @@ export class FormOptionPlugin extends Plugin {
             if (field.name === "state_id" && formEl) {
                 // if there's a country_id field on the form, fetch country_id
                 const cachedFields = await this.authorizedFieldsCache.read(getFormCacheKey(formEl));
-                if (cachedFields?.country_id) {
+                if (cachedFields?.country_id || field.linkStateToCountry) {
                     fieldNames.push("country_id");
                 }
             }
             field.records = await this.services.orm.searchRead(
                 field.relation,
                 field.domain || [],
-                fieldNames
+                fieldNames,
+                { context: this.dependencies.websiteBridge.getWebsiteContextLang() }
             );
             if (field.fieldName) {
                 field.records.forEach((r) => (r["display_name"] = r[field.fieldName]));
@@ -281,11 +319,21 @@ export class FormOptionPlugin extends Plugin {
         }
         return field.records;
     }
+    getRegistryFormInfo(formKey) {
+        const formInfo = this.website_registry
+            ?.category("website.form_editor_actions")
+            .get(formKey, null);
+        const builderFormInfo = registry.category("builder.form_editor_actions").get(formKey, {});
+        return {
+            ...formInfo,
+            ...omit(builderFormInfo, "formFields"),
+        };
+    }
     async prepareFormModel(el, activeForm) {
         const formEl = el.closest("form");
         const formKey = activeForm?.website_form_key;
-        const formInfo = registry.category("website.form_editor_actions").get(formKey, null);
-        if (formInfo) {
+        const formInfo = this.getRegistryFormInfo(formKey);
+        if (formInfo.formFields) {
             const formatInfo = getDefaultFormat(el);
             await Promise.all(
                 formInfo.formFields.map((field) => {
@@ -294,7 +342,9 @@ export class FormOptionPlugin extends Plugin {
                 })
             );
             await this.fetchFormInfoFields(formInfo);
+            return formInfo;
         }
+        await this.fetchFormInfoFields(formInfo);
         return formInfo;
     }
     /**
@@ -309,11 +359,6 @@ export class FormOptionPlugin extends Plugin {
             `.s_website_form_dnone:has(input[name="${fieldName}"])`
         )) {
             hiddenEl.remove();
-        }
-        // For the email_to field, we keep the field even if it has no value so
-        // that the email is sent to data-for value or to the default email.
-        if (fieldName === "email_to" && !value && !this.dataForEmailTo) {
-            value = DEFAULT_EMAIL_TO_VALUE;
         }
         if (value || fieldName === "email_to") {
             const hiddenField = renderToElement("website.form_field_hidden", {
@@ -338,14 +383,12 @@ export class FormOptionPlugin extends Plugin {
      * @param {Integer} modelId
      * @param {Object} formInfo obtained from prepareFormModel
      */
-    applyFormModel(el, activeForm, modelId, formInfo) {
+    async applyFormModel(el, activeForm, modelId, formInfo) {
         let oldFormInfo;
         if (modelId) {
             const oldFormKey = activeForm.website_form_key;
             if (oldFormKey) {
-                oldFormInfo = registry
-                    .category("website.form_editor_actions")
-                    .get(oldFormKey, null);
+                oldFormInfo = this.getRegistryFormInfo(oldFormKey);
             }
             for (const fieldEl of el.querySelectorAll(".s_website_form_field")) {
                 fieldEl.remove();
@@ -374,7 +417,7 @@ export class FormOptionPlugin extends Plugin {
         // Load template
         if (formInfo) {
             const formatInfo = getDefaultFormat(el);
-            formInfo.formFields.forEach((field) => {
+            formInfo.formFields?.forEach((field) => {
                 // Create a shallow copy of field to prevent unintended
                 // mutations to the original field stored in the registry
                 const _field = { ...field };
@@ -388,12 +431,36 @@ export class FormOptionPlugin extends Plugin {
             // In some forms (e.g., contact forms), the "email_to" field must be included as hidden.
             // For example, this may force the 'email_to' value to a dummy/default one on the
             // contact us form just by interacting with it.
-            formInfo.fields?.forEach((field) => {
-                if (field.defaultValue) {
-                    this.addHiddenField(el, field.defaultValue, field.name);
+            for (const field of formInfo.fields || []) {
+                let defaultValue = field.defaultValue;
+                if (!defaultValue && field.getDefaultValue) {
+                    defaultValue = await field.getDefaultValue({ services: this.services });
                 }
-            });
+                if (defaultValue || field.name === "email_to") {
+                    this.addHiddenField(el, defaultValue, field.name);
+                }
+            }
         }
+        await this.applyDefaultValues(el);
+    }
+    async applyDefaultValues(rootEl) {
+        const formEls = selectElements(rootEl, ".s_website_form form[data-model_name]");
+        if (!formEls.length) {
+            return;
+        }
+        const formInfos = registry.category("builder.form_editor_actions").getAll();
+        const promises = [];
+        // Each applyDefaultValue is responsible for checking the form model and field.
+        for (const formEl of formEls) {
+            for (const formInfo of formInfos) {
+                for (const field of formInfo.fields || []) {
+                    if (field.applyDefaultValue) {
+                        promises.push(field.applyDefaultValue({ formEl, services: this.services }));
+                    }
+                }
+            }
+        }
+        await Promise.all(promises);
     }
     /**
      * Ensures formInfo fields are fetched.
@@ -409,10 +476,16 @@ export class FormOptionPlugin extends Plugin {
         return this.authorizedFieldsCache.read({ cacheKey, model, propertyOrigins });
     }
     async _fetchAuthorizedFields({ cacheKey, model, propertyOrigins }) {
-        return this.services.orm.call("ir.model", "get_authorized_fields", [
-            model,
-            propertyOrigins,
-        ]);
+        return this.services.orm.call(
+            "ir.model",
+            "get_authorized_fields",
+            [model, propertyOrigins],
+            {
+                context: {
+                    additional_lang: this.services.website.currentWebsite.default_lang_id.code,
+                },
+            }
+        );
     }
     async _getVisibilityConditionCachedRecords(model, domain, fields, kwargs = {}) {
         return this.services.orm.searchRead(model, domain, fields, {
@@ -426,6 +499,9 @@ export class FormOptionPlugin extends Plugin {
      */
     setLabelsMark(formEl) {
         formEl.querySelectorAll(".s_website_form_mark").forEach((el) => el.remove());
+        formEl
+            .querySelectorAll("[data-description-mark]")
+            .forEach((el) => (el.dataset.descriptionMark = ""));
         const mark = getMark(formEl);
         if (!mark) {
             return;
@@ -443,10 +519,14 @@ export class FormOptionPlugin extends Plugin {
             span.classList.add("s_website_form_mark");
             span.textContent = ` ${mark}`;
             field.querySelector(".s_website_form_label").appendChild(span);
+            const descriptionMarkEl = field.querySelector("[data-description-mark]");
+            if (descriptionMarkEl) {
+                descriptionMarkEl.dataset.descriptionMark = ` ${mark}`;
+            }
         });
     }
     addFieldToForm(formEl) {
-        const field = getCustomField("char", _t("Custom Text"));
+        const field = getCustomField("char", this.website_t("Custom Text"));
         field.formatInfo = getDefaultFormat(formEl);
         const fieldEl = renderField(field);
         let locationEl = formEl.querySelector(".s_website_form_submit, .s_website_form_recaptcha");
@@ -458,16 +538,34 @@ export class FormOptionPlugin extends Plugin {
         }
         this.dependencies.builderOptions.setNextTarget(fieldEl);
     }
-    addFieldAfterField(fieldEl) {
+    addSnippetAfterField(fieldEl, snippet) {
+        let newSnippetEl = null;
         const formEl = fieldEl.closest("form");
-        const field = getCustomField("char", _t("Custom Text"));
-        field.formatInfo = getFieldFormat(fieldEl);
-        field.formatInfo.requiredMark = isRequiredMark(formEl);
-        field.formatInfo.optionalMark = isOptionalMark(formEl);
-        field.formatInfo.mark = getMark(formEl);
-        const newFieldEl = renderField(field);
-        fieldEl.insertAdjacentElement("afterend", newFieldEl);
-        this.dependencies.builderOptions.setNextTarget(newFieldEl);
+        if (snippet.id === "field") {
+            const field = getCustomField("char", this.website_t("Custom Text"));
+            field.formatInfo = getFieldFormat(fieldEl);
+            field.formatInfo.requiredMark = isRequiredMark(formEl);
+            field.formatInfo.optionalMark = isOptionalMark(formEl);
+            field.formatInfo.mark = getMark(formEl);
+            newSnippetEl = renderField(field);
+        } else {
+            newSnippetEl = document.createElement("div");
+            newSnippetEl.className =
+                "s_website_form_inner_content o_no_direct_child_drop col-lg-12";
+            const snippetConfig = this.config.snippetModel.getSnippetByName(
+                "snippet_content",
+                snippet.id
+            );
+            const defaultSnippetEl = snippetConfig.content.cloneNode(true);
+            newSnippetEl.appendChild(snippet.build?.(defaultSnippetEl) || defaultSnippetEl);
+        }
+        // WARNING: For now, inner snippets allowed between form fields
+        // do not need to be built. If additional blocks that require building
+        // are introduced in the future, make sure to handle them here as well,
+        // either via "on_snippet_dropped_handlers" or through a dedicated
+        // resource.
+        fieldEl.insertAdjacentElement("afterend", newSnippetEl);
+        this.dependencies.builderOptions.setNextTarget(newSnippetEl);
     }
     /**
      * To be used in load for any action that uses getActiveField or
@@ -646,8 +744,9 @@ export class FormOptionPlugin extends Plugin {
                 } else {
                     // DependencyEl is a radio or a checkbox
                     const dependencyContainerEl = dependencyEl.closest(".s_website_form_field");
-                    const inputsInDependencyContainer =
-                        dependencyContainerEl.querySelectorAll(".s_website_form_input");
+                    const inputsInDependencyContainer = dependencyContainerEl.querySelectorAll(
+                        ".s_website_form_input:not(.o_other_input)"
+                    );
                     // TODO: @owl-options already wrong in master for e.g. Project/Tags
                     for (const el of inputsInDependencyContainer) {
                         conditionValueList.push({
@@ -721,7 +820,7 @@ export class FormOptionPlugin extends Plugin {
                 await this.fetchFieldRecords(field, formEl);
                 availableRecords = JSON.stringify(field.records);
             }
-            valueList = reactive({
+            valueList = proxy({
                 title: optionText,
                 addItemTitle: _t("Add New Option"),
                 checkType,
@@ -745,11 +844,55 @@ export class FormOptionPlugin extends Plugin {
      * Handler called when a snippet is dropped.
      *
      * @param {Object} params
+     * @param {HTMLElement} params.dragState- The state provided by drag handlers
      * @param {HTMLElement} params.snippetEl - The dropped snippet element.
      */
-    async onSnippetDropped({ snippetEl }) {
+    async onSnippetDropped({ dragState, snippetEl }) {
+        if (!snippetEl.closest(".s_website_form")) {
+            return;
+        }
+
+        // Manage the wrapping into columns
+        this.wrapFormElement(snippetEl);
+        this.clearEmptyWrappersAfterDrag(dragState);
+
         // Re-render the fields to ensure each field gets a unique ID.
         await this.rerenderFieldsInElement(snippetEl);
+        await this.applyDefaultValues(snippetEl);
+    }
+    /**
+     * Called when the snippet is dragged over a dropzone.
+     *
+     * @param {Object} params
+     * @param {HTMLElement} params.dragState- The state provided by drag handlers
+     * @param {HTMLElement} params.snippetEl - The dragged snippet element.
+     */
+    onSnippetOverDropzone({ snippetEl, dragState }) {
+        const dropzoneEl = dragState.currentDropzoneEl;
+        // Skip if dropzone is outside a form or inside a form inner snippet
+        if (!dropzoneEl.matches(".s_website_form_rows > *")) {
+            return;
+        }
+        // Wrap `snippetEl` in a column element to get a realistic preview,
+        // and store the wrapper element in `dragState` to cleanup later on
+        snippetEl = this.wrapFormElement(snippetEl);
+        dragState.previewWrapper = snippetEl;
+    }
+    /**
+     * Checks if the drag state contains a `previewWrapper` element and remove
+     * it if present.
+     *
+     * `dragState.previewWrapper` is an empty element left over by the drag
+     * mechanism (see `onSnippetOverDropzone` and `wrapFormElement`).
+     *
+     * @param {Object} dragState - The state provided by drag handlers
+     */
+    clearEmptyWrappersAfterDrag(dragState) {
+        const previewWrapper = dragState.previewWrapper;
+        if (previewWrapper) {
+            previewWrapper.remove();
+            delete dragState.previewWrapper;
+        }
     }
     /**
      * Handler called when an element is cloned.
@@ -805,6 +948,7 @@ export class FormOptionPlugin extends Plugin {
     removeSuccessMessagePreviews(rootEl) {
         const toCleanEls = rootEl.querySelectorAll(".o_show_form_success_message");
         toCleanEls.forEach((el) => el.classList.remove("o_show_form_success_message"));
+        return rootEl;
     }
     /**
      * Clear the dataset of the field to avoid keeping old values.
@@ -819,76 +963,44 @@ export class FormOptionPlugin extends Plugin {
     }
 
     /**
-     * Generates an error message for requirement set on field if validation fails.
+     * If the element is positioned inside a website form, wraps it in a `div`
+     * having classes `s_website_form_inner_content` and `o_no_direct_child_drop`
+     * and `col-12`.
+     * `s_website_form_inner_content` is used in form-related dropzone selector
+     * rules, e.g., to define how blocks can be moved inside forms.
+     * `o_no_direct_child_drop` prevents elements from being dropped as a direct
+     * child of the wrapper. As a result, each wrapper can contain only a single
+     * element. This does not prevent new inner snippets to be dropped inside
+     * already wrapped ones.
+     * `col-12` is to get a column that is both displayed and edited correctly.
      *
-     * @param {string} [comparator] The method used to form the error message.
-     * @param {string} [condition] The expected value of the field.
-     * @param {string} [between] The maximum date value if the comparator is
-     *      'between' or '!between'.
-     * @returns {string} The default error message.
+     * @param {HTMLElement} el - The element to check.
+     * @returns {HTMLElement} The element, or the wrapper if wrapping is applied
+     *
      */
-    defaultMessage(comparator, condition, between, type) {
-        const textMessages = {
-            contains: _t("This field must include keyword %s.", condition),
-            "!contains": _t("This field must not include keyword %s.", condition),
-            substring: _t("This field must include keyword %s.", condition),
-            "!substring": _t("This field must not include keyword %s.", condition),
-            greater: _t("Invalid: field is not greater than %s.", condition),
-            less: _t("Invalid: field is not less than %s.", condition),
-            "greater or equal": _t("Invalid: field is not greater than or equal to %s.", condition),
-            "less or equal": _t("Invalid: field is not less than or equal to %s.", condition),
-        };
-
-        if (condition && textMessages[comparator]) {
-            return textMessages[comparator];
+    wrapFormElement(el) {
+        if (el.matches(".s_website_form_rows > p > *")) {
+            // Some inner blocks such as buttons are wrapped inside a `p`. In
+            // that case we should wrap the `p`
+            el = el.parentElement;
+        } else if (!el.matches(".s_website_form_rows > *")) {
+            // Skip if el was dropped outside a form or inside a form inner snippet
+            return el;
         }
 
-        if (["date", "datetime"].includes(type)) {
-            const format = type === "date" ? localization.dateFormat : localization.dateTimeFormat;
-            const start = formatDate(DateTime.fromSeconds(parseInt(condition)), { format });
-            const end = formatDate(DateTime.fromSeconds(parseInt(between)), { format });
-
-            const dateMessages = {
-                dateEqual: _t(
-                    "Entered date or time is not correct! It must be %(start)s (%(format)s).",
-                    { start, format }
-                ),
-                "date!equal": _t(
-                    "Entered date or time is not correct! It must not be %(start)s (%(format)s).",
-                    { start, format }
-                ),
-                before: _t(
-                    "Entered date or time is not correct! It must be before %(start)s (%(format)s).",
-                    { start, format }
-                ),
-                after: _t(
-                    "Entered date or time is not correct! It must be after %(start)s (%(format)s).",
-                    { start, format }
-                ),
-                "equal or before": _t(
-                    "Entered date or time is not correct! It must be before or equal to %(start)s (%(format)s).",
-                    { start, format }
-                ),
-                "equal or after": _t(
-                    "Entered date or time is not correct! It must be after or equal to %(start)s (%(format)s).",
-                    { start, format }
-                ),
-                between: _t(
-                    "Entered date or time is not correct! It must be within %(start)s and %(end)s (%(format)s).",
-                    { start, end, format }
-                ),
-                "!between": _t(
-                    "Entered date or time is not correct! It must not be within %(start)s and %(end)s (%(format)s).",
-                    { start, end, format }
-                ),
-            };
-
-            if (condition && dateMessages[comparator]) {
-                return dateMessages[comparator];
-            }
+        // Snippet doesn't need wrapping if it already has a 'col' class.
+        // This is the case, e.g., for cards that could be dragged from
+        // s_three_columns snippets inside a form.
+        if ([...el.classList].some((c) => c.startsWith("col-"))) {
+            el.classList.add("s_website_form_inner_content", "o_no_direct_child_drop");
+            return el;
         }
 
-        return _t("An error has occurred, the form has not been sent.");
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("s_website_form_inner_content", "o_no_direct_child_drop", "col-12");
+        el.parentNode.replaceChild(wrapper, el);
+        wrapper.appendChild(el);
+        return wrapper;
     }
 }
 
@@ -909,14 +1021,14 @@ export class SelectAction extends BuilderAction {
             formInfo: await this.dependencies.websiteFormOption.prepareFormModel(el, activeForm),
         };
     }
-    apply({ editingElement: el, value: modelId, loadResult }) {
+    async apply({ editingElement: el, value: modelId, loadResult }) {
         if (!loadResult) {
             return;
         }
         const models = this.dependencies.websiteFormOption.getModelsCache(el);
         const targetModelName = getModelName(el);
         const activeForm = models.find((m) => m.model === targetModelName);
-        this.dependencies.websiteFormOption.applyFormModel(
+        await this.dependencies.websiteFormOption.applyFormModel(
             el,
             activeForm,
             parseInt(modelId),
@@ -958,19 +1070,9 @@ export class AddActionFieldAction extends BuilderAction {
         const value = el.querySelector(
             `.s_website_form_dnone input[name="${params.fieldName}"]`
         )?.value;
-        if (params.fieldName === "email_to") {
-            // For email_to, we try to find a value in this order:
-            // 1. The current value of the input
-            // 2. The data-for value if it exists
-            // 3. The default value (`defaultEmailToValue`)
-            if (value && value !== DEFAULT_EMAIL_TO_VALUE) {
-                return value;
-            }
-            // Get the email_to value from the data-for attribute if it exists.
-            // We use it if there is no value on the email_to input.
-            const formId = el.id;
-            const dataForValues = getParsedDataFor(formId, el.ownerDocument);
-            return dataForValues?.["email_to"] || DEFAULT_EMAIL_TO_VALUE;
+        const dataForValue = getParsedDataFor(el.id, el.ownerDocument)?.[params.fieldName];
+        if (dataForValue) {
+            return value || dataForValue;
         }
         if (value) {
             return value;
@@ -1107,8 +1209,26 @@ export class CustomFieldAction extends BuilderAction {
         delete fieldEl.dataset.requirementComparator;
         const oldLabelText = fieldEl.querySelector(".s_website_form_label_content").textContent;
         const field = getCustomField(value, oldLabelText);
+        const isFieldRequired = field.required;
+        const isCheckbox = (type) => type === "boolean";
+
         setActiveProperties(fieldEl, field);
+        if (isCheckbox(getFieldType(fieldEl))) {
+            field.description = !!field.description;
+        }
+        if (isCheckbox(value)) {
+            if (!isFieldRequired) {
+                field.required = true;
+            }
+            // Sets a default checkbox description & description layout.
+            field.description = true;
+            field.formatInfo.textPosition = "top";
+        }
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+        if (isCheckbox(value) && !isFieldRequired) {
+            // Set the mark on the "checkbox" field (required by default).
+            this.dependencies.websiteFormOption.setLabelsMark(fieldEl.closest("form"));
+        }
     }
     isApplied({ editingElement: fieldEl, value }) {
         const currentValue = isFieldCustom(fieldEl) ? getFieldType(fieldEl) : "";
@@ -1267,38 +1387,84 @@ export class SetLabelTextAction extends BuilderAction {
         return labelEl.textContent;
     }
 }
-export class SelectLabelPositionAction extends BuilderAction {
-    static id = "selectLabelPosition";
+export class SelectLabelsPositionAction extends BuilderAction {
+    static id = "selectLabelsPosition";
     static dependencies = ["websiteFormOption"];
+    setup() {
+        this.fieldSelector = ".s_website_form_field:not(.s_website_form_dnone)";
+    }
     load(context) {
         return this.dependencies.websiteFormOption.prepareFields(context);
     }
-    apply({ editingElement: fieldEl, value, loadResult: fields }) {
-        const field = getActiveField(fieldEl, { fields });
-        field.formatInfo.labelPosition = value;
-        this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+    apply({ editingElement: formEl, value, loadResult: fields }) {
+        for (const fieldEl of formEl.querySelectorAll(this.fieldSelector)) {
+            const fieldClassName = !isTargetVisible(fieldEl) ? fieldEl.className : "";
+            const field = getActiveField(fieldEl, { fields });
+            field.formatInfo.labelPosition = value;
+            field.formatInfo.labelInvisible = value === "none";
+            // Reset label width for the "top" position.
+            if (value === "top") {
+                delete field.formatInfo.labelWidth;
+            }
+            this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+            // For invisible fields (device visibility), we need to reapply
+            // the initial `className` before the label position update.
+            if (fieldClassName) {
+                fieldEl.className = fieldClassName;
+            }
+        }
     }
-    isApplied({ editingElement: fieldEl, value }) {
-        const currentValue = getLabelPosition(fieldEl);
+    isApplied({ editingElement: formEl, value }) {
+        const fieldEls = [...formEl.querySelectorAll(this.fieldSelector)];
+        const labelPositions = fieldEls.map(getLabelPosition);
+        const currentValue = labelPositions.every((val) => val === labelPositions[0])
+            ? labelPositions[0]
+            : false;
         return currentValue === value;
     }
 }
-export class ToggleDescriptionAction extends BuilderAction {
-    static id = "toggleDescription";
-    static dependencies = ["websiteFormOption"];
+export class SetDescriptionAction extends BuilderAction {
+    static id = "setDescription";
+    static dependencies = ["websiteFormOption", "selection"];
     load(context) {
         return this.dependencies.websiteFormOption.prepareFields(context);
     }
-    apply({ editingElement: fieldEl, loadResult: fields, value }) {
-        const description = fieldEl.querySelector(".s_website_form_field_description");
-        const hasDescription = !!description;
+    apply({ isPreviewing, editingElement: fieldEl, loadResult: fields, value }) {
         const field = getActiveField(fieldEl, { fields });
-        field.description = !hasDescription; // Will be changed to default description in qweb
+        // This action is used for two scenarios:
+        // 1. The target field is a checkbox: The field description will be set
+        // with the position specified in the `value`.
+        // 2. Otherwise, the field description will be simply toggled.
+        const toggleMode = !value || value === "none" || !field.description;
+        field.formatInfo.textPosition = value;
+        if (toggleMode) {
+            // If enabled, the field description will be changed to the
+            // default one in qweb.
+            field.description = !field.description;
+        }
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+        const description = fieldEl.querySelector(".s_website_form_field_description")
+            ?.childNodes[0];
+        if (description) {
+            if (!isPreviewing) {
+                this.editable.focus();
+            }
+            // Select the field description text in the editor.
+            this.dependencies.selection.setSelection({
+                anchorNode: description,
+                anchorOffset: 0,
+                focusNode: description,
+                focusOffset: nodeSize(description),
+            });
+        }
     }
-    isApplied({ editingElement: fieldEl }) {
+    isApplied({ editingElement: fieldEl, value }) {
         const description = fieldEl.querySelector(".s_website_form_field_description");
-        return !!description;
+        if (getFieldType(fieldEl) !== "boolean") {
+            return !!description;
+        } else {
+            return getDescriptionPosition(fieldEl) === value;
+        }
     }
 }
 export class ToggleAllowEmptyAction extends BuilderAction {
@@ -1374,7 +1540,12 @@ export class SetRequirementComparatorAction extends BuilderAction {
     static id = "setRequirementComparator";
     static dependencies = ["websiteFormOption"];
     apply({ editingElement: fieldEl }) {
-        this.dependencies.websiteFormOption.clearValidationDataset(fieldEl);
+        if (!fieldEl.dataset.requirementComparator) {
+            this.dependencies.websiteFormOption.clearValidationDataset(fieldEl);
+        } else {
+            delete fieldEl.dataset.customError;
+            delete fieldEl.dataset.errorMessage;
+        }
     }
 }
 /**
@@ -1387,36 +1558,77 @@ export class SetRequirementComparatorAction extends BuilderAction {
 export class SetCustomErrorMessageAction extends BuilderAction {
     static id = "setCustomErrorMessage";
     apply({ editingElement: fieldEl }) {
-        if (!fieldEl.dataset.customError) {
-            fieldEl.dataset.customError = true;
-        } else {
-            delete fieldEl.dataset.customError;
-        }
+        fieldEl.dataset.customError = true;
+    }
+    clean({ editingElement: fieldEl }) {
+        delete fieldEl.dataset.customError;
     }
     isApplied({ editingElement: fieldEl }) {
         return fieldEl.dataset.customError;
     }
 }
 /**
- * Sets the default error message based on the requirement comparator,
- * condition and type of form fields.
+ * Toggles the character limit on input fields.
  */
-export class SetDefaultErrorMessageAction extends BuilderAction {
-    static id = "setDefaultErrorMessage";
-    static dependencies = ["websiteFormOption"];
-    apply({ editingElement: fieldEl }) {
-        const {
-            requirementComparator: comparator,
-            requirementCondition: condition,
-            requirementBetween: between,
-            type,
-        } = fieldEl.dataset;
-        fieldEl.dataset.errorMessage = this.dependencies.websiteFormOption.defaultMessage(
-            comparator,
-            condition,
-            between,
-            type
-        );
+export class ToggleCharacterLimitAction extends BuilderAction {
+    static id = "toggleCharacterLimit";
+    setup() {
+        this.preview = false;
+    }
+    apply({ editingElement: inputEl }) {
+        inputEl.setAttribute("maxlength", 100);
+        inputEl.setAttribute("minlength", 0);
+    }
+    clean({ editingElement: inputEl }) {
+        inputEl.removeAttribute("maxlength");
+        inputEl.removeAttribute("minlength");
+    }
+    isApplied({ editingElement: inputEl, params: { mainParam: activeValue } }) {
+        return inputEl.hasAttribute("maxlength") && inputEl.hasAttribute("minlength");
+    }
+}
+/**
+ * Toggles the restriction of file types on file input fields.
+ */
+export class ToggleRestrictFileTypesAction extends BuilderAction {
+    static id = "toggleRestrictFileTypes";
+    setup() {
+        this.preview = false;
+    }
+    apply({ editingElement: inputEl }) {
+        inputEl.toggleAttribute("accept");
+    }
+    isApplied({ editingElement: inputEl }) {
+        return inputEl.hasAttribute("accept");
+    }
+}
+/**
+ * Restricts to the allowed file types on file input fields.
+ */
+export class SetAllowedFileTypesAction extends BuilderAction {
+    static id = "setAllowedFileTypes";
+    setup() {
+        this.preview = false;
+    }
+    apply({ editingElement: inputEl, params: { mainParam: activeValue } }) {
+        if (activeValue === "application/pdf") {
+            inputEl.setAttribute("accept", activeValue);
+        } else {
+            let allowedMimeTypes = inputEl.accept ? inputEl.accept.split(",") : [];
+            allowedMimeTypes = allowedMimeTypes.filter((type) => type !== "application/pdf");
+            if (!allowedMimeTypes.includes(activeValue)) {
+                allowedMimeTypes.push(activeValue);
+            }
+            inputEl.setAttribute("accept", allowedMimeTypes.join(","));
+        }
+    }
+    clean({ editingElement: inputEl, params: { mainParam: activeValue } }) {
+        let allowedMimeTypes = inputEl.accept ? inputEl.accept.split(",") : [];
+        allowedMimeTypes = allowedMimeTypes.filter((mimeType) => mimeType !== activeValue);
+        inputEl.setAttribute("accept", allowedMimeTypes.join(","));
+    }
+    isApplied({ editingElement: inputEl, params: { mainParam: activeValue } }) {
+        return !!inputEl.accept?.includes(activeValue);
     }
 }
 
@@ -1478,7 +1690,26 @@ export class SetFormCustomFieldValueListAction extends BuilderAction {
 
 export class SetDependencyValueListAction extends BuilderAction {
     static id = "setDependencyValueList";
+    static dependencies = ["websiteFormOption"];
 
+    setup() {
+        this.recordValue = [];
+    }
+    async prepare({ editingElement }) {
+        const dependencyEl = getDependencyEl(editingElement);
+        const containerEl = dependencyEl.closest(".s_website_form_field");
+        this.visibilityConditionCachedRecords =
+            this.dependencies.websiteFormOption.getVisibilityConditionCache();
+        if (containerEl?.dataset.type === "record") {
+            const model = containerEl.dataset.model;
+            const idField = containerEl.dataset.idField || "id";
+            const displayNameField = containerEl.dataset.displayNameField || "display_name";
+            this.recordValue = await this.visibilityConditionCachedRecords.read(model, [
+                idField,
+                displayNameField,
+            ]);
+        }
+    }
     apply({ editingElement: fieldEl, value }) {
         const values = JSON.parse(value);
         const selectedList = values.filter(({ selected }) => selected).map(({ name }) => name);
@@ -1491,40 +1722,58 @@ export class SetDependencyValueListAction extends BuilderAction {
         if (!dependencyEl) {
             return;
         }
+        const containerEl = dependencyEl.closest(".s_website_form_field");
         const isSelect = dependencyEl.nodeName === "SELECT";
         const multipleInputsWrapper = dependencyEl.closest(".s_website_form_multiple");
-        let optionEls = [];
-        if (isSelect) {
-            optionEls = Array.from(dependencyEl.querySelectorAll("option"));
-        } else if (multipleInputsWrapper) {
-            optionEls = Array.from(multipleInputsWrapper.querySelectorAll(".s_website_form_input"));
+        let visibilityCondition = fieldEl.dataset.visibilityCondition;
+        try {
+            const parsed = JSON.parse(visibilityCondition);
+            // Accept parsed result only when it's NOT a string
+            if (typeof parsed !== "string") {
+                visibilityCondition = parsed;
+            }
+        } catch {
+            // keep original value
         }
-
-        const isSelected = (el) => {
-            let visibilityCondition = fieldEl.dataset.visibilityCondition;
-            try {
-                const parsed = JSON.parse(visibilityCondition);
-                // Accept parsed result only when it's NOT a string
-                if (typeof parsed !== "string") {
-                    visibilityCondition = parsed;
-                }
-            } catch {
-                // keep original value
+        const isSelected = (value) => {
+            if (!visibilityCondition) {
+                return false;
             }
-            if (visibilityCondition) {
-                return Array.isArray(visibilityCondition)
-                    ? visibilityCondition?.includes(el.value)
-                    : visibilityCondition === el.value;
-            }
-            return false;
+            return Array.isArray(visibilityCondition)
+                ? visibilityCondition?.includes(value.toString())
+                : visibilityCondition.toString() === value.toString();
         };
-        const result = optionEls.map((el) => ({
-            id: el.value,
-            name: el.value,
-            display_name: isSelect ? el.textContent : el.labels[0]?.textContent || "",
-            undeletable: true,
-            selected: isSelected(el),
-        }));
+        let result = [];
+        if (isSelect || multipleInputsWrapper) {
+            let optionEls = [];
+            if (isSelect) {
+                optionEls = Array.from(dependencyEl.querySelectorAll("option"));
+            } else if (multipleInputsWrapper) {
+                optionEls = Array.from(
+                    multipleInputsWrapper.querySelectorAll(".s_website_form_input")
+                );
+            }
+            result = optionEls.map((el) => ({
+                id: el.value,
+                name: el.value,
+                display_name: isSelect ? el.textContent : el.labels[0]?.textContent || "",
+                undeletable: true,
+                selected: isSelected(el.value),
+            }));
+        } else if (containerEl?.dataset.type === "record") {
+            const idField = containerEl.dataset.idField || "id";
+            const displayNameField = containerEl.dataset.displayNameField || "display_name";
+            result = this.recordValue.map((record) => {
+                const id = String(record[idField]);
+                return {
+                    id,
+                    name: id,
+                    display_name: record[displayNameField],
+                    undeletable: true,
+                    selected: isSelected(id),
+                };
+            });
+        }
         return JSON.stringify(result);
     }
 }
@@ -1540,6 +1789,32 @@ export class SetMultipleFilesAction extends BuilderAction {
     static id = "setMultipleFiles";
     apply({ editingElement }) {
         editingElement.multiple = editingElement.dataset.maxFilesNumber > 1;
+    }
+}
+
+export class ToggleCheckboxLabel extends BuilderAction {
+    static id = "toggleCheckboxLabel";
+    static dependencies = ["websiteFormOption"];
+
+    load(context) {
+        return this.dependencies.websiteFormOption.prepareFields(context);
+    }
+    apply({ editingElement: fieldEl, loadResult: fields }) {
+        const field = getActiveField(fieldEl, { fields });
+        const labelPosition = field.formatInfo.labelPosition;
+        const labelInvisible = !field.formatInfo.labelInvisible;
+
+        if (labelInvisible && labelPosition === "top") {
+            field.formatInfo.labelPosition = "none";
+        } else if (labelPosition === "none") {
+            field.formatInfo.labelPosition = "top";
+        }
+        field.formatInfo.labelInvisible = labelInvisible;
+        this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+    }
+    isApplied({ editingElement: fieldEl }) {
+        const formatInfo = getFieldFormat(fieldEl);
+        return formatInfo.labelInvisible;
     }
 }
 

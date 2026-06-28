@@ -45,6 +45,7 @@ class ResPartner(models.Model):
             ('date_order', '>', fields.Date.today() - timedelta(date_order_days_delta)),
             ('qty_received', '!=', 0),
             ('order_id.state', '=', 'purchase'),
+            ('date_promised', '!=', False),
             ('product_id', 'in', self.env['product.product'].sudo()._search([('type', '!=', 'service')]))
         ])
         lines_quantity = defaultdict(lambda: 0)

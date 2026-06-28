@@ -7,6 +7,23 @@
         border: 0;
         padding: 0;
     }
+    .tab-pane.active:has(> div[name="google_map_iframe"]) {
+        padding: 0;
+        div[name="google_map_iframe"] {
+            margin: 0 var(--Notebook-margin-x, -16px) calc(var(--formView-sheet-padding-y, 16px) * -1);
+            border-radius: 0 0 var(--formView-sheet-border-radius, 0) var(--formView-sheet-border-radius, 0);
+            overflow: hidden;
+
+            div.o_readonly {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            @include media-breakpoint-down(sm) {
+                margin: 0 0 calc(var(--formView-sheet-padding-y, 16px) * -1);
+            }
+        }
+    }
 }
 
 .o_form_view.o_form_project_tasks .o_notebook > .tab-content > .tab-pane > :first-child.o_field_html .o_readonly {
@@ -31,16 +48,8 @@
 }
 
 .o_field_widget {
-    &.o_field_subtasks_one2many, &.o_field_many2many_tags_email, &.o_field_CopyClipboardChar {
+    &.o_field_subtasks_one2many {
         width: 100%;
-    }
-    &.o_field_CopyClipboardChar span:not(.fa-clipboard) {
-        white-space: unset;
-        width: calc(100% - var(--inputbox-overlay-end-size));
-        display: block;
-        overflow: hidden;
-        text-wrap: nowrap;
-        text-overflow: ellipsis;
     }
 }
 

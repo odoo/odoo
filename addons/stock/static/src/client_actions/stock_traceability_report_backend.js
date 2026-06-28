@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -10,6 +9,12 @@ import { standardActionServiceProps } from "@web/webclient/actions/action_servic
 
 function processLine(line) {
     return { ...line, lines: [], isFolded: true };
+}
+
+function hasFoldedLine(lines) {
+    return lines.some(
+        (line) => (line.unfoldable && line.isFolded) || hasFoldedLine(line.lines)
+    );
 }
 
 function extractPrintData(lines) {
@@ -46,9 +51,10 @@ export class TraceabilityReport extends Component {
             }),
         });
 
-        this.state = useState({
+        this.state = proxy({
             lines: this.props.state?.lines || [],
         });
+        this.hasUnfoldableLines = this.state.lines.some((line) => line.unfoldable);
 
         const { active_id, active_model, auto_unfold, context, lot_name, ttype, url, lang } =
             this.props.action.context;
@@ -80,7 +86,12 @@ export class TraceabilityReport extends Component {
                 this.context,
             ]);
             this.state.lines = mainLines.map(processLine);
+            this.hasUnfoldableLines = this.state.lines.some((line) => line.unfoldable);
         }
+    }
+
+    get hasFoldedLines() {
+        return hasFoldedLine(this.state.lines);
     }
 
     onClickBoundLink(line) {
@@ -141,9 +152,34 @@ export class TraceabilityReport extends Component {
         });
     }
 
+    async onClickUnfold() {
+        const unfoldLines = async (lines) => {
+            for (const line of lines) {
+                if (line.unfoldable) {
+                    if (line.isFolded) {
+                        await this.toggleLine(line);
+                    }
+                    await unfoldLines(line.lines);
+                }
+            }
+        };
+        await unfoldLines(this.state.lines);
+    }
+
+    onClickFold() {
+        const foldLines = (lines) => {
+            for (const line of lines) {
+                if (!line.isFolded) {
+                    this.toggleLine(line);
+                }
+                foldLines(line.lines);
+            }
+        };
+        foldLines(this.state.lines);
+    }
+
     async toggleLine(line) {
-        line.isFolded = !line.isFolded;
-        if (!line.lines.length) {
+        if (line.isFolded && !line.lines.length) {
             line.lines = (
                 await this.orm.call("stock.traceability.report", "get_lines", [line.id], {
                     model_id: line.model_id,
@@ -152,6 +188,7 @@ export class TraceabilityReport extends Component {
                 })
             ).map(processLine);
         }
+        line.isFolded = !line.isFolded;
     }
 }
 

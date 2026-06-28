@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { DiscussSidebarChannelActions } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel_actions";
 import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 import { useService } from "@web/core/utils/hooks";
@@ -9,12 +9,15 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 
 export class DiscussSidebarSubchannel extends Component {
     static template = "mail.DiscussSidebarSubchannel";
-    static props = ["channel", "isFirst?"];
     static components = { DiscussSidebarChannelActions, Dropdown, UseHoverOverlay };
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.props = props({
+            channel: types.instanceOf(this.store["discuss.channel"].Class),
+            isFirst: types.boolean(),
+        });
         this.hover = useHover(["root"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {

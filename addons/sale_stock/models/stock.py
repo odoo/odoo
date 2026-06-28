@@ -57,7 +57,7 @@ class StockMove(models.Model):
 
             so_line_vals = {
                 'move_ids': [(4, move.id, 0)],
-                'name': product.display_name,
+                'name': product.with_context(lang=sale_order.partner_id.lang).get_product_multiline_description_sale(),
                 'order_id': sale_order.id,
                 'product_id': product.id,
                 'product_uom_qty': 0,
@@ -76,7 +76,9 @@ class StockMove(models.Model):
                 so_line_vals['price_unit'] = 0
             # New lines should be added at the bottom of the SO (higher sequence number)
             if not so_line:
-                so_line_vals['sequence'] = max(sale_order.order_line.mapped('sequence')) + len(sale_order_lines_vals) + 1
+                so_line_vals['sequence'] = (
+                    max(sale_order.order_line.mapped('sequence'), default=0) + len(sale_order_lines_vals) + 1
+                )
             sale_order_lines_vals.append(so_line_vals)
 
         if sale_order_lines_vals:
@@ -127,7 +129,7 @@ class StockMove(models.Model):
         res = super().write(vals)
         if 'product_id' in vals:
             for move in self:
-                if move.sale_line_id and move.product_id != move.sale_line_id.product_id:
+                if move.sale_line_id and move.product_id != move.sale_line_id.product_id and move.sale_line_id.order_id.state != 'draft':
                     move.sale_line_id = False
         return res
 
@@ -136,6 +138,8 @@ class StockMove(models.Model):
         # to pass sale_line_id fom SO to MO in mto
         if self.sale_line_id:
             res['sale_line_id'] = self.sale_line_id.id
+            if self.sale_line_id.analytic_distribution:
+                res['analytic_distribution'] = self.sale_line_id.analytic_distribution
         return res
 
     def _reassign_sale_lines(self, sale_order):
@@ -159,6 +163,21 @@ class StockMove(models.Model):
             if ids_to_reset:
                 self.env['stock.move'].browse(ids_to_reset).sale_line_id = False
 
+    def _prepare_return_data(self):
+        """Get return line data for the portal return label flow.
+
+        :return: A dict with the move id, picking name, remaining returnable quantity, and lot name.
+        :rtype: dict
+        """
+        self.ensure_one()
+        returned_qty = sum(rm.quantity for rm in self.returned_move_ids if rm.state == "done")
+        return {
+            "move_id": self.id,
+            "picking_name": self.picking_id.name,
+            "remaining_delivered_qty": self.quantity - returned_qty,
+            "lot_name": ", ".join(self.lot_ids.mapped("name")),
+        }
+
 
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
@@ -179,7 +198,9 @@ class StockRule(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    allow_spontaneous_returns = fields.Boolean(related="company_id.allow_spontaneous_returns")
     sale_id = fields.Many2one('sale.order', compute="_compute_sale_id", inverse="_set_sale_id", string="Sales Order", store=True, index='btree_not_null')
+    return_reason_id = fields.Many2one("return.reason")
 
     @api.depends('reference_ids.sale_ids', 'move_ids.sale_line_id.order_id')
     def _compute_sale_id(self):
@@ -267,12 +288,26 @@ class StockPicking(models.Model):
                 so_line_vals['price_unit'] = 0
             # New lines should be added at the bottom of the SO (higher sequence number)
             if not so_line:
-                so_line_vals['sequence'] = max(sale_order.order_line.mapped('sequence')) + len(sale_order_lines_vals) + 1
+                so_line_vals['sequence'] = (
+                    max(sale_order.order_line.mapped('sequence'), default=0) + len(sale_order_lines_vals) + 1
+                )
             sale_order_lines_vals.append(so_line_vals)
 
         if sale_order_lines_vals:
             self.env['sale.order.line'].with_context(skip_procurement=True).create(sale_order_lines_vals)
         return res
+
+    def _create_return(self):
+        return_picking = super()._create_return()
+        return_reason_id = self.env.context.get("return_reason_id")
+        if (
+            return_reason_id
+            and return_reason_id.isdigit()
+            and self.env['return.reason'].browse(int(return_reason_id)).exists()
+        ):
+            return_picking.return_reason_id = int(return_reason_id)
+
+        return return_picking
 
     def _log_less_quantities_than_expected(self, moves):
         """ Log an activity on sale order that are linked to moves. The
@@ -311,6 +346,18 @@ class StockPicking(models.Model):
         self._log_activity(_render_note_exception_quantity, documents)
 
         return super(StockPicking, self)._log_less_quantities_than_expected(moves)
+
+    def _prepare_return_move_default_values(self, move_id):
+        vals = super()._prepare_return_move_default_values(move_id)
+        if move_id.sale_line_id:
+            vals['sale_line_id'] = move_id.sale_line_id.id
+        return vals
+
+    def _prepare_return_picking_default_values(self):
+        vals = super()._prepare_return_picking_default_values()
+        if self.sale_id:
+            vals['sale_id'] = self.sale_id.id
+        return vals
 
 
 class StockLot(models.Model):

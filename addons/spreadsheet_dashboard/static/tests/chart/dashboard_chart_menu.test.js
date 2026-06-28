@@ -128,7 +128,7 @@ test("Click on chart element in dashboard mode do not redirect twice", async fun
         actionXmlId: "menuAction2",
     });
     const fixture = await mountSpreadsheet(model);
-    const chartId = insertChartInSpreadsheet(model, "odoo_pie");
+    const chartId = insertChartInSpreadsheet(model, "pie");
     model.dispatch("UPDATE_ODOO_LINK_TO_CHART", {
         chartId,
         odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceCoreId: pivotId },

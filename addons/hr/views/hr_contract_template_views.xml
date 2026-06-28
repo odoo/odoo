@@ -6,10 +6,19 @@
         <field name="arch" type="xml">
             <form string="Contract Template">
                 <sheet>
-                    <div class="oe_title pe-0 w-100 mw-100" name="title">
+                    <div class="oe_title pe-0 w-100 mw-100" name="title" invisible="employee_id">
                         <h1 class="d-flex flex-row justify-content-between">
-                            <field name="name" class="text-truncate" placeholder="Template Name" required="1"/>
+                            <field name="name" class="text-truncate" placeholder="Template Name" required="not employee_id"/>
                         </h1>
+                    </div>
+                    <!-- Employee version header -->
+                    <div class="oe_title pe-0 w-100 mw-100" name="employee_title" invisible="not employee_id">
+                        <h1>
+                            <field name="employee_id" readonly="1" options="{'no_open': True}"/>
+                        </h1>
+                        <h2 class="text-muted">
+                            <field name="date_version" readonly="1" string="Effective Date"/>
+                        </h2>
                     </div>
                     <group name="top_info">
                         <group name="top_info_left">
@@ -34,7 +43,9 @@
                                     <field name="structure_type_id" string="Pay Category" placeholder="Employee will be excluded from Pay Runs"
                                             domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
 
-                                    <separator name="schedule" string="Schedule"/>
+                                    
+                                </group>
+                                <group name="schedule" string="Schedule">
                                     <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
                                 </group>
                             </group>

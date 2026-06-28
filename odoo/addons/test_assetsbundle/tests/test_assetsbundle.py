@@ -1954,20 +1954,18 @@ class TestAssetsManifest(AddonManifestPatched):
 @tagged('-at_install', 'post_install')
 class AssetsNodeOrmCacheUsage(TransactionCase):
 
-    def cache_keys(self):
-        keys = list(self.env.registry._Registry__caches['assets'])
+    def setUp(self):
+        super().setUp()
+        self.env.transaction.invalidate_ormcache('assets')
 
-        asset_keys = [key for key in keys if key[0] == 'ir.asset' and '_get_asset_paths' in str(key[1])] # ignore topological sort entry
+    def cache_keys(self):
+        keys = list(self.env.transaction.ormcaches__['assets'])
+
+        asset_keys = [key for key in keys if key[0] == 'ir.asset' and '_get_asset_paths' in str(key[1])]  # ignore topological sort entry
         qweb_keys = [key for key in keys if key[0] == 'ir.qweb']
         return asset_keys, qweb_keys
 
     def test_assets_node_orm_cache_usage_debug(self):
-        self.env.registry.clear_cache('assets')
-
-        asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 0)
-        self.assertEqual(len(qweb_keys), 0)
-
         self.env['ir.qweb']._get_asset_nodes('test_assetsbundle.manifest1')
         asset_keys, qweb_keys = self.cache_keys()
         asset_keys_length = len(asset_keys)
@@ -1987,12 +1985,6 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         check_no_new_cache_entry(debug='assets')
 
     def test_assets_node_orm_cache_usage_file_type(self):
-        self.env.registry.clear_cache('assets')
-
-        asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 0)
-        self.assertEqual(len(qweb_keys), 0)
-
         self.env['ir.qweb']._get_asset_nodes('test_assetsbundle.manifest1', js=True, css=False)
         asset_keys, qweb_keys = self.cache_keys()
         self.assertEqual(len(asset_keys), 1)
@@ -2012,7 +2004,6 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         self.assertEqual(len(qweb_keys), 3)
 
     def test_assets_node_orm_cache_usage_lang(self):
-        self.env.registry.clear_cache('assets')
         self.env['res.lang']._activate_lang('ar_SY')
         self.env['res.lang']._activate_lang('fr_FR')
         self.env['res.lang']._activate_lang('en_US')
@@ -2041,11 +2032,6 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
     def test_assets_node_orm_cache_usage_website(self):
         if self.env['ir.module.module'].search([('name', '=', 'website'), ('state', '=', 'uninstalled')]):
             return  # only makes sence if website is installed
-        self.env.registry.clear_cache('assets')
-
-        asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 0)
-        self.assertEqual(len(qweb_keys), 0)
 
         self.env['ir.qweb'].with_context(website_id=None)._get_asset_nodes('test_assetsbundle.manifest1')
         asset_keys, qweb_keys = self.cache_keys()
@@ -2054,7 +2040,7 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         self.assertEqual(asset_keys_length, 1)
         self.assertEqual(qweb_keys_length, 1)
 
-        self.env['ir.qweb'].with_context(website_id=self.ref('website.default_website'))._get_asset_nodes('test_assetsbundle.manifest1')
+        self.env['ir.qweb'].with_context(website_id=self.ref('base.default_website'))._get_asset_nodes('test_assetsbundle.manifest1')
         asset_keys, qweb_keys = self.cache_keys()
         # The content may be different for different websites, even if it is not
         # always the case.
@@ -2062,12 +2048,6 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         self.assertEqual(len(qweb_keys), qweb_keys_length + 1)
 
     def test_assets_node_orm_cache_usage_node_flags(self):
-        self.env.registry.clear_cache('assets')
-
-        asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 0)
-        self.assertEqual(len(qweb_keys), 0)
-
         self.env['ir.qweb']._get_asset_nodes('test_assetsbundle.manifest1')
         asset_keys, qweb_keys = self.cache_keys()
         asset_keys_length = len(asset_keys)

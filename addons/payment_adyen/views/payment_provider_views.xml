@@ -6,14 +6,40 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <group name="provider_credentials" position='inside'>
-                <group invisible="code != 'adyen'">
-                    <field name="adyen_merchant_account" required="code == 'adyen' and state != 'disabled'"/>
-                    <field name="adyen_api_key" required="code == 'adyen' and state != 'disabled'" password="True"/>
-                    <field name="adyen_client_key" required="code == 'adyen' and state != 'disabled'"/>
-                    <field name="adyen_hmac_key" required="code == 'adyen' and state != 'disabled'" password="True"/>
-                    <field name="adyen_api_url_prefix" required="code == 'adyen' and state == 'enabled'"/>
-                </group>
+            <group name="provider_credentials" position="inside">
+                <field
+                    string="Merchant Account"
+                    name="adyen_merchant_account"
+                    invisible="code != 'adyen'"
+                    required="is_live"
+                    widget="password"
+                />
+                <field
+                    string="API Key"
+                    name="adyen_api_key"
+                    invisible="code != 'adyen'"
+                    required="is_live"
+                    widget="password"
+                />
+                <field
+                    string="Client Key"
+                    name="adyen_client_key"
+                    invisible="code != 'adyen'"
+                    required="is_live"
+                />
+                <field
+                    string="HMAC Key"
+                    name="adyen_hmac_key"
+                    invisible="code != 'adyen'"
+                    required="is_live"
+                    widget="password"
+                />
+                <field
+                    string="API URL Prefix"
+                    name="adyen_api_url_prefix"
+                    invisible="code != 'adyen'"
+                    required="is_live"
+                />
             </group>
             <group name="provider_config" position='before'>
                 <div invisible="code != 'adyen' or not capture_manually"

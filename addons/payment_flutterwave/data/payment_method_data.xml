@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- https://developer.flutterwave.com/v3.0.0/docs/payment-methods -->
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_bank_account" model="payment.method">
+        <field name="name">Bank Account</field>
+        <field name="code">bank_account</field>
+        <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="support_tokenization">False</field>
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.EUR'), ref('base.GBP'), ref('base.USD'), ref('base.ZAR')])]"
+        />
+    </record>
+
+    <record id="payment_method_bank_transfer" model="payment.method">
+        <field name="name">Bank Transfer</field>
+        <field name="code">bank_transfer</field>
+        <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.ng')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.NGN')])]"/>
+    </record>
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="sequence">10</field>
+        <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="support_tokenization">True</field>
+    </record>
+
+    <record id="payment_method_mobile_money" model="payment.method">
+        <field name="name">Mobile money</field>
+        <field name="code">mobile_money</field>
+        <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
+        <field name="image" type="bytes" file="payment/static/img/mtn-mobile-money.png"/>
+        <field name="support_tokenization">False</field>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.ci'),
+                        ref('base.cm'),
+                        ref('base.gh'),
+                        ref('base.ml'),
+                        ref('base.rw'),
+                        ref('base.sn'),
+                        ref('base.ug'),
+                        ref('base.zm'),
+                ])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.GHS'),
+                        ref('base.RWF'),
+                        ref('base.UGX'),
+                        ref('base.XAF'),
+                        ref('base.XOF'),
+                        ref('base.ZMW'),
+                ])]"
+        />
+    </record>
+
+    <record id="payment_method_mpesa" model="payment.method">
+        <field name="name">M-Pesa</field>
+        <field name="code">mpesa</field>
+        <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
+        <field name="image" type="bytes" file="payment/static/img/mpesa.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.ke')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.KES')])]"/>
+    </record>
+
+    <record id="payment_method_paypal" model="payment.method">
+        <field name="name">Paypal</field>
+        <field name="code">paypal</field>
+        <field name="sequence">20</field>
+        <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
+        <field name="image" type="bytes" file="payment/static/img/paypal.png"/>
+        <field name="support_tokenization">False</field>
+    </record>
+
+    <record id="payment_method_ussd" model="payment.method">
+        <field name="name">USSD</field>
+        <field name="code">ussd</field>
+        <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
+        <field name="image" type="bytes" file="payment/static/img/flutterwave.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.ng')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.NGN')])]"/>
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS === -->
+
+    <record id="payment_method_amex" model="payment.method">
+        <field name="name">American Express</field>
+        <field name="code">amex</field>
+        <field
+            name="primary_payment_method_id" eval="ref('payment_flutterwave.payment_method_card')"
+        />
+        <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
+        <field name="image" type="bytes" file="payment/static/img/amex.png"/>
+    </record>
+
+    <record id="payment_method_credit" model="payment.method">
+        <field name="name">Credit Payment</field>
+        <field name="code">credit</field>
+        <field
+            name="primary_payment_method_id" eval="ref('payment_flutterwave.payment_method_card')"
+        />
+        <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+    </record>
+
+    <record id="payment_method_discover" model="payment.method">
+        <field name="name">Discover</field>
+        <field name="code">discover</field>
+        <field
+            name="primary_payment_method_id" eval="ref('payment_flutterwave.payment_method_card')"
+        />
+        <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
+        <field name="image" type="bytes" file="payment/static/img/discover.png"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field
+            name="primary_payment_method_id" eval="ref('payment_flutterwave.payment_method_card')"
+        />
+        <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field
+            name="primary_payment_method_id" eval="ref('payment_flutterwave.payment_method_card')"
+        />
+        <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+</odoo>

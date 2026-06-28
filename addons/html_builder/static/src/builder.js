@@ -1,4 +1,4 @@
-import { useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useRef, useSubEnv } from "@web/owl2/utils";
 import { Editor } from "@html_editor/editor";
 import {
     Component,
@@ -7,8 +7,10 @@ import {
     onWillDestroy,
     onWillStart,
     onWillUnmount,
-    onWillUpdateProps,
     status,
+    proxy,
+    props,
+    t,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
@@ -24,8 +26,17 @@ import { withSequence } from "@html_editor/utils/resource";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
 import { isVisible } from "@html_builder/utils/utils";
 
+// These elements should only have inline content (even if they have a `block`
+// display style, for example if they are in a flex)
+// NOTE: h1, h2, ..., p, pre already prevents wrapping their children into block
+const ONLY_ALLOW_INLINE_TAGS = new Set([
+    ...["a", "em", "strong", "small", "s", "cite", "q", "abbr", "data", "time", "code"],
+    ...["samp", "sub", "sup", "i", "b", "u", "mark", "bdi", "span", "label", "button"],
+]);
+
 /**
- * @typedef {(() => void)[]} on_mobile_preview_clicked_handlers
+ * @typedef {((args: {isMobileView: boolean}) => ())[]} on_mobile_view_switched_handlers
+ * called when the screen size switches between mobile and desktop view
  * @typedef {(() => void)[]} on_dom_updated_handlers
  * @typedef {{ Component: Component; props: object; }[]} lower_panel_entries
  */
@@ -33,46 +44,41 @@ import { isVisible } from "@html_builder/utils/utils";
 export class Builder extends Component {
     static template = "html_builder.Builder";
     static components = { BlockTab, CustomizeTab };
-    static props = {
-        closeEditor: { type: Function, optional: true },
-        reloadEditor: { type: Function, optional: true },
-        onEditorLoad: { type: Function, optional: true },
-        installSnippetModule: { type: Function, optional: true },
-        snippetsName: { type: String },
-        toggleMobile: { type: Function },
-        overlayRef: { type: Function },
-        iframeLoaded: { type: Object },
-        isMobile: { type: Boolean },
-        Plugins: { type: Array, optional: true },
+    props = props({
+        closeEditor: t.function().optional(),
+        reloadEditor: t.function().optional(() => () => {}),
+        onEditorLoad: t.function().optional(),
+        newInstalledModule: t.string().optional(),
+        installSnippetModule: t.function().optional(),
+        snippetsName: t.string(),
+        toggleMobile: t.function(),
+        overlayRef: t.function(),
+        iframeLoaded: t.object(),
+        isMobile: t.boolean(),
+        Plugins: t.array().optional(),
         // This fragment of config will be passed to the Editor and be
         // available to the plugins in `config`
-        config: { type: Object, optional: true },
-        getThemeTab: { type: Function, optional: true },
-        editableSelector: { type: String },
-        themeTabDisplayName: { type: String, optional: true },
-        slots: { type: Object, optional: true },
-        initialTab: { type: String, optional: true },
-        onlyCustomizeTab: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        config: {},
-        themeTabDisplayName: _t("Theme"),
-        initialTab: "blocks",
-        onlyCustomizeTab: false,
-    };
+        config: t.object().optional({}),
+        getThemeTab: t.function().optional(),
+        editableSelector: t.string(),
+        themeTabDisplayName: t.string().optional(_t("Theme")),
+        slots: t.object().optional(),
+        initialTab: t.string().optional("blocks"),
+        onlyCustomizeTab: t.boolean().optional(false),
+    });
 
     setup() {
         this.ThemeTab = this.props.getThemeTab?.();
         this.builder_sidebarRef = useRef("builder_sidebar");
-        this.state = useState({
+        this.state = proxy({
             canUndo: false,
             canRedo: false,
             activeTab: this.props.onlyCustomizeTab ? "customize" : this.props.initialTab,
             currentOptionsContainers: undefined,
         });
-        this.invisibleElementsPanelState = useState({
+        this.invisibleElementsPanelState = proxy({
             invisibleEls: [],
-            invisibleSelector: this.getInvisibleSelector(),
+            invisibleSelector: "",
         });
         useHotkey("control+z", () => this.undo());
         useHotkey("control+y", () => this.redo());
@@ -116,12 +122,11 @@ export class Builder extends Component {
                         this.props.config.onChange?.();
                     }
                 },
-                reloadEditor: async (param = {}) => {
-                    await this.props.reloadEditor?.({
-                        initialTab: this.state.activeTab,
-                        ...param,
-                    });
-                },
+                reloadEditor: ({ url, editingElement } = {}) =>
+                    this.props.reloadEditor(
+                        url,
+                        this.editor.processThrough("reload_context_processors", {}, editingElement)
+                    ),
                 closeEditor: async () => {
                     await this.props.closeEditor?.();
                 },
@@ -131,8 +136,9 @@ export class Builder extends Component {
                     on_dom_updated_handlers: () => {
                         this.triggerDomUpdated();
                     },
-                    on_mobile_preview_clicked_handlers: withSequence(20, () => {
+                    on_mobile_view_switched_handlers: withSequence(20, () => {
                         this.triggerDomUpdated();
+                        this.updateInvisibleEls();
                     }),
                     on_will_save_handlers: () => {
                         const snippetMenuEl = this.builder_sidebarRef.el;
@@ -168,6 +174,10 @@ export class Builder extends Component {
                             this.setTab("blocks");
                         }
                     },
+                    reload_context_processors: (context) => ({
+                        ...context,
+                        initialTab: this.state.activeTab,
+                    }),
                     lower_panel_entries: withSequence(20, {
                         Component: InvisibleElementsPanel,
                         props: this.invisibleElementsPanelState,
@@ -177,6 +187,8 @@ export class Builder extends Component {
                             return false;
                         }
                     },
+                    are_inlines_allowed_at_root_predicates: (el) =>
+                        ONLY_ALLOW_INLINE_TAGS.has(el.tagName.toLowerCase()) || undefined,
                 },
                 localOverlayContainers: {
                     key: this.env.localOverlayContainerKey,
@@ -197,6 +209,9 @@ export class Builder extends Component {
                 baseContainers: ["P"],
                 cleanEmptyStructuralContainers: false,
                 isEditableRTL: false,
+                publicAttachments: true,
+                direction: "ltr",
+                maxFontSize: 400,
             },
             this.env.services
         );
@@ -217,6 +232,7 @@ export class Builder extends Component {
 
             if (this.editableEl.matches(".o_rtl")) {
                 this.editor.config.isEditableRTL = true;
+                this.editor.config.direction = "rtl";
             }
 
             // Prevent image dragging in the website builder. Not via css because
@@ -228,6 +244,19 @@ export class Builder extends Component {
                     ev.stopPropagation();
                 }
             };
+
+            // Use a resize observer to trigger `on_mobile_view_switched_handlers`
+            // when the view size switches between desktop and mobile view
+            let isMobileView = this.editor.config.isMobileView(this.editableEl);
+            this.resizeObserver = new ResizeObserver(() => {
+                const wasMobileView = isMobileView;
+                isMobileView = this.editor.config.isMobileView(this.editableEl);
+                if (wasMobileView !== isMobileView) {
+                    this.editor.trigger("on_mobile_view_switched_handlers", { isMobileView });
+                }
+            });
+            this.resizeObserver.observe(this.editableEl);
+
             this.editor.attachTo(this.editableEl);
         });
 
@@ -239,6 +268,7 @@ export class Builder extends Component {
             editShadow: this.editShadow.bind(this),
         });
         onWillDestroy(() => {
+            this.resizeObserver?.disconnect();
             this.editor.destroy();
         });
 
@@ -252,14 +282,6 @@ export class Builder extends Component {
         onWillUnmount(() => {
             this.editableEl.removeEventListener("dragstart", this.onDragStart);
         });
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.isMobile !== this.props.isMobile) {
-                this.updateInvisibleEls(nextProps.isMobile);
-                this.invisibleElementsPanelState.invisibleSelector = this.getInvisibleSelector(
-                    nextProps.isMobile
-                );
-            }
-        });
     }
     async triggerDomUpdated() {
         this.lastTrigerUpdateId++;
@@ -270,12 +292,6 @@ export class Builder extends Component {
         await Promise.allSettled(getStatePromises);
         const isLastTriggerId = this.lastTrigerUpdateId === currentTriggerId;
         resolve(isLastTriggerId);
-    }
-
-    getInvisibleSelector(isMobile = this.props.isMobile) {
-        return `.o_snippet_invisible, ${
-            isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
-        }`;
     }
 
     /**
@@ -320,12 +336,16 @@ export class Builder extends Component {
 
     onMobilePreviewClick() {
         this.props.toggleMobile();
-        this.editor.resources["on_mobile_preview_clicked_handlers"].forEach((handler) => handler());
     }
 
-    updateInvisibleEls(isMobile = this.props.isMobile) {
+    updateInvisibleEls() {
+        const isMobile = this.editor.config.isMobileView(this.editor.editable);
+        const invisibleSelector = `.o_snippet_invisible, ${
+            isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
+        }`;
+        this.invisibleElementsPanelState.invisibleSelector = invisibleSelector;
         this.invisibleElementsPanelState.invisibleEls = [
-            ...this.editor.editable?.querySelectorAll(this.getInvisibleSelector(isMobile)) || [],
+            ...this.editor.editable.querySelectorAll(invisibleSelector),
         ];
     }
 

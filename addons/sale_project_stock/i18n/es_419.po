@@ -3,25 +3,36 @@
 # * sale_project_stock
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
 # "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:02+0000\n"
-"PO-Revision-Date: 2025-11-11 00:37+0000\n"
-"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"PO-Revision-Date: 2026-04-30 07:29+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-19/sale_project_stock/es_419/>\n"
+"odoo-s19-3/sale_project_stock/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Línea analítica"
+
+#. module: sale_project_stock
+#: model:ir.model.fields,field_description:sale_project_stock.field_account_analytic_line__billable_type
+msgid "Billable Type"
+msgstr "Tipo de facturación"
+
+#. module: sale_project_stock
+#: model:ir.model.fields,field_description:sale_project_stock.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:sale_project_stock.field_project_project__display_name
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_move__display_name
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_picking__display_name
@@ -29,11 +40,22 @@ msgid "Display Name"
 msgstr "Nombre para mostrar"
 
 #. module: sale_project_stock
+#: model:ir.model.fields,field_description:sale_project_stock.field_account_analytic_line__id
 #: model:ir.model.fields,field_description:sale_project_stock.field_project_project__id
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_move__id
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_picking__id
 msgid "ID"
 msgstr "ID"
+
+#. module: sale_project_stock
+#: model:ir.model.fields.selection,name:sale_project_stock.selection__account_analytic_line__billable_type__16_picking_entry_negative
+msgid "Inventory Transfers (Costs)"
+msgstr "Traslados de inventario (costos)"
+
+#. module: sale_project_stock
+#: model:ir.model.fields.selection,name:sale_project_stock.selection__account_analytic_line__billable_type__15_picking_entry_positive
+msgid "Inventory Transfers (Revenues)"
+msgstr "Traslados de inventario (Ingresos)"
 
 #. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_project_project

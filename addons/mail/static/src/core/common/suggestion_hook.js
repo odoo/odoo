@@ -1,43 +1,76 @@
-import { useComponent, useLayoutEffect, useState } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
 import { rightPos } from "@html_editor/utils/position";
 import {
     generatePartnerMentionElement,
     generateRoleMentionElement,
     generateSpecialMentionElement,
-    generateChannelMentionElement,
 } from "@mail/utils/common/format";
-import { status } from "@odoo/owl";
+import { proxy, status, t } from "@odoo/owl";
+import { emojiType } from "@web/core/emoji_picker/emoji_loader";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { useDebounced } from "@web/core/utils/timing";
-import { createTextNode } from "@web/core/utils/xml";
+import { useSearch } from "@mail/utils/common/hooks";
 
-export const DELAY_FETCH = 250;
+/**
+ * Delimiters that trigger suggestion lists in the composer.
+ *
+ * @typedef {typeof SUGGESTION_DELIMITERS[keyof typeof SUGGESTION_DELIMITERS]} SuggestionDelimiter
+ */
+export const SUGGESTION_DELIMITERS = Object.freeze({
+    PARTNER: "@",
+    CANNED_RESPONSE: "::",
+    EMOJI: ":",
+    CHANNEL_COMMAND: "/",
+});
+
+/** @param {import("models").Store} store */
+export const optionType = (store) =>
+    t.object({
+        buttonClass: t.string().optional(),
+        cannedResponse: t.instanceOf(store["mail.canned.response"].Class).optional(),
+        classList: t.string().optional(),
+        emoji: emojiType.optional(),
+        group: t.any().optional(),
+        help: t.string().optional(),
+        isSpecial: t.boolean().optional(),
+        label: t.string().optional(),
+        optionTemplate: t.string().optional(),
+        partner: t.instanceOf(store["res.partner"].Class).optional(),
+        role: t.instanceOf(store["res.role"].Class).optional(),
+        source: t.string().optional(),
+        thread: t.instanceOf(store["mail.thread"].Class).optional(),
+        title: t.string().optional(),
+        unselectable: t.boolean().optional(),
+    });
+
+/** @typedef {import("@odoo/owl").StripType<ReturnType<typeof optionType>>} Option */
+
+/**
+ * @typedef {import("models").ResPartner
+ *   | import("models").ResRole
+ *   | import("models").CannedResponse
+ *   | import("@web/core/emoji_picker/emoji_picker").Emoji
+ *   | import("@mail/core/common/store_service").SpecialMention} Suggestion
+ */
 
 export class UseSuggestion {
     constructor(comp) {
         this.comp = comp;
-        this.fetchSuggestions = useDebounced(this.fetchSuggestions.bind(this), DELAY_FETCH);
-        useLayoutEffect(
-            () => {
-                this.update();
-                if (this.search.position === undefined || !this.search.delimiter) {
-                    return; // nothing else to fetch
-                }
-                if (!this.composer.store.self_user) {
-                    return; // guests cannot access fetch suggestion method
-                }
-                if (
-                    this.lastFetchedSearch?.count === 0 &&
-                    (!this.search.delimiter || this.isSearchMoreSpecificThanLastFetch)
-                ) {
-                    return; // no need to fetch since this is more specific than last and last had no result
-                }
-                this.fetchSuggestions();
-            },
-            () => [this.search.delimiter, this.search.position, this.search.term]
-        );
+        this.suggestionService = useService("mail.suggestion");
+        this.detection = proxy({
+            /** @type {SuggestionDelimiter|undefined} */
+            delimiter: undefined,
+            /** @type {number|undefined} */
+            position: undefined,
+            term: "",
+        });
+        this.search = useSearch({
+            fetch: this.fetchSuggestions.bind(this),
+            filter: this.update.bind(this),
+            deps: () => [this.detection.delimiter, this.detection.position],
+            isActive: () => !!this.detection.delimiter,
+        });
         useLayoutEffect(
             () => {
                 this.detect();
@@ -55,27 +88,7 @@ export class UseSuggestion {
     get composer() {
         return this.comp.props.composer;
     }
-    suggestionService = useService("mail.suggestion");
-    state = useState({
-        count: 0,
-        items: undefined,
-        isFetching: false,
-    });
-    search = {
-        delimiter: undefined,
-        position: undefined,
-        term: "",
-    };
-    lastFetchedSearch;
-    get isSearchMoreSpecificThanLastFetch() {
-        return (
-            this.lastFetchedSearch.delimiter === this.search.delimiter &&
-            this.search.term.startsWith(this.lastFetchedSearch.term) &&
-            this.lastFetchedSearch.position >= this.search.position
-        );
-    }
     clearRawMentions() {
-        this.composer.mentionedChannels.length = 0;
         this.composer.mentionedPartners.length = 0;
         this.composer.mentionedRoles.length = 0;
     }
@@ -83,12 +96,12 @@ export class UseSuggestion {
         this.composer.cannedResponses = [];
     }
     clearSearch() {
-        Object.assign(this.search, {
+        Object.assign(this.detection, {
             delimiter: undefined,
             position: undefined,
             term: "",
         });
-        this.state.items = undefined;
+        this.search.reset();
     }
     detect() {
         let start = 0;
@@ -134,8 +147,8 @@ export class UseSuggestion {
             candidatePositions.push(index);
         }
         // keep the current delimiter if it is still valid
-        if (this.search.position !== undefined && this.search.position < start) {
-            candidatePositions.push(this.search.position);
+        if (this.detection.position !== undefined && this.detection.position < start) {
+            candidatePositions.push(this.detection.position);
         }
         const supportedDelimiters = this.suggestionService.getSupportedDelimiters(
             this.thread,
@@ -170,12 +183,12 @@ export class UseSuggestion {
             if (charBeforeCandidate && !/\s/.test(charBeforeCandidate)) {
                 continue;
             }
-            Object.assign(this.search, {
+            Object.assign(this.detection, {
                 delimiter: candidateDelimiter,
                 position: candidatePosition,
                 term: text.substring(candidatePosition + candidateDelimiter.length, start),
             });
-            this.state.count++;
+            this.search.searchTerm = this.detection.term;
             return;
         }
         this.clearSearch();
@@ -184,12 +197,15 @@ export class UseSuggestion {
         return this.composer.thread || this.composer.message?.thread;
     }
     insert(option) {
-        let position = this.search.position + 1;
+        let position = this.detection.position + 1;
         if (
-            [":", "::"].includes(this.search.delimiter) ||
-            (this.comp.composerService.htmlEnabled && this.search.delimiter !== "/")
+            [SUGGESTION_DELIMITERS.EMOJI, SUGGESTION_DELIMITERS.CANNED_RESPONSE].includes(
+                this.detection.delimiter
+            ) ||
+            (this.comp.composerService.htmlEnabled &&
+                this.detection.delimiter !== SUGGESTION_DELIMITERS.CHANNEL_COMMAND)
         ) {
-            position = this.search.position;
+            position = this.detection.position;
         }
         if (this.comp.composerService.htmlEnabled) {
             const { startContainer, endContainer, endOffset } =
@@ -205,29 +221,16 @@ export class UseSuggestion {
             this.composer.mentionedPartners.add({ id: option.partner.id });
         } else if (option.role) {
             this.composer.mentionedRoles.add(option.role);
-        } else if (option.channel) {
-            this.composer.mentionedChannels.add(option.channel.id);
         } else if (option.cannedResponse) {
             this.composer.cannedResponses.push(option.cannedResponse);
         }
         if (this.comp.composerService.htmlEnabled) {
-            let inlineElement;
-            if (option.partner) {
-                inlineElement = generatePartnerMentionElement(option.partner, this.thread);
-            } else if (option.isSpecial) {
-                inlineElement = generateSpecialMentionElement(option.label);
-            } else if (option.role) {
-                inlineElement = generateRoleMentionElement(option.role);
-            } else if (option.channel) {
-                inlineElement = generateChannelMentionElement(option.channel);
-            } else {
-                inlineElement = createTextNode(option.label);
-            }
+            const inlineElement = makeMentionFromOption(option, { thread: this.thread });
             this.comp.editor.shared.dom.insert(inlineElement);
             const [anchorNode, anchorOffset] = rightPos(inlineElement);
             this.comp.editor.shared.selection.setSelection({ anchorNode, anchorOffset });
             this.comp.editor.shared.dom.insert("\u00A0");
-            this.comp.editor.shared.history.addStep();
+            this.comp.editor.shared.history.commit();
         } else {
             // remove the user-typed search delimiter
             this.composer.composerText =
@@ -238,62 +241,156 @@ export class UseSuggestion {
         }
     }
     update() {
-        if (!this.search.delimiter) {
-            return;
+        if (!this.detection.delimiter) {
+            return undefined;
         }
-        const { type, suggestions } = this.suggestionService.searchSuggestions(this.search, {
+        const { type, suggestions } = this.suggestionService.searchSuggestions(this.detection, {
+            composerType: this.comp.props.type,
             thread: this.thread,
         });
         if (!suggestions.length) {
-            this.state.items = undefined;
-            return;
+            return undefined;
         }
         // arbitrary limit to avoid displaying too many elements at once
         // ideally a load more mechanism should be introduced
         const limit = 8;
         suggestions.length = Math.min(suggestions.length, limit);
-        this.state.items = { type, suggestions };
+        return { type, suggestions };
     }
 
     async fetchSuggestions() {
         if (!this.thread || status(this.comp) === "destroyed") {
             return;
         }
-        let resetFetchingState = true;
+        if (!this.composer.store.self_user) {
+            return; // guests cannot access fetch suggestion method
+        }
         try {
             this.abortController?.abort();
             this.abortController = new AbortController();
-            this.state.isFetching = true;
-            await this.suggestionService.fetchSuggestions(this.search, {
+            await this.suggestionService.fetchSuggestions(this.detection, {
                 thread: this.thread,
                 abortSignal: this.abortController.signal,
+                composerType: this.comp.props.type,
             });
         } catch (e) {
-            this.lastFetchedSearch = null;
             if (e instanceof ConnectionAbortedError) {
-                resetFetchingState = false;
                 return;
             }
             throw e;
-        } finally {
-            if (resetFetchingState) {
-                this.state.isFetching = false;
-            }
         }
         if (!this.thread || status(this.comp) === "destroyed") {
             return;
         }
-        this.update();
-        this.lastFetchedSearch = {
-            ...this.search,
-            count: this.state.items?.suggestions.length ?? 0,
-        };
-        if (!this.state.items?.suggestions.length) {
-            this.clearSearch();
-        }
+        const { suggestions } = this.suggestionService.searchSuggestions(this.detection, {
+            thread: this.thread,
+        });
+        return suggestions.length === 0 ? false : undefined;
     }
 }
 
 export function useSuggestion() {
     return new UseSuggestion(useComponent());
+}
+
+/**
+ * Maps raw suggestion records to navigable list option objects for all suggestion types.
+ *
+ * @param {string} type
+ * @param {Suggestion[]} suggestions
+ * @param {Object} [params]
+ * @param {import("models").Thread} [params.thread] The thread where the suggestion is being
+ *   composed. Used e.g. to resolve partner display names in context and stored on the resulting
+ *   Option so that consumers (insertion handlers, mention templates) can access it.
+ * @returns {{ optionTemplate?: string, options: Option[] }}
+ */
+export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
+    const classList = "o-mail-Composer-suggestion";
+    switch (type) {
+        case "Partner":
+            return {
+                optionTemplate: "mail.Composer.suggestionPartner",
+                options: suggestions.map((suggestion) => {
+                    if (suggestion.isSpecial) {
+                        return {
+                            ...suggestion,
+                            group: 3,
+                            optionTemplate: "mail.Composer.suggestionSpecial",
+                            classList,
+                        };
+                    }
+                    if (suggestion?.Model?.getName?.() === "res.role") {
+                        return {
+                            group: 2,
+                            label: suggestion.name,
+                            role: suggestion,
+                            thread,
+                            optionTemplate: "mail.Composer.suggestionRole",
+                            classList,
+                        };
+                    }
+                    return {
+                        group: 1,
+                        label:
+                            thread?.getPersonaName(suggestion) ||
+                            suggestion.displayName ||
+                            suggestion.email ||
+                            "",
+                        partner: suggestion,
+                        thread,
+                        classList,
+                    };
+                }),
+            };
+        case "ChannelCommand":
+            return {
+                optionTemplate: "mail.Composer.suggestionChannelCommand",
+                options: suggestions.map((suggestion) => ({
+                    label: suggestion.name,
+                    help: suggestion.help,
+                    classList,
+                })),
+            };
+        case "mail.canned.response":
+            return {
+                optionTemplate: "mail.Composer.suggestionCannedResponse",
+                options: suggestions.map((suggestion) => ({
+                    cannedResponse: suggestion,
+                    label: suggestion.substitution,
+                    source: suggestion.source,
+                    title: suggestion.substitution,
+                    classList,
+                })),
+            };
+        case "emoji":
+            return {
+                optionTemplate: "mail.Composer.suggestionEmoji",
+                options: suggestions.map((suggestion) => ({
+                    emoji: suggestion,
+                    label: suggestion.codepoints,
+                })),
+            };
+        default:
+            return { options: [] };
+    }
+}
+
+/**
+ * @param {Option} option
+ * @param {Object} [params]
+ * @param {import("models").Thread} [params.thread] The thread being viewed by the
+ *   user, needed to generate mention links that point back to the right record.
+ */
+export function makeMentionFromOption(option, { thread } = {}) {
+    let inlineElement;
+    if (option.partner) {
+        inlineElement = generatePartnerMentionElement(option.partner, { thread });
+    } else if (option.isSpecial) {
+        inlineElement = generateSpecialMentionElement(option.label);
+    } else if (option.role) {
+        inlineElement = generateRoleMentionElement(option.role);
+    } else {
+        inlineElement = document.createTextNode(option.label);
+    }
+    return inlineElement;
 }

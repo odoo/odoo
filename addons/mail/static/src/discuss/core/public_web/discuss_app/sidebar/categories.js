@@ -6,13 +6,8 @@ import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useService } from "@web/core/utils/hooks";
 
-/**
- * @typedef {Object} Props
- * @extends {Component<Props, Env>}
- */
 export class DiscussSidebarCategories extends Component {
     static template = "mail.DiscussSidebarCategories";
-    static props = {};
     static components = { DiscussSidebarCategory, Dropdown };
 
     setup() {

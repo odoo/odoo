@@ -123,6 +123,39 @@ class ResUsers(models.Model):
         self.env['gamification.karma.tracking'].sudo().create(create_values)
         return True
 
+    @api.model
+    def _get_user_ids_ranked_by_karma(self, user_domain, from_date=None, to_date=None, limit=30, offset=0):
+        """ Return the list of user_ids satisfying the domain, sorted by their
+        karma gain during the specified period.
+
+        This method is designed for the website leaderboard pagination. It
+        computes the ranking based on the sum of gamification.karma.tracking
+        values within the given dates."""
+
+        where_query = self.env['res.users']._search(user_domain, bypass_access=True)
+
+        sql = SQL("""
+            SELECT "res_users".id as user_id
+            FROM %s
+            LEFT JOIN "gamification_karma_tracking" as "tracking"
+                ON "res_users".id = "tracking".user_id
+            WHERE %s %s %s
+            GROUP BY "res_users".id
+            ORDER BY COALESCE(SUM("tracking".new_value - "tracking".old_value), 0) DESC, "res_users".id DESC
+            LIMIT %s OFFSET %s
+        """,
+            where_query.from_clause,
+            where_query.where_clause or SQL("TRUE"),
+            SQL("AND tracking.tracking_date >= %s::DATE", from_date) if from_date else SQL(),
+            SQL("AND tracking.tracking_date < %s::DATE + interval '1' day", to_date) if to_date else SQL(),
+            limit,
+            offset,
+        )
+
+        self.env.cr.execute(sql)
+        res = self.env.cr.fetchall()
+        return [r[0] for r in res]
+
     def _get_tracking_karma_gain_position(self, user_domain, from_date=None, to_date=None):
         """ Get absolute position in term of gained karma for users. First a ranking
         of all users is done given a user_domain; then the position of each user

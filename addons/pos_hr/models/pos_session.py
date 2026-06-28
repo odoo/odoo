@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models, api, _
+from odoo import _, api, fields, models
 from odoo.tools import plaintext2html
 
 
@@ -12,6 +12,20 @@ class PosSession(models.Model):
         help="The employee who currently uses the cash register",
         tracking=True,
     )
+    logged_employee_ids = fields.Many2many(
+        'hr.employee',
+        string="Logged In Cashiers",
+        store=True,
+        compute='_compute_logged_employee_ids',
+        help="All employees who have logged into this session",
+    )
+
+    @api.depends('employee_id')
+    def _compute_logged_employee_ids(self):
+        for session in self:
+            employee = session.employee_id
+            if employee and employee.id not in session.logged_employee_ids.ids:
+                session.logged_employee_ids |= employee
 
     @api.model
     def _load_pos_data_models(self, config):
@@ -22,23 +36,15 @@ class PosSession(models.Model):
 
     def _set_opening_control_data(self, cashbox_value: int, notes: str):
         super()._set_opening_control_data(cashbox_value, notes)
-        if author_id := self._get_message_author():
-            self.message_post(body=plaintext2html(_('Opened register')), author_id=author_id.id)
-
-    def post_close_register_message(self):
-        if author_id := self._get_message_author():
-            self.message_post(body=plaintext2html(_('Closed Register')), author_id=author_id.id)
-        else:
-            return super().post_close_register_message()
+        if self.employee_id:
+            self.message_post(body=plaintext2html(_('Opened register')), author_id=self._get_message_author().id)
 
     def _get_message_author(self):
-        if not self.employee_id:
-            return None
-        
-        if related_partners := self.employee_id._get_related_partners():
-            return related_partners[0]
-        
-        return self.user_id.partner_id
+        if self.employee_id:
+            if related_partners := self.employee_id._get_related_partners():
+                return related_partners[0]
+
+        return super()._get_message_author()
 
     def _aggregate_payments_amounts_by_employee(self, all_payments):
         payments_by_employee = []

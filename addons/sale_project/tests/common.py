@@ -22,7 +22,7 @@ class TestSaleProjectCommon(TestSaleCommon):
             'plan_id': cls.analytic_plan.id,
             'company_id': cls.company_data['company'].id,
         })
-        Project = cls.env['project.project'].with_context(tracking_disable=True)
+        Project = cls.env['project.project']
         cls.project_global = Project.create({
             'name': 'Project Global',
             'account_id': cls.analytic_account_sale.id,

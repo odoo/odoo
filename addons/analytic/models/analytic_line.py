@@ -98,6 +98,15 @@ class AnalyticPlanFieldsMixin(models.AbstractModel):
                 raise ValidationError(_("At least one analytic account must be set"))
 
     @api.model
+    def default_get(self, fields):
+        defaults = super().default_get(fields)
+        account_id = self.env.context.get('default_auto_account_id')
+        account = self.env['account.analytic.account'].browse(account_id).exists()
+        if account:
+            defaults[account.plan_id._column_name()] = account.id
+        return defaults
+
+    @api.model
     def fields_get(self, allfields=None, attributes=None):
         fields = super().fields_get(allfields, attributes)
         if not self.env.context.get("studio") and self.env['account.analytic.plan'].has_access('read'):
@@ -198,6 +207,7 @@ class AccountAnalyticLine(models.Model):
         'res.company',
         string='Company',
         required=True,
+        index=True,
         readonly=True,
         default=lambda self: self.env.company,
     )
@@ -270,7 +280,7 @@ class AccountAnalyticLine(models.Model):
         return 'amount'
 
     def _search_fiscal_date(self, operator, value):
-        fiscalyear_date_range = self.env.company.compute_fiscalyear_dates(fields.Date.today())
+        fiscalyear_date_range = self.env.company.compute_fiscalyear_dates(fields.Date.context_today(self))
         return [('date', '>=', fiscalyear_date_range['date_from'] - relativedelta(years=1))]
 
     # Hook to be shared between non related modules

@@ -154,9 +154,7 @@ class MrpWorkcenter(models.Model):
         graph_data = {wid: [] for wid in self._ids}
         has_workorder = self.env['mrp.workorder'].search_count([('workcenter_id', 'in', self.ids)], limit=1)
         for workcenter in self:
-            load_limit = sum(workcenter.resource_calendar_id.attendance_ids.mapped('duration_hours'))
-            if workcenter.resource_calendar_id.two_weeks_calendar:
-                load_limit /= 2
+            load_limit = workcenter.resource_calendar_id.hours_per_week
             wc_data = {'is_sample_data': not has_workorder, 'labels': list(week_range.values())}
             load_bar = []
             excess_bar = []

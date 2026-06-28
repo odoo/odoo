@@ -175,7 +175,6 @@
                   <!-- chatter -->
                   <hr/>
                   <div id="purchase_order_communication">
-                      <h3>Communication history</h3>
                       <t t-call="portal.message_thread"/>
                   </div>
               </div><!-- // #quote_content -->
@@ -256,7 +255,7 @@
               <h3 id="details">Pricing</h3>
 
               <div class="table-responsive">
-                <table t-att-data-order-id="order.id" t-att-data-token="order.access_token" class="table table-sm" id="purchase_order_table">
+                <table t-att-data-order-id="order.id" t-att-data-token="order.access_token" class="table" id="purchase_order_table">
                     <t t-set="display_price_and_taxes" t-value="not update_dates and order.state == 'purchase'"/>
                     <thead class="bg-100">
                         <tr>
@@ -275,13 +274,13 @@
                     </thead>
                     <tbody class="purchase_tbody">
 
-                          <t t-set="current_subtotal" t-value="0"/>
+                        <t t-foreach="order.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)" t-as="line">
 
-                          <t t-foreach="order.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)" t-as="line">
-
-                              <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
-
-                            <tr t-att-class="'fw-bolder o_line_section' if line.display_type == 'line_section' else 'fw-bold o_line_subsection' if line.display_type == 'line_subsection' else 'fst-italic text-break o_line_note' if line.display_type == 'line_note' else ''">
+                            <tr t-att-class="{
+                                    'line_section': 'fw-bold o_line_section bg-200',
+                                    'line_subsection': 'fw-bold o_line_subsection bg-100',
+                                    'line_note': 'fst-italic text-break o_line_note',
+                                }.get(line.display_type, '')">
                                 <t t-if="not line.display_type">
                                     <td id="product_name" class="d-flex">
                                         <img t-att-src="line.product_id.image_128 and image_data_uri(line.product_id.image_128) or '/web/static/img/placeholder.png'"
@@ -326,11 +325,15 @@
                                     </td>
                                 </t>
                                 <t t-if="line.display_type in ('line_section', 'line_subsection')">
-                                    <td colspan="99">
+                                    <td colspan="5">
                                         <span t-field="line.name"/>
                                     </td>
-                                    <t t-set="current_section" t-value="line"/>
-                                    <t t-set="current_subtotal" t-value="0"/>
+                                    <td t-if="display_price_and_taxes" class="text-end">
+                                        <span
+                                            t-out="line._get_section_totals()"
+                                            t-options='{"widget": "monetary", "display_currency": order.currency_id}'
+                                        />
+                                    </td>
                                 </t>
                                 <t t-if="line.display_type == 'line_note'">
                                     <td colspan="99">
@@ -338,17 +341,6 @@
                                     </td>
                                 </t>
                             </tr>
-                            <t t-if="current_section and (line_last or order.order_line[line_index+1].display_type in ('line_section', 'line_subsection')) and order.state == 'purchase'">
-                                <tr class="is-subtotal text-end">
-                                    <td colspan="99">
-                                        <strong class="mr16">Subtotal</strong>
-                                        <span
-                                            t-out="current_subtotal"
-                                            t-options='{"widget": "monetary", "display_currency": order.currency_id}'
-                                        />
-                                    </td>
-                                </tr>
-                            </t>
                         </t>
                     </tbody>
                 </table>

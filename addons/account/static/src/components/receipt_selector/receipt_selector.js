@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { radioField, RadioField } from "@web/views/fields/radio/radio_field";
-import { onWillStart } from "@odoo/owl";
+import { radioField, RadioField, radioFieldProps } from "@web/views/fields/radio/radio_field";
+import { onWillStart, props, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { deepCopy } from "@web/core/utils/objects";
 
@@ -20,14 +19,14 @@ const out_move_types = ['out_invoice', 'out_receipt']
 
 export class ReceiptSelector extends RadioField {
     static template = "account.ReceiptSelector";
-    static props = {
-        ...RadioField.props,
-    };
+    props = props({
+        ...radioFieldProps,
+    });
 
     setup() {
         super.setup();
         this.lazySession = useService("lazy_session");
-        this.show_sale_receipts = useState({ value: false });
+        this.show_sale_receipts = proxy({ value: false });
         onWillStart(()=> {
             this.lazySession.getValue("show_sale_receipts", (show_sale_receipts) => {
                 this.show_sale_receipts.value = show_sale_receipts;

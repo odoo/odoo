@@ -17,6 +17,7 @@ class ProjectProject(models.Model):
     def _get_template_default_context_whitelist(self):
         return [
             *super()._get_template_default_context_whitelist(),
+            'company_id',
             'lead_id',
         ]
 

@@ -64,6 +64,8 @@
     $-padding-h: var(--treeEntry-padding-h, #{map-get($spacers, 4)});
     $-padding-v: var(--treeEntry-padding-v, #{map-get($spacers, 2)});
 
+    --treeEntry-branch-top: calc(.5em + #{$-padding-v});
+
     padding-left: $-padding-h;
     position: relative;
 
@@ -78,17 +80,18 @@
         top: var(--treeEntry--before-top, 0);
         width: 1px;
         height: 100%;
+        z-index: 1;
     }
 
     &:after {
         display: var(--treeEntry--after-display, initial);
-        top: calc(.5em + #{$-padding-v});
+        top: var(--treeEntry-branch-top);
         width: var(--treeEntry--after-width, calc(#{$-padding-h} * .5));
         height: 1px;
     }
 
     &:last-of-type:before {
-        height: calc(.5em + #{$-padding-v});
+        height: var(--treeEntry-branch-top);
     }
 }
 

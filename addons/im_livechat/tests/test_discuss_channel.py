@@ -6,7 +6,9 @@ from markupsafe import Markup
 from odoo import Command, fields
 from odoo.tests import new_test_user, users
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon, TestGetOperatorCommon
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCase
+from odoo.addons.mail.tools.discuss import Store
 
 
 class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
@@ -81,11 +83,11 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         with self.assertBus(
-            [(channel, "internal_users")],
             [
-                {
-                    "type": "mail.record/insert",
-                    "payload": {
+                BusResult(
+                    (channel, "internal_users"),
+                    "mail.record/insert",
+                    {
                         "discuss.channel": [
                             {
                                 "id": channel.id,
@@ -93,7 +95,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
                             }
                         ]
                     },
-                }
+                ),
             ],
         ):
             channel.description = "Description of the conversation"
@@ -123,11 +125,11 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         with self.assertBus(
-            [(channel, "internal_users")],
             [
-                {
-                    "type": "mail.record/insert",
-                    "payload": {
+                BusResult(
+                    (channel, "internal_users"),
+                    "mail.record/insert",
+                    {
                         "discuss.channel": [
                             {
                                 "id": channel.id,
@@ -138,7 +140,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
                             }
                         ]
                     },
-                }
+                ),
             ],
         ):
             channel.livechat_note = "This is a note for the internal user."
@@ -151,8 +153,26 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         group = self.env.ref("im_livechat.im_livechat_group_user")
+
         with self.assertBus(
-            [(channel, "internal_users"), (group, "LOOKING_FOR_HELP")],
+            lambda: [
+                BusResult(
+                    (channel, "internal_users"),
+                    "mail.record/insert",
+                    Store(bus_channel=channel, bus_subchannel="internal_users").add(
+                        channel,
+                        ["livechat_status", "livechat_looking_for_help_since_dt"],
+                    )._build_result(),
+                ),
+                BusResult(
+                    (group, "LOOKING_FOR_HELP"),
+                    "mail.record/insert",
+                    Store(bus_channel=group, bus_subchannel="LOOKING_FOR_HELP").add(
+                        channel,
+                        "_store_channel_fields",
+                    )._build_result(),
+                ),
+            ],
         ):
             channel.livechat_status = "need_help"
 
@@ -180,9 +200,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         # Add the operator to both channels in a batch, which should switch their status to 'in_progress'
         self.assertEqual(channel_1.livechat_agent_partner_ids, self.operators[0].partner_id)
         agent_user = channel_1.livechat_agent_partner_ids.mapped("main_user_id")
-        (channel_1 | channel_2).with_user(agent_user).add_members(
-            partner_ids=bob_operator.partner_id.ids
-        )
+        (channel_1 | channel_2).with_user(agent_user)._add_members(users=bob_operator)
         self.assertEqual(channel_1.livechat_status, "in_progress")
         self.assertEqual(channel_2.livechat_status, "in_progress")
 
@@ -190,9 +208,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         channel_1.livechat_status = "need_help"
         self.assertEqual(channel_1.livechat_status, "need_help")
         self.assertEqual(channel_1.livechat_agent_partner_ids, bob_operator.partner_id | self.operators[0].partner_id)
-        channel_1.with_user(agent_user).add_members(
-            partner_ids=bob_operator.partner_id.ids
-        )
+        channel_1.with_user(agent_user)._add_members(users=bob_operator)
         self.assertEqual(channel_1.livechat_status, "need_help")
 
     def test_join_livechat_needing_help(self):

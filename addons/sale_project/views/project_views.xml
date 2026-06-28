@@ -6,17 +6,16 @@
         <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
         <field name="priority">25</field>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('o_settings_container')]" position="inside">
-                <field name="company_id" invisible="1"/>
-                <setting class="col-lg-12" help="Invoice your time and material to customers" invisible="context.get('hide_allow_billable', False)">
-                    <field name="allow_billable"/>
-                    <div invisible="not allow_billable" class="d-flex flex-column flex-sm-row align-items-baseline">
-                        <label for="partner_id"/>
-                        <field name="partner_id" class="ms-1" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer'}"
-                            options="{'no_create_edit': True, 'no_open': True}" placeholder="Select who to bill..."/>
-                    </div>
-                </setting>
-            </xpath>
+            <field name="date_start" position="before">
+                <field
+                    name="partner_id"
+                    string="Customer"
+                    placeholder="Select who to bill..."
+                    widget="res_partner_many2one"
+                    options="{'no_create_edit': True, 'no_open': True}"
+                />
+                <field name="allow_billable" invisible="1"/>
+            </field>
         </field>
     </record>
 
@@ -135,6 +134,24 @@
         <field name="inherit_id" ref="project.project_templates_view_list"/>
         <field name="arch" type="xml">
             <field name="sale_line_id" position="replace"/>
+        </field>
+    </record>
+
+    <record id="project_project_view_card_inherit_sale_project" model="ir.ui.view">
+        <field name="name">project.project.card.inherit.sale.project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_card"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="show_ratings"/>
+                <field name="allow_billable"/>
+            </xpath>
+            <xpath expr="//div[@name='project_customer_rating_menu']" position="attributes">
+                <attribute name="t-if">record.show_ratings.raw_value and record.allow_billable.raw_value</attribute>
+            </xpath>
+            <xpath expr="//div[@t-if='record.show_ratings.raw_value and record.rating_count.raw_value &gt; 0']" position="attributes">
+                <attribute name="t-if">record.show_ratings.raw_value and record.allow_billable.raw_value and record.rating_count.raw_value &gt; 0 </attribute>
+            </xpath>
         </field>
     </record>
 </odoo>

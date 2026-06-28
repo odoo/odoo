@@ -14,4 +14,4 @@ export const kanbanMany2ManyTagsField = {
     component: KanbanMany2ManyTagsField,
 };
 
-registry.category("fields").add("kanban.many2many_tags", kanbanMany2ManyTagsField);
+registry.category("fields").add("card.many2many_tags", kanbanMany2ManyTagsField);

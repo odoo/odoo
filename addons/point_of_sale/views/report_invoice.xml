@@ -7,7 +7,7 @@
             </t>
         </xpath>
         <xpath expr="//div[@name='origin']" position="after">
-            <div class="col" t-if="o.pos_refunded_invoice_ids" name="source_invoice">
+            <div class="col me-3" t-if="o.pos_refunded_invoice_ids" name="source_invoice">
                 <strong>Source Invoice</strong>
                 <div t-field="o.pos_refunded_invoice_ids"/>
             </div>

@@ -6,7 +6,7 @@ import uuid
 from datetime import timedelta
 from urllib.parse import urlencode
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import RedirectWarning, ValidationError
 from odoo.http import request
 
@@ -51,6 +51,7 @@ class PaymentProvider(models.Model):
     razorpay_access_token_expiry = fields.Datetime(
         string="Razorpay Access Token Expiry", copy=False, groups="base.group_system"
     )
+    razorpay_is_oauth_supported = fields.Boolean(compute="_compute_razorpay_is_oauth_supported")
 
     # === COMPUTE METHODS === #
 
@@ -72,21 +73,38 @@ class PaymentProvider(models.Model):
             )
         return supported_currencies
 
+    @api.depends("company_id.country_id")
+    def _compute_razorpay_is_oauth_supported(self):
+        self.razorpay_is_oauth_supported = False
+        for provider in self.filtered(lambda p: p.code == "razorpay"):
+            country_code = provider.company_id.country_id.code
+            provider.razorpay_is_oauth_supported = (
+                country_code in const.OAUTH_SUPPORTED_COUNTRY_CODES
+            )
+
     # === CONSTRAINT METHODS === #
 
-    @api.constrains("state")
-    def _check_razorpay_credentials_are_set_before_enabling(self):
-        """Check that the Razorpay credentials are valid when the provider is enabled.
+    @api.constrains("is_live")
+    def _check_razorpay_credentials_are_set_if_live(self):
+        """Check that the Razorpay credentials are valid when the provider is set to live mode.
 
         :raise ValidationError: If the Razorpay credentials are not valid.
         """
-        for provider in self.filtered(lambda p: p.code == "razorpay" and p.state != "disabled"):
+        for provider in self.filtered(lambda p: p.code == "razorpay" and p.is_live):
             if not provider.razorpay_account_id:
                 if not provider.razorpay_key_id or not provider.razorpay_key_secret:
+                    if provider.razorpay_is_oauth_supported:
+                        raise ValidationError(
+                            provider.env._(
+                                "Razorpay credentials are missing. Please set the state back to"
+                                " 'Disabled' and click the \"Connect\" button to set up your"
+                                " account."
+                            )
+                        )
                     raise ValidationError(
-                        _(
-                            'Razorpay credentials are missing. Click the "Connect" button to set'
-                            " up your account."
+                        provider.env._(
+                            "Razorpay credentials are missing. Please fill them to set up your"
+                            " account."
                         )
                     )
 
@@ -118,12 +136,12 @@ class PaymentProvider(models.Model):
 
         if self.company_id.currency_id.name not in const.SUPPORTED_CURRENCIES:
             raise RedirectWarning(
-                _(
+                self.env._(
                     "Razorpay is not available in your country; please use another payment"
                     " provider."
                 ),
                 self.env.ref("payment.action_payment_provider").id,
-                _("Other Payment Providers"),
+                self.env._("Other Payment Providers"),
             )
 
         params = {
@@ -133,7 +151,7 @@ class PaymentProvider(models.Model):
             "provider_id": self.id,
             "csrf_token": request.csrf_token(),
         }
-        authorization_url = f"{const.OAUTH_URL}/authorize?{urlencode(params)}"
+        authorization_url = f"{const.OAUTH_URL}1/authorize?{urlencode(params)}"
         return {"type": "ir.actions.act_url", "url": authorization_url, "target": "self"}
 
     def _get_reset_values(self):
@@ -147,6 +165,7 @@ class PaymentProvider(models.Model):
             "razorpay_refresh_token": None,
             "razorpay_access_token": None,
             "razorpay_access_token_expiry": None,
+            "razorpay_webhook_secret": None,
         }
 
     def action_razorpay_create_webhook(self):
@@ -176,7 +195,7 @@ class PaymentProvider(models.Model):
             "tag": "display_notification",
             "params": {
                 "type": "success",
-                "message": _("Your Razorpay webhook was successfully set up!"),
+                "message": self.env._("Your Razorpay webhook was successfully set up!"),
                 "next": {"type": "ir.actions.client", "tag": "soft_reload"},
             },
         }
@@ -200,7 +219,7 @@ class PaymentProvider(models.Model):
 
         See https://razorpay.com/docs/webhooks/validate-test#validate-webhooks.
 
-        :param bytes data: The data to sign.
+        :param dict|bytes data: The data to sign.
         :param bool is_redirect: Whether the data should be treated as redirect data or as coming
                                  from a webhook notification.
         :return: The calculated signature.
@@ -229,12 +248,10 @@ class PaymentProvider(models.Model):
         :return: dict
         """
         self.ensure_one()
-        proxy_payload = self._prepare_json_rpc_payload({
-            "refresh_token": self.razorpay_refresh_token
-        })
+        proxy_payload = {"refresh_token": self.razorpay_refresh_token}
 
         response_content = self._send_api_request(
-            "POST", "/refresh_access_token", json=proxy_payload, is_proxy_request=True
+            "POST", "2/refresh_access_token", json=proxy_payload, is_proxy_request=True
         )
         if response_content.get("access_token"):
             expiry = fields.Datetime.now() + timedelta(seconds=int(response_content["expires_in"]))
@@ -283,10 +300,3 @@ class PaymentProvider(models.Model):
         if self.code != "razorpay":
             return super()._parse_response_error(response)
         return response.json().get("error", {}).get("description", "")
-
-    def _parse_response_content(self, response, *, is_proxy_request=False, **kwargs):
-        if self.code != "razorpay" or not is_proxy_request:
-            return super()._parse_response_content(
-                response, is_proxy_request=is_proxy_request, **kwargs
-            )
-        return self._parse_proxy_response(response)

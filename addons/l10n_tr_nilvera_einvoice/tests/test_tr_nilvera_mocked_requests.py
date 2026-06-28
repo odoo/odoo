@@ -98,7 +98,7 @@ def mock_requests_request(method, url, *args, **kwargs):
     elif method == 'GET' and '/einvoice/Purchase' in url:
         if '/xml' in url:
             with file_open('l10n_tr_nilvera_einvoice/tests/test_files/fetching/invoice.xml', 'rb') as xml:
-                response = xml.read()
+                response = xml.read().decode()
         elif '/pdf' in url:
             with file_open('l10n_tr_nilvera_einvoice/tests/test_files/fetching/invoice.pdf', 'rb') as pdf:
                 response = pdf.read()
@@ -244,6 +244,7 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
     @freeze_time('2025-03-05')
     @patch_nilvera_request
     def test_fetching_einvoices(self, mocked_request):
+        # EndDate is adjusted to match Europe/Istanbul timezone(UTC+3)
         with patch.object(self.env.cr, 'commit', autospec=True):
             self.env
             self.env['account.move']._l10n_tr_nilvera_get_documents()
@@ -256,7 +257,7 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
                     params={
                         'StatusCode': ['succeed'],
                         'StartDate': fields.Datetime.now() - relativedelta(months=1),
-                        'EndDate': '2025-03-05T00:00:00',
+                        'EndDate': '2025-03-05T03:00:00',
                         'DateFilterType': 'CreatedDate',
                         'SortColumn': 'CreationDateTime',
                         'SortType': 'ASC',
@@ -271,7 +272,7 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
                     params={
                         'StatusCode': ['succeed'],
                         'StartDate': fields.Datetime.now(),
-                        'EndDate': '2025-03-05T00:00:00',
+                        'EndDate': '2025-03-05T03:00:00',
                         'DateFilterType': 'CreatedDate',
                         'SortColumn': 'CreationDateTime',
                         'SortType': 'ASC',

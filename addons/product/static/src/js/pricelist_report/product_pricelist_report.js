@@ -1,5 +1,4 @@
-import { onRendered, useState } from "@web/owl2/utils";
-import { Component, markup, onWillStart } from "@odoo/owl";
+import { Component, markup, onMounted, onWillStart, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
@@ -41,7 +40,7 @@ export class ProductPricelistReport extends Component {
         this.activeModel = this.noProducts ? 'product.template' : active_model;
         this.defaultPricelistId = this.noProducts ? this.props.action.context.active_id : false;
 
-        this.state = useState({
+        this.state = proxy({
             displayPricelistTitle: pastState.displayPricelistTitle || false,
             html: "",
             pricelists: [],
@@ -63,7 +62,7 @@ export class ProductPricelistReport extends Component {
             this.renderHtml();
         });
 
-        onRendered(() => {
+        onMounted(() => {
             this.env.config.setDisplayName(_t("Pricelist Report"));
         });
 

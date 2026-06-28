@@ -10,11 +10,10 @@
         to digitize business tax and accounting information declaration.
     """,
     'countries': ['gr'],
-    'depends': ['l10n_gr'],
+    'depends': ['account_edi_ubl_cii', 'l10n_gr'],
     'data': [
         'data/ir_cron.xml',
         'data/template.xml',
-        'security/ir.model.access.csv',
         'views/account_fiscal_position_views.xml',
         'views/account_move_views.xml',
         'views/account_tax_views.xml',
@@ -23,6 +22,7 @@
         'views/res_company_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
+        'security/ir.access.csv',
     ],
     'auto_install': True,
     'license': 'LGPL-3',

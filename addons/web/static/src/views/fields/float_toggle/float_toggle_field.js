@@ -3,22 +3,18 @@ import { registry } from "@web/core/registry";
 import { formatFloatFactor } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 export class FloatToggleField extends Component {
     static template = "web.FloatToggleField";
-    static props = {
+    props = props({
         ...standardFieldProps,
-        digits: { type: Array, optional: true },
-        range: { type: Array, optional: true },
-        factor: { type: Number, optional: true },
-        disableReadOnly: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        range: [0.0, 0.5, 1.0],
-        factor: 1,
-        disableReadOnly: false,
-    };
+        digits: t.array().optional(),
+        range: t.array().optional([0.0, 0.5, 1.0]),
+        factor: t.number().optional(1),
+        disableReadOnly: t.boolean().optional(false),
+        trailingZeros: t.boolean().optional(true),
+    });
 
     // TODO perf issue (because of update round trip)
     // we probably want to have a state and a useEffect or onWillUpateProps
@@ -45,6 +41,7 @@ export class FloatToggleField extends Component {
             digits: this.props.digits,
             factor: this.factor,
             field: this.props.record.fields[this.props.name],
+            trailingZeros: this.props.trailingZeros,
         });
     }
 }
@@ -77,6 +74,12 @@ export const floatToggleField = {
             name: "force_button",
             type: "boolean",
         },
+        {
+            label: _t("Hide trailing zeros"),
+            name: "hide_trailing_zeros",
+            type: "boolean",
+            help: _t("Hide zeros to the right of the last non-zero digit, e.g. 1.20 becomes 1.2"),
+        },
     ],
     supportedTypes: ["float"],
     isEmpty: () => false,
@@ -92,6 +95,7 @@ export const floatToggleField = {
 
         return {
             digits,
+            trailingZeros: !options.hide_trailing_zeros,
             range: options.range,
             factor: options.factor,
             disableReadOnly: options.force_button || false,

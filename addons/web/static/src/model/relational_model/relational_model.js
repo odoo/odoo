@@ -4,14 +4,15 @@ import { EventBus, markRaw, toRaw } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
-import { ConnectionLostError, rpcBus } from "@web/core/network/rpc";
+import { ConnectionLostError } from "@web/core/network/rpc";
 import { shallowEqual } from "@web/core/utils/arrays";
-import { deepCopy, pick } from "@web/core/utils/objects";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
+import { deepCopy, pick } from "@web/core/utils/objects";
 import { orderByToString } from "@web/search/utils/order_by";
 import { Model } from "../model";
 import { DynamicGroupList } from "./dynamic_group_list";
 import { DynamicRecordList } from "./dynamic_record_list";
+import { FetchRecordError } from "./errors";
 import { Group } from "./group";
 import { Record as RelationalRecord } from "./record";
 import { StaticList } from "./static_list";
@@ -24,7 +25,6 @@ import {
     getId,
     makeActiveField,
 } from "./utils";
-import { FetchRecordError } from "./errors";
 
 /**
  * @typedef {import("@web/core/context").Context} Context
@@ -89,6 +89,8 @@ const DEFAULT_HOOKS = {
     onWillLoadRoot: () => {},
     /** @type {(root: DataPoint) => any} */
     onRootLoaded: () => {},
+    /** @type {(root: DataPoint) => any} */
+    onRootUpdated: () => {},
     /** @type {(record: RelationalRecord) => any} */
     onWillSaveRecord: () => {},
     /** @type {(record: RelationalRecord) => any} */
@@ -101,17 +103,13 @@ const DEFAULT_HOOKS = {
     onWillSetInvalidField: () => {},
     /** @type {(record: RelationalRecord) => any} */
     onRecordChanged: () => {},
+    /** @type {(record: RelationalRecord) => any} */
+    onRecordDiscarded: () => {},
     /** @type {(warning: Object) => any} */
     onWillDisplayOnchangeWarning: () => {},
     /** @type {(changes: Object, validRecords: RelationalRecord[]) => any} */
     onAskMultiSaveConfirmation: () => true,
 };
-
-rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
-    if (ev.detail.data.params?.method === "unlink" && !ev.detail.error) {
-        rpcBus.trigger("CLEAR-CACHES", ["web_read", "web_search_read", "web_read_group"]);
-    }
-});
 
 export class RelationalModel extends Model {
     static services = ["action", "dialog", "notification", "orm", "offline"];
@@ -140,6 +138,9 @@ export class RelationalModel extends Model {
 
         this.keepLast = markRaw(new KeepLast());
         this.mutex = markRaw(new Mutex());
+
+        /** @type {DataPoint | null} */
+        this.root = null;
 
         /** @type {RelationalModelConfig} */
         this.config = {
@@ -199,7 +200,7 @@ export class RelationalModel extends Model {
             this.orm.setGroups(this.initialSampleGroups);
         }
         const config = this._getNextConfig(this.config, params);
-        if (!this.isReady) {
+        if (!this.isReady()) {
             // We want the control panel to be displayed directly, without waiting for data to be
             // loaded, for instance to be able to interact with the search view. For that reason, we
             // create an empty root, without data, s.t. controllers can make the assumption that the
@@ -266,6 +267,48 @@ export class RelationalModel extends Model {
     }
 
     /**
+     * Cache the many2X records in the root
+     *
+     * @param {RelationalModelConfig} config
+     * @param {Object} data
+     */
+    _cacheMany2X(config, data) {
+        let records = [];
+        if (config.isMonoRecord) {
+            if (!config.resId) {
+                records = [data.value];
+            } else {
+                records = data;
+            }
+        } else if (config.groupBy.length) {
+            records = data.groups.flatMap((group) => group.__records).filter(Boolean);
+        } else {
+            records = data.records;
+        }
+        for (const record of records) {
+            for (const [fieldName, value] of Object.entries(record)) {
+                const field = config.fields[fieldName];
+                const activeField = config.activeFields[fieldName];
+                if (
+                    activeField &&
+                    activeField.invisible !== "True" &&
+                    activeField.invisible !== "1"
+                ) {
+                    let values = [];
+                    if (field.type === "many2one" && value && value.id && value.display_name) {
+                        values = [value];
+                    } else if (field.type === "many2many" && value && Array.isArray(value)) {
+                        values = value.filter((v) => v.id && v.display_name);
+                    }
+                    if (values.length) {
+                        this.offline.cacheMany2XSearch(field.relation, values);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Creates a root datapoint without data. Supported root types are DynamicRecordList and
      * DynamicGroupList.
      *
@@ -300,7 +343,8 @@ export class RelationalModel extends Model {
         if (!this.withCache) {
             return;
         }
-        const firstLoad = !this.isReady;
+        const firstLoad = !this.isReady();
+        const currentResId = config.resId;
         // Do not use a cached result if we're online and this isn't the first load of the model,
         // except if we're loading another record (form view) or creating a new record (onchange).
         const noCache =
@@ -313,10 +357,15 @@ export class RelationalModel extends Model {
             noCache,
             callback: async (result, hasChanged) => {
                 this._setAvailableOffline(config, result);
+                const { root, loadId } = await rootLoadProm;
+                if (root.config.isMonoRecord && currentResId !== root.config.resId) {
+                    // The record ID has been changed, likely because a new record was saved.
+                    return;
+                }
+                this._cacheMany2X(config, result);
                 if (!hasChanged) {
                     return;
                 }
-                const { root, loadId } = await rootLoadProm;
                 if (root.id !== this.root.id) {
                     // The root id might have changed, either because:
                     //  1) the user already changed the domain and a second load has been done
@@ -332,6 +381,7 @@ export class RelationalModel extends Model {
                             result = await this._postprocessReadGroup(this.root.config, result);
                         }
                         this.root._setData(result);
+                        this.hooks.onRootUpdated(this.root);
                     }
                     return;
                 }
@@ -342,14 +392,18 @@ export class RelationalModel extends Model {
                 if (root.config.isMonoRecord) {
                     if (!root.config.resId) {
                         // result is the response of the onchange rpc
-                        return root._setData(result.value, { keepChanges: true });
+                        root._setData(result.value, { keepChanges: true });
+                        this.hooks.onRootUpdated(this.root);
+                        return;
                     }
                     // result is the response of a web_read rpc
                     if (!result.length) {
                         // we read a record that no longer exists
                         throw new FetchRecordError([root.config.resId]);
                     }
-                    return root._setData(result[0], { keepChanges: true });
+                    root._setData(result[0], { keepChanges: true });
+                    this.hooks.onRootUpdated(this.root);
+                    return;
                 }
 
                 // multi record case: either grouped or ungrouped
@@ -364,6 +418,7 @@ export class RelationalModel extends Model {
                     result = await this._postprocessReadGroup(root.config, result);
                 }
                 root._setData(result);
+                this.hooks.onRootUpdated(this.root);
             },
         };
     }
@@ -718,8 +773,13 @@ export class RelationalModel extends Model {
      * @param {Object} result the data loaded with the given config (rpc result)
      */
     _setAvailableOffline(config, result) {
-        const { actionId, viewType } = this.env.config;
+        let { actionId, viewType } = this.env.config;
+        let resId = config.resId;
         let markAsAvailableOffline = actionId;
+        if (config.isMonoRecord && ["list", "kanban"].includes(viewType)) {
+            viewType = viewType + "_quick_create"; // list_quick_create or kanban_quick_create
+            resId = false;
+        }
         if (!config.isMonoRecord) {
             const hasRecords = config.groupBy.length
                 ? result.groups.some((group) => group.__count > 0)
@@ -728,7 +788,7 @@ export class RelationalModel extends Model {
         }
         if (markAsAvailableOffline) {
             const params = config.isMonoRecord
-                ? { resId: config.resId }
+                ? { resId }
                 : { search: this.env.searchModel.getCurrentSearch() };
             this.offline.setAvailableOffline(actionId, viewType, params);
         }

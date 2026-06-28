@@ -4,21 +4,17 @@ import useStore from "../../hooks/store_hook.js";
 import { Dialog } from "./dialog.js";
 import { LoadingFullScreen } from "../loading_full_screen.js";
 
-const { Component, xml, useState } = owl;
+const { Component, xml, signal } = owl;
 
 export class UpdateDialog extends Component {
-    static props = {};
     static components = { Dialog, LoadingFullScreen };
 
-    setup() {
-        this.store = useStore();
-        this.state = useState({
-            waitRestart: false,
-        });
-    }
+    store = useStore();
+
+    waitRestart = signal(false);
 
     async update() {
-        this.state.waitRestart = true;
+        this.waitRestart.set(true);
         try {
             const data = await this.store.rpc({
                 url: "/iot_drivers/update_git_tree",
@@ -26,7 +22,7 @@ export class UpdateDialog extends Component {
             });
 
             if (data.status === "error") {
-                this.state.waitRestart = false;
+                this.waitRestart.set(false);
                 console.error(data.message);
             }
         } catch {
@@ -36,7 +32,7 @@ export class UpdateDialog extends Component {
 
     static template = xml`
     <t t-translation="off">
-        <LoadingFullScreen t-if="this.state.waitRestart">
+        <LoadingFullScreen t-if="this.waitRestart()">
             <t t-set-slot="body">
                 Updating your device, please wait...
             </t>
@@ -53,7 +49,7 @@ export class UpdateDialog extends Component {
                 If you are experiencing issues that may have been fixed since the last update, you can manually trigger an update here.
             </t>
             <t t-set-slot="footer">
-                <button type="button" class="btn btn-sm btn-primary" t-on-click="update">Update</button>
+                <button type="button" class="btn btn-sm btn-primary" t-on-click="this.update">Update</button>
                 <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
             </t>
         </Dialog>

@@ -35,12 +35,12 @@
             </BuilderSelect>
         </BuilderRow>
         <BuilderRow label.translate="Active" level="1" t-if="this.isActiveItem('accordion_icons_custom_opt')">
-            <BuilderButton action="'defineCustomIcon'" actionParam="{ isActiveIcon: true }" preview="false">
+            <BuilderButton action="'defineCustomIcon'" actionParam="{ isActiveIcon: true }" type="'success'" preview="false">
                 <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
             </BuilderButton>
         </BuilderRow>
         <BuilderRow label.translate="Inactive" level="1" t-if="this.isActiveItem('accordion_icons_custom_opt')">
-            <BuilderButton action="'defineCustomIcon'" actionParam="{ isActiveIcon: false }" preview="false">
+            <BuilderButton action="'defineCustomIcon'" actionParam="{ isActiveIcon: false }" type="'success'" preview="false">
                 <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
             </BuilderButton>
         </BuilderRow>
@@ -54,8 +54,12 @@
         </BuilderRow>
         <BuilderRow label.translate="Position" level="1" applyTo="':scope > .accordion-item > .accordion-header'">
             <BuilderButtonGroup>
-                <BuilderButton title.translate="Left" classAction="'justify-content-end flex-row-reverse o_icons_position_reversed'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
-                <BuilderButton title.translate="Right" classAction="'justify-content-between'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+                <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left"
+                    classAction="'justify-content-end flex-row-reverse o_icons_position_reversed'"
+                    iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+                <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right"
+                    classAction="'justify-content-between'"
+                    iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
             </BuilderButtonGroup>
         </BuilderRow>
     </BuilderContext>

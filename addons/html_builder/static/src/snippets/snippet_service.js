@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { memoize, uniqueId } from "@web/core/utils/functions";
@@ -6,7 +5,7 @@ import { Reactive } from "@web/core/utils/reactive";
 import { AddSnippetDialog } from "./add_snippet_dialog";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { markup } from "@odoo/owl";
+import { markup, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
@@ -264,8 +263,8 @@ export class SnippetModel extends Reactive {
                 : snippet.name;
             if (this.isCustomInnerContent(customSnippetName)) {
                 customInnerContent.unshift(snippet);
-                customSnippets.splice(i, 1);
-            } else if (!this.isCustomStructure(customSnippetName)) {
+            }
+            if (!this.isCustomStructure(customSnippetName)) {
                 // If no structure snippet could be found, it means that the
                 // module is not installed (i.e. the original snippet has no
                 // `data-snippet` attribute).
@@ -286,14 +285,15 @@ export class SnippetModel extends Reactive {
                 {
                     body: message,
                     confirm: async () => {
-                        const isInnerContent =
-                            this.snippetsByCategory.snippet_custom_content.includes(snippet);
-                        const snippetCustom = isInnerContent
-                            ? this.snippetsByCategory.snippet_custom_content
-                            : this.snippetsByCategory.snippet_custom;
-                        const index = snippetCustom.findIndex((s) => s.id === snippet.id);
-                        if (index > -1) {
-                            snippetCustom.splice(index, 1);
+                        for (const categoryKey of ["snippet_custom", "snippet_custom_content"]) {
+                            const snippetList = this.snippetsByCategory[categoryKey] || [];
+                            const snippetIndex = snippetList.findIndex(
+                                (item) => item.id === snippet.id
+                            );
+
+                            if (snippetIndex > -1) {
+                                snippetList.splice(snippetIndex, 1);
+                            }
                         }
                         await this.orm.call("ir.ui.view", "delete_snippet", [], {
                             view_id: snippet.viewId,
@@ -340,7 +340,7 @@ export class SnippetModel extends Reactive {
     cleanSnippetForSave(snippetCopyEl, cleanForSaveProcessors) {
         let item = snippetCopyEl;
         cleanForSaveProcessors.forEach((processor) => {
-            item = processor(item) || item;
+            item = processor(item);
         });
         return item;
     }
@@ -496,5 +496,5 @@ registry.category("services").add("html_builder.snippets", snippetService);
 
 export function useSnippets(snippetsName) {
     const snippetsService = useService("html_builder.snippets");
-    return useState(snippetsService.getSnippetModel(snippetsName));
+    return proxy(snippetsService.getSnippetModel(snippetsName));
 }

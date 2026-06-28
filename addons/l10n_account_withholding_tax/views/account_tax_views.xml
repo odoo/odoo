@@ -6,22 +6,22 @@
         <field name="inherit_id" ref="account.view_tax_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet/group//group[last()]" position="inside">
-                <field name="is_withholding_tax_on_payment" invisible="type_tax_use not in ['sale', 'purchase'] or amount >= 0"/>
+                <field name="is_withholding_tax" invisible="type_tax_use not in ['sale', 'purchase']"/>
             </xpath>
             <field name="hide_tax_exigibility" position="after">
-                <field name="withholding_sequence_id" context="{'default_name': name}" invisible="type_tax_use == 'sale' or not is_withholding_tax_on_payment"/>
+                <field name="withholding_sequence_id" context="{'default_name': name}" invisible="type_tax_use == 'sale' or not is_withholding_tax"/>
             </field>
             <field name="tax_exigibility" position="attributes">
-                <attribute name="invisible" add="is_withholding_tax_on_payment" separator=" or "/>
+                <attribute name="invisible" add="is_withholding_tax" separator=" or "/>
             </field>
             <field name="price_include_override" position="attributes">
-                <attribute name="invisible" add="is_withholding_tax_on_payment" separator=" or "/>
+                <attribute name="invisible" add="is_withholding_tax" separator=" or "/>
             </field>
             <field name="cash_basis_transition_account_id" position="attributes">
-                <attribute name="invisible" add="is_withholding_tax_on_payment" separator=" or "/>
+                <attribute name="invisible" add="is_withholding_tax" separator=" or "/>
             </field>
             <field name="is_base_affected" position="attributes">
-                <attribute name="invisible" add="not is_withholding_tax_on_payment" separator=" and "/>
+                <attribute name="invisible" add="not is_withholding_tax" separator=" and "/>
             </field>
         </field>
     </record>

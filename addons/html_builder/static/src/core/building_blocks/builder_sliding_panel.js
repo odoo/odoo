@@ -1,36 +1,45 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, onWillUnmount, props, proxy, t } from "@odoo/owl";
 import { BuilderComponent } from "./builder_component";
 import { BuilderRow } from "./builder_row";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
-import { basicContainerBuilderComponentProps, useBuilderComponent } from "../utils";
+import { useBuilderComponent } from "../utils";
 
 export class BuilderSlidingPanel extends Component {
     static template = "html_builder.BuilderSlidingPanel";
     static components = { BuilderComponent, BuilderRow };
-    static props = {
-        ...basicContainerBuilderComponentProps,
-        label: { type: String, optional: false },
-        extraClasses: { type: String, optional: true },
-        fullHeight: { type: Boolean, optional: true },
-        darkBackground: { type: Boolean, optional: true },
-        openByDefault: { type: Boolean, optional: true },
-        slots: { type: Object, optional: true },
-    };
-    static defaultProps = {
-        extraClasses: "",
-        fullHeight: false,
-        darkBackground: false,
-        openByDefault: false,
-    };
+    props = props({
+        // basicContainerBuilderComponentProps (converted inline)
+        id: t.string().optional(),
+        applyTo: t.string().optional(),
+        preview: t.boolean().optional(),
+        inheritedActions: t.array(t.string()).optional(),
+
+        action: t.string().optional(),
+        actionParam: t.any().optional(),
+
+        // Shorthand actions.
+        classAction: t.any().optional(),
+        attributeAction: t.any().optional(),
+        dataAttributeAction: t.any().optional(),
+        styleAction: t.any().optional(),
+
+        label: t.string(),
+        extraClasses: t.string().optional(""),
+        fullHeight: t.boolean().optional(false),
+        darkBackground: t.boolean().optional(false),
+        openByDefault: t.boolean().optional(false),
+        slots: t.object().optional(),
+    });
 
     setup() {
         useBuilderComponent();
         this.slidingPanelRef = useRef("slidingPanel");
         this.openButtonRef = useRef("openButton");
-        this.state = useState({
+        this.state = proxy({
             optionContainerName: "",
+            contentRendered: this.props.openByDefault,
         });
         onMounted(() => {
             const slidingPanelEl = this.slidingPanelRef.el;
@@ -66,6 +75,7 @@ export class BuilderSlidingPanel extends Component {
     }
 
     showSlidingPanel() {
+        this.state.contentRendered = true;
         this.updateDisplay("hb-panel-slide-in");
         this.updateDisplayTimeout = setTimeout(() => this.updateDisplay("d-block"), 200);
     }

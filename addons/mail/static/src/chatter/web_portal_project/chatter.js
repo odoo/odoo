@@ -1,60 +1,61 @@
-import { useChildSubEnv, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv, useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
-import { useMessageScrolling } from "@mail/utils/common/hooks";
+import { useMessageScrolling, useOnChange } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUpdateProps } from "@odoo/owl";
+import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { router } from "@web/core/browser/router";
 import { useService } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
-/**
- * @typedef {Object} Props
- * @extends {Component<Props, Env>}
- */
 export class Chatter extends Component {
     static template = "mail.Chatter";
     static components = { Thread, Composer };
-    static props = ["composer?", "threadId?", "threadModel", "twoColumns?"];
-    static defaultProps = { composer: true, threadId: false, twoColumns: false };
 
     setup() {
         this.store = useService("mail.store");
-        this.state = useState({
+        this.props = props({
+            composer: t.boolean().optional(true),
+            threadId: t.or([t.number(), t.literal(false)]).optional(false),
+            threadModel: t.string(),
+            twoColumns: t.boolean().optional(false),
+        });
+        this.state = proxy({
             jumpThreadPresent: 0,
             /** @type {import("models").Thread} */
             thread: undefined,
-            aside: false,
-            disabled: !this.props.threadId,
         });
         this.messageHighlight = useMessageScrolling({
             thread: () => this.state.thread,
             messageFetchRouteParams: () => this.messageFetchRouteParams,
         });
         this.highlightMessage = router.current.highlight_message_id;
-        this.rootRef = useRef("root");
+        this.rootRef = signal.ref(HTMLDivElement);
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
         useChildSubEnv(this.childSubEnv);
         useSubEnv(this.subEnv);
 
         onMounted(this._onMounted);
-        onWillUpdateProps((nextProps) => {
-            this.state.disabled = !nextProps.threadId;
-            if (
-                this.props.threadId !== nextProps.threadId ||
-                this.props.threadModel !== nextProps.threadModel
-            ) {
-                this.changeThread(nextProps.threadModel, nextProps.threadId);
-            }
-            if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
-                if (this.env.chatter) {
-                    this.env.chatter.fetchThreadData = false;
+
+        useOnChange(
+            () => [this.props.threadId, this.props.threadModel],
+            (threadId, threadModel) => this.changeThread(threadModel, threadId),
+            { initialRun: false }
+        );
+        useOnChange(
+            () => [this.state.thread],
+            (thread) => {
+                if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
+                    if (this.env.chatter) {
+                        this.env.chatter.fetchThreadData = false;
+                    }
+                    this.load(thread, this.requestList);
                 }
-                this.load(this.state.thread, this.requestList);
-            }
-        });
+            },
+            { initialRun: false }
+        );
     }
 
     get afterPostRequestList() {
@@ -77,7 +78,7 @@ export class Chatter extends Component {
     }
 
     get onCloseFullComposerRequestList() {
-        return ["messages"];
+        return this.state.thread.fullComposerCloseRequestList;
     }
 
     get requestList() {
@@ -99,13 +100,16 @@ export class Chatter extends Component {
         this.state.thread = this.store["mail.thread"].insert(data);
         if (threadId === false) {
             if (this.state.thread.messages.length === 0) {
+                const { effectiveSelf } = this.state.thread;
+                const authorModelName = effectiveSelf.Model.getName();
                 this.state.thread.messages.push({
                     id: this.store.getNextTemporaryId(),
-                    author_id: this.state.thread.effectiveSelf,
+                    is_transient: true,
+                    author_id: authorModelName === "res.partner" ? effectiveSelf : undefined,
+                    author_guest_id: authorModelName === "mail.guest" ? effectiveSelf : undefined,
                     body: _t("Creating a new record..."),
                     message_type: "notification",
                     thread: this.state.thread,
-                    trackingValues: [],
                     res_id: threadId,
                     model: threadModel,
                 });
@@ -119,7 +123,7 @@ export class Chatter extends Component {
      * @param {string[]} requestList
      */
     async load(thread, requestList) {
-        if (!thread.id || !this.state.thread?.eq(thread)) {
+        if (!thread?.id || !this.state.thread?.eq(thread)) {
             return;
         }
         await thread.fetchThreadData(requestList, {
@@ -148,6 +152,6 @@ export class Chatter extends Component {
     }
 
     onScroll() {
-        this.state.isTopStickyPinned = this.rootRef.el.scrollTop !== 0;
+        this.state.isTopStickyPinned = this.rootRef().scrollTop !== 0;
     }
 }

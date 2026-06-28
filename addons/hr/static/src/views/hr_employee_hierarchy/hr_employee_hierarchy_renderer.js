@@ -1,15 +1,11 @@
-import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 import { useService } from "@web/core/utils/hooks";
 
 import { HierarchyRenderer } from "@web_hierarchy/hierarchy_renderer";
-import { HrEmployeeHierarchyCard } from "./hr_employee_hierarchy_card";
 
 export class HrEmployeeHierarchyRenderer extends HierarchyRenderer {
     static template = "hr.HrEmployeeHierarchyRenderer";
     static components = {
         ...HierarchyRenderer.components,
-        HierarchyCard: HrEmployeeHierarchyCard,
-        Avatar,
     };
 
     setup() {

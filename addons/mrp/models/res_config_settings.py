@@ -17,8 +17,6 @@ class ResConfigSettings(models.TransientModel):
     group_mrp_routings = fields.Boolean("MRP Work Orders",
         implied_group='mrp.group_mrp_routings')
     group_unlocked_by_default = fields.Boolean("Unlock Manufacturing Orders", implied_group='mrp.group_unlocked_by_default')
-    group_mrp_reception_report = fields.Boolean("Allocation Report for Manufacturing Orders", implied_group='mrp.group_mrp_reception_report')
-    group_mrp_workorder_dependencies = fields.Boolean("Custom Work Order Dependencies", implied_group="mrp.group_mrp_workorder_dependencies")
 
     def set_values(self):
         routing_before = self.env.user.has_group('mrp.group_mrp_routings')
@@ -31,9 +29,6 @@ class ResConfigSettings(models.TransientModel):
             if last_updated:
                 op_to_update = self.env['mrp.routing.workcenter'].browse([op['id'] for op in operations if op['write_date'] == last_updated])
                 op_to_update.active = True
-        if not self.group_mrp_workorder_dependencies:
-            # Disabling this option should not interfere with currently planned productions
-            self.env['mrp.bom'].sudo().search([('allow_operation_dependencies', '=', True)]).allow_operation_dependencies = False
 
     @api.onchange('group_unlocked_by_default')
     def _onchange_group_unlocked_by_default(self):

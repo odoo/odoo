@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-15 17:36+0000\n"
 "PO-Revision-Date: 2025-12-09 14:05+0000\n"
 "Last-Translator: Alin Ilie <alin.ilie@logit-solutions.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/payment/"
@@ -163,18 +163,13 @@ msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "<strong><i class=\"oi oi-arrow-right\"/> Payment Methods</strong>"
-msgstr "<strong><i class=\"oi oi-arrow-right\"/> Metode de plată</strong>"
+msgid "<strong>No payment methods are available</strong>"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "<strong><i class=\"oi oi-arrow-right\"/> Payment Providers</strong>"
-msgstr "<strong><i class=\"oi oi-arrow-right\"/> Furnizori de plată</strong>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "<strong>No payment method available</strong>"
-msgstr "<strong>Nicio metodă de plată disponibilă</strong>"
+msgid "<strong>No payment providers are configured</strong>"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -239,6 +234,11 @@ msgstr "ACH Direct Debit"
 #: model:payment.method,name:payment.payment_method_abitab
 msgid "Abitab"
 msgstr "Abitab"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "Account"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
@@ -367,12 +367,14 @@ msgid "Amount To Capture"
 msgstr "Valoare de Capturat"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
 msgid "An error occurred during the processing of your payment."
 msgstr "A apărut o eroare în timpul procesării plății dvs."
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
 msgid "An error occurred while saving your payment method."
 msgstr "A apărut o eroare la salvarea metodei dvs. de plată."
 
@@ -619,11 +621,6 @@ msgid "CMR"
 msgstr "CMR"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "CONNECT"
-msgstr ""
-
-#. module: payment
 #: model:payment.method,name:payment.payment_method_cabal
 msgid "Cabal"
 msgstr "Cabal"
@@ -808,10 +805,21 @@ msgid "Confirmed"
 msgstr "Confirmat"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "Connect"
+msgstr ""
+
+#. module: payment
 #: model:ir.model,name:payment.model_res_partner
 #: model:payment.method,name:payment.payment_method_contact
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Contact"
 msgstr "Contact"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_cvs
+msgid "Convenience Stores"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cordial
@@ -846,6 +854,11 @@ msgstr "Țări"
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Country"
 msgstr "Țară"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "Create"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__tokenize
@@ -960,6 +973,7 @@ msgstr "Discover"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_ir_http__display_name
+#: model:ir.model.fields,field_description:payment.field_ir_websocket__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_method__display_name
@@ -993,6 +1007,11 @@ msgstr "Ciornă"
 #: model:payment.method,name:payment.payment_method_duitnow
 msgid "DuitNow"
 msgstr "DuitNow"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_ecpay
+msgid "ECPay"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_emi_india
@@ -1072,6 +1091,16 @@ msgstr "FPX"
 #: model:payment.method,name:payment.payment_method_facilito
 msgid "Facilito"
 msgstr "Facilito"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_family_mart
+msgid "Family Mart"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "Find a Payment Provider"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_floa_bank
@@ -1179,6 +1208,11 @@ msgid "Help Message"
 msgstr "Mesaj de ajutor"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_hi_life
+msgid "Hi-Life"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_hipercard
 msgid "Hipercard"
 msgstr "Hipercard"
@@ -1195,6 +1229,7 @@ msgstr "Humm"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_ir_http__id
+#: model:ir.model.fields,field_description:payment.field_ir_websocket__id
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__id
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__id
 #: model:ir.model.fields,field_description:payment.field_payment_method__id
@@ -1208,14 +1243,6 @@ msgstr "Humm"
 #: model:ir.model.fields,field_description:payment.field_res_partner__id
 msgid "ID"
 msgstr "ID"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid ""
-"If you believe that it is an error, please contact the website administrator."
-msgstr ""
-"Dacă credeți că este o eroare, vă rugăm să contactați administratorul "
-"sitului web."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image
@@ -1551,6 +1578,11 @@ msgid "Mobile"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_mobile_wallet
+msgid "Mobile Wallet"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_wallet_eg
 msgid "Mobile Wallets Egypt"
 msgstr "Portofele mobile Egipt"
@@ -1625,11 +1657,6 @@ msgid "No payment methods found for your payment providers."
 msgstr "Nu s-au găsit metode de plată pentru furnizorii dvs. de plată."
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "No payment providers are configured."
-msgstr "Nu sunt configurate furnizori de plată."
-
-#. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "No providers available"
 msgstr "Nici un furnizor disponibil"
@@ -1649,6 +1676,11 @@ msgstr "Nici unul nu este configurat pentru:"
 #: model:payment.provider,name:payment.payment_provider_nuvei
 msgid "Nuvei"
 msgstr "Nuvei"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_ok_mart
+msgid "OK Mart"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ovo
@@ -1906,6 +1938,7 @@ msgstr "Cod metodă de plată"
 #: code:addons/payment/models/payment_provider.py:0
 #: model:ir.actions.act_window,name:payment.action_payment_method
 #: model:portal.entry,name:payment.payment_methods_portal_entry
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Methods"
@@ -2059,8 +2092,8 @@ msgstr "Pix"
 #: code:addons/payment/models/payment_method.py:0
 msgid "Please make sure that %(payment_method)s is supported by %(provider)s."
 msgstr ""
-"Vă rugăm să vă asigurați că %(payment_method)s este acceptată de "
-"%(provider)s."
+"Vă rugăm să vă asigurați că %(payment_method)s este acceptată de %"
+"(provider)s."
 
 #. module: payment
 #. odoo-python
@@ -2080,7 +2113,7 @@ msgid "Please switch to company"
 msgstr "Vă rugăm să treceți la compania"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
+#: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Please wait..."
 msgstr "Vă rugăm să așteptați..."
 
@@ -2309,7 +2342,8 @@ msgid "Save"
 msgstr "Salvează"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
 msgid "Saving your payment method."
 msgstr "Salvarea metodei dvs. de plată."
 
@@ -2358,16 +2392,6 @@ msgstr "Card de cumpărături"
 #: model:payment.method,name:payment.payment_method_scb
 msgid "Siam Commerical Bank"
 msgstr "Siam Commerical Bank"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
-msgid "Skip <i class=\"oi oi-arrow-right ms-1 small\"/>"
-msgstr "Sari peste <i class=\"oi oi-arrow-right ms-1 small\"/>"
-
-#. module: payment
-#: model:payment.method,name:payment.payment_method_sofort
-msgid "Sofort"
-msgstr "Sofort"
 
 #. module: payment
 #. odoo-python
@@ -2451,6 +2475,11 @@ msgid "TTB"
 msgstr "TTB"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_twqr
+msgid "TWQR"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_tabby
 msgid "Tabby"
 msgstr "Tabby"
@@ -2491,11 +2520,6 @@ msgstr "Mod testare"
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid "Test mode"
 msgstr "Mod testare"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
-msgid "Thank you!"
-msgstr "Vă mulțumim!"
 
 #. module: payment
 #. odoo-python
@@ -2792,7 +2816,8 @@ msgid "The route the user is redirected to after the transaction"
 msgstr "Ruta către care este redirecționat utilizatorul după tranzacție"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
 msgid "The saving of your payment method has been canceled."
 msgstr "Salvarea metodei dvs. de plată a fost anulată."
 
@@ -3128,6 +3153,11 @@ msgid "Void Transaction"
 msgstr "Tranzacție nulă"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_wero_brand
+msgid "WERO"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_wallets_india
 msgid "Wallets India"
 msgstr "Portofele India"
@@ -3169,6 +3199,11 @@ msgstr "WeLend"
 #: model:payment.method,name:payment.payment_method_webpay
 msgid "WebPay"
 msgstr "WebPay"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_wero
+msgid "Wero"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
@@ -3296,6 +3331,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_mercado_pago
@@ -3324,6 +3360,7 @@ msgstr "Plata dvs. a fost autorizată."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_mercado_pago
@@ -3352,6 +3389,7 @@ msgstr "Plata dvs. a fost anulată."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_mercado_pago
@@ -3379,6 +3417,7 @@ msgstr "Plata dvs. a fost procesată, dar așteaptă aprobarea."
 #: model_terms:payment.provider,done_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,done_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,done_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,done_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,done_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,done_msg:payment.payment_provider_mercado_pago
@@ -3398,9 +3437,15 @@ msgid "Your payment has been processed."
 msgstr "Plata dvs. a fost procesată."
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
 msgid "Your payment has not been processed yet."
 msgstr "Plata dvs. nu a fost încă procesată."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_status
+msgid "Your payment is being processed."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
@@ -3408,9 +3453,16 @@ msgid "Your payment is on its way!"
 msgstr "Plata dvs. este în curs de procesare!"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.state_header
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
 msgid "Your payment method has been saved."
 msgstr "Metoda dvs. de plată a fost salvată."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "Your payment method has not been saved yet."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -3421,8 +3473,8 @@ msgstr "Metodele dvs. de plată"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"Your payment operation could not be completed for following transactions: "
-"%(tx_refs)s"
+"Your payment operation could not be completed for following transactions: %"
+"(tx_refs)s"
 msgstr ""
 "Operațiunea dvs. de plată nu a putut fi finalizată pentru următoarele "
 "tranzacții: %(tx_refs)s"
@@ -3467,8 +3519,14 @@ msgstr "plata rapidă nu este acceptată"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ideal
+#: model:payment.method,name:payment.payment_method_ideal_brand
 msgid "iDEAL"
 msgstr "iDEAL"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_ipass_money
+msgid "iPASS Money"
+msgstr ""
 
 #. module: payment
 #. odoo-python
@@ -3529,6 +3587,11 @@ msgid "provider"
 msgstr "furnizor"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "the website administrator."
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
@@ -3546,3 +3609,8 @@ msgstr "tokenizarea nu este acceptată"
 #: code:addons/payment/const.py:0
 msgid "tokenization without payment no supported"
 msgstr "tokenizarea fără plată nu este acceptată"
+
+#. module: payment
+#: model:ir.model,name:payment.model_ir_websocket
+msgid "websocket message handling"
+msgstr ""

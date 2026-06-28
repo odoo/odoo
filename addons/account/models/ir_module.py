@@ -1,8 +1,8 @@
 from importlib import import_module
 from inspect import getmembers, ismodule, isclass, isfunction
 
-from odoo import api, models, fields
-from odoo.tools.misc import get_flag
+from odoo import api, fields, models, modules
+from odoo.tools.misc import frozendict, get_flag
 
 
 def templ(env, code2country, name=None, country_code='', **kwargs):
@@ -36,10 +36,14 @@ class IrModuleModule(models.Model):
             }
 
     def _get_module_template(self):
+        self.ensure_one()
         if self.name not in TEMPLATE_REGISTER:
             chart_category = self.env.ref('base.module_category_accounting_localizations_account_charts')
             templates = {}
-            if self.category_id == chart_category or self.name == 'account':
+            if (
+                (self.category_id == chart_category or self.name == 'account')
+                and (modules.Manifest.for_addon(self.name) or {}).get('installable')
+            ):
                 try:
                     python_module = import_module(f"odoo.addons.{self.name}.models")
                 except ModuleNotFoundError:
@@ -48,11 +52,11 @@ class IrModuleModule(models.Model):
                     for _name, mdl in getmembers(python_module, template_module):
                         for _name, cls in getmembers(mdl, template_class):
                             for _name, fct in getmembers(cls, template_function):
-                                if (template_values := fct(self.env['account.chart.template'])):
+                                if (template_values := fct(self.env['account.chart.template'])) is not None:
                                     code = fct._l10n_template[0]
                                     country = template_values.get('country', '')
                                     country_code = country or code.split('_')[0] if country is not None else None
-                                    templates[code] = {
+                                    templates[code] = frozendict({
                                         'name': template_values.get('name'),
                                         'parent': template_values.get('parent'),
                                         'sequence': template_values.get('sequence', 1),
@@ -60,8 +64,8 @@ class IrModuleModule(models.Model):
                                         'country_code': country_code,
                                         'visible': template_values.get('visible', True),
                                         'module': self.name,
-                                    }
-            TEMPLATE_REGISTER[self.name] = dict(sorted(templates.items(), key=lambda kv: kv[1]['sequence']))
+                                    })
+            TEMPLATE_REGISTER[self.name] = frozendict(sorted(templates.items(), key=lambda kv: kv[1]['sequence']))
         return TEMPLATE_REGISTER[self.name]
 
     def write(self, vals):

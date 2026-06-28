@@ -1,4 +1,5 @@
-import { expect, queryAllTexts, test } from "@odoo/hoot";
+import { animationFrame, expect, test } from "@odoo/hoot";
+import { click, queryAllTexts } from "@odoo/hoot-dom";
 import {
     clickSave,
     contains,
@@ -6,8 +7,12 @@ import {
     fields,
     models,
     mountView,
+    mountWithCleanup,
+    getService,
     onRpc,
 } from "@web/../tests/web_test_helpers";
+import { WebClient } from "@web/webclient/webclient";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 class Partner extends models.Model {
     product_id = fields.Many2one({ relation: "product" });
@@ -25,6 +30,7 @@ class Partner extends models.Model {
         related: "product_id.color",
         default: 20,
     });
+    variant_id = fields.Many2one({ relation: "variant" });
 
     _records = [
         { id: 1 },
@@ -44,7 +50,16 @@ class Product extends models.Model {
     ];
 }
 
-defineModels([Partner, Product]);
+class Variant extends models.Model {
+    _rec_name = "name";
+
+    name = fields.Char("name");
+    product_id = fields.Many2one({ relation: "product" });
+
+    _records = [];
+}
+
+defineModels([Partner, Product, Variant]);
 
 onRpc("has_group", () => true);
 
@@ -137,14 +152,25 @@ test("BadgesMany2OneField: with domain and badge_limit option", async () => {
     });
 
     expect("span.o_selection_badge").toHaveCount(2);
-    expect(".o_select_menu").toHaveCount(0);
+    expect(".dropdown-menu").toHaveCount(0);
 
-    await contains(".o_field_widget[name=product_min_id] input").edit("0");
-    expect("span.o_selection_badge").toHaveCount(0);
-    expect(".o_select_menu").toHaveCount(1);
+    await contains(".o_field_widget[name=product_min_id] input").edit("0", { confirm: "enter" });
+    await animationFrame();
 
-    await contains(".o_select_menu_input").click();
-    expect(queryAllTexts(".o_select_menu_item")).toEqual(["xmac", "xpad", "xphone"]);
+    expect("span.o_selection_badge").toHaveCount(3);
+    expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
+
+    await contains(".o_selection_badge.o-dropdown-caret").click();
+    await animationFrame();
+
+    expect(".dropdown-menu").toHaveCount(1);
+
+    expect(".dropdown-menu .dropdown-item:not(:contains(Search more...))").toHaveCount(1);
+
+    await contains(".dropdown-menu .dropdown-item").click();
+    await animationFrame();
+
+    expect(".o_selection_badge.active").toHaveCount(1);
 });
 
 test("BadgesMany2OneField: placeholder attribute is used when provided", async () => {
@@ -159,11 +185,8 @@ test("BadgesMany2OneField: placeholder attribute is used when provided", async (
             </form>`,
     });
 
-    expect(
-        ".o_select_menu .dropdown-toggle .o_select_menu_input[placeholder='Pick a product']"
-    ).toHaveCount(1, {
-        message: "should display the custom placeholder",
-    });
+    expect("span.o_selection_badge").toHaveCount(2);
+    expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
 });
 
 test("BadgesMany2OneField: placeholder falls back to field label when not provided", async () => {
@@ -177,11 +200,8 @@ test("BadgesMany2OneField: placeholder falls back to field label when not provid
             </form>`,
     });
 
-    expect(
-        ".o_select_menu .dropdown-toggle .o_select_menu_input[placeholder='Product']"
-    ).toHaveCount(1, {
-        message: "should fall back to the field label as placeholder",
-    });
+    expect("span.o_selection_badge").toHaveCount(2);
+    expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
 });
 
 test("[Offline] BadgesMany2OneField: verify badges are displayed in offline mode", async () => {
@@ -202,10 +222,72 @@ test("[Offline] BadgesMany2OneField: verify badges are displayed in offline mode
     // Verify the field doesn't crash and displays the fallback name
     expect(".o_selection_badge").toHaveCount(1);
     expect(".o_selection_badge:contains(xphone)").toHaveCount(1);
-    expect(".o_selection_badge").toHaveClass("pe-none");
 
-    expect.verifySteps([
-        "name_search", // initial rendering
-        "name_search", // re-rendered because we switched offline (due to the first name_search)
-    ]);
+    expect.verifySteps(["name_search"]);
+});
+
+test.tags("desktop");
+test("BadgesMany2OneField: variant_id options update correctly after Save & New with different product", async () => {
+    Variant._records = [
+        { id: 1, name: "xphone Black", product_id: 37 },
+        { id: 2, name: "xphone Red", product_id: 37 },
+        { id: 3, name: "xpad Pro", product_id: 41 },
+        { id: 4, name: "xpad Lite", product_id: 41 },
+    ];
+
+    Partner._records[0].product_id = false;
+    Partner._records[0].variant_id = false;
+
+    Partner._views.form = /* xml */ `
+        <form string="Partner">
+            <sheet>
+                <group>
+                    <field name="product_id" widget="badges_many2one"/>
+                    <field name="variant_id"
+                           widget="badges_many2one"
+                           domain="[('product_id', '=', product_id)]"/>
+                </group>
+            </sheet>
+        </form>
+    `;
+
+    onRpc("partner", "save_new", () => true);
+
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(FormViewDialog, {
+        resModel: "partner",
+        resId: 1,
+        isToMany: true,
+    });
+    await animationFrame();
+
+    expect(".o_dialog .o_form_view").toHaveCount(1);
+    expect(".o_dialog .modal-footer .o_form_button_save_new").toHaveCount(1, {
+        message: "Save & New button should be present in the footer",
+    });
+
+    await click("span.o_selection_badge:contains(xphone)");
+    await animationFrame();
+
+    expect(
+        queryAllTexts(".o_field_widget[name=variant_id] .o_selection_badge span")
+    ).toEqual(["xphone Black", "xphone Red"], {
+        message: "xphone selected — variant_id should show xphone Black and xphone Red",
+    });
+
+    await click(".o_dialog .modal-footer .o_form_button_save_new");
+    await animationFrame();
+
+    expect(".o_dialog .o_form_view").toHaveCount(1, {
+        message: "dialog should remain open after Save & New",
+    });
+
+    await click("span.o_selection_badge:contains(xpad)");
+    await animationFrame();
+
+    expect(
+        queryAllTexts(".o_field_widget[name=variant_id] .o_selection_badge span")
+    ).toEqual(["xpad Pro", "xpad Lite"], {
+        message: "xpad selected on new record — variant_id should show xpad Pro and xpad Lite, not xphone's variants",
+    });
 });

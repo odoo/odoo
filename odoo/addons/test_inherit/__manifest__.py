@@ -5,8 +5,8 @@
     'description': """A module to verify the inheritance.""",
     'depends': ['base', 'test_orm'],
     'data': [
-        'ir.model.access.csv',
         'demo_data.xml',
+        'ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.PillsSelectionPopup">
         <Dialog header="false"
-            contentClass="'w-100 m-0 position-absolute self_order_pills_selection_popup_dialog'"
+            contentClass="'w-100 m-0 position-absolute self_order_pills_selection_popup_dialog preset_info_popup_dialog'"
             bodyClass="'p-4 pb-3 m-0'"
             title="this.props.title">
             <div class="self_order_pills_selection_popup w-100 flex-column d-flex">
@@ -14,15 +14,19 @@
                     <button class="btn btn-close" t-on-click="this.props.close"/>
                 </div>
                 <div t-custom-ref="category-list" class="d-flex w-100 gap-1 mt-2 flex-nowrap overflow-x-auto no-scrollbar pb-2 flex-shrink-0">
-                    <button class="btn py-3 d-flex flex-column align-items-center text-center text-nowrap"
-                        t-foreach="this.categories" t-as="category" t-key="category.id"
-                        t-on-click="(ev) => this.onClickScrollTracked(ev, category.id)"
-                        t-att-class="{
-                            'btn-primary': this.state.selectedCategoryId === category.id,
-                            'btn-secondary': this.state.selectedCategoryId !== category.id
-                        }">
-                        <span class="fw-bold" t-out="this.getCategoryDisplayName(category)" />
-                    </button>
+                    <t t-foreach="this.categories" t-as="category" t-key="category.id">
+                        <t t-set="dateInfo" t-value="this.getCategoryInfo(category)"/>
+                        <button class="preset_date_buttons btn py-3 text-center text-nowrap"
+                            t-on-click="(ev) => this.onClickScrollTracked(ev, category.id)"
+                            t-att-class="{
+                                'd-flex flex-column align-items-center': !dateInfo.isTodayOrTomorrow,
+                                'btn-primary': this.state.selectedCategoryId === category.id,
+                                'btn-secondary': this.state.selectedCategoryId !== category.id
+                            }">
+                            <span class="fw-bold" t-out="this.isTimeSelection ? dateInfo.dayLabel : dateInfo.label" />
+                            <small t-if="this.isTimeSelection and !dateInfo.isTodayOrTomorrow" t-out="dateInfo.monthDayLabel" />
+                        </button>
+                    </t>
                 </div>
                 <div class="w-100 overflow-x-hidden">
                     <div t-foreach="this.getSelectedCategorySubCategories" t-as="subCateg" t-key="subCateg.id" class="mt-3 w-100">

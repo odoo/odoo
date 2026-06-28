@@ -1,14 +1,13 @@
 import { useComponent } from "@web/owl2/utils";
 import { ColorSelector } from "@html_editor/main/font/color_selector";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import {
     useColorPicker,
     DEFAULT_COLORS,
     DEFAULT_THEME_COLOR_VARS,
-} from "@web/core/color_picker/color_picker";
+} from "@html_editor/components/color_picker/color_picker";
 import { BuilderComponent } from "./builder_component";
 import {
-    basicContainerBuilderComponentProps,
     getAllActionsAndOperations,
     revertPreview,
     useBuilderComponent,
@@ -128,24 +127,35 @@ export class ColorPickerButton extends Component {
 
 export class BuilderColorPicker extends Component {
     static template = "html_builder.BuilderColorPicker";
-    static props = {
-        ...basicContainerBuilderComponentProps,
-        noTransparency: { type: Boolean, optional: true },
-        enabledTabs: { type: Array, optional: true },
-        grayscales: { type: Object, optional: true },
-        unit: { type: String, optional: true },
-        title: { type: String, optional: true },
-        tooltip: { type: String, optional: true },
-        getUsedCustomColors: { type: Function, optional: true },
-        selectedTab: { type: String, optional: true },
-        defaultColor: { type: String, optional: true },
-        defaultOpacity: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        enabledTabs: ["theme", "gradient", "custom"],
-        defaultColor: "#FFFFFF00",
-        selectedTab: "theme",
-    };
+    props = props({
+        // basicContainerBuilderComponentProps (converted inline)
+        id: t.string().optional(),
+        applyTo: t.string().optional(),
+        preview: t.boolean().optional(),
+        inheritedActions: t.array(t.string()).optional(),
+
+        action: t.string().optional(),
+        actionParam: t.any().optional(),
+
+        // Shorthand actions.
+        classAction: t.any().optional(),
+        attributeAction: t.any().optional(),
+        dataAttributeAction: t.any().optional(),
+        styleAction: t.any().optional(),
+
+        noTransparency: t.boolean().optional(),
+        enabledTabs: t.array().optional(["theme", "gradient", "custom"]),
+        grayscales: t.object().optional(),
+        unit: t.string().optional(),
+        title: t.string().optional(),
+        tooltip: t.string().optional(),
+        getUsedCustomColors: t.function().optional(),
+        selectedTab: t.string().optional("theme"),
+        defaultColor: t.string().optional("#FFFFFF00"),
+        defaultOpacity: t.number().optional(),
+        colorPickerClassName: t.string().optional("o-hb-colorpicker"),
+        colorPickerPopoverClassName: t.string().optional("o-hb-colorpicker-popover"),
+    });
     static components = {
         ColorSelector: ColorSelector,
         BuilderComponent,
@@ -171,12 +181,12 @@ export class BuilderColorPicker extends Component {
                 enabledTabs: this.props.enabledTabs,
                 grayscales: this.props.grayscales,
                 defaultOpacity: this.props.defaultOpacity,
-                className: "o-hb-colorpicker",
+                className: this.props.colorPickerClassName,
                 editColorCombination: this.env.editColorCombination,
             },
             options: {
                 onClose: onPreviewRevert,
-                popoverClass: "o-hb-colorpicker-popover",
+                popoverClass: this.props.colorPickerPopoverClassName,
             },
         };
     }
@@ -193,13 +203,7 @@ export class BuilderColorPicker extends Component {
         }
         if (this.state.selectedColorCombination) {
             const colorCombination = this.state.selectedColorCombination.replace("_", "-");
-            const el = this.env.getEditingElement();
-            const style = el.ownerDocument.defaultView.getComputedStyle(el);
-            if (style.backgroundImage !== "none") {
-                return `background-image: ${style.backgroundImage}`;
-            } else {
-                return `background-color: var(--${colorCombination}-bg)`;
-            }
+            return `background-color: var(--hb-cp-${colorCombination}-bg); background-image: var(--hb-cp-${colorCombination}-bg-gradient);`;
         }
         return "";
     }

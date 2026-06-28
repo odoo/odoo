@@ -24,7 +24,7 @@ patch(PaymentScreen.prototype, {
             }
         });
     },
-    async addNewPaymentLine(paymentMethod) {
+    async addNewPaymentLine(paymentMethod, args = {}) {
         if (paymentMethod.payment_provider === "razorpay" && this.isRefundOrder) {
             const refundedOrder = this.currentOrder.lines[0]?.refunded_orderline_id?.order_id;
             if (!refundedOrder) {
@@ -48,7 +48,7 @@ patch(PaymentScreen.prototype, {
                 );
                 return false;
             }
-            const res = await super.addNewPaymentLine(paymentMethod);
+            const res = await super.addNewPaymentLine(paymentMethod, args);
             const newPaymentLine = this.paymentLines.at(-1);
             const amountToSet = Math.min(
                 Math.abs(newPaymentLine.amount),
@@ -60,7 +60,7 @@ patch(PaymentScreen.prototype, {
             }
             return res;
         } else {
-            return await super.addNewPaymentLine(paymentMethod);
+            return await super.addNewPaymentLine(paymentMethod, args);
         }
     },
 });

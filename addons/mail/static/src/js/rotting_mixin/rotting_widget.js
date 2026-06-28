@@ -1,8 +1,8 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { Record } from "@web/model/relational_model/record";
 
 export function getRottingDaysTitle(modelName, rotDays) {
     switch (modelName) {
@@ -24,20 +24,18 @@ export function getRottingDaysTitle(modelName, rotDays) {
     });
 }
 
-export class KanbanRottingField extends Component {
-    static props = {
-        ...standardFieldProps,
-    };
-    static template = "mail.KanbanRottingField";
+export class RottingDaysField extends Component {
+    static template = "mail.RottingDaysField";
 
     setup() {
+        this.props = props({ record: types.instanceOf(Record) });
         // Preprocess all sentences as childless strings so they're easier to format in the DOM
         this.dayCount = _t("%(numberOfDays)sd", {
             numberOfDays: this.props.record.data.rotting_days,
         });
 
         this.title = getRottingDaysTitle(
-            this.props.record.model.config.resModel,
+            this.props.record.resModel,
             this.props.record.data.rotting_days
         );
     }
@@ -55,8 +53,8 @@ export class Many2OneFieldRotting extends Many2OneField {
     }
 }
 
-registry.category("fields").add("kanban.rotting", {
-    component: KanbanRottingField,
+registry.category("fields").add("rotting_days", {
+    component: RottingDaysField,
 });
 
 registry.category("fields").add("rotting", {

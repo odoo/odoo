@@ -21,12 +21,6 @@ class L10nARPortalAccount(L10nLatamBasePortalAccount):
             })
         return rendering_values
 
-    def _get_mandatory_billing_address_fields(self, country_sudo):
-        mandatory_fields = super()._get_mandatory_billing_address_fields(country_sudo)
-        if self._is_argentinean_company():
-            mandatory_fields.add('l10n_ar_afip_responsibility_type_id')
-        return mandatory_fields
-
     def _validate_address_values(self, address_values, partner_sudo, address_type, *args, **kwargs):
         """ We extend the method to add a new validation. If ARCA Resposibility is:
 

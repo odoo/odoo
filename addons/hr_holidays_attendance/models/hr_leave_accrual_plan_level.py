@@ -26,5 +26,14 @@ class HrLeaveAccrualLevel(models.Model):
             if level.accrued_gain_time == 'start' and level.frequency == 'worked_hours':
                 level.frequency = 'hourly'
 
+    @api.depends('frequency', 'added_value')
+    def _compute_yearly_gain(self):
+        super()._compute_yearly_gain()
+        company_calendar = self.env.company.resource_calendar_id
+        hours_per_week = company_calendar.hours_per_week
+        for level in self:
+            if level.frequency == 'worked_hours':
+                level.yearly_gain = level.added_value * 52 * hours_per_week
+
     def _get_hourly_frequencies(self):
         return super()._get_hourly_frequencies() + ["worked_hours"]

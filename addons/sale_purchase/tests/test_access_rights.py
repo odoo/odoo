@@ -3,7 +3,7 @@
 
 from odoo.exceptions import AccessError
 from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 
 @tagged('-at_install', 'post_install')
@@ -31,7 +31,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
 
     def test_access_saleperson(self):
         """ Check a saleperson (only) can generate a PO and a PO user can not confirm a SO """
-        SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
+        SaleOrder = self.env['sale.order']
 
         sale_order = SaleOrder.with_user(self.user_salesperson).create({
             'partner_id': self.partner_a.id,
@@ -63,5 +63,21 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         purchase_orders.read()
 
         # try to access the PO lines from the SO, as sale person
+        self.assertFalse(sol_service_purchase.with_user(self.user_salesperson).purchase_line_ids)
         with self.assertRaises(AccessError):
-            sol_service_purchase.with_user(self.user_salesperson).purchase_line_ids.read()
+            sol_service_purchase.sudo().purchase_line_ids.with_user(self.user_salesperson).read()
+
+    def test_access_forecasted_ministock(self):
+        """ Test that a sale user can access a product without purchase rights
+        and that a purchase user can access a product without sale rights. """
+        if self.env["ir.module.module"]._get('stock').state == 'installed':
+            self.skipTest("This test is only for stock without stock")
+
+        with Form(self.product_a.with_user(self.user_salesperson)) as form_a_sale:
+            # The free_qty field itself is not very important here. We just check that
+            # we can read it, so there were no access errors.
+            self.assertEqual(form_a_sale.free_qty, 0.0)
+        with Form(self.product_a.with_user(self.user_purchaseperson)) as form_a_purchase:
+            # The free_qty field itself is not very important here. We just check that
+            # we can read it, so there were no access errors.
+            self.assertEqual(form_a_purchase.free_qty, 0.0)

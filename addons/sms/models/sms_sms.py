@@ -56,6 +56,7 @@ class SmsSms(models.Model):
         ('sms_country_not_supported', 'Country Not Supported'),
         ('sms_registration_needed', 'Country-specific Registration Required'),
         ('sms_credit', 'Insufficient Credit'),
+        ('sms_database_non_active', 'Database non active'),
         ('sms_server', 'Server Error'),
         ('sms_acc', 'Unregistered Account'),
         # mass mode specific codes, generated internally, not returned by IAP.
@@ -237,6 +238,12 @@ class SmsSms(models.Model):
 
     def _handle_call_result_hook(self, results):
         """Further process SMS sending API results."""
+        for result in results:
+            if result["state"] == "insufficient_credit":
+                self.env["iap.account"]._send_no_credit_notification(
+                    service_name="sms",
+                    title=_("Not enough credits to send SMS"),
+                )
         pass
 
     @api.autovacuum

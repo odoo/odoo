@@ -7,12 +7,12 @@
         <t t-set="additional_title">Partners</t>
         <div id="wrap">
             <div class="oe_structure oe_empty" id="oe_structure_website_partnership_layout_1"
-                data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS PARTNERS"/>
+                data-editor-message.translate="Drag blocks here to add them on all partners"/>
             <div class="container mb-3">
                 <t t-call="website_partnership.index"/>
             </div>
             <div class="oe_structure oe_empty" id="oe_structure_website_partnership_layout_2"
-                data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS PARTNERS"/>
+                data-editor-message.translate="Drag blocks here to add them on all partners"/>
         </div>
     </t>
 </template>
@@ -93,8 +93,8 @@
                         <div class="card-body">
                             <h5 class="card-title m-0" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}" t-field="partner.display_name"/>
                             <small id="o_wcrm_partners_address"/>
-                            <small class="o_wcrm_short_description text-muted overflow-hidden">
-                                <span t-field="partner.website_short_description"/>
+                            <small class="o_wcrm_short_description o_line_clamp text-muted" style="--lines-clamp: 4;">
+                                <span t-field="partner.website_short_description" placeholder="Edit to add a short description"/>
                             </small>
                             <small t-if="not partner.website_short_description" class="css_editable_mode_hidden text-muted fst-italic" groups="website.group_website_restricted_editor">
                                 Edit to add a short description
@@ -115,13 +115,13 @@
 <template id="partner_page" name="Partner Page">
     <t t-call="website.layout">
         <div id="wrap">
-            <div class="oe_structure oe_empty" id="oe_structure_website_partnership_partner_1" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PARTNERS"/>
+            <div class="oe_structure oe_empty" id="oe_structure_website_partnership_partner_1" data-editor-message.translate="Drag blocks here to add them on all partners"/>
             <div class="container">
                 <div class="row">
                     <t t-call="website_partnership.partner_detail"/>
                 </div>
             </div>
-            <div class="oe_structure oe_empty" id="oe_structure_website_partnership_partner_2" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PARTNERS"/>
+            <div class="oe_structure oe_empty" id="oe_structure_website_partnership_partner_2" data-editor-message.translate="Drag blocks here to add them on all partners"/>
         </div>
     </t>
 </template>

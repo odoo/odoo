@@ -180,11 +180,11 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
 }
 export class BaseWebsitePageConfigAction extends BuilderAction {
     static id = "baseWebsitePageConfig";
-    static dependencies = ["websitePageConfigOptionPlugin", "history", "visibility"];
+    static dependencies = ["websitePageConfigOptionPlugin", "domObserver", "visibility"];
     setup() {
         this.websitePageConfig = this.dependencies.websitePageConfigOptionPlugin;
         this.visibility = this.dependencies.visibility;
-        this.history = this.dependencies.history;
+        this.domObserver = this.dependencies.domObserver;
         this.headerVisibilityHandlers = this.getVisibilityHandlers("header");
         this.breadcrumbVisibilityHandlers = this.getVisibilityHandlers("breadcrumb");
     }
@@ -270,7 +270,7 @@ export class SetWebsiteHeaderVisibilityAction extends BaseWebsitePageConfigActio
     static id = "setWebsiteHeaderVisibility";
     apply({ editingElement, value: headerPositionValue, isPreviewing }) {
         const lastValue = this.websitePageConfig.getVisibilityItem("header");
-        this.history.applyCustomMutation({
+        this.domObserver.applyCustomMutation({
             apply: () => this.headerVisibilityHandlers[headerPositionValue](),
             revert: () => this.headerVisibilityHandlers[lastValue](),
         });
@@ -286,13 +286,13 @@ export class SetWebsiteBreadcrumbVisibilityAction extends BaseWebsitePageConfigA
     isApplied({ value }) {
         return this.websitePageConfig.getVisibilityItem("breadcrumb") === value;
     }
-    apply({ value }) {
+    apply({ value, isPreviewing }) {
         const lastValue = this.websitePageConfig.getVisibilityItem("breadcrumb");
-        this.history.applyCustomMutation({
+        this.domObserver.applyCustomMutation({
             apply: () => this.breadcrumbVisibilityHandlers[value](),
             revert: () => this.breadcrumbVisibilityHandlers[lastValue](),
         });
-        this.websitePageConfig.setDirty();
+        this.websitePageConfig.setDirty(isPreviewing);
     }
 }
 export class SetWebsiteFooterVisibleAction extends BaseWebsitePageConfigAction {

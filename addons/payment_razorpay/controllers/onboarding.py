@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from werkzeug.exceptions import Forbidden
 
-from odoo import _, fields
+from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.http import Controller, request, route
 
@@ -32,9 +32,11 @@ class RazorpayController(Controller):
         provider_id = int(data["provider_id"])
         authorization_code = data.get("authorization_code")
         csrf_token = data["csrf_token"]
-        provider_sudo = request.env["payment.provider"].sudo().browse(provider_id).exists()
+        provider_sudo = self.env["payment.provider"].sudo().browse(provider_id).exists()
         if not provider_sudo or provider_sudo.code != "razorpay":
-            raise ValidationError(_("Could not find Razorpay provider with id %s", provider_sudo))
+            raise ValidationError(
+                self.env._("Could not find Razorpay provider with id %s", provider_sudo)
+            )
 
         # Verify the CSRF token.
         if not request.validate_csrf(csrf_token):
@@ -42,18 +44,16 @@ class RazorpayController(Controller):
             raise Forbidden
 
         # Request and set the OAuth tokens on the provider.
-        action = request.env.ref("payment.action_payment_provider")
+        action = self.env.ref("payment.action_payment_provider")
         redirect_url = f"/odoo/action-{action.id}/{int(provider_sudo.id)}"
         if not authorization_code:  # The user cancelled the authorization.
             return request.redirect(redirect_url)
 
         # Fetch an access token using the authorization token.
-        proxy_payload = self.env["payment.provider"]._prepare_json_rpc_payload({
-            "authorization_code": authorization_code
-        })
+        proxy_payload = {"authorization_code": authorization_code}
         try:
             response_content = provider_sudo._send_api_request(
-                "POST", "/get_access_token", json=proxy_payload, is_proxy_request=True
+                "POST", "2/get_access_token", json=proxy_payload, is_proxy_request=True
             )
         except ValidationError as e:
             return request.render(
@@ -72,8 +72,8 @@ class RazorpayController(Controller):
             "razorpay_refresh_token": response_content["refresh_token"],
             "razorpay_access_token": response_content["access_token"],
             "razorpay_access_token_expiry": expires_in,
-            # Enable the provider.
-            "state": "enabled",
+            # Set the provider live.
+            "is_live": True,
             "is_published": True,
         })
         try:

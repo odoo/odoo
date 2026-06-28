@@ -45,7 +45,7 @@ class TestResource(TestResourceCommon):
         self.assertFalse(interval - false_entry[false_calendar], "Calendar validity should cover all interval")
 
     def test_performance(self):
-        calendars = [self.calendar_jean, self.calendar_john, self.calendar_patel]
+        calendars = [self.calendar_jean, self.calendar_john, self.calendar_jules, self.calendar_patel]
         calendars_len = len(calendars)
         self.resources_test = self.env['resource.test'].create([{
             'name': 'resource ' + str(i),
@@ -54,7 +54,7 @@ class TestResource(TestResourceCommon):
 
         start = datetime(2021, 7, 7, 12, 0, 0).replace(tzinfo=UTC)
         end = datetime(2021, 7, 16, 23, 59, 59).replace(tzinfo=UTC)
-        with self.assertQueryCount(13):
+        with self.assertQueryCount(17):
             work_intervals, _ = self.resources_test.resource_id._get_valid_work_intervals(start, end)
 
         self.assertEqual(len(work_intervals), 50)
@@ -67,7 +67,7 @@ class TestResource(TestResourceCommon):
         self.assertEqual(58, sum_work_intervals, "Sum of the work intervals for the resource jean should be 40h+18h = 58h")
 
     def test_get_valid_work_intervals_calendars_only(self):
-        calendars = [self.calendar_jean, self.calendar_john, self.calendar_patel]
+        calendars = [self.calendar_jean, self.calendar_john, self.calendar_jules, self.calendar_patel]
         start = datetime(2021, 7, 7, 12, 0, 0).replace(tzinfo=UTC)
         end = datetime(2021, 7, 16, 23, 59, 59).replace(tzinfo=UTC)
         _, calendars_intervals = self.env['resource.resource']._get_valid_work_intervals(start, end, calendars)
@@ -75,6 +75,8 @@ class TestResource(TestResourceCommon):
         self.assertEqual(60, sum_work_intervals_jean, "Sum of the work intervals for the calendar of jean should be 40h+20h = 60h")
         sum_work_intervals_john = sum_intervals(calendars_intervals[self.calendar_john.id])
         self.assertEqual(32, sum_work_intervals_john, "Sum of the work intervals for the calendar of john should be 24h+8h = 32h")
+        sum_work_intervals_jules = sum_intervals(calendars_intervals[self.calendar_jules.id])
+        self.assertEqual(33, sum_work_intervals_jules, "Sum of the work intervals for the calendar of jules should be Wodd:15h+Wpair:16h = 31h")
         sum_work_intervals_patel = sum_intervals(calendars_intervals[self.calendar_patel.id])
         self.assertEqual(53, sum_work_intervals_patel, "Sum of the work intervals for the calendar of patel should be 4h+14h+35h = 53h")
 

@@ -1,29 +1,22 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat, formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 export class BomOverviewLine extends Component {
     static template = "mrp.BomOverviewLine";
-    static props = {
-        isFolded: { type: Boolean, optional: true },
-        showOptions: {
-            type: Object,
-            shape: {
-                mode: String,
-                uom: Boolean,
-                attachments: Boolean,
-            },
-        },
-        currentWarehouseId: { type: Number, optional: true },
-        data: Object,
-        precision: Number,
-        toggleFolded: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        isFolded: true,
-        toggleFolded: () => {},
-    };
+    props = props({
+        isFolded: t.boolean().optional(true),
+        showOptions: t.object({
+            mode: t.string(),
+            uom: t.boolean(),
+            attachments: t.boolean(),
+        }),
+        currentWarehouseId: t.number().optional(),
+        data: t.object(),
+        precision: t.number(),
+        toggleFolded: t.function().optional(() => () => {}),
+    });
 
     setup() {
         this.actionService = useService("action");
@@ -79,7 +72,7 @@ export class BomOverviewLine extends Component {
             name: _t("Attachments"),
             type: "ir.actions.act_window",
             res_model: "product.document",
-            domain: ['&', ["attached_on_mrp", "=", "bom"], '|',
+            domain: ['|',
                 '&',["res_model", "=", "product.product"],["res_id", "in", [this.data.product_id]],
                 '&',["res_model", "=", "product.template"],["res_id", "in", [this.data.product_template_id]]],
             views: [[false, "kanban"], [false, "list"], [false, "form"]],

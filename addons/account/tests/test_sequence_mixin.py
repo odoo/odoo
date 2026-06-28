@@ -92,7 +92,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         Test the sequence update behavior when changing the date of a move in quick edit mode.
         The sequence should only be recalculated if a value (year or month) utilized in the sequence is modified.
         """
-        self.env.company.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.quick_edit_mode_enabled = True
         self.env.company.fiscalyear_last_day = 30
         self.env.company.fiscalyear_last_month = '12'
 
@@ -140,9 +140,9 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             invoice_form.date = '2017-01-01'
             self.assertMoveName(invoice_form, 'INV/16-17/0001')
 
-    def test_sequence_empty_editable_with_quick_edit_mode(self):
+    def test_sequence_empty_editable_with_document_sequence_editable(self):
         """ Ensure the names of all but the first moves in a period are empty and editable in quick edit mode """
-        self.env.company.quick_edit_mode = 'in_invoices'
+        self.env.company.document_sequence_editable = True
 
         bill_1 = self.env['account.move'].create({
             'partner_id': self.ref('base.partner_root'),
@@ -599,7 +599,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
 
     def test_sequence_staggered_year(self):
         """The sequence is correctly computed when the year is staggered."""
-        self.env.company.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.document_sequence_editable = True
         self.env.company.fiscalyear_last_day = 15
         self.env.company.fiscalyear_last_month = '4'
 
@@ -664,6 +664,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.set_sequence('2101-02-01', 'MISC/01-02/00001')
         move = self.assertNameAtDate('2101-03-01', 'MISC/01-03/00001')
 
+        move.name = '/'
         move.journal_id.sequence_override_regex = move._sequence_year_range_regex
         move.name = 'MISC/00-01/00001'
         self.assertNameAtDate('2101-03-01', 'MISC/00-01/00002')
@@ -765,6 +766,15 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             self.create_move(date='2021-01-01', post=True)
         mock.assert_called_once()
 
+    def test_flushing_savepoint_rollback_should_clear_cache(self):
+        self.assertFalse(self.env['account.move']._get_sequence_cache(), 'The cache should be empty at this point')
+        with self.env.cr.savepoint() as sp:
+            self.create_move(date='2021-01-01', post=True)
+            self.assertTrue(self.env['account.move']._get_sequence_cache(), 'The cache should have been filled')
+            sp.rollback()
+            self.assertFalse(self.env['account.move']._get_sequence_cache(), 'The cache should have been cleared')
+
+
 @tagged('post_install', '-at_install')
 class TestSequenceGaps(TestSequenceMixinCommon):
     @classmethod
@@ -788,10 +798,10 @@ class TestSequenceGaps(TestSequenceMixinCommon):
     def test_unlink(self):
         self.all_moves[0].button_draft()
         self.all_moves[0].unlink()
-        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True, False])
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False, False])
         self.all_moves[1].button_draft()
         self.all_moves[1].unlink()
-        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True])
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False])
 
     def test_unlink_2(self):
         self.all_moves[1].button_draft()
@@ -799,7 +809,7 @@ class TestSequenceGaps(TestSequenceMixinCommon):
         self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False, True])
         self.all_moves[0].button_draft()
         self.all_moves[0].unlink()
-        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True])
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False])
 
     def test_change_sequence(self):
         previous = self.all_moves[1].name
@@ -811,12 +821,12 @@ class TestSequenceGaps(TestSequenceMixinCommon):
     def test_change_multi(self):
         self.all_moves[0].name = '/'
         self.all_moves[1].name = '/'
-        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, True])
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
 
     def test_change_multi_2(self):
         self.all_moves[1].name = '/'
         self.all_moves[0].name = '/'
-        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, True])
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
 
     def test_null_change(self):
         self.all_moves[1].name = self.all_moves[1].name
@@ -840,6 +850,100 @@ class TestSequenceGaps(TestSequenceMixinCommon):
         new_move = self.create_move(name=format_string.format(**format_values))
         new_move.action_post()
         self.assertEqual(new_move.made_sequence_gap, True)
+
+    def test_draft1(self):
+        self.all_moves[0].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft2(self):
+        self.all_moves[1].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, True, False])
+
+    def test_draft3(self):
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft4(self):
+        self.all_moves[0].button_draft()
+        self.all_moves[1].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft4_2(self):
+        self.all_moves[1].button_draft()
+        self.all_moves[0].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft5(self):
+        self.all_moves[0].button_draft()
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft5_2(self):
+        self.all_moves[2].button_draft()
+        self.all_moves[0].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft6(self):
+        self.all_moves[1].button_draft()
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, True, False])
+
+    def test_draft6_2(self):
+        self.all_moves[2].button_draft()
+        self.all_moves[1].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, True, False])
+
+    def test_draft7(self):
+        self.all_moves[0].button_draft()
+        self.all_moves[1].button_draft()
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_branch_company_user_empty_prefix(self):
+        """Branch-company users must not get an AccessError when creating a journal
+        entry in a journal where one of the first two posted entries had its
+        sequence_prefix emptied by a parent-company admin.
+
+        Regression for bug introduced in 19.0: _update_sequence_made_gap used
+        self.browse() (no sudo) after a raw SQL query that returns IDs across all
+        companies, so the branch user couldn't read/write the parent's moves.
+        """
+
+        first_move = self.all_moves[0]
+        first_move.button_draft()
+        first_move.name = '0001'
+
+        parent_company = self.env.company
+        branch_company = self.env['res.company'].create({
+            'name': 'Branch Company',
+            'parent_id': parent_company.id,
+        })
+        branch_user = self.env['res.users'].create({
+            'login': 'branch_seq_test',
+            'name': 'Branch User',
+            'email': 'branch_seq_test@example.com',
+            'group_ids': [Command.link(self.env.ref('account.group_account_user').id)],
+            'company_ids': [Command.link(branch_company.id)],
+            'company_id': branch_company.id,
+        })
+
+        misc_journal = self.all_moves[0].journal_id
+
+        branch_env = self.env(user=branch_user)
+        account = self.company_data['default_account_revenue']
+        new_move = branch_env['account.move'].create({
+            'move_type': 'entry',
+            'journal_id': misc_journal.id,
+            'date': '2016-01-01',
+            'line_ids': [Command.create({
+                'name': 'branch line',
+                'account_id': account.id,
+            })],
+        })
+        # Writing name triggers _inverse_name → _update_sequence_made_gap.
+        # Must NOT raise an AccessError.
+        new_move.name = '0002'
+        self.assertEqual(new_move.name, '0002')
 
 
 @tagged('post_install', '-at_install')
@@ -907,12 +1011,12 @@ class TestSequenceMixinConcurrency(TransactionCase):
             moves.name = False
             moves[0].action_post()
             self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', False, False])
-            env.cr.commit()
         self.data = {
             'move_ids': moves.ids,
             'account_id': account.id,
             'journal_id': journal.id,
             'envs': [
+                # all transactions are started here...
                 api.Environment(self.env.registry.cursor(), SUPERUSER_ID, {}),
                 api.Environment(self.env.registry.cursor(), SUPERUSER_ID, {}),
                 api.Environment(self.env.registry.cursor(), SUPERUSER_ID, {}),
@@ -931,7 +1035,6 @@ class TestSequenceMixinConcurrency(TransactionCase):
             journal.unlink()
             account = env['account.account'].browse(self.data['account_id'])
             account.unlink()
-            env.cr.commit()
         for env in self.data['envs']:
             env.cr.close()
 
@@ -953,6 +1056,7 @@ class TestSequenceMixinConcurrency(TransactionCase):
         env1.cr.commit()
 
         # check the values
+        env0.cr.rollback()
         moves = env0['account.move'].browse(self.data['move_ids'])
         self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', 'CT/2016/01/0003'])
         self.assertEqual(moves.mapped('sequence_prefix'), ['CT/2016/01/', 'CT/2016/01/', 'CT/2016/01/'])
@@ -979,6 +1083,7 @@ class TestSequenceMixinConcurrency(TransactionCase):
         env1.cr.commit()
 
         # check the values
+        env0.cr.rollback()
         moves = env0['account.move'].browse(self.data['move_ids'])
         self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', False, 'CT/2016/01/0002'])
 
@@ -1018,6 +1123,7 @@ class TestSequenceMixinBankStatementLoadImport(TestSequenceMixinCommon):
         with (
             patch.object(self.env.registry['account.bank.statement.line'], '_load_records_create', side_effect=new_load_records_create),
             patch.object(self.env.registry['sequence.mixin'], '_get_sequence_cache', side_effect=count_empty_cache),
+            patch.object(self.env.registry['account.move'], '_update_sequence_made_gap', side_effect=lambda *args, **kwargs: None),
         ):
             results = self.env['account.bank.statement.line'].load(fields_list, data)
 

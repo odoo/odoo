@@ -7,25 +7,26 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position="inside">
-                <group invisible="code != 'xendit'">
-                    <field
-                        name="xendit_public_key"
-                        string="Public Key"
-                        required="code == 'xendit' and state != 'disabled'"
-                    />
-                    <field
-                        name="xendit_secret_key"
-                        string="Secret Key"
-                        required="code == 'xendit' and state != 'disabled'"
-                        password="True"
-                    />
-                    <field
-                        name="xendit_webhook_token"
-                        string="Webhook Token"
-                        required="code == 'xendit' and state != 'disabled'"
-                        password="True"
-                    />
-                </group>
+                <field
+                    string="Public Key"
+                    name="xendit_public_key"
+                    invisible="code != 'xendit'"
+                    required="is_live"
+                />
+                <field
+                    string="Secret Key"
+                    name="xendit_secret_key"
+                    invisible="code != 'xendit'"
+                    required="is_live"
+                    widget="password"
+                />
+                <field
+                    string="Webhook Token"
+                    name="xendit_webhook_token"
+                    invisible="code != 'xendit'"
+                    required="is_live"
+                    widget="password"
+                />
             </group>
         </field>
     </record>

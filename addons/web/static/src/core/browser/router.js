@@ -129,17 +129,32 @@ function stateToUrl(state) {
     const actionStack = (state.actionStack || [state]).map((a) => ({ ...a }));
     if (actionStack.at(-1)?.action !== "menu") {
         for (const [prevAct, currentAct] of slidingWindow(actionStack, 2).reverse()) {
-            const { action: prevAction, resId: prevResId, active_id: prevActiveId } = prevAct;
-            const { action: currentAction, active_id: currentActiveId } = currentAct;
+            const {
+                action: prevAction,
+                model: prevModel,
+                resId: prevResId,
+                active_id: prevActiveId,
+            } = prevAct;
+            const {
+                action: currentAction,
+                model: currentModel,
+                active_id: currentActiveId,
+            } = currentAct;
             // actions would typically map to a path like `active_id/action/res_id`
             if (currentActiveId === prevResId) {
                 // avoid doubling up when the active_id is the same as the previous action's res_id
                 delete currentAct.active_id;
             }
-            if (prevAction === currentAction && !prevResId && currentActiveId === prevActiveId) {
-                //avoid doubling up the action and the active_id when a single-record action is preceded by a multi-record action
-                delete currentAct.action;
-                delete currentAct.active_id;
+            if (!prevResId && currentActiveId === prevActiveId) {
+                if (prevAction && currentAction && prevAction === currentAction) {
+                    //avoid doubling up the action and the active_id when a single-record action is preceded by a multi-record action
+                    delete currentAct.action;
+                    delete currentAct.active_id;
+                } else if (prevModel && currentModel && prevModel === currentModel) {
+                    //avoid doubling up the mmodel and the active_id when a single-record model is preceded by a multi-record model
+                    delete currentAct.model;
+                    delete currentAct.active_id;
+                }
             }
         }
         const pathSegments = actionStack.map(pathFromActionState).filter(Boolean);

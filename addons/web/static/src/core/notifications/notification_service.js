@@ -1,7 +1,6 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { registry } from "../registry";
 import { NotificationContainer } from "./notification_container";
-
 
 /**
  * @typedef {Object} NotificationButton
@@ -25,7 +24,7 @@ export const notificationService = {
 
     start() {
         let notifId = 0;
-        const notifications = reactive({});
+        const notifications = proxy({});
 
         registry.category("main_components").add(
             this.notificationContainer.name,

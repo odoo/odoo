@@ -1,4 +1,4 @@
-import { useExternalListener } from "@web/owl2/utils";
+import { useListener } from "@odoo/owl";
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import { ChatHub } from "@mail/core/common/chat_hub";
 import { patch } from "@web/core/utils/patch";
@@ -8,7 +8,7 @@ ChatHub.components = { ...ChatHub.components, LivechatButton };
 patch(ChatHub.prototype, {
     setup() {
         super.setup(...arguments);
-        useExternalListener(document, "scroll", this._onScroll);
+        useListener(document, "scroll", this._onScroll.bind(this));
     },
     _onScroll(ev) {
         if (this.position.dragged) {

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>, 2023\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
@@ -31,12 +31,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__can_be_reinvoiced
 msgid "Can be reinvoiced"
-msgstr ""
-
-#. module: sale_expense
-#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
-#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
-msgid "Customer to Reinvoice"
 msgstr ""
 
 #. module: sale_expense
@@ -77,7 +71,7 @@ msgstr "Troškovi"
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
-msgid "Expenses of this category may not be added to a Sales Order."
+msgid "Expenses of this product may not be added to a Sales Order."
 msgstr ""
 
 #. module: sale_expense
@@ -132,6 +126,12 @@ msgstr "Stavka dnevnika"
 #: model:ir.model,name:sale_expense.model_product_template
 msgid "Product"
 msgstr "Proizvod"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
+msgid "Reinvoice to"
+msgstr ""
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_line_id

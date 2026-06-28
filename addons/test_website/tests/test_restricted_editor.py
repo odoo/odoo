@@ -12,7 +12,7 @@ class TestRestrictedEditor(HttpCaseWithWebsiteUser):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        website = cls.env.ref('website.default_website')
+        website = cls.env.ref('base.default_website')
         fr = cls.env.ref('base.lang_fr').sudo()
         en = cls.env.ref('base.lang_en').sudo()
 

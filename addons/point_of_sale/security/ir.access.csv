@@ -1,0 +1,62 @@
+id,name,model_id,group_id/id,operation,domain
+access_pos_printer_manager,pos.printer.manager,pos.printer,point_of_sale.group_pos_manager,crud,
+access_pos_printer,pos.printer.user,pos.printer,point_of_sale.group_pos_user,r,
+access_pos_order,pos.order,pos.order,point_of_sale.group_pos_user,crud,
+rule_pos_multi_company,Point Of Sale Order,pos.order,,crud,"[('company_id', 'in', company_ids)]"
+access_pos_order_line,pos.order.line,pos.order.line,point_of_sale.group_pos_user,crud,
+rule_pos_order_line_multi_company,Point Of Sale Order Line,pos.order.line,,crud,"[('company_id', 'in', company_ids)]"
+access_report_pos_order,report.pos.order,report.pos.order,point_of_sale.group_pos_user,r,
+rule_pos_order_report_multi_company,Point Of Sale Order Analysis multi-company,report.pos.order,,crud,"[('company_id', 'in', company_ids)]"
+access_account_journal_pos_user,account.journal pos_user,account.journal,point_of_sale.group_pos_user,r,
+access_account_payment_method_pos_user,account.payment.method pos_user,account.payment.method,point_of_sale.group_pos_manager,r,
+access_account_payment_method_line_pos_user,account.payment.method.line pos_user,account.payment.method.line,point_of_sale.group_pos_manager,r,
+rule_pos_bank_statement_line_account_user,Point Of Sale Bank Statement Line Accountant,account.bank.statement.line,account.group_account_invoice,r,
+rule_pos_bank_statement_line_account_user_1,Point Of Sale Bank Statement Line Accountant,account.bank.statement.line,account.group_account_basic,crud,
+rule_pos_bank_statement_line_user,Point Of Sale Bank Statement Line POS User,account.bank.statement.line,point_of_sale.group_pos_user,cru,"[('pos_session_id', '!=', False)]"
+rule_pos_bank_statement_line_user_1,Point Of Sale Bank Statement Line POS User,account.bank.statement.line,point_of_sale.group_pos_manager,crud,"[('pos_session_id', '!=', False)]"
+access_product_product,product.product,product.product,point_of_sale.group_pos_user,r,
+access_product_template_pos_user,product.template pos user,product.template,point_of_sale.group_pos_user,r,
+access_product_product_supplierinfo_user,product.supplierinfo user,product.supplierinfo,point_of_sale.group_pos_user,r,
+access_product_pricelist_manager,product.pricelist manager,product.pricelist,point_of_sale.group_pos_manager,crud,
+access_product_pricelist_user,product.pricelist user,product.pricelist,point_of_sale.group_pos_user,r,
+access_pos_session_user,pos.session user,pos.session,point_of_sale.group_pos_user,cru,
+rule_pos_session_multi_company,Point Of Sale Session,pos.session,,crud,"[('config_id.company_id', 'in', company_ids)]"
+access_pos_config_user,pos.config user,pos.config,point_of_sale.group_pos_user,ru,
+access_pos_config_system_user,pos.config system,pos.config,base.group_system,ru,
+access_pos_config_manager,pos.config manager,pos.config,point_of_sale.group_pos_manager,crud,
+rule_pos_config_multi_company,Point Of Sale Config,pos.config,,crud,"[('company_id', 'in', company_ids)]"
+access_product_category_pos_manager,pos.category manager,pos.category,point_of_sale.group_pos_manager,crud,
+access_product_category_pos_user,pos.category user,pos.category,base.group_user,r,
+access_barcode_nomenclature_pos_user,barcode.nomenclature.pos.user,barcode.nomenclature,point_of_sale.group_pos_user,r,
+access_barcode_nomenclature_pos_manager,barcode.nomenclature.pos.manager,barcode.nomenclature,point_of_sale.group_pos_manager,crud,
+access_barcode_rule_pos_user,barcode.rule.pos.user,barcode.rule,point_of_sale.group_pos_user,r,
+access_barcode_rule_pos_manager,barcode.rule.pos.manager,barcode.rule,point_of_sale.group_pos_manager,crud,
+access_decimal_precision_user,decimal.precision,decimal.precision,point_of_sale.group_pos_user,r,
+access_pos_payment_user,pos.payment user,pos.payment,point_of_sale.group_pos_user,crud,
+rule_pos_payment_multi_company,PoS Payment,pos.payment,,crud,"[('company_id', 'in', company_ids)]"
+access_pos_payment_method_user,pos.payment.method user,pos.payment.method,point_of_sale.group_pos_user,r,
+access_pos_payment_method_manager,pos.payment.method manager,pos.payment.method,point_of_sale.group_pos_manager,crud,
+rule_pos_payment_method_multi_company,PoS Payment Method,pos.payment.method,,crud,"[('company_id', 'in', company_ids)]"
+access_product_combo_pos_user,product.combo user,product.combo,point_of_sale.group_pos_user,r,
+access_product_combo_item_pos_user,product.combo.item user,product.combo.item,point_of_sale.group_pos_user,r,
+access_pos_details_wizard,access.pos.details.wizard,pos.details.wizard,point_of_sale.group_pos_manager,cru,
+access_pos_make_payment,access.pos.make.payment,pos.make.payment,point_of_sale.group_pos_manager,cru,
+access_pos_close_session_wizard,access.pos.close.session.wizard,pos.close.session.wizard,point_of_sale.group_pos_user,cru,
+access_account_cash_rounding_pos_user,account.cash.rounding pos_user,account.cash.rounding,point_of_sale.group_pos_user,r,
+access_pos_bill,pos.bill pos_user,pos.bill,point_of_sale.group_pos_user,crud,
+access_pos_daily_sales_reports_wizard,access.pos.daily.sales.reports.wizard,pos.daily.sales.reports.wizard,point_of_sale.group_pos_manager,cru,
+rule_invoice_pos_user,Invoice POS User,account.move,point_of_sale.group_pos_user,r,"[('pos_order_ids', '!=', False)]"
+base_user_account_move_line_rule,Normal User Account Move Line,account.move.line,point_of_sale.group_pos_user,r,"[('move_id', 'access', 'read')]"
+access_pos_note,pos.note.user,pos.note,point_of_sale.group_pos_user,r,
+access_pos_note_manager,pos.note.manager,pos.note,point_of_sale.group_pos_manager,crud,
+access_pos_preset,pos.preset.user,pos.preset,point_of_sale.group_pos_user,r,
+access_pos_preset_manager,pos.preset.manager,pos.preset,point_of_sale.group_pos_manager,crud,
+access_pos_make_invoice,pos.make.invoice.user,pos.make.invoice,point_of_sale.group_pos_user,cru,
+access_pos_make_invoice_manager,pos.make.invoice.manager,pos.make.invoice,point_of_sale.group_pos_manager,crud,
+access_pos_confirmation_wizard,pos.confirmation.wizard.user,pos.confirmation.wizard,point_of_sale.group_pos_user,crud,
+access_pos_product_template_snooze,pos.product.template.snooze,pos.product.template.snooze,point_of_sale.group_pos_user,crud,
+res_partner_rule_user,user read access,res.partner,point_of_sale.group_pos_user,r,
+access_res_partner_pos_manager,res.partner.pos.manager,res.partner,point_of_sale.group_pos_manager,c,
+res_partner_rule_write_self,self user write access,res.partner,point_of_sale.group_pos_manager,u,"[('id', '=', user.partner_id.id)]"
+access_preparation_line,pos.prep.line,pos.prep.line,point_of_sale.group_pos_user,crud,
+access_preparation_order,pos.prep.order,pos.prep.order,point_of_sale.group_pos_user,crud,

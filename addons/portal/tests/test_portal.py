@@ -1,75 +1,154 @@
 from datetime import datetime, timedelta
 
-from odoo import Command
 from odoo.tests.common import HttpCase, tagged
 
-from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.base.tests.common import BaseCommon
 
 
 @tagged('-at_install', 'post_install')
-class TestUsersHttp(HttpCase):
+class TestUsersHttp(BaseCommon, HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.country_be = cls.quick_ref('base.be')
+        cls.portal_user = cls._create_new_portal_user()
+        cls.address_test_data = {
+            'email': 'o@d.oo',
+            'street': 'Rue de Ramillies 1',
+            'city': 'Ramillies',
+            'zip': '1367',
+            'country_id': cls.country_be.id,
+            'phone': '+323333333333333',
+        }
+        # Company tree-like hierarchy
+        #       Company
+        #          |
+        #          A
+        cls.account_a = cls._create_new_portal_user(login='portal_a')
+        cls.company_user = cls._create_new_portal_user(login='company_portal_user')
+        cls.company_partner = cls.env['res.partner'].create({
+            'name': 'Test Odoo SA',
+            'email': 'odoo@odoo.com',
+            'street': 'Chau. de Namur 40',
+            'city': 'Ramillies',
+            'zip': '1367',
+            'country_id': cls.country_be.id,
+            'phone': '+3200000000000',
+            'vat': 'BE0477472701',
+        })
+        cls.account_a.partner_id.write({
+            'parent_id': cls.company_partner.id,
+        })
+        cls.company_user.write({
+            'name': 'Company Portal User',
+            'partner_id': cls.company_partner.id,
+        })
 
     def test_account_holder_name_update(self):
         """Test that bank account holder name updates when partner name changes via /my/account route."""
-        login = 'test_portal_user'
-        portal_user = mail_new_test_user(
-            self.env,
-            login,
-            name='Partner A',
-        )
+        portal_user = self.portal_user.partner_id
 
         bank_account = self.env['res.partner.bank'].create({
             'account_number': '123456789',
-            'partner_id': portal_user.partner_id.id,
+            'partner_id': portal_user.id,
             'holder_name': 'Partner A Holder',
         })
 
-        common_data = {
-            'phone': '1234567890',
-            'email': portal_user.partner_id.email,
-            'street': '123 Main St',
-            'city': 'Anytown',
-            'zipcode': '12345',
-            'country_id': self.env.ref('base.us').id,
-            'state_id': self.env.ref('base.state_us_5').id,
-        }
-
-        self.authenticate(login, login)
+        self.authenticate(self.portal_user.login, self.portal_user.login)
         # request without changing partner name
         response = self.url_open(
             url='/my/address/submit',
             data={
-                **common_data,
-                'name': portal_user.partner_id.name,
-                'partner_id': str(portal_user.partner_id.id),
-                'csrf_token': self.csrf_token(),
-            },
+                **self.address_test_data,
+                'name': portal_user.name,
+                'partner_id': str(portal_user.id),
+                'csrf_token': self.csrf_token()
+            }
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(bank_account.holder_name, 'Partner A Holder')
 
+    def test_address_submit_parent_name_for_portal_partner(self):
+        "Create a new partner upon entering a new Company Name"
+        portal_user = self.portal_user.partner_id
+        self.assertFalse(portal_user.parent_id)
+
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        response = self.url_open(
+            url='/my/address/submit',
+            data={
+                **self.address_test_data,
+                'name': portal_user.name,
+                'parent_name': 'Portal Company',
+                'partner_id': str(portal_user.id),
+                'csrf_token': self.csrf_token()
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(portal_user.parent_id)
+        self.assertEqual(portal_user.parent_id.name, 'Portal Company')
+        self.assertEqual(portal_user.parent_name, 'Portal Company')
+        self.assertEqual(portal_user.commercial_company_name, 'Portal Company')
+
+    def test_address_change_name_for_company_partner(self):
+        # Test that a company partner can change its own name"
+        company_user = self.company_user
+        self.assertTrue(company_user.partner_id.is_company)
+
+        self.authenticate(company_user.login, company_user.login)
+        response = self.url_open(
+            url='/my/address/submit',
+            data={
+                **self.address_test_data,
+                'name': company_user.name,
+                'parent_name': 'New Company Name SA',
+                'partner_id': str(self.company_partner.id),
+                'csrf_token': self.csrf_token(),
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.company_partner.name, 'New Company Name SA')
+        self.assertEqual(self.company_partner.commercial_company_name, 'New Company Name SA')
+
+    def test_address_change_parent_name_for_portal_partner(self):
+        # Test that a portal user can change its company (parent) name
+        self.authenticate(self.account_a.login, self.account_a.login)
+        portal_user = self.account_a.partner_id
+        company_id_before_change = portal_user.parent_id
+        self.assertTrue(portal_user.parent_id)
+
+        response = self.url_open(
+            url='/my/address/submit',
+            data={
+                **self.address_test_data,
+                'name': portal_user.name,
+                'parent_name': 'Portal Company',
+                'partner_id': str(portal_user.id),
+                'csrf_token': self.csrf_token()
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(company_id_before_change, portal_user.parent_id)
+        self.assertEqual(portal_user.parent_id.name, 'Portal Company')
+        self.assertEqual(portal_user.commercial_company_name, 'Portal Company')
+
     def test_deactivate_portal_user(self):
         # Create a portal user with data which should be removed on deactivation
-        login = 'portal_user'
-        portal_user = self.env['res.users'].create({
-            'name': login,
-            'login': login,
-            'password': login,
-            'group_ids': [Command.set([self.env.ref('base.group_portal').id])],
-        })
+        portal_user = self.portal_user
         self.env['res.users.apikeys'].with_user(portal_user)._generate(
-            None,
+            'rpc',
             'Portal API Key',
             datetime.now() + timedelta(days=1)
         )
         self.assertTrue(portal_user.api_key_ids)
 
         # Request the deactivation of the portal account as portal through the route meant for this purpose
-        self.authenticate(login, login)
+        self.authenticate(self.portal_user.login, self.portal_user.login)
         self.url_open('/my/deactivate_account', data={
-            'validation': login,
-            'password': login,
-            'csrf_token': self.csrf_token(),
+            'validation': self.portal_user.login,
+            'password': self.portal_user.login,
+            'csrf_token': self.csrf_token()
         })
 
         # Assert the user is disabled, correctly renamed, the critical data is well removed.
@@ -89,29 +168,17 @@ class TestUsersHttp(HttpCase):
         self.assertFalse(portal_user.exists())
 
     def test_submit_address_from_anonymous_partner(self):
-        login = 'test_portal_user'
-        portal_user = mail_new_test_user(self.env, login, name='Portal User')
-        self.authenticate(login, login)
+        portal_user = self.portal_user
+        self.authenticate(portal_user.login, portal_user.login)
         anonymous_partner = self.env['res.partner'].create({
             'type': 'invoice',
             'parent_id': portal_user.commercial_partner_id.id,
         })
-        if 'enforce_cities' in self.env['res.country']._fields:
-            self.env.company.country_id.enforce_cities = False
-        common_data = {
-            'phone': '1234567890',
-            'email': 'anonymous-user@example.com',
-            'street': '123 Street Name',
-            'city': 'City',
-            'zipcode': '12345',
-            'country_id': self.env.ref('base.us').id,
-            'state_id': self.env.ref('base.state_us_5').id,
-        }
         new_name = 'Secret Name'
         self.url_open(
             url='/my/address/submit',
             data={
-                **common_data,
+                **self.address_test_data,
                 'name': new_name,
                 'partner_id': str(anonymous_partner.id),
                 'csrf_token': self.csrf_token(),

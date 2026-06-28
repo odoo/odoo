@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.CategorySelector">
-        <div t-attf-class="{{this.pos.config.show_category_images ? 'category-list' : 'product-list'}} d-grid gap-1 gap-lg-2 p-2 height-category-selector">
+        <div t-attf-class="product-list category-list p-2 gap-2 {{ this.ui.isSmall ? 'd-flex flex-nowrap overflow-x-auto' : 'd-grid' }}" t-att-style="this.ui.isSmall and 'width: 100vw'">
             <t t-foreach="this.getCategoriesAndSub()" t-as="category" t-key="category.id">
                 <button t-on-click="() => this.pos.setSelectedCategory(category.id)"
                     t-attf-class="o_colorlist_item_color_{{category.color or 'none'}}"
+                    t-att-style="this.ui.isSmall ? 'width: 115px; height: 3rem;' : 'height: 4rem;'"
                     t-att-class="{
                         'border-0': category.isChildren and !this.isAncestorOrSelected(category), 
                         'opacity-75 border-0': !category.isChildren and !category.isSelected,
                         'justify-content-center': this.ui.isSmall
                     }"
-                    class="category-button p-1 btn btn-light d-flex justify-content-around align-items-center rounded-3 gap-1">
+                    class="category-button p-1 btn btn-light d-flex justify-content-around align-items-center rounded-3 gap-1 flex-shrink-0">
                     <div t-if="this.showCategoryImg(category)" class="overflow-hidden flex-shrink-0 ratio ratio-1x1" style="width:40%;">
                         <img t-if="category.imgSrc and !this.ui.isSmall" t-att-src="category.imgSrc"
                             class="category-img-thumb h-100 rounded-3 object-fit-cover"
                             alt="Category"
                         />
                     </div>
-                    <div class="line-clamp-3" t-att-class="{'w-100': !this.showCategoryImg(category)}" t-att-style="{'width: 60%;': this.showCategoryImg(category)}">
+                    <div t-attf-class="o_line_clamp o_line_clamp_{{ this.ui.isSmall ? 2 : 3 }}">
                         <span t-if="category.name" class="text-center" t-out="category.name" />
                     </div>
                 </button>

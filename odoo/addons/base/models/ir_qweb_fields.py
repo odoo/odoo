@@ -227,7 +227,7 @@ class IrQwebFieldFloat(models.AbstractModel):
 
         # We use the precision or the maximum of relevent decimal digits if it's lower
         int_digits = int(math.log10(abs(value))) + 1 if value != 0 else 1
-        max_dec_digits = max(15 - int_digits, 0)
+        max_dec_digits = max(14 - int_digits, 0)
         precision = min(precision, max_dec_digits)
 
         fmt = f'%.{precision}f'
@@ -341,6 +341,12 @@ class IrQwebFieldText(models.AbstractModel):
         Escapes the value and converts newlines to br. This is bullshit.
         """
         return nl2br(value) if value else ''
+
+    @api.model
+    def attributes(self, record, field_name, options, values=None):
+        attrs = super().attributes(record, field_name, options, values)
+        attrs['dir'] = 'auto'
+        return attrs
 
 
 class IrQwebFieldSelection(models.AbstractModel):
@@ -529,7 +535,7 @@ class IrQwebFieldMonetary(models.AbstractModel):
         fmt = "%.{0}f".format(options.get('decimal_places', display_currency.decimal_places))
 
         if options.get('from_currency'):
-            date = options.get('date') or fields.Date.today()
+            date = options.get('date')
             company_id = options.get('company_id')
             if company_id:
                 company = self.env['res.company'].browse(company_id)

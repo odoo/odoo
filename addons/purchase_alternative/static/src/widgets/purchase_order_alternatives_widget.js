@@ -35,7 +35,7 @@ export class FieldMany2ManyAltPOs extends X2ManyField {
     */
    async openRecord(record) {
       if (record.resId !== this.props.record.resId) {
-         const action = await this.orm.call(record.resModel, "get_formview_action", [[record.resId]], {
+         const action = await this.orm.call(record.resModel, "get_record_default_action", [[record.resId]], {
                context: this.props.context,
          });
          await this.action.doAction(action);

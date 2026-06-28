@@ -1,10 +1,9 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
 export class ImageUrlField extends Component {
@@ -19,7 +18,7 @@ export class ImageUrlField extends Component {
 
     setup() {
         this.notification = useService("notification");
-        this.state = useState({
+        this.state = proxy({
             src: this.props.record.data[this.props.name],
         });
 
@@ -30,15 +29,14 @@ export class ImageUrlField extends Component {
 
     get sizeStyle() {
         let style = "";
-        if (this.props.width) {
-            style += `max-width: ${this.props.width}px;`;
-        }
-        if (this.props.height) {
-            style += `max-height: ${this.props.height}px;`;
-        }
+        const width = this.props.width;
+        const height = this.props.height;
+        style = width ? `max-width: ${width}px;` : `width: auto;`;
+        style += height ? `max-height: ${height}px` : `height: auto`;
+        
         return style;
     }
-
+    
     onLoadFailed() {
         this.state.src = this.constructor.fallbackSrc;
     }

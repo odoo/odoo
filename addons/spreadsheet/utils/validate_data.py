@@ -109,11 +109,16 @@ def list_order_fields(list_definition):
     return [order["name"] for order in list_definition["orderBy"]]
 
 
+def list_columns_fields(list_definition):
+    columns = list_definition["columns"]
+    return [(isinstance(columns, dict) and col["name"]) or col for col in list_definition["columns"] if isinstance(columns, dict)]
+
+
 def list_fields(list_definition):
     """return all field names used in a list definitions"""
     model = list_definition["model"]
     fields = set(
-        list_definition["columns"]
+        list_columns_fields(list_definition)
         + list_order_fields(list_definition)
         + domain_fields(list_definition["domain"])
     )

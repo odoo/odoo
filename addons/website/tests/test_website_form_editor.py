@@ -84,7 +84,7 @@ class TestWebsiteForm(TransactionCase):
         })
 
     def test_website_form_html_escaping(self):
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         WebsiteFormController = WebsiteForm()
         with MockRequest(self.env, website=website):
             WebsiteFormController.insert_record(

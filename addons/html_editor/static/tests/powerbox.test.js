@@ -14,21 +14,21 @@ import {
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import {
     applyConcurrentActions,
-    mergePeersSteps,
+    mergePeersCommits,
     renderTextualSelection,
     setupMultiEditor,
     validateContent,
 } from "./_helpers/collaboration";
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
-import { ensureDistinctHistoryStep, insertText, redo, undo } from "./_helpers/user_actions";
+import { ensureDistinctHistoryCommit, insertText, redo, undo } from "./_helpers/user_actions";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { PowerboxPlugin } from "@html_editor/main/powerbox/powerbox_plugin";
 import { SearchPowerboxPlugin } from "@html_editor/main/powerbox/search_powerbox_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { execCommand } from "./_helpers/userCommands";
 import { expectElementCount } from "./_helpers/ui_expectations";
-import { VideoPlugin } from "@html_editor/main/media/video_plugin";
+import { VideoPlugin } from "@html_editor/main/media/video/video_plugin";
 import { deepEqual } from "@web/core/utils/objects";
 
 function commandNames() {
@@ -91,7 +91,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(28);
         await insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -101,7 +101,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(28);
         await insertText(editor, "title");
         await animationFrame();
         const commands = commandNames(el);
@@ -114,7 +114,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(28);
         await insertText(editor, "line");
         await animationFrame();
         expect(commandNames(el).includes("Separator")).toBe(true);
@@ -131,8 +131,8 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(27);
-        expect(".o-we-category").toHaveCount(6);
+        expect(commandNames(el).length).toBe(28);
+        expect(".o-we-category").toHaveCount(7);
         expect(queryAllTexts(".o-we-category")).toEqual([
             "FORMAT",
             "STRUCTURE",
@@ -140,6 +140,7 @@ describe("search", () => {
             "MEDIA",
             "NAVIGATION",
             "WIDGET",
+            "BASIC BLOCK",
         ]);
 
         await insertText(editor, "h");
@@ -153,7 +154,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(28);
         await insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -205,7 +206,7 @@ describe("search", () => {
         await insertText(editor, "/");
         await animationFrame();
         await expectElementCount(".o-we-powerbox", 1);
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(28);
 
         await insertText(editor, "headx");
         await animationFrame();
@@ -263,7 +264,7 @@ describe("search", () => {
             },
         });
         await animationFrame();
-        mergePeersSteps(peerInfos);
+        mergePeersCommits(peerInfos);
         await expectElementCount(".o-we-powerbox", 1);
         expect(commandNames()).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
 
@@ -273,7 +274,7 @@ describe("search", () => {
             },
         });
         await animationFrame();
-        mergePeersSteps(peerInfos);
+        mergePeersCommits(peerInfos);
         await expectElementCount(".o-we-powerbox", 1);
         expect(commandNames()).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
 
@@ -283,7 +284,7 @@ describe("search", () => {
             },
         });
         await animationFrame();
-        mergePeersSteps(peerInfos);
+        mergePeersCommits(peerInfos);
         await expectElementCount(".o-we-powerbox", 1);
         expect(commandNames()).toEqual(["Heading 1"]);
 
@@ -549,6 +550,9 @@ test("should insert a 3x3 table on type `/table` in mobile view", async () => {
     await insertText(editor, "/table");
     await waitFor(".o-we-powerbox ");
     await press("Enter");
+    await animationFrame();
+
+    await press("Enter");
     await tick();
     expect(getContent(el)).toBe(
         `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table"><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
@@ -707,13 +711,13 @@ test("should discard /command insertion from history when command is executed", 
     // Simulate <br> removal by contenteditable when something is inserted
     el.querySelector("p > br").remove();
     await insertText(editor, "a");
-    await ensureDistinctHistoryStep();
+    await ensureDistinctHistoryCommit();
     await insertText(editor, "b");
-    await ensureDistinctHistoryStep();
+    await ensureDistinctHistoryCommit();
     await insertText(editor, "c");
-    await ensureDistinctHistoryStep();
+    await ensureDistinctHistoryCommit();
     await insertText(editor, "/heading1");
-    await ensureDistinctHistoryStep();
+    await ensureDistinctHistoryCommit();
     expect(getContent(el)).toBe("<p>abc/heading1[]</p>");
     await animationFrame();
     await expectElementCount(".o-we-powerbox", 1);
@@ -739,9 +743,9 @@ test("should discard /command insertion from history when command is executed", 
 test("should adapt the search of the powerbox when undo/redo", async () => {
     const { editor, el } = await setupEditor("<p>ab[]</p>");
     await insertText(editor, "/heading");
-    await ensureDistinctHistoryStep();
+    await ensureDistinctHistoryCommit();
     await insertText(editor, "1");
-    await ensureDistinctHistoryStep();
+    await ensureDistinctHistoryCommit();
     await animationFrame();
     expect(commandNames(el)).toEqual(["Heading 1"]);
 

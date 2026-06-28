@@ -1,5 +1,3 @@
-import { insertText as htmlInsertText } from "@html_editor/../tests/_helpers/user_actions";
-
 import {
     click,
     contains,
@@ -11,9 +9,13 @@ import {
     openFormView,
     start,
     startServer,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { Composer } from "@mail/core/common/composer";
+import { Thread } from "@mail/core/common/thread_model";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 import { getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
@@ -144,4 +146,64 @@ test("Show self-avatar in composer of Discuss App", async () => {
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow .o-mail-Composer");
     await contains(".o-mail-ChatWindow .o-mail-Composer-avatar", { count: 0 });
+});
+
+test.tags("html composer");
+test("html composer: trim boundary empty formatting on send", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+    });
+    let body;
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step("/mail/message/post");
+        body = args.post_data.body;
+    });
+    await start();
+    await openDiscuss(channelId);
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    triggerHotkey("Enter");
+    await htmlInsertText(editor, "Hello World");
+    triggerHotkey("shift+Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
+    await expect.waitForSteps(["/mail/message/post"]);
+    // Expected editor shape before trimming: '<div><br></div><div">Hello World<br/></div>'
+    expect(body).toBe("<div>Hello World</div>");
+    await contains(".o-mail-Message[data-persistent]:contains(Hello)");
+});
+
+test("keep mentions when channel post is deferred", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+    });
+    const { promise, resolve } = Promise.withResolvers();
+    patchWithCleanup(Thread.prototype, {
+        async post(body, postData = {}, extraData = {}) {
+            await promise;
+            return super.post(body, postData, extraData);
+        },
+    });
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step("/mail/message/post");
+        expect(args.post_data.partner_ids).toEqual([serverState.partnerId]);
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@");
+    await click(".o-mail-Composer-suggestion strong:text('Mitchell Admin')");
+    await contains(".o-mail-Composer-input", { value: "@Mitchell Admin " });
+    await click(".o-mail-Composer button[title='Send']:enabled");
+    await animationFrame();
+    resolve();
+    await expect.waitForSteps(["/mail/message/post"]);
+    await contains(".o-mail-Message-bubble.o-orange");
 });

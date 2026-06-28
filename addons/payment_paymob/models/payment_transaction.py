@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
 
@@ -88,7 +88,7 @@ class PaymentTransaction(models.Model):
             payment_method_codes.append("card")
 
         # Suffix to all payment methods with the environment.
-        environment = "live" if self.provider_id.state == "enabled" else "test"
+        environment = "live" if self.provider_id.is_live else "test"
         payment_method_codes = [
             f"{code.replace('_', '')}{environment}" for code in payment_method_codes
         ]
@@ -122,16 +122,6 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("merchant_order_id")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of payment to extract the amount and currency from the payment data."""
-        if self.provider_code != "paymob":
-            return super()._extract_amount_data(payment_data)
-
-        amount_cents = float(payment_data.get("amount_cents"))
-        amount = payment_utils.to_major_currency_units(amount_cents, self.currency_id)
-        currency_code = payment_data.get("currency")
-        return {"amount": amount, "currency_code": currency_code}
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "paymob":
@@ -148,9 +138,19 @@ class PaymentTransaction(models.Model):
             )
             message = payment_data.get("data.message")
             self._set_error(
-                _(
+                self.env._(
                     "An error occurred during the processing of your payment (%(msg)s). Please try"
                     " again.",
                     msg=message,
                 )
             )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of payment to extract the amount and currency from the payment data."""
+        if self.provider_code != "paymob":
+            return super()._extract_amount_data(payment_data)
+
+        amount_cents = float(payment_data.get("amount_cents"))
+        amount = payment_utils.to_major_currency_units(amount_cents, self.currency_id)
+        currency_code = payment_data.get("currency")
+        return {"amount": amount, "currency_code": currency_code}

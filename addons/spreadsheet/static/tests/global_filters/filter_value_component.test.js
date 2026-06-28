@@ -25,8 +25,8 @@ defineSpreadsheetModels();
 class FilterValueWrapper extends Component {
     static template = xml`
         <FilterValue
-            t-props="props"
-            globalFilterValue="globalFilterValue"
+            t-props="this.props"
+            globalFilterValue="this.globalFilterValue"
         />`;
     static components = { FilterValue };
     static props = FilterValue.props;
@@ -179,6 +179,21 @@ test("text filter cannot have the same value twice", async function () {
         operator: "ilike",
         strings: ["foo"],
     });
+});
+
+test("text filter have a placeholder", async function () {
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "text",
+        label: "Text Filter",
+    });
+    await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
+    expect(".o-autocomplete--input").toHaveAttribute("placeholder", "Enter one or several values");
+    await contains(".o-autocomplete--input").edit("foo");
+    await contains(".o-autocomplete--input").press("Enter");
+    expect(".o-autocomplete--input").toHaveAttribute("placeholder", "");
 });
 
 test("relational filter with domain", async function () {

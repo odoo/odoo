@@ -7,10 +7,11 @@ from reportlab.lib.units import mm
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.pdfgen.canvas import Canvas
+from requests import RequestException
 
 from odoo import fields, models, api, _
 from odoo.addons.iap.tools import iap_tools
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import UserError
 from odoo.tools import BinaryBytes
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter
 from odoo.tools.safe_eval import safe_eval
@@ -229,7 +230,7 @@ class SnailmailLetter(models.Model):
             }
         }
         """
-        account_token = self.env['iap.account'].get('snailmail').sudo().account_token
+        account_token = self.env['iap.account'].sudo().get('snailmail').account_token
         dbuuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         documents = []
 
@@ -323,6 +324,8 @@ class SnailmailLetter(models.Model):
             return _('One or more required fields are empty.')
         if error == 'FORMAT_ERROR':
             return _('The attachment of the letter could not be sent. Please check its content and contact the support if the problem persists.')
+        if error == 'TOO_MANY_PAGES':
+            return _('The document to be sent exceeds the maximum allowed limit of 8 pages.')
         else:
             return _('An unknown error happened. Please contact the support.')
         return error
@@ -384,12 +387,12 @@ class SnailmailLetter(models.Model):
         params = self._snailmail_create('print')
         try:
             response = iap_tools.iap_jsonrpc(endpoint + PRINT_ENDPOINT, params=params, timeout=timeout)
-        except AccessError as ae:
+        except RequestException:
             for doc in params['documents']:
                 letter = self.browse(doc['letter_id'])
                 letter.state = 'error'
                 letter.error_code = 'UNKNOWN_ERROR'
-            raise ae
+            raise
         for doc in response['request']['documents']:
             if doc.get('sent') and response['request_code'] == 200:
                 self.env['iap.account']._send_success_notification(
@@ -549,8 +552,10 @@ class SnailmailLetter(models.Model):
         curr_pdf = PdfFileReader(io.BytesIO(invoice_bin))
         out = PdfFileWriter()
         for page in curr_pdf.pages:
-            page.merge_page(new_pdf.pages[0])
             out.add_page(page)
+            added_page = out.pages[-1]
+            added_page.merge_page(new_pdf.pages[0])
+            added_page.compress_content_streams()
         out_stream = io.BytesIO()
         out.write(out_stream)
         out_bin = out_stream.getvalue()

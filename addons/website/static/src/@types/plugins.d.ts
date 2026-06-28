@@ -5,7 +5,6 @@ declare module "plugins" {
     import { WebsiteFontShared } from "@website/builder/plugins/font/font_plugin";
     import { FormOptionShared } from "@website/builder/plugins/form/form_option_plugin";
     import { ImageHoverShared } from "@website/builder/plugins/image/image_hover_plugin";
-    import { AddElementOptionShared } from "@website/builder/plugins/layout_option/add_element_option_plugin";
     import { MenuDataShared } from "@website/builder/plugins/menu_data_plugin";
     import { can_have_hover_effect_predicates } from "@website/builder/plugins/options/animate_option";
     import { AnimateOptionShared, on_hover_animation_mode_cleaned_handlers, on_hover_animation_mode_applied_handlers } from "@website/builder/plugins/options/animate_option_plugin";
@@ -24,7 +23,7 @@ declare module "plugins" {
     import { MegaMenuOptionShared } from "@website/builder/plugins/options/mega_menu_option_plugin";
     import { NavTabsStyleOptionShared } from "@website/builder/plugins/options/navtabs_style_option_plugin";
     import { WebsiteParallaxShared } from "@website/builder/plugins/options/parallax_option_plugin";
-    import { searchbar_option_display_items, searchbar_option_order_by_items } from "@website/builder/plugins/options/searchbar_option_plugin";
+    import { searchbar_option_order_by_items } from "@website/builder/plugins/options/searchbar_option_plugin";
     import { SocialMediaOptionShared } from "@website/builder/plugins/options/social_media_option_plugin";
     import { on_visibility_toggled_handlers, visibility_selector_parameters } from "@website/builder/plugins/options/visibility_option_plugin";
     import { WebsitePageConfigOptionShared } from "@website/builder/plugins/options/website_page_config_option_plugin";
@@ -32,12 +31,12 @@ declare module "plugins" {
     import { SwitchableViewsShared } from "@website/builder/plugins/switchable_views_plugin";
     import { theme_options, ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
     import { TranslateWebpageOptionShared } from "@website/builder/plugins/translation/options/translate_webpage_option_plugin";
-    import { on_nodes_marked_translatable_handlers } from "@website/builder/plugins/translation/translation_plugin";
+    import { on_nodes_marked_translatable_handlers, TranslationShared } from "@website/builder/plugins/translation/translation_plugin";
     import { WebsiteSaveShared } from "@website/builder/plugins/website_save_plugin";
-    import { WebsiteSessionShared } from "@website/builder/plugins/website_session_plugin";
+    import { force_background_translation_state_selectors } from "@website/builder/plugins/translation/repeat_translation_state_plugin";
+    import { WebsiteBridgeShared } from "@website/builder/plugins/website_bridge_plugin";
 
     interface SharedMethods {
-        addElementOption: AddElementOptionShared;
         animateOption: AnimateOptionShared;
         carouselOption: CarouselOptionShared;
         cardImageOption: CardImageOptionShared;
@@ -61,13 +60,14 @@ declare module "plugins" {
         switchableViews: SwitchableViewsShared;
         themeTab: ThemeTabShared;
         translateWebpageOption: TranslateWebpageOptionShared;
+        translation: TranslationShared;
         websiteBackgroundVideoPlugin: WebsiteBackgroundVideoShared;
         websiteFont: WebsiteFontShared;
         websiteFormOption: FormOptionShared;
         websitePageConfigOptionPlugin: WebsitePageConfigOptionShared;
         websiteParallaxPlugin: WebsiteParallaxShared;
         websiteSavePlugin: WebsiteSaveShared;
-        websiteSession: WebsiteSessionShared;
+        websiteBridge: WebsiteBridgeShared;
     }
 
     interface GlobalResources extends WebsiteResourcesAccess {}
@@ -94,8 +94,8 @@ declare module "plugins" {
         header_templates_providers: header_templates_providers;
 
         // Data
-        searchbar_option_display_items: searchbar_option_display_items;
         searchbar_option_order_by_items: searchbar_option_order_by_items;
+        force_background_translation_state_selectors: force_background_translation_state_selectors;
         theme_options: theme_options;
         visibility_selector_parameters: visibility_selector_parameters;
     }

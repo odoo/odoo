@@ -11,7 +11,6 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
-import { Deferred } from "@odoo/hoot-mock";
 import { animationFrame } from "@odoo/hoot-dom";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 
@@ -75,10 +74,10 @@ defineMenus([
 
 test.tags("desktop");
 test(`use stored menus, and don't update on load_menus return (if identical)`, async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     const menuDB = new IndexedDB("webclient_menu");
     redirect("/odoo/action-666");
-    onRpc("/web/webclient/load_menus", () => def);
+    onRpc("/web/webclient/load_menus", () => def?.promise);
 
     // Initial Stored values
     menuDB.write(
@@ -105,10 +104,10 @@ test(`use stored menus, and don't update on load_menus return (if identical)`, a
 
 test.tags("desktop");
 test(`use stored menus, and update on load_menus return`, async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     const menuDB = new IndexedDB("webclient_menu");
     redirect("/odoo/action-666");
-    onRpc("/web/webclient/load_menus", () => def);
+    onRpc("/web/webclient/load_menus", () => def?.promise);
 
     // Initial Stored values
     // There is no menu "Test2" in the initial values

@@ -33,10 +33,10 @@ class ProductReplenish(models.TransientModel):
         if not self.env.context.get('default_quantity'):
             self.quantity = abs(self.forecasted_quantity) if self.forecasted_quantity < 0 else 1
 
-    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.extra_uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
     def _compute_allowed_uom_ids(self):
         for rec in self:
-            rec.allowed_uom_ids = rec.product_id.uom_id | rec.product_id.uom_ids | rec.product_id.seller_ids.uom_id
+            rec.allowed_uom_ids = rec.product_id._get_available_uoms() | rec.product_id.seller_ids.uom_id
 
     @api.depends('warehouse_id', 'product_id')
     def _compute_forecasted_quantity(self):
@@ -76,7 +76,7 @@ class ProductReplenish(models.TransientModel):
         if 'route_id' in fields and 'route_id' not in res and product_tmpl_id:
             res['route_id'] = self.env['stock.route'].search(self._get_route_domain(product_tmpl_id), limit=1).id
             if not res['route_id'] and product_tmpl_id.route_ids:
-                res['route_id'] = product_tmpl_id.route_ids.filtered(lambda r: r.company_id == self.env.company or not r.company_id)[0].id
+                res['route_id'] = product_tmpl_id.route_ids.filtered(lambda r: r.company_id == self.env.company or not r.company_id)[:1].id
         return res
 
     def _get_date_planned(self, route_id, **kwargs):
@@ -89,7 +89,7 @@ class ProductReplenish(models.TransientModel):
     def launch_replenishment(self):
         try:
             now = self.env.cr.now()
-            self.env['stock.rule'].with_context(clean_context(self.env.context)).run([
+            self.env['stock.rule'].with_context(clean_context(self.env.context), manual_replenishment=True).run([
                 self.env['stock.rule'].Procurement(
                     self.product_id,
                     self.quantity,

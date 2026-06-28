@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 12:31+0000\n"
+"POT-Creation-Date: 2026-06-19 18:14+0000\n"
 "PO-Revision-Date: 2025-11-17 03:12+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19-l10n/"
@@ -132,6 +132,16 @@ msgid "A PAN Entity with same PAN Number already exists."
 msgstr ""
 
 #. module: l10n_in
+#: model:account.report,name:l10n_in.tcs_report
+msgid "ACT 1961 TCS Report"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report,name:l10n_in.tds_report
+msgid "ACT 1961 TDS Report"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model,name:l10n_in.model_account_account
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid "Account"
@@ -211,6 +221,11 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.constraint,message:l10n_in.constraint_l10n_in_section_alert_aggregate_limit
 msgid "Aggregate limit must be positive"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__l10n_in_applicable_tds_tcs_section_ids
+msgid "Applicable TDS/TCS Sections"
 msgstr ""
 
 #. module: l10n_in
@@ -315,7 +330,9 @@ msgid "BVM IT Consulting"
 msgstr ""
 
 #. module: l10n_in
+#: model:account.report.column,name:l10n_in.tcs_report_25_balance
 #: model:account.report.column,name:l10n_in.tcs_report_balance
+#: model:account.report.column,name:l10n_in.tds_report_25_balance
 #: model:account.report.column,name:l10n_in.tds_report_balance
 msgid "Balance"
 msgstr "बैलेंस"
@@ -454,6 +471,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_pan_entity__type__c
 msgid "Company"
 msgstr "कंपनी"
+
+#. module: l10n_in
+#: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__purchase_composition_supplies
+msgid "Composition Supplies"
+msgstr ""
 
 #. module: l10n_in
 #: model:ir.model,name:l10n_in.model_res_config_settings
@@ -736,12 +758,6 @@ msgid "Firms"
 msgstr ""
 
 #. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/models/company.py:0
-msgid "First enable GST e-Filing feature from configuration for company %s."
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_pan_entity__message_follower_ids
 msgid "Followers"
 msgstr "फ़ॉलोवर"
@@ -856,12 +872,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in/models/account_invoice.py:0
 msgid "Go to Company configuration"
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/models/company.py:0
-msgid "Go to configuration"
 msgstr ""
 
 #. module: l10n_in
@@ -996,6 +1006,11 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__purchase_imp_services
 msgid "IMP(service)"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__purchase_imp_services_rcm
+msgid "IMP(service) RCM"
 msgstr ""
 
 #. module: l10n_in
@@ -1459,6 +1474,14 @@ msgid "Number of messages with delivery error"
 msgstr "डिलीवरी में गड़बड़ी वाले मैसेज की संख्या"
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid ""
+"Once enabled, the Audit Trail cannot be disabled for companies in India,\n"
+"                    in accordance with the requirements of the Ministry of "
+"Corporate Affairs, Government of India."
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,help:l10n_in.field_account_bank_statement_line__l10n_in_reseller_partner_id
 #: model:ir.model.fields,help:l10n_in.field_account_move__l10n_in_reseller_partner_id
 msgid "Only Registered Reseller"
@@ -1589,14 +1612,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
 msgid "Please configure the withholding account from the settings"
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
-msgid ""
-"Please deduct TDS at higher rate if PAN is missing. Ignore if already "
-"applied."
 msgstr ""
 
 #. module: l10n_in
@@ -2081,6 +2096,461 @@ msgid "Section 206C(1H): Sale of Goods"
 msgstr ""
 
 #. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_392_1
+msgid "Section 392(1): Salary income based on slab rate"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_1_i
+msgid ""
+"Section 393(1) SI.1(i): Insurance Commission - Person other than Company/"
+"Domestic Company"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_1_ii
+msgid "Section 393(1) SI.1(ii): Commission/brokerage (other than insurance)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_2_i
+msgid "Section 393(1) SI.2(i): Rent paid by non-specified person"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_2_ii_a
+msgid ""
+"Section 393(1) SI.2(ii) D(a): Rent of machinery/plant/equipment (specified "
+"person)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_2_ii_b
+msgid ""
+"Section 393(1) SI.2(ii) D(b): Rent of land/building/furniture/fittings "
+"(specified person)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_3_i
+msgid ""
+"Section 393(1) SI.3(i): Consideration for immovable property transfer "
+"(higher of consideration or stamp duty value)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_3_ii
+msgid ""
+"Section 393(1) SI.3(ii): Consideration for property transfer under section "
+"67(14) agreement"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_3_iii
+msgid ""
+"Section 393(1) SI.3(iii): Compensation/consideration for compulsory "
+"acquisition of immovable property"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_4_i
+msgid ""
+"Section 393(1) SI.4(i): Income from Mutual Fund units / specified "
+"undertaking / specified company"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_4_ii
+msgid ""
+"Section 393(1) SI.4(ii): Distributed income payable by Business Trust to "
+"unitholders (Sch V SI. 3 & 4)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_4_iii
+msgid ""
+"Section 393(1) SI.4(iii): Income from Investment Fund units (other than "
+"exempt portion)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_4_iv
+msgid "Section 393(1) SI.4(iv): Income from investment in Securitisation Trust"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_5_i
+msgid "Section 393(1) SI.5(i): Income by Way of Interest on Securities"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_5_ii_a
+msgid ""
+"Section 393(1) SI.5(ii) D(a): Income by Way of Interest other than Interest "
+"on securities (senior citizen)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_5_ii_b
+msgid ""
+"Section 393(1) SI.5(ii) D(b): Income by Way of Interest other than Interest "
+"on securities (other than senior citizen)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_5_iii
+msgid ""
+"Section 393(1) SI.5(iii): Income being Interest other than Interest on "
+"securities"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_6_i_a
+msgid ""
+"Section 393(1) SI.6(i) D(a): Contract payments to Individual/HUF contractor "
+"(designated person)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_6_i_b
+msgid ""
+"Section 393(1) SI.6(i) D(b): Contract payments to non-individual/HUF "
+"contractor (designated person)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_6_ii
+msgid ""
+"Section 393(1) SI.6(ii): Contract/Professional Services/Commission by "
+"Individual/HUF"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_6_iii_a
+msgid ""
+"Section 393(1) SI.6(iii) D(a): Technical services (non-professional) / "
+"royalty for films / call centre operation"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_6_iii_b
+msgid ""
+"Section 393(1) SI.6(iii) D(b): Professional services / royalty / Sec 26(2)"
+"(h) sum"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_7
+msgid ""
+"Section 393(1) SI.7: Dividend (including preference shares) declared by "
+"domestic company"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_8_i
+msgid ""
+"Section 393(1) SI.8(i): Income component of life insurance policy sum "
+"(including bonus)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_8_ii
+msgid "Section 393(1) SI.8(ii): Purchase of goods exceeding ₹50 lakh"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_8_iii
+msgid "Section 393(1) SI.8(iii): Total Income of a Specified Senior Citizen"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_8_iv
+msgid ""
+"Section 393(1) SI.8(iv): Benefit or perquisite (cash/kind) arising from "
+"business/profession to resident"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_8_v
+msgid ""
+"Section 393(1) SI.8(v): Gross sale/services amount by e-commerce operator to "
+"e-commerce participant"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_1_8_vi
+msgid ""
+"Section 393(1) SI.8(vi): Consideration for transfer of Virtual Digital Asset"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_10
+msgid ""
+"Section 393(2) SI.10: Income from Mutual Fund units [Sch VII SI.20 or 21] or "
+"units from specified company, to non-resident/foreign company"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_11
+msgid ""
+"Section 393(2) SI.11: Income in respect of units referred to in section 208 "
+"payable by any person to an offshore fund"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_12
+msgid ""
+"Section 393(2) SI.12: Long-term capital gains arising from transfer of units "
+"referred to in section 208, payable to offshore fund"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_13
+msgid ""
+"Section 393(2) SI.13: Income by way of interest or dividends on bonds or "
+"Global Depository Receipts referred to in section 209, payable to non-"
+"resident"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_14
+msgid ""
+"Section 393(2) SI.14: Long-term capital gains arising from transfer of bonds "
+"or Global Depository Receipts referred to in section 209, payable to non-"
+"resident"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_15
+msgid ""
+"Section 393(2) SI.15: Income in respect of securities u/s 210(1) Table SI.1 "
+"payable to Foreign Institutional Investor (FII)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_16
+msgid ""
+"Section 393(2) SI.16: Income in respect of securities u/s 210(1) Table SI.1 "
+"payable to specified fund referred to in Sch VI Note 1(g)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_17
+msgid ""
+"Section 393(2) SI.17: Any interest (not covered under SI.2,3,4,5) or any "
+"other sum chargeable to tax (not being salary) payable to non-resident (not "
+"a company) or foreign company by any person"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_1
+msgid ""
+"Section 393(2) SI.1: Income of non-resident sportsman (incl. athlete) or "
+"entertainer who is not a citizen of India, or a non-resident sports "
+"association/institution"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_2
+msgid ""
+"Section 393(2) SI.2: Interest payable on money borrowed in foreign currency "
+"under loan agreement or LT infrastructure bond (1 Jul 2012 – 1 Jul 2023), "
+"approved by Central Govt"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_3
+msgid ""
+"Section 393(2) SI.3: Interest on money borrowed outside India via rupee "
+"denominated bond before 1 Jul 2023, payable to non-resident (not a company) "
+"or foreign company"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_4_a
+msgid ""
+"Section 393(2) SI.4 E(a): Interest on LT bond or rupee denominated bond "
+"listed only on recognised stock exchange in IFSC (Pre 1 Jul 2023)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_4_b
+msgid ""
+"Section 393(2) SI.4 E(b): Interest on LT bond or rupee denominated bond "
+"listed only on recognised stock exchange in IFSC (Post 1 Jul 2023)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_5
+msgid ""
+"Section 393(2) SI.5: Interest income paid by infrastructure debt fund [Sch "
+"VII Table SI. No. 46] to non-resident (not a company) or foreign company"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_6_a
+msgid ""
+"Section 393(2) SI.6 E(a): Distributed income referred to in section 223 of "
+"the nature in Sch V Table SI.3.B(a) payable to non-resident/foreign company "
+"unitholder by Business Trust"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_6_b
+msgid ""
+"Section 393(2) SI.6 E(b): Distributed income referred to in section 223 of "
+"the nature in Sch V Table SI.3.B(b) payable to non-resident/foreign company "
+"unitholder by Business Trust"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_7
+msgid ""
+"Section 393(2) SI.7: Distributed income (section 223, Sch V SI.4) payable to "
+"non-resident/foreign company unitholder by Business Trust – actual rate as "
+"per DTAA/slab"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_8
+msgid ""
+"Section 393(2) SI.8: Income (other than exempt portion under Sch V SI.2) "
+"from units of investment fund u/s 224, payable to non-resident/foreign "
+"company unitholder"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_2_9
+msgid ""
+"Section 393(2) SI.9: Income from investment in securitisation trust u/s 221, "
+"payable to non-resident/foreign company investor"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_3_1
+msgid ""
+"Section 393(3) SI.1: Winnings from lottery, crossword puzzle, card game, "
+"other games, gambling or betting. Threshold: ₹10,000 per single transaction"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_3_2
+msgid ""
+"Section 393(3) SI.2: Net winnings from online games at end of tax year and/"
+"or at time of withdrawal; computed as per prescribed manner"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_3_3
+msgid ""
+"Section 393(3) SI.3: Winnings from horse race by a bookmaker or licensed "
+"person under law. Threshold: ₹10,000 per single transaction"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_3_4
+msgid ""
+"Section 393(3) SI.4: Commission, remuneration or prize paid to person "
+"stocking, distributing, purchasing or selling lottery tickets. Threshold: "
+"₹20,000"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_3_5_a
+msgid ""
+"Section 393(3) SI.5 D(a): Sum paid in cash from one or more accounts by "
+"banking company / co-operative bank / post office where recipient is a co-"
+"operative society"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_3_5_b
+msgid ""
+"Section 393(3) SI.5 D(b): Sum paid in cash from one or more accounts by "
+"banking company / co-operative bank / post office where recipient is other "
+"than co-operative society"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_3_6
+msgid ""
+"Section 393(3) SI.6: Any amount referred to in section 80CCA(2)(a) of the "
+"Income-tax Act, 1961 (National Savings Scheme deposit withdrawals). "
+"Threshold: ₹2,500"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_393_3_7
+msgid ""
+"Section 393(3) SI.7: Salary, remuneration, commission, bonus or interest "
+"paid to a partner of the firm or credited to partner's account (including "
+"capital account). Threshold: ₹20,000"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_394_1_1
+msgid "Section 394(1) SI.1: Sale of alcoholic liquor for human consumption"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_394_1_2
+msgid "Section 394(1) SI.2: Sale of tendu leaves"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_394_1_3
+msgid ""
+"Section 394(1) SI.3: Sale of timber (forest lease or otherwise) or other "
+"forest produce (non-tendu) under forest lease"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_394_1_4
+msgid "Section 394(1) SI.4: Sale of scrap"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_394_1_5
+msgid "Section 394(1) SI.5: Sale of minerals – coal, lignite, or iron ore"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_394_1_6_a
+msgid "Section 394(1) SI.6(a): Sale of motor vehicles"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_394_1_6_b
+msgid "Section 394(1) SI.6(b): Sale of notified goods"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_394_1_7_a
+msgid ""
+"Section 394(1) SI.7 D(a): Remittance under LRS for education, medical "
+"treatment"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_394_1_7_b
+msgid ""
+"Section 394(1) SI.7 D(b): Remittance under LRS for purposes other than "
+"education or medical"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_394_1_8
+msgid "Section 394(1) SI.8: Sale of Overseas Tour Programme Package"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_394_1_9
+msgid ""
+"Section 394(1) SI.9: Use of parking lot / toll plaza / mine / quarry "
+"(excluding mineral oil mining)"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__name
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_section_alert_view_form
 msgid "Section Name"
@@ -2179,8 +2649,8 @@ msgid "TCS"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.report,name:l10n_in.tcs_report
-msgid "TCS Report"
+#: model:account.report,name:l10n_in.tcs_report_it_act_25
+msgid "TCS I.T. Act 25 Report"
 msgstr ""
 
 #. module: l10n_in
@@ -2244,6 +2714,11 @@ msgid "TDS Entry"
 msgstr ""
 
 #. module: l10n_in
+#: model:account.report,name:l10n_in.tds_report_it_act_25
+msgid "TDS I.T. Act 25 Report"
+msgstr ""
+
+#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
 msgid "TDS Information"
 msgstr ""
@@ -2257,11 +2732,6 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_tax__l10n_in_tax_type__tds_purchase
 msgid "TDS Purchase"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.report,name:l10n_in.tds_report
-msgid "TDS Report"
 msgstr ""
 
 #. module: l10n_in
@@ -2320,11 +2790,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
 msgid "Tax"
 msgstr "टैक्स"
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__tax_report_line_id
-msgid "Tax Report Line"
-msgstr ""
 
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__tax_source_type
@@ -2527,16 +2992,6 @@ msgid "View Journal Item(s)"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_pan_entity__website_message_ids
-msgid "Website Messages"
-msgstr "वेबसाइट मैसेज"
-
-#. module: l10n_in
-#: model:ir.model.fields,help:l10n_in.field_l10n_in_pan_entity__website_message_ids
-msgid "Website communication history"
-msgstr "वेबसाइट कम्यूनिकेशन हिस्ट्री"
-
-#. module: l10n_in
 #: model:ir.model,name:l10n_in.model_l10n_in_withhold_wizard
 msgid "Withhold Wizard"
 msgstr ""
@@ -2654,3 +3109,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_in.view_company_form
 msgid "update it"
 msgstr ""
+
+#~ msgid "Website Messages"
+#~ msgstr "वेबसाइट मैसेज"
+
+#~ msgid "Website communication history"
+#~ msgstr "वेबसाइट कम्यूनिकेशन हिस्ट्री"

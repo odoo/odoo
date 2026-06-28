@@ -1,23 +1,21 @@
 import { useSubEnv } from "@web/owl2/utils";
+import { t } from "@odoo/owl";
 import {
-    ProductConfiguratorDialog
+    ProductConfiguratorDialog,
+    productConfiguratorDialogOptionsShape,
+    productConfiguratorDialogProps,
 } from '@sale/js/product_configurator_dialog/product_configurator_dialog';
 import { _t } from '@web/core/l10n/translation';
 import { patch } from '@web/core/utils/patch';
 
-patch(ProductConfiguratorDialog, {
-    props: {
-        ...ProductConfiguratorDialog.props,
-        isFrontend: { type: Boolean, optional: true },
-        options: {
-            ...ProductConfiguratorDialog.props.options,
-            shape: {
-                ...ProductConfiguratorDialog.props.options.shape,
-                isMainProductConfigurable: { type: Boolean, optional: true },
-                isBuyNow: { type: Boolean, optional: true },
-            },
-        },
-    },
+Object.assign(productConfiguratorDialogOptionsShape, {
+    isMainProductConfigurable: t.boolean().optional(),
+    isBuyNow: t.boolean().optional(),
+});
+Object.assign(productConfiguratorDialogProps, {
+    isFrontend: t.boolean().optional(),
+    // Rebuild the `options` entry so that it picks up the extended shape.
+    options: t.object(productConfiguratorDialogOptionsShape).optional(),
 });
 
 patch(ProductConfiguratorDialog.prototype, {
@@ -54,6 +52,13 @@ patch(ProductConfiguratorDialog.prototype, {
      */
     showShopButtons() {
         return this.props.isFrontend && !this.props.edit;
+    },
+
+    _handleUnitOfMeasureUpdate(product, combination, uomId) {
+        super._handleUnitOfMeasureUpdate(...arguments);
+        if (this.props.isFrontend && combination.strikethrough_price) {
+            product.strikethrough_price = parseFloat(combination.strikethrough_price);
+        }
     },
 
     get totalMessage() {

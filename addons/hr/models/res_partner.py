@@ -7,6 +7,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
+    _explanation = "In the HR context, partners also represent employees."
 
     employee_ids = fields.One2many(
         'hr.employee', 'work_contact_id', string='Employees', groups="hr.group_hr_user",
@@ -107,5 +108,5 @@ class ResPartner(models.Model):
     def _store_avatar_card_fields(self, res: Store.FieldList):
         super()._store_avatar_card_fields(res)
         if res.is_for_internal_users():
-            # sudo: res.partner - internal users can access employee information of partner
-            res.many("employee_ids", "_store_avatar_card_fields", mode="ADD", sudo=True)
+            # sudo: res.partner - internal users can access employee information of accessible partner
+            res.many("employee_ids", "_store_avatar_card_fields", sudo=True)

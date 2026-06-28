@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { registry } from "@web/core/registry";
 
@@ -9,7 +9,7 @@ export class TranslateWebpageOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
-        this.translationState = useState(
+        this.translationState = proxy(
             this.env.editor.shared.translateWebpageOption.getTranslationState()
         );
     }

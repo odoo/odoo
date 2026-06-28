@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import models
 
 
 class ReportMrpReport_Mo_Overview(models.AbstractModel):
@@ -95,6 +95,6 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 partner=po.partner_id,
                 rounding_method='round_globally',
             )['total_void']
-            price = po_line.currency_id._convert(price, currency, (move_in.company_id or self.env.company), fields.Date.today())
+            price = po_line.currency_id._convert(price, currency, (move_in.company_id or self.env.company))
             return currency.round(price)
         return super()._get_replenishment_mo_cost(product, quantity, uom_id, currency, move_in)

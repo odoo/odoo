@@ -25,10 +25,8 @@
             <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-5'}" t-if="rating_stats.total">
                 <p t-if="!two_columns" class="text-center"><strong>Average</strong></p>
                 <div t-attf-class="o_website_rating_avg #{two_columns and 'mb-2' or 'text-center'}">
-                    <h1><t t-out="Math.round(rating_stats.avg * 100) / 100"/></h1>
-                    <t t-call="portal_rating.rating_stars_static">
-                        <t t-set="val" t-value="rating_stats.avg || 0"/>
-                    </t>
+                    <span class="h1"><t t-out="Math.round(rating_stats.avg * 100) / 100"/></span>
+                    <t t-call="portal_rating.rating_stars_static" val="rating_stats.avg || 0"/>
                     <span class="fa fa-comments" />
                     <span class="px-1"> <t t-out="rating_stats.total"/> </span>
                     comments

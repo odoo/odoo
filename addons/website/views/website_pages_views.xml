@@ -44,12 +44,12 @@
             <group class="mt-4">
                 <label for="is_in_menu" string="In Menu"/>
                 <div class="o_row">
-                    <field name="is_in_menu" widget="boolean_toggle" options="{'autosave': False}"/>
+                    <field name="is_in_menu" widget="boolean_toggle"/>
                     <button type="action" name="%(website.open_custom_menu)d" context="{'xmlid': 'website.menu_edit_menu'}" string="Edit Menu" class="btn-link" icon="oi-arrow-right"/>
                 </div>
                 <!-- is_homepage toggle auto-save is enabled to update the current homepage for assigning parent_id -->
                 <field name="is_homepage" string="Is Homepage" widget="boolean_toggle"/>
-                <field invisible="not can_publish" string="Published" name="is_published" widget="boolean_toggle" readonly="publish_on" options="{'autosave': False}"/>
+                <field invisible="not can_publish" string="Published" name="is_published" widget="boolean_toggle" readonly="publish_on"/>
                 <label invisible="not can_publish or is_published" for="publish_on" string="Publish on"/>
                 <div invisible="not can_publish or is_published" class="o_row">
                     <field name="publish_on" widget="datetime"/>
@@ -72,7 +72,7 @@
                 <field name="url" widget="page_url"/>
                 <div class="my-4" invisible="url == old_url">
                     <div class="o_row">
-                        <field name="redirect_old_url" widget="boolean_toggle" options="{'autosave': False}"/>
+                        <field name="redirect_old_url" widget="boolean_toggle"/>
                         <label for="redirect_old_url" string="Redirect Old URL"/>
                     </div>
                     <div class="o_row">
@@ -88,7 +88,7 @@
         <field name="is_homepage" position="after">
             <label for="has_parent_page" invisible="is_homepage"/>
             <div class="d-flex" invisible="is_homepage">
-                <field name="has_parent_page" class="w-25" widget="boolean_toggle" options="{'autosave': False}"/>
+                <field name="has_parent_page" class="w-25" widget="boolean_toggle"/>
                 <label for="parent_id" string="/" invisible="not has_parent_page"/>
                 <field name="parent_id" widget="many2one" invisible="not has_parent_page" required="has_parent_page and not is_homepage"/>
             </div>
@@ -96,14 +96,14 @@
         <xpath expr="//group/*[last()]" position="after"> <!-- Bottom -->
             <label for="website_indexed" string="Indexed"/>
             <div class="o_row">
-                <field name="website_indexed" widget="boolean_toggle" options="{'autosave': False}" help="Hide this page from search results"/>
+                <field name="website_indexed" widget="boolean_toggle" help="Hide this page from search results"/>
                 <span invisible="website_indexed">Won't appear in search engine results</span>
             </div>
 
             <field name="visibility"/>
             <field name="visibility_password_display" invisible="visibility != 'password'" required="visibility == 'password'" password="True" string="Password"/>
             <field name="group_ids" invisible="visibility != 'restricted_group'" string="Authorized Groups" widget="many2many_tags"/>
-            <field name="is_new_page_template" string="Is a Template" widget="boolean_toggle" options="{'autosave': False}"/>
+            <field name="is_new_page_template" string="Is a Template" widget="boolean_toggle"/>
         </xpath>
     </field>
 </record>

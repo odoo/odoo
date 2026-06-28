@@ -12,7 +12,9 @@ class BaseDocumentLayout(models.TransientModel):
         # OVERRIDE web/models/base_document_layout
         company_details = super()._default_company_details()
         if self.env.company.country_code == 'MA':
-            company_details += Markup('<br> ICE: %s') % self.env.company.company_registry
+            ice = self.env.company.partner_id._get_additional_identifier('MA_ICE')
+            if ice:
+                company_details += Markup('<br> ICE: %s') % ice
         return company_details
 
     company_details = fields.Html(default=_default_company_details)

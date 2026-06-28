@@ -1,8 +1,8 @@
 import { Store, storeService } from "@mail/core/common/store_service";
 import { fields } from "@mail/model/export";
 import { router } from "@web/core/browser/router";
+import { normalize } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
-import { cleanTerm } from "@mail/utils/common/format";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 
 patch(Store.prototype, {
@@ -15,13 +15,13 @@ patch(Store.prototype, {
             /** @this {import("models").Store} */
             compute() {
                 /** @type {import("models").Thread[]} */
-                const searchTerm = cleanTerm(this.discuss.searchTerm);
+                const searchTerm = normalize(this.discuss.searchTerm);
                 let threads = Object.values(this["mail.thread"].records).filter(
                     (thread) =>
                         (thread.channel?.self_member_id?.is_pinned ||
                             (thread.needactionMessages.length > 0 &&
                                 thread.model !== "mail.box")) &&
-                        cleanTerm(thread.channel?.displayName).includes(searchTerm)
+                        normalize(thread.channel?.displayName || "").includes(searchTerm)
                 );
                 const tab = this.discuss.activeTab;
                 if (tab === "inbox") {
@@ -50,6 +50,9 @@ patch(Store.prototype, {
                         return result;
                     }
                 }
+                if (thread1.localId === thread2.localId) {
+                    return 0;
+                }
                 return thread2.localId > thread1.localId ? 1 : -1;
             },
         });
@@ -57,15 +60,6 @@ patch(Store.prototype, {
     onStarted() {
         super.onStarted(...arguments);
         this.discuss = { activeTab: "notification" };
-        this.env.bus.addEventListener(
-            "discuss.channel/new_message",
-            ({ detail: { channel, message, silent } }) => {
-                if (this.env.services.ui.isSmall || message.isSelfAuthored || silent) {
-                    return;
-                }
-                channel.notifyMessageToUser(message);
-            }
-        );
     },
 });
 

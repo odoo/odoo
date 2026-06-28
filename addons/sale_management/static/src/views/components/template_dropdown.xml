@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="sale_management.SaleTemplateDropdown">
+        <button
+            t-if="!this.state.quotationTemplates.length"
+            type="button"
+            t-att-class="this.props.newButtonClasses"
+            t-att-disabled="this.props.isDisabled"
+            t-att-data-hotkey="this.props.hotkey"
+            t-on-click.stop="() => this.createQuotation()"
+            data-bounce-button=""
+        >
+            New
+        </button>
+        <Dropdown t-else="">
+            <button
+                t-attf-class="{{ this.props.newButtonClasses }}
+                o-dropdown-caret"
+                t-att-disabled="this.props.isDisabled"
+                t-att-data-hotkey="this.props.hotkey"
+                data-bounce-button=""
+            >
+                New
+            </button>
+            <t t-set-slot="content">
+                <DropdownItem
+                    tag="'button'"
+                    class="'btn btn-link'"
+                    onSelected="() => this.createQuotation()"
+                >
+                    New Quotation
+                </DropdownItem>
+                <div role="separator" class="dropdown-divider"/>
+                <t t-foreach="this.state.quotationTemplates" t-as="template" t-key="template.id">
+                    <DropdownItem
+                        tag="'button'"
+                        class="'btn btn-link o-dropdown-item-indent o_sale_management_template d-flex align-items-center pe-0'"
+                        onSelected="() => this.createQuotation({ additionalContext: { default_sale_order_template_id: template.id } })"
+                    >
+                        <span class="text-truncate" style="max-width: 400px;" t-out="template.name"/>
+                        <div class="btn-group o_template_icon_group ms-auto d-flex ps-1" t-if="this.state.canManageTemplates">
+                            <i role="button" t-on-click.stop="() => this.onEditClick(template.id)" class="btn btn-link fa fa-pencil fs-3"/>
+                            <i role="button" t-on-click.stop="() => this.onDeleteClick(template.id)" class="btn text-danger fa fa-trash fs-3"/>
+                        </div>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

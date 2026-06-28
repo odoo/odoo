@@ -11,6 +11,7 @@ from psycopg2 import Error
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.models import TableSQL
 from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
@@ -19,6 +20,7 @@ _logger = logging.getLogger(__name__)
 class StockQuant(models.Model):
     _name = 'stock.quant'
     _description = 'Quant'
+    _explanation = "The actual, current inventory on hand. A quant tracks how much of a specific product is currently sitting in a specific location (down to the lot/serial number or package)."
     _rec_name = 'product_id'
     _rec_names_search = ['location_id', 'lot_id', 'package_id', 'owner_id']
 
@@ -53,7 +55,7 @@ class StockQuant(models.Model):
         'uom.uom', 'Unit',
         readonly=True, related='product_id.uom_id')
     is_favorite = fields.Boolean(related='product_tmpl_id.is_favorite')
-    company_id = fields.Many2one(related='location_id.company_id', string='Company', store=True, readonly=True)
+    company_id = fields.Many2one(related='location_id.company_id', string='Company', store=True, readonly=True, index='btree_not_null')
     location_id = fields.Many2one(
         'stock.location', 'Location',
         domain=lambda self: self._domain_location_id(),
@@ -109,7 +111,7 @@ class StockQuant(models.Model):
     inventory_date = fields.Date(
         'Scheduled', compute='_compute_inventory_date', store=True, readonly=False,
         help="Next date the On Hand Quantity should be counted.")
-    last_count_date = fields.Date(compute='_compute_last_count_date', help='Last time the Quantity was Updated')
+    last_count_date = fields.Date(compute='_compute_last_count_date', compute_sql='_compute_sql_last_count_date', compute_sudo=False, help='Last time the Quantity was Updated')
     inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False)
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated', search='_search_is_outdated')
     user_id = fields.Many2one(
@@ -175,6 +177,37 @@ class StockQuant(models.Model):
             _update_dict(date_by_quant, (location_dest_id, result_package_id, product_id, lot_id, owner_id), move_line_date)
         for quant in self:
             quant.last_count_date = date_by_quant.get((quant.location_id.id, quant.package_id.id, quant.product_id.id, quant.lot_id.id, quant.owner_id.id))
+
+    def _compute_sql_last_count_date(self, table):
+        query = table._query
+
+        if 'last_count_per_quant' not in query._joins:
+            query.add_join(
+                'LEFT JOIN',
+                'last_count_per_quant',
+                SQL(
+                    """(
+                        SELECT sq.id AS quant_id,
+                               MAX(sml.date::date) as last_date
+                          FROM stock_quant sq
+                     LEFT JOIN stock_move_line sml
+                            ON sq.product_id = sml.product_id
+                           AND ((sq.lot_id IS NULL AND sml.lot_id IS NULL) OR sq.lot_id = sml.lot_id)
+                           AND ((sq.owner_id IS NULL AND sml.owner_id IS NULL) OR sq.owner_id = sml.owner_id)
+                           AND (sq.location_id = sml.location_id OR sq.location_id = sml.location_dest_id)
+                           AND ((sq.package_id IS NULL AND (sml.package_id IS NULL OR sml.result_package_id IS NULL)) OR sq.package_id = sml.package_id OR sq.package_id = sml.result_package_id)
+                     LEFT JOIN stock_move sm ON sml.move_id = sm.id
+                         WHERE sq.company_id IN %(allowed_company_ids)s
+                           AND sml.state = 'done'
+                           AND sm.is_inventory IS TRUE
+                      GROUP BY sq.id
+                    )""",
+                    allowed_company_ids=self.env.user._get_company_ids(),
+                ),
+                SQL('last_count_per_quant.quant_id = %(quant_id)s', quant_id=table.id),
+            )
+        last_count_per_quant = TableSQL('last_count_per_quant', None, query)
+        return SQL("%(last_date)s", last_date=last_count_per_quant.last_date)
 
     def _search(self, domain, *args, **kwargs):
         domain = Domain(domain).map_conditions(
@@ -300,7 +333,7 @@ class StockQuant(models.Model):
                     # Set the `inventory_quantity` field to create the necessary move.
                     quant.inventory_quantity = inventory_quantity
                     quant.user_id = vals.get('user_id', self.env.user.id)
-                    quant.inventory_date = fields.Date.today()
+                    quant.inventory_date = fields.Date.context_today(self)
                 quants |= quant
             else:
                 if 'inventory_quantity' not in vals:
@@ -850,7 +883,7 @@ class StockQuant(models.Model):
 
         # do full packaging reservation when it's needed
         if self.env.context.get('packaging_uom_id') and product_id.product_tmpl_id.categ_id.packaging_reserve_method == "full":
-            available_quantity = self.env.context.get('packaging_uom_id')._check_qty(available_quantity, product_id.uom_id, "DOWN")
+            available_quantity = self.env.context.get('packaging_uom_id')._check_qty(min(quantity, available_quantity), product_id.uom_id, "DOWN")
 
         quantity = min(quantity, available_quantity)
 
@@ -1028,7 +1061,7 @@ class StockQuant(models.Model):
         if date:
             moves.date = date
         moves._trigger_assign()
-        self.location_id.sudo().write({'last_inventory_date': fields.Date.today()})
+        self.location_id.sudo().write({'last_inventory_date': fields.Date.context_today(self)})
         date_by_location = {loc: loc._get_next_inventory_date() for loc in self.mapped('location_id')}
         for quant in self:
             quant.inventory_date = date_by_location[quant.location_id]
@@ -1319,7 +1352,7 @@ class StockQuant(models.Model):
         ctx.pop('group_by', None)
 
         action = self.env['ir.actions.act_window']._for_xml_id('stock.stock_quant_action')
-
+        action["domain"] = [('product_id.company_id', 'in', ctx.get('allowed_company_ids', []) + [False])]
         form_view = self.env.ref('stock.view_stock_quant_form_editable').id
         if self.env.context.get('inventory_mode') and self.env.user.has_group('stock.group_stock_manager'):
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree_editable').id

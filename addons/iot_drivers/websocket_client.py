@@ -34,7 +34,6 @@ def on_error(ws, error):
     _logger.error("websocket received an error: %s", error)
 
 
-@helpers.require_db
 class WebsocketClient(Thread):
     channel = ""
 
@@ -45,6 +44,7 @@ class WebsocketClient(Thread):
             'data': {
                 'channels': [self.channel] if self.channel else [],  # TODO: remove when v19 is deprecated
                 'last': self.last_message_id,
+                'check_outdated': False,
                 'iot_token': helpers.get_token(),
                 'mac_address': system.get_mac_address(),  # TODO: remove when v18 is deprecated
                 'identifier': IOT_IDENTIFIER,  # TODO: remove when v19 is deprecated
@@ -66,13 +66,13 @@ class WebsocketClient(Thread):
                 send_to_controller(result)
 
     def on_close(self, ws, close_status_code, close_msg):
-        _logger.debug("websocket closed with status: %s", close_status_code)
+        _logger.warning("websocket closed with status code %s (%s)", close_status_code, close_msg)
 
-    def __init__(self, channel="", server_url=None):
+    def __init__(self, channel: str, server_url: str):
         """This class will not be instantiated if no db is connected.
 
         :param channel: WebSocket channel provided by db, used for retro compatibility (optional).
-        :param server_url: URL of the Odoo server (provided by decorator).
+        :param server_url: URL of the Odoo server.
         """
         self.channel = channel
         self.server_url = server_url
@@ -85,7 +85,7 @@ class WebsocketClient(Thread):
         super().__init__(daemon=True)
 
     def run(self):
-        if self.db_name:
+        try:
             session_response = requests.get(
                 self.server_url + "/web/login?db=" + self.db_name,
                 allow_redirects=False,
@@ -95,6 +95,8 @@ class WebsocketClient(Thread):
                 self.session_id = session_response.cookies['session_id']
             else:
                 _logger.error("Failed to get session ID, status %s", session_response.status_code)
+        except requests.RequestException:
+            _logger.exception("Failed to get session ID")
 
         self.ws = websocket.WebSocketApp(self.websocket_url,
             header={"User-Agent": "OdooIoTBox/1.0", "Cookie": f"session_id={self.session_id}"},

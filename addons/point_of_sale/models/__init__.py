@@ -11,7 +11,6 @@ from . import account_tax_group
 from . import account_move
 from . import pos_bus_mixin
 from . import barcode_rule
-from . import binary
 from . import digest
 from . import pos_category
 from . import pos_config
@@ -32,9 +31,6 @@ from . import res_company
 from . import res_config_settings
 from . import ir_http
 from . import ir_module_module
-from . import stock_picking
-from . import stock_reference
-from . import stock_warehouse
 from . import pos_payment
 from . import pos_payment_method
 from . import pos_bill
@@ -53,3 +49,5 @@ from . import product_tag
 from . import resource_calendar_attendance
 from . import product_uom
 from . import ir_sequence
+from . import pos_prep_order
+from . import pos_prep_line

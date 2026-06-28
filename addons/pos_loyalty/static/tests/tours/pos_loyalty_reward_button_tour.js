@@ -9,7 +9,6 @@ import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 
 registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -111,20 +110,24 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
             // can select from the different reward products.
             ProductScreen.clickNumpad("⌫"),
             ProductScreen.clickNumpad("⌫"),
+            Dialog.isNot(),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("Free Product - [Desk Pad, Monitor Stand]"),
+            Dialog.is({ title: "Please select a product for this reward" }),
             SelectionPopup.has("Monitor Stand"),
-            SelectionPopup.has("Desk Pad"),
             SelectionPopup.has("Desk Pad", { run: "click" }),
+            Dialog.isNot(),
             PosLoyalty.isRewardButtonHighlighted(false),
             PosLoyalty.hasRewardLine("Free Product", "-1.98", "1"),
             ProductScreen.clickNumpad("⌫"),
             ProductScreen.clickNumpad("⌫"),
+            Dialog.isNot(),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("Free Product - [Desk Pad, Monitor Stand]"),
-            SelectionPopup.has("Monitor Stand"),
+            Dialog.is({ title: "Please select a product for this reward" }),
             SelectionPopup.has("Desk Pad"),
             SelectionPopup.has("Monitor Stand", { run: "click" }),
+            Dialog.isNot(),
             PosLoyalty.isRewardButtonHighlighted(false),
             ProductScreen.selectedOrderlineHas("Monitor Stand", "1", "3.19"),
             PosLoyalty.hasRewardLine("Free Product", "-3.19", "1"),
@@ -235,7 +238,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardPro
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -245,6 +247,7 @@ registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             PosLoyalty.isRewardButtonHighlighted(true, true),
             PosLoyalty.claimReward("Free Product - [Product A, Product B]"),
+            Dialog.is({ title: "Please select a product for this reward" }),
             SelectionPopup.has("Product A", { run: "click" }),
             PosLoyalty.hasRewardLine("Free Product", "-2", "1"),
             PosLoyalty.isRewardButtonHighlighted(false, true),
@@ -253,6 +256,7 @@ registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             PosLoyalty.isRewardButtonHighlighted(true, true),
             PosLoyalty.claimReward("Free Product - [Product A, Product B]"),
+            Dialog.is({ title: "Please select a product for this reward" }),
             SelectionPopup.has("Product B", { run: "click" }),
             PosLoyalty.hasRewardLine("Free Product", "-5", "1"),
             PosLoyalty.isRewardButtonHighlighted(false, true),
@@ -261,6 +265,7 @@ registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             PosLoyalty.isRewardButtonHighlighted(true, true),
             PosLoyalty.claimReward("Free Product - [Product A, Product B]"),
+            Dialog.is({ title: "Please select a product for this reward" }),
             SelectionPopup.has("Product B", { run: "click" }),
             PosLoyalty.hasRewardLine("Free Product", "-10", "2"),
             PosLoyalty.isRewardButtonHighlighted(false, true),

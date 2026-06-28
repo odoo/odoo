@@ -7,7 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL
 from odoo.tools.sql import column_exists, create_column
 
-from ..tools import (
+from odoo.addons.l10n_hr_edi.tools.api import (
     _mer_api_mark_paid,
     _mer_api_query_document_process_status_inbox,
     _mer_api_query_document_process_status_outbox,
@@ -106,8 +106,12 @@ class AccountMove(models.Model):
     @api.constrains('move_type', 'l10n_hr_process_type')
     def _check_l10n_hr_process_type(self):
         for record in self:
-            if record.country_code == 'HR' and (record.l10n_hr_process_type == 'P9') == (record.move_type != 'out_refund'):
-                raise ValidationError(self.env._('Business Process Type P9 can only be used with credit notes and vice versa.'))
+            if record.country_code != 'HR':
+                continue
+            if record.move_type != 'out_refund' and record.l10n_hr_process_type == 'P9':
+                raise ValidationError(self.env._('Business Process Type P9 can only be used with credit notes.'))
+            if record.move_type == 'out_refund' and record.l10n_hr_process_type not in ('P9', 'P10'):
+                raise ValidationError(self.env._('Credit notes must use Business Process Type P9 or P10.'))
 
     @api.depends('l10n_hr_fiscalization_status')
     def _compute_show_reset_to_draft_button(self):
@@ -132,7 +136,7 @@ class AccountMove(models.Model):
         Only applies for Croatian sales invoices/credit notes. Expected name
         pattern is produced by the overridden `sequence.mixin` logic.
         """
-        name_regex = r'.*?(?P<seq>\d+)/(?P<premises_label>\d+)/(?P<device_label>\d+)'
+        name_regex = r'.*?(?P<seq>\d+)/(?P<premises_label>[a-zA-Z0-9]+)/(?P<device_label>\d+)'
         if match := re.match(name_regex, name):
             return f"{int(match.group('seq'))}/{match.group('premises_label')}/{match.group('device_label')}"
         else:

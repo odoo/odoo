@@ -6,11 +6,12 @@ import { parseUrl } from "../local_helpers";
 /**
  * @param {Promise<any>} promise
  */
-const ensureResolvesImmediatly = (promise) =>
-    Promise.race([
+function ensureResolvesImmediatly(promise) {
+    return Promise.race([
         promise,
-        new Promise((resolve, reject) => reject("failed to resolve in a single micro tick")),
+        new Promise((_, reject) => reject("failed to resolve in a single micro tick")),
     ]);
+}
 
 describe(parseUrl(import.meta.url), () => {
     describe("clipboard", () => {

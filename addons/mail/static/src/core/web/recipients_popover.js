@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, props, types } from "@odoo/owl";
 
 /**
  * This popover is used to show a card with details for the recipients' partner with its name,
@@ -10,13 +10,13 @@ import { Component, onWillStart } from "@odoo/owl";
  */
 export class RecipientsPopover extends Component {
     static template = "mail.RecipientsPopover";
-    static props = {
-        id: { type: Number },
-        close: { type: Function },
-        viewProfileBtnOverride: { type: Function },
-    };
 
     setup() {
+        this.props = props({
+            close: types.function([]),
+            id: types.number(),
+            viewProfileBtnOverride: types.function([]),
+        });
         this.orm = useService("orm");
         onWillStart(async () => {
             [this.partner] = await this.orm.read("res.partner", [this.props.id], this.fieldNames);

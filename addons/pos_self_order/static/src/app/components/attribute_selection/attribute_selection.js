@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { AttributeSelectionHelper } from "./attribute_selection_helper";
 
@@ -9,12 +8,15 @@ export class AttributeSelection extends Component {
 
     setup() {
         this.selfOrder = useSelfOrder();
-        this.envSelectedValues = useState(this.env.selectedValues);
+        this.envSelectedValues = proxy(this.env.selectedValues);
+        this.attributesToDisplay = this.props.productTemplate.attribute_line_ids.filter(
+            (a) => this.availableAttributeValue(a).length > 0
+        );
     }
 
     get selectedValues() {
         return (this.envSelectedValues[this.props.productTemplate.id] ??=
-            new AttributeSelectionHelper(this.selfOrder));
+            new AttributeSelectionHelper(this.selfOrder, this.attributesToDisplay));
     }
 
     isValueSelected(attribute, value) {

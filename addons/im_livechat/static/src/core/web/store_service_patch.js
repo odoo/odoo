@@ -30,8 +30,8 @@ const storePatch = {
     /**
      * @override
      */
-    onStarted() {
-        super.onStarted(...arguments);
+    initialize() {
+        super.initialize(...arguments);
         if (this.discuss.isActive && this.has_access_livechat) {
             this.livechatChannels.fetch();
             this.livechatSelfExpertises.fetch();

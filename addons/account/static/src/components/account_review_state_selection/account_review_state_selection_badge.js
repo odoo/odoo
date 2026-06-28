@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, props, t } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cookie } from "@web/core/browser/cookie";
@@ -8,23 +8,19 @@ import { user } from "@web/core/user";
 
 export class AccountReviewStateSelectionBadge extends Component {
     static template = "account_reports.AccountReviewStateSelectionBadgeField";
-    static props = {
+    props = props({
         ...standardFieldProps,
-        decorations: { type: Object, optional: true },
-        options: { type: Object, optional: true },
-        class: { type: String, optional: true },
-        size: { type: String, optional: true },
-    };
+        decorations: t.object().optional(),
+        options: t.object().optional(),
+        class: t.string().optional(),
+        size: t.string().optional("normal"),
+    });
 
     setup() {
         onWillStart(async () => {
             this.editableOptions = await this.getEditableOptions();
         });
     }
-
-    static defaultProps = {
-        size: "normal"
-    };
 
     static components = {
         Dropdown,
@@ -71,24 +67,34 @@ export class AccountReviewStateSelectionBadge extends Component {
         return editableOptions;
     }
 
-    getDropdownButtonDecoration(value) {
-        const decoration = this.props.options[value]?.decoration
-        if (!decoration || decoration === 'muted') {
-            return 'btn-outline-secondary'
-        }
-        return `btn-outline-${decoration}`
+    getIcon(value) {
+        return this.props.options[value]?.icon;
     }
 
-    getDropdownItemDecoration(value) {
+    getDropdownButtonFill(value) {
+        return this.props.options[value]?.fill;
+    }
+
+    getDropdownButtonDecoration(value) {
+        const decoration = this.props.options[value]?.decoration
+        const fill = this.getDropdownButtonFill(value) ? "btn" : "btn-outline";
+        if (!decoration || decoration === 'muted') {
+            return `${fill}-secondary`
+        }
+        return `${fill}-${decoration}`
+    }
+
+    getDropdownItemDecoration(value, hasIcon = false) {
         const colorScheme = cookie.get("color_scheme");
         const decoration = this.props.options[value]?.decoration;
+        const decorationClassName = hasIcon ? "text" : "text-bg";
         if (decoration) {
             if (decoration === "muted") {
-                return colorScheme === 'dark' ? "text-bg-200" : "text-bg-300";
+                return colorScheme === 'dark' ? `${decorationClassName}-200` : `${decorationClassName}-300`;
             }
-            return `text-bg-${decoration}`;
+            return `${decorationClassName}-${decoration}`;
         }
-        return "text-bg-200";
+        return `${decorationClassName}-200`;
     }
 
     get additionalClassName() {

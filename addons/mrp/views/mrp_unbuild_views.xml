@@ -98,16 +98,30 @@
                                 <field name="bom_id" invisible="mo_id and not mo_bom_id" readonly="mo_id or state == 'done'" required="not mo_id" force_save="1"/>
                                 <label for="product_qty"/>
                                 <div class="o_row">
-                                    <field name="product_qty" readonly="has_tracking == 'serial' or state == 'done'"/>
+                                    <field name="product_qty" readonly="has_tracking == 'serial' or state == 'done'" force_save="1"/>
                                     <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom" readonly="mo_id or state == 'done'" force_save="1"/>
                                 </div>
                             </group>
                             <group>
-                                <field name="mo_id" readonly="state == 'done'"/>
+                                <field name="mo_id" readonly="state == 'done' or context.get('default_mo_id')"/>
                                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
                                 <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
                                 <field name="has_tracking" invisible="1"/>
-                                <field name="lot_id" invisible="has_tracking not in ['lot', 'serial']" readonly="state == 'done'" required="has_tracking in ['lot', 'serial']" groups="stock.group_production_lot" force_save="1"/>
+                                <label for="lot_ids" invisible="has_tracking not in ['lot', 'serial']" groups="stock.group_production_lot"/>
+                                <div class="o_row" invisible="has_tracking not in ['lot', 'serial']" groups="stock.group_production_lot">
+                                    <field
+                                        name="lot_ids"
+                                        widget="many2many_tags"
+                                        readonly="state == 'done' or (has_tracking == 'lot' and lot_ids)"
+                                        required="has_tracking in ['lot', 'serial']"
+                                        options="{'on_tag_click': 'open_form'}"
+                                        force_save="1"/>
+                                    <button
+                                        name="action_clear_lots"
+                                        string="Clear"
+                                        type="object"
+                                        invisible="state == 'done' or not lot_ids or (has_tracking == 'serial' and product_qty == 1)"/>
+                                </div>
                                 <field name="company_id" groups="base.group_multi_company" readonly="state == 'done'"/>
                             </group>
                         </group>
@@ -116,45 +130,6 @@
                 </form>
             </field>
         </record>
-
-        <!-- simplified version of unbuild form for unbuild button via manufacturing order,
-             expects required fields to be filled in via 'default_' values -->
-        <record id="mrp_unbuild_form_view_simplified" model="ir.ui.view">
-            <field name="name">mrp.unbuild.form.simplified</field>
-            <field name="model">mrp.unbuild</field>
-            <field name="arch" type="xml">
-                <form string="Unbuild Order">
-                    <sheet>
-                        <group>
-                            <group>
-                                <field name="company_id" invisible="1" readonly="state == 'done'"/>
-                                <field name="state" invisible="1"/>
-                                <field name="product_id" invisible="1" readonly="state == 'done'"/>
-                                <field name="bom_id" invisible="1" readonly="state == 'done'"/>
-                                <label for="product_qty"/>
-                                <div class="o_row">
-                                    <field name="product_qty" readonly="has_tracking == 'serial'"/>
-                                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom" readonly="mo_id" force_save="1"/>
-                                </div>
-                            </group>
-                            <group>
-                                <field name="mo_id" invisible="1" readonly="state == 'done'"/>
-                                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
-                                <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>
-                                <field name="has_tracking" invisible="1"/>
-                                <field name="lot_id" invisible="has_tracking not in ['lot', 'serial']" required="has_tracking in ['lot', 'serial']" groups="stock.group_production_lot"/>
-                                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
-                            </group>
-                        </group>
-                    </sheet>
-                    <footer class="oe_edit_only">
-                        <button name="action_validate" string="Unbuild" type="object" invisible="state != 'draft'" class="oe_highlight" data-hotkey="q"/>
-                        <button special="cancel" data-hotkey="x"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
 
         <record id="mrp_unbuild_tree_view" model="ir.ui.view">
             <field name="name">mrp.unbuild.list</field>
@@ -165,7 +140,7 @@
                     <field name="product_id" readonly="state == 'done'"/>
                     <field name="bom_id" readonly="state == 'done'"/>
                     <field name="mo_id" readonly="state == 'done'"/>
-                    <field name="lot_id" groups="stock.group_production_lot"/>
+                    <field name="lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                     <field name="product_qty" readonly="state == 'done'"/>
                     <field name="uom_id" groups="uom.group_uom" widget="many2one_uom" readonly="state == 'done'"/>
                     <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state == 'done'"/>

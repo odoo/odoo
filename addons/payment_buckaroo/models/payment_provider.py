@@ -16,7 +16,7 @@ class PaymentProvider(models.Model):
         selection_add=[("buckaroo", "Buckaroo")], ondelete={"buckaroo": "set default"}
     )
     buckaroo_website_key = fields.Char(
-        string="Website Key",
+        string="Buckaroo Website Key",
         help="The key solely used to identify the website with Buckaroo",
         required_if_provider="buckaroo",
         copy=False,
@@ -59,11 +59,9 @@ class PaymentProvider(models.Model):
         :rtype: str
         """
         self.ensure_one()
-        if self.state == "enabled":
-            api_url = "https://checkout.buckaroo.nl/html/"
-        else:  # test
-            api_url = "https://testcheckout.buckaroo.nl/html/"
-        return api_url
+        if self.is_live:
+            return "https://checkout.buckaroo.nl/html/"
+        return "https://testcheckout.buckaroo.nl/html/"
 
     def _buckaroo_generate_digital_sign(self, values, incoming=True):
         """Generate the shasign for incoming or outgoing communications.

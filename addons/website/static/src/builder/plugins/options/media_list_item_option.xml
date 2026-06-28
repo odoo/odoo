@@ -14,25 +14,44 @@
         <BorderConfigurator label.translate="Border"/>
         <ShadowOption/>
     </BuilderContext>
-
-    <BuilderRow label.translate="Layout">
-        <BuilderButtonGroup applyTo="':scope > .row'">
-            <BuilderButton title.translate="Left" id="'media_left_opt'" classAction="''" iconImg="'/website/static/src/img/snippets_options/image_left.svg'"/>
-            <BuilderButton title.translate="Right" classAction="'flex-row-reverse'" iconImg="'/website/static/src/img/snippets_options/image_right.svg'"/>
-        </BuilderButtonGroup>
-    </BuilderRow>
-    <BuilderRow label.translate="Image Size">
-        <BuilderButtonGroup t-if="this.isActiveItem('media_left_opt')">
-            <BuilderButton action="'setMediaLayout'" actionValue="3" iconImg="'/website/static/src/img/snippets_options/media_layout_1_4.svg'" title.translate="1/4 - 3/4"/>
-            <BuilderButton action="'setMediaLayout'" actionValue="4" iconImg="'/website/static/src/img/snippets_options/media_layout_1_3.svg'" title.translate="1/3 - 2/3"/>
-            <BuilderButton action="'setMediaLayout'" actionValue="6" iconImg="'/website/static/src/img/snippets_options/media_layout_1_2.svg'" title.translate="1/2 - 1/2"/>
-        </BuilderButtonGroup>
-        <BuilderButtonGroup t-if="!this.isActiveItem('media_left_opt')">
-            <BuilderButton action="'setMediaLayout'" actionValue="3" iconImg="'/website/static/src/img/snippets_options/media_layout_1_4_right.svg'" title.translate="1/4 - 3/4"/>
-            <BuilderButton action="'setMediaLayout'" actionValue="4" iconImg="'/website/static/src/img/snippets_options/media_layout_1_3_right.svg'" title.translate="1/3 - 2/3"/>
-            <BuilderButton action="'setMediaLayout'" actionValue="6" iconImg="'/website/static/src/img/snippets_options/media_layout_1_2_right.svg'" title.translate="1/2 - 1/2"/>
-        </BuilderButtonGroup>
-    </BuilderRow>
+    <t t-if="this.state.hasImage">
+        <BuilderRow label.translate="Layout">
+            <BuilderButtonGroup applyTo="':scope > .row'">
+                <BuilderButton ltrRtlMapping="'left-right'"
+                    title.translate="Left"
+                    id="this.env.langDir.builder === 'ltr' ? 'media_left_opt' : ''"
+                    classAction="''"
+                    iconImg="'/website/static/src/img/snippets_options/image_left.svg'"/>
+                <BuilderButton ltrRtlMapping="'left-right'"
+                    title.translate="Right"
+                    id="this.env.langDir.builder === 'ltr' ? '' : 'media_left_opt'"
+                    classAction="'flex-row-reverse'"
+                    iconImg="'/website/static/src/img/snippets_options/image_right.svg'"/>
+            </BuilderButtonGroup>
+        </BuilderRow>
+        <BuilderRow label.translate="Image Size">
+            <BuilderButtonGroup t-if="this.isActiveItem('media_left_opt')">
+                <BuilderButton action="'setMediaLayout'" actionValue="3" iconImg="'/website/static/src/img/snippets_options/media_layout_1_4.svg'" title.translate="1/4 - 3/4"/>
+                <BuilderButton action="'setMediaLayout'" actionValue="4" iconImg="'/website/static/src/img/snippets_options/media_layout_1_3.svg'" title.translate="1/3 - 2/3"/>
+                <BuilderButton action="'setMediaLayout'" actionValue="6" iconImg="'/website/static/src/img/snippets_options/media_layout_1_2.svg'" title.translate="1/2 - 1/2"/>
+            </BuilderButtonGroup>
+            <BuilderButtonGroup t-if="!this.isActiveItem('media_left_opt')">
+                <BuilderButton action="'setMediaLayout'" actionValue="3" iconImg="'/website/static/src/img/snippets_options/media_layout_1_4_right.svg'" title.translate="1/4 - 3/4"/>
+                <BuilderButton action="'setMediaLayout'" actionValue="4" iconImg="'/website/static/src/img/snippets_options/media_layout_1_3_right.svg'" title.translate="1/3 - 2/3"/>
+                <BuilderButton action="'setMediaLayout'" actionValue="6" iconImg="'/website/static/src/img/snippets_options/media_layout_1_2_right.svg'" title.translate="1/2 - 1/2"/>
+            </BuilderButtonGroup>
+        </BuilderRow>
+    </t>
+    <t t-else="">
+        <BuilderRow label.translate="Image">
+            <BuilderButton
+                action="'addMediaImage'"
+                preview="false"
+                type="'success'"
+                label.translate="Add an image"
+                title.translate="Add an image"/>
+        </BuilderRow>
+    </t>
 
     <BuilderRow label.translate="Text Position" applyTo="':scope > .row'">
         <!-- Don't use the standard Vert. Alignement option to not suggest
@@ -56,5 +75,10 @@
     </xpath>
 </t>
 
+<t t-name="website.s_media_list.imageWrapper">
+    <div class="col-lg-4 align-self-stretch s_media_list_img_wrapper">
+        <img src="/web/image/website.s_media_list_default_image_1" class="s_media_list_img h-100 w-100" alt=""/>
+    </div>
+</t>
 
 </templates>

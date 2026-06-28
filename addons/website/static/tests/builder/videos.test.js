@@ -1,7 +1,6 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, test, advanceTime } from "@odoo/hoot";
 import { animationFrame, dblclick, waitFor, queryOne } from "@odoo/hoot-dom";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
-import { onRpc } from "@web/../tests/web_test_helpers";
 
 defineWebsiteModels();
 
@@ -22,12 +21,6 @@ test("double click on video", async () => {
 });
 
 test("vertical toggle of video options", async () => {
-    onRpc("/html_editor/video_url/data", () => ({
-        platform: "youtube",
-        embed_url: "//www.youtube.com/embed/G8b4UZIcTfg?rel=0&autoplay=0",
-        video_id: "G8b4UZIcTfg",
-        params: { rel: "0", autoplay: "0" },
-    }));
     await setupWebsiteBuilder(`
         <div>
             <div data-oe-expression="//www.youtube.com/embed/wf9gPmNc2sc?rel=0&autoplay=0"
@@ -60,6 +53,8 @@ test("vertical toggle of video options", async () => {
     await waitFor(
         ".modal-content:contains(Select a media) .media_iframe_video .media_iframe_video_size_for_vertical"
     );
+    // Advance time to force the video preview refresh (debounced).
+    await advanceTime(100);
     queryOne(".modal-content:contains(Select a media) footer button:contains(Add)").click();
     await animationFrame();
     // Verify the vertical class persists in the website preview

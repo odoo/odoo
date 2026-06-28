@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="stock.GenerateSerials">
-        <button class="btn btn-link" t-on-click="this.openDialog">Generate Serials/Lots</button>
+        <button class="btn btn-secondary w-100" t-on-click="this.openDialog">
+            <t t-if="this.props.record.data.has_tracking === 'lot'">Generate Lots</t>
+            <t t-else="">Generate Serials</t>
+        </button>
     </t>
     <t t-name="stock.ImportLots">
-        <button class="btn btn-link" t-on-click="this.openDialog">Import Serials/Lots</button>
+        <button class="btn btn-secondary w-100" t-on-click="this.openDialog">
+            <t t-if="this.props.record.data.has_tracking === 'lot'">Import Lots</t>
+            <t t-else="">Import Serials</t>
+        </button>
     </t>
     <t t-name="stock.generate_serial_dialog">
         <Dialog size="this.size" title="this.title" withBodyPadding="false">

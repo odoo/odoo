@@ -68,7 +68,7 @@ test("bus subscription updated when joining locally pinned thread", async () => 
     await openDiscuss(channelId);
     await waitForChannels([`discuss.channel_${channelId}`]);
     await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
-    await click("[title='Invite People']");
+    await click("[title='Add People']");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('Mitchell Admin'))");
     await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
     await waitForChannels([`discuss.channel_${channelId}`], { operation: "delete" });
@@ -86,8 +86,11 @@ test("bus subscription is refreshed when channel is joined", async () => {
     await expect.waitForSteps(["subscribe"]);
     await openDiscuss();
     await expect.waitForSteps([]);
-    await click("input[placeholder='Search conversations']");
-    await insertText("input[placeholder='Search a conversation']", "new channel");
+    await click("input[placeholder='Search']");
+    await insertText(
+        ".o_command_palette_search input[placeholder='Search conversations']",
+        "new channel"
+    );
     await expect.waitForSteps(["subscribe"]);
 });
 

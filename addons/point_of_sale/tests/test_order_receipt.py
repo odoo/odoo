@@ -3,8 +3,14 @@
 import logging
 from datetime import datetime
 
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, BinaryBytes
+from odoo import Command
 from odoo.tests import tagged
+from odoo.tools import (
+    DEFAULT_SERVER_DATE_FORMAT,
+    DEFAULT_SERVER_DATETIME_FORMAT,
+    BinaryBytes,
+)
+
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
 _logger = logging.getLogger(__name__)
@@ -36,6 +42,7 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
             'weight': 0.01,
             'to_weight': True,
             'pos_categ_ids': [(4, self.category.id)],
+            'company_id': self.env.company.id,
         })
 
         self.example_partner = self.env['res.partner'].create({
@@ -53,7 +60,7 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
         })
 
         self.key_to_skip = {
-            'pos.order': ['last_order_preparation_change', 'lines', 'payment_ids', 'message_ids', 'write_date'],
+            'pos.order': ['lines', 'payment_ids', 'message_ids', 'write_date'],
             'pos.order.line': ['write_date'],
             'pos.payment': ['write_date'],
             'res.partner': ['write_date'],
@@ -153,7 +160,7 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
             log = f"Mismatch on field '{key}': frontend='{f_val}' vs backend='{b_val}'"
             _logger.warning(log)
 
-    def compare_data(self, frontend, backend):
+    def compare_receipt_data(self, frontend, backend):
         backend_prices = backend['extra_data'].pop('prices', {})
         frontend_prices = frontend['extra_data'].pop('prices', {})
         backend_taxes = backend_prices.pop('taxes', {})
@@ -192,7 +199,6 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({
             'receipt_header': 'This is a test header for receipt',
             'receipt_footer': 'This is a test footer for receipt',
-            'ship_later': True,
             'logo': BinaryBytes(image.encode()),
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -210,7 +216,49 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
         order_model = self.env.registry.models['pos.order']
         order_model.get_order_frontend_receipt_data = get_order_frontend_receipt_data
         self.start_pos_tour("test_receipt_data")
-        self.compare_data(data['frontend_data'], data['backend_data'])
+        self.compare_receipt_data(data['frontend_data'], data['backend_data'])
 
         logo_image = data['backend_data']['image']['logo']
         self.assertTrue(logo_image.startswith('data:image/svg+xml;base64,'))
+
+    def compare_change_receipt_data(self, frontend, backend):
+        for key, value in frontend.items():
+            self.assertIn(key, backend, f"Key '{key}' not found in backend data")
+            if isinstance(value, dict):
+                self.compare_change_receipt_data(value, backend[key])
+            else:
+                self.assertEqual(value, backend[key], f"Mismatch on field '{key}': frontend='{value}' vs backend='{backend[key]}'")
+
+    def test_change_receipt_data(self):
+        printer = self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'printer_ip': '0.0.0.0',
+            'use_type': 'preparation',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+        self.main_pos_config.write({
+            'preparation_printer_ids': [(4, printer.id)],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        data = {
+            'frontend_data': None,
+            'backend_data': None,
+        }
+
+        def get_order_frontend_receipt_data(self, frontend_data):
+            prep_set = set(self.env['pos.category'].search([]).ids)
+            prep_data = self._generate_preparation_change_for_categories(prep_set)
+            backend_data = self._generate_preparation_receipt_data(prep_data)
+            data['frontend_data'] = frontend_data[0]['changes']['data'][0]
+            data['backend_data'] = backend_data[0]['changes']['data'][0]
+            self.env['ir.qweb']._render(
+                'point_of_sale.pos_order_change_receipt',
+                backend_data[0],
+            )
+
+        # Add function to model
+        order_model = self.env.registry.models['pos.order']
+        order_model.get_order_frontend_receipt_data = get_order_frontend_receipt_data
+        self.start_pos_tour("test_change_receipt_data")
+        self.compare_change_receipt_data(data['frontend_data'], data['backend_data'])

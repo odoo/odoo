@@ -10,10 +10,10 @@
                     <field name="order_id" string="Sales Order" filter_domain="['|', ('so_line', 'ilike', self), ('order_id', 'ilike', self)]"/>
                 </xpath>
                 <xpath expr="//filter[@name='month']" position="before">
-                    <filter name="billable" string="Billable" domain="[('so_line', '!=', False)]"
+                    <filter name="billable" string="Billable" domain="[('billable_type', '!=', '09_non_billable')]"
                         context="{'show_target_left': True}"
                         groups="sales_team.group_sale_salesman"/>
-                    <filter name="non_billable" string="Non-Billable" domain="[('so_line', '=', False)]"
+                    <filter name="non_billable" string="Non-Billable" domain="[('billable_type', '=', '09_non_billable')]"
                         groups="sales_team.group_sale_salesman"/>
                     <separator/>
                 </xpath>
@@ -115,6 +115,21 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='amount']" position="attributes">
                 <attribute name="type">measure</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_timesheet_line_search" model="ir.ui.view">
+        <field name="name">sale_timesheet.account.analytic.margins.search</field>
+        <field name="model">account.analytic.line</field>
+        <field name="priority" eval="50"/>
+        <field name="inherit_id" ref="account.view_account_analytic_line_filter_inherit_account"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='mine']" position="attributes">
+                <attribute name="string">Mine</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='groupby_parent_task']" position="attributes">
+                <attribute name="invisible">True</attribute>
             </xpath>
         </field>
     </record>

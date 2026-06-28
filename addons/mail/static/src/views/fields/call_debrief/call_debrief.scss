@@ -1,0 +1,75 @@
+@keyframes o-CallDebrief-videoFeedbackPop {
+    0% {
+        opacity: 0;
+        transform: scale(0.75);
+    }
+    15% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    30% {
+        transform: scale(1);
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/*
+    Form renderer wraps field widgets in a container `display: inline-block`,
+    which causes the container to shrink to the width of its content.
+*/
+.o_field_widget.o_field_call_debrief {
+    --fieldWidget-display: block;
+}
+
+.o-CallDebrief {
+    max-height: var(--CallDebrief-max-height, 85vh);
+    max-width: var(--CallDebrief-max-width, #{map-get($container-max-widths, xxl)});
+    scrollbar-width: thin;
+    scrollbar-color: currentColor transparent;
+
+    &:fullscreen {
+        --CallDebrief__video-flex-shrink: 0;
+
+        &.o-CallDebrief--has-video-transcript {
+            --CallDebrief__video-max-height: 66%;
+        }
+    }
+
+    .o-CallDebrief-media-container {
+        container-type: inline-size;
+        min-height: 0;
+    }
+
+    .o-CallDebrief-mediaPlayer {
+        container: callDebrief-mediaPlayer / inline-size;
+        padding: var(--CallDebrief__mediaPlayer-padding, #{map-get($spacers, 3)});
+    }
+
+    .o-CallDebrief-video {
+        flex-shrink: var(--CallDebrief__video-flex-shrink, 1);
+        min-height: 200px;
+        max-height: var(--CallDebrief__video-max-height, auto);
+        background-color: black;
+    }
+
+    .o_feedback_indicator {
+        .o_feedback_indicator_animate {
+            animation: o-CallDebrief-videoFeedbackPop 0.75s forwards ease-out;
+        }
+    }
+}
+
+.o_cell:has(.o-CallDebrief) {
+    @include media-breakpoint-down(md) {
+        .o-CallDebrief-mediaPlayer {
+            --#{$prefix}border-width: 0;
+            --#{$prefix}background-color: none;
+            --CallDebrief__mediaPlayer-padding: #{map-get($spacers, 3)} 0 0;
+        }
+    }
+}

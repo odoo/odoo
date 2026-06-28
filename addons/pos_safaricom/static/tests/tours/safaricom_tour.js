@@ -14,6 +14,7 @@ registry.category("web_tour.tours").add("MpesaExpressTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.isShown(),
             PaymentScreen.clickPaymentMethod("M-PESA Express"),
+            PaymentScreen.clickSendButton(),
             {
                 content: "Enter phone number",
                 trigger: ".form-control",
@@ -34,6 +35,7 @@ registry.category("web_tour.tours").add("LipaNaMpesaTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.isShown(),
             PaymentScreen.clickPaymentMethod("Lipa na M-PESA"),
+            PaymentScreen.clickSendButton(),
 
             // Wait for transaction popup to show
             {

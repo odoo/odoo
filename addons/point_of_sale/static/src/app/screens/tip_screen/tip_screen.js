@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -7,6 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Component, onMounted } from "@odoo/owl";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
+import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 
 export class TipScreen extends Component {
     static template = "point_of_sale.TipScreen";
@@ -14,9 +14,11 @@ export class TipScreen extends Component {
         orderUuid: { type: String },
         finalizeValidation: { type: Function, optional: true },
     };
+    static components = {
+        PriceFormatter,
+    };
     setup() {
         this.pos = usePos();
-        this.posReceiptContainer = useRef("pos-receipt-container");
         this.dialog = useService("dialog");
         this.state = this.currentOrder.uiState.TipScreen;
         this._totalAmount = this.currentOrder.priceIncl;
@@ -32,13 +34,29 @@ export class TipScreen extends Component {
             await this.printTipReceipt();
         });
     }
-    get overallAmountStr() {
-        const tipAmount = this.env.utils.parseValidFloat(this.state.inputTipAmount);
-        const original = this.env.utils.formatCurrency(this.totalAmount);
-        const tip = this.env.utils.formatCurrency(tipAmount);
-        const overall = this.env.utils.formatCurrency(this.totalAmount + tipAmount);
-        return `${original} + ${tip} tip = ${overall}`;
+
+    get tipAmount() {
+        return this.env.utils.parseValidFloat(this.state.inputTipAmount) || 0;
     }
+
+    get overallAmount() {
+        return this.env.utils.formatCurrency(this.totalAmount + this.tipAmount);
+    }
+
+    get tipSubText() {
+        if (this.state.selectedPercentage) {
+            return _t("Includes a %s tip", this.state.selectedPercentage);
+        }
+        if (this.tipAmount > 0) {
+            return _t("With %s tip Included", this.env.utils.formatCurrency(this.tipAmount));
+        }
+        return "";
+    }
+
+    get canSettle() {
+        return Boolean(this.state.selectedPercentage || this.state.inputTipAmount);
+    }
+
     get totalAmount() {
         return this._totalAmount;
     }
@@ -59,9 +77,22 @@ export class TipScreen extends Component {
             };
         });
     }
+
+    selectTip(tip = null) {
+        this.state.selectedPercentage = tip?.percentage ?? null;
+        this.state.inputTipAmount = tip?.percentage
+            ? this.env.utils.formatCurrency(tip.inputTipAmount, false)
+            : "0";
+    }
+
+    async noTip() {
+        this.selectTip();
+        await this.validateTip();
+    }
+
     async validateTip() {
         if (!this.pos.config.module_pos_restaurant) {
-            await this.props.finalizeValidation();
+            await this.props?.finalizeValidation?.();
         }
         const amount = this.env.utils.parseValidFloat(this.state.inputTipAmount);
         const order = this.pos.getOrder();
@@ -105,6 +136,8 @@ export class TipScreen extends Component {
 
         const serializedTipLine = order.getSelectedOrderline().serializeForORM();
         order.getSelectedOrderline().delete();
+        delete serializedTipLine["record_dependencies"];
+        delete serializedTipLine["relations_uuid_mapping"];
         const serverTipLine = await this.pos.data.create("pos.order.line", [serializedTipLine]);
         await this.pos.data.write("pos.order", [serverId], {
             is_tipped: true,

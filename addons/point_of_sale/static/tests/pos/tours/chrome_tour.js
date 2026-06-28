@@ -146,7 +146,6 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
 });
 
 registry.category("web_tour.tours").add("test_tracking_number_closing_session", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -227,55 +226,10 @@ registry.category("web_tour.tours").add("test_edit_paid_order", {
             },
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
-            FeedbackScreen.clickNextOrder(),
-            // Ship later case
-            ProductScreen.addOrderline("Desk Organizer"),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickPartnerButton(),
-            PaymentScreen.clickCustomer("Partner Full"),
-            // This will set today's date as shipping date
-            PaymentScreen.clickShipLaterButton(),
-            PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
-            FeedbackScreen.checkTicketData({
-                is_shipping_date: true,
-            }),
-            FeedbackScreen.clickEditPayment(),
-            // clicking once will make it empty and on clicking again it will open date picking
-            {
-                content: "click ship later button",
-                trigger: ".button:contains('Ship Later')",
-                run: "click",
-            },
-            {
-                content: "click ship later button",
-                trigger: ".button:contains('Ship Later')",
-                run: "click",
-            },
-            {
-                content: "pick a date",
-                trigger: ".modal-body .o_datetime_input",
-                run: () => {
-                    const input = document.querySelector(".modal-body .o_datetime_input");
-                    const nextYear = new Date().getFullYear() + 1;
-                    input.value = `${nextYear}-05-30`;
-                    input.dispatchEvent(new Event("input", { bubbles: true }));
-                    input.dispatchEvent(new Event("change", { bubbles: true }));
-                },
-            },
-            {
-                content: "click confirm button",
-                trigger: ".btn:contains('Confirm')",
-                run: "click",
-            },
-            PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
         ].flat(),
 });
 
 registry.category("web_tour.tours").add("test_cash_in_out", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -312,6 +266,7 @@ registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "100",
+                has_portal_url: true,
             }),
             FeedbackScreen.clickNextOrder(),
             ProductScreen.clickDisplayedProduct("Test Product", true, "1.00"),
@@ -322,12 +277,10 @@ registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
 });
 
 registry.category("web_tour.tours").add("SessionStatisticsDisplay", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
             ProductScreen.enterOpeningAmount("100.00"),
-            Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Desk Pad", "5", "5"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
@@ -370,8 +323,14 @@ registry.category("web_tour.tours").add("test_click_all_orders_keep_customer", {
             Chrome.clickRegister(),
             ProductScreen.isShown(),
             {
+                isActive: ["desktop"],
                 content: "customer is selected",
                 trigger: ".product-screen .set-partner:contains('Partner Test 1')",
+            },
+            {
+                isActive: ["mobile"],
+                content: `customer is selected`,
+                trigger: `.product-screen .set-partner.btn-outline-secondary.active`,
             },
         ].flat(),
 });

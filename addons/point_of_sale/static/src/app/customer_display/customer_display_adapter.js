@@ -63,6 +63,7 @@ export class CustomerDisplayPosAdapter {
             lines: order.lines.map((l) => this.getOrderlineData(l)),
             qrPaymentData: this.getQrPaymentData(order),
             displayScreenSaver: false,
+            processingValidation: order.processingValidation,
         };
     }
 
@@ -72,13 +73,12 @@ export class CustomerDisplayPosAdapter {
             taxGroupLabels: line.taxGroupLabels,
             discount: line.getDiscountStr(),
             customerNote: line.getCustomerNote() || "",
-            internalNote: line.getNote() || "[]",
+            internalNote: line.getNote() || "",
             productName: line.getFullProductName(),
             price: line.currencyDisplayPrice,
             qty: line.getQuantityStr().qtyStr,
             unit: line.product_id.uom_id ? line.product_id.uom_id.name : "",
             unitPrice: line.currencyDisplayPriceUnit,
-            packLotLines: line.packLotLines,
             comboParent: line.combo_parent_id?.getFullProductName?.() || "",
             price_without_discount: formatCurrency(line.displayPriceNoDiscount, line.currency),
             isSelected: line.isSelected(),

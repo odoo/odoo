@@ -24,7 +24,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom_qty')
     def _onchange_service_product_uom_qty(self):
-        if self.state == 'sale' and self.product_id.type == 'service' and self.product_id.with_company(self._purchase_service_get_company()).service_to_purchase:
+        if self.state == 'sale' and self.product_id.type == 'service' and self.product_id.with_company(self._purchase_service_get_company()).service_tracking == 'subcontract':
             if self.product_uom_qty < self._origin.product_uom_qty:
                 if self.product_uom_qty < self.qty_delivered:
                     return {}
@@ -55,8 +55,8 @@ class SaleOrderLine(models.Model):
         decreased_values = {}
         if 'product_uom_qty' in vals:
             precision = self.env['decimal.precision'].precision_get('Product Unit')
-            increased_lines = self.sudo().filtered(lambda r: r.product_id.with_company(r._purchase_service_get_company()).service_to_purchase and r.purchase_line_count and float_compare(r.product_uom_qty, vals['product_uom_qty'], precision_digits=precision) == -1)
-            decreased_lines = self.sudo().filtered(lambda r: r.product_id.with_company(r._purchase_service_get_company()).service_to_purchase and r.purchase_line_count and float_compare(r.product_uom_qty, vals['product_uom_qty'], precision_digits=precision) == 1)
+            increased_lines = self.sudo().filtered(lambda r: r.product_id.with_company(r._purchase_service_get_company()).service_tracking == 'subcontract' and r.purchase_line_count and float_compare(r.product_uom_qty, vals['product_uom_qty'], precision_digits=precision) == -1)
+            decreased_lines = self.sudo().filtered(lambda r: r.product_id.with_company(r._purchase_service_get_company()).service_tracking == 'subcontract' and r.purchase_line_count and float_compare(r.product_uom_qty, vals['product_uom_qty'], precision_digits=precision) == 1)
             increased_values = {line.id: line.product_uom_qty for line in increased_lines}
             decreased_values = {line.id: line.product_uom_qty for line in decreased_lines}
 
@@ -108,7 +108,7 @@ class SaleOrderLine(models.Model):
                 quantity = line.product_uom_id._compute_quantity(new_qty, last_purchase_line.uom_id)
                 last_purchase_line.write({'product_qty': quantity})
             elif last_purchase_line.state in ['purchase', 'cancel']:  # create new PO, by forcing the quantity as the difference from SO line
-                quantity = line.product_uom_id._compute_quantity(new_qty - origin_values.get(line.id, 0.0), last_purchase_line.uom_id)
+                quantity = new_qty - origin_values.get(line.id, 0.0)
                 line._purchase_service_create(quantity=quantity)
 
     def _purchase_get_date_order(self, supplierinfo):
@@ -144,13 +144,12 @@ class SaleOrderLine(models.Model):
         supplier_taxes = self.product_id.supplier_taxes_id.filtered(lambda t: t.company_id in purchase_order.company_id.parent_ids)
         taxes = purchase_order.fiscal_position_id.map_tax(supplier_taxes)
         if supplierinfo:
-            price_unit = self.env['account.tax'].sudo()._fix_tax_included_price_company(supplierinfo.price, supplier_taxes, taxes, purchase_order.company_id)
+            price_unit = self.env['account.tax'].sudo()._fix_tax_included_price_company(supplierinfo.price, supplier_taxes, taxes, purchase_order.company_id, purchase_order.document_tax_mode)
             if purchase_order.currency_id and supplierinfo.currency_id != purchase_order.currency_id:
                 price_unit = supplierinfo.currency_id._convert(
                     price_unit,
                     purchase_order.currency_id,
                     purchase_order.company_id,
-                    fields.Date.context_today(self)
                 )
         else:
             price_unit = 0.0
@@ -300,7 +299,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             line = line.with_company(line._purchase_service_get_company())
             # Do not regenerate PO line if the SO line has already created one in the past (SO cancel/reconfirmation case)
-            if line.product_id.service_to_purchase and not line.purchase_line_count:
+            if line.product_id.service_tracking == 'subcontract' and not line.purchase_line_count:
                 result = line._purchase_service_create()
                 sale_line_purchase_map.update(result)
         return sale_line_purchase_map

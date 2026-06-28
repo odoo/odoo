@@ -47,7 +47,7 @@ class TestPaymentTransaction(NuveiCommon):
                 "merchant_id": self.provider.nuvei_merchant_identifier,
                 "merchant_site_id": self.provider.nuvei_site_identifier,
                 "payment_method_mode": "filter",
-                "payment_method": "unknown",
+                "payment_method": "dummy",
                 "phone1": "+3212345678",
                 "state": tx.partner_state_id.code or "",
                 "user_token_id": make_uuid(),
@@ -131,7 +131,7 @@ class TestPaymentTransaction(NuveiCommon):
         """Test that the transaction state is set to 'done' when the payment data indicates a
         successful payment."""
         tx = self._create_transaction(flow="redirect")
-        tx._apply_updates(self.payment_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
         self.assertEqual(tx.state, "done")
 
     def test_apply_updates_sets_transaction_in_error(self):
@@ -139,7 +139,7 @@ class TestPaymentTransaction(NuveiCommon):
         that something went wrong."""
         tx = self._create_transaction(flow="redirect")
         payload = dict(self.payment_data, Status="ERROR", Reason="Invalid Card")
-        tx._apply_updates(payload)
+        tx.with_context(payment_safe_write=True)._apply_updates(payload)
         self.assertEqual(tx.state, "error")
 
     def test_apply_updates_sets_unknown_transaction_in_error(self):
@@ -147,14 +147,14 @@ class TestPaymentTransaction(NuveiCommon):
         something with an unknown state."""
         tx = self._create_transaction(flow="redirect")
         payload = dict(self.payment_data, Status="???", Reason="Invalid Card")
-        tx._apply_updates(payload)
+        tx.with_context(payment_safe_write=True)._apply_updates(payload)
         self.assertEqual(tx.state, "error")
 
     def test_processing_payment_data_sets_transaction_to_cancel(self):
         """Test that the transaction state is set to 'cancel' when the payment data is
         missing."""
         tx = self._create_transaction(flow="redirect")
-        tx._apply_updates({})
+        tx.with_context(payment_safe_write=True)._apply_updates({})
         self.assertEqual(tx.state_message, "The customer left the payment page.")
         self.assertEqual(tx.state, "cancel")
 
@@ -162,7 +162,7 @@ class TestPaymentTransaction(NuveiCommon):
         """Ensure that for USD currency with Webpay payment method, processing_values should
         contain a value which is the amount rounded down to the nearest 0."""
         currency_usd = self.env.ref("base.USD")
-        webpay_id = self.env.ref("payment.payment_method_webpay")
+        webpay_id = self.provider._get_pm_from_code("webpay")
         tx = self._create_transaction(
             "redirect", amount=1000.50, currency_id=currency_usd.id, payment_method_id=webpay_id.id
         )

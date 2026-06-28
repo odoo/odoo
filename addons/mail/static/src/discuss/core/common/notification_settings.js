@@ -1,4 +1,4 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, props, t, xml } from "@odoo/owl";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -10,7 +10,6 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useHover } from "@mail/utils/common/hooks";
 
 class NotificationDialog extends Component {
-    static props = ["close?"];
     static components = { Dialog, DiscussNotificationSettingsClientAction };
     static template = xml`
         <Dialog size="'md'" footer="false">
@@ -21,11 +20,14 @@ class NotificationDialog extends Component {
 
 export class NotificationSettings extends Component {
     static components = { ActionPanel, Dropdown, DropdownItem };
-    static props = ["channel", "close?", "className?", "hasSizeConstraints?"];
     static template = "discuss.NotificationSettings";
 
     setup() {
         this.store = useService("mail.store");
+        this.props = props({
+            channel: t.instanceOf(this.store["discuss.channel"].Class),
+            close: t.function([t.instanceOf(MouseEvent)]).optional(),
+        });
         this.dialog = useService("dialog");
         this.ui = useService("ui");
         this.DROPDOWN_NESTING = DROPDOWN_NESTING;

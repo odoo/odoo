@@ -14,10 +14,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2026-01-16 05:44+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
+"PO-Revision-Date: 2026-04-13 19:27+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-2/"
 "product/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -25,19 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.14.3\n"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_product.py:0
-msgid ""
-"\n"
-"\n"
-"Note: products that you don't have access to will not be shown above."
-msgstr ""
-"\n"
-"\n"
-"ملاحظة: لن يتم عرض المنتجات التي لا تملك صلاحية الوصول إليها أعلاه."
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
@@ -52,35 +40,25 @@ msgid "# Products"
 msgstr "عدد المنتجات"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "$14.00"
-msgstr "$14.00"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "$15.00"
-msgstr "$15.00"
-
-#. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
 "fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
-"%(total_amount)s"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 msgstr ""
-"%(base)s مع خصم %(discount)s %% %(discount_type)s ورسوم إضافية "
-"%(surcharge)s\n"
-"مثال: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
-"%(total_amount)s"
+"%(base)s مع خصم %(discount)s %% %(discount_type)s ورسوم إضافية %"
+"(surcharge)s\n"
+"مثال: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(item_name)s: end date (%(end_date)s) should be after start date "
-"(%(start_date)s)"
+"%(item_name)s: end date (%(end_date)s) should be after start date (%"
+"(start_date)s)"
 msgstr ""
 "%(item_name)s: يجب أن يكون تاريخ الانتهاء (%(end_date)s) أكبر من تاريخ البدء "
 "(%(start_date)s)"
@@ -113,9 +91,18 @@ msgid "%s (copy)"
 msgstr "%s (نسخة)"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_label_contour_marks
+#: model_terms:ir.ui.view,arch_db:product.report_simple_label2x7
+#: model_terms:ir.ui.view,arch_db:product.report_simple_label4x12
+#: model_terms:ir.ui.view,arch_db:product.report_simple_label4x12_gs1
+#: model_terms:ir.ui.view,arch_db:product.report_simple_label4x7
+#: model_terms:ir.ui.view,arch_db:product.report_simple_label_dymo
+msgid "&amp;nbsp;"
+msgstr ""
+
+#. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_2x7
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_4x12
-#: model:ir.actions.report,print_report_name:product.report_product_template_label_4x12_noprice
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_4x7
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_dymo
 msgid "'Products Labels - %s' % (object.name)"
@@ -131,6 +118,12 @@ msgstr "'عبوات المنتجات - %s' % (object.uom_id.name)"
 #: code:addons/product/models/product_template.py:0
 msgid "(e.g: product description, ebook, legal notice, ...)."
 msgstr "(مثال: وصف المنتج، الكتاب الإلكتروني، الإشعار القانوني، ...)."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
+#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
+msgid ")^FS"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -150,8 +143,8 @@ msgstr "- %(amount)s خصم"
 msgid ""
 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
-"- الباركود \"%(barcode)s\" تم تعيينه بالفعل للمنتج (المنتجات): "
-"%(product_list)s"
+"- الباركود \"%(barcode)s\" تم تعيينه بالفعل للمنتج (المنتجات): %"
+"(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -181,39 +174,9 @@ msgid "1 year"
 msgstr "سنة واحدة"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "10"
-msgstr "10"
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "10 Units"
 msgstr "10 وحدات"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_height_100
-msgid "100"
-msgstr "100"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_length_120
-msgid "120"
-msgstr "120"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "123456789012"
-msgstr "123456789012"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_length_140
-msgid "140"
-msgstr "140"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_length_160
-msgid "160"
-msgstr "160"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -221,19 +184,14 @@ msgid "160x80cm, with large legs"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
-msgid "2 x 7 with price"
-msgstr "2 × 7 بالسعر"
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7
+msgid "2 x 7"
+msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_year_2
 msgid "2 years"
 msgstr "سنتان 2"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "2025-05-25"
-msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_2xl
@@ -246,11 +204,6 @@ msgid "3 years"
 msgstr "3 سنوات"
 
 #. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_39
-msgid "39"
-msgstr "39"
-
-#. module: product
 #: model:product.attribute.value,name:product.pav_size_3xl
 msgid "3XL"
 msgstr "3XL"
@@ -261,39 +214,9 @@ msgid "4 x 12"
 msgstr "4 × 12"
 
 #. module: product
-#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12xprice
-msgid "4 x 12 with price"
-msgstr "4 × 12 بالسعر"
-
-#. module: product
-#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7xprice
-msgid "4 x 7 with price"
-msgstr "4 × 7 بالسعر"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_40
-msgid "40"
-msgstr "40"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_41
-msgid "41"
-msgstr "41"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_42
-msgid "42"
-msgstr "42"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_43
-msgid "43"
-msgstr "43"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_height_45
-msgid "45"
-msgstr "45"
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7
+msgid "4 x 7"
+msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_4xl
@@ -309,11 +232,6 @@ msgstr "5XL"
 #: model:product.attribute.value,name:product.pav_duration_month_6
 msgid "6 months"
 msgstr "6 شهور"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_height_85
-msgid "85"
-msgstr "85"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -346,18 +264,6 @@ msgstr ""
 "\"/>"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
-msgid ""
-"<span class=\"o_input_box_overlay_end o_input_box_overlay_inline\">days</"
-"span>"
-msgstr ""
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "<span class=\"o_input_box_overlay_end\">%</span>"
-msgstr ""
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
 msgstr "<span class=\"o_stat_text\"> المنتجات</span>"
@@ -373,6 +279,19 @@ msgid "<span class=\"o_stat_text\">Products</span>"
 msgstr "<span class=\"o_stat_text\">المنتجات</span>"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
+msgid ""
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
+"on variants</span>"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_kanban_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
+msgid "<span class=\"text-muted\">On Hand</span>"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "<span> - </span>"
 msgstr ""
@@ -383,11 +302,6 @@ msgid "<span>%</span>"
 msgstr "<span>%</span>"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-msgid "<span>All general settings about this product are managed on</span>"
-msgstr "<span>تتم إدارة كافة الإعدادات العامة المتعلقة بهذا المنتج في</span>"
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<span>on</span>"
 msgstr "<span>في</span>"
@@ -396,22 +310,6 @@ msgstr "<span>في</span>"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "<span>per</span>"
 msgstr ""
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "<strong>Qty: </strong>"
-msgstr "<strong>الكمية: </strong>"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
-msgid ""
-"<strong>Warning</strong>: adding or deleting attributes\n"
-"                        will delete and recreate existing variants and lead\n"
-"                        to the loss of their possible customizations."
-msgstr ""
-"<strong>تحذير</strong>: سيؤدي إضافة أو حذف خصائص\n"
-"                        إلى حذف المتغيرات الموجودة وإعادة إنشائها مما سيؤدي\n"
-"                        إلى خسارة أي تخصيصات تم القيام بها عليهم."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_uom_barcode_uniq
@@ -543,11 +441,6 @@ msgid "Active"
 msgstr "نشط"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
-msgid "Active Products"
-msgstr "المنتجات النشطة"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_ids
 #: model:ir.model.fields,field_description:product.field_product_product__activity_ids
 #: model:ir.model.fields,field_description:product.field_product_template__activity_ids
@@ -586,13 +479,13 @@ msgstr "أيقونة نوع النشاط"
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "Add"
-msgstr "إضافة"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Add Products"
-msgstr "إضافة المنتجات"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -618,8 +511,6 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
-"أضف منتجات باستخدام زر \"إضافة المنتجات\" من أعلى اليسار\n"
-"                                لتضمينها في التقرير."
 
 #. module: product
 #. odoo-python
@@ -710,6 +601,16 @@ msgid "Allow customers to set their own value"
 msgstr "السماح للعملاء بتعيين قيمهم الخاصة"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__alternative
+msgid "Alternative (2.00\" x 1.00\")"
+msgstr ""
+
+#. module: product
 #: model:product.attribute.value,name:product.pav_legs_aluminium
 msgid "Aluminium"
 msgstr "ألمونيوم"
@@ -745,12 +646,15 @@ msgstr "يُطبق على"
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
-#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Archived"
 msgstr "مؤرشف"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+msgid "Archived Products"
+msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_ariel
@@ -843,6 +747,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
+#: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_tree
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Attributes"
@@ -852,6 +757,19 @@ msgstr "الخصائص"
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Attributes & Variants"
 msgstr "الخصائص والمتغيرات"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__free_qty
+msgid ""
+"Available quantity (computed as Quantity On Hand - reserved quantity - "
+"quantity to remove)\n"
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -896,6 +814,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_uom_uom__product_uom_ids
 msgid "Barcodes"
 msgstr "الباركودات"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_label_base
+msgid "Base Product Label Report"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__base_unit_name
+#: model:ir.model.fields,field_description:product.field_product_template__base_unit_name
+msgid "Base Unit Name"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_show_uom_price
+msgid "Base Unit Price"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.base_unit_action
+msgid "Base Units"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -1011,13 +950,13 @@ msgstr ""
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid ""
-"Changing the unit of measure for your product will apply a conversion 1 "
-"%(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"Changing the unit of measure for your product will apply a conversion 1 %"
+"(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
-"سيؤدي تغيير وحدة القياس في منتجك إلى تطبيق معدل تحويل قدره 1 "
-"%(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"سيؤدي تغيير وحدة القياس في منتجك إلى تطبيق معدل تحويل قدره 1 %"
+"(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "سيتم تحديث كافة السجلات الموجودة (أوامر البيع، أوامر الشراء، إلخ) التي "
 "تستخدم هذا المنتج عن طريق استبدال اسم الوحدة."
 
@@ -1040,11 +979,6 @@ msgstr "اختر مخطط الورقة لطباعة بطاقات العناوي�
 #: model:product.attribute.value,name:product.pav_brand_cocacola
 msgid "Coca-Cola"
 msgstr "كوكا كولا"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-msgid "Codes"
-msgstr "الأكواد"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_colgate
@@ -1247,8 +1181,6 @@ msgid "Create a new product category"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.actions.act_window,help:product.product_normal_action
-#: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 msgid "Create a new product variant"
 msgstr "إنشاء متغير جديد لمنتج"
@@ -1274,6 +1206,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__create_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__create_uid
+#: model:ir.model.fields,field_description:product.field_product_base_unit__create_uid
 #: model:ir.model.fields,field_description:product.field_product_category__create_uid
 #: model:ir.model.fields,field_description:product.field_product_combo__create_uid
 #: model:ir.model.fields,field_description:product.field_product_combo_item__create_uid
@@ -1296,6 +1229,7 @@ msgstr "أنشئ بواسطة"
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__create_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__create_date
+#: model:ir.model.fields,field_description:product.field_product_base_unit__create_date
 #: model:ir.model.fields,field_description:product.field_product_category__create_date
 #: model:ir.model.fields,field_description:product.field_product_combo__create_date
 #: model:ir.model.fields,field_description:product.field_product_combo_item__create_date
@@ -1364,6 +1298,12 @@ msgid "Custom"
 msgstr "مُخصص"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__base_unit_id
+#: model:ir.model.fields,field_description:product.field_product_template__base_unit_id
+msgid "Custom Unit of Measure"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_value
 msgid "Custom Value"
 msgstr "قيمة العميل"
@@ -1426,6 +1366,13 @@ msgstr "لقد تغيير السعر الإضافي الافتراضي"
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
 msgstr "وحدة القياس الافتراضية المستخدمة لكافة عمليات المخزون."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_base_unit__name
+#: model:ir.model.fields,help:product.field_product_product__base_unit_id
+#: model:ir.model.fields,help:product.field_product_template__base_unit_id
+msgid "Define a custom unit to display in the price per unit of measure field."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
@@ -1534,6 +1481,7 @@ msgstr "عرض ما تم التطبيق عليه"
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__display_name
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__display_name
+#: model:ir.model.fields,field_description:product.field_product_base_unit__display_name
 #: model:ir.model.fields,field_description:product.field_product_catalog_mixin__display_name
 #: model:ir.model.fields,field_description:product.field_product_category__display_name
 #: model:ir.model.fields,field_description:product.field_product_combo__display_name
@@ -1549,12 +1497,14 @@ msgstr "عرض ما تم التطبيق عليه"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__display_name
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_name
 #: model:ir.model.fields,field_description:product.field_product_uom__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_label_base__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_packagingbarcode__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel2x7__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12__display_name
-#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12noprice__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x7__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel_dymo__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel_zpl__display_name
 #: model:ir.model.fields,field_description:product.field_res_company__display_name
 #: model:ir.model.fields,field_description:product.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:product.field_res_country_group__display_name
@@ -1571,6 +1521,20 @@ msgstr "اسم العرض"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_type
 msgid "Display Type"
 msgstr "نوع العرض"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__base_unit_count
+#: model:ir.model.fields,help:product.field_product_template__base_unit_count
+msgid "Display base unit price. Set to 0 to hide it for this product."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__base_unit_name
+#: model:ir.model.fields,help:product.field_product_template__base_unit_name
+msgid ""
+"Displays the custom unit for the products if defined or the selected unit of "
+"measure otherwise."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1601,12 +1565,6 @@ msgstr "Dove"
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "Download"
 msgstr "تنزيل"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_template.py:0
-msgid "Download examples"
-msgstr "تنزيل الأمثلة"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
@@ -1658,11 +1616,6 @@ msgstr "Dyson"
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
 msgstr "يجب تحديد كل قيمة مرة واحدة فقط لكل خاصية لكلك منتج."
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "Eco-friendly Wooden Chair"
-msgstr "كرسي خشبي صديق للبيئة"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1728,9 +1681,9 @@ msgid "Extra Fee"
 msgstr "رسوم إضافية"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
-msgid "Extra Info"
-msgstr "معلومات إضافية"
+#: model:ir.model.fields,field_description:product.field_product_product__extra_uom_ids
+msgid "Extra Packagings"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__extra_price
@@ -1870,6 +1823,16 @@ msgstr "الصيغة"
 #: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Four Person Desk"
 msgstr "مكتب لأربعة أشخاص"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template__free_qty
+msgid "Free To Use"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__free_qty
+msgid "Free To Use Quantity "
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
@@ -2019,6 +1982,7 @@ msgstr "إقامة الفندق"
 #: model:ir.model.fields,field_description:product.field_product_attribute__id
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__id
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__id
+#: model:ir.model.fields,field_description:product.field_product_base_unit__id
 #: model:ir.model.fields,field_description:product.field_product_catalog_mixin__id
 #: model:ir.model.fields,field_description:product.field_product_category__id
 #: model:ir.model.fields,field_description:product.field_product_combo__id
@@ -2034,12 +1998,14 @@ msgstr "إقامة الفندق"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__id
 #: model:ir.model.fields,field_description:product.field_product_uom__id
+#: model:ir.model.fields,field_description:product.field_report_product_label_base__id
+#: model:ir.model.fields,field_description:product.field_report_product_report_packagingbarcode__id
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__id
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel2x7__id
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12__id
-#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12noprice__id
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x7__id
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel_dymo__id
+#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel_zpl__id
 #: model:ir.model.fields,field_description:product.field_res_company__id
 #: model:ir.model.fields,field_description:product.field_res_config_settings__id
 #: model:ir.model.fields,field_description:product.field_res_country_group__id
@@ -2163,6 +2129,7 @@ msgstr "الصورة هي رابط"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_search
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 msgid "Inactive"
 msgstr "غير نشط"
@@ -2283,9 +2250,19 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__jewelry
+msgid "Jewelry (2.20\" x 0.50\")"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
 msgid "Kilograms (kg)"
 msgstr "كيلوجرام (كجم)"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_l
+msgid "L"
+msgstr ""
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_loreal
@@ -2323,6 +2300,7 @@ msgstr "طاولة اجتماعات كبيرة"
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__write_uid
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__write_uid
+#: model:ir.model.fields,field_description:product.field_product_base_unit__write_uid
 #: model:ir.model.fields,field_description:product.field_product_category__write_uid
 #: model:ir.model.fields,field_description:product.field_product_combo__write_uid
 #: model:ir.model.fields,field_description:product.field_product_combo_item__write_uid
@@ -2345,6 +2323,7 @@ msgstr "آخر تحديث بواسطة"
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__write_date
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__write_date
+#: model:ir.model.fields,field_description:product.field_product_base_unit__write_date
 #: model:ir.model.fields,field_description:product.field_product_category__write_date
 #: model:ir.model.fields,field_description:product.field_product_combo__write_date
 #: model:ir.model.fields,field_description:product.field_product_combo_item__write_date
@@ -2445,7 +2424,6 @@ msgstr "مصنوع يدوياً محلياً"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Logistics"
 msgstr "اللوجستيات"
 
@@ -2457,6 +2435,11 @@ msgid ""
 msgstr ""
 "هل تبحث عن صبغة بامبو مخصصة لتماثل الأثاث الموجود بالفعل؟ تواصل معنا لتحصل "
 "على عرض سعر."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_m
+msgid "M"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__excluded_value_ids
@@ -2484,6 +2467,11 @@ msgstr "الترميز"
 #: model:product.attribute.value,name:product.pav_color_maroon
 msgid "Maroon"
 msgstr "أحمر داكن"
+
+#. module: product
+#: model:product.attribute,name:product.pa_material
+msgid "Material"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2596,6 +2584,7 @@ msgstr "الموعد النهائي لنشاطاتي"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__name
+#: model:ir.model.fields,field_description:product.field_product_base_unit__name
 #: model:ir.model.fields,field_description:product.field_product_category__name
 #: model:ir.model.fields,field_description:product.field_product_combo__name
 #: model:ir.model.fields,field_description:product.field_product_document__name
@@ -2690,13 +2679,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid "No products could be found."
-msgstr "لم يتم العثور على أي منتجات."
+msgstr ""
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "No products found in the report"
-msgstr "لم يتم العثور على منتجات في التقرير"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2715,11 +2704,22 @@ msgid "Noise-reducing panels for open spaces"
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__normal
+msgid "Normal (2.25\" x 1.25\")"
+msgstr ""
+
+#. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "Note:"
 msgstr "ملاحظة:"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid "Note: Some products may be hidden due to access restrictions."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__service_tracking__no
@@ -2811,11 +2811,6 @@ msgid "On Hand"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
-msgid "On hand:"
-msgstr ""
-
-#. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
@@ -2829,11 +2824,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"On the product %(product)s you cannot transform the attribute "
-"%(attribute_src)s into the attribute %(attribute_dest)s."
+"On the product %(product)s you cannot transform the attribute %"
+"(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
-"في المنتج %(product)s لا يمكنك تحويل الخاصية %(attribute_src)s إلى الخاصية "
-"%(attribute_dest)s."
+"في المنتج %(product)s لا يمكنك تحويل الخاصية %(attribute_src)s إلى الخاصية %"
+"(attribute_dest)s."
 
 #. module: product
 #. odoo-javascript
@@ -2897,9 +2892,9 @@ msgid "Overhead shelves"
 msgstr "أرفف علوية"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "Package Type A"
-msgstr "طرد من نوع (أ)"
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__uom_id
+msgid "Packaging"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -2940,6 +2935,11 @@ msgid "Parent Path"
 msgstr "المسار الرئيسي"
 
 #. module: product
+#: model:product.attribute,name:product.pa_pattern
+msgid "Pattern"
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_9_product_template
 msgid "Pedal Bin"
 msgstr "سلة مهملات"
@@ -2948,11 +2948,6 @@ msgstr "سلة مهملات"
 #: model:product.attribute.value,name:product.pav_brand_pepsi
 msgid "Pepsi"
 msgstr "Pepsi"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
-msgid "Per"
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
@@ -3034,10 +3029,7 @@ msgstr ""
 "للوقوف خلال ثوانٍ."
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Price"
 msgstr "السعر"
 
@@ -3045,6 +3037,12 @@ msgstr "السعر"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_discount
 msgid "Price Discount"
 msgstr "خصم السعر"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__base_unit_price
+#: model:ir.model.fields,field_description:product.field_product_template__base_unit_price
+msgid "Price Per Unit"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_round
@@ -3067,12 +3065,6 @@ msgstr "نوع السعر"
 #: model:ir.model.fields,help:product.field_product_template__list_price
 msgid "Price at which the product is sold to customers."
 msgstr "سعر بيع المنتج للعملاء."
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_kanban_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
-msgid "Price:"
-msgstr "السعر:"
 
 #. module: product
 #. odoo-javascript
@@ -3143,11 +3135,6 @@ msgid "Prices"
 msgstr "الأسعار"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-msgid "Pricing"
-msgstr "الأسعار"
-
-#. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
@@ -3161,6 +3148,11 @@ msgstr "طباعة"
 #: model:ir.actions.server,name:product.action_product_template_print_labels
 msgid "Print Labels"
 msgstr "طباعة بطاقات العناوين"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__with_price
+msgid "Print With Price"
+msgstr ""
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_24_product_template
@@ -3271,6 +3263,11 @@ msgid "Product Label (PDF)"
 msgstr "بطاقة عنوان المنتج (PDF)"
 
 #. module: product
+#: model:ir.actions.report,name:product.report_product_template_label_zpl
+msgid "Product Label (ZPL)"
+msgstr ""
+
+#. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_2x7
 msgid "Product Label 2x7 (PDF)"
 msgstr "بطاقة عنوان المنتج 2x7 (PDF)"
@@ -3279,11 +3276,6 @@ msgstr "بطاقة عنوان المنتج 2x7 (PDF)"
 #: model:ir.actions.report,name:product.report_product_template_label_4x12
 msgid "Product Label 4x12 (PDF)"
 msgstr "بطاقة عنوان المنتج 4x12 (PDF)"
-
-#. module: product
-#: model:ir.actions.report,name:product.report_product_template_label_4x12_noprice
-msgid "Product Label 4x12 No Price (PDF)"
-msgstr "بطاقة عنوان المنتج 4x12 بلا سعر (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x7
@@ -3306,19 +3298,24 @@ msgid "Product Label Report 4x12"
 msgstr "تقرير بطاقة عنوان المنتج 4x12"
 
 #. module: product
-#: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12noprice
-msgid "Product Label Report 4x12 No Price"
-msgstr "تقرير بطاقة عنوان المنتج 4x12 بلا سعر"
-
-#. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x7
 msgid "Product Label Report 4x7"
 msgstr "تقرير بطاقة عنوان المنتج 4x7"
 
 #. module: product
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel_zpl
+msgid "Product Label Report ZPL"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 msgid "Product Name"
 msgstr "اسم المنتج"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_packagingbarcode
+msgid "Product Packaging Barcode Report"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
@@ -3334,6 +3331,7 @@ msgstr "علامة تصنيف المنتج"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_tag_action
+#: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Tags"
 msgstr "علامات تصنيف المنتج"
@@ -3343,7 +3341,6 @@ msgstr "علامات تصنيف المنتج"
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_tmpl_id
-#: model_terms:ir.ui.view,arch_db:product.product_search_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Product Template"
 msgstr "قالب المنتج"
@@ -3405,13 +3402,10 @@ msgid "Product Variant"
 msgstr "متغير المنتج"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_normal_action
-#: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_variant_action
 #: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_activity
-#: model_terms:ir.ui.view,arch_db:product.product_product_view_tree_tag
 msgid "Product Variants"
 msgstr "متغيرات المنتج"
 
@@ -3501,7 +3495,7 @@ msgstr "بنفسجي"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Quantities"
-msgstr "الكميات"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -3556,6 +3550,11 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_template__free_qty
+msgid "Quantity on hand minus outgoing quantity."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
 msgid "Radio"
 msgstr "راديو"
@@ -3588,6 +3587,12 @@ msgid "Reference"
 msgstr "الرقم المرجعي"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__base_unit_count
+#: model:ir.model.fields,field_description:product.field_product_template__base_unit_count
+msgid "Reference Unit"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid ""
 "Register the prices requested by your vendors for each product, based on the "
@@ -3615,13 +3620,23 @@ msgstr "المرفق ذو الصلة"
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "Remove"
-msgstr "إزالة"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Remove quantity"
 msgstr "إزالة الكمية"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__res_access_read
+msgid "Res Access Read"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__res_access_write
+msgid "Res Access Write"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_field
@@ -3686,12 +3701,16 @@ msgid "Rules"
 msgstr ""
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_size_s
+msgid "S"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
 #: model:ir.model.fields,field_description:product.field_product_template__sale_ok
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Sales"
 msgstr "المبيعات"
 
@@ -3705,7 +3724,7 @@ msgstr "وصف البيع"
 #: model:ir.model.fields,field_description:product.field_product_product__list_price
 #: model:ir.model.fields,field_description:product.field_product_template__list_price
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__list_price
-#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 msgid "Sales Price"
 msgstr "سعر البيع"
@@ -3825,6 +3844,11 @@ msgid "Size"
 msgstr "الحجم"
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__small
+msgid "Small (1.25\" x 1.00\")"
+msgstr ""
+
+#. module: product
 #: model:product.template,description_sale:product.product_product_9_product_template
 msgid "Soft-close pedal bin for office use"
 msgstr ""
@@ -3879,6 +3903,12 @@ msgstr "تحديد الحد الأقصى المسموح به لهامش الزي
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_min_margin
 msgid "Specify the minimum amount of margin over the base price."
 msgstr "تحديد الحد الأدنى المسموح به لهامش الزيادة عن السعر الأساسي."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
+msgid "Specify unit"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_start
@@ -4008,8 +4038,8 @@ msgstr "المرجع '%s' موجود بالفعل."
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"The attribute %(attribute)s must have at least one value for the product "
-"%(product)s."
+"The attribute %(attribute)s must have at least one value for the product %"
+"(product)s."
 msgstr ""
 "يجب أن يكون للخاصية %(attribute)s قيمة واحدة على الأقل للمنتج %(product)s."
 
@@ -4050,8 +4080,8 @@ msgstr "نوع العرض المستخدم في أداة تهيئة المنتج
 #: code:addons/product/models/product_product.py:0
 msgid ""
 "The exitings product has different attribute value. \"%(imported_values)s\" "
-"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", "
-"\"%(id)s\""
+"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", \"%"
+"(id)s\""
 msgstr ""
 
 #. module: product
@@ -4148,6 +4178,14 @@ msgstr ""
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid ""
+"The value of Base Unit Count must be greater than 0. Use 0 to hide the price "
+"per unit on this product."
+msgstr ""
+
+#. module: product
+#. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "There are no possible combination."
 msgstr "لا توجد أي تركيبات ممكنة."
@@ -4240,6 +4278,12 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
+msgid "Total Free To Use"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Total On Hand"
 msgstr ""
@@ -4278,6 +4322,11 @@ msgstr "نوع النشاط المستثنى في السجل."
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "UOM"
 msgstr "وحدة القياس"
+
+#. module: product
+#: model:res.groups,name:product.group_show_uom_price
+msgid "UOM price display"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -4337,15 +4386,22 @@ msgid "Unit Name"
 msgstr "اسم الوحدة"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Unit Price"
 msgstr "سعر الوحدة"
 
 #. module: product
+#: model:ir.model,name:product.model_product_base_unit
+msgid "Unit of Measure for price per unit on products."
+msgstr ""
+
+#. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_model.js:0
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Units"
 msgstr "الوحدات"
 
@@ -4394,7 +4450,7 @@ msgstr "تحديث السعر الإضافي للمنتجات الموجودة"
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.xml:0
 msgid "Upload"
-msgstr "رفع"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -4459,14 +4515,10 @@ msgstr "بنود خصائص المنتج الصالحة"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Validity"
 msgstr "الصلاحية"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
-msgid "Validity Start"
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__name
@@ -4545,11 +4597,6 @@ msgid "Variant Image 512"
 msgstr "صورة المتغير 512"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-msgid "Variant Information"
-msgstr "معلومات المتغير"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__price_extra
 msgid "Variant Price Extra"
 msgstr "السعر الإضافي للمتغير"
@@ -4566,10 +4613,16 @@ msgid "Variant Tags"
 msgstr "علامات تصنيف المتغيرات"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
 msgid "Variant Values"
 msgstr "قيم المتغير"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__extra_uom_ids
+msgid ""
+"Variant-specific additional packagings for this product which can be used "
+"for sales"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
@@ -4812,7 +4865,16 @@ msgstr "يمكنك رفع صورة سيتم استخدامها كلون قيمة
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "You can't edit this product in the catalog."
-msgstr "لا يمكنك تحرير هذا المنتج في الكتالوج."
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
+msgid ""
+"You cannot archive a product that is part of a combo. Please remove it from "
+"the following combos first: %s"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -4840,23 +4902,23 @@ msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on "
 "the following products: %(products)s"
 msgstr ""
-"لا يمكنك تغيير الخاصية للقيمة %(value)s لأنها مستخدَمة في المنتجات التالية: "
-"%(products)s"
+"لا يمكنك تغيير الخاصية للقيمة %(value)s لأنها مستخدَمة في المنتجات التالية: %"
+"(products)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the product of the value %(value)s set on product "
-"%(product)s."
+"You cannot change the product of the value %(value)s set on product %"
+"(product)s."
 msgstr "لا يمكنك تغيير المنتج للقيمة %(value)s المعينة للمنتج %(product)s."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the value of the value %(value)s set on product "
-"%(product)s."
+"You cannot change the value of the value %(value)s set on product %"
+"(product)s."
 msgstr "لا يمكنك تغيير قيمة القيمة %(value)s المعينة للمنتج %(product)s."
 
 #. module: product
@@ -4902,8 +4964,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s "
 "to the product %(product_dest)s."
 msgstr ""
-"لا يمكنك نقل الخاصية %(attribute)s من المنتج %(product_src)s إلى المنتج "
-"%(product_dest)s."
+"لا يمكنك نقل الخاصية %(attribute)s من المنتج %(product_src)s إلى المنتج %"
+"(product_dest)s."
 
 #. module: product
 #. odoo-python
@@ -4923,11 +4985,8 @@ msgid ""
 "                            whether it's a storable product, a consumable or "
 "a service."
 msgstr ""
-"يجب عليك تحديد منتج لكل شيئ تقوم ببيعه أو شرائه،\n"
-"                            سواءً كان منتجاً قابلاً للتخزين أو استهلاكي أو خدمة."
 
 #. module: product
-#: model_terms:ir.actions.act_window,help:product.product_normal_action
 #: model_terms:ir.actions.act_window,help:product.product_template_action
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
@@ -4954,24 +5013,6 @@ msgstr ""
 "إلخ."
 
 #. module: product
-#: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
-msgid ""
-"You must define a product for everything you sell, whether it's a physical "
-"product,\n"
-"                a consumable or a service you offer to customers.\n"
-"                The product form contains information to simplify the sale "
-"process:\n"
-"                price, notes in the quotation, accounting data, procurement "
-"methods, etc."
-msgstr ""
-"يجب عليك تحديد منتج لكل شيئ تقوم ببيعه، سواءً كان منتجاً فعلياً\n"
-"                أو منتج استهلاكي أو خدمة تقدمها لعملائك. \n"
-"                تحتوي استمارة المنتج على معلومات تهدف إلى تبسيط عملية "
-"البيع:\n"
-"                السعر، ملاحظات عرض السعر، البيانات المحاسبية، طرق الشراء، "
-"إلخ."
-
-#. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "You must leave at least one quantity."
@@ -4984,9 +5025,116 @@ msgid "You need to set a positive quantity."
 msgstr "عليك تعيين كمية موجبة."
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__zpl
+msgid "ZPL Labels"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__zpl_preview
+msgid "ZPL Preview"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__zpl_template
+msgid "ZPL Template"
+msgstr ""
+
+#. module: product
 #: model:product.attribute.value,name:product.pav_brand_zara
 msgid "Zara"
 msgstr "Zara"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.small_zpl_label
+msgid "^FO150,165 ^A0N,25^FH ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
+msgid "^FO150,210 ^A0N,25^FH ^FD("
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
+msgid "^FO160,185 ^A0N,18^FH ^FD("
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
+msgid "^FO290,165 ^A0N,30^FH ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
+msgid "^FO290,50 ^A0N,30^FH ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
+msgid "^FO300,200 ^A0N,40^FH ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.small_zpl_label
+msgid "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
+msgid "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
+msgid "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
+msgid "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
+#: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
+#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
+#: model_terms:ir.ui.view,arch_db:product.small_zpl_label
+msgid "^FS"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
+msgid ""
+"^FS\n"
+"^FT35,48^A0N,15^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
+msgid ""
+"^FS\n"
+"^FT35,65^A0N,20^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
+msgid "^FT210,30^A0N,25^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.small_zpl_label
+msgid "^FT35,30^A0N,15^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
+msgid "^FT35,30^A0N,20^FD"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
+msgid "^FT35,40^A0N,25^FD"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -5006,6 +5154,7 @@ msgid "csv"
 msgstr "csv"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_view_kanban
 msgid "days"
 msgstr "أيام"
@@ -5038,11 +5187,6 @@ msgid "e.g. Lamps"
 msgstr "مثال: مصابيح"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-msgid "e.g. Odoo Enterprise Subscription"
-msgstr "مثال: الاشتراك في نسخة أودو للمؤسسات"
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Starter - Meal - Desert"
 msgstr "مثال: المقبلات - الوجبة الرئيسية - التحلية"
@@ -5071,6 +5215,7 @@ msgstr "pdf"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "per"
 msgstr "لكل"
 
@@ -5100,11 +5245,6 @@ msgid "sales price"
 msgstr "سعر البيع"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
-msgid "the product template."
-msgstr "قالب المنتج."
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "to"
 msgstr "إلى"
@@ -5114,3 +5254,15 @@ msgstr "إلى"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid "<strong>Qty: </strong>"
+#~ msgstr "<strong>الكمية: </strong>"
+
+#~ msgid "Eco-friendly Wooden Chair"
+#~ msgstr "كرسي خشبي صديق للبيئة"
+
+#~ msgid "Package Type A"
+#~ msgstr "طرد من نوع (أ)"
+
+#~ msgid "Price:"
+#~ msgstr "السعر:"

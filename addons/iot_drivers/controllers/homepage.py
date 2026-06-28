@@ -51,6 +51,24 @@ CONTENT_SECURITY_POLICY = (
 )
 
 
+@system.rpi_only
+def get_network_interfaces():
+    network_interfaces = []
+    ssid = wifi.get_current() or wifi.get_access_point_ssid()
+    for iface_id in netifaces.interfaces():
+        if iface_id == 'lo' or 'tailscale' in iface_id:
+            continue  # Skip loopback interface (127.0.0.1) and Tailscale interfaces
+
+        is_wifi = 'wlan' in iface_id
+        network_interfaces.extend([{
+            'id': iface_id,
+            'is_wifi': is_wifi,
+            'ssid': ssid if is_wifi else None,
+            'ip': conf.get('addr', 'No Internet'),
+        } for conf in netifaces.ifaddresses(iface_id).get(netifaces.AF_INET, [])])
+    return network_interfaces
+
+
 class IotBoxOwlHomePage(Controller):
     def __init__(self):
         super().__init__()
@@ -137,21 +155,6 @@ class IotBoxOwlHomePage(Controller):
 
     @route.iot_route('/iot_drivers/data', type="http", cors='*')
     def get_homepage_data(self):
-        network_interfaces = []
-        if IS_RPI:
-            ssid = wifi.get_current() or wifi.get_access_point_ssid()
-            for iface_id in netifaces.interfaces():
-                if iface_id == 'lo':
-                    continue  # Skip loopback interface (127.0.0.1)
-
-                is_wifi = 'wlan' in iface_id
-                network_interfaces.extend([{
-                    'id': iface_id,
-                    'is_wifi': is_wifi,
-                    'ssid': ssid if is_wifi else None,
-                    'ip': conf.get('addr', 'No Internet'),
-                } for conf in netifaces.ifaddresses(iface_id).get(netifaces.AF_INET, [])])
-
         devices = [{
             'name': device.device_name,
             'type': device.device_type,
@@ -169,7 +172,7 @@ class IotBoxOwlHomePage(Controller):
         }
 
         six_terminal = system.get_conf('six_payment_terminal') or 'Not Configured'
-        network_qr_codes = wifi.generate_network_qr_codes() if IS_RPI else {}
+        network_qr_codes = wifi.generate_network_qr_codes() or {}
         odoo_server_url = helpers.get_odoo_server_url() or ''
         odoo_uptime_seconds = time.monotonic() - ODOO_START_TIME
         system_uptime_seconds = time.monotonic() - SYSTEM_START_TIME
@@ -186,8 +189,8 @@ class IotBoxOwlHomePage(Controller):
             'new_database_url': connection_manager.new_database_url,
             'pairing_code_expired': connection_manager.pairing_code_expired and not odoo_server_url,
             'six_terminal': six_terminal,
-            'is_access_point_up': IS_RPI and wifi.is_access_point(),
-            'network_interfaces': network_interfaces,
+            'is_access_point_up': wifi.is_access_point(),
+            'network_interfaces': get_network_interfaces() or [],
             'version': system.get_version(),
             'system': IOT_SYSTEM,
             'odoo_uptime_seconds': odoo_uptime_seconds,

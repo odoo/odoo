@@ -55,11 +55,6 @@ class WebsiteBlog(http.Controller):
 
     def _get_blog_post_search_options(self, blog=None, active_tags=None, date_begin=None, date_end=None, state=None, **post):
         return {
-            'displayDescription': True,
-            'displayDetail': False,
-            'displayExtraDetail': False,
-            'displayExtraLink': False,
-            'displayImage': False,
             'allowFuzzy': not post.get('noFuzzy'),
             'blog': str(blog.id) if blog else None,
             'tag': ','.join([str(id) for id in active_tags.ids]),
@@ -74,7 +69,7 @@ class WebsiteBlog(http.Controller):
         BlogTag = request.env['blog.tag']
 
         # prepare domain
-        domain = request.website.website_domain()
+        domain = self.env.website.website_domain()
 
         if blog:
             domain &= Domain('blog_id', '=', blog.id)
@@ -122,8 +117,8 @@ class WebsiteBlog(http.Controller):
             state=state,
             **post
         )
-        total, details, fuzzy_search_term = request.website._search_with_fuzzy("blog_posts_only", search,
-            limit=page * self._blog_post_per_page, order="is_published desc, published_date desc, id asc", options=options)
+        total, details, fuzzy_search_term = self.env.website._search_with_fuzzy('blog_post', search,
+            offset=0, limit=page * self._blog_post_per_page, order="is_published desc, published_date desc, id asc", options=options)
         posts = details[0].get('results', BlogPost)
         posts = posts[offset:offset + self._blog_post_per_page]
 
@@ -135,7 +130,7 @@ class WebsiteBlog(http.Controller):
             url_args["date_begin"] = date_begin
             url_args["date_end"] = date_end
 
-        pager = tools.lazy(lambda: request.website.pager(
+        pager = tools.lazy(lambda: self.env.website.pager(
             url=request.httprequest.path.partition('/page/')[0],
             total=total,
             page=page,
@@ -175,8 +170,7 @@ class WebsiteBlog(http.Controller):
 
     def sitemap_blog(env, rule, qs):
         Blog = env['blog.blog']
-        website = env['website'].get_current_website()
-        domain = website.website_domain()
+        domain = env.website.website_domain()
         blogs = tools.lazy(lambda: Blog.search(domain, order="sequence"))
         slug = env['ir.http']._slug
 
@@ -204,7 +198,7 @@ class WebsiteBlog(http.Controller):
     ], type='http', auth="public", website=True, sitemap=sitemap_blog, list_as_website_content=_lt("Blogs"))
     def blog(self, blog=None, tag=None, page=1, search=None, **opt):
         Blog = request.env['blog.blog']
-        blogs = tools.lazy(lambda: Blog.search(request.website.website_domain(), order="sequence"))
+        blogs = tools.lazy(lambda: Blog.search(self.env.website.website_domain(), order="sequence"))
 
         if not blog and len(blogs) == 1:
             url = QueryURL('/blog/%s' % request.env['ir.http']._slug(blogs[0]), search=search, **opt)()
@@ -228,6 +222,13 @@ class WebsiteBlog(http.Controller):
         if blog:
             values['main_object'] = blog
         values['blog_url'] = QueryURL('/blog', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end, search=search)
+
+        posts = values['posts']
+        if blog:
+            # Scope the listing to this blog for the breadcrumb + CollectionPage;
+            # the posts recordset alone can't tell which /blog/<blog> page it's for.
+            posts = posts.with_context(blog_id=blog.id)
+        values['structured_data'] = posts._render_jsonld()
 
         return request.render("website_blog.blog_post_short", values)
 
@@ -288,7 +289,7 @@ class WebsiteBlog(http.Controller):
         BlogPost = request.env['blog.post']
         date_begin, date_end = post.get('date_begin'), post.get('date_end')
 
-        domain = request.website.website_domain()
+        domain = self.env.website.website_domain()
         blogs = blog.search(domain, order="sequence")
 
         tag = None
@@ -316,7 +317,7 @@ class WebsiteBlog(http.Controller):
         if (
             not next_post
             or not next_post.sudo().is_published
-            or next_post.website_id.id not in (False, request.website.id)
+            or next_post.website_id.id not in (False, self.env.website.id)
         ):
             # Fallback to the next post in the list.
             all_post_ids = all_post.ids
@@ -339,6 +340,7 @@ class WebsiteBlog(http.Controller):
             'is_next_post_recommended': is_next_post_recommended,
             'date': date_begin,
             'blog_url': blog_url,
+            'structured_data': blog_post._render_jsonld(is_detail_page=True),
         }
         response = request.render("website_blog.blog_post_complete", values)
 

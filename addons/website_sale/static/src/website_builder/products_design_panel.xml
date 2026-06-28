@@ -197,9 +197,7 @@
 
 <t t-name="website_sale.ProductsDesignPanel">
     <BuilderRow label="this.props.label">
-        <t t-call="website_sale.ProductsDesignPanelPresets">
-            <t t-set="showImages" t-value="false"/>
-        </t>
+        <t t-call="website_sale.ProductsDesignPanelPresets" showImages="false"/>
         <BuilderSlidingPanel
             label.translate="Design"
             extraClasses="'btn-primary fa fa-paint-brush'"
@@ -211,10 +209,9 @@
                     label.translate="Preset"
                     tooltip.translate="Choose one pre-made preset and customise it as you wish"
                 >
-                    <t t-call="website_sale.ProductsDesignPanelPresets">
-                        <t t-set="label">Presets</t>
-                        <t t-set="showImages" t-value="true"/>
-                    </t>
+                    <t t-call="website_sale.ProductsDesignPanelPresets"
+                        label.translate="Presets"
+                        showImages="true"/>
                 </BuilderRow>
 
                 <div class="o_wsale_design_panel_section_title ps-2 pt-2 pb-1 fw-bold">General</div>
@@ -252,7 +249,7 @@
 
                 <BuilderRow
                     label.translate="Hover Effect"
-                    t-if="anyThumb || anyCard || catalogThumb || catalogChips || listCondensed || (this.catalogPanel and this.isActiveItem('o_has_description_opt'))"
+                    t-if="anyThumb || anyCard || catalogThumb || catalogChips || listCondensed || (catalogBento and this.isActiveItem('o_has_description_opt'))"
                     >
                     <BuilderSelect>
                         <BuilderSelectItem
@@ -285,7 +282,7 @@
                             Border-Primary
                         </BuilderSelectItem>
                         <BuilderSelectItem
-                            t-if="this.catalogPanel"
+                            t-if="catalogBento"
                             classAction="'o_wsale_products_opt_hover_show_description'">
                             Show description
                         </BuilderSelectItem>
@@ -299,16 +296,14 @@
                         min="0"
                         max="28"
                         unit="'px'"
-                        displayRangeValue="true"
-                    />
+                        withNumberInput="true" />
                     <BuilderRange
                         t-else=""
                         action="'setGap'"
                         min="0"
                         max="28"
                         unit="'px'"
-                        displayRangeValue="true"
-                    />
+                        withNumberInput="true" />
                 </BuilderRow>
 
                 <BuilderRow
@@ -332,7 +327,7 @@
                 >
                     <BuilderSelect t-if="!anyThumb and !this.isActiveItem('wsale_design_condensed_list') and !this.isActiveItem('wsale_design_list_large')">
                         <BuilderSelectItem
-                            classAction="'.o_wsale_products_opt_cc o_wsale_products_opt_cc1'"
+                            classAction="'o_wsale_products_opt_cc o_wsale_products_opt_cc1'"
                         >
                             Theme Preset n&#176;1 (default)
                         </BuilderSelectItem>

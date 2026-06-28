@@ -60,21 +60,11 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.start_tour("/blog", 'blog_autocomplete_with_date')
 
     def test_blog_context_and_social_media(self):
-        self.env.ref('website.default_website').write({
-            'social_facebook': "https://www.facebook.com/Odoo",
-            'social_twitter': 'https://twitter.com/Odoo',
-            'social_linkedin': 'https://www.linkedin.com/company/odoo',
-            'social_youtube': 'https://www.youtube.com/user/OpenERPonline',
-            'social_github': 'https://github.com/odoo',
-            'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
-            'social_tiktok': 'https://www.tiktok.com/@odoo',
-            'social_discord': 'https://discord.com/servers/discord-town-hall-169256939211980800',
-        })
         self.env.ref('website_blog.opt_blog_sidebar_show').active = True
         self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_context_and_social_media", login="admin")
 
     def test_blog_social_image(self):
-        with MockRequest(self.env, website=self.env.ref('website.default_website'), url_root='http://example.com'):
+        with MockRequest(self.env, website=self.env.ref('base.default_website'), url_root='http://example.com'):
             meta = self.blog_post.get_website_meta()
             self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/website_blog/static/src/img/cover_1.jpg')
             self.blog_post.cover_properties = """{"background-image": "url(\\"/2.jpg\\")"}"""
@@ -162,7 +152,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
     def test_blog_posts_dynamic_snippet_visibility(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'blog_posts_dynamic_snippet_edit', login='admin')
         homepage_view = self.env['ir.ui.view'].search([
-            ('website_id', '=', self.env.ref('website.default_website').id),
+            ('website_id', '=', self.env.ref('base.default_website').id),
             ('key', '=', 'website.homepage'),
         ])
         # Unpublish blog posts so the dynamic snippet can't show content.
@@ -192,7 +182,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         post4.recommended_next_post_id = post3
         post5.recommended_next_post_id = post6
 
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         controller = WebsiteBlog()
 
         cases = [(self.env, post1, post5, "Next post should be Post5 according to chronological order"),
@@ -207,4 +197,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
 
                 mock_request.session.touch = lambda: None
                 mock_request.render = fake_render
-                controller.blog_post(blog1, current_post)
+                controller.blog_post(
+                    blog1.with_env(mock_request.env),
+                    current_post.with_env(mock_request.env),
+                )

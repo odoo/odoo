@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.PaymentScreenPaymentLines">
-        <div t-if="this.props.paymentLines.length" class="paymentlines flex-grow-1 d-flex flex-column overflow-y-auto gap-2" t-att-class="{'mb-3': !this.ui.isSmall}">
-            <t t-foreach="this.props.paymentLines" t-as="line" t-key="line.uuid">
+        <div t-if="this.paymentLines.length" class="paymentlines flex-grow-1 d-flex flex-column overflow-y-auto gap-2" t-att-class="{'mb-3': !this.ui.isSmall}">
+            <t t-foreach="this.paymentLines" t-as="line" t-key="line.uuid">
                 <div class="paymentline d-flex align-items-center rounded-3" t-att-class="{ 'selected': line.isSelected() }">
                     <!-- Show QR Code -->
                     <t t-if="line.useQr">
@@ -14,7 +14,7 @@
 
                     <!-- Payment Info -->
                     <div class="payment-infos d-flex align-items-center justify-content-between flex-grow-1 px-3 py-3 text-truncate cursor-pointer fs-2" t-on-click="() => this.selectLine(line)">
-                        <span class="payment-name" t-out="line.payment_method_id.name"/>
+                        <span class="payment-name" t-out="line.displayName"/>
                         <div class="payment-amount px-3">
                             <PriceFormatter price="this.env.utils.formatCurrency(line.getAmount())" />
                         </div>
@@ -43,6 +43,11 @@
                             <t t-if="state.icon">
                                 <i t-att-class="state.icon" role="img" />
                             </t>
+                        </div>
+                        <div t-if="state.id == 'waiting' and line.payment_method_id.payment_interface?.amountInserted != null"
+                            class="d-flex align-items-center justify-content-between pb-3 px-4 fs-4">
+                            <span>Cash inserted</span>
+                            <span t-out="this.env.utils.formatCurrency(line.payment_method_id.payment_interface.amountInserted)"/>
                         </div>
                         <div class="paymentline_status_actions btn-group d-flex w-100" role="group">
                             <button t-foreach="state.actions" t-as="button" t-key="button.id"

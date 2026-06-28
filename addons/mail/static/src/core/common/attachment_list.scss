@@ -14,6 +14,9 @@ $o-mail-attachment-height: 10em;
     @include media-breakpoint-down(sm) {
         width: 12em;
     }
+    .o_image, .fa {
+        z-index: 1;
+    }
 }
 
 .o-mail-AttachmentCard-image, .o-mail-Attachment-hover-image {
@@ -27,17 +30,10 @@ $o-mail-attachment-height: 10em;
 
 .o-mail-Attachment-hover {
     background: $gray-100;
-
-    &.o-image {
+    z-index: 2;
+    &.o-bgTranslucent {
         background: rgba(0, 0, 0, 0.4);
     }
-}
-
-.o-mail-Attachment-hoverImageText {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-height: 1.25;
 }
 
 .o-mail-AttachmentImage.o-inMessage:not(.o-inComposer) {

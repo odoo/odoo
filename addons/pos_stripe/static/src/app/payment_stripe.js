@@ -160,7 +160,11 @@ export class PaymentStripe extends PaymentInterface {
             return false;
         }
         line.setPaymentStatus("waitingCard");
-        const collectPaymentMethod = await this.terminal.collectPaymentMethod(clientSecret);
+        const collectPaymentMethod = await this.terminal.collectPaymentMethod(clientSecret, {
+            config_override: {
+                enable_customer_cancellation: true,
+            },
+        });
         if (collectPaymentMethod.error) {
             this._showError(collectPaymentMethod.error.message, collectPaymentMethod.error.code);
             line.setPaymentStatus("retry");
@@ -184,7 +188,10 @@ export class PaymentStripe extends PaymentInterface {
                     line.card_type = captured_card_type;
                     line.transaction_id = captured_transaction_id;
                 } else {
-                    await this.captureAfterPayment(processPayment, line);
+                    if ((await this.captureAfterPayment(processPayment, line)) === false) {
+                        line.setPaymentStatus("retry");
+                        return false;
+                    }
                 }
 
                 line.setPaymentStatus("done");
@@ -246,6 +253,9 @@ export class PaymentStripe extends PaymentInterface {
         // will capture later.
         if (!this.canBeAdjusted(line.uuid)) {
             const capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
+            if (!capturePayment) {
+                return false;
+            }
             if (capturePayment.charges) {
                 line.card_type = this.getCardBrandFromPaymentMethodDetails(
                     capturePayment.charges.data[0].payment_method_details
@@ -253,6 +263,7 @@ export class PaymentStripe extends PaymentInterface {
             }
             line.transaction_id = capturePayment.id;
         }
+        return true;
     }
 
     async sendPaymentAdjust(uuid) {

@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from abc import ABC, abstractmethod
 from typing import NamedTuple
 from contextlib import contextmanager
 import logging
@@ -9,6 +8,7 @@ from threading import Lock
 import time
 
 from odoo.addons.iot_drivers.driver import Driver
+from odoo.addons.iot_drivers.iot_handlers.interfaces.serial_interface import SerialInterface
 
 _logger = logging.getLogger(__name__)
 
@@ -57,11 +57,11 @@ def serial_connection(path, protocol, is_probing=False):
     connection.close()
 
 
-class SerialDriver(Driver, ABC):
+class SerialDriver(Driver):
     """Abstract base class for serial drivers."""
 
     _protocol = None
-    connection_type = 'serial'
+    interface = SerialInterface
 
     def __init__(self, identifier: str, device: dict):
         """ Attributes initialization method for `SerialDriver`.
@@ -85,7 +85,6 @@ class SerialDriver(Driver, ABC):
             name = 'Unknown Serial Device'
         self.device_name = name
 
-    @abstractmethod
     def _take_measure(self):
         """Reads the device's value, and pushes that value to the frontend."""
         pass

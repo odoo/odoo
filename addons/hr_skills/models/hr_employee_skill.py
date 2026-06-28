@@ -19,9 +19,10 @@ class HrEmployeeSkill(models.Model):
     def get_current_skills_by_employee(self):
         emp_skill_grouped = dict(self.grouped(lambda emp_skill: (emp_skill.employee_id, emp_skill.skill_id)))
         result_dict = defaultdict(lambda: self.env['hr.employee.skill'])
+        today = fields.Date.context_today(self)
         for (employee, skill), emp_skills in emp_skill_grouped.items():
             filtered_emp_skill = emp_skills.filtered(
-                lambda employee_skill: not employee_skill.valid_to or employee_skill.valid_to >= fields.Date.today()
+                lambda employee_skill: not employee_skill.valid_to or employee_skill.valid_to >= today,
             )
             if skill.skill_type_id.is_certification and not filtered_emp_skill:
                 expired_skills = (emp_skills - filtered_emp_skill)

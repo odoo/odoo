@@ -1,14 +1,8 @@
 import { patch } from "@web/core/utils/patch";
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { useService } from "@web/core/utils/hooks";
 import { navigateToOdoolinkFromChart } from "../odoo_chart/odoo_chart_helpers";
 
 patch(spreadsheet.components.FigureComponent.prototype, {
-    setup() {
-        super.setup();
-        this.actionService = useService("action");
-        this.notificationService = useService("notification");
-    },
     get chartId() {
         if (this.props.figureUI.tag !== "chart" && this.props.figureUI.tag !== "carousel") {
             return undefined;
@@ -24,11 +18,6 @@ patch(spreadsheet.components.FigureComponent.prototype, {
 });
 
 patch(spreadsheet.components.ScorecardChart.prototype, {
-    setup() {
-        super.setup();
-        this.actionService = useService("action");
-        this.notificationService = useService("notification");
-    },
     async navigateToOdooLink(newWindow) {
         await navigateToOdoolinkFromChart(this.env, this.props.chartId, newWindow);
     },
@@ -36,18 +25,13 @@ patch(spreadsheet.components.ScorecardChart.prototype, {
         return this.env.model.getters.getChartOdooLink(this.props.chartId) !== undefined;
     },
     async onClick() {
-        if (this.env.isDashboard() && this.hasOdooLink) {
+        if (this.env.model.getters.isDashboard() && this.hasOdooLink) {
             await this.navigateToOdooLink();
         }
     },
 });
 
 patch(spreadsheet.components.GaugeChartComponent.prototype, {
-    setup() {
-        super.setup();
-        this.actionService = useService("action");
-        this.notificationService = useService("notification");
-    },
     async navigateToOdooLink(newWindow) {
         await navigateToOdoolinkFromChart(this.env, this.props.chartId, newWindow);
     },
@@ -55,7 +39,7 @@ patch(spreadsheet.components.GaugeChartComponent.prototype, {
         return this.env.model.getters.getChartOdooLink(this.props.chartId) !== undefined;
     },
     async onClick() {
-        if (this.env.isDashboard() && this.hasOdooLink) {
+        if (this.env.model.getters.isDashboard() && this.hasOdooLink) {
             await this.navigateToOdooLink();
         }
     },

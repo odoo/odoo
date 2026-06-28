@@ -218,11 +218,17 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         # 5 Timesheets should have been created for full_time_employee and full_time_employee_2
         # but none for part_time_employee
         leave_task = self.test_company.leave_timesheet_task_id
+        timesheets_by_employee = self._get_timesheets_by_employee(leave_task)
+        self.assertFalse(timesheets_by_employee.get(self.part_time_employee.id, False))
+        self.assertEqual(timesheets_by_employee.get(self.full_time_employee.id), 5)
 
-        # Now we delete the calendar_id. The timesheets should be deleted too.
+        # means it will be applied to all employees regardless of the calendars.
         global_time_off.calendar_id = False
 
-        self.assertFalse(leave_task.timesheet_ids.ids)
+        timesheets_by_employee = self._get_timesheets_by_employee(leave_task)
+        self.assertEqual(timesheets_by_employee.get(self.part_time_employee.id), 4)
+        self.assertEqual(timesheets_by_employee.get(self.full_time_employee.id), 5)
+        self.assertEqual(timesheets_by_employee.get(self.full_time_employee_2.id), 5)
 
         # Now we reset the calendar_id. The timesheets should be created and have the right value.
         global_time_off.calendar_id = self.test_company.resource_calendar_id.id
@@ -459,7 +465,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         })
 
         # create and validate a leave for full time employee
-        HrLeave = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True)
+        HrLeave = self.env['hr.leave']
         holiday = HrLeave.with_user(test_user).create({
             'name': 'Leave 1',
             'employee_id': test_user.employee_id.id,

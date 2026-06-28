@@ -1,18 +1,18 @@
 import { dataUrlToBlob } from "@mail/core/common/attachment_uploader_hook";
 import { registry } from "@web/core/registry";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useService } from "@web/core/utils/hooks";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
+import { Record } from "@web/model/relational_model/record";
 
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 export class MailComposerAttachmentSelector extends Component {
     static template = "mail.MailComposerAttachmentSelector";
     static components = { FileUploader };
-    static props = { ...standardFieldProps };
 
     setup() {
+        this.props = props({ record: types.instanceOf(Record) });
         this.mailStore = useService("mail.store");
         this.attachmentUploadService = useService("mail.attachment_upload");
         this.operations = useX2ManyCrud(() => this.props.record.data["attachment_ids"], true);
@@ -34,7 +34,12 @@ export class MailComposerAttachmentSelector extends Component {
             id: resIds[0],
         });
         const file = new File([dataUrlToBlob(data, type)], name, { type });
-        const attachment = await this.attachmentUploadService.upload(thread, thread.composer, file);
+        const isThreadComposer = this.props.record.context.is_thread_composer;
+        const attachment = await this.attachmentUploadService.upload(
+            thread,
+            isThreadComposer ? thread.composer : undefined,
+            file
+        );
         if (attachment) {
             await this.operations.saveRecord([attachment.id]);
         }

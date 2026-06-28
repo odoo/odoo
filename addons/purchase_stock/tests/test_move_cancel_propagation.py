@@ -110,7 +110,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.move.write({
             'picking_id': False,
             'picking_type_id': self.warehouse.pick_type_id.id,
-            'location_final_id': self.customer_location.id,
+            'forecasted_location_id': self.customer_location.id,
         })
         self.move._action_confirm()
         self.assertEqual(self.move.picking_id.state, 'waiting')
@@ -141,7 +141,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.move.write({
             'picking_id': False,
             'picking_type_id': self.warehouse.pick_type_id.id,
-            'location_final_id': self.customer_location.id,
+            'forecasted_location_id': self.customer_location.id,
         })
         self.move._action_confirm()
         self.assertEqual(self.move.picking_id.state, 'waiting')
@@ -176,7 +176,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.move.write({
             'picking_id': False,
             'picking_type_id': self.warehouse.pick_type_id.id,
-            'location_final_id': self.customer_location.id,
+            'forecasted_location_id': self.customer_location.id,
         })
         self.move._action_confirm()
         self.assertEqual(self.move.picking_id.state, 'waiting')
@@ -207,7 +207,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.move.write({
             'picking_id': False,
             'picking_type_id': self.warehouse.pick_type_id.id,
-            'location_final_id': self.customer_location.id,
+            'forecasted_location_id': self.customer_location.id,
         })
         self.move._action_confirm()
         self.assertEqual(self.move.picking_id.state, 'waiting')

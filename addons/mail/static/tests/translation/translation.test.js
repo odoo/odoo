@@ -31,18 +31,21 @@ test("Toggle display of original/translated version of chatter message", async (
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains("[title='Translate']");
-    await contains("[title='Revert']", { count: 0 });
+    await click(".o-mail-Message [title='Expand']");
+    await contains(".o-dropdown-item:contains('Translate')");
+    await contains(".o-dropdown-item:contains('Revert')", { count: 0 });
     // Click acts as a toogle affecting its appearence and the actual message content displayed.
-    await click("[title='Translate']");
+    await click(".o-dropdown-item:contains('Translate')");
     await contains(
         ".o-mail-Message-body:text('To bad weather, good face. (Translated from: Spanish)')"
     );
-    await contains("[title='Translate']", { count: 0 });
-    await contains("[title='Revert']");
-    await click("[title='Revert']");
+    await click(".o-mail-Message [title='Expand']");
+    await contains(".o-dropdown-item:contains('Translate')", { count: 0 });
+    await contains(".o-dropdown-item:contains('Revert')");
+    await click(".o-dropdown-item:contains('Revert')");
     await contains(".o-mail-Message:has(:text('Al mal tiempo, buena cara.'))");
-    await click("[title='Translate']");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:contains('Translate')");
     // The translation button should not trigger more than one external request for a single message.
     await expect.waitForSteps(["Request"]);
 });
@@ -113,13 +116,15 @@ test("Do not show translate action if message body is empty", async () => {
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message", { count: 3 });
     await click(".o-mail-Message:eq(0) button[title='Expand']");
-    await waitFor("[title='Pin']");
-    await waitFor("[title='Translate']:count(1)");
+    await waitFor(".o-dropdown-item:text('Pin')");
+    await waitFor(".o-dropdown-item:contains('Translate'):count(1)");
     await click(".o-mail-Message:eq(0) button[title='Expand']");
-    await waitForNone(".o-mail-Message:eq(1) button[title='Expand']");
+    // The attachment-only message has an empty body, so its menu must not offer translation.
+    await click(".o-mail-Message:eq(1) button[title='Expand']");
+    await waitFor(".dropdown-menu");
+    await waitForNone(".o-dropdown-item:contains('Translate')");
     await click(".o-mail-Message:eq(2) button[title='Expand']");
-    await waitFor("[title='Pin']");
-    await waitFor("[title='Translate']:count(1)"); // only 1, from first message
+    await waitFor(".o-dropdown-item:text('Pin')");
 });
 
 test.tags("mobile");

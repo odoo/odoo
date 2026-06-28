@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class ProductSupplierinfo(models.Model):
@@ -91,6 +92,14 @@ class ProductSupplierinfo(models.Model):
         if self.product_id and self.product_id not in self.product_tmpl_id.product_variant_ids:
             self.product_id = False
 
+    @api.constrains('date_start', 'date_end')
+    def _check_dates(self):
+        invalid_suppliers = self.filtered(lambda r: r.date_end and r.date_start and r.date_end < r.date_start)
+        if invalid_suppliers:
+            raise ValidationError(_(
+                "End date can't be earlier than the start date. Please check dates for vendor pricelist: %s", ', '.join(invalid_suppliers.mapped('partner_id.name'))
+            ))
+
     @api.model
     def get_import_templates(self):
         return [{
@@ -116,4 +125,5 @@ class ProductSupplierinfo(models.Model):
         return super().write(vals)
 
     def _get_filtered_supplier(self, company_id, product_id, params=False):
-        return self.filtered(lambda s: (not s.company_id or s.company_id.id == company_id.id) and (s.partner_id.active and (not s.product_id or s.product_id == product_id)))
+        return self.filtered(lambda s: (not s.company_id or s.company_id.id == company_id.id) and (s.partner_id.active and (not s.product_id or s.product_id == product_id))
+                             and (not params or not params.get('partner_id') or s.partner_id == params.get('partner_id')))

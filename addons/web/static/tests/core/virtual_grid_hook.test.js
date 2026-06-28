@@ -1,7 +1,8 @@
+import { useRef } from "@web/owl2/utils";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { resize, scroll } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, useRef, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
 import { range } from "@web/core/utils/numbers";
@@ -44,7 +45,7 @@ function getTestComponent(virtualGridParams) {
     class Item extends Component {
         static props = ["row", "col"];
         static template = xml`
-            <div class="item" t-att-data-row-id="props.row.id" t-att-data-col-id="props.col.id" t-att-style="style" t-out="content"/>
+            <div class="item" t-att-data-row-id="this.props.row.id" t-att-data-col-id="this.props.col.id" t-att-style="this.style" t-out="this.content"/>
         `;
         get content() {
             return `${this.props.row.id}|${this.props.col.id}`;
@@ -60,10 +61,10 @@ function getTestComponent(virtualGridParams) {
         static props = [];
         static components = { Item };
         static template = xml`
-            <div class="scrollable" t-ref="scrollable" style="${CONTAINER_STYLE}" dir="${localization.direction}">
-                <div class="inner" t-att-style="innerStyle">
-                    <t t-foreach="virtualRows" t-as="row" t-key="row.id">
-                        <t t-foreach="virtualColumns" t-as="col" t-key="col.id">
+            <div class="scrollable" t-custom-ref="scrollable" style="${CONTAINER_STYLE}" dir="${localization.direction}">
+                <div class="inner" t-att-style="this.innerStyle">
+                    <t t-foreach="this.virtualRows" t-as="row" t-key="row.id">
+                        <t t-foreach="this.virtualColumns" t-as="col" t-key="col.id">
                             <Item row="row" col="col"/>
                         </t>
                     </t>
@@ -159,7 +160,7 @@ test("initialScroll: bottom right", async () => {
 
 test("required params only", async () => {
     class C extends Component {
-        static template = xml`<div t-ref="pseudoScrollable"/>`;
+        static template = xml`<div t-custom-ref="pseudoScrollable"/>`;
         static props = [];
         setup() {
             const scrollableRef = useRef("pseudoScrollable");
@@ -174,7 +175,7 @@ test("required params only", async () => {
 test("with empty rows and columns", async () => {
     class C extends Component {
         static template = xml`
-            <div t-ref="pseudoScrollable"/>
+            <div t-custom-ref="pseudoScrollable"/>
         `;
         static props = [];
         setup() {
@@ -192,7 +193,7 @@ test("with empty rows and columns", async () => {
 test("with 1 row and 1 column", async () => {
     class C extends Component {
         static template = xml`
-            <div t-ref="pseudoScrollable"/>
+            <div t-custom-ref="pseudoScrollable"/>
         `;
         static props = [];
         setup() {
@@ -210,7 +211,7 @@ test("with 1 row and 1 column", async () => {
 test("with columns only", async () => {
     class C extends Component {
         static template = xml`
-            <div t-ref="pseudoScrollable"/>
+            <div t-custom-ref="pseudoScrollable"/>
         `;
         static props = [];
         setup() {
@@ -227,7 +228,7 @@ test("with columns only", async () => {
 test("with rows only", async () => {
     class C extends Component {
         static template = xml`
-            <div t-ref="pseudoScrollable"/>
+            <div t-custom-ref="pseudoScrollable"/>
         `;
         static props = [];
         setup() {

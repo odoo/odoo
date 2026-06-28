@@ -1,11 +1,11 @@
-import { useExternalListener, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useRef, useSubEnv } from "@web/owl2/utils";
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { Priority } from "@mail/core/common/priority";
 import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { useDiscussSystray } from "@mail/utils/common/hooks";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy, useListener } from "@odoo/owl";
 
 import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -25,25 +25,24 @@ export class MessagingMenu extends Component {
         ImStatus,
         Priority,
     };
-    static props = [];
     static template = "mail.MessagingMenu";
 
     setup() {
         super.setup();
         this.isIosPwa = isIOS() && isDisplayStandalone();
-        this.discussSystray = useDiscussSystray();
         this.store = useService("mail.store");
         this.hasTouch = hasTouch;
         this.ui = useService("ui");
-        this.state = useState({
+        this.state = proxy({
             activeIndex: null,
             adding: false,
         });
         this.dropdown = useDropdownState();
+        this.discussSystray = useDiscussSystray(this.dropdown);
         this.notificationList = useRef("notification-list");
         useSubEnv({ inMessagingMenu: { dropdown: this.dropdown } });
 
-        useExternalListener(window, "keydown", this.onKeydown, true);
+        useListener(window, "keydown", (ev) => this.onKeydown(ev), true);
     }
 
     onClickThread(isMarkAsRead, thread, message) {

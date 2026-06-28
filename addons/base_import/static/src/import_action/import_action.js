@@ -1,11 +1,12 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { useDropzone } from "@web/core/dropzone/dropzone_hook";
 import { FileInput } from "@web/core/file_input/file_input";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useFileUploader } from "@web/core/utils/files";
 import { useService } from "@web/core/utils/hooks";
+import { localization } from "@web/core/l10n/localization";
 import { Layout } from "@web/search/layout";
 import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
@@ -37,7 +38,7 @@ export class ImportAction extends Component {
             context: this.props.action.params?.context || {},
         });
 
-        this.state = useState({
+        this.state = proxy({
             filename: undefined,
             numRows: 0,
             importMessages: [],
@@ -133,6 +134,7 @@ export class ImportAction extends Component {
                 [false, "form"],
             ],
             domain: [["id", "in", resIds]],
+            context: this.model.context,
             target: "current",
             path: "imported-records",
         });
@@ -210,6 +212,11 @@ export class ImportAction extends Component {
         this.env.config.setDisplayName(_t("Import") + ` ${this.state.filename}`);
         this.state.importMessages = [];
 
+        const extension = this.state.filename.split(".").pop();
+        this.model.formattingOptionsValues.float_thousand_separator.value =
+            extension === "csv" ? localization.thousandsSep : ",";
+        this.model.formattingOptionsValues.float_decimal_separator.value =
+            extension === "csv" ? localization.decimalPoint : ".";
         this.model.block(_t("Loading file..."));
         const { res, error } = await this.model.updateData(true);
 
@@ -283,6 +290,10 @@ export class ImportAction extends Component {
 
     onFieldChanged(column, fieldInfo) {
         this.model.setColumnField(column, fieldInfo);
+    }
+
+    onFieldLanguageChanged(column, language) {
+        this.model.setColumnLanguage(column, language);
     }
 
     isFieldSet(column) {

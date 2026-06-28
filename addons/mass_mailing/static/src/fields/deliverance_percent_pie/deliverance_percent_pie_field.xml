@@ -1,0 +1,22 @@
+<templates>
+    <t t-name="mass_mailing.DeliverancePercentPieField" >
+                <figure class="o_pie mb-0 rounded-circle"
+                t-attf-style="background: conic-gradient(
+                    var(--PercentPieField-color-active) 0% {{this.props.record.data[this.props.name]}}%,
+                    var(--PercentPieField-color-static) 0% 100%
+                )"
+        />
+        <table class="o_pie_info">
+            <tbody>
+                <tr>
+                    <td class="o_pie_value" t-out="this.props.record.data[this.props.topFieldName]"/>
+                    <td class="o_pie_text ps-1" t-out="this.props.record.fields[this.props.topFieldName].string"/> 
+                </tr>
+                <tr>
+                    <td class="o_pie_value" t-out="this.props.record.data[this.props.bottomFieldName]"/>
+                    <td class="o_pie_text ps-1" t-out="this.props.record.fields[this.props.bottomFieldName].string"/> 
+                </tr>
+            </tbody>
+        </table>
+    </t>
+</templates>

@@ -1,50 +1,35 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
+import { SearchInput } from "@mail/core/common/search_input";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { SubChannelPreview } from "@mail/discuss/core/public_web/sub_channel_preview";
-import { useSequential, useVisible } from "@mail/utils/common/hooks";
-import { Component } from "@odoo/owl";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useSearch, useVisible } from "@mail/utils/common/hooks";
+import { Component, props, types } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 
-/**
- * @typedef {Object} Props
- * @property {import("@mail/core/common/thread_model").Thread} thread
- * @property {function} [close]
- * @extends {Component<Props, Env>}
- */
 export class SubChannelList extends Component {
     static template = "mail.SubChannelList";
-    static components = { ActionPanel, NotificationItem, SubChannelPreview };
-
-    static props = ["channel", "close?"];
+    static components = { ActionPanel, NotificationItem, SearchInput, SubChannelPreview };
 
     setup() {
         this.store = useService("mail.store");
-        this.state = useState({
-            loading: false,
-            searchTerm: "",
-            searching: false,
-            subChannels: this.props.channel.sub_channel_ids,
+        this.props = props({
+            channel: types.instanceOf(this.store["discuss.channel"].Class),
+            close: types.function([types.instanceOf(MouseEvent)]).optional(),
         });
-        this.searchRef = useRef("search");
-        this.sequential = useSequential();
-        useAutofocus({ refName: "search" });
+        this.search = useSearch({
+            initialResults: this.props.channel.sub_channel_ids,
+            fetch: (term) => this.props.channel.loadMoreSubChannels({ searchTerm: term }),
+            filter: (term) =>
+                fuzzyLookup(term, this.props.channel.sub_channel_ids, ({ name }) => name),
+        });
         this.loadMoreState = useVisible("load-more", (isVisible) => {
             if (isVisible) {
                 this.props.channel.loadMoreSubChannels({
-                    searchTerm: this.state.searching ? this.state.searchTerm : undefined,
+                    searchTerm: this.search.searchTerm || undefined,
                 });
             }
         });
-        useLayoutEffect(
-            (searchTerm) => {
-                if (!searchTerm) {
-                    this.clearSearch();
-                }
-            },
-            () => [this.state.searchTerm]
-        );
     }
 
     /**
@@ -55,50 +40,9 @@ export class SubChannelList extends Component {
         this.props.close?.();
     }
 
-    clearSearch() {
-        this.state.searchTerm = "";
-        this.state.searching = false;
-        this.state.loading = false;
-        this.state.subChannels = this.props.channel.sub_channel_ids;
-    }
-
-    onKeydownSearch(ev) {
-        if (ev.key === "Enter") {
-            this.search();
-        }
-    }
-
     async onClickCreate() {
-        await this.props.channel.createSubChannel({ name: this.state.searchTerm });
-        this._refreshSubChannelList();
+        await this.props.channel.createSubChannel({ name: this.search.searchTerm });
+        this.search.run({ skipFetch: true });
         this.props.close?.();
-    }
-
-    async search() {
-        if (!this.state.searchTerm) {
-            return;
-        }
-        this.sequential(async () => {
-            this.state.searching = true;
-            this.state.loading = true;
-            try {
-                await this.props.channel.loadMoreSubChannels({
-                    searchTerm: this.state.searchTerm,
-                });
-                if (this.state.searching) {
-                    this._refreshSubChannelList();
-                }
-            } finally {
-                this.state.loading = false;
-            }
-        });
-    }
-
-    _refreshSubChannelList() {
-        this.state.subChannels = fuzzyLookup(
-            this.state.searchTerm ?? "",
-            this.props.channel.sub_channel_ids,
-            ({ name }) => name
-        );
     }
 }

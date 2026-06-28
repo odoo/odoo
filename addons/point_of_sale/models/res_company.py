@@ -7,11 +7,6 @@ class ResCompany(models.Model):
     _name = 'res.company'
     _inherit = ['res.company', 'pos.load.mixin']
 
-    point_of_sale_update_stock_quantities = fields.Selection([
-            ('closing', 'At the session closing'),
-            ('real', 'In real time'),
-            ], default='real', string="Update quantities in stock",
-            help="At the session closing: A picking is created for the entire session when it's closed\n In real time: Each order sent to the server create its own picking")
     point_of_sale_use_ticket_qr_code = fields.Boolean(
         string='Self-service invoicing',
         default=True,
@@ -41,7 +36,7 @@ class ResCompany(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         return [
-            'id', 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id',
+            'id', 'currency_id', 'email', 'website', 'vat', 'additional_identifiers', 'name', 'phone', 'partner_id',
             'country_id', 'state_id', 'tax_calculation_rounding_method', 'nomenclature_id', 'point_of_sale_use_ticket_qr_code',
             'point_of_sale_ticket_unique_code', 'point_of_sale_ticket_portal_url_display_mode', 'street', 'city', 'zip',
             'account_fiscal_country_id', 'street2',

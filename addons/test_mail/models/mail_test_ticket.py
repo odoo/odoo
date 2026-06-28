@@ -29,11 +29,9 @@ class MailTestTicket(models.Model):
         self.ensure_one()
         return f"Ticket for {self.name} on {self.datetime.strftime('%m/%d/%Y, %H:%M:%S')}"
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+    def _notify_get_recipients_groups(self, message, model_description):
         # Activate more groups to test query counters notably (and be backward compatible for tests)
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals
-        )
+        groups = super()._notify_get_recipients_groups(message, model_description)
         for group_name, _group_method, group_data in groups:
             if group_name == 'portal':
                 group_data['active'] = True
@@ -43,10 +41,10 @@ class MailTestTicket(models.Model):
 
         return groups
 
-    def _track_template(self, changes):
-        res = super()._track_template(changes)
+    def _track_template_parameters(self, tracked_fields):
+        res = super()._track_template_parameters(tracked_fields)
         record = self[0]
-        if 'customer_id' in changes and record.mail_template:
+        if 'customer_id' in tracked_fields and record.mail_template:
             res['customer_id'] = (
                 record.mail_template,
                 {
@@ -54,7 +52,7 @@ class MailTestTicket(models.Model):
                     'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
                 }
             )
-        elif 'datetime' in changes:
+        elif 'datetime' in tracked_fields:
             res['datetime'] = (
                 'test_mail.mail_test_ticket_tracking_view',
                 {
@@ -69,11 +67,11 @@ class MailTestTicket(models.Model):
             return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
         return super(MailTestTicket, self)._creation_subtype()
 
-    def _track_subtype(self, init_values):
+    def _track_log_get_default_subtype(self, track_init_values):
         self.ensure_one()
-        if 'container_id' in init_values and self.container_id:
+        if 'container_id' in track_init_values and self.container_id:
             return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
-        return super(MailTestTicket, self)._track_subtype(init_values)
+        return super()._track_log_get_default_subtype(track_init_values)
 
     def _get_customer_information(self):
         email_keys_to_values = super()._get_customer_information()
@@ -150,11 +148,11 @@ class MailTestTicketMc(models.Model):
             return self.env.ref('test_mail.st_mail_test_ticket_container_mc_upd')
         return super()._creation_subtype()
 
-    def _track_subtype(self, init_values):
+    def _track_log_get_default_subtype(self, track_init_values):
         self.ensure_one()
-        if 'container_id' in init_values and self.container_id:
+        if 'container_id' in track_init_values and self.container_id:
             return self.env.ref('test_mail.st_mail_test_ticket_container_mc_upd')
-        return super()._track_subtype(init_values)
+        return super()._track_log_get_default_subtype(track_init_values)
 
 
 class MailTestTicketPartner(models.Model):
@@ -174,7 +172,7 @@ class MailTestTicketPartner(models.Model):
         default='open', tracking=10)
     state_template_id = fields.Many2one('mail.template')
 
-    def _message_post_after_hook(self, message, msg_vals):
+    def _message_post_after_hook(self, message):
         if self.email_from and not self.customer_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -190,18 +188,18 @@ class MailTestTicketPartner(models.Model):
                 self.search([
                     ('customer_id', '=', False), email_domain,
                 ]).write({'customer_id': new_partner[0].id})
-        return super()._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message)
 
     def _creation_subtype(self):
         if self.state == 'new':
             return self.env.ref('test_mail.st_mail_test_ticket_partner_new')
         return super(MailTestTicket, self)._creation_subtype()
 
-    def _track_template(self, changes):
-        res = super()._track_template(changes)
+    def _track_template_parameters(self, tracked_fields):
+        res = super()._track_template_parameters(tracked_fields)
         record = self[0]
         # acknowledgement-like email, like in project/helpdesk
-        if 'state' in changes and record.state == 'new' and record.state_template_id:
+        if 'state' in tracked_fields and record.state == 'new' and record.state_template_id:
             res['state'] = (
                 record.state_template_id,
                 {
@@ -228,11 +226,9 @@ class MailTestContainer(models.Model):
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+    def _notify_get_recipients_groups(self, message, model_description):
         # Activate more groups to test query counters notably (and be backward compatible for tests)
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals
-        )
+        groups = super()._notify_get_recipients_groups(message, model_description)
         for group_name, _group_method, group_data in groups:
             if group_name == 'portal':
                 group_data['active'] = True

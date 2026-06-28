@@ -5,6 +5,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
+    toggleMobilePreview,
 } from "@website/../tests/builder/website_helpers";
 import { insertText, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
@@ -86,7 +87,7 @@ test("check invisible element after save", async () => {
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect(resultSave[0]).toBe(
-        `<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="DRAG BUILDING BLOCKS HERE">
+        `<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="Drag blocks here">
         <section class="o_colored_level">
             <div class="container">
                 <div class="row">
@@ -103,7 +104,7 @@ test("check invisible element after save", async () => {
 test("click on 'Show/hide on mobile' in mobile view", async () => {
     await setupWebsiteBuilder(websiteContent);
     await contains(":iframe .col-lg-3").click();
-    await contains("button[data-action='mobile']").click();
+    await toggleMobilePreview();
 
     await contains("button[data-action-id='toggleDeviceVisibility']:last").click();
     expect(".o-snippets-tabs button:contains('Blocks')").toHaveClass("active");
@@ -122,7 +123,7 @@ test("click on 'Show/hide on mobile' in desktop view", async () => {
 test("click on 'Show/hide on desktop' in mobile view", async () => {
     await setupWebsiteBuilder(websiteContent);
     await contains(":iframe .col-lg-3").click();
-    await contains("button[data-action='mobile']").click();
+    await toggleMobilePreview();
 
     await contains(
         "[data-container-title='Column']  button[data-action-id='toggleDeviceVisibility']"
@@ -138,13 +139,13 @@ test("hide on mobile and toggle mobile view", async () => {
     await contains(":iframe .col-lg-3").click();
 
     await contains("button[data-action-id='toggleDeviceVisibility']:last").click();
-    await contains("button[data-action='mobile']").click();
+    await toggleMobilePreview();
     expect(":iframe .col-lg-3").not.toHaveClass("o_snippet_override_invisible");
     expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry i")).toHaveClass(
         "fa-eye-slash"
     );
 
-    await contains("button[data-action='mobile']").click();
+    await toggleMobilePreview();
     expect(".o_we_invisible_el_panel").not.toHaveCount();
 });
 

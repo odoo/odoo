@@ -1,3 +1,8 @@
+body:has(.o_mass_mailing_fullscreen) {
+    .o_tour_pointer {
+        display: none;
+    }
+}
 .o_mass_mailing_iframe_wrapper {
     &.o_mass_mailing_fullscreen {
         display: block !important;
@@ -14,6 +19,35 @@
             margin: auto;
         }
     }
+
+    .o_mass_mailing_can_edit_overlay {
+        cursor: pointer;
+        .opacity_on_hover {
+            background-color: rgba(0, 0, 0, 0);
+            > * { display: none }
+        }
+        .bg_empty_body {
+            background: white url(/mass_mailing/static/src/img/theme_empty/mass_mailing_empty_body.png) no-repeat top;
+        }
+        .o_mass_mailing_iframe_fullscreen_label {
+            top: 300px;
+        }
+    }
+
+    &:hover {
+        .o_mass_mailing_can_edit_overlay {
+            .opacity_on_hover {
+                transition: background-color 300ms;
+                background-color: rgba(0, 0, 0, 0.65);
+                > * { display: inline-block; }
+            }
+        }
+    }
+
+    .o_mass_mailing_iframe_container {
+        background-color: white;
+    }
+
     .o_is_mobile {
         background-image: url("/html_builder/static/img/phone.svg");
         width: fit-content;

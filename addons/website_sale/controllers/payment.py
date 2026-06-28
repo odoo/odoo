@@ -2,7 +2,6 @@
 
 from psycopg2.errors import LockNotAvailable
 
-from odoo import _
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.http import request, route
@@ -38,20 +37,28 @@ class PaymentPortal(payment_portal.PaymentPortal):
         # Then lock it during the transaction to prevent concurrent payments
         try:
             order_sudo = self._document_check_access("sale.order", order_id, access_token)
-            request.env.cr.execute(
+            self.env.cr.execute(
                 SQL("SELECT 1 FROM sale_order WHERE id = %s FOR NO KEY UPDATE NOWAIT", order_id)
             )
         except MissingError:
             raise
         except AccessError as e:
-            raise ValidationError(_("The access token is invalid.")) from e
+            raise ValidationError(self.env._("The access token is invalid.")) from e
         except LockNotAvailable as lna:
-            raise UserError(_("Payment is already being processed.")) from lna
+            raise UserError(self.env._("Payment is already being processed.")) from lna
 
         if order_sudo.state == "cancel":
-            raise ValidationError(_("The order has been cancelled."))
+            raise ValidationError(self.env._("The order has been cancelled."))
 
-        order_sudo._check_cart_is_ready_to_be_paid()
+        # Ensure the cart is still valid before proceeding any further.
+        if redirect := self.env["website.checkout.step"].validate_checkout_progress(
+            "/shop/payment/transaction", order_sudo
+        ):
+            return {
+                "state": "error",
+                "state_message": order_sudo._join_alert_messages(),
+                "redirect": redirect,
+            }
 
         self._validate_transaction_kwargs(kwargs)
         kwargs.update({
@@ -64,9 +71,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         compare_amounts = order_sudo.currency_id.compare_amounts
         if compare_amounts(kwargs["amount"], order_sudo.amount_total):
-            raise ValidationError(_("The cart has been updated. Please refresh the page."))
+            raise ValidationError(self.env._("The cart has been updated. Please refresh the page."))
         if compare_amounts(order_sudo.amount_paid, order_sudo.amount_total) == 0:
-            raise UserError(_("The cart has already been paid. Please refresh the page."))
+            raise UserError(self.env._("The cart has already been paid. Please refresh the page."))
 
         if delay_token_charge := kwargs.get("flow") == "token":
             request.update_context(delay_token_charge=True)  # wait until after tx validation

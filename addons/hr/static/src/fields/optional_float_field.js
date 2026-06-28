@@ -1,14 +1,15 @@
+import { props, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { floatField, FloatField } from "@web/views/fields/float/float_field";
+import { floatField, FloatField, floatFieldProps } from "@web/views/fields/float/float_field";
 
 const fieldRegistry = registry.category("fields");
 
 class OptionalFloatField extends FloatField {
     static template = "hr.OptionalFloatField";
-    static props = {
-        ...FloatField.props,
-        placeholder: { type: String, optional: true },
-    }
+    props = props({
+        ...floatFieldProps,
+        placeholder: t.string().optional(),
+    });
 
     get formattedValue() {
         if (!this.value) {

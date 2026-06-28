@@ -18,11 +18,11 @@
     </template>
 
     <template id='l10n_ar_website_sale_products_item_inherit' inherit_id='website_sale.products_item'>
-        <xpath expr='//div[hasclass("product_price")]' position='attributes'>
-            <attribute name='t-attf-class' add='o_l10n_ar_product_price'/>
-        </xpath>
-        <xpath expr='//div[hasclass("product_price")]' position='inside'>
-            <small t-if='template_price_vals.get("l10n_ar_price_tax_excluded")' class='d-block mt-1 text-muted'>
+        <xpath 
+            expr='//div[hasclass("product_price")]//t[@name="product_base_price"]'
+            position="after"
+        >
+            <small t-if='template_price_vals.get("l10n_ar_price_tax_excluded")' class='d-block text-muted'>
                 Precio s/Imp. Nac.
                 <span
                     class='o_l10n_ar_price_tax_excluded'

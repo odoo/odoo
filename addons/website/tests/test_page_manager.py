@@ -27,7 +27,7 @@ class TestWebsitePageManager(odoo.tests.HttpCase):
         Page = self.env['website.page']
         Website = self.env['website']
 
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         generic_page = Page.create({
             'name': 'Test Diverged',
             'type': 'qweb',
@@ -56,6 +56,7 @@ class TestWebsitePageManager(odoo.tests.HttpCase):
     def test_unique_view_key_on_duplication_pages(self):
         Page = self.env['website.page']
         View = self.env['ir.ui.view']
+        website_id = self.ref('base.default_website')
 
         test_view = View.create({
             'name': 'Base',
@@ -67,7 +68,7 @@ class TestWebsitePageManager(odoo.tests.HttpCase):
             'view_id': test_view.id,
             'url': '/test-duplicate',
             'name': 'Test Duplicate',
-            'website_id': self.ref('website.default_website'),
+            'website_id': website_id,
         })
 
         pages = Page.search([('name', 'like', 'Test Duplicate')])
@@ -79,6 +80,6 @@ class TestWebsitePageManager(odoo.tests.HttpCase):
         pages = Page.search([('name', 'like', 'Test Duplicate')])
         self.assertEqual(len(pages), 4)
 
-        original_view = View.get_related_views(original_page.view_id.key)
+        original_view = View.with_context(website_id=website_id).get_related_views(original_page.view_id.key)
 
         self.assertEqual(len(original_view), 1)

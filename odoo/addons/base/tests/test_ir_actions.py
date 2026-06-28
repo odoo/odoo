@@ -3,16 +3,27 @@
 import json
 from datetime import date
 from unittest.mock import patch
-
 import requests
 from markupsafe import Markup
 
 from odoo import Command
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tests import tagged
+from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+
+
+class TestActionExplanation(TransactionCase):
+
+    def test_action_explanation(self):
+        """ Test that explanation is correctly stored and retrieved for actions. """
+        action = self.env['ir.actions.act_window'].create({
+            'name': 'Test Action',
+            'res_model': 'res.partner',
+            'explanation': 'This action is used for testing explanations.',
+        })
+        self.assertEqual(action.explanation, 'This action is used for testing explanations.')
 
 
 class TestServerActionsBase(TransactionCaseWithUserDemo):
@@ -508,6 +519,17 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
 
         self.action.with_context(self.context).run()
         self.assertEqual(self.test_country.vat_label, 'VatFromTest', 'vat label should be changed to VatFromTest')
+
+    @mute_logger('odoo.addons.base.models.ir_actions')
+    def test_55_access_error_message(self):
+        self.action.write({
+            'model_id': self.res_country_model.id,
+            'binding_model_id': self.res_country_model.id,
+            'code': '1+2',
+        })
+
+        with self.assertRaisesRegex(AccessError, "You don't have enough access rights to run this action."):
+            self.action.with_user(self.user_demo).with_context(active_model="res.country").run()
 
     def test_60_sort(self):
         """ check the actions sorted by sequence """

@@ -16,7 +16,7 @@ export function useDynamicPlaceholder(elementRef) {
     });
     const notification = useService("notification");
 
-    let model = null;
+    let modelField = null;
 
     const onDynamicPlaceholderValidate = function (path, defaultValue) {
         const element = elementRef?.el;
@@ -61,6 +61,8 @@ export function useDynamicPlaceholder(elementRef) {
      * @param {function} [opts.positionCallback]
      */
     async function open(opts) {
+        const recordData = ownerField.props.record.data;
+        const model = (modelField && recordData[modelField]) || recordData.model;
         if (!model) {
             return notification.add(
                 _t("You need to select a model before opening the dynamic placeholder selector."),
@@ -87,8 +89,7 @@ export function useDynamicPlaceholder(elementRef) {
         }
     }
     function updateModel(model_name_location) {
-        const recordData = ownerField.props.record.data;
-        model = recordData[model_name_location] || recordData.model;
+        modelField = model_name_location;
     }
 
     return {

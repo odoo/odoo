@@ -6,27 +6,26 @@ import { standardFieldProps } from "../standard_field_props";
 import { FileUploader } from "../file_handler";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 export const MAX_FILENAME_SIZE_BYTES = 0xff; // filenames do not exceed 255 bytes on Linux/Windows/MacOS
+
+export const binaryFieldProps = {
+    ...standardFieldProps,
+    acceptedFileExtensions: t.string().optional("*"),
+    // See https://www.iana.org/assignments/media-types/media-t.xhtml
+    allowedMIMETypes: t.string().optional(),
+    fileNameField: t.string().optional(),
+    // Show a button instead of file size when there is no file name
+    useReplaceButton: t.boolean().optional(),
+};
 
 export class BinaryField extends Component {
     static template = "web.BinaryField";
     static components = {
         FileUploader,
     };
-    static props = {
-        ...standardFieldProps,
-        acceptedFileExtensions: { type: String, optional: true },
-        // See https://www.iana.org/assignments/media-types/media-types.xhtml
-        allowedMIMETypes: { type: String, optional: true },
-        fileNameField: { type: String, optional: true },
-        // Show a button instead of file size when there is no file name
-        useReplaceButton: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        acceptedFileExtensions: "*",
-    };
+    props = props(binaryFieldProps);
 
     setup() {
         this.notification = useService("notification");

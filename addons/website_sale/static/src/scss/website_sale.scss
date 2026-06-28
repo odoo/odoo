@@ -31,6 +31,7 @@
         }
 
         .o_wsale_products_grid_before_rail{
+            height: calc(100vh - var(--o_ws_sidebar_top_gap));
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
@@ -55,11 +56,12 @@
     // === Content (Right) =====================================================
     // == Main content wrapper
     #products_grid {
-        overflow: auto;
+        overflow: visible;
         container-type: inline-size;
         container-name: o-wsale-grid;
         grid-template-rows: minmax(auto, auto);
 
+        /*rtl:ignore*/
         border-left: var(--o-wsale-sidebar-border);
     }
 
@@ -158,11 +160,13 @@
 
         // Filmstrip design variations ->
         &.o_wsale_filmstrip_default {
+            --o-wsale-filmstrip-item-min-height: 3.5rem;
             --o-wsale-filmstrip-item-color: #{color-contrast($light)};
             --o-wsale-filmstrip-item-bg-hover: #{if(lightness($light) > .5, darken($light, 8%), lighten($light, 8%))};
         }
 
         &.o_wsale_filmstrip_bordered {
+            --o-wsale-filmstrip-item-min-height: 3.5rem;
             --o-wsale-filmstrip-item-border-width: #{$border-width};
             --o-wsale-filmstrip-item-bg: transparent;
             --o-wsale-filmstrip-item-image-bg: #{$gray-100};
@@ -255,7 +259,7 @@
             --o-wsale-filmstrip-item-direction: column;
             --o-wsale-filmstrip-item-justify: flex-start;
             --o-wsale-filmstrip-item-width: 18rem;
-            --o-wsale-filmstrip-item-border-width: 0 #{$border-width} 0 0;
+            --o-wsale-filmstrip-item-border-width: 0 #{$border-width} 0 0 #{"/*rtl: 0 0 0 " + $border-width + "*/"};
             --o-wsale-filmstrip-item-border-radius: 0;
             --o-wsale-filmstrip-item-padding-y: #{map-get($spacers, 3)};
             --o-wsale-filmstrip-item-padding-x: #{map-get($spacers, 3)};
@@ -616,12 +620,14 @@
                     --o-wsale-topbar-border-width: 0 #{$border-width} #{$border-width} 0;
 
                     #o_wsale_pager {
+                        /*rtl:ignore*/
                         border-left: 0;
                     }
                 }
             }
 
             #o_wsale_products_grid {
+                /*rtl:ignore*/
                 box-shadow: inset -1px -1px 0 0px var(--border-color);
             }
 
@@ -629,7 +635,7 @@
                 border-left: #{$border-width} solid #{$border-color};
             }
 
-            &.o_wsale_has_sidebar.o_wsale_products_opt_layout_catalog #o_wsale_products_grid {
+            &.o_wsale_has_sidebar .o_wsale_products_opt_layout_catalog#o_wsale_products_grid {
                 @include media-breakpoint-down(lg) {
                     border-left: #{$border-width} solid #{$border-color};
                 }
@@ -642,6 +648,7 @@
             }
             @include media-breakpoint-up(lg) {
                 #products_grid {
+                    /*rtl:ignore*/
                     padding-left: 0;
                 }
             }
@@ -787,14 +794,6 @@
     &:where(:has(#o_wsale_products_grid.o_wsale_products_opt_layout_list)) {
         @include media-breakpoint-up(md) {
             --o-wsale-card-price-min-width: MAX(12ch, 16cqw);
-        }
-
-        .product_price {
-            > span, > del {
-                display: block;
-                text-align: end;
-            }
-
         }
 
         .o_wsale_product_btn_catalog {
@@ -962,12 +961,6 @@
     margin: auto;
 }
 
-.o_wsale_products_searchbar_form, #o_wsale_search_modal {
-    .oe_search_found {
-        display: none;
-    }
-}
-
 div#payment_method {
     div.list-group {
         margin-left: 40px;
@@ -1054,7 +1047,6 @@ $-product-radius-map: (
     padding-top: map-get($spacers, 3);
     padding-left: var(--o-wsale-product-col-details-padding-left, calc(var(--gutter-x) * .5));
     padding-right: var(--o-wsale-product-col-details-padding-right, calc(var(--gutter-x) * .5));
-    background-color: $body-bg;
     container: product-details / inline-size;
     z-index: 0;
 
@@ -1680,19 +1672,9 @@ $-product-radius-map: (
     }
 }
 
-// ==== IMAGE ZOOM (discontinued) ==============================================
-.ecom-zoomable {
-    &[data-ecom-zoom-click] img.product_detail_img {
-        cursor: zoom-in;
-    }
-
-    img[data-zoom] {
-        cursor: zoom-in;
-    }
-
-    .o_savable img[data-zoom] {
-        cursor: pointer;
-    }
+// ==== IMAGE ZOOM ==============================================
+.ecom-zoomable[data-ecom-zoom-click] img.product_detail_img {
+    cursor: zoom-in;
 }
 
 #coupon_box form {
@@ -2082,4 +2064,12 @@ body.modal-open:has(.o_wsale_product_page) {
 
 .o_wsale_alternative_products:not(:has(.s_dynamic_snippet_row)) {
     display: none;
+}
+
+div[name="order_confirmation"] {
+    .alert {
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
 }

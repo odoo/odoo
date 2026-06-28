@@ -55,7 +55,7 @@ def test_01_cow_views_unlink_on_module_update(env):
     })
 
     # Trigger COW on child view
-    update_module_child_view.with_context(website_id=env.ref('website.default_website').id).write({'name': 'Child View (W1)'})
+    update_module_child_view.with_context(website_id=env.ref('base.default_website').id).write({'name': 'Child View (W1)'})
 
     # Ensure views are correctly setup
     msg = "View '%s' does not exist!"
@@ -70,7 +70,6 @@ def test_01_cow_views_unlink_on_module_update(env):
     # Upgrade the module
     test_website_module = env['ir.module.module'].search([('name', '=', 'test_website')])
     test_website_module.button_immediate_upgrade()
-    env.transaction.reset()     # clear the set of environments
 
     # Ensure generic views got removed
     view = env.ref('test_website.update_module_view_to_be_t_called', raise_if_not_found=False)
@@ -115,7 +114,7 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
     ThemeView = env['theme.ir.ui.view']
     Imd = env['ir.model.data']
 
-    website_1 = env.ref('website.default_website')
+    website_1 = env.ref('base.default_website')
     website_2 = website_1.search([('id', '>', website_1.id)], order='id', limit=1).ensure_one()
     theme_default = env.ref('base.module_theme_default')
 
@@ -181,7 +180,6 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
 
     # Upgrade the module
     theme_default.button_immediate_upgrade()
-    env.transaction.reset()  # clear the set of environments
 
     # Beware: records do not belong to the correct registry anymore
     assert env.registry is not old_registry
@@ -190,7 +188,7 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
     ThemeView = env['theme.ir.ui.view']
     Imd = env['ir.model.data']
 
-    website_1 = env.ref('website.default_website')
+    website_1 = env.ref('base.default_website')
     website_2 = website_1.search([('id', '>', website_1.id)], order='id', limit=1).ensure_one()
     theme_default = env.ref('base.module_theme_default')
 
@@ -215,7 +213,6 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
     # Upgrade the module
     with MockRequest(env, website=website_1):
         theme_default.button_immediate_upgrade()
-    env.transaction.reset()  # clear the set of environments
 
     # Ensure the theme.ir.ui.view got removed (since there is an IMD but not
     # present in XML files)

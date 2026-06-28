@@ -41,22 +41,13 @@ export class LinkSelectionPlugin extends Plugin {
 
         /** Processors */
         clean_for_save_processors: (root) => this.clearLinkInSelectionClass(root),
-        normalize_processors: () => this.resetLinkInSelection(),
+        normalize_processors: (root) => {
+            this.resetLinkInSelection();
+            return root;
+        },
 
         /** Providers */
         feff_providers: this.addFeffsToLinks.bind(this),
-
-        /** Predicates */
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (container.nodeName === "BUTTON" || container.nodeName === "A") {
-                // We sometimes have buttons or links that are blocks with
-                // contenteditable=true but we never want to insert a paragraph
-                // in them.
-                // Note: this can be removed if `allowsParagraphRelatedElements`
-                // is adapted to return false in these cases.
-                return false;
-            }
-        },
 
         system_classes: ["o_link_in_selection"],
     };
@@ -122,5 +113,6 @@ export class LinkSelectionPlugin extends Plugin {
         for (const link of selectElements(root, ".o_link_in_selection")) {
             removeClass(link, "o_link_in_selection");
         }
+        return root;
     }
 }

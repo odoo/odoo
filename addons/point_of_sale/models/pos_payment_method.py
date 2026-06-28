@@ -8,6 +8,7 @@ class PosPaymentMethod(models.Model):
     _description = "Point of Sale Payment Method"
     _order = "sequence, id"
     _inherit = ['pos.load.mixin']
+    _check_company_auto = True
 
     def _default_sequence(self):
         return (self.search([], order="sequence desc", limit=1).sequence or 0) + 1
@@ -42,12 +43,14 @@ class PosPaymentMethod(models.Model):
     sequence = fields.Integer(copy=False, default=_default_sequence)
     outstanding_account_id = fields.Many2one('account.account',
         string='Outstanding Account',
+        check_company=True,
         ondelete='restrict',
         help='Account used as outstanding account when creating accounting payment records for bank payments.')
     receivable_account_id = fields.Many2one('account.account',
         string='Intermediary Account',
         ondelete='restrict',
-        domain=[('reconcile', '=', True), ('account_type', '=', 'asset_receivable')],
+        domain=[('account_type', '=', 'asset_receivable')],
+        check_company=True,
         help="Leave empty to use the default account from the company setting.\n"
              "Overrides the company's receivable account (for Point of Sale) used in the journal entries.")
     is_cash_count = fields.Boolean(string='Cash', compute="_compute_is_cash_count", store=True)
@@ -67,8 +70,13 @@ class PosPaymentMethod(models.Model):
         default=False,
         help='Forces to set a customer when using this payment method and splits the journal entries for each customer. It could slow down the closing process.')
     open_session_ids = fields.Many2many('pos.session', string='Pos Sessions', compute='_compute_open_session_ids', help='Open PoS sessions that are using this payment method.')
-    config_ids = fields.Many2many('pos.config', string='Point of Sale')
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    config_ids = fields.Many2many('pos.config', string='Point of Sale', check_company=True)
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        string='Company',
+        required=True,
+        default=lambda self: self.env.company,
+    )
     default_pos_receivable_account_name = fields.Char(related="company_id.account_default_pos_receivable_account_id.display_name", string="Default Receivable Account Name")
     active = fields.Boolean(default=True)
     type = fields.Selection(selection=[('cash', 'Cash'), ('bank', 'Bank'), ('pay_later', 'Customer Account')], compute="_compute_type")
@@ -98,7 +106,7 @@ class PosPaymentMethod(models.Model):
     @api.model
     def get_payment_providers(self):
         return [
-            {"type": "terminal", "provider": "axepta_bnpp", "module": "pos_iot_worldline", "name": "Axepta BNP Paribas"},
+            {"type": "terminal", "provider": "worldline", "module": "pos_iot_worldline", "name": "Axepta BNP Paribas"},
             {"type": "terminal", "provider": "six_iot", "module": "pos_iot_six", "name": "SIX"},
             {"type": "terminal", "provider": "adyen", "module": "pos_adyen", "name": "Adyen"},
             {"type": "terminal", "provider": "mercado_pago", "module": "pos_mercado_pago", "name": "Mercado Pago"},
@@ -114,6 +122,8 @@ class PosPaymentMethod(models.Model):
             {"type": "terminal", "provider": "safaricom", "module": "pos_safaricom", "name": "Safaricom"},
             {"type": "external_qr", "provider": "bancontact_pay", "module": "pos_bancontact_pay", "name": "Bancontact Pay"},
             {"type": "cash_machine", "provider": "glory", "module": "pos_glory_cash", "name": "Glory"},
+            {"type": "cash_machine", "provider": "cashdro", "module": "pos_cashdro", "name": "Cashdro"},
+            {"type": "cash_machine", "provider": "cashmatic", "module": "pos_cashmatic", "name": "Cashmatic"},
         ]
 
     @api.model
@@ -323,6 +333,22 @@ class PosPaymentMethod(models.Model):
                 if error_msg:
                     raise ValidationError(error_msg)
 
+    @api.constrains('config_ids')
+    def _check_company_config(self):
+        for payment in self:
+            if self.env['pos.config'].search_count([('id', 'in', payment.config_ids.ids), ('company_id', '!=', payment.company_id.id)]):
+                raise ValidationError(_("The points of sale for the payment method %s must belong to its company.", payment.name))
+
+    @api.constrains('config_ids', 'is_cash_count', 'journal_id')
+    def _check_cash_method_single_shop(self):
+        for method in self:
+            is_cash = method.is_cash_count or (method.journal_id and method.journal_id.type == 'cash')
+            if is_cash and len(method.config_ids) > 1:
+                raise ValidationError(_(
+                    "Validation Error: You cannot assign the same Cash payment method to multiple POS Shops. "
+                    "Please create a separate Cash payment method for each shop."
+                ))
+
     @api.depends('payment_method_type', 'journal_id')
     def _compute_qr(self):
         for pm in self:
@@ -331,7 +357,7 @@ class PosPaymentMethod(models.Model):
                 continue
             try:
                 # Generate QR without amount that can then be used when the POS is offline
-                pm.default_qr = pm.get_qr_code(False, '', '', pm.company_id.currency_id.id, False)
+                pm.default_qr = pm.get_qr_code_url(False, '', '', pm.company_id.currency_id.id, False)
             except UserError:
                 pm.default_qr = False
 
@@ -343,8 +369,8 @@ class PosPaymentMethod(models.Model):
         # the payment terminal modules don't need to depend on it.
         return []
 
-    def get_qr_code(self, amount, free_communication, structured_communication, currency, debtor_partner):
-        """ Generates and returns a QR-code
+    def get_qr_code_url(self, amount, free_communication, structured_communication, currency, debtor_partner):
+        """ Generates and returns a QR-code Url
         """
         self.ensure_one()
         if self.payment_method_type != "bank_qr_code" or not self.qr_code_method:
@@ -353,5 +379,5 @@ class PosPaymentMethod(models.Model):
         debtor_partner = self.env['res.partner'].browse(debtor_partner)
         currency = self.env['res.currency'].browse(currency)
 
-        return payment_bank.with_context(is_online_qr=True).build_qr_code_base64(
+        return payment_bank.with_context(is_online_qr=True).build_qr_code_url(
             float(amount), free_communication, structured_communication, currency, debtor_partner, self.qr_code_method, silent_errors=False)

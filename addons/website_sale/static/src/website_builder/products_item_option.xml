@@ -20,10 +20,22 @@
         </div>
         <BuilderRow label.translate="Re-order" t-if="this.displayReOrder">
             <BuilderButtonGroup action="'changeSequence'">
-                <BuilderButton actionValue="'top'" title.translate="Push to top" className="'fa fa-fw fa-angle-double-left'" />
-                <BuilderButton actionValue="'up'" title.translate="Push up" className="'fa fa-fw fa-angle-left ms-1'" />
-                <BuilderButton actionValue="'down'" title.translate="Push down" className="'fa fa-fw fa-angle-right mx-1'" />
-                <BuilderButton actionValue="'bottom'" title.translate="Push to bottom" className="'fa fa-fw fa-angle-double-right'" />
+                <BuilderButton ltrRtlMapping="'top-bottom'" isLabelLinkedToContent="true"
+                    actionValue="'top'"
+                    title.translate="Push to top"
+                    icon="'fa-fw fa-angle-double-left'" />
+                <BuilderButton ltrRtlMapping="'up-down'" isLabelLinkedToContent="true"
+                    actionValue="'up'"
+                    title.translate="Push up"
+                    icon="'fa-fw fa-angle-left'" />
+                <BuilderButton ltrRtlMapping="'up-down'" isLabelLinkedToContent="true"
+                    actionValue="'down'"
+                    title.translate="Push down"
+                    icon="'fa-fw fa-angle-right'" />
+                <BuilderButton ltrRtlMapping="'top-bottom'" isLabelLinkedToContent="true"
+                    actionValue="'bottom'"
+                    title.translate="Push to bottom"
+                    icon="'fa-fw fa-angle-double-right'" />
             </BuilderButtonGroup>
         </BuilderRow>
     </t>

@@ -9,19 +9,19 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { SavePlugin } from "@html_builder/core/save_plugin";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, delay, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, delay, queryOne, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
 describe("useDomState", () => {
-    test("Should not update the state of an async useDomState if a new step has been made", async () => {
+    test("Should not update the state of an async useDomState if a new commit has been written", async () => {
         let currentResolve;
         addBuilderOption({
             selector: ".test-options-target",
             Component: class extends BaseOptionComponent {
-                static template = xml`<div t-att-data-letter="getLetter()"/>`;
+                static template = xml`<div t-att-data-letter="this.getLetter()"/>`;
                 setup() {
                     super.setup(...arguments);
                     this.state = useDomState(async () => {
@@ -48,10 +48,10 @@ describe("useDomState", () => {
         await animationFrame();
 
         editor.editable.querySelector(".test-options-target").textContent = "b";
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         const resolve2 = currentResolve;
         editor.editable.querySelector(".test-options-target").textContent = "c";
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         const resolve3 = currentResolve;
 
         resolve3("z");
@@ -82,7 +82,7 @@ describe("waitSidebarUpdated", () => {
         class TestSubComponent extends BaseOptionComponent {
             static template = xml`
                 <div class="test-value-sub">
-                    <t t-out="state.value"/>
+                    <t t-out="this.state.value"/>
                 </div>
             `;
             setup() {
@@ -97,7 +97,7 @@ describe("waitSidebarUpdated", () => {
         class TestOptionComponent extends BaseOptionComponent {
             static template = xml`
                 <div class="test-value-parent">
-                    <t t-out="state.value"/>
+                    <t t-out="this.state.value"/>
                 </div>
                 <div class="test-button-1">
                     <BuilderButton action="'testAction'" actionValue="'b'">b</BuilderButton>
@@ -105,7 +105,7 @@ describe("waitSidebarUpdated", () => {
                 <div class="test-button-2">
                     <BuilderButton id="'button_2_opt'" action="'testAction'" actionValue="'c'">c</BuilderButton>
                 </div>
-                <t t-if="state.showOther and isActiveItem('button_2_opt')">
+                <t t-if="this.state.showOther and this.isActiveItem('button_2_opt')">
                     <TestSubComponent/>
                 </t>
             `;
@@ -256,7 +256,7 @@ test("System should not crash if an asynchronous useDomState is working with rem
     let useDomStateStarted;
     let editingElRemoved;
     class TestOptionComponent extends BaseOptionComponent {
-        static template = xml`<BuilderButton t-if="state.showOption" classAction="'y'">Click</BuilderButton>`;
+        static template = xml`<BuilderButton t-if="this.state.showOption" classAction="'y'">Click</BuilderButton>`;
         setup() {
             super.setup();
             this.state = useDomState(async (el) => {
@@ -281,4 +281,118 @@ test("System should not crash if an asynchronous useDomState is working with rem
     await useDomStateStarted.promise;
     queryOne(":iframe .test").remove();
     editingElRemoved.resolve();
+});
+
+describe("useSelectableLtrRtlComponent", () => {
+    test("Should register 2*2 ltrRtlMapping with the same name in different parents", async () => {
+        addBuilderOption(
+            class TestOptionComponent extends BaseOptionComponent {
+                static selector = "div.test-options-target";
+                static template = xml`
+                    <BuilderButtonGroup>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'a'">A</BuilderButton>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'b'">B</BuilderButton>
+                    </BuilderButtonGroup>
+                    <BuilderButtonGroup>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'c'">C</BuilderButton>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'d'">D</BuilderButton>
+                    </BuilderButtonGroup>
+                `;
+            }
+        );
+        await setupHTMLBuilder(`<div class="test-options-target">Target</div>`);
+        await contains(":iframe .test-options-target").click();
+        await tick();
+        for (const cls of ["a", "b", "c", "d"]) {
+            expect(`[data-class-action=${cls}]`).toBeVisible();
+        }
+    });
+    test("Registering only 1 ltrRtlMapping should crash", async () => {
+        addBuilderOption(
+            class TestOptionComponent extends BaseOptionComponent {
+                static selector = "div.test-options-target";
+                static template = xml`
+                    <BuilderButtonGroup>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'d-none'">Hide</BuilderButton>
+                    </BuilderButtonGroup>
+                `;
+            }
+        );
+        await setupHTMLBuilder(`<div class="test-options-target">Target</div>`);
+        await contains(":iframe .test-options-target").click();
+        await tick();
+        expect.waitForErrors([
+            `ltrRtlMapping "test" has been found only once. They should always come in pair and shouldn't have different render conditions.`,
+        ]);
+    });
+    test("Registering 2 ltrRtlMapping with different rendering conditions should crash", async () => {
+        addBuilderOption(
+            class TestOptionComponent extends BaseOptionComponent {
+                static selector = "div.test-options-target";
+                static template = xml`
+                    <BuilderButtonGroup>
+                        <BuilderButton t-if="true" ltrRtlMapping="'test'" classAction="'button-a'">A</BuilderButton>
+                        <BuilderButton t-if="false" ltrRtlMapping="'test'" classAction="'button-b'">B</BuilderButton>
+                    </BuilderButtonGroup>
+                `;
+            }
+        );
+        await setupHTMLBuilder(`<div class="test-options-target">Target</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect.waitForErrors([
+            `ltrRtlMapping "test" has been found only once. They should always come in pair and shouldn't have different render conditions.`,
+        ]);
+    });
+    test("Registering 3 identical ltrRtlMapping should crash", async () => {
+        addBuilderOption(
+            class TestOptionComponent extends BaseOptionComponent {
+                static selector = "div.test-options-target";
+                static template = xml`
+                    <BuilderButtonGroup>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'button-a'">Button A</BuilderButton>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'button-b'">Button B</BuilderButton>
+                        <BuilderButton ltrRtlMapping="'test'" classAction="'button-c'">Button C</BuilderButton>
+                    </BuilderButtonGroup>
+                `;
+            }
+        );
+        await setupHTMLBuilder(`<div class="test-options-target">Target</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect.waitForErrors([
+            `ltrRtlMapping "test" has been found more than twice. They should always come in pair.`,
+        ]);
+    });
+});
+
+test("UI is unblocked when getting an error on a reloadable operation", async () => {
+    expect.errors(1);
+    const { promise, resolve } = Promise.withResolvers();
+    addBuilderAction({
+        TestAction: class extends BuilderAction {
+            static id = "testAction";
+            setup() {
+                this.reload = {};
+            }
+            async apply({ editingElement }) {
+                await promise;
+                throw new Error("Apply failed!");
+            }
+        },
+    });
+
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton action="'testAction'">Click</BuilderButton>`,
+    });
+
+    const { waitSidebarUpdated } = await setupHTMLBuilder(
+        `<div class="test-options-target">Target</div>`
+    );
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container [data-action-id='testAction']").click();
+    expect(".o_blockUI").toHaveCount(1);
+    resolve();
+    await waitSidebarUpdated();
+    expect(".o_blockUI").toHaveCount(0);
+    expect.verifyErrors(["Apply failed!"]);
 });

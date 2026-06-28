@@ -574,7 +574,7 @@ class TestProfiling(TransactionCase):
 
     def test_profiler_return(self):
         # Enter test mode to avoid the profiler to commit the result
-        self.registry_enter_test_mode()
+        self.enterContext(self.registry_test_mode())
         # Trick: patch db_connect() to make it return the registry with the current test cursor
         # See `ProfilingHttpCase`
         self.startClassPatcher(patch('odoo.sql_db.db_connect', return_value=self.registry))

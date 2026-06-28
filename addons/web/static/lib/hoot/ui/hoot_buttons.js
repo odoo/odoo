@@ -1,24 +1,16 @@
 /** @odoo-module */
 
-import { Component, useState, xml } from "@odoo/owl";
-import { refresh, subscribeToURLParams } from "../core/url";
+import { Component, signal, types as t, xml } from "@odoo/owl";
+import { refresh } from "../core/url";
 import { STORAGE, storageSet } from "../hoot_utils";
 import { HootLink } from "./hoot_link";
-
-/**
- * @typedef {{
- * }} HootButtonsProps
- */
+import { getConfigPlugin, getRunnerPlugin } from "./runner_plugin";
 
 //-----------------------------------------------------------------------------
 // Global
 //-----------------------------------------------------------------------------
 
-const {
-    clearTimeout,
-    Object: { keys: $keys },
-    setTimeout,
-} = globalThis;
+const { clearTimeout, setTimeout } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -30,28 +22,24 @@ const DISABLE_TIMEOUT = 500;
 // Exports
 //-----------------------------------------------------------------------------
 
-/** @extends {Component<HootButtonsProps, import("../hoot").Environment>} */
 export class HootButtons extends Component {
     static components = { HootLink };
-
-    static props = {};
-
     static template = xml`
-        <t t-set="isRunning" t-value="runnerState.status === 'running'" />
-        <t t-set="showAll" t-value="env.runner.hasRemovableFilter" />
-        <t t-set="showFailed" t-value="runnerState.failedIds.size" />
+        <t t-set="isRunning" t-value="this.runner.status() === 'running'" />
+        <t t-set="showAll" t-value="this.runner.hasRemovableFilter" />
+        <t t-set="showFailed" t-value="this.runner.failedIds().size" />
         <div
             class="${HootButtons.name} relative"
-            t-on-pointerenter="onPointerEnter"
-            t-on-pointerleave="onPointerLeave"
+            t-on-pointerenter="this.onPointerEnter"
+            t-on-pointerleave="this.onPointerLeave"
         >
             <div class="flex rounded gap-px overflow-hidden">
             <button
                 type="button"
                 class="flex items-center bg-btn gap-2 px-2 py-1 transition-colors"
-                t-on-click.stop="onRunClick"
+                t-on-click.stop="this.onRunClick"
                 t-att-title="isRunning ? 'Stop (Esc)' : 'Run'"
-                t-att-disabled="state.disable"
+                t-att-disabled="this.isDisabled()"
             >
                 <i t-attf-class="fa fa-{{ isRunning ? 'stop' : 'play' }}" />
                 <span t-out="isRunning ? 'Stop' : 'Run'" />
@@ -60,13 +48,13 @@ export class HootButtons extends Component {
                 <button
                     type="button"
                     class="bg-btn px-2 py-1 transition-colors animate-slide-left"
-                    t-on-click.stop="onToggleClick"
+                    t-on-click.stop="this.onToggleClick"
                 >
-                    <i class="fa fa-caret-down transition" t-att-class="{ 'rotate-180': state.open }" />
+                    <i class="fa fa-caret-down transition" t-att-class="{ 'rotate-180': this.isOpen() }" />
                 </button>
             </t>
             </div>
-            <t t-if="state.open">
+            <t t-if="this.isOpen()">
                 <div
                     class="
                         w-fit absolute animate-slide-down
@@ -85,16 +73,16 @@ export class HootButtons extends Component {
                         <HootLink
                             class="'p-3 whitespace-nowrap transition-colors hover:bg-gray-300 dark:hover:bg-gray-700'"
                             title="'Run failed tests'"
-                            ids="{ id: runnerState.failedIds }"
-                            onClick="onRunFailedClick"
+                            ids="{ id: this.runner.failedIds() }"
+                            onClick="this.onRunFailedClick"
                         >
                             Run <strong class="text-rose">failed</strong> tests
                         </HootLink>
                         <HootLink
                             class="'p-3 whitespace-nowrap transition-colors hover:bg-gray-300 dark:hover:bg-gray-700'"
                             title="'Run failed suites'"
-                            ids="{ id: getFailedSuiteIds() }"
-                            onClick="onRunFailedClick"
+                            ids="{ id: this.getFailedSuiteIds() }"
+                            onClick="this.onRunFailedClick"
                         >
                             Run <strong class="text-rose">failed</strong> suites
                         </HootLink>
@@ -104,22 +92,21 @@ export class HootButtons extends Component {
         </div>
     `;
 
-    setup() {
-        const { runner } = this.env;
-        this.state = useState({
-            disable: false,
-            open: false,
-        });
-        this.runnerState = useState(runner.state);
-        this.disableTimeout = 0;
+    // Props & plugins
+    config = getConfigPlugin();
+    runner = getRunnerPlugin();
 
-        subscribeToURLParams(...$keys(runner.config));
-    }
+    // Reactive values
+    isDisabled = signal(false, { type: t.boolean() });
+    isOpen = signal(false, { type: t.boolean() });
+
+    // Other members
+    disableTimeout = 0;
 
     getFailedSuiteIds() {
-        const { tests } = this.env.runner;
+        const { tests } = this.runner;
         const suiteIds = [];
-        for (const id of this.runnerState.failedIds) {
+        for (const id of this.runner.failedIds()) {
             const test = tests.get(id);
             if (test && !suiteIds.includes(test.parent.id)) {
                 suiteIds.push(test.parent.id);
@@ -135,7 +122,7 @@ export class HootButtons extends Component {
         if (ev.pointerType !== "mouse") {
             return;
         }
-        this.state.open = false;
+        this.isOpen.set(false);
     }
 
     /**
@@ -146,35 +133,31 @@ export class HootButtons extends Component {
             return;
         }
         if (!this.isRunning) {
-            this.state.open = true;
+            this.isOpen.set(true);
         }
     }
 
     onRunClick() {
-        const { runner } = this.env;
-        switch (runner.state.status) {
+        switch (this.runner.status()) {
             case "done": {
                 refresh();
                 break;
             }
             case "ready": {
-                if (runner.config.manual) {
-                    runner.manualStart();
+                if (this.config.manual()) {
+                    this.runner.manualStart();
                 } else {
                     refresh();
                 }
                 break;
             }
             case "running": {
-                runner.stop();
+                this.runner.stop();
                 if (this.disableTimeout) {
                     clearTimeout(this.disableTimeout);
                 }
-                this.state.disable = true;
-                this.disableTimeout = setTimeout(
-                    () => (this.state.disable = false),
-                    DISABLE_TIMEOUT
-                );
+                this.isDisabled.set(true);
+                this.disableTimeout = setTimeout(() => this.isDisabled.set(false), DISABLE_TIMEOUT);
                 break;
             }
         }
@@ -185,6 +168,6 @@ export class HootButtons extends Component {
     }
 
     onToggleClick() {
-        this.state.open = !this.state.open;
+        this.isOpen.set(!this.isOpen());
     }
 }

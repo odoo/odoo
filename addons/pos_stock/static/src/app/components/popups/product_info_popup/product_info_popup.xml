@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_stock.ProductInfoPopup" t-inherit="point_of_sale.ProductInfoPopup" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('section-inventory')]//h3" position="inside">
+            <t t-if="this.pos.session.update_stock_at_closing"> (as of opening)</t>
+        </xpath>
+        <div class="section-inventory-body" position="replace">
+            <div class="section-inventory-body">
+                <t t-foreach="this.props.info.productInfo.warehouses" t-as="warehouse" t-key="warehouse.name">
+                    <div class="d-flex flex-column flex-md-row gap-2">
+                        <div>
+                            <t t-out="warehouse.name" class="table-name"/>
+                            :
+                        </div>
+                        <div>
+                            <span class="me-1 fw-bolder"><t t-out="warehouse.free_qty" class="table-name"/></span>
+                            <t t-out="warehouse.uom"/> available,
+                        </div>
+                        <div>
+                            <span class="me-1 fw-bolder"><t t-out="warehouse.forecasted_quantity"/></span>
+                            forecasted
+                        </div>
+                    </div>
+                    <div>
+                        On hand: <span class="me-1 fw-bolder"><t t-out="warehouse.available_quantity"/></span>
+                        <t t-out="warehouse.uom"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

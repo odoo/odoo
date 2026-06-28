@@ -11,7 +11,12 @@ from shutil import copyfileobj
 from types import CodeType
 
 from werkzeug import urls
-from werkzeug.datastructures import FileStorage, MultiDict, iter_multi_items
+from werkzeug.datastructures import (
+    FileStorage,
+    MultiDict,
+    WWWAuthenticate,
+    iter_multi_items,
+)
 from werkzeug.routing import Rule
 from werkzeug.urls import _decode_idna
 from werkzeug.wrappers import Request, Response
@@ -1027,6 +1032,12 @@ def patch_module():
     Request.json_module = Response.json_module = scriptsafe
 
     FileStorage.save = lambda self, dst, buffer_size=(1 << 20): copyfileobj(self.stream, dst, buffer_size)
+
+    # https://github.com/pallets/werkzeug/issues/3127
+    def _stripped_to_header(*args, **kwargs):
+        return orig_to_header(*args, **kwargs).rstrip()
+    orig_to_header = WWWAuthenticate.to_header
+    WWWAuthenticate.to_header = _stripped_to_header
 
     def _multidict_deepcopy(self, memo=None):
         return orig_deepcopy(self)

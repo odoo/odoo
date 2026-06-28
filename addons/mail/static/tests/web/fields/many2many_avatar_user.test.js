@@ -38,13 +38,13 @@ test("many2many_avatar_user in kanban view", async () => {
             </kanban>
         `,
     });
-    expect(".o_kanban_record .o_field_many2many_avatar_user .o_m2m_avatar_empty").toHaveText("+2");
+    expect(".o_kanban_record .o_field_many2many_avatar_user .o_m2m_avatar_empty").toHaveText("+3");
     await click(".o_kanban_record .o_field_many2many_avatar_user .o_quick_assign");
     await contains(".o_popover > .o_field_tags > .o_tag", { count: 4 });
-    await contains(".o_popover > .o_field_tags > .o_tag:eq(0):text('Tapu')");
-    await contains(".o_popover > .o_field_tags > .o_tag:eq(1):text('Luigi')");
-    await contains(".o_popover > .o_field_tags > .o_tag:eq(2):text('Yoshi')");
-    await contains(".o_popover > .o_field_tags > .o_tag:eq(3):text('Mario')");
+    await contains(".o_popover > .o_field_tags > .o_tag:eq(0):text('Mario')");
+    await contains(".o_popover > .o_field_tags > .o_tag:eq(1):text('Yoshi')");
+    await contains(".o_popover > .o_field_tags > .o_tag:eq(2):text('Luigi')");
+    await contains(".o_popover > .o_field_tags > .o_tag:eq(3):text('Tapu')");
 });
 
 test('many2one_avatar_user widget edited by the smart action "Assign to..."', async () => {
@@ -264,7 +264,6 @@ test("avatar_user widget displays the appropriate user image in kanban view", as
             </kanban>
         `,
     });
-    await start();
     await contains(
         `.o_m2o_avatar > img[data-src="/web/image/res.users/${userId}/avatar_128?unique=1676282400000"]`
     );

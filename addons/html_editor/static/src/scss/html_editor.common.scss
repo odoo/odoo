@@ -170,17 +170,20 @@ ul.o_checklist {
                 justify-content: center;
                 padding-left: 1px #{"/*rtl:ignore*/"};
                 padding-top: 1px;
+                transition: opacity .5s;
+                opacity: 1;
             }
 
-            &:has(ul, ol)::before {
+            &.o_checked_has_nested_list::before {
                 opacity: 0.5;
             }
 
-            &:not(:has(ul, ol)) {
+            &:not(.o_checked_has_nested_list) {
                 text-decoration: line-through;
                 opacity: 0.5;
             }
-            &:has(ul, ol) > :not(ul, ol) {
+
+            &.o_checked_has_nested_list > :not(ul, ol) {
                 text-decoration: line-through;
                 opacity: 0.5;
             }
@@ -663,7 +666,7 @@ pre {
             // Primary
             $-btn-primary-color: if($-btn-primary, o-color($-btn-primary), map-get($theme-colors, 'primary'));
             $-btn-primary-border-color: if($-btn-primary-border, o-color($-btn-primary-border), $-btn-primary-color);
-            $-btn-primary-outline-color: increase-contrast($-btn-primary-border-color, $-bg-color);
+            $-btn-primary-outline-color: if($-btn-primary, $-btn-primary-color, increase-contrast($-btn-primary-border-color, $-bg-color));
             .btn-fill-primary {
                 @include button-variant($-btn-primary-color, $-btn-primary-border-color);
             }
@@ -674,7 +677,7 @@ pre {
             // Secondary
             $-btn-secondary-color: if($-btn-secondary, o-color($-btn-secondary), map-get($theme-colors, 'secondary'));
             $-btn-secondary-border-color: if($-btn-secondary-border, o-color($-btn-secondary-border), $-btn-secondary-color);
-            $-btn-secondary-outline-color: increase-contrast($-btn-secondary-border-color, $-bg-color);
+            $-btn-secondary-outline-color: if($-btn-secondary, $-btn-secondary-color, increase-contrast($-btn-secondary-border-color, $-bg-color));
             .btn-fill-secondary {
                 @include button-variant($-btn-secondary-color, $-btn-secondary-border-color);
             }
@@ -722,14 +725,17 @@ pre {
     background-image: none !important;
 }
 
-.o_full_screen_height {
+@mixin o_full_screen_height {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     min-height: 100vh !important;
 }
+.o_full_screen_height {
+    @include o_full_screen_height;
+}
 .o_half_screen_height {
-    @extend .o_full_screen_height;
+    @include o_full_screen_height;
     min-height: 55vh !important;
 }
 
@@ -853,4 +859,12 @@ code.o_inline_code {
     background-color: var(--WebEditor__inlineCode-bg, #{$gray-200});
     font-size: 85%;
     color: $gray-900;
+    font-style: normal;
+    font-weight: normal;
+}
+
+// Ensure colored font wrapper is inherited by child links
+font[class^="text-o-"] a,
+font[style*="color"] a {
+    color: inherit !important;
 }

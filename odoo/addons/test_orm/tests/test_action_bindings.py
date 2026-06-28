@@ -10,7 +10,7 @@ class TestActionBindings(common.TransactionCase):
 
         # first make sure there is no bound action
         self.env.ref('base.action_partner_merge').unlink()
-        bindings = Actions.get_bindings('res.partner')
+        bindings = Actions.get_bindings('test_orm.partner')
         self.assertFalse(bindings.get('action'))
         self.assertFalse(bindings.get('report'))
 
@@ -20,9 +20,9 @@ class TestActionBindings(common.TransactionCase):
         action3 = self.env['ir.actions.report'].search([('group_ids', '=', False)], limit=1)
         action1.binding_model_id = action2.binding_model_id \
                                  = action3.binding_model_id \
-                                 = self.env['ir.model']._get('res.partner')
+                                 = self.env['ir.model']._get('test_orm.partner')
 
-        bindings = Actions.get_bindings('res.partner')
+        bindings = Actions.get_bindings('test_orm.partner')
         self.assertItemsEqual(
             bindings['action'],
             (action1 + action2).read(['name', 'binding_view_types']),
@@ -39,7 +39,7 @@ class TestActionBindings(common.TransactionCase):
         action2.group_ids += group
         self.env.user.group_ids -= group
 
-        bindings = Actions.get_bindings('res.partner')
+        bindings = Actions.get_bindings('test_orm.partner')
         self.assertItemsEqual(
             bindings['action'],
             action1.read(['name', 'binding_view_types']),

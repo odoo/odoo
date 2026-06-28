@@ -39,7 +39,7 @@ class TestStockFlow(TestStockCommon):
         cls.SDozA = cls.ProductObj.create({'name': 'SuperDozon-A', 'is_storable': True, 'uom_id': cls.uom_sdozen.id})
         cls.UnitA = cls.ProductObj.create({'name': 'Unit-A', 'is_storable': True})
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.models')
     def test_00_picking_create_and_transfer_quantity(self):
         """ Basic stock operation on incoming and outgoing shipment. """
         LotObj = self.env['stock.lot']
@@ -1528,7 +1528,7 @@ class TestStockFlow(TestStockCommon):
         # receive one product in stock
         inventory_quant.inventory_quantity = 2
         inventory_quant.action_apply_inventory()
-        # recheck availability of the delivery order, it should be assigned
+        # re-reserve the delivery order, it should be assigned
         picking_out.action_assign()
         self.assertEqual(len(picking_out.move_ids), 1.0)
         self.assertEqual(picking_out.move_ids.product_qty, 2.0)
@@ -1610,7 +1610,7 @@ class TestStockFlow(TestStockCommon):
         inventory_quant.inventory_quantity = 2
         inventory_quant.action_apply_inventory()
 
-        # recheck availability of the delivery order, it should be assigned
+        # re-reserve the delivery order, it should be assigned
         picking_out.action_assign()
         self.assertEqual(picking_out.state, "assigned")
 
@@ -2526,7 +2526,6 @@ class TestStockFlow(TestStockCommon):
     def test_multi_picking_validation(self):
         """ This test ensures that the validation of 2 pickings is successfull even if they have different operation types """
 
-        self.env.user.write({'group_ids': [Command.link(self.env.ref('stock.group_reception_report').id)]})
         picking_A, picking_B = self.PickingObj.create([{
             'picking_type_id': self.picking_type_in.id,
             'location_id': self.supplier_location.id,

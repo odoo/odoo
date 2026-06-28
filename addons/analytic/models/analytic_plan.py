@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
-
 from random import randint
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import ormcache, make_index_name, create_index
+from odoo.tools import frozendict
+from odoo.tools.sql import create_index, make_index_name
 
 
 class AccountAnalyticPlan(models.Model):
@@ -100,15 +99,12 @@ class AccountAnalyticPlan(models.Model):
             )
         self.env.cr.precommit.add(precommit)
 
-    @ormcache()
+    @api.ormcache()
     def __get_all_plans(self):
         project_plan = self.browse(self.env['ir.config_parameter'].sudo().get_int('analytic.project_plan'))
-        if not project_plan:
+        if not project_plan and self.env.registry.ready:
             raise UserError(_("A 'Project' plan needs to exist and its id needs to be set as `analytic.project_plan` in the system variables"))
         other_plans = self.sudo().search([('parent_id', '=', False)]) - project_plan
-        if project_plan.id == 1 and not self.env.registry.ready and not project_plan.exists():
-            # temporary fix during load
-            project_plan, other_plans = other_plans[0], other_plans[1:]
         return project_plan.id, other_plans.ids
 
     def _get_all_plans(self):
@@ -216,6 +212,10 @@ class AccountAnalyticPlan(models.Model):
     def get_relevant_plans(self, **kwargs):
         """ Returns the list of plans that should be available.
             This list is computed based on the applicabilities of root plans. """
+        cache = self.env.cr.cache.setdefault('get_relevant_plans', {})
+        key = frozendict(kwargs)
+        if key in cache:
+            return cache[key]
         record_account_ids = kwargs.get('existing_account_ids', [])
         project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
         root_plans = (project_plan + other_plans).filtered(lambda p: (
@@ -228,7 +228,7 @@ class AccountAnalyticPlan(models.Model):
         # percentage could be different from 0)
         forced_plans = self.env['account.analytic.account'].browse(record_account_ids).exists().mapped(
             'root_plan_id') - root_plans
-        return [
+        cache[key] = [
             {
                 "id": plan.id,
                 "name": plan.name,
@@ -239,6 +239,7 @@ class AccountAnalyticPlan(models.Model):
             }
             for plan in (root_plans + forced_plans).sorted('sequence')
         ]
+        return cache[key]
 
     def _get_applicability(self, **kwargs):
         """ Returns the applicability of the best applicability line or the default applicability """
@@ -267,7 +268,8 @@ class AccountAnalyticPlan(models.Model):
         related_fields = self._find_related_field()
         res = super().unlink()
         related_fields.filtered(lambda f: not self._is_subplan_field_used(f)).unlink()
-        self.env.registry.clear_cache('stable')
+        self.env.transaction.invalidate_ormcache('stable')
+        self.env.cr.cache.pop('get_relevant_plans', None)
         return res
 
     def _hierarchy_name(self):
@@ -366,7 +368,14 @@ class AccountAnalyticPlan(models.Model):
         if self.children_ids:
             self.children_ids._sync_plan_column(model)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        self.env.cr.cache.pop('get_relevant_plans', None)
+        return super().create(vals_list)
+
     def write(self, vals):
+        if 'default_applicability' in vals:
+            self.env.cr.cache.pop('get_relevant_plans', None)
         new_parent = self.env['account.analytic.plan'].browse(vals.get('parent_id'))
         plan2previous_parent = {plan: plan.parent_id for plan in self if plan.parent_id}
         if 'parent_id' in vals and new_parent:
@@ -418,6 +427,19 @@ class AccountAnalyticApplicability(models.Model):
         string='Company',
         default=lambda self: self.env.company,
     )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        self.env.cr.cache.pop('get_relevant_plans', None)
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self.env.cr.cache.pop('get_relevant_plans', None)
+        return super().write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_clear_cache(self):
+        self.env.cr.cache.pop('get_relevant_plans', None)
 
     def _get_score(self, **kwargs):
         """ Gives the score of an applicability with the parameters of kwargs """

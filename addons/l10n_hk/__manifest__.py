@@ -12,6 +12,7 @@
     ],
     'auto_install': ['account'],
     'data': [
+        'data/account.account.tag.csv',
         'data/account_chart_template_data.xml',
         'views/res_bank_views.xml',
     ],

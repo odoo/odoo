@@ -11,7 +11,7 @@ class TestUi(HttpCase):
             self.skipTest("Transfer provider is not installed")
 
         transfer_provider = self.env.ref("payment.payment_provider_transfer")
-        transfer_provider.write({"state": "enabled", "is_published": True})
+        transfer_provider.is_published = True
         transfer_provider._transfer_ensure_pending_msg_is_set()
 
         if "enforce_cities" in self.env["res.country"]._fields:

@@ -7,17 +7,13 @@
                 <div class="page">
                     <div class="oe_structure"/>
                     <div class="row mt8">
-                        <div class="col-8">
-                            <h2>
-                                <span>RETURN OF <span t-out="o.name">Default Return Name</span></span>
-                            </h2>
-                            <p>
-                                Please put this document inside your return parcel.<br/>
-                                Your parcel must be sent to this address:
-                            </p>
-                            <span t-field="(o if o.picking_type_code == 'incoming' else o.location_id.warehouse_id).partner_id"
-                                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'>Demo Address and Name</span>
-                        </div>
+                        <t t-call="stock.return_label_header">
+                            <t t-set="picking" t-value="o"/>
+                            <t
+                                t-set="wh_address_id"
+                                t-value="o.picking_type_code == 'incoming' and o.location_id.warehouse_id.partner_id or o.partner_id"
+                            />
+                        </t>
                         <div class="col-4 text-center mt-4">
                             <div>
                                 <span t-field="o.name" t-options="{'widget': 'barcode', 'img_style': 'width:100%;'}">Default Barcode Name</span>
@@ -35,6 +31,24 @@
         </t>
     </template>
 
+    <template id="return_label_header">
+        <div class="col-8">
+            <h1>RETURN OF <t t-out="picking.name"/></h1>
+            <p>Please put this document inside your return parcel.<br/></p>
+            <p class="mt-4 mb-0 fw-bold">
+                Your parcel must be sent to this address:
+            </p>
+            <div
+                t-out="wh_address_id"
+                t-options="{
+                    'widget': 'contact',
+                    'fields': ['address', 'name', 'phone'],
+                    'no_marker': True,
+                    'phone_icons': True,
+                }"
+            />
+        </div>
+    </template>
 
     <template id="report_return_document">
         <t t-foreach="docs" t-as="o">

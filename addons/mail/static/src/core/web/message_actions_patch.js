@@ -1,4 +1,4 @@
-import { getNonEditableMentions, parseEmail } from "@mail/utils/common/format";
+import { prepareBodyForEditing, parseEmail } from "@mail/utils/common/format";
 import { registerMessageAction } from "@mail/core/common/message_actions";
 import { _t } from "@web/core/l10n/translation";
 import { renderToMarkup } from "@web/core/utils/render";
@@ -23,7 +23,7 @@ export function messageActionOpenFullComposer(title, context, component) {
         },
     };
     component.env.services.action.doAction(action, {
-        onClose: () => thread.fetchNewMessages(),
+        onClose: () => thread.fetchThreadData(thread.fullComposerCloseRequestList),
     });
 }
 
@@ -37,7 +37,6 @@ registerMessageAction("reply-all", {
             thread_id: thread.id,
             message_id: message.id,
         });
-        const recipientIds = recipients.map((r) => r.id);
         // usually reply_to is what you want people to see as being "from"
         // showing this avoids "leaking" the actual user when reply_to is an alias
         const emailFrom = message.reply_to || message.email_from || message.author_id?.email;
@@ -47,7 +46,7 @@ registerMessageAction("reply-all", {
             time: message.datetime.toFormat("hh:mm a"),
         });
         const body = renderToMarkup("mail.Message.bodyInReply", {
-            body: getNonEditableMentions(message.body),
+            body: prepareBodyForEditing(message.body),
             date: datetime,
             email,
             message,
@@ -59,11 +58,16 @@ registerMessageAction("reply-all", {
             default_composition_mode: "comment",
             default_composition_comment_option: "reply_all",
             default_email_add_signature: false,
-            default_partner_ids: recipientIds,
+            default_partner_ids: recipients
+                .filter((r) => r.recipient_type !== "cc")
+                .map((r) => r.id),
+            default_partner_cc_ids: recipients
+                .filter((r) => r.recipient_type === "cc")
+                .map((r) => r.id),
         };
         messageActionOpenFullComposer(_t("Reply All"), context, owner);
     },
-    sequence: 71,
+    sequence: ({ message }) => (message.isSelfAuthored ? 55 : 20),
 });
 registerMessageAction("forward", {
     condition: ({ message, thread }) => message.canForward(thread),
@@ -79,7 +83,7 @@ registerMessageAction("forward", {
             time: message.datetime.toFormat("hh:mm a"),
         });
         const body = renderToMarkup("mail.Message.bodyInForward", {
-            body: getNonEditableMentions(message.body),
+            body: prepareBodyForEditing(message.body),
             date: datetime,
             email,
             message,
@@ -104,5 +108,5 @@ registerMessageAction("forward", {
         };
         messageActionOpenFullComposer(_t("Forward Message"), context, owner);
     },
-    sequence: 72,
+    sequence: 30,
 });

@@ -5,6 +5,7 @@ from unittest import skip
 
 from odoo.tests import Form, tagged
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 from odoo.exceptions import UserError
 
 
@@ -82,4 +83,54 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             {'debit': 1, 'credit': 0, 'account_id': self.company_data['default_account_receivable'].id},
             {'debit': 0, 'credit': 10, 'account_id': self.company_data['default_account_stock_out'].id},
             {'debit': 10, 'credit': 0, 'account_id': self.company_data['default_account_expense'].id},
+        ])
+
+
+@tagged('post_install', '-at_install')
+class TestAngloSaxonValuationNoSkip(TestStockValuationCommon):
+
+    def test_ro_invoice_double_valuation(self):
+        """This test make sure that the valuation entry for a repair is created only once.
+           It could happen if the repair order was already creating the valuation, then the sale order would also create it
+           when invoiced"""
+
+        self.product_fifo_auto.taxes_id = False
+        self.env['stock.quant']._update_available_quantity(self.product_fifo_auto, self.warehouse.lot_stock_id, 5)
+
+        self.account_inventory = self.env['account.account'].create({
+            'name': 'Inventory Account',
+            'code': '100101',
+            'account_type': 'asset_current',
+        })
+        inventory_locations = self.warehouse.repair_type_id.default_location_dest_id
+        inventory_locations.valuation_account_id = self.account_inventory.id
+
+        ro = self.env['repair.order'].create({
+            'product_id': self.product.id,
+            'partner_id': self.owner.id,
+            'move_ids': [(0, 0, {
+                'repair_line_type': 'add',
+                'product_id': self.product_fifo_auto.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        ro.action_validate()
+        ro.action_repair_start()
+        ro.action_repair_end()
+
+        ro.sudo().action_create_sale_order()
+        so = ro.sale_order_id
+        so.sudo().action_confirm()
+        self.assertEqual(so.order_line.qty_to_invoice, 1)
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+
+        self.assertRecordValues(invoice.line_ids, [
+            {'debit': 0.0, 'credit': 20.0, 'account_id': self.account_income.id},
+            {'debit': 20.0, 'credit': 0.0, 'account_id': self.account_receivable.id},
+        ])
+        self.assertRecordValues(ro.move_ids.account_move_id.line_ids, [
+            {'debit': 0.0, 'credit': 10.0, 'account_id': self.account_stock_valuation.id},
+            {'debit': 10.0, 'credit': 0.0, 'account_id': self.account_inventory.id},
         ])

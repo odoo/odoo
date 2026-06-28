@@ -20,7 +20,7 @@ export function parseXML(str) {
     const xml = parser.parseFromString(str, "text/xml");
     if (hasParsingError(xml)) {
         throw new Error(
-            `An error occured while parsing ${str}: ${xml.getElementsByTagName("parsererror")}`
+            `An error occurred while parsing ${str}: ${xml.getElementsByTagName("parsererror")}`
         );
     }
     return xml.documentElement;

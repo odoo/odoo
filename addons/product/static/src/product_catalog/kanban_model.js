@@ -41,7 +41,13 @@ export class ProductCatalogKanbanModel extends RelationalModel {
 
             let orderLinesInfo;
             if (!isSample) {
-                orderLinesInfo = await rpc("/product/catalog/order_lines_info", this._getOrderLinesInfoParams(params, records.map((rec) => rec.id)));
+                orderLinesInfo = await rpc(
+                    "/product/catalog/order_lines_info",
+                    this._getOrderLinesInfoParams(
+                        params,
+                        records.map((rec) => rec.id)
+                    )
+                );
             } else {
                 orderLinesInfo = this._getSampleOrderLineInfo();
             }
@@ -58,11 +64,11 @@ export class ProductCatalogKanbanModel extends RelationalModel {
             product_ids: productIds,
             res_model: params.context.product_catalog_order_model,
             child_field: params.context.child_field,
-        }
+        };
     }
 
     _getSampleOrderLineInfo() {
-         // this function only returns data for sample view similar to rpc call ("/product/catalog/order_lines_info) made in _loadData
+        // this function only returns data for sample view similar to rpc call ("/product/catalog/order_lines_info) made in _loadData
         const sampleOrderLineInfo = {};
         const numRecords = 10; // Number of records to generate
         for (let i = 1; i <= numRecords; i++) {
@@ -74,6 +80,8 @@ export class ProductCatalogKanbanModel extends RelationalModel {
                 productType: "consu",
                 readOnly: false,
                 uomDisplayName: _t("Units"),
+                uomId: 1,
+                availableUoms: [{ id: 1, name: _t("Units") }],
             };
         }
         return sampleOrderLineInfo;

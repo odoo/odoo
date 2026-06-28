@@ -142,7 +142,7 @@ test("portal_invoice_page_payment is started with #portal_pay", async () => {
                                     <iframe id="invoice_html" class="position-relative my-2" width="100%" height="100%" frameborder="0" scrolling="no" data-oe-model="ir.ui.view" data-oe-id="789" data-oe-field="arch" data-oe-xpath="/data/xpath/div/div[1]/div[1]/iframe[1]" src="/my/invoices/2?access_token=48b81433-0b2f-4ebd-847b-980120176bb6&amp;report_type=html" style="height: 0px;"></iframe>
                                 </div>
                                 <div id="invoice_communication" class="mt-4">
-                                    <h3 data-oe-model="ir.ui.view" data-oe-id="789" data-oe-field="arch" data-oe-xpath="/data/xpath/div/div[1]/div[2]/h3[1]">Communication history</h3>
+                                    <h3 data-oe-model="ir.ui.view" data-oe-id="789" data-oe-field="arch" data-oe-xpath="/data/xpath/div/div[1]/div[2]/h3[1]">Communication History</h3>
                                     <div id="discussion" data-anchor="true" class="d-print-none o_portal_chatter o_not_editable p-0" data-oe-model="ir.ui.view" data-oe-id="559" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]" data-token="48b81433-0b2f-4ebd-847b-980120176bb6" data-res_model="account.move" data-res_id="2" data-pager_step="10" data-allow_composer="1" data-two_columns="false">
                                         <div id="chatterRoot"></div>
                                     </div>
@@ -160,7 +160,7 @@ test("portal_invoice_page_payment is started with #portal_pay", async () => {
                         <div class="modal-content mt-5">
                             <form method="get" class="o_searchbar_form s_searchbar_input" action="/website/search" data-snippet="s_searchbar_input">
                                 <div role="search" class="input-group input-group-lg">
-                                    <input type="search" name="search" data-oe-model="ir.ui.view" data-oe-id="1019" data-oe-field="arch" data-oe-xpath="/data/xpath[3]/form/t[1]/div[1]/input[1]" class="search-query form-control oe_search_box border border-end-0 p-3 border-0 bg-light" placeholder="Search..." data-search-type="all" data-limit="5" data-display-image="true" data-display-description="true" data-display-extra-link="true" data-display-detail="true" data-order-by="name asc" autocomplete="off">
+                                    <input type="search" name="search" data-oe-model="ir.ui.view" data-oe-id="1019" data-oe-field="arch" data-oe-xpath="/data/xpath[3]/form/t[1]/div[1]/input[1]" class="search-query form-control oe_search_box border border-end-0 p-3 border-0 bg-light" placeholder="Search..." data-search-type="all" data-limit="5" data-order-by="name asc" autocomplete="off">
                                     <button type="submit" aria-label="Search" title="Search" class="btn oe_search_button border border-start-0 px-4 bg-o-color-4">
                                     <i class="oi oi-search" data-oe-model="ir.ui.view" data-oe-id="1019" data-oe-field="arch" data-oe-xpath="/data/xpath[3]/form/t[1]/div[1]/button[1]/i[1]"></i>
                                     </button>

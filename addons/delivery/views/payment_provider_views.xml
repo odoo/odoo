@@ -6,11 +6,12 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment_custom.payment_provider_form"/>
         <field name="arch" type="xml">
-            <field name="qr_code" position="attributes">
-                <attribute
-                    name="invisible" separator=" or " add="custom_mode == 'cash_on_delivery'"
-                />
-            </field>
+            <page name="configuration" position="attributes">
+                <attribute name="invisible" separator="or" add="custom_mode == 'cash_on_delivery'"/>
+            </page>
+            <page name="messages" position="attributes">
+                <attribute name="invisible" separator="or" add="custom_mode == 'cash_on_delivery'"/>
+            </page>
         </field>
     </record>
 

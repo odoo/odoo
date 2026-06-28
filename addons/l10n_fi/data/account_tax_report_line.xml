@@ -27,7 +27,7 @@
                         <field name="name">25.5% tax + 24% tax</field>
                         <field name="name@fi">25.5 %:n vero + 24 %:n vero</field>
                         <field name="code">sale_25_5_and_24</field>
-                        <field name="foldable">True</field>
+                        <field name="foldability">foldable</field>
                         <field name="aggregation_formula">sale_25_5.balance + sale_24.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_sales_25_5" model="account.report.line">
@@ -60,7 +60,7 @@
                         <field name="name">14% tax + 13.5% tax</field>
                         <field name="name@fi">14 %:n vero + 13.5 %:n vero</field>
                         <field name="code">sale_14_and_13_5</field>
-                        <field name="foldable">True</field>
+                        <field name="foldability">foldable</field>
                         <field name="aggregation_formula">sale_14.balance + sale_13_5.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_sales_14" model="account.report.line">

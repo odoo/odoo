@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2025-11-28 16:15+0000\n"
 "Last-Translator: Busoi Cristina <elena.busoi@capps.ai>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
@@ -94,13 +94,13 @@ msgstr "Carduri de fidelitate active"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.xml:0
 msgid "Add Balance"
-msgstr "Adăugați sold"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.xml:0
 msgid "Add existing Gift Card"
-msgstr "Adăugați cardul cadou existent"
+msgstr ""
 
 #. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
@@ -153,8 +153,8 @@ msgid "Available rewards"
 msgstr "Recompense disponibile"
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
+#. odoo-python
+#: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
 msgid "Balance:"
 msgstr ""
 
@@ -193,7 +193,7 @@ msgstr "Creează un Client"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
 msgid "Current Balance:"
-msgstr "Sold curent:"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -214,6 +214,7 @@ msgid "Discount & Loyalty"
 msgstr "Reducere și loialitate"
 
 #. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__display_name
@@ -234,7 +235,6 @@ msgstr "Nume Afișat"
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Enter Code"
 msgstr "Introduceți codul"
 
@@ -291,6 +291,7 @@ msgid "How many point this reward cost on the coupon."
 msgstr "Câte puncte costă această recompensă pe cupon."
 
 #. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__id
@@ -346,6 +347,11 @@ msgstr "Program de carduri cadou invalid. Mai mult de o regulă."
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__is_reward_line
 msgid "Is Reward Line"
 msgstr "Este linie de recompensă"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_account_move_line
+msgid "Journal Item"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_mail
@@ -538,12 +544,6 @@ msgstr ""
 "un program eWallet sau card cadou nu este permisă."
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
-msgid "Reset Programs"
-msgstr "Resetare programe"
-
-#. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_config_ids
 msgid ""
 "Restrict publishing to those shops. Note: A program will only be used in the "
@@ -551,8 +551,6 @@ msgid ""
 msgstr ""
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_id
 msgid "Reward"
 msgstr "Recompensă"
@@ -596,10 +594,8 @@ msgstr ""
 "rugăm să verificați comanda."
 
 #. module: pos_loyalty
-#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
-#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Spent:"
 msgstr "Cheltuit:"
 
@@ -817,6 +813,11 @@ msgid "Unpaid gift card rejected."
 msgstr "Card cadou neachitat respins."
 
 #. module: pos_loyalty
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.pos_order_receipt
+msgid "Until:"
+msgstr ""
+
+#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Use eWallet to pay"
@@ -839,10 +840,8 @@ msgid "Whether this line is part of a reward or not."
 msgstr "Dacă această linie face parte dintr-o recompensă sau nu."
 
 #. module: pos_loyalty
-#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
-#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Won:"
 msgstr "Câștigător:"
 
@@ -895,3 +894,17 @@ msgstr "Rambursare portofel electronic"
 #: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
 msgid "eWallet requires a customer to be selected"
 msgstr "Portofelul electronic necesitǎ selectarea unui client"
+
+#. module: pos_loyalty
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.pos_order_receipt
+msgid "no expiration"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
+msgid "used"
+msgstr ""
+
+#~ msgid "Reset Programs"
+#~ msgstr "Resetare programe"

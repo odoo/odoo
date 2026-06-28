@@ -1,11 +1,11 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { Component, onMounted, onWillDestroy } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, proxy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { downloadPosLogs } from "../pretty_console_log";
+import { downloadPosLogs, downloadIdbErrors } from "../pretty_console_log";
 const { DateTime } = luxon;
 
 export class DebugWidget extends Component {
@@ -19,7 +19,7 @@ export class DebugWidget extends Component {
         this.numberBuffer = useService("number_buffer");
         this.dialog = useService("dialog");
         this.importOrderInput = useRef("import-order-input");
-        this.state = useState({
+        this.state = proxy({
             isOpen: false,
             barcodeInput: "",
             weightInput: "",
@@ -161,7 +161,7 @@ export class DebugWidget extends Component {
                 const jsonData = JSON.parse(await file.text());
                 await this.pos.data.getLocalDataFromIndexedDB(jsonData);
             } catch (error) {
-                console.warn("An error occured during import", error);
+                console.warn("An error occurred during import", error);
             }
         }
     }
@@ -171,6 +171,9 @@ export class DebugWidget extends Component {
     }
     async downloadLogs() {
         await downloadPosLogs();
+    }
+    downloadIdbErrors() {
+        downloadIdbErrors();
     }
     _onBufferUpdate({ detail: value }) {
         this.state.buffer = value;

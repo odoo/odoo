@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -62,7 +62,7 @@ class ProductPricelist(models.Model):
     @api.depends('currency_id')
     def _compute_display_name(self):
         for pricelist in self:
-            pricelist_name = pricelist.name and pricelist.name or _('New')
+            pricelist_name = pricelist.name and pricelist.name or pricelist.env._('New')
             pricelist.display_name = f'{pricelist_name} ({pricelist.currency_id.name})'
 
     def write(self, vals):
@@ -80,7 +80,7 @@ class ProductPricelist(models.Model):
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for pricelist, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", pricelist.name)
+                vals['name'] = pricelist.env._("%s (copy)", pricelist.name)
         return vals_list
 
     def _get_products_price(self, products, *args, **kwargs):
@@ -166,7 +166,8 @@ class ProductPricelist(models.Model):
         self, products, quantity, *, currency=None, uom=None, date=False, compute_price=True,
         **kwargs
     ):
-        """ Low-level method - Mono pricelist, multi products
+        """Low-level method - Mono pricelist, multi products.
+
         Returns: dict{product_id: (price, suitable_rule) for the given pricelist}
 
         Note: self and self.ensure_one()
@@ -196,26 +197,57 @@ class ProductPricelist(models.Model):
             # Used to fetch pricelist rules and currency rates
             date = fields.Datetime.now()
 
-        # Fetch all rules potentially matching specified products/templates/categories and date
-        rules = self._get_applicable_rules(products, date, **kwargs)
+        # Fetch all rules potentially matching specified products/templates/categories/uom and date
+        rules = self._get_applicable_rules(products, quantity, date=date, uom=uom, **kwargs)
 
+        return self._resolve_applicable_rule_and_price(
+            rules,
+            products,
+            quantity,
+            date,
+            currency=currency,
+            uom=uom,
+            compute_price=compute_price,
+            **kwargs,
+        )
+
+    def _resolve_applicable_rule_and_price(
+        self,
+        rule_candidates,
+        products,
+        quantity,
+        date,
+        *,
+        currency=None,
+        uom=None,
+        compute_price=True,
+        **kwargs,
+    ):
+        """Pick the first applicable rule per product and optionally compute its price.
+
+        :param product.pricelist.item rule_candidates: Candidate rules, already pre-filtered and
+            ordered by precedence.
+        :param product.product|product.template products: Products/templates to price.
+        :param float quantity: Quantity to evaluate against rule's ``min_quantity`` conditions.
+        :param datetime date: Pricing/conversion reference date.
+        :param res.currency|None currency: Currency used for price computation.
+        :param uom.uom|None uom: UoM used for applicability checks and pricing.
+            Falls back to each product main UoM when not provided.
+        :param bool compute_price: Whether to compute the price, or only resolve the matching rule.
+        :param dict kwargs: Extra arguments forwarded to rule applicability and price computation
+            hooks.
+        :return: Mapping ``product_id -> (price, rule_id)``.
+        :rtype: dict[int, tuple[float, int]]
+        """
         results = {}
         for product in products:
             suitable_rule = self.env['product.pricelist.item']
 
-            quantity_uom = uom or product.uom_id
-            qty_to_consider = self._compute_qty_to_consider(
-                product,
-                quantity,
-                quantity_uom,
-                currency=currency,
-                date=date,
-                compute_price=compute_price,
-                **kwargs,
-            )
+            # If no uom is specified, fallback on the product uom
+            quantity_uom = uom or product._get_main_uom()
 
-            for rule in rules:
-                if rule._is_applicable_for(product, qty_to_consider):
+            for rule in rule_candidates:
+                if rule._is_applicable_for(product, quantity, uom=quantity_uom, **kwargs):
                     suitable_rule = rule
                     break
 
@@ -232,40 +264,74 @@ class ProductPricelist(models.Model):
         return results
 
     # Split methods to ease (community) overrides
-    def _get_applicable_rules(self, products, date, **kwargs):
+    def _get_applicable_rules(self, products, quantity, date, *, uom=None, **kwargs):
         self and self.ensure_one()  # self is at most one record
         if not self:
             return self.env['product.pricelist.item']
 
         return self.env['product.pricelist.item'].search(
-            self._get_applicable_rules_domain(products=products, date=date, **kwargs)
+            self._get_applicable_rules_domain(
+                products, date=date, quantity=quantity, uom=uom, **kwargs
+            )
         )
 
-    def _get_applicable_rules_domain(self, products, date, **kwargs):
+    def _get_applicable_rules_domain(
+        self, products, *, date=None, quantity=None, uom=None, **_kwargs
+    ):
+        """Build the base domain used to fetch candidate pricelist rules.
+
+        This method only builds a SQL/search domain. Final applicability checks that require
+        conversions or extra business logic are done later by
+        ``product.pricelist.item._is_applicable_for``.
+
+        Note: ``self and self.ensure_one()`` self is at most one record
+
+        :param product.product|product.template products: Products/templates for which candidate
+            rules are fetched.
+        :param datetime|None date: Optional reference date used to pre-filter rules by their period
+            of validity.
+        :param float|None quantity: Optional quantity used to pre-filter ``min_quantity`` only when
+            ``uom`` is not provided (quantity is then expected in product main UoM).
+        :param uom.uom|None uom: Optional requested UoM. When provided, only rules for that UoM (or
+            no UoM restriction) are kept.
+        :param dict _kwargs: Extra keyword arguments forwarded by callers and optional module
+            overrides.
+        :return: Domain matching rules potentially applicable to the inputs.
+        :rtype: Domain
+        """
         self and self.ensure_one()  # self is at most one record
-        if products._name == 'product.template':
-            templates_domain = ('product_tmpl_id', 'in', products.ids)
-            products_domain = ('product_id.product_tmpl_id', 'in', products.ids)
+
+        if not products:
+            return Domain(False)
+
+        if products._name == "product.template":
+            templates_domain = Domain("product_tmpl_id", "in", products.ids)
+            products_domain = Domain("product_id.product_tmpl_id", "in", products.ids)
         else:
-            templates_domain = ('product_tmpl_id', 'in', products.product_tmpl_id.ids)
-            products_domain = ('product_id', 'in', products.ids)
+            templates_domain = Domain("product_tmpl_id", "in", products.product_tmpl_id.ids)
+            products_domain = Domain("product_id", "in", products.ids)
 
-        return [
-            ('pricelist_id', '=', self.id),
-            '|', ('categ_id', '=', False), ('categ_id', 'parent_of', products.categ_id.ids),
-            '|', ('product_tmpl_id', '=', False), templates_domain,
-            '|', ('product_id', '=', False), products_domain,
-            '|', ('date_start', '=', False), ('date_start', '<=', date),
-            '|', ('date_end', '=', False), ('date_end', '>=', date),
-        ]
+        domain = Domain.AND([
+            Domain("pricelist_id", "=", self.id),
+            Domain("categ_id", "=", False) | Domain("categ_id", "parent_of", products.categ_id.ids),
+            Domain("product_tmpl_id", "=", False) | templates_domain,
+            Domain("product_id", "=", False) | products_domain,
+        ])
 
-    def _compute_qty_to_consider(self, product, quantity, uom, **_kwargs):
-        """Compute quantity in product UoM because the min quantity on pricelist rules are specified
-        w.r.t. product default UoM."""
-        product_uom = product.uom_id
-        if uom != product_uom:
-            return uom._compute_quantity(quantity, product_uom, raise_if_failure=False)
-        return quantity
+        if date:
+            domain &= Domain.AND([
+                Domain("date_start", "=", False) | Domain("date_start", "<=", date),
+                Domain("date_end", "=", False) | Domain("date_end", ">=", date),
+            ])
+
+        if uom:
+            domain &= Domain("uom_id", "=", False) | Domain("uom_id", "=", uom.id)
+        elif quantity:
+            # ONLY if no uom is given, pre-handle min_qty check as quantity will be in product uom
+            # already.
+            domain &= Domain("min_quantity", "=", 0) | Domain("min_quantity", "<=", quantity)
+
+        return domain
 
     # Multi pricelists price|rule computation
     def _price_get(self, product, quantity, **kwargs):
@@ -388,7 +454,7 @@ class ProductPricelist(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Template for Pricelists'),
+            'label': self.env._('Template for Pricelists'),
             'template': '/product/static/xls/product_pricelist.xls'
         }]
 
@@ -400,7 +466,7 @@ class ProductPricelist(models.Model):
             ('pricelist_id', 'not in', self.ids),
         ])
         if linked_items:
-            raise UserError(_(
+            raise UserError(self.env._(
                 'You cannot delete pricelist(s):\n(%(pricelists)s)\nThey are used within pricelist(s):\n%(other_pricelists)s',
                 pricelists='\n'.join(linked_items.base_pricelist_id.mapped('display_name')),
                 other_pricelists='\n'.join(linked_items.pricelist_id.mapped('display_name')),
@@ -410,7 +476,22 @@ class ProductPricelist(models.Model):
     def action_open_pricelist_report(self):
         self.ensure_one()
         return {
-            'name': _("Pricelist Report Preview"),
+            'name': self.env._("Pricelist Report Preview"),
             'type': 'ir.actions.client',
             'tag': 'generate_pricelist_report',
         }
+
+    def _get_related_uoms(self, product):
+        """Return UoMs from applicable pricelist rules for the given product.
+
+        The method retrieves pricelist items matching the product and current date
+        using ``_get_applicable_rules_domain``, then filters out rules without a UoM.
+
+        :param product: Product template or product variant.
+        :return: UoMs defined on matching pricelist items.
+        :rtype: uom.uom
+        """
+        domain = self._get_applicable_rules_domain(product, date=fields.Datetime.now())
+        # filter out pricelist items without UoM
+        domain += [('uom_id', '!=', False)]
+        return self.env['product.pricelist.item'].search_fetch(domain, ['uom_id']).uom_id

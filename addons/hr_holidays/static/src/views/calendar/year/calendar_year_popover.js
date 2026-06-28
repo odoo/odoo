@@ -8,5 +8,6 @@ export class TimeOffCalendarYearPopover extends CalendarYearPopover {
     static subTemplates = {
         ...CalendarYearPopover.subTemplates,
         body: "hr_holidays.MandatoryDayCalendarYearPopover.body",
+        record: "hr_holidays.CalendarYearPopover.record",
     };
 }

@@ -6,7 +6,6 @@ import { useService } from "@web/core/utils/hooks";
 
 export class BlurPerformanceWarning extends Component {
     static template = "discuss.BlurPerformanceWarning";
-    static props = {};
     static components = { CallDropdown };
 
     setup() {

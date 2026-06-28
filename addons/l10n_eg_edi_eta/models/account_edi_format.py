@@ -56,7 +56,7 @@ class AccountEdiFormat(models.Model):
         if not request_response.ok:
             try:
                 response_data = request_response.json()
-            except JSONDecodeError as ex:
+            except (JSONDecodeError, json.JSONDecodeError) as ex:
                 return {
                     'error': str(ex),
                     'blocking_level': 'error'
@@ -69,7 +69,7 @@ class AccountEdiFormat(models.Model):
 
         try:
             response_data = request_response.json()
-        except requests.exceptions.JSONDecodeError:
+        except JSONDecodeError:
             response_data = {}
 
         return {
@@ -187,7 +187,7 @@ class AccountEdiFormat(models.Model):
         }
         if document_summary.get('doc_data') and return_dict.get(document_summary['doc_data'][0].get('status')):
             return return_dict.get(document_summary['doc_data'][0]['status'])
-        return {'error': _('an Unknown error has occured'), 'blocking_level': 'warning'}
+        return {'error': _('an Unknown error has occurred'), 'blocking_level': 'warning'}
 
     def _l10n_eg_eta_get_access_token(self, invoice):
         user = invoice.company_id.sudo().l10n_eg_client_identifier
@@ -373,7 +373,7 @@ class AccountEdiFormat(models.Model):
                 'country': partner.country_id.code,
                 'governate': partner.state_id.name or '',
                 'regionCity': partner.city or '',
-                'street': partner.street or '',
+                'street': ' '.join(s for s in [partner.street, partner.street2] if s),
                 'buildingNumber': partner.l10n_eg_building_no or '',
                 'postalCode': partner.zip or '',
             },
@@ -440,7 +440,7 @@ class AccountEdiFormat(models.Model):
         if not invoice.l10n_eg_eta_json_doc_file:
             return {
                 invoice: {
-                    'error':  _("An error occured in created the ETA invoice, please retry signing"),
+                    'error':  _("An error occurred in created the ETA invoice, please retry signing"),
                     'blocking_level': 'error'
                 }
             }

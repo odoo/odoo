@@ -77,6 +77,8 @@ class AccountAnalyticLine(models.Model):
     milestone_id = fields.Many2one('project.milestone', related='task_id.milestone_id')
     message_partner_ids = fields.Many2many('res.partner', compute='_compute_message_partner_ids', search='_search_message_partner_ids')
     calendar_display_name = fields.Char(compute="_compute_calendar_display_name", export_string_translation=False)
+    color = fields.Integer(related="project_id.color")
+    sequence = fields.Integer(string='Sequence', export_string_translation=False, default=10)
 
     def _search_message_partner_ids(self, operator, value):
         followed_ids_by_model = dict(self.env['mail.followers']._read_group([
@@ -405,7 +407,7 @@ class AccountAnalyticLine(models.Model):
     def _timesheet_get_portal_domain(self):
         if self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
             # Then, he is internal user, and we take the domain for this current user
-            return self.env['ir.rule']._compute_domain(self._name)
+            return self._access_domain('read')
         return (
             (
                 Domain('message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id])

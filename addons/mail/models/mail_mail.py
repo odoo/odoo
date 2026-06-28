@@ -15,6 +15,7 @@ from dateutil.parser import parse
 
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
+from odoo.addons.mail.tools.attachment import extract_attachment_ids_from_html
 from odoo.exceptions import UserError, ValidationError
 from odoo.modules.registry import Registry
 
@@ -30,6 +31,12 @@ class MailMail(models.Model):
     _inherits = {'mail.message': 'mail_message_id'}
     _order = 'id desc'
     _rec_name = 'subject'
+
+    def _access_domain(self, operation):
+        domain = super()._access_domain(operation)
+        if domain.is_false():
+            return domain
+        return self.env['ir.access']._get_domain_for(self._name, operation, include_inherits=False)
 
     @api.model
     def default_get(self, fields):
@@ -64,6 +71,8 @@ class MailMail(models.Model):
     email_cc = fields.Char('Cc', help='Carbon copy message recipients')
     recipient_ids = fields.Many2many('res.partner', string='To (Partners)',
         context={'active_test': False})
+    recipient_cc_ids = fields.Many2many('res.partner', relation='mail_mail_res_partner_cc_rel',
+                                        string='Cc (Partners)', context={'active_test': False})
     # process
     state = fields.Selection([
         ('outgoing', 'Outgoing'),
@@ -126,7 +135,7 @@ class MailMail(models.Model):
         and the number of attachments we do not have access to.
         """
         for mail_sudo, mail in zip(self.sudo(), self):
-            mail.unrestricted_attachment_ids = mail_sudo.attachment_ids.sudo(False)._filtered_access('read')
+            mail.unrestricted_attachment_ids = mail.sudo(False).attachment_ids
             mail.restricted_attachment_count = len(mail_sudo.attachment_ids) - len(mail.unrestricted_attachment_ids)
 
     def _inverse_unrestricted_attachment_ids(self):
@@ -273,7 +282,7 @@ class MailMail(models.Model):
                     )
                 (notifications - failed).sudo().write({
                     'notification_status': 'sent',
-                    'failure_type': '',
+                    'failure_type': False,
                     'failure_reason': '',
                 })
                 if failed:
@@ -417,7 +426,7 @@ class MailMail(models.Model):
                 )
         headers.setdefault('Return-Path', self.record_alias_domain_id.bounce_email or self.env.company.bounce_email)
 
-        # prepare recipients: use email_to if defined then check recipient_ids
+        # prepare recipients: use email_to if defined then check recipient_ids/recipient_cc_ids
         # that receive a specific email, notably due to link shortening / redirect
         # that is recipients-dependent. Keep original email/partner as this is
         # used in post-processing to know failures, like missing recipients
@@ -449,16 +458,17 @@ class MailMail(models.Model):
                     'partner_id': False,
                 })
         # specific behavior to customize the send email for notified partners
-        for partner in self.recipient_ids:
+        for partner in self.recipient_ids | self.recipient_cc_ids:
+            is_cc = partner not in self.recipient_ids
             # check partner email content
             email_to_normalized = tools.mail.email_normalize_all(partner.email)
-            email_to = [
+            partner_email = [
                 tools.formataddr((partner.name or "", email or "False"))
                 for email in email_to_normalized or [partner.email]
             ]
             email_list.append({
-                'email_cc': [],
-                'email_to': email_to,
+                'email_cc': partner_email if is_cc else [],
+                'email_to': partner_email if not is_cc else [],
                 # list of normalized emails to help extract_rfc2822
                 'email_to_normalized': email_to_normalized,
                 # keep raw initial value for incoming pre processing of outgoing emails
@@ -470,9 +480,7 @@ class MailMail(models.Model):
         # Prepare attachments:
         # Remove attachments if user send the link with the access_token.
         if body and attachments:
-            link_ids = {int(link) for link in re.findall(r'/web/(?:content|image)/([0-9]+)', body)}
-            if link_ids:
-                attachments = attachments - self.env['ir.attachment'].browse(list(link_ids))
+            attachments = attachments - self.env['ir.attachment'].browse(extract_attachment_ids_from_html(body))
 
         # Convert URL-only attachments (e.g. cloud or plain external links) into email links
         url_attachments = attachments.sudo().filtered(
@@ -490,14 +498,13 @@ class MailMail(models.Model):
                 lambda a: a.res_model and a.res_id and a.res_model != 'mail.message'):
             estimated_email_size_bytes = self._estimate_email_size(
                 headers, body, [a.file_size for a in attachments.sudo()])
-            max_email_size_bytes = (mail_server or self.env['ir.mail_server']
-                                    ).sudo()._get_max_email_size() * 1024 * 1024
+            max_email_size_bytes = self.env['ir.mail_server'].sudo()._get_max_email_size() * 1024 * 1024
             if estimated_email_size_bytes > max_email_size_bytes:
                 # Remove attachments and prepare downloadable links to be added in the body
                 record_owned_attachments.sudo().generate_access_token()
                 attachments_links = self.env['ir.qweb']._render('mail.mail_attachment_links',
                                                                 {'attachments': record_owned_attachments})
-                body = tools.mail.append_content_to_html(body, attachments_links, plaintext=False)
+                body = tools.mail.prepend_html_content(str(body), str(attachments_links))
                 attachments -= record_owned_attachments
         # attachments sorted by increasing ID to match front-end and upload ordering
         attachments.sudo().fetch(['name', 'raw', 'mimetype'])
@@ -623,42 +630,47 @@ class MailMail(models.Model):
             ('notification_status', 'not in', ('sent', 'canceled'))
         ])
         for mail in self.sorted(lambda k: (k.create_date, k.id)):
+            all_recipients = mail.recipient_ids | mail.recipient_cc_ids
             if mail_server.owner_limit_count >= MAX_SEND:
                 to_delay |= mail
-            elif mail_server.owner_limit_count + (len(mail.recipient_ids) or 1) > MAX_SEND:
+            elif mail_server.owner_limit_count + (len(all_recipients) or 1) > MAX_SEND:
                 # Because we split for each recipient, if we want to
                 # respect the limit we have to create new mails
                 # (the first one keep the email_to and the email_cc
                 # so it might send 2 emails instead of 1,
                 # see `_prepare_outgoing_list`)
                 to_keep = MAX_SEND - mail_server.owner_limit_count
-                recipient_ids = mail.recipient_ids
+                current_recipients = all_recipients[:to_keep]
+                delayed_recipients = all_recipients[to_keep:]
                 new_mail = mail.with_user(mail.create_uid).sudo().copy({
                     'headers': mail.headers,
                     'mail_message_id': mail.mail_message_id.id,
-                    'recipient_ids': recipient_ids[:to_keep].ids,
+                    'recipient_ids': current_recipients.filtered(lambda r: r in mail.recipient_ids),
+                    'recipient_cc_ids': current_recipients.filtered(lambda r: r not in mail.recipient_ids),
                 })
                 mail.write({
-                    'recipient_ids': recipient_ids[to_keep:],
+                    'recipient_ids': delayed_recipients.filtered(lambda r: r in mail.recipient_ids),
+                    'recipient_cc_ids': delayed_recipients.filtered(lambda r: r not in mail.recipient_ids),
                     'email_cc': False,
                     'email_to': False,
                 })
                 mail_server.owner_limit_count += to_keep or 1
-                notifs.filtered(lambda n: n.mail_mail_id == mail and n.res_partner_id in recipient_ids[:to_keep]).mail_mail_id = new_mail
+                notifs.filtered(lambda n: n.mail_mail_id == mail and n.res_partner_id in current_recipients).mail_mail_id = new_mail
                 to_send |= new_mail
                 to_delay |= mail
             else:
                 to_send |= mail
-                mail_server.owner_limit_count += len(mail.recipient_ids) or 1
+                mail_server.owner_limit_count += len(all_recipients) or 1
 
         # Delay if necessary
         if to_delay:
             owner_limit_count = mail_server.owner_limit_count
             for mail in to_delay:
+                all_recipients = mail.recipient_ids | mail.recipient_cc_ids
                 if owner_limit_count < MAX_SEND:
-                    owner_limit_count += len(mail.recipient_ids) or 1
+                    owner_limit_count += len(all_recipients) or 1
                 else:
-                    owner_limit_count = len(mail.recipient_ids) or 1
+                    owner_limit_count = len(all_recipients) or 1
                     server_limit_minute += timedelta(minutes=1)
 
                 mail.scheduled_date = server_limit_minute
@@ -789,7 +801,8 @@ class MailMail(models.Model):
                 mail = self.browse(mail_id)
                 if mail.state != 'outgoing':
                     continue
-                no_recipients = (not (mail.email_to or '').strip() and not mail.recipient_ids and not (mail.email_cc or '').strip())
+                no_recipients = (not (mail.email_to or '').strip() and not mail.recipient_ids
+                                 and not (mail.email_cc or '').strip() and not mail.recipient_cc_ids)
 
                 # Writing on the mail object may fail (e.g. lock on user) which
                 # would trigger a rollback *after* actually sending the email.

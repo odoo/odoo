@@ -44,17 +44,6 @@
                             />
                         </group>
                         <group/>
-                        <group name="autorefill" string="Auto-Refill">
-                            <field name="auto_refill_threshold"/>
-                            <field
-                                name="auto_refill_pack_id"
-                                string="Buy"
-                                readonly="auto_refill_threshold == 0"
-                                options="{'no_open': True, 'no_create': True}"
-                                domain="[('service_id', '=', service_id)]"
-                            />
-                            <button name="action_manage_payment_method" colspan="2" class="oe_link" type="object" string="Manage your auto-refill payment method" invisible="auto_refill_threshold == 0"/>
-                        </group>
                     </group>
                 </sheet>
             </form>
@@ -71,7 +60,6 @@
                 <field name="balance"/>
                 <field name="account_token" optional="hidden"/>
                 <button name="action_buy_credits" type="object" string="Buy Credits" icon="fa-shopping-cart"/>
-                <button name="action_open_iap_account" type="object" string="Set Alerts &amp; Auto-Refill" icon="fa-refresh"/>
             </list>
         </field>
     </record>

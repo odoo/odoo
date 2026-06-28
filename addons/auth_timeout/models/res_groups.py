@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from odoo.tools import ormcache
 
 CACHE_INVALIDATE_FIELDS = ("lock_timeout", "lock_timeout_mfa", "lock_timeout_inactivity", "lock_timeout_inactivity_mfa")
 
@@ -174,22 +173,22 @@ class ResGroups(models.Model):
     def create(self, vals_list):
         """Override to invalidate `_get_lock_timeouts` cache if timeout fields are set on creation."""
         if any(field in vals for vals in vals_list for field in CACHE_INVALIDATE_FIELDS):
-            self.env.registry.clear_cache()
+            self.env.transaction.invalidate_ormcache()
         return super().create(vals_list)
 
     def write(self, vals):
         """Override to invalidate `_get_lock_timeouts` cache if timeout fields are updated."""
         if any(field in vals for field in CACHE_INVALIDATE_FIELDS):
-            self.env.registry.clear_cache()
+            self.env.transaction.invalidate_ormcache()
         return super().write(vals)
 
     def unlink(self):
         """Override to invalidate `_get_lock_timeouts` cache if timeout fields exist on deleted records."""
         if self.filtered(lambda r: any(r[field] for field in CACHE_INVALIDATE_FIELDS)):
-            self.env.registry.clear_cache()
+            self.env.transaction.invalidate_ormcache()
         return super().unlink()
 
-    @ormcache("self._ids")
+    @api.ormcache("self._ids")
     def _get_lock_timeouts(self):
         """
         Compute the session and inactivity timeout settings for the user.

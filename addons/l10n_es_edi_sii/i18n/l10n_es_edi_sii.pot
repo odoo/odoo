@@ -4,16 +4,32 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.3a1+e\n"
+"Project-Id-Version: Odoo Server 19.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 19:13+0000\n"
-"PO-Revision-Date: 2026-03-12 19:13+0000\n"
+"POT-Creation-Date: 2026-06-19 18:13+0000\n"
+"PO-Revision-Date: 2026-06-19 18:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__l10n_es_edi_sii_document__state__accepted
+msgid "Accepted"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__l10n_es_edi_sii_document__state__accepted_with_errors
+msgid "Accepted with Errors"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/l10n_es_edi_sii_document.py:0
+msgid "Accepted with errors: %s"
+msgstr ""
 
 #. module: l10n_es_edi_sii
 #: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__res_company__l10n_es_sii_tax_agency__aeat
@@ -23,7 +39,21 @@ msgstr ""
 #. module: l10n_es_edi_sii
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_bank_statement_line__l10n_es_edi_csv
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__l10n_es_edi_csv
-msgid "CSV return code"
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_l10n_es_edi_sii_document__csv
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_sii.view_move_form_inherit_l10n_es_edi
+msgid "CSV"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_move__l10n_es_edi_sii_state__cancelled
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__l10n_es_edi_sii_document__state__cancelled
+msgid "Cancelled"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/account_move.py:0
+msgid "Cannot send this entry as it is already being processed."
 msgstr ""
 
 #. module: l10n_es_edi_sii
@@ -53,6 +83,7 @@ msgstr ""
 
 #. module: l10n_es_edi_sii
 #: model:ir.model,name:l10n_es_edi_sii.model_res_company
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_l10n_es_edi_sii_document__company_id
 msgid "Company"
 msgstr ""
 
@@ -67,19 +98,63 @@ msgid "Create the first certificate"
 msgstr ""
 
 #. module: l10n_es_edi_sii
-#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_edi_format__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_l10n_es_edi_sii_document__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_l10n_es_edi_sii_document__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_sii.view_move_form_inherit_l10n_es_edi
+msgid "Date"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,help:l10n_es_edi_sii.field_account_bank_statement_line__l10n_es_registration_date
+#: model:ir.model.fields,help:l10n_es_edi_sii.field_account_move__l10n_es_registration_date
+msgid "Date when the invoice was registered in the SII system."
+msgstr ""
+
+#. module: l10n_es_edi_sii
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_send__display_name
-#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_resequence_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_send_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_certificate_certificate__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_l10n_es_edi_sii_document__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: l10n_es_edi_sii
-#: model:ir.model,name:l10n_es_edi_sii.model_account_edi_format
-msgid "EDI format"
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_l10n_es_edi_sii_document__sii_json_file
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_sii.view_move_form_inherit_l10n_es_edi
+msgid "Download JSON"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/l10n_es_edi_sii_document.py:0
+msgid "Duplicated/Already processed."
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_sii.view_invoice_tree_inherit_l10n_es_edi_sii
+msgid "Edi Blocking Level"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_sii.view_invoice_tree_inherit_l10n_es_edi_sii
+msgid "Electronic invoicing"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/account_move_send.py:0
+msgid "Error while sending the invoice to SII"
 msgstr ""
 
 #. module: l10n_es_edi_sii
@@ -93,11 +168,16 @@ msgid "Hacienda Foral de Gipuzkoa"
 msgstr ""
 
 #. module: l10n_es_edi_sii
-#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_edi_format__id
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__res_company__l10n_es_sii_tax_agency__navarra
+msgid "Hacienda Foral de Navarra"
+msgstr ""
+
+#. module: l10n_es_edi_sii
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_send__id
-#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_resequence_wizard__id
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move_send_wizard__id
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_certificate_certificate__id
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_l10n_es_edi_sii_document__id
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_res_config_settings__id
 msgid "ID"
@@ -105,16 +185,27 @@ msgstr ""
 
 #. module: l10n_es_edi_sii
 #. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
+#: code:addons/l10n_es_edi_sii/models/account_move.py:0
 msgid ""
-"In case of a foreign customer, you need to configure the tax scope on taxes:\n"
-"%s"
+"In case of a foreign customer, you need to configure the tax scope on taxes."
+" Please configure tax scope on taxes: %s"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/account_move.py:0
+msgid "Invalid invoice configuration:"
 msgstr ""
 
 #. module: l10n_es_edi_sii
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_bank_statement_line__l10n_es_edi_is_required
 #: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__l10n_es_edi_is_required
 msgid "Is the Spanish EDI needed"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_l10n_es_edi_sii_document__sii_json_filename
+msgid "JSON Filename"
 msgstr ""
 
 #. module: l10n_es_edi_sii
@@ -129,39 +220,25 @@ msgid "L10N Es Sii Certificate"
 msgstr ""
 
 #. module: l10n_es_edi_sii
-#. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
-msgid "Line %s should only have one main tax."
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_l10n_es_edi_sii_document__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_l10n_es_edi_sii_document__write_date
+msgid "Last Updated on"
 msgstr ""
 
 #. module: l10n_es_edi_sii
 #. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
-msgid "Line %s should only have one no sujeto (localizations) tax."
+#: code:addons/l10n_es_edi_sii/models/account_move.py:0
+msgid "Line %(line_name)s has duplicate tax types: %(tax_types)s"
 msgstr ""
 
 #. module: l10n_es_edi_sii
 #. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
-msgid "Line %s should only have one no sujeto tax."
-msgstr ""
-
-#. module: l10n_es_edi_sii
-#. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
-msgid "Line %s should only have one recargo tax."
-msgstr ""
-
-#. module: l10n_es_edi_sii
-#. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
-msgid "Line %s should only have one retention tax."
-msgstr ""
-
-#. module: l10n_es_edi_sii
-#. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
-msgid "Line %s should only have one sujeto tax."
+#: code:addons/l10n_es_edi_sii/models/account_move.py:0
+msgid "Line %s should only have one main tax type."
 msgstr ""
 
 #. module: l10n_es_edi_sii
@@ -170,8 +247,13 @@ msgid "Manage certificates (SII)"
 msgstr ""
 
 #. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_l10n_es_edi_sii_document__move_id
+msgid "Move"
+msgstr ""
+
+#. module: l10n_es_edi_sii
 #. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
+#: code:addons/l10n_es_edi_sii/models/l10n_es_edi_sii_document.py:0
 msgid ""
 "Networking error:\n"
 "%s"
@@ -184,13 +266,13 @@ msgstr ""
 
 #. module: l10n_es_edi_sii
 #. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
+#: code:addons/l10n_es_edi_sii/models/account_move.py:0
 msgid "Please configure the certificate for SII."
 msgstr ""
 
 #. module: l10n_es_edi_sii
 #. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
+#: code:addons/l10n_es_edi_sii/models/account_move.py:0
 msgid "Please specify a tax agency on your company for SII."
 msgstr ""
 
@@ -211,14 +293,54 @@ msgid "Registro de Libros connection SII"
 msgstr ""
 
 #. module: l10n_es_edi_sii
-#: model:ir.model,name:l10n_es_edi_sii.model_account_resequence_wizard
-msgid "Remake the sequence of Journal Entries."
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/account_move_send.py:0
+msgid "Resend the e-invoice data to SII as a modification"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/account_move_send.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_sii.view_move_form_inherit_l10n_es_edi
+msgid "Resend to SII"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_l10n_es_edi_sii_document__response_message
+msgid "Response"
 msgstr ""
 
 #. module: l10n_es_edi_sii
 #: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__certificate_certificate__scope__sii
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_sii.certificate_certificate_view_search
 msgid "SII"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model,name:l10n_es_edi_sii.model_l10n_es_edi_sii_document
+msgid "SII Document"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_bank_statement_line__l10n_es_edi_sii_document_ids
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__l10n_es_edi_sii_document_ids
+msgid "SII Documents"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_bank_statement_line__l10n_es_edi_sii_error
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__l10n_es_edi_sii_error
+msgid "SII Error"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_sii.view_move_form_inherit_l10n_es_edi
+msgid "SII History"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_l10n_es_edi_sii_document__attachment_id
+msgid "SII JSON Payload"
 msgstr ""
 
 #. module: l10n_es_edi_sii
@@ -233,6 +355,41 @@ msgid "SII certificates"
 msgstr ""
 
 #. module: l10n_es_edi_sii
+#: model:ir.model.fields,help:l10n_es_edi_sii.field_account_bank_statement_line__l10n_es_edi_csv
+#: model:ir.model.fields,help:l10n_es_edi_sii.field_account_move__l10n_es_edi_csv
+msgid "Secure Verification Code of the last accepted document"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,help:l10n_es_edi_sii.field_l10n_es_edi_sii_document__csv
+msgid "Secure Verification Code returned by the SII"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model,name:l10n_es_edi_sii.model_account_move_send_wizard
+msgid "Send Invoice Wizard"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/account_move_send.py:0
+msgid "Send the e-invoice data to SII"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/account_move_send.py:0
+#: model:ir.actions.server,name:l10n_es_edi_sii.action_l10n_es_send_sii
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_sii.view_move_form_inherit_l10n_es_edi
+msgid "Send to SII"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_move__l10n_es_edi_sii_state__sent
+msgid "Sent"
+msgstr ""
+
+#. module: l10n_es_edi_sii
 #: model:ir.model,name:l10n_es_edi_sii.model_account_move_send
 msgid "Shared Send Invoice Wizard Functions"
 msgstr ""
@@ -240,6 +397,23 @@ msgstr ""
 #. module: l10n_es_edi_sii
 #: model:ir.ui.menu,name:l10n_es_edi_sii.menu_l10n_es_edi_sii_root
 msgid "Spain SII"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_bank_statement_line__l10n_es_edi_sii_state
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_account_move__l10n_es_edi_sii_state
+msgid "Spain SII Status"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,field_description:l10n_es_edi_sii.field_l10n_es_edi_sii_document__state
+msgid "State"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/l10n_es_edi_sii_document.py:0
+msgid "Success"
 msgstr ""
 
 #. module: l10n_es_edi_sii
@@ -262,20 +436,66 @@ msgstr ""
 
 #. module: l10n_es_edi_sii
 #. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
+#: code:addons/l10n_es_edi_sii/models/l10n_es_edi_sii_document.py:0
 msgid "The SSL certificate could not be validated."
 msgstr ""
 
 #. module: l10n_es_edi_sii
 #. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
-msgid "The web service is not responding"
+#: code:addons/l10n_es_edi_sii/models/l10n_es_edi_sii_document.py:0
+msgid "The document was accepted by SII with the following error: %s"
 msgstr ""
 
 #. module: l10n_es_edi_sii
 #. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
-msgid "This was accepted with errors: "
+#: code:addons/l10n_es_edi_sii/models/l10n_es_edi_sii_document.py:0
+msgid "The document was accepted by SII."
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/l10n_es_edi_sii_document.py:0
+msgid "The document was cancelled by SII."
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/l10n_es_edi_sii_document.py:0
+msgid "The document was rejected by SII with the following error: %s"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields,help:l10n_es_edi_sii.field_l10n_es_edi_sii_document__attachment_id
+msgid "The full JSON payload (Header + Body) sent to the SII."
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/l10n_es_edi_sii_document.py:0
+msgid "The web service is not responding"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__l10n_es_edi_sii_document__state__to_cancel
+msgid "To Cancel"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__account_move__l10n_es_edi_sii_state__to_send
+#: model:ir.model.fields.selection,name:l10n_es_edi_sii.selection__l10n_es_edi_sii_document__state__to_send
+msgid "To Send"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/l10n_es_edi_sii_document.py:0
+msgid "Unknown Error"
+msgstr ""
+
+#. module: l10n_es_edi_sii
+#. odoo-python
+#: code:addons/l10n_es_edi_sii/models/l10n_es_edi_sii_document.py:0
+msgid "Unknown response state"
 msgstr ""
 
 #. module: l10n_es_edi_sii
@@ -286,26 +506,18 @@ msgstr ""
 
 #. module: l10n_es_edi_sii
 #. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
-msgid "VAT number is missing on company %s"
+#: code:addons/l10n_es_edi_sii/models/account_move.py:0
+msgid "VAT number is missing on company %s."
 msgstr ""
 
 #. module: l10n_es_edi_sii
 #. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
-msgid ""
-"We saw that this invoice was sent correctly before, but we did not treat the"
-" response.  Make sure it is not because of a wrong configuration."
+#: code:addons/l10n_es_edi_sii/models/account_move.py:0
+msgid "You must set a Vendor Reference for this vendor bill."
 msgstr ""
 
 #. module: l10n_es_edi_sii
 #. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
-msgid "You should put a vendor reference on this vendor bill. "
-msgstr ""
-
-#. module: l10n_es_edi_sii
-#. odoo-python
-#: code:addons/l10n_es_edi_sii/models/account_edi_format.py:0
+#: code:addons/l10n_es_edi_sii/models/l10n_es_edi_sii_document.py:0
 msgid "[%(error_code)s] %(error_message)s"
 msgstr ""

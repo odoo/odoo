@@ -6,13 +6,34 @@ import { IndexedDB } from "@web/core/utils/indexed_db";
 import { Reactive } from "@web/core/utils/reactive";
 import { session } from "@web/session";
 import { hashCode } from "../utils/strings";
+import { Crypto, CRYPTO_ALGO } from "../crypto";
+import { normalize } from "../l10n/utils";
+import { NonSecureContextError } from "../errors/non_secure_context_error";
+import { _t } from "../l10n/translation";
 
 const IS_READY = Symbol("ready");
+
+class FakeIndexedDB {
+    // used in non secure context to disable the offline features as data can't be encrypted
+    invalidate() {}
+    read() {
+        return Promise.resolve({});
+    }
+    write() {}
+    delete() {}
+    getAllKeys() {
+        return Promise.resolve([]);
+    }
+    getAllEntries() {
+        return Promise.resolve([]);
+    }
+}
 
 class OfflineManager extends Reactive {
     static VISITED_UI_TABLE_NAME = "visited-ui-items";
     static VISITED_UI_TABLE_NAME_DEBUG = "visited-ui-items-debug";
     static ORM_SYNC_TABLE_NAME = "orm-to-sync";
+    static MANY2X_TABLE_PREFIX = "many2x_";
 
     static SELECTORS_TO_DISABLE = ["button:not([data-available-offline]):not([disabled])"];
 
@@ -21,7 +42,13 @@ class OfflineManager extends Reactive {
 
         this.env = env;
         this.orm = orm;
-        this._idb = markRaw(new IndexedDB("offline", session.registry_hash));
+        this._idb = window.isSecureContext
+            ? markRaw(new IndexedDB("offline", session.registry_hash + CRYPTO_ALGO))
+            : new FakeIndexedDB();
+        this._crypto =
+            window.isSecureContext &&
+            session.browser_cache_secret &&
+            new Crypto(session.browser_cache_secret);
         this._visitedUITable = this.env.debug
             ? OfflineManager.VISITED_UI_TABLE_NAME_DEBUG
             : OfflineManager.VISITED_UI_TABLE_NAME;
@@ -57,6 +84,7 @@ class OfflineManager extends Reactive {
             this._idb.invalidate([
                 OfflineManager.VISITED_UI_TABLE_NAME,
                 OfflineManager.VISITED_UI_TABLE_NAME_DEBUG,
+                new RegExp(`^${OfflineManager.MANY2X_TABLE_PREFIX}`),
             ]);
             this._visited = {};
         });
@@ -68,6 +96,10 @@ class OfflineManager extends Reactive {
                 this._syncORM();
             }
         });
+
+        registry
+            .category("services")
+            .addEventListener("CLEANUP", () => (this.offline = false), { once: true });
     }
 
     get offline() {
@@ -196,7 +228,7 @@ class OfflineManager extends Reactive {
      * Mark an action, view type and optionally record as available offline.
      *
      * @param {number} actionId
-     * @param {"kanban"|"list"|"form"} viewType
+     * @param {"kanban"|"list"|"form"|"kanban_quick_create"|"list_quick_create"} viewType
      * @param {Object} params
      * @param {number} [params.resId] the record id, when viewType is "form"
      * @param {Object} [params.search] the current search view state
@@ -205,7 +237,7 @@ class OfflineManager extends Reactive {
         if (!this.offline) {
             const key = this._generateKey(actionId, viewType, resId);
             let value;
-            if (["form", "kanban_quick_create"].includes(viewType)) {
+            if (["form", "kanban_quick_create", "list_quick_create"].includes(viewType)) {
                 value = true;
             } else {
                 value = (await this._idb.read(this._visitedUITable, key)) || {};
@@ -223,6 +255,11 @@ class OfflineManager extends Reactive {
     // -------------------------------------------------------------------------
 
     scheduleORM(model, method, args, kwargs, options) {
+        if (!window.isSecureContext) {
+            throw new NonSecureContextError(
+                _t("Offline features not available in a non-secure context")
+            );
+        }
         const value = { model, method, args, kwargs, extras: options.extras };
         const key = options.id ?? hashCode(JSON.stringify(value));
         this._ormToSync[key] = { key, value };
@@ -248,8 +285,68 @@ class OfflineManager extends Reactive {
     }
 
     // -------------------------------------------------------------------------
+    // Many2X Offline
+    // -------------------------------------------------------------------------
+
+    async cacheMany2XSearch(resModel, result) {
+        if (!this._crypto) {
+            return;
+        }
+        const tableName = OfflineManager.MANY2X_TABLE_PREFIX + resModel;
+        const values = await this._encryptAndFormat(result);
+        this._idb.write(tableName, values);
+    }
+
+    async searchMany2XRecords(resModel, name) {
+        if (!this._crypto) {
+            return;
+        }
+
+        const normalizeSearch = normalize(name);
+        const _searchFn = !normalizeSearch
+            ? () => true
+            : async (value) => {
+                  const decryptedValue = normalize(await this._crypto.decrypt(value));
+                  return decryptedValue.includes(normalizeSearch);
+              };
+        const tableName = OfflineManager.MANY2X_TABLE_PREFIX + resModel;
+        const res = await this._idb.search(tableName, _searchFn);
+        return this._decryptAndFormat(res);
+    }
+
+    async readMany2XRecords(resModel, resIds) {
+        if (!this._crypto) {
+            return;
+        }
+        const tableName = OfflineManager.MANY2X_TABLE_PREFIX + resModel;
+        const res = await this._idb.read(tableName, resIds);
+        return this._decryptAndFormat(res);
+    }
+
+    // -------------------------------------------------------------------------
     // Private
     // -------------------------------------------------------------------------
+
+    async _decryptAndFormat(offlineRes) {
+        const decrytedRes = [];
+        for (const r of offlineRes) {
+            const value = r.value ? await this._crypto.decrypt(r.value) : undefined;
+            decrytedRes.push({ id: Number(r.key), display_name: value });
+        }
+        return decrytedRes;
+    }
+
+    async _encryptAndFormat(ormResult) {
+        const encryptedRes = [];
+        for (const r of ormResult) {
+            const value = await this._crypto.encrypt(
+                typeof r.display_name === "string" ? r.display_name.split("\n")[0] : r.display_name
+            );
+
+            encryptedRes.push({ key: r.id, value });
+        }
+        return encryptedRes;
+    }
 
     /**
      * Generates the key to identify an action, a viewType and optionally a record
@@ -322,13 +419,19 @@ class OfflineManager extends Reactive {
     // -------------------------------------------------------------------------
 
     async _syncORM() {
+        if (!window.isSecureContext) {
+            return;
+        }
+
         // Only one tab can execute this block at a time
+        // This can only be done in a secure context
         await navigator.locks.request("db-sync", async () => {
             this._syncingORM = true;
             await this._updateScheduledORMList();
 
             for (const [index, { key, value }] of Object.values(this._ormToSync)
                 .filter(({ value }) => !value.extras.error)
+                .sort((s1, s2) => s1.value.extras.timeStamp - s2.value.extras.timeStamp)
                 .entries()) {
                 if (index !== 0) {
                     await new Promise((r) => browser.setTimeout(r, 1000)); // Waits 1 second
@@ -336,10 +439,17 @@ class OfflineManager extends Reactive {
                 try {
                     await this.orm.silent.call(value.model, value.method, value.args, value.kwargs);
                     this.removeScheduledORM(key);
-                } catch {
+                } catch (e) {
+                    if (e instanceof ConnectionLostError) {
+                        break;
+                    }
+                    let error = e.message || _t("Error");
+                    if (e.data) {
+                        error = e.data.name + " - " + e.data.message;
+                    }
                     this.scheduleORM(value.model, value.method, value.args, value.kwargs, {
                         id: key,
-                        extras: { ...value.extras, error: true },
+                        extras: { ...value.extras, error },
                     });
                 }
             }

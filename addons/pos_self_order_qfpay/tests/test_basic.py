@@ -31,6 +31,7 @@ class TestSelfOrderKioskQFPay(TestPointOfSaleHttpCommon, AccountTestInvoicingCom
                 "qfpay_payment_type": "card_payment",
                 "journal_id": cls.bank_journal.id,
             })],
+            'self_ordering_default_user_id': cls.pos_admin.id,
         })
 
         cls.env['pos.payment.method'].create({

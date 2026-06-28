@@ -18,6 +18,7 @@ import {
 import { withSequence } from "@html_editor/utils/resource";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex } from "@html_editor/utils/position";
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 /**
  * @typedef { Object } BaseContainerShared
@@ -92,8 +93,17 @@ export class BaseContainerPlugin extends Plugin {
         system_classes: [BASE_CONTAINER_CLASS],
     };
 
-    createBaseContainer(nodeName = this.getDefaultNodeName()) {
-        return createBaseContainer(nodeName, this.document);
+    createBaseContainer({ nodeName = this.getDefaultNodeName(), children } = {}) {
+        const container = createBaseContainer(nodeName, this.document, children);
+        if (children?.length) {
+            // Update cursors for moved children so callers don't have to.
+            const cursors = this.dependencies.selection.preserveSelection();
+            for (const child of children) {
+                cursors.update(callbacksForCursorUpdate.append(container, child));
+            }
+            cursors.restore();
+        }
+        return container;
     }
 
     getDefaultNodeName() {
@@ -110,7 +120,9 @@ export class BaseContainerPlugin extends Plugin {
         const closestEditable = (n) =>
             isContentEditable(n.parentElement) ? closestEditable(n.parentElement) : n;
 
-        const isUnsplittable = !(this.checkPredicates("is_node_splittable_predicates", node) ?? true);
+        const isUnsplittable = !(
+            this.checkPredicates("is_node_splittable_predicates", node) ?? true
+        );
         const isCandidateForBase = this.isCandidateForBaseContainerAllowUnsplittable(node);
 
         if (isUnsplittable || !isCandidateForBase) {
@@ -205,18 +217,15 @@ export class BaseContainerPlugin extends Plugin {
                 baseContainer.removeAttribute("class");
             }
         }
+        return root;
     }
 
     normalizeDivBaseContainers(element = this.editable) {
         if (this.config.baseContainers && !this.config.baseContainers.includes("DIV")) {
-            return;
+            return element;
         }
         const newBaseContainers = [];
-        const divSelector = `div:not(.${BASE_CONTAINER_CLASS})`;
-        const targets = [...element.querySelectorAll(divSelector)];
-        if (element.matches(divSelector)) {
-            targets.unshift(element);
-        }
+        const targets = selectElements(element, `div:not(.${BASE_CONTAINER_CLASS})`);
         for (const div of targets) {
             if (
                 // Ensure that newly created `div` baseContainers are never themselves
@@ -232,8 +241,12 @@ export class BaseContainerPlugin extends Plugin {
             ) {
                 div.classList.add(BASE_CONTAINER_CLASS);
                 newBaseContainers.push(div);
-                fillEmpty(div);
+                if (!div.hasChildNodes()) {
+                    const br = this.document.createElement("br");
+                    div.appendChild(br);
+                }
             }
         }
+        return element;
     }
 }

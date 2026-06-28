@@ -8,7 +8,7 @@ from lxml import etree
 from odoo import fields, Command
 from odoo.addons.survey.tests import common
 from odoo.addons.mail.tests.common import MailCase
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged, Form
 from odoo.tests.common import users
 
@@ -315,6 +315,8 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCase):
         Test that a group_survey_user can send a survey that includes an attachment from the survey invite's
             email template
         """
+        # avoid rendering restriction complexity (survey_user is not a template editor by default)
+        self.env['ir.config_parameter'].sudo().set_bool('mail.restrict.template.rendering', False)
         mail_template = self.env['mail.template'].create({
             'name': 'test mail template',
             'attachment_ids': [Command.create({
@@ -356,3 +358,100 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCase):
         self.assertEqual(self.env['mail.mail'].sudo().search([
             ('email_to', '=', 'test_survey_invite_with_template_attachment@odoo.gov')
         ]).attachment_ids, mail_template.attachment_ids)
+
+    def test_survey_invite_mixed_langs(self):
+        """ Test that survey invitations are sent in the correct language when recipients have different languages. """
+
+        self.env['res.lang'].sudo()._activate_lang('nl_NL')
+
+        partner_en, partner_nl = self.env['res.partner'].create([
+            {
+                'name': 'Partner EN',
+                'email': 'partner_en@example.com',
+                'lang': 'en_US',
+            },
+            {
+                'name': 'Partner NL',
+                'email': 'partner_nl@example.com',
+                'lang': 'nl_NL',
+            },
+        ])
+
+        template = self.env['mail.template'].create({
+            'name': 'Test Template',
+            'model_id': self.env['ir.model']._get('survey.user_input').id,
+            'subject': 'English Subject',
+            'body_html': '<p>English Body</p>',
+            'lang': '{{ object.partner_id.lang }}',
+        })
+        template.with_context(lang='nl_NL').write({
+            'subject': 'Dutch Subject',
+            'body_html': '<p>Dutch Body</p>',
+        })
+
+        with self.with_user('survey_manager'):
+            Invite = self.env['survey.invite']
+            invite = Invite.create({
+                'survey_id': self.survey.id,
+                'partner_ids': [Command.set((partner_en + partner_nl).ids)],
+                'template_id': template.id,
+            })
+
+            with self.mock_mail_gateway():
+                invite.action_invite()
+
+        self.assertEqual(len(self._new_mails), 2)
+
+        mail_en = self._new_mails.filtered(lambda m: partner_en in m.recipient_ids)
+        mail_nl = self._new_mails.filtered(lambda m: partner_nl in m.recipient_ids)
+
+        self.assertTrue(mail_en, "Email should be sent to Partner EN")
+        self.assertTrue(mail_nl, "Email should be sent to Partner NL")
+
+        self.assertIn('English Subject', mail_en.subject)
+        self.assertIn('English Body', mail_en.body_html)
+        self.assertIn('Dutch Subject', mail_nl.subject)
+        self.assertIn('Dutch Body', mail_nl.body_html)
+
+    def test_survey_invite_lang_security(self):
+        """ Test that a user without 'mail template editor' cannot send an invite whose
+        lang field contains a forbidden expression different from the template's lang,
+        but can send one whose lang matches the template's (trusted as validated data). """
+        # MailCommon grants template_editor to all internal users by default; undo that
+        # so survey_manager is subject to the rendering restriction.
+        self.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', True)
+
+        partner = self.env['res.partner'].create({
+            'name': 'Partner Security Test',
+            'email': 'partner_security_test@example.com',
+            'lang': 'en_US',
+        })
+        template = self.env['mail.template'].create({
+            'name': 'Test Template Security',
+            'model_id': self.env['ir.model']._get('survey.user_input').id,
+            'subject': 'Original Subject',
+            'body_html': '<p>Original Body</p>',
+            'lang': '{{ object.partner_id.lang }}',
+        })
+
+        with self.with_user('survey_manager'):
+            invite = self.env['survey.invite'].create({
+                'survey_id': self.survey.id,
+                'partner_ids': [Command.set([partner.id])],
+                'template_id': template.id,
+                'subject': 'Custom Subject',
+                'lang': '{{ object.access_token }}',
+            })
+            with self.assertRaises(AccessError):
+                invite.action_invite()
+
+            invite2 = self.env['survey.invite'].create({
+                'survey_id': self.survey.id,
+                'partner_ids': [Command.set([partner.id])],
+                'template_id': template.id,
+                'subject': 'Custom Subject',
+                'lang': '{{ object.partner_id.lang }}',
+            })
+            with self.mock_mail_gateway():
+                invite2.action_invite()
+        self.assertEqual(len(self._new_mails), 1)

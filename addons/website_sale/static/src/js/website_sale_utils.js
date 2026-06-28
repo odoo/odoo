@@ -1,6 +1,9 @@
 import { browser } from '@web/core/browser/browser';
 import { _t } from '@web/core/l10n/translation';
-import { createElementWithContent } from '@web/core/utils/html';
+import { rpc } from "@web/core/network/rpc";
+import { createElementWithContent, setElementContent } from '@web/core/utils/html';
+import { redirect } from '@web/core/utils/urls';
+import { markup } from "@odoo/owl";
 
 /**
  * Updates both navbar cart
@@ -32,7 +35,7 @@ function updateCartNavBar(data) {
 
     updateCartSummary(data);
 
-    if (data.cart_ready) {
+    if (!data.cart_has_blocking_alerts) {
         document.querySelector("a[name='website_sale_main_button']")?.classList.remove('disabled');
     } else {
         document.querySelector("a[name='website_sale_main_button']")?.classList.add('disabled');
@@ -82,29 +85,51 @@ function updateQuickReorderSidebar(data) {
     }
 }
 
-/**
- * Displays `message` in an alert box at the top of the page if it's a
- * non-empty string.
- *
- * @param {string | null} message
- */
-function showWarning(message) {
-    if (!message) return;
-    document.querySelector('.oe_website_sale')?.querySelector('#data_warning')?.remove();
+async function updateShopContent(interaction, {
+    url,
+    searchParams,
+}) {
+    const targetUrl = `${url.pathname}?${searchParams.toString()}`;
 
-    const alertDiv = document.createElement('div');
-    alertDiv.classList.add('alert', 'alert-danger', 'alert-dismissible');
-    alertDiv.role = 'alert';
-    alertDiv.id = 'data_warning';
-    const closeButton = document.createElement('button');
-    closeButton.classList.add('btn-close');
-    closeButton.type = 'button'; // Avoid default submit type in case of a form.
-    closeButton.dataset.bsDismiss = 'alert';
-    const messageSpan = document.createElement('span');
-    messageSpan.textContent = message;
-    alertDiv.appendChild(closeButton);
-    alertDiv.appendChild(messageSpan);
-    document.querySelector('.oe_website_sale').prepend(alertDiv);
+    const productGridWrapper = document.querySelector('.o_wsale_products_grid_table_wrapper');
+    productGridWrapper?.classList?.add('opacity-50');
+
+    try {
+        const paramsObject = Object.fromEntries(searchParams.entries());
+        const data = await interaction.waitFor(rpc('/shop/reload', paramsObject));
+        const updatedShopPage = document.createElement('div');
+        setElementContent(updatedShopPage, markup(data.html))
+        const shopPageEl = document.querySelector('.o_wsale_products_page');
+        interaction.services['public.interactions'].stopInteractions(shopPageEl);
+
+        const newSidebar = updatedShopPage.querySelector('#products_grid_before');
+        const currentSidebar = document.querySelector('#products_grid_before');
+        if (newSidebar && currentSidebar) {
+            setElementContent(currentSidebar, markup(newSidebar.innerHTML))
+        }
+
+        const newGrid = updatedShopPage.querySelector('.o_wsale_products_grid_table');
+        const currentGrid = document.querySelector('.o_wsale_products_grid_table');
+        setElementContent(currentGrid, markup(newGrid.innerHTML))
+
+        const newPager = updatedShopPage.querySelector('.products_pager');
+        const currentPager = document.querySelector('.products_pager');
+        setElementContent(currentPager, markup(newPager.innerHTML))
+
+        const newOffcanvas = updatedShopPage.querySelector('.o_website_offcanvas');
+        const currentOffcanvas = document.querySelector('.o_website_offcanvas');
+        setElementContent(currentOffcanvas, markup(newOffcanvas.innerHTML))
+
+        const applyBtn = document.querySelector('#o_wsale_offcanvas_product_count');
+        if (applyBtn) {
+            setElementContent(applyBtn, data.product_count)
+        }
+        history.pushState({}, '', targetUrl);
+        interaction.services['public.interactions'].startInteractions(shopPageEl);
+        productGridWrapper?.classList.remove('opacity-50');
+    } catch {
+        redirect(targetUrl);
+    }
 }
 
 /**
@@ -118,9 +143,56 @@ function getSelectedAttributeValues(container) {
     )).map(el => parseInt(el.value));
 }
 
+/**
+ * Return a record ID from a slug.
+ *
+ * @param {string} slug - The slug to parse.
+ * @return {undefined|number} - The record ID extracted from the slug, if any.
+ */
+function unslug(slug) {
+    if (!slug) return undefined;
+    return parseInt(slug.split('-').at(-1)) || undefined;
+}
+
+/**
+ * Convert the provided attribute value slugs into search params.
+ *
+ * @param {string[]} attributeValueSlugs - The attribute value slugs to convert.
+ * @return {URLSearchParams} - The search params representing the attribute values.
+ */
+function getAttributeValueParams(attributeValueSlugs) {
+    const attributeValues = new Map();
+    for (const slug of attributeValueSlugs) {
+        // Group attribute values by attribute.
+        const [attribute, attributeValue] = slug.split('/');
+        const values = attributeValues.get(attribute) ?? new Set();
+        values.add(attributeValue);
+        attributeValues.set(attribute, values);
+    }
+    // Aggregate all attribute values belonging to the same attribute into a single search param.
+    return new URLSearchParams(Array.from(attributeValues.entries()).map(
+        ([attribute, values]) => [attribute, [...values].join(',')]
+    ));
+}
+
+/**
+ * Filter out any attribute value params from the provided search params.
+ *
+ * @param {URLSearchParams} searchParams - The search params to filter.
+ * @return {URLSearchParams} - The filtered search params.
+ */
+function clearAttributeValueParams(searchParams) {
+    return new URLSearchParams(Array.from(searchParams.entries()).filter(
+        ([attribute, _]) => !unslug(attribute)
+    ));
+}
+
 export default {
     updateCartNavBar: updateCartNavBar,
-    showWarning: showWarning,
     getSelectedAttributeValues: getSelectedAttributeValues,
     updateQuickReorderSidebar: updateQuickReorderSidebar,
+    unslug: unslug,
+    getAttributeValueParams: getAttributeValueParams,
+    clearAttributeValueParams: clearAttributeValueParams,
+    updateShopContent: updateShopContent,
 };

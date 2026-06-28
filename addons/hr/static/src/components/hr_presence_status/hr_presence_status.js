@@ -28,7 +28,6 @@ export class HrPresenceStatus extends Component {
             case "presence_absent":
                 return "o_icon_employee_absent";
             case "presence_out_of_working_hour":
-            case "presence_archive":
                 return "text-muted";
             default:
                 return "";
@@ -46,7 +45,7 @@ export class HrPresenceStatus extends Component {
                     return "fa-map-marker";
             }
         }
-        return `fa-circle${this.value.startsWith("presence_archive") ? "-o" : ""}`;
+        return "fa-circle";
     }
 
     get location() {
@@ -71,12 +70,17 @@ export class HrPresenceStatus extends Component {
     get value() {
         return this.props.record.data[this.props.name];
     }
+
+    get isActive() {
+        return this.props.record.data.active;
+    }
 }
 
 export const hrPresenceStatus = {
     additionalClasses: ["position-absolute", "d-flex", "align-items-center", "justify-content-center", "bg-light", "rounded-circle","top-0", "end-0"],
     component: HrPresenceStatus,
     fieldDependencies: [
+        { name: "active", type: "boolean" },
         { name: "hr_presence_state", type: "selection" },
         { name: "work_location_type", type: "char" },
         { name: "work_location_name", type: "char" },

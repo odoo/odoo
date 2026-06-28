@@ -1,7 +1,12 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.MobileToolbar">
         <div t-custom-ref="toolbarWrapper" class="o-toolbar-above-keyboard">
-            <Toolbar t-props="this.props"/>
+            <Toolbar
+                state="this.props.state"
+                getSelection="this.props.getSelection"
+                focusEditable="this.props.focusEditable"
+                class="this.props.class"
+            />
         </div>
     </t>
 </templates>

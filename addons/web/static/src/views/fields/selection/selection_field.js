@@ -18,10 +18,6 @@ export class SelectionField extends Component {
         placeholder: { type: String, optional: true },
         required: { type: Boolean, optional: true },
         domain: { type: [Array, Function], optional: true },
-        autosave: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        autosave: false,
     };
 
     setup() {
@@ -64,7 +60,7 @@ export class SelectionField extends Component {
         return choices;
     }
     get isBottomSheet() {
-        return this.env.isSmall && hasTouch();
+        return hasTouch();
     }
     get options() {
         switch (this.type) {
@@ -107,25 +103,16 @@ export class SelectionField extends Component {
         switch (this.type) {
             case "many2one":
                 if (value === null) {
-                    this.props.record.update(
-                        { [this.props.name]: false },
-                        { save: this.props.autosave }
-                    );
+                    this.props.record.update({ [this.props.name]: false });
                 } else {
                     const option = this.options.find((option) => option[0] === value);
-                    this.props.record.update(
-                        {
-                            [this.props.name]: { id: option[0], display_name: option[1] },
-                        },
-                        { save: this.props.autosave }
-                    );
+                    this.props.record.update({
+                        [this.props.name]: { id: option[0], display_name: option[1] },
+                    });
                 }
                 break;
             case "selection":
-                this.props.record.update(
-                    { [this.props.name]: value ?? false },
-                    { save: this.props.autosave }
-                );
+                this.props.record.update({ [this.props.name]: value ?? false });
                 break;
         }
     }
@@ -146,12 +133,11 @@ export const selectionField = {
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
     extractProps({ viewType, placeholder }, dynamicInfo) {
         const props = {
-            autosave: viewType === "kanban",
             placeholder,
             required: dynamicInfo.required,
             domain: dynamicInfo.domain,
         };
-        if (viewType === "kanban") {
+        if (viewType === "card") {
             props.readonly = dynamicInfo.readonly;
         }
         return props;

@@ -14,6 +14,7 @@ class WebsiteVisitor(models.Model):
     current_livechat_agent_ids = fields.Many2many(
         "res.partner",
         compute="_compute_current_livechat_agent_ids",
+        groups="im_livechat.im_livechat_group_user",
         string="Speaking with",
     )
     discuss_channel_ids = fields.One2many('discuss.channel', 'livechat_visitor_id',
@@ -59,7 +60,7 @@ class WebsiteVisitor(models.Model):
         This creates a chat_request and a discuss_channel with livechat active flag.
         But for the visitor to get the chat request, the operator still has to speak to the visitor.
         The visitor will receive the chat request the next time he navigates to a website page.
-        (see _handle_webpage_dispatch for next step)"""
+        """
         # check if visitor is available
         unavailable_visitors_count = self.env["discuss.channel"].search_count(
             [("livechat_visitor_id", "in", self.ids), ("livechat_end_dt", "=", False)]
@@ -70,7 +71,6 @@ class WebsiteVisitor(models.Model):
         for website in self.mapped('website_id'):
             if not website.channel_id:
                 raise UserError(_('No Livechat Channel allows you to send a chat request for website %s.', website.name))
-        self.website_id.channel_id.write({'user_ids': [(4, self.env.user.id)]})
         # Create chat_requests and linked discuss_channels
         discuss_channel_vals_list = []
         for visitor in self:
@@ -123,8 +123,8 @@ class WebsiteVisitor(models.Model):
         ]
         return super()._merge_visitor(target)
 
-    def _upsert_visitor(self, access_token, force_track_values=None):
-        visitor_id, upsert = super()._upsert_visitor(access_token, force_track_values=force_track_values)
+    def _upsert_visitor(self, token_or_partner_id, website_id, lang_id=None, country_code=None, timezone=None, url=None, **kwargs):
+        visitor_id, upsert = super()._upsert_visitor(token_or_partner_id, website_id, lang_id, country_code, timezone, url, **kwargs)
         if upsert == 'inserted':
             visitor_sudo = self.sudo().browse(visitor_id)
             if guest := self.env["mail.guest"]._get_guest_from_context():

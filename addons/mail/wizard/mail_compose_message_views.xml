@@ -40,8 +40,10 @@
                         <!-- visible wizard -->
                         <field name="email_from"
                             invisible="composition_mode != 'mass_mail'"/>
-                        <label for="partner_ids" string="To" invisible="composition_mode != 'comment' or subtype_is_log"/>
-                        <div groups="base.group_user" invisible="composition_mode != 'comment' or subtype_is_log" class="d-flex gap-3">
+                    </group>
+                    <group>
+                        <label for="partner_ids" string="To" groups="base.group_user" invisible="composition_mode != 'comment' or subtype_is_log"/>
+                        <div class="d-flex gap-3" groups="base.group_user" invisible="composition_mode != 'comment' or subtype_is_log">
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Followers only" class="w-auto flex-grow-1"
                                 invisible="composition_comment_option == 'forward' or (composition_comment_option != 'reply_all' and not context.get('clicked_on_full_composer', False))"
                                 context="{'form_view_ref': 'base.view_partner_simple_form', 'show_email': True}"
@@ -51,11 +53,24 @@
                                 invisible="composition_comment_option != 'forward' and (context.get('clicked_on_full_composer', False) or composition_comment_option == 'reply_all' )"
                                 options="{'on_tag_click': 'open_form'}"
                                 context="{'force_email': True, 'show_email': True, 'form_view_ref': 'base.view_partner_simple_form', 'forward_mode': True}"/>
+                            <div class="d-flex gap-2">
+                                <field string="Cc" name="partner_cc_allowed" widget="mail_boolean_toggle_label" nolabel="1"
+                                    options="{'btn_class_on': '', 'btn_class_off': ''}" invisible="partner_cc_allowed"/>
+                            </div>
                         </div>
-                        <field name="subject" placeholder="e.g. Welcome to MyCompany!" required="True"/>
+                        <label for="partner_cc_ids" string="Cc"
+                            groups="base.group_user" invisible="composition_mode != 'comment' or subtype_is_log or not partner_cc_allowed"/>
+                        <div class="d-flex gap-3"
+                            groups="base.group_user" invisible="composition_mode != 'comment' or subtype_is_log or not partner_cc_allowed">
+                            <field name="partner_cc_ids" widget="many2many_tags_email" placeholder="Add Cc recipients..."
+                                class="w-auto flex-grow-1"/>
+                        </div>
+                        <field name="subject_placeholder" invisible="1"/><!--used as dynamic placeholder-->
+                        <field name="subject" options="{'placeholder_field': 'subject_placeholder'}" required="composition_mode == 'mass_mail'"/>
                         <field name="reply_to" placeholder="e.g. info@company.com"
                             invisible="reply_to_mode == 'update'"
                             required="reply_to_mode != 'update'"/>
+                        <field name="attachment_links" nolabel="1" colspan="2" invisible="not attachment_links"/>
                     </group>
                     <field name="can_edit_body" invisible="1"/>
                     <div invisible="composition_mode == 'mass_mail'">
@@ -81,6 +96,9 @@
                         </page>
                     </notebook>
                     <footer>
+                        <div invisible="not attachment_links_info" class="alert alert-info py-1 my-0 align-right w-100" role="alert">
+                            <field name="attachment_links_info" nolabel="1"/>
+                        </div>
                         <button string="Send" name="action_send_mail"
                                 type="object" class="btn-primary o_mail_send" data-hotkey="q"
                                 invisible="(subtype_is_log or composition_mode == 'comment' and not composition_batch and scheduled_date) or not partner_ids_all_have_email"/>

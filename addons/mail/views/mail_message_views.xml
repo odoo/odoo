@@ -90,9 +90,6 @@
                                     </field>
                                 </group>
                             </page>
-                            <page string="Tracking" name="page_tracking">
-                                <field name="tracking_value_ids"/>
-                            </page>
                         </notebook>
                     </sheet>
                 </form>
@@ -137,7 +134,7 @@
             <field name="name">ir.attachment kanban</field>
             <field name="model">ir.attachment</field>
             <field name="arch" type="xml">
-                <kanban edit="false" import="false">
+                <kanban edit="false" import="false" js_class="ir_attachment_kanban">
                     <field name="id"/>
                     <field name="mimetype"/>
                     <field name="type"/>
@@ -172,6 +169,16 @@
                         </t>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+        <record id="ir_attachment_view_list" model="ir.ui.view">
+            <field name="name">ir.attachment.list.inherit.mail</field>
+            <field name="model">ir.attachment</field>
+            <field name="inherit_id" ref="base.view_attachment_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="attributes">
+                    <attribute name="js_class">ir_attachment_list</attribute>
+                </xpath>
             </field>
         </record>
         <record id="base.action_attachment" model="ir.actions.act_window">

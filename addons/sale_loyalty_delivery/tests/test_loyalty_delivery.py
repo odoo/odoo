@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import Form, common
@@ -66,16 +65,12 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
             "program_type": "gift_card",
             "trigger": "auto",
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 1,
-                        "discount_mode": "per_point",
-                        "discount_applicability": "order",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 1,
+                    "discount_mode": "per_point",
+                    "discount_applicability": "order",
+                })
             ],
         })
         self.env["loyalty.generate.wizard"].with_context(active_id=program_gift_card.id).create({
@@ -148,18 +143,14 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
             "program_type": "coupons",
             "applies_on": "current",
             "trigger": "auto",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 90,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 90,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                })
             ],
         })
 
@@ -211,7 +202,7 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
             raise ValidationError(status["error"])
         if not status and no_reward_fail:
             # Can happen if global discount got filtered out in `_get_claimable_rewards`
-            raise ValidationError(_("No reward to claim with this coupon"))
+            raise ValidationError(self.env._("No reward to claim with this coupon"))
         coupons = self.env["loyalty.card"]
         rewards = self.env["loyalty.reward"]
         for coupon, coupon_rewards in status.items():
@@ -221,3 +212,46 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
             status = order._apply_program_reward(rewards, coupons)
             if "error" in status:
                 raise ValidationError(status["error"])
+
+    def test_ewallet_is_excluded_from_delivery_pricing(self):
+        program_ewallet = self.env["loyalty.program"].create({
+            "name": "eWallet",
+            "program_type": "ewallet",
+            "reward_ids": [
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "per_point",
+                    "discount": 1,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
+            ],
+        })
+        self.env["loyalty.generate.wizard"].with_context(active_id=program_ewallet.id).create({
+            "coupon_qty": 1,
+            "points_granted": 200,
+        }).generate_coupons()
+        reward_ewallet = program_ewallet.reward_ids[0]
+        ewallet = program_ewallet.coupon_ids[0]
+
+        self.delivery_carrier.delivery_type = "base_on_rule"
+        self.delivery_carrier.price_rule_ids = [
+            Command.create({
+                "list_base_price": 30,
+                "operator": "<",
+                "variable": "price",
+                "max_value": 99,
+            }),
+            Command.create({
+                "list_base_price": 50,
+                "operator": ">=",
+                "variable": "price",
+                "max_value": 100,
+            }),
+        ]
+
+        order = self.order
+        order.order_line.price_unit = 100
+        order._apply_program_reward(reward_ewallet, ewallet)
+
+        self.assertEqual(self.delivery_carrier._get_price_available(order), 50)

@@ -146,13 +146,13 @@ test("should not remove a link containing an image on save", async () => {
 test("should not remove a document link on save", async () => {
     await testEditor({
         contentBefore:
-            '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain"></a>b</p>',
+            '<p>a<span class="o_file_box"><a href="exist" title="file.js.map" data-mimetype="text/plain"></a></span>b</p>',
         contentBeforeEdit:
-            '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain" contenteditable="false"></a>b</p>',
+            '<p>a\ufeff<span class="o_file_box" contenteditable="false"><a href="exist" title="file.js.map" data-mimetype="text/plain"></a></span>\ufeffb</p>',
         contentAfterEdit:
-            '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain" contenteditable="false"></a>b</p>',
+            '<p>a\ufeff<span class="o_file_box" contenteditable="false"><a href="exist" title="file.js.map" data-mimetype="text/plain"></a></span>\ufeffb</p>',
         contentAfter:
-            '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain"></a>b</p>',
+            '<p>a<span class="o_file_box"><a href="exist" title="file.js.map" data-mimetype="text/plain"></a></span>b</p>',
     });
 });
 
@@ -174,6 +174,15 @@ test("should not add a character in the link if start of paragraph", async () =>
             await insertText(editor, "c");
         },
         contentAfter: '<p>a<a href="exist">b</a></p><p>c[]d</p>',
+    });
+});
+
+test("should not show hint for link with only &nbsp;", async () => {
+    await testEditor({
+        contentBefore: '<p><a href="http://test.test/">&nbsp;[]</a></p>',
+        contentAfterEdit:
+            '<p>\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff&nbsp;[]\ufeff</a>\ufeff</p>',
+        contentAfter: '<p><a href="http://test.test/">&nbsp;[]</a></p>',
     });
 });
 

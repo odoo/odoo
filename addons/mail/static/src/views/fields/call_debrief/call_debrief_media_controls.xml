@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="mail.CallDebriefMediaControls">
+        <div class="o-CallDebriefMediaControls d-flex justify-content-between column-gap-1 row-gap-3 flex-wrap">
+            <div class="d-flex align-items-center gap-1">
+                <button t-on-click="this.props.onTogglePlay" class="btn btn-primary rounded-pill p-1" t-att-class="{ 'active': this.props.isPlaying }" t-att-data-tooltip="this.playPauseTooltip">
+                    <i class="fa fa-stack" t-att-class="this.props.isPlaying ? 'fa-pause' : 'fa-play'"/>
+                </button>
+                <button t-on-click="() => this.props.onSeek(-5)" class="o-CallDebrief-control btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.skipBackwardTooltip" t-att-disabled="this.props.currentTime === 0" data-control-feedback="skip-backward">
+                    <i class="fa fa-backward fa-stack"/>
+                </button>
+                <button t-on-click="() => this.props.onSeek(5)" class="o-CallDebrief-control btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.skipForwardTooltip" t-att-disabled="this.props.currentTime === this.props.totalDuration" data-control-feedback="skip-forward">
+                    <i class="fa fa-forward fa-stack"/>
+                </button>
+            </div>
+            <div class="o-CallDebriefMediaControls-timeLabel d-flex align-items-center flex-shrink-0 ms-1 me-auto smaller">
+                <span class="o_current_time" t-out="this.formatDuration(this.props.currentTime)"/>
+                <span class="mx-1 text-muted">/</span>
+                <span class="text-muted" t-out="this.formattedTotalDuration"/>
+            </div>
+            <div class="d-flex align-items-center gap-1">
+                <div class="o-CallDebriefMediaControls-volumeWrapper position-relative d-flex align-items-center">
+                    <button t-on-click="this.props.onToggleMute" data-control-feedback="mute" class="o-CallDebrief-control o-CallDebrief-muteBtn btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.muteTooltip">
+                        <i class="fa fa-stack" t-att-class="this.volumeIconClass"/>
+                    </button>
+                    <input t-if="!this.isMobileOS"
+                        type="range"
+                        class="o-CallDebriefMediaControls-volumeRange form-range position-absolute start-100 rounded border px-2 py-3 bg-100 z-1"
+                        min="0"
+                        max="1"
+                        step="0.05"
+                        t-att-value="this.props.isMuted ? 0 : this.props.volume"
+                        t-on-input="(ev) => this.props.onSetVolume(ev)"
+                    />
+                </div>
+                <select class="o-CallDebrief-control o-CallDebrief-select btn btn-secondary rounded-pill py-1 px-2 lh-lg" t-on-change="(ev) => this.props.onSetPlaybackRate(ev)" data-control-feedback="playback-speed" data-tooltip-template="mail.CallDebriefPlaybackSpeedTooltip">
+                    <t t-foreach="this.props.playbackRates" t-as="rate" t-key="rate">
+                        <option t-att-value="rate" t-att-selected="this.props.playbackRate === rate ? 'selected' : null">
+                            <t t-out="rate"/>x
+                        </option>
+                    </t>
+                </select>
+                <button t-if="this.props.hasVideo and !this.isMobileOS" t-on-click="this.props.onToggleFullscreen" class="o-CallDebrief-control btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.fullscreenTooltip" data-control-feedback="fullscreen">
+                    <i class="fa fa-stack" t-att-class="this.props.isFullscreen ? 'fa-compress' : 'fa-expand'"/>
+                </button>
+                <button class="o-CallDebrief-control btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.downloadTooltip" t-if="this.props.mediaUrl" t-on-click="() => this.downloadMedia()">
+                    <i class="fa fa-stack fa-download"/>
+                </button>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mail.CallDebriefPlaybackSpeedTooltip">
+        <span t-if="!this.isMobileOS" class="d-flex flex-column text-center">
+            <span class="mb-1">Playback speed</span>
+            <span class="smaller font-monospace">SHIFT+, SHIFT+.</span>
+        </span>
+    </t>
+</templates>

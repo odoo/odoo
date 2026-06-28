@@ -10,7 +10,6 @@ import {
     SIZES,
     start,
     startServer,
-    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { expect, mockTouch, mockUserAgent, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
@@ -39,8 +38,8 @@ test("Should open the search panel when search button is clicked", async () => {
     await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
     await click("[title='Search Messages']");
     await contains(".o-mail-SearchMessagesPanel");
-    await contains(".o_searchview");
-    await contains(".o_searchview_input");
+    await contains(".o-mail-SearchMessageInput");
+    await contains(".o-mail-SearchInput input");
 });
 
 test.tags("desktop");
@@ -78,13 +77,13 @@ test("Search a message", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
-    await contains(".o-mail-SearchMessageInput .o_searchview_input");
-    await editInput(document.body, ".o_searchview_input", "message");
+    await contains(".o-mail-SearchMessageInput .o-mail-SearchInput input");
+    await editInput(document.body, ".o-mail-SearchInput input", "message");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
-    expect(".o_searchview_input").toHaveValue("message");
-    await click("i[aria-label='Clear Search']");
+    expect(".o-mail-SearchInput input").toHaveValue("message");
+    await click("button[aria-label='Clear']");
     await contains(".o-mail-SearchMessagesPanel:not(:has(.o-mail-Message))");
-    expect(".o_searchview_input").toHaveValue("");
+    expect(".o-mail-SearchInput input").toHaveValue("");
 });
 
 test.tags("desktop");
@@ -103,8 +102,8 @@ test("Search should be hightlighted", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await click("[title='Search Messages']");
-    await insertText(".o_searchview_input", "message");
-    triggerHotkey("Enter");
+    await contains(".o-mail-SearchMessageInput");
+    await insertText(".o-mail-SearchInput input", "message");
     await contains(`.o-mail-SearchMessagesPanel .o-mail-Message .${HIGHLIGHT_CLASS}`);
 });
 
@@ -125,8 +124,7 @@ test("Search a bookmark", async () => {
     await openDiscuss("mail.box_bookmark");
     await contains(".o-mail-Message");
     await click("[title='Search Messages']");
-    await insertText(".o_searchview_input", "message");
-    triggerHotkey("Enter");
+    await insertText(".o-mail-SearchInput input", "message");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
 });
 
@@ -147,8 +145,7 @@ test("Search a message in inbox", async () => {
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
     await click("[title='Search Messages']");
-    await insertText(".o_searchview_input", "message");
-    triggerHotkey("Enter");
+    await insertText(".o-mail-SearchInput input", "message");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
 });
 
@@ -175,8 +172,7 @@ test("Search a message in history (desktop)", async () => {
     await start();
     await openDiscuss("mail.box_history");
     await click("[title='Search Messages']");
-    await insertText(".o_searchview_input", "message");
-    triggerHotkey("Enter");
+    await insertText(".o-mail-SearchInput input", "message");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
     await click(".o-mail-SearchMessagesPanel .o-mail-MessageCard-jump");
     await contains(".o-mail-Thread .o-mail-Message.o-highlighted");
@@ -211,8 +207,7 @@ test("Search a message in history (mobile)", async () => {
     await click("[title='Search Messages']");
     await contains(".o-mail-SearchMessagesPanel");
     await contains(".o-mail-Thread", { count: 0 });
-    await insertText(".o_searchview_input", "message");
-    await triggerHotkey("Enter");
+    await insertText(".o-mail-SearchInput input", "message");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
     await click(".o-mail-MessageCard-jump");
     await contains(".o-mail-Thread");
@@ -249,8 +244,8 @@ test("Search a message in 60 messages should return 30 message first", async () 
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await click("[title='Search Messages']");
-    await insertText(".o_searchview_input", "message");
-    triggerHotkey("Enter");
+    await contains(".o-mail-SearchMessageInput");
+    await insertText(".o-mail-SearchInput input", "message");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 30 });
     // give enough time to useVisible to potentially load more (unexpected) messages
     await tick();
@@ -275,8 +270,8 @@ test("Scrolling to the bottom should load more searched message", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await click("[title='Search Messages']");
-    await insertText(".o_searchview_input", "message");
-    triggerHotkey("Enter");
+    await contains(".o-mail-SearchMessageInput");
+    await insertText(".o-mail-SearchInput input", "message");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 30 });
     await scroll(".o-mail-SearchMessagesPanel .o-mail-ActionPanel", "bottom");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 60 });
@@ -301,8 +296,8 @@ test("Search a message containing round brackets", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
-    await insertText(".o_searchview_input", "(message");
-    triggerHotkey("Enter");
+    await contains(".o-mail-SearchMessageInput");
+    await insertText(".o-mail-SearchInput input", "(message");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
 });
 
@@ -316,8 +311,8 @@ test("Search a message containing single quotes", async () => {
     await click(".o-sendMessageActive:enabled");
     await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
-    await insertText(".o_searchview_input", "can't");
-    triggerHotkey("Enter");
+    await contains(".o-mail-SearchMessageInput");
+    await insertText(".o-mail-SearchInput input", "can't");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
 });
 

@@ -1,4 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -15,7 +16,7 @@ export class AutoResizeImage extends Attachment {
         this.image = useRef("auto-resize-image");
         this.container = useRef("auto-resize-image-container");
 
-        this.state = useState({
+        this.state = proxy({
             loaded: false,
         });
     }
@@ -87,6 +88,7 @@ export class ImageSelector extends FileSelector {
         this.fileMimetypes = IMAGE_MIMETYPES.join(",");
         this.isImageField =
             !!this.props.media?.closest("[data-oe-type=image]") || !!this.props.addFieldImage;
+        this.isProcessingClick = false;
     }
 
     get canLoadMore() {
@@ -344,6 +346,10 @@ export class ImageSelector extends FileSelector {
     }
 
     async onClickAttachment(attachment) {
+        if (this.isProcessingClick) {
+            return;
+        }
+        this.isProcessingClick = true;
         if (attachment.unselectable) {
             this.notificationService.add(
                 _t(
@@ -360,6 +366,11 @@ export class ImageSelector extends FileSelector {
         if (!this.props.multiSelect) {
             await this.props.save();
         }
+        // The use of requestAnimationFrame is not ideal but we do it as a
+        // temporary fix as the media dialog will be refactored
+        requestAnimationFrame(() => {
+            this.isProcessingClick = false;
+        });
     }
 
     async onClickMedia(media) {
@@ -372,7 +383,7 @@ export class ImageSelector extends FileSelector {
     /**
      * Utility method used by the MediaDialog component.
      */
-    static async createElements(selectedMedia, { orm }) {
+    static async createElements(selectedMedia, { orm, document = window.document } = {}) {
         // Create all media-library attachments.
         const toSave = Object.fromEntries(
             selectedMedia

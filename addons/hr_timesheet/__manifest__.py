@@ -21,8 +21,6 @@ up a management by affair.
     'depends': ['hr', 'analytic', 'project', 'uom'],
     'data': [
         'security/hr_timesheet_security.xml',
-        'security/ir.model.access.csv',
-        'security/ir.model.access.xml',
         'data/portal_entry_data.xml',
         'views/account_analytic_line_views.xml',
         'views/res_config_settings_views.xml',
@@ -40,6 +38,7 @@ up a management by affair.
         'views/project_task_sharing_views.xml',
         'views/project_update_views.xml',
         'views/hr_timesheet_menus.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/hr_timesheet_demo.xml',

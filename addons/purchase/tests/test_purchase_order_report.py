@@ -3,6 +3,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.fields import Command
 from odoo.tests import Form, tagged
+from odoo.tools import mute_logger
 
 from datetime import datetime, timedelta
 
@@ -79,7 +80,8 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         #                 ...
         #             )""")
         #     ...
-        f.purchase_id = po
+        with mute_logger('odoo.tests.form.onchange'):  # Mute "x PO lines added to the bill" notification
+            f.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
         invoice = f.save()
         invoice.action_post()
         po.flush_model()

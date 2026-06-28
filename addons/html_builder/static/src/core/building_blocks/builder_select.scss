@@ -4,6 +4,7 @@
             display: unset;
             top: 50%;
             transform: translate(-1.5em, -50%);
+            font-size: 0.8em;
         }
     }
 }
@@ -22,7 +23,7 @@
         display: block;
         flex: 1;
         min-width: 0;
-        padding-right: 0.75rem;
+        padding-right: 0.95rem;
         transition: none;
 
         &.show {
@@ -93,6 +94,8 @@
     .dropdown-item {
         --dropdown-item-padding-y: 0;
 
+        $active-color: var(--o-hb-select-item-active-color, $o-we-sidebar-content-field-toggle-active-bg);
+
         color: var(--o-hb-select-color, $white);
         line-height: 2rem;
         border-bottom: $o-we-border-width solid var(--border-color);
@@ -103,7 +106,18 @@
         }
 
         &::before {
-            color: var(--o-hb-select-item-active-color, $o-we-sidebar-content-field-toggle-active-bg) !important;
+            color: $active-color !important;
+        }
+
+        &.active:has(.hb-svg, > img) {
+            position: relative;
+            background-color: color-mix(in srgb, $active-color 10%, transparent);
+
+            &::after {
+                content: "";
+                @include o-position-absolute(0, 0, 0, 0);
+                border: 1px solid color-mix(in srgb, $active-color 50%, transparent);
+            }
         }
     }
 

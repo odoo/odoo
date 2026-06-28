@@ -2,21 +2,32 @@
 /* Element widget */
 .oe-sidewidget-move {
     position: absolute;
-    opacity: 0.6;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(white, 0.4);
-    color: #6e727a;
-    border-radius: 3px;
-    padding: 2px 3px;
+    color: rgba(110, 114, 122, 0.6);
     cursor: move; /* fallback if grab cursor is unsupported */
     cursor: grab;
     right: 5px;
     top: 0px;
 }
 .oe-sidewidget-move:hover, .o_touch_device .oe-sidewidget-move {
-    opacity: 1;
+    color: rgb(110, 114, 122);
+}
+.oe_movewidget_border {
+    background-color: $o-view-background-color;
+    font-size: 13px;
+    &::after {
+        content: '';
+        position: absolute;
+        top: -1px;
+        bottom: -1px;
+        left: 0;
+        width: var(--after-element-width, 0);
+        border: 1px solid $border-color;
+        border-right: none;
+        border-radius: 4px 0 0 4px;
+    }
 }
 
 /* Element widget drag & drop zone */

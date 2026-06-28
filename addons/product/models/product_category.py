@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
 
@@ -28,6 +28,9 @@ class ProductCategory(models.Model):
         '# Products', compute='_compute_product_count',
         help="The number of products under this category (Does not consider the children categories)")
     product_properties_definition = fields.PropertiesDefinition('Product Properties')
+    company_id = fields.Many2one(comodel_name='res.company', tracking=True)
+
+    # === COMPUTE METHODS === #
 
     @api.depends('name', 'parent_id.complete_name')
     @api.depends_context('lang')
@@ -56,17 +59,45 @@ class ProductCategory(models.Model):
                 product_count += group_data.get(sub_categ_id, 0)
             categ.product_count = product_count
 
-    @api.model
-    def name_create(self, name):
-        category = self.create({'name': name})
-        return category.id, category.display_name
-
     @api.depends_context('hierarchical_naming')
     def _compute_display_name(self):
         if self.env.context.get('hierarchical_naming', True):
             return super()._compute_display_name()
         for record in self:
             record.display_name = record.name
+
+    # === CONSTRAINT METHODS === #
+
+    @api.constrains('company_id')
+    def _check_company_id(self):
+        for company, categories in self.grouped('company_id').items():
+            if not company:
+                # Shared categories can be set on any product
+                continue
+
+            invalid_products = self.env['product.template'].sudo().search([
+                ('company_id', '!=', company.id),
+                ('categ_id', 'in', categories.ids),
+            ])
+            if invalid_products:
+                if len(categories) > 1:
+                    raise ValidationError(self.env._(
+                        "You cannot change the company of %(categories)s as they hold products"
+                        " shared between companies or belonging to other companies.",
+                        categories=', '.join(categories.mapped('display_name')),
+                    ))
+                raise ValidationError(self.env._(
+                    "You cannot change the company of %(category)s as it holds products shared"
+                    " between companies or belonging to other companies.",
+                    category=categories.display_name,
+                ))
+
+    # === CRUD METHODS === #
+
+    @api.model
+    def name_create(self, name):
+        category = self.create({'name': name})
+        return category.id, category.display_name
 
     def copy_data(self, default=None):
         default = dict(default or {})

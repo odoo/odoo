@@ -141,3 +141,45 @@ class TestEmployee(TransactionCase):
         self.assertEqual(len(timesheet), 1, 'A timesheet should have been created for the global leave of the employee')
         self.assertEqual(str(timesheet.date), '2020-01-01', 'The timesheet should be created for the correct date')
         self.assertEqual(timesheet.unit_amount, 8, 'The timesheet should be created for the correct duration')
+
+    @freeze_time('2020-01-01')
+    def test_timesheet_inactive_employee(self):
+        """ Test if the timesheets representing the time off of this employee,
+            are correctly generated once the employee is set to inactive
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'Test Employee',
+            'resource_calendar_id': self.company.resource_calendar_id.id,
+            'company_id': self.company.id,
+        })
+        old_timesheet_count = len(self.env['account.analytic.line'].search([
+            ('employee_id', '=', employee.id)]))
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Legal Leaves',
+            'code': 'Legal Leaves',
+            'count_as': 'absence',
+            'leave_validation_type': 'both',
+            'requires_allocation': False,
+            'unit_of_measure': 'day',
+        })
+        leave = self.env['hr.leave'].create({
+            'employee_id': employee.id,
+            'state': 'confirm',
+            'work_entry_type_id': work_entry_type.id,
+            'request_date_from': '2020-01-02 08:00:00',
+            'request_date_to': '2020-01-07 17:00:00',
+        })
+        leave._action_validate()
+        timesheets = self.env['account.analytic.line'].search([
+            ('employee_id', '=', employee.id)])
+        self.assertEqual(len(timesheets), old_timesheet_count + 4, "4 new Timesheets should be generated for timeoff that doesn't fall on a week-end")
+
+        employee.write({'active': False})  # Archiveing an employee will delete the timesheet related to its future holidays, this will change the number of timesheets
+        old_timesheet_count = len(self.env['account.analytic.line'].search([
+            ('employee_id', '=', employee.id)]))
+
+        leave._generate_timesheets()
+        self.assertTrue(timesheets, "Timesheet should not have been regenerated and therefore old timesheet shouldn't be deleted")
+        timesheets = self.env['account.analytic.line'].search([
+            ('employee_id', '=', employee.id)])
+        self.assertEqual(len(timesheets), old_timesheet_count, "New timesheets should not have been generated due to employee being inactive/archived")

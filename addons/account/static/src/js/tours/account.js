@@ -35,7 +35,6 @@ export const accountTourSteps = {
 }
 
 registry.category("web_tour.tours").add('account_tour', {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps ) #245680
     steps: () => [
     ...accountTourSteps.goToAccountMenu(markup(_t('Send invoices to your customers in no time with the <b>Invoicing app</b>.'))),
     ...accountTourSteps.onboarding(),
@@ -87,12 +86,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=product_id] button[id=labelVisibilityButtonId]`,
-        content: _t("Click here to add a description to your product."),
-        tooltipPosition: "bottom",
-        run: "click",
-    },
-    {
         trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=product_id] textarea`,
         content: _t("Add a description to your item."),
         tooltipPosition: "bottom",
@@ -132,6 +125,14 @@ registry.category("web_tour.tours").add('account_tour', {
         content: _t("Send the invoice to the customer and check what he'll receive."),
         tooltipPosition: "bottom",
         run: "click",
+    },
+    {
+        isActive: ["auto"],
+        trigger: `body${accountTourSteps.postedInvoiceSelector} .o-mail-RecipientsInputTagsListPopover input`,
+        content: "Wait for animation frame",
+        async run(helpers) {
+            await helpers.animationFrame();
+        },
     },
     {
         // RecipientsInputTagsListPopover will not display if the customer already has an email address

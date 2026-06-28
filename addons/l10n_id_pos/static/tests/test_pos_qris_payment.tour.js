@@ -10,7 +10,7 @@ function isQRDisplayedinDialog() {
     return [
         {
             content: "Verify QR image is displayed",
-            trigger: ".modal-content img[src^='data:image/png;base64,']",
+            trigger: ".modal-content img[src^='data:image/svg+xml;base64,']",
             run: "click",
         },
     ].flat();

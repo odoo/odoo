@@ -1,8 +1,6 @@
 import {
-    after,
     animationFrame,
     click,
-    Deferred,
     expect,
     formatXml,
     getFixture,
@@ -12,13 +10,14 @@ import {
     runAllTimers,
     tick,
 } from "@odoo/hoot";
-import { Component, onMounted, useSubEnv, xml } from "@odoo/owl";
+import { Component, onMounted, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { useSubEnv } from "@web/owl2/utils";
 import { View } from "@web/views/view";
 import { mountWithCleanup } from "./component_test_helpers";
 import { contains } from "./dom_test_helpers";
-import { getMockEnv, getService } from "./env_test_helpers";
+import { getMockEnv, getService } from "./app_test_helpers";
 import { registerInlineViewArchs } from "./mock_server/mock_model";
 
 /**
@@ -74,7 +73,7 @@ class ViewDialog extends Component {
 
     static template = xml`
         <Dialog>
-            <View t-props="props.viewProps" />
+            <View t-props="this.props.viewProps" />
         </Dialog>
     `;
 
@@ -220,7 +219,7 @@ export async function mountViewInDialog(params) {
     const container = await mountWithCleanup(MainComponentsContainer, {
         env: params.env,
     });
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     getService("dialog").add(ViewDialog, {
         viewEnv: { config: params.config },
         viewProps: parseViewProps(params),
@@ -228,19 +227,17 @@ export async function mountViewInDialog(params) {
             deferred.resolve();
         },
     });
-    await deferred;
+    await deferred.promise;
     return container;
 }
 
 /**
  * @param {MountViewParams} params
- * @param {HTMLElement} [target]
  */
-export async function mountView(params, target = null) {
+export async function mountView(params) {
     const actionManagerEl = document.createElement("div");
     actionManagerEl.classList.add("o_action_manager");
-    (target ?? getFixture()).append(actionManagerEl);
-    after(() => actionManagerEl.remove());
+    getFixture().appendChild(actionManagerEl);
     return mountWithCleanup(View, {
         env: params.env,
         componentEnv: { config: params.config },

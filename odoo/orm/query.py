@@ -253,6 +253,7 @@ class Query:
             #   FROM "stuff"
             #   JOIN (SELECT * FROM unnest(%s) WITH ORDINALITY) AS "stuff__ids"
             #       ON ("stuff"."id" = "stuff__ids"."unnest")
+            #   WHERE 1=1  -- some code uses the fact there is a WHERE to detect restrictions
             #   ORDER BY "stuff__ids"."ordinality"
             table = self.table
             alias = table._make_alias('ids')
@@ -262,6 +263,7 @@ class Query:
                 SQL('(SELECT * FROM unnest(%s) WITH ORDINALITY)', list(ids)),
                 SQL('%s = %s', table.id, alias.unnest),
             )
+            self._where_clauses.append(SQL('1=1'))
             self.order = alias.ordinality
         else:
             self.add_where(SQL("%s IN %s", self.table.id, ids))

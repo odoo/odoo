@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { getElementsWithOption } from "@html_builder/utils/utils";
-import { withSequence } from "@html_editor/utils/resource";
 
 /**
  * @typedef { Object } VisibilityShared
@@ -30,10 +29,7 @@ export class VisibilityPlugin extends Plugin {
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_mobile_preview_clicked_handlers: withSequence(
-            10,
-            this.onMobilePreviewClicked.bind(this)
-        ),
+        on_mobile_view_switched_handlers: this.onMobileViewSwitched.bind(this),
         system_attributes: ["data-invisible"],
         system_classes: ["o_snippet_override_invisible"],
         clean_for_save_processors: this.cleanForSaveVisibility.bind(this),
@@ -118,6 +114,7 @@ export class VisibilityPlugin extends Plugin {
                 invisibleEl.removeAttribute("data-invisible");
             }
         }
+        return rootEl;
     }
 
     onSnippetDropped({ snippetEl }) {
@@ -128,7 +125,7 @@ export class VisibilityPlugin extends Plugin {
         }
     }
 
-    onMobilePreviewClicked() {
+    onMobileViewSwitched() {
         const deviceInvisibleEls = this.editable.querySelectorAll(deviceInvisibleSelector);
         const currentContainerTargetEl = this.dependencies["builderOptions"].getTarget();
         for (const deviceInvisibleEl of [...deviceInvisibleEls]) {
@@ -208,8 +205,8 @@ export class VisibilityPlugin extends Plugin {
 
     /**
      * Hides the given element and updates what needs to be.
-     * Note: to use only when hiding things without adding history steps:
-     * - if an action adding a history step hides the element, it should call
+     * Note: to use only when hiding things without adding history commits:
+     * - if an action adding a history commit hides the element, it should call
      *   `onOptionVisibilityUpdate`
      * - if it concerns the "Invisible Element" panel, refer to its component.
      *
@@ -223,6 +220,6 @@ export class VisibilityPlugin extends Plugin {
     }
 }
 
-function isTargetVisible(editingEl) {
+export function isTargetVisible(editingEl) {
     return editingEl.dataset.invisible !== "1";
 }

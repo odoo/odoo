@@ -50,6 +50,15 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
+    repair_service_line_id = fields.Many2one('repair.service.line', check_company=True, copy=False, index='btree_not_null')
+
+    @api.depends('repair_service_line_id.description')
+    def _compute_name(self):
+        super()._compute_name()
+        for line in self:
+            if line.repair_service_line_id and line.repair_service_line_id.description:
+                line.name = line.translated_product_name + '\n' + line.repair_service_line_id.description
+
     def _prepare_qty_delivered(self):
         repair_delivered_qties = defaultdict(float)
         remaining_so_lines = self
@@ -96,7 +105,8 @@ class SaleOrderLine(models.Model):
                 binded_ro_ids.action_repair_cancel_draft()
                 binded_ro_ids._action_repair_confirm()
                 continue
-            if line.product_template_id.sudo().service_tracking != 'repair' or line.move_ids.sudo().repair_id or line.product_uom_id.compare(line.product_uom_qty, 0) <= 0:
+            if line.product_template_id.sudo().service_tracking != 'repair' or line.move_ids.sudo().repair_id or line.repair_service_line_id.repair_id \
+                or line.product_uom_id.compare(line.product_uom_qty, 0) <= 0:
                 continue
 
             order = line.order_id

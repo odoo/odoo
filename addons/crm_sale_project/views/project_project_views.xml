@@ -4,7 +4,7 @@
     <record id="view_edit_project_inherit_form_crm_project" model="ir.ui.view">
         <field name="name">project.project.view.inherit.crm.project</field>
         <field name="model">project.project</field>
-        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="inherit_id" ref="sale_project.view_edit_project_inherit_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_customer_preview']" position="after">
                 <button name="action_view_lead" icon="fa-star" type="object" class="oe_stat_button"

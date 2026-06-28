@@ -79,11 +79,15 @@ class IrBinary(models.AbstractModel):
         value = record[field_name]
 
         if value and record._fields[field_name].attachment:
-            field_attachment = self.env['ir.attachment'].sudo().search(
-                domain=[('res_model', '=', record._name),
-                        ('res_id', '=', record.id),
-                        ('res_field', '=', field_name)],
-                limit=1)
+            from odoo.orm.fields_binary import BinaryValueAttachment  # noqa: PLC0415
+            if isinstance(value, BinaryValueAttachment):
+                field_attachment = value._BinaryValueAttachment__attachment
+            else:
+                field_attachment = self.env['ir.attachment'].sudo().search(
+                    domain=[('res_model', '=', record._name),
+                            ('res_id', '=', record.id),
+                            ('res_field', '=', field_name)],
+                    limit=1)
             if not field_attachment:
                 raise MissingError(self.env._("The related attachment does not exist."))
             return field_attachment._to_http_stream()
@@ -159,8 +163,9 @@ class IrBinary(models.AbstractModel):
                 stream.download_name = f'{record._table}-{record.id}-{field_name}'
 
             stream.download_name = stream.download_name.replace('\n', '_').replace('\r', '_')
-            if not get_extension(stream.download_name):
-                stream.download_name += guess_extension(stream.mimetype) or ''
+            ext = get_extension(stream.download_name)
+            stream.download_name = stream.download_name.removesuffix(ext)[:100] + (
+                ext or guess_extension(stream.mimetype) or '')
 
         return stream
 

@@ -1,6 +1,7 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { isSyncStatusConnected } from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 
 export function nbOrdersIs(nb) {
     return [
@@ -19,8 +20,11 @@ export function clickDiscard() {
 export function selectOrder(orderName) {
     return [
         {
-            trigger: `.ticket-screen .order-row:contains("${orderName}")`,
+            trigger: `.ticket-screen .order-row:contains(${orderName})`,
             run: "click",
+        },
+        {
+            trigger: `.ticket-screen .order-row:contains(${orderName}).highlight`,
         },
     ];
 }
@@ -47,7 +51,7 @@ export function loadSelectedOrder() {
     return [
         ProductScreen.clickReview(),
         {
-            trigger: ".ticket-screen .pads .button.validation.load-order-button",
+            trigger: ".ticket-screen .pads .button.validation.load-order-button:not(.syncing)",
             run: "click",
         },
     ];
@@ -163,12 +167,15 @@ export function checkOrderDetailsDialog(orderRef, totalPayment, payments) {
             trigger: ".modal-content .field-details:contains('Origin')",
         },
         {
-            trigger: `.modal-content .card-header h5:contains("Payment Info"):contains(${totalPayment})`,
+            trigger: `.modal-content h3:contains("Payment Info")`,
+        },
+        {
+            trigger: `.modal-content .text-success:contains(${totalPayment})`,
         },
     ];
     for (const pm in payments) {
         steps.push({
-            trigger: `.modal-content table tr:contains("${pm}"):contains(${payments[pm]})`,
+            trigger: `.modal-content .row:has(.fw-medium:contains("${pm}")):has(.fw-medium:contains(${payments[pm]}))`,
         });
     }
     return steps;
@@ -205,7 +212,7 @@ export function filterIs(name) {
 export function invoicePrinted() {
     return [
         {
-            trigger: ProductScreen.controlButtonTrigger("Reprint Invoice"),
+            trigger: ProductScreen.controlButtonTrigger("Print Invoice"),
         },
     ];
 }
@@ -280,5 +287,31 @@ export function isShown() {
             content: "ticket screen is shown",
             trigger: ".pos .ticket-screen",
         },
+    ];
+}
+
+export function checkCustomerAddress(addressText) {
+    return [
+        {
+            isActive: ["desktop"],
+            trigger: `.ticket-screen tbody tr > td:contains("${addressText}")`,
+        },
+    ];
+}
+
+export function sendEmail(email, expectSuccess = true) {
+    return [
+        ...clickControlButton("Send"),
+        {
+            trigger: ".send-receipt-email-input",
+            run: `edit ${email}`,
+        },
+        {
+            trigger: `.modal-body .fa-paper-plane`,
+            run: "click",
+        },
+        ...(expectSuccess ? [{ trigger: `.modal-body .text-success` }] : []),
+        Dialog.cancel(),
+        back(),
     ];
 }

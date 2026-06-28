@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 
@@ -23,7 +22,7 @@ export class SpreadsheetShareButton extends Component {
 
     setup() {
         this.copiedText = _t("Copied");
-        this.state = useState({ url: undefined });
+        this.state = proxy({ url: undefined });
     }
 
     get togglerClass() {
@@ -39,6 +38,7 @@ export class SpreadsheetShareButton extends Component {
         }
         const excelExport = await model.exportXLSX();
         const url = await this.props.onSpreadsheetShared(data, excelExport);
+        model.dispatch("LOG_DATASOURCE_EXPORT", { action: "freeze" });
         this.state.url = url;
         setTimeout(async () => {
             try {

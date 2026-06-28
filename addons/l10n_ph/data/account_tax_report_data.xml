@@ -22,13 +22,11 @@
                 <field name="name">Part II - Total Tax Payable</field>
                 <field name="code">2550Q_TTP</field>
                 <field name="hierarchy_level">0</field>
-                <field name="foldable" eval="False"/>
                 <field name="children_ids">
                     <record id="l10n_ph_2550Q_2550q_15" model="account.report.line">
                         <field name="name">15 Net VAT Payable(Excess Input Tax)</field>
                         <field name="code">2550Q_15</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_15_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -41,13 +39,11 @@
                         <field name="name">Less: Tax Credits/Payments</field>
                         <field name="code">2550Q_LTC</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="children_ids">
                             <record id="l10n_ph_2550Q_2550q_16" model="account.report.line">
                                 <field name="name">16 Creditable VAT Withheld</field>
                                 <field name="code">2550Q_16</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="l10n_ph_2550Q_2550q_16_balance" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -60,7 +56,6 @@
                                 <field name="name">17 Advance VAT Payments</field>
                                 <field name="code">2550Q_17</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="l10n_ph_2550Q_2550q_17_balance" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -74,7 +69,6 @@
                                 <field name="name">18 VAT paid in return previously filed, if this is an amended return</field>
                                 <field name="code">2550Q_18</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="l10n_ph_2550Q_2550q_18_balance" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -88,7 +82,6 @@
                                 <field name="name">19 Other Credits/Payment</field>
                                 <field name="code">2550Q_19</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="l10n_ph_2550Q_2550q_19_balance" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -104,7 +97,6 @@
                         <field name="name">20 Total Tax Credits/Payment</field>
                         <field name="code">2550Q_20</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_20_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -119,7 +111,6 @@
                 <field name="name">21 Tax Still Payable/(Excess Credits)</field>
                 <field name="code">2550Q_21</field>
                 <field name="hierarchy_level">1</field>
-                <field name="foldable" eval="False"/>
                 <field name="expression_ids">
                     <record id="l10n_ph_2550Q_2550q_21_balance" model="account.report.expression">
                         <field name="label">balance</field>
@@ -132,13 +123,11 @@
                 <field name="name">Add: Penalties</field>
                 <field name="code">2550Q_APEN</field>
                 <field name="hierarchy_level">1</field>
-                <field name="foldable" eval="False"/>
                 <field name="children_ids">
                     <record id="l10n_ph_2550Q_2550q_22" model="account.report.line">
                         <field name="name">22 Surcharge</field>
                         <field name="code">2550Q_22</field>
                         <field name="hierarchy_level">3</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_22_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -152,7 +141,6 @@
                         <field name="name">23 Interest</field>
                         <field name="code">2550Q_23</field>
                         <field name="hierarchy_level">3</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_23_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -166,7 +154,6 @@
                         <field name="name">24 Compromise</field>
                         <field name="code">2550Q_24</field>
                         <field name="hierarchy_level">3</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_24_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -180,7 +167,6 @@
                         <field name="name">25 Total Penalties</field>
                         <field name="code">2550Q_25</field>
                         <field name="hierarchy_level">3</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_25_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -195,7 +181,6 @@
                 <field name="name">26 TOTAL AMOUNT PAYABLE/(Excess Credits)</field>
                 <field name="code">2550Q_26</field>
                 <field name="hierarchy_level">1</field>
-                <field name="foldable" eval="False"/>
                 <field name="expression_ids">
                     <record id="l10n_ph_2550Q_2550q_26_balance" model="account.report.expression">
                         <field name="label">balance</field>
@@ -208,13 +193,11 @@
                 <field name="name">Part IV - Details of VAT Computation</field>
                 <field name="code">2550Q_DOVC</field>
                 <field name="hierarchy_level">0</field>
-                <field name="foldable" eval="False"/>
                 <field name="children_ids">
                     <record id="l10n_ph_2550Q_2550q_31" model="account.report.line">
                         <field name="name">31 VATable Sales</field>
                         <field name="code">2550Q_31</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_31_tax_base" model="account.report.expression">
                                 <field name="label">tax_base</field>
@@ -232,7 +215,6 @@
                         <field name="name">32 Zero-Rated Sales</field>
                         <field name="code">2550Q_32</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_32_tax_base" model="account.report.expression">
                                 <field name="label">tax_base</field>
@@ -245,7 +227,6 @@
                         <field name="name">33 Exempt Sales</field>
                         <field name="code">2550Q_33</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_33_tax_base" model="account.report.expression">
                                 <field name="label">tax_base</field>
@@ -258,7 +239,6 @@
                         <field name="name">34 Total Sales &amp; Output Tax Due</field>
                         <field name="code">2550Q_34</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_34_tax_base" model="account.report.expression">
                                 <field name="label">tax_base</field>
@@ -276,7 +256,6 @@
                         <field name="name">35 Less: Output VAT on Uncollected Receivables</field>
                         <field name="code">2550Q_35</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_35_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -289,7 +268,6 @@
                         <field name="name">36 Add: Output VAT on Recovered Uncollected Receivables Previously Deducted </field>
                         <field name="code">2550Q_36</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_36_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -303,7 +281,6 @@
                         <field name="name">37 Total Adjusted Output Tax Due</field>
                         <field name="code">2550Q_37</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_37_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -316,13 +293,11 @@
                         <field name="name">Less: Allowable Input Tax</field>
                         <field name="code">2550Q_AIT</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="children_ids">
                             <record id="l10n_ph_2550Q_2550q_38" model="account.report.line">
                                 <field name="name">38 Input Tax Carried Over from Previous Quarter</field>
                                 <field name="code">2550Q_38</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="l10n_ph_2550Q_2550q_38_balance" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -336,7 +311,6 @@
                                 <field name="name">39 Input Tax Deferred on Capital Goods Exceeding P1 Million from Previous Quarter (From Part V - Schedule 1 Col E)</field>
                                 <field name="code">2550Q_39</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="l10n_ph_2550Q_2550q_39_balance" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -350,7 +324,6 @@
                                 <field name="name">40 Transitional Input Tax</field>
                                 <field name="code">2550Q_40</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="l10n_ph_2550Q_2550q_40_balance" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -364,7 +337,6 @@
                                 <field name="name">41 Presumptive Input Tax</field>
                                 <field name="code">2550Q_41</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="l10n_ph_2550Q_2550q_41_balance" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -377,7 +349,6 @@
                                 <field name="name">42 Others</field>
                                 <field name="code">2550Q_42</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="l10n_ph_2550Q_2550q_42_balance" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -393,7 +364,6 @@
                         <field name="name">43 Total</field>
                         <field name="code">2550Q_43</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_43_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -406,7 +376,6 @@
                         <field name="name">44 Domestic Purchases</field>
                         <field name="code">2550Q_44</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_44__vat_base_1" model="account.report.expression">
                                 <field name="label">_vat_base_1</field>
@@ -459,7 +428,6 @@
                         <field name="name">45 Services Rendered by Non-residents</field>
                         <field name="code">2550Q_45</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_45_tax_base" model="account.report.expression">
                                 <field name="label">tax_base</field>
@@ -477,7 +445,6 @@
                         <field name="name">46 Importations</field>
                         <field name="code">2550Q_46</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_46_tax_base" model="account.report.expression">
                                 <field name="label">tax_base</field>
@@ -495,7 +462,6 @@
                         <field name="name">47 Others</field>
                         <field name="code">2550Q_47</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_47_tax_base" model="account.report.expression">
                                 <field name="label">tax_base</field>
@@ -515,7 +481,6 @@
                         <field name="name">48 Domestic Purchases with No Input Tax</field>
                         <field name="code">2550Q_48</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_48__exempt_base" model="account.report.expression">
                                 <field name="label">_exempt_base</field>
@@ -538,7 +503,6 @@
                         <field name="name">49 VAT-Exempt Importations</field>
                         <field name="code">2550Q_49</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_49_tax_base" model="account.report.expression">
                                 <field name="label">tax_base</field>
@@ -551,7 +515,6 @@
                         <field name="name">50 Total Current Purchase/Input Tax</field>
                         <field name="code">2550Q_50</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_50_tax_base" model="account.report.expression">
                                 <field name="label">tax_base</field>
@@ -569,7 +532,6 @@
                         <field name="name">51 Total Available Input Tax</field>
                         <field name="code">2550Q_51</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_51_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -582,13 +544,11 @@
                         <field name="name">Less: Adjustment/Deductions from Input Tax</field>
                         <field name="code">2550Q_LTCIT</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="children_ids">
                             <record id="l10n_ph_2550Q_2550q_52" model="account.report.line">
                                 <field name="name">52 Input Tax on Purchases/Importation of Capital Goods exceeding P1 Million deferred for the succeeding period</field>
                                 <field name="code">2550Q_52</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="l10n_ph_2550Q_2550q_52_balance" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -602,7 +562,6 @@
                                 <field name="name">53 Input Tax Attributable to VAT Exempt Sales</field>
                                 <field name="code">2550Q_53</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="l10n_ph_2550Q_2550q_53_tax_base" model="account.report.expression">
                                         <field name="label">tax_base</field>
@@ -621,7 +580,6 @@
                                 <field name="name">54 VAT refund/TCC claimed</field>
                                 <field name="code">2550Q_54</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="l10n_ph_2550Q_2550q_54_balance" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -635,7 +593,6 @@
                                 <field name="name">55 Input VAT on Unpaid Payables</field>
                                 <field name="code">2550Q_55</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="l10n_ph_2550Q_2550q_55_balance" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -648,7 +605,6 @@
                                 <field name="name">56 Others</field>
                                 <field name="code">2550Q_56</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="expression_ids">
                                     <record id="l10n_ph_2550Q_2550q_56_balance" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -664,7 +620,6 @@
                         <field name="name">57 Total Deductions from Input Tax</field>
                         <field name="code">2550Q_57</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_57_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -677,7 +632,6 @@
                         <field name="name">58 Add: Input VAT on Settled Unpaid Payables Previously Deducted</field>
                         <field name="code">2550Q_58</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_58_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -691,7 +645,6 @@
                         <field name="name">59 Adjusted Deductions from Input Tax</field>
                         <field name="code">2550Q_59</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_59_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -704,7 +657,6 @@
                         <field name="name">60 Total Allowable Input Tax</field>
                         <field name="code">2550Q_60</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_60_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -717,7 +669,6 @@
                         <field name="name">61 Net VAT Payable/(Excess Input Tax)</field>
                         <field name="code">2550Q_61</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_ph_2550Q_2550q_61_balance" model="account.report.expression">
                                 <field name="label">balance</field>

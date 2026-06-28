@@ -101,7 +101,7 @@
         <span
             name="sale_product_configurator_formatted_price"
             class="h5 text-nowrap fw-bold text-end h6 mb-0 mb-md-2 d-block"
-            t-out="this.getFormattedPrice()"
+            t-out="this.getFormattedPrice(this.props.price)"
         />
         <div t-if="this.props.price_info" t-out="this.props.price_info" class="text-muted"/>
     </t>

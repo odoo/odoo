@@ -42,7 +42,7 @@ class TestTOTPMail(TestTOTPMixin, HttpCase):
 
         # Create an API key for the user
         api_key = self.env['res.users.apikeys'].with_user(self.user_test)._generate(
-            None, 'Foo', datetime.now() + timedelta(days=1)
+            'rpc', 'Foo', datetime.now() + timedelta(days=1)
         )
 
         # With TOTP by mail, xmlrpc using an API key is expected
@@ -54,11 +54,6 @@ class TestTOTPMail(TestTOTPMixin, HttpCase):
 class TestTOTPInvite(TestTOTPMixin, HttpCase):
 
     def test_totp_administration(self):
-        # If not enabled (like in demo data), landing on res.config will try
-        # to disable module_sale_quotation_builder and raise an issue
-        group_order_template = self.env.ref('sale_management.group_sale_order_template', raise_if_not_found=False)
-        if group_order_template:
-            self.env.ref('base.group_user').write({"implied_ids": [(4, group_order_template.id)]})
         self.install_totphook()
         self.start_tour('/odoo', 'totp_admin_invite', login='admin')
         self.start_tour('/odoo', 'totp_admin_self_invite', login='admin')

@@ -18,7 +18,7 @@ class TestWebsiteSaleProductAttributeValueConfig(
     def setUpClass(cls):
         super().setUpClass()
         # Use the testing environment.
-        cls.env["website"].get_current_website().company_id = cls.env.company
+        cls.env.website.company_id = cls.env.company
         cls.computer.company_id = cls.env.company
         cls.computer = cls.computer.with_env(cls.env)
         cls.other_currency = cls.setup_other_currency("GBP")

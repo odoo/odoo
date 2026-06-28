@@ -8,6 +8,7 @@ import { expandToolbar } from "../_helpers/toolbar";
 import { unformat } from "../_helpers/format";
 import { expectElementCount } from "../_helpers/ui_expectations";
 import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
+import { insertText } from "../_helpers/user_actions";
 
 test("should do nothing if no format is set", async () => {
     await testEditor({
@@ -794,8 +795,8 @@ test("should remove backgroundColor from selected cells using removeFormat (2)",
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: unformat(`
             <table class="table table-bordered o_table"><tbody>
-                <tr><td><p>[\u200b</p></td></tr>
-                <tr><td><p>]\u200b</p></td></tr>
+                <tr><td><p>[<br></p></td></tr>
+                <tr><td><p>]<br></p></td></tr>
             </tbody></table>
         `),
         styleContent,
@@ -825,35 +826,6 @@ test("should remove gradient color from span element", async () => {
             '<p><span style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[ab]</span></p>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<p>[ab]</p>",
-    });
-});
-
-test("should remove text color from empty element", async () => {
-    await testEditor({
-        contentBefore:
-            '<p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">[]\u200B</font></p>',
-        stepFunction: (editor) => execCommand(editor, "removeFormat"),
-        contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]\u200b</p>`,
-    });
-});
-
-test("should remove text color from empty element in a single selected cell", async () => {
-    await testEditor({
-        contentBefore: unformat(`
-            <table class="table table-bordered o_table o_selected_table"><tbody>
-                <tr><td class="o_selected_td"><p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">[]\u200B</font></p></td></tr>
-                <tr><td><p><br></p></td></tr>
-            </tbody></table>
-        `),
-        stepFunction: (editor) => execCommand(editor, "removeFormat"),
-        contentAfterEdit: unformat(`
-            <p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table"><tbody>
-                <tr><td class="o_selected_td"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]\u200b</p></td></tr>
-                <tr><td><p><br></p></td></tr>
-            </tbody></table>
-            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
-        `),
     });
 });
 
@@ -901,6 +873,14 @@ test("Remove format not remove text color if applied on .btn element", async () 
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
             '<p><a href="#" class="btn btn-custom text-o-color-5" style="font-weight: 400;">T[es]t</a></p>',
+    });
+});
+
+test("should remove format of a editable text within contenteditable false block", async () => {
+    await testEditor({
+        contentBefore: `<div contenteditable="false"><div contenteditable="true"><p><font style="background-color: red;"><font style="background-color: blue;">ab[cd]ef</font></font></p></div></div>`,
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: `<div contenteditable="false"><div contenteditable="true"><p><font style="background-color: red;"><font style="background-color: blue;">ab</font></font>[cd]<font style="background-color: red;"><font style="background-color: blue;">ef</font></font></p></div></div>`,
     });
 });
 
@@ -1009,7 +989,7 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p>\u200b</p></td></tr></tbody></table><p>]\u200b</p>`
+            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p><br></p></td></tr></tbody></table><p>]<br></p>`
         );
     });
 
@@ -1019,7 +999,7 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[\u200b</p></td><td style="" class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[<br></p></td><td class="o_selected_td"><p>]<br></p></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
 
@@ -1226,4 +1206,19 @@ describe("typography classes", () => {
             `),
         });
     });
+});
+
+test("remove format on a collapsed cursor removes format from next typed char", async () => {
+    const { editor, el } = await setupEditor(`<p><strong>ab[]cd</strong></p>`);
+    await press(["control", "Space"]);
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(`<p><strong>ab</strong>x[]<strong>cd</strong></p>`);
+});
+
+test("remove format discards a pending format intent", async () => {
+    const { editor, el } = await setupEditor(`<p>ab[]cd</p>`);
+    await press(["ctrl", "b"]); // pending bold, no DOM
+    await press(["control", "space"]); // should drop the pending intent
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(`<p>abx[]cd</p>`);
 });

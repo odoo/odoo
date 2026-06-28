@@ -6,11 +6,7 @@
                 <div class="col-md-6 col-12 pt16 pb16">
                     <div class="o_not_editable">
                         <a t-att-href="company_id.website or '#'" style="text-decoration:none;float:none;" target="_blank">
-                            <img t-if="company_id.logo or user_id.company_id.logo"
-                                class="img img-fluid o_editable_media py-4"
-                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
-                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
-                                style="height:auto;max-width:100%;" />
+                            <t t-call="mass_mailing.s_mail_company_logo" class="'img img-fluid o_editable_media py-4'" style="'height:auto;max-width:100%;'"/>
                         </a>
                     </div>
                 </div>
@@ -28,11 +24,7 @@
                 <div class="col-md-6" style="text-align: center;">
                     <div class="o_not_editable">
                         <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;" target="_blank">
-                            <img t-if="company_id.logo or user_id.company_id.logo"
-                                class="img img-fluid o_editable_media py-4"
-                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
-                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
-                                style="height:auto;max-width:100%;"/>
+                            <t t-call="mass_mailing.s_mail_company_logo" class="'img img-fluid o_editable_media py-4'" style="'height:auto;max-width:100%;'"/>
                         </a>
                     </div>
                 </div>
@@ -50,11 +42,7 @@
                 <div class="col-md-6" style="text-align: center;">
                     <div class="o_not_editable">
                         <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;" target="_blank">
-                            <img t-if="company_id.logo or user_id.company_id.logo"
-                                class="img img-fluid o_editable_media py-4"
-                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
-                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
-                                style="height:auto;max-width:100%;"/>
+                            <t t-call="mass_mailing.s_mail_company_logo" class="'img img-fluid o_editable_media py-4'" style="'height:auto;max-width:100%;'"/>
                         </a>
                     </div>
                 </div>
@@ -91,10 +79,7 @@
                 <div class="col-md-6 col-6">
                     <div class="o_not_editable">
                         <a t-att-href="company_id.website or '#'" target="_blank">
-                            <img t-if="company_id.logo or user_id.company_id.logo"
-                                class="img img-fluid o_editable_media py-4"
-                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
-                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"/>
+                            <t t-call="mass_mailing.s_mail_company_logo" class="'img img-fluid o_editable_media py-4'"/>
                         </a>
                     </div>
                 </div>
@@ -117,18 +102,14 @@
                 <div class="col-md-12 col-12">
                     <div class="o_not_editable">
                         <a t-att-href="company_id.website or '#'" target="_blank">
-                            <img t-if="company_id.logo or user_id.company_id.logo"
-                                class="img img-fluid o_editable_media mx-auto py-4"
-                                style="width: 30% !important"
-                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
-                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo" />
+                            <t t-call="mass_mailing.s_mail_company_logo" class="'img img-fluid o_editable_media mx-auto py-4'" style="'width: 30% !important'"/>
                         </a>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12 col-12">
-                    <p class="m-0" style="text-align: center;"><a href="#" class="btn btn-link">News</a><a href="#" class="btn btn-link">Shop</a><a href="#" class="btn btn-link">Contact Us</a></p>
+                    <p class="m-0" style="text-align: center;"><a href="#" class="btn btn-link align-baseline">News</a><a href="#" class="btn btn-link align-baseline">Shop</a><a href="#" class="btn btn-link align-baseline">Contact Us</a></p>
                 </div>
             </div>
         </div>
@@ -146,10 +127,7 @@
                 <div class="col-md-6 col-6">
                     <div class="o_not_editable">
                         <a t-att-href="company_id.website or '#'" target="_blank">
-                            <img t-if="company_id.logo or user_id.company_id.logo"
-                                class="img img-fluid o_editable_media py-4"
-                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
-                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"/>
+                            <t t-call="mass_mailing.s_mail_company_logo" class="'img img-fluid o_editable_media py-4'"/>
                         </a>
                     </div>
                 </div>
@@ -168,15 +146,12 @@
                 <div class="col-md-6 col-12">
                     <div class="o_not_editable">
                         <a t-att-href="company_id.website or '#'" target="_blank">
-                            <img t-if="company_id.logo or user_id.company_id.logo"
-                                class="img img-fluid o_editable_media py-4"
-                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
-                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo" />
+                            <t t-call="mass_mailing.s_mail_company_logo" class="'img img-fluid o_editable_media py-4'"/>
                         </a>
                     </div>
                 </div>
                 <div class="col-md-6 col-12">
-                    <p class="m-0" style="text-align: center;"><a href="#" class="btn btn-link">News</a><a href="#" class="btn btn-link">Shop</a><a href="#" class="btn btn-link">Contact Us</a></p>
+                    <p class="m-0" style="text-align: center;"><a href="#" class="btn btn-link align-baseline">News</a><a href="#" class="btn btn-link align-baseline">Shop</a><a href="#" class="btn btn-link align-baseline">Contact Us</a></p>
                 </div>
             </div>
         </div>
@@ -191,22 +166,7 @@
                     <h1><span class="h2-fs" t-out="company_id.partner_id.name"/></h1>
                 </div>
                 <div class="col-md-6 col-12">
-                    <p class="m-0" style="text-align: center;"><a href="#" class="btn btn-link">News</a><a href="#" class="btn btn-link">Shop</a><a href="#" class="btn btn-link">Contact Us</a></p>
-                </div>
-            </div>
-        </div>
-    </section>
-</template>
-
-<template id="s_mail_block_header_name_and_inline_menu" name="Company Name and Menu">
-    <section class="o_mail_snippet_general pt32 pb32" data-vxml="001">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6 col-12">
-                    <h1><span class="h2-fs" t-out="company_id.partner_id.name"/></h1>
-                </div>
-                <div class="col-md-6 col-12">
-                    <p class="m-0" style="text-align: center;"><a href="#" class="btn btn-link">News</a><a href="#" class="btn btn-link">Shop</a><a href="#" class="btn btn-link">Contact Us</a></p>
+                    <p class="m-0" style="text-align: center;"><a href="#" class="btn btn-link align-baseline">News</a><a href="#" class="btn btn-link align-baseline">Shop</a><a href="#" class="btn btn-link align-baseline">Contact Us</a></p>
                 </div>
             </div>
         </div>

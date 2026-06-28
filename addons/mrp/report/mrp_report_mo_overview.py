@@ -717,7 +717,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'currency': currency,
             }}
             if resupply_data:
-                mo_cost = resupply_data['currency']._convert(resupply_data['cost'], currency, (production.company_id or self.env.company), fields.Date.today())
+                mo_cost = resupply_data['currency']._convert(resupply_data['cost'], currency, (production.company_id or self.env.company))
                 to_order_line['summary']['mo_cost'] = mo_cost
                 to_order_line['summary']['bom_cost'] = currency.round(self._get_component_real_cost(move_raw, bom_missing_quantity))
                 to_order_line['summary']['receipt'] = self._check_planned_start(production.date_start, self._format_receipt_date('estimated', fields.Datetime.today() + timedelta(days=resupply_data['delay'])))

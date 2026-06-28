@@ -47,7 +47,7 @@ class StockWarehouse(models.Model):
         'stock.location', 'Location Stock',
         domain="[('usage', '=', 'internal'), ('company_id', '=', company_id)]",
         required=True, check_company=True)
-    code = fields.Char('Short Name', required=True, size=5, help="Short name used to identify your warehouse")
+    code = fields.Char('Short Name', required=True, help="Short name used to identify your warehouse")
     route_ids = fields.Many2many(
         'stock.route', 'stock_route_warehouse', 'warehouse_id', 'route_id',
         'Routes',
@@ -983,6 +983,7 @@ class StockWarehouse(models.Model):
                 'use_existing_lots': False,
                 'sequence': max_sequence + 1,
                 'company_id': self.company_id.id,
+                'auto_show_allocation_report': True,
             }, 'out_type_id': {
                 'name': _('Delivery Orders'),
                 'code': 'outgoing',
@@ -1110,6 +1111,7 @@ class StockWarehouse(models.Model):
 
     def _get_all_routes(self):
         routes = self.mapped('route_ids') | self.mapped('mto_pull_id').mapped('route_id')
+        routes |= self.env['stock.route']._get_routes_with_no_warehouse()
         routes |= self.env["stock.route"].with_context(active_test=False).search([('supplied_wh_id', 'in', self.ids)])
         return routes
 

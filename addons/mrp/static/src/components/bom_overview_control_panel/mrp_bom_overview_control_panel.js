@@ -5,7 +5,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, props, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class BomOverviewControlPanel extends Component {
@@ -17,28 +17,24 @@ export class BomOverviewControlPanel extends Component {
         BomOverviewDisplayFilter,
         Many2XAutocomplete,
     };
-    static props = {
-        bomQuantity: Number,
-        showOptions: Object,
-        showVariants: { type: Boolean, optional: true },
-        variants: { type: Object, optional: true },
-        data: { type: Object, optional: true },
-        uomName: { type: String, optional: true },
-        currentWarehouse: Object,
-        warehouses: { type: Array, optional: true },
-        print: Function,
-        changeWarehouse: Function,
-        changeVariant: Function,
-        changeBomQuantity: Function,
-        changeMode: Function,
-        precision: Number,
-        foldable: Boolean,
-        allFolded: Boolean,
-    };
-    static defaultProps = {
-        variants: {},
-        warehouses: [],
-    };
+    props = props({
+        bomQuantity: t.number(),
+        showOptions: t.object(),
+        showVariants: t.boolean().optional(),
+        variants: t.object().optional({}),
+        data: t.object().optional(),
+        uomName: t.string().optional(),
+        currentWarehouse: t.object().optional(),
+        warehouses: t.array().optional([]),
+        print: t.function(),
+        changeWarehouse: t.function(),
+        changeVariant: t.function(),
+        changeBomQuantity: t.function(),
+        changeMode: t.function(),
+        precision: t.number(),
+        foldable: t.boolean(),
+        allFolded: t.boolean(),
+    });
 
     setup() {
         this.action = useService("action");
@@ -102,7 +98,7 @@ export class BomOverviewControlPanel extends Component {
         return this.props.warehouses.map(wh => ({
             id: wh.id,
             label: wh.name,
-            class: { selected: wh.name === this.props.currentWarehouse.name },
+            class: { selected: wh.name === this.props.currentWarehouse?.name },
             onSelected: () => this.props.changeWarehouse(wh.id)
         }));
     }

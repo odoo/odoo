@@ -19,7 +19,7 @@ class CrmLead(models.Model):
             sale_orders = lead.order_ids.filtered_domain(self._get_lead_sale_order_domain())
             lead.sale_amount_total = sum(
                 order.currency_id._convert(
-                    order.amount_untaxed, company_currency, order.company_id, order.date_order or fields.Date.today()
+                    order.amount_untaxed, company_currency, order.company_id, order.date_order,
                 )
                 for order in sale_orders
             )
@@ -78,6 +78,7 @@ class CrmLead(models.Model):
         """ Prepares the context for a new quotation (sale.order) by sharing the values of common fields """
         self.ensure_one()
         quotation_context = {
+            'active_test': True,  # In case the context has active_test, we don't want to fetch archived default values.
             'default_opportunity_id': self.id,
             'default_partner_id': self.partner_id.id,
             'default_campaign_id': self.campaign_id.id,

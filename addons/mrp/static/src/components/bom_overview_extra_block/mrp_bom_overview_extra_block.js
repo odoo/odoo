@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { useBus } from "@web/core/utils/hooks";
 import { BomOverviewLine } from "../bom_overview_line/mrp_bom_overview_line";
 import { BomOverviewSpecialLine } from "../bom_overview_special_line/mrp_bom_overview_special_line";
-import { Component, onWillUnmount, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUnmount, onWillUpdateProps, proxy } from "@odoo/owl";
 
 export class BomOverviewExtraBlock extends Component {
     static template = "mrp.BomOverviewExtraBlock";
@@ -23,7 +22,7 @@ export class BomOverviewExtraBlock extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             isFolded: !this.props.unfoldAll,
         });
         if (this.props.unfoldAll) {

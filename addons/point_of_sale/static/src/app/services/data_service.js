@@ -1,7 +1,7 @@
 import { Base, createRelatedModels } from "@point_of_sale/app/models/related_models";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
-import { markRaw, reactive } from "@odoo/owl";
+import { markRaw, proxy } from "@odoo/owl";
 import { debounce } from "@web/core/utils/timing";
 import IndexedDB from "../models/utils/indexed_db";
 import { DataServiceOptions } from "../models/data_service_options";
@@ -36,7 +36,7 @@ export class PosData {
             300
         );
 
-        this.network = reactive({
+        this.network = proxy({
             warningTriggered: false,
             offline: false,
             loading: true,
@@ -156,7 +156,7 @@ export class PosData {
         });
 
         return new Promise((resolve) => {
-            this.indexedDB = new IndexedDB(this.databaseName, false, models, resolve);
+            this.indexedDB = new IndexedDB(this.databaseName, false, models, resolve, this.dialog);
         });
     }
 
@@ -388,12 +388,24 @@ export class PosData {
         const data = await this.loadInitialData(hard, limit);
         const order = data["pos.order"] || [];
         const orderlines = data["pos.order.line"] || [];
+        const posPrepOrder = data["pos.prep.order"] || [];
+        const posPrepLine = data["pos.prep.line"] || [];
 
         delete data["pos.order"];
         delete data["pos.order.line"];
+        delete data["pos.prep.order"];
+        delete data["pos.prep.line"];
 
         this.models.loadConnectedData(data, this.modelToLoad);
-        this.models.loadConnectedData({ "pos.order": order, "pos.order.line": orderlines }, []);
+        this.models.loadConnectedData(
+            {
+                "pos.order": order,
+                "pos.order.line": orderlines,
+                "pos.prep.order": posPrepOrder,
+                "pos.prep.line": posPrepLine,
+            },
+            []
+        );
         this.sanitizeData();
     }
 
@@ -1042,7 +1054,7 @@ export const PosDataService = {
     async start(env, deps) {
         const data = new PosData();
         await data.setup(env, deps);
-        return reactive(data);
+        return proxy(data);
     },
 };
 

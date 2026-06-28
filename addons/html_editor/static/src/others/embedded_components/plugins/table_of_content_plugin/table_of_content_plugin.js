@@ -6,10 +6,20 @@ import {
     TableOfContentManager,
 } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { withSequence } from "@html_editor/utils/resource";
+import { closestElement } from "@html_editor/utils/dom_traversal";
+import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
 
 export class TableOfContentPlugin extends Plugin {
     static id = "tableOfContent";
-    static dependencies = ["dom", "selection", "embeddedComponents", "link", "history"];
+    static dependencies = [
+        "dom",
+        "selection",
+        "embeddedComponents",
+        "link",
+        "history",
+        "domObserver",
+    ];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -31,12 +41,16 @@ export class TableOfContentPlugin extends Plugin {
 
         /** Handlers */
         on_savepoint_restored_handlers: () => this.delayedUpdateTableOfContents(this.editable),
-        on_history_reset_handlers: () => this.delayedUpdateTableOfContents(this.editable),
-        on_history_reset_from_steps_handlers: () =>
-            this.delayedUpdateTableOfContents(this.editable),
-        on_step_added_handlers: ({ stepCommonAncestor }) =>
-            this.delayedUpdateTableOfContents(stepCommonAncestor),
-        on_external_step_added_handlers: this.delayedUpdateTableOfContents.bind(
+        on_will_reset_history_handlers: () => this.delayedUpdateTableOfContents(this.editable),
+        on_history_rebased_handlers: () => this.delayedUpdateTableOfContents(this.editable),
+        on_committed_to_history_handlers: (commit) => {
+            const root =
+                this.dependencies.domObserver.getMutationsCommonAncestor(
+                    commit.data.mutations || []
+                ) || this.editable;
+            return this.delayedUpdateTableOfContents(root);
+        },
+        on_remote_history_commits_applied_handlers: this.delayedUpdateTableOfContents.bind(
             this,
             this.editable
         ),
@@ -44,6 +58,17 @@ export class TableOfContentPlugin extends Plugin {
 
         /** Processors */
         clean_for_save_processors: this.cleanForSave.bind(this),
+
+        toolbar_namespace_providers: withSequence(70, (targetedNodes) => {
+            if (
+                targetedNodes.length &&
+                targetedNodes.every((node) =>
+                    closestElement(node, `[data-embedded="tableOfContent"]`)
+                )
+            ) {
+                return DISABLED_NAMESPACE;
+            }
+        }),
 
         system_classes: ["o_embedded_toc_header_highlight"],
     };
@@ -57,7 +82,7 @@ export class TableOfContentPlugin extends Plugin {
     insertTableOfContent() {
         const tableOfContentBlueprint = renderToElement("html_editor.TableOfContentBlueprint");
         this.dependencies.dom.insert(tableOfContentBlueprint);
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     /**
@@ -67,6 +92,7 @@ export class TableOfContentPlugin extends Plugin {
         for (const el of root.querySelectorAll(".o_embedded_toc_header_highlight")) {
             el.classList.remove("o_embedded_toc_header_highlight");
         }
+        return root;
     }
 
     destroy() {
@@ -76,7 +102,14 @@ export class TableOfContentPlugin extends Plugin {
 
     delayedUpdateTableOfContents(element) {
         const selector = HEADINGS.join(",");
-        if (!(!element || element.querySelector(selector) || element.closest(selector))) {
+        if (
+            !(
+                !element ||
+                this.manager.structure.headings.length ||
+                element.querySelector(selector) ||
+                element.closest(selector)
+            )
+        ) {
             return;
         }
         if (this.updateTimeout) {

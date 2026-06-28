@@ -1,5 +1,4 @@
-import { reactive } from "@web/owl2/utils";
-import { mount, whenReady } from "@odoo/owl";
+import { mount, whenReady, proxy } from "@odoo/owl";
 import { selfOrderIndex as Index } from "./self_order_index";
 import { mountComponent } from "@web/env";
 import { Loader } from "@point_of_sale/app/components/loader/loader";
@@ -9,7 +8,7 @@ whenReady(async () => {
     try {
         await mountComponent(Index, document.body);
     } catch (err) {
-        const loader = reactive({ isShown: true, error: err });
+        const loader = proxy({ isShown: true, error: err });
         mount(Loader, document.body, {
             getTemplate,
             props: { loader },

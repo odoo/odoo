@@ -13,7 +13,6 @@ from odoo.tools import SQL, human_size
 from odoo.tools.binary import EMPTY_BINARY, BinaryBytes, BinaryValue
 
 from .fields import Field
-from .utils import SQL_OPERATORS
 
 if typing.TYPE_CHECKING:
     from .environments import Environment
@@ -52,6 +51,20 @@ class Binary(Field[BinaryValue]):
 
     def _description_sortable(self, env):
         return False
+
+    def update_db(self, model, columns):
+        if self.column_type is None and self.default and model._table_has_rows():
+            model.pool.post_init(self.update_db_binary_attachment, model)
+            return False
+        return super().update_db(model, columns)
+
+    def update_db_binary_attachment(self, model):
+        """Initialized the records for binary fields stored as attachment with the default"""
+        value = self.default(model)
+        # assume already initialized when some records have a value
+        if not value or model.search_count([(self.name, '!=', False)], limit=1):
+            return
+        model.search([(self.name, '=', False)]).write({self.name: value})
 
     def convert_to_column(self, value, record, values=None, validate=True):
         data = self.convert_to_cache(value, record, validate) or EMPTY_BINARY
@@ -201,11 +214,11 @@ class Binary(Field[BinaryValue]):
             return super().condition_to_sql(table, field_expr, operator, value)
         assert operator in ('in', 'not in') and set(value) == {False}, "Should have been done in Domain optimization"
         return SQL(
-            "%s%s(SELECT res_id FROM ir_attachment WHERE res_model = %s AND res_field = %s)",
-            table.id,
-            SQL_OPERATORS['not in' if operator in ('in', '=') else 'in'],
+            "%sEXISTS (SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s AND res_id = %s)",
+            SQL("NOT ") if operator == 'in' else SQL(),
             table._model._name,
             self.name,
+            table.id,
         )
 
 
@@ -232,7 +245,7 @@ class Image(Binary):
 
     def setup(self, model):
         super().setup(model)
-        if not model._abstract and not model._log_access:
+        if not self._setup_done and not model._abstract and not model._log_access:
             warnings.warn(f"Image field {self} requires the model to have _log_access = True", stacklevel=1)
 
     def create(self, record_values):
@@ -368,4 +381,4 @@ class BinaryValueAttachment(BinaryValue):
         return self.__attachment.raw.open()
 
     def __repr__(self):
-        return f"BinaryAttachment(id={self.__attachment.id})"
+        return f"BinaryValueAttachment(id={self.__attachment.id})"

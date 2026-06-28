@@ -107,6 +107,7 @@ export class DragAndDropPlugin extends Plugin {
         selectElements(root, ".o_draggable").forEach((el) => {
             el.classList.remove("o_draggable");
         });
+        return root;
     }
 
     isDraggable(el) {
@@ -216,7 +217,11 @@ export class DragAndDropPlugin extends Plugin {
             onDragStart: ({ x, y }) => {
                 const dragAndDropProm = new Promise(
                     (resolve) => (dragAndDropResolve = () => resolve())
-                );
+                ).then(() => {
+                    this.dependencies.builderOptions.updateContainers(this.overlayTarget, {
+                        forceUpdate: true,
+                    });
+                });
                 this.dependencies.operation.next(async () => await dragAndDropProm, {
                     withLoadingEffect: false,
                     canTimeout: false,
@@ -228,7 +233,6 @@ export class DragAndDropPlugin extends Plugin {
                     this.dragState.restoreCallbacks?.forEach((restore) => restore());
                     restoreDragSavePoint();
                     dragAndDropResolve();
-                    this.dependencies.builderOptions.updateContainers(this.overlayTarget);
                 };
 
                 this.dragStarted = true;
@@ -300,9 +304,8 @@ export class DragAndDropPlugin extends Plugin {
                     withGrids
                 );
 
-                // Remove the dragged element and deactivate the options.
+                // Remove the dragged element
                 this.overlayTarget.remove();
-                this.dependencies.builderOptions.deactivateContainers();
 
                 // Add the dropzones.
                 dropzoneEls = this.dependencies.dropzone.activateDropzones(selectors, {
@@ -430,7 +433,7 @@ export class DragAndDropPlugin extends Plugin {
                     dragState: this.dragState,
                 });
 
-                // Add a history step only if the element was not dropped where
+                // Add a history commit only if the element was not dropped where
                 // it was before, otherwise cancel everything.
                 let hasSamePositionAsStart;
                 if ("hasSamePositionAsStart" in this.dragState) {
@@ -445,14 +448,13 @@ export class DragAndDropPlugin extends Plugin {
                         startParentEl === parentEl;
                 }
                 if (!hasSamePositionAsStart) {
-                    this.dependencies.history.addStep();
+                    this.dependencies.history.commit();
                 } else {
                     this.cancelDragAndDrop();
                     return;
                 }
 
                 dragAndDropResolve();
-                this.dependencies.builderOptions.updateContainers(this.overlayTarget);
             },
         };
 

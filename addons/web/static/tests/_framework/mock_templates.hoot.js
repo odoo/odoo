@@ -47,8 +47,8 @@ const { loader } = odoo;
  * @param {string} name
  * @param {OdooModuleFactory} factory
  */
-export function makeTemplateFactory(name, factory) {
-    return () => {
+export function mockTemplatesFactory(name, factory) {
+    return function mockTemplates() {
         if (loader.modules.has(name)) {
             return loader.modules.get(name);
         }

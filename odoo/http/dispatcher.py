@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import logging
+import time
 import traceback
 import typing
 import weakref
 from abc import ABC, abstractmethod
 from http import HTTPStatus
+from wsgiref.handlers import format_date_time
 
 from werkzeug.exceptions import (
     BadRequest,
@@ -19,6 +21,16 @@ from werkzeug.exceptions import default_exceptions as werkzeug_default_exception
 
 from odoo.exceptions import UserError
 from odoo.tools import exception_to_unicode
+
+from .response import Response
+from .session import (
+    CheckIdentityException,
+    SessionExpiredException,
+    get_session_max_inactivity,
+    logout,
+    save_session,
+    session_store,
+)
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection
@@ -69,6 +81,7 @@ def serialize_exception(exception: Exception, *, message: str | None = None, arg
         'name': f'{module}.{name}' if module else name,
         'message': exception_to_unicode(exception) if message is None else message,
         'arguments': exception.args if arguments is None else arguments,
+        'timestamp': int(time.time()),
         'context': getattr(exception, 'context', {}),
         'debug': ''.join(traceback.format_exception(exception)),
     }
@@ -125,7 +138,7 @@ class Dispatcher(ABC):
         if cors and self.request.httprequest.method == 'OPTIONS':
             set_header('Access-Control-Max-Age', str(CORS_MAX_AGE))
             set_header('Access-Control-Allow-Headers',
-                       'Origin, X-Requested-With, Content-Type, Accept, Authorization')
+                'Origin, X-Requested-With, Content-Type, Accept, Authorization, Range')
             abort(Response(status=204))
 
         if 'max_content_length' in routing:
@@ -148,8 +161,9 @@ class Dispatcher(ABC):
         Manipulate the HTTP response to inject various headers, also
         save the session when it is dirty.
         """
-        self.request._save_session()
-        self.request._inject_future_response(response)
+        save_session(self.request)
+        response.headers.extend(self.request.future_response.headers)
+        from .router import root  # noqa: PLC0415
         root.set_csp(response)
 
     @abstractmethod
@@ -341,7 +355,11 @@ class JsonRPCDispatcher(Dispatcher):
         else:
             response['result'] = result
 
-        return self.request.make_json_response(response)
+        res = self.request.make_json_response(response)
+        if error is not None:
+            if timestamp := error.get('data', {}).get('timestamp'):
+                res.headers['Date'] = format_date_time(timestamp)
+        return res
 
 
 class Json2Dispatcher(Dispatcher):
@@ -403,15 +421,3 @@ class Json2Dispatcher(Dispatcher):
             body = serialize_exception(exc)
 
         return self.request.make_json_response(body, headers=headers, status=status)
-
-
-# ruff: noqa: E402
-from .response import Response
-from .router import root
-from .session import (
-    CheckIdentityException,
-    SessionExpiredException,
-    get_session_max_inactivity,
-    logout,
-    session_store,
-)

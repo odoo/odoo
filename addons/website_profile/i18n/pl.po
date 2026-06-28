@@ -21,10 +21,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2026-01-13 13:14+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"PO-Revision-Date: 2026-04-11 14:37+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-2/"
 "website_profile/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -48,7 +48,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_profile/models/res_users.py:0
 msgid "%(company_name)s Profile validation"
-msgstr ""
+msgstr "%(company_name)s Weryfikacja profilu"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
@@ -174,6 +174,25 @@ msgid ""
 "                            Thanks for your participation!\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"                            Dzień dobry <t t-out=\"object.name or ''\">Marc "
+"Demo</t>,<br/><br/>\n"
+"                            Zostałeś poproszony do zweryfikowania swojego "
+"adresu e-mail, aby uzyskać dostęp do strony internetowej <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"                            Aby zweryfikować swój adres e-mail, kliknij "
+"poniższy przycisk:\n"
+"                           <div style=\"margin: 32px 0px 32px 0px;\">\n"
+"                                <a t-att-href=\"ctx.get('token_url')\" t-"
+"attf-style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\"> \n"
+"                                    Zweryfikuj moje konto\n"
+"                               </a>\n"
+"                            </div> \n"
+"                            Dziękujemy!\n"
+"           </t>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -199,7 +218,7 @@ msgstr "O programie"
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
 msgid "All Courses"
-msgstr ""
+msgstr "Wszystkie kursy"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
@@ -215,12 +234,12 @@ msgstr "Cały czas"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "Opublikuj automatycznie na"
 
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__publish_on
 msgid "Automatically publish the page on the chosen date and time."
-msgstr ""
+msgstr "Automatycznie opublikuj stronę w wybranym dniu i o wybranej godzinie."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
@@ -268,6 +287,8 @@ msgid ""
 "Changing the country is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Zmiana kraju nie jest dozwolona po opublikowaniu dokumentów na Twoim koncie. "
+"W tej sprawie skontaktuj się z nami bezpośrednio."
 
 #. module: website_profile
 #. odoo-javascript
@@ -335,7 +356,7 @@ msgstr "E-mail"
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
 msgid "Forum"
-msgstr ""
+msgstr "Forum"
 
 #. module: website_profile
 #: model:mail.template,name:website_profile.validation_email
@@ -441,12 +462,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "Public Profile"
-msgstr ""
+msgstr "Profil publiczny"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__published_date
 msgid "Published date"
-msgstr ""
+msgstr "Data opublikowania"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -457,12 +478,12 @@ msgstr "Rankingi"
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
 msgid "Ranks and Badges"
-msgstr ""
+msgstr "Rangi i odznaki"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
 msgid "Return to the website."
-msgstr ""
+msgstr "Powrót na stronę internetową."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -517,7 +538,7 @@ msgstr "Aktualizacja"
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.js:0
 msgid "Update failed."
-msgstr ""
+msgstr "Aktualizacja nie powiodła się."
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_res_users
@@ -528,7 +549,7 @@ msgstr "Użytkownik"
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
 msgid "User Profiles"
-msgstr ""
+msgstr "Profile użytkowników"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
@@ -566,12 +587,12 @@ msgstr "Pełen adres URL strony"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_res_users__website
 msgid "Website Link"
-msgstr ""
+msgstr "Link do strony internetowej"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_res_users__website_description
 msgid "Website Partner Full Description"
-msgstr ""
+msgstr "Pełny opis partnera strony internetowej"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_url
@@ -595,6 +616,12 @@ msgstr "Napisz kilka słów o sobie..."
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "XP"
 msgstr "XP"
+
+#. module: website_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+msgid "You are not allowed to edit this user"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -638,10 +665,15 @@ msgid "point"
 msgstr "punkt"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
+msgid "s"
+msgstr ""
+
+#. module: website_profile
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
 msgid "slides"
-msgstr ""
+msgstr "slajdy"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card

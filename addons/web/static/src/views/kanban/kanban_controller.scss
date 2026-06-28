@@ -55,8 +55,10 @@
                 padding: 0;
             }
 
-            div[class*="col-"] + div[class*="col-"] {
-                border-left: 1px solid $dropdown-divider-bg;
+            @include media-breakpoint-up(sm) {
+                > div + div {
+                    border-left: 1px solid $dropdown-divider-bg;
+                }
             }
             > div:last-child {
                 @include o-kanban-dashboard-dropdown-link($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);
@@ -93,19 +95,11 @@
     --KanbanGroup-padding-h: #{$o-kanban-group-padding};
     --KanbanGroup-padding-bottom: #{$o-kanban-group-padding};
 
-    --KanbanRecord-width: #{$o-kanban-default-record-width};
     --KanbanRecord-margin-v: #{$o-kanban-record-margin};
     --KanbanRecord-margin-h: #{$o-kanban-record-margin};
-    --KanbanRecord-padding-v: #{$o-kanban-inside-vgutter};
-    --KanbanRecord-padding-h: #{$o-kanban-inside-hgutter};
     --KanbanRecord-gap-v: #{$o-kanban-inner-hmargin};
-
+    --KanbanRecord-width: #{$o-kanban-default-record-width}; 
     --KanbanRecord--small-width: #{$o-kanban-small-record-width};
-
-    --KanbanRecord__image-width: #{$o-kanban-image-width};
-    --KanbanRecord__image--fill-width: #{$o-kanban-image-fill-width};
-
-    --KanbanRecord__dropdown-gap: #{$border-width};
 
     --KanbanColumn__highlight-background: #{tint-color($o-action, 90%)};
     --KanbanColumn__highlight-border: #{$o-action};
@@ -114,6 +108,11 @@
 
     --o-view-nocontent-zindex: 1;
 
+    --Card-border-width: 1px;
+    --Card-padding-v: #{$o-kanban-inside-vgutter};
+    --Card-padding-h: #{$o-kanban-inside-hgutter};
+    --Card__image-width: #{$o-kanban-image-width};
+    --Card__image--fill-width: #{$o-kanban-image-fill-width};
     --Card-Footer-gap: 4px;
 
     // ----------------------------------------------------------------------------
@@ -139,7 +138,7 @@
 
     @include media-only(print) {
         @include media-breakpoint-down(md) {
-            --KanbanRecord-padding-h: #{$o-kanban-inside-hgutter * 2};
+            --Card-padding-h: #{$o-kanban-inside-hgutter * 2};
         }
     }
 

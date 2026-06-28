@@ -2,7 +2,7 @@
 
 from datetime import timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -51,14 +51,22 @@ class ProductProduct(models.Model):
         domain = Domain.AND([
             Domain("order_id.state", "=", "sale"),
             Domain("product_id", "in", self.ids),
+            Domain("company_id", "in", self.env.companies.ids),
         ])
         if self.env.context.get("to_date"):
             domain = Domain.AND([
                 domain,
                 [("order_id.commitment_date", "<=", self.env.context.get("to_date").date())],
             ])
-        order_lines = self.env["sale.order.line"]._read_group(
-            domain, ["product_id", "product_uom_id"], ["product_uom_qty:sum", "qty_delivered:sum"]
+        order_lines = (
+            self
+            .env["sale.order.line"]
+            .sudo()
+            ._read_group(
+                domain,
+                ["product_id", "product_uom_id"],
+                ["product_uom_qty:sum", "qty_delivered:sum"],
+            )
         )
         for product, line_uom, qty_sold, qty_delivered in order_lines:
             to_deliver = (qty_sold - qty_delivered) * line_uom.factor / product.uom_id.factor
@@ -71,8 +79,8 @@ class ProductProduct(models.Model):
         if self._origin and self.sales_count > 0:
             return {
                 "warning": {
-                    "title": _("Warning"),
-                    "message": _(
+                    "title": self.env._("Warning"),
+                    "message": self.env._(
                         "You cannot change the product's type because it is already used in sales"
                         " orders."
                     ),
@@ -151,7 +159,7 @@ class ProductProduct(models.Model):
         ):
             if so_lines.product_uom_id != product.product_tmpl_id.uom_id:
                 raise UserError(
-                    _(
+                    self.env._(
                         "As other units of measure (ex : %(problem_uom)s)"
                         " than %(uom)s have already been used for this product, the change of unit"
                         " of measure can not be done.\nIf you want to change it, please archive the"

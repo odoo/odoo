@@ -1,10 +1,7 @@
 import { Plugin, isValidTargetForDomListener } from "../plugin";
-import { closestBlock } from "@html_editor/utils/blocks";
-import { fillEmpty } from "@html_editor/utils/dom";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { omit } from "@web/core/utils/objects";
 import { escapeRegExp } from "@web/core/utils/strings";
-import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef {Object} Shortcut
@@ -39,7 +36,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class ShortCutPlugin extends Plugin {
     static id = "shortcut";
-    static dependencies = ["userCommand", "selection", "split", "dom", "history"];
+    static dependencies = ["userCommand", "selection", "split", "dom", "history", "delete"];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -77,6 +74,25 @@ export class ShortCutPlugin extends Plugin {
         if (!hotkeyService) {
             throw new Error("ShorcutPlugin needs hotkey service to properly work");
         }
+
+        // We override the command palette shortcut to open a palette with an
+        // onClose callback to focus the editor and keep the selection without
+        // scrolling. We also pass the editable as the area option for this
+        // hotkey override, so it only applies when calling the command palette
+        // from the editor.
+        this.removeEditorCommandPalette = this.services.hotkey.add(
+            "control+k",
+            () => {
+                this.services.command.openMainPalette({}, () => {
+                    this.dependencies.selection.focusEditable();
+                });
+            },
+            {
+                bypassEditableProtection: true,
+                global: true,
+                area: () => this.editable,
+            }
+        );
         if (document !== this.document) {
             hotkeyService.registerIframe({ contentWindow: this.window });
         }
@@ -104,23 +120,35 @@ export class ShortCutPlugin extends Plugin {
         });
     }
 
+    destroy() {
+        super.destroy();
+        this.removeEditorCommandPalette();
+    }
+
     addShortcut(hotkey, action, { isAvailable, global }) {
         this._cleanups.push(
             this.services.hotkey.add(hotkey, action, {
-                area: () => this.editable,
                 bypassEditableProtection: true,
                 allowRepeat: true,
-                isAvailable: (target) =>
-                    (!isAvailable ||
-                        isAvailable(this.dependencies.selection.getEditableSelection())) &&
-                    (global || isValidTargetForDomListener(target)),
+                isAvailable: (target) => {
+                    // Shortcuts are available when focus is in the editable or the toolbar
+                    const isFocusInAvailableArea =
+                        this.editable.contains(target) ||
+                        !!target?.closest(".o-we-toolbar[data-namespace], .o-we-toolbar-dropdown");
+                    return (
+                        isFocusInAvailableArea &&
+                        (!isAvailable ||
+                            isAvailable(this.dependencies.selection.getEditableSelection())) &&
+                        (global || isValidTargetForDomListener(target))
+                    );
+                },
             })
         );
     }
 
     replaceSymbol(symbol) {
         this.dependencies.dom.insert(symbol + "\u00A0");
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     onInput(ev) {
@@ -128,12 +156,12 @@ export class ShortCutPlugin extends Plugin {
             return;
         }
         const selection = this.dependencies.selection.getEditableSelection();
-        let blockEl = closestBlock(selection.anchorNode);
         const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);
         let spaceOffset = selection.anchorOffset;
         let lineBreak;
         let lineOffset = 0;
         let leftLeaf = leftDOMPath.next().value;
+        let textContent = selection.anchorNode.textContent;
         while (leftLeaf) {
             // Calculate spaceOffset by adding lengths of previous text nodes
             // to correctly find offset position for selection within inline
@@ -147,18 +175,18 @@ export class ShortCutPlugin extends Plugin {
             } else if (leftLeaf.nodeName === "BR") {
                 lineBreak = leftLeaf;
             }
+            textContent = leftLeaf.textContent + textContent;
             leftLeaf = leftDOMPath.next().value;
         }
-        const precedingText = blockEl.textContent.substring(lineOffset, spaceOffset - 1);
+        const precedingText = textContent.substring(lineOffset, spaceOffset - 1);
         const matchedShortcut = this.shorthands.find(({ pattern }) =>
             pattern.test(precedingText.trimStart())
         );
         if (matchedShortcut) {
             const command = this.dependencies.userCommand.getCommand(matchedShortcut.commandId);
-            if (command) {
-                if (lineBreak) {
+            if (command && (!command.isAvailable || command.isAvailable(selection))) {
+                if (lineBreak && !matchedShortcut.inline) {
                     this.dependencies.split.splitBlockSegments();
-                    blockEl = closestBlock(selection.anchorNode);
                 }
                 // Set selection to the matched string with space
                 let offset =
@@ -167,10 +195,7 @@ export class ShortCutPlugin extends Plugin {
                     this.dependencies.selection.modifySelection("extend", "backward", "character");
                     offset--;
                 }
-                this.dependencies.selection.extractContent(
-                    this.dependencies.selection.getEditableSelection()
-                );
-                fillEmpty(closestElement(selection.focusNode));
+                this.dependencies.delete.deleteSelection();
                 command.run(matchedShortcut.commandParams);
             }
         }

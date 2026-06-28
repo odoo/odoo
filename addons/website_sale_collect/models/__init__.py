@@ -2,11 +2,13 @@
 
 from . import (
     delivery_carrier,
+    payment_method,
     payment_provider,
     payment_transaction,
     product_template,
     res_config_settings,
     sale_order,
+    sale_order_line,
     stock_warehouse,
     website,
 )

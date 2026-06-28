@@ -1,14 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import OrderedDict
+from urllib.parse import urlencode, urlparse
 
-from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import api, fields, models
 from odoo.http import request
 
 
 class ProductProduct(models.Model):
-    _inherit = "product.product"
+    _name = 'product.product'
+    _inherit = ["product.product", "website.structured_data.mixin"]
     _mail_post_access = "read"
 
     variant_ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name="product.ribbon")
@@ -20,78 +21,34 @@ class ProductProduct(models.Model):
         inverse_name="product_variant_id",
     )
 
-    base_unit_count = fields.Float(
-        string="Base Unit Count",
-        help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this"
-        " product.",
-        required=True,
-        default=1,
-    )
-    base_unit_id = fields.Many2one(
-        string="Custom Unit of Measure",
-        help="Define a custom unit to display in the price per unit of measure field.",
-        comodel_name="website.base.unit",
-    )
-    base_unit_price = fields.Monetary(string="Price Per Unit", compute="_compute_base_unit_price")
-    base_unit_name = fields.Char(
-        help="Displays the custom unit for the products if defined or the selected unit of measure"
-        " otherwise.",
-        compute="_compute_base_unit_name",
-    )
-
     website_url = fields.Char(
         string="Website URL",
         help="The full URL to access the document through the website.",
         compute="_compute_product_website_url",
     )
 
+    stock_notification_partner_ids = fields.Many2many(
+        "res.partner",
+        relation="stock_notification_product_partner_rel",
+        string="Back in stock Notifications",
+    )
+
     # === COMPUTE METHODS ===#
-
-    def _get_base_unit_price(self, price):
-        self.ensure_one()
-        return self.base_unit_count and price / self.base_unit_count
-
-    @api.depends("lst_price", "base_unit_count")
-    def _compute_base_unit_price(self):
-        for product in self:
-            if not product.id:
-                product.base_unit_price = 0
-            else:
-                product.base_unit_price = product._get_base_unit_price(product.lst_price)
-
-    @api.depends("uom_name", "base_unit_id")
-    def _compute_base_unit_name(self):
-        for product in self:
-            product.base_unit_name = product.base_unit_id.name or product.uom_name
 
     @api.depends_context("lang")
     @api.depends("product_tmpl_id.website_url", "product_template_attribute_value_ids")
     def _compute_product_website_url(self):
+        slug = self.env["ir.http"]._slug
         for product in self:
-            url = product.product_tmpl_id.website_url
+            url = urlparse(product.product_tmpl_id.website_url)
             if pavs := product.product_template_attribute_value_ids.product_attribute_value_id:
-                pav_ids = [str(pav.id) for pav in pavs]
-                url = f"{url}?attribute_values={','.join(pav_ids)}"
-            product.website_url = url
-
-    # === CONSTRAINT METHODS ===#
-
-    @api.constrains("base_unit_count")
-    def _check_base_unit_count(self):
-        if any(product.base_unit_count < 0 for product in self):
-            raise ValidationError(
-                _(
-                    "The value of Base Unit Count must be greater than 0."
-                    " Use 0 to hide the price per unit on this product."
-                )
-            )
+                # There's no need to group the PAVs by attribute since a product variant can have
+                # only one PAV per attribute.
+                query_params = {slug(pav.attribute_id): slug(pav) for pav in pavs}
+                url = url._replace(query=urlencode(query_params))
+            product.website_url = url.geturl()
 
     # === BUSINESS METHODS ===#
-
-    def _prepare_variant_values(self, combination):
-        variant_dict = super()._prepare_variant_values(combination)
-        variant_dict["base_unit_count"] = self.base_unit_count
-        return variant_dict
 
     def website_publish_button(self):
         self.ensure_one()
@@ -133,23 +90,26 @@ class ProductProduct(models.Model):
 
     def _website_show_quick_add(self):
         self.ensure_one()
-        if not self.filtered_domain(self.env["website"]._product_domain()):
+        if self._is_sold_out() or not self.filtered_domain(self.env["website"]._product_domain()):
             return False
-        website = self.env["website"].get_current_website()
+        if not self._get_available_uoms():
+            return False
         return not (
-            website.prevent_sale
-            and website._prevent_product_sale(self, not self._get_contextual_price())
+            self.env.website.prevent_sale
+            and self.env.website._prevent_product_sale(self, not self._get_contextual_price())
         )
 
     def _is_add_to_cart_allowed(self):
         self.ensure_one()
         if self.env.user.has_group("base.group_system"):
             return True
+        if self._is_donation():
+            return True
         if not self.active or not self.website_published:
             return False
         if not self.filtered_domain(self.env["website"]._product_domain()):
             return False
-        website = self.env["website"].get_current_website()
+        website = self.env.website
         if website.prevent_sale and website._prevent_product_sale(
             self, not self._get_contextual_price()
         ):
@@ -163,39 +123,50 @@ class ProductProduct(models.Model):
         else:
             self.website_published = False
 
-    def _to_markup_data(self, website):
-        """Generate JSON-LD markup data for the current product.
-
-        :param website website: The current website.
-        :return: The JSON-LD markup data.
-        :rtype: dict
-        """
+    def _prepare_jsonld_vals(self):
+        """JSON-LD payload describing the variant as a https://schema.org/Product."""
         self.ensure_one()
 
+        website = self.env["website"].get_current_website()
+        base_url = website.get_base_url()
         product_price = request.pricelist._get_product_price(
             self, quantity=1, currency=website.currency_id
         )
         # Use sudo to access cross-company taxes.
-        product_taxes_sudo = self.sudo().taxes_id._filter_taxes_by_company(self.env.company)
-        taxes = request.fiscal_position.map_tax(product_taxes_sudo)
-        price = self.product_tmpl_id._apply_taxes_to_price(
-            product_price, website.currency_id, product_taxes_sudo, taxes, self, website=website
-        )
+        price = self._apply_taxes_to_price(product_price, website.currency_id, website=website)
 
-        base_url = website.get_base_url()
-        markup_data = {
-            "@context": "https://schema.org",
+        offer = {
+            "@type": "Offer",
+            "price": price,
+            "priceCurrency": website.currency_id.name,
+        }
+        if self.is_product_variant and self.is_storable:
+            offer["availability"] = (
+                "https://schema.org/OutOfStock" if self._is_sold_out()
+                else "https://schema.org/InStock"
+            )
+
+        vals = {
             "@type": "Product",
+            "@id": f"{base_url}{self.website_url}/#product-{self.id}",
             "name": self.with_context(display_default_code=False).display_name,
             "url": f"{base_url}{self.website_url}",
-            "image": f"{base_url}{website.image_url(self, 'image_1920')}",
-            "offers": {"@type": "Offer", "price": price, "priceCurrency": website.currency_id.name},
+            "offers": offer,
+            "image": f"{base_url}{self._get_image_1920_url()}",
         }
-        if self.website_meta_description or self.description_sale:
-            markup_data["description"] = self.website_meta_description or self.description_sale
+        if description := (self.website_meta_description or self.description_sale):
+            vals["description"] = description
         if self.barcode:
-            markup_data["gtin"] = self.barcode
-        return markup_data
+            vals["gtin"] = self.barcode
+
+        direct, others = self._split_standard_from_custom_attributes()
+        vals.update(direct)
+        if others:
+            vals["additionalProperty"] = [
+                {"@type": "PropertyValue", "name": name, "value": value}
+                for name, value in others.items()
+            ]
+        return vals
 
     def _get_image_1920_url(self):
         """Return the local url of the product main image.
@@ -283,3 +254,133 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         return self.env["website"].image_url(self, "image_1024")
+
+    def _has_multiple_uoms(self) -> bool:
+        """Check if the product has multiple available uoms for the current website.
+
+        :return: True if the product has multiple available uoms for the current website
+                 or if the default uom is not available
+        """
+        res = super()._has_multiple_uoms()
+        if res:
+            return res
+        if self.env.context.get("website_id") and self.type != "combo":
+            uoms = self._get_available_uoms()
+            if uoms:
+                return self.uom_id not in uoms
+        return res
+
+    def _get_available_uoms(self):
+        """Return a recordset of uoms configured for the product that are available for the current
+        website.
+
+        :returns: uoms available on the product for the current website.
+        :rtype: recordset of `uom.uom`
+        """
+        all_uoms = super()._get_available_uoms()
+        if self.env["res.groups"]._is_feature_enabled("uom.group_uom") and self.env.context.get(
+            "website_id"
+        ):
+            return all_uoms - self.env.website.restricted_uom_ids
+        return all_uoms
+
+    def _get_main_uom(self):
+        """Return the main uom for the product.
+        The main uom is always the first available uom on the current website, if no uom is
+        available, the default uom configured on the product is considered as the main uom.
+
+        :returns: the main uom of the product
+        :rtype: `uom.uom` recordset
+        """
+        self.ensure_one()
+        if self.env.context.get("website_id"):
+            return self._get_available_uoms()[:1] or self.uom_id
+        return super()._get_main_uom()
+
+    def _get_extra_tracking_values(self, **kwargs):
+        extra_tracking_values = {}
+        if kwargs.get("res_model") == self._name and (res_id := kwargs.get("res_id")):
+            extra_tracking_values["product_id"] = res_id
+        return extra_tracking_values
+
+    def _is_donation(self):
+        """Return whether this product is the donation product used by the donation snippet."""
+        self.ensure_one()
+        # Unpublished, sudo to allow public users to read it
+        return self.sudo().product_tmpl_id._is_donation()
+
+    def _is_sold_out(self):
+        """Return whether the product is sold out (no available quantity).
+
+        If a product inventory is not tracked, or if it's allowed to be sold regardless
+        of availabilities, the product is never considered sold out.
+
+        :return: whether the product can still be sold
+        :rtype: bool
+        """
+        self.ensure_one()
+        if not self.is_storable or self.allow_out_of_stock_order:
+            return False
+        free_qty = self.env.website._get_product_available_qty(self.sudo())
+        return free_qty <= 0
+
+    def _has_stock_notification(self, partner):
+        self.ensure_one()
+        return partner in self.stock_notification_partner_ids
+
+    def _get_max_quantity(self, website, sale_order, **kwargs):
+        """Return The max quantity of a product.
+        It is the difference between the quantity that's free to use and the quantity that's already
+        been added to the cart.
+
+        Note: self.ensure_one()
+
+        :param website website: The website for which to compute the max quantity.
+        :return: The max quantity of the product.
+        :rtype: float | None
+        """
+        self.ensure_one()
+        if self.is_storable and not self.allow_out_of_stock_order:
+            free_qty = website._get_product_available_qty(self.sudo(), **kwargs)
+            cart_qty = sale_order._get_cart_qty(self.id)
+            return free_qty - cart_qty
+        return None
+
+    def _send_availability_email(self):
+        products = self.search([("stock_notification_partner_ids", "!=", False)]).filtered(
+            lambda p: not p._is_sold_out()
+        )
+        self.env["ir.cron"]._commit_progress(remaining=len(products.stock_notification_partner_ids))
+        email_template = self.env.ref(
+            "website_sale.email_template_back_in_stock", raise_if_not_found=False
+        )
+        if not email_template:
+            return
+        for product_id in products.ids:
+            product = self.env["product.product"].browse(product_id)
+            for partner_id in product.with_context(
+                # Only fetch the ids, all the other fields will be invalidated either way
+                prefetch_fields=False
+            ).stock_notification_partner_ids.ids:
+                partner = self.env["res.partner"].browse(partner_id)
+                email_template.with_user(self.env.website.salesperson_id).with_context(
+                    customer_name=partner.name, lang=partner.lang
+                ).send_mail(
+                    product.id,
+                    force_send=True,
+                    email_values={
+                        "email_to": partner.email_formatted,
+                        "email_from": self.env.website.company_id.partner_id.email_formatted,
+                    },
+                )
+
+                product.stock_notification_partner_ids -= partner
+                self.env["ir.cron"]._commit_progress(1)
+
+    def _split_standard_from_custom_attributes(self):
+        self.ensure_one()
+        return self.product_template_attribute_value_ids._split_standard_from_custom_attributes()
+
+    def _apply_taxes_to_price(self, *args, **kwargs):
+        self.ensure_one()
+        return self.product_tmpl_id._apply_taxes_to_price(*args, product=self, **kwargs)

@@ -2,11 +2,12 @@ import { useSubEnv } from "@web/owl2/utils";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 
 import { Component } from "@odoo/owl";
-const { registries, stores } = spreadsheet;
+const { registries, stores, constants } = spreadsheet;
 const { figureRegistry } = registries;
 const { ModelStore, useStoreProvider } = stores;
 
 const EMPTY_FIGURE = { tag: "empty" };
+const { DARK_MODE_FILTER_STRING } = constants;
 
 export class MobileFigureContainer extends Component {
     static template = "documents_spreadsheet.MobileFigureContainer";
@@ -22,6 +23,11 @@ export class MobileFigureContainer extends Component {
             isDashboard: () => this.props.spreadsheetModel.getters.isDashboard(),
             openSidePanel: () => {},
         });
+    }
+
+    get style() {
+        return `--os-dark-mode-filter: ${DARK_MODE_FILTER_STRING};
+        color-scheme: ${this.props.spreadsheetModel.getters.isDarkMode() ? "dark" : "light"};`;
     }
 
     get figureRows() {

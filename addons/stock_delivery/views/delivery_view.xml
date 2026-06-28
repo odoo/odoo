@@ -29,14 +29,14 @@
                             <button type='object' class="oe_link" icon="oi-arrow-right" confirm="Cancelling a delivery may not be undoable. Are you sure you want to continue?" name="cancel_shipment" string="Cancel" invisible="not carrier_tracking_ref or delivery_type in ['fixed', 'base_on_rule'] or not delivery_type or state != 'done'"/>
                         </div>
                         <label for="weight" string="Weight"/>
-                        <div class="o_input_box">
-                            <field name="weight"/>
-                            <field name="weight_uom_name" nolabel="1" class="o_input_box_overlay_end"/>
+                        <div>
+                            <field name="weight" class="oe_inline"/>
+                            <field name="weight_uom_name" nolabel="1" class="oe_inline ms-1"/>
                         </div>
                         <label for="shipping_weight" string="Weight for shipping"/>
-                        <div class="o_input_box">
-                            <field name="shipping_weight"/>
-                            <field name="weight_uom_name" nolabel="1" class="o_input_box_overlay_end"/>
+                        <div>
+                            <field name="shipping_weight" class="oe_inline"/>
+                            <field name="weight_uom_name" nolabel="1" class="oe_inline ms-1"/>
                         </div>
                     </group>
                 </xpath>

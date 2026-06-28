@@ -86,7 +86,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.external_user_employee = mail_new_test_user(cls.env, login='external', password='external', groups='base.group_user')
         cls.external_user_employee_id = cls.external_user_employee.id
         # Hr Data
-        Department = cls.env['hr.department'].with_context(tracking_disable=True)
+        Department = cls.env['hr.department']
 
         cls.hr_dept = Department.create({
             'name': 'Human Resources',
@@ -146,17 +146,40 @@ class TestHrHolidaysCommon(common.TransactionCase):
             self.assertEqual(allocation_data[employee][0][1]['remaining_leaves'],
                 value, f"Remaining leaves for date '{date}' are incorrect.")
 
+    def _take_leave(self, employee, work_entry_type, date_from, date_to):
+        leave = self.env['hr.leave'].create({
+            'name': 'Leave',
+            'employee_id': employee.id,
+            'work_entry_type_id': work_entry_type.id,
+            'request_date_from': date_from,
+            'request_date_to': date_to,
+        })
+        return leave
+
     def _create_form_test_accrual_allocation(self, work_entry_type, date_from, employee, accrual_plan, date_to=None, creator_user=None):
         allocation = self.env['hr.leave.allocation']
         if creator_user:
             allocation = allocation.with_user(creator_user)
         with Form(allocation, 'hr_holidays.hr_leave_allocation_view_form_manager') as form:
             form.name = 'Test accrual allocation'
-            form.allocation_type = 'accrual'
             form.accrual_plan_id = accrual_plan
             form.employee_id = employee
             form.work_entry_type_id = work_entry_type
             form.date_from = date_from
+            if date_to:
+                form.date_to = date_to
+        return form.record
+
+    def _create_form_test_regular_allocation(self, work_entry_type, date_from, employee, number_of_days, date_to=None, creator_user=None):
+        allocation = self.env['hr.leave.allocation']
+        if creator_user:
+            allocation = allocation.with_user(creator_user)
+        with Form(allocation, 'hr_holidays.hr_leave_allocation_view_form_manager') as form:
+            form.name = 'Test regular allocation'
+            form.employee_id = employee
+            form.work_entry_type_id = work_entry_type
+            form.date_from = date_from
+            form.number_of_days_display = number_of_days
             if date_to:
                 form.date_to = date_to
         return form.record

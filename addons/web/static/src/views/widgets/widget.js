@@ -1,52 +1,48 @@
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, t, xml } from "@odoo/owl";
 const viewWidgetRegistry = registry.category("view_widgets");
 
-const supportedInfoValidation = {
-    type: Array,
-    element: Object,
-    shape: {
-        label: String,
-        name: String,
-        type: String,
-        availableTypes: { type: Array, element: String, optional: true },
-        default: { type: String, optional: true },
-        help: { type: String, optional: true },
-        choices: /* choices if type == selection */ {
-            type: Array,
-            element: Object,
-            shape: { label: String, value: String },
-            optional: true,
-        },
-    },
-    optional: true,
-};
+const supportedInfoValidation = t.array(
+    t.object({
+        label: t.string(),
+        name: t.string(),
+        type: t.string(),
+        availableTypes: t.array(t.string()).optional(),
+        default: t.any().optional(),
+        help: t.string().optional(),
+        choices: /* choices if type == selection */ t
+            .array(
+                t.object({
+                    label: t.string(),
+                    value: t.any(),
+                })
+            )
+            .optional(),
+    })
+);
 
-viewWidgetRegistry.addValidation({
-    component: { validate: (c) => c.prototype instanceof Component },
-    extractProps: { type: Function, optional: true },
-    additionalClasses: { type: Array, element: String, optional: true },
-    fieldDependencies: {
-        type: [Function, { type: Array, element: Object, shape: { name: String, type: String } }],
-        optional: true,
-    },
-    listViewWidth: {
-        type: [
-            Number,
-            {
-                type: Array,
-                element: Number,
-                validate: (array) => array.length === 1 || array.length === 2,
-            },
-            Function,
-        ],
-        optional: true,
-    },
-    supportedAttributes: supportedInfoValidation,
-    supportedOptions: supportedInfoValidation,
-});
+viewWidgetRegistry.addValidation(
+    t.object({
+        component: t.component(),
+        extractProps: t.function().optional(),
+        additionalClasses: t.array(t.string()).optional(),
+        fieldDependencies: t
+            .or([t.function(), t.array(t.object({ name: t.string(), type: t.string() }))])
+            .optional(),
+        listViewWidth: t
+            .or([
+                t.number(),
+                t.tuple([t.number()]),
+                t.tuple([t.number(), t.number()]),
+                t.function(),
+            ])
+            .optional(),
+        supportedAttributes: supportedInfoValidation.optional(),
+        supportedOptions: supportedInfoValidation.optional(),
+    })
+);
 
 /**
  * A Component that supports rendering `<widget />` tags in a view arch
@@ -58,8 +54,8 @@ viewWidgetRegistry.addValidation({
  */
 export class Widget extends Component {
     static template = xml/*xml*/ `
-        <div t-att-class="classNames" t-att-style="props.style">
-            <t t-component="widget.component" t-props="widgetProps" />
+        <div t-att-class="this.classNames" t-att-style="this.props.style">
+            <t t-component="this.widget.component" t-props="this.widgetProps" />
         </div>`;
 
     static parseWidgetNode = function (node) {

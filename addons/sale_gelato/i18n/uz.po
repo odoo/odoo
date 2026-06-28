@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-07 17:37+0000\n"
 "PO-Revision-Date: 2025-10-20 11:54+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -27,46 +27,44 @@ msgstr ""
 #. module: sale_gelato
 #: model:mail.template,body_html:sale_gelato.order_status_update
 msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                    Hello <t t-out=\"object.partner_id.name or ''\">Brandon "
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                Hello <t t-out=\"object.partner_id.name or ''\">Brandon "
 "Freeman</t>,<br/><br/>\n"
-"                    <!-- Order in transit body -->\n"
-"                    <t t-if=\"ctx.get('tracking_data')\">\n"
-"                        We are glad to inform you that your order is in "
+"                <!-- Order in transit body -->\n"
+"                <t t-if=\"ctx.get('tracking_data')\">\n"
+"                    We are glad to inform you that your order is in "
 "transit.\n"
-"                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
-"                            <t t-set=\"tracking_url\" t-"
+"                    <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+"                        <t t-set=\"tracking_url\" t-"
 "value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
-"                            Your tracking number is <a t-att-"
+"                        Your tracking number is <a t-att-"
 "href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
-"                            <br/><br/>\n"
-"                        </t>\n"
-"                        <t t-else=\"\">\n"
-"                            Your tracking numbers are:\n"
-"                            <ul>\n"
-"                                <li t-foreach=\"ctx['tracking_data']\" t-"
-"as=\"tracking_url\">\n"
-"                                    <a t-att-href=\"tracking_url\" t-"
-"out=\"ctx['tracking_data'][tracking_url]\"/>\n"
-"                                </li>\n"
-"                            </ul>\n"
-"                        </t>\n"
-"                    </t>\n"
-"                    <!-- Order delivered body -->\n"
-"                    <t t-if=\"ctx.get('order_delivered')\">\n"
-"                        We are glad to inform you that your order has been "
-"delivered.\n"
 "                        <br/><br/>\n"
 "                    </t>\n"
-"                    Thank you,\n"
-"                    <t t-if=\"object.user_id.name\">\n"
-"                        <br/>\n"
-"                        <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"                    <t t-else=\"\">\n"
+"                        Your tracking numbers are:\n"
+"                        <ul>\n"
+"                            <li t-foreach=\"ctx['tracking_data']\" t-"
+"as=\"tracking_url\">\n"
+"                                <a t-att-href=\"tracking_url\" t-"
+"out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                            </li>\n"
+"                        </ul>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <!-- Order delivered body -->\n"
+"                <t t-if=\"ctx.get('order_delivered')\">\n"
+"                    We are glad to inform you that your order has been "
+"delivered.\n"
+"                    <br/><br/>\n"
+"                </t>\n"
+"                Thank you,\n"
+"                <t t-if=\"object.user_id.name\">\n"
+"                    <br/>\n"
+"                    <div data-o-mail-quote=\"1\">--<br data-o-mail-"
 "quote=\"1\"/><t t-out=\"object.user_id.name or ''\">Mitchell Admin</t></"
 "div>\n"
-"                    </t>\n"
-"                </p>\n"
+"                </t>\n"
 "            </div>\n"
 "        "
 msgstr ""
@@ -164,7 +162,6 @@ msgstr "Tezkor yetkazib berish (Gelato)"
 
 #. module: sale_gelato
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__delivery_type__gelato
-#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_easy_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 #, fuzzy
@@ -227,8 +224,8 @@ msgstr "Gelato veb-ilgak siri"
 #: code:addons/sale_gelato/controllers/main.py:0
 #, fuzzy
 msgid ""
-"Gelato could not proceed with the fulfillment of order %(order_reference)s: "
-"%(gelato_message)s"
+"Gelato could not proceed with the fulfillment of order %(order_reference)s: %"
+"(gelato_message)s"
 msgstr ""
 "Gelato %(order_reference)s buyurtmasini bajara olmadi: %(gelato_message)s"
 
@@ -253,7 +250,6 @@ msgid "Gelato: Order status update"
 msgstr "Gelato: Buyurtma holatini yangilash"
 
 #. module: sale_gelato
-#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_easy_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 msgid "Generate Print Images"
 msgstr ""
@@ -313,7 +309,6 @@ msgstr ""
 "Yetishmayotgan mahsulot variantlari va tasvirlari muvaffaqiyatli yaratildi."
 
 #. module: sale_gelato
-#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_easy_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 #, fuzzy
@@ -342,7 +337,6 @@ msgid "Product Document"
 msgstr "Mahsulot hujjati"
 
 #. module: sale_gelato
-#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_easy_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 #, fuzzy
@@ -406,7 +400,6 @@ msgid "Successfully updated print images."
 msgstr ""
 
 #. module: sale_gelato
-#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_easy_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 #, fuzzy
@@ -467,8 +460,8 @@ msgid ""
 "The order with reference %(order_reference)s was not sent to Gelato.\n"
 "Reason: %(error_message)s"
 msgstr ""
-"%(order_reference)s havolali buyurtma Gelatoga yuborilmadi. Sabab: "
-"%(error_message)s"
+"%(order_reference)s havolali buyurtma Gelatoga yuborilmadi. Sabab: %"
+"(error_message)s"
 
 #. module: sale_gelato
 #: model:ir.model.fields,help:sale_gelato.field_product_product__gelato_image_ids

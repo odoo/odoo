@@ -80,12 +80,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_line_action_used_in_boms")
         action['domain'] = [('product_tmpl_id', '=', self.id)]
-        action['context'] = {
-            'component_variant_count': len(
-                self.product_variant_ids.filtered(lambda variant: variant.bom_line_ids)
-            ),
-            'search_default_bom_active': True,
-        }
+        action['context'] = {'search_default_bom_active': True}
         return action
 
     def _compute_mrp_product_qty(self):
@@ -227,12 +222,11 @@ class ProductProduct(models.Model):
             })
         return super().write(vals)
 
-    def get_total_routes(self):
-        routes = super().get_total_routes()
+    def get_routes_actions(self):
+        actions = super().get_routes_actions()
         if self.bom_ids:
-            manufacture_routes = self.env['stock.rule'].search([('action', '=', 'manufacture')]).route_id
-            routes |= manufacture_routes
-        return routes
+            actions += ['manufacture']
+        return actions
 
     def get_components(self):
         """ Return the components list ids in case of kit product.
@@ -249,20 +243,24 @@ class ProductProduct(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_line_action_used_in_boms")
         action['domain'] = [('product_id', '=', self.id)]
-        action['context'] = {
-            'component_variant_count': len(
-                self.product_tmpl_id.product_variant_ids.filtered(lambda variant: variant.bom_line_ids)
-            ),
-            'search_default_bom_active': True,
-        }
+        action['context'] = {'search_default_bom_active': True}
         return action
 
     def _compute_mrp_product_qty(self):
         date_from = fields.Datetime.to_string(fields.Datetime.now() - timedelta(days=365))
-        #TODO: state = done?
-        domain = [('state', '=', 'done'), ('product_id', 'in', self.ids), ('date_start', '>', date_from)]
-        read_group_res = self.env['mrp.production']._read_group(domain, ['product_id'], ['product_uom_qty:sum'])
-        mapped_data = {product.id: qty for product, qty in read_group_res}
+        domain = [
+            ('production_id.state', '=', 'done'),
+            ('product_id', 'in', self.ids),
+            ('production_id.date_start', '>', date_from),
+            ('state', '!=', 'cancel'),
+            ('picked', '=', True),
+        ]
+        read_group_res = self.env['stock.move']._read_group(domain, ['product_id', 'uom_id'], ['quantity:sum'])
+        mapped_data = collections.defaultdict(float)
+        for product, uom, qty in read_group_res:
+            if uom != product.uom_id:
+                qty = uom._compute_quantity(qty, product.uom_id)
+            mapped_data[product.id] += qty
         for product in self:
             if not product.id:
                 product.mrp_product_qty = 0.0
@@ -280,7 +278,7 @@ class ProductProduct(models.Model):
         This override is used to get the correct quantities of products
         with 'phantom' as BoM type.
         """
-        bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom')
+        bom_kits = self.env['mrp.bom'].sudo()._bom_find(self, bom_type='phantom')
         kits = self.filtered(lambda p: bom_kits.get(p))
         regular_products = self - kits
         res = (

@@ -1,8 +1,8 @@
-import { useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { parseFloat } from "@web/views/fields/parsers";
-import { Component, onWillStart, useRef } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { CashMoveListPopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -23,7 +23,7 @@ export class CashMovePopup extends Component {
         this.notification = useService("notification");
         this.pos = usePos();
         this.dialog = useService("dialog");
-        this.state = useState({
+        this.state = proxy({
             /** @type {'in'|'out'} */
             type: "out",
             amount: "",

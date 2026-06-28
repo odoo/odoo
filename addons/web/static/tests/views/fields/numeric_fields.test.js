@@ -10,7 +10,7 @@ import {
     mountWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
 
 class Partner extends models.Model {
@@ -250,15 +250,15 @@ test("useNumpadDecimal should synchronize handlers on input elements", async () 
 
     class MyComponent extends Component {
         static template = xml`
-            <main t-ref="numpadDecimal">
+            <main t-custom-ref="numpadDecimal">
                 <input type="text" placeholder="input 1" />
-                <input t-if="state.showOtherInput" type="text" placeholder="input 2" />
+                <input t-if="this.state.showOtherInput" type="text" placeholder="input 2" />
             </main>
         `;
         static props = ["*"];
         setup() {
             useNumpadDecimal();
-            this.state = useState({ showOtherInput: false });
+            this.state = proxy({ showOtherInput: false });
         }
     }
 

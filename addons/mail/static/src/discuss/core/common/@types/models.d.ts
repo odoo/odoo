@@ -26,14 +26,14 @@ declare module "models" {
     }
     export interface Store {
         channel_types_with_seen_infos: string[];
-        channelIdsFetchingDeferred: Map<number, Deferred>;
-        createGroupChat: (param0: { default_display_mode: string, partners_to: number[], name: string }) => Promise<DiscussChannel>;
+        createGroupChat: (param0: { default_display_mode: string, users_to: number[], name: string }) => Promise<DiscussChannel>;
         "discuss.category": StaticMailRecord<DiscussCategory, typeof DiscussCategoryClass>;
         "discuss.channel": StaticMailRecord<DiscussChannel, typeof DiscussChannelClass>;
         "discuss.channel.member": StaticMailRecord<ChannelMember, typeof ChannelMemberClass>;
+        favoriteChannels: DiscussChannel[];
         fetchChannel: (channelId: number) => Promise<void>;
+        fetchChannelPromiseByChannelId: Map<number, Promise<DiscussChannel|void>>;
         getRecentChatPartnerIds: () => number[];
-        onlineMemberStatuses: Readonly<string[]>;
         sortMembers: (m1: ChannelMember, m2: ChannelMember) => number;
         startChat: (partnerIds: number[]) => Promise<void>;
         updateBusSubscription: (() => unknown) & { cancel: () => void };

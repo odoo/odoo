@@ -42,6 +42,7 @@ registry.category("web_tour.tours").add("self_mobile_each_table_takeaway_out", {
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
         Utils.clickBtn("Order"),
         CartPage.fillInput("Name", "Dr Dre"),
+        CartPage.fillInput("Phone", "490904390"),
         Utils.clickBtn("Continue"),
         Utils.clickBtn("Ok"),
         Utils.checkIsNoBtn("Order Now"),
@@ -80,6 +81,7 @@ registry.category("web_tour.tours").add("self_mobile_each_counter_takeaway_out",
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
         Utils.clickBtn("Order"),
         CartPage.fillInput("Name", "Dr Dre"),
+        CartPage.fillInput("Phone", "490904390"),
         Utils.clickBtn("Continue"),
         Utils.clickBtn("Ok"),
         Utils.checkIsNoBtn("Order Now"),
@@ -130,6 +132,7 @@ registry.category("web_tour.tours").add("self_mobile_meal_table_takeaway_out", {
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
         Utils.clickBtn("Order"),
         CartPage.fillInput("Name", "Dr Dre"),
+        CartPage.fillInput("Phone", "490904390"),
         Utils.clickBtn("Continue"),
         ConfirmationPage.isShown(),
         Utils.clickBtn("Ok"),
@@ -190,6 +193,7 @@ registry.category("web_tour.tours").add("self_mobile_meal_counter_takeaway_out",
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
         Utils.clickBtn("Order"),
         CartPage.fillInput("Name", "Dr Dre"),
+        CartPage.fillInput("Phone", "490904390"),
         Utils.clickBtn("Continue"),
         ConfirmationPage.isShown(),
         Utils.clickBtn("Ok"),
@@ -230,6 +234,7 @@ registry.category("web_tour.tours").add("self_order_mobile_meal_cancel", {
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
         Utils.clickBtn("Order"),
         CartPage.fillInput("Name", "Dr Dre"),
+        CartPage.fillInput("Phone", "490904390"),
         Utils.clickBtn("Continue"),
         ConfirmationPage.isShown(),
         Utils.clickBtn("Ok"),
@@ -264,6 +269,7 @@ registry.category("web_tour.tours").add("self_order_mobile_each_cancel", {
         CartPage.checkProduct("Fanta", "2.53", "1"),
         Utils.clickBtn("Order"),
         CartPage.fillInput("Name", "Dr Dre"),
+        CartPage.fillInput("Phone", "490904390"),
         Utils.clickBtn("Continue"),
         Utils.clickBtn("Ok"),
         Utils.checkIsNoBtn("Order Now"),
@@ -327,6 +333,8 @@ registry.category("web_tour.tours").add("test_self_order_product_availability", 
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
         LandingPage.selectLocation("Test-In"),
+        // 'Combo Product 2' is snoozed, so it should appear as Out of stock
+        ProductPage.isProductDisplayed("Combo Product 2", true),
         // Mark 'Combo Product 5' as unavailable and verify it is not displayed
         Utils.setProductAvailability("Combo Product 5", false),
         negateStep(ProductPage.isProductDisplayed("Combo Product 5")),
@@ -372,7 +380,7 @@ registry.category("web_tour.tours").add("self_order_mobile_0_price_order", {
             Utils.clickOrderNoteBtn(),
             Utils.clickTextArea(),
             Utils.textInput("test"),
-            Utils.clickOrderNoteBtn(),
+            Utils.clickBtn("Apply"),
             Utils.clickBtn("Order"),
             ConfirmationPage.isShown(),
             Utils.clickBtn("Ok"),
@@ -423,7 +431,7 @@ registry.category("web_tour.tours").add("test_mobile_self_order_preparation_chan
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("test_self_order_table_sharing-each_mode", {
+registry.category("web_tour.tours").add("test_self_order_table_no_more_sharing-each_mode", {
     steps: () =>
         [
             Utils.checkIsNoBtn("My Order"),
@@ -439,13 +447,12 @@ registry.category("web_tour.tours").add("test_self_order_table_sharing-each_mode
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("test_self_order_table_sharing-meal_mode", {
+registry.category("web_tour.tours").add("test_self_order_table_no_more_sharing-meal_mode", {
     steps: () =>
         [
             Utils.checkIsNoBtn("My Order"),
             Utils.clickBtn("Order Now"),
-            Utils.clickBtn("Checkout"),
-            CartPage.checkProduct("Coca-Cola", "2.20", "1"),
+            Utils.checkIsDisabledBtn("Checkout"),
         ].flat(),
 });
 
@@ -472,12 +479,15 @@ registry.category("web_tour.tours").add("test_delete_mobile_order_from_backend",
             Utils.checkIsNoBtn("Order Now"),
             {
                 trigger: "body",
-                run: async () => {
-                    // Simulate mobile self-order deletion from the backend
-                    await rpc(`/pos-self-order/test-delete-order-from-backend/`, {
-                        order_ids: [posmodel.currentOrder.id],
-                    });
-                },
+                run: async () =>
+                    new Promise((resolve) => {
+                        setTimeout(async () => {
+                            await rpc(`/pos-self-order/test-delete-order-from-backend/`, {
+                                order_ids: [posmodel.currentOrder.id],
+                            });
+                            resolve();
+                        }, 150);
+                    }),
             },
             Utils.clickBtn("Order Now"),
             ProductPage.isShown(),

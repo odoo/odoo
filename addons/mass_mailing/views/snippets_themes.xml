@@ -35,14 +35,14 @@
     <t id="default_snippets">
         <t t-set="company_id" t-value="res_company"/>
         <snippets id="snippet_groups" string="Categories">
-            <t snippet-group="custom" t-snippet="mass_mailing.s_snippet_group" string="Custom" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_media_list.svg"/>
-            <t snippet-group="headers" t-snippet="mass_mailing.s_snippet_group" string="Headers" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_alert.svg"/>
-            <t snippet-group="text" t-snippet="mass_mailing.s_snippet_group" string="Text" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_block.svg"/>
-            <t snippet-group="images" t-snippet="mass_mailing.s_snippet_group" string="Images" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_picture.svg"/>
-            <t snippet-group="people" t-snippet="mass_mailing.s_snippet_group" string="People" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_company_team.svg"/>
-            <t snippet-group="columns" t-snippet="mass_mailing.s_snippet_group" string="Columns" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_three_columns.svg"/>
-            <t snippet-group="website" t-snippet="mass_mailing.s_snippet_group" string="Website" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_blog_posts.svg"/>
-            <t snippet-group="footers" t-snippet="mass_mailing.s_snippet_group" string="Footers" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/block_footer_social.png"/>
+            <t snippet-group="custom" t-snippet="mass_mailing.s_snippet_group" string="Custom" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/thumb_snippets_custom.svg"/>
+            <t snippet-group="headers" t-snippet="mass_mailing.s_snippet_group" string="Headers" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/thumb_snippets_headers.svg"/>
+            <t snippet-group="text" t-snippet="mass_mailing.s_snippet_group" string="Text" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/thumb_snippets_text.svg"/>
+            <t snippet-group="images" t-snippet="mass_mailing.s_snippet_group" string="Images" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/thumb_snippets_images.svg"/>
+            <t snippet-group="people" t-snippet="mass_mailing.s_snippet_group" string="People" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/thumb_snippets_people.svg"/>
+            <t snippet-group="columns" t-snippet="mass_mailing.s_snippet_group" string="Columns" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/thumb_snippets_columns.svg"/>
+            <t snippet-group="website" t-snippet="mass_mailing.s_snippet_group" string="Website" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/thumb_snippets_website.svg"/>
+            <t snippet-group="footers" t-snippet="mass_mailing.s_snippet_group" string="Footers" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/thumb_snippets_footers.svg"/>
         </snippets>
         <snippets id ="snippet_structure">
             <t t-snippet="mass_mailing.s_mail_block_header_social" string="Left Logo" group="headers"/>
@@ -117,7 +117,7 @@
             <t t-snippet="mass_mailing.s_pricelist_boxed" string="Pricelist Boxed" group="text"/>
             <t t-snippet="mass_mailing.s_blog_title" string="Blog Title" group="text"/>
 
-            <t t-snippet="mass_mailing.s_mail_block_header_view" string="View Online" group="website"/>
+            <t t-snippet="mass_mailing.s_mail_block_header_view" string="View in Browser" group="website"/>
             <t t-snippet="mass_mailing.s_centered_cta_badge" string="Centered CTA" group="website"/>
             <t t-snippet="mass_mailing.s_special_offer_cta" string="Special Offer CTA" group="website"/>
             <t t-snippet="mass_mailing.s_section_mobile" string="Section Mobile" group="website"/>
@@ -154,10 +154,10 @@
     </section>
 </template>
 
-<template id="s_mail_block_header_view" name="View Online">
-    <section class="o_snippet_view_in_browser o_mail_snippet_general pt16 pb16" data-name="View Online" data-vxml="001">
+<template id="s_mail_block_header_view" name="View in Browser">
+    <section class="o_snippet_view_in_browser o_mail_snippet_general pt16 pb16" data-name="View in Browser" data-vxml="001">
         <p style="text-align: center" class="mb-0">
-            <a href="/view">View Online</a>
+            <a href="/view">View in Browser</a>
         </p>
     </section>
 </template>

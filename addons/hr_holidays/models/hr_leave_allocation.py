@@ -24,10 +24,29 @@ class HrLeaveAllocation(models.Model):
 
     def _default_work_entry_type_id(self):
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', True)]
+            domain = [('id', 'in', self.allowed_work_entry_type_ids.ids), ('has_valid_allocation', '=', True), ('requires_allocation', '=', True)]
         else:
-            domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', True), ('employee_requests', '=', True)]
+            domain = [('id', 'in', self.allowed_work_entry_type_ids.ids), ('has_valid_allocation', '=', True), ('requires_allocation', '=', True), ('employee_requests', '=', True)]
         return self.env['hr.work.entry.type'].search(domain, limit=1)
+
+    @api.model
+    def default_get(self, fields):
+        defaults = super().default_get(fields)
+        employee = defaults.get('employee_id')
+        country = self.env['hr.employee'].browse(employee).company_id.country_id or self.env.company.country_id
+        domain = [
+                ('country_id', '=', country.id),
+                ('has_valid_allocation', '=', True),
+                ('requires_allocation', '=', True)
+            ]
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            domain = Domain.AND(
+                [domain, [('employee_requests', '=', True)]]
+            )
+        work_entry_type = self.env['hr.work.entry.type'].search(domain, limit=1)
+        if work_entry_type:
+            defaults['work_entry_type_id'] = work_entry_type.id
+        return defaults
 
     def _domain_work_entry_type_id(self):
         domain = [
@@ -66,9 +85,10 @@ class HrLeaveAllocation(models.Model):
         tracking=True, required=True)
     date_to = fields.Date('End Date', copy=False, tracking=True)
     work_entry_type_id = fields.Many2one(
-        "hr.work.entry.type", compute='_compute_work_entry_type_id', store=True, string="Time Off Type", required=True, readonly=False,
-        domain=_domain_work_entry_type_id,
-        default=_default_work_entry_type_id)
+        "hr.work.entry.type", compute='_compute_work_entry_type_id', store=True, string="Time Type", required=True, index=True, readonly=False,
+        domain=_domain_work_entry_type_id)
+    allowed_work_entry_type_ids = fields.Many2many(
+        'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', default=lambda self: self.env.user.employee_id,
         index=True, ondelete="restrict", required=True, tracking=True, domain=_domain_employee_id)
@@ -95,7 +115,7 @@ class HrLeaveAllocation(models.Model):
         help='This area is automatically filled by the user who validates the allocation')
     second_approver_id = fields.Many2one(
         'hr.employee', string='Second Approval', readonly=True, copy=False,
-        help='This area is automatically filled by the user who validates the allocation with second level (If time off type need second validation)')
+        help='This area is automatically filled by the user who validates the allocation with second level (If time type need second validation)')
     validation_type = fields.Selection(string='Validation Type', related='work_entry_type_id.allocation_validation_type', readonly=True)
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
     can_validate = fields.Boolean('Can Validate', compute='_compute_can_validate')
@@ -114,13 +134,8 @@ class HrLeaveAllocation(models.Model):
     nextcall = fields.Date("Date of the next accrual allocation", readonly=True, default=False)
     already_accrued = fields.Boolean()
     yearly_accrued_amount = fields.Float(export_string_translation=False)
-    allocation_type = fields.Selection([
-        ('regular', 'Regular Allocation'),
-        ('accrual', 'Accrual Allocation')
-    ], string="Allocation Type", default="regular", required=True, readonly=True)
     is_officer = fields.Boolean(compute='_compute_is_officer')
-    accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', compute="_compute_accrual_plan_id",
-    inverse="_inverse_accrual_plan_id", store=True, index='btree_not_null', readonly=False, tracking=True)
+    accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', index='btree_not_null', tracking=True)
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
     virtual_remaining_leaves = fields.Float(compute='_compute_leaves', string='Available Time Off')
@@ -135,7 +150,7 @@ class HrLeaveAllocation(models.Model):
     # The compute does not get triggered without a depends on record creation
     # aka keep the 'useless' depends
     @api.depends_context('uid')
-    @api.depends('allocation_type')
+    @api.depends('accrual_plan_id')
     def _compute_is_officer(self):
         self.is_officer = self.env.user.has_group("hr_holidays.group_hr_holidays_user")
 
@@ -197,8 +212,8 @@ class HrLeaveAllocation(models.Model):
 
     @api.depends('employee_id', 'work_entry_type_id')
     def _compute_leaves(self):
-        date_from = fields.Date.from_string(self.env.context['default_date_from']) if 'default_date_from' in self.env.context else fields.Date.today()
-        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from)[0]
+        date_from = fields.Date.context_today(self)
+        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from, ignore_future=True)[0]
         for allocation in self:
             origin = allocation._origin
             virtual_leave = employee_days_per_allocation[origin.employee_id][origin.work_entry_type_id][origin]
@@ -252,6 +267,17 @@ class HrLeaveAllocation(models.Model):
         for allocation in self:
             allocation.manager_id = allocation.employee_id and allocation.employee_id.parent_id
 
+    @api.depends('employee_company_id')
+    def _compute_allowed_work_entry_type_ids(self):
+        for allocation in self:
+            country = allocation.employee_company_id.country_id or self.env.company.country_id
+            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
+                domain = [('country_id', '=', False)]
+            else:
+                domain = [('country_id', '=', country.id)]
+            domain = Domain.AND([allocation._domain_work_entry_type_id(), domain])
+            allocation.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
+
     @api.depends('accrual_plan_id')
     def _compute_work_entry_type_id(self):
         default_work_entry_type_id = None
@@ -272,39 +298,45 @@ class HrLeaveAllocation(models.Model):
 
     @api.constrains('number_of_days', 'work_entry_type_id', 'employee_id')
     def _check_negative_allocation(self):
-        for allocation in self:
-            if allocation.number_of_days >= 0:
-                continue
+        for allocation in self.filtered(lambda allocation: allocation.number_of_days < 0):
             if not allocation.work_entry_type_id.allows_negative:
-                raise ValidationError(self.env._("Negative allocations are not allowed for this time off type."))
-            allocation_unit = allocation.type_request_unit
-            if allocation_unit != 'hour' and abs(allocation.number_of_days_display) > allocation.work_entry_type_id.max_allowed_negative:
-                raise ValidationError(self.env._("The negative allocation cannot exceed the maximum allowed negative value of %(max)s day(s).",
-                      max=allocation.work_entry_type_id.max_allowed_negative))
-            if allocation_unit == 'hour' and abs(allocation.number_of_hours_display) > allocation.work_entry_type_id.max_allowed_negative:
-                raise ValidationError(self.env._("The negative allocation cannot exceed the maximum allowed negative value of %(max)s hour(s).",
-                      max=allocation.work_entry_type_id.max_allowed_negative))
+                raise ValidationError(self.env._("Negative allocations are not allowed for this time type."))
+            domain = [
+                ('id', '!=', allocation.id),
+                ('employee_id', '=', allocation.employee_id.id),
+                ('work_entry_type_id', '=', allocation.work_entry_type_id.id),
+                ('state', 'in', ('confirm', 'validate', 'validate1')),
+                ('number_of_days', '<', 0),
+            ]
+            if allocation.date_to:
+                domain += [('date_from', '<=', allocation.date_to)]
+            domain += [
+                '|',
+                ('date_to', '=', False),
+                ('date_to', '>=', allocation.date_from),
+            ]
+            is_hour_allocation = allocation.type_request_unit == 'hour'
+            aggregate_field = 'number_of_hours_display' if is_hour_allocation else 'number_of_days'
+            current_amount = allocation.number_of_hours_display if is_hour_allocation else allocation.number_of_days
+            negative_total, = self.env['hr.leave.allocation']._read_group(domain, aggregates=[f'{aggregate_field}:sum'])[0]
+            total_negative = -(current_amount + (negative_total or 0))
+            max_negative = allocation.work_entry_type_id.max_allowed_negative
 
-    @api.depends('allocation_type')
-    def _compute_accrual_plan_id(self):
-        for allocation in self:
-            if (allocation.allocation_type == 'regular' and allocation.accrual_plan_id):
-                allocation.accrual_plan_id = False
-
-    def _inverse_accrual_plan_id(self):
-        for allocation in self:
-            allocation.allocation_type = "accrual" if allocation.accrual_plan_id else "regular"
+            if total_negative > max_negative:
+                raise ValidationError(self.env._(
+                    "The total negative allocation within this validity period "
+                    "cannot exceed %(max)s %(unit)s.",
+                    max=max_negative,
+                    unit='hours' if is_hour_allocation else 'days',
+                ))
 
     def _get_request_unit(self):
         self.ensure_one()
-        if self.allocation_type == "accrual" and self.accrual_plan_id:
+        if self.accrual_plan_id:
             return self.accrual_plan_id.sudo().added_value_type
-        elif self.allocation_type == "regular":
-            return self.work_entry_type_id.unit_of_measure
-        else:
-            return "day"
+        return self.work_entry_type_id.unit_of_measure or "day"
 
-    @api.depends("allocation_type", "work_entry_type_id", "accrual_plan_id")
+    @api.depends("work_entry_type_id", "accrual_plan_id")
     def _compute_type_request_unit(self):
         for allocation in self:
             allocation.type_request_unit = allocation._get_request_unit()
@@ -432,13 +464,23 @@ class HrLeaveAllocation(models.Model):
         The goal of this method is to retroactively apply accrual plan levels and progress from nextcall to date_to or today.
         If force_period is set, the accrual will run until date_to in a prorated way (used for end of year accrual actions).
         """
+        def _get_leaves_taken(allocation):
+            precomputed_allocations = allocation
+            if context_precomputed := self.env.context.get('precomputed_allocations'):
+                precomputed_allocations |= context_precomputed
+            # By setting `precomputed_allocations`, avoid infinite loop (otherwise _get_consumed_leaves -> _get_future_leaves_on -> _process_accrual_plans -> ...)
+            employee_days_per_allocation = allocation.employee_id.with_context(precomputed_allocations=precomputed_allocations)._get_consumed_leaves(
+                allocation.work_entry_type_id, allocation.nextcall, ignore_future=True)[0]
+            origin = allocation._origin
+            leaves_taken = employee_days_per_allocation[origin.employee_id][origin.work_entry_type_id][origin]['leaves_taken']
+            return leaves_taken
 
-        date_to = date_to or fields.Date.today()
+        date_to = date_to or fields.Date.context_today(self)
         already_accrued = {allocation.id: allocation.already_accrued or (allocation.number_of_days != 0 and allocation.accrual_plan_id.accrued_gain_time == 'start') for allocation in self}
         first_allocation = _("""This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, delete and create a new one.""")
         for allocation in self:
             expiration_date = False
-            if allocation.allocation_type != 'accrual':
+            if not allocation.accrual_plan_id:
                 continue
             level_ids = allocation.accrual_plan_id.level_ids.sorted('sequence')
             if not level_ids:
@@ -448,10 +490,6 @@ class HrLeaveAllocation(models.Model):
             # even if the value doesn't change. This is the best performance atm.
             first_level = level_ids[0]
             first_level_start_date = allocation.date_from + get_timedelta(first_level.start_count, first_level.start_type)
-            if allocation.work_entry_type_id.request_unit in ["day", "half_day"]:
-                leaves_taken = allocation.leaves_taken
-            else:
-                leaves_taken = allocation.leaves_taken / allocation.employee_id._get_hours_per_day(allocation.date_from)
             allocation.already_accrued = already_accrued[allocation.id]
             # first time the plan is run, initialize nextcall and take carryover / level transition into account
             if not allocation.nextcall:
@@ -476,6 +514,10 @@ class HrLeaveAllocation(models.Model):
             # get current level and normal period boundaries, then set nextcall, adjusted for level transition and carryover
             # add days, trimmed if there is a maximum_leave
             while allocation.nextcall <= date_to:
+                if allocation.work_entry_type_id.unit_of_measure == 'day':
+                    leaves_taken = _get_leaves_taken(allocation)
+                else:
+                    leaves_taken = _get_leaves_taken(allocation) / allocation.employee_id._get_hours_per_day(allocation.nextcall or allocation.date_from)
                 (current_level, current_level_idx) = allocation._get_current_accrual_plan_level_id(allocation.nextcall)
                 if not current_level:
                     break
@@ -483,7 +525,7 @@ class HrLeaveAllocation(models.Model):
                     if current_level.added_value_type == "day":
                         current_level_maximum_leave = current_level.maximum_leave
                     else:
-                        current_level_maximum_leave = current_level.maximum_leave / allocation.employee_id._get_hours_per_day(allocation.date_from)
+                        current_level_maximum_leave = current_level.maximum_leave / allocation.employee_id._get_hours_per_day(allocation.nextcall or allocation.date_from)
                 nextcall = current_level._get_next_date(allocation.nextcall)
                 # Since _get_previous_date returns the given date if it corresponds to a call date
                 # this will always return lastcall except possibly on the first call
@@ -526,7 +568,7 @@ class HrLeaveAllocation(models.Model):
                         # allocation.expiring_carryover_days - allocation.leaves_taken or 0 if all the expiring days were used
                         # to take time off.
                         # This ensures that only the days that weren't used to take time off will expire.
-                        expiring_days = max(0, allocation.expiring_carryover_days - allocation.leaves_taken)
+                        expiring_days = max(0, allocation.expiring_carryover_days - leaves_taken)
                         allocation.number_of_days = max(0, allocation.number_of_days - expiring_days)
                         allocation.expiring_carryover_days = 0
 
@@ -620,7 +662,8 @@ class HrLeaveAllocation(models.Model):
                         current_level_maximum_leave = current_level.maximum_leave / allocation.employee_id._get_hours_per_day(allocation.date_from)
                 if allocation.actual_lastcall in {period_start, allocation.date_from} | set(level_start.keys())\
                         or (allocation.actual_lastcall - get_timedelta(current_level.accrual_validity_count, current_level.accrual_validity_type)
-                            in {period_start, allocation.date_from} | set(level_start.keys())):
+                        in {period_start, allocation.date_from} | set(level_start.keys())):
+                    leaves_taken = _get_leaves_taken(allocation)
                     allocation._add_days_to_allocation(current_level, current_level_maximum_leave, leaves_taken, period_start, allocation.nextcall)
                     allocation.already_accrued = True
 
@@ -632,7 +675,7 @@ class HrLeaveAllocation(models.Model):
         """
         today = datetime.combine(fields.Date.today(), time(0, 0, 0))
         allocations = self.search([
-            ('allocation_type', '=', 'accrual'), ('state', '=', 'validate'),
+            ('state', '=', 'validate'),
             ('accrual_plan_id', '!=', False), ('employee_id', '!=', False),
             '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),
             '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
@@ -648,14 +691,13 @@ class HrLeaveAllocation(models.Model):
 
         if not (self.accrual_plan_id
                 and self.state == 'validate'
-                and self.allocation_type == 'accrual'
                 and (not self.date_to or self.date_to > accrual_date)
                 and (not self.nextcall or self.nextcall <= accrual_date)):
             return 0
 
-        fake_allocation = self.env['hr.leave.allocation'].with_context(default_date_from=accrual_date).new(origin=self)
-        fake_allocation.sudo().with_context(default_date_from=accrual_date)._process_accrual_plans(accrual_date, log=False)
-        if self.work_entry_type_id.unit_of_measure in ['hour']:
+        fake_allocation = self.env['hr.leave.allocation'].new(origin=self)
+        fake_allocation.sudo()._process_accrual_plans(accrual_date, log=False)
+        if self.work_entry_type_id.unit_of_measure == 'hour':
             res = float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
         else:
             res = round((fake_allocation.number_of_days - self.number_of_days), 2)
@@ -722,10 +764,10 @@ class HrLeaveAllocation(models.Model):
             )
 
     def _add_lastcalls(self):
+        today = fields.Date.context_today(self)
         for allocation in self:
-            if allocation.allocation_type != 'accrual':
+            if not allocation.accrual_plan_id:
                 continue
-            today = fields.Date.today()
             (current_level, current_level_idx) = allocation._get_current_accrual_plan_level_id(today)
             if not allocation.lastcall:
                 if not current_level:
@@ -789,7 +831,7 @@ class HrLeaveAllocation(models.Model):
 
         if 'number_of_days_display' not in values and 'number_of_hours_display' not in values and 'state' not in values:
             res = super().write(values)
-            if 'allocation_type' in values:
+            if 'accrual_plan_id' in values:
                 self._add_lastcalls()
             return res
 
@@ -797,7 +839,7 @@ class HrLeaveAllocation(models.Model):
         result = super().write(values)
         consumed_leaves = self.employee_id._get_consumed_leaves(work_entry_types=self.work_entry_type_id)
 
-        if 'allocation_type' in values:
+        if 'accrual_plan_id' in values:
             self._add_lastcalls()
         for allocation in self:
             current_excess = dict(consumed_leaves[1]).get(allocation.employee_id, {}) \
@@ -928,9 +970,21 @@ class HrLeaveAllocation(models.Model):
                 return False
         return True
 
-    @api.onchange('allocation_type')
-    def _onchange_allocation_type(self):
-        if self.allocation_type == 'accrual':
+    def _get_initialize_accrual_plan_values(self, date_from):
+        return {
+            'lastcall': date_from,
+            'nextcall': False,
+            'number_of_days': 0.0,
+            'number_of_days_display': 0.0,
+            'number_of_hours_display': 0.0,
+            'already_accrued': False,
+            'carried_over_days_expiration_date': False,
+            'expiring_carryover_days': 0
+        }
+
+    @api.onchange('accrual_plan_id')
+    def _onchange_accrual_plan_id(self):
+        if self.accrual_plan_id:
             self.number_of_days = 0.0
         elif not self.number_of_days_display:
             self.number_of_days = 1.0
@@ -942,17 +996,11 @@ class HrLeaveAllocation(models.Model):
     # call of the cron job.
     @api.onchange('date_from', 'accrual_plan_id', 'date_to', 'employee_id')
     def _onchange_date_from(self):
-        if not self.date_from or self.allocation_type != 'accrual' or self.state == 'validate' or not self.accrual_plan_id\
+        if not self.date_from or not self.accrual_plan_id or self.state == 'validate'\
            or not self.employee_id:
             return
-        self.lastcall = self.date_from
-        self.nextcall = False
-        self.number_of_days_display = 0.0
-        self.number_of_hours_display = 0.0
-        self.number_of_days = 0.0
-        self.already_accrued = False
-        self.carried_over_days_expiration_date = False
-        self.expiring_carryover_days = 0
+        update_vals = self._get_initialize_accrual_plan_values(self.date_from)
+        self.update(update_vals)
         date_to = min(self.date_to, date.today()) if self.date_to else False
         self._process_accrual_plans(date_to)
 
@@ -969,6 +1017,8 @@ class HrLeaveAllocation(models.Model):
                 responsible = self.employee_id.leave_manager_id
             elif self.employee_id.parent_id.user_id:
                 responsible = self.employee_id.parent_id.user_id
+            elif self.employee_id.hr_responsible_id:
+                responsible = self.employee_id.hr_responsible_id
         elif self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
             if self.employee_id.hr_responsible_id:
                 responsible = self.employee_id.hr_responsible_id
@@ -987,16 +1037,16 @@ class HrLeaveAllocation(models.Model):
                     if allocation.state == 'confirm':
                         activity_type = confirm_activity
                         note = _(
-                            'New Allocation Request created by %(user)s: %(count)s Days of %(allocation_type)s',
+                            'New Allocation Request created by %(user)s: %(count)s Days of %(leave_type)s',
                             user=allocation.create_uid.name,
                             count=float_round(allocation.number_of_days, precision_digits=2),
-                            allocation_type=allocation.work_entry_type_id.name,
+                            leave_type=allocation.work_entry_type_id.name,
                         )
                     else:
                         activity_type = approval_activity
                         note = _(
-                            'Second approval request for %(allocation_type)s',
-                            allocation_type=allocation.work_entry_type_id.name,
+                            'Second approval request for %(leave_type)s',
+                            leave_type=allocation.work_entry_type_id.name,
                         )
                         to_second_do |= allocation
                     user_ids = allocation.sudo()._get_responsible_for_approval().ids
@@ -1029,11 +1079,11 @@ class HrLeaveAllocation(models.Model):
     # Messaging methods
     ####################################################
 
-    def _track_subtype(self, init_values):
-        if 'state' in init_values and self.state == 'validate':
+    def _track_log_get_default_subtype(self, track_init_values):
+        if 'state' in track_init_values and self.state == 'validate':
             allocation_notif_subtype_id = self.work_entry_type_id.allocation_notif_subtype_id
             return allocation_notif_subtype_id or self.env.ref('hr_holidays.mt_leave_allocation')
-        return super()._track_subtype(init_values)
+        return super()._track_log_get_default_subtype(track_init_values)
 
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         # due to record rule can not allow to add follower and mention on validated leave so subscribe through sudo

@@ -3,54 +3,51 @@ import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { Call } from "@mail/discuss/call/common/call";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
-import {
-    inDiscussCallViewProps,
-    useInDiscussCallView,
-    useMessageScrolling,
-} from "@mail/utils/common/hooks";
+import { useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, signal, types } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { MeetingReadyBanner } from "./meeting_ready_banner";
 import { MeetingSideActions } from "./meeting_side_actions";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { useMessageSearch } from "@mail/core/common/message_search_hook";
+import { useDynamicInterval } from "@mail/utils/common/misc";
 
+const { DateTime } = luxon;
 const PIP_EXTRA_ACTION_IDS = ["copy-invite-link", "meeting-chat"];
 
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
-/**
- * @typedef {Object} Props
- * @property {ThreadActionDefinition.id} [autoOpenAction]
- * @extends {Component<Props, Env>}
- */
 export class Meeting extends Component {
     static template = "mail.Meeting";
-    static props = ["autoOpenAction?", ...inDiscussCallViewProps];
     static components = {
         Call,
         CallActionList,
         Composer,
         Dropdown,
+        MeetingReadyBanner,
         MeetingSideActions,
         Thread,
     };
 
     setup() {
+        this.props = props({
+            autoOpenAction: types.string().optional(),
+            isPip: types.boolean().optional(),
+        });
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
-        onMounted(() => {
-            if (this.props.autoOpenAction) {
-                this.threadActions.actions
-                    .find((a) => a.id === this.props.autoOpenAction)
-                    ?.onSelected();
-            }
+        this.datetimeNow = signal(DateTime.now());
+        useDynamicInterval(() => {
+            this.datetimeNow.set(DateTime.now());
+            return 60_000 - (Date.now() % 60_000);
         });
-        useInDiscussCallView();
+        useSubEnv({ inDiscussCallView: true });
         useSubEnv({
             inMeetingView: {
                 openChat: () =>
@@ -76,6 +73,14 @@ export class Meeting extends Component {
         return this.store.rtc.channel;
     }
 
+    get dateSimple() {
+        return this.datetimeNow().toLocaleString(DateTime.TIME_SIMPLE, { locale: user.lang });
+    }
+
+    get datetimeMedium() {
+        return this.datetimeNow().toLocaleString(DateTime.DATETIME_MED, { locale: user.lang });
+    }
+
     get pipExtraActions() {
         if (!this.rtc.isPipMode) {
             return [];
@@ -89,7 +94,11 @@ export class Meeting extends Component {
             return true;
         }
         if (this.rtc.isFullscreen) {
-            this.rtc.exitFullscreen();
+            if (this.rtc.isBrowserFullscreen) {
+                this.rtc.exitBrowserFullscreen();
+            } else {
+                this.rtc.exitFullscreen();
+            }
             return true;
         }
         return false;

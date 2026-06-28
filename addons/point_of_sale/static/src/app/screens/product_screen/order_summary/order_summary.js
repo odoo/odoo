@@ -1,6 +1,6 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -24,7 +24,7 @@ export class OrderSummary extends Component {
         this.numberBuffer = useService("number_buffer");
         this.dialog = useService("dialog");
         this.pos = usePos();
-        this.state = useState({
+        this.state = proxy({
             potentialCombos: [],
         });
 
@@ -53,20 +53,6 @@ export class OrderSummary extends Component {
         return this.pos.selectedOrder;
     }
 
-    async editPackLotLines(line) {
-        const isAllowOnlyOneLot = line.product_id.isAllowOnlyOneLot();
-        let editedPackLotLines = [];
-        if (line.refunded_orderline_id) {
-            editedPackLotLines = await this.pos.editLotsRefund(line);
-        } else {
-            editedPackLotLines = await this.pos.editLots(
-                line.product_id,
-                line.getPackLotLinesToEdit(isAllowOnlyOneLot)
-            );
-        }
-        line.editPackLotLines(editedPackLotLines);
-    }
-
     clickLine(ev, orderline) {
         ev.stopPropagation();
         this.numberBuffer.reset();
@@ -89,13 +75,7 @@ export class OrderSummary extends Component {
 
         // Prevent if already sent to kitchen
         if (typeof order.id === "number") {
-            const preparation_data = await this.pos.data.call(
-                "pos.order",
-                "get_preparation_change",
-                [order.id]
-            );
-            const prep = JSON.parse(preparation_data.last_order_preparation_change || "{}");
-            if (prep.lines && Object.keys(prep.lines).some((l) => l === orderline.uuid)) {
+            if (orderline.prep_line_ids.length > 0) {
                 this.dialog.add(AlertDialog, {
                     title: _t("Cannot edit orderline"),
                     body: _t(
@@ -204,6 +184,18 @@ export class OrderSummary extends Component {
             }
             return;
         }
+
+        if (selectedLine?.isServiceFeeLine() && order.preset_id?.service_fee_type !== "fixed") {
+            this.numberBuffer.reset();
+            if (key === "Backspace") {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Cannot modify a service fee"),
+                    body: _t("Service fees cannot be modified from the order."),
+                });
+            }
+            return;
+        }
+
         if (
             selectedLine &&
             this.pos.numpadMode === "quantity" &&
@@ -292,12 +284,21 @@ export class OrderSummary extends Component {
         }
     }
 
-    async _showDecreaseQuantityPopup() {
+    /**
+     * @param {Object} [options={}]
+     * @param {(value: string) => string} [options.formatDisplayedValue]
+     * @param {(value: string) => string} [options.parseQuantityValue]
+     */
+    async _showDecreaseQuantityPopup(options = {}) {
         this.numberBuffer.reset();
-        const inputNumber = await makeAwaitable(this.dialog, NumberPopup, {
+        let inputNumber = await makeAwaitable(this.dialog, NumberPopup, {
             title: _t("Set the new quantity"),
+            formatDisplayedValue: options.formatDisplayedValue,
         });
         if (inputNumber) {
+            inputNumber = options.parseQuantityValue
+                ? options.parseQuantityValue(inputNumber)
+                : inputNumber;
             const newQuantity = inputNumber && inputNumber !== "" ? parseFloat(inputNumber) : null;
             return await this.updateQuantityNumber(newQuantity);
         }
@@ -334,15 +335,14 @@ export class OrderSummary extends Component {
         if (selectedLine.combo_parent_id) {
             selectedLine = selectedLine.combo_parent_id;
         }
-        let current_saved_quantity = 0;
-        for (const line of this.currentOrder.lines) {
-            if (line === selectedLine) {
-                current_saved_quantity += line.uiState.savedQuantity;
-            } else if (
-                line.product_id.id === selectedLine.product_id.id &&
-                line.prices.total_excluded_currency === selectedLine.prices.total_excluded_currency
-            ) {
-                current_saved_quantity += line.qty;
+        let current_saved_quantity = selectedLine.uiState.savedQuantity;
+        const decreaseLineUuid = selectedLine.uiState.decreaseLineUuid;
+        if (decreaseLineUuid) {
+            const decreaseLine = this.currentOrder.lines.find(
+                (line) => line.uuid === decreaseLineUuid
+            );
+            if (decreaseLine) {
+                current_saved_quantity += decreaseLine.qty;
             }
         }
         const newLine = this.getNewLine();
@@ -363,18 +363,15 @@ export class OrderSummary extends Component {
         if (selectedLine.combo_parent_id) {
             selectedLine = selectedLine.combo_parent_id;
         }
-        const sign = selectedLine.getQuantity() > 0 ? 1 : -1;
         let newLine = selectedLine;
         if (selectedLine.uiState.savedQuantity != 0) {
-            for (const line of selectedLine.order_id.lines) {
-                if (
-                    line.product_id.id === selectedLine.product_id.id &&
-                    line.prices.total_excluded_currency ===
-                        selectedLine.prices.total_excluded_currency &&
-                    line.getQuantity() * sign < 0 &&
-                    line !== selectedLine
-                ) {
-                    return line;
+            const existingUuid = selectedLine.uiState.decreaseLineUuid;
+            if (existingUuid) {
+                const existing = selectedLine.order_id.lines.find(
+                    (line) => line.uuid === existingUuid
+                );
+                if (existing) {
+                    return existing;
                 }
             }
             const data = selectedLine.serializeForORM({ keepCommands: true });
@@ -389,6 +386,7 @@ export class OrderSummary extends Component {
                 true
             );
             newLine.setQuantity(0);
+            selectedLine.uiState.decreaseLineUuid = newLine.uuid;
         }
         return newLine;
     }

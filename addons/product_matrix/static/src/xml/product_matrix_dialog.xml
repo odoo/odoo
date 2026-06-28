@@ -1,11 +1,10 @@
 <templates>
     <t t-name="product_matrix.dialog">
-        <Dialog size="this.size" title="props.dialogTitle" withBodyPadding="false">
-            <t t-call="product_matrix.matrix">
-                <t t-set="header" t-value="this.props.header"/>
-                <t t-set="rows" t-value="this.props.rows"/>
-                <t t-set="format" t-value="this._format"/>
-            </t>
+        <Dialog size="this.size" title="this.props.dialogTitle" withBodyPadding="false">
+            <t t-call="product_matrix.matrix"
+                header="this.props.header"
+                rows="this.props.rows"
+                format="this._format"/>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="this._onConfirm">Confirm</button>
                 <button class="btn btn-secondary" t-on-click="() => this.props.close()">

@@ -17,7 +17,7 @@
             <t t-if="custom_header_sa" t-out="custom_header_sa"/>
         </xpath>
         <t t-set="header_shape_height" position="after">
-            <t t-set="header_shape_height" t-if="o and o._name == 'account.move' and o.country_code == 'SA'">215</t>
+            <t t-set="header_shape_height" t-if="o and o._name == 'account.move' and o.country_code == 'SA'">250</t>
         </t>
     </template>
     <template id="l10n_sa_external_layout_wave" inherit_id="web.external_layout_wave">

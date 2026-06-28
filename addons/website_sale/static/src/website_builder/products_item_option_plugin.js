@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
@@ -14,7 +14,7 @@ export class ProductsItemOptionPlugin extends Plugin {
         "getItemSize",
         "getCount",
     ];
-    itemSize = reactive({ x: 1, y: 1 });
+    itemSize = proxy({ x: 1, y: 1 });
 
     resources = {
         builder_actions: {

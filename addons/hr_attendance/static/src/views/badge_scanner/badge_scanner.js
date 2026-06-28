@@ -6,7 +6,7 @@ import { standardActionServiceProps } from "@web/webclient/actions/action_servic
 import { BarcodeScanner } from "@barcodes/components/barcode_scanner";
 
 export class BadgeScanner extends Component {
-    static template = "hr.BadgeScannerTemplate"
+    static template = "hr.BadgeScannerTemplate";
     static components = { BarcodeScanner };
     static props = {
         ...standardActionServiceProps,
@@ -33,12 +33,11 @@ export class BadgeScanner extends Component {
                 type: "danger",
             });
         }
-        try{
-            await this.orm.write("hr.employee", [this.employee[0].id], { barcode: barcode })
+        try {
+            await this.orm.write("hr.employee", [this.employee[0].id], { barcode: barcode });
             this.env.config.historyBack();
-            this.notification.add((_t("Badge updated: ") + barcode), { type: "success" });
-        }
-        catch(error){
+            this.notification.add(_t("Badge updated: ") + barcode, { type: "success" });
+        } catch (error) {
             this.notification.add(_t("Failed to update badge: ") + error?.data?.message, {
                 type: "danger",
             });

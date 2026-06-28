@@ -86,7 +86,7 @@ class ResLang(models.CachedModel):
     _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
 
     def _get_date_format_selection(self):
-        current_year = fields.Date.today().year
+        current_year = fields.Date.context_today(self).year
         return [
             ('%d/%m/%Y', '31/01/%s' % current_year),
             ('%m/%d/%Y', '01/31/%s' % current_year),
@@ -308,7 +308,7 @@ class ResLang(models.CachedModel):
     @api.model
     def _get_active_langs(self):
         """ Return active languages. """
-        return self.browse(self._cached_data()['id'])
+        return self.get_all()
 
     def _get_data(self, **kwargs) -> LangData:
         """ Get the language data for the given field value in kwargs
@@ -350,7 +350,7 @@ class ResLang(models.CachedModel):
             for lang in self.sudo()._get_active_langs().sorted('name')
         ]
 
-    @tools.ormcache('field', cache='stable')
+    @api.ormcache('field', cache='stable')
     def _get_active_by(self, field: str) -> LangDataDict:
         """ Return a LangDataDict mapping active languages' **unique**
         **required** ``self._cached_data_fields`` values to their LangData.

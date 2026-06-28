@@ -40,7 +40,6 @@ class TestAccountFleet(AccountTestInvoicingCommon):
                 'name': 'Accrual Revenue Account',
                 'code': '765432',
                 'account_type': 'expense',
-                'reconcile': True,
             }).id,
         })
         result_action = wizard.do_action()

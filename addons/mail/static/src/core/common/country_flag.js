@@ -1,10 +1,16 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
-/**
- * @typedef {Object} Props
- * @extends {Component<Props, Env>}
- */
+import { useService } from "@web/core/utils/hooks";
+
 export class CountryFlag extends Component {
-    static props = ["country", "class?"];
     static template = "mail.CountryFlag";
+
+    setup() {
+        super.setup(...arguments);
+        this.store = useService("mail.store");
+        this.props = props({
+            class: t.string().optional(),
+            country: t.instanceOf(this.store["res.country"].Class),
+        });
+    }
 }

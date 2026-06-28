@@ -36,6 +36,12 @@ html:has(.o_layout, .o_basic_theme) {
         .note-editable {
             padding: 0;
             border: none;
+            .o_table {
+                table-layout: fixed;
+            }
+        }
+        .o_mass_mailing_value {
+            overflow-wrap: break-word !important;
         }
         .o_mass_mailing_value ~ .o_loading_screen {
             display: none !important;
@@ -67,25 +73,37 @@ html:has(.o_layout, .o_basic_theme) {
 
 html:has(.o_layout) {
     .editor_enable .o_mail_wrapper_td.oe_empty:empty {
+        cursor: pointer;
+        background-color: rgba(1, 186, 210, 0.5) !important;
         &:not(:focus) {
             &:before {
                 content: attr(data-editor-message);
                 pointer-events: none;
                 color: white;
             }
-            background-color: rgba(1, 186, 210, 0.5) !important;
         }
-        &:focus {
-            color: black;
+        &:hover {
+            background-color: rgba(1, 186, 210, 0.7) !important;
         }
+        width: 100% - 2 * $-editor-messages-margin-x;
         text-align: center;
         font-size: 20px;
         display: block;
-        width: 96%;
         padding: 12px 0;
-        margin: 20px 2%;
-        border-radius: 0.375rem;
-        outline: 2px dashed #01bad2;
-        outline-offset: -2px;
+        margin: 20px $-editor-messages-margin-x;
+
+        &:not(:focus) {
+            @include o-editor-messages;
+
+            &:before {
+                pointer-events: none;
+            }
+        }
     }
+}
+
+body {
+    // Set frontend direction that will be flipped with
+    // rtlcss for right-to-left text direction.
+    direction: ltr;
 }

@@ -77,14 +77,21 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
                         'schemeID': '0151' if commercial_partner.country_code == 'AU' else '0088',
                     },
                 }]
-            elif commercial_partner.peppol_eas and commercial_partner.peppol_endpoint:
-                vals['party_node']['cac:PartyLegalEntity'] = [{
-                    'cbc:RegistrationName': {'_text': commercial_partner.name},
-                    'cbc:CompanyID': {
-                        '_text': commercial_partner.peppol_endpoint,
-                        'schemeID': commercial_partner.peppol_eas,
-                    },
-                }]
+            else:
+                identifier_vals = partner._get_preferred_routing_identifier_vals()
+                if identifier_vals:
+                    vals['party_node']['cac:PartyLegalEntity'] = [{
+                        'cbc:RegistrationName': {'_text': commercial_partner.name},
+                        'cbc:CompanyID': {
+                            '_text': identifier_vals['value'],
+                            'schemeID': identifier_vals['scheme'],
+                        },
+                    }]
+
+    def _ubl_add_customization_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:peppol:pint:billing-1@aunz-1'
 
     # -------------------------------------------------------------------------
     # EXPORT: Constraints
@@ -136,9 +143,11 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         # ALIGNED-IBR-001-AUNZ and ALIGNED-IBR-002-AUNZ
         for partner_type in ('supplier', 'customer'):
             partner = vals[partner_type]
-            if partner.country_code == 'AU' and partner.peppol_eas != '0151':
+            identifier_vals = partner._get_preferred_routing_identifier_vals()
+            partner_eas = identifier_vals.get('scheme')
+            if partner.country_code == 'AU' and partner_eas != '0151':
                 constraints[f'au_{partner_type}_eas_0151'] = _("The Peppol EAS must be set to ABN (0151) if the partner country is Australia.")
-            elif partner.country_code == 'NZ' and partner.peppol_eas != '0088':
+            elif partner.country_code == 'NZ' and partner_eas != '0088':
                 constraints[f'nz_{partner_type}_eas_0088'] = _("The Peppol EAS must be set to EAN (0088) if the partner country is New Zealand.")
 
         return constraints

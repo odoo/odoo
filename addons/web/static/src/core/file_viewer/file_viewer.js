@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, props, proxy, signal, t, useEffect } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { useAutofocus, useBackButton, useService } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
@@ -29,17 +29,20 @@ const IMAGE_BUFFER_PADDING = 20;
 export class FileViewer extends Component {
     static template = "web.FileViewer";
     static components = {};
-    static props = ["files", "startIndex", "close?", "modal?"];
-    static defaultProps = {
-        modal: true,
-    };
+    props = props({
+        files: t.any(),
+        startIndex: t.any(),
+        close: t.any().optional(),
+        modal: t.any().optional(true),
+    });
+
+    iframeViewerPdfRef = signal(null);
 
     setup() {
         useAutofocus();
         this.imageRef = useRef("image");
         this.imageToolbarRef = useRef("imageToolbar");
         this.zoomerRef = useRef("zoomer");
-        this.iframeViewerPdfRef = useRef("iframeViewerPdf");
         this.hasTouch = hasTouch();
 
         this.isDragging = false;
@@ -59,30 +62,34 @@ export class FileViewer extends Component {
             y: 0,
         };
 
-        this.state = useState({
+        this.state = proxy({
             index: this.props.startIndex,
             file: this.props.files[this.props.startIndex],
             imageLoaded: false,
             scale: 1,
             angle: 0,
+            isIframeLoaded: false,
         });
         this.ui = useService("ui");
-        useLayoutEffect(
-            (el) => {
-                if (el) {
-                    hidePDFJSButtons(this.iframeViewerPdfRef.el, {
-                        hideDownload: true,
-                        hidePrint: true,
-                    });
-                }
-            },
-            () => [this.iframeViewerPdfRef.el]
-        );
+        useEffect(() => {
+            if (this.iframeViewerPdfRef()) {
+                hidePDFJSButtons(this.iframeViewerPdfRef(), {
+                    hideDownload: true,
+                });
+            }
+        });
         useBackButton(() => this.close());
     }
 
     onImageLoaded() {
         this.state.imageLoaded = true;
+    }
+
+    onIframeLoaded(ev) {
+        const iFrameEl = ev.target;
+        iFrameEl.contentWindow.requestAnimationFrame(() => {
+            this.state.isIframeLoaded = true;
+        });
     }
 
     close() {
@@ -329,25 +336,11 @@ export class FileViewer extends Component {
     }
 
     onClickPrint() {
-        const printWindow = window.open("about:blank", "_new");
-        printWindow.document.open();
-        printWindow.document.write(`
-                <html>
-                    <head>
-                        <script>
-                            function onloadImage() {
-                                setTimeout('printImage()', 10);
-                            }
-                            function printImage() {
-                                window.print();
-                                window.close();
-                            }
-                        </script>
-                    </head>
-                    <body onload='onloadImage()'>
-                        <img src="${this.state.file.defaultSource}" alt=""/>
-                    </body>
-                </html>`);
-        printWindow.document.close();
+        const printWindow = window.open();
+        const image = printWindow.document.createElement("img");
+        image.setAttribute("onload", "window.print(); setTimeout(window.close, 10)");
+        image.setAttribute("onerror", "window.print(); setTimeout(window.close, 10)");
+        image.src = this.state.file.defaultSource;
+        printWindow.document.body.appendChild(image);
     }
 }

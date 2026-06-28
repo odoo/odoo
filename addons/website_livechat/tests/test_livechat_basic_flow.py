@@ -80,7 +80,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
 
         # Retrieve channels information, visitor info should be there
         init_messaging = self.make_jsonrpc_request(
-            f"{self.livechat_base_url}/mail/data", {"fetch_params": ["channels_as_member"]}
+            f"{self.livechat_base_url}/mail/store", {"fetch_params": ["channels_as_member"]}
         )
         livechat_info = next(c for c in init_messaging["discuss.channel"] if c["id"] == channel.id)
         self.assertIn("livechat_visitor_id", livechat_info)
@@ -88,7 +88,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         # Remove access to visitors and try again, visitors info shouldn't be included
         self.operator.group_ids -= self.group_livechat_user
         init_messaging = self.make_jsonrpc_request(
-            f"{self.livechat_base_url}/mail/data", {"fetch_params": ["channels_as_member"]}
+            f"{self.livechat_base_url}/mail/store", {"fetch_params": ["channels_as_member"]}
         )
         livechat_info = next(c for c in init_messaging["discuss.channel"] if c["id"] == channel.id)
         self.assertNotIn("livechat_visitor_id", livechat_info)
@@ -160,15 +160,18 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         channel = self._common_basic_flow()
         self._reset_bus()
         guest = self.env["mail.guest"].search([], order="id desc", limit=1)
-        operator_member = channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
+        operator_member = channel.with_user(self.operator).self_member_id
         guest_member = channel.channel_member_ids.filtered(lambda m: m.guest_id == guest)
         self.assertEqual(
-            Store().add(channel, "_store_channel_fields").get_result(),
+            Store().add(channel, "_store_channel_fields")._build_result(),
             {
                 "discuss.channel": self._filter_channels_fields(
                     {
                         "ai_agent_id": False,
+                        'ai_session_ids': [],
                         "channel_type": "livechat",
+                        "chatbot": False,
+                        "chatbot_current_step_id": False,
                         "country_id": False,
                         "create_uid": self.user_public.id,
                         "default_display_mode": False,
@@ -260,14 +263,13 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 "res.partner": self._filter_partners_fields(
                     {
                         "active": True,
+                        "agent_ids": [],
                         "avatar_128_access_token": self.operator.partner_id._get_avatar_128_access_token(),
                         "country_id": False,
                         "id": self.operator.partner_id.id,
-                        "im_status": "online",
-                        "im_status_access_token": self.operator.partner_id._get_im_status_access_token(),
                         "is_public": False,
-                        "main_user_id": self.operator.id,
                         "mention_token": self.operator.partner_id._get_mention_token(),
+                        "user_ids": self.operator.ids,
                         "user_livechat_username": "El Deboulonnator",
                         "write_date": fields.Datetime.to_string(
                             self.operator.partner_id.write_date
@@ -276,13 +278,16 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 ),
                 "res.users": self._filter_users_fields(
                     {
+                        "all_employee_ids": [],
+                        "should_display_in_call_im_status": False,
                         "id": self.operator.id,
-                        "employee_ids": [],
+                        "im_status": "online",
+                        "im_status_access_token": self.operator._get_im_status_access_token(),
                         "partner_id": self.operator.partner_id.id,
                     },
                 ),
                 "website": [
-                    {"id": self.env.ref("website.default_website").id, "name": "My Website"}
+                    {"id": self.env.ref("base.default_website").id, "name": "My Website"}
                 ],
                 "website.page": [
                     {"id": self.page_1.id, "name": "Test Page 1"},
@@ -319,7 +324,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "lang_id": self.env.ref("base.lang_en").id,
                         "last_track_ids": self.track_ids.ids[::-1],
                         "partner_id": False,
-                        "website_id": self.env.ref("website.default_website").id,
+                        "website_id": self.env.ref("base.default_website").id,
                     }
                 ],
             },
@@ -333,17 +338,18 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         with freeze_time(agent_left_dt):
             channel.with_user(self.operator).action_unfollow()
         self._reset_bus()
-        self.assertFalse(
-            channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
-        )
+        self.assertFalse(channel.with_user(self.operator).self_member_id)
         channel_w_user = channel.with_user(self.user_public).with_context(guest=guest)
-        data = Store().add(channel_w_user, "_store_channel_fields").get_result()
+        data = Store().add(channel_w_user, "_store_channel_fields")._build_result()
         self.assertEqual(
             data["discuss.channel"],
             self._filter_channels_fields(
                 {
                     "ai_agent_id": False,
+                    "ai_session_ids": [],
                     "channel_type": "livechat",
+                    "chatbot": False,
+                    "chatbot_current_step_id": False,
                     "country_id": False,
                     "create_uid": self.user_public.id,
                     "default_display_mode": False,
@@ -401,13 +407,13 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             },
         ])
         result = self.make_jsonrpc_request(
-            "/mail/action",
+            "/mail/store",
             {"fetch_params": [["init_livechat", self.livechat_channel.id]]},
             headers={"Referer": "/show"},
         )
         self.assertEqual(result["Store"]["livechat_available"], True)
         result = self.make_jsonrpc_request(
-            "/mail/action",
+            "/mail/store",
             {"fetch_params": [["init_livechat", self.livechat_channel.id]]},
             headers={"Referer": "/hide"},
         )

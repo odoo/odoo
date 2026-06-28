@@ -5,6 +5,7 @@ import contextlib
 import logging
 import re
 import textwrap
+import typing
 from binascii import Error as binascii_error
 from collections import defaultdict
 from lxml import html
@@ -12,16 +13,27 @@ from typing import Self
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError, MissingError
-from odoo.fields import Command, Domain
+from odoo.fields import Domain
 from odoo.tools import clean_context, groupby, SQL
+from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import OrderedSet
 from odoo.addons.base.models.ir_attachment import condition_values
 from odoo.addons.mail.tools.discuss import Store
+
+if typing.TYPE_CHECKING:
+    from odoo.addons.mail.models.mail_followers import MailFollowers
+
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
 
 MAX_COMODELS_FOR_DOMAIN = 5
+MAX_SEARCH_LIMIT = PREFETCH_MAX * 10
+SHARE_DOMAIN = (
+    Domain("message_type", "!=", "tracking")
+    & Domain("is_internal", "=", False)
+    & Domain("subtype_id.internal", "=", False)
+)
 
 
 def exists_in_cache(records, *, hint_field=''):
@@ -47,22 +59,27 @@ def exists_in_cache(records, *, hint_field=''):
 
 
 def _find_allowed_doc_ids(env, model_ids, operation):
-    """ Filter out communication records (messages, activities) that user cannot
-    read due to missing document access.
+    """Filter out communication records (messages, activities) that the user
+    cannot read due to missing document access.
 
-    :param dict model_ids: dictionary giving messages IDs per model / doc ids {
-        'document_model_name': {
-            document_id_1: set(message IDs),
-            document_id_2: set(message IDs),
-        },
-        [...]
-    }
+    :param model_ids: dictionary giving message IDs per model / document
+        IDs, structured as::
 
-    :return: set of allowed message IDs to read, based on document check
+            {
+                'document_model_name': {
+                    document_id_1: set(message IDs),
+                    document_id_2: set(message IDs),
+                },
+                ...
+            }
+
+    :return: set of allowed message IDs to read, based on document check.
     :rtype: set
     """
     allowed_ids = set()
     for doc_model, doc_dict in model_ids.items():
+        if doc_model not in env:
+            continue
         documents = exists_in_cache(env[doc_model].browse(doc_dict))
         for document_domain, operation_res_ids in documents._mail_get_operation_for_mail_message_operation(operation):
             if not documents:
@@ -81,6 +98,7 @@ class MailMessage(models.Model):
     Note:: State management / Error codes / Failure types summary
 
     * mail.notification
+
       * notification_status
         'ready', 'sent', 'bounce', 'exception', 'canceled'
       * notification_type
@@ -100,11 +118,13 @@ class MailMessage(models.Model):
         'sn_format', 'sn_error'
 
     * mail.mail
+
       * state
         'outgoing', 'sent', 'received', 'exception', 'cancel'
       * failure_reason: text
 
     * sms.sms (SMS addon)
+
       * state
         'outgoing', 'sent', 'error', 'canceled'
       * error_code
@@ -114,6 +134,7 @@ class MailMessage(models.Model):
         'sms_blacklist', 'sms_duplicate'
 
     * snailmail.letter (snailmail addon)
+
       * state
         'pending', 'sent', 'error', 'canceled'
       * error_code
@@ -168,6 +189,30 @@ class MailMessage(models.Model):
     # related document
     model = fields.Char('Related Document Model')
     res_id = fields.Many2oneReference('Related Document ID', model_field='model')
+    res_access_read = fields.Boolean(
+        groups=fields.NO_ACCESS,
+        compute=lambda self: self._compute_res_access('read'),
+        search=lambda self, operator, value: self._search_res_access('read', operator),
+        compute_sudo=True,
+        depends_context=('uid',))
+    res_access_write = fields.Boolean(
+        groups=fields.NO_ACCESS,
+        compute=lambda self: self._compute_res_access('write'),
+        search=lambda self, operator, value: self._search_res_access('write', operator),
+        compute_sudo=True,
+        depends_context=('uid',))
+    res_access_create = fields.Boolean(
+        groups=fields.NO_ACCESS,
+        compute=lambda self: self._compute_res_access('create'),
+        search=lambda self, operator, value: self._search_res_access('create', operator),
+        compute_sudo=True,
+        depends_context=('uid',))
+    res_access_unlink = fields.Boolean(
+        groups=fields.NO_ACCESS,
+        compute=lambda self: self._compute_res_access('unlink'),
+        search=lambda self, operator, value: self._search_res_access('unlink', operator),
+        compute_sudo=True,
+        depends_context=('uid',))
     record_name = fields.Char('Message Record Name', compute='_compute_record_name', store=False)
     record_alias_domain_id = fields.Many2one('mail.alias.domain', 'Alias Domain', ondelete='set null')
     record_company_id = fields.Many2one('res.company', 'Company', ondelete='set null')
@@ -181,6 +226,7 @@ class MailMessage(models.Model):
         ('auto_comment', 'Automated Targeted Notification'),
         ('out_of_office', 'Out-of-office Message'),
         ('user_notification', 'User Specific Notification'),
+        ('tracking', 'Tracking'),
         ],
         'Type', required=True, default='comment',
         help="Used to categorize message generator"
@@ -206,7 +252,9 @@ class MailMessage(models.Model):
     is_current_user_or_guest_author = fields.Boolean(compute='_compute_is_current_user_or_guest_author')
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
-    partner_ids = fields.Many2many('res.partner', string='Recipients', context={'active_test': False})
+    partner_ids = fields.Many2many('res.partner', string='Recipients (To)', context={'active_test': False})
+    partner_cc_ids = fields.Many2many('res.partner', relation='mail_message_res_partner_cc_rel',
+                                      string='Recipients (Cc)', context={'active_test': False})
     # email recipients of incoming emails: comma separated list of emails (not necessarily normalized)
     incoming_email_to = fields.Text('Emails To')
     incoming_email_cc = fields.Char('Emails Cc')
@@ -235,13 +283,6 @@ class MailMessage(models.Model):
         search="_search_is_bookmarked",
         help="Current user has bookmarked this message",
     )
-    # tracking
-    tracking_value_ids = fields.One2many(
-        'mail.tracking.value', 'mail_message_id',
-        string='Tracking values',
-        groups="base.group_system",
-        help='Tracked values are stored in a separate model. This field allow to reconstruct '
-             'the tracking and to generate statistics on the model.')
     # polls
     ended_poll_ids = fields.One2many('mail.poll', 'end_message_id')
     started_poll_ids = fields.One2many('mail.poll', 'start_message_id')
@@ -388,7 +429,7 @@ class MailMessage(models.Model):
     def _search(self, domain, offset=0, limit=None, order=None, *, bypass_access=False, **kwargs):
         """ Override that adds specific access rights of mail.message, to remove
         ids uid could not see according to our custom rules. Please refer to
-        :meth:`_check_access` for more details about those rules.
+        res_access fields for more details about those rules.
         """
         domain = Domain(domain).optimize(self)
         if self.env.su or bypass_access or domain.is_false():
@@ -396,26 +437,40 @@ class MailMessage(models.Model):
         if self.env.context.get('_generating_sql_for_fields'):
             raise ValueError("Cannot generate SQL for whole mail.message")
 
+        return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
+
+    def _compute_res_access(self, operation: str):
+        assert self.env.su
+        field_name = f'res_access_{operation}'
+
+        if not self or not self.browse().sudo(False).has_access(operation):
+            self[field_name] = False
+            return
+
+        # Non-employee see only messages with a subtype and not internal
+        query = self.sudo()._search(self._get_search_domain_share() & Domain('id', 'in', self.ids))
+        accessible_messages = self.sudo(False)._filter_accessible_from_query(query, operation)
+        accessible_messages[field_name] = True
+        (self - accessible_messages)[field_name] = False
+
+    def _search_res_access(self, operation, domain_operator):
+        assert self.env.su
+        if domain_operator != 'in':
+            return NotImplemented
+        domain = self.env.context.get('search_domain')
+        if not isinstance(domain, Domain):
+            domain = Domain.TRUE
         # Non-employee see only messages with a subtype and not internal
         domain = self._get_search_domain_share() & domain
-        domain = domain.optimize_dynamic(self)
-
-        # search by ids
-        if condition_values(self, 'id', domain) is not None:
-            query = super()._search(domain, order=order, **kwargs)
-            records = self.browse()._filter_accessible_from_query(query, 'read')
-            if offset > 0:
-                records = records[offset:]
-            if limit is not None:
-                records = records[:limit]
-            return records._as_query(ordered=bool(order))
+        self = self.sudo(False)  # noqa: PLW0642
 
         # searching for all messages or a subset of models
         res_model_names = condition_values(self, 'model', domain) or ()
-        if not (0 < len(res_model_names) <= MAX_COMODELS_FOR_DOMAIN):
-            query = super()._search(domain, offset, limit, order, **kwargs)
-            records = self.browse()._filter_accessible_from_query(query, 'read')
-            return records._as_query(ordered=bool(order))
+        if operation != 'read' or not (0 < len(res_model_names) <= MAX_COMODELS_FOR_DOMAIN):
+            query = super(MailMessage, self.sudo())._search(domain, order='id')
+            records = self.browse()._filter_accessible_from_query(query, operation)
+            # [('id', 'any!', query_with_ids)] is optimized in sec_domain
+            return Domain('id', 'any!', records._as_query(ordered=False))
 
         # search by model and res_id
         model_codomains = Domain.FALSE  # (model = a & res_id in ...) | (model = b & ...)
@@ -437,17 +492,16 @@ class MailMessage(models.Model):
             # (because the rules are applied with sudo permissions) and search.
             comodel_domain = Domain.FALSE
             comodel_domain_remaining = Domain.TRUE
-            for domain_operation, doc_operation in comodel._mail_get_operation_for_mail_message_operation('read'):
+            for domain_operation, doc_operation in comodel._mail_get_operation_for_mail_message_operation(operation):
                 domain_operation, comodel_domain_remaining = (
                     comodel_domain_remaining & domain_operation,
                     comodel_domain_remaining & ~domain_operation,
                 )
-                if not comodel.has_access(doc_operation):
+                comodel_rule = comodel._access_domain(doc_operation)
+                if comodel_rule.is_false():
                     continue
                 if doc_operation == 'read':
                     comodel_rule = Domain.TRUE  # covered by the search below
-                else:
-                    comodel_rule = self.env['ir.rule']._compute_domain(comodel._name, doc_operation)
                 comodel_domain |= (domain_operation & comodel_rule)
             if comodel_res_ids is not None:
                 comodel_domain &= Domain('id', 'in', comodel_res_ids)
@@ -465,6 +519,7 @@ class MailMessage(models.Model):
             Domain('create_uid', '=', self.env.uid),
             # force an IN condition with a list of values
             Domain('partner_ids', 'any!', partner._as_query()),
+            Domain('partner_cc_ids', 'any!', partner._as_query()),
             Domain('notified_partner_ids', 'any!', partner._as_query()),
             # User_notification notified relevant partners, hence covered by
             # 'partner_ids' domain part (which is why it is ok to exclude them
@@ -472,24 +527,27 @@ class MailMessage(models.Model):
             model_codomains & Domain('message_type', '!=', 'user_notification'),
         ))
 
-        return super()._search(domain, offset, limit, order, **kwargs)
+        return domain
 
     def _get_search_domain_share(self):
         if self.env.user._is_internal():
             return Domain.TRUE
-        return Domain('is_internal', '=', False) & Domain('subtype_id.internal', '=', False)
+        return SHARE_DOMAIN
 
-    def _check_access(self, operation: str) -> tuple | None:
-        """ Access rules of mail.message:
+    def _filter_accessible_from_query(self, query: models.Query, operation: str) -> Self:
+        """ Return the subset of ``self`` that satisfies the specific conditions
+        for messages. Flush current recordset or the model on empty self.
+
+        Access rules of mail.message:
             - read: if any
                 - author_id == pid, uid is the author
                 - create_uid == uid, uid is the creator
-                - pid is in the recipients (partner_ids)
+                - pid is in the recipients (partner_ids + partner_cc_ids)
                 - pid has been notified (needaction)
                 - uid has access on the related document
             - write: if any
                 - author_id == pid, uid is the author
-                - pid is in the recipients (partner_ids)
+                - pid is in the recipients (partner_ids + partner_cc_ids)
                 - pid has been notified (needaction)
                 - uid has access on the related document
             - create: if any
@@ -506,27 +564,6 @@ class MailMessage(models.Model):
         Global restriction: non employee users cannot see internal messages (aka logs):
         'is_internal' flag on message, 'internal' flag on subtype.
         """
-        result = super()._check_access(operation)
-        if not self:
-            return result
-
-        # discard forbidden records, and check remaining ones
-        messages = self - result[0] if result else self
-
-        query = self.sudo()._search(self._get_search_domain_share() & Domain('id', 'in', messages.ids), active_test=False)
-        accessible_messages = messages._filter_accessible_from_query(query, operation)
-        if messages != accessible_messages:
-            forbidden = messages - accessible_messages
-            if result:
-                result = (result[0] + forbidden, result[1])
-            else:
-                result = (forbidden, lambda: forbidden._make_access_error(operation))
-        return result
-
-    def _filter_accessible_from_query(self, query: models.Query, operation: str) -> Self:
-        """ Return the subset of ``self`` that satisfies the specific conditions
-        for messages. Flush current recordset or the model on empty self.
-        """
         assert query._model._name == self._name
         if query.is_empty():
             return self.browse()
@@ -536,26 +573,31 @@ class MailMessage(models.Model):
         # once we know they are accessible. At the end, the remaining entries
         # are the invalid ones.
         if self:
-            self.flush_recordset(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids'])
+            self.flush_recordset(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids', 'partner_cc_ids'])
         else:
-            self.flush_model(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids'])
+            self.flush_model(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids', 'partner_cc_ids'])
         self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
         pid = self.env.user.partner_id.id
 
         # Non internal users see only non-private messages
         table = query.table
+        if query.limit is None:
+            query.limit = MAX_SEARCH_LIMIT
         if operation in ('read', 'write'):
             id_sql = table.id
             query.groupby = id_sql
-            # notified: partner_ids or needaction
+            # notified: partner_ids or partner_cc_ids or needaction
             query.add_join('LEFT JOIN', 'partner_rel', 'mail_message_res_partner_rel',
                 SQL('partner_rel.mail_message_id = %s AND partner_rel.res_partner_id = %s', id_sql, pid))
+            query.add_join('LEFT JOIN', 'partner_cc_rel', 'mail_message_res_partner_cc_rel',
+                SQL('partner_cc_rel.mail_message_id = %s AND partner_cc_rel.res_partner_id = %s', id_sql, pid))
             query.add_join('LEFT JOIN', 'needaction_rel', 'mail_notification',
                 SQL('needaction_rel.mail_message_id = %s AND needaction_rel.res_partner_id = %s', id_sql, pid))
             query = query.select(*(
                 table[fname]
                 for fname in ('id', 'model', 'res_id', 'author_id', 'parent_id', 'message_type', 'create_uid')
-            ), SQL('bool_or(partner_rel.res_partner_id IS NOT NULL OR needaction_rel.res_partner_id IS NOT NULL) AS notified'))
+            ), SQL('bool_or(partner_rel.res_partner_id IS NOT NULL OR partner_cc_rel.res_partner_id IS NOT NULL '
+                   'OR needaction_rel.res_partner_id IS NOT NULL) AS notified'))
         elif operation in ('create', 'unlink'):
             query = query.select(*(
                 table[fname]
@@ -569,6 +611,8 @@ class MailMessage(models.Model):
             values['id']: values
             for values in self.env.cr.dictfetchall()
         }
+        if len(messages_to_check) == MAX_SEARCH_LIMIT:  # avoid out of memory
+            raise ValueError(self.env._("Cannot search, too many messages"))
         accessible = self.browse(messages_to_check)
         if not messages_to_check:
             return accessible
@@ -635,12 +679,16 @@ class MailMessage(models.Model):
                     parent_ids_msg_ids[message['parent_id']].append(mid)
             if parent_ids_msg_ids:
                 query = SQL(
-                    """ SELECT m.id
-                        FROM "mail_message" m
-                        JOIN "mail_message_res_partner_rel" partner_rel
-                            ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %s
-                        WHERE m.id = ANY(%s) """,
-                    pid, list(parent_ids_msg_ids),
+                    """ SELECT mail_message_id
+                          FROM mail_message_res_partner_rel
+                         WHERE res_partner_id = %s
+                           AND mail_message_id = ANY (%s)
+                         UNION
+                        SELECT mail_message_id
+                          FROM mail_message_res_partner_cc_rel
+                         WHERE res_partner_id = %s
+                           AND mail_message_id = ANY (%s) """,
+                    pid, list(parent_ids_msg_ids), pid, list(parent_ids_msg_ids),
                 )
                 for [parent_id] in self.env.execute_query(query):
                     for mid in parent_ids_msg_ids[parent_id]:
@@ -651,17 +699,19 @@ class MailMessage(models.Model):
 
         return accessible - self.browse(messages_to_check)
 
-    def _make_access_error(self, operation: str) -> AccessError:
-        return AccessError(_(
-            "The requested operation cannot be completed due to security restrictions. "
-            "Please contact your system administrator.\n\n"
-            "(Document type: %(type)s, Operation: %(operation)s)\n\n"
-            "Records: %(records)s, User: %(user)s",
-            type=self._description,
-            operation=operation,
-            records=self.ids[:6],
-            user=self.env.uid,
-        ))
+    def _make_access_error_message(self, operation, domain):
+        if not domain.is_false():
+            return AccessError(self.env._(
+                "The requested operation cannot be completed due to security restrictions. "
+                "Please contact your system administrator.\n\n"
+                "(Document type: %(type)s, Operation: %(operation)s)\n\n"
+                "Records: %(records)s, User: %(user)s",
+                type=self._description,
+                operation=operation,
+                records=self.ids[:6],
+                user=self.env.uid,
+            ))
+        return super()._make_access_error_message(operation, domain)
 
     def _get_with_access(self, mode="read", **kwargs):
         if not self:
@@ -686,7 +736,6 @@ class MailMessage(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        tracking_values_list = []
         for values in vals_list:
             if not (self.env.su or self.env.user.has_group('base.group_user')):
                 values.pop('author_id', None)
@@ -731,9 +780,6 @@ class MailMessage(models.Model):
                     return f'{data_to_url[key][0]}{match.group(3)} alt="{data_to_url[key][1]}" data-attachment-id="{data_to_url[key][2]}"'
                 values['body'] = _image_dataurl.sub(base64_to_boundary, values['body'] or '')
 
-            # delegate creation of tracking after the create as sudo to avoid access rights issues
-            tracking_values_list.append(values.pop('tracking_value_ids', False))
-
         messages = super().create(vals_list)
 
         # link back attachments to records, to filter out attachments linked to
@@ -774,15 +820,6 @@ class MailMessage(models.Model):
         if attachments_tocheck:
             attachments_tocheck.check_access('read')
 
-        for message, values, tracking_values_cmd in zip(messages, vals_list, tracking_values_list):
-            if tracking_values_cmd:
-                vals_lst = [dict(cmd[2], mail_message_id=message.id) for cmd in tracking_values_cmd if len(cmd) == 3 and cmd[0] == 0]
-                other_cmd = [cmd for cmd in tracking_values_cmd if len(cmd) != 3 or cmd[0] != 0]
-                if vals_lst:
-                    self.env['mail.tracking.value'].sudo().create(vals_lst)
-                if other_cmd:
-                    message.sudo().write({'tracking_value_ids': tracking_values_cmd})
-
         messages.filtered(lambda msg: msg._is_thread_message() and msg.message_type != 'user_notification')._invalidate_documents()
 
         return messages
@@ -815,10 +852,10 @@ class MailMessage(models.Model):
             lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
         ).unlink()
         messages_by_partner = defaultdict(lambda: self.env['mail.message'])
-        partners_with_user = self.partner_ids.filtered('user_ids')
+        partners_with_user = (self.partner_ids | self.partner_cc_ids).filtered('user_ids')
         for elem in self:
             for partner in (
-                elem.partner_ids & partners_with_user | elem.notification_ids.author_id
+                (elem.partner_ids | elem.partner_cc_ids) & partners_with_user | elem.notification_ids.author_id
             ):
                 messages_by_partner[partner] |= elem
         # Notify front-end of messages deletion for partners having a user
@@ -906,11 +943,11 @@ class MailMessage(models.Model):
         if not notifications:
             return
         notifications.write({"is_read": False, "read_date": False})
-        store = Store().add(notifications.mail_message_id, "_store_message_fields")
-        self.env.user._bus_send(
-            "mail.message/mark_as_unread",
-            {"message_ids": notifications.mail_message_id.ids, "store_data": store.get_result()},
-        )
+        Store(
+            self.env.user,
+            notification_type="mail.message/mark_as_unread",
+            notification_payload={"message_ids": notifications.mail_message_id.ids},
+        ).add(notifications.mail_message_id, "_store_message_fields")
 
     @api.model
     def _message_fetch(self, domain, *, thread=None, search_term=None, is_notification=None, before=None, after=None, around=None, limit=30):
@@ -940,16 +977,6 @@ class MailMessage(models.Model):
                 [("subject", "ilike", search_term)],
                 [("subtype_id.description", "ilike", search_term)],
             ])
-            if thread and is_notification is not False:
-                tracking_value_domain = (
-                    Domain("mail_message_id.res_id", "=", thread.id)
-                    & Domain("mail_message_id.model", "=", thread._name)
-                    & self._get_tracking_values_domain(search_term)
-                )
-                # sudo: mail.tracking.value - searching allowed tracking values for acessible records
-                tracking_values = self.env["mail.tracking.value"].sudo().search(tracking_value_domain)
-                accessible_tracking_value_ids = tracking_values._filter_has_field_access(self.env)
-                message_domain |= Domain("id", "in", accessible_tracking_value_ids.mail_message_id.ids)
             domain &= message_domain
         if search_term or is_notification is not None:
             res["count"] = self.search_count(domain)
@@ -1029,23 +1056,71 @@ class MailMessage(models.Model):
     def _bus_send_reaction_group(self, content):
         store = Store(bus_channel=self)
         store.add(self, "_store_reaction_group_fields", fields_params={"content": content})
-        store.bus_send()
 
-    def _store_reaction_group_fields(self, res: Store.FieldList, *, content):
-        group_domain = [("message_id", "in", self.ids), ("content", "=", content)]
-        reactions = self.env["mail.message.reaction"].search(group_domain)
-        reactions_by_message = reactions.grouped("message_id")
+    def _store_reaction_group_fields(self, res: Store.FieldList, *, content=None):
+        """Build field list to group reactions by content for each message.
+
+        This is an optimization to avoid sending all reactions individually,
+        which does not scale. The group is described by the model
+        MessageReactions in the JS side, and it is linked through the field
+        reactions of the message model.
+
+        When content is empty, all reactions are included. When content is
+        given, only the reactions matching this content are included. This is
+        useful to avoid re-sending all groups in flows where only one group is
+        impacted, like when adding or removing a reaction.
+        """
+        # sudo: mail.message - reading reactions on accessible message is allowed
+        messages_sudo = res.records.sudo()
+        filter_content = content is not None
+        if filter_content:
+            group_domain = [("message_id", "in", messages_sudo.ids), ("content", "=", content)]
+            reactions = messages_sudo.env["mail.message.reaction"].search_fetch(group_domain)
+        else:
+            reactions = messages_sudo.reaction_ids
+        reactions_by_message = defaultdict(self.env["mail.message.reaction"].browse)
+        reactions_by_message.update(reactions.grouped("message_id"))
         res.many(
             "reactions",
             [],
-            mode="ADD",
-            predicate=lambda m: m in reactions_by_message,
-            value=reactions_by_message.get,
+            mode="ADD" if filter_content else "REPLACE",
+            predicate=lambda m: not filter_content or m in reactions_by_message,
+            value=lambda m: [
+                {
+                    "content": content,
+                    "count": len(reactions),
+                    "guests": reactions.guest_id.ids,
+                    "message": reactions.message_id.id,
+                    "partners": reactions.partner_id.ids,
+                    "sequence": min(reactions.ids),
+                }
+                for content, reactions in reactions_by_message[m].grouped("content").items()
+            ],
         )
-        res.attr(
-            "reactions",
-            [("DELETE", {"message": self.id, "content": content})],
-            predicate=lambda m: m not in reactions_by_message,
+        if filter_content:
+            res.many(
+                "reactions",
+                [],
+                mode="DELETE",
+                predicate=lambda m: m not in reactions_by_message,
+                value=lambda m: {"message": m.id, "content": content},
+            )
+        res.many(
+            "reaction_ids",
+            lambda res: (
+                res.one(
+                    "partner_id",
+                    "_store_avatar_fields",
+                    dynamic_fields=lambda res, reaction: (
+                        reaction.message_id._store_partner_name_dynamic_fields(res),
+                    ),
+                    only_data=True,
+                ),
+                res.one("guest_id", "_store_avatar_fields", only_data=True),
+            ),
+            only_data=True,
+            predicate=lambda m: m in reactions_by_message,
+            value=lambda m: reactions_by_message[m],
         )
 
     # ------------------------------------------------------
@@ -1057,22 +1132,19 @@ class MailMessage(models.Model):
         res: Store.FieldList,
         *,
         format_reply=True,
-        msg_vals=False,
+        chatter_fields=False,
         inbox_fields=False,
-        followers=None,
+        followers: Store.LazyValue[MailFollowers] = None,
     ):
         """
         :param format_reply: if True, also get data about the parent message if it exists.
             Only makes sense for discuss channel.
 
-        :param msg_vals: dictionary of values used to create the message. If
-          given it may be used to access values related to ``message`` without
-          accessing it directly. It lessens query count in some optimized use
-          cases by avoiding access message content in db;
-
         :param inbox_fields: if True, also add inbox fields: followers of the current target for
             each thread of each message as well as module icon and priority fields.
             Only applicable if ``res.target`` is a specific user.
+
+        :param chatter_fields: forwarded to _store_attachment_fields
 
         :param followers: if given, use this pre-computed list of followers instead of fetching
             them. It lessen query count in some optimized use cases.
@@ -1085,6 +1157,7 @@ class MailMessage(models.Model):
             sort="id",
             dynamic_fields="_store_attachment_dynamic_fields",
             sudo=True,
+            fields_params={"chatter_fields": chatter_fields},
         )
         # sudo: mail.message: access to author_guest_id is allowed
         res.one("author_guest_id", "_store_avatar_fields", sudo=True)
@@ -1096,7 +1169,7 @@ class MailMessage(models.Model):
                 res.one("main_user_id", ["partner_id", "share"]),
                 res.from_method("_store_avatar_fields"),
             ),
-            dynamic_fields="_store_partner_name_dynamic_fields",
+            dynamic_fields="_store_author_dynamic_fields",
             sudo=True,
         )
         res.extend(["body", "create_date", "date"])
@@ -1115,9 +1188,16 @@ class MailMessage(models.Model):
             sort="id",
             sudo=True,
         )
+        res.many(
+            "partner_cc_ids",
+            lambda res: res.from_method("_store_avatar_fields"),
+            dynamic_fields="_store_partner_name_dynamic_fields",
+            predicate=lambda m: m.model != "discuss.channel",
+            sort="id",
+            sudo=True,
+        )
         res.attr("pinned_at")
-        # sudo: mail.message - reading reactions on accessible message is allowed
-        res.many("reactions", [], value=lambda m: m.sudo().reaction_ids)
+        res.from_method("_store_reaction_group_fields")
         res.attr(
             "reply_to",
             predicate=lambda m: res.is_for_internal_users()
@@ -1148,12 +1228,8 @@ class MailMessage(models.Model):
                 sudo=True,
             )
 
-        # fetch scheduled notifications once, only if msg_vals is not given to
-        # avoid useless queries when notifying Inbox right after a message_post
         scheduled_dt_by_msg = defaultdict(bool)
-        if msg_vals:
-            scheduled_dt_by_msg = {m: msg_vals.get("scheduled_date", False) for m in self}
-        elif self:
+        if self:
             schedulers = self.env["mail.message.schedule"].sudo().search([("mail_message_id", "in", self.ids)])
             for scheduler in schedulers:
                 scheduled_dt_by_msg[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
@@ -1171,6 +1247,8 @@ class MailMessage(models.Model):
                 domain &= Domain("partner_id", "=", target_user.partner_id.id)
                 # sudo: mail.followers - reading followers of current partner
                 followers = self.env["mail.followers"].sudo().search(domain)
+            else:
+                followers = followers.get(self.env)
             for follower in followers:
                 follower_by_record_and_partner[
                     self.env[follower.res_model].browse(follower.res_id),
@@ -1181,6 +1259,7 @@ class MailMessage(models.Model):
             lambda res: (
                 # sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
                 res.attr("display_name", sudo=True),
+                res.attr("has_mail_thread", lambda t: isinstance(t, self.env.registry["mail.thread"])),
                 res.attr(
                     "module_icon",
                     lambda t: modules.module.get_module_icon(t._original_module),
@@ -1243,22 +1322,10 @@ class MailMessage(models.Model):
 
             res.attr("needaction", needaction)
 
-            def tracking_values(message):
-                # sudo: mail.message - filtering allowed tracking values
-                trackings = message.sudo().tracking_value_ids._filter_has_field_access(message.env)
-                record = record_by_message.get(message)
-                if record and hasattr(record, "_track_filter_for_display"):
-                    trackings = record._track_filter_for_display(trackings)
-                return trackings._tracking_value_format()
-
-            res.attr("trackingValues", tracking_values)
         # Add extras at the end to guarantee order in result. In particular, the parent message
         # needs to be after the current message (client code assuming the first received message is
         # the one just posted for example, and not the message being replied to).
         self._store_extra_fields(res, format_reply=format_reply)
-
-    def _to_store(self, store: Store, res: Store.FieldList):
-        store.add_records_fields(res)
 
     def _store_message_link_previews_fields(self, res: Store.FieldList):
         res.many(
@@ -1272,6 +1339,9 @@ class MailMessage(models.Model):
                 message_link_preview.id,
             ),
         )
+
+    def _store_author_dynamic_fields(self, res: Store.FieldList):
+        self._store_partner_name_dynamic_fields(res)
 
     def _store_partner_name_dynamic_fields(self, res: Store.FieldList):
         res.attr("name")
@@ -1353,7 +1423,6 @@ class MailMessage(models.Model):
                 store = Store(bus_channel=user)
                 user_messages = messages.with_user(user)._filtered_access('read')
                 store.add(user_messages, "_store_notification_fields")
-                store.bus_send()
 
     def _bus_channels(self):
         return self.env.user._bus_channels()
@@ -1364,54 +1433,54 @@ class MailMessage(models.Model):
 
     def _filter_empty(self):
         """ Return subset of "void" messages """
-        return self.filtered(lambda message: message._is_empty())
+        return self.filtered_domain(self._get_empty_domain()).filtered(
+            lambda m: tools.is_html_empty(m.body)
+        )
 
-    def _is_empty(self):
-        self.ensure_one()
+    def _get_empty_domain(self):
+        """Return a domain matching messages considered empty."""
         return (
-            (not self.body or tools.is_html_empty(self.body))
-            and (not self.subtype_id or not self.subtype_id.description)
-            and not self.attachment_ids
-            and not (
-                self.has_field_access(self._fields["tracking_value_ids"], "read")
-                and self.tracking_value_ids
+            Domain("attachment_ids", "=", False)
+            & (
+                Domain("body", "in", [False, ""])
+                | Domain("body", "=like", '<span class="o-mail-Message-edited"%></span>')
             )
-            and not self.has_poll
+            & Domain("ended_poll_ids", "=", False)
+            & Domain("started_poll_ids", "=", False)
+            & Domain("subtype_id.description", "=", False)
         )
 
     @api.model
     def _get_reply_to(self, values):
         """ Return a specific reply_to for the document """
-        author_id = values.get('author_id')
-        model = values.get('model', self.env.context.get('default_model'))
-        res_id = values.get('res_id', self.env.context.get('default_res_id')) or False
+        author_id = values.get('author_id', self.default_get(['author_id']).get('author_id'))
+        model = values.get('model', self.default_get(['model']).get('model'))
+        res_id = values.get('res_id', self.default_get(['res_id']).get('res_id'))
         email_from = values.get('email_from')
-        message_type = values.get('message_type')
         records = None
-        if self._is_thread_message(vals={'model': model, 'res_id': res_id, 'message_type': message_type}):
+        if model and res_id and self.browse()._is_thread_message(thread=self.env[model].browse(res_id)):
             records = self.env[model].browse([res_id])
         else:
             records = self.env[model] if model else self.env['mail.thread']
-        return records.sudo()._notify_get_reply_to(default=email_from, author_id=author_id)[res_id]
+        return records.sudo()._notify_get_reply_to(default=email_from, author_id=author_id)[res_id or False]  # False is key for 'norecord'
 
     @api.model
     def _get_message_id(self, values):
+        model = values.get('model', self.default_get(['model']).get('model'))
+        res_id = values.get('res_id', self.default_get(['res_id']).get('res_id'))
         if values.get('reply_to_force_new', False) is True:
             message_id = tools.mail.generate_tracking_message_id('reply_to')
-        elif self._is_thread_message(vals=values):
+        elif model and res_id and self.browse()._is_thread_message(thread=self.env[model].browse(res_id)):
             message_id = tools.mail.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         else:
             message_id = tools.mail.generate_tracking_message_id('private')
         return message_id
 
-    def _is_thread_message(self, vals=False, thread=None):
+    def _is_thread_message(self, thread=None):
         """ Tool method to compute thread validity in notification methods.
-
-        Thread message has a model and a res_id.
-        """
-        vals = vals or {}
-        res_model = vals['model'] if 'model' in vals else thread._name if thread else self.model
-        res_id = vals['res_id'] if 'res_id' in vals else thread.ids[0] if thread and thread.ids else self.res_id
+        Thread message has a model and a res_id. """
+        res_model = self.model if self else (thread and thread._name)
+        res_id = self.res_id if self else (thread and thread.ids and thread.ids[0])
         return bool(res_id) if (res_model and res_model != 'mail.thread') else False
 
     def _invalidate_documents(self, model=None, res_id=None):

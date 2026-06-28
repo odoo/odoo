@@ -257,12 +257,12 @@ class IrHttp(models.AbstractModel):
             _logger.warning(exception)
             return False
 
-    @classmethod
-    def _get_default_lang(cls) -> LangData:
-        lang_code = request.env['ir.default'].sudo()._get('res.partner', 'lang')
+    @api.model
+    def _get_default_lang(self) -> LangData:
+        lang_code = self.env['ir.default'].sudo()._get('res.partner', 'lang')
         if lang_code:
-            return request.env['res.lang']._get_data(code=lang_code)
-        return next(iter(request.env['res.lang']._get_active_by('code').values()))
+            return self.env['res.lang']._get_data(code=lang_code)
+        return next(iter(self.env['res.lang']._get_active_by('code').values()))
 
     @api.model
     def get_frontend_session_info(self) -> dict:
@@ -402,11 +402,11 @@ class IrHttp(models.AbstractModel):
         # the public user. Don't try it at home!
         real_env = request.env
         try:
-            request.registry['ir.http']._auth_method_public()  # it calls update_env
+            request.registry['ir.http']._auth_method_public({})  # it calls update_env
             nearest_url_lang = request.env['ir.http'].get_nearest_lang(request.env['res.lang']._get_data(url_code=url_lang_str).code or url_lang_str)
             cookie_lang = request.env['ir.http'].get_nearest_lang(request.cookies.get('frontend_lang'))
             context_lang = request.env['ir.http'].get_nearest_lang(real_env.context.get('lang'))
-            default_lang = cls._get_default_lang()
+            default_lang = request.env['ir.http']._get_default_lang()
             request.lang = request.env['res.lang']._get_data(code=(
                 nearest_url_lang or cookie_lang or context_lang or default_lang.code
             ))
@@ -508,7 +508,7 @@ class IrHttp(models.AbstractModel):
                 generated_path = werkzeug.urls.url_unquote_plus(path)
                 current_path = werkzeug.urls.url_unquote_plus(request.httprequest.path)
                 if generated_path != current_path:
-                    if request.lang != cls._get_default_lang():
+                    if request.lang != request.env['ir.http']._get_default_lang():
                         path = f'/{request.lang.url_code}{path}'
                     redirect = request.redirect_query(path, request.httprequest.args, code=301)
                     werkzeug.exceptions.abort(redirect)
@@ -559,13 +559,13 @@ class IrHttp(models.AbstractModel):
         values['view'] = env["ir.ui.view"]
         return values
 
-    @classmethod
-    def _get_error_html(cls, env, code, values):
+    @api.model
+    def _get_error_html(self, code, values):
         try:
-            return code, env['ir.ui.view']._render_template('http_routing.%s' % code, values)
+            return code, self.env['ir.ui.view']._render_template('http_routing.%s' % code, values)
         except MissingError:
             if str(code)[0] == '4':
-                return code, env['ir.ui.view']._render_template('http_routing.4xx', values)
+                return code, self.env['ir.ui.view']._render_template('http_routing.4xx', values)
             raise
 
     @classmethod
@@ -579,7 +579,7 @@ class IrHttp(models.AbstractModel):
 
         # minimal setup to serve frontend pages
         if not request.env.uid:
-            cls._auth_method_public()
+            cls._auth_method_public({})
         cls._handle_debug()
         cls._frontend_pre_dispatch()
         request.params = request.get_http_params()
@@ -599,10 +599,10 @@ class IrHttp(models.AbstractModel):
         elif code == 500:
             values = cls._get_values_500_error(request.env, values, exception)
         try:
-            code, html = cls._get_error_html(request.env, code, values)
+            code, html = request.env['ir.http']._get_error_html(code, values)
         except Exception:
             _logger.exception("Couldn't render a template for http status %s", code)
-            code, html = 418, request.env['ir.ui.view']._render_template('http_routing.http_error', values)
+            code, html = 418, request.env['ir.http']._get_error_html('http_error', values)[1]
 
         response = Response(html, status=code, content_type='text/html;charset=utf-8')
         cls._post_dispatch(response)
@@ -613,7 +613,7 @@ class IrHttp(models.AbstractModel):
     # ------------------------------------------------------------
 
     @api.model
-    @tools.ormcache('path', 'query_args', cache='routing.rewrites')
+    @api.ormcache('path', 'query_args', cache='routing.rewrites')
     def url_rewrite(self, path, query_args=None):
         new_url = False
         router = root.get_db_router(request.db).bind('')

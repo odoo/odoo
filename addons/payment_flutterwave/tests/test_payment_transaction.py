@@ -49,7 +49,7 @@ class TestPaymentTransaction(FlutterwaveCommon):
         """Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment."""
         tx = self._create_transaction(flow="redirect")
-        tx._apply_updates(self.verification_data["data"])
+        tx.with_context(payment_safe_write=True)._apply_updates(self.verification_data["data"])
         self.assertEqual(tx.state, "done")
 
     def test_extract_token_values_maps_fields_correctly(self):

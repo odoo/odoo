@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -21,9 +21,9 @@ export class EventRegistrationSummaryDialog extends Component {
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.continueButtonRef = useRef("continueButton");
-        this.button = useState({enabled: true});
+        this.button = proxy({enabled: true});
 
-        this.registrationStatus = useState({value: this.registration.status});
+        this.registrationStatus = proxy({value: this.registration.status});
 
         onMounted(() => {
             if (['already_registered', 'need_manual_confirmation'].includes(this.props.registration.status) && this.props.playSound) {
@@ -44,12 +44,7 @@ export class EventRegistrationSummaryDialog extends Component {
         return this.registrationStatus.value === "need_manual_confirmation";
     }
 
-    async onRegistrationConfirm() {
-        if (this.registrationStatus.value !== "confirmed_registration") {
-            this.button.enabled = false
-            await this.orm.call("event.registration", "action_set_done", [this.registration.id]).catch(() => this.button.enabled = true);
-            this.registrationStatus.value = "confirmed_registration";
-        }
+    async onRegistrationClose() {
         this.props.close();
         if (this.props.model) {
             this.props.model.load();
@@ -61,7 +56,11 @@ export class EventRegistrationSummaryDialog extends Component {
 
     async undoRegistration() {
         if (["confirmed_registration", "already_registered"].includes(this.registrationStatus.value)) {
-            await this.orm.call("event.registration", "action_confirm", [this.registration.id]);
+            if (this.registration.remaining_entries === 0) {
+                await this.orm.call("event.registration", "action_confirm_and_reset", [this.registration.id]);
+            } else if (this.registration.remaining_entries > 0) {
+                await this.orm.call("event.registration", "action_cancel_last_sub_registration", [this.registration.id]);
+            }
         } else if (this.registrationStatus.value == "unconfirmed_registration") {
             await this.orm.call("event.registration", "action_set_draft", [this.registration.id]);
         }

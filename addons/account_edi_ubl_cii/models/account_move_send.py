@@ -38,7 +38,7 @@ class AccountMoveSend(models.AbstractModel):
         peppol_formats = set(self.env['res.partner']._get_peppol_formats())
         if peppol_format_moves := moves.filtered(lambda m: moves_data[m]['invoice_edi_format'] in peppol_formats):
             not_configured_company_partners = peppol_format_moves.company_id.partner_id.filtered(
-                lambda partner: not (partner.peppol_eas and partner.peppol_endpoint)
+                lambda partner: not partner.routing_identifier
             )
             if not_configured_company_partners:
                 alerts['account_edi_ubl_cii_configure_company'] = {
@@ -48,7 +48,7 @@ class AccountMoveSend(models.AbstractModel):
                     'action': not_configured_company_partners._get_records_action(),
                 }
             not_configured_partners = peppol_format_moves.partner_id.commercial_partner_id.filtered(
-                lambda partner: not (partner.peppol_eas and partner.peppol_endpoint)
+                lambda partner: not partner.routing_identifier
             )
             if not_configured_partners:
                 alerts['account_edi_ubl_cii_configure_partner'] = {
@@ -188,18 +188,15 @@ class AccountMoveSend(models.AbstractModel):
         writer = OdooPdfFileWriter()
         writer.clone_reader_document_root(reader)
 
-        attachment_name = 'factur-x.xml'
-        if invoice.commercial_partner_id.country_code == 'DE' and invoice.commercial_partner_id.peppol_eas != '0204':
-            attachment_name = 'zugferd-invoice.xml'
-
-        writer.add_attachment(attachment_name, xml_facturx, subtype='text/xml')
+        writer.add_attachment('factur-x.xml', xml_facturx, subtype='text/xml', afrelationship='/Alternative')
 
         # PDF-A.
         if ((invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') in ('facturx', 'zugferd')
-                or (invoice.commercial_partner_id.country_code in ('FR', 'DE') and invoice.commercial_partner_id.peppol_eas != '0204'))
-                and invoice.country_code in ('FR', 'DE')
-                and not writer.is_pdfa
-            ):
+                or (invoice.commercial_partner_id.country_code in ('FR', 'DE')
+                    and not invoice.commercial_partner_id._get_additional_identifier('DE_LTW')))
+            and invoice.country_code in ('FR', 'DE')
+            and not writer.is_pdfa
+        ):
             try:
                 writer.convert_to_pdfa()
             except Exception:

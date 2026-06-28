@@ -13,9 +13,6 @@ Activates:
     "category": "Accounting/Localizations/Account Charts",
     "depends": ["account"],
     'auto_install': ['account'],
-    "data": [
-        "data/res.country.state.csv",
-    ],
     "demo": [
         "demo/demo_company.xml",
     ],

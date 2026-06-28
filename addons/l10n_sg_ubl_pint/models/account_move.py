@@ -13,3 +13,12 @@ class AccountMove(models.Model):
         dbuuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         guid = uuid.uuid5(namespace=uuid.UUID(dbuuid), name=str(self.id))
         return str(guid)
+
+    def _get_import_file_type(self, file_data):
+        """ Identify PINT SG files. """
+        # EXTENDS 'account_edi_ubl_cii'
+        tree = file_data['xml_tree']
+        if tree is not None and tree.findtext('{*}CustomizationID') == 'urn:peppol:pint:billing-1@sg-1':
+            return 'account.edi.xml.pint_sg'
+
+        return super()._get_import_file_type(file_data)

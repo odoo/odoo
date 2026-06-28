@@ -864,16 +864,11 @@ class TestStockQuant(TestStockCommon):
 
         quant = self.env['stock.quant'].search([('product_id', '=', self.product_serial.id), ('location_id', '=', self.stock_location.id)])
 
-        wizard_form = Form(self.env['stock.return.picking'].with_context(active_ids=receipt01.ids, active_id=receipt01.ids[0], active_model='stock.picking'))
-        wizard = wizard_form.save()
-        wizard.product_return_moves.quantity = 1.0
-        stock_return_picking_action = wizard.action_create_returns()
-
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.move_ids.move_line_ids.quantity = 1.0
+        return_pick = receipt01._create_return()
+        return_pick.move_ids.product_uom_qty = 1.0
+        return_pick.action_assign()
         return_pick.action_put_in_pack()
-        return_pick.move_ids.picked = True
-        return_pick._action_done()
+        return_pick.button_validate()
 
         self.assertEqual(return_pick.move_line_ids.lot_id, quant.lot_id)
         self.assertTrue(return_pick.move_line_ids.result_package_id, quant.lot_id)
@@ -1422,6 +1417,86 @@ class TestStockQuant(TestStockCommon):
             "The destination location should be the default loss location"
         )
         self.assertEqual(quant.inventory_quantity, 0)
+
+    def test_forced_full_packaging_reservation(self):
+        '''
+        Ensure reservations respect the setting set on the product's category.
+        '''
+        self.productA.categ_id = self.env.ref('product.product_category_goods')
+        self.productA.categ_id.packaging_reserve_method = 'full'
+        # Delivery for 26 units
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'product_uom_qty': 26,
+                'uom_id': self.productA.uom_id.id,
+            })],
+            'state': 'draft',
+        })
+        delivery.move_ids.packaging_uom_id = self.uom_dozen
+
+        # Only 1 full packaging in stock, so reservation should be 12
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 15)
+        delivery.action_confirm()
+        self.assertEqual(delivery.move_ids.quantity, 12)
+
+        # Plenty in stock, reservation should be the max amount of full packagings so 24
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100)
+        delivery.action_assign()
+        self.assertEqual(delivery.move_ids.quantity, 24)
+
+    def test_reservation_preserved_after_relocation(self):
+        """Test stock relocation preserves the original reservation order
+        between deliveries."""
+        customer_location = self.env.ref('stock.stock_location_customers')
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 8.0)
+        first_delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 5.0,
+                'location_id': self.stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        second_delivery = first_delivery.copy()
+        (first_delivery | second_delivery).action_confirm()
+
+        self.assertRecordValues(first_delivery.move_line_ids, [{
+            'quantity': 5.0,
+            'location_id': self.stock_location.id,
+            'product_id': self.productA.id,
+        }])
+        self.assertRecordValues(second_delivery.move_line_ids, [{
+            'quantity': 3.0,
+            'location_id': self.stock_location.id,
+            'product_id': self.productA.id,
+        }])
+        quant = self.env['stock.quant'].search([
+            ('product_id', '=', self.productA.id),
+            ('location_id', '=', self.stock_location.id),
+        ])
+        relocate_wizard = Form.from_action(self.env, quant.action_stock_quant_relocate())
+        relocate_wizard.dest_location_id = self.shelf_1
+        relocate_wizard.save().action_relocate_quants()
+
+        self.assertRecordValues(first_delivery.move_line_ids, [{
+            'quantity': 5.0,
+            'location_id': self.shelf_1.id,
+            'product_id': self.productA.id,
+        }])
+        self.assertRecordValues(second_delivery.move_line_ids, [{
+            'quantity': 3.0,
+            'location_id': self.shelf_1.id,
+            'product_id': self.productA.id,
+        }])
 
 
 class TestStockQuantRemovalStrategy(TestStockCommon):

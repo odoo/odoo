@@ -7,11 +7,9 @@ from odoo import Command
 from odoo.tests.common import new_test_user, TransactionCase, HttpCase
 from odoo.tools.mail import email_split_and_format
 
-DISABLED_MAIL_CONTEXT = {
-    'tracking_disable': True,
+DISABLED_MAIL_CREATE_CONTEXT = {
     'mail_create_nolog': True,
     'mail_create_nosubscribe': True,
-    'mail_notrack': True,
     'no_reset_password': True,
 }
 
@@ -59,7 +57,7 @@ class BaseCommon(TransactionCase):
     @classmethod
     def default_env_context(cls):
         """ To Override to reactivate the tracking """
-        return {**DISABLED_MAIL_CONTEXT}
+        return {**DISABLED_MAIL_CREATE_CONTEXT}
 
     @classmethod
     def setup_other_currency(cls, code, **kwargs):

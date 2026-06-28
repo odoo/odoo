@@ -10,4 +10,121 @@
         </span>
     </template>
 
+    <template id="report_delivery_note">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.html_container" t-lang="o._get_report_lang()">
+                <t t-set="partner" t-value="o.partner_id"/>
+                <t t-set="address">
+                    <div name="div_outgoing_address">
+                        <div name="outgoing_delivery_address">
+                            <strong>Delivery Address</strong>
+                            <div
+                                t-out="o.partner_id"
+                                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'
+                            />
+                        </div>
+                    </div>
+                </t>
+                <t t-set="information_block">
+                    <div class="row">
+                        <div class="col-7" name="div_incoming_address">
+                            <t t-set="show_partner" t-value="False"/>
+                            <div name="customer_address" t-if="partner and partner != partner.commercial_partner_id">
+                                <strong>Customer</strong>
+                                <t t-set="show_partner" t-value="True"/>
+                            </div>
+                            <div t-if="show_partner" name="partner_header">
+                                <div
+                                    t-field="partner.commercial_partner_id"
+                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True, "phone_icons": True}'
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <t
+                    t-call="web.external_layout"
+                    partner="partner"
+                    address="address"
+                    information_block="information_block"
+                >
+                    <t t-set="o" t-value="o.with_context(lang=o._get_report_lang())"/>
+                    <div class="page">
+                        <h2 style="margin-top: 15px;">
+                            <span>Delivery Note</span>
+                            <span t-field="o.name" data-oe-demo="D00001"/>
+                        </h2>
+                        <div class="oe_structure"></div>
+                        <div id="informations" class="report-wrapping-flexbox clearfix row mb-4">
+                            <div t-if="o.so_reference" class="col col-3 mw-100 mb-2" name="div_origin">
+                                <strong>Order</strong>
+                                <div t-field="o.so_reference" class="m-0" data-oe-demo="S0001"/>
+                            </div>
+                            <div class="col col-3 mw-100 mb-2" name="div_sched_date">
+                                <strong>Shipping Date</strong>
+                                <div t-field="o.shipping_date" t-options='{"widget": "date"}' class="m-0"/>
+                            </div>
+                            <div t-if="o.dm_id" class="col col-3 mw-100 mb-2">
+                                <strong>Delivery method</strong>
+                                <div t-field="o.dm_id" class="m-0"/>
+                            </div>
+                            <div t-if="o.tracking_ref" class="col col-3 mw-100 mb-2" style="max-width:30%;">
+                                <strong>Tracking Number</strong>
+                                <div t-field="o.tracking_ref" class="m-0"/>
+                            </div>
+                        </div>
+                        <div class="oe_structure"></div>
+                        <t t-set="format_number" t-value="lambda x: int(x) if x == int(x) else x"/>
+                        <table class="table table-sm table-borderless">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-end">Shipped</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t name="delivery_note_lines">
+                                    <tr t-foreach="o.note_line_ids" t-as="line">
+                                        <t t-if="line.product_uom_qty">
+                                            <td class="pt-2 pb-0">
+                                                <span t-out="line.product_id.display_name"/>
+                                            </td>
+                                            <td class="pt-2 pb-0 text-end" name="delivery_note_line_quantity">
+                                                <span t-out="format_number(line.product_uom_qty)"/>
+                                                <span t-out="line.product_uom_id.name" groups="uom.group_uom"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="oe_structure py-3"></div>
+                        <t t-set="remaining_lines" t-value="o.note_line_ids.filtered('remaining_qty_to_ship')"/>
+                        <div t-if="not remaining_lines" class="oe_structure"></div>
+                        <div t-else="">
+                            <table class="table table-sm table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Remaining quantities to ship:</strong>
+                                        </td>
+                                    </tr>
+                                    <tr t-foreach="remaining_lines" t-as="line">
+                                        <td class="w-auto">
+                                            <span t-field="line.product_id" data-oe-demo="Office Chair"/>
+                                        </td>
+                                        <td class="text-end w-auto">
+                                            <span t-out="format_number(line.remaining_qty_to_ship)" data-oe-demo="3.00"/>
+                                            <span t-field="line.product_uom_id" groups="uom.group_uom" data-oe-demo="units"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
 </odoo>

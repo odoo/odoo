@@ -16,13 +16,12 @@ class TestPhoneBlacklist(SMSCommon, TestSMSRecipients):
         super(TestPhoneBlacklist, cls).setUpClass()
         cls._test_body = 'VOID CONTENT'
 
-        cls.test_record = cls.env['mail.test.sms.bl'].with_context(**cls._test_context).create({
+        cls.test_record = cls.env['mail.test.sms.bl'].create({
             'name': 'Test',
             'customer_id': cls.partner_1.id,
             'mobile_nbr': cls.test_numbers[0],
             'phone_nbr': cls.test_numbers[1],
         })
-        cls.test_record = cls._reset_mail_context(cls.test_record)
 
     def test_phone_blacklist_create_unblacklisted(self):
         """Ensure that the API allows creating unblacklisted records."""

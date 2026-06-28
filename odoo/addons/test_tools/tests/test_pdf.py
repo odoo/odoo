@@ -12,7 +12,7 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from cryptography.x509.oid import NameOID
 
-from odoo.addons.base.tests.files import PDF_RAW
+from odoo.addons.base.tests.files import PDF_RAW, KIDS_PDF_RAW
 from odoo.tests.common import tagged, TransactionCase
 from odoo.tools import pdf
 from odoo.tools.misc import file_open
@@ -77,6 +77,12 @@ class TestPdf(TransactionCase):
             pdf_reader = pdf.OdooPdfFileReader(reader_buffer)
             attachments = list(pdf_reader.get_attachments())
 
+        self.assertEqual(len(attachments), 2)
+
+    def test_odoo_pdf_file_reader_with_nested_attachments(self):
+        reader_buffer = io.BytesIO(KIDS_PDF_RAW)
+        pdf_reader = pdf.OdooPdfFileReader(reader_buffer, strict=False)
+        attachments = list(pdf_reader.get_attachments())
         self.assertEqual(len(attachments), 2)
 
     def test_merge_pdf(self):

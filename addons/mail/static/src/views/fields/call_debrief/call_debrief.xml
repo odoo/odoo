@@ -1,0 +1,78 @@
+<templates>
+    <t t-name="mail.CallDebrief">
+        <div t-if="this.state.error" class="text-danger">
+            <t t-out="this.state.error"/>
+        </div>
+        <div t-else="" t-ref="this.rootElement" class="o-CallDebrief d-flex flex-column bg-view" t-att-class="this.callDebriefCustomClasses">
+            <div class="o-CallDebrief-media-container d-flex flex-column h-100" t-att-class="{ 'o-CallDebrief-media-container--no-video': !this.hasVideo }">
+                <div t-if="this.hasVideo" t-on-click="() => this.togglePlay()" class="o-CallDebrief-video position-relative d-flex flex-grow-1 w-100 border border-bottom-0 rounded-top overflow-hidden cursor-pointer">
+                    <video
+                        t-key="this.state.currentSegment.id"
+                        t-ref="this.mediaPlayer"
+                        t-att-src="this.state.currentSegment.mediaUrl"
+                        class="w-100 h-auto object-fit-contain"
+                        t-on-loadeddata="this._onMediaLoaded"
+                        t-on-timeupdate="this.onTimeUpdate"
+                        t-on-play="() => this.state.isPlaying = true"
+                        t-on-pause="() => this.state.isPlaying = false"
+                        t-on-ended="this.onMediaEnded"
+                        t-on-error="this.onMediaError"
+                        t-on-volumechange="(ev) => this.onVolumeChange(ev)"
+                        t-on-ratechange="(ev) => this.onRateChange(ev)"
+                    />
+                    <div class="o_feedback_indicator position-absolute top-50 start-50 translate-middle text-center pe-none" t-if="this.state.feedback" t-key="this.state.feedback.id">
+                        <span class="o_feedback_indicator_animate d-block rounded-pill text-bg-900">
+                            <i t-if="this.state.feedback.icon" class="fa fa-stack fs-1" t-att-class="this.state.feedback.icon" role="img"/>
+                            <span class="d-block py-2 px-3 fs-2" t-if="this.state.feedback.text" t-out="this.state.feedback.text"/>
+                        </span>
+                    </div>
+                </div>
+                <audio t-if="this.state.currentSegment and this.state.currentSegment.type === 'audio'"
+                    t-key="this.state.currentSegment.id"
+                    t-ref="this.mediaPlayer"
+                    t-att-src="this.state.currentSegment.mediaUrl"
+                    class="d-none"
+                    t-on-loadeddata="this._onMediaLoaded"
+                    t-on-timeupdate="this.onTimeUpdate"
+                    t-on-play="() => this.state.isPlaying = true"
+                    t-on-pause="() => this.state.isPlaying = false"
+                    t-on-ended="this.onMediaEnded"
+                    t-on-error="this.onMediaError"
+                    t-on-volumechange="this.onVolumeChange"
+                    t-on-ratechange="this.onRateChange"
+                />
+            </div>
+            <div t-if="this.hasTimeline or this.hasMedia" class="o-CallDebrief-mediaPlayer d-flex flex-column gap-2 border bg-100" t-attf-class="{{ this.hasVideo ? 'rounded-bottom' : 'rounded' }}">
+                <t t-if="this.hasTimeline">
+                    <CallDebriefTimeline
+                        totalDuration="this.callDurationSeconds"
+                        mediaSegments="this.state.mediaSegments"
+                        onSeek="(options) => this.setPlaybackTime(options)"
+                        currentTime="this.state.currentTime"
+                    />
+                </t>
+                <t t-if="this.hasMedia">
+                    <CallDebriefMediaControls
+                        isPlaying="this.state.isPlaying"
+                        volume="this.state.volume"
+                        isMuted="this.state.isMuted"
+                        playbackRate="this.state.playbackRate"
+                        playbackRates="this.playbackRates"
+                        currentTime="this.state.currentTime"
+                        totalDuration="this.callDurationSeconds"
+                        feedback="this.state.feedback"
+                        onTogglePlay="() => this.togglePlay()"
+                        onSeek="(delta) => this.seekRelative(delta)"
+                        onSetPlaybackRate="(ev) => this.setPlaybackRate(ev)"
+                        onSetVolume="(ev) => this.setVolume(ev)"
+                        onToggleMute="() => this.toggleMute()"
+                        mediaUrl="this.state.currentSegment?.mediaUrl"
+                        hasVideo="this.hasVideo"
+                        isFullscreen="this.state.isFullscreen"
+                        onToggleFullscreen="() => this.toggleFullscreen()"
+                    />
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

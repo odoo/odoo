@@ -1,9 +1,20 @@
-import { destroy, expect, test } from "@odoo/hoot";
-import { keyDown, keyUp, press, queryAllTexts, queryOne, resize } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onMounted, useState, xml } from "@odoo/owl";
+import {
+    animationFrame,
+    expect,
+    keyDown,
+    keyUp,
+    mockTouch,
+    mockUserAgent,
+    press,
+    queryAllTexts,
+    queryOne,
+    resize,
+    test,
+} from "@odoo/hoot";
+import { Component, onMounted, proxy, xml } from "@odoo/owl";
 import {
     contains,
+    destroyApp,
     getService,
     makeDialogMockEnv,
     mountWithCleanup,
@@ -36,6 +47,37 @@ test("simple rendering", async () => {
     expect(".o_dialog footer:visible").toHaveCount(0, { message: "the footer is hidden if empty" });
 });
 
+test("simple rendering - touch display with trap focus", async () => {
+    mockTouch(true);
+    class Parent extends Component {
+        static components = { Dialog };
+        static template = xml`
+          <Dialog>
+            <input type="text" placeholder="withFocus"/>
+          </Dialog>
+      `;
+        static props = ["*"];
+    }
+    await makeDialogMockEnv();
+    await mountWithCleanup(Parent);
+
+    expect(".o_dialog").toHaveCount(1);
+    expect("input[placeholder=withFocus]").not.toBeFocused();
+    await press("Tab", { shiftKey: false });
+    await animationFrame();
+    expect("input[placeholder=withFocus]").toBeFocused();
+
+    await press("Tab", { shiftKey: true });
+    await animationFrame();
+    expect("input[placeholder=withFocus]").not.toBeFocused();
+    // The main became focusable, this affects devices with touch and keyboard.
+    expect(".o_dialog main").toBeFocused();
+
+    await press("Tab", { shiftKey: true });
+    await animationFrame();
+    expect("input[placeholder=withFocus]").toBeFocused();
+});
+
 test("hotkeys work on dialogs", async () => {
     class Parent extends Component {
         static components = { Dialog };
@@ -43,7 +85,7 @@ test("hotkeys work on dialogs", async () => {
             <Dialog title="'Wow(l) Effect'">
                 Hello!
                 <t t-set-slot="footer">
-                    <button t-on-click="onClickOk">Ok</button>
+                    <button t-on-click="this.onClickOk">Ok</button>
                 </t>
             </Dialog>
         `;
@@ -69,6 +111,46 @@ test("hotkeys work on dialogs", async () => {
     await keyDown("control+enter");
     await keyUp("ctrl+enter");
     expect.verifySteps(["clickOk"]);
+});
+
+test("hotkey control+enter on input triggers blur event before clicking dialog button", async () => {
+    class Parent extends Component {
+        static components = { Dialog };
+        static template = xml`
+            <Dialog title="'Test Dialog'">
+                <input type="text" t-on-blur="this.onInputBlur" class="test_input"/>
+
+                <t t-set-slot="footer">
+                    <button t-on-click="this.onConfirm">Confirm</button>
+                </t>
+            </Dialog>
+        `;
+        static props = ["*"];
+
+        setup() {
+            this.state = proxy({ value: "" });
+        }
+
+        onInputBlur(ev) {
+            this.state.value = ev.target.value;
+            expect.step("inputBlur: " + ev.target.value);
+        }
+
+        onConfirm() {
+            expect.step("confirmed with value: " + this.state.value);
+        }
+    }
+
+    await makeDialogMockEnv();
+    await mountWithCleanup(Parent);
+
+    await contains(".test_input").edit("new value", { confirm: false });
+
+    expect.verifySteps([]);
+
+    await press("control+enter");
+
+    expect.verifySteps(["inputBlur: new value", "confirmed with value: new value"]);
 });
 
 test("simple rendering with two dialogs", async () => {
@@ -173,7 +255,7 @@ test("render custom footer buttons is possible", async () => {
         static components = { SimpleButtonsDialog };
         setup() {
             super.setup();
-            this.state = useState({
+            this.state = proxy({
                 displayDialog: true,
             });
         }
@@ -188,7 +270,7 @@ test("embed an arbitrary component in a dialog is possible", async () => {
     expect.assertions(4);
     class SubComponent extends Component {
         static template = xml`
-            <div class="o_subcomponent" t-out="props.text" t-on-click="_onClick"/>
+            <div class="o_subcomponent" t-out="this.props.text" t-on-click="this._onClick"/>
         `;
         static props = ["*"];
         _onClick() {
@@ -200,7 +282,7 @@ test("embed an arbitrary component in a dialog is possible", async () => {
         static components = { Dialog, SubComponent };
         static template = xml`
             <Dialog>
-                <SubComponent text="'Wow(l) Effect'" onClicked="_onSubcomponentClicked"/>
+                <SubComponent text="'Wow(l) Effect'" onClicked="this._onSubcomponentClicked"/>
             </Dialog>
         `;
         static props = ["*"];
@@ -293,8 +375,8 @@ test("can be the UI active element", async () => {
         }
     }
     await makeDialogMockEnv();
-    const parent = await mountWithCleanup(Parent);
-    destroy(parent);
+    await mountWithCleanup(Parent);
+    destroyApp();
     await Promise.resolve();
     expect(getService("ui").activeElement).toBe(document, {
         message: "UI owner should be reset to the default (document)",
@@ -403,4 +485,27 @@ test("dialog's position is reset on resize", async () => {
         left: "0px",
         top: "0px",
     });
+});
+
+test.tags("mobile");
+test("back button closes dialog in mobile", async () => {
+    mockUserAgent("android");
+    class Parent extends Component {
+        static components = { Dialog };
+        static template = xml`
+            <Dialog title="'Wow(l) Effect'">
+                Hello!
+            </Dialog>
+        `;
+        static props = ["*"];
+    }
+    await makeDialogMockEnv({
+        dialogData: {
+            dismiss: () => expect.step("dismiss"),
+        },
+    });
+    await mountWithCleanup(Parent);
+    expect(".o_dialog").toHaveCount(1);
+    history.back();
+    expect.verifySteps(["dismiss"]);
 });

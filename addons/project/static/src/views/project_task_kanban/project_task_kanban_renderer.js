@@ -1,8 +1,8 @@
-import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
+import { KanbanRenderer, kanbanRendererProps } from '@web/views/kanban/kanban_renderer';
 import { ProjectTaskKanbanRecord } from './project_task_kanban_record';
 import { ProjectTaskKanbanHeader } from './project_task_kanban_header';
 import { useService } from '@web/core/utils/hooks';
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, props, t } from "@odoo/owl";
 import { user } from "@web/core/user";
 
 export class ProjectTaskKanbanRenderer extends KanbanRenderer {
@@ -13,7 +13,7 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
         KanbanHeader: ProjectTaskKanbanHeader,
     };
 
-    static props = [...KanbanRenderer.props, "hideKanbanStagesNocontent?"];
+    props = props({ ...kanbanRendererProps, hideKanbanStagesNocontent: t.any().optional() });
 
     setup() {
         super.setup();

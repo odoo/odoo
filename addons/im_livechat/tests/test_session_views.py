@@ -1,9 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests import new_test_user
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
+from odoo.addons.mail.tests.common import freeze_all_time
 from odoo.tests.common import users
+
+from datetime import timedelta
 
 
 class TestImLivechatSessionViews(TestImLivechatCommon):
@@ -13,16 +16,18 @@ class TestImLivechatSessionViews(TestImLivechatCommon):
             login="operator",
             groups="base.group_user,im_livechat.im_livechat_group_manager",
         )
-        self.env["mail.presence"]._update_presence(operator)
         self.livechat_channel.user_ids |= operator
         self.authenticate(None, None)
-        data = self.make_jsonrpc_request("/im_livechat/get_session", {
-            "channel_id": self.livechat_channel.id,
-            "previous_operator_id": operator.partner_id.id
-        })
-        channel = self.env["discuss.channel"].browse(data["channel_id"])
-        channel.with_user(operator).message_post(body="Hello, how can I help you?")
-        self._reset_bus()
+        # Freeze time to get around the last 30 days default filter hidding messages in tours
+        with freeze_all_time(fields.Datetime.now() - timedelta(days=15)):
+            self.env["mail.presence"]._update_presence(operator)
+            data = self.make_jsonrpc_request("/im_livechat/get_session", {
+                "channel_id": self.livechat_channel.id,
+                "previous_operator_id": operator.partner_id.id
+            })
+            channel = self.env["discuss.channel"].browse(data["channel_id"])
+            channel.with_user(operator).message_post(body="Hello, how can I help you?")
+            self._reset_bus()
         action = self.env.ref("im_livechat.discuss_channel_action_from_livechat_channel")
         self.start_tour(
             f"/odoo/livechat/{self.livechat_channel.id}/action-{action.id}",
@@ -38,28 +43,30 @@ class TestImLivechatSessionViews(TestImLivechatCommon):
             groups="base.group_user,im_livechat.im_livechat_group_manager",
         )
         [user_1, user_2] = self.env["res.partner"].create([{"name": "test 1"}, {"name": "test 2"}])
-        [channel1, channel2] = self.env["discuss.channel"].create(
-            [
-                {
-                    "name": "test 1",
-                    "channel_type": "livechat",
-                    "livechat_channel_id": self.livechat_channel.id,
-                    "channel_member_ids": [Command.create({"partner_id": user_1.id})],
-                },
-                {
-                    "name": "test 2",
-                    "channel_type": "livechat",
-                    "livechat_channel_id": self.livechat_channel.id,
-                    "channel_member_ids": [Command.create({"partner_id": user_2.id})],
-                },
-            ]
-        )
-        channel1.message_post(
-            body="Test Channel 1 Msg", message_type="comment", subtype_xmlid="mail.mt_comment"
-        )
-        channel2.message_post(
-            body="Test Channel 2 Msg", message_type="comment", subtype_xmlid="mail.mt_comment"
-        )
+        # Freeze time to get around the last 30 days default filter hidding messages in tours
+        with freeze_all_time(fields.Datetime.now() - timedelta(days=15)):
+            [channel1, channel2] = self.env["discuss.channel"].create(
+                [
+                    {
+                        "name": "test 1",
+                        "channel_type": "livechat",
+                        "livechat_channel_id": self.livechat_channel.id,
+                        "channel_member_ids": [Command.create({"partner_id": user_1.id})],
+                    },
+                    {
+                        "name": "test 2",
+                        "channel_type": "livechat",
+                        "livechat_channel_id": self.livechat_channel.id,
+                        "channel_member_ids": [Command.create({"partner_id": user_2.id})],
+                    },
+                ]
+            )
+            channel1.message_post(
+                body="Test Channel 1 Msg", message_type="comment", subtype_xmlid="mail.mt_comment"
+            )
+            channel2.message_post(
+                body="Test Channel 2 Msg", message_type="comment", subtype_xmlid="mail.mt_comment"
+            )
         action = self.env.ref("im_livechat.discuss_channel_action_from_livechat_channel")
         self.start_tour(
             f"/odoo/livechat/{self.livechat_channel.id}/action-{action.id}",

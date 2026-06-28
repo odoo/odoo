@@ -7,7 +7,9 @@
                 <div class="col-12 col-sm-3 mb-3">
                     <div class="card o_card_people">
                         <div class="card-body">
-                            <img class="o_wforum_avatar_img w-100 mb-3" t-custom-ref="profileImg" t-attf-src="/web/image/res.users/#{this.user.id}/avatar_128"/>
+                            <div class="ratio ratio-1x1 w-100 mb-3">
+                                <img class="o_wforum_avatar_img object-fit-cover" t-custom-ref="profileImg" t-attf-src="/web/image/res.users/#{this.user.id}/avatar_128"/>
+                            </div>
                             <div class="d-flex justify-content-center gap-1">
                                 <FileUploader onUploaded.bind="this.onUploadProfileImg" acceptedFileExtensions="'image/*'">
                                     <t t-set-slot="toggler">
@@ -15,7 +17,7 @@
                                             <i class="fa fa-pencil fa-1g float-sm-none float-md-start"/>
                                         </button>
                                     </t>
-                                    <t t-slot="default"/>
+                                    <t t-call-slot="default"/>
                                 </FileUploader>
                                 <button href="#" title="Clear" aria-label="Clear" class="btn border-primary" t-on-click="this.onClearProfileImg">
                                     <i class="fa fa-trash-o float-sm-none float-md-end"></i>

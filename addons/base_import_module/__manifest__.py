@@ -12,9 +12,9 @@ for customization purpose.
     'depends': ['web'],
     'auto_install': True,
     'data': [
-        'security/ir.model.access.csv',
         'views/base_import_module_view.xml',
         'views/ir_module_views.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

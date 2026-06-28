@@ -2,8 +2,9 @@ import unittest
 from unittest.mock import patch
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
+from odoo.exceptions import AccessError
 from odoo.fields import Command, Domain
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, new_test_user
 from odoo.tools import mute_logger
 from odoo.tests import tagged
 
@@ -244,11 +245,14 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
 
         # restrict access of user Demo to partners Top and Bottom
         accessible = top + bot
-        self.env['ir.rule'].search([]).unlink()
-        self.env['ir.rule'].create({
+        model_id = self.env['ir.model']._get('res.partner').id
+        self.env['ir.access'].search([('model_id', '=', model_id)]).unlink()
+        self.env['ir.access'].create({
             'name': 'partners rule',
-            'model_id': self.env['ir.model']._get('res.partner').id,
-            'domain_force': str([('id', 'in', accessible.ids)]),
+            'model_id': model_id,
+            'group_id': self.env.ref('base.group_user').id,
+            'domain': str([('id', 'in', accessible.ids)]),
+            'operation': 'crud',
         })
 
         # these searches should return the subset of accessible nodes that are
@@ -1137,12 +1141,14 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         other = Model.create({'name': 'other'})
         partners = parent1 + parent2 + child1 + child2 + other
 
-        # replace all ir.rules by one global rule to prevent access to parent1
-        self.env['ir.rule'].search([]).unlink()
-        self.env['ir.rule'].create([{
+        # replace all ir.rules by one rule to prevent access to parent1
+        self.env['ir.access'].search([]).unlink()
+        self.env['ir.access'].create([{
             'name': 'partners rule',
             'model_id': self.env['ir.model']._get('res.partner').id,
-            'domain_force': str([('id', 'not in', parent1.ids)]),
+            'group_id': self.env.ref('base.group_user').id,
+            'domain': str([('id', 'not in', parent1.ids)]),
+            'operation': 'crud',
         }])
 
         # search for children, bypassing access rights
@@ -1417,11 +1423,13 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
     def test_filtered_domain_any_bypass_access(self):
         Partner = self.env['res.partner'].with_user(self.env.ref('base.user_admin'))
         private_child = self.partners.child_ids[0]
-        self.env['ir.rule'].search([]).unlink()
-        self.env['ir.rule'].create([{
+        self.env['ir.access'].search([]).unlink()
+        self.env['ir.access'].create([{
             'name': 'partners rule',
             'model_id': self.env['ir.model']._get('res.partner').id,
-            'domain_force': str([('id', '!=', private_child.id)]),
+            'group_id': self.env.ref('base.group_user').id,
+            'domain': str([('id', '!=', private_child.id)]),
+            'operation': 'crud',
         }])
 
         domain = Domain('child_ids', 'any!', Domain('name', '=', private_child.name))
@@ -1576,6 +1584,47 @@ class TestBypassAccess(TransactionExpressionCase):
         partners = self._search(partner_obj, [('state_id.country_id.code', 'like', name_test)])
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
             "bypass_search_access on: ('state_id.country_id.code', 'like', '..') incorrect result")
+
+        # --------------------------------------------------
+        # Test: many2one security
+        # --------------------------------------------------
+
+        # Do: many2one check read access read on comodel record if
+        # bypass_search_access is set during create/write
+        internal_user = new_test_user(self.env, 'internal')
+
+        self.env['ir.access'].create({
+            'name': 'test_state_access',
+            'model_id': self.env['ir.model']._get('res.country.state').id,
+            'group_id': self.env.ref('base.group_user').id,
+            'operation': 'crud',
+        })
+        country_access = self.env['ir.access'].search([
+            ('model_id.model', '=', 'res.country'),
+        ])
+        country_access.write({'operation': 'c'})
+
+        patch_bypass_search_access(state_obj, 'country_id', False)
+        # internal_user has create access right
+        state = state_obj.with_user(internal_user).create({
+            'name': 'without bypass',
+            'code': 'AAA',
+            'country_id': country_us.id,
+        })
+        # internal_user has write access right
+        state.with_user(internal_user).write({'country_id': country_us.id})
+
+        patch_bypass_search_access(state_obj, 'country_id', True)
+        # prevent linking to a record that internal_user does not have
+        # read access right
+        with self.assertRaises(AccessError):
+            state_obj.with_user(internal_user).create({
+                'name': 'with bypass',
+                'code': 'BBB',
+                'country_id': country_us.id,
+            })
+        with self.assertRaises(AccessError):
+            state.with_user(internal_user).write({'country_id': country_us.id})
 
         # --------------------------------------------------
         # Test: domain attribute on one2many fields
@@ -1774,15 +1823,19 @@ class TestQueries(TransactionCase):
     @mute_logger('odoo.models.unlink')
     def test_access_rules(self):
         Model = self.env['res.users'].with_user(self.env.ref('base.user_admin'))
-        self.env['ir.rule'].search([]).unlink()
-        self.env['ir.rule'].create([{
+        self.env['ir.access'].search([]).unlink()
+        self.env['ir.access'].create([{
             'name': 'users rule',
             'model_id': self.env['ir.model']._get('res.users').id,
-            'domain_force': str([('id', '=', 1)]),
+            'group_id': self.env.ref('base.group_user').id,
+            'operation': 'crud',
+            'domain': str([('id', '=', 1)]),
         }, {
             'name': 'partners rule',
             'model_id': self.env['ir.model']._get('res.partner').id,
-            'domain_force': str([('id', '=', 1)]),
+            'group_id': self.env.ref('base.group_user').id,
+            'operation': 'crud',
+            'domain': str([('id', '=', 1)]),
         }])
         Model.search([])
 
@@ -1802,15 +1855,22 @@ class TestQueries(TransactionCase):
         PartnerCateg = self.env['res.partner.category']
 
         model_id = self.env['ir.model']._get('res.partner.category').id
-        self.env['ir.rule'].search([('model_id', '=', model_id)]).unlink()
-        self.env['ir.rule'].create([{
+        self.env['ir.access'].search([('model_id', '=', model_id)]).unlink()
+        self.env['ir.access'].create([{
+            'name': 'categ access',
+            'model_id': model_id,
+            'group_id': self.env.ref('base.group_user').id,
+            'operation': 'crud',
+        }, {
             'name': 'categ childs rule',
             'model_id': model_id,
-            'domain_force': str([('child_ids', 'not any', [('name', 'ilike', 'private')])]),
+            'domain': str([('child_ids', 'not any', [('name', 'ilike', 'private')])]),
+            'operation': 'crud',
         }, {
             'name': 'categ rule',
             'model_id': model_id,
-            'domain_force': str([('parent_id.name', 'ilike', 'public')]),
+            'domain': str([('parent_id.name', 'ilike', 'public')]),
+            'operation': 'crud',
         }])
 
         pub_active, pub_inactive, pri_active, pri_inactive = PartnerCateg.create([
@@ -1857,6 +1917,7 @@ class TestQueries(TransactionCase):
                     )
                     AND (
                         "res_partner_category"."parent_id" IS NOT NULL
+                        AND "res_partner_category__parent_id"."id" IS NOT NULL
                         AND "res_partner_category__parent_id"."name" ->> %s ILIKE %s
                     )
                 )
@@ -1872,15 +1933,22 @@ class TestQueries(TransactionCase):
 
     def test_access_rules_active_test_neg(self):
         Model = self.env['res.partner'].with_user(self.env.ref('base.user_admin'))
-        self.env['ir.rule'].search([]).unlink()
-        self.env['ir.rule'].create([{
+        self.env['ir.access'].search([]).unlink()
+        self.env['ir.access'].create([{
+            'name': 'partner access',
+            'model_id': self.env['ir.model']._get('res.partner').id,
+            'group_id': self.env.ref('base.group_user').id,
+            'operation': 'crud',
+        }, {
             'name': 'partner users rule',
             'model_id': self.env['ir.model']._get('res.partner').id,
-            'domain_force': str(['!', ('user_ids.login', 'not like', '%@%')]),
+            'domain': str(['!', ('user_ids.login', 'not like', '%@%')]),
+            'operation': 'crud',
         }, {
             'name': 'partners rule',
             'model_id': self.env['ir.model']._get('res.partner').id,
-            'domain_force': str(['!', ('write_uid.login', '!=', 'John')]),
+            'domain': str(['!', ('write_uid.login', '!=', 'John')]),
+            'operation': 'crud',
         }])
         Model.search([])
 
@@ -1981,7 +2049,9 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id"
             ON ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id"."name" LIKE %s)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id.name', 'like', self.company.name)])
@@ -1993,7 +2063,9 @@ class TestMany2one(TransactionCase):
             ON ("res_partner"."company_id" = "res_partner__company_id"."id")
             LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id"
             ON ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id__partner_id"."name" LIKE %s)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
@@ -2006,8 +2078,12 @@ class TestMany2one(TransactionCase):
             LEFT JOIN "res_country" AS "res_partner__country_id"
             ON ("res_partner"."country_id" = "res_partner__country_id"."id")
             WHERE (
-                ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
-                OR ("res_partner"."country_id" IS NOT NULL AND "res_partner__country_id"."code" LIKE %s)
+                ("res_partner"."company_id" IS NOT NULL
+                    AND "res_partner__company_id"."id" IS NOT NULL
+                    AND "res_partner__company_id"."name" LIKE %s)
+                OR ("res_partner"."country_id" IS NOT NULL
+                    AND "res_partner__country_id"."id" IS NOT NULL
+                    AND "res_partner__country_id"."code" LIKE %s)
             )
             ORDER BY ...
         ''']):
@@ -2120,7 +2196,9 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id" ON
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id"."name" LIKE %s)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id.name', 'like', self.company.name)])
@@ -2132,7 +2210,9 @@ class TestMany2one(TransactionCase):
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
             LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON
                 ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id__partner_id"."name" LIKE %s)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
@@ -2142,7 +2222,9 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id" ON
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."parent_id" IS NULL)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id"."parent_id" IS NULL)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id.parent_id', '=', False)])
@@ -2159,7 +2241,9 @@ class TestMany2one(TransactionCase):
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
             LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON
                 ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id__partner_id"."name" LIKE %s)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
@@ -2176,7 +2260,9 @@ class TestMany2one(TransactionCase):
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
             LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON
                 ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id__partner_id"."name" LIKE %s)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
@@ -2198,8 +2284,12 @@ class TestMany2one(TransactionCase):
             LEFT JOIN "res_country" AS "res_partner__country_id" ON
                 ("res_partner"."country_id" = "res_partner__country_id"."id")
             WHERE (
-                ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
-                OR ("res_partner"."country_id" IS NOT NULL AND "res_partner__country_id"."code" LIKE %s)
+                ("res_partner"."company_id" IS NOT NULL
+                    AND "res_partner__company_id"."id" IS NOT NULL
+                    AND "res_partner__company_id"."name" LIKE %s)
+                OR ("res_partner"."country_id" IS NOT NULL
+                    AND "res_partner__country_id"."id" IS NOT NULL
+                    AND "res_partner__country_id"."code" LIKE %s)
             )
             ORDER BY ...
         ''']):
@@ -2217,7 +2307,9 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id"
             ON ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id"."name" LIKE %s)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id', 'like', self.company.name)])
@@ -2432,7 +2524,9 @@ class TestOne2many(TransactionCase):
                 WHERE (
                     "res_partner"."active" IS TRUE
                     AND "res_partner"."parent_id" IS NOT NULL
-                    AND ("res_partner"."state_id" IS NOT NULL AND "res_partner__state_id__country_id"."code" LIKE %s)
+                    AND ("res_partner"."state_id" IS NOT NULL
+                        AND "res_partner__state_id"."id" IS NOT NULL
+                        AND "res_partner__state_id__country_id"."code" LIKE %s)
                 )
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY ...
@@ -2492,11 +2586,13 @@ class TestMany2many(TransactionCase):
 
     def test_regular(self):
         group = self.env.ref('base.group_user')
-        rule = group.rule_groups[0]
+        menu = self.env['ir.ui.menu'].create({'name': 'Menu'})
+        group.menu_access |= menu
+        self.env.flush_all()
 
         self.User.search([('all_group_ids', 'in', group.ids)], order='id')
         self.User.search([('group_ids.name', 'like', group.name)], order='id')
-        self.User.search([('group_ids.rule_groups.name', 'like', rule.name)], order='id')
+        self.User.search([('group_ids.menu_access.name', 'like', menu.name)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
@@ -2548,19 +2644,19 @@ class TestMany2many(TransactionCase):
                     SELECT "res_groups"."id"
                     FROM "res_groups"
                     WHERE EXISTS (
-                        SELECT 1 FROM "rule_group_rel" AS "res_groups__rule_groups"
-                        WHERE "res_groups__rule_groups"."group_id" = "res_groups"."id"
-                        AND "res_groups__rule_groups"."rule_group_id" IN (
-                            SELECT "ir_rule"."id"
-                            FROM "ir_rule"
-                            WHERE "ir_rule"."name" LIKE %s
+                        SELECT 1 FROM "ir_ui_menu_group_rel" AS "res_groups__menu_access"
+                        WHERE "res_groups__menu_access"."gid" = "res_groups"."id"
+                        AND "res_groups__menu_access"."menu_id" IN (
+                            SELECT "ir_ui_menu"."id"
+                            FROM "ir_ui_menu"
+                            WHERE "ir_ui_menu"."name"->>%s LIKE %s
                         )
                     )
                 )
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('group_ids.rule_groups.name', 'like', rule.name)], order='id')
+            self.User.search([('group_ids.menu_access.name', 'like', menu.name)], order='id')
 
     def test_regular_in_false(self):
         group = self.env.ref('base.group_user')
@@ -2590,14 +2686,14 @@ class TestMany2many(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
-            WHERE (NOT EXISTS (
-                SELECT 1 FROM "res_groups_users_rel" AS "res_users__group_ids"
-                WHERE "res_users__group_ids"."uid" = "res_users"."id"
-            )
-            OR EXISTS (
+            WHERE (EXISTS (
                 SELECT 1 FROM "res_groups_users_rel" AS "res_users__group_ids"
                 WHERE "res_users__group_ids"."uid" = "res_users"."id"
                 AND "res_users__group_ids"."gid" IN %s
+            )
+            OR NOT EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__group_ids"
+                WHERE "res_users__group_ids"."uid" = "res_users"."id"
             ))
             ORDER BY "res_users"."id"
         ''']):

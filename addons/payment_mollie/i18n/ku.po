@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
 "PO-Revision-Date: 2025-11-10 13:26+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Kurdish (Central) <https://translate.odoo.com/projects/"
@@ -37,12 +37,14 @@ msgstr "کۆد"
 
 #. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_transaction__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_token__id
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_transaction__id
 msgid "ID"
 msgstr "ID"
@@ -58,9 +60,19 @@ msgid "Mollie API Key"
 msgstr ""
 
 #. module: payment_mollie
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_token__mollie_customer_id
+msgid "Mollie Customer ID"
+msgstr ""
+
+#. module: payment_mollie
 #: model:ir.model,name:payment_mollie.model_payment_provider
 msgid "Payment Provider"
 msgstr "دابینکەری پارەدان"
+
+#. module: payment_mollie
+#: model:ir.model,name:payment_mollie.model_payment_token
+msgid "Payment Token"
+msgstr ""
 
 #. module: payment_mollie
 #: model:ir.model,name:payment_mollie.model_payment_transaction

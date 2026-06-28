@@ -251,6 +251,7 @@ class IrModuleModule(models.Model):
     @api.depends('icon')
     def _get_icon_image(self):
         self.icon_image = ''
+        self.icon_flag = ''
         for module in self:
             if not module.id:
                 continue
@@ -340,7 +341,7 @@ class IrModuleModule(models.Model):
     def unlink(self):
         res = super().unlink()
         if self:
-            self.env.registry.clear_cache('stable')
+            self.env.transaction.invalidate_ormcache('stable')
         return res
 
     def _get_modules_to_load_domain(self):
@@ -627,6 +628,7 @@ class IrModuleModule(models.Model):
             # raise error if another transaction is trying to schedule module operations concurrently
             self.env.cr.execute("LOCK ir_module_module IN EXCLUSIVE MODE")
         except psycopg2.OperationalError:
+            self.env.cr.rollback()
             raise UserError(_("Odoo is currently processing another module operation.\n"
                                "Please try again later or contact your system administrator."))
 
@@ -636,20 +638,19 @@ class IrModuleModule(models.Model):
             # during execution, the lock won't be released until timeout.
             self.env.cr.execute("SELECT FROM ir_cron FOR UPDATE")
         except psycopg2.OperationalError:
+            self.env.cr.rollback()
             raise UserError(_("Odoo is currently processing a scheduled action.\n"
                               "Module operations are not possible at this time, "
                               "please try again later or contact your system administrator."))
         function(self)
 
         self.env.cr.commit()
-        registry = modules.registry.Registry.new(self.env.cr.dbname, update_module=True)
-        self.env.cr.commit()
-        if request and request.registry is self.env.registry:
-            request.env.transaction.reset()
+        modules.registry.Registry.new(self.env.cr.dbname, update_module=True)
+        self.env.cr.rollback()
+        assert (self.env.transaction.default_env or self.env).registry is self.env.transaction.registry, "env is bound correctly to the transaction's registry"
+        if request:
+            assert request.env.transaction is self.env.transaction, "request on another transaction than the model"
             request.registry = request.env.registry
-            assert request.env.registry is registry
-        self.env.transaction.reset()
-        assert self.env.registry is registry
 
         # pylint: disable=next-method-called
         config = self.env['ir.module.module'].next() or {}
@@ -675,7 +676,9 @@ class IrModuleModule(models.Model):
 
     @assert_log_admin_access
     def button_uninstall(self):
-        un_installable_modules = set(odoo.tools.config['server_wide_modules']) & set(self.mapped('name'))
+        un_installable_modules = set(self.mapped('name')) & (
+            set(tools.config['server_wide_modules']) | set(odoo.modules.loading._FORCED_MODULES)
+        )
         if un_installable_modules:
             raise UserError(_("Those modules cannot be uninstalled: %s", ', '.join(un_installable_modules)))
         if any(state not in ('installed', 'to upgrade') for state in self.mapped('state')):
@@ -911,14 +914,15 @@ class IrModuleModule(models.Model):
         model_id = self._get_id(name) if name else False
         return self.browse(model_id).sudo()
 
-    @tools.ormcache('name', cache='stable')
+    @api.ormcache('name', cache='stable')
     def _get_id(self, name):
         self.flush_model(['name'])
         self.env.cr.execute("SELECT id FROM ir_module_module WHERE name=%s", (name,))
-        return self.env.cr.fetchone()
+        result = self.env.cr.fetchone()
+        return result and result[0]
 
     @api.model
-    @tools.ormcache(cache='stable')
+    @api.ormcache(cache='stable')
     def _installed(self):
         """ Return the set of installed modules as a dictionary {name: id} """
         return {

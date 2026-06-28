@@ -91,7 +91,9 @@ test("Update description on product line", async() => {
     const pyEnv = await startServer();
     const productId = pyEnv["product"].browse([1]);
     const accountMove = pyEnv["account.move"].browse([1]);
-    pyEnv["account.move.line"].create({ name: productId[0].name, product_id: productId[0].id, move_id: accountMove[0].id });
+    pyEnv["account.move"].write([accountMove[0].id], {
+        invoice_line_ids: [[0, 0, { name: productId[0].name, product_id: productId[0].id }]],
+    });
     await start();
     onRpc("account.move", "web_save", () => { expect.step("save")});
     await openFormView("account.move", accountMove[0].id, {
@@ -102,7 +104,7 @@ test("Update description on product line", async() => {
                         <field name="invoice_line_ids" mode="list" widget="product_label_section_and_note_field_o2m">
                             <list name="journal_items" editable="bottom" string="Journal Items">
                                 <field name="product_id" widget="product_label_section_and_note_field" readonly="0"/>
-                                <field name="name" widget="section_and_note_text" optional="show"/>
+                                <field name="name" widget="account_label_text" optional="show"/>
                             </list>
                         </field>
                     </page>
@@ -112,12 +114,10 @@ test("Update description on product line", async() => {
     });
 
     await click(".o_many2one");
-    await contains("#labelVisibilityButtonId").click()
     await insertText("textarea[placeholder='Enter a description']", "testDescription");
     await click(".o_form_button_save");
     await expect.waitForSteps(["save"]);
 
     const line = pyEnv["account.move.line"].browse([1])[0];
     expect(line.name).toBe("testProduct\ntestDescription");
-
 });

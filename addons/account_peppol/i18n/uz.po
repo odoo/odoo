@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -141,15 +141,15 @@ msgid ""
 "                                        <a t-attf-href=\"/odoo/accounting/\" "
 "target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
 "{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
-"important; font-weight: 400; background-color: {{ object."
-"email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"important; font-weight: 400; background-color: "
+"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            Send invoices\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not object."
-"uses_default_logo\">\n"
+"                                    <t t-if=\"not "
+"object.uses_default_logo\">\n"
 "                                        <img t-att-src=\"'/logo.png?"
 "company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
 "10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
@@ -213,8 +213,8 @@ msgstr ""
 "style=\"margin-bottom: 5px; margin-top: 18px;\"> <a t-attf-href=\"/odoo/"
 "accounting/\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: "
 "12px; color: {{ object.email_primary_color or '#FFFFFF' }}; text-decoration: "
-"none !important; font-weight: 400; background-color: {{ object."
-"email_secondary_color or '#875A7B' }}; border-radius:3px\"> Hisob-"
+"none !important; font-weight: 400; background-color: "
+"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\"> Hisob-"
 "fakturalarni yuborish </a> </div> </td> <td valign=\"middle\" "
 "align=\"right\"> <t t-if=\"not object.uses_default_logo\"> <img t-att-"
 "src=\"'/logo.png?company=%s' % object.id\" style=\"height: auto; width: "
@@ -227,11 +227,11 @@ msgstr ""
 "\"> <tr> <td style=\"font-size: 14px;\"> <p>Hurmatli <t t-out=\"object.name "
 "or ''\">YourCompany</t>,</p> <p>Sizning kompaniyangizni <strong>Peppol "
 "tarmog‘i</strong>ga muvaffaqiyatli qo‘shdik.</p> <p>Endi siz Odoo orqali "
-"elektron hisob-fakturalarni <strong>yuborishingiz<t t-if=\"object."
-"account_peppol_proxy_state == 'receiver'\"> va qabul qilishingiz</t></"
-"strong> mumkin — mutlaqo bepul.</p> <p>Hurmat bilan,</p> <p style=\"margin-"
-"bottom: 24px;\">Odoo jamoasi</p> </td> </tr> </table> </td> </tr> </table> </"
-"td> </tr> </table>"
+"elektron hisob-fakturalarni <strong>yuborishingiz<t t-"
+"if=\"object.account_peppol_proxy_state == 'receiver'\"> va qabul "
+"qilishingiz</t></strong> mumkin — mutlaqo bepul.</p> <p>Hurmat bilan,</p> <p "
+"style=\"margin-bottom: 24px;\">Odoo jamoasi</p> </td> </tr> </table> </td> </"
+"tr> </table> </td> </tr> </table>"
 
 #. module: account_peppol
 #. odoo-python
@@ -597,6 +597,11 @@ msgid "Available Peppol Sending Methods"
 msgstr "Mavjud Peppol yuborish usullari"
 
 #. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_edi_ubl
+msgid "Base helpers for UBL"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "By clicking the button below:"
 msgstr ""
@@ -658,8 +663,8 @@ msgid ""
 "codelist/eas/"
 msgstr ""
 "BIS Billing 3.0 va uning hosilalari uchun Endpoint'ni aniqlashda "
-"foydalaniladigan kod. Ro‘yxat quyidagi manzilda mavjud: https://docs.peppol."
-"eu/poacc/billing/3.0/codelist/eas/"
+"foydalaniladigan kod. Ro‘yxat quyidagi manzilda mavjud: https://"
+"docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_common
@@ -726,9 +731,8 @@ msgstr "Mijoz yaratish"
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
-#, fuzzy
 msgid "Create, send and receive e-invoices for free."
-msgstr "Elektron hisob-fakturalarni bepul yarating, yuboring va qabul qiling."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__create_uid
@@ -788,7 +792,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__display_name
-#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_ubl__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__display_name
@@ -932,7 +936,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__id
-#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__id
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_ubl__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__id
@@ -1103,9 +1107,8 @@ msgstr "Odoo namoyish IDsi"
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
-#, fuzzy
 msgid "Odoo keeps you up to date with the new regulation."
-msgstr "Odoo sizni yangi qonun-qoidalardan xabardor qilib turadi."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1235,6 +1238,12 @@ msgid "Peppol ID should be different from main company."
 msgstr "Peppol IDsi asosiy kompaniyadan farq qilishi kerak."
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_is_sent
+#: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_is_sent
+msgid "Peppol Is Sent"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_metadata
 #, fuzzy
 msgid "Peppol Metadata"
@@ -1302,13 +1311,6 @@ msgstr "Peppol hujjat UUID: %s"
 #, fuzzy
 msgid "Peppol e-Address (EAS)"
 msgstr "Peppol elektron manzili (EAS)"
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-#, fuzzy
-msgid "Peppol error: %s"
-msgstr "Peppol xatosi: %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -1397,8 +1399,7 @@ msgstr "Telefon"
 #, fuzzy
 msgid ""
 "Please enter the mobile number in the correct international format.\n"
-"For example: +32123456789, where +32 is the country code.\n"
-"Currently, only European countries are supported."
+"For example: +32123456789, where +32 is the country code."
 msgstr ""
 "Iltimos, mobil telefon raqamini to‘g‘ri xalqaro formatda kiriting. Masalan: "
 "+32123456789, bunda +32 - mamlakat kodi. Hozircha faqat Yevropa davlatlari "
@@ -1772,8 +1773,8 @@ msgstr "Elektron hisob-faktura tarmog‘i"
 #: code:addons/account_peppol/exceptions.py:0
 #, fuzzy
 msgid ""
-"The eb3:Message header copied to the fragment header does not match the eb3:"
-"Message header in the reassembled source message."
+"The eb3:Message header copied to the fragment header does not match the "
+"eb3:Message header in the reassembled source message."
 msgstr ""
 "Fragment sarlavhasiga nusxalangan eb3:Message sarlavhasi qayta yig‘ilgan "
 "manba xabaridagi eb3:Message sarlavhasiga mos kelmaydi."
@@ -2039,12 +2040,6 @@ msgid "Token Out of Sync"
 msgstr "Token muvofiqlashtirish buzildi"
 
 #. module: account_peppol
-#: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_20
-#, fuzzy
-msgid "UBL 2.0"
-msgstr "UBL 2.0"
-
-#. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_bis3
 msgid "UBL BIS Billing 3.0.12"
 msgstr ""
@@ -2212,6 +2207,16 @@ msgstr "Endi Peppol orqali elektron hisob-fakturalarni yuborishingiz mumkin."
 #, fuzzy
 msgid "You can send this invoice electronically via Peppol."
 msgstr "Bu hisob-fakturani Peppol orqali elektron tarzda yuborishingiz mumkin."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_journal.py:0
+msgid ""
+"You can't change the type of a journal used for Peppol invoice reception toa "
+"type different than 'Purchase'.\n"
+"Please change the journal used for Peppol reception before changing the type "
+"of this journal."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2405,3 +2410,7 @@ msgstr "hisob-fakturalarni yuborish uchun, lekin bu"
 #, fuzzy
 msgid "uses"
 msgstr "foydalanadi"
+
+#, fuzzy
+#~ msgid "UBL 2.0"
+#~ msgstr "UBL 2.0"

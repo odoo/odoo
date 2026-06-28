@@ -8,7 +8,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 
-// TODO: test composite with each spec: prepare, load, getValue
+// TODO: test composite with each spec: prepare, load
 // TODO: test reloadComposite
 
 describe.current.tags("desktop");
@@ -137,6 +137,46 @@ test("composite action's isApplied returns false if no action defined it", async
         "action: class1", // apply
         "action: class2", // apply
     ]);
+});
+
+test("composite action should use the first getValue", async () => {
+    class Action1 extends BuilderAction {
+        static id = "action1";
+        setup() {
+            this.data = { name: "first action" };
+        }
+        getValue() {
+            return this.data.name;
+        }
+        apply() {}
+    }
+    class Action2 extends BuilderAction {
+        static id = "action2";
+        setup() {
+            this.data = { name: "second action" };
+        }
+        getValue() {
+            return this.data.name;
+        }
+        apply() {}
+    }
+    addBuilderAction({
+        Action1,
+        Action2,
+    });
+    addBuilderOption({
+        selector: ".s_test",
+        template: xml`
+            <BuilderTextInput action="'composite'"
+                actionParam="[
+                    { action: 'action1' },
+                    { action: 'action2' },
+                ]"/>`,
+    });
+    await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+    await contains(":iframe .s_test").click();
+
+    expect("[data-action-id='composite'] input").toHaveValue("first action");
 });
 
 test("composite action's isApplied returns true if at least one action defined it", async () => {

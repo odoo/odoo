@@ -63,7 +63,7 @@ class WebsiteAssets(models.AbstractModel):
             # If it was already modified, simply override the corresponding
             # attachment content
             custom_attachment.write({"raw": raw})
-            self.env.registry.clear_cache('assets')
+            self.env.transaction.invalidate_ormcache('assets')
         else:
             # If not, create a new attachment to copy the original scss/js file
             # content, with its modifications
@@ -201,6 +201,9 @@ class WebsiteAssets(models.AbstractModel):
                 word hook). If a key is already in the file's map, its value is
                 overridden.
         """
+        if not self.env.website and (host_id := self.env.context.get('host_id')):
+            self = self.with_context(website_id=host_id)  # noqa: PLW0642
+
         IrAttachment = self.env['ir.attachment']
         if 'color-palettes-name' in values:
             self.reset_asset('/website/static/src/scss/options/colors/user_color_palette.scss', 'web.assets_frontend')
@@ -248,7 +251,7 @@ class WebsiteAssets(models.AbstractModel):
                 else:
                     font_family_attachments = IrAttachment
                     font_content = requests.get(
-                        f'https://fonts.googleapis.com/css?family={font_name}:300,300i,400,400i,700,700i&display=swap',
+                        f'https://fonts.googleapis.com/css?family={font_name}:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap',
                         timeout=5, headers=headers_woff2,
                     ).content.decode()
 
@@ -330,8 +333,7 @@ class WebsiteAssets(models.AbstractModel):
         assert op in ('in', '='), 'Invalid operator'
         if self.env.user.has_group('website.group_website_designer'):
             self = self.sudo()
-        website = self.env['website'].get_current_website()
-        res = self.env["ir.attachment"].search([("url", op, custom_url), ("website_id", "=", website.id)])
+        res = self.env['ir.attachment'].search([('url', op, custom_url), ('website_id', '=', self.env.website.id)])
         # It is guaranteed that the attachment we are looking for has a website_id.
         # When we serve an attachment we normally serve the ones which have the right website_id
         # or no website_id at all (which means "available to all websites", of
@@ -352,13 +354,11 @@ class WebsiteAssets(models.AbstractModel):
             ir.asset()
         Return the views related to the current website.
         """
-        website = self.env['website'].get_current_website()
         url = custom_url[1:] if custom_url.startswith(('/', '\\')) else custom_url
         res = self.env['ir.asset'].search([('path', 'like', url)])
-        return res.with_context(website_id=website.id).filter_duplicate()
+        return res.filter_duplicate()
 
     @api.model
     def _add_website_id(self, values):
-        website = self.env['website'].get_current_website()
-        values['website_id'] = website.id
+        values['website_id'] = self.env.website.id
         return values

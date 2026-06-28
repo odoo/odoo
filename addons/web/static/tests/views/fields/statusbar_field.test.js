@@ -1,7 +1,6 @@
 import { expect, resize, test } from "@odoo/hoot";
 import {
     click,
-    Deferred,
     edit,
     press,
     queryAll,
@@ -633,28 +632,6 @@ test("hotkeys are unavailable if readonly", async () => {
     expect(".modal").toHaveCount(0, { message: "command palette should not open" });
 });
 
-test("auto save record when field toggled", async () => {
-    onRpc("web_save", () => expect.step("web_save"));
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        resId: 1,
-        arch: /* xml */ `
-            <form>
-                <header>
-                    <field name="trululu" widget="statusbar" options="{'clickable': 1}" />
-                </header>
-            </form>
-        `,
-    });
-
-    await click(
-        ".o_statusbar_status button.btn:not(.dropdown-toggle):not(:disabled):not(.o_arrow_button_current):eq(-1)"
-    );
-    await animationFrame();
-    expect.verifySteps(["web_save"]);
-});
-
 test("For the same record, a single rpc is done to recover the specialData", async () => {
     Partner._views = {
         "list,3": '<list><field name="display_name"/></list>',
@@ -1147,7 +1124,7 @@ test("cache: update current status if it changed", async () => {
 
     onRpc("has_group", () => true);
     let def;
-    onRpc("web_read", () => def);
+    onRpc("web_read", () => def?.promise);
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
         id: 1,
@@ -1183,7 +1160,7 @@ test("cache: update current status if it changed", async () => {
     // re-open last record and use to pager to reach the record we just moved
     await contains(".o_kanban_record:contains(third record)").click();
     await pagerPrevious();
-    def = new Deferred();
+    def = Promise.withResolvers();
     await pagerPrevious();
     // retrieved from the cache => former value
     expect(".o_last_breadcrumb_item").toHaveText("second record");

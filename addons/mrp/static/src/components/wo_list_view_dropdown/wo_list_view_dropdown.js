@@ -1,10 +1,11 @@
-import { useState } from "@web/owl2/utils";
+import { props, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useService } from "@web/core/utils/hooks";
 import { BadgeField, badgeField } from "@web/views/fields/badge/badge_field";
+import { _t } from "@web/core/l10n/translation";
 
 export class MOListViewDropdown extends BadgeField {
     static template = "mrp.MOViewListDropdown";
@@ -13,17 +14,14 @@ export class MOListViewDropdown extends BadgeField {
         DropdownItem,
     };
 
-    static props = {
+    props = props({
         ...standardFieldProps,
-        display: { type: String, validate: (val) => ["bubble", "badge"].includes(val)} ,
-    };
+        display: t.string(),
+    });
 
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
-        this.workorderState = useState({
-            state: this.props.record.data.state,
-        });
         this.colorIcons = {
             "blocked": "text-bg-warning",
             "ready": "text-bg-secondary",
@@ -34,6 +32,7 @@ export class MOListViewDropdown extends BadgeField {
     }
 
     async reload(){
+        await this.props.record.load();
         await this.env.model.root.load();
         this.env.model.notify();
     }
@@ -48,12 +47,11 @@ export class MOListViewDropdown extends BadgeField {
         if (!selectedWorkorders || selectedWorkorders.length == 0) {
             selectedWorkorders = [this.props.record];
         }
-        let ids = selectedWorkorders.filter((wo) => !([state, 'done'].includes(wo.data.state) || wo.data.production_state == 'done')).map((wo) => wo.resId)  
+        let ids = selectedWorkorders.filter((wo) => wo.data.production_state != 'done').map((wo) => wo.resId)
         if (ids && ids.length > 0) {
             await this.callOrm("set_state", [state], ids);
         }
     }
-
 
     async callOrm(functionName, args, ids = undefined) {
         if (!ids){
@@ -63,10 +61,18 @@ export class MOListViewDropdown extends BadgeField {
         if (!ids || ids.length == 0) {
             ids = [this.props.record.resId];
         }
+        let result;
         if (args !== undefined) {
-            await this.orm.call("mrp.workorder", functionName, [ids, ...args]);
+            result = await this.orm.call("mrp.workorder", functionName, [ids, ...args]);
         } else {
-            await this.orm.call("mrp.workorder", functionName, [ids]);
+            result = await this.orm.call("mrp.workorder", functionName, [ids]);
+        }
+        if (result && typeof result === "object") {
+            return this.action.doAction(result, {
+                onClose: async () => {
+                    await this.reload();
+                },
+            });
         }
         await this.reload();
     }
@@ -76,9 +82,10 @@ registry.category("fields").add("mo_view_list_dropdown", {
     ...badgeField,
     supportedOptions: [
         {
+            label: _t("Display"),
             name: "display",
-            type: "String"
-        }
+            type: "String",
+        },
     ],
     extractProps: ({ options }) => ({
         display: options.display,

@@ -53,6 +53,7 @@ class TestHrEmployeeMail(TestHrCommon, MailCommon):
                 'email': self.test_employee.work_contact_id.email_normalized,
                 'name': self.test_employee.work_contact_id.name,
                 'partner_id': self.test_employee.work_contact_id.id,
+                'recipient_type': 'to',
             },
         ])
 

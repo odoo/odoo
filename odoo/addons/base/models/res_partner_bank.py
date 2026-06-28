@@ -15,7 +15,9 @@ class ResPartnerBank(models.Model):
     _name = 'res.partner.bank'
     _rec_name = 'account_number'
     _description = 'Bank Account'
+    _explanation = "Represents a bank account owned by a partner (customer, vendor, or company). It stores the account number (IBAN), bank details, and owner information."
     _order = 'sequence, id'
+    _check_company_domain = models.check_company_domain_parent_of
 
     active = fields.Boolean(default=True)
     account_type = fields.Selection(
@@ -59,7 +61,7 @@ class ResPartnerBank(models.Model):
     zip = fields.Char()
     city = fields.Char()
     state_id = fields.Many2one(comodel_name='res.country.state', string="Fed. State", domain="[('country_id', '=?', country_id)]")
-    country_id = fields.Many2one(comodel_name='res.country', compute='_compute_country_id', precompute=True, store=True, readonly=False)
+    country_id = fields.Many2one(comodel_name='res.country', compute='_compute_country_id', precompute=True, store=True, readonly=False, index='btree_not_null')
     country_code = fields.Char(related='country_id.code')
     bank_bic = fields.Char(
         string="BIC/SWIFT",
@@ -79,7 +81,7 @@ class ResPartnerBank(models.Model):
     show_clearing_number = fields.Boolean(compute='_compute_show_clearing_number')
 
     sequence = fields.Integer(default=10)
-    company_id = fields.Many2one('res.company', 'Company')
+    company_id = fields.Many2one('res.company', 'Company', index=True)
     note = fields.Text('Notes')
     color = fields.Integer(compute='_compute_color')
 
@@ -231,7 +233,7 @@ class ResPartnerBank(models.Model):
             ('partner_id', 'child_of', partner.commercial_partner_id.id),
         ])
         if not bank_account:
-            if not allow_company_account_creation and partner.id in self.env['res.company']._get_company_partner_ids():
+            if not allow_company_account_creation and partner.id in self.env['res.company']._cached_data()['partner_id']:
                 raise UserError(_(
                     "Please add your own bank account manually: %(account_number)s (%(partner)s)",
                     account_number=account_number,

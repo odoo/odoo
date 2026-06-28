@@ -19,7 +19,7 @@
                 </div>
             </t>
             <t t-else="">
-                <div t-custom-ref="canvas" class="o_fp_canvas_inner position-relative" t-attf-style="{{this.getCanvasStyles()}}">
+                <div t-custom-ref="canvas" class="o_fp_canvas_inner position-relative" dir="ltr" t-attf-style="{{this.getCanvasStyles()}}">
                       <t t-foreach="this.getFloorDecorElements()" t-as="element" t-key="element.uuid">
                          <t t-call="pos_restaurant.floor_screen_element"/>
                      </t>
@@ -33,7 +33,8 @@
     <t t-name="pos_restaurant.floor_screen_element">
         <t t-if="element.isTable">
             <t t-set="table" t-value="element.record"/>
-             <div t-attf-class="o_fp_table table floor-table {{ kanbanMode ? 'd-flex align-items-center justify-content-center' : 'o_fp_shape ' + element.shape}} "
+            <t t-set="isSyncing" t-value="this.pos.isOrderSyncing(table.getOrder(), false)"/>
+             <div t-attf-class="o_fp_table table floor-table {{ kanbanMode ? 'd-flex align-items-center justify-content-center' : 'o_fp_shape ' + element.shape}} {{ isSyncing ? 'syncing' : '' }}"
                   t-on-click="(ev) => this.onClickTable(table, ev)"
                   t-att-style="kanbanMode ? element.getCssColorStyle() : element.getTableViewCssStyle()"
                   t-attf-id="fpe-{{element.uuid}}" t-attf-data-table_id="{{element.id}}" >

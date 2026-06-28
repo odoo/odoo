@@ -48,6 +48,9 @@
             <field name="url" position="after">
                 <field name="product_id"/>
             </field>
+            <filter name="type_url" position="attributes">
+                <attribute name="domain">[('url', '!=', False), ('product_id', '=', False)]</attribute>
+            </filter>
             <filter name="type_url" position="after">
                 <filter string="Products" name="type_product" domain="[('product_id', '!=', False)]"/>
             </filter>

@@ -16,7 +16,6 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
-import { Deferred } from "@web/core/utils/concurrency";
 
 defineLivechatModels();
 describe.current.tags("desktop");
@@ -27,6 +26,7 @@ test("Show looking for help in the sidebar while active or still seeking help", 
         group_ids: pyEnv["res.groups"]
             .search_read([["id", "=", serverState.groupLivechatId]])
             .map(({ id }) => id),
+        notification_type: "inbox",
     });
     const bobPartnerId = pyEnv["res.partner"].create({
         name: "bob",
@@ -66,7 +66,7 @@ test("Show looking for help in the sidebar while active or still seeking help", 
     await contains(".o-livechat-LivechatStatusSelection .o-inProgress.active");
     await waitForChannels([`discuss.channel_${bobChannelId}`]);
     await contains(".o-mail-DiscussSidebarChannel", { text: "bob" });
-    await click(".o-mail-Mailbox[data-mailbox-id=bookmark]");
+    await click(".o-mail-Mailbox[data-mailbox-id=inbox]");
     await contains(".o-mail-DiscussSidebarChannel", { text: "bob", count: 0 });
     await waitForChannels([`discuss.channel_${bobChannelId}`], { operation: "delete" });
 });
@@ -97,7 +97,7 @@ test("Enable/disable looking for help when category is opened/folded", async () 
             }
         },
     });
-    onRpc("/mail/data", async (req) => {
+    onRpc("/mail/store", async (req) => {
         const { params } = await req.json();
         if (params.fetch_params.includes("/im_livechat/looking_for_help")) {
             expect.step("fetch looking_for_help");
@@ -176,6 +176,8 @@ test("Show notification when joining a channel that already received help", asyn
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "Looking for help" });
     await click("button[name='join-channel']");
     expect.waitForSteps(["warning - Someone has already joined this conversation"]);
+    await click("[title='Chat Actions']");
+    await contains(".o-dropdown-item:text('Hide')");
 });
 
 test("Hide 'help already received' notification when channel is not visible", async () => {
@@ -187,9 +189,9 @@ test("Hide 'help already received' notification when channel is not visible", as
     });
     // Simulate another agent attempting to join the channel to provide help at the same time,
     // but succeeding just before the current agent (server returns false when it happens).
-    let canRespondDeferred;
+    let joinChannelPromise;
     onRpc("discuss.channel", "livechat_join_channel_needing_help", async () => {
-        await canRespondDeferred;
+        await joinChannelPromise;
         return false;
     });
     const channel = pyEnv["discuss.channel"].create({
@@ -204,14 +206,16 @@ test("Hide 'help already received' notification when channel is not visible", as
     await openDiscuss(channel);
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "Looking for help" });
     await click("button[name='join-channel']");
+    await tick();
     expect.waitForSteps(["warning - Someone has already joined this conversation"]);
-    canRespondDeferred = new Deferred();
+    const { promise, resolve: resolveJoinChannel } = Promise.withResolvers();
+    joinChannelPromise = promise;
     await click("button[name='join-channel']");
     await click(".o-mail-DiscussSidebar-item", { text: "Inbox" });
     await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
-    canRespondDeferred.resolve();
+    resolveJoinChannel();
     await tick();
-    await expect.waitForSteps([]);
+    expect.waitForSteps([]);
 });
 
 test("Expertise matching hint is shown in the sidebar when chat is looking for help", async () => {

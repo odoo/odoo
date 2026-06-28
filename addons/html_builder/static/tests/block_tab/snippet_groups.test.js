@@ -8,10 +8,9 @@ import {
     waitForEndOfOperation,
     waitForSnippetDialog,
 } from "@html_builder/../tests/helpers";
-import { Builder } from "@html_builder/builder";
 import { beforeEach, expect, test, describe } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -44,17 +43,13 @@ test("display group snippet", async () => {
 });
 
 test("install an app from snippet group", async () => {
-    patchWithCleanup(Builder.prototype, {
-        setup() {
-            this.props.installSnippetModule = ({ moduleId }) => {
+    await setupHTMLBuilder("<div><p>Text</p></div>", {
+        builderProps: {
+            installSnippetModule: ({ moduleId }) => {
                 expect(moduleId).toEqual("111");
                 expect.step(`button_immediate_install`);
-            };
-            super.setup(...arguments);
+            },
         },
-    });
-
-    await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-module-id="111" data-module-display-name="module_A" data-oe-thumbnail="a.svg"><section class="s_snippet_group" data-snippet="s_snippet_group"></section></div>',
@@ -74,16 +69,6 @@ test("install an app from snippet group", async () => {
 });
 
 test("install an app from snippet structure", async () => {
-    patchWithCleanup(Builder.prototype, {
-        setup() {
-            this.props.installSnippetModule = ({ moduleId }) => {
-                expect(moduleId).toEqual("111");
-                expect.step(`button_immediate_install`);
-            };
-            super.setup(...arguments);
-        },
-    });
-
     const snippetsDescription = createTestSnippets({
         snippets: [
             {
@@ -103,6 +88,12 @@ test("install an app from snippet structure", async () => {
     });
 
     await setupHTMLBuilder("<div><p>Text</p></div>", {
+        builderProps: {
+            installSnippetModule: ({ moduleId }) => {
+                expect(moduleId).toEqual("111");
+                expect.step(`button_immediate_install`);
+            },
+        },
         snippets: {
             snippet_groups: [
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
@@ -518,4 +509,13 @@ test("Cancel snippet drag & drop over sidebar", async () => {
     await waitForEndOfOperation();
 
     expect(contentEl).toHaveInnerHTML("");
+});
+
+test("data-name is injected when missing and preserved when already set on snippets at editor setup", async () => {
+    await setupHTMLBuilder(`
+        <section class="s_test" data-snippet="s_test"></section>
+        <section class="s_test_existing" data-snippet="s_test_existing" data-name="Existing Name"></section>
+    `);
+    expect(":iframe .s_test").toHaveAttribute("data-name", "Test");
+    expect(":iframe .s_test_existing").toHaveAttribute("data-name", "Existing Name");
 });

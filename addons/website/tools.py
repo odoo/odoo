@@ -2,9 +2,10 @@
 import re
 
 import werkzeug.urls
-from lxml import etree
+from lxml import etree, html
 
 from odoo.tools.misc import hmac
+from odoo.tools.urls import urljoin
 
 
 def distance(s1="", s2="", limit=4):
@@ -93,6 +94,18 @@ def text_from_html(html_fragment, collapse_whitespace=False):
     return content
 
 
+def images_from_html(html_fragment, base_url):
+    if not html_fragment or not html_fragment.strip():
+        return []
+    tree = html.fromstring(html_fragment)
+    seen = dict.fromkeys(
+        urljoin(base_url, src)
+        for img in tree.xpath('//img[@src]')
+        if (src := img.get('src')) and not src.startswith('data:')
+    )
+    return list(seen)
+
+
 def get_base_domain(url, strip_www=False):
     """
     Returns the domain of a given url without the scheme and the www. and the
@@ -128,11 +141,7 @@ def add_form_signature(html_fragment, env_sudo):
             continue
 
         email_to_value = form_values['email_to'].attrib.get('value')
-        if (not email_to_value
-            or (email_to_value == 'info@yourcompany.example.com'
-                and html_fragment.xpath('//span[@data-for="contactus_form"]'))):
-            # This means that the mail will be sent to the value of the dataFor
-            # which is the company email.
+        if not email_to_value:
             email_to_value = env_sudo.company.email or ''
 
         has_cc = {'email_cc', 'email_bcc'} & form_values.keys()

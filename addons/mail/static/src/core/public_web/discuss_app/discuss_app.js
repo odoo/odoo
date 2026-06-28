@@ -1,8 +1,8 @@
-import { useExternalListener, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { DiscussSidebar } from "@mail/core/public_web/discuss_app/sidebar/sidebar";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t, useListener, onMounted, onWillUnmount } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 import { useService } from "@web/core/utils/hooks";
@@ -15,16 +15,15 @@ export class Discuss extends Component {
         DiscussSidebar,
         MessagingMenu,
     };
-    static props = {
-        hasSidebar: { type: Boolean, optional: true },
-        thread: { optional: true },
-    };
-    static defaultProps = { hasSidebar: true };
     static template = "mail.Discuss";
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.props = props({
+            hasSidebar: t.boolean().optional(true),
+            thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
+        });
         this.messageHighlight = useMessageScrolling({ thread: () => this.thread });
         this.root = useRef("root");
         this.orm = useService("orm");
@@ -34,7 +33,7 @@ export class Discuss extends Component {
             inDiscussApp: true,
             messageHighlight: this.messageHighlight,
         });
-        useExternalListener(
+        useListener(
             window,
             "keydown",
             (ev) => {
@@ -68,6 +67,13 @@ export class Discuss extends Component {
                 () => [this.thread, this.ui.isSmall]
             );
         }
+        onMounted(() => {
+            document.body.classList.add("o_mail_discuss");
+        });
+
+        onWillUnmount(() => {
+            document.body.classList.remove("o_mail_discuss");
+        });
     }
 
     get thread() {

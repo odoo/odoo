@@ -1,11 +1,9 @@
 import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add("test_basic_purchase_flow_with_minimal_access_rights", {
     steps: () => [
-        {
-            trigger: ".o_menuitem[href='/odoo/purchase']",
-            run: "click",
-        },
+        ...stepUtils.goToAppSteps("purchase.menu_purchase_root", "Open the purchase app"),
         {
             content: "Check that at least one RFQ is present in the view",
             trigger: ".o_purchase_dashboard_list_view .o_data_row",

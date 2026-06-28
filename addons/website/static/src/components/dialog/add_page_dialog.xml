@@ -19,20 +19,15 @@
 </t>
 
 <t t-name="website.AddPageTemplatePreviewWrapper">
-    <div t-custom-ref="holder" class="o_page_template position-relative placeholder-glow mx-auto transition-base" t-att-class="{ 'mt-4': !this.props.firstRow }" t-att-data-configurator-page="this.props.template and this.props.template.is_from_configurator">
+    <div t-custom-ref="holder" class="o_page_template position-relative mx-auto mx-lg-3 placeholder-glow transition-base" t-att-class="{ 'mt-4': !this.props.firstRow }" t-att-data-configurator-page="this.props.template and this.props.template.is_from_configurator">
         <div t-custom-ref="preview" class="o_page_template_preview border border-white bg-white rounded" t-out="0" inert="inert"/>
         <span class="placeholder position-absolute top-0 w-100 h-100 rounded" t-attf-style="animation-duration: #{this.props.animationDelay + 500}ms"/>
-        <button class="btn o_button_area position-absolute top-0 w-100 h-100 start-0 cursor-pointer rounded" t-on-click="this.select">
+        <button class="btn o_button_area position-absolute top-0 w-100 h-100 start-0 cursor-pointer rounded" t-on-click="this.select" t-on-keydown="this.props.onPageKeydown">
             <div t-if="this.props.template and this.props.template.name" class="position-absolute start-0 bottom-100 w-100 fw-bold lh-1 pb-1 pe-none text-center o_page_name" t-out="this.props.template.name"/>
         </button>
     </div>
 </t>
 
-<t t-name="website.AddPageTemplateBlank">
-    <t t-call="website.AddPageTemplatePreviewWrapper">
-        <div class="d-flex align-items-center justify-content-center h-100 h3-fs fw-bold text-muted">Blank Page</div>
-    </t>
-</t>
 
 <t t-name="website.AddPageTemplatePreviewDynamicMessage">
     <section class="o_new_page_snippet_preview container h2">
@@ -48,7 +43,7 @@
 
 <t t-name="website.AddPageTemplatePreviews">
     <div class="container-fluid py-3 py-xl-4">
-        <div class="row g-0">
+        <div class="row g-0" t-custom-ref="previews-container">
             <div t-if="this.props.isCustom and !this.props.templates.length" class="col-12 alert alert-info d-flex">
                 <i class="fa fa-2x fa-info-circle me-3"/>
                 To add your page to this category, open the page properties: "Site -&gt; Properties".<br/>
@@ -57,10 +52,10 @@
             <t t-foreach="[...this.columns.entries()]" t-as="column" t-key="column[0]">
                 <div class="col-lg-4 col-12">
                     <t t-foreach="[...column[1].entries()]" t-as="template" t-key="template[0]">
-                        <AddPageTemplateBlank t-if="template[1].isBlank" firstRow="template_first"/>
-                        <AddPageTemplatePreview t-else="" template="template[1]" firstRow="template_first"
+                        <AddPageTemplatePreview template="template[1]" firstRow="template_first"
                             animationDelay="(column_index * 500) + (template_index * 350)"
                             isCustom="this.props.isCustom"
+                            onPageKeydown="this.onPageKeydown"
                         />
                     </t>
                     <t t-if="column[1].length === 0">
@@ -74,11 +69,54 @@
 
 <t t-name="website.AddPageTemplates">
     <div class="overflow-hidden w-100" t-att-class="{o_loading: this.state.loading}">
+        <!-- Mobile layout-->
+        <t t-if="this.state.isMobile">
+            <!-- Menu -->
+            <div t-if="!this.state.activePageId" class="d-flex flex-column h-100" >
+                <div t-custom-ref="tabs" class="list-group list-group-flush overflow-y-auto flex-grow-1">
+                    <button type="button" class="list-group-item list-group-item-action p-3 fw-bold" t-on-click="this.addBlankPage">
+                        <i class="oi oi-plus me-2"/>Blank Page
+                    </button>
+                    <t t-foreach="this.state.pages" t-as="page" t-key="page.id">
+                        <button t-att-data-id="page.id"
+                            class="list-group-item list-group-item-action p-3 d-flex align-items-center justify-content-between"
+                            t-att-disabled="page.isPreloading ? true : undefined"
+                            t-on-click="() => this.onTabListBtnClick(page.id)">
+                            <span>
+                                <span t-if="page.isPreloading" class="fa fa-spin fa-circle-o-notch me-1"/>
+                                <t t-out="page.title"/>
+                            </span>
+                            <i class="fa fa-chevron-right text-muted small"/>
+                        </button>
+                    </t>
+                </div>
+            </div>
+            <!-- Previews -->
+            <div t-else="" class="d-flex flex-column h-100">
+                <div class="border-bottom px-2 py-1">
+                    <button type="button" class="btn btn-link text-decoration-none fw-bold text-uppercase ps-0" t-on-click="this.onMobileBackClick">
+                        <i class="fa fa-chevron-left me-1"/>Back
+                    </button>
+                </div>
+                <div class="overflow-y-scroll flex-grow-1 bg-200">
+                    <AddPageTemplatePreviews templates="this.selectedPage.props.templates"
+                        isCustom="this.selectedPage.props.is_custom" isSingleColumn="true"/>
+                </div>
+            </div>
+        </t>
+
+        <!-- Desktop layout -->
         <!-- Do not rely on Notebook to avoid pages from needing reload -->
-        <div class="d-flex w-100 h-100 vertical flex-row">
-            <aside class="border-end overflow-auto">
+        <div t-else="" class="d-flex w-100 h-100 vertical flex-row">
+            <aside class="border-end overflow-auto d-flex flex-column">
+                <button type="button"
+                    class="btn btn-secondary rounded-0 p-3 text-start"
+                    data-name="add_blank_page"
+                    t-on-click="this.addBlankPage">
+                    <i class="oi oi-plus me-2" role="img" aria-hidden="true"/>Blank Page
+                </button>
                 <div t-custom-ref="tabs"
-                    class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto"
+                    class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto flex-grow-1"
                     role="tablist"
                     aria-orientation="vertical"
                     aria-label="Page categories">
@@ -100,7 +138,13 @@
                     </t>
                 </div>
             </aside>
-            <div t-custom-ref="panes" class="position-relative flex-grow-1 flex-shrink-1 bg-200">
+            <div t-custom-ref="panes" class="position-relative flex-grow-1 flex-shrink-1 bg-200"
+                 role="application"
+                 aria-roledescription="New page template"
+                 aria-describedby="o_page_templates_pane_description">
+                <div id="o_page_templates_pane_description" class="visually-hidden">
+                    Navigate around the blocks with <kbd>Tab</kbd> or the arrow keys. Select with <kbd>Enter</kbd> or <kbd>Space</kbd>.
+                </div>
                 <t t-foreach="this.state.pages" t-as="page" t-key="page.id">
                     <div t-att-data-id="page.id"
                         t-att-id="'pane_' + page.id"
@@ -123,7 +167,7 @@
 
 <t t-name="website.AddPageDialog">
     <WebsiteDialog
-        title.translate="New Page"
+        title.translate="Add a page"
         contentClass="'o_website_page_templates_dialog h-100'"
         showFooter="false"
         footer="false"

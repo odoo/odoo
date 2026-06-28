@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="discuss.CallContextMenu">
-        <div class="o-discuss-CallContextMenu d-flex flex-column p-3 rounded">
-            <div class="text-center pb-2 fw-bolder" t-out="this.props.rtcSession.name"/>
-            <div t-if="!this.isSelf" class="d-flex flex-row gap-2 align-items-center">
-                <i class="fa fa-fw fa-lg opacity-75" t-attf-class="{{this.state.rangeVolume > 0 ? 'fa-volume-up' : 'fa-volume-off'}}"/>
-                <div class="position-relative">
-                    <input type="range" min="0.0" max="1" step="0.01" class="form-range h-auto" t-att-value="this.volume" t-custom-model="this.state.rangeVolume" t-on-change="this.onChangeVolume"/>
-                    <output t-out="`${Math.round(this.state.rangeVolume * 200)}%`" class="o-mail-CallContextMenu-volumeTooltip fw-bold rounded" t-attf-style="--progress:{{this.state.rangeVolume * 100}}%;"/>
+        <div class="o-discuss-CallContextMenu d-flex flex-column gap-1 p-2 rounded">
+            <t t-if="!this.isSelf">
+                <button class="btn o-discuss-CallContextMenu-item d-flex align-items-center gap-2 w-100 px-2 py-1 border-0 rounded text-reset text-start cursor-pointer" t-on-click="this.togglePin">
+                    <i class="fa fa-fw fa-thumb-tack opacity-75"/><t t-if="this.isPinned">Unpin</t><t t-else="">Pin</t>
+                </button>
+                <div class="o-discuss-CallContextMenu-row d-flex align-items-center gap-2 w-100 px-2 py-1">
+                    <button class="btn o-discuss-CallContextMenu-muteToggle border-0 p-0 lh-1 cursor-pointer text-reset" t-on-click="this.toggleLocallyMute" t-att-title="this.muteLabel" t-att-aria-label="this.muteLabel">
+                        <i class="fa fa-fw" t-att-class="(this.isLocallyMuted or this.state.rangeVolume === 0) ? 'fa-volume-off' : 'fa-volume-up'"/>
+                    </button>
+                    <div class="position-relative flex-grow-1">
+                        <input type="range" min="0.0" max="1" step="0.01" class="form-range h-auto" t-att-value="this.volume" t-model.proxy="this.state.rangeVolume" t-on-change="this.onChangeVolume"/>
+                        <output t-out="`${Math.round(this.state.rangeVolume * 200)}%`" class="o-mail-CallContextMenu-volumeTooltip fw-bold rounded" t-attf-style="--progress:{{this.state.rangeVolume * 100}}%;"/>
+                    </div>
                 </div>
-            </div>
+                <button t-if="this.canModerate" class="btn o-discuss-CallContextMenu-item o-danger d-flex align-items-center gap-2 w-100 px-2 py-1 border-0 rounded text-danger text-start cursor-pointer" t-on-click="this.onClickRemoveFromCall">
+                    <i class="fa fa-fw fa-times-circle"/>Remove from call
+                </button>
+            </t>
             <t t-if="this.env.debug and !this.isSelf and this.rtc.connectionType === this.rtcConnectionTypes.P2P">
                 <hr class="w-100 border-top"/>
                 <div><span class="fw-bolder">RTC Session ID: </span><t t-out="this.props.rtcSession.id"/></div>

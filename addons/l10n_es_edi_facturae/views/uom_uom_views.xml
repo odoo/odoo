@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="product_uom_tree_view_inherit_l10n_es_edi_facturae" model="ir.ui.view">
-        <field name="name">uom.uom.list.inherit.l10n_es_edi_facturae</field>
+    <record id="uom_uom_view_list" model="ir.ui.view">
+        <field name="name">uom.uom.view.list.inherit.l10n.es.edi.facturae</field>
         <field name="model">uom.uom</field>
-        <field name="inherit_id" ref="uom.product_uom_tree_view"/>
+        <field name="inherit_id" ref="uom.uom_uom_view_list"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="l10n_es_edi_facturae_uom_code" string="Spanish Facturae EDI type"/>
             </field>
         </field>
     </record>
-    <record id="product_uom_form_view_inherit_l10n_es_edi_facturae" model="ir.ui.view">
-        <field name="name">uom.uom.form.inherit.l10n_es_edi_facturae</field>
+    <record id="uom_uom_view_form" model="ir.ui.view">
+        <field name="name">uom.uom.view.form.inherit.l10n.es.edi.facturae</field>
         <field name="model">uom.uom</field>
-        <field name="inherit_id" ref="uom.product_uom_form_view"/>
+        <field name="inherit_id" ref="uom.uom_uom_view_form"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="l10n_es_edi_facturae_uom_code" string="Spanish Facturae EDI type"/>

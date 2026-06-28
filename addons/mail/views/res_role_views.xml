@@ -8,6 +8,8 @@
                 <search string="Roles Search">
                     <field name="name" string="Role"/>
                     <field name="user_ids"/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
                     <filter string="My Roles" name="my_role_ids" domain="[('user_ids', '=', uid)]"/>
                     <group>
                         <filter string="Users" name="filter_user_ids" domain="[]" context="{'group_by': 'user_ids'}"/>
@@ -21,7 +23,7 @@
             <field name="arch" type="xml">
                 <list string="Role" editable="bottom" sample="1">
                     <field name="name" string="Role"/>
-                    <field name="user_ids" widget="many2many_avatar_user"/>
+                    <field name="user_ids" widget="many2many_avatar_user" required="1"/>
                 </list>
             </field>
         </record>
@@ -32,8 +34,11 @@
                 <form string="Role">
                     <sheet>
                         <group>
+                            <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                            <field name="active" invisible="1"/>
                             <field name="name" string="Role"/>
-                            <field name="user_ids" widget="many2many_avatar_user" options="{'no_create': True}"/>
+                            <field name="user_ids" widget="many2many_avatar_user" options="{'no_create': True}"
+                                required="1"/>
                         </group>
                     </sheet>
                 </form>

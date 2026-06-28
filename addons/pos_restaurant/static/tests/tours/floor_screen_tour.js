@@ -5,13 +5,12 @@ import * as ChromeRestaurant from "@pos_restaurant/../tests/tours/utils/chrome";
 const Chrome = { ...ChromePos, ...ChromeRestaurant };
 import * as ProductScreenPos from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
-import * as Utils from "@point_of_sale/../tests/generic_helpers/utils";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
+import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import { registry } from "@web/core/registry";
-import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 
 registry.category("web_tour.tours").add("FloorScreenTour", {
     steps: () =>
@@ -32,130 +31,13 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.clickTable("3"),
             ProductScreen.isShown(),
             Chrome.clickPlanButton(),
+            FloorScreen.clickEditPlan(),
             FloorScreen.selectedFloorIs("Second Floor"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            // Check the linking of tables
-            FloorScreen.clickFloor("Main Floor"),
-            FloorScreen.clickTable("4"),
-            ProductScreen.clickDisplayedProduct("Coca-Cola"),
-            Chrome.clickPlanButton(),
-            FloorScreen.isShown(),
-            FloorScreen.linkTables("5", "4"),
-            FloorScreen.isChildTable("5"),
-            Utils.refresh(),
-            FloorScreen.isChildTable("5"),
-
-            // Check that tables are unlinked automatically when the order is done
-            FloorScreen.clickTable("5"),
-            Chrome.isTabActive("4 & 5"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
-            Chrome.clickPlanButton(),
-            FloorScreen.isShown(),
-            FloorScreen.goTo("5"),
-            Chrome.isTabActive("4 & 5"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
-            ProductScreen.clickPayButton(false),
-            PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickValidate(),
-            Chrome.closePrintingWarning(),
-            FeedbackScreen.clickNextOrder(),
-            Utils.negateStep(FloorScreen.isChildTable("5")),
-
-            FloorScreen.linkTables("5", "4"),
-            // Check that the tables are unlinked when the child table is dragged
-            FloorScreen.unlinkTables("5", "4"),
-            Utils.negateStep(FloorScreen.isChildTable("5")),
-
-            // Verify that tables are unlinked and original orders are restored after dragging a child table.
-            FloorScreen.isShown(),
-            FloorScreen.clickTable("4"),
-            ProductScreen.clickDisplayedProduct("Coca-Cola"),
-            Chrome.clickPlanButton(),
-            FloorScreen.isShown(),
-
-            FloorScreen.clickTable("5"),
-            ProductScreen.clickDisplayedProduct("Minute Maid"),
-            Chrome.clickPlanButton(),
-            FloorScreen.isShown(),
-
-            // Link tables 5 and 4
-            FloorScreen.linkTables("5", "4"),
-            FloorScreen.isChildTable("5"),
-
-            // Check merged orders
-            FloorScreen.clickTable("5"),
-            Chrome.isTabActive("4 & 5"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
-            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
-            Chrome.clickPlanButton(),
-            FloorScreen.isShown(),
-
-            // Unlink tables and verify restoration of original orders
-            FloorScreen.unlinkTables("5", "4"),
-            Utils.negateStep(FloorScreen.isChildTable("5")),
-
-            // Check original orders for table 4
-            FloorScreen.clickTable("4"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
-            ProductScreen.clickOrderButton(),
-            {
-                ...Dialog.confirm(),
-                content: "Acknowledge printing error (test does not use a printer).",
-            },
-            ProductScreen.orderlinesHaveNoChange(),
-            Chrome.clickPlanButton(),
-            FloorScreen.isShown(),
-
-            // Check original orders for table 5
-            FloorScreen.clickTable("5"),
-            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
-            ProductScreen.clickOrderButton(),
-            {
-                ...Dialog.confirm(),
-                content: "Acknowledge printing error (test does not use a printer).",
-            },
-            ProductScreen.orderlinesHaveNoChange(),
-            Chrome.clickPlanButton(),
-            FloorScreen.isShown(),
-
-            // Relink tables and verify
-            FloorScreen.linkTables("5", "4"),
-            FloorScreen.clickTable("5"),
-            Chrome.isTabActive("4 & 5"),
-            ProductScreen.orderlinesHaveNoChange(),
-
-            // Add a new product to the merged order
-            ProductScreen.clickDisplayedProduct("Minute Maid"),
-            ProductScreen.orderlineIsToOrder("Minute Maid"),
-            ProductScreen.clickOrderButton(),
-            {
-                ...Dialog.confirm(),
-                content: "Acknowledge printing error (test does not use a printer).",
-            },
-            ProductScreen.orderlinesHaveNoChange(),
-
-            // Unlink tables again and verify restoration
-            Chrome.clickPlanButton(),
-            FloorScreen.isShown(),
-            FloorScreen.unlinkTables("5", "4"),
-            Utils.negateStep(FloorScreen.isChildTable("5")),
-
-            // Verify orders after unlinking
-            FloorScreen.clickTable("5"),
-            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
-            Chrome.clickPlanButton(),
-            FloorScreen.isShown(),
-            FloorScreen.clickTable("4"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
-            Chrome.clickPlanButton(),
-            FloorScreen.isShown(),
+            FloorScreen.addFloor(),
+            Dialog.is("New Floor"),
+            Dialog.footerBtnIsDisabled("Apply"),
+            TextInputPopup.inputText("Test Floor"),
+            Dialog.confirm(),
         ].flat(),
 });
 

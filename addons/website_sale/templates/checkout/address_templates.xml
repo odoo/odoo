@@ -46,14 +46,9 @@
             - dm: The delivery method to display, as a `delivery.carrier` recordset.
             - is_selected: Whether the radio button of the delivery method should be checked.
         -->
-        <t t-set="delivery_type" t-value="dm.delivery_type + '_use_locations'"/>
-        <t
-            t-set="is_pickup_needed"
-            t-value="delivery_type in dm.fields_get() and dm[delivery_type]"
-        />
-        <div class="d-flex justify-content-between align-items-center flex-wrap">
-            <div class="form-check flex-grow-1 cursor-pointer">
-                <!-- === Radio button === -->
+        <div name="dm_row_container" class="o_delivery_method_row d-grid column-gap-4 row-gap-2 align-items-center">
+            <!-- === Radio button === -->
+            <div class="form-check cursor-pointer">
                 <input
                     t-attf-id="o_delivery_{{dm.id}}"
                     name="o_delivery_radio"
@@ -63,7 +58,6 @@
                     class="form-check-input position-absolute"
                     t-att-data-dm-id="dm.id"
                     t-att-data-delivery-type="dm.delivery_type"
-                    t-att-data-is-pickup-location-required="is_pickup_needed"
                 />
                 <!-- === Delivery method label === -->
                 <label
@@ -74,19 +68,19 @@
                     <span name="o_delivery_method_name" t-field="dm.name"/>
                 </label>
             </div>
-            <div class="o_delivery_info_container flex-grow-1 flex-md-grow-0 d-flex justify-content-end align-items-center col-lg-5 gap-4">
-                <!-- === Delivery estimated date === -->
+            <!-- === Delivery estimated date === -->
+            <div class="o_delivery_date_col order-1 order-md-0 order-lg-1 order-xl-0">
                 <t t-if="dm.enable_delivery_estimate">
                     <t t-set="tooltip_title" t-value="'Estimated Delivery'"/>
                     <t t-set="available_delivery_days" t-value="dm._get_estimate_delivery_days()"/>
                     <div
-                        class="o_wsale_delivery_date_badge input-group w-75"
+                        class="o_wsale_delivery_date_badge input-group"
                         t-if="len(available_delivery_days) == 1"
                     >
                         <input
                             type="text"
                             name="estimated_delivery"
-                            class="form-control"
+                            class="form-control pt-0 pt-md-2 pt-lg-0 pt-xl-2"
                             t-att-value="dm._format_estimate_delivery_date(available_delivery_days[0])"
                             disabled="1"
                             t-att-title="tooltip_title"
@@ -94,10 +88,13 @@
                             data-bs-placement="top"
                             data-bs-delay="0"
                         />
+                        <label class="input-group-text input-group-text-subtle d-flex align-items-center invisible">
+                            <i class="fa fa-edit" role="img"/>
+                        </label>
                     </div>
                     <div
                         t-if="len(available_delivery_days) > 1"
-                        class="o_website_sale_delivery_date_picker input-group o_daterange_picker w-75"
+                        class="o_website_sale_delivery_date_picker input-group o_daterange_picker"
                         t-att-data-delivery-available-days="json.dumps(dm._get_estimate_delivery_days())"
                     >
                         <input
@@ -114,63 +111,15 @@
                             data-bs-placement="top"
                             data-bs-delay="0"
                         >
-                            <i class="fa fa-edit" role="img"/>
+                            <i class="fa fa-edit cursor-pointer" role="img"/>
                         </label>
                     </div>
                 </t>
-                <!-- === Delivery price badge === -->
-                <span class="o_wsale_delivery_price_badge text-muted fw-bold text-end" name="price">
-                    <small class="fw-normal">Select to compute delivery rate</small>
-                </span>
             </div>
-
-        </div>
-        <!-- === Pick up location === -->
-        <div
-            t-if="is_pickup_needed"
-            name="o_pickup_location"
-            t-attf-class="position-relative d-flex gap-2 mt-3 mb-2 {{'' if is_selected else 'd-none'}}"
-        >
-            <t
-                t-set="pickup_location_data"
-                t-value="(is_selected and order.pickup_location_data) or {}"
-            />
-            <div
-                name="o_pickup_location_details"
-                t-attf-class="d-flex justify-items-between align-items-center gap-3 w-100 border p-3 rounded {{'' if pickup_location_data else 'd-none'}}"
-            >
-                <span>
-                    <b name="o_pickup_location_name" t-out="pickup_location_data.get('name', '')"/>
-                    <br/>
-                    <span
-                        name="o_pickup_location_address"
-                        class="text-muted"
-                        t-out="(pickup_location_data.get('street', ) or '')
-                               + ' '
-                               + (pickup_location_data.get('zip_code') or '')
-                               + ' '
-                               + (pickup_location_data.get('city') or '')"
-                    />
-                </span>
-                <span
-                    name="o_pickup_location_selector"
-                    class="btn btn-light fa fa-pencil ms-auto p-3"
-                    title="Change location"
-                    aria-label="Change location"
-                    t-att-data-location-id="pickup_location_data.get('id')"
-                    t-att-data-zip-code="pickup_location_data.get('zip_code')"
-                    t-att-data-pickup-location-data="json.dumps(pickup_location_data)"
-                />
-            </div>
-            <button
-                t-if="not pickup_location_data"
-                name="o_pickup_location_selector"
-                type="button"
-                class="btn btn-primary ms-4"
-                t-att-data-zip-code="order.partner_shipping_id.zip"
-            >
-                Select a location
-            </button>
+            <!-- === Delivery price badge === -->
+            <span class="o_wsale_delivery_price_badge text-muted fw-bold text-end" name="price">
+                <small class="fw-normal">Select to compute delivery rate</small>
+            </span>
         </div>
         <div
             t-if="dm.website_description"
@@ -302,7 +251,7 @@
                         action="/shop/address/submit"
                         method="post"
                         name="address_form"
-                        class="address_autoformat"
+                        class="address_autoformat o_address_autocomplete"
                         t-att-data-company-country-code="res_company.country_id.code"
                         t-att-data-submit-url="'/shop/address/submit'"
                     >

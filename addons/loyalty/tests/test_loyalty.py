@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from unittest.mock import patch
 
 from psycopg2 import IntegrityError
 
+from odoo import Command, fields
 from odoo.exceptions import UserError, ValidationError
-from odoo.fields import Command
 from odoo.tests import Form, TransactionCase, tagged
 from odoo.tools import mute_logger
 
@@ -18,7 +19,7 @@ class TestLoyalty(TransactionCase):
 
         cls.program = cls.env["loyalty.program"].create({
             "name": "Test Program",
-            "reward_ids": [(0, 0, {})],
+            "reward_ids": [Command.create({})],
         })
         cls.product = (
             cls
@@ -77,35 +78,23 @@ class TestLoyalty(TransactionCase):
         ])
         self.program.write({
             "communication_plan_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "program_id": self.program.id,
-                        "trigger": "create",
-                        "mail_template_id": create_tmpl.id,
-                    },
-                ),
-                (
-                    0,
-                    0,
-                    {
-                        "program_id": self.program.id,
-                        "trigger": "points_reach",
-                        "points": 50,
-                        "mail_template_id": fifty_tmpl.id,
-                    },
-                ),
-                (
-                    0,
-                    0,
-                    {
-                        "program_id": self.program.id,
-                        "trigger": "points_reach",
-                        "points": 100,
-                        "mail_template_id": hundred_tmpl.id,
-                    },
-                ),
+                Command.create({
+                    "program_id": self.program.id,
+                    "trigger": "create",
+                    "mail_template_id": create_tmpl.id,
+                }),
+                Command.create({
+                    "program_id": self.program.id,
+                    "trigger": "points_reach",
+                    "points": 50,
+                    "mail_template_id": fifty_tmpl.id,
+                }),
+                Command.create({
+                    "program_id": self.program.id,
+                    "trigger": "points_reach",
+                    "points": 100,
+                    "mail_template_id": hundred_tmpl.id,
+                }),
             ]
         })
 
@@ -320,3 +309,15 @@ class TestLoyalty(TransactionCase):
         # attempt to unarchive both programs together
         with self.assertRaises(ValidationError):
             (program1 + program2).action_unarchive()
+
+    def test_card_write_with_past_expiration_date(self):
+        """A loyalty card should not allow an expiry date in the past."""
+        partner = self.env["res.partner"].create({"name": "Test Partner"})
+        card = self.env["loyalty.card"].create({
+            "program_id": self.program.id,
+            "partner_id": partner.id,
+            "points": 10,
+        })
+        past_date = fields.Date.today() - timedelta(days=1)
+        with self.assertRaises(ValidationError):
+            card.write({"expiration_date": past_date})

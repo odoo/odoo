@@ -24,3 +24,18 @@ export function getEditingEls(rootEl, { selector, exclude, applyTo }) {
     }
     return targetEls;
 }
+
+export const setHrefUrl = (targetEl, url) => {
+    if (!url) {
+        // If no URL is provided, remove the href attribute to avoid treating
+        // elements (e.g. images) as links and to clean up empty links.
+        targetEl.removeAttribute("href");
+        return;
+    }
+    if (!url.startsWith("/") && !url.startsWith("#") && !/^([a-zA-Z]*.):.+$/gm.test(url)) {
+        // We permit every protocol (http:, https:, ftp:, mailto:,...).
+        // If none is explicitly specified, we assume it is a http.
+        url = "http://" + url;
+    }
+    targetEl.setAttribute("href", url);
+};

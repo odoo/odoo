@@ -25,7 +25,7 @@ registerWebsitePreviewTour(
         ...clickOnSave(),
         {
             content: "Check that the video was correctly saved",
-            trigger: ":iframe .media_iframe_video[data-oe-expression*='G8b4UZIcTfg']",
+            trigger: ":iframe .media_iframe_video[data-embed-url*='G8b4UZIcTfg']",
         },
     ]
 );
@@ -41,7 +41,7 @@ registerWebsitePreviewTour(
         {
             content: "Check that the video iframe was correctly restored after saving the changes",
             trigger:
-                ":iframe [data-oe-field]:not([data-oe-sanitize-prevent-edition]) .media_iframe_video[data-oe-expression*='G8b4UZIcTfg']",
+                ":iframe [data-oe-field]:not([data-oe-sanitize-prevent-edition]) .media_iframe_video[data-embed-url*='G8b4UZIcTfg']",
         },
         {
             content: "As a restricted editor, edit the HTML field content",

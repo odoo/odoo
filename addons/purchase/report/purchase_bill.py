@@ -1,0 +1,73 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import api, fields, models
+from odoo.tools import format_date, formatLang, SQL
+
+
+class PurchaseBillUnion(models.Model):
+    _name = 'purchase.bill.union'
+    _auto = False
+    _description = 'Purchases & Bills Union'
+    _order = "date desc, name desc"
+    _rec_names_search = ['name', 'reference']
+
+    name = fields.Char(string='Reference', readonly=True)
+    reference = fields.Char(string='Source', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Vendor', readonly=True)
+    date = fields.Date(string='Date', readonly=True)
+    amount = fields.Float(string='Amount', readonly=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
+    company_id = fields.Many2one('res.company', 'Company', readonly=True)
+    vendor_bill_id = fields.Many2one('account.move', string='Vendor Bill', readonly=True)
+    purchase_order_id = fields.Many2one('purchase.order', string='Purchase Order', readonly=True)
+
+    @api.depends('currency_id', 'reference', 'amount', 'purchase_order_id', 'date')
+    @api.depends_context('show_total_amount', 'formatted_display_name')
+    def _compute_display_name(self):
+        for doc in self:
+            amount = doc.amount
+            if doc.purchase_order_id and doc.purchase_order_id.invoice_status == 'no':
+                amount = 0.0
+            formatted_amount = formatLang(self.env, amount, currency_obj=doc.currency_id)
+            if self.env.context.get('formatted_display_name'):
+                header = f"**{doc.name or ''}**{f" ({doc.reference})" if doc.reference else ''}\t{formatted_amount}"
+                detail = f"{format_date(self.env, doc.date) if doc.date else ''}"
+                doc.display_name = f"{header}\t{detail}"
+            else:
+                name = doc.name or ''
+                if doc.reference:
+                    name += ' - ' + doc.reference
+                name += ': ' + formatted_amount
+                doc.display_name = name
+
+    @property
+    def _table_query(self):
+        return SQL("""
+                SELECT id,
+                       name,
+                       ref as reference,
+                       partner_id,
+                       date,
+                       amount_untaxed as amount,
+                       currency_id,
+                       company_id,
+                       id as vendor_bill_id,
+                       NULL as purchase_order_id
+                  FROM account_move
+                 WHERE move_type in ('in_invoice', 'in_refund')
+                   AND state = 'posted'
+            UNION
+                SELECT -id,
+                       name,
+                       partner_ref as reference,
+                       partner_id,
+                       date_order::date as date,
+                       amount_untaxed as amount,
+                       currency_id,
+                       company_id,
+                       NULL as vendor_bill_id,
+                       id as purchase_order_id
+                  FROM purchase_order
+                 WHERE state = 'purchase'
+                   AND invoice_status in ('to invoice', 'no')
+        """)

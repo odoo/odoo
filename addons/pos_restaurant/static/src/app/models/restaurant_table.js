@@ -48,5 +48,11 @@ export class RestaurantTable extends Base {
         }
         return table;
     }
+    setParent(parent) {
+        if (parent && (parent.id === this.id || parent.isParent(this))) {
+            return;
+        }
+        this.parent_id = parent;
+    }
 }
 registry.category("pos_available_models").add(RestaurantTable.pythonModel, RestaurantTable);

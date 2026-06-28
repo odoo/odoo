@@ -5,8 +5,9 @@ import {
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
 import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
+import { t } from "@odoo/owl";
 import { expect, test, describe, beforeEach } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
+import { queryOne, setInputRange } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -110,17 +111,11 @@ beforeEach(async () => {
     addBuilderOption({
         selector: "section",
         Component: class TestBackgroundOption extends BackgroundOption {
-            static props = {
-                ...BackgroundOption.props,
-                withColors: { type: Boolean, optional: true },
-                withImages: { type: Boolean, optional: true },
-                withColorCombinations: { type: Boolean, optional: true },
-            };
-            static defaultProps = {
-                withColors: true,
-                withImages: true,
-                withShapes: true,
-                withColorCombinations: false,
+            static propShape = {
+                withColors: t.boolean().optional(true),
+                withImages: t.boolean().optional(true),
+                withShapes: t.boolean().optional(true),
+                withColorCombinations: t.boolean().optional(false),
             };
         },
     });
@@ -456,4 +451,20 @@ test("Connections shape color updates even default color shape is in hexadecimal
     const shape1Data = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
     expect(shape1Data.colors).toInclude("c5");
     expect(shape1Data.colors.c5).not.toBe(HEX_BLUE);
+});
+
+test("background shapes with animation speed should have the range [0.33, 3]", async () => {
+    await setupHTMLBuilder(
+        `
+        <section id="section1" data-snippet="s_snippet" data-oe-shape-data='{"shape":"html_builder/Floats/11","shapeAnimationSpeed":"-2"}'>
+            <div class="o_we_shape o_html_builder_Floats_11"></div>
+            Section 1
+        </section>
+    `
+    );
+    await contains(":iframe  #section1").click();
+    expect("[data-label='Speed'] input[type='number']").toHaveValue(0.33);
+    await setInputRange("[data-label='Speed'] input[type='range']", 2);
+    expect(":iframe #section1").toHaveAttribute("data-oe-shape-data", /"shapeAnimationSpeed":"2"/);
+    expect("[data-label='Speed'] input[type='number']").toHaveValue(3);
 });

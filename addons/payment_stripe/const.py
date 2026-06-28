@@ -10,20 +10,8 @@ API_VERSION = "2019-05-16"  # The API version of Stripe implemented in this modu
 # Stripe proxy URL
 PROXY_URL = "https://stripe.api.odoo.com/api/stripe/"
 
-# The codes of the payment methods to activate when Stripe is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
-    "card",
-    "bancontact",
-    "eps",
-    "ideal",
-    "p24",
-    # Brand payment methods.
-    "visa",
-    "mastercard",
-    "amex",
-    "discover",
-}
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card"}
 
 # Mapping of payment method codes to Stripe codes.
 PAYMENT_METHODS_MAPPING = {

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:36+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2025-12-20 09:33+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
@@ -24,45 +24,29 @@ msgstr ""
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: base_install_request
-#: model:mail.template,body_html:base_install_request.mail_template_base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.mail_installation_request_template
 msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello,\n"
-"        <br/><br/>\n"
-"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/> "
-"has requested to activate the <span style=\"font-weight: bold;\" t-"
-"out=\"object.module_id.shortdesc\"/> module.\n"
-"        <br/><br/>\n"
-"        </p><blockquote data-o-mail-quote-node=\"1\" data-o-mail-"
-"quote=\"1\">\n"
-"            <t t-out=\"object.body_html\"/>\n"
-"        </blockquote>\n"
-"        <br data-o-mail-quote=\"1\"/><br data-o-mail-quote=\"1\"/>\n"
-"        <a t-attf-style=\"background-color: {{object.user_id.company_id."
-"email_secondary_color or '#875A7B'}}; padding:8px 16px 8px 16px; text-"
-"decoration:none; color: {{object.user_id.company_id.email_primary_color or "
-"'#FFFFFF'}}; border-radius:5px\" t-attf-href=\"/odoo/{{ object.module_id."
-"id }}/action-base_install_request.action_base_module_install_review?"
-"menu_id={{ ctx['menu_id'] }}\">Review Request</a>\n"
-"        <br/><br/>\n"
-"        Thanks,\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br/><br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"    \n"
-"</div>\n"
-"            "
+",\n"
+"                <br/><br/>"
+msgstr ""
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.mail_installation_request_template
+msgid ""
+".\n"
+"                <br/><br/>"
+msgstr ""
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.mail_installation_request_template
+msgid "<span> They added the following comment: </span>"
 msgstr ""
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/models/ir_module_module.py:0
-msgid "Activation Request of \"%s\""
-msgstr "Запрос на активацию \"%s\""
+msgid "Activation Request for %(module_desc)s"
+msgstr ""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__body_html
@@ -80,6 +64,11 @@ msgstr "Создано:"
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__create_date
 msgid "Created on"
 msgstr "Дата создания:"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.mail_installation_request_template
+msgid "Dear"
+msgstr ""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_ids
@@ -118,11 +107,6 @@ msgid "Last Updated on"
 msgstr "Дата последнего обновления:"
 
 #. module: base_install_request
-#: model:mail.template,name:base_install_request.mail_template_base_install_request
-msgid "Mail: Install Request"
-msgstr "Почта: Запрос на установку"
-
-#. module: base_install_request
 #: model:ir.model,name:base_install_request.model_ir_module_module
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__module_id
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_id
@@ -135,9 +119,10 @@ msgid "Module Activation Request"
 msgstr "Запрос на активацию модуля"
 
 #. module: base_install_request
-#: model:mail.template,subject:base_install_request.mail_template_base_install_request
-msgid "Module Activation Request for \"{{ object.module_id.shortdesc }}\""
-msgstr "Запрос на активацию модуля для \"{{ object.module_id.shortdesc }}\""
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+msgid "Module Activation Request for \"%(module_desc)s\""
+msgstr ""
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_review
@@ -161,15 +146,30 @@ msgid "Request Access"
 msgstr "Запрос доступа"
 
 #. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+msgid "Request sent"
+msgstr ""
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.mail_installation_request_template
+msgid "Review Request"
+msgstr ""
+
+#. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
-msgid "Request Activation"
-msgstr "Запрос активации"
+msgid "Send"
+msgstr ""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_ids
-#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Send to:"
 msgstr "Отправить:"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__qweb_template_xmlid
+msgid "Template Id"
+msgstr ""
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_description
@@ -181,6 +181,11 @@ msgstr "Будут установлены следующие приложени�
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 msgid "The module is already installed."
 msgstr "Модуль уже установлен."
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid "To:"
+msgstr ""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_id
@@ -198,17 +203,6 @@ msgid "You are about to install an extra application"
 msgstr "Вы собираетесь установить дополнительное приложение"
 
 #. module: base_install_request
-#. odoo-python
-#: code:addons/base_install_request/wizard/base_module_install_request.py:0
-msgid "Your request has been successfully sent"
-msgstr "Ваш запрос успешно отправлен"
-
-#. module: base_install_request
-#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
-msgid ""
-"e.g. I'd like to use the SMS Marketing module to organize the promotion of "
-"our internal events, and exhibitions. I need access for 3 people of my team."
+#: model_terms:ir.ui.view,arch_db:base_install_request.mail_installation_request_template
+msgid "has requested access to"
 msgstr ""
-"например, я хочу использовать модуль SMS-маркетинга для организации "
-"продвижения наших внутренних мероприятий и выставок. Мне нужен доступ для 3 "
-"человек из моей команды."

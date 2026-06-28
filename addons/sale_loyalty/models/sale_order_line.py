@@ -49,6 +49,13 @@ class SaleOrderLine(models.Model):
             )
             line.tax_ids = fpos.map_tax(taxes)
 
+    def _prepare_base_line_for_taxes_computation(self, **kwargs):
+        """Override to add the special_type on coupon lines."""
+        self.ensure_one()
+        if self.reward_id and self.reward_id.reward_type == "discount":
+            kwargs["special_type"] = "loyalty_discount"
+        return super()._prepare_base_line_for_taxes_computation(**kwargs)
+
     def _get_display_price(self):
         # A product created from a promotion does not have a list_price.
         # The price_unit of a reward order line is computed by the promotion, so it can be used

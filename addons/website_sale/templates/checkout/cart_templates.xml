@@ -47,15 +47,11 @@
                 </a>
             </p>
         </div>
-        <t t-if='website_sale_order'>
-            <div t-if='website_sale_order._get_shop_warning(clear=False)' class="alert alert-warning js_cart_lines" role="alert">
-                <strong>Warning!</strong>
-                <div t-out="website_sale_order._get_shop_warning()" class="text-prewrap"/>
-            </div>
-        </t>
-        <div id="cart_products"
-             t-if="website_sale_order and website_sale_order.website_order_line"
-             class="js_cart_lines d-flex flex-column mb32">
+        <div
+            t-else=""
+            id="cart_products"
+            class="js_cart_lines d-flex flex-column mb32"
+        >
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
                 <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
                 <div
@@ -103,7 +99,7 @@
                                         <t t-set="combination_name" t-value="line._get_combination_name()"/>
                                         <span t-if="combination_name" class="d-none d-md-inline h6 text-muted mb-1">-</span>
                                         <div
-                                            t-if="combination_name or line.product_template_id._has_multiple_uoms()"
+                                            t-if="combination_name or line.product_id._has_multiple_uoms()"
                                             class="d-inline-flex flex-wrap column-gap-2 row-gap-1 align-items-center my-1 my-md-0 w-100 w-md-auto"
                                         >
                                             <span
@@ -112,7 +108,7 @@
                                                 t-out="combination_name"
                                             />
                                             <span
-                                                t-if="line.product_template_id._has_multiple_uoms()"
+                                                t-if="line.product_id._has_multiple_uoms()"
                                                 class="badge bg-light mb-1"
                                                 t-out="line.product_uom_id.name"
                                             />
@@ -174,13 +170,13 @@
             t-value="is_view_active('website_sale.product_quantity')"
         />
         <div
-            t-attf-class="css_quantity input-group justify-content-end h-100 {{should_show_quantity_selector and line._is_sellable() and 'border' or ''}}"
+            t-attf-class="css_quantity input-group justify-content-end h-100"
             t-attf-name="{{'website_sale_cart_line_quantity' if not is_mobile else 'website_sale_cart_line_quantity_mobile'}}"
         >
             <t t-if="should_show_quantity_selector and line._is_sellable()">
                 <button
                     name="minus_button"
-                    class="btn btn-link d-inline-block border-end-0"
+                    class="btn btn-link d-inline-block border border-end-0"
                     aria-label="Remove one"
                     title="Remove one"
                 >
@@ -188,26 +184,24 @@
                 </button>
                 <input
                     type="text"
-                    class="js_quantity quantity form-control border-0"
+                    class="js_quantity quantity form-control border border-start-0 border-end-0"
                     t-att-data-line-id="line.id"
                     t-att-data-product-id="line.product_id.id"
                     t-att-value="line._get_displayed_quantity()"
                     t-attf-name="cart-quantity-{{line.id}}{{'-mobile' if is_mobile else ''}}"
+                    t-att-data-max="line._get_max_line_qty()"
                     aria-label="Quantity"
                 />
-                <t t-if="line._get_shop_warning(clear=False)">
-                    <a href="#" class="btn btn-link">
-                        <i
-                            class="fa fa-warning text-warning"
-                            t-att-title="line._get_shop_warning()"
-                            role="img"
-                            aria-label="Warning"
-                        />
-                    </a>
-                </t>
+                <div t-if="line.alerts" class="btn btn-link d-inline-block border border-start-0">
+                    <t
+                        t-call="website_sale.alert_inline"
+                        level="line._get_max_alert_level()"
+                        message="line._join_alert_messages()"
+                    />
+                </div>
                 <button
                     t-else=""
-                    class="btn btn-link d-inline-block border-start-0"
+                    class="btn btn-link d-inline-block border border-start-0"
                     aria-label="Add one"
                     title="Add one"
                 >
@@ -215,18 +209,35 @@
                 </button>
             </t>
             <t t-else="">
+                <t
+                    t-if="line.alerts"
+                    t-call="website_sale.alert_inline"
+                    level="line._get_max_alert_level()"
+                    message="line._join_alert_messages()"
+                    classes.f="d-none d-md-block pe-1 align-self-center"
+                />
+                <t t-set="displayed_qty" t-value="line._get_displayed_quantity()"/>
                 <input
                     type="text"
-                    class="js_quantity quantity form-control text-start text-md-end text-md-end border-0 p-0 shadow-none mw-100"
+                    class="js_quantity quantity form-control text-start text-md-end border-0 p-0 shadow-none w-auto"
                     t-att-data-line-id="line.id"
                     t-att-data-product-id="line.product_id.id"
-                    t-att-value="line._get_displayed_quantity()"
+                    t-att-value="displayed_qty"
                     t-attf-name="cart-quantity-{{line.id}}{{'-mobile' if is_mobile else ''}}"
                     readonly="True"
                     aria-label="Quantity"
+                    t-att-size="len(str(displayed_qty))"
+                />
+                <t
+                    t-if="line.alerts"
+                    t-call="website_sale.alert_inline"
+                    level="line._get_max_alert_level()"
+                    message="line._join_alert_messages()"
+                    classes.f="d-md-none ps-1 align-self-center"
                 />
             </t>
         </div>
+        <div class="availability_messages"/>
     </template>
 
     <template id="website_sale.cart_lines_price" name="Shopping Cart Line Price">
@@ -243,16 +254,15 @@
             <t t-set="product_price" t-value="line._get_cart_display_price()"/>
             <t t-call="website_sale.cart_product_price"/>
         </h6>
-        <small
-            t-if="line._is_sellable() and line.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price') and line.product_id.base_unit_price"
+        <div
+            t-if="line._is_sellable() and line.env['res.groups']._is_feature_enabled('product.group_show_uom_price') and line.product_id.base_unit_price"
             class="cart_product_base_unit_price d-block text-muted text-end"
-            groups="website_sale.group_show_uom_price"
+            groups="product.group_show_uom_price"
         >
             <t t-set="product" t-value="line.product_id"/>
             <t t-call="website_sale.base_unit_price"
-                product="product"
                 base_unit_price="product._get_base_unit_price(product_price/line.product_qty)"/>
-        </small>
+        </div>
     </template>
 
     <template id="website_sale.cart_combo_item_line">
@@ -336,7 +346,7 @@
 
     <template id="website_sale.quick_reorder_button">
         <t t-set="quick_reorder_button_title">
-            <t t-if="request.website.is_public_user()">Login to reorder</t>
+            <t t-if="website.is_public_user()">Login to reorder</t>
             <t t-elif="not order_history">No previous products available for reorder.</t>
         </t>
         <span t-att-title="quick_reorder_button_title">
@@ -430,7 +440,7 @@
                                     </ul>
                                 </div>
                                 <small
-                                    t-if="order_line.product_template_id._has_multiple_uoms()"
+                                    t-if="order_line.product_id._has_multiple_uoms()"
                                     t-out="order_line.product_uom_id.name"
                                     class="badge mt-1 bg-light"
                                 />
@@ -534,6 +544,11 @@
                                         t-options="{'widget': 'monetary','display_currency': website.currency_id}"
                                     />
                                 </h6>
+                                <t
+                                    t-if="combination_info.get('base_unit_price')"
+                                    t-call="website_sale.base_unit_price"
+                                    base_unit_price="combination_info['base_unit_price']"
+                                />
                                 <button
                                     name="add_to_cart"
                                     class="btn btn-primary text-nowrap"

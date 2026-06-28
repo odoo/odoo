@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -24,7 +23,7 @@ export class EditWebsiteSystrayItem extends Component {
     setup() {
         this.websiteService = useService("website");
         this.notification = useService("notification");
-        this.websiteContext = useState(this.websiteService.context);
+        this.websiteContext = proxy(this.websiteService.context);
         // TODO: website service should share a reactive
         useBus(websiteSystrayRegistry, "CONTENT-UPDATED", () => this.checkPendingTranslations());
         this.isEnteringTranslateMode = false;

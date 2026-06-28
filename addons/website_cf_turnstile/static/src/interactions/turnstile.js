@@ -31,7 +31,11 @@ export class TurnStile {
             for (const button of buttons) {
                 button.classList.remove("disabled", "cf_form_disabled");
             }
-            form.querySelector("input.turnstile_captcha_valid").value = "done";
+            const inputValidation = form.querySelector("input.turnstile_captcha_valid");
+            // ensure form is unlocked without using `.value = …` that may be
+            // blocked by Safari tracking and fingreprinting protection
+            inputValidation.setAttribute('value', 'done');
+            inputValidation.required = false;
         };
         // unhide if interaction is needed
         globalThis.turnstileBecomeVisible = function () {

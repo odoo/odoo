@@ -25,12 +25,8 @@ import {
     GlobalFiltersUIPlugin,
     GlobalFiltersCoreViewPlugin,
 } from "@spreadsheet/global_filters/index";
-import {
-    PivotOdooCorePlugin,
-    PivotCoreViewGlobalFilterPlugin,
-    PivotUIGlobalFilterPlugin,
-} from "@spreadsheet/pivot/index"; // list depends on filter for its getters
-import { ListCorePlugin, ListCoreViewPlugin, ListUIPlugin } from "@spreadsheet/list/index"; // pivot depends on filter for its getters
+import { PivotOdooCorePlugin, PivotCoreViewGlobalFilterPlugin } from "@spreadsheet/pivot/index"; // pivot depends on filter for its getters
+import { ListCorePlugin, ListCoreViewPlugin, ListUIPlugin } from "@spreadsheet/list/index"; // list depends on filter for its getters
 import {
     ChartOdooLinkPlugin,
     OdooChartCorePlugin,
@@ -41,6 +37,8 @@ import { PivotOdooUIPlugin } from "./pivot/plugins/pivot_odoo_ui_plugin";
 import { ListCoreGlobalFilterPlugin } from "./list/plugins/list_core_global_filter_plugin";
 import { globalFieldMatchingRegistry } from "./global_filters/helpers";
 import { OdooChartFeaturePlugin } from "./chart/plugins/odoo_chart_feature_plugin";
+import { LoggingUIPlugin } from "@spreadsheet/logging/logging_ui_plugin";
+import { PivotOdooCoreViewPlugin } from "./pivot/plugins/pivot_odoo_core_view_plugin";
 
 globalFieldMatchingRegistry.add("pivot", {
     getIds: (getters) =>
@@ -94,7 +92,7 @@ globalFieldMatchingRegistry.add("chart", {
     getFieldMatching: (getters, chartId, filterId) =>
         getters.getOdooChartFieldMatching(chartId, filterId),
     getModel: (getters, chartId) =>
-        getters.getChart(chartId).getDefinitionForDataSource().metaData.resModel,
+        getters.getChart(chartId).getDefinition().dataSource.metaData.resModel,
     getTag: (getters, chartId) => {
         const odooChartId = getters.getOdooChartIds().indexOf(chartId) + 1;
         return _t("Chart #%(odooChartId)s", { odooChartId });
@@ -130,8 +128,9 @@ coreViewsPluginRegistry.add(
 );
 coreViewsPluginRegistry.add("OdooListCoreViewPlugin", ListCoreViewPlugin);
 coreViewsPluginRegistry.add("OdooChartCoreViewPlugin", OdooChartCoreViewPlugin);
+coreViewsPluginRegistry.add("OdooLoggingUIPlugin", LoggingUIPlugin);
+coreViewsPluginRegistry.add("PivotOdooCoreViewPlugin", PivotOdooCoreViewPlugin);
 
-featurePluginRegistry.add("OdooPivotGlobalFilterUIPlugin", PivotUIGlobalFilterPlugin);
 featurePluginRegistry.add("OdooGlobalFiltersUIPlugin", GlobalFiltersUIPlugin);
 featurePluginRegistry.add("odooPivotUIPlugin", PivotOdooUIPlugin);
 featurePluginRegistry.add("odooListUIPlugin", ListUIPlugin);

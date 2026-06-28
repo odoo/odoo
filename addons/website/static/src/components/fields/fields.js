@@ -1,11 +1,11 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { PageDependencies } from "@website/components/dialog/page_properties";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { UrlField, urlField } from "@web/views/fields/url/url_field";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { debounce } from "@web/core/utils/timing";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { charField, CharField } from "@web/views/fields/char/char_field";
 
 /**
@@ -13,19 +13,24 @@ import { charField, CharField } from "@web/views/fields/char/char_field";
  * is updated.
  */
 class PageUrlField extends UrlField {
-    static components = { ...UrlField.components, PageDependencies };
+    static components = { PageDependencies };
     static template = "website.PageUrlField";
-    static defaultProps = {
-        ...UrlField.defaultProps,
-        websitePath: true,
-    };
+    // Inlined from UrlField's static props (UrlField is not yet converted to
+    // an exported schema const; it has no defaultProps of its own).
+    props = props({
+        ...standardFieldProps,
+        placeholder: t.string().optional(),
+        text: t.string().optional(),
+        websitePath: t.boolean().optional(true),
+    });
 
     setup() {
         super.setup();
         this.serverUrl = `${window.location.origin}/`;
+        this.inputRef = useRef("input");
 
         // Trigger onchange api on input event to display redirection
-        // parameters as soon as the user types.
+        // parameters as soon as the user t.
         // TODO should find a way to do this more automatically (and option in
         // the framework? or at least a t-on-input?)
         useLayoutEffect(
@@ -52,7 +57,7 @@ class PageUrlField extends UrlField {
                     };
                 }
             },
-            () => [this.input.el]
+            () => [this.inputRef.el]
         );
     }
 
@@ -71,7 +76,6 @@ class PageUrlField extends UrlField {
 
 const pageUrlField = {
     ...urlField,
-    additionalClasses: ["o_input_box"],
     component: PageUrlField,
 };
 

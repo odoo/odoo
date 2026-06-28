@@ -1,6 +1,7 @@
-import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Dropzone } from "@web/core/dropzone/dropzone";
 import { useService } from "@web/core/utils/hooks";
+import { useListener } from "@odoo/owl";
 
 /**
  * @param {Ref} targetRef - Element on which to place the dropzone.
@@ -17,20 +18,27 @@ export function useCustomDropzone(
     const overlayService = useService("overlay");
     const uiService = useService("ui");
 
+    // Transitional shim: accept both an Owl 3 signal ref (call it to get the
+    // element) and a legacy `.el` ref object. Remove once all callers pass a signal.
+    // Note: `useChildRef()` returns a *function* with an `.el` getter, so we must
+    // probe `.el` first and only fall back to calling the ref when no `.el` is
+    // exposed at all (true signal refs).
+    const getTargetEl = () => ("el" in targetRef ? targetRef.el : targetRef());
+
     let dragCount = 0;
     let hasTarget = false;
     let removeDropzone = false;
 
-    useExternalListener(document, "dragenter", onDragEnter, { capture: true });
-    useExternalListener(document, "dragleave", onDragLeave, { capture: true });
+    useListener(document, "dragenter", onDragEnter, { capture: true });
+    useListener(document, "dragleave", onDragLeave, { capture: true });
     // Prevents the browser to open or download the file when it is dropped
     // outside of the dropzone.
-    useExternalListener(window, "dragover", (ev) => {
+    useListener(window, "dragover", (ev) => {
         if (ev.dataTransfer && ev.dataTransfer.types.includes("Files")) {
             ev.preventDefault();
         }
     });
-    useExternalListener(
+    useListener(
         window,
         "drop",
         (ev) => {
@@ -45,7 +53,7 @@ export function useCustomDropzone(
 
     function updateDropzone() {
         const hasDropzone = !!removeDropzone;
-        const isTargetInActiveElement = uiService.activeElement.contains(targetRef.el);
+        const isTargetInActiveElement = uiService.activeElement.contains(getTargetEl());
         const shouldDisplayDropzone =
             dragCount && hasTarget && isTargetInActiveElement && isDropzoneEnabled();
 
@@ -80,7 +88,7 @@ export function useCustomDropzone(
             hasTarget = !!el;
             updateDropzone();
         },
-        () => [targetRef.el]
+        () => [getTargetEl()]
     );
 }
 

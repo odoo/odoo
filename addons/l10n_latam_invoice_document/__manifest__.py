@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     "name": "LATAM Document",
+    "version": "1.1",
     "author": "ADHOC SA",
     'category': 'Accounting/Localizations',
     "summary": "LATAM Document Types",
@@ -35,7 +36,7 @@ If your localization needs this logic will then need to add this module as depen
         'views/report_templates.xml',
         'report/invoice_report_view.xml',
         'wizards/account_move_reversal_view.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'license': 'LGPL-3',
 }

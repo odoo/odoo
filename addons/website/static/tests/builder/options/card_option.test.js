@@ -22,7 +22,7 @@ test("set card width", async () => {
     await setupWebsiteBuilderWithSnippet("s_card");
     await contains(":iframe .s_card").click();
     await waitFor("[data-action-id='setCardWidth']");
-    expect("[data-action-id='setCardWidth']").toHaveCount(1);
+    expect("[data-action-id='setCardWidth']").toHaveCount(2);
     expect(queryOne(":iframe .s_card").style.maxWidth).toBeEmpty();
     // Default value for range input is 100%
     expect("[data-action-id='setCardWidth'] input").toHaveValue(100);

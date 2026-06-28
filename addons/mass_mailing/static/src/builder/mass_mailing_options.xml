@@ -42,7 +42,7 @@
         <alert_option
             template="html_builder.AlertOption"
             selector=".s_alert"
-            exclude=".s_mail_alert .s_alert"/>
+            exclude=".s_mail_alert"/>
         <social_media_option
             template="mass_mailing.SocialMediaOption"
             selector=".s_social_media"/>
@@ -60,11 +60,11 @@
             applyTo=":scope > *:has(> .row:not(.s_nb_column_fixed)), * > .s_allow_columns"/>
         <width_option
             template="html_builder.WidthOption"
-            selector=".s_alert, .s_text_highlight, .s_mail_alert .s_alert, .s_mail_blockquote, .s_mail_text_highlight"/>
-        <mass_mailing_border_option selector=".s_mail_alert .s_alert"/>
+            selector=".s_alert, .s_text_highlight, .s_mail_blockquote, .s_mail_text_highlight"/>
+        <mass_mailing_border_option selector=".s_mail_alert"/>
         <alert_option
             template="mass_mailing.AlertOption"
-            selector=".s_mail_alert .s_alert"/>
+            selector=".s_mail_alert"/>
         <social_media_links selector=".s_social_media"/>
         <block_alignment_option template="html_builder.BlockAlignmentOption" selector=".s_alert, .s_text_highlight"/>
         <mass_mailing_cta_badge_option

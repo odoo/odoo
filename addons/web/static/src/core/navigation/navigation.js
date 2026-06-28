@@ -1,5 +1,5 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { onWillUnmount } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onWillUnmount, useListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
 import { scrollTo } from "@web/core/utils/scrolling";
@@ -343,7 +343,8 @@ export class Navigator {
      */
     _updateActiveItemIndex(index) {
         if (this.items[index]) {
-            this.items[index].setActive();
+            const shouldFocus = !this.items.some((item) => item.target === document.activeElement);
+            this.items[index].setActive(shouldFocus);
         } else {
             this.activeItemIndex = -1;
             this.activeItem = null;
@@ -425,16 +426,41 @@ export class Navigator {
  * - Optional virtual focus
  * - Focus on mouse enter
  *
- * @param {string|Object} containerRef
+ * The container reference can be:
+ * - a string: resolved through the (compat) `useRef`, then read via `.el`;
+ * - an Owl 2 ref-like object exposing `.el`;
+ * - an Owl 3 native ref, which is a signal: a function returning the element
+ *   (or `null` when unmounted).
+ *
+ * @param {string|Object|Function} containerRef
  * @param {NavigationOptions} options
  * @returns {Navigator}
  */
 export function useNavigation(containerRef, options = {}) {
     containerRef = typeof containerRef === "string" ? useRef(containerRef) : containerRef;
 
+    // TRANSITIONAL SHIM (Owl 3 migration): resolve "the current container
+    // element" in a single place so all accepted input forms work:
+    //   - string  → already converted above via the compat `useRef`, read `.el`
+    //               (original pre-migration behavior);
+    //   - ref-like object/callable → anything exposing an `el` accessor, read
+    //               `.el` (covers Owl 2 refs, `useRef` and `useChildRef`). Note
+    //               `useChildRef` returns a *callable* that is also ref-like, so
+    //               we must NOT call it: invoking it would reset its internal
+    //               value and corrupt the ref;
+    //   - bare function → an Owl 3 native ref (signal) that has no `el`
+    //               accessor, called to get the element.
+    // The `el` check first ensures ref-like callables go through the `.el` path
+    // (original behavior); only genuine signals fall through to being called.
+    // The optional chaining keeps this null-safe (a ref can be undefined before
+    // mount), so it can never throw "Cannot read properties of undefined".
+    // Remove the function branch once every caller passes a native signal ref.
+    const isSignal = typeof containerRef === "function" && !("el" in containerRef);
+    const getContainerEl = () => (isSignal ? containerRef() : containerRef?.el);
+
     const newOptions = { ...options };
     if (!newOptions.getItems) {
-        newOptions.getItems = () => containerRef.el?.querySelectorAll(":scope .o-navigable") ?? [];
+        newOptions.getItems = () => getContainerEl()?.querySelectorAll(":scope .o-navigable") ?? [];
     }
 
     const hotkeyService = useService("hotkey");
@@ -452,10 +478,10 @@ export function useNavigation(containerRef, options = {}) {
             }
             return () => observer.disconnect();
         },
-        () => [containerRef.el]
+        () => [getContainerEl()]
     );
 
-    useExternalListener(browser, "focus", ({ target }) => navigator._checkFocus(target), true);
+    useListener(browser, "focus", ({ target }) => navigator._checkFocus(target), true);
     onWillUnmount(() => navigator._destroy());
 
     return navigator;

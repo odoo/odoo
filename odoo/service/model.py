@@ -9,7 +9,6 @@ from odoo.exceptions import (
     AccessDenied,
     UserError,
 )
-from odoo.http.retrying import retrying
 from odoo.models import BaseModel, get_public_method
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
@@ -48,6 +47,11 @@ def call_kw(model: BaseModel, name: str, args: list, kwargs: Mapping):
     # after a serialization error: the retry is done without context!
     kwargs = dict(kwargs)
     context = kwargs.pop('context', None) or {}
+    # TODO: remove this crap O.o
+    if 'website_id' not in context and (website_id := recs.env.context.get('website_id')):
+        context['website_id'] = website_id
+    if 'host_id' not in context and (host_id := recs.env.context.get('host_id')):
+        context['host_id'] = host_id
     recs = recs.with_context(context)
 
     # call
@@ -72,32 +76,26 @@ def dispatch(method, params):
     # access checked once we open a cursor
 
     threading.current_thread().uid = uid
-    registry = Registry(db).check_signaling()
-    try:
-        if method == 'execute':
+    if method == 'execute':
+        kw = {}
+    elif method == 'execute_kw':
+        # accept: (args, kw=None)
+        if len(args) == 1:
+            args += ({},)
+        args, kw = args
+        if kw is None:
             kw = {}
-        elif method == 'execute_kw':
-            # accept: (args, kw=None)
-            if len(args) == 1:
-                args += ({},)
-            args, kw = args
-            if kw is None:
-                kw = {}
-        else:
-            raise NameError(f"Method not available {method}")  # noqa: TRY301
-        with registry.cursor() as cr:
-            api.Environment(cr, api.SUPERUSER_ID, {})['res.users']._check_uid_passwd(uid, passwd)
-            res = execute_cr(cr, uid, model, method_, args, kw)
-        registry.signal_changes()
-    except Exception:
-        registry.reset_changes()
-        raise
-    return res
+    else:
+        raise NameError(f"Method not available {method}")  # noqa: TRY301
+    with Registry(db).cursor() as cr:
+        api.Environment(cr, api.SUPERUSER_ID, {})['res.users']._check_uid_passwd(uid, passwd)
+        return execute_cr(cr, uid, model, method_, args, kw)
 
 
 def execute_cr(cr, uid, obj, method, args, kw):
+    from odoo.http.retrying import retrying  # noqa: PLC0415
+
     env = api.Environment(cr, uid, {})
-    env.transaction.reset()  # clean cache etc if we retry the same transaction
     env.transaction.default_env = env  # ensure this is the default env for the call
     recs = env.get(obj)
     if recs is None:
@@ -106,8 +104,8 @@ def execute_cr(cr, uid, obj, method, args, kw):
     result = retrying(partial(call_kw, recs, method, args, kw), env)
     # force evaluation of lazy values before the cursor is closed, as it would
     # error afterwards if the lazy isn't already evaluated (and cached)
-    for l in _traverse_containers(result, lazy):
-        _0 = l._value
+    for x in _traverse_containers(result, lazy):
+        _0 = x._value
     if result is None:
         _logger.info('The method %s of the object %s cannot return `None`!', method, obj)
     return result
@@ -118,7 +116,7 @@ def _traverse_containers(val, type_):
     through standard containers (non-string mappings or sequences) *unless*
     they're selected by the type filter
     """
-    from odoo.models import BaseModel
+    from odoo.models import BaseModel  # noqa: PLC0415
     if isinstance(val, type_):
         yield val
     elif isinstance(val, (str, bytes, BaseModel)):

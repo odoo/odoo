@@ -14,7 +14,7 @@ class TestNestedTaskUpdate(TransactionCase):
         super().setUpClass()
 
         cls.partner = cls.env['res.partner'].create({'name': "Mur en béton"})
-        sale_order = cls.env['sale.order'].with_context(tracking_disable=True).create({
+        sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner.id,
             'partner_invoice_id': cls.partner.id,
             'partner_shipping_id': cls.partner.id,

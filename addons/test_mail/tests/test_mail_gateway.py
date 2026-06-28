@@ -1548,6 +1548,15 @@ class TestMailgateway(MailGatewayCommon):
                 date=False,
                 parent_id=reply1.id,
             )
+
+        self.env.cr.execute("""
+            UPDATE mail_message
+            SET date = NULL, create_date = NULL
+            WHERE id = %s
+        """, (old_disturbing_msg.id,))
+        self.env.invalidate_all()
+
+        self.assertFalse(old_disturbing_msg.create_date)
         self.assertFalse(old_disturbing_msg.date)
 
         with self.mock_datetime_and_now(datetime(2025, 11, 19, 10, 30, 0)):
@@ -2269,7 +2278,7 @@ class TestMailGatewayLoops(MailGatewayCommon):
         self.assertEqual(record.name, 'Inquiry')
         self.assertFalse(record.message_partner_ids, 'Inquiry')
         self.assertNotSentEmail()
-        self.assertEqual(record.message_ids.partner_ids, self.other_partner,
+        self.assertEqual(record.message_ids.partner_cc_ids, self.other_partner,
                          'MailGateway: recipients = alias should not be linked to message')
 
         # for some stupid reason, people add an alias as follower
@@ -2373,6 +2382,7 @@ class TestMailGatewayRecipients(MailGatewayCommon):
                         subject=f'Test To {additional_to}',
                 )
                 self.assertEqual(record.message_ids[0].partner_ids, exp_partners)
+                self.assertFalse(record.message_ids[0].partner_cc_ids)
 
                 with self.mock_mail_gateway():
                     record = self.format_and_process(
@@ -2381,7 +2391,27 @@ class TestMailGatewayRecipients(MailGatewayCommon):
                         cc=additional_to,
                         subject=f'Test Cc {additional_to}',
                 )
-                self.assertEqual(record.message_ids[0].partner_ids, exp_partners)
+                self.assertEqual(record.message_ids[0].partner_cc_ids, exp_partners)
+                self.assertFalse(record.message_ids[0].partner_ids)
+
+    def test_gateway_recipients_with_cc(self):
+        to1, to2, cc1, cc2 = self.env['res.partner'].create([
+            {'email': f'"{name}Partner" <{name}@{self.alias_domain}>', 'name': f'{name}Partner'}
+            for name in ('to1', 'to2', 'cc1', 'cc2')
+        ])
+        main = f'groups@{self.alias_domain}'
+        to = f'{main},{to1.email_normalized},{to2.email_normalized},to@external.com'
+        cc = f'{cc1.email_normalized},{cc2.email_normalized},cc@external.com'
+        record = self.format_and_process(MAIL_TEMPLATE, self.email_from, to=to, cc=cc, subject='Specific')
+
+        # Test: recipients
+        self.assertEqual(len(record), 1, 'message_process: a new mail.test should have been created')
+        self.assertEqual(len(record.message_ids), 1)
+        msg = record.message_ids[0]
+        self.assertEqual(msg.partner_ids, to1 | to2)
+        self.assertEqual(msg.partner_cc_ids, cc1 | cc2)
+        self.assertEqual(set(email_split_and_format(msg.incoming_email_to)), set(email_split_and_format(to)) - {main})
+        self.assertEqual(set(email_split_and_format(msg.incoming_email_cc)), set(email_split_and_format(cc)))
 
 
 @tagged('mail_gateway', 'mail_loop', 'mail_reply')

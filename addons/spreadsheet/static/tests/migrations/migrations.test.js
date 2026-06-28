@@ -30,7 +30,7 @@ test("Odoo formulas are migrated", () => {
     expect(migratedData.sheets[0].cells.A1).toBe(`=PIVOT.VALUE("1")`);
     expect(migratedData.sheets[0].cells.A2).toBe(`=PIVOT.HEADER("1")`);
     expect(migratedData.sheets[0].cells.A3).toBe(`=ODOO.FILTER.VALUE.V18("1")`);
-    expect(migratedData.sheets[0].cells.A4).toBe(`=ODOO.LIST("1")`);
+    expect(migratedData.sheets[0].cells.A4).toBe(`=ODOO.LIST.VALUE("1")`);
     expect(migratedData.sheets[0].cells.A5).toBe(`=ODOO.LIST.HEADER("1")`);
     expect(migratedData.sheets[0].cells.A6).toBe(`=ODOO.PIVOT.POSITION("1")`);
     expect(migratedData.sheets[0].cells.A7).toBe(`=PIVOT.VALUE("1")`);
@@ -137,9 +137,11 @@ test("List name default is model name", () => {
             1: {
                 name: "Name",
                 model: "Model",
+                columns: [],
             },
             2: {
                 model: "Model",
+                columns: [],
             },
         },
     };
@@ -213,6 +215,7 @@ test("fieldMatchings are moved from filters to their respective datasources", ()
         lists: {
             1: {
                 name: "Name",
+                columns: [],
             },
         },
         sheets: [
@@ -284,6 +287,7 @@ test("fieldMatchings offsets are correctly preserved after migration", () => {
         lists: {
             1: {
                 name: "Name",
+                columns: [],
             },
         },
         sheets: [
@@ -593,12 +597,12 @@ test("Chart cumulatedStart is set to true if cumulative at migration", () => {
     };
     const migratedData = load(data);
     const sheet = migratedData.sheets[0];
-    expect(sheet.figures[0].data.metaData.cumulatedStart).toBe(true);
-    expect(sheet.figures[0].data.cumulatedStart).toBe(true);
-    expect(sheet.figures[1].data.metaData.cumulatedStart).toBe(false);
-    expect(sheet.figures[1].data.cumulatedStart).toBe(false);
-    expect(sheet.figures[2].data.metaData.cumulatedStart).toBe(false);
-    expect(sheet.figures[2].data.cumulatedStart).toBe(false);
+    expect(sheet.figures[0].data.dataSource.metaData.cumulatedStart).toBe(true);
+    expect(sheet.figures[0].data.dataSource.cumulatedStart).toBe(true);
+    expect(sheet.figures[1].data.dataSource.metaData.cumulatedStart).toBe(false);
+    expect(sheet.figures[1].data.dataSource.cumulatedStart).toBe(false);
+    expect(sheet.figures[2].data.dataSource.metaData.cumulatedStart).toBe(false);
+    expect(sheet.figures[2].data.dataSource.cumulatedStart).toBe(false);
 });
 
 test("text global filter default value is now an array of strings", () => {
@@ -887,4 +891,18 @@ test("18.5.10: ODOO.FILTER.VALUE to ODOO.FILTER.VALUE.V18 in cells", () => {
     expect(migratedData.sheets[0].cells.A1).toBe(
         `=ODOO.FILTER.VALUE.V18("MyFilter")+ODOO.FILTER.VALUE.V18("AnotherFilter")`
     );
+});
+
+test("19.3.10: List columns are converted as objects", () => {
+    const data = {
+        version: "19.2.1",
+        lists: {
+            1: {
+                name: "My List",
+                columns: ["foo", "bar"],
+            },
+        },
+    };
+    const migratedData = load(data);
+    expect(migratedData.lists["1"].columns).toEqual([{ name: "foo" }, { name: "bar" }]);
 });

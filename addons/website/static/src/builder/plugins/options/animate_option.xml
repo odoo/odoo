@@ -30,7 +30,7 @@
                             id="'animation_on_hover_opt'"
                             t-if="this.state.canHover">On Hover</BuilderSelectItem>
             </BuilderSelect>
-            <t t-if="!!this.props.slots?.animationRowTrailing" t-slot="animationRowTrailing"/>
+            <t t-if="!!this.props.slots?.animationRowTrailing" t-call-slot="animationRowTrailing"/>
             <t t-else="" t-call="website.animateOnScrollInOut"/> 
         </BuilderRow>
         <BuilderRow label.translate="On Scroll" level="1" t-if="!!this.props.slots?.animationRowTrailing">
@@ -70,7 +70,9 @@
                 min="1"
                 max="100"
                 step="1"
-                displayRangeValue="true"/>
+                unit="'%'"
+                applyWithUnit="false"
+                withNumberInput="true" />
         </BuilderRow>
         <!-- Scroll Zone -->
         <BuilderRow label.translate="Scroll Zone" level="1" t-if="this.isActiveItem('animation_on_scroll_opt')" preview="false">
@@ -100,9 +102,16 @@
                 </BuilderSelect>
             </BuilderRow>
             <BuilderRow label.translate="Intensity" tooltip.translate="Adjust how strong the hover effect is" level="2">
-                <BuilderRange action="'setHoverEffectIntensity'"
+                <BuilderRange
+                    action="'setHoverEffectIntensity'"
                     t-if="this.isActiveItems(['hover_effect_zoom_in_opt', 'hover_effect_zoom_out_opt', 'hover_effect_mirror_blur_opt', 'hover_effect_dolly_zoom_opt'])"
-                    preview="false" min="1" max="100" step="1" displayRangeValue="true"/>
+                    preview="false"
+                    min="1"
+                    max="100"
+                    step="1"
+                    unit="'%'"
+                    applyWithUnit="false"
+                    withNumberInput="true" />
             </BuilderRow>
             <t t-if="this.isActiveItems(['hover_effect_zoom_in_opt', 'hover_effect_zoom_out_opt', 'hover_effect_dolly_zoom_opt'])" t-set="color_label">Overlay</t>
             <t t-else="" t-set="color_label">Color</t>

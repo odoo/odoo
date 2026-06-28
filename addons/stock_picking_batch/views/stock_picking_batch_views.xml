@@ -99,11 +99,11 @@
                     <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="oe_highlight" data-hotkey="q"/>
                     <button name="action_done" string="Validate" type="object" class="oe_highlight"
                         invisible="not picking_ids or state != 'in_progress' or show_check_availability" data-hotkey="v"/>
-                    <button name="action_assign" string="Check Availability" type="object" class="oe_highlight"
+                    <button name="action_assign" string="Reserve" type="object" class="oe_highlight"
                         invisible="state != 'in_progress' or not show_check_availability" data-hotkey="w"/>
                     <button name="action_done" string="Validate" type="object"
                         invisible="not picking_ids or state != 'in_progress' or not show_check_availability" data-hotkey="v"/>
-                    <button name="action_assign" string="Check Availability" type="object"
+                    <button name="action_assign" string="Reserve" type="object"
                         invisible="state != 'draft' or not show_check_availability" data-hotkey="w"/>
                     <button name="action_print" invisible="state not in ('in_progress', 'done')" string="Print" type="object" data-hotkey="o"/>
                     <button string="Print Labels" type="object" name="action_open_label_layout" data-hotkey="shift+o"/>
@@ -128,21 +128,20 @@
                                     <span class="o_stat_text">Moves</span>
                                 </div>
                         </button>
-                        <button name="action_view_reception_report" string="Allocation" type="object"
+                        <button name="action_view_allocation_report" string="Allocation" type="object"
                             class="oe_stat_button" icon="fa-list"
-                            invisible="not show_allocation"
-                            groups="stock.group_reception_report"/>
+                            invisible="not show_allocation"/>
                     </div>
                     <div class="oe_title">
-                        <h1>
-                            <field name="priority" widget="priority" class="me-3"/>
-                            <field name="name" class="oe_inline"/>
+                        <h1 class="o_outlined d-flex align-items-center gap-2">
+                            <field name="priority" widget="priority"/>
+                            <field name="name"/>
                         </h1>
                     </div>
                     <group>
                         <group id="batch_delivery_data">
                             <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
-                            <field name="picking_type_id" readonly="state != 'draft'"/>
+                            <field name="picking_type_id" options="{'no_quick_create': True}" readonly="state != 'draft'"/>
                             <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
                             <field name="description"/>
                         </group>
@@ -178,7 +177,7 @@
                 <field name="description"/>
                 <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
                 <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
-                <field name="picking_type_id" readonly="state != 'draft'"/>
+                <field name="picking_type_id" options="{'no_quick_create': True}" readonly="state != 'draft'"/>
                 <field name="company_id" optional="hide" groups="base.group_multi_company"/>
                 <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state in ('draft', 'in_progress')" decoration-danger="state == 'cancel'"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
@@ -186,11 +185,11 @@
         </field>
     </record>
 
-    <record id="stock_picking_batch_kanban" model="ir.ui.view">
-        <field name="name">stock.picking.batch.kanban</field>
+    <record id="stock_picking_batch_card" model="ir.ui.view">
+        <field name="name">stock.picking.batch.card</field>
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile oe_stock_picking_batch" sample="1">
+            <card>
                 <field name="company_id"/>
                 <field name="picking_ids"/>
                 <templates>
@@ -222,7 +221,15 @@
                         </footer>
                     </t>
                 </templates>
-            </kanban>
+            </card>
+        </field>
+    </record>
+
+    <record id="stock_picking_batch_kanban" model="ir.ui.view">
+        <field name="name">stock.picking.batch.kanban</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile oe_stock_picking_batch" sample="1" card_id="%(stock_picking_batch.stock_picking_batch_card)d"/>
         </field>
     </record>
 
@@ -243,6 +250,7 @@
         <field name="arch" type="xml">
             <search string="Search Batch Transfer">
                 <field name="name" string="Batch Transfer"/>
+                <field name="description"/>
                 <field name="picking_type_id" invisible="1"/>
                 <field name="user_id"/>
                 <filter name="to_do_transfers" string="To Do" domain="['&amp;',('user_id', 'in', [uid, False]),('state','not in',['done','cancel'])]"/>

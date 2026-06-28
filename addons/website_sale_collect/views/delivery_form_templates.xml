@@ -33,11 +33,11 @@
                         <t t-out="order_line.product_id.name"/>
                         <t t-if="attrib_names" t-out="' - ' + attrib_names"/>
                         <t
-                            t-if="order_line.product_id.product_tmpl_id._has_multiple_uoms()"
+                            t-if="order_line.product_id._has_multiple_uoms()"
                             t-out="' (' + order_line.product_uom_id.name + ')'"
                         />
                     </div>
-                    <div t-out="order_line._get_shop_warning()"/>
+                    <div t-out="order_line._get_shop_warning_stock(order_line.product_uom_qty, available_qty)"/>
                     <div
                         name="o_wsale_unavailable_line_button_container"
                         class="mt-2 mt-md-1 d-flex align-items-center gap-2"
@@ -89,10 +89,7 @@
         </div>
     </template>
 
-    <template id="in_store_delivery_method" inherit_id="website_sale.delivery_method">
-        <xpath expr="//t[@t-set='is_pickup_needed']" position="attributes">
-            <attribute name="t-value" add="dm.delivery_type=='in_store'" separator=" or "/>
-        </xpath>
+    <template id="in_store_delivery_method" inherit_id="website_sale_stock.pickup_delivery_method">
         <t t-set="pickup_location_data" position="after">
             <t t-if="not pickup_location_data and default_pickup_locations.get(dm.id)">
                 <t
@@ -114,11 +111,16 @@
         </t>
         <span name="o_delivery_method_name" position="before">
             <i
-                t-if="request.website.sudo().in_store_dm_id"
+                t-if="website.sudo().in_store_dm_id"
                 t-attf-class="fa fa-fw {{'fa-map-marker' if dm.delivery_type == 'in_store' else 'fa-truck'}} me-1"
                 role="presentation"
                 aria-label="Delivery method"
             />
+        </span>
+        <span name="o_delivery_method_name" position="after">
+            <span t-if="not order._can_be_delivered_with(dm)" class="badge text-bg-danger ms-1">
+                Not available
+            </span>
         </span>
         <div name="o_pickup_location" position="after">
             <t t-if="dm.delivery_type=='in_store' and pickup_location_data">

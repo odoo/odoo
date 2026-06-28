@@ -1,24 +1,28 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
-import { Component, onMounted, onPatched, status } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, onPatched, props, status, t, useListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
-/**
- * @typedef {Object} Props
- * @property {import("models").RtcSession} session
- * @extends {Component<Props, Env>}
- */
 export class CallParticipantVideo extends Component {
-    static props = ["session", "type", "inset?"];
     static template = "discuss.CallParticipantVideo";
 
     setup() {
         super.setup();
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
+        this.props = props({
+            inset: t
+                .function([
+                    t.instanceOf(this.store["discuss.channel.rtc.session"].Class),
+                    t.selection(["camera", "screen"]),
+                ])
+                .optional(),
+            session: t.instanceOf(this.store["discuss.channel.rtc.session"].Class),
+            type: t.selection(["camera", "screen"]),
+        });
         this.root = useRef("root");
         onMounted(() => this._update());
         onPatched(() => this._update());
-        useExternalListener(this.env.bus, "RTC-SERVICE:PLAY_MEDIA", async () => {
+        useListener(this.env.bus, "RTC-SERVICE:PLAY_MEDIA", async () => {
             await this.play();
         });
     }

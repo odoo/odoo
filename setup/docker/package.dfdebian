@@ -1,7 +1,7 @@
 # Please note that this Dockerfile is used for testing nightly builds and should
 # not be used to deploy Odoo
-FROM ubuntu:noble
-MAINTAINER Odoo S.A. <info@odoo.com>
+FROM ubuntu:resolute
+LABEL maintainer="Odoo S.A. <info@odoo.com>"
 
 RUN userdel -r ubuntu
 
@@ -13,15 +13,16 @@ RUN apt-get update && \
 RUN dpkg-reconfigure locales && \
     locale-gen C.UTF-8 && \
     /usr/sbin/update-locale LANG=C.UTF-8
-ENV LC_ALL C.UTF-8
-ENV DEBIAN_FRONTEND noninteractive
+ENV LC_ALL=C.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -qq &&  \
     apt-get upgrade -qq -y && \
     apt-get install -qq -y\
         adduser \
         dh-python \
-        packaging-dev \
+        debhelper \
+        dpkg-dev \
         postgresql \
         postgresql-client \
         python3 \
@@ -32,6 +33,7 @@ RUN apt-get update -qq &&  \
         python3-docutils \
         python3-geoip2 \
         python3-gevent \
+        python3-h11 \
         python3-pil \
         python3-jinja2 \
         python3-libsass \
@@ -45,7 +47,7 @@ RUN apt-get update -qq &&  \
         python3-psutil \
         python3-psycopg2 \
         python3-openssl \
-        python3-pypdf2 \
+        python3-pypdf \
         python3-rjsmin \
         python3-qrcode \
         python3-renderpm \

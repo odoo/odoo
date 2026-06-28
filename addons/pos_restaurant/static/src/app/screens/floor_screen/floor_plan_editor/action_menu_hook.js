@@ -1,5 +1,5 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
-import { onMounted, onWillUnmount, onPatched } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { onMounted, onWillUnmount, onPatched, useListener } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
 import { normDeg } from "@pos_restaurant/app/services/floor_plan/utils/utils";
 
@@ -210,7 +210,7 @@ export function useActionMenu(refName, containerRef, getTarget, onPositionChange
         }
     };
 
-    useExternalListener(window, "resize", useDebounced(handleResize, 150));
+    useListener(window, "resize", useDebounced(handleResize, 150));
 
     onMounted(() => {
         containerRef.el?.addEventListener("scroll", handleScroll);

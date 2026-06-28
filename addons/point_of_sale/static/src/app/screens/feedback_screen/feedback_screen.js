@@ -1,72 +1,61 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onWillStart, onWillUnmount, signal } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
-import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useErrorHandlers } from "@point_of_sale/app/hooks/hooks";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 import { PrintPopup } from "@point_of_sale/app/components/popups/print_popup/print_popup";
 import { SendReceiptPopup } from "@point_of_sale/app/components/popups/send_receipt_popup/send_receipt_popup";
+import { FeedbackPaymentSummary } from "@point_of_sale/app/components/feedback_payment_summary/feedback_payment_summary";
 
 export class FeedbackScreen extends Component {
     static template = "point_of_sale.FeedbackScreen";
     static storeOnOrder = false;
-    static components = { PriceFormatter };
+    static components = { FeedbackPaymentSummary };
     static props = {
         orderUuid: String,
         waitFor: { type: Object, optional: true },
     };
+
+    loading = signal(true);
+    timeout = signal(null);
 
     setup() {
         super.setup();
         this.pos = usePos();
         useRouterParamsChecker();
         useErrorHandlers();
-        this.notification = useService("notification");
         this.ui = useService("ui");
         this.dialog = useService("dialog");
-        this.containerRef = useRef("feedback-screen");
-        this.amountRef = useRef("amount");
-        this.state = useState({
-            loading: true,
-            timeout: false,
+
+        onWillStart(() => {
+            this.waiter();
         });
-
-        onMounted(() => {
-            this.scaleText();
-        });
-
-        useLayoutEffect(
-            () => {
-                const waiter = async () => {
-                    try {
-                        if (this.props.waitFor) {
-                            await this.props.waitFor;
-                        }
-                    } finally {
-                        await this._afterWaitFinished();
-                    }
-                };
-
-                waiter();
-            },
-            () => []
-        );
 
         onWillUnmount(() => {
-            clearTimeout(this.state.timeout);
+            clearTimeout(this.timeout());
         });
     }
 
+    async waiter() {
+        try {
+            if (this.props.waitFor) {
+                await this.props.waitFor;
+            }
+        } finally {
+            await this._afterWaitFinished();
+        }
+    }
+
     async _afterWaitFinished() {
-        this.state.loading = false;
+        this.loading.set(false);
 
         if (this.isAutoSkip && !this.ignoreTimeout) {
-            this.state.timeout = setTimeout(() => {
-                this.pos.orderDone(this.currentOrder);
-            }, this.pos.feedbackScreenAutoSkipDelay);
+            this.timeout.set(
+                setTimeout(() => {
+                    this.pos.orderDone(this.currentOrder);
+                }, this.pos.feedbackScreenAutoSkipDelay)
+            );
         }
     }
 
@@ -76,27 +65,13 @@ export class FeedbackScreen extends Component {
         );
     }
 
-    scaleText() {
-        const containerWidth = this.containerRef.el.offsetWidth * 0.8; // 80% of the container width to have some space on the sides
-        const textWidth = this.amountRef.el.scrollWidth;
-
-        const scale = Math.min(1, containerWidth / textWidth);
-        this.amountRef.el.style.transform = `scale(${scale})`;
-    }
-
     get currentOrder() {
         return this.pos.models["pos.order"].getBy("uuid", this.props.orderUuid);
     }
 
     onClick(buttonClicked = false) {
         if (!this.isAutoSkip || buttonClicked) {
-            if (this.state.loading) {
-                this.notification.add(
-                    _t("A request is still being processed in the background. Please wait."),
-                    {
-                        type: "warning",
-                    }
-                );
+            if (this.loading()) {
                 return;
             }
             this.goNext();
@@ -109,9 +84,9 @@ export class FeedbackScreen extends Component {
         if (!this.isAutoSkip) {
             return;
         }
-        if (this.state.timeout) {
-            clearTimeout(this.state.timeout);
-            this.state.timeout = false;
+        if (this.timeout()) {
+            clearTimeout(this.timeout());
+            this.timeout.set(null);
         } else {
             this.ignoreTimeout = true;
         }
@@ -119,10 +94,6 @@ export class FeedbackScreen extends Component {
 
     goNext() {
         this.pos.orderDone(this.currentOrder);
-    }
-
-    get canSendReceipt() {
-        return true;
     }
 
     get canPrintReceipt() {
@@ -138,7 +109,7 @@ export class FeedbackScreen extends Component {
 
     clickSend() {
         this.stopAutomaticSkip();
-        if (this.canSendReceipt) {
+        if (this.pos.canSendReceipt) {
             this.dialog.add(SendReceiptPopup, {
                 order: this.currentOrder,
             });

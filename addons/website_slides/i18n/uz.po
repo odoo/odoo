@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -156,9 +156,8 @@ msgstr "(masalan, https://drive.google.com/file/d/ABC/view)."
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
-#, fuzzy
 msgid "(e.g., https://drive.google.com/file/d/ABC/view?usp=sharing)."
-msgstr "(masalan, https://drive.google.com/file/d/ABC/view?usp=sharing)."
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
@@ -268,8 +267,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been enrolled to a new course: <t t-out=\"object.channel_id."
-"name or ''\">Basics of Gardening</t>.\n"
+"        You have been enrolled to a new course: <t t-"
+"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -293,8 +292,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been invited to check out this course: <t t-out=\"object."
-"channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        You have been invited to check out this course: <t t-"
+"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -318,11 +317,11 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;"
 "\">\n"
-"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object."
-"partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                        <p style=\"margin: 0px;\">Hello <t t-"
+"out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
 "                        <p><b>Congratulations!</b></p>\n"
-"                        <p>You've completed the course <b t-out=\"object."
-"channel_id.name or ''\">Basics of Gardening</b></p>\n"
+"                        <p>You've completed the course <b t-"
+"out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
 "                        <p>Check out the other available courses.</p><br/>\n"
 "\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
@@ -447,10 +446,11 @@ msgid ""
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
 "center;\">\n"
 "                            <a t-att-href=\"object.website_share_url\" t-"
-"attf-style=\"background-color: {{object.user_id.company_id."
-"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
-"decoration: none; color: {{object.user_id.company_id.email_primary_color or "
-"'#FFFFFF'}}; border-radius: 5px;\">View content</a>\n"
+"attf-style=\"background-color: "
+"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"radius: 5px;\">View content</a>\n"
 "                        </div>\n"
 "                        Enjoy this exclusive content!\n"
 "                        <t t-if=\"user.signature\">\n"
@@ -512,18 +512,6 @@ msgid "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>Loading...</b>"
 msgstr "<i class=\"fa fa-circle-o-notch fa-spin me-2\"/><b>Yuklanmoqda...</b>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
-#, fuzzy
-msgid "<i class=\"fa fa-clipboard\"/> Copy Embed Code"
-msgstr "<i class=\"fa fa-clipboard\"/> Joylashtirish kodini nusxalash"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_link
-#, fuzzy
-msgid "<i class=\"fa fa-clipboard\"/> Copy Link"
-msgstr "<i class=\"fa fa-clipboard\"/> Havolani nusxalash"
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 #, fuzzy
 msgid ""
@@ -553,12 +541,6 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-desktop me-xl-2 my-1\"/> <span class=\"d-none d-xl-inline-"
 "block\">To‘liq ekran</span>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
-#, fuzzy
-msgid "<i class=\"fa fa-envelope\"/> Send Email"
-msgstr "<i class=\"fa fa-envelope\"/> Xat yuborish"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -912,12 +894,6 @@ msgid "<span class=\"fw-normal\">Last update:</span>"
 msgstr "<span class=\"fw-normal\">Oxirgi yangilanish:</span>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
-#, fuzzy
-msgid "<span class=\"input-group-text\">Start at Page</span>"
-msgstr "<span class=\"input-group-text\">Sahifadan boshlash</span>"
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_my
 #, fuzzy
 msgid ""
@@ -1224,14 +1200,6 @@ msgstr "<strong>Hali ishtirokchilar yo‘q!</strong>"
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_partner_action_report_certified
 msgid "<strong>No Certified Attendees Yet!</strong>"
 msgstr ""
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
-#, fuzzy
-msgid "<strong>Sharing is caring!</strong> Your email(s) will arrive shortly."
-msgstr ""
-"<strong>Ulashish - g‘amxo‘rlik!</strong> Xatingiz(laringiz) tez orada yetib "
-"keladi."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_1
@@ -1937,12 +1905,6 @@ msgid "Average Review"
 msgstr "O‘rtacha sharh"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-#, fuzzy
-msgid "BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS"
-msgstr "BU YERGA TASHLANGAN QURILISH BLOKLARI BARCHA DARSLARDA KO‘RSATILADI"
-
-#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.xml:0
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
@@ -1989,9 +1951,8 @@ msgstr "Bog‘dorchilik asoslari"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.xml:0
-#, fuzzy
 msgid "Be notified when a new content is added."
-msgstr "Yangi mazmun qo‘shilganda xabar olish."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__body_has_template_value
@@ -2185,9 +2146,8 @@ msgstr "Qo‘llanma"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog.xml:0
-#, fuzzy
 msgid "Check Profile"
-msgstr "Profilni tekshirish"
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
@@ -2288,7 +2248,6 @@ msgstr "Mundarijaga qaytish uchun <b>Kurs</b> ustiga bosing."
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_modal_header
 #, fuzzy
 msgid "Close"
 msgstr "Yopish"
@@ -2544,9 +2503,8 @@ msgstr "Mas'ul shaxs"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
-#, fuzzy
 msgid "Contact the responsible to enroll."
-msgstr "Ro‘yxatdan o‘tish uchun mas'ul shaxs bilan bog‘laning."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_content_ids
@@ -2650,9 +2608,8 @@ msgstr "Havoladan nusxa olish"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
-#, fuzzy
 msgid "Copy the shareable link"
-msgstr "Ulashish havolasidan nusxa olish"
+msgstr ""
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_0_0
@@ -2793,6 +2750,12 @@ msgid "Course Set Uncompleted"
 msgstr "Kurs to‘plami yakunlanmagan"
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/slide_slide.py:0
+msgid "Course Slides"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_form
 #, fuzzy
 msgid "Course Tag"
@@ -2869,6 +2832,7 @@ msgstr "Kurs: %s"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/website_slides/models/res_partner.py:0
+#: code:addons/website_slides/models/slide_channel.py:0
 #: code:addons/website_slides/models/website.py:0
 #: code:addons/website_slides/static/src/website_builder/slides_searchbar_option.xml:0
 #: model:ir.actions.act_window,name:website_slides.slide_channel_action_report
@@ -2889,7 +2853,7 @@ msgstr "Kurslar"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/website_builder/courses_list_page_option_plugin.js:0
+#: code:addons/website_slides/static/src/website_builder/courses_list_page_option.xml:0
 #, fuzzy
 msgid "Courses Page"
 msgstr "Kurslar sahifasi"
@@ -2909,16 +2873,14 @@ msgstr "Muqova xususiyatlari"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
-#, fuzzy
 msgid "Create New Category \""
-msgstr "Yangi turkum yaratish \""
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
-#, fuzzy
 msgid "Create New Tag \""
-msgstr "Yangi teg yaratish \""
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_tag
@@ -2955,16 +2917,14 @@ msgstr "Elektron ta'lim uchun yangi kontent yarating"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.xml:0
-#, fuzzy
 msgid "Create this tag \""
-msgstr "Bu tegni yaratish \""
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.xml:0
-#, fuzzy
 msgid "Create this tag group\""
-msgstr "Bu teg guruhini yaratish\""
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__create_uid
@@ -3111,8 +3071,6 @@ msgid "Delete Question"
 msgstr "Savolni o‘chirish"
 
 #. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/website_builder/slides_searchbar_option_plugin.js:0
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__description
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__description
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -3169,6 +3127,7 @@ msgid "Display"
 msgstr "Ko‘rsatish"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_base_partner_merge_automatic_wizard__display_name
 #: model:ir.model.fields,field_description:website_slides.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__display_name
 #: model:ir.model.fields,field_description:website_slides.field_gamification_karma_tracking__display_name
@@ -3332,6 +3291,11 @@ msgid "Download URL"
 msgstr "Yuklab olish URL manzili"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "Drag blocks here to add them on all lessons"
+msgstr ""
+
+#. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_10
 #, fuzzy
 msgid "Drawing 1"
@@ -3443,7 +3407,6 @@ msgstr "Joylash kodi"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
 #, fuzzy
 msgid "Embed in another Website"
 msgstr "Boshqa veb-saytga joylash"
@@ -3867,9 +3830,8 @@ msgstr "Google Drive:"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/core/web/activity_patch.xml:0
-#, fuzzy
 msgid "Grant Access"
-msgstr "Ruxsat berish"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_graph
@@ -4033,6 +3995,7 @@ msgid "HowTo"
 msgstr "Qo‘llanma"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_base_partner_merge_automatic_wizard__id
 #: model:ir.model.fields,field_description:website_slides.field_digest_digest__id
 #: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__id
 #: model:ir.model.fields,field_description:website_slides.field_gamification_karma_tracking__id
@@ -4174,8 +4137,8 @@ msgstr "Rasm manbasi"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, fuzzy
 msgid ""
-"Impossible to send emails. Select a \"Channel Share Template\" for courses "
-"%(course_names)s first"
+"Impossible to send emails. Select a \"Channel Share Template\" for courses %"
+"(course_names)s first"
 msgstr ""
 "Elektron xatlarni yuborish imkonsiz. Avval %(course_names)s kurslari uchun "
 "\"Kanal ulashish andozasi\"ni tanlang"
@@ -4185,8 +4148,8 @@ msgstr ""
 #: code:addons/website_slides/models/slide_slide.py:0
 #, fuzzy
 msgid ""
-"Impossible to send emails. Select a \"Share Template\" for courses "
-"%(course_names)s first"
+"Impossible to send emails. Select a \"Share Template\" for courses %"
+"(course_names)s first"
 msgstr ""
 "Elektron xatlarni yuborish imkonsiz. Avval %(course_names)s kurslari uchun "
 "\"Ulashish andozasi\"ni tanlang"
@@ -4257,9 +4220,8 @@ msgstr "O‘rnatish"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog_select.xml:0
-#, fuzzy
 msgid "Install the"
-msgstr "O‘rnating"
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
@@ -4423,9 +4385,8 @@ msgstr "Ushbu ishtirokchi uchun taklif kutilmoqdami"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
-#, fuzzy
 msgid "It should look similar to"
-msgstr "U quyidagiga o‘xshash bo‘lishi kerak"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_3
@@ -4454,10 +4415,8 @@ msgstr "Kursga qo‘shilish"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
-#, fuzzy
 msgid "Join the course to take the quiz and verify your answers!"
 msgstr ""
-"Viktorinada qatnashish va javoblaringizni tekshirish uchun kursga qo‘shiling!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -4863,6 +4822,11 @@ msgstr ""
 #, fuzzy
 msgid "Menu Entry"
 msgstr "Menyu bandi"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
@@ -5360,8 +5324,8 @@ msgid ""
 msgstr ""
 "Elektron xat yuborishda tanlanadigan ixtiyoriy tarjima tili (ISO kodi). Agar "
 "belgilanmagan bo‘lsa, asosiy hamkorning tili ishlatiladi. Bu odatda tegishli "
-"tilni ta'minlaydigan to‘ldiruvchi ifoda bo‘lishi kerak, masalan: {{ object."
-"partner_id.lang }}."
+"tilni ta'minlaydigan to‘ldiruvchi ifoda bo‘lishi kerak, masalan: "
+"{{ object.partner_id.lang }}."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -5425,7 +5389,6 @@ msgstr "Tayanch nuqta"
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, fuzzy
 msgid "Please"
 msgstr "Iltimos"
@@ -5438,9 +5401,8 @@ msgid ""
 "Please %(a_login_open)slogin%(a_login_close)s or %(a_signup_open)screate an "
 "account%(a_signup_close)s to vote for this lesson"
 msgstr ""
-"Ushbu darsga ovoz berish uchun iltimos %(a_login_open)stizimga "
-"kiring%(a_login_close)s yoki %(a_signup_open)shisob "
-"yarating%(a_signup_close)s"
+"Ushbu darsga ovoz berish uchun iltimos %(a_login_open)stizimga kiring%"
+"(a_login_close)s yoki %(a_signup_open)shisob yarating%(a_signup_close)s"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5448,8 +5410,8 @@ msgstr ""
 #, fuzzy
 msgid "Please %(a_login_open)slogin%(a_login_close)s to vote for this lesson"
 msgstr ""
-"Ushbu darsga ovoz berish uchun iltimos %(a_login_open)stizimga "
-"kiring%(a_login_close)s"
+"Ushbu darsga ovoz berish uchun iltimos %(a_login_open)stizimga kiring%"
+"(a_login_close)s"
 
 #. module: website_slides
 #. odoo-python
@@ -5468,7 +5430,6 @@ msgstr "Iltimos, to‘g‘ri Google Drive havolasini kiriting"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.js:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, fuzzy
 msgid "Please enter valid email(s)"
 msgstr "Iltimos, to‘g‘ri elektron pochta manzil(lar)ini kiriting"
@@ -5595,13 +5556,6 @@ msgstr "Tavsiya etilgan slayd"
 #, fuzzy
 msgid "Public Views"
 msgstr "Ommaviy ko‘rishlar"
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/website_builder/slides_searchbar_option_plugin.js:0
-#, fuzzy
-msgid "Publication Date"
-msgstr "Nashr sanasi"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_pages_kanban_view
@@ -5795,9 +5749,8 @@ msgstr "Qabul qiluvchilar"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/core/web/activity_patch.xml:0
-#, fuzzy
 msgid "Refuse Access"
-msgstr "Kirishni rad etish"
+msgstr ""
 
 #. module: website_slides
 #: model:gamification.challenge,name:website_slides.badge_data_register_challenge
@@ -5861,9 +5814,8 @@ msgstr "Hamkor so‘rovi"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
-#, fuzzy
 msgid "Reset"
-msgstr "Qayta o‘rnatish"
+msgstr ""
 
 #. module: website_slides
 #. odoo-python
@@ -5907,9 +5859,8 @@ msgstr "Mas'ul foydalanuvchi"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
-#, fuzzy
 msgid "Responsible already contacted."
-msgstr "Mas'ul shaxs allaqachon bog‘langan."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_id
@@ -6061,7 +6012,6 @@ msgid "Score"
 msgstr "Ball"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 #, fuzzy
 msgid "Search"
@@ -6074,18 +6024,10 @@ msgid "Search Contents"
 msgstr "Kontentlarni qidirish"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.courses_search_bar
-#, fuzzy
-msgid "Search Courses"
-msgstr "Kurslarni qidirish"
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
-#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_search_bar
-#, fuzzy
-msgid "Search courses"
-msgstr "Kurslarni qidirish"
+msgid "Search courses..."
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -6261,16 +6203,14 @@ msgstr "Ketma-ketlik"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
-#, fuzzy
 msgid "Set file permissions to"
-msgstr "Fayl ruxsatlarini quyidagicha o‘rnating"
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
-#, fuzzy
 msgid "Set permissions to"
-msgstr "Ruxsatlarni quyidagicha o‘rnating"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.website_slides_action_settings
@@ -6297,7 +6237,6 @@ msgstr "Kanalni ulashish"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_link
 #, fuzzy
 msgid "Share Link"
 msgstr "Havolani ulashish"
@@ -6309,12 +6248,6 @@ msgid "Share Template"
 msgstr "Shablonni ulashish"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_modal_header
-#, fuzzy
-msgid "Share This Content"
-msgstr "Ushbu kontentni ulashish"
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_share_url
 #, fuzzy
 msgid "Share URL"
@@ -6323,7 +6256,6 @@ msgstr "URL manzilini ulashish"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, fuzzy
 msgid "Share by Email"
 msgstr "Elektron pochta orqali ulashish"
@@ -6331,7 +6263,6 @@ msgstr "Elektron pochta orqali ulashish"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, fuzzy
 msgid "Share on Facebook"
 msgstr "Facebook'da ulashish"
@@ -6339,7 +6270,6 @@ msgstr "Facebook'da ulashish"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, fuzzy
 msgid "Share on LinkedIn"
 msgstr "LinkedIn'da ulashish"
@@ -6347,7 +6277,6 @@ msgstr "LinkedIn'da ulashish"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, fuzzy
 msgid "Share on Pinterest"
 msgstr "Pinterest'da ulashish"
@@ -6355,7 +6284,6 @@ msgstr "Pinterest'da ulashish"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_modal_body
 #, fuzzy
 msgid "Share on Social Media"
 msgstr "Ijtimoiy tarmoqlarda ulashish"
@@ -6363,7 +6291,6 @@ msgstr "Ijtimoiy tarmoqlarda ulashish"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, fuzzy
 msgid "Share on Whatsapp"
 msgstr "WhatsApp'da ulashish"
@@ -6371,7 +6298,6 @@ msgstr "WhatsApp'da ulashish"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, fuzzy
 msgid "Share on X"
 msgstr "X'da ulashish"
@@ -6433,9 +6359,8 @@ msgstr "Ro‘yxatdan o‘ting!"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
-#, fuzzy
 msgid "Sign in and join the course to verify your answers!"
-msgstr "Javoblaringizni tekshirish uchun tizimga kiring va kursga qo‘shiling!"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
@@ -6963,9 +6888,8 @@ msgstr ""
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
-#, fuzzy
 msgid "This course is private."
-msgstr "Bu kurs shaxsiy."
+msgstr ""
 
 #. module: website_slides
 #. odoo-python
@@ -7265,9 +7189,8 @@ msgstr ""
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
-#, fuzzy
 msgid "Upload as"
-msgstr "Sifatida yuklash"
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
@@ -7327,9 +7250,8 @@ msgstr "Andozadan foydalanish"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
-#, fuzzy
 msgid "Use the"
-msgstr "Foydalanish"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
@@ -7844,6 +7766,14 @@ msgstr ""
 
 #. module: website_slides
 #. odoo-python
+#: code:addons/website_slides/models/base_partner_merge.py:0
+msgid ""
+"You cannot merge these contacts because multiple contacts are enrolled in "
+"the same courses: %s"
+msgstr ""
+
+#. module: website_slides
+#. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
 #, fuzzy
 msgid "You cannot upload on this channel."
@@ -7880,9 +7810,8 @@ msgstr "Ovoz berish uchun yetarli karmangiz yo‘q"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog.xml:0
-#, fuzzy
 msgid "You gained"
-msgstr "Siz qo‘lga kiritdingiz"
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
@@ -8001,9 +7930,8 @@ msgstr ""
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
-#, fuzzy
 msgid "Your email(s) will arrive shortly."
-msgstr "E-pochtangizga xabar tez orada yuboriladi."
+msgstr ""
 
 #. module: website_slides
 #. odoo-python
@@ -8073,9 +8001,8 @@ msgstr "baribir"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog_select.xml:0
-#, fuzzy
 msgid "app."
-msgstr "ilova."
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -8086,17 +8013,14 @@ msgstr "yo‘l ko‘rsatkich"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
-#, fuzzy
 msgid "button to get a link"
-msgstr "havola olish uchun tugma"
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
-#, fuzzy
 msgid "by email."
-msgstr "elektron pochta orqali."
+msgstr ""
 
 #. module: website_slides
 #. odoo-python
@@ -8274,7 +8198,6 @@ msgstr "qo‘shilish"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/course_join_popup/course_join_popup.xml:0
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, fuzzy
 msgid "login"
 msgstr "tizimga kirish"
@@ -8354,16 +8277,14 @@ msgstr "mas'ul shaxs bilan bog‘lanish uchun"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
-#, fuzzy
 msgid "to enroll."
-msgstr "ro‘yxatdan o‘tish uchun."
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/course_join_popup/course_join_popup.xml:0
-#, fuzzy
 msgid "to join this course"
-msgstr "ushbu kursga qo‘shilish uchun"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -8374,10 +8295,8 @@ msgstr "kirish huquqini so‘rash"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
-#, fuzzy
 msgid "to share this"
-msgstr "buni ulashish"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -8392,12 +8311,6 @@ msgstr "qulfdan chiqarish"
 #, fuzzy
 msgid "xp"
 msgstr "xp"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
-#, fuzzy
-msgid "your-friend@domain.com, your-friend2@domain.com"
-msgstr "your-friend@domain.com, your-friend2@domain.com"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_channel_shared

@@ -3,10 +3,16 @@ import inspect
 import logging
 from threading import Thread, Event
 
+from odoo.addons.iot_drivers.interface import Interface
 from odoo.addons.iot_drivers.main import drivers, iot_devices
 from odoo.addons.iot_drivers.event_manager import event_manager
 from odoo.addons.iot_drivers.tools.helpers import toggleable
 from odoo.tools.lru import LRU
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 _logger = logging.getLogger(__name__)
 
@@ -15,17 +21,17 @@ class Driver(Thread):
     """Hook to register the driver into the drivers list"""
     connection_type = ''
     priority = 0
+    interface: type[Interface] = None
 
     def __init__(self, identifier, device):
         super().__init__(daemon=True)
         self.dev = device
         self.device_identifier = identifier
-        self.device_name = ''
-        self.device_connection = ''
-        self.device_type = ''
-        self.device_manufacturer = ''
+        self.device_name = ""
+        self.device_connection = "direct"
+        self.device_type = ""
         self.data = {'value': '', 'result': ''}  # TODO: deprecate "value"?
-        self._actions = {"status": self.status}
+        self._actions: dict[str, Callable[[dict], dict | bool | None]] = {"status": self.status}
         self._stopped = Event()
         self._recent_action_ids = LRU(256)
 
@@ -33,6 +39,12 @@ class Driver(Thread):
         super().__init_subclass__()
         if not inspect.isabstract(cls) and cls not in drivers:
             drivers.append(cls)
+            if not cls.interface:  # TODO: remove when v19.0 is deprecated
+                _logger.warning(
+                    "DEPRECATION (%s): 'connection_type' attribute will be removed in v20.0, set "
+                    "'interface = <corresponding interface>' attribute instead.",
+                    cls.__name__,
+                )
 
     @classmethod
     def supported(cls, device):
@@ -59,7 +71,7 @@ class Driver(Thread):
 
         session_id = data.get('session_id')
         if session_id:
-            self.data["owner"] = session_id
+            self.data["owner"] = session_id  # TODO: remove when v19.0 is deprecated
             self.data["session_id"] = session_id
 
         try:
@@ -79,6 +91,7 @@ class Driver(Thread):
         # printers and payment terminals handle their own events (low on paper, waiting for card, etc.)
         # TODO: remove when v19.0 is deprecated - backward compat for db that don't handle longpolling direct response
         if self.device_type not in ["printer", "payment"]:
+            response["owner"] = session_id
             event_manager.device_changed(self, response)
 
         return response

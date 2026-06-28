@@ -556,6 +556,7 @@ class TestCommon(HttpCase):
 
         # need to manually handle post-commit hooks calls as `self.env.cr.postcommit.run()` clean
         # the queue at the end of the first post-commit hook call ...
+        self.env.cr.flush()  # flush changes first
         funcs = self.env.cr.postcommit._funcs.copy()
         while funcs:
             func = funcs.popleft()

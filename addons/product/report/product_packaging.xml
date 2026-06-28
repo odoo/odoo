@@ -1,44 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
+        <template id="report_packaging_simple_label4x7" inherit_id="product.report_simple_label4x7" primary="True">
+            <xpath expr="//div[hasclass('o_label_table')]/div[hasclass('o_label_meta_block')]" position="replace">
+                <div class="o_label_meta_block">
+                    <div class="o_label_meta_line" t-out="label.get('uom_name', '')"/>
+                </div>
+            </xpath>
+        </template>
+
         <template id="report_packagingbarcode">
             <t t-call="web.basic_layout">
                 <div class="page">
                     <div class="oe_structure"/>
-                    <t t-foreach="docs" t-as="packaging">
-                        <div class="col-4" style="padding:0;">
-                            <div class="oe_structure"></div>
-                            <table class="table table-condensed" style="border-bottom: 0px solid white !important;width: 3in;">
+                    <div t-foreach="label_pages" t-as="page_rows" class="o_label_sheet" t-att-style="'padding: 14mm 3mm'">
+                        <table class="my-0 table table-sm table-borderless">
+                            <t t-foreach="page_rows" t-as="label_row">
                                 <tr>
-                                    <th style="text-align: left;">
-                                        <strong><span t-field="packaging.uom_id.name">Package Type A</span></strong>
-                                    </th>
+                                    <t t-foreach="label_row" t-as="label">
+                                        <t t-call="product.report_packaging_simple_label4x7"/>
+                                    </t>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <strong><span t-field="packaging.product_id.display_name">Eco-friendly Wooden Chair</span></strong>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="o_row">
-                                            <strong>Qty: </strong>
-                                            <strong><span t-field="packaging.uom_id.relative_factor">10</span></strong>
-                                            <strong><span t-field="packaging.uom_id.relative_uom_id" groups="uom.group_uom">Units</span></strong>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: center; vertical-align: middle;" class="col-5">
-                                        <div t-field="packaging.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 600, 'height': 150, 'img_style': 'width:100%;height:20%;'}"/>
-                                        <span t-field="packaging.barcode">123456789012</span>
-                                    </td>
-                                </tr>
-                            </table>
-                            <div class="oe_structure"/>
-                        </div>
-                    </t>
-                    <div class="oe_structure"/>
+                            </t>
+                        </table>
+                        <div class="oe_structure"/>
+                    </div>
                 </div>
             </t>
         </template>

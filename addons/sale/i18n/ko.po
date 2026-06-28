@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2026-02-28 13:51+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
+"PO-Revision-Date: 2026-05-04 13:46+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-2/sale/"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-3/sale/"
 "ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: sale
 #. odoo-javascript
@@ -59,6 +59,11 @@ msgstr "라인 수"
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
 msgstr "# 판매주문서"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_percent
+msgid "% Delivered"
+msgstr ""
 
 #. module: sale
 #. odoo-python
@@ -101,32 +106,6 @@ msgstr ""
 "을 절약할 수 있습니다."
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "2023-12-31"
-msgstr "2023-12-31"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "25.00"
-msgstr "25.00"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "27.00"
-msgstr "27.00"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "30.00"
-msgstr "30.00"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "31.05"
-msgstr "31.05"
-
-#. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid ""
@@ -137,8 +116,8 @@ msgstr "자신에게 <b>견적서를 전송하여</b> 고객이 받을 내용을
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <t t-set=\"color\" t-value=\"object.company_id."
-"email_secondary_color or '#875A7B'\"/>\n"
+"                    <t t-set=\"color\" t-"
+"value=\"object.company_id.email_secondary_color or '#875A7B'\"/>\n"
 "                    <t t-if=\"'website_id' in object and object.website_id\" "
 "t-set=\"logo_src\" t-value=\"object.website_id.image_url(object.website_id, "
 "'logo')\"/>\n"
@@ -151,13 +130,28 @@ msgid ""
 "                        Hello <t t-out=\"object.partner_id.display_name or "
 "''\">Johnny Tester</t>,\n"
 "                        <br/><br/>\n"
-"                        <t t-set=\"tx_sudo\" t-value=\"object."
-"get_portal_last_transaction()\"/>\n"
+"                        <t t-set=\"tx_sudo\" t-"
+"value=\"object.get_portal_last_transaction()\"/>\n"
 "                        Your order <span style=\"font-weight:bold;\" t-"
 "out=\"object.name or ''\">S00049</span>\n"
 "                        <t t-if=\"object.state == 'sale' or (tx_sudo and "
 "tx_sudo.state in ('done', 'authorized'))\">\n"
-"                            has been confirmed.<br/>\n"
+"                            <t t-if=\"hasattr(object, 'carrier_id') and "
+"object.carrier_id.delivery_type == 'in_store'\">\n"
+"                                <t t-if=\"object.commitment_date and "
+"object.commitment_date.date() != object.date_order.date()\">\n"
+"                                    has been confirmed and will be ready on\n"
+"                                    <span t-field=\"object.commitment_date\" "
+"t-options=\"{&quot;widget&quot;: &quot;date&quot;}\"/>.<br/>\n"
+"                                </t>\n"
+"                                <t t-else=\"\">\n"
+"                                    has been confirmed and will be ready "
+"soon.<br/>\n"
+"                                </t>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                has been confirmed.<br/>\n"
+"                            </t>\n"
 "                            Thank you for your trust.\n"
 "                        </t>\n"
 "                        <t t-elif=\"tx_sudo and tx_sudo.state == "
@@ -170,8 +164,8 @@ msgid ""
 "                            </t>\n"
 "                        </t>\n"
 "                        <br/>\n"
-"                        <t t-set=\"documents\" t-value=\"object."
-"_get_product_documents()\"/>\n"
+"                        <t t-set=\"documents\" t-"
+"value=\"object._get_product_documents()\"/>\n"
 "                        <t t-if=\"documents\">\n"
 "                            <br/>\n"
 "                            <t t-if=\"len(documents)&gt;1\">\n"
@@ -186,21 +180,21 @@ msgid ""
 "                                <t t-foreach=\"documents\" t-"
 "as=\"document\">\n"
 "                                    <li style=\"font-size: 14px;\">\n"
-"                                        <a t-out=\"document.ir_attachment_id."
-"name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" "
-"t-att-target=\"target\"/>\n"
+"                                        <a t-"
+"out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/"
+"document/' + str(document.id))\" t-att-target=\"target\"/>\n"
 "                                    </li>\n"
 "                                </t>\n"
 "                            </ul>\n"
 "                        </t>\n"
-"                        <t t-if=\"not is_html_empty(object.user_id."
-"signature)\">\n"
+"                        <t t-if=\"not is_html_empty(object.user_id.signature)"
+"\">\n"
 "                            <div style=\"font-size: 14px; margin: 0 0 16px;"
 "\"><t t-out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
 "                        </t>\n"
 "                    </p>\n"
-"                    <t t-if=\"hasattr(object, 'website_id') and object."
-"website_id\">\n"
+"                    <t t-if=\"hasattr(object, 'website_id') and "
+"object.website_id\">\n"
 "                        <div style=\"margin: 0px; padding: 0px;\">\n"
 "                            <!-- The following loop is also used in the "
 "addons > sale > data > mail_template_data.xml file because we want the same "
@@ -216,23 +210,24 @@ msgid ""
 "width: 120px; padding: 0 10px 10px 0; vertical-align: top;\">\n"
 "                                                <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" t-attf-style=\"width: "
-"64px; height: {{object.website_id and object.website_id."
-"_get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-"
-"position: center;\" alt=\"Product image\"/>\n"
+"64px; height: {{object.website_id and "
+"object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: "
+"cover; object-position: center;\" alt=\"Product image\"/>\n"
 "                                            </td>\n"
 "                                            <td align=\"left\" "
 "style=\"vertical-align: top; padding-bottom: 22px;\">\n"
 "                                                <h3 t-attf-style=\"mso-line-"
 "height-rule:exactly; margin:0; font-size: 14px; {{'margin-bottom: 6px;' if "
 "line.product_type == 'combo' else ''}}\">\n"
-"                                                    <strong t-out=\"line."
-"product_id.name or ''\" t-attf-style=\"color: #{color};\">Taking care of "
-"Trees Course</strong>\n"
-"                                                    <span t-if=\"line."
-"product_id.product_template_attribute_value_ids\" style=\"opacity: 0.5;\">\n"
-"                                                        <t t-out=\"', '."
-"join(line.product_id.product_template_attribute_value_ids.mapped('name'))\"/"
-">\n"
+"                                                    <strong t-"
+"out=\"line.product_id.name or ''\" t-attf-style=\"color: #{color};\">Taking "
+"care of Trees Course</strong>\n"
+"                                                    <span t-"
+"if=\"line.product_id.product_template_attribute_value_ids\" style=\"opacity: "
+"0.5;\">\n"
+"                                                        <t t-out=\"', "
+"'.join(line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
 "                                                    </span>\n"
 "                                                </h3>\n"
 "                                                <t t-set=\"combo_line_idx\" "
@@ -241,25 +236,25 @@ msgid ""
 "t-value=\"0\"/>\n"
 "                                                <t t-set=\"line_idx\" t-"
 "value=\"line_index\"/>\n"
-"                                                <t t-foreach=\"object."
-"order_line\" t-as=\"combo_liness\">\n"
+"                                                <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_liness\">\n"
 "                                                    <t t-if=\"(not "
-"hasattr(line, 'is_delivery') or not line.is_delivery) and (combo_liness."
-"linked_line_id.id == line.id) and line_idx == line_index\">\n"
+"hasattr(line, 'is_delivery') or not line.is_delivery) and "
+"(combo_liness.linked_line_id.id == line.id) and line_idx == line_index\">\n"
 "                                                        <t t-"
-"if=\"combo_liness.linked_line_id.id == line.id and combo_liness.id != line."
-"id\">\n"
+"if=\"combo_liness.linked_line_id.id == line.id and combo_liness.id != "
+"line.id\">\n"
 "                                                            <t t-"
 "set=\"totalComboLines\" t-value=\"totalComboLines + 1\"/>\n"
 "                                                        </t>\n"
 "                                                    </t>\n"
 "                                                </t>\n"
-"                                                <t t-foreach=\"object."
-"order_line\" t-as=\"combo_line\">\n"
+"                                                <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_line\">\n"
 "                                                    <t t-if=\"(not "
-"hasattr(line, 'is_delivery') or not line.is_delivery) and (combo_line."
-"linked_line_id.id == line.id) and combo_line.combo_item_id and line_idx == "
-"line_index\">\n"
+"hasattr(line, 'is_delivery') or not line.is_delivery) and "
+"(combo_line.linked_line_id.id == line.id) and combo_line.combo_item_id and "
+"line_idx == line_index\">\n"
 "                                                            <t t-"
 "set=\"borderRadiusStyle\" t-value=\"''\"/>\n"
 "                                                            <t t-"
@@ -268,8 +263,8 @@ msgid ""
 "set=\"borderBottomStyle\" t-value=\"''\"/>\n"
 "\n"
 "                                                            <t t-"
-"if=\"combo_line.linked_line_id.id == line.id and combo_line.id != line."
-"id\">\n"
+"if=\"combo_line.linked_line_id.id == line.id and combo_line.id != "
+"line.id\">\n"
 "                                                                <t t-"
 "set=\"combo_line_idx\" t-value=\"combo_line_idx + 1\"/>\n"
 "                                                            </t>\n"
@@ -312,8 +307,9 @@ msgid ""
 "t-if=\"combo_line.product_id.product_template_attribute_value_ids\" "
 "style=\"opacity: 0.5;\">\n"
 "                                                                            <t "
-"t-out=\"', '.join(combo_line.product_id.product_template_attribute_value_ids."
-"mapped('name'))\"/>\n"
+"t-out=\"', "
+"'.join(combo_line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
 "                                                                        </"
 "span>\n"
 "                                                                        -\n"
@@ -321,8 +317,8 @@ msgid ""
 "                                                                            <t "
 "t-out=\"int(combo_line.product_uom_qty) or ''\">10000</t>\n"
 "                                                                            <t "
-"t-out=\"combo_line.product_uom_id.name or ''\" t-if=\"combo_line.order_id."
-"create_uid._has_group('uom.group_uom')\"/>\n"
+"t-out=\"combo_line.product_uom_id.name or ''\" t-"
+"if=\"combo_line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
 "                                                                        </"
 "span>\n"
 "                                                                        <p t-"
@@ -335,18 +331,18 @@ msgid ""
 "                                                                        <t t-"
 "if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
 "(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
-"(hasattr(combo_line, 'calendar_event_id') and combo_line."
-"calendar_event_id)\">\n"
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)"
+"\">\n"
 "                                                                            <t "
-"t-set=\"description_lines\" t-value=\"combo_line."
-"get_description_following_lines()\"/>\n"
+"t-set=\"description_lines\" t-"
+"value=\"combo_line.get_description_following_lines()\"/>\n"
 "                                                                            <div "
 "t-if=\"description_lines\" style=\"opacity: 0.7;\">\n"
 "                                                                                <t "
 "t-foreach=\"description_lines\" t-as=\"description_line\">\n"
 "                                                                                    <p "
-"t-if=\"description_line\" t-out=\"description_line\" style=\"margin: 4px 0 0;"
-"\"/>\n"
+"t-if=\"description_line\" t-out=\"description_line\" style=\"margin: 4px 0 "
+"0;\"/>\n"
 "                                                                                </"
 "t>\n"
 "                                                                            </"
@@ -360,17 +356,17 @@ msgid ""
 "                                                        <p t-"
 "if=\"hasattr(line, 'is_rental') and line.is_rental\" style=\"margin: 4px 0 "
 "0; opacity: 0.7;\">\n"
-"                                                            <t t-out=\"line."
-"_get_rental_pricing_description() or ''\"/><br/>\n"
+"                                                            <t t-"
+"out=\"line._get_rental_pricing_description() or ''\"/><br/>\n"
 "                                                        </p>\n"
 "                                                        <t t-"
 "if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
 "(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
-"(hasattr(combo_line, 'calendar_event_id') and combo_line."
-"calendar_event_id)\">\n"
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)"
+"\">\n"
 "                                                            <t t-"
-"set=\"product_description_lines\" t-value=\"line."
-"get_description_following_lines()\"/>\n"
+"set=\"product_description_lines\" t-"
+"value=\"line.get_description_following_lines()\"/>\n"
 "                                                            <div t-"
 "if=\"product_description_lines\" style=\"opacity: 0.7;\">\n"
 "                                                                <t t-"
@@ -386,11 +382,11 @@ msgid ""
 "                                                <span style=\"display: "
 "inline-block;  margin-top: 4px; padding: 4px 8px; border-radius: 20px; "
 "background-color: #e9ecef; color: #454748; font-size: 12px;\">\n"
-"                                                    <t t-out=\"int(line."
-"product_uom_qty) or ''\">10000</t>\n"
-"                                                    <t t-out=\"line."
-"product_uom_id.name or ''\" t-if=\"line.order_id.create_uid._has_group('uom."
-"group_uom')\"/>\n"
+"                                                    <t t-"
+"out=\"int(line.product_uom_qty) or ''\">10000</t>\n"
+"                                                    <t t-"
+"out=\"line.product_uom_id.name or ''\" t-"
+"if=\"line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
 "                                                </span>\n"
 "                                            </td>\n"
 "                                            <td width=\"19%\" "
@@ -405,8 +401,8 @@ msgid ""
 "                                                    <span style=\"white-"
 "space: nowrap;\">\n"
 "                                                        <t t-"
-"if=\"hasattr(object, 'website_id') and object.website_id."
-"show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
+"if=\"hasattr(object, 'website_id') and "
+"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
 "                                                            <t t-"
 "out=\"format_amount(line.price_subtotal, object.currency_id) or ''\">$ "
 "10.00</t>\n"
@@ -421,8 +417,8 @@ msgid ""
 "                                                <t t-if=\"hasattr(line, "
 "'recurring_invoice') and line.recurring_invoice\">\n"
 "                                                    <br/>\n"
-"                                                    <t t-out=\"line."
-"subscription_plan_id.billing_period_display_sentence or ''\"/>\n"
+"                                                    <t t-"
+"out=\"line.subscription_plan_id.billing_period_display_sentence or ''\"/>\n"
 "                                                </t>\n"
 "                                            </td>\n"
 "                                        </tr>\n"
@@ -447,8 +443,8 @@ msgid ""
 "                                    <td style=\"width: 50%;\" "
 "align=\"left\">Untaxed Amount</td>\n"
 "                                    <td style=\"width: 50%;\" "
-"align=\"right\" t-out=\"format_amount(object.amount_untaxed, object."
-"currency_id) or ''\">$ 10.00</td>\n"
+"align=\"right\" t-out=\"format_amount(object.amount_untaxed, "
+"object.currency_id) or ''\">$ 10.00</td>\n"
 "                                </tr>\n"
 "                            </table>\n"
 "                            <table width=\"100%\" t-else=\"\" style=\"max-"
@@ -458,32 +454,32 @@ msgid ""
 "                                    <td style=\"width: 50%; border-top: 1px "
 "solid #dee2e6;\" align=\"left\">Untaxed Amount</td>\n"
 "                                    <td style=\"width: 50%; border-top: 1px "
-"solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object."
-"amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
+"solid #dee2e6;\" align=\"right\" t-"
+"out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ "
+"10.00</td>\n"
 "                                </tr>\n"
 "                            </table>\n"
+"                            <t t-if=\"object.tax_totals and "
+"object.tax_totals['subtotals']\">\n"
+"                                <t t-set=\"all_tax_lines\" t-value=\"[tax "
+"for line in object.tax_totals['subtotals'] for tax in line['tax_groups']]\"/"
+">\n"
+"                                <table width=\"100%\" t-if=\"all_tax_lines\" "
+"style=\"max-width: 590px; font-size: 14px; border-spacing: 0px; white-space: "
+"nowrap;\" role=\"presentation\">\n"
+"                                    <tr t-foreach=\"all_tax_lines\" t-"
+"as=\"tax_line\">\n"
+"                                        <td style=\"width: 20%; padding-"
+"bottom: 8px;\" align=\"left\"><span t-out=\"tax_line['group_name']\"/></td>\n"
+"                                        <td style=\"width: 80%;\" "
+"align=\"right\" t-out=\"format_amount(tax_line['tax_amount_currency'], "
+"object.currency_id) or ''\">$ 0.00</td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </t>\n"
 "                            <table width=\"100%\" style=\"max-width: 590px; "
 "font-size: 14px; border-spacing: 0px; white-space: nowrap;\" "
 "role=\"presentation\">\n"
-"                                <tr>\n"
-"                                    <t t-if=\"object.tax_totals and object."
-"tax_totals['subtotals']\">\n"
-"                                        <t t-foreach=\"object."
-"tax_totals['subtotals']\" t-as=\"line\">\n"
-"                                            <t t-"
-"foreach=\"line['tax_groups']\" t-as=\"tax_line\">\n"
-"                                                <tr>\n"
-"                                                    <td style=\"width: 20%; "
-"padding-bottom: 8px;\" align=\"left\"><span t-out=\"tax_line['group_name']\"/"
-"></td>\n"
-"                                                    <td style=\"width: 80%;"
-"\" align=\"right\" t-out=\"format_amount(tax_line['tax_amount_currency'], "
-"object.currency_id) or ''\">$ 0.00</td>\n"
-"                                                </tr>\n"
-"                                            </t>\n"
-"                                        </t>\n"
-"                                    </t>\n"
-"                                </tr>\n"
 "                                <tr>\n"
 "                                    <td style=\"width: 20%; padding-top: "
 "4px; border-top: 1px solid #343a40; opacity: 0.9;\" "
@@ -493,12 +489,10 @@ msgid ""
 "                                        <span style=\"display: inline-block; "
 "margin-right: 4px; padding: 4px 8px; border: 1px solid #dee2e6; border-"
 "radius: 4px;\">\n"
-"                                            <span style=\"opacity: 0.9;"
-"\">Paid with</span>\n"
 "                                            <span t-attf-style=\"color: "
 "#{color}; font-weight: bold;\">\n"
-"                                                <t t-out=\"tx_sudo."
-"provider_id.sudo().name or ''\"/>\n"
+"                                                <t t-"
+"out=\"tx_sudo.provider_id.sudo().name or ''\"/>\n"
 "                                            </span>\n"
 "                                        </span>\n"
 "                                        <span style=\"opacity: 0.9;\"><t t-"
@@ -514,24 +508,27 @@ msgid ""
 "                            <tr>\n"
 "                                <td style=\"padding-bottom: 4px; font-"
 "weight: bold;\">\n"
-"                                    <span style=\"opacity: 0.9;\">Delivery "
-"with</span>\n"
+"                                    <t t-if=\"not (hasattr(object, "
+"'carrier_id') and object.carrier_id.delivery_type == 'in_store')\">\n"
+"                                        <span style=\"opacity: "
+"0.9;\">Delivery with</span>\n"
+"                                    </t>\n"
 "                                    <span t-attf-style=\"color: {{color}}; "
 "opacity: 1;\"><t t-out=\"object.carrier_id.name or ''\"/></span>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr>\n"
 "                                <td style=\"opacity: 0.9;\">\n"
-"                                    <t t-out=\"object.partner_shipping_id."
-"street or ''\">1201 S Figueroa St</t><br/>\n"
-"                                    <t t-out=\"object.partner_shipping_id."
-"city or ''\">Los Angeles</t>\n"
-"                                    <t t-out=\"object.partner_shipping_id."
-"state_id.name or ''\">California</t>\n"
-"                                    <t t-out=\"object.partner_shipping_id."
-"zip or ''\">90015</t><br/>\n"
-"                                    <t t-out=\"object.partner_shipping_id."
-"country_id.name or ''\">United States</t>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.street or ''\">1201 S Figueroa St</t><br/>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.city or ''\">Los Angeles</t>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.state_id.name or ''\">California</t>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.zip or ''\">90015</t><br/>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.country_id.name or ''\">United States</t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
@@ -546,16 +543,16 @@ msgid ""
 "                            </tr>\n"
 "                            <tr>\n"
 "                                <td>\n"
-"                                    <t t-out=\"object.partner_invoice_id."
-"street or ''\">1201 S Figueroa St</t><br/>\n"
-"                                    <t t-out=\"object.partner_invoice_id."
-"city or ''\">Los Angeles</t>\n"
-"                                    <t t-out=\"object.partner_invoice_id."
-"state_id.name or ''\">California</t>\n"
+"                                    <t t-"
+"out=\"object.partner_invoice_id.street or ''\">1201 S Figueroa St</t><br/>\n"
+"                                    <t t-"
+"out=\"object.partner_invoice_id.city or ''\">Los Angeles</t>\n"
+"                                    <t t-"
+"out=\"object.partner_invoice_id.state_id.name or ''\">California</t>\n"
 "                                    <t t-out=\"object.partner_invoice_id.zip "
 "or ''\">90015</t><br/>\n"
-"                                    <t t-out=\"object.partner_invoice_id."
-"country_id.name or ''\">United States</t>\n"
+"                                    <t t-"
+"out=\"object.partner_invoice_id.country_id.name or ''\">United States</t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
@@ -564,8 +561,8 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <t t-set=\"color\" t-value=\"object.company_id."
-"email_secondary_color or '#875A7B'\"/>\n"
+"                    <t t-set=\"color\" t-"
+"value=\"object.company_id.email_secondary_color or '#875A7B'\"/>\n"
 "                    <t t-if=\"'website_id' in object and object.website_id\" "
 "t-set=\"logo_src\" t-value=\"object.website_id.image_url(object.website_id, "
 "'logo')\"/>\n"
@@ -576,56 +573,72 @@ msgstr ""
 "                    <p style=\"margin: 0 0 12px; padding: 0px; line-height: "
 "18px; font-size: 14px;\">\n"
 "                        안녕하세요 <t t-out=\"object.partner_id.display_name "
-"or ''\">Johnny Tester</t>님,\n"
+"or ''\">Johnny Tester</t> 고객님,\n"
 "                        <br/><br/>\n"
-"                        <t t-set=\"tx_sudo\" t-value=\"object."
-"get_portal_last_transaction()\"/>\n"
-"                        주문 번호 <span style=\"font-weight:bold;\" t-"
+"                        <t t-set=\"tx_sudo\" t-"
+"value=\"object.get_portal_last_transaction()\"/>\n"
+"                        주문서 번호 <span style=\"font-weight:bold;\" t-"
 "out=\"object.name or ''\">S00049</span>\n"
 "                        <t t-if=\"object.state == 'sale' or (tx_sudo and "
 "tx_sudo.state in ('done', 'authorized'))\">\n"
-"                            주문서가 확정되었습니다.<br/>\n"
-"                            저희 서비스를 이용해 주셔서 감사합니다.\n"
+"                            <t t-if=\"hasattr(object, 'carrier_id') and "
+"object.carrier_id.delivery_type == 'in_store'\">\n"
+"                                <t t-if=\"object.commitment_date and "
+"object.commitment_date.date() != object.date_order.date()\">\n"
+"                                    주문이 확정되었으며 다음 날짜까지 준비가 "
+"완료될 예정입니다:\n"
+"                                    <span t-field=\"object.commitment_date\" "
+"t-options=\"{&quot;widget&quot;: &quot;date&quot;}\"/>.<br/>\n"
+"                                </t>\n"
+"                                <t t-else=\"\">\n"
+"                                    주문이 확정되었으며 곧 준비가 완료될 예정"
+"입니다.<br/>\n"
+"                                </t>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                주문이 확정되었습니다.<br/>\n"
+"                            </t>\n"
+"                            이용해 주셔서 감사합니다.\n"
 "                        </t>\n"
 "                        <t t-elif=\"tx_sudo and tx_sudo.state == "
 "'pending'\">\n"
-"                            주문이 아직 보류 중입니다. 결제 확인 후 승인될 예"
-"정입니다.\n"
+"                            주문이 현재 대기 중입니다. 해당 주문은 결제 즉시 "
+"확정됩니다.\n"
 "                            <t t-if=\"object.reference\">\n"
-"                                결제 관련 참조 번호는 <span style=\"font-"
-"weight:bold;\" t-out=\"object.reference or ''\"/> 입니다.\n"
+"                                결제 참조 번호: <span style=\"font-"
+"weight:bold;\" t-out=\"object.reference or ''\"/>.\n"
 "                            </t>\n"
 "                        </t>\n"
 "                        <br/>\n"
-"                        <t t-set=\"documents\" t-value=\"object."
-"_get_product_documents()\"/>\n"
+"                        <t t-set=\"documents\" t-"
+"value=\"object._get_product_documents()\"/>\n"
 "                        <t t-if=\"documents\">\n"
 "                            <br/>\n"
 "                            <t t-if=\"len(documents)&gt;1\">\n"
-"                                다음과 같은 참고 자료도 함께 확인해 보세요:\n"
+"                                다음 자료를 참고하시기 바랍니다:\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
-"                                다음과 같은 참고 자료도 함께 확인해 보세요:\n"
+"                                다음 자료를 참고하시기 바랍니다:\n"
 "                            </t>\n"
 "                            <ul style=\"margin-bottom: 0;\">\n"
 "                                <t t-foreach=\"documents\" t-"
 "as=\"document\">\n"
 "                                    <li style=\"font-size: 14px;\">\n"
-"                                        <a t-out=\"document.ir_attachment_id."
-"name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" "
-"t-att-target=\"target\"/>\n"
+"                                        <a t-"
+"out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/"
+"document/' + str(document.id))\" t-att-target=\"target\"/>\n"
 "                                    </li>\n"
 "                                </t>\n"
 "                            </ul>\n"
 "                        </t>\n"
-"                        <t t-if=\"not is_html_empty(object.user_id."
-"signature)\">\n"
+"                        <t t-if=\"not is_html_empty(object.user_id.signature)"
+"\">\n"
 "                            <div style=\"font-size: 14px; margin: 0 0 16px;"
 "\"><t t-out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
 "                        </t>\n"
 "                    </p>\n"
-"                    <t t-if=\"hasattr(object, 'website_id') and object."
-"website_id\">\n"
+"                    <t t-if=\"hasattr(object, 'website_id') and "
+"object.website_id\">\n"
 "                        <div style=\"margin: 0px; padding: 0px;\">\n"
 "                            <!-- The following loop is also used in the "
 "addons > sale > data > mail_template_data.xml file because we want the same "
@@ -641,23 +654,24 @@ msgstr ""
 "width: 120px; padding: 0 10px 10px 0; vertical-align: top;\">\n"
 "                                                <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" t-attf-style=\"width: "
-"64px; height: {{object.website_id and object.website_id."
-"_get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-"
-"position: center;\" alt=\"Product image\"/>\n"
+"64px; height: {{object.website_id and "
+"object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: "
+"cover; object-position: center;\" alt=\"Product image\"/>\n"
 "                                            </td>\n"
 "                                            <td align=\"left\" "
 "style=\"vertical-align: top; padding-bottom: 22px;\">\n"
 "                                                <h3 t-attf-style=\"mso-line-"
 "height-rule:exactly; margin:0; font-size: 14px; {{'margin-bottom: 6px;' if "
 "line.product_type == 'combo' else ''}}\">\n"
-"                                                    <strong t-out=\"line."
-"product_id.name or ''\" t-attf-style=\"color: #{color};\">Taking care of "
-"Trees Course</strong>\n"
-"                                                    <span t-if=\"line."
-"product_id.product_template_attribute_value_ids\" style=\"opacity: 0.5;\">\n"
-"                                                        <t t-out=\"', '."
-"join(line.product_id.product_template_attribute_value_ids.mapped('name'))\"/"
-">\n"
+"                                                    <strong t-"
+"out=\"line.product_id.name or ''\" t-attf-style=\"color: #{color};\">Taking "
+"care of Trees Course</strong>\n"
+"                                                    <span t-"
+"if=\"line.product_id.product_template_attribute_value_ids\" style=\"opacity: "
+"0.5;\">\n"
+"                                                        <t t-out=\"', "
+"'.join(line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
 "                                                    </span>\n"
 "                                                </h3>\n"
 "                                                <t t-set=\"combo_line_idx\" "
@@ -666,25 +680,25 @@ msgstr ""
 "t-value=\"0\"/>\n"
 "                                                <t t-set=\"line_idx\" t-"
 "value=\"line_index\"/>\n"
-"                                                <t t-foreach=\"object."
-"order_line\" t-as=\"combo_liness\">\n"
+"                                                <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_liness\">\n"
 "                                                    <t t-if=\"(not "
-"hasattr(line, 'is_delivery') or not line.is_delivery) and (combo_liness."
-"linked_line_id.id == line.id) and line_idx == line_index\">\n"
+"hasattr(line, 'is_delivery') or not line.is_delivery) and "
+"(combo_liness.linked_line_id.id == line.id) and line_idx == line_index\">\n"
 "                                                        <t t-"
-"if=\"combo_liness.linked_line_id.id == line.id and combo_liness.id != line."
-"id\">\n"
+"if=\"combo_liness.linked_line_id.id == line.id and combo_liness.id != "
+"line.id\">\n"
 "                                                            <t t-"
 "set=\"totalComboLines\" t-value=\"totalComboLines + 1\"/>\n"
 "                                                        </t>\n"
 "                                                    </t>\n"
 "                                                </t>\n"
-"                                                <t t-foreach=\"object."
-"order_line\" t-as=\"combo_line\">\n"
+"                                                <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_line\">\n"
 "                                                    <t t-if=\"(not "
-"hasattr(line, 'is_delivery') or not line.is_delivery) and (combo_line."
-"linked_line_id.id == line.id) and combo_line.combo_item_id and line_idx == "
-"line_index\">\n"
+"hasattr(line, 'is_delivery') or not line.is_delivery) and "
+"(combo_line.linked_line_id.id == line.id) and combo_line.combo_item_id and "
+"line_idx == line_index\">\n"
 "                                                            <t t-"
 "set=\"borderRadiusStyle\" t-value=\"''\"/>\n"
 "                                                            <t t-"
@@ -693,8 +707,8 @@ msgstr ""
 "set=\"borderBottomStyle\" t-value=\"''\"/>\n"
 "\n"
 "                                                            <t t-"
-"if=\"combo_line.linked_line_id.id == line.id and combo_line.id != line."
-"id\">\n"
+"if=\"combo_line.linked_line_id.id == line.id and combo_line.id != "
+"line.id\">\n"
 "                                                                <t t-"
 "set=\"combo_line_idx\" t-value=\"combo_line_idx + 1\"/>\n"
 "                                                            </t>\n"
@@ -737,8 +751,9 @@ msgstr ""
 "t-if=\"combo_line.product_id.product_template_attribute_value_ids\" "
 "style=\"opacity: 0.5;\">\n"
 "                                                                            <t "
-"t-out=\"', '.join(combo_line.product_id.product_template_attribute_value_ids."
-"mapped('name'))\"/>\n"
+"t-out=\"', "
+"'.join(combo_line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
 "                                                                        </"
 "span>\n"
 "                                                                        -\n"
@@ -746,8 +761,8 @@ msgstr ""
 "                                                                            <t "
 "t-out=\"int(combo_line.product_uom_qty) or ''\">10000</t>\n"
 "                                                                            <t "
-"t-out=\"combo_line.product_uom_id.name or ''\" t-if=\"combo_line.order_id."
-"create_uid._has_group('uom.group_uom')\"/>\n"
+"t-out=\"combo_line.product_uom_id.name or ''\" t-"
+"if=\"combo_line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
 "                                                                        </"
 "span>\n"
 "                                                                        <p t-"
@@ -760,18 +775,18 @@ msgstr ""
 "                                                                        <t t-"
 "if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
 "(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
-"(hasattr(combo_line, 'calendar_event_id') and combo_line."
-"calendar_event_id)\">\n"
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)"
+"\">\n"
 "                                                                            <t "
-"t-set=\"description_lines\" t-value=\"combo_line."
-"get_description_following_lines()\"/>\n"
+"t-set=\"description_lines\" t-"
+"value=\"combo_line.get_description_following_lines()\"/>\n"
 "                                                                            <div "
 "t-if=\"description_lines\" style=\"opacity: 0.7;\">\n"
 "                                                                                <t "
 "t-foreach=\"description_lines\" t-as=\"description_line\">\n"
 "                                                                                    <p "
-"t-if=\"description_line\" t-out=\"description_line\" style=\"margin: 4px 0 0;"
-"\"/>\n"
+"t-if=\"description_line\" t-out=\"description_line\" style=\"margin: 4px 0 "
+"0;\"/>\n"
 "                                                                                </"
 "t>\n"
 "                                                                            </"
@@ -785,17 +800,17 @@ msgstr ""
 "                                                        <p t-"
 "if=\"hasattr(line, 'is_rental') and line.is_rental\" style=\"margin: 4px 0 "
 "0; opacity: 0.7;\">\n"
-"                                                            <t t-out=\"line."
-"_get_rental_pricing_description() or ''\"/><br/>\n"
+"                                                            <t t-"
+"out=\"line._get_rental_pricing_description() or ''\"/><br/>\n"
 "                                                        </p>\n"
 "                                                        <t t-"
 "if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
 "(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
-"(hasattr(combo_line, 'calendar_event_id') and combo_line."
-"calendar_event_id)\">\n"
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)"
+"\">\n"
 "                                                            <t t-"
-"set=\"product_description_lines\" t-value=\"line."
-"get_description_following_lines()\"/>\n"
+"set=\"product_description_lines\" t-"
+"value=\"line.get_description_following_lines()\"/>\n"
 "                                                            <div t-"
 "if=\"product_description_lines\" style=\"opacity: 0.7;\">\n"
 "                                                                <t t-"
@@ -811,11 +826,11 @@ msgstr ""
 "                                                <span style=\"display: "
 "inline-block;  margin-top: 4px; padding: 4px 8px; border-radius: 20px; "
 "background-color: #e9ecef; color: #454748; font-size: 12px;\">\n"
-"                                                    <t t-out=\"int(line."
-"product_uom_qty) or ''\">10000</t>\n"
-"                                                    <t t-out=\"line."
-"product_uom_id.name or ''\" t-if=\"line.order_id.create_uid._has_group('uom."
-"group_uom')\"/>\n"
+"                                                    <t t-"
+"out=\"int(line.product_uom_qty) or ''\">10000</t>\n"
+"                                                    <t t-"
+"out=\"line.product_uom_id.name or ''\" t-"
+"if=\"line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
 "                                                </span>\n"
 "                                            </td>\n"
 "                                            <td width=\"19%\" "
@@ -830,8 +845,8 @@ msgstr ""
 "                                                    <span style=\"white-"
 "space: nowrap;\">\n"
 "                                                        <t t-"
-"if=\"hasattr(object, 'website_id') and object.website_id."
-"show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
+"if=\"hasattr(object, 'website_id') and "
+"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
 "                                                            <t t-"
 "out=\"format_amount(line.price_subtotal, object.currency_id) or ''\">$ "
 "10.00</t>\n"
@@ -846,8 +861,8 @@ msgstr ""
 "                                                <t t-if=\"hasattr(line, "
 "'recurring_invoice') and line.recurring_invoice\">\n"
 "                                                    <br/>\n"
-"                                                    <t t-out=\"line."
-"subscription_plan_id.billing_period_display_sentence or ''\"/>\n"
+"                                                    <t t-"
+"out=\"line.subscription_plan_id.billing_period_display_sentence or ''\"/>\n"
 "                                                </t>\n"
 "                                            </td>\n"
 "                                        </tr>\n"
@@ -869,11 +884,11 @@ msgstr ""
 "0.00</td>\n"
 "                                </tr>\n"
 "                                <tr>\n"
+"                                    <td style=\"width: 50%;\" align=\"left\">"
+"세전 금액:</td>\n"
 "                                    <td style=\"width: 50%;\" "
-"align=\"left\">Untaxed Amount</td>\n"
-"                                    <td style=\"width: 50%;\" "
-"align=\"right\" t-out=\"format_amount(object.amount_untaxed, object."
-"currency_id) or ''\">$ 10.00</td>\n"
+"align=\"right\" t-out=\"format_amount(object.amount_untaxed, "
+"object.currency_id) or ''\">$ 10.00</td>\n"
 "                                </tr>\n"
 "                            </table>\n"
 "                            <table width=\"100%\" t-else=\"\" style=\"max-"
@@ -881,34 +896,34 @@ msgstr ""
 "space: nowrap;\" role=\"presentation\">\n"
 "                                <tr>\n"
 "                                    <td style=\"width: 50%; border-top: 1px "
-"solid #dee2e6;\" align=\"left\">Untaxed Amount</td>\n"
+"solid #dee2e6;\" align=\"left\">세전 금액:</td>\n"
 "                                    <td style=\"width: 50%; border-top: 1px "
-"solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object."
-"amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
+"solid #dee2e6;\" align=\"right\" t-"
+"out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ "
+"10.00</td>\n"
 "                                </tr>\n"
 "                            </table>\n"
+"                            <t t-if=\"object.tax_totals and "
+"object.tax_totals['subtotals']\">\n"
+"                                <t t-set=\"all_tax_lines\" t-value=\"[tax "
+"for line in object.tax_totals['subtotals'] for tax in line['tax_groups']]\"/"
+">\n"
+"                                <table width=\"100%\" t-if=\"all_tax_lines\" "
+"style=\"max-width: 590px; font-size: 14px; border-spacing: 0px; white-space: "
+"nowrap;\" role=\"presentation\">\n"
+"                                    <tr t-foreach=\"all_tax_lines\" t-"
+"as=\"tax_line\">\n"
+"                                        <td style=\"width: 20%; padding-"
+"bottom: 8px;\" align=\"left\"><span t-out=\"tax_line['group_name']\"/></td>\n"
+"                                        <td style=\"width: 80%;\" "
+"align=\"right\" t-out=\"format_amount(tax_line['tax_amount_currency'], "
+"object.currency_id) or ''\">$ 0.00</td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </t>\n"
 "                            <table width=\"100%\" style=\"max-width: 590px; "
 "font-size: 14px; border-spacing: 0px; white-space: nowrap;\" "
 "role=\"presentation\">\n"
-"                                <tr>\n"
-"                                    <t t-if=\"object.tax_totals and object."
-"tax_totals['subtotals']\">\n"
-"                                        <t t-foreach=\"object."
-"tax_totals['subtotals']\" t-as=\"line\">\n"
-"                                            <t t-"
-"foreach=\"line['tax_groups']\" t-as=\"tax_line\">\n"
-"                                                <tr>\n"
-"                                                    <td style=\"width: 20%; "
-"padding-bottom: 8px;\" align=\"left\"><span t-out=\"tax_line['group_name']\"/"
-"></td>\n"
-"                                                    <td style=\"width: 80%;"
-"\" align=\"right\" t-out=\"format_amount(tax_line['tax_amount_currency'], "
-"object.currency_id) or ''\">$ 0.00</td>\n"
-"                                                </tr>\n"
-"                                            </t>\n"
-"                                        </t>\n"
-"                                    </t>\n"
-"                                </tr>\n"
 "                                <tr>\n"
 "                                    <td style=\"width: 20%; padding-top: "
 "4px; border-top: 1px solid #343a40; opacity: 0.9;\" "
@@ -918,12 +933,10 @@ msgstr ""
 "                                        <span style=\"display: inline-block; "
 "margin-right: 4px; padding: 4px 8px; border: 1px solid #dee2e6; border-"
 "radius: 4px;\">\n"
-"                                            <span style=\"opacity: 0.9;"
-"\">Paid with</span>\n"
 "                                            <span t-attf-style=\"color: "
 "#{color}; font-weight: bold;\">\n"
-"                                                <t t-out=\"tx_sudo."
-"provider_id.sudo().name or ''\"/>\n"
+"                                                <t t-"
+"out=\"tx_sudo.provider_id.sudo().name or ''\"/>\n"
 "                                            </span>\n"
 "                                        </span>\n"
 "                                        <span style=\"opacity: 0.9;\"><t t-"
@@ -939,24 +952,27 @@ msgstr ""
 "                            <tr>\n"
 "                                <td style=\"padding-bottom: 4px; font-"
 "weight: bold;\">\n"
-"                                    <span style=\"opacity: 0.9;\">Delivery "
-"with</span>\n"
+"                                    <t t-if=\"not (hasattr(object, "
+"'carrier_id') and object.carrier_id.delivery_type == 'in_store')\">\n"
+"                                        <span style=\"opacity: 0.9;\">배송지:"
+"</span>\n"
+"                                    </t>\n"
 "                                    <span t-attf-style=\"color: {{color}}; "
 "opacity: 1;\"><t t-out=\"object.carrier_id.name or ''\"/></span>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr>\n"
 "                                <td style=\"opacity: 0.9;\">\n"
-"                                    <t t-out=\"object.partner_shipping_id."
-"street or ''\">1201 S Figueroa St</t><br/>\n"
-"                                    <t t-out=\"object.partner_shipping_id."
-"city or ''\">Los Angeles</t>\n"
-"                                    <t t-out=\"object.partner_shipping_id."
-"state_id.name or ''\">California</t>\n"
-"                                    <t t-out=\"object.partner_shipping_id."
-"zip or ''\">90015</t><br/>\n"
-"                                    <t t-out=\"object.partner_shipping_id."
-"country_id.name or ''\">United States</t>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.street or ''\">1201 S Figueroa St</t><br/>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.city or ''\">Los Angeles</t>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.state_id.name or ''\">California</t>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.zip or ''\">90015</t><br/>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.country_id.name or ''\">United States</t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
@@ -965,22 +981,22 @@ msgstr ""
 "align=\"left\" role=\"presentation\">\n"
 "                            <tr>\n"
 "                                <td style=\"padding-bottom: 4px;\">\n"
-"                                    <span style=\"font-weight:bold;"
-"\">Billing</span>\n"
+"                                    <span style=\"font-weight:bold;\">청구지:"
+"</span>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr>\n"
 "                                <td>\n"
-"                                    <t t-out=\"object.partner_invoice_id."
-"street or ''\">1201 S Figueroa St</t><br/>\n"
-"                                    <t t-out=\"object.partner_invoice_id."
-"city or ''\">Los Angeles</t>\n"
-"                                    <t t-out=\"object.partner_invoice_id."
-"state_id.name or ''\">California</t>\n"
+"                                    <t t-"
+"out=\"object.partner_invoice_id.street or ''\">1201 S Figueroa St</t><br/>\n"
+"                                    <t t-"
+"out=\"object.partner_invoice_id.city or ''\">Los Angeles</t>\n"
+"                                    <t t-"
+"out=\"object.partner_invoice_id.state_id.name or ''\">California</t>\n"
 "                                    <t t-out=\"object.partner_invoice_id.zip "
 "or ''\">90015</t><br/>\n"
-"                                    <t t-out=\"object.partner_invoice_id."
-"country_id.name or ''\">United States</t>\n"
+"                                    <t t-"
+"out=\"object.partner_invoice_id.country_id.name or ''\">United States</t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
@@ -993,8 +1009,8 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
-"        <t t-set=\"transaction_sudo\" t-value=\"object."
-"get_portal_last_transaction()\"/>\n"
+"        <t t-set=\"transaction_sudo\" t-"
+"value=\"object.get_portal_last_transaction()\"/>\n"
 "        Hello,\n"
 "        <br/><br/>\n"
 "        A payment with reference\n"
@@ -1030,8 +1046,8 @@ msgid ""
 "object.amount_total) &lt; 0\">\n"
 "                <br/>\n"
 "                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid, object."
-"currency_id) or ''\">$ 10.00</span>\n"
+"out=\"format_amount(object.amount_total - object.amount_paid, "
+"object.currency_id) or ''\">$ 10.00</span>\n"
 "                remains to be paid.\n"
 "            </t>\n"
 "        </t>\n"
@@ -1049,8 +1065,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
-"        <t t-set=\"transaction_sudo\" t-value=\"object."
-"get_portal_last_transaction()\"/>\n"
+"        <t t-set=\"transaction_sudo\" t-"
+"value=\"object.get_portal_last_transaction()\"/>\n"
 "        안녕하세요,\n"
 "        <br/><br/>\n"
 "        결제 참조 번호:\n"
@@ -1086,8 +1102,8 @@ msgstr ""
 "object.amount_total) &lt; 0\">\n"
 "                <br/>\n"
 "                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid, object."
-"currency_id) or ''\">$ 10.00</span>\n"
+"out=\"format_amount(object.amount_total - object.amount_paid, "
+"object.currency_id) or ''\">$ 10.00</span>\n"
 "                대기 중인 결제 잔액입니다.\n"
 "            </t>\n"
 "        </t>\n"
@@ -1162,9 +1178,9 @@ msgstr ""
 "        <t t-if=\"object.origin\">\n"
 "            (참조번호: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "        </t>\n"
-"        금액 <span style=\"font-weight: bold;\" t-out=\"format_amount(object."
-"amount_total, object.currency_id) or ''\">$ 10.00</span>건이 검토를 위한 준비"
-"가 완료되었습니다\n"
+"        금액 <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span>건이 검토를 위한 준비가 완료되었습니다\n"
 "        <br/>\n"
 "        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
 ">\n"
@@ -1235,9 +1251,9 @@ msgstr ""
 "        <t t-if=\"object.origin\">\n"
 "            (참조번호: <t t-out=\"object.origin or ''\"/> )\n"
 "        </t>\n"
-"        <span style=\"font-weight: bold;\" t-out=\"format_amount(object."
-"amount_total, object.currency_id) or ''\">$ 10.00</span>건에 대한 청구서가 준"
-"비되었습니다.\n"
+"        <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span>건에 대한 청구서가 준비되었습니다.\n"
 "        <br/><br/>\n"
 "        궁금한 점이 있으시면 언제든지 문의 주시기 바랍니다.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
@@ -1311,22 +1327,6 @@ msgid "<i class=\"fa fa-print me-1\"/>View Details"
 msgstr "<i class=\"fa fa-print me-1\"/> 상세 보기"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
-"<i class=\"fa fa-refresh\"/>\n"
-"                                        <span class=\"d-touch-none "
-"ms-1\">Update Taxes</span>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
-"<i class=\"fa fa-refresh\"/>\n"
-"                                <span class=\"d-touch-none ms-1\">Update "
-"Prices</span>"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-times\"/> Reject"
 msgstr "<i class=\"fa fa-times\"/> 거부"
@@ -1367,19 +1367,6 @@ msgid "<span class=\"flex-grow-1\">/ Month</span>"
 msgstr "<span class=\"flex-grow-1\">/ 월</span>"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
-"<span class=\"o_input_box_overlay_end o_input_box_overlay_inline\">%</span>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
-"<span class=\"o_input_box_overlay_end o_input_box_overlay_inline\">days</"
-"span>"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "<span class=\"o_stat_text\">Sold</span>"
@@ -1403,8 +1390,10 @@ msgstr "<span id=\"o_sale_portal_use_amount_total\">결제 시,</span>"
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid ""
 "<span invisible=\"advance_payment_method != 'percentage'\" "
-"class=\"o_input_box_overlay_end\">%</span>"
+"class=\"oe_inline\">% </span>"
 msgstr ""
+"<span invisible=\"advance_payment_method != 'percentage'\" "
+"class=\"oe_inline\">% </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1545,8 +1534,9 @@ msgstr "영역 제목"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__advance_payment_method
 msgid ""
-"A standard invoice is issued with all the order lines ready for invoicing,"
-"according to their invoicing policy (based on ordered or delivered quantity)."
+"A standard invoice is issued with all the order lines ready for "
+"invoicing,according to their invoicing policy (based on ordered or delivered "
+"quantity)."
 msgstr ""
 "청구서 발행 기준에 따라 발행 준비가 완료된 모든 주문 라인에 대해 표준 청구서"
 "가 발행됩니다 (주문 또는 배송 수량 기준)."
@@ -1710,7 +1700,7 @@ msgstr "그리드에서 주문서로 여러 세부선택 항목을 추가합니�
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 msgid "Add to order"
-msgstr "주문 추가"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
@@ -1783,19 +1773,9 @@ msgid "Amount"
 msgstr "금액"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__amount_undiscounted
-msgid "Amount Before Discount"
-msgstr "할인 전 금액"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Amount paid:"
 msgstr "결제 금액:"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_orders_to_invoice_tree
-msgid "Amount to invoice"
-msgstr "청구서 금액"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -1893,7 +1873,12 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
+#: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__sales_price
+msgid "At Sales price"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__cost
 msgid "At cost"
 msgstr "실경비 기준"
 
@@ -2132,12 +2117,6 @@ msgstr ""
 "다. 가격 변경 여부도 확인하시기 바랍니다."
 
 #. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_quotations
-#: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
-msgid "Check a sample. It's clean!"
-msgstr "샘플을 확인하세요. 깔끔합니다!"
-
-#. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Click here to add some products or services to your quotation."
@@ -2153,7 +2132,7 @@ msgstr "환경설정 클릭"
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
 msgid "Click to define an invoicing target"
-msgstr "청구서 발행 대상을 지정하려면 클릭하세요."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
@@ -2209,11 +2188,6 @@ msgid "Communication"
 msgstr "연락"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Communication history"
-msgstr "대화 이력"
-
-#. module: sale
 #: model:ir.model,name:sale.model_res_company
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__company_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__company_id
@@ -2231,85 +2205,6 @@ msgid "Company Document Layout"
 msgstr "사내 문서 레이아웃"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with DHL<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"배송비 계산 후 DHL로 발송하세요.<br/>\n"
-"                                    <strong>(홈&gt;앱 으로 이동하여 설치하세"
-"요)</strong>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Easypost"
-msgstr "Easypost로 배송비를 계산 및 배송합니다."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Envia.com"
-msgstr "배송비 계산 후 Envia.com으로 배송하기"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with FedEx<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"배송비 계산 후 FedEx로 발송하세요.<br/>\n"
-"                                    <strong>(홈&gt;앱 으로 이동하여 설치하세"
-"요)</strong>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "Sendcloud로 배송비를 계산 및 배송합니다."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Shiprocket"
-msgstr "Shiprocket으로 배송비를 계산 및 배송합니다."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Starshipit"
-msgstr "Starshipit로 배송비 계산 및 배송"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with UPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"배송비 계산 후 UPS로 발송하세요.<br/>\n"
-"                                    <strong>(홈&gt;앱 으로 이동하여 설치하세"
-"요)</strong>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with USPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"배송비 계산 후 USPS로 발송하세요.<br/>\n"
-"                                    <strong>(홈&gt;앱 으로 이동하여 설치하세"
-"요)</strong>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with bpost"
-msgstr "bpost로 배송비를 계산 및 배송합니다."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs on orders"
-msgstr "주문 시 배송비를 계산합니다."
-
-#. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
 msgid "Config Settings"
 msgstr "환경 설정"
@@ -2323,6 +2218,18 @@ msgstr "설정"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Configure"
 msgstr "환경설정"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Configure Delivery Methods"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid ""
+"Configure delivery methods or work with delivery providers using existing "
+"integrations."
+msgstr ""
 
 #. module: sale
 #. odoo-javascript
@@ -2339,8 +2246,12 @@ msgstr "승인"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_confirm
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Confirm Orders"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Confirmation"
 msgstr ""
 
 #. module: sale
@@ -2569,11 +2480,6 @@ msgid "Customer Reference"
 msgstr "고객 참조"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Customer Signature"
-msgstr "고객 서명"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__state_id
 msgid "Customer State"
 msgstr "고객 상태"
@@ -2594,16 +2500,6 @@ msgstr "고객 우편번호"
 #: model:ir.ui.menu,name:sale.res_partner_menu
 msgid "Customers"
 msgstr "고객"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "DHL Connector"
-msgstr "DHL 커넥터"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
-msgid "DHL Express Connector"
-msgstr "DHL 익스프레스 배송"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_list
@@ -2682,11 +2578,6 @@ msgid "Deliver"
 msgstr "배송"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Deliver Content by Email"
-msgstr "이메일로 내용 전송"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_at_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivered"
@@ -2737,6 +2628,12 @@ msgid "Delivery Status"
 msgstr "배송 상태"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__sale_delay
+#: model:ir.model.fields,field_description:sale.field_product_template__sale_delay
+msgid "Delivery Time"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
@@ -2747,6 +2644,14 @@ msgstr ""
 "고객에게 약속할 수 있는 배송 날짜로, 서비스 제품의 경우 주문 내역의 최소 리드"
 "타임을 기준으로 계산됩니다. 배송되는 품목의 경우, 주문의 배송 정책을 고려하"
 "여 주문 내역의 최소 또는 최대 리드타임을 사용하도록 권장합니다."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__sale_delay
+#: model:ir.model.fields,help:sale.field_product_template__sale_delay
+msgid ""
+"Delivery lead time, in days. It's the number of days, promised to the "
+"customer, between the confirmation of the sales order and the delivery."
+msgstr ""
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2885,6 +2790,13 @@ msgid "Display Name"
 msgstr "표시명"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_company__display_product_images_on_so
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__display_product_images_on_so
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Display Product Images"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
 msgstr "수량 위젯 표시"
@@ -2898,11 +2810,6 @@ msgstr "표시 유형"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
 msgstr "분포 분석 계정"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Documentation"
-msgstr "참고 문서"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -2973,6 +2880,11 @@ msgid "Down payment <br/>"
 msgstr "선결제 금액 <br/>"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_active
+msgid "Down payment Account Active"
+msgstr ""
+
+#. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "Down payment invoice"
@@ -2992,6 +2904,11 @@ msgid ""
 msgstr ""
 "판매주문서에서 청구서를 생성하면 선결제 항목이 만들어집니다. 판매주문서를 복"
 "사하더라도 이 항목은 복사되지 않습니다."
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Download"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__downpayment_account_id
@@ -3026,11 +2943,6 @@ msgid "Duplicated Order"
 msgstr "중복 주문"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
-msgid "Easypost Connector"
-msgstr "Easypost 배송"
-
-#. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_product_field.js:0
 msgid "Edit Configuration"
@@ -3047,15 +2959,20 @@ msgid "Email sent to the customer once the invoice is available."
 msgstr "청구서가 준비되면 고객에게 이메일을 전송합니다."
 
 #. module: sale
+#: model:res.groups,name:sale.group_services_and_material
+msgid "Enable Services and Materials in Sales"
+msgstr ""
+
+#. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
 msgstr "사용자 지정 값 입력"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_envia
-msgid "Envia.com Connector"
-msgstr "Envia.com 커넥터"
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "Excl. Tax)"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -3064,8 +2981,8 @@ msgstr "예정일"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
-msgid "Expense"
-msgstr "경비"
+msgid "Expenses, Services & Materials"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
@@ -3097,12 +3014,6 @@ msgstr "추가 값"
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Extra line with %s"
 msgstr "행 추가됨:%s"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex_rest
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "FedEx Connector"
-msgstr "FedEx 배송"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
@@ -3151,7 +3062,7 @@ msgstr "멋진 아이콘 폰트 예: fa-tasks"
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
 msgid ""
 "For formula or fixed pricing, the original price isn’t shown in\n"
-"                                sale orders."
+"                            sale orders."
 msgstr ""
 
 #. module: sale
@@ -3209,11 +3120,6 @@ msgstr "젤라또"
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
 msgstr "판매 결제 링크 생성"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
-msgid "Generate a Payment Link"
-msgstr "결제 링크 생성"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3280,11 +3186,6 @@ msgstr "승인된 작업이 있습니다"
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
 msgid "Has Confirmed Order"
 msgstr "주문이 확인되었습니다"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
-msgid "Has Fiscal Position Changed"
-msgstr "재정 위치가 변경되었습니다."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -3418,10 +3319,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
 msgid ""
 "In sale order line original price is unit price and discount is in\n"
-"                                discount column."
+"                            discount column."
 msgstr ""
-"판매주문서 내역에서 원래 가격은 단가이고 할인율은 할인 열에\n"
-"표시되어 있습니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
@@ -3429,15 +3328,10 @@ msgid "In the Order"
 msgstr "주문서 상"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Incl. tax)"
-msgstr "세금 포함)"
-
-#. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 msgid "Included"
-msgstr "포함 사항"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_id
@@ -3643,11 +3537,6 @@ msgid "Invoicing Address"
 msgstr "청구서 발행 주소:"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
-msgid "Invoicing Journal"
-msgstr "청구서 발행 전표"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
@@ -3732,6 +3621,11 @@ msgid ""
 msgstr ""
 "다음 필드를 잠긴 상태로 수정하는 것은 금지되어 있습니다 :\n"
 "%s"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
+msgid "Journal"
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -3886,8 +3780,8 @@ msgstr "마진"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
-msgid "Mark Quotation as Sent"
-msgstr "견적 발송으로 표시"
+msgid "Mark as Sent"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -3922,11 +3816,6 @@ msgstr "메시지"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
 msgstr "배송 수량을 갱신하는 방법"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
-msgid "Min Qty"
-msgstr "최소 수량"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
@@ -4012,7 +3901,7 @@ msgid "Next Activity Type"
 msgstr "다음 활동 유형"
 
 #. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__no
+#: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__no
 msgid "No"
 msgstr "없음"
 
@@ -4117,7 +4006,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
 msgid "On"
-msgstr "-"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
@@ -4351,11 +4240,6 @@ msgid "Other Info"
 msgstr "기타 정보"
 
 #. module: sale
-#: model:ir.actions.report,name:sale.action_report_saleorder
-msgid "PDF Quote"
-msgstr "PDF 견적"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
@@ -4418,6 +4302,11 @@ msgid "Payment"
 msgstr "결제"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
+msgid "Payment Link"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__preferred_payment_method_line_id
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Payment Method"
@@ -4472,6 +4361,11 @@ msgstr "결제 거래 금액"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Payment terms"
 msgstr "지급 조건"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Payments"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pending_email_template_id
@@ -4563,11 +4457,6 @@ msgstr "가격표"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Pricing"
 msgstr "금액"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Print"
-msgstr "인쇄"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
@@ -4663,11 +4552,6 @@ msgid "Product Variant"
 msgstr "품목 사양"
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.menu_products
-msgid "Product Variants"
-msgstr "품목 세부사항"
-
-#. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Product prices have been recomputed according to pricelist %s."
@@ -4678,12 +4562,6 @@ msgstr "다음 가격표에 맞추어 품목 가격이 다시 계산되었습니
 #: code:addons/sale/models/sale_order.py:0
 msgid "Product prices have been recomputed."
 msgstr "품목 가격이 다시 계산되었습니다."
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr "품목 관련 세금이 재정 위치 %s 기준으로 다시 계산되었습니다."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
@@ -4779,6 +4657,11 @@ msgid "Quotation #"
 msgstr "견적서 #"
 
 #. module: sale
+#: model:ir.actions.report,name:sale.action_report_saleorder
+msgid "Quotation / Order"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
 msgstr "견적 수"
@@ -4867,14 +4750,14 @@ msgid "Ratings"
 msgstr "평가"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
-#: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
+#: model:ir.model.fields,field_description:sale.field_product_product__reinvoice_policy
+#: model:ir.model.fields,field_description:sale.field_product_template__reinvoice_policy
 msgid "Re-Invoice Costs"
 msgstr "청구서 재발행 비용"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
-#: model:ir.model.fields,field_description:sale.field_product_template__visible_expense_policy
+#: model:ir.model.fields,field_description:sale.field_product_product__visible_reinvoice_policy
+#: model:ir.model.fields,field_description:sale.field_product_template__visible_reinvoice_policy
 msgid "Re-Invoice Policy visible"
 msgstr "청구서 재발행 정책 표시"
 
@@ -4892,11 +4775,6 @@ msgstr "'장바구니에 담기' 또는 견적 시 추천됩니다"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
 msgstr "이 가격표를 기준하여 모든 가격 재계산"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Recompute all taxes based on this fiscal position"
-msgstr "이 재정 상태를 기준으로 모든 세금 내역을 다시 계산합니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -4923,7 +4801,7 @@ msgstr "이 견적 거절"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "Remove"
-msgstr "제거"
+msgstr ""
 
 #. module: sale
 #. odoo-javascript
@@ -5217,7 +5095,6 @@ msgid "Sales Order(s)"
 msgstr "판매 주문"
 
 #. module: sale
-#: model:account.analytic.plan,name:sale.analytic_plan_sale_orders
 #: model:ir.actions.act_window,name:sale.action_orders
 #: model:ir.actions.act_window,name:sale.action_orders_salesteams
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice_salesteams
@@ -5264,11 +5141,6 @@ msgid ""
 msgstr ""
 "고객에게 청구서를 발행하는데 소요되는 시간을 추가하기 위한 판매 주문 항목입니"
 "다. 작업기록 항목을 청구할 수 없도록 하려면 판매 주문 항목을 제거하십시오."
-
-#. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
-msgid "Sales price"
-msgstr "판매 가격 기준"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
@@ -5377,30 +5249,9 @@ msgid "Send PRO FORMA Invoice"
 msgstr "견적용 청구서 발송"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Send a product-specific email once the invoice is validated"
-msgstr "청구서가 승인되면 품목별로 이메일을 전송합니다."
-
-#. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_send_mail
 msgid "Send an email"
 msgstr "이메일 발송"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
-msgid "Sendcloud Connector"
-msgstr "Sendcloud 배송"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"Sending an email is useful if you need to share specific information or "
-"content about a product (instructions, rules, links, media, etc.). Create "
-"and set the email template from the product detail form (in Accounting tab)."
-msgstr ""
-"이메일 전송은 제품과 관련된 특정 정보나 내용 (사용법, 지침, 링크, 미디어 등)"
-"을 공유하는 경우에 유용합니다. 품목의 세부 정보 양식 (회계 탭)에서 이메일 서"
-"식을 생성하여 설정하십시오."
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
@@ -5438,6 +5289,11 @@ msgid "Services & Material"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__group_services_and_material
+msgid "Services & Materials"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
 msgstr "품목당 복합단가 및 자동 할인 등을 설정할 수 있습니다."
@@ -5470,11 +5326,6 @@ msgid "Shipping Address"
 msgstr "배송 주소"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_shiprocket
-msgid "Shiprocket Connector"
-msgstr "Shiprocket 배송"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_shopee
 msgid "Shopee Sync"
 msgstr "Shopee 동기화"
@@ -5495,6 +5346,11 @@ msgid "Show margins on orders"
 msgstr "주문에 대한 마진을 표시합니다."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Show product images on your PDF and online quotes."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
 msgstr "서명 &amp; 결제"
@@ -5506,7 +5362,6 @@ msgstr "온라인 서명"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Signature"
 msgstr "서명"
 
@@ -5591,11 +5446,6 @@ msgstr "원본 문서"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_product_email_template
 msgid "Specific Email"
 msgstr "특정 이메일"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_starshipit
-msgid "Starshipit Connector"
-msgstr "Starshipit 커넥터"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5884,8 +5734,8 @@ msgid ""
 "You can archive these products and recreate them with your company "
 "restriction instead, or leave them as shared product."
 msgstr ""
-"다음 제품은 이미 다른 회사의 견적 또는 판매 주문에 사용되었기 때문에 "
-"%(company)s 회사로 제한될 수 없습니다:\n"
+"다음 제품은 이미 다른 회사의 견적 또는 판매 주문에 사용되었기 때문에 %"
+"(company)s 회사로 제한될 수 없습니다:\n"
 "%(used_products)s\n"
 "대신 이러한 제품을 보관하고 회사 제한으로 재생성하거나 공유 제품으로 둘 수 있"
 "습니다."
@@ -6138,12 +5988,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
-"This will update all taxes based on the currently selected fiscal position."
-msgstr "현재 설정된 재정 위치를 기준으로 모든 세금을 업데이트합니다."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr "새로운 가격표를 기준으로 모든 품목의 단가를 업데이트합니다."
 
@@ -6233,6 +6077,11 @@ msgid "Tracking"
 msgstr "추적"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__transaction_count
+msgid "Transaction Count"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_ids
 msgid "Transactions"
 msgstr "거래"
@@ -6261,18 +6110,6 @@ msgstr "고객을 검색하거나 새로 입력합니다."
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a product..."
 msgstr "품목을 검색하거나 새로 입력합니다."
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups_rest
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "UPS Connector"
-msgstr "UPS 배송"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps_rest
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "USPS Connector"
-msgstr "USPS 배송"
 
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
@@ -6359,11 +6196,6 @@ msgid "Update Prices"
 msgstr "가격 업데이트"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Update Taxes"
-msgstr "업데이트: 세금"
-
-#. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/upload_rfq_cog_menu/upload_rfq_cog_menu.xml:0
 msgid "Upload Request For Quotation"
@@ -6382,6 +6214,11 @@ msgstr "%(customer)s 고객에 대한 %(order)s 상향 판매"
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__line_invoice_status__upselling
 msgid "Upselling Opportunity"
 msgstr "추가판매 기회"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Use fixed-price and cost-based services and materials for re-invoicing"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -6411,19 +6248,14 @@ msgid "Validate Order"
 msgstr "주문 승인"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_product_product__expense_policy
-#: model:ir.model.fields,help:sale.field_product_template__expense_policy
+#: model:ir.model.fields,help:sale.field_product_product__reinvoice_policy
+#: model:ir.model.fields,help:sale.field_product_template__reinvoice_policy
 msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
 "검증된 비용, 공급업체 청구서 또는 재고 피킹 (비용을 추적하도록 설정)은 원가 "
 "또는 판매 가격으로 고객에게 다시 청구할 수 있습니다."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
-msgid "Validity"
-msgstr "유효 기간"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
@@ -6615,12 +6447,6 @@ msgstr ""
 "성화하려면 공란으로 두십시오 (또는 0으로 설정)."
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/account_analytic_line.py:0
-msgid "You cannot set a negative quantity on services."
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "You don't use a good CRM software?"
 msgstr "좋은 CRM 소프트웨어를 사용하고 있지 않으신가요?"
@@ -6649,7 +6475,7 @@ msgstr "내 참조:"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
 msgid "Your browser does not support iframe."
-msgstr "이 브라우저는 iframe을 지원하지 않습니다."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -6698,17 +6524,14 @@ msgid "automatic invoicing: send ready invoice"
 msgstr "자동 청구서 발행: 준비된 청구서 전송"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
-msgid "bpost Connector"
-msgstr "bpost 배송"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "close"
 msgstr "닫기"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "days"
 msgstr "일"
 
@@ -6812,3 +6635,35 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Has Fiscal Position Changed"
+#~ msgstr "재정 위치가 변경되었습니다."
+
+#~ msgid "Product taxes have been recomputed according to fiscal position %s."
+#~ msgstr "품목 관련 세금이 재정 위치 %s 기준으로 다시 계산되었습니다."
+
+#~ msgid "Recompute all taxes based on this fiscal position"
+#~ msgstr "이 재정 상태를 기준으로 모든 세금 내역을 다시 계산합니다."
+
+#~ msgid ""
+#~ "This will update all taxes based on the currently selected fiscal "
+#~ "position."
+#~ msgstr "현재 설정된 재정 위치를 기준으로 모든 세금을 업데이트합니다."
+
+#~ msgid "Update Taxes"
+#~ msgstr "업데이트: 세금"
+
+#~ msgid "Communication history"
+#~ msgstr "대화 이력"
+
+#~ msgid "Generate a Payment Link"
+#~ msgstr "결제 링크 생성"
+
+#~ msgid "Mark Quotation as Sent"
+#~ msgstr "견적 발송으로 표시"
+
+#~ msgid "Print"
+#~ msgstr "인쇄"
+
+#~ msgid "Invoicing Journal"
+#~ msgstr "청구서 발행 전표"

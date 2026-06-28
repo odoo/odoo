@@ -26,7 +26,6 @@
         <record id="pos_closed_order_3_1" model="pos.order" forcecreate="False">
             <field name="session_id" ref="pos_closed_session_3" />
             <field name="company_id" ref="base.main_company" />
-            <field name="state">paid</field>
             <field name="amount_total">14.0</field>
             <field name="amount_tax">0.0</field>
             <field name="amount_paid">14.0</field>
@@ -60,10 +59,14 @@
             <field name="amount">14.0</field>
         </record>
 
+        <function model="pos.order" name="write">
+            <value eval="[ref('pos_closed_order_3_1')]"/>
+            <value eval="{'state': 'paid'}"/>
+        </function>
+
         <record id="pos_closed_order_3_2" model="pos.order" forcecreate="False">
             <field name="session_id" ref="pos_closed_session_3" />
             <field name="company_id" ref="base.main_company" />
-            <field name="state">paid</field>
             <field name="amount_total">7.0</field>
             <field name="amount_tax">0.0</field>
             <field name="amount_paid">7.0</field>
@@ -88,6 +91,11 @@
             <field name="amount">7.0</field>
         </record>
 
+        <function model="pos.order" name="write">
+            <value eval="[ref('pos_closed_order_3_2')]"/>
+            <value eval="{'state': 'paid'}"/>
+        </function>
+
         <function model="pos.session" name="action_pos_session_closing_control"
             eval="[[ref('pos_closed_session_3')]]" />
 
@@ -106,7 +114,6 @@
         <record id="pos_closed_order_4_1" model="pos.order" forcecreate="False">
             <field name="session_id" ref="pos_closed_session_4" />
             <field name="company_id" ref="base.main_company" />
-            <field name="state">paid</field>
             <field name="amount_total">6.7</field>
             <field name="amount_tax">0.0</field>
             <field name="amount_paid">6.7</field>
@@ -140,10 +147,14 @@
             <field name="amount">6.7</field>
         </record>
 
+        <function model="pos.order" name="write">
+            <value eval="[ref('pos_closed_order_4_1')]"/>
+            <value eval="{'state': 'paid'}"/>
+        </function>
+
         <record id="pos_closed_order_4_2" model="pos.order" forcecreate="False">
             <field name="session_id" ref="pos_closed_session_4" />
             <field name="company_id" ref="base.main_company" />
-            <field name="state">paid</field>
             <field name="amount_total">28.0</field>
             <field name="amount_tax">0.0</field>
             <field name="amount_paid">28.0</field>
@@ -168,6 +179,11 @@
             <field name="pos_order_id" ref="pos_closed_order_4_2" />
             <field name="amount">28.0</field>
         </record>
+
+        <function model="pos.order" name="write">
+            <value eval="[ref('pos_closed_order_4_2')]"/>
+            <value eval="{'state': 'paid'}"/>
+        </function>
 
         <record id="pos_closed_order_4_3" model="pos.order" forcecreate="False">
             <field name="session_id" ref="pos_closed_session_4" />
@@ -207,6 +223,11 @@
             <field name="pos_order_id" ref="pos_closed_order_4_3" />
             <field name="amount">6.60</field>
         </record>
+
+        <function model="pos.order" name="write">
+            <value eval="[ref('pos_closed_order_4_3')]"/>
+            <value eval="{'state': 'paid'}"/>
+        </function>
 
         <function model="pos.session" name="action_pos_session_closing_control"
             eval="[[ref('pos_closed_session_4')]]" />
@@ -359,8 +380,5 @@
             <field name="order_id" ref="pos_open_order_5" />
             <field name="full_product_name">Pizza 4 Formaggi</field>
         </record>
-
-        <function model="pos.session" name="_set_last_order_preparation_change"
-            eval="[[ref('pos_open_order_2'), ref('pos_open_order_3'), ref('pos_open_order_4')]]"/>
     </data>
 </odoo>

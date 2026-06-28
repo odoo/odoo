@@ -2,31 +2,68 @@
 <templates xml:space="preserve">
     <t t-name="web.SettingsPage">
         <div class="o_setting_container">
-            <div class="position-sticky top-0 flex-grow-0 z-1">
-                <div class="settings_tab h-100 border-end" t-if="!this.env.isSmall or this.state.search.value.length === 0" t-custom-ref="settings_tab">
-                    <t t-foreach="this.props.modules" t-as="module" t-key="module.key">
-                        <a class="tab" t-if="!module.isVisible"
-                             t-att-class="{
-                                'o_page_invalid': this.invalidApps.includes(module.key), 'selected': this.state.selectedTab === module.key and this.state.search.value.length === 0, 'text-bg-primary shadow-none': this.state.selectedTab === module.key and this.state.search.value.length === 0 and this.env.isSmall
-                             }" t-att-data-key="module.key" role="tab" t-attf-href="#${ctx.module.key}" t-on-click="() => this.onSettingTabClick(module.key)">
-                            <span class="icon d-none d-md-block" t-attf-style="background : url('{{module.imgurl}}') no-repeat center;background-size:contain;"/> <span class="app_name"><t t-out="module.string"/></span>
-                        </a>
-                    </t>
-                </div>
+            <t t-if="this.env.isSmall">
+                <t t-call="web.SettingsPage.SidePanel.Small"/>
+            </t>
+            <t t-else="">
+                <t t-call="web.SettingsPage.SidePanel.Regular"/>
+            </t>
+            <div class="settings" t-custom-ref="settings">
+                <t t-call-slot="NoContentHelper" t-if="this.props.slots['NoContentHelper'].isVisible"/>
+                <t t-call-slot="default" selectedTab="this.state.selectedTab"/>
             </div>
-            <ActionSwiper
-                    onRightSwipe="this.hasRightSwipe() ? {
-                        action: this.onRightSwipe.bind(this),
-                    } : undefined"
-                    onLeftSwipe="this.hasLeftSwipe() ? {
-                        action: this.onLeftSwipe.bind(this),
-                    } : undefined"
-                    animationType="'forwards'">
-                <div class="settings" t-custom-ref="settings">
-                    <t t-slot="NoContentHelper" t-if="this.props.slots['NoContentHelper'].isVisible"/>
-                    <t t-slot="default" selectedTab="state.selectedTab"/>
-                </div>
-            </ActionSwiper>
         </div>
     </t>
+
+    <t t-name="web.SettingsPage.SidePanel.Small">
+        <div class="settings_tab w-100 overflow-visible">
+            <div class="d-flex overflow-auto align-items-center px-2 border-top">
+                <Dropdown menuClass="'my-2 mx-1'">
+                    <span class="btn btn-secondary my-2 mx-1 o-dropdown-caret">
+                        <i class="d-inline-block flex-shrink-0 me-2" 
+                            t-attf-style="background: url('#{this.selectedModule.imgurl}') no-repeat center; background-size: contain; width: 23px; height: 23px;" />
+                        <span class="pe-2" t-out="this.selectedModule.string"/>
+                    </span>
+                    <t t-set-slot="content">
+                        <t t-foreach="this.props.modules" t-as="module" t-key="module.key">
+                            <DropdownItem t-if="!module.isVisible"
+                                class="{
+                                    'd-flex': true,
+                                    'align-items-center': true,
+                                    'py-2': true,
+                                    'px-3': true,
+                                    'text-danger': this.invalidApps.includes(module.key),
+                                    'active': this.selectedModule.key === module.key and this.state.search.value.length === 0,
+                                 }"
+                                onSelected="() => this.onSettingTabClick(module.key)">
+                                
+                                <span class="flex-shrink-0 me-2" 
+                                    t-attf-style="background: url('#{module.imgurl}') no-repeat center; background-size: contain; width: 23px; height: 23px; display: inline-block;" />
+                                
+                                <span class="app_name text-truncate">
+                                    <t t-out="module.string"/>
+                                </span>
+                            </DropdownItem>
+                        </t>
+                    </t>
+                </Dropdown>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.SettingsPage.SidePanel.Regular">
+        <div class="position-sticky top-0 flex-grow-0 z-1">
+            <div class="settings_tab h-100 border-end">
+                <t t-foreach="this.props.modules" t-as="module" t-key="module.key">
+                    <a class="tab" t-if="!module.isVisible"
+                            t-att-class="{
+                            'o_page_invalid': this.invalidApps.includes(module.key), 'selected': this.selectedModule.key === module.key and this.state.search.value.length === 0
+                            }" t-att-data-key="module.key" role="tab" t-attf-href="#${ctx.module.key}" t-on-click="() => this.onSettingTabClick(module.key)">
+                        <span class="icon d-none d-md-block" t-attf-style="background : url('{{module.imgurl}}') no-repeat center;background-size:contain;"/> <span class="app_name"><t t-out="module.string"/></span>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </t>
+
 </templates>

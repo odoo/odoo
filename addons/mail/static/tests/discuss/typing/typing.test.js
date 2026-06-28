@@ -1,5 +1,3 @@
-import { insertText as htmlInsertText } from "@html_editor/../tests/_helpers/user_actions";
-
 import {
     click,
     contains,
@@ -10,7 +8,8 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
+import { animationFrame, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import {
     Command,
@@ -282,7 +281,11 @@ test('[text composer] other member typing status "is typing" refreshes of assumi
             is_typing: true,
         })
     );
-    await expect.waitForSteps([ "register_typing_timeout", "notify_typing", "register_typing_timeout"]);
+    await expect.waitForSteps([
+        "register_typing_timeout",
+        "notify_typing",
+        "register_typing_timeout",
+    ]);
     await advanceTime(LONG_TYPING);
     await contains(".o-discuss-Typing:text('Demo is typing...')");
     await advanceTime(Store.OTHER_LONG_TYPING - LONG_TYPING);
@@ -333,7 +336,11 @@ test('other member typing status "is typing" refreshes of assuming no longer typ
             is_typing: true,
         })
     );
-    await expect.waitForSteps(["register_typing_timeout", "notify_typing", "register_typing_timeout"]);
+    await expect.waitForSteps([
+        "register_typing_timeout",
+        "notify_typing",
+        "register_typing_timeout",
+    ]);
     await advanceTime(LONG_TYPING);
     await contains(".o-discuss-Typing:text('Demo is typing...')");
     await advanceTime(Store.OTHER_LONG_TYPING - LONG_TYPING);
@@ -650,12 +657,8 @@ test("current partner is typing should not translate on textual typing status", 
 
 test("[text composer] chat: correspondent is typing", async () => {
     const pyEnv = await startServer();
-    const userId = pyEnv["res.users"].create({ name: "Demo" });
-    const partnerId = pyEnv["res.partner"].create({
-        im_status: "online",
-        name: "Demo",
-        user_ids: [userId],
-    });
+    const userId = pyEnv["res.users"].create({ name: "Demo", im_status: "online" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", user_ids: [userId] });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -665,8 +668,7 @@ test("[text composer] chat: correspondent is typing", async () => {
     });
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon");
-    await contains(".fa-circle.text-success");
+    await contains(".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon.fa-circle.text-success");
     // simulate receive typing notification from demo "is typing"
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -682,18 +684,79 @@ test("[text composer] chat: correspondent is typing", async () => {
             is_typing: false,
         })
     );
-    await contains(".fa-circle.text-success");
+    await contains(".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon.fa-circle.text-success");
+});
+
+test("Do not show typing indicator when channel is muted", async () => {
+    const pyEnv = await startServer();
+    const [userId1, userId2] = pyEnv["res.users"].create([
+        { name: "Demo", im_status: "online" },
+        { name: "Demo2", im_status: "online" },
+    ]);
+    const [partnerId1, partnerId2] = pyEnv["res.partner"].create([
+        { name: "Demo", user_ids: [userId1] },
+        { name: "Demo2", user_ids: [userId2] },
+    ]);
+    const [channelId1, channelId2] = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId1 }),
+            ],
+            channel_type: "chat",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId2 }),
+            ],
+            channel_type: "chat",
+        },
+    ]);
+    pyEnv["mail.message"].create([
+        {
+            author_id: serverState.partnerId,
+            body: "some message",
+            model: "discuss.channel",
+            res_id: channelId1,
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "some message",
+            model: "discuss.channel",
+            res_id: channelId1,
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId1);
+    await contains(".o-mail-Message", { count: 2 });
+    await rpc("/discuss/settings/mute", { minutes: -1, channel_id: channelId2 });
+    withUser(userId2, () =>
+        rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId2,
+            is_typing: true,
+        })
+    );
+    withUser(userId1, () =>
+        rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId1,
+            is_typing: true,
+        })
+    );
+    await contains(
+        ".o-mail-DiscussSidebarChannel-itemMain[title='Demo'] .o-discuss-Typing-icon[title='Demo is typing...']"
+    );
+    await contains(
+        ".o-mail-DiscussSidebarChannel-itemMain[title='Demo2'] .o-discuss-Typing-icon[title='Demo is typing...']",
+        { count: 0 }
+    );
 });
 
 test.tags("html composer");
 test("chat: correspondent is typing", async () => {
     const pyEnv = await startServer();
-    const userId = pyEnv["res.users"].create({ name: "Demo" });
-    const partnerId = pyEnv["res.partner"].create({
-        im_status: "online",
-        name: "Demo",
-        user_ids: [userId],
-    });
+    const userId = pyEnv["res.users"].create({ name: "Demo", im_status: "online" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", user_ids: [userId] });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -705,8 +768,7 @@ test("chat: correspondent is typing", async () => {
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon");
-    await contains(".fa-circle.text-success");
+    await contains(".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon.fa-circle.text-success");
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
@@ -720,17 +782,13 @@ test("chat: correspondent is typing", async () => {
             is_typing: false,
         })
     );
-    await contains(".fa-circle.text-success");
+    await contains(".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon.fa-circle.text-success");
 });
 
 test("[text composer] chat: correspondent is typing in chat window", async () => {
     const pyEnv = await startServer();
-    const userId = pyEnv["res.users"].create({ name: "Demo" });
-    const partnerId = pyEnv["res.partner"].create({
-        im_status: "online",
-        name: "Demo",
-        user_ids: [userId],
-    });
+    const userId = pyEnv["res.users"].create({ name: "Demo", im_status: "online" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", user_ids: [userId] });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -763,12 +821,8 @@ test("[text composer] chat: correspondent is typing in chat window", async () =>
 test.tags("html composer");
 test("chat: correspondent is typing in chat window", async () => {
     const pyEnv = await startServer();
-    const userId = pyEnv["res.users"].create({ name: "Demo" });
-    const partnerId = pyEnv["res.partner"].create({
-        im_status: "online",
-        name: "Demo",
-        user_ids: [userId],
-    });
+    const userId = pyEnv["res.users"].create({ name: "Demo", im_status: "online" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", user_ids: [userId] });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -812,6 +866,7 @@ test("[text composer] show typing in member list", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-ChannelMember", { count: 2 });
+    // simulate other user typing
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
@@ -819,14 +874,35 @@ test("[text composer] show typing in member list", async () => {
         })
     );
     await contains(".o-discuss-ChannelMemberList [title='Other 10 is typing...']");
-    withUser(serverState.userId, () =>
+    await insertText(".o-mail-Composer-input", "HelloWorld!");
+    await contains(
+        `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']`
+    );
+    await click(".o-mail-Composer button:enabled[aria-label='Send']");
+    await contains(
+        `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']`,
+        { count: 0 }
+    );
+    await advanceTime(Store.OTHER_LONG_TYPING);
+    await contains(".o-discuss-ChannelMemberList [title='Other 10 is typing...']", { count: 0 });
+    // check editing doesn't trigger is typing
+    await contains(".o-mail-Message-content:has(:text('HelloWorld!'))");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
+    await insertText(".o-mail-Message .o-mail-Composer-input", "GoodByeWorld!");
+    await animationFrame();
+    await advanceTime(SHORT_TYPING / 2);
+    await withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
             is_typing: true,
         })
     );
+    await animationFrame();
+    await contains(".o-discuss-ChannelMemberList [title='Other 10 is typing...']");
     await contains(
-        `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']`
+        `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']`,
+        { count: 0 }
     );
 });
 
@@ -847,6 +923,7 @@ test("show typing in member list", async () => {
     composerService.setHtmlComposer();
     await openDiscuss(channelId);
     await contains(".o-discuss-ChannelMember", { count: 2 });
+    // simulate other user typing
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
@@ -854,25 +931,55 @@ test("show typing in member list", async () => {
         })
     );
     await contains(".o-discuss-ChannelMemberList [title='Other 10 is typing...']");
-    withUser(serverState.userId, () =>
+    const threadComposerEditor = {
+        document,
+        editable: document.querySelector(
+            ".o-mail-Composer.o-discussApp .o-mail-Composer-html.odoo-editor-editable"
+        ),
+    };
+    await htmlInsertText(threadComposerEditor, "HelloWorld!");
+    await contains(
+        `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']`
+    );
+    await click(".o-mail-Composer button:enabled[aria-label='Send']");
+    await contains(
+        `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']`,
+        { count: 0 }
+    );
+    await advanceTime(Store.OTHER_LONG_TYPING);
+    await contains(".o-discuss-ChannelMemberList [title='Other 10 is typing...']", { count: 0 });
+    // check editing doesn't trigger is typing
+    await contains(".o-mail-Message-content:has(:text('HelloWorld!'))");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
+    await contains(".o-mail-Message .o-mail-Composer-html.odoo-editor-editable");
+    const messageComposerEditor = {
+        document,
+        editable: document.querySelector(
+            ".o-mail-Message .o-mail-Composer-html.odoo-editor-editable"
+        ),
+    };
+    await htmlInsertText(messageComposerEditor, "GoodByeWorld!");
+    await animationFrame();
+    await advanceTime(SHORT_TYPING / 2);
+    await withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
             is_typing: true,
         })
     );
+    await animationFrame();
+    await contains(".o-discuss-ChannelMemberList [title='Other 10 is typing...']");
     await contains(
-        `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']`
+        `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']`,
+        { count: 0 }
     );
 });
 
 test("[text composer] switching to another channel triggers notify_typing to stop", async () => {
     const pyEnv = await startServer();
-    const userId = pyEnv["res.users"].create({ name: "Demo" });
-    const partnerId = pyEnv["res.partner"].create({
-        im_status: "online",
-        name: "Demo",
-        user_ids: [userId],
-    });
+    const userId = pyEnv["res.users"].create({ name: "Demo", im_status: "online" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", user_ids: [userId] });
     const chatId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -896,12 +1003,8 @@ test("[text composer] switching to another channel triggers notify_typing to sto
 test.tags("html composer");
 test("switching to another channel triggers notify_typing to stop", async () => {
     const pyEnv = await startServer();
-    const userId = pyEnv["res.users"].create({ name: "Demo" });
-    const partnerId = pyEnv["res.partner"].create({
-        im_status: "online",
-        name: "Demo",
-        user_ids: [userId],
-    });
+    const userId = pyEnv["res.users"].create({ name: "Demo", im_status: "online" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", user_ids: [userId] });
     const chatId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),

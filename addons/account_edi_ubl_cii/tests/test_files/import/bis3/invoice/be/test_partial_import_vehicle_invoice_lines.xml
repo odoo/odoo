@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ccts="urn:oasis:names:specification:ubl:schema:xsd:CoreComponentParameters-2" xmlns:cec="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:stat="urn:oasis:names:specification:ubl:schema:xsd:DocumentStatusCode-1.0" xmlns:udt="urn:un:unece:uncefact:data:draft:UnqualifiedDataTypesSchemaModule:2">
+  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
+  <cac:InvoiceLine>
+    <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE</cbc:Description>
+      <!-- VIN in AdditionalItemProperty/Value with AdditionalItemProperty/Name == 'SerialNumber' -->
+      <cac:AdditionalItemProperty>
+        <cbc:Name>SerialNumber</cbc:Name>
+        <cbc:Value>ABCDEF012345GHJKL</cbc:Value>
+      </cac:AdditionalItemProperty>
+      <cac:AdditionalItemProperty>
+        <cbc:Name>OtherInfo</cbc:Name>
+        <cbc:Value>TEST</cbc:Value>
+      </cac:AdditionalItemProperty>
+    </cac:Item>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE</cbc:Description>
+      <!-- VIN in AdditionalItemProperty/Value with AdditionalItemProperty/Name == 'VIN' -->
+      <cac:AdditionalItemProperty>
+        <cbc:Name>VIN</cbc:Name>
+        <cbc:Value>ABCDEF012346GHJKL</cbc:Value>
+      </cac:AdditionalItemProperty>
+      <cac:AdditionalItemProperty>
+        <cbc:Name>OtherInfo</cbc:Name>
+        <cbc:Value>TEST</cbc:Value>
+      </cac:AdditionalItemProperty>
+    </cac:Item>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE</cbc:Description>
+      <!-- License Plate in AdditionalItemProperty/Value with AdditionalItemProperty/Name == 'PlateNumber' -->
+      <cac:AdditionalItemProperty>
+        <cbc:Name>PlateNumber</cbc:Name>
+        <cbc:Value>1-ABC-123</cbc:Value>
+      </cac:AdditionalItemProperty>
+    </cac:Item>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <!-- VIN in Item/Description -->
+      <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE ABCDEF012347GHJKL</cbc:Description>
+    </cac:Item>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <!-- LICENSE PLATE in Item/Description -->
+      <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE 1-ABC-123</cbc:Description>
+    </cac:Item>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <!-- combine LICENSE PLATE and VIN in Item/Description -->
+      <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 ABCDEF012345GHJKL VOITURE PARTICULIERE ESSENCE 1-ABC-123</cbc:Description>
+    </cac:Item>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE</cbc:Description>
+        <!--Shouldn't import vehicle as we have more than 1 Serial number-->
+      <cac:AdditionalItemProperty>
+        <cbc:Name>SerialNumber</cbc:Name>
+        <cbc:Value>ABCDEF012348GHJKL</cbc:Value>
+      </cac:AdditionalItemProperty>
+      <cac:AdditionalItemProperty>
+        <cbc:Name>VIN</cbc:Name>
+        <cbc:Value>ABCDEF012349GHJKL</cbc:Value>
+      </cac:AdditionalItemProperty>
+      <cac:AdditionalItemProperty>
+        <cbc:Name>OtherInfo</cbc:Name>
+        <cbc:Value>TEST</cbc:Value>
+      </cac:AdditionalItemProperty>
+    </cac:Item>
+  </cac:InvoiceLine>
+</Invoice>

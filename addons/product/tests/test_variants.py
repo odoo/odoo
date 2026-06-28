@@ -2,7 +2,6 @@
 
 import io
 import unittest.mock
-
 from collections import OrderedDict
 from datetime import timedelta
 from unittest.mock import patch
@@ -302,10 +301,106 @@ class TestVariants(ProductVariantsCommon):
         )
 
     def test_variant_extra_price_when_lst_price_set_manually(self):
-        variant = self.product
+        variant = self.product_sofa_red
+        template_price = variant.list_price
         self.assertEqual(variant._get_attributes_extra_price(), 0)
         variant.lst_price = 500
-        self.assertEqual(variant._get_attributes_extra_price(), 480)
+        self.assertEqual(variant.product_tmpl_id.list_price, template_price)
+        self.assertEqual(variant._get_attributes_extra_price(), 500 - template_price)
+
+    def test_manual_lst_price_preserved_on_single_value_attribute(self):
+        """Adding a single-value attribute to a template with existing variants
+        must not reset manually-set lst_price on those variants.
+        """
+        template = self.env['product.template'].create({
+            'name': 'Cable',
+            'list_price': 1.0,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': self.size_attribute.id,
+                'value_ids': [Command.set([
+                    self.size_attribute_s.id,
+                    self.size_attribute_m.id,
+                    self.size_attribute_l.id,
+                ])],
+            })],
+        })
+        variants = template.product_variant_ids
+        self.assertEqual(len(variants), 3)
+        for variant, price in zip(variants, [10.0, 20.0, 30.0]):
+            variant.lst_price = price
+        variant_ids_before = set(variants.ids)
+        prices_before = {v.id: v.lst_price for v in variants}
+
+        brand_attribute = self.env['product.attribute'].create({
+            'name': 'Brand',
+            'value_ids': [Command.create({'name': 'Acme'})],
+        })
+        template.write({
+            'attribute_line_ids': [Command.create({
+                'attribute_id': brand_attribute.id,
+                'value_ids': [Command.set(brand_attribute.value_ids.ids)],
+            })],
+        })
+
+        variants_after = template.product_variant_ids
+        self.assertEqual(set(variants_after.ids), variant_ids_before)
+        self.assertDictEqual(
+            {v.id: v.lst_price for v in variants_after},
+            prices_before,
+        )
+
+    def test_lst_price_on_single_value_attribute_with_price_extra(self):
+        """When the added single-value attribute has a non-zero price_extra,
+        overridden variants must keep their override, while non-overridden
+        variants must pick up the new price_extra via the recompute.
+        """
+        # Template with two size variants. price_extra(M)=2.0 to distinguish
+        # overridden vs computed cases.
+        template = self.env['product.template'].create({
+            'name': 'Cable',
+            'list_price': 1.0,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': self.size_attribute.id,
+                'value_ids': [Command.set([
+                    self.size_attribute_s.id,
+                    self.size_attribute_m.id,
+                ])],
+            })],
+        })
+        ptav_m = template.attribute_line_ids.product_template_value_ids.filtered(
+            lambda ptav: ptav.product_attribute_value_id == self.size_attribute_m,
+        )
+        ptav_m.price_extra = 2.0
+        variant_s = template.product_variant_ids.filtered(
+            lambda v: v.product_template_attribute_value_ids.product_attribute_value_id == self.size_attribute_s,
+        )
+        variant_m = template.product_variant_ids.filtered(
+            lambda v: v.product_template_attribute_value_ids.product_attribute_value_id == self.size_attribute_m,
+        )
+        # S gets a manual override; M is left at the computed value (1 + 2 = 3).
+        variant_s.lst_price = 100.0
+        self.assertEqual(variant_m.lst_price, 3.0)
+
+        # Add a single-value Brand attribute that itself carries a price_extra.
+        # `default_extra_price` propagates to the ptav at creation time, so the
+        # extra is set atomically with the line write — before _create_variant_ids
+        # runs and the snapshot is taken.
+        brand_attribute = self.env['product.attribute'].create({
+            'name': 'Brand',
+            'value_ids': [Command.create({'name': 'Acme', 'default_extra_price': 5.0})],
+        })
+        template.write({
+            'attribute_line_ids': [Command.create({
+                'attribute_id': brand_attribute.id,
+                'value_ids': [Command.set(brand_attribute.value_ids.ids)],
+            })],
+        })
+
+        # Override is preserved verbatim.
+        self.assertEqual(variant_s.lst_price, 100.0)
+        # Non-overridden variant correctly picks up the new ptav's price_extra:
+        # list_price (1) + size_M extra (2) + Brand extra (5) = 8.
+        self.assertEqual(variant_m.lst_price, 8.0)
 
     @mute_logger('odoo.models.unlink')
     def test_archive_variant(self):
@@ -442,6 +537,96 @@ class TestVariants(ProductVariantsCommon):
             product_template.barcode,
             'THIS IS A BARCODE',
         )
+
+    def test_extra_uom_ids_propagation_on_variant_recreation(self):
+        """When adding a new attribute to a template, existing extra_uom_ids
+        should propagate to new variants based on PTAV subset matching."""
+        template = self.env['product.template'].create({
+            'name': 'Test Extra UoM Propagation',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.size_attribute.id,
+                    'value_ids': [Command.set([
+                        self.size_attribute_s.id,
+                        self.size_attribute_m.id,
+                        self.size_attribute_l.id,
+                    ])],
+                }),
+            ],
+        })
+        self.assertEqual(len(template.product_variant_ids), 3)
+
+        # Assign extra_uom_ids per variant
+        variants = template.product_variant_ids.sorted('id')
+        variant_s, variant_m, variant_l = variants
+        variant_s.extra_uom_ids = self.uom_gram
+        variant_m.extra_uom_ids = self.uom_kgm
+        variant_l.extra_uom_ids = self.uom_ton
+
+        # Add Color attribute → triggers variant recreation → 6 variants
+        template.write({
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.color_attribute.id,
+                    'value_ids': [Command.set([
+                        self.color_attribute_red.id,
+                        self.color_attribute_blue.id,
+                    ])],
+                }),
+            ],
+        })
+        self.assertEqual(len(template.product_variant_ids), 6)
+
+        # Check propagation by PTAV subset matching
+        for variant in template.product_variant_ids:
+            ptav_names = variant.product_template_attribute_value_ids.mapped(
+                'product_attribute_value_id.name'
+            )
+            if 'S' in ptav_names:
+                self.assertEqual(variant.extra_uom_ids, self.uom_gram,
+                    f"Variant {ptav_names} should inherit gram from S")
+            elif 'M' in ptav_names:
+                self.assertEqual(variant.extra_uom_ids, self.uom_kgm,
+                    f"Variant {ptav_names} should inherit kgm from M")
+            elif 'L' in ptav_names:
+                self.assertEqual(variant.extra_uom_ids, self.uom_ton,
+                    f"Variant {ptav_names} should inherit ton from L")
+
+    def test_extra_uom_ids_not_propagated_without_match(self):
+        """When old variants have no PTAV overlap with new ones,
+        extra_uom_ids should not propagate."""
+        template = self.env['product.template'].create({
+            'name': 'Test No Propagation',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.size_attribute.id,
+                    'value_ids': [Command.set([
+                        self.size_attribute_s.id,
+                        self.size_attribute_m.id,
+                    ])],
+                }),
+            ],
+        })
+        variants = template.product_variant_ids.sorted('id')
+        variants[0].extra_uom_ids = self.uom_gram  # S only
+
+        # Remove Size, add Color → completely new variants with no PTAV overlap
+        template.write({
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.color_attribute.id,
+                    'value_ids': [Command.set([
+                        self.color_attribute_red.id,
+                        self.color_attribute_blue.id,
+                    ])],
+                }),
+                Command.unlink(template.attribute_line_ids[0].id),
+            ],
+        })
+
+        self.assertFalse(template.product_variant_ids.extra_uom_ids,
+            "New variants with no PTAV overlap should have empty extra_uom_ids")
+
 
 @tagged('post_install', '-at_install')
 class TestVariantsNoCreate(ProductVariantsCommon):
@@ -681,6 +866,8 @@ class TestVariantsManyAttributes(TransactionCase):
                 'value_ids': [Command.create({'name': n}) for n in range(10)]
             } for name in "ABCDEFGHIJ"
         ])
+        # Reset the ICP in case it's been set in another module.
+        cls.env['ir.config_parameter'].sudo().search([('key', '=', 'product.dynamic_variant_limit')]).unlink()
 
     def test_01_create_no_variant(self):
         toto = self.env['product.template'].create({
@@ -1504,7 +1691,7 @@ class TestVariantsArchive(ProductVariantsCommon):
 
 
 @tagged('post_install', '-at_install')
-class TestVariantWrite(TransactionCase):
+class TestVariantWrite(ProductVariantsCommon):
 
     def test_write_inherited_field(self):
         product = self.env['product.product'].create({'name': 'Foo', 'sequence': 1})
@@ -1534,6 +1721,44 @@ class TestVariantWrite(TransactionCase):
             self.assertEqual(product.name, 'Bar')
             self.assertEqual(product.sequence, 2)
 
+    def test_weight_volume_multi_variant(self):
+        """Make sure that weight and volumes are correctly set & computed.
+
+        Those two fields are stored and expected to behave differently from
+        the other template fields based on variant values.
+
+        * they can be used to update the value on all the variants.
+        * their value is not restricted to their unique variant (if only one),
+        but also holds the value shared by all the variants (if identical).
+        """
+        template = self.env['product.template'].create({
+            'name': 'Multi Variant Product',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.color_attribute.id,
+                    'value_ids': [
+                        Command.link(self.color_attribute_red.id),
+                        Command.link(self.color_attribute_blue.id),
+                    ],
+                })
+            ],
+        })
+        self.assertEqual(len(template.product_variant_ids), 2)
+        v1, v2 = template.product_variant_ids
+
+        v1.weight = 5.0
+        v2.weight = 5.0
+        self.assertEqual(template.weight, 5.0)
+
+        v1.volume = 2.0
+        v2.volume = 2.0
+        self.assertEqual(template.volume, 2.0)
+
+        v1.weight = 3.0
+        self.assertEqual(template.weight, 5.0)
+
+        v1.volume = 1.0
+        self.assertEqual(template.volume, 2.0)
 
 @tagged('post_install', '-at_install')
 class TestVariantsExclusion(ProductVariantsCommon):

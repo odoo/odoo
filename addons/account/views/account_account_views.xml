@@ -35,7 +35,7 @@
                         <div>
                             <h1 style="font-size: 1.9rem;">
                                 <div class="row">
-                                    <div class="col mw-25">
+                                    <div class="col-2">
                                         <label for="code" string="Code"/>
                                         <div>
                                             <field name="placeholder_code" invisible="1"/>
@@ -70,12 +70,12 @@
                                         <field name="parent_id" placeholder="Root account"/>
                                         <field name="company_ids" widget="many2many_tags" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     </group>
+                                    <group string="Description">
+                                        <field name="description" nolabel="1" colspan="2" placeholder="Enter description here..."/>
+                                    </group>
                                 </group>
                             </page>
-                            <page name="Description">
-                                <field name="description"/>
-                            </page>
-                            <page name="mapping" string="Mapping" groups="base.group_multi_company" invisible="not display_mapping_tab">
+                            <page name="mapping" string="Consolidation" groups="base.group_multi_company" invisible="not display_mapping_tab">
                                 <field name="code_mapping_ids" nolabel="1">
                                     <list editable="bottom">
                                         <field name="company_id" force_save="1"/>
@@ -170,11 +170,18 @@
                     <filter string="Expenses" name="expensesacc" domain="[('internal_group','=', 'expense')]"/>
                     <filter string="Fixed Assets" name="type_asset_fixed" domain="[('account_type', '=', 'asset_fixed')]" invisible="True"/>
                     <filter string="Frequent Expenses" name="type_expense" domain="[('account_type', '=', 'expense')]" invisible="True"/>
+                    <filter string="Cost of revenue" name="type_expense_direct_cost" domain="[('account_type', '=', 'expense_direct_cost')]" invisible="True"/>
                     <separator/>
                     <filter string="Account with Entries" name="used" domain="[('used', '=', True)]"/>
                     <filter string="Inactive Accounts" name="inactiveacc" domain="[('active', '=', False)]"/>
                     <separator/>
                     <field name="account_type"/>
+                    <separator invisible="1"/>
+                    <filter string="My Activities" name="filter_activities_my" domain="[('activity_user_id', '=', uid)]" invisible="True"/>
+                    <separator invisible="1"/>
+                    <filter string="Late Activities" name="activities_overdue" domain="[('my_activity_date_deadline', '&lt;', 'today')]" invisible="True"/>
+                    <filter string="Today Activities" name="activities_today" domain="[('my_activity_date_deadline', '=', 'today')]" invisible="True"/>
+                    <filter string="Future Activities" name="activities_upcoming_all" domain="[('my_activity_date_deadline', '&gt;', 'today')]" invisible="True"/>
                     <group>
                         <filter string="Account Type" name="accounttype" domain="" context="{'group_by':'account_type'}"/>
                     </group>

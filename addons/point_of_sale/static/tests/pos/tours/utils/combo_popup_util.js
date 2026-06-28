@@ -54,18 +54,7 @@ export function clickQtyBtnMinus(productName) {
 export function checkProductQty(productName, expectedQty) {
     return {
         content: `Check that product ${productName} has quantity ${expectedQty}`,
-        trigger: `.modal article:has(.product-name:contains("${productName}")):has(input[name="pos_quantity"])`,
-        run: () => {
-            const article = [...document.querySelectorAll(".modal article")].find((el) =>
-                el.textContent.includes(productName)
-            );
-            const input = article.querySelector('input[name="pos_quantity"]');
-            if (input.value != expectedQty) {
-                throw new Error(
-                    `Expected ${expectedQty}, but got ${input.value} for "${productName}".`
-                );
-            }
-        },
+        trigger: `.modal article:has(.product-name:contains("${productName}")):has(input[name="pos_quantity"]:value(${expectedQty}))`,
     };
 }
 export function checkImgAndSelect(productName, checkImg = false) {

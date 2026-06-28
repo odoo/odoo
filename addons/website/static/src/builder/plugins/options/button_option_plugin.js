@@ -187,4 +187,13 @@ export class ButtonOptionPlugin extends Plugin {
     }
 }
 
+class ButtonTranslationPlugin extends Plugin {
+    static id = "buttonTranslation";
+    /** @type {import("plugins").WebsiteResources} */
+    resources = {
+        force_background_translation_state_selectors: "a.btn",
+    };
+}
+
 registry.category("website-plugins").add(ButtonOptionPlugin.id, ButtonOptionPlugin);
+registry.category("translation-plugins").add(ButtonTranslationPlugin.id, ButtonTranslationPlugin);

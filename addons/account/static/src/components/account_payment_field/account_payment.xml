@@ -50,7 +50,7 @@
                             </td>
                         </t>
                         <td t-if="!line.is_exchange" class="text-end ps-2 text-nowrap">
-                            <span class="oe_form_field oe_form_field_float oe_form_field_monetary">
+                            <span class="oe_form_field oe_form_field_float oe_form_field_monetary" dir="ltr">
                                 <t t-out="line.amount_formatted"/>
                             </span>
                         </td>
@@ -62,7 +62,7 @@
                         </td>
                         <td colspan="2">
                             <i class="o_field_widget text-start text-muted text-start">
-                                <span class="oe_form_field oe_form_field_float oe_form_field_monetary fw-bold exchange_amount">
+                                <span class="oe_form_field oe_form_field_float oe_form_field_monetary fw-bold exchange_amount" dir="ltr">
                                     <t t-out="info.exchangeInfo.exchange_amount_formatted"/>
                                 </span>
                                 <span class="ps-2 exchange_label" t-out="info.exchangeInfo.label" />
@@ -92,7 +92,7 @@
                         <tr>
                             <td class="fw-bolder align-top">Memo:</td>
                             <td class="ps-1">
-                                <div class="o_memo_content" t-att-data-tooltip="this.props.ref" data-tooltip-position="left">
+                                <div class="o_memo_content o_line_clamp o_line_clamp_3" t-att-data-tooltip="this.props.ref" data-tooltip-position="left">
                                     <t t-out="this.props.ref"/>
                                 </div>
                             </td>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_country_state_tree" model="ir.ui.view">
+        <field name="name">res.country.state.list</field>
+        <field name="model">res.country.state</field>
+        <field name="arch" type="xml">
+            <list string="State" editable="bottom">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="country_id" options="{'no_create': True, 'no_open': True}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_country_state_form" model="ir.ui.view">
+        <field name="name">res.country.state.form</field>
+        <field name="model">res.country.state</field>
+        <field name="arch" type="xml">
+            <form string="State">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_country_state_search" model="ir.ui.view">
+        <field name="name">res.country.state.search</field>
+        <field name="model">res.country.state</field>
+        <field name="arch" type="xml">
+            <search string="Country">
+                <field name="name"/>
+                <field name="country_id"/>
+                <group>
+                    <filter name="groupby_country" string="Country" context="{'group_by': 'country_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_country_state" model="ir.actions.act_window">
+        <field name="name">Fed. States</field>
+        <field name="res_model">res.country.state</field>
+        <field name="view_id" ref="view_country_state_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a State
+            </p><p>
+                Federal States belong to countries and are part of your contacts' addresses.
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -8,7 +8,7 @@ import {
     enableTransitions,
     runAllTimers,
 } from "@odoo/hoot-mock";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -29,16 +29,16 @@ class Counter extends Component {
     static template = xml/*html*/ `
         <div class="counter">
             <div class="interval">
-                <input type="number" t-model.number="state.interval" />
+                <input type="number" t-custom-model.number="this.state.interval" />
             </div>
             <div class="counter">
-                <span class="value" t-out="state.value" />
-                <button class="inc" t-on-click="onIncrement">+</button>
+                <span class="value" t-out="this.state.value" />
+                <button class="inc" t-on-click="this.onIncrement">+</button>
             </div>
         </div>
     `;
     setup() {
-        this.state = useState({ interval: 1, value: 0 });
+        this.state = proxy({ interval: 1, value: 0 });
     }
     onIncrement() {
         this.state.value += this.state.interval;
@@ -120,7 +120,7 @@ test("scrolling to next step should update the pointer's height", async (assert)
     // now the scroller pointer should be shown
     expect(".o_tour_pointer_tip").toHaveCount(1);
     await contains(".o_tour_pointer_tip").hover();
-    await animationFrame();
+    await waitFor(".o_tour_pointer_content span");
     expect(".o_tour_pointer span").toHaveText("Scroll up to reach the next step.");
     await contains(".o_tour_pointer_content").click();
 
@@ -298,10 +298,10 @@ test("next step with new anchor at same position", async () => {
 
     class Dummy extends Component {
         static props = ["*"];
-        state = useState({ bool: true });
+        state = proxy({ bool: true });
         static template = xml/*html*/ `
-            <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
-            <button class="bar w-100" t-if="!state.bool">Bar</button>
+            <button class="foo w-100" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
+            <button class="bar w-100" t-if="!this.state.bool">Bar</button>
         `;
     }
     class Root extends Component {

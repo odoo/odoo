@@ -1,3 +1,4 @@
+import { props, t } from "@odoo/owl";
 import { render } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -7,7 +8,13 @@ import { imageUrl } from "@web/core/utils/urls";
 import {
     many2ManyTagsField,
     Many2ManyTagsField,
+    many2ManyTagsFieldProps,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
+
+export const many2ManyTagsAvatarFieldProps = {
+    ...many2ManyTagsFieldProps,
+    withCommand: t.boolean().optional(),
+};
 
 export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
     static template = "web.Many2ManyTagsAvatarField";
@@ -16,10 +23,7 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
         ...super.components,
         Tag: AvatarTag,
     };
-    static props = {
-        ...Many2ManyTagsField.props,
-        withCommand: { type: Boolean, optional: true },
-    };
+    props = props(many2ManyTagsAvatarFieldProps);
 
     get assignBtnTooltip() {
         return _t("Assign");
@@ -59,8 +63,13 @@ export const many2ManyTagsAvatarField = {
 
 registry.category("fields").add("many2many_tags_avatar", many2ManyTagsAvatarField);
 
+export const listMany2ManyTagsAvatarFieldProps = {
+    ...many2ManyTagsAvatarFieldProps,
+    tagLimit: t.number().optional(5),
+};
+
 export class ListMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
-    visibleItemsLimit = 5;
+    props = props(listMany2ManyTagsAvatarFieldProps);
 }
 
 export const listMany2ManyTagsAvatarField = {
@@ -72,10 +81,11 @@ registry.category("fields").add("list.many2many_tags_avatar", listMany2ManyTagsA
 
 export class Many2ManyTagsAvatarFieldPopover extends Many2ManyTagsAvatarField {
     static template = "web.Many2ManyTagsAvatarFieldPopover";
-    static props = {
-        ...Many2ManyTagsAvatarField.props,
-        close: { type: Function },
-    };
+    props = props({
+        ...many2ManyTagsAvatarFieldProps,
+        specification: t.object(),
+        close: t.function(),
+    });
 
     setup() {
         super.setup();
@@ -98,22 +108,21 @@ export class Many2ManyTagsAvatarFieldPopover extends Many2ManyTagsAvatarField {
         // update dropdown
         this.autoCompleteRef.el?.querySelector("input")?.click();
     }
-
-    get tags() {
-        return super.tags.reverse();
-    }
 }
 
-export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
-    static props = {
-        ...super.props,
-        isEditable: { type: Boolean, optional: true },
-    };
-    visibleItemsLimit = 3;
+export const cardMany2ManyTagsAvatarFieldProps = {
+    ...many2ManyTagsAvatarFieldProps,
+    isEditable: t.boolean().optional(),
+    tagLimit: t.number().optional(2),
+};
+
+export class CardMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
+    props = props(cardMany2ManyTagsAvatarFieldProps);
+    static PopoverClass = Many2ManyTagsAvatarFieldPopover;
 
     setup() {
         super.setup();
-        this.popover = usePopover(Many2ManyTagsAvatarFieldPopover, {
+        this.popover = usePopover(this.constructor.PopoverClass, {
             popoverClass: "o_m2m_tags_avatar_field_popover",
             closeOnClickAway: (target) => !target.closest(".modal"),
         });
@@ -124,14 +133,11 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
     }
 
     get popoverProps() {
-        const props = { ...this.props };
+        const props = { ...this.props, specification: this.specification };
         delete props.isEditable;
         delete props.relation;
+        props.tagLimit = 0; // See all tags when editing in popover
         return props;
-    }
-
-    get tags() {
-        return super.tags.reverse();
     }
 
     get placeholder() {
@@ -150,9 +156,9 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
     }
 }
 
-export const kanbanMany2ManyTagsAvatarField = {
+export const cardMany2ManyTagsAvatarField = {
     ...many2ManyTagsAvatarField,
-    component: KanbanMany2ManyTagsAvatarField,
+    component: CardMany2ManyTagsAvatarField,
     extractProps(fieldInfo, dynamicInfo) {
         const props = many2ManyTagsAvatarField.extractProps(...arguments);
         props.isEditable = !dynamicInfo.readonly;
@@ -160,4 +166,4 @@ export const kanbanMany2ManyTagsAvatarField = {
     },
 };
 
-registry.category("fields").add("kanban.many2many_tags_avatar", kanbanMany2ManyTagsAvatarField);
+registry.category("fields").add("card.many2many_tags_avatar", cardMany2ManyTagsAvatarField);

@@ -12,6 +12,16 @@ import { ResourceResource } from "@resource/../tests/mock_server/mock_models/res
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResPartner } from "./mock_server/mock_models/res_partner";
 
+export function createPublicEmployee(env, data_list) {
+    const isList = Array.isArray(data_list);
+    data_list = isList ? data_list : [data_list];
+    const employeeIds = env["hr.employee"].create(data_list.map((data) => ({ ...data })));
+    const publicEmployeeIds = env["hr.employee.public"].create(
+        data_list.map((data, index) => ({ ...data, employee_id: employeeIds[index] }))
+    );
+    return isList ? publicEmployeeIds : publicEmployeeIds[0];
+}
+
 export function defineHrModels() {
     return defineModels(hrModels);
 }

@@ -573,6 +573,84 @@ describe("stateToUrl", () => {
                 ],
             })
         ).toBe("/odoo/m-model_no_dot/5/m-no_dot_model/2");
+        // consolidate models
+        expect(
+            router.stateToUrl({
+                actionStack: [{ model: "some.model" }, { model: "some.model", resId: 2 }],
+            })
+        ).toBe("/odoo/some.model/2", {
+            message: "consolidates multi-record models with mono-record models",
+        });
+        expect(
+            router.stateToUrl({
+                actionStack: [
+                    { active_id: 5, model: "some.model" },
+                    { active_id: 5, model: "some.model", resId: 2 },
+                ],
+            })
+        ).toBe("/odoo/5/some.model/2", {
+            message:
+                "consolidates multi-record model with mono-record model if they have the same active_id",
+        });
+        expect(
+            router.stateToUrl({
+                actionStack: [
+                    { active_id: 5, model: "some.model", resId: 2 },
+                    { model: "some.model" },
+                ],
+            })
+        ).toBe("/odoo/5/some.model/2/some.model");
+        expect(
+            router.stateToUrl({
+                actionStack: [
+                    { model: "some.model" },
+                    { active_id: 5, model: "some.model", resId: 2 },
+                ],
+            })
+        ).toBe("/odoo/some.model/5/some.model/2", {
+            message:
+                "doesn't consolidate mono-record model into preceding multi-record model if active_id is not the same",
+        });
+        expect(
+            router.stateToUrl({
+                actionStack: [
+                    { model: "some.model" },
+                    { active_id: 5, model: "some.model", resId: "new" },
+                ],
+            })
+        ).toBe("/odoo/some.model/5/some.model/new");
+        expect(
+            router.stateToUrl({
+                actionStack: [
+                    { model: "some.model", resId: 5 },
+                    { active_id: 5, model: "some.model" },
+                ],
+            })
+        ).toBe("/odoo/some.model/5/some.model", {
+            message:
+                "model with resId followed by model with same value as active_id is not duplicated",
+        });
+        expect(
+            router.stateToUrl({
+                actionStack: [
+                    { model: "some.model", resId: 5 },
+                    { active_id: 5, model: "some.model", resId: 2 },
+                ],
+            })
+        ).toBe("/odoo/some.model/5/some.model/2", {
+            message: "doesn't consolidate two mono-record models",
+        });
+        expect(
+            router.stateToUrl({
+                actionStack: [
+                    { active_id: 5, model: "some.model", resId: 5 },
+                    { active_id: 5, model: "some.model", resId: 2 },
+                ],
+            })
+        ).toBe("/odoo/5/some.model/5/some.model/2", {
+            message: "doesn't consolidate two mono-record models even with same active_id",
+        });
+
         // action + model
         expect(
             router.stateToUrl({ actionStack: [{ action: "some-path" }, { model: "some.model" }] })
@@ -1683,7 +1761,9 @@ describe("Scoped apps", () => {
         createRouter();
         router.pushState({ app_name: "some_app", path: "scoped_app/some_path" });
         await tick();
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo/some-path?app_name=some_app&path=scoped_app%2Fsome_path");
+        expect(browser.location.href).toBe(
+            "https://www.hoot.test/odoo/some-path?app_name=some_app&path=scoped_app%2Fsome_path"
+        );
     });
     test("url location is preserved as /scoped_app if the client is used in a standalone scoped app", async () => {
         mockMatchMedia({ ["display-mode"]: "standalone" });
@@ -1691,9 +1771,11 @@ describe("Scoped apps", () => {
         createRouter();
         router.pushState({ app_name: "some_app", path: "scoped_app/some_path" });
         await tick();
-        expect(browser.location.href).toBe("https://www.hoot.test/scoped_app/some-path?app_name=some_app&path=scoped_app%2Fsome_path");
+        expect(browser.location.href).toBe(
+            "https://www.hoot.test/scoped_app/some-path?app_name=some_app&path=scoped_app%2Fsome_path"
+        );
     });
-})
+});
 
 describe("Retrocompatibility", () => {
     test("parse an url with hash (key/values)", async () => {

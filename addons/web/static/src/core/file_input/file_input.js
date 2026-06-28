@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, props, proxy, t } from "@odoo/owl";
 import { useFileUploader } from "@web/core/utils/files";
 
 /**
@@ -22,31 +22,23 @@ import { useFileUploader } from "@web/core/utils/files";
  */
 export class FileInput extends Component {
     static template = "web.FileInput";
-    static defaultProps = {
-        acceptedFileExtensions: "*",
-        hidden: false,
-        multiUpload: false,
-        onUpload: () => {},
-        route: "/web/binary/upload_attachment",
-        beforeOpen: async () => true,
-    };
-    static props = {
-        acceptedFileExtensions: { type: String, optional: true },
-        autoOpen: { type: Boolean, optional: true },
-        hidden: { type: Boolean, optional: true },
-        multiUpload: { type: Boolean, optional: true },
-        onUpload: { type: Function, optional: true },
-        beforeOpen: { type: Function, optional: true },
-        resId: { type: Number, optional: true },
-        resModel: { type: String, optional: true },
-        route: { type: String, optional: true },
-        "*": true,
-    };
+    props = props({
+        acceptedFileExtensions: t.string().optional("*"),
+        autoOpen: t.boolean().optional(),
+        hidden: t.boolean().optional(false),
+        multiUpload: t.boolean().optional(false),
+        onUpload: t.function().optional(() => () => {}),
+        onWillUploadFiles: t.function().optional(),
+        beforeOpen: t.function().optional(() => async () => true),
+        resId: t.number().optional(),
+        resModel: t.string().optional(),
+        route: t.string().optional("/web/binary/upload_attachment"),
+    });
 
     setup() {
         this.uploadFiles = useFileUploader();
         this.fileInputRef = useRef("file-input");
-        this.state = useState({
+        this.state = proxy({
             // Disables upload button if currently uploading.
             isDisable: false,
         });

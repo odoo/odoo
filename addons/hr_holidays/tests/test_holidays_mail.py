@@ -16,7 +16,7 @@ from odoo.addons.mail.tests.common import MailCase
 class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
     """Test that mails are correctly sent when a timeoff is taken"""
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.models')
     def test_email_sent_when_approved(self):
         """ Testing leave request flow: limited type of leave request """
         with freeze_time('2022-01-15'):
@@ -66,6 +66,6 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
             leave.action_approve()
             with self.mock_mail_gateway():
                 leave.action_approve()
-                admin_emails = self._new_mails.filtered(lambda x: x.partner_ids.employee_ids.id == self.admin_employee.id)
+                admin_emails = self._new_mails.filtered(lambda x: self.admin_employee in x.partner_ids.employee_ids)
                 self.assertEqual(len(admin_emails), 1, "Mitchell Admin should receive an email")
                 self.assertTrue("has been accepted" in admin_emails.preview)

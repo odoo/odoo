@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2025-09-16 15:21+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -97,7 +97,7 @@ msgstr "基础导入对照"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Batch"
-msgstr "批"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -133,8 +133,8 @@ msgstr "列%(column)s包含不正确的值（值：%(value)s）"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: "
-"%(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: %"
+"(error)s"
 msgstr "列%(column)s包含不正确的值。行%(line)d中有错误：%(error)s"
 
 #. module: base_import
@@ -280,8 +280,8 @@ msgstr "导入记录时出错： 文本分隔符应为单字符。"
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has "
-"%(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has %"
+"(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "导入记录时出错：所有行应该大小相同，但标题行有%(title_row_entries)d 条记项，"
 "而第一行有%(first_row_entries)d 条记项。您可能需要更改分隔符。"
@@ -345,7 +345,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Finalizing current batch before interrupting..."
-msgstr "在中断前完成当前批次的工作..."
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -409,10 +409,6 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
-"如果该文件包含\n"
-"                    列名，Odoo可以尝试自动检测列所对应的\n"
-"                    与该列对应的字段。这使得导入\n"
-"                    更加简单，特别是当文件有很多列时。"
 
 #. module: base_import
 #. odoo-python
@@ -445,7 +441,7 @@ msgstr "导入文件没有内容或已损坏"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Import preview failed due to: \""
-msgstr "导入预览失败，原因：“"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -466,8 +462,8 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
-"第%(row)s行、第%(col)s列的单元格格式无效：%(cell_value)s，格式为："
-"%(cell_format)s，因为不支持 %(format_type)s格式。"
+"第%(row)s行、第%(col)s列的单元格格式无效：%(cell_value)s，格式为：%"
+"(cell_format)s，因为不支持 %(format_type)s格式。"
 
 #. module: base_import
 #. odoo-python
@@ -514,7 +510,7 @@ msgstr "模型"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "Multiple errors occurred"
-msgstr "发生多个错误"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -544,7 +540,7 @@ msgstr "未选择文件"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "No matching records found for the following name"
-msgstr "找不到以下名称的匹配记录"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -627,7 +623,7 @@ msgstr "搜索字段..."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "See possible values"
-msgstr "查看可能的值"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -833,7 +829,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Use first row as header"
-msgstr "使用第一行作为标题"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -878,19 +874,19 @@ msgstr "您必须配置至少一个要导入的字段"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "at multiple rows"
-msgstr "在多行处的匹配"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "at row"
-msgstr "在行"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "in field"
-msgstr "与字段"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -902,7 +898,7 @@ msgstr "分钟"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "more"
-msgstr "更多"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -914,7 +910,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "out of"
-msgstr "之外"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript

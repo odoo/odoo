@@ -11,18 +11,18 @@ class TestCODPaymentProvider(CashOnDeliveryCommon):
         order = self.sale_order
         self.free_delivery.allow_cash_on_delivery = True
         order.carrier_id = self.free_delivery
-        compatible_providers = (
+        available_providers = (
             self
             .env["payment.provider"]
             .sudo()
-            ._get_compatible_providers(
+            ._find_available_providers(
                 self.company.id, self.partner.id, self.amount, sale_order_id=order.id
             )
         )
         self.assertTrue(
             any(
                 p.code == "custom" and p.custom_mode == "cash_on_delivery"
-                for p in compatible_providers
+                for p in available_providers
             )
         )
 
@@ -30,17 +30,17 @@ class TestCODPaymentProvider(CashOnDeliveryCommon):
         order = self.sale_order
         self.free_delivery.allow_cash_on_delivery = False
         order.carrier_id = self.free_delivery
-        compatible_providers = (
+        available_providers = (
             self
             .env["payment.provider"]
             .sudo()
-            ._get_compatible_providers(
+            ._find_available_providers(
                 self.company.id, self.partner.id, self.amount, sale_order_id=order.id
             )
         )
         self.assertFalse(
             any(
                 p.code == "custom" and p.custom_mode == "cash_on_delivery"
-                for p in compatible_providers
+                for p in available_providers
             )
         )

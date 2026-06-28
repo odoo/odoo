@@ -14,7 +14,7 @@ class Data_RecycleRecord(models.Model):
     name = fields.Char('Record Name', compute='_compute_name', compute_sudo=True)
     recycle_model_id = fields.Many2one('data_recycle.model', string='Recycle Model', index='btree_not_null', ondelete='cascade')
 
-    res_id = fields.Integer('Record ID', index=True)
+    res_id = fields.Integer('Record ID', aggregator=None, index=True)
     res_model_id = fields.Many2one(related='recycle_model_id.res_model_id', store=True, readonly=True)
     res_model_name = fields.Char(related='recycle_model_id.res_model_name', store=True, readonly=True)
 
@@ -85,3 +85,6 @@ class Data_RecycleRecord(models.Model):
 
     def action_discard(self):
         self.write({'active': False})
+
+    def action_undiscard(self):
+        self.write({'active': True})

@@ -77,8 +77,9 @@
                             <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
                             <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
                         </div>
-                        <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
-                            ICE: <a t-field="o.partner_id.company_registry"/>
+                        <t t-set="partner_ice" t-value="o.partner_id.country_code == 'MA' and o.partner_id._get_additional_identifier('MA_ICE')"/>
+                        <div t-if="partner_ice">
+                            ICE: <span t-out="partner_ice"/>
                         </div>
                     </t>
                 </t>
@@ -89,8 +90,9 @@
                             <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
                             <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
                         </div>
-                        <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
-                            ICE: <a t-field="o.partner_id.company_registry"/>
+                        <t t-set="partner_ice" t-value="o.partner_id.country_code == 'MA' and o.partner_id._get_additional_identifier('MA_ICE')"/>
+                        <div t-if="partner_ice">
+                            ICE: <span t-out="partner_ice"/>
                         </div>
                     </t>
                 </t>
@@ -101,8 +103,9 @@
                             <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
                             <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
                         </div>
-                        <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
-                            ICE: <a t-field="o.partner_id.company_registry"/>
+                        <t t-set="partner_ice" t-value="o.partner_id.country_code == 'MA' and o.partner_id._get_additional_identifier('MA_ICE')"/>
+                        <div t-if="partner_ice">
+                            ICE: <span t-out="partner_ice"/>
                         </div>
                     </t>
                 </t>
@@ -111,6 +114,7 @@
                 forced_vat="o.fiscal_position_id.foreign_vat"
                 layout_document_title="layout_document_title"
                 information_block="information_block"
+                lang="lang"
                 address="address">
                 <t t-set="o" t-value="o.with_context(lang=lang)" /> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
                 <div class="clearfix invoice_main">
@@ -240,12 +244,12 @@
                                                         <span t-if="not hide_prices" t-out="taxes" id="line_tax_ids">Tax 15%</span>
                                                     </td>
                                                     <td name="td_subtotal" class="text-end o_price_total">
-                                                        <span t-if="not hide_prices and o.company_price_include == 'tax_excluded'" class="text-nowrap" t-field="line.price_subtotal">27.00</span>
-                                                        <span t-if="not hide_prices and o.company_price_include == 'tax_included'" class="text-nowrap" t-field="line.price_total">31.05</span>
+                                                        <span t-if="not hide_prices and o.document_tax_mode == 'tax_excluded'" class="text-nowrap" t-field="line.price_subtotal">27.00</span>
+                                                        <span t-if="not hide_prices and o.document_tax_mode == 'tax_included'" class="text-nowrap" t-field="line.price_total">31.05</span>
                                                     </td>
                                                 </t>
                                                 <t t-elif="line.display_type in ('line_section', 'line_subsection')" name="account_invoice_line_section">
-                                                    <t t-set="section_subtotal" t-value="line.get_section_subtotal()"/>
+                                                    <t t-set="section_subtotal" t-value="line.get_section_subtotal() if o.company_price_include == 'tax_excluded' else line.get_section_total()"/>
                                                     <!-- For desktop -->
                                                     <td name="line_name_td"
                                                         t-att-colspan="(1 if is_product else line_colspan)"
@@ -270,7 +274,7 @@
                                         <t t-else="">
                                             <t t-set="grouped_lines" t-value="line._get_child_lines()"/>
                                             <t t-foreach="grouped_lines" t-as="grouped_line">
-                                                <t t-if="grouped_line['display_type'] == 'product'">
+                                                <t t-if="grouped_line['display_type'] == 'product' or hide_details">
                                                     <t t-set="line_colspan" t-value="1"/>
                                                 </t>
                                                 <t t-else="">
@@ -326,24 +330,24 @@
                                                         </div>
                                                     </td>
                                                     <td name="td_price_unit_grouped"
-                                                        t-if="grouped_line['display_type'] not in ('line_section', 'line_subsection')"
+                                                        t-if="hide_details or grouped_line['display_type'] not in ('line_section', 'line_subsection')"
                                                         colspan="1"
                                                         t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                                         <span t-if="not hide_prices" t-out="grouped_line['price_subtotal']" t-options="{'widget': 'float', 'decimal_precision': 'Product Price'}" class="text-nowrap">9.00</span>
                                                     </td>
                                                     <td name="td_discount_grouped"
-                                                        t-if="display_discount and grouped_line['display_type'] == 'product'"
+                                                        t-if="display_discount and (hide_details or grouped_line['display_type'] == 'product')"
                                                         colspan="1"
                                                         t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"/>
                                                     <td name="td_taxes_grouped"
                                                         colspan="1"
-                                                        t-if="display_taxes and (grouped_line['display_type'] == 'product' or grouped_line.get('taxes'))"
+                                                        t-if="display_taxes and (hide_details or grouped_line['display_type'] == 'product' or grouped_line.get('taxes'))"
                                                         t-attf-class="text-end {{'d-none d-md-table-cell' if report_type == 'html' else ''}}">
                                                         <span t-if="grouped_line.get('taxes')" t-out="','.join(grouped_line['taxes'])" id="grouped_line_tax_ids">Tax 15%</span>
                                                     </td>
                                                     <td name="td_subtotal_grouped" colspan="1" class="text-end o_price_total">
-                                                        <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details) and o.company_price_include == 'tax_excluded'" class="text-nowrap" t-out="grouped_line['price_subtotal']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>27.00</span>
-                                                        <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details) and o.company_price_include == 'tax_included'" class="text-nowrap" t-out="grouped_line['price_total']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>31.05</span>
+                                                        <span t-if="(grouped_line.get('display_type') == 'line_section' or (not hide_prices and grouped_line.get('display_type') == 'line_subsection') or hide_details) and o.document_tax_mode == 'tax_excluded'" class="text-nowrap" t-out="grouped_line['price_subtotal']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>27.00</span>
+                                                        <span t-if="(grouped_line.get('display_type') == 'line_section' or (not hide_prices and grouped_line.get('display_type') == 'line_subsection') or hide_details) and o.document_tax_mode == 'tax_included'" class="text-nowrap" t-out="grouped_line['price_total']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>31.05</span>
                                                     </td>
                                                 </tr>
                                             </t>

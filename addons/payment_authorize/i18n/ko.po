@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
 "PO-Revision-Date: 2025-11-20 10:00+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -52,6 +52,11 @@ msgstr "API Transaction Key"
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Account Number"
 msgstr "계정 과목"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_webhook_id
+msgid "Authorize Webhook ID"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__code__authorize
@@ -142,6 +147,11 @@ msgstr "클라이언트 키 생성"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
+msgid "Generate Your Webhook"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "How to get paid with Authorize.Net"
 msgstr "Authorize.Net으로 지불받는 방법"
 
@@ -200,6 +210,11 @@ msgid "Personal Savings"
 msgstr ""
 
 #. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
+msgid "Re-generate Your Webhook"
+msgstr ""
+
+#. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
@@ -217,6 +232,11 @@ msgstr "변조된 결제 요청 데이터가 수신되었습니다."
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Set Account Currency"
 msgstr "계정 통화 설정"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_webhook_id
+msgid "The ID of the webhook created in Authorize.net."
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_login
@@ -244,8 +264,8 @@ msgid ""
 "The transaction is not in a status to be refunded. (status: %(status)s, "
 "details: %(message)s)"
 msgstr ""
-"해당 거래는 환불할 수 없는 상태입니다. (상태: %(status)s, 세부 정보: "
-"%(message)s)"
+"해당 거래는 환불할 수 없는 상태입니다. (상태: %(status)s, 세부 정보: %"
+"(message)s)"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -261,6 +281,23 @@ msgid "This action cannot be performed while the provider is disabled."
 msgstr "공급업체가 비활성화된 상태이므로 이 작업을 수행할 수 없습니다."
 
 #. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/controllers/main.py:0
+msgid "Transaction not found."
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
+msgid "Webhook ID"
+msgstr ""
+
+#. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "YY"
 msgstr "년"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_provider.py:0
+msgid "Your Authorize.Net webhook was successfully set up!"
+msgstr ""

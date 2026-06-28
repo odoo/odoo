@@ -1,9 +1,9 @@
-import { render, useComponent, useEnv, useLayoutEffect, useState, useSubEnv } from "@web/owl2/utils";
+import { render, useComponent, useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { RPCError } from "@web/core/network/rpc";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import {
     useBus,
@@ -38,7 +38,7 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @typedef {import("services").ServiceFactories} Services
  */
 
-import { Component, onWillUpdateProps, status } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, status, proxy, t } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { highlightText, odoomark } from "@web/core/utils/html";
 import { deepEqual } from "@web/core/utils/objects";
@@ -170,7 +170,7 @@ export function useSpecialData(loadFn) {
     };
 
     /** @type {{ data: Record<string, T> }} */
-    const result = useState({ data: {} });
+    const result = proxy({ data: {} });
     useRecordObserver(async (record, props) => {
         result.data = await loadFn(ormWithCache, { ...props, record });
     });
@@ -187,51 +187,42 @@ export function useSpecialData(loadFn) {
 // Many2X
 //
 
+export const many2XAutocompleteProps = {
+    activeActions: t.object(),
+    autoSelect: t.boolean().optional(),
+    autocomplete_container: t.function().optional(),
+    autofocus: t.boolean().optional(),
+    context: t.object().optional({}),
+    createAction: t.function().optional(),
+    dropdown: t.boolean().optional(true),
+    fieldString: t.string(),
+    getDomain: t.function(),
+    id: t.string().optional(),
+    isToMany: t.boolean().optional(),
+    nameCreateField: t.string().optional("name"),
+    otherSources: t.array().optional([]),
+    placeholder: t.string().optional(),
+    quickCreate: t.or([t.function(), t.literal(null)]).optional(null),
+    resModel: t.string(),
+    searchLimit: t.number().optional(7),
+    searchMoreLabel: t.string().optional(),
+    searchMoreLimit: t.number().optional(1000),
+    searchThreshold: t.number().optional(0),
+    preventMemoization: t.boolean().optional(),
+    setInputFloats: t.function().optional(() => () => {}),
+    slots: t.any().optional(),
+    specification: t.object().optional({}),
+    update: t.function(),
+    value: t.string().optional(""),
+};
+
 export class Many2XAutocomplete extends Component {
     static template = "web.Many2XAutocomplete";
     static components = { AutoComplete };
-    static props = {
-        activeActions: Object,
-        autoSelect: { type: Boolean, optional: true },
-        autocomplete_container: { type: Function, optional: true },
-        autofocus: { type: Boolean, optional: true },
-        context: { type: Object, optional: true },
-        createAction: { type: Function, optional: true },
-        dropdown: { type: Boolean, optional: true },
-        fieldString: String,
-        getDomain: Function,
-        id: { type: String, optional: true },
-        isToMany: { type: Boolean, optional: true },
-        nameCreateField: { type: String, optional: true },
-        otherSources: { type: Array, optional: true },
-        placeholder: { type: String, optional: true },
-        quickCreate: { type: [Function, { value: null }], optional: true },
-        resModel: String,
-        searchLimit: { type: Number, optional: true },
-        searchMoreLabel: { type: String, optional: true },
-        searchMoreLimit: { type: Number, optional: true },
-        searchThreshold: { type: Number, optional: true },
-        setInputFloats: { type: Function, optional: true },
-        slots: { optional: true },
-        specification: { type: Object, optional: true },
-        update: Function,
-        value: { type: String, optional: true },
-    };
-    static defaultProps = {
-        context: {},
-        dropdown: true,
-        nameCreateField: "name",
-        otherSources: [],
-        quickCreate: null,
-        searchLimit: 7,
-        searchThreshold: 0,
-        searchMoreLimit: 1000,
-        setInputFloats: () => {},
-        specification: {},
-        value: "",
-    };
+    props = props(many2XAutocompleteProps);
     setup() {
         this.orm = useService("orm");
+        this.offline = useService("offline");
 
         this.autoCompleteContainer = useForwardRefToParent("autocomplete_container");
         const { activeActions, resModel, update, isToMany, fieldString } = this.props;
@@ -346,20 +337,31 @@ export class Many2XAutocomplete extends Component {
     }
 
     async search(name, domain, context) {
-        return await this.orm.call(this.props.resModel, "web_name_search", [], {
-            name,
-            operator: "ilike",
-            domain,
-            limit: this.props.searchLimit + 1,
-            context,
-            specification: this.searchSpecification,
-        });
+        let result;
+        try {
+            result = await this.orm.call(this.props.resModel, "web_name_search", [], {
+                name,
+                operator: "ilike",
+                domain,
+                limit: this.props.searchLimit + 1,
+                context,
+                specification: this.searchSpecification,
+            });
+        } catch (e) {
+            if (e instanceof ConnectionLostError) {
+                return this.offline.searchMany2XRecords(this.props.resModel, name);
+            }
+            throw e;
+        }
+        this.offline.cacheMany2XSearch(this.props.resModel, result);
+        return result;
     }
 
     async memoizedSearch(name) {
         const domain = this.props.getDomain();
         const context = this.props.context;
         if (
+            !this.props.preventMemoization &&
             this.previousSearch &&
             deepEqual(this.previousSearch.domain, domain) &&
             deepEqual(this.previousSearch.context, context)
@@ -427,13 +429,18 @@ export class Many2XAutocomplete extends Component {
                 suggestions.push(this.buildNoRecordsSuggestion());
             } else if (this.addStartTypingSuggestion({ request, records })) {
                 suggestions.push(this.buildStartTypingSuggestion());
+            } else if (this.offline.offline) {
+                suggestions.push(this.buildNoRecordsSuggestion());
             }
         }
 
-        for (const action of this.actionSuggestions) {
-            const enabled = action.enabled ?? (() => true);
-            if (enabled({ request, records })) {
-                suggestions.push(action.build(request));
+        // Only add action suggestions if online!
+        if (!this.offline.offline) {
+            for (const action of this.actionSuggestions) {
+                const enabled = action.enabled ?? (() => true);
+                if (enabled({ request, records })) {
+                    suggestions.push(action.build(request));
+                }
             }
         }
 
@@ -570,6 +577,10 @@ export class Many2XAutocomplete extends Component {
                 limit: this.props.searchMoreLimit,
                 context,
             });
+            this.offline.cacheMany2XSearch(
+                resModel,
+                nameGets.map((r) => ({ id: r[0], display_name: r[1] }))
+            );
 
             dynamicFilters = [
                 {
@@ -578,8 +589,10 @@ export class Many2XAutocomplete extends Component {
                 },
             ];
         }
-
-        const title = _t("Search: %s", fieldString);
+        let title = _t("Search");
+        if (fieldString && fieldString.trim()) {
+            title = _t("Search: %s", fieldString);
+        }
         this.selectCreate({
             domain,
             context,
@@ -667,24 +680,23 @@ export function useOpenMany2XRecord({
 // X2Many
 //
 
+export const x2ManyFieldDialogProps = {
+    archInfo: t.object(),
+    close: t.function(),
+    record: t.object(),
+    addNew: t.function(),
+    save: t.function(),
+    title: t.string(),
+    delete: t.any().optional(),
+    deleteButtonLabel: t.any().optional(),
+    config: t.object(),
+    controls: t.array().optional([]),
+};
+
 export class X2ManyFieldDialog extends Component {
     static template = "web.X2ManyFieldDialog";
     static components = { Dialog, FormRenderer, ViewButton };
-    static props = {
-        archInfo: Object,
-        close: Function,
-        record: Object,
-        addNew: Function,
-        save: Function,
-        title: String,
-        delete: { optional: true },
-        deleteButtonLabel: { optional: true },
-        config: Object,
-        controls: { type: Array, optional: true },
-    };
-    static defaultProps = {
-        controls: [],
-    };
+    props = props(x2ManyFieldDialogProps);
     setup() {
         this.actionService = useService("action");
         this.ui = useService("ui");
@@ -756,7 +768,9 @@ export class X2ManyFieldDialog extends Component {
             title: this.title,
             withBodyPadding: false,
             modalRef: this.modalRef,
-            contentClass: `${ this.contentClass}  ${ this.ui.size <= SIZES.XS ? " o_xxs_form_view" : ""}`,
+            contentClass: `${this.contentClass}  ${
+                this.ui.size <= SIZES.XS ? " o_xxs_form_view" : ""
+            }`,
         };
         if (!this.record.isNew) {
             props.onExpand = async () => {

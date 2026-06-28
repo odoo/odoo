@@ -17,11 +17,10 @@ class PurchaseOrder(models.Model):
     def _default_picking_type(self):
         return self._get_picking_type(self.env.context.get('company_id') or self.env.company.id)
 
-    incoterm_location = fields.Char(string='Incoterm Location')
     incoming_picking_count = fields.Integer("Incoming Shipment count", compute='_compute_incoming_picking_count')
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Receptions', copy=False, store=True)
     dest_address_id = fields.Many2one('res.partner', compute='_compute_dest_address_id', store=True, readonly=False)
-    picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', required=True, default=_default_picking_type, domain="['|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]",
+    picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', required=True, index=True, default=_default_picking_type, domain="['|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]",
         help="This will determine operation type of incoming shipment")
     default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',
         help="Technical field used to display the Drop Ship Address", readonly=True)
@@ -224,9 +223,6 @@ class PurchaseOrder(models.Model):
                 if picking.state == 'done':
                     picking.message_post(body=self.env._("The purchase order %s this receipt is linked to was cancelled.", order._get_html_link()))
 
-            if order.reference_ids:
-                order.reference_ids.purchase_ids = [Command.unlink(order.id)]
-
         order_lines = self.env['purchase.order.line'].browse(order_lines_ids)
         moves_to_cancel_ids = OrderedSet()
         moves_to_recompute_ids = OrderedSet()
@@ -279,7 +275,7 @@ class PurchaseOrder(models.Model):
         for po in purchases:
             if po.user_id == self.env.user:
                 my_purchase_count += 1
-            if not po.effective_date or po.effective_date > po.date_promised:
+            if not po.effective_date or po.effective_date.date() > po.date_promised.date():
                 continue
             otd_purchase_count += 1
             if po.user_id == self.env.user:
@@ -293,7 +289,7 @@ class PurchaseOrder(models.Model):
     def _get_domain_is_late(self, operator, value):
         domain = super()._get_domain_is_late(operator, value)
         if operator == "=" and value or operator == "!=" and not value:
-            domain &= Domain.OR([Domain('picking_ids', '=', False), Domain('picking_ids.state', '!=', 'done')])
+            domain &= Domain.OR([Domain('picking_ids', '=', False), Domain('picking_ids.state', 'not in', ['done', 'cancel'])])
         return domain
 
     def _get_action_view_picking(self, pickings):
@@ -312,11 +308,6 @@ class PurchaseOrder(models.Model):
             result['views'] = form_view + [(state, view) for state, view in result.get('views', []) if view != 'form']
             result['res_id'] = pickings.id
         return result
-
-    def _prepare_invoice(self):
-        invoice_vals = super()._prepare_invoice()
-        invoice_vals['invoice_incoterm_id'] = self.incoterm_id.id
-        return invoice_vals
 
     # --------------------------------------------------
     # Business methods
@@ -363,7 +354,11 @@ class PurchaseOrder(models.Model):
             if self.dest_address_id:
                 return self.dest_address_id.property_stock_customer
             return self.picking_type_id.default_location_dest_id
-        return self.picking_type_id.warehouse_id.lot_stock_id
+        wh_stock_loc = self.picking_type_id.warehouse_id.lot_stock_id
+        default_dest_loc = self.picking_type_id.default_location_dest_id
+        if default_dest_loc and (not wh_stock_loc or default_dest_loc._child_of(wh_stock_loc)):
+            return default_dest_loc
+        return wh_stock_loc
 
     @api.model
     def _get_picking_type(self, company_id):
@@ -380,49 +375,24 @@ class PurchaseOrder(models.Model):
             'name': self.name,
         }
 
-    def _prepare_picking(self):
-        if not self.reference_ids:
-            self.reference_ids = self.reference_ids.create(self._prepare_reference_vals())
-        if not self.partner_id.property_stock_supplier.id:
-            raise UserError(_("You must set a Vendor Location for this partner %s", self.partner_id.name))
-        return {
-            'picking_type_id': self.picking_type_id.id,
-            'partner_id': self.partner_id.id,
-            'user_id': False,
-            'origin': self.name,
-            'location_dest_id': self._get_destination_location(),
-            'location_id': self.partner_id.property_stock_supplier.id,
-            'company_id': self.company_id.id,
-            'state': 'draft',
-            'reference_ids': [Command.set(self.reference_ids.ids)],
-            'priority': self.priority,
-        }
-
     def _create_picking(self):
-        StockPicking = self.env['stock.picking']
         for order in self.filtered(lambda po: po.state == 'purchase'):
             if any(product.type == 'consu' for product in order.order_line.product_id):
                 order = order.with_company(order.company_id)
-                pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-                if not pickings:
-                    res = order._prepare_picking()
-                    picking = StockPicking.with_user(SUPERUSER_ID).create(res)
-                    pickings = picking
-                else:
-                    picking = pickings[0]
-                moves = order.order_line._create_stock_moves(picking)
-                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel'))._action_confirm()
+                moves = order.order_line._create_stock_moves()
+                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel')).with_context({'move_picking_partner_id': self.partner_id}).sudo()._action_confirm()
                 seq = 0
                 for move in sorted(moves, key=lambda move: move.date):
                     seq += 5
                     move.sequence = seq
                 moves._action_assign()
+                pickings = moves.picking_id
                 # Get following pickings (created by push rules) to confirm them as well.
                 forward_pickings = self.env['stock.picking']._get_impacted_pickings(moves)
                 (pickings | forward_pickings).action_confirm()
-                picking.message_post_with_source(
+                pickings.message_post_with_source(
                     'mail.message_origin_link',
-                    render_values={'self': picking, 'origin': order},
+                    render_values={'self': pickings, 'origin': order},
                     subtype_xmlid='mail.mt_note',
                 )
         return True
@@ -471,9 +441,9 @@ class PurchaseOrder(models.Model):
             )
         return super()._get_product_catalog_order_line_info(product_ids, child_field=child_field, **kwargs)
 
-    def _get_product_price_and_data(self, product):
+    def _get_product_catalog_seller_data(self, product, **kwargs):
         """ Fetch the product's data used by the purchase's catalog."""
-        res = super()._get_product_price_and_data(product)
+        res = super()._get_product_catalog_seller_data(product, **kwargs)
         res["suggested_qty"] = product.suggested_qty
         return res
 
@@ -486,3 +456,7 @@ class PurchaseOrder(models.Model):
         """ remove the given references from the list of references. """
         self.ensure_one()
         self.reference_ids = [Command.unlink(reference.id) for reference in references]
+
+    def _merge_po_post_process(self, rfqs):
+        super()._merge_po_post_process(rfqs)
+        self.reference_ids += rfqs.reference_ids

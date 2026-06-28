@@ -1,9 +1,15 @@
-import { after, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
-import { Deferred, tick } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
-import { clearRegistry, makeMockEnv, allowTranslations } from "@web/../tests/web_test_helpers";
+import { afterEach, beforeEach, describe, expect, getFixture, test, tick } from "@odoo/hoot";
+import { Component, signal, xml } from "@odoo/owl";
+import {
+    allowTranslations,
+    clearRegistry,
+    getTestApp,
+    makeMockEnv,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 
 import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { makeEnv, mountComponent, startServices } from "@web/env";
 
 describe.current.tags("headless");
@@ -12,6 +18,15 @@ const servicesRegistry = registry.category("services");
 
 beforeEach(() => {
     clearRegistry(servicesRegistry);
+    // ideally, should not be done like this, we should simply start odoo with
+    // the services that we want. but for now, it will do
+    patchWithCleanup(services, {
+        _items: signal.Array([]),
+    });
+});
+afterEach(() => {
+    delete odoo.isReady;
+    delete odoo.__WOWL_DEBUG__;
 });
 
 /**
@@ -47,10 +62,10 @@ test(`crashing async service start causes startService to crash`, async () => {
 });
 
 test(`can start an asynchronous service`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     registerService("test", [], async () => {
         expect.step("before");
-        const result = await deferred;
+        const result = await deferred.promise;
         expect.step("after");
         return result;
     });
@@ -88,16 +103,16 @@ test(`get an object containing dependencies as second arg`, async () => {
 });
 
 test(`can start two sequentially dependant asynchronous services`, async () => {
-    const deferred2 = new Deferred();
+    const deferred2 = Promise.withResolvers();
     registerService("test2", ["test1"], () => {
         expect.step("test2");
-        return deferred2;
+        return deferred2.promise;
     });
 
-    const deferred1 = new Deferred();
+    const deferred1 = Promise.withResolvers();
     registerService("test1", [], () => {
         expect.step("test1");
-        return deferred1;
+        return deferred1.promise;
     });
 
     registerService("test3", ["test2"], () => {
@@ -120,16 +135,16 @@ test(`can start two sequentially dependant asynchronous services`, async () => {
 });
 
 test(`can start two independant asynchronous services in parallel`, async () => {
-    const deferred1 = new Deferred();
+    const deferred1 = Promise.withResolvers();
     registerService("test1", [], () => {
         expect.step("test1");
-        return deferred1;
+        return deferred1.promise;
     });
 
-    const deferred2 = new Deferred();
+    const deferred2 = Promise.withResolvers();
     registerService("test2", [], () => {
         expect.step("test2");
-        return deferred2;
+        return deferred2.promise;
     });
 
     registerService("test3", ["test1", "test2"], () => {
@@ -155,14 +170,14 @@ test(`startServices: throws if all dependencies are not met in the same microtic
     const env = makeEnv();
     registerService("b", ["a"], () => "b");
 
-    const serviceStartingPromise = startServices(env);
+    const serviceStartingPromise = startServices(env, getTestApp());
     await expect(serviceStartingPromise).rejects.toThrow(
         "Some services could not be started: b. Missing dependencies: a"
     );
     expect(env.services).toEqual({});
 
     registerService("a", [], () => "a");
-    await startServices(env);
+    await startServices(env, getTestApp());
     expect(env.services).toEqual({ a: "a", b: "b" });
 });
 
@@ -170,7 +185,7 @@ test(`startServices: waits for all synchronous code before attempting to start s
     const env = makeEnv();
     registerService("b", ["a"], () => "b");
 
-    const serviceStartingPromise = startServices(env);
+    const serviceStartingPromise = startServices(env, getTestApp());
     // Dependency added in the same microtick doesn't cause startServices to throw even if it was added after the call
     // (eg, a module is defined after main.js)
     registerService("a", [], () => "a");
@@ -188,12 +203,10 @@ test(`mountComponent creates an env and sets the application as root when no env
         static props = ["*"];
     }
     const app = await mountComponent(Root, getFixture());
-    after(() => {
-        delete odoo.__WOWL_DEBUG__;
-    });
     const { env } = app;
     expect(env.services).toEqual({ my_service: "a" });
-    expect(odoo.__WOWL_DEBUG__).toEqual({ root: app.root.component });
+    const [firstRoot] = app.roots;
+    expect(odoo.__WOWL_DEBUG__).toEqual({ root: firstRoot.node.component });
     expect(getFixture()).toHaveText("Root");
 });
 
@@ -206,7 +219,7 @@ test(`mountComponent uses the env when provided and doesn't start the services`,
 
     const env = makeEnv();
     expect.verifySteps([]);
-    await startServices(env);
+    await startServices(env, getTestApp());
     expect.verifySteps(["starting myService"]);
 
     class Root extends Component {
@@ -217,25 +230,23 @@ test(`mountComponent uses the env when provided and doesn't start the services`,
     const app = await mountComponent(Root, getFixture(), { env });
     expect.verifySteps([]);
     expect(app.env.services).toBe(env.services);
-    expect(odoo.__WOWL_DEBUG__).toBe(undefined);
+    expect(odoo).not.toInclude("isReady");
+    expect(odoo).not.toInclude("__WOWL_DEBUG__");
     expect(getFixture()).toHaveText("Root");
 });
 
 test(`mountComponent: can pass props to the root component`, async () => {
     class Root extends Component {
-        static template = xml`<t t-esc="props.text"/>`;
+        static template = xml`<t t-out="this.props.text"/>`;
         static props = ["*"];
     }
 
     await mountComponent(Root, getFixture(), { props: { text: "text from props" } });
-    after(() => {
-        delete odoo.__WOWL_DEBUG__;
-    });
     expect(getFixture()).toHaveText("text from props");
 });
 
 test(`env.isReady is resolved after services are loaded`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
 
     registerService("test", [], async (env) => {
         expect.step("before");
@@ -243,7 +254,7 @@ test(`env.isReady is resolved after services are loaded`, async () => {
             expect.step("env ready");
         });
 
-        const result = await deferred;
+        const result = await deferred.promise;
         expect.step("after");
         return result;
     });

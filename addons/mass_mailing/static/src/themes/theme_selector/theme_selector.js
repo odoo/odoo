@@ -1,11 +1,11 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillStart, onWillUnmount, status } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, onWillStart, onWillUnmount, status, useEffect, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { FavoritePreview } from "./favorite_preview";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { effect } from "@web/core/utils/reactive";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { _t } from "@web/core/l10n/translation";
+import { closestScrollableY } from "@web/core/utils/scrolling";
 
 export class ThemeSelector extends Component {
     static template = "mass_mailing.ThemeSelector";
@@ -29,7 +29,7 @@ export class ThemeSelector extends Component {
         this.config = this.props.config;
         this.commonThemes = this.themeService.getCommonThemes();
         this.simpleThemes = this.themeService.getSimpleThemes();
-        this.state = useState({
+        this.state = proxy({
             loading: false,
             favoriteTemplates: [],
         });
@@ -40,23 +40,18 @@ export class ThemeSelector extends Component {
         });
         let favoriteThemesPromise = this.props.favoriteThemes.promise;
         const keepLastFavoriteThemes = new KeepLast();
-        effect(
-            async (favoriteThemes) => {
-                if (status(this) === "destroyed") {
-                    return;
-                }
-                if (favoriteThemesPromise !== favoriteThemes.promise) {
-                    favoriteThemesPromise = favoriteThemes.promise;
-                    this.state.loading = true;
-                    const favoriteTemplates = await keepLastFavoriteThemes.add(
-                        favoriteThemesPromise
-                    );
-                    Object.assign(this.state, { favoriteTemplates });
-                    this.state.loading = false;
-                }
-            },
-            [this.props.favoriteThemes]
-        );
+        useEffect(async () => {
+            if (status(this) === "destroyed") {
+                return;
+            }
+            if (favoriteThemesPromise !== this.props.favoriteThemes.promise) {
+                favoriteThemesPromise = this.props.favoriteThemes.promise;
+                this.state.loading = true;
+                const favoriteTemplates = await keepLastFavoriteThemes.add(favoriteThemesPromise);
+                Object.assign(this.state, { favoriteTemplates });
+                this.state.loading = false;
+            }
+        });
         this.throttledResize = useThrottleForAnimation(() => {
             if (status(this) === "destroyed") {
                 return;
@@ -66,7 +61,25 @@ export class ThemeSelector extends Component {
             const height = Math.trunc(
                 this.themeSelectorWrapperRef.el.getBoundingClientRect().height
             );
-            iframe.style.height = height + "px";
+
+            // If reducing the size of the frame would cause the scrollable element to become unscrollable,
+            // then we don't resize the frame down to avoid flickering on Chromium-based browsers.
+            const scrollable = closestScrollableY(iframe);
+            const scrollableRange = scrollable
+                ? scrollable.scrollHeight - scrollable.clientHeight
+                : 0;
+            let adjustHeight = true;
+            if (
+                scrollable &&
+                iframe.style.height &&
+                iframe.clientHeight - height >= scrollableRange &&
+                iframe.clientHeight - height - scrollableRange < 20
+            ) {
+                adjustHeight = false;
+            }
+            if (adjustHeight) {
+                iframe.style.height = height + "px";
+            }
         });
         onMounted(() => {
             this.htmlResizeObserver = new ResizeObserver(this.throttledResize);

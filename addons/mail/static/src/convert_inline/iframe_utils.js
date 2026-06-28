@@ -5,17 +5,24 @@ import { loadBundle } from "@web/core/assets";
  * have same origin sandbox policy enabled, and must be in the DOM (Chrome does
  * not dispatch the "load" event for an iframe without `src`).
  *
- * @param {HTMLIFrameElement} iframe
- * @param {Function} [callback]
- * @returns {Promise}
+ * @template [I=HTMLIFrameElement]
+ * @template [T=any]
+ * @param {I} iframe
+ * @param {(iframe: I) => T} [callback]
+ * @returns {Promise<T>}
  */
 export function loadIframe(iframe, callback = () => {}) {
-    const { promise: iframeLoaded, resolve } = Promise.withResolvers();
+    const { promise: iframeLoaded, resolve, reject } = Promise.withResolvers();
     const onIframeLoaded = () => {
         if (iframe.isConnected) {
-            resolve(callback(iframe));
+            Promise.resolve(callback(iframe))
+                .then(resolve)
+                .catch((err) => {
+                    if (iframe.isConnected) {
+                        reject(err);
+                    }
+                });
         }
-        resolve(null);
     };
     if (iframe.contentDocument?.readyState === "complete") {
         // Browsers like Chrome don't make use of the load event for iframes without `src`
@@ -33,17 +40,12 @@ export function loadIframe(iframe, callback = () => {}) {
  * "load" event for an iframe without `src`).
  *
  * @param {HTMLIFrameElement} iframe
- * @param {Array<string>} bundles assets bundle names
- * @param {Object} [options] type of files to load
- * @returns {Promise}
+ * @param {string[]} bundles assets bundle names
+ * @param {Parameters<loadBundle>[1]} [options] type of files to load
  */
-export function loadIframeBundles(iframe, bundles, { css = true, js = false } = {}) {
-    return loadIframe(iframe, async () =>
-        Promise.all(
-            bundles.map(
-                async (bundle) =>
-                    await loadBundle(bundle, { targetDoc: iframe.contentDocument, css, js })
-            )
-        )
+export function loadIframeBundles(iframe, bundles, options) {
+    const bundleOptions = { js: false, targetDoc: iframe.contentDocument, ...options };
+    return loadIframe(iframe, () =>
+        Promise.all(bundles.map((bundle) => loadBundle(bundle, bundleOptions)))
     );
 }

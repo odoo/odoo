@@ -23,28 +23,24 @@
                 <field name="name@zh_TW">銷項</field>
                 <field name="code">TW_403_S</field>
                 <field name="hierarchy_level">0</field>
-                <field name="foldable" eval="False"/>
                 <field name="children_ids">
                     <record id="l10n_tw_tax_report_403_tw_403_ot" model="account.report.line">
                         <field name="name">Output - Sales &amp; Tax</field>
                         <field name="name@zh_TW">產出 - 銷售和稅收</field>
                         <field name="code">TW_403_OT</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="children_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_5_vat" model="account.report.line">
                                 <field name="name">5% VAT Sales</field>
                                 <field name="name@zh_TW">5% 增值稅銷售額</field>
                                 <field name="code">TW_403_5_VAT</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="children_ids">
                                     <record id="l10n_tw_tax_report_403_tw_403_1" model="account.report.line">
                                         <field name="name">1 Triplicate Invoices / E-Invoices</field>
                                         <field name="name@zh_TW">1 三聯式發票、電子計算機發票</field>
                                         <field name="code">TW_403_1</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_1_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -63,7 +59,6 @@
                                         <field name="name@zh_TW">5 收銀機發票(三聯式)及電子發票</field>
                                         <field name="code">TW_403_5</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_5_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -82,7 +77,6 @@
                                         <field name="name@zh_TW">9 二聯式發票、收銀機發票(二聯式)</field>
                                         <field name="code">TW_403_9</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_9_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -101,7 +95,6 @@
                                         <field name="name@zh_TW">13 免用發票</field>
                                         <field name="code">TW_403_13</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_13_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -120,7 +113,6 @@
                                         <field name="name@zh_TW">17 減：退回及折讓</field>
                                         <field name="code">TW_403_17</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_17_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -139,7 +131,6 @@
                                         <field name="name@zh_TW">21 合計 ①</field>
                                         <field name="code">TW_403_21</field>
                                         <field name="hierarchy_level">7</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_21_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -153,7 +144,6 @@
                                         <field name="name@zh_TW">22 合計稅額 ②</field>
                                         <field name="code">TW_403_22</field>
                                         <field name="hierarchy_level">7</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_22_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
@@ -169,14 +159,12 @@
                                 <field name="name@zh_TW">零稅率銷售額</field>
                                 <field name="code">TW_403_ZS</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="children_ids">
                                     <record id="l10n_tw_tax_report_403_tw_403_3" model="account.report.line">
                                         <field name="name">3 Triplicate Invoices / E-Invoices</field>
                                         <field name="name@zh_TW">3 三聯式發票、電子計算機發票</field>
                                         <field name="code">TW_403_3</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_3_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -190,7 +178,6 @@
                                         <field name="name@zh_TW">7 收銀機發票(三聯式)及電子發票</field>
                                         <field name="code">TW_403_7</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_7_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -204,7 +191,6 @@
                                         <field name="name@zh_TW">11 二聯式發票、收銀機發票(二聯式)</field>
                                         <field name="code">TW_403_11</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_11_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -218,7 +204,6 @@
                                         <field name="name@zh_TW">15 免用發票</field>
                                         <field name="code">TW_403_15</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_15_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -232,7 +217,6 @@
                                         <field name="name@zh_TW">19 減：退回及折讓</field>
                                         <field name="code">TW_403_19</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_19_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -246,7 +230,6 @@
                                         <field name="name@zh_TW">23 合計 ③</field>
                                         <field name="code">TW_403_23</field>
                                         <field name="hierarchy_level">7</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_23_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -262,14 +245,12 @@
                                 <field name="name@zh_TW">免稅銷售額</field>
                                 <field name="code">TW_403_VE</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="children_ids">
                                     <record id="l10n_tw_tax_report_403_tw_403_4" model="account.report.line">
                                         <field name="name">4 Triplicate Invoices / E-Invoices</field>
                                         <field name="name@zh_TW">4 三聯式發票、電子計算機發票</field>
                                         <field name="code">TW_403_4</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_4_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -283,7 +264,6 @@
                                         <field name="name@zh_TW">8 收銀機發票(三聯式)及電子發票</field>
                                         <field name="code">TW_403_8</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_8_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -297,7 +277,6 @@
                                         <field name="name@zh_TW">12 二聯式發票、收銀機發票(二聯式)</field>
                                         <field name="code">TW_403_12</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_12_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -311,7 +290,6 @@
                                         <field name="name@zh_TW">16 免用發票</field>
                                         <field name="code">TW_403_16</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_16_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -325,7 +303,6 @@
                                         <field name="name@zh_TW">20 減：退回及折讓</field>
                                         <field name="code">TW_403_20</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_20_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -339,7 +316,6 @@
                                         <field name="name@zh_TW">24 合計 ④</field>
                                         <field name="code">TW_403_24</field>
                                         <field name="hierarchy_level">7</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_24_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -355,14 +331,12 @@
                                 <field name="name@zh_TW">特種稅額</field>
                                 <field name="code">TW_403-GBRT</field>
                                 <field name="hierarchy_level">1</field>
-                                <field name="foldable" eval="False"/>
                                 <field name="children_ids">
                                     <record id="l10n_tw_tax_report_403_tw_403_52" model="account.report.line">
                                         <field name="name">52 25% Special Dining Industry</field>
                                         <field name="name@zh_TW">52 25% 特種飲食業</field>
                                         <field name="code">TW_403_52</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_52_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -381,7 +355,6 @@
                                         <field name="name@zh_TW">54 15% 特種飲食業</field>
                                         <field name="code">TW_403_54</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_54_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -400,7 +373,6 @@
                                         <field name="name@zh_TW">84 5% 銀行業、保險業經營銀行、保險本業收入</field>
                                         <field name="code">TW_403_84</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_84_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -419,7 +391,6 @@
                                         <field name="name@zh_TW">56 2% 銀行業、保險業及信託投資業經營前項以外專屬金融本業入</field>
                                         <field name="code">TW_403_56</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_56_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -438,7 +409,6 @@
                                         <field name="name@zh_TW">60 1% 再保收入</field>
                                         <field name="code">TW_403_60</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_60_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -457,7 +427,6 @@
                                         <field name="name@zh_TW">62 免稅收入</field>
                                         <field name="code">TW_403_62</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_62_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -472,7 +441,6 @@
                                         <field name="name@zh_TW">63 減：退回及折讓</field>
                                         <field name="code">TW_403_63</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_63_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -491,7 +459,6 @@
                                         <field name="name@zh_TW">65 合計 ⑤</field>
                                         <field name="code">TW_403_65</field>
                                         <field name="hierarchy_level">7</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_65_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -505,7 +472,6 @@
                                         <field name="name@zh_TW">66 合計稅額</field>
                                         <field name="code">TW_403_66</field>
                                         <field name="hierarchy_level">7</field>
-                                        <field name="foldable" eval="False"/>
                                         <field name="expression_ids">
                                             <record id="l10n_tw_tax_report_403_tw_403_66_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
@@ -523,7 +489,6 @@
                         <field name="name@zh_TW">25 銷售額總計 (①＋③＋④＋⑤) ⑦</field>
                         <field name="code">TW_403_25</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_25_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -537,7 +502,6 @@
                         <field name="name@zh_TW">26 元(內含銷售土地) ⑧</field>
                         <field name="code">TW_403_26</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_26_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -551,7 +515,6 @@
                         <field name="name@zh_TW">27 元(其他固定資產)</field>
                         <field name="code">TW_403_27</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_27_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -566,7 +529,6 @@
                         <field name="name@zh_TW">50 不得扣抵比例 (④＋⑤－⑧)/(⑦－⑧) ⑪</field>
                         <field name="code">TW_403_50</field>
                         <field name="hierarchy_level">0</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_50_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -592,7 +554,6 @@
                         <field name="name@zh_TW">51 得扣抵之進項稅額 ( ⑨ ＋ ⑩ ) × ( 1 － ⑪ )</field>
                         <field name="code">TW_403_51</field>
                         <field name="hierarchy_level">0</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_51_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -618,14 +579,12 @@
                 <field name="name@zh_TW">進項</field>
                 <field name="code">TW_403_P</field>
                 <field name="hierarchy_level">0</field>
-                <field name="foldable" eval="False"/>
                 <field name="children_ids">
                     <record id="l10n_tw_tax_report_403_tw_403_28" model="account.report.line">
                         <field name="name">28 Unified Invoice Deduction / Standard Invoice Credit - Purchase &amp; Costs</field>
                         <field name="name@zh_TW">28 統一發票扣抵聯 (包括一般稅額計算之電子計算機發票扣抵聯) - 進貨及費用</field>
                         <field name="code">TW_403_28</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_28_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -644,7 +603,6 @@
                         <field name="name@zh_TW">30 統一發票扣抵聯 (包括一般稅額計算之電子計算機發票扣抵聯) - 固定資產</field>
                         <field name="code">TW_403_30</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_30_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -663,7 +621,6 @@
                         <field name="name@zh_TW">32 三聯式收銀機發票扣抵聯及一般稅額計算之電子發票 - 進貨及費用</field>
                         <field name="code">TW_403_32</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_32_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -682,7 +639,6 @@
                         <field name="name@zh_TW">34 三聯式收銀機發票扣抵聯及一般稅額計算之電子發票 - 固定資產</field>
                         <field name="code">TW_403_34</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_34_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -701,7 +657,6 @@
                         <field name="name@zh_TW">36 載有稅額之其他憑證 (包括二聯式收銀機發票) - 進貨及費用</field>
                         <field name="code">TW_403_36</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_36_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -720,7 +675,6 @@
                         <field name="name@zh_TW">38 載有稅額之其他憑證 (包括二聯式收銀機發票) - 固定資產</field>
                         <field name="code">TW_403_38</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_38_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -739,7 +693,6 @@
                         <field name="name@zh_TW">78 海關代徵營業稅繳納證扣抵聯 - 進貨及費用</field>
                         <field name="code">TW_403_78</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_78_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -758,7 +711,6 @@
                         <field name="name@zh_TW">80 海關代徵營業稅繳納證扣抵聯 - 固定資產</field>
                         <field name="code">TW_403_80</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_80_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -777,7 +729,6 @@
                         <field name="name@zh_TW">40 減：退出、折讓及海關退還溢繳稅款 - 進貨及費用</field>
                         <field name="code">TW_403_40</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_40_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -796,7 +747,6 @@
                         <field name="name@zh_TW">42 減：退出、折讓及海關退還溢繳稅款 - 固定資產</field>
                         <field name="code">TW_403_42</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_42_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -815,7 +765,6 @@
                         <field name="name@zh_TW">44 合計 - 進貨及費用</field>
                         <field name="code">TW_403_44</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_44_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -829,7 +778,6 @@
                         <field name="name@zh_TW">45 合計稅額 - 進貨及費用 ⑨</field>
                         <field name="code">TW_403_45</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_45_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -843,7 +791,6 @@
                         <field name="name@zh_TW">46 合計 - 固定資產</field>
                         <field name="code">TW_403_46</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_46_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -857,7 +804,6 @@
                         <field name="name@zh_TW">47 合計稅額 - 固定資產 ⑩</field>
                         <field name="code">TW_403_47</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_47_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -871,7 +817,6 @@
                         <field name="name@zh_TW">48 進項總金額 (包括不得扣抵憑證及普通收據) - 進貨及費用</field>
                         <field name="code">TW_403_48</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_48_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -900,7 +845,6 @@
                         <field name="name@zh_TW">49 進項總金額 (包括不得扣抵憑證及普通收據) - 固定資產</field>
                         <field name="code">TW_403_49</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_49_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -926,7 +870,6 @@
                 <field name="name@zh_TW">73 進口免稅貨物</field>
                 <field name="code">TW_403_73</field>
                 <field name="hierarchy_level">0</field>
-                <field name="foldable" eval="False"/>
                 <field name="expression_ids">
                     <record id="l10n_tw_tax_report_403_tw_403_73_balance" model="account.report.expression">
                         <field name="label">balance</field>
@@ -940,7 +883,6 @@
                 <field name="name@zh_TW">74 購買國外勞務給付額 ⑬</field>
                 <field name="code">TW_403_74</field>
                 <field name="hierarchy_level">0</field>
-                <field name="foldable" eval="False"/>
                 <field name="expression_ids">
                     <record id="l10n_tw_tax_report_403_tw_403_74_balance" model="account.report.expression">
                         <field name="label">balance</field>
@@ -954,7 +896,6 @@
                 <field name="name@zh_TW">75 營業稅額 ⑭ ＝ ⑬ × 稅率</field>
                 <field name="code">TW_403_75</field>
                 <field name="hierarchy_level">0</field>
-                <field name="foldable" eval="False"/>
                 <field name="expression_ids">
                     <record id="l10n_tw_tax_report_403_tw_403_75_balance" model="account.report.expression">
                         <field name="label">balance</field>
@@ -968,7 +909,6 @@
                 <field name="name@zh_TW">76 應納稅額 ⑮ ＝ ⑭ × ⑪ ⑱</field>
                 <field name="code">TW_403_76</field>
                 <field name="hierarchy_level">0</field>
-                <field name="foldable" eval="False"/>
                 <field name="expression_ids">
                     <record id="l10n_tw_tax_report_403_tw_403_76_balance" model="account.report.expression">
                         <field name="label">balance</field>
@@ -982,14 +922,13 @@
                 <field name="name@zh_TW">稅額計算</field>
                 <field name="code">TW_403_TC</field>
                 <field name="hierarchy_level">0</field>
-                <field name="foldable" eval="True"/>
+                <field name="foldability">foldable</field>
                 <field name="children_ids">
                     <record id="l10n_tw_tax_report_403_tw_403_101" model="account.report.line">
                         <field name="name">101 Total Output Tax for the Current Period (Month) ②</field>
                         <field name="name@zh_TW">101 稅額計算 ②</field>
                         <field name="code">TW_403_101</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_101_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -1003,7 +942,6 @@
                         <field name="name@zh_TW">103 購買國外勞務應納稅額 ⑱</field>
                         <field name="code">TW_403_103</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_103_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -1017,7 +955,6 @@
                         <field name="name@zh_TW">104 特種稅額計算之應納稅額 ⑥</field>
                         <field name="code">TW_403_104</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_104_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -1031,7 +968,6 @@
                         <field name="name@zh_TW">105 中途歇業年底調整補徵應繳稅額(詳附表)</field>
                         <field name="code">TW_403_105</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_105_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -1046,7 +982,6 @@
                         <field name="name@zh_TW">106 小計(1.+3.+4.+5.)</field>
                         <field name="code">TW_403_106</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_106_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -1060,7 +995,6 @@
                         <field name="name@zh_TW">107 得扣抵進項稅額合計 ⑫</field>
                         <field name="code">TW_403_107</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_107_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -1084,7 +1018,6 @@
                         <field name="name@zh_TW">108 上期(月)累積留抵稅額</field>
                         <field name="code">TW_403_108</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_108_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -1099,7 +1032,6 @@ Year-end adjustment of tax refund (see attached table)</field>
                         <field name="name@zh_TW">109 中途歇業/年底調整應退稅額(詳附表)</field>
                         <field name="code">TW_403_109</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_109_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -1114,7 +1046,6 @@ Year-end adjustment of tax refund (see attached table)</field>
                         <field name="name@zh_TW">110 小計(7.+8.+9.)</field>
                         <field name="code">TW_403_110</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_110_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -1128,7 +1059,6 @@ Year-end adjustment of tax refund (see attached table)</field>
                         <field name="name@zh_TW">111 本期(月)應實繳稅額(6.－10.)</field>
                         <field name="code">TW_403_111</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_111_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -1142,7 +1072,6 @@ Year-end adjustment of tax refund (see attached table)</field>
                         <field name="name@zh_TW">112 本期(月)申報留抵稅額(10.－6.)</field>
                         <field name="code">TW_403_112</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_112_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -1157,7 +1086,6 @@ Year-end adjustment of tax refund (see attached table)</field>
                         <field name="name@zh_TW">113 得退稅限額合計③×5%＋⑩</field>
                         <field name="code">TW_403_113</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_113_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -1171,7 +1099,6 @@ Year-end adjustment of tax refund (see attached table)</field>
                         <field name="name@zh_TW">114 本期(月)應退稅額(如 12.＞13. 則為 13. / 13.＞12. 則為 12.)</field>
                         <field name="code">TW_403_114</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_114_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -1191,7 +1118,6 @@ Year-end adjustment of tax refund (see attached table)</field>
                         <field name="name@zh_TW">115 本期(月)累積留抵稅額(12.－14.)</field>
                         <field name="code">TW_403_115</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False"/>
                         <field name="expression_ids">
                             <record id="l10n_tw_tax_report_403_tw_403_115_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -1207,7 +1133,6 @@ Year-end adjustment of tax refund (see attached table)</field>
                 <field name="name@zh_TW">82 保稅區營業人按進口報關程序銷售貨物至 固 定 資 產 我國境內課稅區之免開立統一發票銷售額</field>
                 <field name="code">TW_403_82</field>
                 <field name="hierarchy_level">0</field>
-                <field name="foldable" eval="False"/>
                 <field name="expression_ids">
                     <record id="l10n_tw_tax_report_403_tw_403_82_balance" model="account.report.expression">
                         <field name="label">balance</field>

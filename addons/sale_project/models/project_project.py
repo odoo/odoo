@@ -37,16 +37,18 @@ class ProjectProject(models.Model):
     has_any_so_to_invoice = fields.Boolean('Has SO to Invoice', compute='_compute_has_any_so_to_invoice', export_string_translation=False)
     sale_order_line_count = fields.Integer(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman', export_string_translation=False)
     sale_order_count = fields.Integer(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman', export_string_translation=False)
+    sale_order_amount_total = fields.Monetary(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman', export_string_translation=False)
     has_any_so_with_nothing_to_invoice = fields.Boolean('Has a SO with an invoice status of No', compute='_compute_has_any_so_with_nothing_to_invoice', export_string_translation=False)
     invoice_count = fields.Integer(compute='_compute_invoice_count', groups='account.group_account_readonly', export_string_translation=False)
     vendor_bill_count = fields.Integer(related='account_id.vendor_bill_count', groups='account.group_account_readonly', compute_sudo=False, export_string_translation=False)
     partner_id = fields.Many2one(compute="_compute_partner_id", store=True, readonly=False)
     display_sales_stat_buttons = fields.Boolean(compute='_compute_display_sales_stat_buttons', export_string_translation=False)
-    sale_order_state = fields.Selection(related='sale_order_id.state', export_string_translation=False)
-    reinvoiced_sale_order_id = fields.Many2one('sale.order', string='Sales Order', groups='sales_team.group_sale_salesman', copy=False, domain="[('partner_id', '=', partner_id)]", index='btree_not_null',
+    sale_order_state = fields.Selection(related='sale_order_id.state', export_string_translation=False, tracking=False)
+    reinvoiced_sale_order_id = fields.Many2one('sale.order', string='Sales Order', groups='sales_team.group_sale_salesman', copy=False, domain="['|', ('partner_id', '=', partner_id), ('partner_id.commercial_partner_id.id', 'parent_of', partner_id)]", index='btree_not_null',
         help="Products added to stock pickings, whose operation type is configured to generate analytic costs, will be re-invoiced in this sales order if they are set up for it.",
     )
-    actual_margin = fields.Monetary(compute='_compute_actual_margin', export_string_translation=False)
+    real_cost = fields.Monetary(compute='_compute_real_cost', export_string_translation=False)
+    real_cost_ratio = fields.Float(compute='_compute_real_cost', export_string_translation=False)
 
     @api.model
     def default_get(self, fields):
@@ -60,6 +62,8 @@ class ProjectProject(models.Model):
                 'reinvoiced_sale_order_id': order_id,
                 'sale_line_id': sale_line_id,
             })
+        if defaults.get('sale_order_id') and self.env['sale.order'].search([('id', '=', defaults['sale_order_id']), ('state', '=', 'draft')]):
+            defaults.pop('sale_line_id', False)
         return defaults
 
     @api.model
@@ -67,6 +71,10 @@ class ProjectProject(models.Model):
         defaults = super()._map_tasks_default_values(project)
         defaults['sale_line_id'] = False
         return defaults
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        self.allow_billable = bool(self.partner_id)
 
     @api.depends('allow_billable', 'partner_id.company_id')
     def _compute_partner_id(self):
@@ -127,7 +135,9 @@ class ProjectProject(models.Model):
             project.sale_order_line_count = len(sale_order_lines)
 
             # Use sudo to avoid AccessErrors when the SOLs belong to different companies.
-            project.sale_order_count = len(sale_order_lines.sudo().order_id or project.reinvoiced_sale_order_id)
+            all_sale_orders = sale_order_lines.sudo().order_id or project.reinvoiced_sale_order_id
+            project.sale_order_count = len(all_sale_orders)
+            project.sale_order_amount_total = sum(all_sale_orders.mapped('amount_total'))
 
     def _compute_invoice_count(self):
         data = self.env['account.move.line']._read_group(
@@ -144,14 +154,42 @@ class ProjectProject(models.Model):
         for project in self:
             project.display_sales_stat_buttons = project.allow_billable and project.partner_id
 
-    def _compute_actual_margin(self):
-        margin_per_account = dict(self.env['account.analytic.line']._read_group(
-            domain=[('account_id', 'in', self.account_id.ids)],
+    def _compute_real_cost(self):
+        cost_per_account = dict(self.env['account.analytic.line']._read_group(
+            domain=[('account_id', 'in', self.account_id.ids), ('amount', '<', 0)],
+            groupby=['account_id'],
+            aggregates=['amount:sum'],
+        ))
+        revenue_per_account = dict(self.env['account.analytic.line']._read_group(
+            domain=[('account_id', 'in', self.account_id.ids), ('amount', '>=', 0)],
             groupby=['account_id'],
             aggregates=['amount:sum'],
         ))
         for project in self:
-            project.actual_margin = margin_per_account.get(project.account_id.id, 0.0)
+            project.real_cost = abs(cost_per_account.get(project.account_id, 0))
+            total = project.real_cost + revenue_per_account.get(project.account_id, 0)
+            project.real_cost_ratio = 100 * (project.real_cost / total) if total else 0
+
+    def _fetch_linked_products(self, project_ids, limit=None):
+        return self.env["product.template"].search([
+            ("service_tracking", "!=", "no"),
+            "|",
+                ("project_id", "in", project_ids),
+                ("project_template_id", "in", project_ids),
+        ], limit=limit)
+
+    def _fetch_linked_sale_orders(self, project_ids, limit=None):
+        return self.env["sale.order"].search([("project_id", "in", project_ids)], limit=limit)
+
+    def check_allow_billable_projects(self):
+        """ return if the project is linked to product or sales order """
+        self.ensure_one()
+        return bool(self._fetch_linked_products(self.ids, limit=1) or
+                    self._fetch_linked_sale_orders(self.ids, limit=1))
+
+    def _unlink_billable_products(self):
+        linked_product_ids = self._fetch_linked_products(self.ids)
+        linked_product_ids.write({'project_id': False, 'project_template_id': False})
 
     def action_customer_preview(self):
         self.ensure_one()
@@ -174,37 +212,20 @@ class ProjectProject(models.Model):
         if not self.reinvoiced_sale_order_id and self.sale_line_id:
             self.reinvoiced_sale_order_id = self.sale_line_id.order_id
 
-    def _ensure_sale_order_linked(self, sol_ids):
-        """ Orders created from project/task are supposed to be confirmed to match the typical flow from sales, but since
-        we allow SO creation from the project/task itself we want to confirm newly created SOs immediately after creation.
-        However this would leads to SOs being confirmed without a single product, so we'd rather do it on record save.
-        """
-        quotations = self.env['sale.order.line'].sudo()._read_group(
-            domain=[('state', '=', 'draft'), ('id', 'in', sol_ids)],
-            aggregates=['order_id:recordset'],
-        )[0][0]
-        if quotations:
-            quotations.action_confirm()
-
     @api.model_create_multi
     def create(self, vals_list):
         projects = super().create(vals_list)
-        sol_ids = set()
         for project, vals in zip(projects, vals_list):
-            if (vals.get('sale_line_id')):
-                sol_ids.add(vals['sale_line_id'])
             if project.sale_order_id and not project.sale_order_id.project_id:
                 project.sale_order_id.project_id = project.id
             elif project.sudo().reinvoiced_sale_order_id and not project.sudo().reinvoiced_sale_order_id.project_id:
                 project.sudo().reinvoiced_sale_order_id.project_id = project.id
-        if sol_ids:
-            projects._ensure_sale_order_linked(list(sol_ids))
         return projects
 
     def write(self, vals):
         project = super().write(vals)
-        if sol_id := vals.get('sale_line_id'):
-            self._ensure_sale_order_linked([sol_id])
+        if vals.get('allow_billable') is False:
+            self._unlink_billable_products()
         return project
 
     def _get_sale_orders_domain(self, all_sale_orders):
@@ -513,10 +534,19 @@ class ProjectProject(models.Model):
             'from_sale_order_action',
         ]
 
-    def action_actual_margin(self):
+    def action_real_margin(self):
         self.ensure_one()
+        embedded_action_context = self.env.context.get('from_embedded_action', False)
         action = self.env['ir.actions.act_window']._for_xml_id('sale_project.action_analytic_reporting_inherit_sale_project')
-        action['display_name'] = self.env._("%(name)s's Actual Margins", name=self.name)
-        action['context'] = {'search_default_fiscal_date': 1, 'search_default_group_date': 1}
+        action['views'] = [(self.env.ref('sale_project.view_account_analytic_line_inherit_sale_project_pivot_single').id, 'pivot')]
+        action['display_name'] = self.env._("%(name)s's Margins", name=self.name)
         action['domain'] = [('account_id', 'in', self.account_id.ids)]
+        action['context'] = {
+            **ast.literal_eval(action.get('context', '{}')),
+            'from_embedded_action': embedded_action_context,
+            **({
+                'search_default_month': 0,
+                'pivot_column_groupby': ['date:month'],
+            } if embedded_action_context else {}),
+        }
         return action

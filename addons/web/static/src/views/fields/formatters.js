@@ -7,7 +7,7 @@ import {
 import { localization as l10n } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { isBinarySize } from "@web/core/utils/binary";
+import { humanSize, isBinarySize } from "@web/core/utils/binary";
 import {
     formatFloat as formatFloatNumber,
     humanNumber,
@@ -20,22 +20,6 @@ import { formatCurrency } from "@web/core/currency";
 import { normalizeTimeStr } from "@web/core/l10n/time";
 
 // -----------------------------------------------------------------------------
-// Helpers
-// -----------------------------------------------------------------------------
-
-function humanSize(value) {
-    if (!value) {
-        return "";
-    }
-    const suffix = value < 1024 ? " " + _t("Bytes") : "b";
-    return (
-        humanNumber(value, {
-            decimals: 2,
-        }) + suffix
-    );
-}
-
-// -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
 
@@ -46,8 +30,7 @@ function humanSize(value) {
 export function formatBinary(value) {
     if (!isBinarySize(value)) {
         // Computing approximate size out of base64 encoded string
-        // http://en.wikipedia.org/wiki/Base64#MIME
-        return humanSize(value.length / 1.37);
+        return humanSize(Math.round(value.length * 0.75));
     }
     // already bin_size
     return value;
@@ -185,7 +168,7 @@ formatFloatFactor.extractOptions = ({ attrs, options }) => ({
 });
 
 /**
- * Returns a string representing a time value, from a float or a Duration object.
+ * Returns a string representing a time value, from a Duration object.
  * The idea is that we sometimes want to display something like 1h 45m instead of 1.75,
  * or 0:15 instead of 0.25.
  *
@@ -193,10 +176,10 @@ formatFloatFactor.extractOptions = ({ attrs, options }) => ({
  * @param {Object} [options]
  * @param {boolean} [options.showSeconds] if true, format like 1h 30m 20s otherwise, format like 1h 30m
  * @param {boolean} [options.numeric] if true, show the duration in the format set on the language
- * @param {import("./parsers").UnitOfTime} [options.unit="hours"] The unit of mesure for the duration
+ * @param {import("./parsers").UnitOfTime} [options.unit="hours"] The unit of measure for the duration
  * @returns {string}
  */
-function formatDuration(value, options = {}) {
+export function formatDuration(value, options = {}) {
     if (value === false) {
         return "";
     }
@@ -218,6 +201,16 @@ function formatDuration(value, options = {}) {
             : Math.round((seconds % 3600) / 60),
         seconds: showSeconds ? Math.round(seconds % 60) : 0,
     };
+
+    if (duration.seconds === 60) {
+        duration.minutes += 1;
+        duration.seconds = 0;
+    }
+
+    if (duration.minutes === 60) {
+        duration.hours += 1;
+        duration.minutes = 0;
+    }
 
     let durationParts = new Intl.DurationFormat(l10n.locale, {
         style: options.numeric ? "digital" : "narrow",

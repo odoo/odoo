@@ -44,13 +44,14 @@ class TestPage(common.TransactionCase):
         self.page_1_menu = Menu.create({
             'name': 'Page 1 menu',
             'page_id': self.page_1.id,
-            'website_id': self.ref('website.default_website'),
+            'website_id': self.ref('base.default_website'),
         })
 
     def test_copy_page(self):
-        View = self.env['ir.ui.view']
-        Page = self.env['website.page']
-        Menu = self.env['website.menu']
+        website_id = self.ref('base.default_website')
+        View = self.env['ir.ui.view'].with_context(website_id=website_id)
+        Page = self.env['website.page'].with_context(website_id=website_id)
+        Menu = self.env['website.menu'].with_context(website_id=website_id)
         # Specific page
         self.specific_view = View.create({
             'name': 'Base',
@@ -61,12 +62,12 @@ class TestPage(common.TransactionCase):
         self.page_specific = Page.create({
             'view_id': self.specific_view.id,
             'url': '/page_specific',
-            'website_id': self.ref('website.default_website'),
+            'website_id': self.ref('base.default_website'),
         })
         self.page_specific_menu = Menu.create({
             'name': 'Page Specific menu',
             'page_id': self.page_specific.id,
-            'website_id': self.ref('website.default_website'),
+            'website_id': self.ref('base.default_website'),
         })
         total_pages = Page.search_count([])
         total_menus = Menu.search_count([])
@@ -104,6 +105,45 @@ class TestPage(common.TransactionCase):
         cloned_generic_page_2 = Page.search([('url', '=', '/page_1-1'), ('id', '!=', self.page_1.id)])
         self.assertEqual(len(cloned_generic_page_2), 1, "A generic page being cloned should create a specific page with a new URL if there is already a specific page with that URL")
 
+    def test_clone_page_edited_in_default_language(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        website = self.env.ref('base.default_website')
+
+        self.assertEqual(website.default_lang_id.code, 'en_US')
+
+        view = self.env['ir.ui.view'].create({
+            'name': 'Repro View',
+            'type': 'qweb',
+            'arch': '<div>Original</div>',
+            'key': 'test.repro_view',
+        })
+
+        view.with_context(lang='fr_FR').arch = '<div>Original FR</div>'
+        page = self.env['website.page'].create({
+            'view_id': view.id,
+            'url': '/repro',
+            'website_id': website.id,
+        })
+
+        view.with_context(
+            lang=website.default_lang_id.code, delay_translations=True,
+        ).arch = '<div>Edited</div>'
+        view.invalidate_recordset(['arch_db'])
+        self.assertEqual(view.with_context(lang='fr_FR').arch, '<div>Original FR</div>',
+                         "confirmed fr_FR translation should still be the stale one")
+        self.assertEqual(view.with_context(lang='fr_FR', check_translations=True).arch, '<div>Edited</div>',
+                         "latest fr_FR content lives in the delayed translation slot")
+
+        dup_url = self.env['website.page'].with_context(lang='fr_FR').clone_page(page.id, clone_menu=False)
+        dup = self.env['website.page'].search([('url', '=', dup_url), ('id', '!=', page.id)])
+        self.assertEqual(len(dup), 1, "The page should have been duplicated")
+
+        self.assertEqual(
+            dup.with_context(lang='fr_FR').arch,
+            '<div>Edited</div>',
+            "Duplicating an edited page must use its latest (delayed) content, not the stale confirmed translation",
+        )
+
     def test_cow_page(self):
         Menu = self.env['website.menu']
         Page = self.env['website.page']
@@ -119,7 +159,7 @@ class TestPage(common.TransactionCase):
         self.assertEqual(total_views, View.search_count([]))
 
         # edit through frontend
-        self.page_1.with_context(website_id=self.ref('website.default_website')).write({'arch': '<div>website 1 content</div>'})
+        self.page_1.with_context(website_id=self.ref('base.default_website')).write({'arch': '<div>website 1 content</div>'})
 
         # 1. should have created website-specific copies for:
         #    - page
@@ -133,7 +173,7 @@ class TestPage(common.TransactionCase):
         self.assertEqual(self.page_1.arch, '<div>modified base content</div>')
         self.assertEqual(bool(self.page_1.website_id), False)
 
-        website_id = self.ref('website.default_website')
+        website_id = self.ref('base.default_website')
         new_page = Page.search([('url', '=', '/page_1'), ('id', '!=', self.page_1.id)])
         self.assertEqual(new_page.website_id.id, website_id)
         self.assertEqual(new_page.view_id.inherit_children_ids[0].website_id.id, website_id)
@@ -159,7 +199,7 @@ class TestPage(common.TransactionCase):
         # for the extension view should be created. When rendering the
         # original website.page on website 1 it will look differently
         # due to this new extension view.
-        self.extension_view.with_context(website_id=self.ref('website.default_website')).write({'arch': '<div>website 1 content</div>'})
+        self.extension_view.with_context(website_id=self.ref('base.default_website')).write({'arch': '<div>website 1 content</div>'})
         self.assertEqual(total_pages, Page.search_count([]))
         self.assertEqual(total_menus, Menu.search_count([]))
         self.assertEqual(total_views + 1, View.search_count([]))
@@ -167,9 +207,9 @@ class TestPage(common.TransactionCase):
         self.assertEqual(self.extension_view.arch, '<div>modified extension content</div>')
         self.assertEqual(bool(self.page_1.website_id), False)
 
-        new_view = View.search([('name', '=', 'Extension'), ('website_id', '=', self.ref('website.default_website'))])
+        new_view = View.search([('name', '=', 'Extension'), ('website_id', '=', self.ref('base.default_website'))])
         self.assertEqual(new_view.arch, '<div>website 1 content</div>')
-        self.assertEqual(new_view.website_id.id, self.ref('website.default_website'))
+        self.assertEqual(new_view.website_id.id, self.ref('base.default_website'))
 
     def test_cou_page_backend(self):
         Page = self.env['website.page']
@@ -194,7 +234,7 @@ class TestPage(common.TransactionCase):
         # currently the view unlink of website.page can't handle views with inherited views
         self.extension_view.unlink()
 
-        website_id = self.ref('website.default_website')
+        website_id = self.ref('base.default_website')
         self.page_1.with_context(website_id=website_id).unlink()
 
         self.assertEqual(bool(self.base_view.exists()), False)
@@ -231,7 +271,7 @@ class WithContext(HttpCase):
         })
 
     def test_unpublished_page(self):
-        specific_page = self.page.copy({'website_id': self.env['website'].get_current_website().id})
+        specific_page = self.page.copy({'website_id': self.env.ref('base.default_website').id})
         specific_page.write({'is_published': False, 'arch': self.page.arch.replace('I am a generic page', 'I am a specific page')})
 
         self.authenticate(None, None)
@@ -247,11 +287,10 @@ class WithContext(HttpCase):
     def test_search(self):
         dbname = common.get_db_name()
         admin_uid = self.env.ref('base.user_admin').id
-        website = self.env['website'].get_current_website()
 
         pages = self.xmlrpc_object.execute(
             dbname, admin_uid, 'admin',
-            'website', 'search_pages', [website.id], 'page'
+            'website', 'search_pages', [self.ref('base.default_website')], 'page'
         )
         self.assertIn(
             '/page_1',
@@ -260,7 +299,7 @@ class WithContext(HttpCase):
 
     @mute_logger('odoo.http')
     def test_03_error_page_debug(self):
-        with MockRequest(self.env, website=self.env.ref('website.default_website')):
+        with MockRequest(self.env, website=self.env.ref('base.default_website')):
             self.base_view.arch = self.base_view.arch.replace('I am a generic page', '<t t-out="15/0"/>')
 
             # first call, no debug, traceback should not be visible
@@ -281,13 +320,13 @@ class WithContext(HttpCase):
 
     def test_04_visitor_no_session(self):
         with patch.object(session_store(), 'save') as session_save,\
-             MockRequest(self.env, website=self.env.ref('website.default_website')):
+             MockRequest(self.env, website=self.env.ref('base.default_website')):
             # no session should be saved for website visitor
             self.url_open(self.page.url).raise_for_status()
             session_save.assert_not_called()
 
     def test_05_homepage_not_slash_url(self):
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         # Set another page (/page_1) as homepage
         website.write({
             'homepage_url': self.page.url,
@@ -305,7 +344,7 @@ class WithContext(HttpCase):
 
     def test_opengraph_image_with_absolute_url(self):
         base_url = self.base_url()
-        with MockRequest(self.env, website=self.env.ref('website.default_website')):
+        with MockRequest(self.env, website=self.env.ref('base.default_website')):
             self.page.website_meta_og_img = 'http://wrong.example.com/favicon.ico'
             r = self.url_open(self.page.url)
             self.assertEqual(r.status_code, 200)
@@ -317,7 +356,7 @@ class WithContext(HttpCase):
             self.assertIn(f'"og:image" content="{base_url}/logo"', r.text)
 
     def test_website_homepage_url_change(self):
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         self.assertFalse(website.homepage_url)
 
         test_page = self.env['website.page'].with_context(website_id=website.id).create({
@@ -370,7 +409,7 @@ class WithContext(HttpCase):
 
     def test_06_homepage_url(self):
         # Setup
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         website.write({
             'name': 'Test Website',
             'domain': self.base_url(),
@@ -501,7 +540,7 @@ class WithContext(HttpCase):
         self.assertEqual(r.history[0].status_code, 303)
 
     def test_07_alternatives(self):
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         lang_fr = self.env['res.lang']._activate_lang('fr_FR')
         lang_fr.write({'url_code': 'fr'})
         website.language_ids = self.env.ref('base.lang_en') + lang_fr
@@ -534,7 +573,7 @@ class WithContext(HttpCase):
             self.assertEqual(alternate_fr_url, f'{self.base_url()}/fr/page_1')
 
     def test_alternate_hreflang(self):
-        website = self.env['website'].get_current_website() or self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         lang_en = self.env.ref('base.lang_en')
         ResLang = self.env['res.lang'].with_context(website_id=website.id)
         lang_fr = ResLang._activate_lang('fr_FR')
@@ -566,7 +605,22 @@ class WithContext(HttpCase):
 
     def test_07_not_authorized(self):
         # Create page that requires specific user role.
-        specific_page = self.page.copy({'website_id': self.env['website'].get_current_website().id})
+        specific_page = self.page.copy({'website_id': self.ref('base.default_website'), 'url': '/page_2'})
+        specific_page.write({
+            'arch': self.page.arch.replace('I am a generic page', 'I am a specific page not available for visitors'),
+            'is_published': True,
+            'visibility': 'restricted_group',
+            'group_ids': [Command.link(self.ref('website.group_website_designer'))],
+        })
+        # Access page as anonymous visitor.
+        self.authenticate(None, None)
+        r = self.url_open('/page_2')
+        # Check that is is rendered as a website page.
+        self.assertEqual(403, r.status_code, "Must fail with 403")
+
+        # with the same page url
+
+        specific_page = self.page.copy({'website_id': self.ref('base.default_website'), 'url': '/page_1'})
         specific_page.write({
             'arch': self.page.arch.replace('I am a generic page', 'I am a specific page not available for visitors'),
             'is_published': True,
@@ -592,7 +646,7 @@ class WithContext(HttpCase):
         generic should not be reachable anymore even if the COW page has a
         different URL. Note that they will both still share the same key.
         """
-        website_id = self.ref('website.default_website')
+        website_id = self.ref('base.default_website')
         Page = self.env['website.page']
         specific_arch = '<div>website 1 content</div>'
         generic_page = self.page
@@ -602,7 +656,7 @@ class WithContext(HttpCase):
         self.assertFalse(specific_page, "For this test, the specific page should not exist yet")
 
         # COW a generic page
-        generic_page.view_id.with_context(website_id=self.ref('website.default_website')).save(specific_arch, xpath='/div')
+        generic_page.view_id.with_context(website_id=self.ref('base.default_website')).save(specific_arch, xpath='/div')
         specific_page = Page.search([('url', '=', self.page.url), ('website_id', '=', website_id)])
         self.assertEqual(specific_page.arch.replace('\n', ''), specific_arch)
         self.assertEqual(generic_page.arch, '<div>content</div>')
@@ -614,14 +668,56 @@ class WithContext(HttpCase):
         r = self.url_open(generic_page.url)
         self.assertEqual(r.status_code, 404, "Generic should not be reachable")
 
+    def test_20_depend_lang(self):
+        website = self.env.ref('base.default_website')
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+        # lang_fr.write({'url_code': 'fr'})
+        website.language_ids = self.env.ref('base.lang_en') + lang_fr
+        website.default_lang_id = self.env.ref('base.lang_en')
+
+        self.base_view.arch_db = '''<t name="Homepage" t-name="test.base_view">BIDULE</t>'''
+        self.base_view.update_field_translations('arch_db', {
+            'en_US': {'BIDULE': 'BIDULE EN !'},
+            lang_fr.code: {'BIDULE': 'BIDULE FR !'},
+        })
+
+        self.assertEqual(self.env['website.page'].with_context({'lang': 'en_US'}).search([('url', '=', '/page_1')]).arch, '''<t name="Homepage" t-name="test.base_view">BIDULE EN !</t>''')
+        self.assertEqual(self.env['website.page'].with_context({'lang': lang_fr.code}).search([('url', '=', '/page_1')]).arch, '''<t name="Homepage" t-name="test.base_view">BIDULE FR !</t>''')
+
 
 @tagged('-at_install', 'post_install')
 class TestNewPage(common.TransactionCase):
     def test_new_page_used_key(self):
-        website = self.env.ref('website.default_website')
+        website = self.env.ref('base.default_website')
         controller = Website()
         with MockRequest(self.env, website=website):
             controller.pagenew(path="snippets")
         pages = self.env['website.page'].search([('url', '=', '/snippets')])
         self.assertEqual(len(pages), 1, "Exactly one page should be at /snippets.")
         self.assertNotEqual(pages.key, "website.snippets", "Page's key cannot be website.snippets.")
+
+    def test_pagenew_links_menu_without_leading_slash(self):
+        website = self.env.ref('base.default_website')
+        controller = Website()
+
+        menus = self.env['website.menu'].create([
+            {
+                'name': 'Without space and slash',
+                'url': 'foobar',
+                'website_id': website.id,
+            },
+            {
+                'name': 'With space and without slash',
+                'url': 'bar baz',
+                'website_id': website.id,
+            },
+        ])
+
+        with MockRequest(self.env, website=website):
+            for menu in menus:
+                controller.pagenew(path=menu.url)
+
+                self.assertTrue(
+                    menu.page_id,
+                    f"Menu '{menu.name}' was not linked to the created page."
+                )

@@ -1,8 +1,7 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove_plugin";
-import { isClonable } from "./clone_plugin";
 import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
@@ -61,7 +60,7 @@ import { omit } from "@web/core/utils/objects";
  * @property { BuilderOptionsPlugin['getPageContainers'] } getPageContainers
  * @property { BuilderOptionsPlugin['getRemoveDisabledReason'] } getRemoveDisabledReason
  * @property { BuilderOptionsPlugin['getCloneDisabledReason'] } getCloneDisabledReason
- * @property { BuilderOptionsPlugin['getReloadSelector'] } getReloadSelector
+ * @property { BuilderOptionsPlugin['isClonable'] } isClonable
  * @property { BuilderOptionsPlugin['setNextTarget'] } setNextTarget
  * @property { BuilderOptionsPlugin['getBuilderOptionContext'] } getBuilderOptionContext
  * @property { BuilderOptionsPlugin['getBuilderOptions'] } getBuilderOptions
@@ -73,6 +72,7 @@ import { omit } from "@web/core/utils/objects";
  *
  * @typedef {((el: HTMLElement) => [] | BuilderButtonDescriptor[])[]} options_container_top_buttons_providers
  *
+ * @typedef {({selector: CSSSelector, target: CSSSelector})[]} auto_unfold_container_providers
  * @typedef {{
  *     Component: Component;
  *     selector: CSSSelector;
@@ -128,7 +128,7 @@ import { omit } from "@web/core/utils/objects";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builderOptions";
-    static dependencies = ["operation", "history"];
+    static dependencies = ["operation", "domObserver", "history"];
     static shared = [
         "checkElement",
         "closestWithOption",
@@ -141,22 +141,36 @@ export class BuilderOptionsPlugin extends Plugin {
         "getPageContainers",
         "getRemoveDisabledReason",
         "getCloneDisabledReason",
-        "getReloadSelector",
         "setNextTarget",
         "getBuilderOptionContext",
         "getBuilderOptions",
+        "isClonable",
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_will_add_step_handlers: this.onWillAddStep.bind(this),
-        on_step_added_handlers: this.onStepAdded.bind(this),
-        on_undone_handlers: (revertedStep) => this.restoreContainers(revertedStep, "undo"),
-        on_redone_handlers: (revertedStep) => this.restoreContainers(revertedStep, "redo"),
+        history_commit_data_properties: ["currentTarget", "nextTarget"],
+        on_will_reset_history_handlers: () => {
+            this.targetState = {};
+        },
+        on_committed_to_history_handlers: this.onHistoryCommitted.bind(this),
+        on_history_commit_undone_handlers: this.restoreContainers.bind(this),
+        on_history_commit_redone_handlers: this.restoreContainers.bind(this),
         clean_for_save_processors: this.cleanForSave.bind(this),
+        reload_context_processors: (context, el) => {
+            if (el) {
+                context.selector = this.getReloadSelector(el);
+                context.folded = this.lastContainers.map((c) => c.folded);
+            }
+            return context;
+        },
         on_editor_started_handlers: () => {
-            if (this.config.initialTarget) {
-                const el = this.editable.querySelector(this.config.initialTarget);
-                this.updateContainers(el);
+            if (this.config.reloadContext) {
+                const { selector, folded } = this.config.reloadContext;
+                this.updateContainers(this.editable.querySelector(selector));
+                for (let i = 0; i < this.lastContainers.length && i < folded.length; i++) {
+                    this.lastContainers[i].folded &&= folded[i];
+                    this.lastContainers[i].foldedIntent &&= this.config.initialFolded[i];
+                }
             }
         },
         options_container_top_buttons_providers: (el) => {
@@ -170,9 +184,31 @@ export class BuilderOptionsPlugin extends Plugin {
             }
             return buttons;
         },
+        on_revert_history_commit_handlers: (commit) => {
+            this.targetState = { current: commit.data.nextTarget, next: commit.data.currentTarget };
+        },
+        on_apply_history_commit_handlers: (commit) => {
+            this.targetState = { current: commit.data.currentTarget, next: commit.data.nextTarget };
+        },
+        pending_history_commit_data_processors: (data) => ({
+            ...data,
+            currentTarget: this.targetState.current,
+            nextTarget: this.targetState.next,
+        }),
+        save_point_history_commit_data_processors: (data) => ({
+            ...data,
+            targetState: { ...this.targetState },
+        }),
+        on_savepoint_restored_handlers: (savePoint) => {
+            if ("targetState" in savePoint.data) {
+                this.targetState = { ...savePoint.data.targetState };
+            }
+        },
     };
 
     setup() {
+        /** @type { current?: Node, next?: Node } */
+        this.targetState = {};
         this.builderOptions = this.computeBuilderOptionsFromTemplate();
         this.builderOptionsContext = new Map();
         this.builderOptionsDependencies = new Map();
@@ -189,12 +225,6 @@ export class BuilderOptionsPlugin extends Plugin {
             this.getResource("builder_header_middle_buttons")
         );
         this.builderContainerTitle = withIds(this.getResource("container_title"));
-        // doing this manually instead of using addDomListener. This is because
-        // addDomListener will ignore all events from protected targets. But in
-        // our case, we still want to update the containers.
-        this.onClick = this.onClick.bind(this);
-        this.editable.addEventListener("click", this.onClick, { capture: true });
-
         this.lastContainers = [];
 
         // Selector of elements that should not update/have containers when they
@@ -210,16 +240,11 @@ export class BuilderOptionsPlugin extends Plugin {
             ".transfo-container",
             ".o_datetime_picker",
         ].join(", ");
-    }
-
-    destroy() {
-        this.editable.removeEventListener("click", this.onClick, { capture: true });
-    }
-
-    onClick(ev) {
-        this.dependencies.operation.next(() => {
-            this.updateContainers(ev.target);
-        });
+        const unclonableButtonSelector = [
+            ".oe_unremovable",
+            ...this.getResource("submit_button_selectors"),
+        ].join(", ");
+        this.clonableSelector = `a.btn:not(${unclonableButtonSelector})`;
     }
     /**
      * Checks if the given element is a valid builder option target.
@@ -270,9 +295,9 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     updateContainers(target, { forceUpdate = false } = {}) {
-        if (this.dependencies.history.getIsCurrentStepModified()) {
+        if (this.dependencies.domObserver.hasStagedMutations()) {
             console.warn(
-                "Should not have any mutations in the current step when you update the container selection"
+                "Should not have any mutations in the current commit when you update the container selection"
             );
         }
         if (this.dependencies.history.getIsPreviewing()) {
@@ -288,6 +313,7 @@ export class BuilderOptionsPlugin extends Plugin {
             const connectedContainers = this.lastContainers.filter((c) => c.element.isConnected);
             this.target = connectedContainers.at(-1)?.element;
         }
+        this.targetState.current = this.target;
 
         const newContainers = this.computeContainers(this.target);
         if (newContainers.length === 0 && this.lastContainers.length === 0) {
@@ -326,6 +352,7 @@ export class BuilderOptionsPlugin extends Plugin {
 
     deactivateContainers() {
         this.target = null;
+        this.targetState.current = false;
         this.lastContainers = [];
         this.trigger("on_current_options_containers_changed_handlers", this.lastContainers);
     }
@@ -377,17 +404,18 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         const previousElementToIdAndStateMap = new Map(
-            this.lastContainers.map((c) => [c.element, { id: c.id, folded: c.folded }])
+            this.lastContainers.map((c) => [
+                c.element,
+                { id: c.id, folded: c.folded, foldedIntent: c.foldedIntent },
+            ])
         );
-        const keepUnfolded = this.lastContainers.some((c) => c.element === element);
-        let containers = reactive(
+        let containers = proxy(
             [...elementToOptions]
                 .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
                 .map(([element, Options]) => ({
                     id: previousElementToIdAndStateMap.get(element)?.id || uniqueId(),
-                    folded: keepUnfolded
-                        ? previousElementToIdAndStateMap.get(element)?.folded ?? true
-                        : true,
+                    folded: previousElementToIdAndStateMap.get(element)?.foldedIntent ?? true,
+                    foldedIntent: previousElementToIdAndStateMap.get(element)?.foldedIntent,
                     element,
                     options: Options,
                     optionTitleComponents: elementToOptionTitleComponents.get(element) || [],
@@ -399,7 +427,7 @@ export class BuilderOptionsPlugin extends Plugin {
                     hasOverlayOptions: this.hasOverlayOptions(element),
                     isRemovable: isRemovable(element),
                     removeDisabledReason: this.getRemoveDisabledReason(element),
-                    isClonable: isClonable(element),
+                    isClonable: this.isClonable(element),
                     cloneDisabledReason: this.getCloneDisabledReason(element),
                     optionsContainerTopButtons: this.getOptionsContainerTopButtons(element),
                 }))
@@ -413,6 +441,19 @@ export class BuilderOptionsPlugin extends Plugin {
         const lastContainerWithOptions = containers.findLast((c) => c.options.length);
         if (lastContainerWithOptions) {
             lastContainerWithOptions.folded = false;
+            // The following is used in case the options in the last container
+            // are not likely the ones the user wants. After we re-organize the
+            // options to avoid these cases, this will be removed
+            for (const { selector, target } of this.getResource(
+                "auto_unfold_container_providers"
+            )) {
+                if (lastContainerWithOptions.element.matches(selector)) {
+                    const ancestorContainer = containers.findLast((c) => c.element.matches(target));
+                    if (ancestorContainer) {
+                        ancestorContainer.folded = ancestorContainer.foldedIntent ?? false;
+                    }
+                }
+            }
         }
         return containers;
     }
@@ -432,7 +473,10 @@ export class BuilderOptionsPlugin extends Plugin {
         const isInnerSnippet = this.config.snippetModel.isInnerContent(el);
         const keepOptions =
             this.checkPredicates("should_keep_overlay_options_predicates", el) ?? false;
-        if (isInnerSnippet && isAloneInColumn && !keepOptions) {
+        const removeOptions =
+            this.checkPredicates("should_remove_overlay_options_predicates", el) ?? false;
+
+        if ((isInnerSnippet && isAloneInColumn && !keepOptions) || removeOptions) {
             return false;
         }
 
@@ -455,7 +499,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 button.handler = (...args) => {
                     this.dependencies.operation.next(async () => {
                         await handler(...args);
-                        this.dependencies.history.addStep();
+                        this.dependencies.history.commit();
                     });
                 };
             }
@@ -473,12 +517,13 @@ export class BuilderOptionsPlugin extends Plugin {
                 cleanForSave(el, this.getBuilderOptionContext(Option));
             }
         }
+        return root;
     }
 
     /**
      * Activates the containers of the given element or deactivate them if false
-     * is given. They will be (de)activated once the current step is added (see
-     * `onStepAdded`).
+     * is given. They will be (de)activated once the current commit is added (see
+     * `onCommitted`).
      *
      * @param {HTMLElement|Boolean} targetEl the element to activate or `false`
      */
@@ -486,19 +531,27 @@ export class BuilderOptionsPlugin extends Plugin {
         if (this.dependencies.history.getIsPreviewing()) {
             return;
         }
+        // In the case an option changes the target, keep its group unfolded.
+        // We don't know which one it is, so we keep all the opened ones.
+        // Only the last group may be "temporarily" unfolded, or one opened
+        // with `auto_unfold_container_providers`. In case an option call
+        // `setNextTarget`, it will always either be an option in the last
+        // group, or the last group will disappear in favor of the one with
+        // the new target.
+        for (const container of this.lastContainers) {
+            if (!container.folded) {
+                container.foldedIntent = false;
+            }
+        }
         // Store the next target to activate in the current step.
-        this.dependencies.history.setStepExtra("nextTarget", targetEl);
+        this.targetState.next = targetEl;
     }
 
-    onWillAddStep() {
-        // Store the current target in the current step.
-        this.dependencies.history.setStepExtra("currentTarget", this.target);
-    }
-
-    onStepAdded({ step }) {
+    onHistoryCommitted(commit) {
+        this.targetState = {};
         // If a target is specified, activate its containers, otherwise simply
         // update them.
-        const nextTargetEl = step.extraStepInfos.nextTarget;
+        const nextTargetEl = commit.data.nextTarget;
         if (nextTargetEl) {
             this.updateContainers(nextTargetEl, { forceUpdate: true });
         } else if (nextTargetEl === false) {
@@ -509,30 +562,20 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     /**
-     * Restores the containers of the target stored in the reverted step.
+     * Restores the containers of the target stored in the reversed commit.
      *
-     * @param {Object} revertedStep the step
-     * @param {String} mode "undo" or "redo"
+     * @param {Object} lastCommitReversed the last commit to have been reversed
      */
-    restoreContainers(revertedStep, mode) {
-        if (revertedStep && revertedStep.extraStepInfos.currentTarget) {
-            let targetEl = revertedStep.extraStepInfos.currentTarget;
-            // If the step was supposed to activate another target, activate
-            // this one instead.
-            const nextTarget = revertedStep.extraStepInfos.nextTarget;
-            if (mode === "redo" && (nextTarget || nextTarget === false)) {
-                targetEl = nextTarget;
-            }
-            if (targetEl) {
-                this.trigger("on_will_restore_containers_handlers", targetEl);
-                this.updateContainers(targetEl, { forceUpdate: true });
-                // Scroll to the target if not visible.
-                if (!isElementInViewport(targetEl)) {
-                    // Firefox mis-scrolls with block "center" on tall snippets; keep "start".
-                    targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
-                }
-            } else {
-                this.deactivateContainers();
+    restoreContainers(lastCommitReversed) {
+        const targetEl =
+            lastCommitReversed.data.currentTarget ?? lastCommitReversed.data.nextTarget;
+        if (targetEl) {
+            this.trigger("on_will_restore_containers_handlers", targetEl);
+            this.updateContainers(targetEl, { forceUpdate: true });
+            // Scroll to the target if not visible.
+            if (!isElementInViewport(targetEl)) {
+                // Firefox mis-scrolls with block "center" on tall snippets; keep "start".
+                targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
             }
         }
     }
@@ -553,6 +596,17 @@ export class BuilderOptionsPlugin extends Plugin {
                 .filter(Boolean)
                 .join(" ") || undefined
         );
+    }
+
+    /**
+     * Checks if the given element can be cloned.
+     *
+     * @param {HTMLElement} el
+     * @returns {boolean}
+     */
+    isClonable(el) {
+        // TODO and isDraggable
+        return el.matches(this.clonableSelector) || isRemovable(el);
     }
 
     /**

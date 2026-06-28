@@ -6,26 +6,32 @@
 # Martin Trigaux, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:01+0000\n"
-"PO-Revision-Date: 2025-09-14 21:10+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"PO-Revision-Date: 2026-05-06 06:25+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "sale_margin/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Delivered"
-msgstr ""
+msgstr "納品済"
+
+#. module: sale_margin
+#: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
+msgid "Delivered Qty"
+msgstr "納品済数量"
 
 #. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order__display_name
@@ -35,9 +41,14 @@ msgid "Display Name"
 msgstr "表示名"
 
 #. module: sale_margin
+#: model:ir.actions.act_window,name:sale_margin.action_order_report_projected_margins
+msgid "Estimated Margins"
+msgstr "見込みマージン"
+
+#. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_report__purchase_price
 msgid "Expected Cost"
-msgstr ""
+msgstr "見込原価"
 
 #. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order__id
@@ -49,7 +60,12 @@ msgstr "ID"
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Invoiced"
-msgstr ""
+msgstr "請求済"
+
+#. module: sale_margin
+#: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
+msgid "Invoiced Qty"
+msgstr "請求済数量"
 
 #. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order__margin
@@ -68,22 +84,17 @@ msgstr "マージン (%)"
 #. module: sale_margin
 #: model_terms:ir.actions.act_window,help:sale_margin.action_order_report_projected_margins
 msgid "No data to display"
-msgstr ""
+msgstr "表示データーなし"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Product"
-msgstr ""
-
-#. module: sale_margin
-#: model:ir.actions.act_window,name:sale_margin.action_order_report_projected_margins
-msgid "Projected Margins"
-msgstr ""
+msgstr "プロダクト"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Sales Analysis"
-msgstr ""
+msgstr "販売分析"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_report
@@ -103,39 +114,59 @@ msgstr "販売オーダ明細"
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Sold"
-msgstr ""
+msgstr "販売済"
+
+#. module: sale_margin
+#: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
+msgid "Sold Qty"
+msgstr "販売済数量"
 
 #. module: sale_margin
 #: model_terms:ir.actions.act_window,help:sale_margin.action_order_report_projected_margins
-msgid "This report performs analysis on projected margins of sales orders."
-msgstr ""
+msgid "This report performs analysis on estimated margins of sales orders."
+msgstr "このレポートは、販売オーダの見込マージンに関する分析を行うものです。"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Total Cost"
-msgstr ""
+msgstr "原価合計"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Total Delivered"
-msgstr ""
+msgstr "納品済合計"
+
+#. module: sale_margin
+#: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
+msgid "Total Delivered Qty"
+msgstr "納品済数量 合計"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Total Invoiced"
-msgstr ""
+msgstr "請求済合計"
+
+#. module: sale_margin
+#: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
+msgid "Total Invoiced Qty"
+msgstr "請求済数量(合計)"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Total Margin"
-msgstr ""
+msgstr "合計マージン"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Total Sold"
-msgstr ""
+msgstr "総販売数"
+
+#. module: sale_margin
+#: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
+msgid "Total Sold Qty"
+msgstr "販売数量 合計"
 
 #. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__purchase_price
 msgid "Unit Cost"
-msgstr ""
+msgstr "単位原価"

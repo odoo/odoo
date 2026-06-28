@@ -1,7 +1,7 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Discuss } from "@mail/core/public_web/discuss_app/discuss_app";
 
-import { onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { FormRenderer } from "@web/views/form/form_renderer";
@@ -15,7 +15,7 @@ export class LivechatSessionFormRenderer extends FormRenderer {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
+        this.store = proxy(useService("mail.store"));
         useLayoutEffect(
             (channel) => {
                 if (channel) {

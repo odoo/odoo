@@ -1,7 +1,6 @@
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
 import {
-    Deferred,
     delay,
     describe,
     dryRun,
@@ -13,12 +12,13 @@ import {
     watchListeners,
 } from "@odoo/hoot";
 
+import { mockAssetsFactory } from "./mock_assets.hoot";
 import { mockBrowserFactory } from "./mock_browser.hoot";
 import { mockCurrencyFactory } from "./mock_currency.hoot";
 import { mockFunctionsFactory } from "./mock_functions.hoot";
-import { mockIndexedDB } from "./mock_indexed_db.hoot";
+import { mockIndexedDBFactory } from "./mock_indexed_db.hoot";
 import { mockSessionFactory } from "./mock_session.hoot";
-import { makeTemplateFactory } from "./mock_templates.hoot";
+import { mockTemplatesFactory } from "./mock_templates.hoot";
 import { mockUserFactory } from "./mock_user.hoot";
 
 /**
@@ -134,12 +134,12 @@ async function fetchDependencies(addons) {
     for (const addon of addons) {
         if (!dependencyCache[addon] && !DEFAULT_ADDONS.includes(addon)) {
             addonsToFetch.push(addon);
-            dependencyCache[addon] = new Deferred();
+            dependencyCache[addon] = Promise.withResolvers();
         }
     }
     if (addonsToFetch.length) {
         if (!dependencyBatch.length) {
-            dependencyBatchPromise = Deferred.resolve().then(() => {
+            dependencyBatchPromise = Promise.resolve().then(() => {
                 const module_names = [...new Set(dependencyBatch)];
                 dependencyBatch = [];
                 return unmockedOrm("ir.module.module.dependency", "all_dependencies", [], {
@@ -150,7 +150,7 @@ async function fetchDependencies(addons) {
         dependencyBatch.push(...addonsToFetch);
         dependencyBatchPromise.then((allDependencies) => {
             for (const [moduleName, dependencyNames] of Object.entries(allDependencies)) {
-                dependencyCache[moduleName] ||= new Deferred();
+                dependencyCache[moduleName] ||= Promise.withResolvers();
                 dependencyCache[moduleName].resolve();
 
                 dependencies[moduleName] = dependencyNames.filter(
@@ -162,7 +162,7 @@ async function fetchDependencies(addons) {
         });
     }
 
-    await Promise.all([...addons].map((addon) => dependencyCache[addon]));
+    await Promise.all([...addons].map((addon) => dependencyCache[addon]?.promise));
 
     return getDependencies(addons);
 }
@@ -274,16 +274,21 @@ function getSuitePath(name) {
 }
 
 /**
- * Keeps the original definition of a factory.
+ * Returns a mocked version of the module factory function to ensure that the same
+ * module instance is used for all test suites.
  *
- * @param {string} name
+ * These "fixed" modules CANNOT require any other module, except:
+ * - Owl/Hoot;
+ * - other "fixed" modules.
+ *
+ * @param {string} moduleName
  */
-function makeFixedFactory(name) {
-    return () => {
-        if (!loader.modules.has(name)) {
-            loader.startModule(name);
+function mockFixedFactory(moduleName) {
+    return function fixedFactory() {
+        if (loader.modules.has(moduleName)) {
+            return loader.modules.get(moduleName);
         }
-        return loader.modules.get(name);
+        return loader.startModule(moduleName);
     };
 }
 
@@ -513,19 +518,21 @@ const CSRF_TOKEN = odoo.csrf_token;
 const DEFAULT_ADDONS = ["base", "web"];
 const MODULE_MOCKS_BY_NAME = new Map([
     // Fixed modules
-    ["@web/core/template_inheritance", makeFixedFactory],
+    ["@web/core/emoji_picker/emoji_loader", mockFixedFactory],
+    ["@web/core/template_inheritance", mockFixedFactory],
     // Other mocks
+    ["@web/core/assets", mockAssetsFactory],
     ["@web/core/browser/browser", mockBrowserFactory],
-    ["@web/core/utils/indexed_db", mockIndexedDB],
     ["@web/core/currency", mockCurrencyFactory],
-    ["@web/core/templates", makeTemplateFactory],
+    ["@web/core/templates", mockTemplatesFactory],
     ["@web/core/user", mockUserFactory],
     ["@web/core/utils/functions", mockFunctionsFactory],
+    ["@web/core/utils/indexed_db", mockIndexedDBFactory],
     ["@web/session", mockSessionFactory],
 ]);
 const MODULE_MOCKS_BY_REGEX = new Map([
     // Fixed modules
-    [/\.bundle\.xml$/, makeFixedFactory],
+    [/\.bundle\.xml$/, mockFixedFactory],
 ]);
 const R_DEFAULT_MODULE = /^@odoo\/(owl|hoot)/;
 const R_PATH_ADDON = /^[@/]?(\w+)/;
@@ -533,7 +540,7 @@ const TEMPLATE_MODULE_NAME = "@web/core/templates";
 
 /** @type {Record<string, string[]} */
 const dependencies = {};
-/** @type {Record<string, Deferred} */
+/** @type {Record<string, PromiseWithResolvers>} */
 const dependencyCache = {};
 /** @type {Record<string, Promise<Response>} */
 const globalFetchCache = Object.create(null);
@@ -638,7 +645,7 @@ export async function runTests(options) {
     }
 
     // Sort modules to accelerate loading time
-    /** @type {Record<string, Deferred>} */
+    /** @type {Record<string, PromiseWithResolvers>} */
     const defs = {};
     /** @type {string[]} */
     const testModuleNames = [];
@@ -650,14 +657,16 @@ export async function runTests(options) {
         }
 
         // Register module dependencies
-        const [modDef, ...depDefs] = [name, ...deps].map((dep) => (defs[dep] ||= new Deferred()));
-        Promise.all(depDefs).then(() => {
+        const [modDef, ...depDefs] = [name, ...deps].map(
+            (dep) => (defs[dep] ||= Promise.withResolvers())
+        );
+        Promise.all(depDefs.map((d) => d.promise)).then(() => {
             sortedModuleNames.push(name);
             modDef.resolve();
         });
     }
 
-    await Promise.all(Object.values(defs));
+    await Promise.all(Object.values(defs).map((d) => d.promise));
 
     // Dry run
     const { suites } = await dryRun(() => describeDrySuite(fileSuffix, testModuleNames));

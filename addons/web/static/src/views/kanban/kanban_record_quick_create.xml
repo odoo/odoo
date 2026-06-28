@@ -9,7 +9,6 @@
         <div
             class="o_kanban_quick_create o_field_highlight shadow"
             t-att-class="{ o_disabled: this.state.disabled, 'w-100 mx-0': this.props.listIsGrouped }"
-            t-attf-style="padding-top: {{ this.state.paddingTop }};"
             t-custom-ref="root"
         >
             <t t-component="this.props.Renderer" class="'o_form_view o_xxs_form_view o_kanban_quick_create_form p-0'" record="this.model.root" Compiler="this.props.Compiler" archInfo="this.props.archInfo"/>

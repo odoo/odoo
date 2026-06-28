@@ -29,6 +29,29 @@ class ResPartner(models.Model):
         super(ResPartner, partners_vat)._check_vat(validation=validation)
         (self - partners_vat)._run_check_identification(validation=validation)
 
+    @api.depends('l10n_latam_identification_type_id', 'country_id')
+    def _compute_is_company(self):
+        latam_country_codes = self.env['res.company']._get_l10n_latam_base_country_codes()
+        latam_partners = self.filtered(lambda p: p.country_code in latam_country_codes)
+        for partner in latam_partners:
+            partner.is_company = bool(
+                partner.l10n_latam_identification_type_id.country_id.code == partner.country_code
+                and partner.l10n_latam_identification_type_id.is_vat
+                and partner.commercial_partner_id == partner
+            )
+        super(ResPartner, self - latam_partners)._compute_is_company()
+
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        country = self.country_id or self.company_id.account_fiscal_country_id or self.env.company.account_fiscal_country_id
+        identification_type = self.l10n_latam_identification_type_id
+        if not identification_type or identification_type.country_id != country:
+            self.l10n_latam_identification_type_id = (
+                self.env['l10n_latam.identification.type'].search(
+                [('country_id', '=', country.id), ('is_vat', '=', True)], limit=1) or
+                self.env.ref('l10n_latam_base.it_vat', raise_if_not_found=False)
+            )
+
     @api.onchange('vat', 'country_id', 'l10n_latam_identification_type_id')
     def _onchange_vat(self):
         super()._onchange_vat()
@@ -38,3 +61,9 @@ class ResPartner(models.Model):
         frontend_writable_fields.add('l10n_latam_identification_type_id')
 
         return frontend_writable_fields
+
+    def _get_mandatory_billing_address_fields(self, country_sudo, **kwargs):
+        mandatory_fields = super()._get_mandatory_billing_address_fields(country_sudo, **kwargs)
+        if self.env.company._is_latam():
+            mandatory_fields.update({'l10n_latam_identification_type_id', 'vat'})
+        return mandatory_fields

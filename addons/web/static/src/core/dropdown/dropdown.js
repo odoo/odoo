@@ -1,5 +1,17 @@
-import { onRendered, reactive, useLayoutEffect } from "@web/owl2/utils";
-import { Component, onMounted, onWillUpdateProps, status, xml } from "@odoo/owl";
+import { onRendered, useChildEnv, useLayoutEffect } from "@web/owl2/utils";
+import {
+    Component,
+    immediateEffect,
+    onMounted,
+    onWillDestroy,
+    onWillUpdateProps,
+    proxy,
+    props,
+    status,
+    t,
+    untrack,
+    xml,
+} from "@odoo/owl";
 import { useDropdownGroup } from "@web/core/dropdown/_behaviours/dropdown_group_hook";
 import { useDropdownNesting } from "@web/core/dropdown/_behaviours/dropdown_nesting";
 import { DropdownPopover } from "@web/core/dropdown/_behaviours/dropdown_popover";
@@ -9,8 +21,6 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { mergeClasses } from "@web/core/utils/classname";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
-import { effect } from "@web/core/utils/reactive";
-import { utils } from "@web/core/ui/ui_service";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
 export function getFirstElementOfNode(node) {
@@ -42,76 +52,58 @@ export function getFirstElementOfNode(node) {
  * also allowed as items to be able to create nested
  * dropdown menus.
  */
+export const dropdownProps = {
+    menuClass: t.any().optional(""),
+    position: t.string().optional(),
+    slots: t.object({
+        default: t.any().optional(),
+        content: t.any().optional(),
+    }),
+
+    items: t
+        .array(
+            t.object({
+                label: t.string(),
+                onSelected: t.function(),
+                class: t.any().optional(),
+            })
+        )
+        .optional(),
+
+    menuRef: t.function().optional(), // to be used with useChildRef
+    disabled: t.boolean().optional(false),
+    holdOnHover: t.boolean().optional(false),
+    focusToggleOnClosed: t.boolean().optional(true),
+
+    beforeOpen: t.function().optional(),
+    onOpened: t.function().optional(),
+    onStateChanged: t.function().optional(),
+
+    /** Manual state handling, @see useDropdownState */
+    state: t
+        .object({
+            isOpen: t.boolean(),
+            close: t.function(),
+            open: t.function(),
+        })
+        .optional(),
+    manual: t.boolean().optional(),
+
+    /** When true, do not add optional styling css classes on the target*/
+    noClasses: t.boolean().optional(false),
+
+    /**
+     * Override the internal navigation hook options
+     * @type {import("@web/core/navigation/navigation").NavigationOptions}
+     */
+    navigationOptions: t.object().optional({}),
+    bottomSheet: t.boolean().optional(true),
+};
+
 export class Dropdown extends Component {
-    static template = xml`<t t-slot="default"/>`;
+    static template = xml`<t t-call-slot="default"/>`;
     static components = {};
-    static props = {
-        menuClass: { optional: true },
-        position: { type: String, optional: true },
-        slots: {
-            type: Object,
-            shape: {
-                default: { optional: true },
-                content: { optional: true },
-            },
-        },
-
-        items: {
-            optional: true,
-            type: Array,
-            element: {
-                type: Object,
-                shape: {
-                    label: String,
-                    onSelected: Function,
-                    class: { optional: true },
-                    "*": true,
-                },
-            },
-        },
-
-        menuRef: { type: Function, optional: true }, // to be used with useChildRef
-        disabled: { type: Boolean, optional: true },
-        holdOnHover: { type: Boolean, optional: true },
-        focusToggleOnClosed: { type: Boolean, optional: true },
-
-        beforeOpen: { type: Function, optional: true },
-        onOpened: { type: Function, optional: true },
-        onStateChanged: { type: Function, optional: true },
-
-        /** Manual state handling, @see useDropdownState */
-        state: {
-            type: Object,
-            shape: {
-                isOpen: Boolean,
-                close: Function,
-                open: Function,
-                "*": true,
-            },
-            optional: true,
-        },
-        manual: { type: Boolean, optional: true },
-
-        /** When true, do not add optional styling css classes on the target*/
-        noClasses: { type: Boolean, optional: true },
-
-        /**
-         * Override the internal navigation hook options
-         * @type {import("@web/core/navigation/navigation").NavigationOptions}
-         */
-        navigationOptions: { type: Object, optional: true },
-        bottomSheet: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        disabled: false,
-        holdOnHover: false,
-        focusToggleOnClosed: true,
-        menuClass: "",
-        state: undefined,
-        noClasses: false,
-        navigationOptions: {},
-        bottomSheet: true,
-    };
+    props = props(dropdownProps);
 
     setup() {
         this.menuRef = this.props.menuRef || useChildRef();
@@ -144,7 +136,7 @@ export class Dropdown extends Component {
             arrow: false,
             closeOnClickAway: (target) => this.popoverCloseOnClickAway(target),
             closeOnEscape: false, // Handled via navigation and prevents closing root of nested dropdown
-            env: this.__owl__.childEnv,
+            env: useChildEnv(),
             holdOnHover: this.props.holdOnHover,
             onClose: () => this.state.close(),
             onPositioned: (el, { direction }) => this.setTargetDirectionClass(direction),
@@ -171,10 +163,24 @@ export class Dropdown extends Component {
 
         // As the popover is in another context we need to force
         // its re-rendering when the dropdown re-renders
-        onRendered(() => (this.popoverRefresher ? this.popoverRefresher.token++ : null));
+        onRendered(() =>
+            untrack(() => (this.popoverRefresher ? this.popoverRefresher.token++ : null))
+        );
 
-        onMounted(() => this.onStateChanged(this.state));
-        effect((state) => this.onStateChanged(state), [this.state]);
+        let mounted = false;
+        onMounted(() => {
+            mounted = true;
+            this.onStateChanged(this.state);
+        });
+        onWillDestroy(
+            immediateEffect(() => {
+                if (!mounted) {
+                    this.state.isOpen; // subscribe to signal
+                    return;
+                }
+                this.onStateChanged(this.state);
+            })
+        );
 
         useLayoutEffect(
             (target) => this.setTargetElement(target),
@@ -189,7 +195,7 @@ export class Dropdown extends Component {
     }
 
     get isBottomSheet() {
-        return utils.isSmall() && hasTouch() && this.props.bottomSheet;
+        return hasTouch() && this.props.bottomSheet;
     }
 
     /** @type {string} */
@@ -203,6 +209,9 @@ export class Dropdown extends Component {
 
     /** @type {HTMLElement|null} */
     get target() {
+        if (status(this) !== "mounted") {
+            return null;
+        }
         const target = getFirstElementOfNode(this.__owl__.bdom);
         if (!target) {
             throw new Error(
@@ -260,7 +269,14 @@ export class Dropdown extends Component {
         if (rootNode instanceof ShadowRoot) {
             target = rootNode.host;
         }
-        return this.uiService.getActiveElementOf(target) === this.activeEl;
+        if (!this.activeEl?.isConnected) {
+            return true;
+        }
+        if (target.ownerDocument !== this.activeEl?.ownerDocument) {
+            return true;
+        }
+        const targetActiveEl = this.uiService.getActiveElementOf(target);
+        return targetActiveEl === this.activeEl || targetActiveEl?.contains(this.activeEl);
     }
 
     setTargetElement(target) {
@@ -338,7 +354,7 @@ export class Dropdown extends Component {
             return;
         }
 
-        this.popoverRefresher = reactive({ token: 0 });
+        this.popoverRefresher = proxy({ token: 0 });
         const props = {
             beforeOpen: () => this.props.beforeOpen?.(),
             onOpened: () => this.onOpened(),
@@ -371,11 +387,14 @@ export class Dropdown extends Component {
             this.target.classList.add("show");
         }
 
-        this.observer = new MutationObserver(() => this.navigation.update());
-        this.observer.observe(this.menuRef.el, {
-            childList: true,
-            subtree: true,
-        });
+        const menuEl = this.menuRef.el;
+        if (menuEl) {
+            this.observer = new MutationObserver(() => this.navigation.update());
+            this.observer.observe(menuEl, {
+                childList: true,
+                subtree: true,
+            });
+        }
     }
 
     onClosed() {

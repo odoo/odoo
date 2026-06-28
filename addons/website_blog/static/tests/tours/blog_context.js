@@ -1,15 +1,9 @@
-import {
-    clickOnEditAndWaitEditMode,
-    clickOnSnippet,
-    registerWebsitePreviewTour,
-} from "@website/js/tours/tour_utils";
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_utils";
+import { clickOnEditAndWaitEditMode, clickOnSnippet } from "@website/js/tours/tour_utils";
 
-registerWebsitePreviewTour(
-    "blog_context_and_social_media",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    },
-    () => [
+registry.category("web_tour.tours").add("blog_context_and_social_media", {
+    steps: () => [
         {
             content: "Ensure we are in blog page",
             trigger: ":iframe html[data-view-xmlid='website_blog.blog_post_short']",
@@ -35,12 +29,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check in dialog current Selected Blog is 'aaa Blog Test'",
-            trigger: ".modal-dialog .o_field_widget[name='blog_id'] .o_input",
-            run: function () {
-                if (this.anchor.value !== "aaa Blog Test") {
-                    console.error("Current selected blog should be 'aaa Blog Test'");
-                }
-            },
+            trigger: ".modal-dialog .o_field_widget[name='blog_id'] .o_input:value(aaa Blog Test)",
         },
         {
             content: "Click on Discard",
@@ -64,13 +53,17 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
+            trigger: "body:not(.o_builder_open)",
+        },
+        stepUtils.waitIframeIsReady(),
+        {
             content: "Click on the first article",
-            trigger: ":iframe article[name='blog_post'] a",
+            trigger: ":iframe article[name='blog_post'] a.o_blog_post_title",
             run: "click",
         },
         {
             content: "Check the blog info is available",
             trigger: ":iframe #o_wblog_post_info",
         },
-    ]
-);
+    ],
+});

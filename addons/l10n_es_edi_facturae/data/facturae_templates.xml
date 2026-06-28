@@ -169,7 +169,7 @@
 
         <template id="corrective_type">
             <Corrective>
-                <InvoiceNumber t-out="invoice['Corrective']['refunded_invoice_record'].name"/>
+                <InvoiceNumber t-out="invoice['Corrective']['refunded_invoice_record']"/>
                 <ReasonCode t-out="invoice['Corrective']['ReasonCode']"/>
                 <ReasonDescription t-out="invoice['Corrective']['Reason']"/>
                 <TaxPeriod>

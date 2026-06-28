@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryText } from "@odoo/hoot-dom";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, xml } from "@odoo/owl";
 import {
     contains,
@@ -397,7 +397,7 @@ describe("new", () => {
 
         class ClientAction extends Component {
             static template = xml`
-                <div class="my_action" t-on-click="onClick">
+                <div class="my_action" t-on-click="this.onClick">
                     My Action
                 </div>`;
             static props = ["*"];
@@ -411,14 +411,14 @@ describe("new", () => {
                         { onClose: () => expect.step("failing dialog closed") }
                     );
                 } catch (e) {
-                    expect(e.cause.message).toBe("my error");
+                    expect(e.message).toBe("my error");
                     throw e;
                 }
             }
         }
         registry.category("actions").add("clientAction", ClientAction);
 
-        const errorDialogOpened = new Deferred();
+        const errorDialogOpened = Promise.withResolvers();
         patchWithCleanup(ClientErrorDialog.prototype, {
             setup() {
                 super.setup(...arguments);
@@ -429,7 +429,7 @@ describe("new", () => {
         await mountWithCleanup(WebClient);
         await getService("action").doAction({ type: "ir.actions.client", tag: "clientAction" });
         await contains(".my_action").click();
-        await errorDialogOpened;
+        await errorDialogOpened.promise;
         expect(".modal").toHaveCount(1);
 
         await contains(".modal-body button.btn-link").click();

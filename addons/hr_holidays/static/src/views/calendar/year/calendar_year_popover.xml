@@ -16,4 +16,25 @@
             </t>
         </t>
     </t>
+
+    <t t-name="hr_holidays.CalendarYearPopover.record"
+       t-inherit="web.CalendarYearPopover.record"
+       t-inherit-mode="primary">
+        <xpath expr="//a/span[last()]" position="replace">
+            <span class="d-flex align-items-center gap-2 w-100">
+                <i area-hidden="true" t-if="record.titleIcon" t-attf-class="me-1 {{record.titleIcon}}"/>
+                <span class="o_event_title text-truncate" style="max-width: 200px;" t-att-title="record.title">
+                    <t t-out="record.title"/>
+                </span>
+                <span
+                    t-attf-class="badge rounded-pill px-2 py-1 flex-shrink-0 {{
+                        record.rawRecord.state === 'validate' ? 'text-bg-success' :
+                        record.rawRecord.state === 'refuse' ? 'text-bg-danger' :
+                        'text-bg-warning'
+                    }}">
+                    <t t-out="record.stateLabel"/>
+                </span>
+            </span>
+        </xpath>
+    </t>
 </templates>

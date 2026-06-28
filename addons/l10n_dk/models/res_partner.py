@@ -1,14 +1,15 @@
 import logging
 import requests
 from hashlib import md5
-from markupsafe import Markup
 from urllib import parse
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools.business_data import split_vat
 
 from odoo.addons.l10n_dk.tools.demo_utils import handle_demo
 
+APPLICATION_RESPONSE_CUSTOMISATION_ID = "busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2::ApplicationResponse##OIOUBL-2.1::2.1"
 TIMEOUT = 10
 _logger = logging.getLogger(__name__)
 
@@ -48,6 +49,8 @@ class ResPartner(models.Model):
         compute="_compute_nemhandel_identifier_value", store=True, readonly=False,
         tracking=True,
     )
+    nemhandel_supported_documents = fields.Json('Supported Nemhandel Documents')
+    nemhandel_response_support = fields.Boolean('Nemhandel Response Service', compute='_compute_nemhandel_response_support')
 
     is_using_nemhandel = fields.Boolean(compute='_compute_is_using_nemhandel')
 
@@ -55,17 +58,7 @@ class ResPartner(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('vat', 'country_id')
-    def _compute_company_registry(self):
-        # OVERRIDE
-        # In Denmark, if you have a VAT number, it's also your company registry (CVR) number
-        super()._compute_company_registry()
-        for partner in self.filtered(lambda p: p.country_id.code == 'DK' and p.vat):
-            vat_country, vat_number = self._split_vat(partner.vat)
-            if vat_country in ('DK', '') and self._check_vat_number('DK', vat_number):
-                partner.company_registry = vat_number
-
-    @api.depends('country_code', 'vat', 'company_registry')
+    @api.depends('country_code', 'vat')
     def _compute_nemhandel_identifier_type(self):
         for partner in self:
             partner.nemhandel_identifier_type = partner.nemhandel_identifier_type
@@ -73,9 +66,9 @@ class ResPartner(models.Model):
             if country_code == 'DK' and not partner.nemhandel_identifier_type:
                 partner.nemhandel_identifier_type = '0184'
             elif country_code != 'DK':
-                partner.nemhandel_identifier_type = ''
+                partner.nemhandel_identifier_type = False
 
-    @api.depends('country_code', 'vat', 'company_registry', 'nemhandel_identifier_type')
+    @api.depends('country_code', 'vat', 'additional_identifiers', 'nemhandel_identifier_type')
     def _compute_nemhandel_identifier_value(self):
         for partner in self:
             if partner.nemhandel_identifier_value != partner._origin.nemhandel_identifier_value:
@@ -83,12 +76,23 @@ class ResPartner(models.Model):
                 partner.nemhandel_identifier_value = partner.nemhandel_identifier_value
                 continue
             country_code = partner._deduce_country_code()
+            cvr = partner._get_additional_identifier('DK_CVR')
             if country_code == 'DK' and partner.nemhandel_identifier_type == '0184':
-                partner.nemhandel_identifier_value = partner.company_registry
+                vat_country, vat_number = split_vat(cvr or '')
+                partner.nemhandel_identifier_value = vat_number if vat_country == 'DK' else cvr
             elif country_code == 'DK':
                 partner.nemhandel_identifier_value = partner.nemhandel_identifier_value
             else:
                 partner.nemhandel_identifier_value = ''
+
+    @api.depends('nemhandel_supported_documents', 'nemhandel_verification_state')
+    def _compute_nemhandel_response_support(self):
+        for partner in self:
+            partner.nemhandel_response_support = (
+                partner.nemhandel_verification_state == 'valid'
+                and partner.nemhandel_supported_documents
+                and APPLICATION_RESPONSE_CUSTOMISATION_ID in partner.nemhandel_supported_documents
+            )
 
     @api.depends_context('allowed_company_ids')
     @api.depends('invoice_edi_format')
@@ -109,11 +113,6 @@ class ResPartner(models.Model):
     # -------------------------------------------------------------------------
     # OVERRIDE AND HELPERS
     # -------------------------------------------------------------------------
-
-    def _get_company_registry_labels(self):
-        labels = super()._get_company_registry_labels()
-        labels['DK'] = 'CVR'
-        return labels
 
     def _get_edi_builder(self, invoice_edi_format):
         # EXTENDS 'account_edi_ubl_cii'
@@ -138,6 +137,8 @@ class ResPartner(models.Model):
         hash_participant = md5(edi_identification.lower().encode()).hexdigest()
         endpoint_participant = parse.quote_plus(f"iso6523-actorid-upis::{edi_identification}")
         nemhandel_user = self.env.company.sudo().nemhandel_edi_user
+        if not nemhandel_user:  # to avoid unnecessary requests; i.e. in tests
+            return None
         edi_mode = nemhandel_user and nemhandel_user.edi_mode or self.env['ir.config_parameter'].sudo().get_str('l10n_dk.edi.mode')
         sml_zone = 'edel.sml-demo' if edi_mode == 'test' else 'edel.sml'
         smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.{sml_zone}.dataudveksling.dk/{endpoint_participant}"
@@ -163,7 +164,7 @@ class ResPartner(models.Model):
         try:
             response = requests.get(endpoint, timeout=TIMEOUT)
         except requests.exceptions.RequestException as e:
-            _logger.error("failed to query nemhandel participant %s: %s", edi_identification, e)
+            _logger.debug("failed to query nemhandel participant %s: %s", edi_identification, e)
             return
 
         if not response.ok:
@@ -182,36 +183,6 @@ class ResPartner(models.Model):
             return
 
         return decoded_response.get('result')
-
-    def _l10n_dk_nemhandel_log_verification_state_update(self, company, old_value, new_value):
-        # log the update of the nemhandel verification state
-        # we do this instead of regular tracking because of the customized message
-        # and because we want to log the change for every company in the db
-        if old_value == new_value:
-            return
-
-        nemhandel_verification_state_field = self._fields['nemhandel_verification_state']
-        selection_values = dict(nemhandel_verification_state_field.selection)
-        old_label = selection_values[old_value] if old_value else False  # get translated labels
-        new_label = selection_values[new_value] if new_value else False
-
-        body = Markup("""
-            <ul>
-                <li>
-                    <span class='o-mail-Message-trackingOld me-1 px-1 text-muted fw-bold'>{old}</span>
-                    <i class='o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600'/>
-                    <span class='o-mail-Message-trackingNew me-1 fw-bold text-info'>{new}</span>
-                    <span class='o-mail-Message-trackingField ms-1 fst-italic text-muted'>({field})</span>
-                    <span class='o-mail-Message-trackingCompany ms-1 fst-italic text-muted'>({company})</span>
-                </li>
-            </ul>
-        """).format(
-            old=old_label,
-            new=new_label,
-            field=nemhandel_verification_state_field.string,
-            company=company.display_name,
-        )
-        self._message_log(body=body)
 
     @api.model
     def _check_nemhandel_participant_exists(self, participant_info, edi_identification):
@@ -282,11 +253,16 @@ class ResPartner(models.Model):
 
         self_partner = self.with_company(company)
         old_value = self_partner.nemhandel_verification_state
-        self_partner.nemhandel_verification_state = self._get_nemhandel_verification_state(self_partner.invoice_edi_format)
+        self_partner.nemhandel_verification_state = self_partner._get_nemhandel_verification_state(self_partner.invoice_edi_format)
         if self_partner.nemhandel_verification_state == 'valid' and not self_partner.invoice_sending_method:
             self_partner.invoice_sending_method = 'nemhandel'
 
-        self._l10n_dk_nemhandel_log_verification_state_update(company, old_value, self_partner.nemhandel_verification_state)
+        if old_value != self_partner.nemhandel_verification_state:
+            self._track_add(
+                initial_values={self.id: {'nemhandel_verification_state': old_value}},
+                end_values={self.id: {'nemhandel_verification_state': self_partner.nemhandel_verification_state}},
+            )
+
         return False
 
     @handle_demo
@@ -300,5 +276,7 @@ class ResPartner(models.Model):
         if participant_info is None:
             return 'not_valid'
 
-        is_participant_on_network = self._check_nemhandel_participant_exists(participant_info, edi_identification)
-        return 'valid' if is_participant_on_network else 'not_valid'
+        if self._check_nemhandel_participant_exists(participant_info, edi_identification):
+            self.nemhandel_supported_documents = [service['document_id'] for service in participant_info.get('services', []) if service.get('document_id')]
+            return 'valid'
+        return 'not_valid'

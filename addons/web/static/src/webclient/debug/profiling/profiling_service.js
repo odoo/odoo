@@ -1,10 +1,9 @@
-import { reactive } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { ProfilingItem } from "./profiling_item";
 import { session } from "@web/session";
 import { profilingSystrayItem } from "./profiling_systray_item";
 
-import { EventBus } from "@odoo/owl";
+import { effect, EventBus, proxy } from "@odoo/owl";
 
 const systrayRegistry = registry.category("systray");
 
@@ -26,20 +25,18 @@ export const profilingService = {
             bus.trigger("UPDATE");
         }
 
-        const state = reactive(
-            {
-                session: session.profile_session || false,
-                collectors: session.profile_collectors || ["sql", "traces_async"],
-                params: session.profile_params || {},
-                get isEnabled() {
-                    return Boolean(state.session);
-                },
+        const state = proxy({
+            session: session.profile_session || false,
+            collectors: session.profile_collectors || ["sql", "traces_async"],
+            params: session.profile_params || {},
+            get isEnabled() {
+                return Boolean(state.session);
             },
-            notify
-        );
+        });
 
         const bus = new EventBus();
-        notify();
+        const disposeEffect = effect(notify);
+        registry.category("services").addEventListener("CLEANUP", disposeEffect, { once: true });
 
         async function setProfiling(params) {
             const kwargs = Object.assign(

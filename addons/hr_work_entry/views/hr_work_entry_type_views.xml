@@ -4,7 +4,7 @@
         <field name="name">hr.work.entry.type.view.search</field>
         <field name="model">hr.work.entry.type</field>
         <field name="arch" type="xml">
-            <search string="Search Work Entry Type">
+            <search string="Search Time Type">
                 <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
                 <separator/>
                 <filter name="working_time" string="Working Time" domain="[('count_as', '=', 'working_time')]"/>
@@ -19,13 +19,13 @@
     </record>
 
     <record id="hr_work_entry_type_action" model="ir.actions.act_window">
-        <field name="name">Work Entry Types</field>
+        <field name="name">Time Types</field>
         <field name="res_model">hr.work.entry.type</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="hr_work_entry_type_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new work entry type
+                Create a new Time type
             </p>
         </field>
     </record>
@@ -38,10 +38,10 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code" string="Code"/>
-                <field name="external_code" optional="hide"/>
                 <field name="display_code" string="Display"/>
-                <field name="country_id"/>
-                <field string="Type of Work" name="count_as" optional="hide"/>
+                <field name="external_code" optional="hide"/>
+                <field string="Type of Work" name="count_as"/>
+                <field name="country_id" optional="hide"/>
                 <field name="color" widget="color_picker"/>
             </list>
         </field>
@@ -51,39 +51,39 @@
         <field name="name">hr.work.entry.type.form</field>
         <field name="model">hr.work.entry.type</field>
         <field name="arch" type="xml">
-            <form string="Work Entry Type" >
+            <form string="Time Type" >
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Work Entry Type Name"/>
+                            <field name="name" placeholder="e.g. Paid Time Off, Sick Leave, Work From Home"/>
                         </h1>
                     </div>
                     <group name="main_group">
                         <group name="identification" class="o_form_fw_labels">
                             <field name="active" invisible="1"/>
-                            <field name="code" placeholder="e.g. WORK100, LEAVE210, OUT, ..."/>
+                            <field name="code" string="Code" placeholder="e.g. WORK100, LEAVE210, OUT, ..."/>
+                            <field string="Considered as" name="count_as" widget="radio" options="{'horizontal': True}" />
                         </group>
                         <group>
                             <field name="country_id" options="{'no_create': True, 'no_open': True}" placeholder="All Countries"/>
+                            <separator string="Display" />
+                            <field name="display_code" placeholder="e.g. ATT, PTO, STO, OT, RW, ..."/>
+                            <field name="color" widget="color_picker"/>
                         </group>
                     </group>
 
                     <notebook>
-                        <page string="Payroll">
-                            <group>
-                                <group name='computation' string="Computation">
-                                    <label for="amount_rate"/>
+                        <page id="work_entry_payroll_tab" string="Payroll">
+                            <span class="text-muted fst-italic">Define how this time type affects payslips and salary computation.</span>
+                            <group string="Computation">
+                                <group name='computation'>
+                                    <label for="amount_rate" string="Pay Rate"/>
                                     <div name="amount_rate">
                                         <field style='width: 4em;' name="amount_rate" widget="percentage"/>
                                     </div>
                                     <field name="is_extra_hours"/>
-                                    <field string="Considered as" name="count_as" widget="radio" options="{'horizontal': True}" />
-                                </group>
-                                <group string="Display">
-                                    <field name="display_code" placeholder="e.g. ATT, PTO, STO, OT, RW, ..."/>
-                                    <field name="color" widget="color_picker"/>
                                 </group>
                             </group>
 
@@ -94,10 +94,11 @@
                             </group>
 
                             <separator string="Description" />
-                            <field rows="5" nolabel="1" name="description" placeholder="Provide a description of the Work Entry Type, in which case should it be used"/>
+                            <field rows="5" nolabel="1" name="description" placeholder="Provide a description of the Time Type, in which case should it be used"/>
                         </page>
                     </notebook>
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>

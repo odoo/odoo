@@ -1,9 +1,9 @@
-import { useEnv, useState } from "@web/owl2/utils";
+import { useEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, proxy } from "@odoo/owl";
 
 /**
  * Used to share code and keep the same behaviour on different types of 'website
@@ -18,7 +18,7 @@ export function usePageManager({ resModel, createAction }) {
     const dialog = useService("dialog");
     const actionService = useService("action");
     const websiteSelection = odoo.debug ? [{ id: 0, name: _t("All Websites") }] : [];
-    const state = useState({
+    const state = proxy({
         activeWebsite: undefined,
     });
 

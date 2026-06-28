@@ -1,11 +1,10 @@
-import { useState } from "@web/owl2/utils";
 import { user } from "@web/core/user";
 import { AccountFileUploader } from "@account/components/account_file_uploader/account_file_uploader";
 import { UploadDropZone } from "@account/components/upload_drop_zone/upload_drop_zone";
 import { KanbanDropdownMenuWrapper } from "@web/views/kanban/kanban_dropdown_menu_wrapper";
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
 
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, proxy } from "@odoo/owl";
 
 // Accounting Dashboard
 export class DashboardKanbanDropdownMenuWrapper extends KanbanDropdownMenuWrapper {
@@ -31,7 +30,7 @@ export class DashboardKanbanRecord extends KanbanRecord {
         onWillStart(async () => {
             this.allowDrop = this.recordDropSettings.group ? await user.hasGroup(this.recordDropSettings.group) : true;
         });
-        this.dropzoneState = useState({
+        this.dropzoneState = proxy({
             visible: false,
         });
     }

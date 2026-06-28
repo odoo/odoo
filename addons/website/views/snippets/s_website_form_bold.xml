@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_website_form_bold" name="Form Bold">
+    <section class="s_website_form_bold pb24 pt24">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 pb0">
+                    <h2><span class="o_rfs" style="font-size: clamp(8px, 1em + 8.2563vw, 400px);">Contact us.</span></h2>
+                </div>
+                <div class="col-lg-4 pt32">
+                    <p>
+                        <i class="fa fa-fw fa-envelope" role="img"/>
+                        &#160;&#160;yourcompany@example.com
+                        <br/>
+                        <i class="fa fa-fw fa-phone" role="img"/>
+                        &#160;&#160;+32(0)499 123 456
+                        <br/>
+                        <i class="fa fa-fw fa-map-marker" role="img"/>
+                        &#160;&#160;Brussels, Belgium
+                    </p>
+                </div>
+                <div class="col-lg-7 offset-lg-1 pt32">
+                    <t t-snippet-call="website.s_website_form" string="Form"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

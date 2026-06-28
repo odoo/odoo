@@ -15,15 +15,4 @@
             </xpath>
         </field>
     </record>
-    <record id="product_label_layout_form_stock" model="ir.ui.view">
-        <field name="name">product.label.layout.form.stock</field>
-        <field name="model">product.label.layout</field>
-        <field name="inherit_id" ref="product.product_label_layout_form"/>
-        <field name="arch" type="xml">
-            <xpath expr='//field[@name="pricelist_id"]' position="after">
-                <field name="zpl_template" invisible="'zpl' not in print_format"/>
-                <field name="zpl_preview" invisible="'zpl' not in print_format" widget="image" options="{'img_class': 'border'}" nolabel="1"/>
-            </xpath>
-        </field>
-    </record>
 </odoo>

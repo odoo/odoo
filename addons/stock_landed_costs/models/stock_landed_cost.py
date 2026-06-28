@@ -64,7 +64,7 @@ class StockLandedCost(models.Model):
     account_journal_id = fields.Many2one(
         'account.journal', 'Account Journal',
         required=True, default=lambda self: self._default_account_journal_id())
-    company_id = fields.Many2one('res.company', string="Company", required=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', string="Company", required=True, index=True, default=lambda self: self.env.company)
     vendor_bill_id = fields.Many2one(
         'account.move', 'Vendor Bill', copy=False, domain=[('move_type', '=', 'in_invoice')], index='btree_not_null')
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
@@ -95,10 +95,10 @@ class StockLandedCost(models.Model):
         self.button_cancel()
         return super().unlink()
 
-    def _track_subtype(self, init_values):
-        if 'state' in init_values and self.state == 'done':
+    def _track_log_get_default_subtype(self, track_init_values):
+        if 'state' in track_init_values and self.state == 'done':
             return self.env.ref('stock_landed_costs.mt_stock_landed_cost_open')
-        return super()._track_subtype(init_values)
+        return super()._track_log_get_default_subtype(track_init_values)
 
     def button_cancel(self):
         if any(cost.state == 'done' for cost in self):
@@ -332,9 +332,9 @@ class StockValuationAdjustmentLines(models.Model):
         'stock.landed.cost', 'Landed Cost',
         ondelete='cascade', required=True, index=True)
     cost_line_id = fields.Many2one(
-        'stock.landed.cost.lines', 'Cost Line', readonly=True)
+        'stock.landed.cost.lines', 'Cost Line', readonly=True, index=True)
     move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True)
-    product_id = fields.Many2one('product.product', 'Product', required=True)
+    product_id = fields.Many2one('product.product', 'Product', required=True, index=True)
     quantity = fields.Float(
         'Quantity', default=1.0,
         digits=0, required=True)

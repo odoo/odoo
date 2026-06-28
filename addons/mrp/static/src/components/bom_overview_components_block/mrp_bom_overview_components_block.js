@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { useBus } from "@web/core/utils/hooks";
 import { BomOverviewLine } from "../bom_overview_line/mrp_bom_overview_line";
 import { BomOverviewExtraBlock } from "../bom_overview_extra_block/mrp_bom_overview_extra_block";
-import { Component, onWillUnmount, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUnmount, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
 
 export class BomOverviewComponentsBlock extends Component {
     static template = "mrp.BomOverviewComponentsBlock";
@@ -11,21 +10,18 @@ export class BomOverviewComponentsBlock extends Component {
         BomOverviewComponentsBlock,
         BomOverviewExtraBlock,
     };
-    static props = {
-        unfoldAll: { type: Boolean, optional: true },
-        showOptions: Object,
-        currentWarehouseId: { type: Number, optional: true },
-        data: Object,
-        precision: Number,
-        changeFolded: Function,
-    };
-    static defaultProps = {
-        unfoldAll: false,
-    };
+    props = props({
+        unfoldAll: t.boolean().optional(false),
+        showOptions: t.object(),
+        currentWarehouseId: t.number().optional(),
+        data: t.object(),
+        precision: t.number(),
+        changeFolded: t.function(),
+    });
 
     setup() {
         const childFoldstate = this.childIds.reduce((prev, curr) => ({ ...prev, [curr]: !this.props.unfoldAll}), {});
-        this.state = useState({
+        this.state = proxy({
             ...childFoldstate,
             unfoldAll: this.props.unfoldAll || false,
         });

@@ -25,12 +25,9 @@
                             <field name="group_uom"/>
                             <div class="content-group" invisible="not group_uom">
                                 <div class="mt8">
-                                    <button name="%(uom.product_uom_form_action)d" icon="oi-arrow-right" type="action" string="Units &amp; Packagings" class="btn-link"/>
+                                    <button name="%(uom.uom_uom_action_list)d" icon="oi-arrow-right" type="action" string="Units &amp; Packagings" class="btn-link"/>
                                 </div>
                             </div>
-                        </setting>
-                        <setting id="email_template" title="Sending an email is useful if you need to share specific information or content about a product (instructions, rules, links, media, etc.). Create and set the email template from the product detail form (in Accounting tab)." string="Deliver Content by Email" help="Send a product-specific email once the invoice is validated">
-                            <field name="module_product_email_template"/>
                         </setting>
                     </block>
                     <block title="Pricing" id="pricing_setting_container">
@@ -56,6 +53,12 @@
                         </setting>
                     </block>
                     <block title="Quotations &amp; Orders" name="quotation_order_setting_container">
+                        <setting
+                            id="sale_order_mandatory_product"
+                            help="Prevent selling without a linked product"
+                        >
+                            <field name="sale_order_mandatory_product"/>
+                        </setting>
                         <setting id="online_signature" company_dependent="1"
                                  documentation="/applications/sales/sales/send_quotations/get_signature_to_validate.html"
                                  help="Request customers to sign quotations to validate orders. The default can be changed per order or template.">
@@ -71,7 +74,7 @@
                             </div>
                             <div
                                 class="row mt8"
-                                invisible="not portal_confirmation_pay or active_provider_id"
+                                invisible="not portal_confirmation_pay or installed_provider_id"
                             >
                                 <div invisible="not onboarding_payment_module" class="oe_inline">
                                     <button
@@ -106,16 +109,16 @@
                             </div>
                             <div
                                 class="mt8"
-                                invisible="not portal_confirmation_pay or not active_provider_id"
+                                invisible="not portal_confirmation_pay or not installed_provider_id"
                             >
                                 <button
                                     type="object"
-                                    name="action_view_active_provider"
+                                    name="action_view_installed_provider"
                                     class="btn btn-primary col-auto"
                                 >
                                     Configure
                                     <field
-                                        name="active_provider_id"
+                                        name="installed_provider_id"
                                         class="oe_inline"
                                         nolabel="1"
                                         options="{'no_open': True}"
@@ -150,6 +153,14 @@
                             <field name="module_sale_pdf_quote_builder"/>
                             <div class="mt8" name="sale_pdf_module_settings" invisible="not module_sale_pdf_quote_builder"/>
                         </setting>
+                        <setting
+                            id="display_product_images_on_so"
+                            string="Display Product Images"
+                            help="Show product images on your PDF and online quotes."
+                            company_dependent="1"
+                        >
+                            <field name="display_product_images_on_so"/>
+                        </setting>
                         <setting id="no_edit_order" help="No longer edit orders once confirmed">
                             <field name="group_auto_done_setting"/>
                         </setting>
@@ -158,79 +169,34 @@
                         </setting>
                     </block>
                     <block title="Shipping" name="sale_shipping_setting_container">
-                        <setting id="delivery" help="Compute shipping costs on orders">
+                        <setting
+                            string="Configure Delivery Methods"
+                            id="delivery"
+                            help="Configure delivery methods or work with delivery providers using existing integrations."
+                            documentation="/applications/inventory_and_mrp/inventory/shipping_receiving/setup_configuration.html"
+                        >
                             <field name="module_delivery"/>
-                        </setting>
-                        <setting id="ups">
-                            <div class="o_form_label">UPS Connector</div>
-                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
-                                    Compute shipping costs and ship with UPS<br/>
-                                    <strong>(please go to Home>Apps to install)</strong>
-                                </div>
-                        </setting>
-                        <setting id="shipping_costs_dhl">
-                            <div class="o_form_label">DHL Connector</div>
-                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
-                                    Compute shipping costs and ship with DHL<br/>
-                                    <strong>(please go to Home>Apps to install)</strong>
-                                </div>
-                        </setting>
-                        <setting id="shipping_costs_fedex">
-                            <div class="o_form_label">FedEx Connector</div>
-                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
-                                    Compute shipping costs and ship with FedEx<br/>
-                                    <strong>(please go to Home>Apps to install)</strong>
-                                </div>
-                        </setting>
-                        <setting id="shipping_costs_usps">
-                            <div class="o_form_label">USPS Connector</div>
-                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
-                                    Compute shipping costs and ship with USPS<br/>
-                                    <strong>(please go to Home>Apps to install)</strong>
-                                </div>
-                        </setting>
-                        <setting id="shipping_costs_bpost" help="Compute shipping costs and ship with bpost"
-                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                            <field name="module_delivery_bpost" widget="upgrade_boolean"/>
-                        </setting>
-                        <setting id="shipping_costs_easypost" help="Compute shipping costs and ship with Easypost"
-                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                            <field name="module_delivery_easypost" widget="upgrade_boolean"/>
-                        </setting>
-                        <setting id="shipping_costs_sendcloud" help="Compute shipping costs and ship with Sendcloud"
-                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                            <field name="module_delivery_sendcloud" widget="upgrade_boolean"/>
-                        </setting>
-                        <setting id="shipping_costs_shiprocket" help="Compute shipping costs and ship with Shiprocket"
-                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                            <field name="module_delivery_shiprocket" widget="upgrade_boolean"/>
-                        </setting>
-                        <setting id="shipping_costs_starshipit" help="Compute shipping costs and ship with Starshipit"
-                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                            <field name="module_delivery_starshipit" widget="upgrade_boolean"/>
-                        </setting>
-                        <setting id="shipping_costs_envia" help="Compute shipping costs and ship with Envia.com"
-                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                            <field name="module_delivery_envia" widget="upgrade_boolean"/>
                         </setting>
                     </block>
                     <block title="Invoicing" name="invoicing_setting_container">
                         <setting id="sales_settings_invoicing_policy" title="This default value is applied to any new product created. This can be changed in the product detail form." documentation="/applications/sales/sales/invoicing/invoicing_policy.html" help="Quantities to invoice from sales orders">
-                            <field name="default_invoice_policy" class="o_light_label" widget="radio"/>
+                            <field name="sale_invoice_policy" class="o_light_label" widget="radio"/>
                         </setting>
-                        <setting id="automatic_invoicing" help="Generate the invoice automatically when the online payment is confirmed" invisible="default_invoice_policy != 'order' or not portal_confirmation_pay">
-                            <field name="automatic_invoice"/>
-                            <div  invisible="not automatic_invoice" groups="base.group_no_one">
+                        <setting id="automatic_invoicing" help="Generate the invoice automatically when the online payment is confirmed" invisible="sale_invoice_policy != 'order' or not portal_confirmation_pay">
+                            <field name="sale_automatic_invoice"/>
+                            <div invisible="not sale_automatic_invoice" groups="base.group_no_one">
                                 <label for="invoice_mail_template_id" class="o_light_label me-2"/>
                                 <field name="invoice_mail_template_id" class="oe_inline" options="{'no_create': True}"/>
                             </div>
                         </setting>
                         <setting id="setting_commission" help="Manage Sales &amp; teams targets and commissions">
                             <field name="module_sale_commission" widget="upgrade_boolean"/>
+                        </setting>
+                        <setting
+                            id="setting_services_and_materials"
+                            help="Use fixed-price and cost-based services and materials for re-invoicing"
+                        >
+                            <field name="group_services_and_material"/>
                         </setting>
                     </block>
                     <block title="Connectors" id="connectors_setting_container">
@@ -267,7 +233,7 @@
             <xpath expr="//setting[@id='product_accounts']" position="inside">
                 <div class="row mt8">
                     <label for="downpayment_account_id" class="col-lg-5 o_light_label"/>
-                    <field name="downpayment_account_id" placeholder="Client's most used account"/>
+                    <field name="downpayment_account_id" placeholder="Client's most used account" decoration-muted="not downpayment_account_active"/>
                 </div>
             </xpath>
         </field>

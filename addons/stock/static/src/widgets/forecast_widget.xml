@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="stock.ForecastWidget">
-        <span title="Forecasted Report"
-              t-on-click="this._openReport" t-att="resId ? {} : {'disabled': ''}"
-              class="badge rounded-pill align-middle"
-              t-att-class="this.decoration"
+        <span t-if="this.product_qty > 0 and this.resId"
+            title="Forecasted Report"
+            t-on-click="this._openReport"
+            class="badge rounded-pill align-middle"
+            t-att-class="this.decoration"
         >
             <t t-if="!this.forecastExpectedDate and this.willBeFulfilled">
                 Available

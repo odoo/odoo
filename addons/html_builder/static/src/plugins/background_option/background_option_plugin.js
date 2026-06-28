@@ -27,6 +27,7 @@ export class BackgroundOptionPlugin extends Plugin {
                 markColorLevelSelectorParam
             );
         }
+        return root;
     }
     markColorLevel(editingEl) {
         editingEl.classList.add("o_colored_level");

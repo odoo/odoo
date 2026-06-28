@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
-"PO-Revision-Date: 2026-02-14 12:15+0000\n"
+"POT-Creation-Date: 2026-05-22 17:46+0000\n"
+"PO-Revision-Date: 2026-04-04 13:00+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
-"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-2/"
 "purchase_stock/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -304,14 +304,14 @@ msgid ""
 "is the same week or week day\n"
 "         Always: Replenishment needs will always be grouped."
 msgstr ""
-"Xác định xem RFQ có nên được nhóm lại với nhau dựa trên thời gian giao hàng "
-"dự kiến hay không, trừ các hoạt động giao hàng trực tiếp.\n"
+"Xác định xem RFQ có nên được nhóm lại với nhau dựa trên ngày nhận hàng dự "
+"kiến hay không, trừ các hoạt động giao hàng trực tiếp.\n"
 "         Trên đơn hàng: Nhu cầu bổ sung hàng sẽ được nhóm lại với nhau, trừ "
 "các đơn hàng đặt hàng theo yêu cầu (MTO).\n"
-"         Hàng ngày: Nhu cầu bổ sung hàng sẽ được nhóm lại nếu thời gian giao "
-"hàng dự kiến là cùng ngày.\n"
-"         Hàng tuần: Nhu cầu bổ sung hàng sẽ được nhóm lại nếu thời gian giao "
-"hàng dự kiến là cùng tuần hoặc cùng ngày trong tuần.\n"
+"         Hàng ngày: Nhu cầu bổ sung hàng sẽ được nhóm lại nếu ngày nhận hàng "
+"dự kiến là cùng ngày.\n"
+"         Hàng tuần: Nhu cầu bổ sung hàng sẽ được nhóm lại nếu ngày nhận hàng "
+"dự kiến là cùng tuần hoặc cùng ngày trong tuần.\n"
 "         Luôn luôn: Nhu cầu bổ sung hàng sẽ luôn được nhóm lại."
 
 #. module: purchase_stock
@@ -355,7 +355,6 @@ msgstr "Loại vị trí đích"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__display_name
@@ -364,7 +363,6 @@ msgstr "Loại vị trí đích"
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenish_mixin__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_option__display_name
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_return_picking__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_route__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__display_name
@@ -448,6 +446,11 @@ msgid "Forecasted Issue"
 msgstr "Vấn đề được dự báo"
 
 #. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_location_id
+msgid "Forecasted Location"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__5
 msgid "Friday"
 msgstr "Thứ 6"
@@ -507,7 +510,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__id
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__id
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__id
@@ -516,7 +518,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenish_mixin__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_option__id
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_return_picking__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_route__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__id
@@ -601,9 +602,9 @@ msgid "Last year quarter"
 msgstr ""
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__location_final_id
-msgid "Location from procurement"
-msgstr "Vị trí từ đơn mua sắm"
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__forecasted_location_id
+msgid "Location used in the computation of the forecast."
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -736,8 +737,8 @@ msgstr "Điểm đặt hàng"
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
 "Over the past x days; the number of products received on time divided by the "
-"number of ordered products.x is either the System Parameter purchase_stock."
-"on_time_delivery_days or the default 365"
+"number of ordered products.x is either the System Parameter "
+"purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
 "Trong x ngày qua; số lượng sản phẩm đã nhận đúng hạn chia cho số lượng sản "
 "phẩm đã đặt. x là tham số hệ thống purchase_stock.on_time_delivery_days hoặc "
@@ -912,11 +913,6 @@ msgid "Reservation"
 msgstr "Dự trữ"
 
 #. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_stock_return_picking
-msgid "Return Picking"
-msgstr "Phiếu xuất kho trả hàng"
-
-#. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Same month last year"
@@ -973,11 +969,6 @@ msgstr "Báo cáo bổ sung tồn kho"
 #: model:ir.model,name:purchase_stock.model_stock_rule
 msgid "Stock Rule"
 msgstr "Quy tắc tồn kho"
-
-#. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_stock_account_stock_valuation_report
-msgid "Stock Valuation"
-msgstr "Định giá tồn kho"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
@@ -1093,9 +1084,9 @@ msgid ""
 "location (%(location)s) of reordering rule (%(reordering_rule)s) for product "
 "%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
-"Kho thuộc loại hoạt động (%(operation_type)s) không nhất quán với vị trí "
-"(%(location)s) của quy tắc tái sắp xếp (%(reordering_rule)s) cho sản phẩm "
-"%(product)s. Thay đổi loại hoạt động hoặc hủy yêu cầu báo giá."
+"Kho thuộc loại hoạt động (%(operation_type)s) không nhất quán với vị trí (%"
+"(location)s) của quy tắc tái sắp xếp (%(reordering_rule)s) cho sản phẩm %"
+"(product)s. Thay đổi loại hoạt động hoặc hủy yêu cầu báo giá."
 
 #. module: purchase_stock
 #. odoo-python
@@ -1181,6 +1172,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_search_catalog
 msgid "To Order"
 msgstr "Cần đặt hàng"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
+msgid "Total"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
@@ -1292,9 +1289,9 @@ msgstr ""
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/purchase_order.py:0
-msgid "You must set a Vendor Location for this partner %s"
-msgstr "Bạn phải thiết lập Vị trí nhà cung cấp cho đối tác này %s"
+#: code:addons/purchase_stock/models/purchase_order_line.py:0
+msgid "You must set a Vendor Location for partner %(partner_name)s"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
@@ -1333,3 +1330,15 @@ msgstr "sản phẩm này phải được bổ sung thủ công."
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "units"
 msgstr ""
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
+msgid "x"
+msgstr ""
+
+#~ msgid "Location from procurement"
+#~ msgstr "Vị trí từ đơn mua sắm"
+
+#~ msgid "Stock Valuation"
+#~ msgstr "Định giá tồn kho"

@@ -28,6 +28,9 @@ class StockPickingType(models.Model):
         help="Allow to create new lot/serial numbers for the components",
         default=False,
     )
+    auto_confirm_production = fields.Boolean(
+        "Auto Confirm Production", default=True,
+        help="Uncheck this option if you want to create a draft production order on replenishment, instead of a confirmed one.")
 
     auto_print_done_production_order = fields.Boolean(
         "Auto Print Done Production Order",
@@ -56,6 +59,7 @@ class StockPickingType(models.Model):
     generated_mrp_lot_label_to_print = fields.Selection(
         [('pdf', 'PDF'), ('zpl', 'ZPL')],
         "Generated Lot/SN Label to Print", default='pdf')
+    wo_properties_definition = fields.PropertiesDefinition('Workorder Properties')
 
     @api.depends('code')
     def _compute_use_create_lots(self):
@@ -85,7 +89,7 @@ class StockPickingType(models.Model):
         domains = {
             'count_mo_waiting': [('reservation_state', '=', 'waiting')],
             'count_mo_todo': [('state', '=', 'confirmed')],
-            'count_mo_late': [('date_start', '<', fields.Date.today()), ('state', '=', 'confirmed')],
+            'count_mo_late': [('date_start', '<', 'today'), ('state', '=', 'confirmed')],
             'count_mo_in_progress': [('state', '=', 'progress')],
             'count_mo_to_close': [('state', '=', 'to_close')],
         }

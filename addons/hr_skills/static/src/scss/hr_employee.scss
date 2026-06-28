@@ -4,18 +4,6 @@
     }
 }
 
-.o_list_renderer {
-    .o_list_table {
-        .o_data_row:not(.o_selected_row) .o_data_cell {
-            &.o_boolean_toggle_load_cell {
-                > .o_field_widget:not(.o_readonly_modifier) .form-check {
-                    pointer-events: auto;
-                }
-            }
-        }
-    }
-}
-
 // hide expand button when the form view is readonly
 .o_hr_skills_dialog_form:has(main > div.o_form_readonly) > header > button.o_expand_button {
     display: None !important;

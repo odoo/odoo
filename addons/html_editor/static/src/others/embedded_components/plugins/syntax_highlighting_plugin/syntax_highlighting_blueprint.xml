@@ -1,6 +1,7 @@
 <templates>
     <t t-name="html_editor.EmbeddedSyntaxHighlightingBlueprint">
         <div t-att-data-embedded-props="embeddedProps" data-embedded="syntaxHighlighting"
+            t-att-class="{ 'o-code-wrap': isCodeWrap }"
             data-oe-protected="true" contenteditable="false" class="o_syntax_highlighting"/>
     </t>
 </templates>

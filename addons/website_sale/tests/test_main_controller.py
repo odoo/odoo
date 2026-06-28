@@ -16,7 +16,7 @@ class TestPaymentProviderVisibility(PaymentHttpCommon, SaleCommon):
 
         The current website must be considered to filter the providers.
         """
-        website_portal = self.env["website"].get_current_website()
+        website_portal = self.env.ref('base.default_website')
         website_shop = self.env["website"].create({"name": "Shop Website"})
 
         base_url = self.env["ir.config_parameter"].sudo().get_base_url()
@@ -29,15 +29,15 @@ class TestPaymentProviderVisibility(PaymentHttpCommon, SaleCommon):
             .sudo()
             .search([("name", "=", "Demo"), ("company_id", "=", website_shop.company_id.id)])
         )
-        restricted_provider.write({"state": "test", "website_id": website_shop.id})
+        restricted_provider.website_id = website_shop.id
 
         url_so = self.sale_order.get_portal_url()
         self.sale_order.require_payment = True
         portal_url = f"{website_portal.domain}{url_so}"
 
         with patch(
-            "odoo.addons.website_payment.models.payment_provider.PaymentProvider._get_compatible_providers",
-            side_effect=lambda *args, **kwargs: PaymentProvider._get_compatible_providers(
+            "odoo.addons.website_payment.models.payment_provider.PaymentProvider._find_available_providers",
+            side_effect=lambda *args, **kwargs: PaymentProvider._find_available_providers(
                 self.env["payment.provider"], *args, **kwargs
             ),
         ) as mock_method:
@@ -47,9 +47,14 @@ class TestPaymentProviderVisibility(PaymentHttpCommon, SaleCommon):
             self.assertEqual(mock_method.call_args.kwargs["website_id"], website_portal.id)
 
         mock_method.call_args.kwargs.pop("show_non_tokenize_provider", None)
-        providers = self.env["payment.provider"]._get_compatible_providers(
-            *mock_method.call_args.args, **mock_method.call_args.kwargs
-        )
+        providers = self.provider + restricted_provider
+        with patch(
+            "odoo.addons.payment.models.payment_provider.PaymentProvider._find_available_providers",
+            return_value=providers,
+        ):
+            providers = self.env["payment.provider"]._find_available_providers(
+                *mock_method.call_args.args, **mock_method.call_args.kwargs
+            )
 
         self.assertIn(self.provider.id, providers.ids, "The visible provider should be visible.")
 

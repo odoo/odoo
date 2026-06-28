@@ -15,7 +15,7 @@
             <field name="body_html" type="html">
                 <div style="margin: 0; padding: 0; font-size: 14px;">
                     <t t-set="store_name" t-value="object.config_id.name"/>
-                    <t t-set="tz" t-value="object.env.user.tz"/>
+                    <t t-set="tz" t-value="object.company_id.partner_id.tz"/>
                     <t t-set="lg" t-value="object.partner_id.lang or user.lang"/>
                     <div>
                         <t t-if="client_name">Hello <t t-out="client_name">Client name</t>,</t>
@@ -55,7 +55,7 @@
                     <t t-set="city" t-value="client.city or ''"/>
                     <t t-set="country" t-value="client.country_id.name or ''"/>
                     <t t-set="store_name" t-value="object.config_id.name"/>
-                    <t t-set="tz" t-value="object.env.user.tz"/>
+                    <t t-set="tz" t-value="object.company_id.partner_id.tz"/>
                     <t t-set="lg" t-value="object.partner_id.lang or user.lang"/>
                     <div>
                         <t t-if="client_name">Hello <t t-out="client_name">Client name</t>,</t>

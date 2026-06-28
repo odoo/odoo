@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
 from odoo.tests import tagged, common
 
 
@@ -87,7 +86,8 @@ class TestQwebFieldFloatConverter(common.TransactionCase):
         self.assertEqual(self.value_to_html(3.123, options), '3.123')
         self.assertEqual(self.value_to_html(3.1239, options), '3.1239')
         self.assertEqual(self.value_to_html(3.1231239, options), '3.123124')
-        self.assertEqual(self.value_to_html(1234567890.1234567890, options), '1,234,567,890.12346')
+        self.assertEqual(self.value_to_html(528000000.0, options), '528,000,000.000')
+        self.assertEqual(self.value_to_html(1234567890.1234567890, options), '1,234,567,890.1235')
 
     def test_float_value_to_html_with_precision_and_min_precision(self):
         options = {'min_precision': 3, 'precision': 4}
@@ -103,7 +103,6 @@ class TestQwebFieldContact(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
         cls.partner = cls.env['res.partner'].create({
             'name': 'Wood Corner',
             'email': 'wood.corner26@example.com',
@@ -180,3 +179,13 @@ class TestQwebFieldMany2One(common.TransactionCase):
         parent = self.env['res.partner'].create({'name': 'BigBoss'})
         child = self.env['res.partner'].create({'name': 'Minion', 'parent_id': parent.id})
         self.assertEqual(self.value_to_html(child.parent_id), 'BigBoss')
+
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
+class TestQwebFieldText(common.TransactionCase):
+
+    def test_attributes_include_dir_auto(self):
+        """Verify that the text widget injects dir="auto" on rendered elements."""
+        partner = self.env['res.partner'].create({'name': 'Test', 'comment': 'Test comment'})
+        attrs = self.env['ir.qweb.field.text'].attributes(partner, 'comment', {'inherit_branding': False, 'translate': False})
+        self.assertEqual(attrs['dir'], 'auto')

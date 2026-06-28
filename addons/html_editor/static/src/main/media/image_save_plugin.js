@@ -6,6 +6,7 @@ import {
 } from "@html_editor/utils/image";
 import { loadImage } from "@html_editor/utils/image_processing";
 import { rpc } from "@web/core/network/rpc";
+import { ATTACHMENT_PENDING_RECORD_ID } from "./media_plugin";
 
 /**
  * @typedef { Object } ImageSaveShared
@@ -105,6 +106,14 @@ export class ImageSavePlugin extends Plugin {
         });
         if (!attachment) {
             return;
+        }
+        if (!this.config.getRecordInfo()?.resId) {
+            // `el` is the image node in the clone that will be saved.
+            // we need to add these to the image in the DOM so the
+            // remap mechanism intercept it and works properly.
+            const originalImage = this.editable.querySelector(`[src="${el.getAttribute("src")}"]`);
+            originalImage.classList.add(ATTACHMENT_PENDING_RECORD_ID);
+            originalImage.dataset.attachmentId = attachment.id;
         }
         if (attachment.mimetype === "image/webp") {
             el.classList.add("o_modified_image_to_save");

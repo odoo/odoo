@@ -33,9 +33,9 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
         if process_type == 'billing':
             return 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0'
 
-    def _ubl_add_values_tax_currency_code(self, vals):
+    def _ubl_add_tax_currency_code_node(self, vals):
         # OVERRIDE account.edi.xml.ubl_bis3
-        self._ubl_add_values_tax_currency_code_empty(vals)
+        self._ubl_add_tax_currency_code_node_empty(vals)
 
     def _ubl_tax_totals_node_grouping_key(self, base_line, tax_data, vals, currency):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -51,11 +51,23 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
 
         return tax_total_keys
 
-    def _add_invoice_header_nodes(self, document_node, vals):
+    def _ubl_add_customization_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
-        super()._add_invoice_header_nodes(document_node, vals)
-        if not document_node['cbc:BuyerReference']['_text']:
-            document_node['cbc:BuyerReference']['_text'] = 'N/A'
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0'
+
+    def _ubl_add_buyer_reference_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_buyer_reference_node(vals)
+        node = vals['document_node']['cbc:BuyerReference']
+
+        customer = vals['customer'].commercial_partner_id
+        if customer.routing_scheme == "0204":
+            # For B2G transactions in Germany: set the buyer_reference to the Leitweg-ID
+            node['_text'] = customer.routing_endpoint
+
+        if not node['_text']:
+            node['_text'] = 'N/A'
 
     def _ubl_add_party_endpoint_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -75,16 +87,15 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
 
-        if (
-            not nodes
-            and commercial_partner.peppol_eas
-        ):
-            nodes.append({
-                'cbc:CompanyID': {'_text': None},
-                'cac:TaxScheme': {
-                    'cbc:ID': {'_text': commercial_partner.peppol_eas},
-                },
-            })
+        if not nodes:
+            identifier_vals = commercial_partner._get_preferred_routing_identifier_vals()
+            if identifier_vals:
+                nodes.append({
+                    'cbc:CompanyID': {'_text': None},
+                    'cac:TaxScheme': {
+                        'cbc:ID': {'_text': identifier_vals['scheme']},
+                    },
+                })
 
     def _ubl_add_party_legal_entity_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3

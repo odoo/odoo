@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="message_meeting_activity_done" inherit_id="mail.message_activity_done">
+            <xpath expr="//span[@t-field='activity.summary']" position="attributes">
+                <attribute name="t-if" add="not activity.calendar_event_id" separator=" and "/>
+            </xpath>
+            <xpath expr="//span[@t-field='activity.summary']" position="after">
+                <a t-if="activity.summary and activity.calendar_event_id" t-attf-href="/odoo/calendar.event/{{activity.calendar_event_id.id}}" title="View Meeting">
+                    <span t-field="activity.summary"/>
+                </a>
+            </xpath>
+            <xpath expr="//div/p[hasclass('o_mail_activity_title')]" position="inside">
+                <t t-if="attendee_names">
+                    <br/>
+                    <span t-out="truncated_attendee_names" t-att-title="attendee_names" class="text-muted"/>
+                </t>
+            </xpath>
+            <xpath expr="//div[hasclass('o_mail_activity_note')]" position="attributes">
+                <attribute name="t-if" add="not activity.calendar_event_id" separator=" and "/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

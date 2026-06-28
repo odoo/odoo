@@ -1,28 +1,28 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { ActionList } from "@mail/core/common/action_list";
+import { UseThreadActions } from "@mail/core/common/thread_actions";
 
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
-import { useCallActions } from "./call_actions";
-import { ACTION_TAGS } from "@mail/core/common/action";
+import { useSubEnv } from "@web/owl2/utils";
 
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
-/**
- * @typedef {Object} Props
- * @property {import("@mail/core/common/thread_actions").UseThreadActions} threadActions
- * @extends {Component<Props, Env>}
- */
 export class MeetingSideActions extends Component {
     static template = "mail.MeetingSideActions";
-    static props = ["threadActions", "isSmall?"];
     static components = { ActionList };
 
     setup() {
         this.store = useService("mail.store");
-        this.callActions = useCallActions({ channel: () => this.store.rtc.channel });
+        this.props = props({
+            threadActions: types.instanceOf(UseThreadActions),
+        });
+        this.ui = useService("ui");
         useSubEnv({ inMeetingSideActions: true });
+    }
+
+    get callActionsParams() {
+        return { channel: () => this.store.rtc.channel };
     }
 
     computeActions() {
@@ -33,7 +33,7 @@ export class MeetingSideActions extends Component {
             );
             return;
         }
-        const quickThreadActionIds = this.props.isSmall ? [] : ["invite-people", "meeting-chat"];
+        const quickThreadActionIds = this.ui.isSmall ? [] : ["invite-people", "meeting-chat"];
         const { quick, other, group } = threadActions.partition;
         const partitionedActions = {
             quick: quick.filter((action) => !quickThreadActionIds.includes(action.id)),
@@ -46,7 +46,7 @@ export class MeetingSideActions extends Component {
             quickThreadActionIds.includes(action.id)
         );
         actions.push(
-            threadActions.more({
+            threadActions.more(this.callActionsParams, {
                 actions: [
                     partitionedActions.quick,
                     partitionedActions.other,
@@ -55,11 +55,5 @@ export class MeetingSideActions extends Component {
             })
         );
         this.actions = actions;
-    }
-
-    get layoutActions() {
-        return this.callActions.actions.filter((action) =>
-            action.tags.includes(ACTION_TAGS.CALL_LAYOUT)
-        );
     }
 }

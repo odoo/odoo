@@ -3,7 +3,6 @@ import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tou
 registerWebsitePreviewTour(
     "website_media_iframe_video",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [
@@ -25,7 +24,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Enter the url",
-            trigger: "input[placeholder='www.example.com']",
+            trigger: "input[placeholder='e.g. /page or URL']",
             run: "edit odoo.com",
         },
         {
@@ -46,7 +45,6 @@ registerWebsitePreviewTour(
         {
             content: "Wait for add button to be enabled",
             trigger: ".modal-footer button:contains('Add'):not([disabled])",
-            run: () => {},
         },
         {
             content: "Remove video link",
@@ -60,12 +58,10 @@ registerWebsitePreviewTour(
         {
             content: "Video input field should not be in valid state",
             trigger: "#o_video_text:not(.is-valid)",
-            run: () => {},
         },
         {
             content: "Check that the preview is not shown",
             trigger: ".media_iframe_video:not(:has(iframe))",
-            run: () => {},
         },
         {
             content: "Check that the add button is disabled in footer",

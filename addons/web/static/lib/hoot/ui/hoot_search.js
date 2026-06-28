@@ -1,6 +1,15 @@
 /** @odoo-module */
 
-import { Component, onPatched, onWillPatch, useRef, useState, xml } from "@odoo/owl";
+import {
+    Component,
+    computed,
+    onPatched,
+    onWillPatch,
+    plugin,
+    signal,
+    types as t,
+    xml,
+} from "@odoo/owl";
 import { getActiveElement } from "@web/../lib/hoot-dom/helpers/dom";
 import { R_REGEX, REGEX_MARKER } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { Suite } from "../core/suite";
@@ -23,15 +32,12 @@ import {
     useWindowListener,
 } from "../hoot_utils";
 import { HootTagButton } from "./hoot_tag_button";
+import { getConfigPlugin, getRunnerPlugin } from "./runner_plugin";
+import { UiPlugin } from "./ui_plugin";
 
 /**
- * @typedef {{
- * }} HootSearchProps
- *
  * @typedef {import("../core/config").SearchFilter} SearchFilter
- *
  * @typedef {import("../core/tag").Tag} Tag
- *
  * @typedef {import("../core/test").Test} Test
  */
 
@@ -90,8 +96,8 @@ function removeRegExp(query) {
  */
 const templateIncludeWidget = (tagName) => /* xml */ `
     <t t-set="type" t-value="category === 'tag' ? category : 'id'" />
-    <t t-set="includeStatus" t-value="runnerState.includeSpecs[type][job.id] or 0" />
-    <t t-set="readonly" t-value="isReadonly(includeStatus)" />
+    <t t-set="includeStatus" t-value="this.runner.includeSpecs[type][job.id] or 0" />
+    <t t-set="readonly" t-value="this.isReadonly(includeStatus)" />
 
     <${tagName}
         class="flex items-center gap-1 cursor-pointer select-none"
@@ -105,7 +111,7 @@ const templateIncludeWidget = (tagName) => /* xml */ `
                 'opacity-50': readonly,
             }"
             t-att-title="readonly and 'Cannot change because it depends on a tag modifier in the code'"
-            t-on-pointerup="focusSearchInput"
+            t-on-pointerup="this.focusSearchInput"
             t-on-change="(ev) => this.onIncludeChange(type, job.id, ev.target.value)"
         >
             <input
@@ -132,7 +138,7 @@ const templateIncludeWidget = (tagName) => /* xml */ `
                 t-att-checked="includeStatus gt 0"
             />
         </div>
-        <t t-if="isTag(job)">
+        <t t-if="this.isTag(job)">
             <HootTagButton tag="job" inert="true" />
         </t>
         <t t-else="">
@@ -140,11 +146,11 @@ const templateIncludeWidget = (tagName) => /* xml */ `
                 class="flex items-center font-bold whitespace-nowrap overflow-hidden"
                 t-att-title="job.fullName"
             >
-                <t t-foreach="getShortPath(job.path)" t-as="suite" t-key="suite.id">
-                    <span class="text-gray px-1" t-esc="suite.name" />
+                <t t-foreach="this.getShortPath(job.path)" t-as="suite" t-key="suite.id">
+                    <span class="text-gray px-1" t-out="suite.name" />
                     <span class="font-normal">/</span>
                 </t>
-                <t t-set="isSet" t-value="job.id in runnerState.includeSpecs.id" />
+                <t t-set="isSet" t-value="job.id in this.runner.includeSpecs.id" />
                 <span
                     class="truncate px-1"
                     t-att-class="{
@@ -155,7 +161,7 @@ const templateIncludeWidget = (tagName) => /* xml */ `
                         'text-primary': !isSet and !hasIncludeValue,
                         'italic': hasIncludeValue ? includeStatus lte 0 : includeStatus lt 0,
                     }"
-                    t-esc="job.name"
+                    t-out="job.name"
                 />
             </span>
         </t>
@@ -164,7 +170,7 @@ const templateIncludeWidget = (tagName) => /* xml */ `
 
 /**
  *
- * @param {ReturnType<typeof useRef<HTMLInputElement>>} ref
+ * @param {typeof t.ref<HTMLElement>} ref
  */
 function useKeepSelection(ref) {
     /**
@@ -178,18 +184,18 @@ function useKeepSelection(ref) {
     let start = 0;
     let end = 0;
     onWillPatch(() => {
-        if (offset === null || !ref.el) {
+        if (offset === null || !ref()) {
             return;
         }
-        start = ref.el.selectionStart;
-        end = ref.el.selectionEnd;
+        start = ref().selectionStart;
+        end = ref().selectionEnd;
     });
     onPatched(() => {
-        if (offset === null || !ref.el) {
+        if (offset === null || !ref()) {
             return;
         }
-        ref.el.selectionStart = start + offset;
-        ref.el.selectionEnd = end + offset;
+        ref().selectionStart = start + offset;
+        ref().selectionEnd = end + offset;
         offset = null;
     });
 
@@ -204,23 +210,23 @@ const RESULT_LIMIT = 5;
 
 const TEMPLATE_FILTERS_AND_CATEGORIES = /* xml */ `
     <div class="flex mb-2">
-        <t t-if="trimmedQuery">
+        <t t-if="this.trimmedQuery()">
             <button
                 class="flex items-center gap-1"
                 type="submit"
                 title="Run this filter"
-                t-on-pointerdown="updateFilterParam"
+                t-on-pointerdown="this.updateFilterParam"
             >
                 <h4 class="text-primary m-0">
                     Filter using
-                    <t t-if="hasRegExpFilter()">
+                    <t t-if="this.hasRegExpFilter(this.trimmedQuery())">
                         regular expression
                     </t>
                     <t t-else="">
                         text
                     </t>
                 </h4>
-                <t t-esc="wrappedQuery()" />
+                <t t-out="this.wrappedQuery(this.trimmedQuery())" />
             </button>
         </t>
         <t t-else="">
@@ -229,14 +235,14 @@ const TEMPLATE_FILTERS_AND_CATEGORIES = /* xml */ `
             </em>
         </t>
     </div>
-    <t t-foreach="categories" t-as="category" t-key="category">
-        <t t-set="jobs" t-value="state.categories[category][0]" />
-        <t t-set="remainingCount" t-value="state.categories[category][1]" />
+    <t t-foreach="this.categoryKeys" t-as="category" t-key="category">
+        <t t-set="jobs" t-value="this.categories[category]()[0]" />
+        <t t-set="remainingCount" t-value="this.categories[category]()[1]" />
         <t t-if="jobs?.length">
             <div class="flex flex-col mb-2 max-h-48 overflow-hidden">
                 <h4
                     class="text-primary font-bold flex items-center mb-2"
-                    t-esc="title(category)"
+                    t-out="this.title(category)"
                 />
                 <ul class="flex flex-col overflow-y-auto gap-1">
                     <t t-foreach="jobs" t-as="job" t-key="job.id">
@@ -244,7 +250,7 @@ const TEMPLATE_FILTERS_AND_CATEGORIES = /* xml */ `
                     </t>
                     <t t-if="remainingCount > 0">
                         <div class="italic">
-                            <t t-esc="remainingCount" /> more items ...
+                            <t t-out="remainingCount" /> more items ...
                         </div>
                     </t>
                 </ul>
@@ -262,13 +268,13 @@ const TEMPLATE_SEARCH_DASHBOARD = /* xml */ `
                 </span>
             </h4>
             <ul class="flex flex-col overflow-y-auto gap-1">
-                <t t-foreach="getLatestSearches()" t-as="text" t-key="text_index">
+                <t t-foreach="this.getLatestSearches()" t-as="text" t-key="text_index">
                     <li>
                         <button
                             class="w-full px-2 hover:bg-gray-300 dark:hover:bg-gray-700"
                             type="button"
                             t-on-click.stop="() => this.setQuery(text)"
-                            t-esc="text"
+                            t-out="text"
                         />
                     </li>
                 </t>
@@ -281,7 +287,7 @@ const TEMPLATE_SEARCH_DASHBOARD = /* xml */ `
                 </span>
             </h4>
             <ul class="flex flex-col overflow-y-auto gap-1">
-                <t t-foreach="getTop(env.runner.rootSuites)" t-as="job" t-key="job.id">
+                <t t-foreach="this.getTop(this.runner.rootSuites)" t-as="job" t-key="job.id">
                     <t t-set="category" t-value="'suite'" />
                     ${templateIncludeWidget("li")}
                 </t>
@@ -294,7 +300,7 @@ const TEMPLATE_SEARCH_DASHBOARD = /* xml */ `
                 </span>
             </h4>
             <ul class="flex flex-col overflow-y-auto gap-1">
-                <t t-foreach="getTop(env.runner.tags.values())" t-as="job" t-key="job.id">
+                <t t-foreach="this.getTop(this.runner.tags.values())" t-as="job" t-key="job.id">
                     <t t-set="category" t-value="'tag'" />
                     ${templateIncludeWidget("li")}
                 </t>
@@ -307,19 +313,15 @@ const TEMPLATE_SEARCH_DASHBOARD = /* xml */ `
 // Exports
 //-----------------------------------------------------------------------------
 
-/** @extends {Component<HootSearchProps, import("../hoot").Environment>} */
 export class HootSearch extends Component {
     static components = { HootTagButton };
-
-    static props = {};
-
     static template = xml`
-        <t t-set="hasIncludeValue" t-value="getHasIncludeValue()" />
-        <t t-set="isRunning" t-value="runnerState.status === 'running'" />
-        <search class="${HootSearch.name} flex-1" t-ref="root" t-on-keydown="onKeyDown">
-            <form class="relative" t-on-submit.prevent="refresh">
+        <t t-set="hasIncludeValue" t-value="this.getHasIncludeValue()" />
+        <t t-set="isRunning" t-value="this.runner.status() === 'running'" />
+        <search class="${HootSearch.name} flex-1" t-ref="this.rootRef" t-on-keydown="this.onKeyDown">
+            <form class="relative" t-on-submit.prevent="this.refresh">
                 <div class="hoot-search-bar flex border rounded items-center bg-base px-1 gap-1 w-full transition-colors">
-                    <t t-foreach="getCategoryCounts()" t-as="count" t-key="count.category">
+                    <t t-foreach="this.getCategoryCounts()" t-as="count" t-key="count.category">
                         <button
                             type="button"
                             class="flex border border-primary rounded"
@@ -339,28 +341,28 @@ export class HootSearch extends Component {
                     <input
                         type="search"
                         class="w-full rounded p-1 outline-none"
-                        t-att-autofocus="!config.manual"
+                        t-att-autofocus="!this.config.manual()"
                         placeholder="Filter suites, tests or tags"
-                        t-ref="search-input"
-                        t-att-class="{ 'text-gray': !config.filter }"
+                        t-ref="this.searchInputRef"
+                        t-att-class="{ 'text-gray': !this.config.filter() }"
                         t-att-disabled="isRunning"
-                        t-att-value="state.query"
-                        t-on-change="onSearchInputChange"
-                        t-on-input="onSearchInputInput"
-                        t-on-keydown="onSearchInputKeyDown"
+                        t-att-value="this.query()"
+                        t-on-change="this.onSearchInputChange"
+                        t-on-input="this.onSearchInputInput"
+                        t-on-keydown="this.onSearchInputKeyDown"
                     />
                     <label
                         class="hoot-search-icon cursor-pointer p-1"
                         title="Use exact match (Alt + X)"
                         tabindex="0"
-                        t-on-keydown="onExactKeyDown"
+                        t-on-keydown="this.onExactKeyDown"
                     >
                         <input
                             type="checkbox"
                             class="hidden"
-                            t-att-checked="hasExactFilter()"
+                            t-att-checked="this.hasExactFilter(this.trimmedQuery())"
                             t-att-disabled="isRunning"
-                            t-on-change="toggleExact"
+                            t-on-change="this.toggleExact"
                         />
                         <i class="fa fa-quote-right text-gray transition-colors" />
                     </label>
@@ -368,35 +370,35 @@ export class HootSearch extends Component {
                         class="hoot-search-icon cursor-pointer p-1"
                         title="Use regular expression (Alt + R)"
                         tabindex="0"
-                        t-on-keydown="onRegExpKeyDown"
+                        t-on-keydown="this.onRegExpKeyDown"
                     >
                         <input
                             type="checkbox"
                             class="hidden"
-                            t-att-checked="hasRegExpFilter()"
+                            t-att-checked="this.hasRegExpFilter(this.trimmedQuery())"
                             t-att-disabled="isRunning"
-                            t-on-change="toggleRegExp"
+                            t-on-change="this.toggleRegExp"
                         />
                         <i class="fa fa-asterisk text-gray transition-colors" />
                     </label>
                     <label
                         class="hoot-search-icon cursor-pointer p-1"
                         title="Debug mode (Alt + D)"
-                        t-on-keydown="onDebugKeyDown"
+                        t-on-keydown="this.onDebugKeyDown"
                     >
                         <input
                             type="checkbox"
                             class="hidden"
-                            t-att-checked="config.debugTest"
+                            t-att-checked="this.config.debugTest()"
                             t-att-disabled="isRunning"
-                            t-on-change="toggleDebug"
+                            t-on-change="this.toggleDebug"
                         />
                         <i class="fa fa-bug text-gray transition-colors" />
                     </label>
                 </div>
-                <t t-if="state.showDropdown">
+                <t t-if="this.showDropdown()">
                     <div class="hoot-dropdown-lg flex flex-col animate-slide-down bg-base text-base absolute mt-1 p-3 shadow rounded z-2">
-                        <t t-if="state.empty">
+                        <t t-if="this.isEmpty()">
                             ${TEMPLATE_SEARCH_DASHBOARD}
                         </t>
                         <t t-else="">
@@ -408,75 +410,75 @@ export class HootSearch extends Component {
         </search>
     `;
 
-    categories = ["suite", "test", "tag"];
+    // Props & plugins
+    config = getConfigPlugin();
+    runner = getRunnerPlugin();
+    ui = plugin(UiPlugin);
+
+    // Reactive values
+    rootRef = signal(null, { type: t.ref(HTMLElement) });
+    searchInputRef = signal(null, { type: t.ref(HTMLInputElement) });
+    categories = {
+        suite: signal.Array([], { type: t.instanceOf(Suite) }),
+        tag: signal.Array([], { type: t.instanceOf(Tag) }),
+        test: signal.Array([], { type: t.instanceOf(Test) }),
+    };
+    query = signal(this.config.filter() || "", { type: t.string() });
+    isEmpty = signal(!this.query().trim(), { type: t.string() });
+    showDropdown = signal(false, { type: t.boolean() });
+    trimmedQuery = computed(() => this.query().trim());
+
+    // Other members
+    categoryKeys = Object.keys(this.categories);
     debouncedUpdateSuggestions = debounce(this.updateSuggestions.bind(this), 16);
+    keepSelection = useKeepSelection(this.searchInputRef);
     refresh = refresh;
     title = title;
 
-    get trimmedQuery() {
-        return this.state.query.trim();
-    }
-
     setup() {
-        const { runner } = this.env;
-
-        runner.beforeAll(() => {
-            this.state.categories = this.findSuggestions();
-            this.state.empty = this.isEmpty();
+        this.runner.beforeAll(() => {
+            this.updateSuggestedCategories();
+            this.isEmpty.set(this.computeIsEmpty());
         });
-        runner.afterAll(() => this.focusSearchInput());
+        this.runner.afterAll(() => this.focusSearchInput());
 
-        this.rootRef = useRef("root");
-        this.searchInputRef = useRef("search-input");
-
-        this.config = useState(runner.config);
-        const query = this.config.filter || "";
-        this.state = useState({
-            categories: {
-                /** @type {Suite[]} */
-                suite: [],
-                /** @type {Tag[]} */
-                tag: [],
-                /** @type {Test[]} */
-                test: [],
-            },
-            disabled: false,
-            empty: !query.trim(),
-            query,
-            showDropdown: false,
-        });
-        this.runnerState = useState(runner.state);
-
-        useHootKey(["Alt", "r"], this.toggleRegExp);
-        useHootKey(["Alt", "x"], this.toggleExact);
-        useHootKey(["Escape"], this.closeDropdown);
+        useHootKey(["Alt", "r"], this.toggleRegExp.bind(this));
+        useHootKey(["Alt", "x"], this.toggleExact.bind(this));
+        useHootKey(["Escape"], this.closeDropdown.bind(this));
 
         useWindowListener(
             "click",
             (ev) => {
-                if (this.runnerState.status !== "running") {
-                    const shouldOpen = ev.composedPath().includes(this.rootRef.el);
-                    if (shouldOpen && !this.state.showDropdown) {
+                if (this.runner.status() !== "running") {
+                    const shouldOpen = ev.composedPath().includes(this.rootRef());
+                    if (shouldOpen && !this.showDropdown()) {
                         this.debouncedUpdateSuggestions();
                     }
-                    this.state.showDropdown = shouldOpen;
+                    this.showDropdown.set(shouldOpen);
                 }
             },
             { capture: true }
         );
-
-        this.keepSelection = useKeepSelection(this.searchInputRef);
     }
 
     /**
      * @param {KeyboardEvent} ev
      */
     closeDropdown(ev) {
-        if (!this.state.showDropdown) {
+        if (!this.showDropdown()) {
             return;
         }
         ev.preventDefault();
-        this.state.showDropdown = false;
+        this.showDropdown.set(false);
+    }
+
+    computeIsEmpty() {
+        return !(
+            this.trimmedQuery() ||
+            $values(this.runner.includeSpecs).some((values) =>
+                $values(values).some((value) => $abs(value) === INCLUDE_LEVEL.url)
+            )
+        );
     }
 
     /**
@@ -485,7 +487,7 @@ export class HootSearch extends Component {
      * @param {SearchFilter} category
      */
     filterItems(parsedQuery, items, category) {
-        const checked = this.runnerState.includeSpecs[category];
+        const checked = this.runner.includeSpecs[category];
 
         const result = [];
         const remaining = [];
@@ -504,25 +506,24 @@ export class HootSearch extends Component {
         return [result, matching.length - RESULT_LIMIT];
     }
 
-    findSuggestions() {
-        const { suites, tags, tests } = this.env.runner;
-        const parsedQuery = parseQuery(this.trimmedQuery);
-        return {
-            suite: this.filterItems(parsedQuery, suites, "id"),
-            tag: this.filterItems(parsedQuery, tags, "tag"),
-            test: this.filterItems(parsedQuery, tests, "id"),
-        };
+    updateSuggestedCategories() {
+        const { suites, tags, tests } = this.runner;
+        const parsedQuery = parseQuery(this.trimmedQuery());
+
+        this.categories.suite.set(this.filterItems(parsedQuery, suites, "id"));
+        this.categories.tag.set(this.filterItems(parsedQuery, tags, "tag"));
+        this.categories.test.set(this.filterItems(parsedQuery, tests, "id"));
     }
 
     focusSearchInput() {
-        this.searchInputRef.el?.focus();
+        this.searchInputRef()?.focus();
     }
 
     getCategoryCounts() {
-        const { includeSpecs } = this.runnerState;
-        const { suites, tests } = this.env.runner;
+        const { includeSpecs } = this.runner;
+        const { suites, tests } = this.runner;
         const counts = [];
-        for (const category of this.categories) {
+        for (const category of this.categoryKeys) {
             const include = [];
             const exclude = [];
             for (const [id, value] of $entries(includeSpecs[categoryToType(category)])) {
@@ -553,7 +554,7 @@ export class HootSearch extends Component {
     }
 
     getHasIncludeValue() {
-        return $values(this.runnerState.includeSpecs).some((values) =>
+        return $values(this.runner.includeSpecs).some((values) =>
             $values(values).some((value) => value > 0)
         );
     }
@@ -581,22 +582,19 @@ export class HootSearch extends Component {
         return [...items].sort((a, b) => b.weight - a.weight).slice(0, 5);
     }
 
-    hasExactFilter(query = this.trimmedQuery) {
+    /**
+     * @param {string} query
+     */
+    hasExactFilter(query) {
         R_QUERY_EXACT.lastIndex = 0;
         return R_QUERY_EXACT.test(query);
     }
 
-    hasRegExpFilter(query = this.trimmedQuery) {
+    /**
+     * @param {string} query
+     */
+    hasRegExpFilter(query) {
         return R_REGEX.test(query);
-    }
-
-    isEmpty() {
-        return !(
-            this.trimmedQuery ||
-            $values(this.runnerState.includeSpecs).some((values) =>
-                $values(values).some((value) => $abs(value) === INCLUDE_LEVEL.url)
-            )
-        );
     }
 
     /**
@@ -617,8 +615,8 @@ export class HootSearch extends Component {
      */
     navigate(inc) {
         const elements = [
-            this.searchInputRef.el,
-            ...this.rootRef.el.querySelectorAll("input[type=radio]:checked:enabled"),
+            this.searchInputRef(),
+            ...this.rootRef().querySelectorAll("input[type=radio]:checked:enabled"),
         ];
         let nextIndex = elements.indexOf(getActiveElement(document)) + inc;
         if (nextIndex >= elements.length) {
@@ -692,11 +690,11 @@ export class HootSearch extends Component {
     }
 
     onSearchInputChange() {
-        if (!this.trimmedQuery) {
+        if (!this.trimmedQuery()) {
             return;
         }
         const latestSearches = this.getLatestSearches();
-        latestSearches.unshift(this.trimmedQuery);
+        latestSearches.unshift(this.trimmedQuery());
         storageSet(STORAGE.searches, [...new Set(latestSearches)].slice(0, 5));
     }
 
@@ -704,9 +702,9 @@ export class HootSearch extends Component {
      * @param {InputEvent & { currentTarget: HTMLInputElement }} ev
      */
     onSearchInputInput(ev) {
-        this.state.query = ev.currentTarget.value;
+        this.query.set(ev.currentTarget.value);
 
-        this.env.ui.resultsPage = 0;
+        this.ui.resultsPage.set(0);
 
         this.updateFilterParam();
         this.debouncedUpdateSuggestions();
@@ -725,7 +723,7 @@ export class HootSearch extends Component {
             }
         }
 
-        if (this.config.fun) {
+        if (this.config.fun()) {
             this.verifySecretSequenceStep(ev);
         }
     }
@@ -736,15 +734,15 @@ export class HootSearch extends Component {
      * @param {number} [value]
      */
     setInclude(type, id, value) {
-        this.config.filter = "";
-        this.env.runner.include(type, id, value);
+        this.config.filter.set("");
+        this.runner.include(type, id, value);
     }
 
     /**
      * @param {string} query
      */
     setQuery(query) {
-        this.state.query = query;
+        this.query.set(query);
 
         this.updateFilterParam();
         this.updateSuggestions();
@@ -752,7 +750,7 @@ export class HootSearch extends Component {
     }
 
     toggleDebug() {
-        this.config.debugTest = !this.config.debugTest;
+        this.config.debugTest.set(!this.config.debugTest());
     }
 
     /**
@@ -761,7 +759,7 @@ export class HootSearch extends Component {
     toggleExact(ev) {
         ev.preventDefault();
 
-        const currentQuery = this.trimmedQuery;
+        const currentQuery = this.trimmedQuery();
         let query = currentQuery;
         if (this.hasRegExpFilter(query)) {
             query = removeRegExp(query);
@@ -780,7 +778,7 @@ export class HootSearch extends Component {
      * @param {string} id
      */
     toggleInclude(type, id) {
-        const currentValue = this.runnerState.includeSpecs[type][id];
+        const currentValue = this.runner.includeSpecs[type][id];
         if (this.isReadonly(currentValue)) {
             return; // readonly
         }
@@ -799,7 +797,7 @@ export class HootSearch extends Component {
     toggleRegExp(ev) {
         ev.preventDefault();
 
-        const currentQuery = this.trimmedQuery;
+        const currentQuery = this.trimmedQuery();
         let query = currentQuery;
         if (this.hasExactFilter(query)) {
             query = removeExact(query);
@@ -816,7 +814,7 @@ export class HootSearch extends Component {
     uncheckLastCategory() {
         for (const count of this.getCategoryCounts().reverse()) {
             const type = categoryToType(count.category);
-            const includeSpecs = this.runnerState.includeSpecs[type];
+            const includeSpecs = this.runner.includeSpecs[type];
             for (const id of [...count.exclude, ...count.include]) {
                 const value = includeSpecs[id];
                 if (this.isReadonly(value)) {
@@ -830,13 +828,13 @@ export class HootSearch extends Component {
     }
 
     updateFilterParam() {
-        this.config.filter = this.trimmedQuery;
+        this.config.filter.set(this.trimmedQuery());
     }
 
     updateSuggestions() {
-        this.state.empty = this.isEmpty();
-        this.state.categories = this.findSuggestions();
-        this.state.showDropdown = true;
+        this.isEmpty.set(this.computeIsEmpty());
+        this.updateSuggestedCategories();
+        this.showDropdown.set(true);
     }
 
     /**
@@ -856,22 +854,21 @@ export class HootSearch extends Component {
         if (this.secretSequence === SECRET_SEQUENCE.length) {
             this.secretSequence = 0;
 
-            const { runner } = this.env;
-            runner.stop();
-            runner.reporting.passed += runner.reporting.failed;
-            runner.reporting.passed += runner.reporting.todo;
-            runner.reporting.failed = 0;
-            runner.reporting.todo = 0;
-            for (const [, suite] of runner.suites) {
+            this.runner.stop();
+            this.runner.reporting.passed += this.runner.reporting.failed;
+            this.runner.reporting.passed += this.runner.reporting.todo;
+            this.runner.reporting.failed = 0;
+            this.runner.reporting.todo = 0;
+            for (const suite of this.runner.suites.values()) {
                 suite.reporting.passed += suite.reporting.failed;
                 suite.reporting.passed += suite.reporting.todo;
                 suite.reporting.failed = 0;
                 suite.reporting.todo = 0;
             }
-            for (const [, test] of runner.tests) {
+            for (const test of this.runner.tests.values()) {
                 test.config.todo = false;
-                test.status = Test.PASSED;
-                for (const result of test.results) {
+                test.status.set(Test.PASSED);
+                for (const result of test.results()) {
                     result.pass = true;
                     result.currentErrors = [];
                     for (const assertion of result.getEvents("assertion")) {
@@ -879,12 +876,14 @@ export class HootSearch extends Component {
                     }
                 }
             }
-            this.__owl__.app.root.render(true);
             console.warn("Secret sequence activated: all tests pass!");
         }
     }
 
-    wrappedQuery(query = this.trimmedQuery) {
+    /**
+     * @param {string} query
+     */
+    wrappedQuery(query) {
         return this.hasRegExpFilter(query) ? query : stringify(query);
     }
 }

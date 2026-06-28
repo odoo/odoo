@@ -49,7 +49,7 @@ export class PosConfig extends models.ServerModel {
         data[0]["_data_server_date"] = "2025-07-03 12:40:15";
         data[0]["_has_cash_move_perm"] = true;
         data[0]["_has_available_products"] = true;
-        data[0]["_pos_special_products_ids"] = [];
+        data[0]["_pos_special_products_ids"] = [25];
         return data;
     }
 
@@ -60,16 +60,14 @@ export class PosConfig extends models.ServerModel {
             access_token: "test_access_token",
             name: "Hoot",
             preparation_printer_ids: [1],
+            receipt_printer_ids: [3, 4],
             use_order_printer: true,
             is_installed_account_accountant: true,
-            picking_type_id: 9,
             journal_id: 1,
             invoice_journal_id: 1,
             currency_id: 1,
-            iface_cashdrawer: false,
             iface_big_scrollbars: false,
             iface_print_auto: false,
-            iface_print_skip_screen: true,
             iface_tax_included: "total",
             iface_available_categ_ids: [],
             customer_display_bg_img: false,
@@ -124,10 +122,6 @@ export class PosConfig extends models.ServerModel {
             only_round_cash_method: false,
             has_active_session: true,
             manual_discount: true,
-            ship_later: false,
-            warehouse_id: false,
-            route_id: false,
-            picking_policy: "direct",
             auto_validate_electronic_payment: true,
             trusted_config_ids: [],
             show_product_images: true,

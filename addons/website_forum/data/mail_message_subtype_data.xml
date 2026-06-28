@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <!-- Comment subtypes -->
+        <record id="mt_comment_new" model="mail.message.subtype">
+            <field name="name">New Comment</field>
+            <field name="res_model">forum.post</field>
+            <field name="default" eval="True"/>
+            <field name="hidden" eval="False"/>
+            <field name="description">New Comment</field>
+        </record>
         <!-- Answers subtypes -->
         <record id="mt_answer_new" model="mail.message.subtype">
             <field name="name">New Answer</field>
@@ -27,6 +35,12 @@
             <field name="res_model">forum.post</field>
             <field name="default" eval="False"/>
             <field name="description">Question Edited</field>
+        </record>
+        <record id="mt_ask_validation" model="mail.message.subtype">
+            <field name="name">Question Ask Validation</field>
+            <field name="res_model">forum.post</field>
+            <field name="default" eval="False"/>
+            <field name="description">Question Ask Validation</field>
         </record>
         <!-- Forum subtypes, to follow all answers or questions -->
         <record id="mt_forum_answer_new" model="mail.message.subtype">

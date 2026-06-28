@@ -1,0 +1,8 @@
+.s_bento_grid_avatars {
+    .row > div {
+        @extend %flex-column-container;
+        // Overriding `justify-content` to force it to `start` (for already
+        // dropped snippets).
+        justify-content: start;
+    }
+}

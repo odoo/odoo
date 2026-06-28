@@ -1,10 +1,9 @@
-import { useState } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { DateTimeInput } from '@web/core/datetime/datetime_input';
-import { Component, onWillStart, markup, xml } from "@odoo/owl";
+import { Component, onWillStart, markup, xml, proxy } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export class LunchCurrency extends Component {
@@ -26,7 +25,7 @@ export class LunchOrderLine extends Component {
     setup() {
         super.setup();
         this.orm = useService('orm');
-        this.state = useState({ mobileOpen: false });
+        this.state = proxy({ mobileOpen: false });
     }
 
     get line() {
@@ -65,7 +64,7 @@ export class LunchOrderLine extends Component {
 
 export class LunchAlert extends Component {
     static props = ["message"];
-    static template = xml`<t t-out="message"/>`;
+    static template = xml`<t t-out="this.message"/>`;
     get message() {
         return markup(this.props.message);
     }
@@ -115,7 +114,7 @@ export class LunchDashboard extends Component {
     static template = "lunch.LunchDashboard";
     setup() {
         super.setup();
-        this.state = useState({
+        this.state = proxy({
             infos: {},
             date: DateTime.now(),
         });

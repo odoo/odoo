@@ -8,6 +8,7 @@ import { BuilderActionsPlugin } from "./builder_actions_plugin";
 import { BuilderComponentPlugin } from "./builder_component_plugin";
 import { BuilderOptionsPlugin } from "./builder_options_plugin";
 import { BuilderOverlayPlugin } from "./builder_overlay/builder_overlay_plugin";
+import { BuilderSelectionRestrictionPlugin } from "./builder_selection_restriction_plugin";
 import { CachedModelPlugin } from "./cached_model_plugin";
 import { ClonePlugin } from "./clone_plugin";
 import { ColorUIPlugin } from "./color_ui_plugin";
@@ -29,12 +30,15 @@ import { RemovePlugin } from "./remove_plugin";
 import { SavePlugin } from "./save_plugin";
 import { SaveSnippetPlugin } from "./save_snippet_plugin";
 import { SetupEditorPlugin } from "./setup_editor_plugin";
+import { SnippetPlugin } from "./snippet_plugin";
 import { VisibilityPlugin } from "./visibility_plugin";
 import { FieldChangeReplicationPlugin } from "./field_change_replication_plugin";
 import { BuilderContentEditablePlugin } from "./builder_content_editable_plugin";
 import { ImageFieldPlugin } from "@html_builder/plugins/image_field_plugin";
 import { MonetaryFieldPlugin } from "@html_builder/plugins/monetary_field_plugin";
+import { DateTimeFieldPlugin } from "@html_builder/plugins/date_time_field_plugin";
 import { Many2OneOptionPlugin } from "@html_builder/plugins/many2one_option_plugin";
+import { VersionErrorPlugin } from "./version_error_plugin";
 
 const mainEditorPluginsToRemove = [
     "PowerButtonsPlugin",
@@ -61,6 +65,7 @@ export const MAIN_PLUGINS = [
     BuilderContentEditablePlugin,
     BuilderOptionsPlugin,
     BuilderOverlayPlugin,
+    BuilderSelectionRestrictionPlugin,
     CachedModelPlugin,
     ColorUIPlugin,
     ImagePlugin,
@@ -75,10 +80,12 @@ export const MAIN_PLUGINS = [
     ImageFieldPlugin,
     Many2OneOptionPlugin,
     MonetaryFieldPlugin,
+    DateTimeFieldPlugin,
     OperationPlugin,
     OverlayButtonsPlugin,
     SavePlugin,
     SetupEditorPlugin,
+    SnippetPlugin,
     VisibilityPlugin,
 ];
 
@@ -92,4 +99,5 @@ export const CORE_PLUGINS = [
     SaveSnippetPlugin,
     AnchorPlugin,
     MediaWebsitePlugin,
+    VersionErrorPlugin,
 ];

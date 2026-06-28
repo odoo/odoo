@@ -1,13 +1,20 @@
-import { cropperDataFieldsWithAspectRatio, loadImage } from "@html_editor/utils/image_processing";
+import {
+    cropperDataFieldsWithAspectRatio,
+    loadImage,
+    loadImageInfo,
+} from "@html_editor/utils/image_processing";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { searchSupportedParentLinkEl } from "./replace_media_option";
+import { getMimetype } from "@html_editor/utils/image";
 import { computeMaxDisplayWidth } from "@html_builder/plugins/image/image_format_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { isCSSColor } from "@web/core/utils/colors";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
+import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
+import { setHrefUrl } from "../utils";
 
 const IMAGE_LINK_ALIGN_CLASSES = ["mx-auto", "ms-auto", "me-auto"];
 
@@ -34,52 +41,7 @@ export class ImageToolOptionPlugin extends Plugin {
             SetNewWindowAction,
             AltAction,
         },
-        on_will_save_media_dialog_handlers: async (elements, { node }) => {
-            for (const image of elements) {
-                if (image && image.tagName === "IMG") {
-                    const updateImageAttributes =
-                        await this.dependencies.imagePostProcess.processImage({
-                            img: image,
-                            newDataset: {
-                                formatMimetype: this.config.defaultImageMimetype ?? "image/webp",
-                            },
-                            // TODO Using a callback is currently needed to avoid
-                            // the extra RPC that would occur if loadImageInfo was
-                            // called before processImage as well. This flow can be
-                            // simplified if image infos are somehow cached.
-                            onImageInfoLoaded: async (dataset) => {
-                                if (!dataset.originalSrc || !dataset.originalId) {
-                                    return true;
-                                }
-                                const original = await loadImage(dataset.originalSrc);
-                                const maxWidth = dataset.width
-                                    ? image.naturalWidth
-                                    : original.naturalWidth;
-                                const optimizedWidth = Math.min(
-                                    maxWidth,
-                                    computeMaxDisplayWidth(node || this.editable)
-                                );
-                                if (
-                                    !["image/gif", "image/svg+xml"].includes(
-                                        dataset.mimetypeBeforeConversion
-                                    )
-                                ) {
-                                    // Convert to recommended format and width.
-                                    dataset.resizeWidth = optimizedWidth;
-                                } else if (
-                                    dataset.shape &&
-                                    dataset.mimetypeBeforeConversion !== "image/gif"
-                                ) {
-                                    dataset.resizeWidth = optimizedWidth;
-                                } else {
-                                    return true;
-                                }
-                            },
-                        });
-                    updateImageAttributes();
-                }
-            }
-        },
+        on_will_save_media_dialog_handlers: this.onWillSaveMediaDialogHandlers.bind(this),
         normalize_processors: this.migrateImages.bind(this),
     };
     setup() {
@@ -99,6 +61,7 @@ export class ImageToolOptionPlugin extends Plugin {
             el.dataset.formatMimetype = el.dataset.originalMimetype;
             delete el.dataset.originalMimetype;
         }
+        return rootEl;
     }
     /**
      * Gets the CSS value of a color variable name.
@@ -111,6 +74,40 @@ export class ImageToolOptionPlugin extends Plugin {
             return color;
         }
         return getCSSVariableValue(color, this.htmlStyle);
+    }
+    async onWillSaveMediaDialogHandlers(elements, { node }) {
+        for (const image of elements) {
+            if (image && image.tagName === "IMG") {
+                const imgInfo = await loadImageInfo(image);
+                if (!imgInfo.originalSrc || !imgInfo.originalId) {
+                    continue;
+                }
+                const isImgSupportedForProcessing = await isImageSupportedForProcessing(
+                    image,
+                    await getMimetype(image, imgInfo)
+                );
+                const newDataset = {};
+                if (isImgSupportedForProcessing) {
+                    newDataset.formatMimetype = this.config.defaultImageMimetype ?? "image/webp";
+                    const original = await loadImage(imgInfo.originalSrc);
+                    const maxWidth = image.dataset.width
+                        ? image.naturalWidth
+                        : original.naturalWidth;
+                    const optimizedWidth = Math.min(
+                        maxWidth,
+                        computeMaxDisplayWidth(node || this.editable)
+                    );
+                    newDataset.resizeWidth = optimizedWidth;
+                }
+                const updateImageAttributes = await this.dependencies.imagePostProcess.processImage(
+                    {
+                        img: image,
+                        newDataset,
+                    }
+                );
+                updateImageAttributes();
+            }
+        }
     }
 }
 
@@ -155,6 +152,7 @@ export class ReplaceMediaAction extends BuilderAction {
 
     setup() {
         this.canTimeout = false;
+        this.preview = false;
     }
 
     async apply({ editingElement: mediaEl }) {
@@ -227,18 +225,7 @@ export class SetUrlAction extends BuilderAction {
     }
     apply({ editingElement, value }) {
         const linkEl = searchSupportedParentLinkEl(editingElement);
-        let url = value;
-        if (!url) {
-            // As long as there is no URL, the image is not considered a link.
-            linkEl.removeAttribute("href");
-            return;
-        }
-        if (!url.startsWith("/") && !url.startsWith("#") && !/^([a-zA-Z]*.):.+$/gm.test(url)) {
-            // We permit every protocol (http:, https:, ftp:, mailto:,...).
-            // If none is explicitly specified, we assume it is a http.
-            url = "http://" + url;
-        }
-        linkEl.setAttribute("href", url);
+        setHrefUrl(linkEl, value);
     }
     getValue({ editingElement }) {
         const linkEl = searchSupportedParentLinkEl(editingElement);

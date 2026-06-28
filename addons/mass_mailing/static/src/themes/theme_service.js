@@ -2,7 +2,6 @@ import { children } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { getInnerHtml } from "@mail/utils/common/html";
 import { registry } from "@web/core/registry";
-import { Deferred } from "@web/core/utils/concurrency";
 import { htmlTrim } from "@web/core/utils/html";
 import { Reactive } from "@web/core/utils/reactive";
 import { renderToMarkup } from "@web/core/utils/render";
@@ -30,7 +29,7 @@ export class ThemeModel extends Reactive {
         this.commonThemes = new Map();
         // Blank slate themes (text-only or empty)
         this.simpleThemes = new Map();
-        this.loadingPromise = new Deferred();
+        this.loadingPromise = Promise.withResolvers();
     }
 
     computeThemesTemplates(themesEl) {
@@ -46,9 +45,6 @@ export class ThemeModel extends Reactive {
                 nowrap: hasDataOption(theme, "nowrap"),
                 title: theme.getAttribute("title") || "",
             };
-            if (!themeOptions.layoutStyles.includes("background-color")) {
-                themeOptions.layoutStyles += "background-color: #F7F7F7;";
-            }
             if (hasDataOption(theme, "images-info")) {
                 const imagesInfo = Object.assign(
                     { all: {} },
@@ -111,7 +107,7 @@ export class ThemeModel extends Reactive {
             this.loadedAssets.add(asset);
             this.loadingPromise.resolve();
         }
-        return this.loadingPromise;
+        return this.loadingPromise.promise;
     }
 }
 

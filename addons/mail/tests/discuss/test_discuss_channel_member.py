@@ -57,9 +57,9 @@ class TestDiscussChannelMember(MailCommon):
 
     def test_group_subchannel_join(self):
         """Test join subchannel."""
-        self.group.add_members((self.user_1 | self.user_2).partner_id.ids)
+        self.group._add_members(users=self.user_1 | self.user_2)
         group_subchannel = self.group.with_user(self.user_1)._create_sub_channel()
-        group_subchannel.with_user(self.user_2).add_members(self.user_2.partner_id.id)
+        group_subchannel.with_user(self.user_2)._add_members(users=self.user_2)
         self.assertEqual(group_subchannel.channel_member_ids.partner_id, (self.user_1 | self.user_2).partner_id)
 
     # ------------------------------------------------------------
@@ -79,7 +79,7 @@ class TestDiscussChannelMember(MailCommon):
         data = self.env["res.partner"].search_for_channel_invite(
             partner.name,
             channel_id=public_channel.id,
-        )["store_data"]
+        )["store_data"]._build_result()
         self.assertEqual(len(data["res.partner"]), 1)
         self.assertEqual(data["res.partner"][0]["id"], partner.id)
 
@@ -121,3 +121,9 @@ class TestDiscussChannelMember(MailCommon):
             1,  # channel 2 user 1: received 1 message (from message post)
             1,  # channel 2 user 3: received 1 message (from message post)
         ])
+
+    def test_new_member_lands_at_latest_message(self):
+        channel = self.env['discuss.channel'].with_user(self.user_1)._create_channel(group_id=None, name='wololo channel')
+        last_message_id = channel.message_ids[0].id
+        new_members = channel.with_user(self.user_1)._add_members(users=self.user_2)
+        self.assertEqual(new_members.new_message_separator, last_message_id + 1)

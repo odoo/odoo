@@ -3,7 +3,7 @@
 import json
 from datetime import date
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
@@ -154,7 +154,7 @@ class IrDefault(models.Model):
         return json.loads(default.json_value) if default else None
 
     @api.model
-    @tools.ormcache('self.env.uid', 'self.env.company.id', 'model_name', 'condition')
+    @api.ormcache('self.env.uid', 'self.env.company.id', 'model_name', 'condition')
     # Note about ormcache invalidation: it is not needed when deleting a field,
     # a user, or a company, as the corresponding defaults will no longer be
     # requested. It must only be done when a user's company is modified.
@@ -207,7 +207,7 @@ class IrDefault(models.Model):
         domain = [('field_id', '=', field.id), ('json_value', 'in', json_vals)]
         return self.search(domain).unlink()
 
-    @tools.ormcache('model_name', 'field_name')
+    @api.ormcache('model_name', 'field_name')
     def _get_field_column_fallbacks(self, model_name, field_name):
         company_ids = self.env.execute_query(SQL('SELECT ARRAY_AGG(id) FROM res_company'))[0][0]
         field = self.env[model_name]._fields[field_name]

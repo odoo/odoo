@@ -431,7 +431,7 @@ test("validate some obviously wrong calls", async () => {
         "Invalid model name: false"
     );
     expect(() => services.orm.read("res.res.partner", false, ["id", "descr"])).toThrow(
-        "Invalid ids list: false"
+        "Invalid ids"
     );
 });
 

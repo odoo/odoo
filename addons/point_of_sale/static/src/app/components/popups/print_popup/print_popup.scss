@@ -1,12 +1,28 @@
-.print-popup .modal-header {
-    border: none;
-    padding-bottom: 8px !important;
-}
+.print-popup {
+    .modal-body {
+        padding-top: 0 !important;
+    }
 
-.print-popup-modal {
-    grid-template-columns: repeat(2, 1fr);
+    .modal-header {
+        border: none;
+        padding-bottom: 8px !important;
+    }
 
-    @include media-breakpoint-down(sm) {
-        grid-template-columns: 1fr;
+    .print-popup-modal {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: map-get($spacers, 2);
+
+        .print-button {
+            min-height: 115px;
+        }
+
+        @include media-breakpoint-down(sm) {
+            grid-template-columns: 1fr;
+
+            .print-button {
+                min-height: 64px;
+            }
+        }
     }
 }

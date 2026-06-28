@@ -1,15 +1,16 @@
-import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
+import {
+    QRPopup,
+    qrPopupProps,
+} from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
+import { t } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
-patch(QRPopup, {
-    props: {
-        ...QRPopup.props,
-        paymentMethod: { type: Object, optional: true },
-        order: { type: Object, optional: true },
-    },
+Object.assign(qrPopupProps, {
+    paymentMethod: t.object().optional(),
+    order: t.object().optional(),
 });
 
 patch(QRPopup.prototype, {

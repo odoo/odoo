@@ -1,15 +1,14 @@
-import { onWillRender, useState } from "@web/owl2/utils";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { imageUrl } from "@web/core/utils/urls";
 import { isBinarySize } from "@web/core/utils/binary";
+import { generateImageVariants } from "@web/core/utils/image_library";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component } from "@odoo/owl";
-const { DateTime } = luxon;
+import { Component, props, proxy, t } from "@odoo/owl";
 
 export const fileTypeMagicWordMap = {
     "/": "jpg",
@@ -25,32 +24,26 @@ export class ImageField extends Component {
     static components = {
         FileUploader,
     };
-    static props = {
+    props = props({
         ...standardFieldProps,
-        alt: { type: String, optional: true },
-        enableZoom: { type: Boolean, optional: true },
-        imgClass: { type: String, optional: true },
-        zoomDelay: { type: Number, optional: true },
-        previewImage: { type: String, optional: true },
-        acceptedFileExtensions: { type: String, optional: true },
-        width: { type: Number, optional: true },
-        height: { type: Number, optional: true },
-        reload: { type: Boolean, optional: true },
-        convertToWebp: { type: Boolean, optional: true },
-        fileNameField: { type: String, optional: true },
-    };
-    static defaultProps = {
-        acceptedFileExtensions: "image/*",
-        alt: _t("Binary file"),
-        imgClass: "",
-        reload: true,
-    };
+        alt: t.string().optional(_t("Binary file")),
+        enableZoom: t.boolean().optional(),
+        imgClass: t.string().optional(""),
+        zoomDelay: t.number().optional(),
+        previewImage: t.string().optional(),
+        acceptedFileExtensions: t.string().optional("image/*"),
+        width: t.number().optional(),
+        height: t.number().optional(),
+        reload: t.boolean().optional(true),
+        convertToWebp: t.boolean().optional(),
+        fileNameField: t.string().optional(),
+    });
 
     setup() {
         this.notification = useService("notification");
         this.orm = useService("orm");
         this.isMobile = isMobileOS();
-        this.state = useState({
+        this.state = proxy({
             isValid: true,
         });
         this.lastURL = undefined;
@@ -61,18 +54,7 @@ export class ImageField extends Component {
             );
         }
         const field = this.props.record.fields[this.props.name];
-        if (field.related?.includes(".")) {
-            this.uniqueId = DateTime.now();
-            let key = this.props.record.data[this.props.name];
-            onWillRender(() => {
-                const nextKey = this.props.record.data[this.props.name];
-                if (key !== nextKey) {
-                    this.uniqueId = DateTime.now();
-                }
-
-                key = nextKey;
-            });
-        }
+        this.isImageOnAnotherRecord = field.related?.includes(".") || this.fieldType === "many2one";
     }
 
     get imgAlt() {
@@ -86,12 +68,24 @@ export class ImageField extends Component {
         return ["img", "img-fluid"].concat(this.props.imgClass.split(" ")).join(" ");
     }
 
+    get containerClass() {
+        let containerClass =
+            "position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover";
+        if (this.isMobile) {
+            containerClass += " o_mobile_controls";
+        }
+        return containerClass;
+    }
+
     get fieldType() {
         return this.props.record.fields[this.props.name].type;
     }
 
     get rawCacheKey() {
-        return this.uniqueId || this.props.record.data.write_date;
+        if (this.isImageOnAnotherRecord) {
+            return null;
+        }
+        return this.props.record.data.write_date;
     }
 
     get sizeStyle() {
@@ -181,63 +175,12 @@ export class ImageField extends Component {
         }
         if (info.type === "image/webp") {
             // Generate alternate sizes and format for reports.
-            const image = document.createElement("img");
-            image.src = `data:image/webp;base64,${info.data}`;
-            await new Promise((resolve) => image.addEventListener("load", resolve));
-            const originalSize = Math.max(image.width, image.height);
-            const smallerSizes = [1920, 1024, 512, 256, 128].filter((size) => size < originalSize);
-            let referenceId = undefined;
-            for (const size of [originalSize, ...smallerSizes]) {
-                const ratio = size / originalSize;
-                const canvas = document.createElement("canvas");
-                canvas.width = image.width * ratio;
-                canvas.height = image.height * ratio;
-                const ctx = canvas.getContext("2d");
-                ctx.fillStyle = "transparent";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.imageSmoothingEnabled = true;
-                ctx.imageSmoothingQuality = "high";
-                ctx.drawImage(
-                    image,
-                    0,
-                    0,
-                    image.width,
-                    image.height,
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height
-                );
-                const [resizedId] = await this.orm.call("ir.attachment", "create_unique", [
-                    [
-                        {
-                            name: info.name,
-                            description: size === originalSize ? "" : `resize: ${size}`,
-                            raw:
-                                size === originalSize
-                                    ? info.data
-                                    : canvas.toDataURL("image/webp").split(",")[1],
-                            res_id: referenceId,
-                            res_model: "ir.attachment",
-                            mimetype: "image/webp",
-                        },
-                    ],
-                ]);
-                referenceId = referenceId || resizedId; // Keep track of original.
-                // Converted to JPEG for use in PDF files, alpha values will default to white
-                await this.orm.call("ir.attachment", "create_unique", [
-                    [
-                        {
-                            name: info.name.replace(/\.webp$/, ".jpg"),
-                            description: "format: jpeg",
-                            raw: canvas.toDataURL("image/jpeg").split(",")[1],
-                            res_id: resizedId,
-                            res_model: "ir.attachment",
-                            mimetype: "image/jpeg",
-                        },
-                    ],
-                ]);
-            }
+            const variants = await generateImageVariants({
+                source: { data: info.data, mimetype: "image/webp" },
+                name: info.name,
+                smoothing: "high",
+            });
+            await this.orm.call("ir.attachment", "web_create_image_variants", [variants]);
         }
         const { fileNameField, record } = this.props;
         const changes = { [this.props.name]: info.data || false };

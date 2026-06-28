@@ -1,0 +1,53 @@
+id,name,model_id,group_id/id,operation,domain
+access_hr_employee_category_user,hr.employee.category.user,hr.employee.category,hr.group_hr_user,crud,
+access_hr_employee_category_emp,hr.employee.category.emp,hr.employee.category,base.group_user,r,
+access_hr_employee_user,hr.employee user,hr.employee,hr.group_hr_user,crud,
+access_hr_employee_system_user,hr.employee system user,hr.employee,base.group_system,r,
+hr_employee_comp_rule,Employee multi company rule,hr.employee,,crud,"['|', '|', '|',
+            ('company_id', 'in', company_ids + [False]),
+            ('parent_id.user_id', '=', user.id),
+            ('id', '=', user.employee_id.parent_id.id),
+            ('user_id', '=', user.id)
+        ]"
+access_hr_employee_public_user,hr.employee_public,hr.employee.public,base.group_user,r,
+access_hr_employee_resource_user,resource.resource.user,resource.resource,hr.group_hr_user,crud,
+access_hr_department_user,hr.department.user,hr.department,hr.group_hr_user,crd,
+hr_dept_hr_officer_access_rule,Department Access For HR Officers,hr.department,hr.group_hr_user,u,
+access_hr_department_employee,hr.department.employee,hr.department,base.group_user,r,
+hr_dept_manager_access_rule,Department Access For Managers,hr.department,base.group_user,u,"[
+            '|',
+            ('manager_id', 'in', user.employee_id.ids),
+            ('manager_id.is_subordinate', '=', True)
+        ]"
+hr_dept_comp_rule,Department multi company rule,hr.department,,crud,"[('company_id', 'in', company_ids + [False])]"
+access_hr_job_user,hr.job user,hr.job,hr.group_hr_user,crud,
+access_hr_job_employee,hr.job.employee,hr.job,base.group_user,r,
+hr_job_comp_rule,Job multi company rule,hr.job,,crud,"[('company_id', 'in', company_ids + [False])]"
+access_hr_employee_departure,access.hr.employee.departure,hr.employee.departure,hr.group_hr_user,crud,
+ir_rule_hr_employee_departure_multi_company,HR Employee Departure: Multi Company,hr.employee.departure,,crud,"[('employee_id.company_id', 'in', company_ids)]"
+ir_rule_hr_employee_departure_company,HR Departure: Multi Company,hr.employee.departure,,crud,"[('employee_id.company_id', 'in', company_ids)]"
+access_hr_bank_account_allocation_wizard,access.hr.bank.account.allocation.wizard,hr.bank.account.allocation.wizard,hr.group_hr_user,cru,
+access_hr_bank_account_allocation_wizard_line,access.hr.bank.account.allocation.wizard.line,hr.bank.account.allocation.wizard.line,hr.group_hr_user,crud,
+access_hr_work_location_user,access_hr_work_location_user,hr.work.location,base.group_user,r,
+access_hr_work_location_manager,access_hr_work_location_manager,hr.work.location,hr.group_hr_manager,crud,
+access_hr_departure_reason,access_hr_departure_reason_user,hr.departure.reason,hr.group_hr_user,crud,
+ir_rule_hr_departure_reason_multi_company,Departure Reason: multi company,hr.departure.reason,,crud,"[('country_code', 'in', user.env.companies.mapped('country_code') + [False])]"
+access_hr_contract_type_manager,hr.employee.type.manager,hr.employee.type,hr.group_hr_user,crud,
+ir_rule_hr_contract_type_multi_company,HR Contract Type: Multi Company,hr.employee.type,,crud,"['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.country_id.ids)]"
+access_hr_version_user,hr.version.user,hr.version,hr.group_hr_user,crud,
+ir_rule_hr_contract_multi_company,HR Contract: Multi Company,hr.version,,crud,"[('company_id', 'in', company_ids)]"
+access_mail_activity_plan_hr_manager,mail.activity.plan.hr.manager,mail.activity.plan,hr.group_hr_manager,r,
+mail_plan_rule_group_hr_manager,Manager can edit employee plan,mail.activity.plan,hr.group_hr_manager,cud,"[('res_model', '=', 'hr.employee')]"
+access_mail_activity_plan_template_hr_manager,mail.activity.plan.template.hr.manager,mail.activity.plan.template,hr.group_hr_manager,r,
+mail_plan_templates_rule_group_hr_manager,Manager can edit employee plan template,mail.activity.plan.template,hr.group_hr_manager,cud,"[('plan_id.res_model', '=', 'hr.employee')]"
+access_hr_payroll_structure_type_hr_contract_manager,hr.payroll.structure.type.contract.manager,hr.payroll.structure.type,hr.group_hr_manager,crud,
+ir_rule_hr_payroll_structure_type_multi_company,HR Payroll Structure Type: Multi Company,hr.payroll.structure.type,,crud,"['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.mapped('country_id').ids)]"
+access_hr_resource_calendar_user,hr.employee.resource.calendar.user,resource.calendar,hr.group_hr_user,crud,
+access_hr_resource_calendar_attendance_user,hr.employee.resource.calendar.attendance.user,resource.calendar.attendance,hr.group_hr_user,crud,
+homeworking_admin_rule,homeworking: admin,hr.employee.location,hr.group_hr_user,crud,
+homeworking_own_rule,homeworking: own,hr.employee.location,base.group_user,crud,"[
+            ('employee_id', '=', user.employee_id.id)
+        ]"
+ir_rule_res_partner_bank_internal_users,HR: Prevent non HR officers from accessing employee bank accounts,res.partner.bank,base.group_user,r,"[('partner_id.employee_ids', '=', False)]"
+ir_rule_res_partner_bank_internal_users_1,HR: Prevent non HR officers from accessing employee bank accounts,res.partner.bank,base.group_partner_manager,cru,"[('partner_id.employee_ids', '=', False)]"
+ir_rule_res_partner_bank_employees,HR: Allow HR officers from accessing employee bank accounts,res.partner.bank,hr.group_hr_user,cru,

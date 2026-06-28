@@ -1,11 +1,16 @@
-import { monetaryField, MonetaryField } from "@web/views/fields/monetary/monetary_field";
+import { props } from "@odoo/owl";
+import {
+    monetaryField,
+    MonetaryField,
+    monetaryFieldProps,
+} from "@web/views/fields/monetary/monetary_field";
 import { registry } from "@web/core/registry";
 import { floatIsZero } from "@web/core/utils/numbers";
 
 export class MonetaryFieldNoZero extends MonetaryField {
-    static props = {
-        ...MonetaryField.props,
-    };
+    props = props({
+        ...monetaryFieldProps,
+    });
 
     /** Override **/
     get value() {

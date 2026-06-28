@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        ==========================================================
+        BENCHMARK 1: Deep Order — 1 order with 10,000 lines
+        ==========================================================
+        Tests ORM performance under heavy one-to-many load on a
+        single sale order (amount compute, tax computation, etc.).
+    -->
+    <record id="benchmark_deep_order" model="populate.blueprint">
+        <field name="name">Benchmark: Deep Sale Order</field>
+        <field name="definition_xml" type="xml">
+            <model name="res.partner" count="1" id="bench_so_partner" scale="False">
+                <field name="name" eval="'Benchmark Customer'"/>
+                <field name="is_company" eval="True"/>
+            </model>
+
+            <model name="sale.order" count="1" id="bench_deep_order" scale="False">
+                <field name="partner_id" ref="bench_so_partner"/>
+                <field name="state" eval="'draft'"/>
+            </model>
+
+            <!--
+                parallel=False because there is only 1 order,
+                compute-stored fields on the SO will create serialization errors
+            -->
+            <model name="sale.order.line" count="10000" id="bench_deep_lines" parallel="False">
+                <field name="order_id" ref="bench_deep_order"/>
+                <field name="product_id" domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"/>
+                <field name="product_uom_qty" start="1" end="100"/>
+                <field name="price_unit" start="1.0" end="1000.0"/>
+                <field name="sequence" start="1" end="10000"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 2: Wide Orders — many orders, few lines each
+        ==========================================================
+        Tests order creation throughput and per-order computed
+        field overhead (amount_total, invoice_status, etc.).
+    -->
+    <record id="benchmark_wide_orders" model="populate.blueprint">
+        <field name="name">Benchmark: Wide Sale Orders</field>
+        <field name="definition_xml" type="xml">
+            <model name="res.partner" count="500" id="bench_wide_partners">
+                <field name="name" length="20"/>
+                <field name="is_company" eval="True"/>
+            </model>
+
+            <model name="sale.order" count="2000" id="bench_wide_orders">
+                <field name="partner_id" ref="bench_wide_partners"/>
+                <field name="state" values="{'draft': 4, 'sent': 2, 'sale': 4, 'cancel': 1}"/>
+                <field name="date_order" start="now -1y" end="now"/>
+            </model>
+
+            <model name="sale.order.line" count="6000" id="bench_wide_lines">
+                <field name="order_id" ref="bench_wide_orders" partition="True"/>
+                <field name="product_id" domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"/>
+                <field name="product_uom_qty" start="1" end="20"/>
+                <field name="price_unit" start="5.0" end="500.0"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 3: Bulk Creation — pure record throughput
+        ==========================================================
+        Measures raw create() performance for sale.order and
+        sale.order.line with minimal field overhead.
+    -->
+    <record id="benchmark_bulk_creation" model="populate.blueprint">
+        <field name="name">Benchmark: Bulk Sale Creation</field>
+        <field name="definition_xml" type="xml">
+            <model name="res.partner" count="1000" id="bench_bulk_partners">
+                <field name="name" length="16"/>
+                <field name="is_company" eval="True"/>
+            </model>
+
+            <model name="sale.order" count="1000" id="bench_bulk_orders">
+                <field name="partner_id" ref="bench_bulk_partners"/>
+                <field name="state" eval="'draft'"/>
+            </model>
+
+            <model name="sale.order.line" count="5000" id="bench_bulk_lines">
+                <field name="order_id" ref="bench_bulk_orders" partition="True"/>
+                <field name="product_id" domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"/>
+                <field name="product_uom_qty" start="1" end="50"/>
+                <field name="price_unit" start="1.0" end="2000.0"/>
+                <field name="discount" start="0" end="30" null_ratio="0.5"/>
+                <field name="sequence" start="1" end="1000"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 4: Write Jobs — bulk write throughput
+        ==========================================================
+        Creates orders + lines, then performs write-back passes.
+        Measures write() overhead with tracking and recompute.
+    -->
+    <record id="benchmark_updates" model="populate.blueprint">
+        <field name="name">Benchmark: Write Jobs (create 1k orders + lines, then update)</field>
+        <field name="definition_xml" type="xml">
+            <model name="res.partner" count="1" id="bench_upd_partner" scale="False">
+                <field name="name" eval="'Benchmark Write Customer'"/>
+                <field name="is_company" eval="True"/>
+            </model>
+
+            <model name="sale.order" count="1000" id="bench_upd_orders">
+                <field name="partner_id" ref="bench_upd_partner"/>
+                <field name="state" eval="'draft'"/>
+            </model>
+
+            <model name="sale.order.line" count="4000" id="bench_upd_lines">
+                <field name="order_id" ref="bench_upd_orders" partition="True"/>
+                <field name="product_id" domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"/>
+                <field name="product_uom_qty" start="1" end="10"/>
+                <field name="price_unit" start="10.0" end="500.0"/>
+            </model>
+
+            <!-- Write pass: update quantities and prices on all created lines -->
+            <model name="sale.order.line" type="write" ref="bench_upd_lines" parallel="False">
+                <field name="product_uom_qty" start="1" end="100"/>
+                <field name="price_unit" start="1.0" end="2000.0"/>
+                <field name="discount" start="0" end="30" null_ratio="0.3"/>
+            </model>
+        </field>
+    </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 5: Sales Teams at scale — team fanout
+        ==========================================================
+        Many sales teams with many orders assigned to each.
+        Stresses team-level aggregates and reporting queries.
+    -->
+    <record id="benchmark_sales_teams" model="populate.blueprint">
+        <field name="name">Benchmark: Sales Teams at Scale</field>
+        <field name="definition_xml" type="xml">
+            <model name="crm.team" count="50" id="bench_teams">
+                <field name="v_counter" virtual="True" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Benchmark Team {v_counter}'"/>
+                <field name="invoiced_target" start="10000" end="500000"/>
+            </model>
+
+            <model name="res.partner" count="500" id="bench_team_partners">
+                <field name="name" length="18"/>
+                <field name="is_company" eval="True"/>
+            </model>
+
+            <model name="sale.order" count="5000" id="bench_team_orders">
+                <field name="partner_id" ref="bench_team_partners"/>
+                <field name="team_id" ref="bench_teams"/>
+                <field name="state" values="{'draft': 3, 'sent': 2, 'sale': 5, 'cancel': 1}"/>
+                <field name="date_order" start="now -1y" end="now"/>
+            </model>
+
+            <model name="sale.order.line" count="10000" id="bench_team_lines">
+                <field name="order_id" ref="bench_team_orders" partition="True"/>
+                <field name="product_id" domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"/>
+                <field name="product_uom_qty" start="1" end="20"/>
+                <field name="price_unit" start="10.0" end="1000.0"/>
+            </model>
+        </field>
+    </record>
+</odoo>

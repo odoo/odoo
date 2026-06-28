@@ -5,8 +5,10 @@
     <BuilderRow label="this.state.heightLabel">
         <BuilderButtonGroup action="'scrollButtonSectionHeightClass'">
             <BuilderButton id="'minheight_auto_opt'" actionParam="''" title.translate="Fit content">Auto</BuilderButton>
-            <BuilderButton actionParam="'o_half_screen_height'" title.translate="Half screen">50%</BuilderButton>
+            <BuilderButton actionParam="'o_three_quarter_height'" title.translate="75% of the screen">75%</BuilderButton>
             <BuilderButton id="'full_height_opt'" actionParam="'o_full_screen_height'" title.translate="Full screen">100%</BuilderButton>
+            <!-- A snippet can have .o_half_screen_height, but we don't want to offer it as an option, this is kept for compatibility -->
+            <BuilderButton actionParam="'o_half_screen_height'" className="'d-none'">50%</BuilderButton>
         </BuilderButtonGroup>
     </BuilderRow>
 
@@ -36,7 +38,7 @@
         </BuilderRow>
         <BuilderRow label.translate="Colors" level="1" applyTo="':scope > .o_scroll_button'">
             <BuilderColorPicker styleAction="'background-color'" title.translate="Apply a background color"/>
-            <BuilderColorPicker styleAction="'color'" title.translate="Apply an icon color"/>
+            <BuilderColorPicker styleAction="'color'" title.translate="Apply an icon color" enabledTabs="['solid', 'custom', 'gradient']"/>
         </BuilderRow>
         <BuilderRow label.translate="Spacing" level="1" applyTo="':scope > .o_scroll_button'">
             <BuilderRange action="'setClassRange'" actionParam="['mb-0', 'mb-1', 'mb-2', 'mb-3', 'mb-4', 'mb-5']" max="5"/>
@@ -48,7 +50,7 @@
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <scroll_button_option
             selector="section"
-            exclude="[data-snippet] :not(.oe_structure) > [data-snippet], .s_instagram_page, .o_facebook_page, .o_mega_menu > section, .s_appointments .s_dynamic_snippet_content, .s_bento_banner section[data-name='Card'], .s_floating_blocks, .s_floating_blocks .s_floating_blocks_block, .s_bento_block_card, .s_dynamic_category, .s_dynamic_category .s_dynamic_snippet_title, .s_announcement_scroll, .o_no_scroll_button"/>
+            exclude="[data-snippet] :not(.oe_structure) > [data-snippet], .s_instagram_page, .o_facebook_page, .o_mega_menu > section, .s_appointments .s_dynamic_snippet_content, .s_bento_banner section[data-name='Card'], .s_floating_blocks, .s_floating_blocks .s_floating_blocks_block, .s_bento_block_card, .s_dynamic_category, .s_dynamic_category .s_dynamic_snippet_title, .s_announcement_scroll, .o_no_scroll_button, .s_whatsapp"/>
     </xpath>
 </t>
 

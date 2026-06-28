@@ -12,6 +12,9 @@ patch(SoundEffects.prototype, {
             "order-receive-tone": {
                 path: "/point_of_sale/static/src/sounds/order-receive-tone",
             },
+            "scan-error": {
+                path: "/point_of_sale/static/src/sounds/scan-error",
+            },
         };
         super.play(...arguments);
     },

@@ -4,7 +4,8 @@
     <record id="project_project_view_form" model="ir.ui.view">
         <field name="name">project.project.form.inherit</field>
         <field name="model">project.project</field>
-        <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="priority">24</field>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_view_sos'][1]" position="attributes">
                 <attribute name="context">{'create_for_project_id': id, 'default_project_id': id, 'default_partner_id': partner_id}</attribute>
@@ -12,6 +13,13 @@
             <xpath expr="//button[@name='action_view_sos'][2]" position="attributes">
                 <attribute name="context">{'create_for_project_id': id, 'default_project_id': id, 'default_partner_id': partner_id}</attribute>
             </xpath>
+            <xpath expr="//setting[@id='allow_billable_container']" position="before">
+                <setting id="timesheet_settings" position="move"/>
+            </xpath>
+            <xpath expr="//group[@name='group_sales_invoicing']" position="attributes">
+                <attribute name="string">Time Billing</attribute>
+            </xpath>
+            <xpath expr="//group[@name='group_time_managment']" position="replace"/>
             <xpath expr="//page[@name='settings']" position="after">
                 <page name="billing_employee_rate" string="Invoicing" invisible="not allow_billable or not partner_id or is_template">
                     <field name="sale_line_employee_ids" mode="list,kanban" context="{'default_sale_line_id': sale_line_id}">
@@ -105,17 +113,17 @@
             </xpath>
             <xpath expr="//page[@name='settings']//field[@name='allow_billable']" position="after">
                 <div invisible="not allow_billable or not allow_timesheets">
-                    <span class="text-muted">Timesheets without a sales order item are reported as</span>
+                    <span class="text-muted">Timesheets without a sales order item are reported as </span>
                     <field name="billing_type" nolabel="1" class="w-auto"/>
                 </div>
             </xpath>
         </field>
     </record>
 
-    <record id="project_project_view_kanban_inherit_sale_timesheet" model="ir.ui.view">
-        <field name="name">project.project.kanban.inherit.sale.timesheet</field>
+    <record id="project_project_view_card_inherit_sale_timesheet" model="ir.ui.view">
+        <field name="name">project.project.card.inherit.sale.timesheet</field>
         <field name="model">project.project</field>
-        <field name="inherit_id" ref="hr_timesheet.view_project_kanban_inherited"/>
+        <field name="inherit_id" ref="hr_timesheet.view_project_card_inherited"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='allow_timesheets']" position="after">
                 <field name="allow_billable"/>
@@ -123,21 +131,14 @@
                 <field name="sale_order_id" invisible="1"/>
                 <field name="pricing_type" invisible="1"/>
             </xpath>
-            <xpath expr="//div[hasclass('o_kanban_manage_reporting')]" position="inside">
-                <div role="menuitem" t-if="record.show_ratings.raw_value" groups="project.group_project_manager">
-                   <a name="action_view_all_rating" type="object">
-                    Customer Ratings
-                    </a>
-                </div>
-            </xpath>
         </field>
     </record>
 
     <!-- We do a separate inheritance from the base view for the SO button to give the buttons a deterministic order using priorities -->
-    <record id="project_project_view_kanban_inherit_sale_timesheet_so_button" model="ir.ui.view">
-        <field name="name">project.project.kanban.inherit.sale.timesheet.so.button</field>
+    <record id="project_project_view_card_inherit_sale_timesheet_so_button" model="ir.ui.view">
+        <field name="name">project.project.card.inherit.sale.timesheet.so.button</field>
         <field name="model">project.project</field>
-        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="inherit_id" ref="project.view_project_card"/>
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='card_menu_view']" position="inside">
@@ -214,18 +215,40 @@
                         readonly="readonly_timesheet"
                         placeholder="Non-billable"/>
                 </xpath>
-                <xpath expr="//field[@name='remaining_hours']" position="after">
-                    <t groups="hr_timesheet.group_hr_timesheet_user">
+                <xpath expr="//group[@name='project_hours']//div[hasclass('row') and .//field[@name='remaining_hours']]" position="after">
+                    <div class="row align-items-center mb-2" groups="hr_timesheet.group_hr_timesheet_user" invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available">
                         <field name="sale_order_id" invisible="1"/>
                         <field name="remaining_hours_available" invisible="1"/>
-                        <span id="remaining_hours_so_label" invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available" class="o_td_label float-start">
+                        <div id="remaining_hours_so_label" class="col-8">
                             <label class="fw-bold" for="remaining_hours_so"
                                 invisible="remaining_hours_so &lt; 0"/>
                             <label class="fw-bold text-danger" for="remaining_hours_so"
                                 invisible="remaining_hours_so &gt;= 0"/>
-                        </span>
-                        <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available" decoration-danger="remaining_hours_so &lt; 0"></field>
-                    </t>
+                        </div>
+                        <div class="col-4">
+                            <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" decoration-danger="remaining_hours_so &lt; 0"></field>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_task_form2_inherit_sale_timesheet" model="ir.ui.view">
+            <field name="name">view.task.form2.inherit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="sale_project.view_sale_project_inherit_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='sale_line_id'][2]" position="attributes">
+                    <attribute name="context">{
+                        'so_form_view_ref': 'sale_project.view_order_simple_form',
+                        'create_for_task_id': id,
+                        'default_partner_id': partner_id,
+                        'default_company_id': company_id,
+                        'default_project_id': project_id,
+                        'with_price_unit': True,
+                        'dialog_size': 'large',
+                        'with_remaining_hours': True,
+                    }</attribute>
                 </xpath>
             </field>
         </record>

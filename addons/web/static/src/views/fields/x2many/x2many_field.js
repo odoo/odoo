@@ -1,7 +1,7 @@
 import { render } from "@web/owl2/utils";
 import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/l10n/translation";
-import { x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 import { Pager } from "@web/core/pager/pager";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
@@ -17,7 +17,7 @@ import {
     useX2ManyCrud,
 } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
+import { CardCompiler } from "@web/views/card/card_compiler";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { computeViewClassName } from "@web/views/utils";
@@ -198,7 +198,7 @@ export class X2ManyField extends Component {
         if (this.props.viewMode === "kanban") {
             const recordsDraggable = !this.props.readonly && archInfo.recordsDraggable;
             props.archInfo = { ...archInfo, recordsDraggable };
-            props.Compiler = KanbanCompiler;
+            props.Compiler = CardCompiler;
             // TODO: apply same logic in the list case
             props.deleteRecord = (record) => {
                 if (this.isMany2Many) {

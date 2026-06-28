@@ -103,11 +103,16 @@ describe("row", () => {
                 stepFunction: turnIntoHeader(),
                 contentAfter: unformat(`
                     <table>
+                        <colgroup>
+                            <col style="width: 20px;">
+                            <col style="width: 25px;">
+                            <col style="width: 30px;">
+                        </colgroup>
                         <tbody>
                             <tr style="height: 20px;">
-                                <th class="o_table_header" style="width: 20px;">ab[]</th>
-                                <th class="o_table_header" style="width: 25px;">cd</th>
-                                <th class="o_table_header" style="width: 30px;">ef</th>
+                                <th class="o_table_header">ab[]</th>
+                                <th class="o_table_header">cd</th>
+                                <th class="o_table_header">ef</th>
                             </tr>
                             <tr style="height: 30px;">
                                 <td>ab</td>
@@ -141,11 +146,16 @@ describe("row", () => {
                 stepFunction: turnIntoRow(),
                 contentAfter: unformat(`
                     <table>
+                        <colgroup>
+                            <col style="width: 20px;">
+                            <col style="width: 25px;">
+                            <col style="width: 30px;">
+                        </colgroup>
                         <tbody>
                             <tr style="height: 20px;">
-                                <td style="width: 20px;">ab[]</td>
-                                <td style="width: 25px;">cd</td>
-                                <td style="width: 30px;">ef</td>
+                                <td>ab[]</td>
+                                <td>cd</td>
+                                <td>ef</td>
                             </tr>
                             <tr style="height: 30px;">
                                 <td>ab</td>
@@ -170,10 +180,16 @@ describe("row", () => {
                     "</tr></tbody></table>",
                 stepFunction: addRow("before"),
                 contentAfter:
-                    '<table><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 20px;"><p><br></p></td>' +
-                    '<td style="width: 25px;"><p><br></p></td>' +
-                    '<td style="width: 30px;"><p><br></p></td>' +
+                    "<table>" +
+                    "<colgroup>" +
+                    '<col style="width: 20px;">' +
+                    '<col style="width: 25px;">' +
+                    '<col style="width: 30px;">' +
+                    "</colgroup>" +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
                     "</tr>" +
                     '<tr style="height: 20px;">' +
                     "<td>ab</td>" +
@@ -198,10 +214,16 @@ describe("row", () => {
                     "</tr></tbody></table>",
                 stepFunction: addRow("before"),
                 contentAfter:
-                    '<table><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 20px;">ab</td>' +
-                    '<td style="width: 25px;">cd</td>' +
-                    '<td style="width: 30px;">ef</td>' +
+                    "<table>" +
+                    "<colgroup>" +
+                    '<col style="width: 20px;">' +
+                    '<col style="width: 25px;">' +
+                    '<col style="width: 30px;">' +
+                    "</colgroup>" +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td><p><br></p></td>" +
@@ -233,11 +255,16 @@ describe("row", () => {
                     "</tbody></table>",
                 stepFunction: addRow("before", 2),
                 contentAfter:
-                    "<table><tbody>" +
-                    '<tr style="height: 20px;">' +
-                    '<td style="width: 20px;"><p><br></p></td>' +
-                    '<td style="width: 25px;"><p><br></p></td>' +
-                    '<td style="width: 30px;"><p><br></p></td>' +
+                    "<table>" +
+                    "<colgroup>" +
+                    '<col style="width: 20px;">' +
+                    '<col style="width: 25px;">' +
+                    '<col style="width: 30px;">' +
+                    "</colgroup>" +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
                     "</tr>" +
                     '<tr style="height: 20px;">' +
                     "<td><p><br></p></td>" +
@@ -274,11 +301,16 @@ describe("row", () => {
                     "</tbody></table>",
                 stepFunction: addRow("after", 2),
                 contentAfter:
-                    "<table><tbody>" +
-                    '<tr style="height: 20px;">' +
-                    '<td style="width: 20px;">ab</td>' +
-                    '<td style="width: 25px;">cd</td>' +
-                    '<td style="width: 30px;">ef</td>' +
+                    "<table>" +
+                    "<colgroup>" +
+                    '<col style="width: 20px;">' +
+                    '<col style="width: 25px;">' +
+                    '<col style="width: 30px;">' +
+                    "</colgroup>" +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td>gh</td>" +
@@ -311,10 +343,16 @@ describe("row", () => {
                     "</tr></tbody></table>",
                 stepFunction: addRow("after"),
                 contentAfter:
-                    '<table><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 20px;">ab</td>' +
-                    '<td style="width: 25px;">cd</td>' +
-                    '<td style="width: 30px;">ef[]</td>' +
+                    "<table>" +
+                    "<colgroup>" +
+                    '<col style="width: 20px;">' +
+                    '<col style="width: 25px;">' +
+                    '<col style="width: 30px;">' +
+                    "</colgroup>" +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef[]</td>" +
                     "</tr>" +
                     '<tr style="height: 20px;">' +
                     "<td><p><br></p></td>" +
@@ -339,10 +377,16 @@ describe("row", () => {
                     "</tr></tbody></table>",
                 stepFunction: addRow("after"),
                 contentAfter:
-                    '<table><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 20px;">ab</td>' +
-                    '<td style="width: 25px;">cd</td>' +
-                    '<td style="width: 30px;">ef[]</td>' +
+                    "<table>" +
+                    "<colgroup>" +
+                    '<col style="width: 20px;">' +
+                    '<col style="width: 25px;">' +
+                    '<col style="width: 30px;">' +
+                    "</colgroup>" +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef[]</td>" +
                     "</tr>" +
                     '<tr style="height: 20px;">' +
                     "<td><p><br></p></td>" +
@@ -380,16 +424,21 @@ describe("row", () => {
                 stepFunction: moveRow(1),
                 contentAfter: unformat(`
                     <table>
+                        <colgroup>
+                            <col style="width: 20px;">
+                            <col style="width: 25px;">
+                            <col style="width: 30px;">
+                        </colgroup>
                         <tbody>
                             <tr style="height: 30px;">
-                                <th class="o_table_header" style="width: 20px;">gh</th>
-                                <th class="o_table_header" style="width: 25px;">ij</th>
-                                <th class="o_table_header" style="width: 30px;">kl</th>
+                                <th class="o_table_header">gh</th>
+                                <th class="o_table_header">ij</th>
+                                <th class="o_table_header">kl</th>
                             </tr>
                             <tr style="height: 20px;">
-                                <td style="width: 20px;">ab[]</td>
-                                <td style="width: 25px;">cd</td>
-                                <td style="width: 30px;">ef</td>
+                                <td>ab[]</td>
+                                <td>cd</td>
+                                <td>ef</td>
                             </tr>
                         </tbody>
                     </table>
@@ -418,16 +467,21 @@ describe("row", () => {
                 stepFunction: moveRow(0),
                 contentAfter: unformat(`
                     <table>
+                        <colgroup>
+                            <col style="width: 20px;">
+                            <col style="width: 25px;">
+                            <col style="width: 30px;">
+                        </colgroup>
                         <tbody>
                             <tr style="height: 30px;">
-                                <th class="o_table_header" style="width: 20px;">gh</th>
-                                <th class="o_table_header" style="width: 25px;">ij</th>
-                                <th class="o_table_header" style="width: 30px;">kl[]</th>
+                                <th class="o_table_header">gh</th>
+                                <th class="o_table_header">ij</th>
+                                <th class="o_table_header">kl[]</th>
                             </tr>
                             <tr style="height: 20px;">
-                                <td style="width: 20px;">ab</td>
-                                <td style="width: 25px;">cd</td>
-                                <td style="width: 30px;">ef</td>
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
                             </tr>
                         </tbody>
                     </table>
@@ -452,13 +506,11 @@ describe("row", () => {
                     </table>
                 `),
                 stepFunction: removeRow(),
-                // @todo @phoenix: consider changing the behavior and placing the cursor
-                // inside the td (normalize deep)
                 contentAfter: unformat(`
                     <table>
                         <tbody>
                             <tr>
-                                <td>[]ef</td> <td>gh</td>
+                                <td>ef[]</td><td>gh</td>
                             </tr>
                         </tbody>
                     </table>
@@ -488,7 +540,7 @@ describe("row", () => {
                     <table>
                         <tbody>
                             <tr>
-                                <td>[]ab</td> <td>cd</td>
+                                <td>ab[]</td><td>cd</td>
                             </tr>
                         </tbody>
                     </table>
@@ -521,6 +573,117 @@ describe("row", () => {
                 contentAfter: "<p>[]<br></p>",
             });
         });
+        test("should remove column intersecting rowspan without breaking table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>a</td><td rowspan="3"><p><br></p></td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td>d</td><td>e</td>
+                            </tr>
+                            <tr>
+                                <td>f</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    // Select the second row
+                    const row = editor.editable.querySelectorAll("tr")[1];
+                    removeRow(row)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>a</td><td rowspan="2"><p><br></p></td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td>f[]</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should remove column intersecting muliple rowspan without breaking table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3">[]5</td>
+                                <td rowspan="3">6</td>
+                                <td>7</td>
+                                <td>8</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">9</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    // Select the second row
+                    const row = editor.editable.querySelectorAll("tr")[1];
+                    removeRow(row)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2"><p>[]<br></p></td>
+                                <td rowspan="2"><p><br></p></td>
+                                <td rowspan="2">9</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should remove the entire table when removing a row from a table where all cells have rowspan", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td rowspan="3">a</td><td rowspan="3">b</td><td rowspan="3">c</td>
+                            </tr>
+                            <tr></tr>
+                            <tr></tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    const row = editor.editable.querySelectorAll("tr")[0];
+                    removeRow(row)(editor);
+                },
+                contentAfter: "<p>[]<br></p>",
+            });
+        });
     });
 });
 
@@ -529,7 +692,8 @@ describe("column", () => {
         test("should add a column left of the leftmost column", async () => {
             await testEditor({
                 contentBefore:
-                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                    '<table style="width: 150px;">' +
+                    '<tbody><tr style="height: 20px;">' +
                     '<td style="width: 40px;">ab[]</td>' +
                     '<td style="width: 50px;">cd</td>' +
                     '<td style="width: 60px;">ef</td>' +
@@ -541,11 +705,15 @@ describe("column", () => {
                     "</tr></tbody></table>",
                 stepFunction: addColumn("before"),
                 contentAfter:
-                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 32px;"><p><br></p></td>' +
-                    '<td style="width: 32px;">ab[]</td>' +
-                    '<td style="width: 40px;">cd</td>' +
-                    '<td style="width: 45px;">ef</td>' +
+                    '<table style="width: 150px;">' +
+                    '<colgroup><col style="width: 32px;">' +
+                    '<col style="width: 32px;"><col style="width: 40px;">' +
+                    '<col style="width: 45px;"></colgroup>' +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td>ab[]</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td><p><br></p></td>" +
@@ -571,11 +739,14 @@ describe("column", () => {
                     "</tr></tbody></table>",
                 stepFunction: addColumn("before"),
                 contentAfter:
-                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
-                    '<th style="width: 32px;"><p><br></p></th>' +
-                    '<th style="width: 32px;">ab[]</th>' +
-                    '<th style="width: 40px;">cd</th>' +
-                    '<th style="width: 45px;">ef</th>' +
+                    '<table style="width: 150px;">' +
+                    '<colgroup><col style="width: 32px;"><col style="width: 32px;">' +
+                    '<col style="width: 40px;"><col style="width: 45px;"></colgroup>' +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<th><p><br></p></th>" +
+                    "<th>ab[]</th>" +
+                    "<th>cd</th>" +
+                    "<th>ef</th>" +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td><p><br></p></td>" +
@@ -594,47 +765,40 @@ describe("column", () => {
                     '<td style="width: 65px;">cd</td>' +
                     '<td style="width: 85px;">ef</td>' +
                     "</tr>" +
-                    '<tr style="height: 30px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd[]</td>" +
-                    "<td>ef</td>" +
-                    "</tr>" +
-                    '<tr style="height: 40px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd</td>" +
-                    "<td>ef</td>" +
-                    "</tr></tbody></table>",
+                    '<tr style="height: 30px;"><td>ab</td><td>cd[]</td><td>ef</td></tr>' +
+                    '<tr style="height: 40px;"><td>ab</td><td>cd</td><td>ef</td></tr>' +
+                    "</tbody></table>",
                 stepFunction: addColumn("before"),
                 contentAfter:
-                    '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 38px;">ab</td>' +
-                    '<td style="width: 49px;"><p><br></p></td>' +
-                    '<td style="width: 49px;">cd</td>' +
-                    '<td style="width: 63px;">ef</td>' +
-                    "</tr>" +
-                    '<tr style="height: 30px;">' +
-                    "<td>ab</td>" +
-                    "<td><p><br></p></td>" +
-                    "<td>cd[]</td>" +
-                    "<td>ef</td>" +
-                    "</tr>" +
-                    '<tr style="height: 40px;">' +
-                    "<td>ab</td>" +
-                    "<td><p><br></p></td>" +
-                    "<td>cd</td>" +
-                    "<td>ef</td>" +
-                    "</tr></tbody></table>",
+                    '<table style="width: 200px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 38px;">' +
+                    '<col style="width: 49px;">' +
+                    '<col style="width: 49px;">' +
+                    '<col style="width: 63px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><td>ab</td><td><p><br></p></td><td>cd</td><td>ef</td></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td><p><br></p></td><td>cd[]</td><td>ef</td></tr>' +
+                    '<tr style="height: 40px;"><td>ab</td><td><p><br></p></td><td>cd</td><td>ef</td></tr>' +
+                    "</tbody></table>",
             });
         });
 
         test("should add two columns before the leftmost column and preserve table width", async () => {
             await testEditor({
                 contentBefore:
-                    '<table style="width: 150px;"><tbody>' +
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 40px;">' +
+                    '<col style="width: 50px;">' +
+                    '<col style="width: 60px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
                     '<tr style="height: 20px;">' +
-                    '<td style="width: 40px;">ab[]</td>' +
-                    '<td style="width: 50px;">cd</td>' +
-                    '<td style="width: 60px;">ef</td>' +
+                    "<td>ab[]</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td>ab</td>" +
@@ -644,13 +808,21 @@ describe("column", () => {
                     "</tbody></table>",
                 stepFunction: addColumn("before", 2),
                 contentAfter:
-                    '<table style="width: 150px;"><tbody>' +
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 27px;">' +
+                    '<col style="width: 27px;">' +
+                    '<col style="width: 27px;">' +
+                    '<col style="width: 33px;">' +
+                    '<col style="width: 35px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
                     '<tr style="height: 20px;">' +
-                    '<td style="width: 27px;"><p><br></p></td>' +
-                    '<td style="width: 27px;"><p><br></p></td>' +
-                    '<td style="width: 27px;">ab[]</td>' +
-                    '<td style="width: 33px;">cd</td>' +
-                    '<td style="width: 35px;">ef</td>' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td>ab[]</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td><p><br></p></td>" +
@@ -666,11 +838,17 @@ describe("column", () => {
         test("should add two columns after the rightmost column and preserve table width", async () => {
             await testEditor({
                 contentBefore:
-                    '<table style="width: 150px;"><tbody>' +
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 40px;">' +
+                    '<col style="width: 50px;">' +
+                    '<col style="width: 60px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
                     '<tr style="height: 20px;">' +
-                    '<td style="width: 40px;">ab</td>' +
-                    '<td style="width: 50px;">cd</td>' +
-                    '<td style="width: 60px;">ef[]</td>' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef[]</td>" +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td>ab</td>" +
@@ -680,13 +858,21 @@ describe("column", () => {
                     "</tbody></table>",
                 stepFunction: addColumn("after", 2),
                 contentAfter:
-                    '<table style="width: 150px;"><tbody>' +
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 23px;">' +
+                    '<col style="width: 28px;">' +
+                    '<col style="width: 32px;">' +
+                    '<col style="width: 32px;">' +
+                    '<col style="width: 34px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
                     '<tr style="height: 20px;">' +
-                    '<td style="width: 23px;">ab</td>' +
-                    '<td style="width: 28px;">cd</td>' +
-                    '<td style="width: 32px;">ef[]</td>' +
-                    '<td style="width: 32px;"><p><br></p></td>' +
-                    '<td style="width: 34px;"><p><br></p></td>' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef[]</td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td>ab</td>" +
@@ -716,21 +902,20 @@ describe("column", () => {
                     "</tr></tbody></table>",
                 stepFunction: addColumn("after"),
                 contentAfter:
-                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 29px;">ab</td>' +
-                    '<td style="width: 36px;">cd</td>' +
-                    '<td style="width: 41px;">ef[]</td>' +
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 29px;">' +
+                    '<col style="width: 36px;">' +
+                    '<col style="width: 41px;">' +
                     // size was slightly adjusted to
                     // preserve table width in view on
                     // fractional division results
-                    '<td style="width: 43px;"><p><br></p></td>' +
-                    "</tr>" +
-                    '<tr style="height: 30px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd</td>" +
-                    "<td>ef</td>" +
-                    "<td><p><br></p></td>" +
-                    "</tr></tbody></table>",
+                    '<col style="width: 43px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><td>ab</td><td>cd</td><td>ef[]</td><td><p><br></p></td></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td>cd</td><td>ef</td><td><p><br></p></td></tr>' +
+                    "</tbody></table>",
             });
         });
 
@@ -749,18 +934,17 @@ describe("column", () => {
                     "</tr></tbody></table>",
                 stepFunction: addColumn("after"),
                 contentAfter:
-                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
-                    '<th style="width: 30px;">ab</th>' +
-                    '<th style="width: 38px;">cd[]</th>' +
-                    '<th style="width: 38px;"><p><br></p></th>' +
-                    '<th style="width: 43px;">ef</th>' +
-                    "</tr>" +
-                    '<tr style="height: 30px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd</td>" +
-                    "<td><p><br></p></td>" +
-                    "<td>ef</td>" +
-                    "</tr></tbody></table>",
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 30px;">' +
+                    '<col style="width: 38px;">' +
+                    '<col style="width: 38px;">' +
+                    '<col style="width: 43px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><th>ab</th><th>cd[]</th><th><p><br></p></th><th>ef</th></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td>cd</td><td><p><br></p></td><td>ef</td></tr>' +
+                    "</tbody></table>",
             });
         });
 
@@ -784,24 +968,18 @@ describe("column", () => {
                     "</tr></tbody></table>",
                 stepFunction: addColumn("after"),
                 contentAfter:
-                    '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 38px;">ab</td>' +
-                    '<td style="width: 49px;">cd</td>' +
-                    '<td style="width: 49px;"><p><br></p></td>' +
-                    '<td style="width: 63px;">ef</td>' +
-                    "</tr>" +
-                    '<tr style="height: 30px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd[]</td>" +
-                    "<td><p><br></p></td>" +
-                    "<td>ef</td>" +
-                    "</tr>" +
-                    '<tr style="height: 40px;">' +
-                    "<td>ab</td>" +
-                    "<td>cd</td>" +
-                    "<td><p><br></p></td>" +
-                    "<td>ef</td>" +
-                    "</tr></tbody></table>",
+                    '<table style="width: 200px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 38px;">' +
+                    '<col style="width: 49px;">' +
+                    '<col style="width: 49px;">' +
+                    '<col style="width: 63px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><td>ab</td><td>cd</td><td><p><br></p></td><td>ef</td></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td>cd[]</td><td><p><br></p></td><td>ef</td></tr>' +
+                    '<tr style="height: 40px;"><td>ab</td><td>cd</td><td><p><br></p></td><td>ef</td></tr>' +
+                    "</tbody></table>",
             });
         });
     });
@@ -828,11 +1006,16 @@ describe("column", () => {
                 stepFunction: moveColumn(0),
                 contentAfter: unformat(`
                     <table>
+                        <colgroup>
+                            <col style="width: 25px;">
+                            <col style="width: 20px;">
+                            <col style="width: 30px;">
+                        </colgroup>
                         <tbody>
                             <tr style="height: 20px;">
-                                <th class="o_table_header" style="width: 25px;">cd[]</th>
-                                <th class="o_table_header" style="width: 20px;">ab</th>
-                                <th class="o_table_header" style="width: 30px;">ef</th>
+                                <th class="o_table_header">cd[]</th>
+                                <th class="o_table_header">ab</th>
+                                <th class="o_table_header">ef</th>
                             </tr>
                             <tr style="height: 30px;">
                                 <td>ij</td>
@@ -852,12 +1035,12 @@ describe("column", () => {
                         <tbody>
                             <tr style="height: 20px;">
                                 <th class="o_table_header" style="width: 20px;">ab</th>
-                                <th class="o_table_header" style="width: 25px;">cd</th>
-                                <th class="o_table_header" style="width: 30px;">ef</th>
+                                <th class="o_table_header" style="width: 30px;">cd[]</th>
+                                <th class="o_table_header" style="width: 25px;">ef</th>
                             </tr>
                             <tr style="height: 30px;">
                                 <td>gh</td>
-                                <td>ij[]</td>
+                                <td>ij</td>
                                 <td>kl</td>
                             </tr>
                         </tbody>
@@ -866,16 +1049,21 @@ describe("column", () => {
                 stepFunction: moveColumn(2),
                 contentAfter: unformat(`
                     <table>
+                        <colgroup>
+                            <col style="width: 20px;">
+                            <col style="width: 25px;">
+                            <col style="width: 30px;">
+                        </colgroup>
                         <tbody>
                             <tr style="height: 20px;">
-                                <th class="o_table_header" style="width: 20px;">ab</th>
-                                <th class="o_table_header" style="width: 30px;">ef</th>
-                                <th class="o_table_header" style="width: 25px;">cd</th>
+                                <th class="o_table_header">ab</th>
+                                <th class="o_table_header">ef</th>
+                                <th class="o_table_header">cd[]</th>
                             </tr>
                             <tr style="height: 30px;">
                                 <td>gh</td>
                                 <td>kl</td>
-                                <td>ij[]</td>
+                                <td>ij</td>
                             </tr>
                         </tbody>
                     </table>
@@ -904,7 +1092,7 @@ describe("column", () => {
                     <table>
                         <tbody>
                             <tr>
-                                <td>[]cd</td>
+                                <td>cd[]</td>
                             </tr>
                             <tr>
                                 <td>gh</td>
@@ -936,7 +1124,7 @@ describe("column", () => {
                     <table>
                         <tbody>
                             <tr>
-                                <th class="o_table_header">[]Header 2</th>
+                                <th class="o_table_header">Header 2[]</th>
                             </tr>
                             <tr>
                                 <td>Cell 2</td>
@@ -970,7 +1158,7 @@ describe("column", () => {
                     <table>
                         <tbody>
                             <tr>
-                                <td>[]ab</td>
+                                <td>ab[]</td>
                             </tr>
                             <tr>
                                 <td>ef</td>
@@ -1004,6 +1192,114 @@ describe("column", () => {
                 contentAfter: "<p>[]<br></p>",
             });
         });
+        test("should remove column intersecting colspan without breaking table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>a</td><td>b</td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">d</td>
+                            </tr>
+                            <tr>
+                                <td>e</td><td>f</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    // Select the second cell
+                    const cell = editor.editable.querySelectorAll("td")[1];
+                    removeColumn(cell)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>a[]</td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td>e</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should remove the entire table when removing a column from a table where all rows have only colspan cells", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="3">a</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">b</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">c</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    const cell = editor.editable.querySelectorAll("td")[0];
+                    removeColumn(cell)(editor);
+                },
+                contentAfter: "<p>[]<br></p>",
+            });
+        });
+        test("should remove row intersecting colspan and rowspan without breaking table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2</td>
+                                <td rowspan="3">3</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">5</td>
+                                <td>6</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    const row = editor.editable.querySelectorAll("tr")[0];
+                    removeRow(row)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="2">5[]</td>
+                                <td rowspan="2"><p><br></p></td>
+                                <td>6</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
     });
 });
 
@@ -1018,34 +1314,46 @@ describe("tab", () => {
                 </tr>
             </tbody></table>`);
         const { el, editor } = await setupEditor(contentBefore);
-
         await press("Tab");
 
         const expectedContent = unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table><tbody>
-                <tr style="height: 20px;">
-                    <td style="width: 20px;">ab</td>
-                    <td>cd</td>
-                    <td>ef</td>
-                </tr>
-                <tr style="height: 20px;">
-                    <td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
-                    <td><p><br></p></td>
-                    <td><p><br></p></td>
-                </tr>
-            </tbody></table>
+            <table>
+                <colgroup><col style="width: 20px;"></colgroup>
+                <tbody>
+                    <tr style="height: 20px;">
+                        <td style="">ab</td>
+                        <td>cd</td>
+                        <td>ef</td>
+                    </tr>
+                    <tr style="height: 20px;">
+                        <td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>
             <p data-selection-placeholder=""><br></p>`
         );
 
         expect(getContent(el)).toBe(expectedContent);
 
-        // Check that it was registed as a history step.
+        // Check that it was registed as a history commit.
         undo(editor);
         expect(getContent(el)).toBe(
-            '<p data-selection-placeholder=""><br></p>' +
-                contentBefore +
-                '<p data-selection-placeholder=""><br></p>'
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table>
+                    <colgroup><col style="width: 20px;"></colgroup>
+                    <tbody>
+                        <tr style="height: 20px;">
+                            <td style="">ab</td>
+                            <td>cd</td>
+                            <td>ef[]</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder=""><br></p>`)
         );
     });
 
@@ -1055,7 +1363,7 @@ describe("tab", () => {
                 '<table><tbody><tr style="height: 20px;"><td style="width: 20px;">ab</td><td>[cd]</td><td>ef</td></tr></tbody></table>',
             stepFunction: () => press("Tab"),
             contentAfter:
-                '<table><tbody><tr style="height: 20px;"><td style="width: 20px;">ab</td><td>cd</td><td>ef[]</td></tr></tbody></table>',
+                '<table><colgroup><col style="width: 20px;"></colgroup><tbody><tr style="height: 20px;"><td>ab</td><td>cd</td><td>ef[]</td></tr></tbody></table>',
         });
     });
 });

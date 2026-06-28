@@ -1,6 +1,6 @@
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
 import { pick } from "@web/core/utils/objects";
-import { reactive } from "@odoo/owl";
+import { proxy } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { closest, touching } from "@web/core/utils/ui";
 
@@ -55,7 +55,7 @@ export function useNativeDraggable(hookParams, initialParams) {
     const cleanupFunctions = [];
     const currentParams = { ...initialParams };
     const setupHooks = {
-        wrapState: reactive,
+        wrapState: proxy,
         throttle: throttleForAnimation,
         addListener: (el, type, callback, options) => {
             el.addEventListener(type, callback, options);

@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'name': _('Common'),
             'visible': 0,
-            'property_account_receivable_id': 'account_common_4300',
-            'property_account_payable_id': 'account_common_4100',
         }
 
     @template('es_common', 'res.company')
@@ -27,15 +25,25 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_currency_exchange_account_id': 'account_common_768',
                 'expense_currency_exchange_account_id': 'account_common_668',
                 'account_journal_suspense_account_id': 'account_common_572998',
-                'account_journal_early_pay_discount_loss_account_id': 'account_common_6060',
-                'account_journal_early_pay_discount_gain_account_id': 'account_common_7060',
+                'account_journal_early_pay_discount_loss_account_id': 'account_common_7060',
+                'account_journal_early_pay_discount_gain_account_id': 'account_common_6060',
                 'default_cash_difference_income_account_id': 'account_common_778',
                 'default_cash_difference_expense_account_id': 'account_common_678',
                 'deferred_expense_account_id': 'account_common_480',
                 'deferred_revenue_account_id': 'account_common_485',
                 'expense_account_id': 'account_common_600',
                 'income_account_id': 'account_common_7000',
+                'receivable_account_id': 'account_common_4300',
+                'payable_account_id': 'account_common_4100',
                 'account_stock_valuation_id': 'account_common_310',
+            },
+        }
+
+    @template('es_common', 'account.journal')
+    def _get_es_common_account_journal(self):
+        return {
+            'purchase': {
+                'non_deductible_account_id': 'account_common_544',
             },
         }
 

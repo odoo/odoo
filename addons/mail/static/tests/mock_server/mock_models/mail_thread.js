@@ -1,5 +1,5 @@
+import { Store } from "@mail/../tests/mock_server/store";
 import { parseEmail } from "@mail/utils/common/format";
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { serializeDateTime } from "@web/core/l10n/dates";
 import {
@@ -28,71 +28,49 @@ export class MailThread extends models.ServerModel {
         after = kwargs.after || 0;
         limit = kwargs.limit || 100;
         filter_recipients = kwargs.filter_recipients || false;
-        /** @type {import("mock_models").MailThread} */
-        const MailThread = this.env["mail.thread"];
 
-        const store = new mailDataHelpers.Store();
-        MailThread._message_followers_to_store.call(
-            this,
-            ids,
-            store,
-            after,
-            limit,
-            filter_recipients
-        );
-        return store.get_result();
+        return new Store()
+            .add(this.browse(ids), "_store_message_followers_fields", {
+                as_thread: true,
+                fields_params: { after, limit, filter_recipients },
+            })
+            .as_dict();
     }
 
-    _message_followers_to_store(ids, store, after, limit, filter_recipients, reset) {
-        const kwargs = getKwArgs(
-            arguments,
-            "ids",
-            "store",
-            "after",
-            "limit",
-            "filter_recipients",
-            "reset"
-        );
-        ids = kwargs.ids;
-        store = kwargs.store;
-        after = kwargs.after || 0;
-        limit = kwargs.limit || 100;
-        filter_recipients = kwargs.filter_recipients || false;
-        reset = kwargs.reset || false;
-
+    _store_message_followers_fields(
+        res,
+        { after = 0, limit = 100, filter_recipients = false, reset = false } = {}
+    ) {
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
 
-        const domain = [
-            ["res_id", "=", ids[0]],
-            ["res_model", "=", this._name],
-            ["partner_id", "!=", this.env.user.partner_id],
-        ];
-        if (after) {
-            domain.push(["id", ">", after]);
-        }
-        if (filter_recipients) {
-            // not implemented for simplicity
-        }
-        const followers = MailFollowers._filter(domain).sort(
-            (f1, f2) => (f1.id < f2.id ? -1 : 1) // sorted from lowest ID to highest ID (i.e. from oldest to youngest)
-        );
-        followers.length = Math.min(followers.length, limit);
-        store.add(
-            this.browse(ids[0]),
-            {
-                [filter_recipients ? "recipients" : "followers"]: mailDataHelpers.Store.many(
-                    followers,
-                    makeKwArgs({ mode: reset ? "REPLACE" : "ADD" })
-                ),
-            },
-            makeKwArgs({ as_thread: true })
-        );
+        const followersByThread = (thread) => {
+            const domain = [
+                ["res_id", "=", thread.id],
+                ["res_model", "=", this._name],
+                ["partner_id", "!=", this.env.user.partner_id],
+            ];
+            if (filter_recipients) {
+                // subtype and partner active checks not done here for simplicity
+            }
+            if (after) {
+                domain.push(["id", ">", after]);
+            }
+            const followers = MailFollowers._filter(domain).sort(
+                (f1, f2) => f1.id - f2.id // sorted from lowest ID to highest ID (i.e. from oldest to youngest)
+            );
+            followers.length = Math.min(followers.length, limit);
+            return MailFollowers.browse(followers.map((follower) => follower.id));
+        };
+        res.many(filter_recipients ? "recipients" : "followers", "_store_follower_fields", {
+            value: followersByThread,
+            mode: reset ? "REPLACE" : "ADD",
+        });
     }
 
     /** @param {number[]} ids */
     message_post(ids) {
-        const kwargs = getKwArgs(arguments, "ids", "subtype_id", "tracking_value_ids");
+        const kwargs = getKwArgs(arguments, "ids", "subtype_id");
         ids = kwargs.ids;
         delete kwargs.ids;
 
@@ -268,12 +246,12 @@ export class MailThread extends models.ServerModel {
         );
         // Send bus notifications to update status of notifications in the web client
         const [partner] = ResPartner.read(this.env.user.partner_id);
-        const store = new mailDataHelpers.Store();
+        const store = new Store();
         MailMessage._message_notifications_to_store(
             notifications.map((notification) => notification.mail_message_id),
             store
         );
-        BusBus._sendone(partner, "mail.record/insert", store.get_result());
+        BusBus._sendone(partner, "mail.record/insert", store.as_dict());
     }
 
     /**
@@ -320,6 +298,7 @@ export class MailThread extends models.ServerModel {
                 lang,
                 reason,
                 create_values: {},
+                recipient_type: "to",
             });
         } else {
             const partnerCreateValues = this._get_customer_information(id);
@@ -329,6 +308,7 @@ export class MailThread extends models.ServerModel {
                 lang,
                 reason,
                 create_values: partnerCreateValues,
+                recipient_type: "to",
             });
         }
         return result;
@@ -362,7 +342,7 @@ export class MailThread extends models.ServerModel {
         BusBus._sendone(
             thread,
             "mail.record/insert",
-            new mailDataHelpers.Store(MailMessage.browse(message_id), { pinned_at }).get_result()
+            new Store().add(MailMessage.browse(message_id), { pinned_at }).as_dict()
         );
     }
 
@@ -440,6 +420,7 @@ export class MailThread extends models.ServerModel {
                             email: partner.email,
                             partner: user.partner_id,
                             reason,
+                            recipient_type: "to",
                         })
                     );
                 }
@@ -483,9 +464,9 @@ export class MailThread extends models.ServerModel {
                     channel,
                     "discuss.channel/new_message",
                     {
-                        data: new mailDataHelpers.Store(
-                            MailMessage.browse(message_id)
-                        ).get_result(),
+                        store_data: new Store()
+                            .add(MailMessage.browse(message_id), "_store_message_fields")
+                            .as_dict(),
                         id: channel.id,
                         temporary_id,
                     },
@@ -516,10 +497,11 @@ export class MailThread extends models.ServerModel {
                             "mail.message/inbox",
                             {
                                 message_id: message.id,
-                                store_data: new mailDataHelpers.Store(
-                                    MailMessage.browse(message.id),
-                                    makeKwArgs({ for_current_user: true, inbox_fields: true })
-                                ).get_result(),
+                                store_data: new Store()
+                                    .add(MailMessage.browse(message.id), "_store_message_fields", {
+                                        fields_params: { inbox_fields: true },
+                                    })
+                                    .as_dict(),
                             },
                         ]);
                     }
@@ -555,7 +537,7 @@ export class MailThread extends models.ServerModel {
             );
         }
         for (const record of model) {
-            const { trackingValueIds, changedFieldNames } = tracking[record.id] || {};
+            const { changedFieldNames } = tracking[record.id] || {};
             if (!changedFieldNames || !changedFieldNames.length) {
                 continue;
             }
@@ -564,8 +546,11 @@ export class MailThread extends models.ServerModel {
             for (const fname in changedFieldNames) {
                 changedFieldsInitialValues[fname] = initialFieldValues[fname];
             }
-            const subtype = MailThread._track_subtype.call(this, changedFieldsInitialValues);
-            MailThread.message_post.call(this, [record.id], subtype.id, trackingValueIds);
+            const subtype = MailThread._track_log_get_default_subtype.call(
+                this,
+                changedFieldsInitialValues
+            );
+            MailThread.message_post.call(this, [record.id], subtype.id);
         }
         return tracking;
     }
@@ -613,138 +598,134 @@ export class MailThread extends models.ServerModel {
         return initialTrackedFieldValuesByRecordId;
     }
 
-    /** @param {Object} initial_values */
-    _track_subtype(initial_values) {
+    /** @param {Object} track_init_values */
+    _track_log_get_default_subtype(track_init_values) {
         return false;
     }
 
-    _thread_to_store(store, fields, request_list) {
-        const kwargs = getKwArgs(arguments, "store", "fields", "request_list");
-        store = kwargs.store;
-        fields = kwargs.fields;
-        request_list = kwargs.request_list || [];
-
+    _store_thread_fields(res, { request_list = [] } = {}) {
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailActivity} */
         const MailActivity = this.env["mail.activity"];
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
-        /** @type {import("mock_models").MailThread} */
-        const MailThread = this.env["mail.thread"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").MailScheduledMessage} */
         const MailScheduledMessage = this.env["mail.scheduled.message"];
+        /** @type {import("mock_models").MailThread} */
+        const MailThread = this.env["mail.thread"];
 
-        if (!fields) {
-            fields = [];
-        }
-        const thread = this[0];
-        store._add_record_fields(this.env[this._name].browse(thread.id), fields, true);
-        const res = {};
-        if (request_list) {
-            res.hasReadAccess = true;
-            res.hasWriteAccess = thread.hasWriteAccess ?? true; // mimic user with write access by default
-            res["canPostOnReadonly"] = this._mail_post_access === "read";
-        }
         const model = this.env[this._name];
-
+        if (res.is_for_current_user()) {
+            res.attr("hasReadAccess", true); // mock: user has read access by default
+            res.attr("hasWriteAccess", (t) => t.hasWriteAccess ?? true); // mock: write access by default
+            res.attr("canPostOnReadonly", this._mail_post_access === "read");
+        }
         if (request_list.includes("activities") && model.has_activities) {
-            res["activities"] = mailDataHelpers.Store.many(
-                MailActivity.browse(thread.activity_ids)
-            );
+            res.many("activities", "_store_activity_fields", {
+                value: (t) => MailActivity.browse(t.activity_ids),
+            });
         }
         if (request_list.includes("attachments")) {
-            res["attachments"] = mailDataHelpers.Store.many(
-                IrAttachment._filter([
-                    ["res_id", "=", thread.id],
-                    ["res_model", "=", this._name],
-                ]).sort((a1, a2) => a1.id - a2.id)
-            );
-            res["areAttachmentsLoaded"] = true;
-            res["isLoadingAttachments"] = false;
+            res.many("attachments", "_store_attachment_fields", {
+                value: (t) =>
+                    IrAttachment.browse(
+                        IrAttachment._filter([
+                            ["res_id", "=", t.id],
+                            ["res_model", "=", this._name],
+                        ])
+                            .sort((a1, a2) => a1.id - a2.id)
+                            .map((attachment) => attachment.id)
+                    ),
+            });
+            res.attr("areAttachmentsLoaded", true);
+            res.attr("isLoadingAttachments", false);
             // Specific implementation of mail.thread.main.attachment
-            if (this.env[this._name]._fields.message_main_attachment_id) {
-                res["message_main_attachment_id"] = mailDataHelpers.Store.one(
-                    IrAttachment.browse(thread.message_main_attachment_id),
-                    makeKwArgs({ only_id: true })
-                );
+            if (model._fields.message_main_attachment_id) {
+                res.one("message_main_attachment_id", [], {
+                    value: (t) => IrAttachment.browse(t.message_main_attachment_id),
+                });
             }
         }
         if (request_list.includes("contact_fields")) {
-            res.primary_email_field = this.env[this._name]._primary_email;
-            res.partner_fields = this.env[this._name]._mail_get_partner_fields?.();
+            res.attr("primary_email_field", model._primary_email);
+            res.attr("partner_fields", model._mail_get_partner_fields?.());
         }
         if (request_list.includes("defaultSubject")) {
-            res.display_name = MailThread._message_compute_subject([thread.id])[thread.id];
+            res.attr("defaultSubject", (t) =>
+                MailThread._message_compute_subject.call(this, [t.id]).get(t.id)
+            );
         }
         if (request_list.includes("display_name")) {
-            res.display_name = thread.display_name;
-        }
-        if (fields.includes("display_name")) {
-            res.name = thread.display_name ?? thread.name;
+            res.attr("display_name");
         }
         if (request_list.includes("followers")) {
-            res["followersCount"] = this.env["mail.followers"].search_count([
-                ["res_id", "=", thread.id],
-                ["res_model", "=", this._name],
-            ]);
-            res["selfFollower"] = mailDataHelpers.Store.one(
-                MailFollowers.browse(
-                    MailFollowers.search([
-                        ["res_id", "=", thread.id],
-                        ["res_model", "=", this._name],
-                        ["partner_id", "=", this.env.user.partner_id],
-                    ])
-                )
+            res.attr("followersCount", (t) =>
+                MailFollowers.search_count([
+                    ["res_id", "=", t.id],
+                    ["res_model", "=", this._name],
+                ])
             );
-            MailThread._message_followers_to_store.call(
-                this,
-                [thread.id],
-                store,
-                makeKwArgs({ reset: true })
+            res.one("selfFollower", "_store_follower_fields", {
+                value: (t) =>
+                    MailFollowers.browse(
+                        MailFollowers.search([
+                            ["res_id", "=", t.id],
+                            ["res_model", "=", this._name],
+                            ["partner_id", "=", this.env.user.partner_id],
+                        ])
+                    ),
+            });
+            this.env["mail.thread"]._store_message_followers_fields.call(this, res, {
+                reset: true,
+            });
+            res.attr("recipientsCount", (t) =>
+                MailFollowers.search_count([
+                    ["res_id", "=", t.id],
+                    ["res_model", "=", this._name],
+                    ["partner_id", "!=", this.env.user.partner_id],
+                    // subtype and partner active checks not done here for simplicity
+                ])
             );
-            res["recipientsCount"] = this.env["mail.followers"].search_count([
-                ["res_id", "=", thread.id],
-                ["res_model", "=", this._name],
-                ["partner_id", "!=", this.env.user.partner_id],
-                // subtype and partner active checks not done here for simplicity
-            ]);
-            MailThread._message_followers_to_store.call(
-                this,
-                [thread.id],
-                store,
-                makeKwArgs({ filter_recipients: true, reset: true })
-            );
+            this.env["mail.thread"]._store_message_followers_fields.call(this, res, {
+                filter_recipients: true,
+                reset: true,
+            });
         }
-        if (fields.includes("modelName")) {
-            res.modelName = this._description;
-        }
-        const pinned_domain = [
+        const pinned_domain = (t) => [
             ["model", "=", this._name],
-            ["res_id", "=", thread.id],
+            ["res_id", "=", t.id],
             ["pinned_at", "!=", false],
         ];
-        if (request_list.includes("has_pinned_messages")) {
-            res["hasPinnedMessages"] = this.env["mail.message"]._filter(pinned_domain).length > 0;
-        }
-        if (request_list.includes("pinned_messages")) {
-            store.add(
-                this.env["mail.message"].browse(this.env["mail.message"].search(pinned_domain)),
-                makeKwArgs({ for_current_user: true })
+        if (res.is_for_internal_users() && request_list.includes("has_pinned_messages")) {
+            res.attr(
+                "has_pinned_messages",
+                (t) => MailMessage._filter(pinned_domain(t)).length > 0
             );
         }
-        if (request_list.includes("suggestedRecipients")) {
-            res["suggestedRecipients"] = MailThread._message_get_suggested_recipients.call(this, [
-                thread.id,
-            ]);
+        if (res.is_for_internal_users() && request_list.includes("pinned_messages")) {
+            res.many("pinned_messages", "_store_message_fields", {
+                only_data: true,
+                value: (t) => MailMessage.browse(MailMessage.search(pinned_domain(t))),
+            });
         }
         if (request_list.includes("scheduledMessages")) {
-            res["scheduledMessages"] = mailDataHelpers.Store.many(
-                MailScheduledMessage.filter(
-                    (message) => message.model === this._name && message.res_id === thread.id
-                )
+            res.many("scheduledMessages", "_store_scheduled_message_fields", {
+                value: (t) =>
+                    MailScheduledMessage.browse(
+                        MailScheduledMessage._filter([
+                            ["model", "=", this._name],
+                            ["res_id", "=", t.id],
+                        ]).map((message) => message.id)
+                    ),
+            });
+        }
+        if (request_list.includes("suggestedRecipients")) {
+            res.attr("suggestedRecipients", (t) =>
+                MailThread._message_get_suggested_recipients.call(this, [t.id])
             );
         }
-        store._add_record_fields(this.env[this._name].browse(thread.id), res, true);
     }
 }

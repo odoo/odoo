@@ -184,7 +184,7 @@ class TestXMLID(TransactionCase):
             self.assertEqual((value._name, value.id), self.env.cr.fetchone(), message)
 
         xmlid = 'base.test_xmlid'
-        records = self.env['ir.model.data'].search([], limit=6)
+        records = self.env['ir.model.data'].search([], limit=7)
         with self.assertQueryCount(1):
             self.env['ir.model.data']._update_xmlids([
                 {'xml_id': xmlid, 'record': records[0]},
@@ -202,6 +202,15 @@ class TestXMLID(TransactionCase):
                 {'xml_id': xmlid, 'record': records[2]},
             ])
         assert_xmlid(xmlid, records[2], f'The xmlid {xmlid} should have been updated with record {records[1]}')
+
+        # _update_xmlids should invalidate ir.model.data
+        xmlid_split = xmlid.split('.')
+        xmlid_record = records.search([('module', '=', xmlid_split[0]), ('name', '=', xmlid_split[1])]).ensure_one()
+        self.assertEqual(xmlid_record.res_id, records[2].id)
+        self.env['ir.model.data']._update_xmlids([
+            {'xml_id': xmlid, 'record': records[6]},
+        ])
+        self.assertEqual(xmlid_record.res_id, records[6].id)
 
         # noupdate case
         # note: this part is mainly there to avoid breaking the current behaviour, not asserting that it makes sence
@@ -306,6 +315,32 @@ class TestIrModelEdition(TransactionCase):
         fnames = [str(field) for field in self.registry.field_depends]
         self.assertEqual(len(fnames), len(set(fnames)), "registry.field_depends contains duplicates")
 
+    def test_setup_model_with_manual_related_fields(self):
+        model = self.env['ir.model'].create({
+            'name': 'Bananas',
+            'model': 'x_bananas',
+        })
+        self.env['ir.model.fields'].create({
+            'name': 'x_partner_id',
+            'field_description': 'Partner',
+            'ttype': 'many2one',
+            'relation': 'res.partner',
+            'model_id': model.id,
+            'state': 'manual',
+        })
+        self.env['ir.model.fields'].create({
+            'name': 'x_name_related',
+            'field_description': 'Name Related',
+            'ttype': 'char',
+            'related': 'x_partner_id.name',
+            'model_id': model.id,
+            'state': 'manual',
+        })
+        # check that registry setup doesn't introduce duplicates in registry.field_setup_dependents
+        self.registry._setup_models__(self.env.cr, [])
+        res_partner_name = self.env['res.partner']._fields['name']
+        fnames = [str(field) for field in self.registry.field_setup_dependents[res_partner_name]]
+        self.assertEqual(len(fnames), len(set(fnames)), "registry.field_setup_dependents contains duplicates")
 
 @tagged('test_eval_context')
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -327,12 +362,6 @@ class TestEvalContext(TransactionCase):
 @tagged('-at_install', 'post_install')
 class TestIrModelFieldsTranslation(HttpCase):
     def test_ir_model_fields_translation(self):
-        # If not enabled (like in demo data), landing on res.config will try
-        # to disable module_sale_quotation_builder and raise an warning
-        group_order_template = self.env.ref('sale_management.group_sale_order_template', raise_if_not_found=False)
-        if group_order_template:
-            self.env.ref('base.group_user').write({"implied_ids": [(4, group_order_template.id)]})
-
         # modify en_US translation
         field = self.env['ir.model.fields'].search([('model_id.model', '=', 'res.users'), ('name', '=', 'login')])
         self.assertEqual(field.with_context(lang='en_US').field_description, 'Login')
@@ -372,7 +401,6 @@ class TestIrModelInherit(TransactionCase):
         self.assertEqual(imi.parent_id.model, "res.partner")
         self.assertEqual(imi.parent_field_id.name, "partner_id")
 
-
 class TestCommonCustomFields(TransactionCase):
     MODEL = 'res.partner'
     COMODEL = 'res.users'
@@ -385,10 +413,8 @@ class TestCommonCustomFields(TransactionCase):
         def check_registry():
             assert set(self.registry[self.MODEL]._fields) == fnames
 
-        self.addCleanup(self.registry.reset_changes)
-        self.addCleanup(self.registry.clear_all_caches)
-
         super().setUp()
+        self.env.transaction.will_change_registry()
 
     def create_field(self, name, *, field_type='char'):
         """ create a custom field and return it """
@@ -600,9 +626,9 @@ class TestCustomFields(TestCommonCustomFields):
 
         # create a non-computed field, and assert how many queries it takes
         model_id = self.env['ir.model']._get_id('res.partner')
-        query_count = 51
+        query_count = 52
         with self.assertQueryCount(query_count):
-            self.env.registry.clear_cache()
+            self.env.transaction.invalidate_ormcache()
             self.env['ir.model.fields'].create({
                 'model_id': model_id,
                 'name': 'x_oh_box',
@@ -611,9 +637,9 @@ class TestCustomFields(TestCommonCustomFields):
                 'store': True,
             })
 
-        # same with a related field, it only takes 8 extra queries
-        with self.assertQueryCount(query_count + 8):
-            self.env.registry.clear_cache()
+        # same with a related field, it only takes 10 extra queries
+        with self.assertQueryCount(query_count + 10):
+            self.env.transaction.invalidate_ormcache()
             self.env['ir.model.fields'].create({
                 'model_id': model_id,
                 'name': 'x_oh_boy',
@@ -659,7 +685,7 @@ class TestCustomFields(TestCommonCustomFields):
 
         x_sel = Model._fields['x_sel']
         self.assertEqual(x_sel.type, 'selection')
-        self.assertEqual(x_sel.selection, [('foo', 'Foo'), ('bar', 'Bar')])
+        self.assertEqual(x_sel.selection, (('foo', 'Foo'), ('bar', 'Bar')))
 
         # add selection value 'baz'
         field.selection_ids.create({
@@ -667,7 +693,7 @@ class TestCustomFields(TestCommonCustomFields):
         })
         x_sel = Model._fields['x_sel']
         self.assertEqual(x_sel.type, 'selection')
-        self.assertEqual(x_sel.selection, [('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')])
+        self.assertEqual(x_sel.selection, (('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')))
 
         # assign values to records
         rec1 = Model.create({'name': 'Rec1', 'x_sel': 'foo'})
@@ -681,7 +707,7 @@ class TestCustomFields(TestCommonCustomFields):
         field.selection_ids[0].unlink()
         x_sel = Model._fields['x_sel']
         self.assertEqual(x_sel.type, 'selection')
-        self.assertEqual(x_sel.selection, [('bar', 'Bar'), ('baz', 'Baz')])
+        self.assertEqual(x_sel.selection, (('bar', 'Bar'), ('baz', 'Baz')))
 
         self.assertEqual(rec1.x_sel, False)
         self.assertEqual(rec2.x_sel, 'bar')
@@ -691,7 +717,7 @@ class TestCustomFields(TestCommonCustomFields):
         field.selection_ids[0].value = 'quux'
         x_sel = Model._fields['x_sel']
         self.assertEqual(x_sel.type, 'selection')
-        self.assertEqual(x_sel.selection, [('quux', 'Bar'), ('baz', 'Baz')])
+        self.assertEqual(x_sel.selection, (('quux', 'Bar'), ('baz', 'Baz')))
 
         self.assertEqual(rec1.x_sel, False)
         self.assertEqual(rec2.x_sel, 'quux')
@@ -699,6 +725,102 @@ class TestCustomFields(TestCommonCustomFields):
 
 
 class TestCustomFieldsPostInstall(TestCommonCustomFields):
+    def test_related_field_non_stored_not_allowed(self):
+        """ Test related field behavior with stored/non-stored combinations """
+
+        model_id = self.env['ir.model']._get_id('res.partner')
+        dummy_model = self.env['ir.model'].create({
+            'name': 'Dummy Model Test',
+            'model': 'x_dummy_model_test',
+        })
+
+        # NON-STORED M2O
+        self.env['ir.model.fields'].create({
+            'model_id': model_id,
+            'name': 'x_non_stored_m2o_test',
+            'field_description': 'x_non_stored_m2o_test',
+            'ttype': 'many2one',
+            'relation': 'x_dummy_model_test',
+            'store': False,
+        })
+
+        # Stored M2O
+        self.env['ir.model.fields'].create({
+            'model_id': model_id,
+            'name': 'x_stored_m2o_test',
+            'field_description': 'x_stored_m2o_test',
+            'ttype': 'many2one',
+            'relation': 'x_dummy_model_test',
+            'store': True,
+        })
+
+        # Stored boolean
+        self.env['ir.model.fields'].create({
+            'model_id': dummy_model.id,
+            'name': 'x_bool_stored_test',
+            'field_description': 'x_bool_stored_test',
+            'ttype': 'boolean',
+            'store': True,
+        })
+
+        # Non-stored boolean
+        self.env['ir.model.fields'].create({
+            'model_id': dummy_model.id,
+            'name': 'x_bool_non_stored_test',
+            'field_description': 'x_bool_non_stored_test',
+            'ttype': 'boolean',
+            'store': False,
+        })
+
+        # 1. Intermediate non-stored → should FAIL
+        with self.assertRaises(UserError):
+            self.env.transaction.invalidate_ormcache()
+            self.env['ir.model.fields'].create({
+                'model_id': model_id,
+                'name': 'x_fail_intermediate_non_stored',
+                'field_description': 'x_fail_intermediate_non_stored',
+                'ttype': 'boolean',
+                'related': 'x_non_stored_m2o_test.x_bool_stored_test',
+                'store': True,
+            })
+
+        # 2. Last non-stored → should PASS
+        self.env.transaction.invalidate_ormcache()
+        field = self.env['ir.model.fields'].create({
+            'model_id': model_id,
+            'name': 'x_pass_last_non_stored',
+            'field_description': 'x_pass_last_non_stored',
+            'ttype': 'boolean',
+            'related': 'x_stored_m2o_test.x_bool_non_stored_test',
+            'store': True,
+        })
+        self.assertTrue(field)
+
+        # 3. All stored → should PASS
+        self.env.transaction.invalidate_ormcache()
+        field = self.env['ir.model.fields'].create({
+            'model_id': model_id,
+            'name': 'x_pass_all_stored',
+            'field_description': 'x_pass_all_stored',
+            'ttype': 'boolean',
+            'related': 'x_stored_m2o_test.x_bool_stored_test',
+            'store': True,
+        })
+        self.assertTrue(field)
+
+        # 4. One non-stored → should PASS
+        self.env.transaction.invalidate_ormcache()
+        field = self.env['ir.model.fields'].create({
+            'model_id': model_id,
+            'name': 'x_pass_single_non_stored',
+            'field_description': 'x_pass_single_non_stored',
+            'ttype': 'many2one',
+            'relation': 'x_dummy_model_test',
+            'related': 'x_non_stored_m2o_test',
+            'store': True,
+        })
+        self.assertTrue(field)
+
     def test_add_field_valid(self):
         """ custom field names must start with 'x_', even when bypassing the constraints
 
@@ -718,3 +840,61 @@ class TestCustomFieldsPostInstall(TestCommonCustomFields):
             self.assertIn(
                 f'The field `{field.name}` is not defined in the `{field.model}` Python class', log_catcher.output[0]
             )
+
+
+@tagged('at_install', '-post_install')
+class TestIrModelExplanation(TransactionCase):
+    def test_explanation_mro_reflection(self):
+        """ Test that _explanation is correctly aggregated across the MRO. """
+
+        class MockBaseModel:
+            _name = 'mock.mro.model'
+            _description = 'Mock'
+            _order = 'id'
+            _custom = False
+            _abstract = False
+            _transient = False
+            _fold_name = 'fold'
+            __module__ = 'odoo.addons.base.models.mock'
+            _explanation = 'Base explanation'
+            __doc__ = 'Base doc'
+
+        class MockExtensionModel(MockBaseModel):
+            __module__ = 'odoo.addons.hr.models.mock'
+            _explanation = 'Extension explanation'
+
+        # Instantiate the extension model as if the ORM built it
+        mock_model = MockExtensionModel()
+        self.env.registry['mock.mro.model'] = MockExtensionModel
+
+        try:
+            params = self.env['ir.model']._reflect_model_params(mock_model)
+
+            expected = 'Base explanation\n\nExtension explanation'
+            self.assertEqual(params['explanation'], expected)
+        finally:
+            del self.env.registry['mock.mro.model']
+
+    def test_model_explanation_reflection(self):
+        """ Test that _explanation is correctly reflected in ir.model. """
+        class MockModel:
+            _name = 'mock.model'
+            _description = 'Mock'
+            _order = 'id'
+            _custom = False
+            _abstract = False
+            _transient = False
+            _fold_name = 'fold'
+            __module__ = 'odoo.addons.base.models.mock'
+            _explanation = 'This is a mock model explanation.'
+            __doc__ = 'Base doc'
+
+        mock_model = MockModel()
+        self.env.registry['mock.model'] = MockModel
+
+        try:
+            params = self.env['ir.model']._reflect_model_params(mock_model)
+            expected = 'This is a mock model explanation.'
+            self.assertEqual(params['explanation'], expected)
+        finally:
+            del self.env.registry['mock.model']

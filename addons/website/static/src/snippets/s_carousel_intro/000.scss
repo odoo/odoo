@@ -1,4 +1,8 @@
 .s_carousel_intro_wrapper {
+    &.o_full_screen_height, &.o_three_quarter_height {
+        @extend %carousel_screen_height;
+    }
+
     .s_carousel_intro {
         @extend %s_carousel_variants;
 

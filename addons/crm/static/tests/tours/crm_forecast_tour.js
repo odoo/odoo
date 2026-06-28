@@ -51,7 +51,6 @@ registry.category("web_tour.tours").add('crm_forecast', {
     }, {
         trigger: '.o_back_button',
         content: 'navigate back to the kanban view',
-        tooltipPosition: "bottom",
         run: "click"
     }, {
         trigger: ".o_kanban_record:contains('Test Opportunity 1')",
@@ -79,7 +78,6 @@ registry.category("web_tour.tours").add('crm_forecast', {
     }, {
         trigger: '.o_back_button',
         content: 'navigate back to the kanban view',
-        tooltipPosition: "bottom",
         run: "click"
     }, {
         trigger: '.o_column_quick_create.o_quick_create_folded div',

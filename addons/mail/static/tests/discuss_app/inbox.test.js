@@ -11,7 +11,6 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred } from "@odoo/hoot-mock";
 import { fields, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
@@ -153,7 +152,9 @@ test('"reply to" composer should send message if message replied to is not a not
     await contains(".o-mail-Message");
     await click("[title='Expand']");
     await click(".o-dropdown-item:contains('Reply')");
-    await contains(".o-mail-Composer [placeholder='Send a message to followers…']");
+    await contains(
+        ".o-mail-Composer [placeholder='Send a message to all followers and selected contacts…']"
+    );
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Composer button[title='Send']", { count: 0 });
@@ -162,21 +163,39 @@ test('"reply to" composer should send message if message replied to is not a not
 
 test("show subject of message in Inbox", async () => {
     const pyEnv = await startServer();
-    const messageId = pyEnv["mail.message"].create({
-        body: "not empty",
-        model: "discuss.channel",
-        needaction: true,
-        subject: "Salutations, voyageur",
-    });
-    pyEnv["mail.notification"].create({
-        mail_message_id: messageId,
-        notification_status: "sent",
-        notification_type: "inbox",
-        res_partner_id: serverState.partnerId,
-    });
+    const [messageId1, messageId2] = pyEnv["mail.message"].create([
+        {
+            body: "not empty",
+            model: "discuss.channel",
+            needaction: true,
+            subject: "Salutations, voyageur",
+        },
+        {
+            body: "",
+            model: "discuss.channel",
+            needaction: true,
+            subject: "Hello, wanderer",
+        },
+    ]);
+    pyEnv["mail.notification"].create([
+        {
+            mail_message_id: messageId1,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        },
+        {
+            mail_message_id: messageId2,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        },
+    ]);
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message:has(:text('Subject: Salutations, voyageur'))");
+    // Empty body: display subject only
+    await contains(".o-mail-Message:has(:text('Subject: Hello, wanderer'))");
 });
 
 test("show subject of message in history", async () => {
@@ -456,7 +475,7 @@ test("click on (non-channel/non-partner) origin thread link should redirect to f
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    const def = new Deferred();
+    const { promise: doActionCalled, resolve: resolveDoActionCalled } = Promise.withResolvers();
     mockService("action", {
         async doAction(action) {
             if (action?.res_model !== "res.fake") {
@@ -470,14 +489,14 @@ test("click on (non-channel/non-partner) origin thread link should redirect to f
             expect(action.views).toEqual([[false, "form"]]);
             expect(action.res_model).toBe("res.fake");
             expect(action.res_id).toBe(fakeId);
-            def.resolve();
+            resolveDoActionCalled();
         },
     });
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
     await click(".o-mail-Message-header a:text('Some record')");
-    await def;
+    await doActionCalled;
     await expect.waitForSteps(["do-action"]);
 });
 
@@ -680,7 +699,7 @@ test("can reply to email message", async () => {
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
     await click("[title='Expand']");
-    await click(".o-dropdown-item:contains('Reply')");
+    await click(".o-dropdown-item:text('Reply')");
     await contains(".o-mail-Composer:has(:text('Replying to md@oilcompany.fr'))");
 });
 
@@ -735,7 +754,6 @@ test("show thread priority in Inbox", async () => {
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message-header .fa-star", { count: 2 });
-    await contains(".o-mail-Message-header .fa-star-o");
 });
 
 test("show thread priority with only 1 or 0 star", async () => {
@@ -788,5 +806,4 @@ test("show thread priority with only 1 or 0 star", async () => {
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message-header .fa-star");
-    await contains(".o-mail-Message-header .fa-star-o");
 });

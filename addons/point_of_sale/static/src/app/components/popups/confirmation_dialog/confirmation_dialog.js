@@ -1,4 +1,9 @@
-import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import {
+    alertDialogProps,
+    ConfirmationDialog,
+    confirmationDialogProps,
+} from "@web/core/confirmation_dialog/confirmation_dialog";
+import { t } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
@@ -38,24 +43,12 @@ patch(ConfirmationDialog.prototype, {
     },
 });
 
-ConfirmationDialog.props = {
-    ...ConfirmationDialog.props,
-    getPayload: { type: Function, optional: true },
-    showReloadButton: { type: Boolean, optional: true },
-};
+Object.assign(confirmationDialogProps, {
+    getPayload: t.function().optional(),
+    showReloadButton: t.boolean().optional(false),
+});
 
-ConfirmationDialog.defaultProps = {
-    ...ConfirmationDialog.defaultProps,
-    showReloadButton: false,
-};
-
-AlertDialog.props = {
-    ...AlertDialog.props,
-    getPayload: { type: Function, optional: true },
-    showReloadButton: { type: Boolean, optional: true },
-};
-
-AlertDialog.defaultProps = {
-    ...AlertDialog.defaultProps,
-    showReloadButton: false,
-};
+Object.assign(alertDialogProps, {
+    getPayload: t.function().optional(),
+    showReloadButton: t.boolean().optional(false),
+});

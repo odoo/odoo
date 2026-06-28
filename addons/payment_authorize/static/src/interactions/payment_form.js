@@ -53,7 +53,7 @@ patch(PaymentForm.prototype, {
             authorizeForm.dataset['authorizeInlineFormValues']
         );
         let acceptJSUrl = 'https://js.authorize.net/v1/Accept.js';
-        if (this.authorizeData[paymentOptionId].state !== 'enabled') {
+        if (this.authorizeData[paymentOptionId].is_live !== true) {
             acceptJSUrl = 'https://jstest.authorize.net/v1/Accept.js';
         }
         this.authorizeData[paymentOptionId].form = authorizeForm;

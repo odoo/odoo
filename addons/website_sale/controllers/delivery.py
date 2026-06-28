@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request, route
 
@@ -25,7 +24,7 @@ class Delivery(WebsiteSale):
             "order": order_sudo,  # Needed for accessing default values for pickup points.
         }
         values |= self._get_additional_delivery_context()
-        return request.env["ir.ui.view"]._render_template("website_sale.delivery_form", values)
+        return self.env.website._render_template("website_sale.delivery_form", values)
 
     def _get_additional_delivery_context(self):
         """Update values used for rendering the website_sale.delivery_form template."""
@@ -50,13 +49,13 @@ class Delivery(WebsiteSale):
             for tx_sudo in order_sudo.transaction_ids:
                 if tx_sudo.state not in {"draft", "cancel", "error"}:
                     raise UserError(
-                        _(
+                        self.env._(
                             "It seems that there is already a transaction for your order; you can't"
                             " change the delivery method anymore."
                         )
                     )
 
-            delivery_method_sudo = request.env["delivery.carrier"].sudo().browse(dm_id).exists()
+            delivery_method_sudo = self.env["delivery.carrier"].sudo().browse(dm_id).exists()
             order_sudo._set_delivery_method(delivery_method_sudo)
         return self._order_summary_values(order_sudo, **kwargs)
 
@@ -68,9 +67,9 @@ class Delivery(WebsiteSale):
         :return: The order summary values.
         :rtype: dict
         """
-        Monetary = request.env["ir.qweb.field.monetary"]
+        Monetary = self.env["ir.qweb.field.monetary"]
         currency = order.currency_id
-        rendered_tax_lines = request.env["ir.ui.view"]._render_template(
+        rendered_tax_lines = self.env.website._render_template(
             "website_sale.order_tax_lines", {"website_sale_order": order}
         )
         return {
@@ -98,18 +97,18 @@ class Delivery(WebsiteSale):
         :rtype: dict
         """
         if not (order_sudo := request.cart):
-            raise ValidationError(_("Your cart is empty."))
+            raise ValidationError(self.env._("Your cart is empty."))
 
         if int(dm_id) not in order_sudo._get_delivery_methods().ids:
             raise UserError(
-                _(
+                self.env._(
                     "It seems that a delivery method is not compatible with your address. Please"
                     " refresh the page and try again."
                 )
             )
 
-        Monetary = request.env["ir.qweb.field.monetary"]
-        delivery_method = request.env["delivery.carrier"].sudo().browse(int(dm_id)).exists()
+        Monetary = self.env["ir.qweb.field.monetary"]
+        delivery_method = self.env["delivery.carrier"].sudo().browse(int(dm_id)).exists()
         rate = Delivery._get_rate(delivery_method, order_sudo)
         if rate["success"]:
             rate["amount_delivery"] = Monetary.value_to_html(
@@ -122,29 +121,6 @@ class Delivery(WebsiteSale):
                 0.0, {"display_currency": order_sudo.currency_id}
             )
         return rate
-
-    @route("/website_sale/set_pickup_location", type="jsonrpc", auth="public", website=True)
-    def website_sale_set_pickup_location(self, pickup_location_data):
-        """Fetch the order from the request and set the pickup location on the current order.
-
-        :param str pickup_location_data: The JSON-formatted pickup location address.
-        :return: The order summary values.
-        :rtype: dict
-        """
-        order_sudo = request.cart
-        order_sudo._set_pickup_location(pickup_location_data)
-        return self._order_summary_values(order_sudo)
-
-    @route("/website_sale/get_pickup_locations", type="jsonrpc", auth="public", website=True)
-    def website_sale_get_pickup_locations(self, **kwargs):
-        """Fetch the order from the request and return the pickup locations close to the zip code.
-
-        :return: The close pickup locations data.
-        :rtype: dict
-        """
-        order_sudo = request.cart
-        country = order_sudo.partner_shipping_id.country_id
-        return order_sudo._get_pickup_locations(country=country, **kwargs)
 
     @route(_express_checkout_delivery_route, type="jsonrpc", auth="public", website=True)
     def express_checkout_process_delivery_address(self, partial_delivery_address):
@@ -167,7 +143,7 @@ class Delivery(WebsiteSale):
             # The partner_shipping_id and partner_invoice_id will be automatically computed when
             # changing the partner_id of the SO. This allows website_sale to avoid creating
             # duplicates.
-            partial_delivery_address["name"] = _(
+            partial_delivery_address["name"] = self.env._(
                 "Anonymous express checkout partner for order %s", order_sudo.name
             )
             new_partner_sudo = self._create_new_address(
@@ -179,7 +155,7 @@ class Delivery(WebsiteSale):
             # Pricelists are recomputed every time the partner is changed. We don't want to
             # recompute the price with another pricelist at this state since the customer has
             # already accepted the amount and validated the payment.
-            with request.env.protecting([order_sudo._fields["pricelist_id"]], order_sudo):
+            with self.env.protecting([order_sudo._fields["pricelist_id"]], order_sudo):
                 order_sudo.partner_id = new_partner_sudo
         elif order_sudo.name in order_sudo.partner_shipping_id.name:
             order_sudo.partner_shipping_id.write(partial_delivery_address)
@@ -193,7 +169,7 @@ class Delivery(WebsiteSale):
             child_partner_id = self._find_child_partner(
                 order_sudo.partner_id.commercial_partner_id.id, partial_delivery_address
             )
-            partial_delivery_address["name"] = _(
+            partial_delivery_address["name"] = self.env._(
                 "Anonymous express checkout partner for order %s", order_sudo.name
             )
             order_sudo.partner_shipping_id = child_partner_id or self._create_new_address(
@@ -202,7 +178,11 @@ class Delivery(WebsiteSale):
                 use_delivery_as_billing=False,
                 order_sudo=order_sudo,
             )
-        order_sudo._recompute_taxes()
+
+        try:
+            order_sudo.with_context(recompute_external_taxes=True)._recompute_taxes()
+        except UserError:
+            return {"external_tax_error": True}
 
         sorted_delivery_methods = sorted(
             [
@@ -300,7 +280,7 @@ class Delivery(WebsiteSale):
                 )
                 if (
                     not is_express_checkout_flow
-                    and request.website.show_line_subtotals_tax_selection == "tax_excluded"
+                    and request.env.website.show_line_subtotals_tax_selection == "tax_excluded"
                 ):
                     rate["price"] = taxes["total_excluded"]
                 else:

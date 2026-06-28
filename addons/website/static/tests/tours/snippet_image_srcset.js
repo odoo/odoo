@@ -7,18 +7,19 @@ import {
 registerWebsitePreviewTour(
     "website_image_srcset",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [
+        // Use a snippet whose default image is wide enough for responsive
+        // derivatives (see saveModifiedImage: needs width > ~750 / 0.85).
         ...insertSnippet({
-            id: "s_picture",
-            name: "Title - Image",
-            groupName: "Images",
+            id: "s_contact_info",
+            name: "Contact Info",
+            groupName: "Contact & Forms",
         }),
         {
             content: "Select image",
-            trigger: ":iframe .s_picture img",
+            trigger: ":iframe .s_contact_info img",
             run: "click",
         },
         {
@@ -28,17 +29,17 @@ registerWebsitePreviewTour(
             run: "range 5",
         },
         {
-            content: "Wait for image update: NOT original image",
-            trigger: ':iframe .s_picture img:not([src$="s_picture_default_image"])',
+            content: "Wait for image post-process (preview uses a data URL before save)",
+            trigger: ":iframe .s_contact_info img[src^='data:image']",
         },
         ...clickOnSave(),
         {
-            content: "Wait for the saved page to reload with the modified image",
-            trigger: ':iframe .s_picture img:not([src$="s_picture_default_image"])',
+            content: "Wait for the saved page to reload with responsive srcset",
+            trigger: ":iframe .s_contact_info img[srcset]",
         },
         {
             content: "Verify responsive candidates persist after save",
-            trigger: ':iframe .s_picture img:not([src$="s_picture_default_image"])',
+            trigger: ":iframe .s_contact_info img[srcset]",
             run() {
                 const img = this.anchor;
                 if (!img?.srcset) {

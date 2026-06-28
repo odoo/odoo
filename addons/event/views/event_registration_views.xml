@@ -28,7 +28,7 @@
                 <field name="message_needaction" column_invisible="True"/>
                 <button name="action_confirm" string="Registered" type="object" icon="fa-check"
                         invisible="not active or state != 'draft'"/>
-                <button name="action_set_done" string="Mark as Attending" type="object" icon="fa-level-down"
+                <button name="action_attend_event" string="Mark as Attending" type="object" icon="fa-level-down"
                         invisible="not active or state != 'open'"/>
                 <button name="action_cancel" string="Cancel" type="object"
                         class="o_btn_cancel_registration" icon="fa-times"
@@ -49,7 +49,7 @@
                             invisible="not active or state != 'open' and state != 'done'"/>
                     <button name="action_confirm" string="Registered" type="object" class="oe_highlight"
                             invisible="not active or state != 'draft'"/>
-                    <button name="action_set_done" string="Attended" type="object" class="oe_highlight"
+                    <button name="action_attend_event" string="Attended" type="object" class="oe_highlight"
                             invisible="not active or state != 'open'"/>
                     <button name="action_cancel" string="Cancel Registration" type="object"
                             invisible="not active or state == 'cancel'"/>
@@ -80,6 +80,10 @@
                             <field name="partner_id"/>
                             <field name="create_date" string="Registration Date" groups="base.group_no_one"/>
                             <field name="date_closed" groups="base.group_no_one"/>
+                        </group>
+                        <group string="Transaction" name="transaction" invisible="ticket_entry_limit  &lt; 2">
+                            <field name="remaining_entries" invisible="ticket_entry_limit &lt; 2 or main_registration_id"/>
+                            <field name="main_registration_id" readonly="true" invisible="not main_registration_id"/>
                         </group>
                         <group string="Marketing" name="utm_link" groups="base.group_no_one">
                             <field name="utm_campaign_id"/>
@@ -216,6 +220,8 @@
                 <filter string="Registered" name="confirmed" domain="[('state', '=', 'open')]"/>
                 <filter string="Attended" name="attended" domain="[('state', '=', 'done')]"/>
                 <separator/>
+                <filter string="Main Registration" name="main_registration" domain="[('main_registration_id', '=', False)]"/>
+                <separator/>
                 <filter string="Registration Date" name="filter_create_date" date="create_date"/>
                 <filter string="Event Start Date" name="filter_event_begin_date" date="event_begin_date"/>
                 <filter string="Attended Date" name="filter_date_closed" date="date_closed"/>
@@ -230,7 +236,7 @@
                     domain="[('my_activity_date_deadline', '=', 'today')]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
-                <filter string="Last 30 days" name="filter_last_month_creation" domain="[('create_date','&gt;', 'today -30d')]"/>
+                <filter string="Last 30 days" name="filter_last_month_creation" domain="[('create_date', '&gt;=', 'today -30d'), ('create_date', '&lt;', 'today')]"/>
                 <separator/>
                 <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
                 <group>
@@ -239,6 +245,7 @@
                     <filter string="Slot" name="group_by_event_slot_id" context="{'group_by': 'event_slot_id'}"/>
                     <filter string="Ticket Type" name ="group_event_ticket_id" domain="[]" context="{'group_by': 'event_ticket_id'}"/>
                     <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Main Registration" name="group_by_main_registration" domain="[]" context="{'group_by':'main_registration_id'}"/>
                     <filter string="Registration Date" name="group_by_create_date_week" domain="[]" context="{'group_by': 'create_date:week'}"
                             invisible="context.get('registration_view_hide_group_by_create_date_week')"/>
                     <filter string="Registration Date" name="group_by_create_date_day" domain="[]" context="{'group_by': 'create_date:day'}"

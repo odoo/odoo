@@ -16,9 +16,9 @@ const EPSON_ERRORS = {
     EPTR_CUTTER: _t("The cutter has a foreign matter, please check the cutter mechanism"),
     EPTR_MECHANICAL: _t("Mechanical error, please check the printer"),
     EPTR_REC_EMPTY: _t("The paper is empty, please load paper into the printer"),
-    EPTR_UNRECOVERABLE: _t("Low voltage unrecoverable error occured, please check the printer"),
+    EPTR_UNRECOVERABLE: _t("Low voltage unrecoverable error occurred, please check the printer"),
     EX_BADPORT: _t("The device is not connected, please check the printer power / connection"),
-    EX_TIMEOUT: _t("Timeout occured, please try again"),
+    EX_TIMEOUT: _t("Timeout occurred, please try again"),
 };
 
 export class TestEPos extends Component {
@@ -52,7 +52,7 @@ export class TestEPos extends Component {
             const response = await this.orm.read(
                 "pos.printer",
                 [printer_id],
-                ["printer_ip", "name", "printer_type", "use_lna"]
+                ["printer_ip", "name", "printer_type", "use_lna", "paper_size"]
             );
             return response[0];
         } else {
@@ -63,6 +63,7 @@ export class TestEPos extends Component {
                 printer_ip: data.printer_ip,
                 printer_type: data.printer_type,
                 use_lna: data.use_lna,
+                paper_size: data.paper_size,
             };
         }
     }
@@ -82,26 +83,15 @@ export class TestEPos extends Component {
     }
 
     async _testAllPrinters() {
-        const config_id = this.props.record.resId;
-
-        if (!config_id) {
-            this.notification.add(_t("Save the configuration before testing"), {
-                type: "warning",
-            });
-            return;
-        }
-        const config_data = await this.orm.read("pos.config", [config_id], ["receipt_printer_ids"]);
-
-        const printers_id = config_data[0].receipt_printer_ids;
-
-        if (!printers_id.length) {
+        const printersIds = this.props.record.data.receipt_printer_ids?._currentIds || [];
+        if (!printersIds.length) {
             this.notification.add(_t("No receipt printers configured for this POS."), {
                 type: "warning",
             });
             return;
         }
 
-        for (const p_id of printers_id) {
+        for (const p_id of printersIds) {
             await this._printTo(p_id);
         }
     }
@@ -109,43 +99,66 @@ export class TestEPos extends Component {
     async _printTo(printer_id = null) {
         const printer = await this.getPrinterDataEPos(printer_id);
         if (printer.printer_type === "epson_epos") {
-            try {
-                const protocol = printer.use_lna ? "http:" : window.location.protocol;
-                const url = protocol + "//" + printer.printer_ip;
-                const address = url + "/cgi-bin/epos/service.cgi?devid=local_printer";
-                const params = {
-                    method: "POST",
-                    body: this._getReceipt(printer.name),
-                    signal: AbortSignal.timeout(15000),
-                };
-                if (printer.use_lna) {
-                    params.targetAddressSpace = getLNATargetAddressSpace(url);
-                    await initLNA(this.notification);
-                }
-                const result = await fetch(address, params);
-                const body = await result.text();
-                const parser = new DOMParser();
-                const parsedBody = parser.parseFromString(body, "application/xml");
-                const response = parsedBody.querySelector("response");
-                const success = response.getAttribute("success") === "true";
-                const errorCode = response.getAttribute("code");
+            const protocol = printer.use_lna ? "http:" : window.location.protocol;
+            const url = protocol + "//" + printer.printer_ip;
+            const params = {
+                method: "POST",
+                body: this._getReceipt(printer.name),
+                signal: AbortSignal.timeout(15000),
+            };
+            if (printer.use_lna) {
+                params.targetAddressSpace = getLNATargetAddressSpace(url);
+                await initLNA(this.notification);
+            }
+            if (printer.paper_size !== "label") {
+                try {
+                    const address = url + "/cgi-bin/epos/service.cgi?devid=local_printer";
+                    const result = await fetch(address, params);
+                    const body = await result.text();
+                    const parser = new DOMParser();
+                    const parsedBody = parser.parseFromString(body, "application/xml");
+                    const response = parsedBody.querySelector("response");
+                    const success = response.getAttribute("success") === "true";
+                    const errorCode = response.getAttribute("code");
 
-                if (!success || errorCode !== "") {
-                    const errorMessage =
-                        EPSON_ERRORS[errorCode] ||
-                        _t("Failed to print a test receipt. Check your printer.");
+                    if (!success || errorCode !== "") {
+                        const errorMessage =
+                            EPSON_ERRORS[errorCode] ||
+                            _t("Failed to print a test receipt. Check your printer.");
+                        this.notification.add(
+                            `${printer.name} (${printer.printer_ip}): ${errorMessage}`,
+                            {
+                                type: "warning",
+                            }
+                        );
+                    }
+                } catch {
                     this.notification.add(
-                        `${printer.name} (${printer.printer_ip}): ${errorMessage}`,
-                        {
-                            type: "warning",
-                        }
+                        `${printer.name} (${printer.printer_ip}): ${_t(
+                            "Cannot reach the printer."
+                        )}`,
+                        { type: "danger" }
                     );
                 }
-            } catch {
-                this.notification.add(
-                    `${printer.name} (${printer.printer_ip}): ${_t("Cannot reach the printer.")}`,
-                    { type: "danger" }
-                );
+            } else {
+                const zpl = "^XA^FO50,50^ADN,36,20^FDTest ZPL receipt!^FS^XZ";
+                params.body = zpl;
+                params.headers = {
+                    "Content-Length": zpl.length,
+                    "Content-Type": "text/plain; charset=utf-8",
+                };
+                params.mode = "no-cors";
+
+                try {
+                    await fetch(`${url}/pstprnt`, params);
+                } catch {
+                    this.notification.add(
+                        `${printer.name} (${printer.printer_ip}): ${_t(
+                            "Cannot reach the printer."
+                        )}`,
+                        { type: "danger" }
+                    );
+                }
             }
         }
     }

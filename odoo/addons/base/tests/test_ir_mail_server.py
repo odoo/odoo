@@ -533,3 +533,74 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             raise AssertionError("Email with non-ASCII .eml attachment could not be serialized") from e
 
         self.assertIsInstance(serialized, bytes)
+
+    def test_mail_add_cc(self):
+        """Check that recipients are added to the "Cc" header when present in X-Msg-Cc-Add."""
+        IrMailServer = self.env['ir.mail_server']
+        mail_from = 'specific_user@test.mycompany.com'
+
+        # Simple use-case: Add a new fake CC recipient
+        with self.mock_smtplib_connection():
+            smtp_session = IrMailServer._connect__(smtp_from=mail_from)
+            message = self._build_email(
+                mail_from=mail_from,
+                email_to=['test-to@ex.com'],
+                email_cc=['test-cc-std@ex.com'],
+                headers={'X-Msg-Cc-Add': 'test-cc-new@ex.com'},
+            )
+            IrMailServer.send_email(message, smtp_session=smtp_session)
+        self.assertSMTPEmailsSent(
+            smtp_from=mail_from,
+            message_from=mail_from,
+            mail_server=self.mail_server_user,
+            # fake Cc is not added to the smtp to list
+            smtp_to_list=['test-to@ex.com', 'test-cc-std@ex.com'],
+            msg_to_lst=['test-to@ex.com'],
+            # Cc header contains original Cc + the fake one
+            msg_cc_lst=['test-cc-std@ex.com', 'test-cc-new@ex.com'],
+        )
+
+        # Additional checks
+        for (email_to, email_cc, email_to_add, email_cc_add), (expected_smtp, expected_msg_to, expected_msg_cc) in (
+                # Pure fake Cc
+                ((['test-to@ex.com'], ['test-cc-std@ex.com'], None, 'test-cc-add@ex.com'),
+                 (['test-to@ex.com', 'test-cc-std@ex.com'],
+                  ['test-to@ex.com'], ['test-cc-std@ex.com', 'test-cc-add@ex.com'])),
+
+                # Pure fake To
+                ((['test-to@ex.com'], ['test-cc@ex.com'], 'test-to-add@ex.com', None),
+                 (['test-to@ex.com', 'test-cc@ex.com'],
+                  ['test-to@ex.com', 'test-to-add@ex.com'], ['test-cc@ex.com'])),
+
+                # Mix both
+                ((['test-to@ex.com'], ['test-cc@ex.com'], 'test-to-add@ex.com', 'test-cc-add@ex.com'),
+                 (['test-to@ex.com', 'test-cc@ex.com'],
+                  ['test-to@ex.com', 'test-to-add@ex.com'], ['test-cc@ex.com', 'test-cc-add@ex.com'])),
+
+                # Avoid duplicate in Cc if address is already in To
+                ((['test-to@ex.com'], ['test-cc@ex.com'], None, 'test-to@ex.com'),
+                 (['test-to@ex.com', 'test-cc@ex.com'],
+                  ['test-to@ex.com'], ['test-cc@ex.com'])),
+
+                # 5. Formatted emails
+                ((['"Formatted To" <test-to@ex.com>'], ['"Formatted Cc" <test-cc@ex.com>'],
+                  None, '"New Cc" <test-cc-add@ex.com>'),
+                 (['test-to@ex.com', 'test-cc@ex.com'],
+                  ['"Formatted To" <test-to@ex.com>'],
+                  ['"Formatted Cc" <test-cc@ex.com>', '"New Cc" <test-cc-add@ex.com>'])),
+        ):
+            with self.subTest(email_to=email_to, email_cc=email_cc, email_to_add=email_to_add,
+                              email_cc_add=email_cc_add):
+                with self.mock_smtplib_connection():
+                    smtp_session = IrMailServer._connect__(smtp_from=mail_from)
+                    headers = {}
+                    if email_to_add:
+                        headers['X-Msg-To-Add'] = email_to_add
+                    if email_cc_add:
+                        headers['X-Msg-Cc-Add'] = email_cc_add
+
+                    message = self._build_email(mail_from, email_to=email_to, email_cc=email_cc, headers=headers)
+                    IrMailServer.send_email(message, smtp_session=smtp_session)
+                self.assertSMTPEmailsSent(
+                    smtp_from=mail_from, message_from=mail_from, mail_server=self.mail_server_user,
+                    smtp_to_list=expected_smtp, msg_to_lst=expected_msg_to, msg_cc_lst=expected_msg_cc)

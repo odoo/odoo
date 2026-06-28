@@ -1,4 +1,4 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { exprToBoolean } from "@web/core/utils/strings";
@@ -8,28 +8,29 @@ import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t, useListener } from "@odoo/owl";
+
+export const charFieldProps = {
+    ...standardFieldProps,
+    autocomplete: t.string().optional(),
+    isPassword: t.boolean().optional(),
+    placeholder: t.string().optional(),
+    dynamicPlaceholder: t.boolean().optional(false),
+    dynamicPlaceholderModelReferenceField: t.string().optional(),
+};
 
 export class CharField extends Component {
     static template = "web.CharField";
     static components = {
         TranslationButton,
     };
-    static props = {
-        ...standardFieldProps,
-        autocomplete: { type: String, optional: true },
-        isPassword: { type: Boolean, optional: true },
-        placeholder: { type: String, optional: true },
-        dynamicPlaceholder: { type: Boolean, optional: true },
-        dynamicPlaceholderModelReferenceField: { type: String, optional: true },
-    };
-    static defaultProps = { dynamicPlaceholder: false };
+    props = props(charFieldProps);
 
     setup() {
         this.input = useRef("input");
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder(this.input);
-            useExternalListener(document, "keydown", this.dynamicPlaceholder.onKeydown);
+            useListener(document, "keydown", this.dynamicPlaceholder.onKeydown);
             useLayoutEffect(() =>
                 this.dynamicPlaceholder.updateModel(
                     this.props.dynamicPlaceholderModelReferenceField
@@ -70,7 +71,9 @@ export class CharField extends Component {
     }
 
     onBlur() {
-        this.selectionStart = this.input.el.selectionStart;
+        if (this.input.el) {
+            this.selectionStart = this.input.el.selectionStart;
+        }
     }
 
     async onDynamicPlaceholderOpen() {
@@ -100,7 +103,6 @@ export class CharField extends Component {
 }
 
 export const charField = {
-    additionalClasses: ["o_input_box"],
     component: CharField,
     displayName: _t("Text"),
     supportedTypes: ["char", "text"],

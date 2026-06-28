@@ -1,8 +1,13 @@
 import { expect, test } from "@odoo/hoot";
 import { click, drag, hover, leave, pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, mockTouch, runAllTimers } from "@odoo/hoot-mock";
-import { Component, useState, xml } from "@odoo/owl";
-import { makeMockEnv, mockService, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { Component, xml, proxy } from "@odoo/owl";
+import {
+    makeMockEnv,
+    mockService,
+    mountWithCleanup,
+    registerTemplate,
+} from "@web/../tests/web_test_helpers";
 
 import { popoverService } from "@web/core/popover/popover_service";
 import { OPEN_DELAY, SHOW_AFTER_DELAY } from "@web/core/tooltip/tooltip_service";
@@ -61,10 +66,10 @@ test("remove element with opened tooltip", async () => {
         static props = ["*"];
         static template = xml`
             <div>
-                <button t-if="state.visible" data-tooltip="hello">Action</button>
+                <button t-if="this.state.visible" data-tooltip="hello">Action</button>
             </div>`;
         setup() {
-            this.state = useState({ visible: true });
+            this.state = proxy({ visible: true });
             compState = this.state;
         }
     }
@@ -186,12 +191,9 @@ test("tooltip with a template, no info", async () => {
         `;
     }
 
+    registerTemplate("my_tooltip_template", /* xml */ `<i t-out='env.tooltip_text'/>`);
     await makeMockEnv({ tooltip_text: "tooltip" });
-    await mountWithCleanup(MyComponent, {
-        templates: {
-            my_tooltip_template: /* xml */ `<i t-out='env.tooltip_text'/>`,
-        },
-    });
+    await mountWithCleanup(MyComponent);
 
     expect(".o-tooltip").toHaveCount(0);
 
@@ -209,7 +211,7 @@ test("tooltip with a template and info", async () => {
         static template = xml`
             <button
                 data-tooltip-template="my_tooltip_template"
-                t-att-data-tooltip-info="info">
+                t-att-data-tooltip-info="this.info">
                 Action
             </button>
         `;
@@ -218,16 +220,16 @@ test("tooltip with a template and info", async () => {
         }
     }
 
-    await mountWithCleanup(MyComponent, {
-        templates: {
-            my_tooltip_template: /* xml */ `
-                <ul>
-                    <li>X: <t t-out="x"/></li>
-                    <li>Y: <t t-out="y"/></li>
-                </ul>
-            `,
-        },
-    });
+    registerTemplate(
+        "my_tooltip_template",
+        /* xml */ `
+            <ul>
+                <li>X: <t t-out="x"/></li>
+                <li>Y: <t t-out="y"/></li>
+            </ul>
+        `
+    );
+    await mountWithCleanup(MyComponent);
 
     expect(".o-tooltip").toHaveCount(0);
 
@@ -242,7 +244,7 @@ test.tags("desktop");
 test("empty tooltip, no template", async () => {
     class MyComponent extends Component {
         static props = ["*"];
-        static template = xml`<button t-att-data-tooltip="tooltip">Action</button>`;
+        static template = xml`<button t-att-data-tooltip="this.tooltip">Action</button>`;
         get tooltip() {
             return "";
         }

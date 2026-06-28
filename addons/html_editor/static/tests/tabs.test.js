@@ -745,7 +745,7 @@ describe("insert tabulation", () => {
                     tabAfterA,
                     false
                 )}b</p>` +
-                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}<br></p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}</p>` +
                 `<h1>${oeTab(TAB_WIDTH, false)}c${oeTab(tabAfterCinH1, false)}</h1>` +
                 `<h1>${oeTab(TAB_WIDTH, false)}d${oeTab(tabAfterDinH1, false)}</h1>` +
                 `<blockquote>${oeTab(tabInBlockquote, false)}e${oeTab(
@@ -756,7 +756,7 @@ describe("insert tabulation", () => {
             contentAfter:
                 `<p>xxx</p>` +
                 `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}a[${oeTab(tabAfterA)}b</p>` +
-                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}<br></p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}</p>` +
                 `<h1>${oeTab(TAB_WIDTH)}c${oeTab(tabAfterCinH1)}</h1>` +
                 `<h1>${oeTab(TAB_WIDTH)}d${oeTab(tabAfterDinH1)}</h1>` +
                 `<blockquote>${oeTab(tabInBlockquote)}e${oeTab(
@@ -787,7 +787,7 @@ describe("insert tabulation", () => {
                     tabAfterA,
                     false
                 )}b</p>` +
-                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}<br></p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}</p>` +
                 `<h1>${oeTab(TAB_WIDTH, false)}c${oeTab(tabAfterCinH1, false)}</h1>` +
                 `<h1>${oeTab(TAB_WIDTH, false)}d${oeTab(tabAfterDinH1, false)}</h1>` +
                 `<blockquote>${oeTab(tabInBlockquote, false)}e${oeTab(
@@ -798,7 +798,7 @@ describe("insert tabulation", () => {
             contentAfter:
                 `<p>xxx</p>` +
                 `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}a]${oeTab(tabAfterA)}b</p>` +
-                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}<br></p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}</p>` +
                 `<h1>${oeTab(TAB_WIDTH)}c${oeTab(tabAfterCinH1)}</h1>` +
                 `<h1>${oeTab(TAB_WIDTH)}d${oeTab(tabAfterDinH1)}</h1>` +
                 `<blockquote>${oeTab(tabInBlockquote)}e${oeTab(
@@ -890,7 +890,7 @@ describe("insert tabulation", () => {
             contentAfterEdit:
                 `<p>${oeTab(TAB_WIDTH, false)}a</p>` +
                 `<p>[${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}b</p>` +
-                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}<br></p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}</p>` +
                 `<ul>` +
                     `<li class="oe-nested">` +
                         `<ul>` +
@@ -907,7 +907,7 @@ describe("insert tabulation", () => {
             contentAfter:
                 `<p>${oeTab(TAB_WIDTH)}a</p>` +
                 `<p>[${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}b</p>` +
-                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}<br></p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}</p>` +
                 `<ul>` +
                     `<li class="oe-nested">` +
                         `<ul>` +
@@ -950,7 +950,7 @@ describe("insert tabulation", () => {
             contentAfterEdit:
                 `<p>${oeTab(TAB_WIDTH, false)}a</p>` +
                 `<p>]${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}b</p>` +
-                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}<br></p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}</p>` +
                 `<ul>` +
                     `<li class="oe-nested">` +
                         `<ul>` +
@@ -967,7 +967,7 @@ describe("insert tabulation", () => {
             contentAfter:
                 `<p>${oeTab(TAB_WIDTH)}a</p>` +
                 `<p>]${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}b</p>` +
-                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}<br></p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}</p>` +
                 `<ul>` +
                     `<li class="oe-nested">` +
                         `<ul>` +

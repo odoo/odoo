@@ -11,7 +11,7 @@ class EventRegistrationAnswer(models.Model):
     _rec_names_search = ['value_answer_id', 'value_text_box']
 
     question_id = fields.Many2one(
-        'event.question', ondelete='restrict', required=True,
+        'event.question', ondelete='restrict', required=True, index=True,
         domain="[('event_ids', 'in', event_id)]")
     registration_id = fields.Many2one('event.registration', required=True, index=True, ondelete='cascade')
     partner_id = fields.Many2one('res.partner', related='registration_id.partner_id')

@@ -4,26 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.3a1+e\n"
+"Project-Id-Version: Odoo Server 19.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 19:13+0000\n"
-"PO-Revision-Date: 2026-03-12 19:13+0000\n"
+"POT-Creation-Date: 2026-06-12 18:21+0000\n"
+"PO-Revision-Date: 2026-06-12 18:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: l10n_es_edi_facturae
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.corrective_type
-msgid "01"
-msgstr ""
-
-#. module: l10n_es_edi_facturae
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.account_invoice_facturae_export
-msgid "3.2.2"
-msgstr ""
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__27
@@ -358,7 +348,6 @@ msgstr ""
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move_send.py:0
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.view_move_form
 msgid "Factura-e"
 msgstr ""
 
@@ -707,6 +696,12 @@ msgid "Open account reimbursement"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_bank_statement_line__l10n_es_original_invoice_credited
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_move__l10n_es_original_invoice_credited
+msgid "Original Invoice Credited"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_tax__l10n_es_edi_facturae_tax_type__05
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__05
 msgid "Other"
@@ -746,6 +741,14 @@ msgid "Physical GLN"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/account_move.py:0
+msgid ""
+"Please fill in the invoicing period (start and end date) before generating "
+"the corrective Facturae document."
+msgstr ""
+
+#. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__29
 msgid "Portions"
 msgstr ""
@@ -777,6 +780,7 @@ msgstr ""
 
 #. module: l10n_es_edi_facturae
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.view_account_move_reversal_inherit_l10n_es_edi_facturae
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.view_move_form
 msgid "Reason"
 msgstr ""
 
@@ -876,8 +880,8 @@ msgid "Spanish Facturae EDI Tax Type"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.product_uom_form_view_inherit_l10n_es_edi_facturae
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.product_uom_tree_view_inherit_l10n_es_edi_facturae
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.uom_uom_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.uom_uom_view_list
 msgid "Spanish Facturae EDI type"
 msgstr ""
 
@@ -971,15 +975,6 @@ msgstr ""
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
-msgid ""
-"The credit note/refund appears to have been issued manually. For the purpose"
-" of generating a Facturae document, it's necessary that the credit "
-"note/refund is created directly from the associated invoice/bill."
-msgstr ""
-
-#. module: l10n_es_edi_facturae
-#. odoo-python
-#: code:addons/l10n_es_edi_facturae/models/account_move.py:0
 msgid "The partner needs a set country"
 msgstr ""
 
@@ -993,6 +988,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
 msgid "The product '%s' could not be found."
+msgstr ""
+
+#. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/account_move.py:0
+msgid ""
+"To generate a Facturae corrective document, link the refund to its original "
+"invoice or, if it is not in the system, fill in the 'Original Invoice "
+"Credited' field."
 msgstr ""
 
 #. module: l10n_es_edi_facturae

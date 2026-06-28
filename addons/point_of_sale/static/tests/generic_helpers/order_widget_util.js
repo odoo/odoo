@@ -31,6 +31,7 @@ export function hasLine({
     oldPrice,
     priceNoDiscount,
     attributeLine,
+    refundQty,
 } = {}) {
     let trigger = `.order-container .orderline${withClass}`;
     if (withoutClass) {
@@ -39,9 +40,15 @@ export function hasLine({
     if (productName) {
         trigger += `:has(.product-name:contains("${productName}"))`;
     }
+
+    const formatQty = (value) =>
+        parseFloat(value) % 1 === 0 ? parseInt(value, 10).toString() : value;
+
     if (quantity) {
-        quantity = parseFloat(quantity) % 1 === 0 ? parseInt(quantity).toString() : quantity;
-        trigger += `:has(.qty:contains("${quantity}"))`;
+        trigger += `:has(.qty:contains("${formatQty(quantity)}"))`;
+    }
+    if (refundQty) {
+        trigger += `:has(.qty .refund:contains("${formatQty(refundQty)}"))`;
     }
     if (price) {
         trigger += `:has(.price:contains("${price}"))`;
@@ -138,9 +145,9 @@ export function hasCustomerNote(note) {
     ];
 }
 
-export function hasNoTax() {
+export function hasServiceFee(amount) {
     return {
-        content: "order has not tax",
-        trigger: negate(".tax-info"),
+        content: `order has service fee of '${amount}'`,
+        trigger: `:has(.product-name:contains("Service Fee")):has(.price:contains("${amount}"))`,
     };
 }

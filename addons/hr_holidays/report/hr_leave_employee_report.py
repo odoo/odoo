@@ -23,7 +23,7 @@ class HrLeaveEmployeeReport(models.Model):
     number_of_days = fields.Float(compute='_compute_leave_duration', readonly=True, store=True)
     number_of_hours = fields.Float(compute='_compute_leave_duration', readonly=True, store=True)
     description = fields.Char()
-    work_entry_type_id = fields.Many2one("hr.work.entry.type", string="Time Off Type")
+    work_entry_type_id = fields.Many2one("hr.work.entry.type", string="Time Type")
     state = fields.Selection([
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
@@ -81,12 +81,18 @@ class HrLeaveEmployeeReport(models.Model):
             return
         leave_ids = [report_record['leave_id'] for report_record in report_records]
         leaves = self.env['hr.leave'].browse(leave_ids)
-        work_entry_type_id_by_leave_id = {leave.id: leave.work_entry_type_id.id for leave in leaves}
+        leave_info_by_id = {
+            leave.id: {
+                'work_entry_type_id': leave.work_entry_type_id.id,
+                'resource_calendar_id': leave.resource_calendar_id.id,
+            }
+            for leave in leaves
+        }
         virtual_leaves_data = [{
             'date_from': report_record['working_schedule_aligned_date_from'],
             'date_to': report_record.pop('day_aligned_date_to'),
             'employee_id': report_record['employee_id'],
-            'work_entry_type_id': work_entry_type_id_by_leave_id[report_record['leave_id']],
+             **leave_info_by_id[report_record['leave_id']],
         } for report_record in report_records]
         virtual_leaves = self.env['hr.leave']
         for virtual_leave_data in virtual_leaves_data:

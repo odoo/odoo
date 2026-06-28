@@ -1,4 +1,3 @@
-import { reactive } from "@web/owl2/utils";
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
@@ -16,9 +15,9 @@ import {
     isListElement,
     isListItemElement,
     isParagraphRelatedElement,
+    isPhrasingContent,
     isProtected,
     isProtecting,
-    isShrunkBlock,
     isVisibleTextNode,
     listElementSelector,
 } from "@html_editor/utils/dom_info";
@@ -37,8 +36,8 @@ import { _t } from "@web/core/l10n/translation";
 import { compareListTypes, createList, insertListAfter, isListItem } from "./utils";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "@html_editor/utils/resource";
-import { FONT_SIZE_CLASSES, getFontSizeOrClass, getHtmlStyle } from "@html_editor/utils/formatting";
-import { getTextColorOrClass, TEXT_CLASSES_REGEX } from "@html_editor/utils/color";
+import { getFontSizeOrClass, getHtmlStyle } from "@html_editor/utils/formatting";
+import { TEXT_CLASSES_REGEX, getColorOrClass } from "@html_editor/utils/color";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { ListSelector } from "./list_selector";
 import { composeToolbarButton } from "../toolbar/toolbar";
@@ -84,7 +83,6 @@ export class ListPlugin extends Plugin {
     static defaultConfig = {
         allowChecklist: true,
     };
-    toolbarListSelectorKey = reactive({ value: 0 });
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -152,7 +150,6 @@ export class ListPlugin extends Plugin {
                 props: {
                     getButtons: () => this.listSelectorButtons,
                     getListMode: this.getListMode.bind(this),
-                    key: this.toolbarListSelectorKey,
                 },
                 isAvailable: this.canToggleList.bind(this),
             }),
@@ -180,16 +177,16 @@ export class ListPlugin extends Plugin {
         hints: [{ selector: `LI, LI > ${baseContainerGlobalSelector}`, text: _t("List") }],
 
         /** Handlers */
-        on_step_added_handlers: this.updateToolbarButtons.bind(this),
         on_deleted_handlers: this.adjustListPaddingOnDelete.bind(this),
         on_will_insert_separator_handlers: this.exitList.bind(this),
-        on_will_format_selection_handlers: this.applyFormatToListItem.bind(this),
+        on_format_applied_handlers: this.postFormatAppliedOnList.bind(this),
 
         /** Processors */
         normalize_processors: this.normalize.bind(this),
         node_to_insert_processors: this.processNodeToInsert.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         before_insert_within_pre_processors: this.insertListWithinPre.bind(this),
+        before_insert_processors: this.handleInsert.bind(this),
 
         /** Overrides */
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
@@ -197,7 +194,7 @@ export class ListPlugin extends Plugin {
         tab_overrides: this.handleTab.bind(this),
         shift_tab_overrides: this.handleShiftTab.bind(this),
         split_element_block_overrides: this.handleSplitBlock.bind(this),
-        color_apply_overrides: this.applyColorToListItem.bind(this),
+        apply_color_overrides: this.applyColorToListItem.bind(this),
         triple_click_overrides: this.handleTripleClick.bind(this),
 
         is_node_fully_selected_predicates: (node, selection, range) => {
@@ -217,6 +214,20 @@ export class ListPlugin extends Plugin {
                 }
             }
         },
+
+        /** Providers */
+        color_target_providers: (node) => {
+            const li = closestElement(node, isListItem);
+            if (li && this.dependencies.selection.areNodeContentsFullySelected(li)) {
+                return li;
+            }
+        },
+        formattable_node_providers: (node) => {
+            const li = closestElement(node, isListItem);
+            if (li && this.dependencies.selection.areNodeContentsFullySelected(li)) {
+                return li;
+            }
+        },
     };
 
     setup() {
@@ -231,7 +242,7 @@ export class ListPlugin extends Plugin {
 
     toggleListCommand({ mode, listStyle } = {}) {
         this.toggleList(mode, listStyle);
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     getBlocksToToggleList() {
@@ -318,6 +329,7 @@ export class ListPlugin extends Plugin {
     }
 
     normalize(root = this.editable) {
+        const originalRoot = root;
         const closestNestedLI = closestElement(root, "li:has(ul, ol)");
         if (closestNestedLI && closestNestedLI.closest("ul, ol")) {
             root = closestNestedLI.parentElement;
@@ -341,6 +353,7 @@ export class ListPlugin extends Plugin {
                 }
             }
         }
+        return originalRoot;
     }
 
     // --------------------------------------------------------------------------
@@ -356,7 +369,7 @@ export class ListPlugin extends Plugin {
             return this.baseContainerToList(element, mode);
         }
         // @todo @phoenix: check for callbacks registered as resources instead?
-        if (element.matches("td, th, li.nav-item")) {
+        if (element.matches("td, th, li.nav-item, blockquote")) {
             return this.blockContentsToList(element, mode);
         }
         let list;
@@ -507,15 +520,14 @@ export class ListPlugin extends Plugin {
         if (!isOrphan) {
             return;
         }
-        if (element.children.length && [...element.children].every(isBlock)) {
-            // Unwrap <li> if each of its children is a block element.
-            unwrapContents(element);
-        } else {
-            // Otherwise, wrap its content in a new <p> element.
-            const paragraph = this.dependencies.baseContainer.createBaseContainer();
-            element.replaceWith(paragraph);
-            paragraph.replaceChildren(...element.childNodes);
-        }
+        const cursors = this.dependencies.selection.preserveSelection();
+        this.dependencies.dom.wrapInlinesInBlocks(element, {
+            baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
+            cursors,
+        });
+        cursors.update(callbacksForCursorUpdate.unwrap(element));
+        unwrapContents(element);
+        cursors.restore();
     }
 
     mergeSimilarLists(element) {
@@ -561,9 +573,15 @@ export class ListPlugin extends Plugin {
             element.classList.add("oe-nested");
         }
 
+        element.classList.toggle(
+            "o_checked_has_nested_list",
+            element.classList.contains("o_checked") && !!element.querySelector("ul, ol")
+        );
+
         if (
             [...element.children].some(
-                (child) => isBlock(child) && !this.dependencies.split.isUnsplittable(child)
+                (child) =>
+                    !isPhrasingContent(child) && !this.dependencies.split.isUnsplittable(child)
             )
         ) {
             const cursors = this.dependencies.selection.preserveSelection();
@@ -664,7 +682,7 @@ export class ListPlugin extends Plugin {
     splitList(node) {
         const cursors = this.dependencies.selection.preserveSelection();
         // Create new list
-        const currentList = closestElement(node, "ul, ol");
+        const currentList = closestElement(node.parentElement, "ul, ol");
         const newList = currentList.cloneNode(false);
         const isList = isListElement(node);
         const wrapperLi = isList ? this.document.createElement("li") : node;
@@ -735,14 +753,9 @@ export class ListPlugin extends Plugin {
         const ul = li.parentNode;
         const children = childNodes(li);
         if (!children.every(isBlock)) {
-            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            for (const child of children) {
-                cursors.update(callbacksForCursorUpdate.append(baseContainer, child));
-                baseContainer.append(child);
-            }
-            if (isShrunkBlock(baseContainer)) {
-                baseContainer.append(this.document.createElement("br"));
-            }
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer({
+                children: [...children],
+            });
             li.append(baseContainer);
             cursors.remapNode(li, baseContainer);
         }
@@ -755,9 +768,15 @@ export class ListPlugin extends Plugin {
         // Preserve style properties
         const dir = li.getAttribute("dir") || ul.getAttribute("dir");
         const textAlign = li.style.getPropertyValue("text-align");
-        const liColorStyle = getTextColorOrClass(li);
+        const liColorStyle = getColorOrClass(li);
         const liFontSizeStyle = getFontSizeOrClass(li);
-        const wrapChildren = (parent, tag) => {
+        const getOrCreateWrapper = (parent, tag) => {
+            if (
+                parent.childNodes.length === 1 &&
+                parent.firstChild.nodeName === tag.toUpperCase()
+            ) {
+                return parent.firstChild;
+            }
             const wrapper = this.document.createElement(tag);
             wrapper.append(...parent.childNodes);
             parent.replaceChildren(wrapper);
@@ -775,16 +794,24 @@ export class ListPlugin extends Plugin {
             }
             // text color
             if (liColorStyle) {
-                const font = wrapChildren(block, "font");
+                const font = getOrCreateWrapper(block, "font");
                 this.dependencies.color.colorElement(font, liColorStyle.value, "color");
             }
             // font-size
-            if (liFontSizeStyle && !isEmptyBlock(block)) {
-                const span = wrapChildren(block, "span");
+            if (liFontSizeStyle) {
+                const span = getOrCreateWrapper(block, "span");
                 if (liFontSizeStyle.type === "font-size") {
-                    span.style.fontSize = liFontSizeStyle.value;
-                } else if (liFontSizeStyle.type === "class") {
+                    span.style.setProperty("font-size", liFontSizeStyle.value);
+                } else {
                     span.classList.add(liFontSizeStyle.value);
+                }
+            }
+            // other style properties
+            for (const property of ["font-weight", "font-style"]) {
+                const value = li.style.getPropertyValue(property);
+                if (value) {
+                    const span = getOrCreateWrapper(block, "span");
+                    span.style.setProperty(property, value);
                 }
             }
         }
@@ -890,7 +917,7 @@ export class ListPlugin extends Plugin {
                 this.adjustListPadding(list);
             }
             // Do nothing to nav-items.
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
             return true;
         }
     }
@@ -914,7 +941,7 @@ export class ListPlugin extends Plugin {
             this.outdentListNodes(listItems);
             this.dependencies.tabulation.outdentBlocks(nonListItems);
             // Do nothing to nav-items.
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
             return true;
         }
     }
@@ -1083,7 +1110,7 @@ export class ListPlugin extends Plugin {
                 this.dependencies.selection.setSelection({ anchorNode: node, anchorOffset: 0 });
             }
             ev.preventDefault();
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
         }
     }
 
@@ -1118,7 +1145,7 @@ export class ListPlugin extends Plugin {
         );
     }
 
-    applyColorToListItem(color, mode) {
+    applyColorToListItem(color, mode, coloredNodes) {
         this.dependencies.split.splitSelection();
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
         const listItems = new Set(
@@ -1130,9 +1157,10 @@ export class ListPlugin extends Plugin {
         const cursors = this.dependencies.selection.preserveSelection();
         for (const listItem of listItems) {
             if (this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
+                const listItemDescendants = descendants(listItem);
                 for (const node of [
                     listItem,
-                    ...descendants(listItem).filter(
+                    ...listItemDescendants.filter(
                         (n) => isElement(n) && closestElement(n, "LI") === listItem
                     ),
                 ]) {
@@ -1147,9 +1175,13 @@ export class ListPlugin extends Plugin {
                     }
                 }
 
+                const sublists = childNodes(listItem).filter(isListElement);
+                coloredNodes.add(listItem);
+                listItemDescendants
+                    .filter((n) => !sublists.some((list) => list.contains(n)))
+                    .forEach((n) => coloredNodes.add(n));
                 if (color) {
                     this.dependencies.color.colorElement(listItem, color, mode);
-                    const sublists = childNodes(listItem).filter(isListElement);
                     for (const list of sublists) {
                         list.classList.add("o_default_color");
                     }
@@ -1177,80 +1209,23 @@ export class ListPlugin extends Plugin {
         cursors.restore();
     }
 
-    applyFormatToListItem(formatName, { formatProps, applyStyle } = {}) {
-        if (!["setFontSizeClassName", "fontSize"].includes(formatName)) {
+    postFormatAppliedOnList(node, formatName, applyStyle) {
+        if (formatName !== "fontSize") {
             return;
         }
-        this.dependencies.split.splitSelection();
-        const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        const listItems = new Set(
-            targetedNodes.map((n) => closestElement(n, "li")).filter(Boolean)
-        );
-        if (!listItems.size) {
-            return false;
-        }
         const listsSet = new Set();
-        const cursors = this.dependencies.selection.preserveSelection();
-        for (const listItem of listItems) {
-            // Skip list items with block descendants other than base
-            // container or a list related elements or no font size formatting
-            // to remove.
-            const hasOnlyBaseBlocks = [...descendants(listItem)]
-                .filter(isBlock)
-                .every((n) => n.matches(`${baseContainerGlobalSelector}, ol, ul, li`));
-            const hasExistingFontSize =
-                FONT_SIZE_CLASSES.some((c) => listItem.classList.contains(c)) ||
-                listItem.style.fontSize;
-            if (!hasOnlyBaseBlocks || (!applyStyle && !hasExistingFontSize)) {
-                continue;
-            }
-
-            if (this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
-                for (const node of [
-                    listItem,
-                    ...descendants(listItem).filter(
-                        (n) => isElement(n) && closestElement(n, "LI") === listItem
-                    ),
-                ]) {
-                    removeClass(node, ...FONT_SIZE_CLASSES, "o_default_font_size");
-                    if (node.style.fontSize) {
-                        node.style.fontSize = "";
-                    }
-                }
-
+        if (isListItem(node)) {
+            const sublists = childNodes(node).filter(isListElement);
+            for (const list of sublists) {
                 if (applyStyle) {
-                    if (formatName === "setFontSizeClassName") {
-                        listItem.classList.add(formatProps.className);
-                    } else if (formatName === "fontSize") {
-                        listItem.style.fontSize = formatProps.size;
-                    }
-                    const sublists = childNodes(listItem).filter(isListElement);
-                    for (const list of sublists) {
-                        list.classList.add("o_default_font_size");
-                    }
-                }
-            } else if (!applyStyle && hasExistingFontSize) {
-                const textNodes = targetedNodes.filter(
-                    (n) => isVisibleTextNode(n) && closestElement(n, "li") === listItem
-                );
-                // Remove inline font size from partial selection by
-                // wrapping in span with default font size.
-                for (const node of textNodes) {
-                    const span = this.document.createElement("span");
-                    span.classList.add("o_default_font_size");
-                    node.before(span);
-                    cursors.update(callbacksForCursorUpdate.before(node, span));
-                    span.append(node);
-                    cursors.update(callbacksForCursorUpdate.append(span, node));
+                    list.classList.add("o_default_font_size");
                 }
             }
-            listsSet.add(listItem.parentElement);
+            listsSet.add(node.parentElement);
         }
-        cursors.restore();
         for (const list of listsSet) {
             this.adjustListPadding(list);
         }
-        return true;
     }
 
     /**
@@ -1261,7 +1236,7 @@ export class ListPlugin extends Plugin {
      * @param {HTMLElement} list - The `<ul>` element used to determine the parent list and marker width.
      */
     adjustListPadding(list) {
-        if (!isListElement(list)) {
+        if (!isListElement(list) || ![...list.children].some(getFontSizeOrClass)) {
             return;
         }
         list.style.removeProperty("padding-inline-start");
@@ -1269,14 +1244,18 @@ export class ListPlugin extends Plugin {
             return;
         }
 
-        const largestMarker = list.children[Symbol.iterator]()
+        const largestMarkerPadding = list.children[Symbol.iterator]()
             .map((li) => {
-                const markerWidth = parseFloat(this.window.getComputedStyle(li, "::marker").width);
-                return isNaN(markerWidth) ? 0 : markerWidth;
+                const beforeMargin = Math.abs(
+                    parseFloat(this.window.getComputedStyle(li, "::before").marginInlineStart) || 0
+                );
+                const markerWidth =
+                    parseFloat(this.window.getComputedStyle(li, "::marker").width) || 0;
+                // For `UL` with large font size the marker width is so big that more padding is needed.
+                const markerPadding = Math.round(markerWidth) * (list.nodeName === "UL" ? 2 : 1);
+                return Math.max(markerPadding, beforeMargin);
             })
             .reduce((accumulator, currentValue) => Math.max(accumulator, currentValue));
-        // For `UL` with large font size the marker width is so big that more padding is needed.
-        const largestMarkerPadding = Math.round(largestMarker) * (list.nodeName === "UL" ? 2 : 1);
 
         // bootstrap sets ul { padding-left: 2rem; }
         const defaultPadding = parseFloat(getHtmlStyle(this.document).fontSize) * 2;
@@ -1330,10 +1309,6 @@ export class ListPlugin extends Plugin {
     // Toolbar buttons
     // --------------------------------------------------------------------------
 
-    updateToolbarButtons() {
-        this.toolbarListSelectorKey.value++;
-    }
-
     getListSelectorButtons() {
         return listSelectorItems
             .filter((item) => item.commandId != "toggleListCL" || this.config.allowChecklist)
@@ -1348,5 +1323,14 @@ export class ListPlugin extends Plugin {
                     description: item.description,
                 };
             });
+    }
+
+    handleInsert(container, block) {
+        if (!this.config.allowChecklist) {
+            for (const list of container.querySelectorAll(".o_checklist > li")) {
+                this.liToBlocks(list);
+            }
+        }
+        return container;
     }
 }

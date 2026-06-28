@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, useEffect, proxy } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { useActionInfo } from "../utils";
 
@@ -39,11 +38,10 @@ export class BuilderInputBase extends Component {
         this.isEditing = false;
         this.info = useActionInfo();
         this.inputRef = useForwardRefToParent("inputRef");
-        this.state = useState({ value: this.props.value });
-        onWillUpdateProps((nextProps) => {
-            if ("value" in nextProps) {
-                this.state.value = this.isEditing ? this.inputRef.el.value : nextProps.value;
-            }
+        this.state = proxy({ value: this.props.value });
+        useEffect(() => {
+            const value = this.props.value;
+            this.state.value = this.isEditing ? this.inputRef.el.value : value;
         });
     }
 
@@ -51,11 +49,13 @@ export class BuilderInputBase extends Component {
         this.isEditing = false;
         const normalizedDisplayValue = this.props.commit(ev.target.value);
         ev.target.value = normalizedDisplayValue;
+        this.state.value = normalizedDisplayValue;
         this.props.onChange?.(ev);
     }
 
     onInput(ev) {
         this.isEditing = true;
+        this.state.value = ev.target.value;
         this.props.preview(ev.target.value);
         this.props.onInput?.(ev);
     }

@@ -12,6 +12,7 @@ from odoo.tools.misc import format_date
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 from odoo.addons.account.models.product import ACCOUNT_DOMAIN
 from odoo.addons.base_vat.models.res_partner import _ref_vat
+from odoo.addons.base.models.res_company import company_default_for
 from odoo.fields import Domain
 
 
@@ -34,8 +35,8 @@ MONTH_SELECTION = [
 # !!! KEEP ALIGNED WITH ACCOUNT_PEPPOL MANIFEST -> COUNTRIES
 PEPPOL_DEFAULT_COUNTRIES = [
     'AT', 'BE', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
-    'FR', 'GR', 'IE', 'IS', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL',
-    'NO', 'PL', 'PT', 'RO', 'SE', 'SI',
+    'FR', 'IE', 'IS', 'LT', 'LU', 'LV', 'MT', 'NL', 'NO', 'SE',
+    'SI',
 ]
 
 # List of countries where Peppol footnote will be added when sending by mail.
@@ -45,12 +46,13 @@ PEPPOL_MAILING_COUNTRIES = [
 
 # List of countries where Peppol is accessible.
 PEPPOL_LIST = PEPPOL_DEFAULT_COUNTRIES + [
-    'AD', 'AL', 'BA', 'BG', 'BL', 'GB', 'GF', 'GP', 'HR', 'HU', 'LI', 'MC', 'ME', 'MF',
-    'MK', 'MQ', 'NC', 'PF', 'PM', 'RE', 'RS', 'SK', 'SM', 'TF', 'TR', 'VA', 'WF', 'YT',
+    'AD', 'AL', 'AX', 'BA', 'BG', 'BL', 'GB', 'GF', 'GP', 'GR', 'HR', 'HU', 'IT', 'LI',
+    'MC', 'ME', 'MF', 'MK', 'MQ', 'NC', 'PF', 'PL', 'PM', 'PT', 'RE', 'RO', 'RS', 'SK',
+    'SM', 'TF', 'TR', 'VA', 'WF', 'YT'
 ]
 
 STORNO_MANDATORY_COUNTRIES = {'BA', 'CN', 'CZ', 'HR', 'PL', 'RO', 'RS', 'RU', 'SI', 'SK', 'UA'}
-STORNO_OPTIONAL_COUNTRIES = {'AT', 'CH', 'DE', 'IT'}
+STORNO_OPTIONAL_COUNTRIES = {'AT', 'CH', 'DE', 'IT', 'MK'}
 
 INTEGRITY_HASH_BATCH_SIZE = 1000
 
@@ -140,7 +142,7 @@ class ResCompany(models.Model):
         comodel_name='account.account',
         string="Loss Exchange Rate Account",
         check_company=True,
-        domain="[('account_type', '=', 'expense')]")
+        domain="[('account_type', 'in', ('expense', 'expense_other'))]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
@@ -156,6 +158,10 @@ class ResCompany(models.Model):
     )
     account_use_credit_limit = fields.Boolean(
         string='Sales Credit Limit', help='Enable the use of credit limit on partners.')
+    account_credit_limit = fields.Float(
+        string="Default Credit Limit",
+        **company_default_for('account_credit_limit', 'res.partner', 'credit_limit'),
+    )
 
     batch_payment_sequence_id = fields.Many2one(
         comodel_name='ir.sequence',
@@ -211,7 +217,7 @@ class ResCompany(models.Model):
     account_fiscal_country_id = fields.Many2one(
         string="Fiscal Country",
         comodel_name='res.country',
-        compute='compute_account_tax_fiscal_country',
+        compute='_compute_account_tax_fiscal_country',
         store=True,
         readonly=False,
         help="The country to use the tax reports from for this company")
@@ -244,19 +250,23 @@ class ResCompany(models.Model):
     # Multivat
     fiscal_position_ids = fields.One2many(comodel_name="account.fiscal.position", inverse_name="company_id")
     multi_vat_foreign_country_ids = fields.Many2many(
-        string="Foreign VAT countries",
-        help="Countries for which the company has a VAT number",
+        string="Foreign Tax ID countries",
+        help="Countries for which the company has a Tax ID",
         comodel_name='res.country',
         compute='_compute_multi_vat_foreign_country',
     )
 
     # Fiduciary mode
+    quick_edit_mode_enabled = fields.Boolean(string="Quick encoding")
     quick_edit_mode = fields.Selection(
         selection=[
             ('out_invoices', 'Customer Invoices'),
             ('in_invoices', 'Vendor Bills'),
             ('out_and_in_invoices', 'Customer Invoices and Vendor Bills')],
-        string="Quick encoding")
+        default='out_and_in_invoices',
+    )
+    document_sequence_editable = fields.Boolean(string="Document's sequence editable")
+    set_to_review_documents = fields.Boolean(string="Review data")
 
     # Separate account for allocation of discounts
     account_discount_income_allocation_id = fields.Many2one(comodel_name='account.account', string='Separate account for income discount')
@@ -289,16 +299,30 @@ class ResCompany(models.Model):
     income_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Income Account",
+        **company_default_for('income_account_id', 'product.category', 'property_account_income_categ_id'),
         domain=ACCOUNT_DOMAIN,
         help="This account will be used when validating a customer invoice.",
     )
     expense_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Expense Account",
+        **company_default_for('expense_account_id', 'product.category', 'property_account_expense_categ_id'),
         domain=ACCOUNT_DOMAIN,
         help="The expense is accounted for when a vendor bill is validated, except in anglo-saxon"
              " accounting with perpetual inventory valuation in which case the expense (Cost of"
              " Goods Sold account) is recognized at the customer invoice validation.",
+    )
+    receivable_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Receivable Account',
+        **company_default_for('receivable_account_id', 'res.partner', 'property_account_receivable_id'),
+        domain=[('account_type', '=', 'asset_receivable')],
+    )
+    payable_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Payable Account',
+        **company_default_for('payable_account_id', 'res.partner', 'property_account_payable_id'),
+        domain=[('account_type', '=', 'liability_payable')],
     )
     price_difference_account_id = fields.Many2one(
         comodel_name='account.account',
@@ -333,11 +357,6 @@ class ResCompany(models.Model):
         companies = self.filtered(lambda c: not c.restrictive_audit_trail and c.force_restrictive_audit_trail)
         if companies:
             raise ValidationError(_("Can't disable restricted audit trail: forced by localization."))
-
-    @api.constrains("account_price_include")
-    def _check_set_account_price_include(self):
-        if any(company.sudo()._existing_accounting() for company in self):
-            raise ValidationError(self.env._("Cannot change Price Tax computation method on a company that has already started invoicing."))
 
     @api.constrains('account_opening_move_id', 'fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear_last_day(self):
@@ -396,7 +415,7 @@ class ResCompany(models.Model):
             company.multi_vat_foreign_country_ids = self.env['res.country'].browse(company_to_foreign_vat_country.get(company.id))
 
     @api.depends('country_id')
-    def compute_account_tax_fiscal_country(self):
+    def _compute_account_tax_fiscal_country(self):
         for record in self:
             if not record.account_fiscal_country_id:
                 record.account_fiscal_country_id = record.country_id
@@ -498,7 +517,6 @@ class ResCompany(models.Model):
                         install_demo=False,
                     )
                 self.env.cr.precommit.add(try_loading)
-        companies._set_category_defaults()
         return companies
 
     def get_new_account_code(self, current_code, old_prefix, new_prefix):
@@ -761,7 +779,6 @@ class ResCompany(models.Model):
 
         companies = super().write(vals)
 
-        self._set_category_defaults()
         # We revoke all active exceptions affecting the changed lock dates and recreate them (with the updated lock dates)
         changed_soft_lock_fields = [field for field in SOFT_LOCK_DATE_FIELDS if field in vals]
         for company in self:
@@ -824,7 +841,7 @@ class ResCompany(models.Model):
             'ref': _('Opening Journal Entry'),
             'company_id': self.id,
             'journal_id': default_journal.id,
-            'date': (self.account_opening_date or fields.Date.start_of(fields.Date.today(), 'year')) - timedelta(days=1),
+            'date': (self.account_opening_date or fields.Date.start_of(fields.Date.context_today(self), 'year')) - timedelta(days=1),
         }
 
     def opening_move_posted(self):
@@ -845,7 +862,7 @@ class ResCompany(models.Model):
         # Do not assume '999999' doesn't exist since the user might have created such an account
         # manually.
         code = 999999
-        while self.env['account.account'].with_company(self).search_count([
+        while self.env['account.account'].with_company(self).with_context(active_test=False).search_count([
             *self.env['account.account']._check_company_domain(self),
             ('code', '=', str(code)),
         ], limit=1):
@@ -855,7 +872,7 @@ class ResCompany(models.Model):
                 'xml_id': f"account.{str(self.id)}_unaffected_earnings_account",
                 'values': {
                               'code': str(code),
-                              'name': _('Undistributed Profits/Losses'),
+                              'name': _('Profit or Loss Appropriation'),
                               'account_type': unaffected_earnings_type,
                               'company_ids': [Command.link(self.id)],
                           },
@@ -977,8 +994,6 @@ class ResCompany(models.Model):
             return False
         if res := super().install_l10n_modules():
             env = self.env
-            env.flush_all()
-            env.transaction.reset()
             for company in self.filtered(lambda c: c.country_id and not c.chart_template):
                 template_code = company.parent_id.chart_template or self.env['account.chart.template']._guess_chart_template(company.country_id)
                 if template_code != 'generic_coa':
@@ -1134,16 +1149,3 @@ class ResCompany(models.Model):
                     placeholder = _("%s, or / if not applicable", expected_vat)
 
             company.company_vat_placeholder = placeholder
-
-    def _set_category_defaults(self):
-        for company in self:
-            self.env['ir.default'].set('product.category', 'property_account_expense_categ_id', company.expense_account_id.id, company_id=company.id)
-            self.env['ir.default'].set('product.category', 'property_account_income_categ_id', company.income_account_id.id, company_id=company.id)
-
-    def _check_tax_return_configuration(self):
-        """
-        To override in localizations to check if the company is properly configured for tax returns.
-        or related modules are installed.
-        :raises RedirectWarning: if something is wrong configured.
-        """
-        return

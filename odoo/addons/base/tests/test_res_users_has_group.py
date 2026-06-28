@@ -317,29 +317,31 @@ class TestHasGroup(TransactionCase):
             user_b.write({"group_ids": [Command.link(group_C.id)]})
 
     def test_has_group_cleared_cache_on_write(self):
-        self.env.registry.clear_cache()
-        self.assertFalse(self.registry._Registry__caches['default'], "Ensure ormcache is empty")
+        def check_cache(filled, message=None):
+            get_group = self.registry['res.users']._get_group_ids
+            key = get_group.__cache__.key(self.test_user)
+            assert get_group.__cache__.cache_name == 'default'
+            cache = self.env.transaction.ormcaches__['default']
+            self.assertEqual(bool(cache.get(key)), filled, message)
 
-        def populate_cache():
-            self.test_user.has_group('test_user_has_group.group0')
-            self.assertTrue(self.registry._Registry__caches['default'], "user._has_group cache must be populated")
+        self.env.transaction.invalidate_ormcache()
+        check_cache(False)
 
-        populate_cache()
+        self.test_user.has_group('test_user_has_group.group0')
+        check_cache(True)
 
         self.env.ref(self.group0).write({"share": True})
-        self.assertFalse(self.registry._Registry__caches['default'], "Writing on group must invalidate user._has_group cache")
+        check_cache(False, "Writing on group must invalidate user._has_group cache")
 
-        populate_cache()
-        # call_cache_clearing_methods is called in res.groups.write to invalidate
-        # cache before calling its parent class method (`odoo.models.Model.write`)
-        # as explain in the `res.group.write` comment.
-        # This verifies that calling `call_cache_clearing_methods()` invalidates
-        # the ormcache of method `user._has_group()`
-        self.env['ir.model.access'].call_cache_clearing_methods()
-        self.assertFalse(
-            self.registry._Registry__caches['default'],
-            "call_cache_clearing_methods() must invalidate user._has_group cache"
-        )
+        self.test_user.has_group('test_user_has_group.group0')
+        check_cache(True)
+        # _clear_caches is called in res.groups.write to invalidate cache before
+        #  calling its parent class method (`odoo.models.Model.write`) as
+        #  explain in the `res.group.write` comment.
+        # This verifies that calling `_clear_caches()` invalidates the ormcache
+        # of method `user._has_group()`
+        self.env['ir.access']._clear_caches()
+        check_cache(False, "_clear_caches() must invalidate user._has_group cache")
 
     def test_has_group_with_new_id(self):
         user = self.env['res.users'].new({'partner_id': self.test_user.partner_id.id})

@@ -1,9 +1,10 @@
+import { registry } from "@web/core/registry";
 import {
     changeOptionInPopover,
     clickOnSnippet,
     insertSnippet,
-    registerWebsitePreviewTour,
     goBackToBlocks,
+    waitForEditMode,
 } from "@website/js/tours/tour_utils";
 
 const dynamicSnippet = {
@@ -17,13 +18,9 @@ const blogPostsSnippet = {
     groupName: "Blogs",
 };
 
-registerWebsitePreviewTour(
-    "blog_posts_dynamic_snippet_options",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("blog_posts_dynamic_snippet_options", {
+    steps: () => [
+        waitForEditMode,
         ...insertSnippet(blogPostsSnippet),
         ...clickOnSnippet({ ...blogPostsSnippet, id: "s_blog_posts" }),
         {
@@ -38,11 +35,11 @@ registerWebsitePreviewTour(
         ...insertSnippet(dynamicSnippet),
         ...clickOnSnippet(dynamicSnippet),
         ...changeOptionInPopover("Dynamic Snippet", "Filter", "Latest Blog Posts"),
-        ...changeOptionInPopover(
-            "Dynamic Snippet",
-            "Fetched Elements",
-            `div[data-action-param*='1']`
-        ),
+        {
+            content: "Check That the `Model` option is visible",
+            trigger: `.options-container [data-label="Fetched Elements"]`,
+        },
+        ...changeOptionInPopover("Dynamic Snippet", "Fetched Elements", `1`),
         {
             content: "Check That the `Model` option is visible",
             trigger: `.options-container [data-label="Model"]`,
@@ -51,5 +48,5 @@ registerWebsitePreviewTour(
             content: "Check That the `Template` option is visible",
             trigger: `.options-container [data-label="Template"]`,
         },
-    ]
-);
+    ],
+});

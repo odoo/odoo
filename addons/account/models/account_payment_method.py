@@ -96,6 +96,7 @@ class AccountPaymentMethodLine(models.Model):
     _name = 'account.payment.method.line'
     _description = "Payment Method Line"
     _order = 'sequence, id'
+    _check_company_domain = models.check_company_domain_parent_of
 
     # == Business fields ==
     name = fields.Char(compute='_compute_name', readonly=False, store=True)
@@ -105,6 +106,7 @@ class AccountPaymentMethodLine(models.Model):
         comodel_name='account.payment.method',
         domain="[('payment_type', '=?', payment_type), ('id', 'in', available_payment_method_ids)]",
         required=True,
+        index=True,
     )
     payment_account_id = fields.Many2one(
         comodel_name='account.account',

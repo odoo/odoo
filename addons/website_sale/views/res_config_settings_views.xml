@@ -18,16 +18,6 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website_payment.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <setting id="shared_user_account_setting" position="after">
-                <setting
-                    id="autocomplete_googleplaces_setting"
-                    string="Google Address Validation"
-                    help="Use Google Places API to validate addresses"
-                    documentation="/applications/websites/website/configuration/address_autocomplete.html"
-                >
-                    <field name="module_website_sale_autocomplete"/>
-                </setting>
-            </setting>
             <block id="website_payment_block" position="attributes">
                 <attribute name="title">eCommerce</attribute>
             </block>
@@ -36,7 +26,7 @@
                     string="Configure Delivery Methods"
                     id="website_delivery_setting"
                     help="Configure delivery methods or work with delivery providers using existing integrations."
-                    documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html"
+                    documentation="/applications/inventory_and_mrp/inventory/shipping_receiving/setup_configuration.html"
                 >
                     <button
                         string="Configure Methods"
@@ -47,7 +37,7 @@
                     <button
                         string="Find a Delivery Provider"
                         type="object"
-                        name="action_view_delivery_provider_modules"
+                        name="action_install_more_provider"
                         class="btn btn-link"
                         icon="oi-arrow-right"
                     />
@@ -75,30 +65,52 @@
                     <field name="account_on_checkout" widget="radio"/>
                 </setting>
                 <setting
-                    string="Add to Cart"
-                    id="cart_redirect_setting"
-                    help="What should be done on &quot;Add to Cart&quot;?"
-                >
-                    <field name="add_to_cart_action" widget="radio"/>
-                </setting>
-                <setting
                     string="Invoicing Policy"
                     id="invoicing_policy_setting"
                     title="The mode selected here applies as invoicing policy of any new product
                            created but not of products already existing."
                     info="This setting is common to all websites."
                 >
-                    <field name="default_invoice_policy" widget="radio" class="o_light_label"/>
+                    <field name="sale_invoice_policy" widget="radio" class="o_light_label"/>
                 </setting>
                 <setting
                     id="automatic_invoice_generation_setting"
                     help="Invoice automatically on payment."
-                    invisible="default_invoice_policy == 'delivery'"
+                    invisible="sale_invoice_policy == 'delivery'"
                 >
-                    <field name="automatic_invoice"/>
-                    <div invisible="not automatic_invoice">
+                    <field name="sale_automatic_invoice"/>
+                    <div invisible="not sale_automatic_invoice">
                         <label for="invoice_mail_template_id" class="o_light_label me-2"/>
                         <field name="invoice_mail_template_id" class="oe_inline"/>
+                    </div>
+                </setting>
+                <setting
+                    string="Inventory Defaults"
+                    id="product_availability_setting"
+                    info="This setting is common to all websites."
+                >
+                    <div class="content-group">
+                        <div class="row mt16"
+                            id="allow_out_of_stock_order_setting"
+                            title="Default availability mode set on newly created storable products. This can be changed at the product level.">
+                            <div class="col-12">
+                                <label for="default_allow_out_of_stock_order" string="Out-of-Stock" class="p-0 col-4 o_light_label"/>
+                                <field name="default_allow_out_of_stock_order" class=" w-auto"/>
+                                <label for="default_allow_out_of_stock_order" class="o_light_label" string="Continue Selling"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-group">
+                        <label for="default_show_availability" string="Show Available Quantity" class="p-0 col-4 o_light_label mt-2"/>
+                        <field name="default_show_availability" class="w-auto"/>
+                        <label for="default_available_threshold" string="only if below" class="o_light_label" invisible="not default_show_availability"/>
+                        <field
+                            name="default_available_threshold"
+                            style="width: 30px;"
+                            digits="[42, 0]"
+                            invisible="not default_show_availability"
+                        />
+                        <span invisible="not default_show_availability">units</span>
                     </div>
                 </setting>
                 <setting
@@ -108,9 +120,15 @@
                     <field name="group_product_price_comparison"/>
                 </setting>
                 <setting
+                    help="Automatically add optional, accessory, and alternative products."
+                    info="This setting is shared across all companies."
+                >
+                    <field name="group_automate_suggested_products"/>
+                </setting>
+                <setting
                     string="Product Reference Price"
                     id="ecom_uom_price_option_setting"
-                    help="Add a reference price per UoM on products (i.e $/kg), in addition to the
+                    help="Add a reference price per UoM on products (e.g $/kg), in addition to the
                           sale price"
                     info="This setting is common to all websites."
                 >
@@ -281,6 +299,29 @@
                     documentation="/applications/websites/ecommerce/shipping.html#click-collect"
                 >
                     <field name="module_website_sale_collect"/>
+                </setting>
+                <setting
+                    id="restrict_packagings_setting"
+                    help="Prevent from selling the specified packagings"
+                    invisible="not group_uom"
+                >
+                    <field name="restricted_uom_ids" widget="many2many_tags"/>
+                </setting>
+                <setting
+                    string="Invoicing Journal"
+                    help="Default accounting journal for online orders"
+                    groups="account.group_account_readonly,account.group_account_invoice"
+                >
+                    <label
+                        string="Journal"
+                        for="journal_id"
+                        class="o_light_label col-lg-3"
+                    />
+                    <field
+                        name="journal_id"
+                        context="{'default_type': 'sale'}"
+                        domain="[('type', '=', 'sale')]"
+                    />
                 </setting>
             </block>
             <setting id="google_analytics_setting" position="after">

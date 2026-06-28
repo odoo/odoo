@@ -3,8 +3,9 @@
 
     <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
         <xpath expr="//address" position="after">
-            <div t-if="o.company_id.account_fiscal_country_id.code == 'RS' and o.partner_id.company_registry" class="mt16">
-                <p>Company ID: <span t-field="o.partner_id.company_registry"/></p>
+            <t t-set="rs_enterprise_number" t-value="o.partner_id._get_additional_identifier('RS_EN')"/>
+            <div t-if="o.company_id.account_fiscal_country_id.code == 'RS' and rs_enterprise_number" class="mt16">
+                <p>Company ID: <span t-out="rs_enterprise_number"/></p>
             </div>
         </xpath>
     </template>

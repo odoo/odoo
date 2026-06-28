@@ -8,16 +8,14 @@ class AccountChartTemplate(models.AbstractModel):
     @template('in')
     def _get_in_template_data(self):
         return {
-            'property_account_receivable_id': 'p10040',
-            'property_account_payable_id': 'p11211',
             'code_digits': '6',
-            'display_invoice_amount_total_words': True,
         }
 
     @template('in', 'res.company')
     def _get_in_res_company(self):
         return {
             self.env.company.id: {
+                'display_invoice_amount_total_words': True,
                 'account_fiscal_country_id': 'base.in',
                 'bank_account_code_prefix': '1002',
                 'cash_account_code_prefix': '1001',
@@ -34,6 +32,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_revenue_account_id': 'p10085',
                 'expense_account_id': 'p2107',
                 'income_account_id': 'p20011',
+                'receivable_account_id': 'p10040',
+                'payable_account_id': 'p11211',
                 'l10n_in_withholding_account_id': 'p100595',
                 'tax_calculation_rounding_method': 'round_per_line',
             },
@@ -157,3 +157,12 @@ class AccountChartTemplate(models.AbstractModel):
                     AccountChartTemplate.company_xmlid('sale'): journal_data['sale'],
                     AccountChartTemplate.company_xmlid('purchase'): journal_data['purchase'],
                 }})
+
+    def _load(self, template_code, company, install_demo, force_create=True):
+        res = super()._load(template_code, company, install_demo, force_create)
+        if template_code == 'in':
+            if company.l10n_in_tds_feature:
+                company._activate_l10n_in_taxes(['tds_it_act_25_group'], company)
+            if company.l10n_in_tcs_feature:
+                company._activate_l10n_in_taxes(['tcs_it_act_25_group'], company)
+        return res

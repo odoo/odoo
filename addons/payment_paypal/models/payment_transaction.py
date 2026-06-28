@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
@@ -98,16 +98,6 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("reference_id")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of payment to extract the amount and currency from the payment data."""
-        if self.provider_code != "paypal":
-            return super()._extract_amount_data(payment_data)
-
-        amount_data = payment_data.get("amount", {})
-        amount = amount_data.get("value")
-        currency_code = amount_data.get("currency_code")
-        return {"amount": float(amount), "currency_code": currency_code}
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "paypal":
@@ -115,7 +105,7 @@ class PaymentTransaction(models.Model):
             return
 
         if not payment_data:
-            self._set_canceled(state_message=_("The customer left the payment page."))
+            self._set_canceled(state_message=self.env._("The customer left the payment page."))
             return
 
         # Update the provider reference.
@@ -123,7 +113,7 @@ class PaymentTransaction(models.Model):
         txn_type = payment_data.get("txn_type")
         if not all((txn_id, txn_type)):
             self._set_error(
-                _(
+                self.env._(
                     "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s).",
                     txn_id=txn_id,
                     txn_type=txn_type,
@@ -136,8 +126,7 @@ class PaymentTransaction(models.Model):
 
         # Force PayPal as the payment method if it exists.
         self.payment_method_id = (
-            self.env["payment.method"].search([("code", "=", "paypal")], limit=1)
-            or self.payment_method_id
+            self.provider_id._get_pm_from_code("paypal") or self.payment_method_id
         )
 
         # Update the payment state.
@@ -155,4 +144,16 @@ class PaymentTransaction(models.Model):
                 payment_status,
                 self.reference,
             )
-            self._set_error(_("Received data with invalid payment status: %s", payment_status))
+            self._set_error(
+                self.env._("Received data with invalid payment status: %s", payment_status)
+            )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of payment to extract the amount and currency from the payment data."""
+        if self.provider_code != "paypal":
+            return super()._extract_amount_data(payment_data)
+
+        amount_data = payment_data.get("amount", {})
+        amount = amount_data.get("value")
+        currency_code = amount_data.get("currency_code")
+        return {"amount": float(amount), "currency_code": currency_code}

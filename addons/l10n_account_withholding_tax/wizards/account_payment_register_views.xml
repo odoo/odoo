@@ -5,11 +5,17 @@
         <field name="model">account.payment.register</field>
         <field name="inherit_id" ref="account.view_account_payment_register_form"/>
         <field name="arch" type="xml">
-            <group name="group1" position="inside">
-                <field name="should_withhold_tax" invisible="not display_withholding"/>
+            <group name="group1" position="before">
+                <field name="withhold" widget="radio" options="{'horizontal': True}" nolabel="1" invisible="not display_withholding"/>
             </group>
+            <field name="payment_method_line_id" position="attributes">
+                <attribute name="invisible" separator="or" add="withhold == 'withhold'"/>
+            </field>
+            <xpath expr="//group[@name='group2']/field[@name='installments_switch_html']" position="attributes">
+                <attribute name="invisible" add="withhold == 'withhold'" separator=" or "/>
+            </xpath>
             <footer position="before">
-                <notebook name="payment_register_notebook" colspan="2" invisible="not should_withhold_tax or not display_withholding">
+                <notebook name="payment_register_notebook" colspan="2" invisible="withhold == 'payment' or not display_withholding">
                     <page name="withholding_page" string="Withholding">
                         <group>
                             <field name="withholding_line_ids" nolabel="1" colspan="2">
@@ -46,11 +52,11 @@
                         <group>
                             <group>
                                 <field name="withholding_outstanding_account_id"
-                                       required="should_withhold_tax and withholding_line_ids and not withholding_payment_account_id"
-                                       invisible="(not withholding_line_ids) or withholding_payment_account_id or not display_withholding"/>
+                                       required="withhold == 'withhold_pay' and withholding_line_ids and not withholding_payment_account_id"
+                                       invisible="(not withholding_line_ids) or withholding_payment_account_id or not display_withholding or withhold != 'withhold_pay'"/>
                             </group>
                             <group>
-                                <field name="withholding_net_amount"/>
+                                <field name="withholding_net_amount" invisible="withhold == 'withhold'"/>
                             </group>
                         </group>
                     </page>

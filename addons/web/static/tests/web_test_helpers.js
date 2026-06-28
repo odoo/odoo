@@ -2,13 +2,12 @@ import { before, withFetch } from "@odoo/hoot";
 import { loadBundle } from "@web/core/assets";
 import * as _fields from "./_framework/mock_server/mock_fields";
 import * as _models from "./_framework/mock_server/mock_model";
+import { IrAccess } from "./_framework/mock_server/mock_models/ir_access";
 import { IrAttachment } from "./_framework/mock_server/mock_models/ir_attachment";
 import { IrHttp } from "./_framework/mock_server/mock_models/ir_http";
 import { IrModel } from "./_framework/mock_server/mock_models/ir_model";
-import { IrModelAccess } from "./_framework/mock_server/mock_models/ir_model_access";
 import { IrModelFields } from "./_framework/mock_server/mock_models/ir_model_fields";
 import { IrModuleCategory } from "./_framework/mock_server/mock_models/ir_module_category";
-import { IrRule } from "./_framework/mock_server/mock_models/ir_rule";
 import { IrUiView } from "./_framework/mock_server/mock_models/ir_ui_view";
 import { ResCompany } from "./_framework/mock_server/mock_models/res_company";
 import { ResCountry } from "./_framework/mock_server/mock_models/res_country";
@@ -39,22 +38,24 @@ import { globalCachedFetch } from "./_framework/module_set.hoot";
  */
 
 export {
+    clearRegistry,
+    destroyApp,
+    getMockEnv,
+    getService,
+    getTestApp,
+    makeDialogMockEnv,
+    makeMockEnv,
+    mockOffline,
+    mockService,
+    restoreRegistry,
+} from "./_framework/app_test_helpers";
+export {
     findComponent,
     getDropdownMenu,
     mountWithCleanup,
     waitUntilIdle,
 } from "./_framework/component_test_helpers";
 export { contains, defineStyle, editAce, sortableDrag } from "./_framework/dom_test_helpers";
-export {
-    clearRegistry,
-    getMockEnv,
-    getService,
-    makeDialogMockEnv,
-    makeMockEnv,
-    mockService,
-    restoreRegistry,
-    mockOffline,
-} from "./_framework/env_test_helpers";
 export {
     clickKanbanLoadMore,
     clickKanbanRecord,
@@ -134,6 +135,7 @@ export {
     toggleSearchBarMenu,
     validateSearch,
 } from "./_framework/search_test_helpers";
+export { registerTemplate } from "./_framework/templates_test_helpers";
 export { swipeLeft, swipeRight } from "./_framework/touch_helpers";
 export {
     allowTranslations,
@@ -195,12 +197,11 @@ export const models = _models;
 
 export const webModels = {
     IrHttp,
+    IrAccess,
     IrAttachment,
     IrModel,
-    IrModelAccess,
     IrModelFields,
     IrModuleCategory,
-    IrRule,
     IrUiView,
     ResCompany,
     ResCountry,

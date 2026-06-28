@@ -1,4 +1,4 @@
-import { addLink, parseAndTransform } from "@mail/utils/common/format";
+import { addLink, htmlToHtmlInline, parseAndTransform } from "@mail/utils/common/format";
 import { useSequential } from "@mail/utils/common/hooks";
 import {
     contains,
@@ -85,7 +85,26 @@ test("addLink: utility function and special entities", () => {
         // Already encoded url should not be encoded twice
         [
             markup`https://odoo.com/%5B%5D`,
-            `<a target="_blank" rel="noreferrer noopener" href="https://odoo.com/%5B%5D">https://odoo.com/[]</a>`,
+            `<a target="_blank" rel="noreferrer noopener" href="https://odoo.com/%5B%5D">https://odoo.com/%5B%5D</a>`,
+        ],
+        [
+            markup`https://www.odoo.com/appointment/10552?filter_appointment_type_ids=%5B6706%2C%2B6705%2C%2B5292%2C%2B10552%5D`,
+            `<a target="_blank" rel="noreferrer noopener" href="https://www.odoo.com/appointment/10552?filter_appointment_type_ids=%5B6706%2C%2B6705%2C%2B5292%2C%2B10552%5D">https://www.odoo.com/appointment/10552?filter_appointment_type_ids=%5B6706%2C%2B6705%2C%2B5292%2C%2B10552%5D</a>`,
+        ],
+        [
+            markup`www.odoo.com`,
+            `<a target="_blank" rel="noreferrer noopener" href="http://www.odoo.com/">www.odoo.com</a>`,
+        ],
+        [
+            markup`https://odoo.com/?q=ỗ`,
+            `<a target="_blank" rel="noreferrer noopener" href="https://odoo.com/?q=%E1%BB%97">https://odoo.com/?q=ỗ</a>`,
+        ],
+        [markup`http://999.999.999.999`, "http://999.999.999.999"],
+        [markup`www.example.com:999999`, "www.example.com:999999"],
+        [markup`www.example.com:abc`, "www.example.com:abc"],
+        [
+            markup`http://999.999.999.999 www.odoo.com`,
+            `http://999.999.999.999 <a target="_blank" rel="noreferrer noopener" href="http://www.odoo.com/">www.odoo.com</a>`,
         ],
     ];
 
@@ -219,4 +238,14 @@ test("isSequential doesn't execute intermediate call.", async () => {
     const result = await Promise.all([sequence(), sequence(), sequence(), sequence(), sequence()]);
     expect(result).toEqual([1, undefined, undefined, undefined, 5]);
     expect.verifySteps(["1", "5"]);
+});
+
+test("htmlToHtmlInline replaces br with spaces", () => {
+    expect(htmlToHtmlInline(markup`a<br/>b`).toString()).toBe("a\u00a0b");
+});
+
+test("htmlToHtmlInline inserts spaces between adjacent block elements", () => {
+    expect(htmlToHtmlInline(markup`<div>Before</div><p>After</p>`).toString()).toBe(
+        "Before\u00a0After"
+    );
 });

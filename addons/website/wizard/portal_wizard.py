@@ -23,7 +23,7 @@ class PortalWizardUser(models.TransientModel):
                 # If a portal user is not linked to a website, search for the
                 # users that are not linked to a website and the users that are
                 # linked to the current website.
-                portal_user_website_ids.extend([False, self.env['website'].get_current_website().id])
+                portal_user_website_ids.extend([False, self.env.website.id])
         similar_user_domain.append(('website_id', 'in', portal_user_website_ids))
         return similar_user_domain
 
@@ -50,5 +50,5 @@ class PortalWizardUser(models.TransientModel):
             # registered' if the user is not linked to a website or if the user
             # is linked to the current website as the current partner will be
             # redirected to the current website when it will create its account.
-            return not user['website_id'] or user['website_id'][0] == self.env['website'].get_current_website().id
+            return not user['website_id'] or user['website_id'][0] == self.env.website.id
         return False

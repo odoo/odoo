@@ -24,14 +24,14 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
             trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] span:contains("Customizable Desk")) span[name="sale_product_configurator_formatted_price"]:contains("800.40")',
         },
         {
-            trigger: 'label[style="background-color:#000000"] input:not(:visible)',
+            trigger: 'label[style*="rgb(0, 0, 0)"] input:not(:visible)',
             run: "click",
         },
         {
             trigger: '.btn-primary:disabled:contains("Confirm")',
         },
         {
-            trigger: 'label[style="background-color:#FFFFFF"] input:not(:visible)',
+            trigger: 'label[style*="rgb(255, 255, 255)"] input:not(:visible)',
             run: "click",
         },
         {
@@ -47,6 +47,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
         configuratorTourUtils.addOptionalProduct("Conference Chair (TEST)"),
         configuratorTourUtils.addOptionalProduct("Chair floor protection (TEST)"),
         ...configuratorTourUtils.saveConfigurator(),
+        ...tourUtils.clickSomewhereElse(),
         // check that 3 products were added to the SO
         {
             trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Aluminium, White)")',

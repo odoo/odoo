@@ -11,11 +11,4 @@
             <field name="margin_right">0</field>
         </record>
     </data>
-    <data>
-        <function model="res.company" name="write">
-            <value model="res.company" search="[
-                ('partner_id.country_id', '=', ref('base.sa'))]"/>
-            <value eval="{'paperformat_id': ref('l10n_sa.paperformat_l10n_sa_a4')}"/>
-        </function>
-    </data>
 </odoo>

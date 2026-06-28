@@ -164,3 +164,25 @@ test("onchange return value before toggle checkbox", async () => {
     await animationFrame();
     expect(`.o_field_boolean input`).toBeChecked();
 });
+
+test.tags("desktop");
+test("Should not display as boolean toggle on desktop", async () => {
+    await mountView({
+        resModel: "partner",
+        resId: 1,
+        type: "form",
+        arch: `<form><field name="bar"/></form>`,
+    });
+    expect(".o-checkbox").not.toHaveClass("o_boolean_toggle");
+});
+
+test.tags("mobile");
+test("Display as boolean toggle on mobile", async () => {
+    await mountView({
+        resModel: "partner",
+        resId: 1,
+        type: "form",
+        arch: `<form><field name="bar"/></form>`,
+    });
+    expect(".o-checkbox").toHaveClass("o_boolean_toggle");
+});

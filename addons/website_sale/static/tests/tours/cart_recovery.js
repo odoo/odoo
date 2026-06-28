@@ -8,7 +8,6 @@ var orderIdKey = "website_sale.tour_shop_cart_recovery.orderId";
 var recoveryLinkKey = "website_sale.tour_shop_cart_recovery.recoveryLink";
 
 registry.category("web_tour.tours").add("website_sale.cart_recovery", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         ...tourUtils.addToCart({ productName: "Acoustic Bloc Screens", expectUnloadPage: true }),
         tourUtils.goToCart(),
@@ -54,18 +53,22 @@ registry.category("web_tour.tours").add("website_sale.cart_recovery", {
             expectUnloadPage: true,
         },
         {
-            content: "click action",
-            trigger: ".o_cp_action_menus .dropdown-toggle",
+            content: "click Send",
+            trigger: "span:text(Send)",
             run: "click",
         },
         {
-            content: "click Send an Email",
-            trigger: "span:text(Send an email)",
+            content: "Wait for the pdf genrator to appear",
+            trigger: ".preview_document_layout",
+        },
+        {
+            content: "click on Continue in the pdf generator",
+            trigger: ".btn:contains(Continue)",
             run: "click",
         },
         {
-            content: "Wait the modal is opened and form is fullfilled",
-            trigger: ".modal main .o_form_view_container [name=subject] input:value(/^S0/)",
+            content: "Wait for mail composer to appear",
+            trigger: ".o_mail_composer_form",
         },
         {
             content: "select template",
@@ -80,7 +83,7 @@ registry.category("web_tour.tours").add("website_sale.cart_recovery", {
         },
         {
             content: "click Send email",
-            trigger: ".btn.o_mail_send",
+            trigger: "button.o_mail_send",
             run: "click",
         },
         {

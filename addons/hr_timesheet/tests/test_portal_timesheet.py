@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from odoo import Command
+from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import tagged
 
 from odoo.addons.project.tests.test_project_sharing import TestProjectSharingCommon
@@ -111,3 +113,84 @@ class TestPortalTimesheet(TestProjectSharingCommon):
         self.project_cows.write({'partner_id': self.user_portal.partner_id.id})
         timesheets = AnalyticLineModel.search(timesheet_domain)
         self.assertIn(timesheet_entry.id, timesheets.ids, "Portal user should see the timesheet when set as the project’s partner.")
+
+    def test_portal_task_hours_no_double_counting(self):
+        """ Test that totals for both allocated and spent hours are calculated correctly, preventing double-counting.
+
+            Test Cases:
+            1. Parent + all sub-tasks in same group -> Totals are based on the parent.
+            2. Parent alone in group -> Totals are based on the parent's value.
+            3. Sub-task alone in group -> Totals are based on the sub-task's value.
+            4. Parent + distant sub-task in same group -> Totals are based on the parent.
+        """
+
+        parent_task = self.env['project.task'].create({
+            'name': 'Parent Task',
+            'project_id': self.project_portal.id,
+            'allocated_hours': 500.0,
+        })
+        sub_task_1 = self.env['project.task'].create({
+            'name': 'Sub-task 1',
+            'project_id': self.project_portal.id,
+            'parent_id': parent_task.id,
+            'allocated_hours': 50.0,
+        })
+        sub_task_2 = self.env['project.task'].create({
+            'name': 'Sub-task 2',
+            'project_id': self.project_portal.id,
+            'parent_id': sub_task_1.id,
+            'allocated_hours': 25.0,
+        })
+
+        employee = self.env['hr.employee'].create({'name': 'Test Employee'})
+        self.env['account.analytic.line'].create([
+            {'name': 'Time on parent', 'project_id': self.project_portal.id, 'task_id': parent_task.id, 'unit_amount': 50, 'employee_id': employee.id},
+            {'name': 'Time on sub-task 1', 'project_id': self.project_portal.id, 'task_id': sub_task_1.id, 'unit_amount': 25, 'employee_id': employee.id},
+            {'name': 'Time on sub-task 2', 'project_id': self.project_portal.id, 'task_id': sub_task_2.id, 'unit_amount': 15, 'employee_id': employee.id},
+        ])
+
+        # Test Case 1: A group containing parent and its all sub-tasks
+        group_with_all_tasks = parent_task | sub_task_1 | sub_task_2
+        result_group_all = group_with_all_tasks._get_portal_total_hours_dict()
+        self.assertEqual(result_group_all.get('allocated_hours'), 500.0, "Should only count the parent's allocated hours (500h).")
+        self.assertEqual(result_group_all.get('effective_hours'), 90.0, "Should be the parent's total hours spent (90h).")
+
+        # Test Case 2: A group containing only the parent task
+        result_group_parent_only = parent_task._get_portal_total_hours_dict()
+        self.assertEqual(result_group_parent_only.get('allocated_hours'), 500.0, "Should be the parent's allocated hours (500h).")
+        self.assertEqual(result_group_parent_only.get('effective_hours'), 90.0, "Should be the parent's total hours spent (90h).")
+
+        # Test Case 3: A group containing only the intermediate sub-task
+        result_group_sub_only = sub_task_1._get_portal_total_hours_dict()
+        self.assertEqual(result_group_sub_only.get('allocated_hours'), 50.0, "Should be the sub-task's allocated hours (50h).")
+        self.assertEqual(result_group_sub_only.get('effective_hours'), 40.0, "Should be the sub-task's total hours spent (40h).")
+
+        # Test Case 4: A group with a parent and a distant sub-task
+        group_with_ancestor = parent_task | sub_task_2
+        result_group_ancestor = group_with_ancestor._get_portal_total_hours_dict()
+        self.assertEqual(result_group_ancestor.get('allocated_hours'), 500.0, "Should only count the parent's allocated hours (500h).")
+        self.assertEqual(result_group_ancestor.get('effective_hours'), 90.0, "Should be the parent's total hours spent (90h).")
+
+    def test_collaborators_accessible_by_timesheet_user(self):
+        """Test that a restricted user (with only HR Timesheet User access) can
+        access project collaborators (fetched when fetching a project) without
+        getting an AccessError.
+        """
+        user = mail_new_test_user(
+            self.env,
+            login="employee_user",
+            groups="hr_timesheet.group_hr_timesheet_user",
+        )
+        self.project_portal.collaborator_ids = [
+            Command.create({"partner_id": self.partner_portal.id}),
+        ]
+
+        def store_fields(res: Store.FieldList):
+            res.from_method("_store_thread_fields", request_list=["followers"])
+
+        store = Store()
+        store.add(self.project_portal.with_user(user), store_fields, as_thread=True)
+        self.assertEqual(
+            store.as_dict()["mail.thread"][0]["collaborator_ids"],
+            [self.partner_portal.id],
+        )

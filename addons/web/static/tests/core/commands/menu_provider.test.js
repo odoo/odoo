@@ -11,6 +11,7 @@ import {
     mockOffline,
     mockService,
     useTestClientAction,
+    serverState,
 } from "@web/../tests/web_test_helpers";
 
 import { Dialog } from "@web/core/dialog/dialog";
@@ -163,4 +164,16 @@ test("open a menu item when a dialog is displayed", async () => {
     await contains("#o_command_2").click();
     await animationFrame();
     expect(".o_menu_brand").toHaveText("Sales");
+});
+
+test.tags("desktop");
+test("app href in command palette includes debug param when in debug mode", async () => {
+    serverState.debug = "assets";
+    await mountWithCleanup(WebClient);
+    await press(["control", "k"]);
+    await animationFrame();
+    await contains(".o_command_palette_search input").edit("/", { confirm: false });
+    await animationFrame();
+    // "Contact" is the first result, actionID 1001
+    expect(".o_command:first-child a").toHaveAttribute("href", "/odoo/action-1001?debug=assets");
 });

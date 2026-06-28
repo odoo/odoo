@@ -232,142 +232,6 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(parent_partner.pos_order_count, 2, "Parent partner should see 2 orders including child’s")
         self.assertEqual(child_partner.pos_order_count, 1, "Child partner should see only their own order")
 
-    def test_order_to_picking(self):
-        """
-            In order to test the Point of Sale in module, I will do three orders
-            from the sale to the payment, invoicing + picking, but will only
-            check the picking consistency in the end.
-
-            TODO: Check the negative picking after changing the picking relation
-            to One2many (also for a mixed use case), check the quantity, the
-            locations and return picking logic
-        """
-        order_1, _ = self.create_backend_pos_order({
-            'order_data': {
-                'partner_id': self.partner_jcb.id,
-                'pricelist_id': self.partner_jcb.property_product_pricelist.id,
-            },
-            'line_data': [
-                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
-                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
-            ],
-            'payment_data': [
-                {'payment_method_id': self.credit_payment_method.id, 'amount': 30},
-            ],
-        })
-        order_2, _ = self.create_backend_pos_order({
-            'order_data': {
-                'partner_id': self.partner_lowe.id,
-                'pricelist_id': self.partner_lowe.property_product_pricelist.id,
-            },
-            'line_data': [
-                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
-                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
-            ],
-            'payment_data': [
-                {'payment_method_id': self.credit_payment_method.id, 'amount': 30},
-            ],
-        })
-        order_3, order_refund_3 = self.create_backend_pos_order({
-            'order_data': {
-                'partner_id': self.partner_vlst.id,
-                'pricelist_id': self.partner_vlst.property_product_pricelist.id,
-            },
-            'line_data': [
-                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
-                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
-            ],
-            'payment_data': [
-                {'payment_method_id': self.cash_payment_method.id, 'amount': 30},
-            ],
-            'refund_data': [
-                {'payment_method_id': self.cash_payment_method.id, 'amount': -30},
-            ],
-        })
-
-        self.assertEqual(order_1.state, 'paid', 'Order should be in paid state.')
-        self.assertEqual(order_1.picking_ids[0].state, 'done')
-        self.assertEqual(order_1.picking_ids[0].move_ids.mapped('state'), ['done', 'done'])
-        self.assertEqual(order_2.state, 'paid', 'Order should be in paid state.')
-        self.assertEqual(order_2.picking_ids[0].state, 'done')
-        self.assertEqual(order_2.picking_ids[0].move_ids.mapped('state'), ['done', 'done'])
-        self.assertEqual(order_3.state, 'paid', 'Order should be in paid state.')
-        self.assertEqual(order_3.picking_ids[0].state, 'done')
-        self.assertEqual(order_3.picking_ids[0].move_ids.mapped('state'), ['done', 'done'])
-
-        order_refund_3.action_pos_order_invoice()
-        legal_documents = order_refund_3.account_move._get_invoice_legal_documents('pdf', allow_fallback=True)
-        self.assertEqual(len(legal_documents), 1)
-        invoice_pdf_content = legal_documents[0]['content'].decode()
-        self.assertTrue("using Cash" in invoice_pdf_content)
-        self.assertEqual(order_refund_3.picking_count, 1)
-        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
-
-    def test_order_to_picking02(self):
-        """
-            This test is similar to test_order_to_picking except that this time,
-            there are two products:
-                - One tracked by lot (ten_dollars_with_10_incl)
-                - One untracked (twenty_dollars_with_15_incl)
-                - Both are in a sublocation of the main warehouse
-        """
-        wh_location = self.company_data['default_warehouse'].lot_stock_id
-        shelf1_location = self.env['stock.location'].create({
-            'name': 'shelf1',
-            'usage': 'internal',
-            'location_id': wh_location.id,
-        })
-        self.ten_dollars_with_10_incl.product_variant_id.write({
-            'tracking': 'lot',
-            'is_storable': True,
-        })
-        self.twenty_dollars_with_15_incl.product_variant_id.write({
-            'tracking': 'none',
-            'is_storable': True,
-        })
-        lot = self.env['stock.lot'].create({
-            'name': 'SuperLot',
-            'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
-        })
-
-        quantity_1 = self.env['stock.quant']._update_available_quantity(
-            self.ten_dollars_with_10_incl.product_variant_id, shelf1_location, 2, lot_id=lot)
-        quantity_2 = self.env['stock.quant']._update_available_quantity(
-            self.twenty_dollars_with_15_incl.product_variant_id, shelf1_location, 2)
-
-        self.assertEqual(quantity_1[0], 2)
-        self.assertEqual(quantity_2[0], 2)
-        self.pos_config_usd.open_ui()
-        self.pos_config_usd.current_session_id.update_stock_at_closing = False
-        order, _ = self.create_backend_pos_order({
-            'order_data': {
-                'partner_id': self.partner_manv.id,
-                'pricelist_id': self.partner_manv.property_product_pricelist.id,
-            },
-            'line_data': [
-                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
-                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
-            ],
-            'payment_data': [
-                {'payment_method_id': self.cash_payment_method.id, 'amount': 30},
-            ],
-        })
-
-        self.assertEqual(order.state, 'paid')
-        tracked_line = self.env['stock.move.line'].search(
-            [('product_id', '=', self.ten_dollars_with_10_incl.product_variant_id.id)])
-        untracked_line = order.picking_ids.move_line_ids - tracked_line
-        self.assertEqual(tracked_line.lot_id, lot)
-        self.assertFalse(untracked_line.lot_id)
-        self.assertEqual(tracked_line.location_id, shelf1_location)
-        self.assertEqual(untracked_line.location_id, shelf1_location)
-
-        res = order.action_pos_order_invoice()
-        invoice_test = self.env['account.move'].browse(res['res_id'])
-        self.assertEqual(invoice_test.ref, invoice_test.pos_order_ids.display_name)
-
-        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
-
     def test_order_to_payment_currency(self):
         """
             In order to test the Point of Sale in module, I will do a full flow
@@ -498,7 +362,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             'amount_total': untax + tax,
             'amount_paid': 0.0,
             'amount_return': 0.0,
-            'last_order_preparation_change': '{}'
         })
 
         pos_order.action_pos_order_invoice()
@@ -518,7 +381,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         })
 
         untax, atax = self.compute_tax(self.ten_dollars_with_10_excl.product_variant_id, 10.0)
-        self.ten_dollars_with_10_excl.taxes_id.unlink()
+        self.ten_dollars_with_10_excl.taxes_id.active = False
         current_session = self.pos_config_usd.current_session_id
         payment = self.env['pos.make.payment'].create({
             'config_id': self.pos_config_usd.id,
@@ -544,72 +407,6 @@ class TestPointOfSaleFlow(CommonPosTest):
         diff_line = current_session.move_id.line_ids.filtered(
             lambda line: line.name == 'Difference at closing PoS session')
         self.assertAlmostEqual(diff_line.credit, 1.0, msg="Missing amount of 1.0")
-
-    def test_order_multi_step_route(self):
-        """
-            Test that orders in sessions with "Ship Later" enabled and
-            "Specific Route" set to a multi-step (2/3) route can be validated.
-            This config implies multiple picking types and multiple move_lines.
-        """
-        self.ten_dollars_with_10_incl.product_variant_id.write({
-            'tracking': 'lot',
-            'is_storable': True,
-        })
-        self.twenty_dollars_with_10_incl.product_variant_id.write({
-            'tracking': 'lot',
-            'is_storable': True,
-        })
-        twenty_dollars_lot = self.env['stock.lot'].create({
-            'name': '80085',
-            'product_id': self.twenty_dollars_with_10_incl.product_variant_id.id,
-        })
-        stock_location = self.company_data['default_warehouse'].lot_stock_id
-        stock_quantity = self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': self.twenty_dollars_with_10_incl.product_variant_id.id,
-            'inventory_quantity': 1,
-            'location_id': stock_location.id,
-            'lot_id': twenty_dollars_lot.id
-        })
-        stock_quantity.action_apply_inventory()
-        warehouse_id = self.company_data['default_warehouse']
-        warehouse_id.delivery_steps = 'pick_ship'
-
-        self.pos_config_usd.write({
-            'ship_later': True,
-            'warehouse_id': warehouse_id.id,
-            'route_id': warehouse_id.route_ids[-1].id,
-        })
-
-        self.pos_config_usd.open_ui()
-        self.pos_config_usd.current_session_id.update_stock_at_closing = False
-        order, _ = self.create_backend_pos_order({
-            'order_data': {
-                'shipping_date': fields.Date.today(),
-                'partner_id': self.partner_mobt.id,
-                'pricelist_id': self.partner_mobt.property_product_pricelist.id,
-            },
-            'line_data': [
-                {
-                    'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
-                    'pack_lot_ids': [[0, 0, {'lot_name': '80085'}]],
-                },
-                {
-                    'product_id': self.twenty_dollars_with_10_incl.product_variant_id.id,
-                    'pack_lot_ids': [[0, 0, {'lot_name': '80085'}]],
-                },
-            ],
-            'payment_data': [
-                {'payment_method_id': self.bank_payment_method.id, 'amount': 30},
-            ],
-        })
-        picking_mls_no_stock = order.picking_ids.move_line_ids.filtered(
-            lambda l: l.product_id.id == self.ten_dollars_with_10_incl.product_variant_id.id)
-        picking_mls_stock = order.picking_ids.move_line_ids.filtered(
-            lambda l: l.product_id.id == self.twenty_dollars_with_10_incl.product_variant_id.id)
-        self.assertEqual(order.state, 'paid')
-        self.assertEqual(len(picking_mls_no_stock), 0)
-        self.assertEqual(len(picking_mls_stock), 1)
-        self.assertEqual(len(order.picking_ids.picking_type_id), 1)
 
     def test_pos_order_invoice_payment_term(self):
         """ Test that when invoicing a POS order paid with customer account, the partner's payment term is then applied to the invoice. """
@@ -645,7 +442,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             'amount_tax': 0.0,
             'amount_return': 0.0,
             'to_invoice': True,
-            'last_order_preparation_change': '{}'
         })
         payment_context = {"active_ids": order.ids, "active_id": order.id}
         order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
@@ -869,28 +665,6 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertTrue(all(amount >= 0 for amount in reverse_closing_entries[1:].line_ids.mapped('debit') + reverse_closing_entries[1:].line_ids.mapped('credit')),
                 "Non-reverse entries should have positive debit or credit amounts.")
 
-    def test_sale_order_postponed_invoicing_anglosaxon(self):
-        """ Test the flow of creating an invoice later, after the POS session has been closed and everything has been processed
-        in the case of anglo-saxon accounting.
-        """
-        self.env.company.anglo_saxon_accounting = True
-        self.env.company.point_of_sale_update_stock_quantities = 'closing'
-        order, _ = self.create_backend_pos_order({
-            'line_data': [
-                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
-            ],
-            'payment_data': [
-                {'payment_method_id': self.bank_payment_method.id, 'amount': 20.0},
-            ],
-        })
-        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
-        with freeze_time('2020-01-03'):
-            order.partner_id = self.partner_stva.id
-            order.action_pos_order_invoice()
-
-        picking_ids = order.session_id.picking_ids
-        self.assertEqual(sum(picking_ids.move_line_ids.mapped('quantity')), 1)
-
     def test_order_pos_tax_same_as_company(self):
         """
             Test that when the default_pos_receivable_account and the partner
@@ -945,42 +719,6 @@ class TestPointOfSaleFlow(CommonPosTest):
         current_session.action_pos_session_closing_control()
         self.assertEqual(current_session.move_id.line_ids[0].account_id.id, account.id)
 
-    def test_tracked_product_with_owner(self):
-        self.stock_location = self.company_data['default_warehouse'].lot_stock_id
-        self.ten_dollars_with_10_incl.product_variant_id.write({
-            'tracking': 'serial',
-            'is_storable': True,
-        })
-        lot1 = self.env['stock.lot'].create({
-            'name': '1001',
-            'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
-        })
-        self.env['stock.quant']._update_available_quantity(
-            self.ten_dollars_with_10_incl.product_variant_id,
-            self.stock_location,
-            1, lot_id=lot1, owner_id=self.partner_adgu)
-
-
-        # create pos order with the two SN created before
-        self.create_backend_pos_order({
-            'order_data': {
-                'partner_id': self.partner_adgu.id,
-                'pricelist_id': self.pos_config_usd.pricelist_id.id,
-            },
-            'line_data': [
-                {
-                    'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
-                    'pack_lot_ids': [[0, 0, {'lot_name': lot1.name}]],
-                },
-            ],
-            'payment_data': [
-                {'payment_method_id': self.cash_payment_method.id, 'amount': 10},
-            ],
-        })
-        current_session = self.pos_config_usd.current_session_id
-        current_session.action_pos_session_closing_control()
-        self.assertEqual(current_session.picking_ids.move_line_ids.owner_id.id, self.partner_adgu.id)
-
     def test_order_refund_with_invoice(self):
         """This test make sure that credit notes of pos orders are correctly
            linked to the original invoice."""
@@ -1007,56 +745,6 @@ class TestPointOfSaleFlow(CommonPosTest):
         credit_notes = self.env['account.move'].search([('move_type', '=', 'out_refund')], order='id desc', limit=1)
         self.assertEqual(credit_notes.ref, "Reversal of: "+invoices.name)
         self.assertEqual(credit_notes.reversed_entry_id.id, invoices.id)
-
-    def test_multi_exp_account_real_time(self):
-        self.real_time_categ = self.env['product.category'].create({
-            'name': 'test category',
-            'parent_id': False,
-            'property_cost_method': 'fifo',
-            'property_valuation': 'real_time',
-        })
-        self.account1 = self.env['account.account'].create({
-            'name': 'Account 1',
-            'code': 'AC1',
-            'reconcile': True,
-            'account_type': 'expense',
-        })
-        self.account2 = self.env['account.account'].create({
-            'name': 'Account 2',
-            'code': 'AC2',
-            'reconcile': True,
-            'account_type': 'expense',
-        })
-        self.ten_dollars_with_15_incl.write({
-            'is_storable': True,
-            'categ_id': self.real_time_categ.id,
-            'property_account_expense_id': self.account1.id,
-            'property_account_income_id': self.account1.id,
-        })
-        self.twenty_dollars_with_15_incl.write({
-            'is_storable': True,
-            'categ_id': self.real_time_categ.id,
-            'property_account_expense_id': self.account2.id,
-            'property_account_income_id': self.account2.id,
-        })
-        order, _ = self.create_backend_pos_order({
-            'order_data': {
-                'pricelist_id': self.pos_config_usd.pricelist_id.id,
-                'partner_id': self.partner_adgu.id,
-                'shipping_date': fields.Date.today(),
-            },
-            'line_data': [
-                {'product_id': self.ten_dollars_with_15_incl.product_variant_id.id},
-                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
-            ],
-            'payment_data': [
-                {'payment_method_id': self.cash_payment_method.id, 'amount': 30},
-            ],
-        })
-
-        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
-        order.picking_ids._action_done()
-        self.assertEqual(len(order.picking_ids.move_ids), 2)
 
     def test_no_default_pricelist(self):
         """Should not have default_pricelist if use_pricelist is false."""
@@ -1100,65 +788,6 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(refund.amount_paid, -25.0)
         self.assertEqual(current_session.state, 'closed')
 
-    def test_order_different_lots(self):
-        self.pos_config_usd.open_ui()
-        self.stock_location = self.company_data['default_warehouse'].lot_stock_id
-        self.ten_dollars_with_10_incl.product_variant_id.write({
-            'tracking': 'lot',
-            'is_storable': True,
-        })
-
-        lot_1 = self.env['stock.lot'].create({
-            'name': '1001',
-            'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
-        })
-        lot_2 = self.env['stock.lot'].create({
-            'name': '1002',
-            'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
-        })
-
-        stock_quant_1 = self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
-            'inventory_quantity': 5,
-            'location_id': self.stock_location.id,
-            'lot_id': lot_1.id
-        })
-        stock_quant_1.action_apply_inventory()
-        stock_quant_2 = self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
-            'inventory_quantity': 5,
-            'location_id': self.stock_location.id,
-            'lot_id': lot_2.id
-        })
-        stock_quant_2.action_apply_inventory()
-        self.assertEqual(stock_quant_1.quantity, 5)
-        self.assertEqual(stock_quant_2.quantity, 5)
-        order, _ = self.create_backend_pos_order({
-            'order_data': {
-                'partner_id': self.partner_adgu.id,
-                'pricelist_id': self.pos_config_usd.pricelist_id.id,
-            },
-            'line_data': [{
-                    'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
-                    'pack_lot_ids': [[0, 0, {'lot_name': '1001'}]],
-                    'qty': 1,
-                }, {
-                    'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
-                    'pack_lot_ids': [[0, 0, {'lot_name': '1002'}]],
-                    'qty': 2,
-                },
-            ],
-            'payment_data': [
-                {'payment_method_id': self.cash_payment_method.id, 'amount': 30},
-            ],
-        })
-        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
-        self.assertEqual(order.state, 'done')
-
-        # Quantity decreased because from the same location
-        self.assertEqual(stock_quant_1.quantity, 4)
-        self.assertEqual(stock_quant_2.quantity, 3)
-
     def test_pos_branch_account(self):
         branch = self.env['res.company'].create({
             'name': 'Sub Company',
@@ -1197,6 +826,28 @@ class TestPointOfSaleFlow(CommonPosTest):
         sub_pos_config.current_session_id.action_pos_session_closing_control()
         self.assertEqual(current_session.state, 'closed', msg='State of current session should be closed.')
 
+    def test_pos_branch_payment_method_config(self):
+        """ This test checks that we don't set a config on a payment
+        method that have different companies.
+        """
+        branch = self.env['res.company'].create({
+            'name': 'Sub Company',
+            'parent_id': self.env.company.id,
+            'chart_template': self.env.company.chart_template,
+            'country_id': self.env.company.country_id.id,
+        })
+        self.env.cr.precommit.run()
+        self.env.user.group_ids += self.env.ref('point_of_sale.group_pos_manager')
+        bank_payment_method = self.bank_payment_method.copy()
+        sub_pos_config = self.env['pos.config'].with_company(branch).create({
+            'name': 'Main',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_journal_id': self.company_data['default_journal_sale'].id,
+        })
+
+        with self.assertRaises(ValidationError, msg="The points of sale for the payment method Bank must belong to its company."):
+            bank_payment_method.write({"config_ids": sub_pos_config.ids})
+
     def test_order_unexisting_lots(self):
         self.ten_dollars_with_10_incl.product_variant_id.write({
             'tracking': 'lot',
@@ -1223,6 +874,44 @@ class TestPointOfSaleFlow(CommonPosTest):
             ])
         ))
 
+    def test_order_existing_lot_gs1_nomenclature(self):
+        """An existing lot whose name is also a valid GS1 barcode (e.g. "10156":
+        AI "10" -> Batch/Lot) must still be found when the order is validated,
+        instead of being recreated and raising a duplicate lot error.
+        """
+        if not self.env['ir.module.module'].search_count([('name', '=', 'stock_barcode'), ('state', '=', 'installed')]):
+            self.skipTest("stock_barcode is not installed")
+        gs1_nomenclature = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature')
+        self.env.company.nomenclature_id = gs1_nomenclature
+        self.pos_config_usd.picking_type_id.write({
+            'use_create_lots': True,
+            'use_existing_lots': True,
+        })
+        product = self.ten_dollars_with_10_incl.product_variant_id
+        product.write({
+            'tracking': 'lot',
+            'is_storable': True,
+        })
+
+        order_data = {
+            'line_data': [{
+                'product_id': product.id,
+                'pack_lot_ids': [Command.create({'lot_name': '10156'})],
+            }],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 10},
+            ],
+        }
+        order1, _ = self.create_backend_pos_order(order_data)
+        lot = order1.picking_ids.move_line_ids.lot_id
+        self.assertEqual(lot.name, '10156')
+
+        order2, _ = self.create_backend_pos_order(order_data)
+        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
+
+        self.assertEqual(order2.state, 'done')
+        self.assertEqual(order2.picking_ids.move_line_ids.lot_id, lot)
+
     def test_pos_creation_in_branch(self):
         branch = self.env['res.company'].create({
             'name': 'Branch 1',
@@ -1233,44 +922,6 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.env["pos.config"].with_company(branch).create({
             "name": "Branch Point of Sale"
         })
-
-    def test_reordering_rules_triggered_closing_pos(self):
-        if self.env['ir.module.module']._get('purchase').state != 'installed':
-            self.skipTest("Purchase module is required for this test to run")
-
-        self.env['stock.route'].search([('name', '=', 'Buy')]).warehouse_ids = self.env['stock.warehouse'].search([])
-        self.ten_dollars_with_15_incl.write({
-            'seller_ids': [Command.create({
-                'partner_id': self.partner_stva.id,
-                'min_qty': 1.0,
-                'price': 10.0,
-            })]
-        })
-
-        self.env['stock.warehouse.orderpoint'].create({
-            'product_id': self.ten_dollars_with_15_incl.product_variant_id.id,
-            'location_id': self.pos_config_usd.picking_type_id.default_location_src_id.id,
-            'product_min_qty': 1.0,
-            'product_max_qty': 1.0,
-        })
-
-        self.create_backend_pos_order({
-            'order_data': {
-                'partner_id': self.partner_stva.id,
-                'pricelist_id': self.pos_config_usd.pricelist_id.id,
-            },
-            'line_data': [
-                {'product_id': self.ten_dollars_with_15_incl.product_variant_id.id},
-            ],
-            'payment_data': [
-                {'payment_method_id': self.bank_payment_method.id, 'amount': 10},
-            ],
-        })
-        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
-        purchase_order = self.env['purchase.order'].search([], limit=1)
-        self.assertEqual(purchase_order.order_line.product_qty, 1)
-        self.assertEqual(purchase_order.order_line.product_id.id,
-                        self.ten_dollars_with_15_incl.product_variant_id.id)
 
     def test_state_when_closing_register(self):
         self.create_backend_pos_order({
@@ -1284,6 +935,59 @@ class TestPointOfSaleFlow(CommonPosTest):
         current_session = self.pos_config_usd.current_session_id
         current_session.action_pos_session_closing_control(bank_payment_method_diffs={self.bank_payment_method.id: 5.00})
         self.assertEqual(current_session.state, 'closed')
+
+    def test_change_with_card_only(self):
+        """Test that the change is not skipped if order was overpaid only with card"""
+        self.pos_config_usd.open_ui()
+        pos_session = self.pos_config_usd.current_session_id
+        cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
+        product_order = {
+            'amount_paid': 500,
+            'amount_return': -50,
+            'amount_tax': 0,
+            'amount_total': 450,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'pricelist_id': self.pos_config_usd.pricelist_id.id,
+            'lines': [Command.create({
+                'discount': 0,
+                'id': 42,
+                'price_unit': 450.0,
+                'product_id': self.product.id,
+                'price_subtotal': 450.0,
+                'price_subtotal_incl': 450.0,
+                'tax_ids': [[6, False, []]],
+                'qty': 1,
+            })],
+            'name': 'Order 12346-123-1234',
+            'partner_id': self.partner.id,
+            'session_id': pos_session.id,
+            'sequence_number': 2,
+            'payment_ids': [Command.create({
+                'amount': 500,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.bank_payment_method.id
+            })],
+            'uuid': '12346-123-1234',
+            'user_id': self.env.uid,
+            'to_invoice': True
+        }
+        pos_order_id = self.env['pos.order'].sync_from_ui([product_order])['pos.order'][0]['id']
+        pos_order = self.env['pos.order'].search([('id', '=', pos_order_id)])
+        payments = pos_order.payment_ids
+        self.assertRecordValues(payments.sorted(), [
+            {'amount': -50.0, 'payment_method_id': cash_payment_method.id, 'is_change': True},
+            {'amount': 500.0, 'payment_method_id': self.bank_payment_method.id, 'is_change': False},
+        ])
+        order_account_move = pos_order.account_move
+        self.assertEqual(order_account_move.amount_total, pos_order.amount_total)
+
+        account_moves = self.env['account.move'].search([('pos_payment_ids', 'in', pos_order.payment_ids.ids)])
+        self.assertEqual(len(account_moves), 2)
+        self.assertRecordValues(account_moves.sorted(), [
+            {'amount_total': 50},
+            {'amount_total': 500},
+        ])
 
     def test_refund_qty_refund_cancel(self):
         """
@@ -1308,7 +1012,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             'fiscal_position_id': False,
             'lines': [(0, 0, {
                 'discount': 0,
-                'pack_lot_ids': [],
                 'price_unit': 100.0,
                 'product_id': product1.id,
                 'price_subtotal': 100.0,
@@ -1326,7 +1029,6 @@ class TestPointOfSaleFlow(CommonPosTest):
                 'payment_method_id': self.cash_payment_method.id
             })],
             'uuid': '12345-123-1234',
-            'last_order_preparation_change': '{}',
             'user_id': self.env.uid
         }
 
@@ -1337,176 +1039,6 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(order.lines[0].refunded_qty, 1)
         refund.cancel_order_from_pos()
         self.assertEqual(order.lines[0].refunded_qty, 0)
-
-    def test_pos_order_refund_ship_delay_totalcost(self):
-        # test that the total cost is computed for refund with a shipping delay and an avco/fifo product
-        self.pos_config_usd.open_ui()
-        current_session = self.pos_config_usd.current_session_id
-        self.pos_config_usd.write({'ship_later': True})
-        categ = self.env['product.category'].create({
-            'name': 'test',
-            'property_cost_method': 'average',
-            'property_valuation': 'real_time',
-        })
-        product = self.env['product.product'].create({
-            'name': 'Product A',
-            'categ_id': categ.id,
-            'lst_price': 10,
-            'standard_price': 10,
-            'is_storable': True,
-        })
-        productB = self.env['product.product'].create({
-            'name': 'Product B',
-            'categ_id': categ.id,
-            'lst_price': 10,
-            'standard_price': 10,
-            'is_storable': True,
-        })
-
-        order_data = {
-            'company_id': self.env.company.id,
-            'session_id': current_session.id,
-            'partner_id': self.partner.id,
-            'lines': [[0, 0, {
-                'name': "OL/0001",
-                'product_id': product.id,
-                'price_unit': 10,
-                'discount': 0,
-                'qty': 2,
-                'tax_ids': [[6, False, []]],
-                'price_subtotal': 20,
-                'price_subtotal_incl': 20,
-                'total_cost': 20,
-            }], [0, 0, {
-                'name': "OL/0001",
-                'product_id': productB.id,
-                'price_unit': 10,
-                'discount': 0,
-                'qty': 2,
-                'tax_ids': [[6, False, []]],
-                'price_subtotal': 20,
-                'price_subtotal_incl': 20,
-                'total_cost': 20,
-            }]],
-            'payment_ids': [(0, 0, {
-                'amount': 20,
-                'name': fields.Datetime.now(),
-                'payment_method_id': self.cash_payment_method.id
-            })],
-            'amount_paid': 20.0,
-            'amount_total': 20.0,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-            'to_invoice': True,
-            'last_order_preparation_change': '{}'
-            }
-        self.env['pos.order'].sync_from_ui([order_data])
-        order = current_session.order_ids[0]
-        refund_values = [{
-            'name': 'a new test refund order',
-            'company_id': self.env.company.id,
-            'user_id': self.env.user.id,
-            'session_id': current_session.id,
-            'partner_id': self.partner.id,
-            'amount_paid': -10,
-            'amount_tax': 0,
-            'amount_return': 0,
-            'amount_total': -10,
-            'fiscal_position_id': False,
-            'lines': [[0, 0, {
-                'product_id': product.id,
-                'price_unit': 10,
-                'discount': 0,
-                'qty': -2,
-                'tax_ids': [[6, False, []]],
-                'price_subtotal': -20,
-                'price_subtotal_incl': -20,
-                'refunded_orderline_id': order.lines[0].id,
-                'price_type': 'automatic'
-            }], [0, 0, {
-                'product_id': productB.id,
-                'price_unit': 10,
-                'discount': 0,
-                'qty': -2,
-                'tax_ids': [[6, False, []]],
-                'price_subtotal': -20,
-                'price_subtotal_incl': -20,
-                'refunded_orderline_id': order.lines[1].id,
-                'price_type': 'automatic'
-            }]],
-            'shipping_date': fields.Date.today(),
-            'sequence_number': 2,
-            'to_invoice': True,
-            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
-            'uuid': '12345-123-1234',
-            'payment_ids': [[0, 0, {
-                'amount': -10,
-                'name': fields.Datetime.now(),
-                'payment_method_id': self.cash_payment_method.id
-            }]],
-            'is_refund': True,
-        }]
-        self.env['pos.order'].sync_from_ui(refund_values)
-        refunded_order_line = self.env['pos.order.line'].search([('product_id', '=', product.id), ('qty', '=', -2)])
-        self.assertEqual(refunded_order_line.total_cost, -20)
-
-    def test_ship_later_total_cost_fallback_to_standard_price(self):
-        # Test that total_cost falls back to standard_price for a regular (non-refund) ship later
-        # order on a FIFO/AVCO product when the stock moves have no valuation yet (goods not
-        # yet delivered). Before the fix, total_cost was incorrectly computed as 0.
-        self.pos_config_usd.open_ui()
-        current_session = self.pos_config_usd.current_session_id
-        self.pos_config_usd.write({'ship_later': True})
-
-        categ = self.env['product.category'].create({
-            'name': 'AVCO Category',
-            'property_cost_method': 'average',
-            'property_valuation': 'real_time',
-        })
-        product = self.env['product.product'].create({
-            'name': 'Ship Later AVCO Product',
-            'categ_id': categ.id,
-            'lst_price': 15,
-            'standard_price': 10,
-            'is_storable': True,
-        })
-
-        order_data = {
-            'company_id': self.env.company.id,
-            'session_id': current_session.id,
-            'partner_id': self.partner.id,
-            'shipping_date': fields.Date.today(),
-            'lines': [[0, 0, {
-                'name': "OL/0001",
-                'product_id': product.id,
-                'price_unit': 15,
-                'discount': 0,
-                'qty': 2,
-                'tax_ids': [[6, False, []]],
-                'price_subtotal': 30,
-                'price_subtotal_incl': 30,
-            }]],
-            'payment_ids': [(0, 0, {
-                'amount': 30,
-                'name': fields.Datetime.now(),
-                'payment_method_id': self.cash_payment_method.id,
-            })],
-            'amount_paid': 30.0,
-            'amount_total': 30.0,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-            'last_order_preparation_change': '{}',
-        }
-        self.env['pos.order'].sync_from_ui([order_data])
-        order = current_session.order_ids[0]
-
-        # Stock moves exist (ship later picking created) but are unvalued because the goods
-        # have not been delivered yet. total_cost must fall back to qty * standard_price.
-        self.assertEqual(
-            order.lines[0].total_cost, 20,
-            "total_cost should equal qty * standard_price (2 * 10 = 20) when ship later "
-            "stock moves have zero valuation",
-        )
 
     def test_cancel_order_with_past_preset(self):
         # Test that cancelling an order with a past preset does not raise an error and does cancel the order.
@@ -1553,7 +1085,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             'amount_tax': 0.0,
             'amount_return': 0.0,
             'to_invoice': False,
-            'last_order_preparation_change': '{}',
             'preset_id': preset_takeaway.id,
             'preset_time': fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=-2)),
         })
@@ -1580,7 +1111,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             "amount_tax": 0,
             "amount_return": 0,
             "to_invoice": True,
-            "last_order_preparation_change": "{}",
         })
         ctx = {"active_ids": [order.id], "active_id": order.id}
         self.env["pos.make.payment"].with_context(ctx).create({
@@ -1618,76 +1148,9 @@ class TestPointOfSaleFlow(CommonPosTest):
         invoice = self._create_and_invoice_order()
         self.assertNotEqual(
             invoice.partner_bank_id.id,
-            allowed_bank.id,
+            blocked_bank.id,
             "Invoice should not use journal bank account when not allowed."
         )
-
-    def test_sum_only_pos_locations(self):
-        """Test that quantities are summed only from POS source locations"""
-
-        self.product = self.env['product.product'].create({
-            'name': 'Test Product',
-            'tracking': 'lot',
-            'is_storable': True,
-        })
-
-        self.warehouse = self.env['stock.warehouse'].create({
-            'name': 'Test Warehouse',
-            'code': 'TWH',
-        })
-
-        self.pos_child_location = self.env['stock.location'].create({
-            'name': 'POS Child Location',
-            'usage': 'internal',
-            'location_id': self.warehouse.lot_stock_id.id,
-        })
-
-        self.other_location = self.env['stock.location'].create({
-            'name': 'Other Location',
-            'usage': 'internal',
-        })
-
-        picking_type = self.env['stock.picking.type'].create({
-            'name': 'POS Operations',
-            'code': 'outgoing',
-            'sequence_code': 'POS',
-            'warehouse_id': self.warehouse.id,
-            'default_location_src_id': self.warehouse.lot_stock_id.id,
-        })
-
-        self.pos_config = self.env['pos.config'].create({
-            'name': 'Test POS Config',
-            'picking_type_id': picking_type.id,
-        })
-
-        self.lot = self.env['stock.lot'].create({
-            'name': 'TEST_LOT',
-            'product_id': self.product.id,
-        })
-
-        # Create quants in different locations for the same lot
-        self.env['stock.quant'].create([{
-            'product_id': self.product.id,
-            'location_id': self.warehouse.lot_stock_id.id,
-            'lot_id': self.lot.id,
-            'quantity': 10.0,
-        }, {
-            'product_id': self.product.id,
-            'location_id': self.pos_child_location.id,
-            'lot_id': self.lot.id,
-            'quantity': 5.0,
-        }, {
-            'product_id': self.product.id,
-            'location_id': self.other_location.id,
-            'lot_id': self.lot.id,
-            'quantity': 20.0,
-        }])
-
-        result = self.env['pos.order.line'].get_existing_lots(self.env.company.id, self.pos_config.id, self.product.id)
-
-        self.assertEqual(len(result), 1, "Should return exactly one lot")
-        self.assertEqual(result[0]['name'], 'TEST_LOT')
-        self.assertEqual(result[0]['product_qty'], 15.0, "Should sum only quantities from POS source locations")
 
     def test_order_invoiced_after_session_closed(self):
         """Test that an order can be invoiced after its session is closed.
@@ -1830,7 +1293,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             'fiscal_position_id': False,
             'lines': [[0, 0, {
                 'discount': 0,
-                'pack_lot_ids': [],
                 'price_unit': 149.99,
                 'product_id': self.product_a.id,
                 'price_subtotal': 149.99,
@@ -1865,76 +1327,10 @@ class TestPointOfSaleFlow(CommonPosTest):
         pos_order.action_pos_order_invoice()
         self.assertEqual(pos_order.state, 'done')
 
-    def test_order_refund_lot_valuated(self):
-        product2 = self.env['product.product'].create({
-            'name': 'Product B',
-            'is_storable': True,
-            'tracking': 'lot',
-            'available_in_pos': True,
-            'lot_valuated': True,
-            'lst_price': 500.0
-        })
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': product2.id,
-            'inventory_quantity': 10,
-            'location_id': self.env.user._get_default_warehouse_id().lot_stock_id.id,
-            'lot_id': self.env['stock.lot'].create({'name': '1001', 'product_id': product2.id}).id,
-        }).sudo().action_apply_inventory()
-
-        self.pos_config_usd.open_ui()
-        current_session = self.pos_config_usd.current_session_id
-        # I create a new PoS order with 2 lines
-        order = self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': current_session.id,
-            'partner_id': self.partner.id,
-            'pricelist_id': self.partner.property_product_pricelist.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': product2.id,
-                'price_unit': 500,
-                'discount': 0,
-                'qty': 1.0,
-                'tax_ids': [],
-                'price_subtotal': 500,
-                'price_subtotal_incl': 500,
-                'pack_lot_ids': [Command.create({'lot_name': '1001'})]
-            })],
-            'amount_total': 500.0,
-            'amount_tax': 0.0,
-            'amount_paid': 0.0,
-            'amount_return': 0.0,
-            'last_order_preparation_change': '{}'
-        })
-
-        payment_context = {"active_ids": order.ids, "active_id": order.id}
-        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
-            'amount': order.amount_total,
-            'payment_method_id': self.cash_payment_method.id
-        })
-        order_payment.with_context(**payment_context).check()
-        self.assertAlmostEqual(order.amount_total, order.amount_paid, msg='Order should be fully paid.')
-
-        # I create a refund
-        refund_action = order.refund()
-        refund = self.env['pos.order'].browse(refund_action['res_id'])
-
-        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
-        refund_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
-            'amount': refund.amount_total,
-            'payment_method_id': self.cash_payment_method.id,
-        })
-
-        # I click on the validate button to register the payment.
-        refund_payment.with_context(**payment_context).check()
-        current_session.close_session_from_ui()
-        self.assertEqual(current_session.picking_ids.mapped('state'), ['done', 'done'])
-
-    def test_search_paid_order_ids(self):
-        """ Test if the orders from other configs are excluded in search_paid_order_ids """
+    def test_search_order_ids(self):
+        """ Test if the orders from other configs are excluded in search_order_ids """
         other_pos_config = self.env['pos.config'].create({
             'name': 'Other POS',
-            'picking_type_id': self.env['stock.picking.type'].search([('code', '=', 'outgoing')], limit=1).id,
         })
         self.pos_config_usd.open_ui()
         other_pos_config.open_ui()
@@ -1960,13 +1356,41 @@ class TestPointOfSaleFlow(CommonPosTest):
             'state': 'paid',
         } for session_id in (current_session.id, other_session.id)])
 
-        order_ids = [oi[0] for oi in self.env['pos.order'].search_paid_order_ids(other_pos_config.id, [], 80, 0)['ordersInfo']]
-        self.assertNotIn(paid_order_1.id, order_ids)
-        self.assertIn(paid_order_2.id, order_ids)
+        cancelled_order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': other_session.id,
+            'partner_id': self.partner.id,
+            'lines': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'qty': 1,
+                    'price_subtotal': 134.38,
+                    'price_subtotal_incl': 134.38,
+                }),
+            ],
+            'amount_tax': 0.0,
+            'amount_total': 134.38,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+            'state': 'cancel',
+        })
 
-        order_ids = [oi[0] for oi in self.env['pos.order'].search_paid_order_ids(other_pos_config.id, [('partner_id.complete_name', 'ilike', self.partner.complete_name)], 80, 0)['ordersInfo']]
+        # paid filter: excludes other config and cancelled orders
+        order_ids = [oi[0] for oi in self.env['pos.order'].search_order_ids(other_pos_config.id, [], 80, 0, state_filter='paid')['ordersInfo']]
         self.assertNotIn(paid_order_1.id, order_ids)
         self.assertIn(paid_order_2.id, order_ids)
+        self.assertNotIn(cancelled_order.id, order_ids)
+
+        order_ids = [oi[0] for oi in self.env['pos.order'].search_order_ids(other_pos_config.id, [('partner_id.complete_name', 'ilike', self.partner.complete_name)], 80, 0, state_filter='paid')['ordersInfo']]
+        self.assertNotIn(paid_order_1.id, order_ids)
+        self.assertIn(paid_order_2.id, order_ids)
+        self.assertNotIn(cancelled_order.id, order_ids)
+
+        # cancelled filter: excludes other config and paid orders
+        order_ids = [oi[0] for oi in self.env['pos.order'].search_order_ids(other_pos_config.id, [], 80, 0, state_filter='cancelled')['ordersInfo']]
+        self.assertNotIn(paid_order_1.id, order_ids)
+        self.assertNotIn(paid_order_2.id, order_ids)
+        self.assertIn(cancelled_order.id, order_ids)
 
     def test_session_name_gap(self):
         self.pos_config_usd.open_ui()
@@ -2042,12 +1466,11 @@ class TestPointOfSaleFlow(CommonPosTest):
             'amount_tax': 0.0,
             'amount_return': 0.0,
             'to_invoice': False,
-            'last_order_preparation_change': '{}'
         })
 
         order_line = order.lines[0]
         self.env.invalidate_all()
-        order_line.with_user(user).with_company(branch)._compute_total_cost(None)
+        order_line.with_user(user).with_company(branch)._compute_total_cost()
 
     def test_delete_res_partner_linked_to_pos_order(self):
         """ Test that a partner linked to a pos order cannot be deleted. """
@@ -2077,7 +1500,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             'amount_tax': 0.0,
             'amount_return': 0.0,
             'to_invoice': False,
-            'last_order_preparation_change': '{}'
         })
 
         with self.assertRaises(ValidationError, msg='You cannot delete a customer that has point of sales orders. You can archive it instead.'):
@@ -2101,7 +1523,6 @@ class TestPointOfSaleFlow(CommonPosTest):
             'fiscal_position_id': False,
             'lines': [[0, 0, {
                 'discount': 0,
-                'pack_lot_ids': [],
                 'price_unit': 750.0,
                 'product_id': self.product.id,
                 'price_subtotal': 750.0,
@@ -2179,7 +1600,7 @@ class TestPointOfSaleFlow(CommonPosTest):
             'company_id': new_company.id,
         })
         self.env.transaction.clear()
-        data = current_session.with_company(self.env.company).filter_local_data({'product.product': [product.id]})
+        data = current_session.with_context(allowed_company_ids=self.env.company.ids).filter_local_data({'product.product': [product.id]})
         self.assertIn(product.id, data['product.product'])
 
     def test_string_sequence_number(self):
@@ -2216,71 +1637,6 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.env['pos.order'].sync_from_ui([product_order])
         order = self.env['pos.order'].search([])
         self.assertEqual(order.name, f"/AA - {order.pos_reference.split('-')[-1]} - 1.B")
-
-    def test_valuation_order_invoiced_after_session_closed(self):
-        """Test that an order can be invoiced after its session is closed.
-        Scenario:
-            1. Create a POS session and two orders:
-            - Order A: Not to be invoiced immediately.
-            - Order B: To be invoiced immediately.
-            2. Close the POS session.
-            3. Ensure:
-            - Both orders have `reversed_move_ids` unset.
-            4. Assign a partner to Order A and invoice it AFTER the session is closed.
-            - Confirm that `reversed_move_ids` is set accordingly.
-        """
-        self.env.company.inventory_valuation = 'real_time'
-        self.real_time_categ = self.env['product.category'].create({
-            'name': 'test category',
-            'parent_id': False,
-            'property_cost_method': 'fifo',
-            'property_valuation': 'real_time',
-        })
-        tracked_product = self.env['product.product'].create({
-            'name': 'Tracked Product',
-            'is_storable': True,
-            'available_in_pos': True,
-            'lst_price': 100.0,
-            'standard_price': 80.0,
-            'categ_id': self.real_time_categ.id,
-        })
-
-        order_data = {
-            'line_data': [
-                {'product_id': tracked_product.id},
-            ],
-            'payment_data': [
-                {'payment_method_id': self.bank_payment_method.id, 'amount': 115},
-            ],
-            'refund_data': [
-                {'payment_method_id': self.cash_payment_method.id, 'amount': -115},
-            ]
-        }
-
-        self.pos_config_usd.open_ui()
-        current_session = self.pos_config_usd.current_session_id
-
-        order_no_invoice, refund_order_no_invoice = self.create_backend_pos_order({**order_data, 'to_invoice': False, 'partner_id': False})
-        current_session.close_session_from_ui()
-        self.assertEqual(current_session.state, 'closed')
-        order_no_invoice.partner_id = self.partner
-        order_no_invoice.action_pos_order_invoice()
-
-        reversal_move = self.env['account.move'].search([('reversed_pos_order_id', '=', order_no_invoice.id)], limit=1)
-        self.assertEqual(len(reversal_move.line_ids), 5)
-        for line in order_no_invoice.account_move.line_ids:
-            reverse_line = reversal_move.line_ids.filtered(lambda l: l.account_id == line.account_id)
-            self.assertEqual(line.debit, reverse_line.credit)
-            self.assertEqual(line.credit, reverse_line.debit)
-
-        refund_order_no_invoice.partner_id = self.partner
-        refund_order_no_invoice.action_pos_order_invoice()
-        reversal_move = self.env['account.move'].search([('reversed_pos_order_id', '=', refund_order_no_invoice.id)], limit=1)
-        self.assertEqual(len(reversal_move.line_ids), 5)
-        for line in refund_order_no_invoice.account_move.line_ids:
-            reverse_line = reversal_move.line_ids.filtered(lambda l: l.account_id == line.account_id)
-            self.assertEqual(line.debit, reverse_line.credit)
-            self.assertEqual(line.credit, reverse_line.debit)
 
     def test_payment_method_sequence(self):
         self.env['pos.payment.method'].search([]).write({'active': False})
@@ -2397,3 +1753,197 @@ class TestPointOfSaleFlow(CommonPosTest):
             'out_refund',
             'Invoicing a manual refund (negative qty) must create a credit note (RINV), not a customer invoice.',
         )
+
+    def test_pos_payment_direction_and_accounts(self):
+        """Ensure POS payments create correct inbound/outbound payments and accounts and related journal items"""
+
+        def _do_pos_transaction(amount, split, index):
+            self.bank_payment_method.write({'split_transactions': split})
+            self.pos_config_usd.open_ui()
+            current_session = self.pos_config_usd.current_session_id
+            product_order = {
+                'amount_paid': amount,
+                'amount_tax': 0,
+                'amount_return': 0,
+                'amount_total': amount,
+                'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+                'lines': [[0, 0, {
+                    'price_unit': 100.0,
+                    'product_id': self.product.id,
+                    'price_subtotal': amount,
+                    'price_subtotal_incl': amount,
+                    'qty': 1 if amount > 0 else -1,
+                }]],
+                'name': f'Order {index}',
+                'partner_id': self.partner.id,
+                'session_id': current_session.id,
+                'payment_ids': [[0, 0, {
+                    'amount': amount,
+                    'payment_method_id': self.bank_payment_method.id
+                }]],
+                'uuid': f'12345-123-1253{index}',
+                'user_id': self.env.uid,
+                'to_invoice': False
+            }
+            self.env['pos.order'].sync_from_ui([product_order])
+            current_session.close_session_from_ui()
+            return current_session
+
+        self.bank_payment_method.outstanding_account_id = self.inbound_payment_method_line.payment_account_id.id
+        session_ids = [
+            _do_pos_transaction(amount, split, idx).id
+            for idx, (amount, split) in enumerate([(100, False), (-100, False), (100, True), (-100, True)])
+        ]
+        payments = self.env['account.payment'].search([('pos_session_id', 'in', session_ids)], order='id')
+        self.assertRecordValues(
+            payments,
+            [
+                {
+                    "payment_type": "inbound",
+                    "outstanding_account_id": self.bank_payment_method.outstanding_account_id.id,
+                    "destination_account_id": self.bank_payment_method.receivable_account_id.id,
+                },
+                {
+                    "payment_type": "outbound",
+                    "outstanding_account_id": self.bank_payment_method.outstanding_account_id.id,
+                    "destination_account_id": self.bank_payment_method.receivable_account_id.id,
+                },
+                {
+                    "payment_type": "inbound",
+                    "outstanding_account_id": self.bank_payment_method.outstanding_account_id.id,
+                    "destination_account_id": self.bank_payment_method.receivable_account_id.id,
+                },
+                {
+                    "payment_type": "outbound",
+                    "outstanding_account_id": self.bank_payment_method.outstanding_account_id.id,
+                    "destination_account_id": self.bank_payment_method.receivable_account_id.id,
+                },
+            ],
+        )
+
+        for payment in payments:
+            move_lines = payment.move_id.line_ids.sorted('balance')
+            if payment.payment_type == "inbound":
+                self.assertRecordValues(move_lines, [
+                    {'account_id': self.bank_payment_method.receivable_account_id.id},
+                    {'account_id': self.bank_payment_method.outstanding_account_id.id},
+                ])
+            else:
+                self.assertRecordValues(move_lines, [
+                    {'account_id': self.bank_payment_method.outstanding_account_id.id},
+                    {'account_id': self.bank_payment_method.receivable_account_id.id},
+                ])
+
+    def test_pricelist_item_date_loading(self):
+        """Pricelist items respect date_start/date_end on full and incremental loads."""
+        pricelist = self.env['product.pricelist'].create({'name': 'Date Test Pricelist'})
+        self.pos_config_usd.write({
+            'use_pricelist': True,
+            'available_pricelist_ids': [(6, 0, pricelist.ids)],
+            'pricelist_id': pricelist.id,
+        })
+        self.pos_config_usd.open_ui()
+        session = self.pos_config_usd.current_session_id
+
+        now = fields.Datetime.now()
+        item_data = {'pricelist_id': pricelist.id, 'compute_price': 'fixed', 'fixed_price': 10}
+
+        item_no_dates = self.env['product.pricelist.item'].create(item_data)
+        item_past_start = self.env['product.pricelist.item'].create({
+            **item_data, 'date_start': now - timedelta(days=5),
+        })
+        item_future_start = self.env['product.pricelist.item'].create({
+            **item_data, 'date_start': now + timedelta(days=5),
+        })
+        item_expired = self.env['product.pricelist.item'].create({
+            **item_data, 'date_end': now - timedelta(days=1),
+        })
+        # date_start just became valid; will be fetched via the date_start window check.
+        item_just_activated = self.env['product.pricelist.item'].create({
+            **item_data, 'date_start': now - timedelta(days=3),
+        })
+        # Will be modified after last_server_date to bump its write_date.
+        item_to_modify = self.env['product.pricelist.item'].create(item_data)
+
+        # Backdate write_date for items that must appear stale during incremental load.
+        old_date = now - timedelta(days=30)
+        stale_items = item_future_start | item_just_activated | item_to_modify
+        stale_items.flush_model()
+        self.env.cr.execute(
+            "UPDATE product_pricelist_item SET write_date = %s WHERE id IN %s",
+            (old_date, tuple(stale_items.ids)),
+        )
+        stale_items.invalidate_recordset(['write_date'])
+
+        # --- Full load ---
+        data = session.load_data([])
+        loaded_ids = {i['id'] for i in data['product.pricelist.item']}
+        self.assertIn(item_no_dates.id, loaded_ids)
+        self.assertIn(item_past_start.id, loaded_ids)
+        self.assertIn(item_just_activated.id, loaded_ids)
+        self.assertNotIn(item_future_start.id, loaded_ids)
+        self.assertNotIn(item_expired.id, loaded_ids)
+
+        # --- Incremental load ---
+        # last_server_date = 10 days ago; item_just_activated has write_date = 30 days ago
+        # so write_date < last_server_date, but date_start (3 days ago) > last_server_date
+        last_server_date = fields.Datetime.to_string(now - timedelta(days=10))
+
+        # Modify item_to_modify now (write_date = now > last_server_date).
+        item_to_modify.write({'fixed_price': 99})
+
+        data = session.with_context(pos_last_server_date=last_server_date).load_data([])
+        loaded_ids = {i['id'] for i in data['product.pricelist.item']}
+        self.assertIn(item_just_activated.id, loaded_ids,
+            "item whose date_start fell inside the sync window must be fetched on incremental load")
+        self.assertIn(item_to_modify.id, loaded_ids,
+            "item modified after last_server_date must be fetched on incremental load")
+        self.assertNotIn(item_future_start.id, loaded_ids,
+            "item with date_start still in the future must not be fetched")
+
+    def test_sequence_dynamic_prefix_suffix(self):
+        """Test that sequence_number is correctly extracted when sequence has dynamic prefix/suffix."""
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        # Use dynamic prefix and suffix with static hyphen separators
+        current_session.config_id.order_seq_id.prefix = 'POS-%(year)s'
+        current_session.config_id.order_seq_id.suffix = '-%(month)s'
+
+        product_order = {
+            'amount_paid': 750,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'amount_total': 750,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'lines': [[0, 0, {
+                'price_unit': 750.0,
+                'product_id': self.product.id,
+                'price_subtotal': 750.0,
+                'price_subtotal_incl': 750.0,
+                'tax_ids': [[6, False, []]],
+                'qty': 1,
+            }]],
+            'name': 'Order 12345-123-1234',
+            'partner_id': False,
+            'session_id': current_session.id,
+            'payment_ids': [[0, 0, {
+                'amount': 750,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.bank_payment_method.id
+            }]],
+            'uuid': '12345-123-1234',
+            'user_id': self.env.uid,
+            'to_invoice': False
+        }
+
+        self.env['pos.order'].sync_from_ui([product_order])
+        order = self.env['pos.order'].search([])
+
+        # Verify order name contains interpolated year and month with static parts
+        current_year = fields.Datetime.now().year
+        current_month = fields.Datetime.now().strftime('%m')
+
+        self.assertIn(f'POS-{current_year}', order.name,
+            f"Order name should contain 'POS-{current_year}', got: {order.name}")
+        self.assertIn(f'-{current_month}', order.name,
+            f"Order name should contain '-{current_month}', got: {order.name}")

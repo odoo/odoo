@@ -186,7 +186,8 @@ class AccountMoveReversal(models.TransientModel):
 
     def _modify_default_reverse_values(self, origin_move):
         data = {
-            'date': self.date
+            'date': self.date,
+            'invoice_origin': origin_move.invoice_origin,
         }
 
         # if has vendor attachment, keep it

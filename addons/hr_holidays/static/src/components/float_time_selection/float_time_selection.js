@@ -1,10 +1,13 @@
-import { useState } from "@web/owl2/utils";
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, props, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { FloatTimeSelectionPopover } from "./float_time_selection_popover";
 
-import { FloatTimeField, floatTimeField } from "@web/views/fields/float_time/float_time_field";
+import {
+    FloatTimeField,
+    floatTimeField,
+    floatTimeFieldProps,
+} from "@web/views/fields/float_time/float_time_field";
 const { DateTime } = luxon;
 
 function floatToHoursMinutes(floatValue) {
@@ -19,16 +22,16 @@ function hoursMinutesToFloat(hours, minutes) {
 
 export class FloatTimeSelectionField extends FloatTimeField {
     static template = "hr_holidays.FloatTimeSelectionField";
-    static props = {
-        ...FloatTimeField.props,
-    };
+    props = props({
+        ...floatTimeFieldProps,
+    });
 
     setup() {
         super.setup();
         this.popover = usePopover(FloatTimeSelectionPopover, {
             onClose: this.onClose.bind(this),
         });
-        this.timeValues = useState({
+        this.timeValues = proxy({
             hours: "00",
             minutes: "00",
             floatValue: 0,
@@ -98,6 +101,9 @@ export class FloatTimeSelectionField extends FloatTimeField {
     onClose() {
         this.props.record.update({ [this.props.name]: this.timeValues.floatValue });
     }
+
+    // Remove the tooltip that shows up in the float time selection widget
+    openPopover() {}
 }
 
 export const charHours = {

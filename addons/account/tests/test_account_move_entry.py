@@ -206,6 +206,27 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # The date has been changed to the first valid date.
         self.assertEqual(copy_move.date, copy_move.company_id.fiscalyear_lock_date + relativedelta(days=1))
 
+    def test_batch_reset_to_draft_partial_success(self):
+        locked_move = self.init_invoice('out_invoice', invoice_date='2016-01-01', post=True, amounts=[100.0], taxes=self.tax_sale_a)
+        resettable_move = self.init_invoice('out_invoice', invoice_date='2026-01-01', post=True, amounts=[200.0], taxes=self.tax_sale_a)
+
+        self.company.fiscalyear_lock_date = '2020-01-01'
+
+        action = (locked_move | resettable_move).action_reset_selected_to_draft()
+
+        self.assertEqual(locked_move.state, 'posted')
+        self.assertEqual(resettable_move.state, 'draft')
+        self.assertEqual(action['type'], 'ir.actions.client')
+        self.assertEqual(action['tag'], 'soft_reload')
+
+    def test_batch_reset_to_draft_all_failed(self):
+        locked_move = self.init_invoice('out_invoice', invoice_date='2016-01-01', post=True, amounts=[100.0], taxes=self.tax_sale_a)
+
+        self.company.fiscalyear_lock_date = '2020-01-01'
+
+        with self.assertRaises(UserError):
+            locked_move.action_reset_selected_to_draft()
+
     def test_misc_fiscalyear_lock_date_2(self):
         self.test_move.action_post()
 
@@ -632,7 +653,6 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
-            'reconcile': True,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
@@ -899,7 +919,6 @@ class TestAccountMove(AccountTestInvoicingCommon):
         taxes should see their tax lines use the final tax account, not the transition account.
         """
         tax_account = self.company_data['default_account_tax_sale']
-        tax_account.reconcile = True
 
         caba_tax = self.env['account.tax'].create({
             'name': "CABA",
@@ -1456,3 +1475,61 @@ class TestAccountMove(AccountTestInvoicingCommon):
             self.test_move.line_ids[0],
             ""
         )
+
+    def test_modify_zero_line_in_locked_period(self):
+        """
+        Ensure that zero-amount lines in a locked period cannot be modified or reset to draft, but can be safely unlinked.
+        """
+        posted_move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2024-01-01',
+            'line_ids': [
+                Command.create({
+                    'name': 'zero line 1',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+                Command.create({
+                    'name': 'zero line 2',
+                    'account_id': self.company_data['default_account_expense'].id,
+                }),
+            ]
+        })
+        posted_move.action_post()
+
+        posted_move.company_id.sudo().write({
+            'fiscalyear_lock_date': '2025-01-01',
+        })
+
+        with self.assertRaisesRegex(UserError, "You cannot add/modify entries prior to and inclusive of"), self.cr.savepoint():
+            posted_move.line_ids[0].write({'account_id': self.company_data['default_account_expense'].id})
+
+        posted_move.line_ids.unlink()
+
+        self.assertFalse(posted_move.line_ids, "The zero-amount lines should have been successfully deleted.")
+
+    def test_invoice_line_name_uses_invoice_partner_language(self):
+        """Test that when an invoice is created for an invoice contact (that has a different language with
+        respect to its parent contact) also the name of the product in the invoice is in the correct language."""
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.partner_a.lang = 'en_US'
+
+        invoice_contact = self.env['res.partner'].create({
+            'name': 'Invoice Contact',
+            'type': 'invoice',
+            'parent_id': self.partner_a.id,
+            'lang': 'fr_FR',
+        })
+
+        self.product_a.update_field_translations('description_sale', {
+            'en_US': 'Water Bottle',
+            'fr_FR': 'Bouteille d\'eau',
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': invoice_contact.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+
+        line = invoice.invoice_line_ids.filtered(lambda l: l.product_id == self.product_a)[:1]
+        self.assertEqual(line.name, "product_a\nBouteille d'eau")

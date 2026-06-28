@@ -54,9 +54,9 @@ class PaymentProvider(models.Model):
     # === BUSINESS METHODS === #
 
     def _aps_get_api_url(self):
-        if self.state == "enabled":
+        if self.is_live:
             api_url = "https://checkout.payfort.com/FortAPI/paymentPage"
-        else:  # 'test'
+        else:
             api_url = "https://sbcheckout.payfort.com/FortAPI/paymentPage"
         return api_url
 

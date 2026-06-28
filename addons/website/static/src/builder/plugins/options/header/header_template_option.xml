@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="website.HeaderTemplateOption">
         <BuilderRow label.translate="Template">
-            <BuilderSelect action="'reloadComposite'">
+            <BuilderSelect>
                 <t t-foreach="this.headerTemplates" t-as="template" t-key="template.key">
                     <t t-component="template.Component" t-props="template.props"/>
                 </t>
@@ -110,7 +110,7 @@
                     classAction="'o_header_standard'"
                     className="'o_we_img_animate'"
                 >
-                    <Image src="'/website/static/src/img/snippets_options/header_effect_standard.png'" attrs="{style:`--animate-src: '/website/static/src/img/snippets_options/header_effect_standard.gif';`}"/>
+                    <t t-call="website.scrollEffectImages" imgName="'header_effect_standard'"/>
                     <span>Standard</span>
                 </BuilderSelectItem>
                 <BuilderSelectItem
@@ -120,7 +120,7 @@
                     classAction="''"
                     className="'o_we_img_animate'"
                 >
-                    <Image src="'/website/static/src/img/snippets_options/header_effect_scroll.png'" attrs="{style:`--animate-src: '/website/static/src/img/snippets_options/header_effect_scroll.gif';`}"/>
+                    <t t-call="website.scrollEffectImages" imgName="'header_effect_scroll'"/>
                     <span>Scroll</span>
                 </BuilderSelectItem>
                 <BuilderSelectItem
@@ -130,7 +130,7 @@
                     classAction="'o_header_fixed'"
                     className="'o_we_img_animate'"
                 >
-                    <Image src="'/website/static/src/img/snippets_options/header_effect_fixed.png'" attrs="{style:`--animate-src: '/website/static/src/img/snippets_options/header_effect_fixed.gif';`}"/>
+                    <t t-call="website.scrollEffectImages" imgName="'header_effect_fixed'"/>
                     <span>Fixed</span>
                 </BuilderSelectItem>
                 <BuilderSelectItem
@@ -140,7 +140,7 @@
                     classAction="'o_header_disappears'"
                     className="'o_we_img_animate'"
                 >
-                    <Image src="'/website/static/src/img/snippets_options/header_effect_disappears.png'" attrs="{style:`--animate-src: '/website/static/src/img/snippets_options/header_effect_disappears.gif';`}"/>
+                    <t t-call="website.scrollEffectImages" imgName="'header_effect_disappears'"/>
                     <span>Disappears</span>
                 </BuilderSelectItem>
                 <BuilderSelectItem
@@ -150,31 +150,36 @@
                     classAction="'o_header_fade_out'"
                     className="'o_we_img_animate'"
                 >
-                    <Image src="'/website/static/src/img/snippets_options/header_effect_fade_out.png'" attrs="{style:`--animate-src: '/website/static/src/img/snippets_options/header_effect_fade_out.gif';`}"/>
+                    <t t-call="website.scrollEffectImages" imgName="'header_effect_fade_out'"/>
                     <span>Fade Out</span>
                 </BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
+        <BuilderRow t-if="!this.isActiveItem('header_sidebar_opt')" label.translate="Show Disclaimer">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{ views: ['website.option_header_disclaimer'] }"/>
+        </BuilderRow>
+    </t>
+
+    <t t-name="website.scrollEffectImages">
+        <Image src="`/website/static/src/img/snippets_options/${imgName}.png`"/>
+        <Image src="'/web/static/img/transparent.png'" attrs="{style: `--animate-src: '/website/static/src/img/snippets_options/${imgName}.gif';`}"/>
     </t>
 
     <t t-name="website.HeaderTemplateChoice">
         <BuilderSelectItem
             id="this.props.id"
             title="this.props.title"
-            actionParam="[
-                {
-                    action: 'websiteConfig',
-                    actionParam: {
-                        views: this.props.views,
-                        vars: {
-                            'header-template': this.props.varName,
-                            'menu-shadow-class': this.props.menuShadowClass,
-                            'menu-box-shadow-style': null,
-                        },
-                        checkVars: false,
-                    },
-                }
-            ]">
+            action="'headerTemplateConfig'"
+            actionParam="{
+                views: this.props.views,
+                vars: {
+                    'header-template': this.props.varName,
+                    'menu-shadow-class': this.props.menuShadowClass,
+                    'menu-box-shadow-style': null,
+                },
+                checkVars: false,
+                defaultAlignment: this.props.defaultAlignment,
+            }">
             <Image attrs="{ style: 'width: calc(100% - 0.5rem);' }" src="this.props.imgSrc"/>
         </BuilderSelectItem>
     </t>

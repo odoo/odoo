@@ -25,7 +25,6 @@
                 <field name="is_won"/>
                 <field name="team_ids" widget="many2many_tags"/>
                 <field name="rotting_threshold_days" optional="hide"/>
-                <field name="color" optional="hide" widget="color_picker"/>
             </list>
         </field>
     </record>
@@ -40,7 +39,9 @@
                 <sheet>
                     <div class="oe_title">
                         <label for="name"/>
-                        <h1><field name="name" placeholder="e.g. Qualification"/></h1>
+                        <h1 class="o_outlined">
+                            <field name="name" placeholder="e.g. Qualification"/>
+                        </h1>
                     </div>
                     <group>
                         <group>
@@ -49,14 +50,13 @@
                                 context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                             <field name="is_won"/>
                             <label for="rotting_threshold_days" string="Rotting in" invisible="is_won"/>
-                            <div class="o_input_box" invisible="is_won">
-                                <field name="rotting_threshold_days"/>
-                                <span class="o_input_box_overlay_end o_input_box_overlay_inline">days</span>
+                            <div invisible="is_won">
+                                <field name="rotting_threshold_days" class="oe_inline o_input_3ch"/>
+                                <span>days</span>
                             </div>
                         </group>
                         <group>
                             <field name="fold" string="Fold by Default"/>
-                            <field name="color" widget="color_picker"/>
                         </group>
                     </group>
                     <separator string="Requirements"/>

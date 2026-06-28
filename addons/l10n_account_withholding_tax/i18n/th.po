@@ -3,21 +3,22 @@
 # * l10n_account_withholding
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:02+0000\n"
-"PO-Revision-Date: 2025-11-17 03:09+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19-l10n/"
+"POT-Creation-Date: 2026-06-19 18:11+0000\n"
+"PO-Revision-Date: 2026-06-10 03:41+0000\n"
+"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-master-l10n/"
 "l10n_account_withholding_tax/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
@@ -35,7 +36,7 @@ msgstr "%(amount)s รวมภาษี"
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/product_template.py:0
 msgid "%(amount)s Tax Withheld"
-msgstr ""
+msgstr "%(amount)s ภาษีที่ถูกหัก ณ ที่จ่าย"
 
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.report_payment_receipt_document
@@ -45,17 +46,17 @@ msgstr "<span>จำนวน</span>"
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.report_payment_receipt_document
 msgid "<span>Base</span>"
-msgstr ""
+msgstr "<span>ฐาน</span>"
 
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.report_payment_receipt_document
 msgid "<span>Tax</span>"
-msgstr ""
+msgstr "<span>ภาษี</span>"
 
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.report_payment_receipt_document
 msgid "<span>Withholding number</span>"
-msgstr ""
+msgstr "<span>หมายเลขผู้ถูกหักภาษี ณ ที่จ่าย</span>"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__account_id
@@ -67,18 +68,24 @@ msgstr "บัญชี"
 #. module: l10n_account_withholding_tax
 #: model:ir.model,name:l10n_account_withholding_tax.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
+msgstr "เทมเพลตแผนภูมิบัญชี"
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/wizards/account_payment_register_withholding_line.py:0
 msgid "All withholding lines in self must have the same payment register."
 msgstr ""
+"ทุกรายการหัก ณ ที่จ่ายในแบบแสดงรายการภาษีด้วยตนเองจะต้องมีทะเบียนการชำระเงินเดียวกัน"
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_payment_withholding_line.py:0
 msgid "All withholding lines in self must have the same payment."
+msgstr "ทุกรายการหัก ณ ที่จ่ายในแบบแสดงรายการภาษีบุคคลธรรมดาจะต้องมีจำนวนเงินชำระเท่ากัน"
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__amount_residual
+msgid "Amount Due"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
@@ -100,28 +107,28 @@ msgstr "ความแม่นยำในการวิเคราะห์
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__comodel_currency_id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__comodel_currency_id
 msgid "Comodel Currency"
-msgstr ""
+msgstr "สกุลเงิน Comodel"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__comodel_date
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__comodel_date
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__comodel_date
 msgid "Comodel Date"
-msgstr ""
+msgstr "วันที่ Comodel"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__comodel_payment_type
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__comodel_payment_type
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__comodel_payment_type
 msgid "Comodel Payment Type"
-msgstr ""
+msgstr "ประเภทการชำระเงินแบบ Comodel"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__comodel_percentage_paid_factor
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__comodel_percentage_paid_factor
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__comodel_percentage_paid_factor
 msgid "Comodel Percentage Paid Factor"
-msgstr ""
+msgstr "ตัวคูณคำนวณสัดส่วนภาษีตามยอดชำระจริง"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model,name:l10n_account_withholding_tax.model_res_company
@@ -156,12 +163,20 @@ msgid "Currency"
 msgstr "สกุลเงิน"
 
 #. module: l10n_account_withholding_tax
+#. odoo-javascript
+#: code:addons/l10n_account_withholding_tax/static/src/components/account_payment.xml:0
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.report_invoice_document
+msgid "Deducted on"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__withholding_default_account_id
 msgid "Default Account"
 msgstr "บัญชีเริ่มต้น"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__display_name
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__display_name
@@ -178,7 +193,7 @@ msgstr "แสดงชื่อ"
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__display_withholding
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__display_withholding
 msgid "Display Withholding"
-msgstr ""
+msgstr "แสดงการหัก ณ ที่จ่าย"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__distribution_analytic_account_ids
@@ -190,7 +205,7 @@ msgstr "บัญชีวิเคราะห์การจัดจำหน
 #. module: l10n_account_withholding_tax
 #: model:ir.model,name:l10n_account_withholding_tax.model_account_tax
 msgid "ETA tax codes mixin"
-msgstr ""
+msgstr "รหัสภาษี ETA mixin"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment_register_withholding_line__placeholder_type__given_by_name
@@ -200,7 +215,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_withholding_line__placeholder_type__given_by_name
 #: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_withholding_line__previous_placeholder_type__given_by_name
 msgid "Given By the Name"
-msgstr ""
+msgstr "เป็นไปตามชื่อที่ระบุ"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment_register_withholding_line__placeholder_type__given_by_sequence
@@ -210,10 +225,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_withholding_line__placeholder_type__given_by_sequence
 #: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_withholding_line__previous_placeholder_type__given_by_sequence
 msgid "Given By the Sequence"
-msgstr ""
+msgstr "กำหนดโดยลำดับ"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__id
@@ -227,10 +243,15 @@ msgid "ID"
 msgstr "ไอดี"
 
 #. module: l10n_account_withholding_tax
-#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_tax__is_withholding_tax_on_payment
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_tax__is_withholding_tax
 msgid ""
-"If enabled, this tax will not affect your accounts until the registration of "
-"payments."
+"If enabled, this tax will not affect the amount due until applied via the "
+"Pay button."
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model,name:l10n_account_withholding_tax.model_account_move
+msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
@@ -246,14 +267,26 @@ msgid "Last Updated on"
 msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 
 #. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__withholding_net_amount
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__withholding_net_amount
 msgid "Net Amount"
+msgstr "จำนวนสุทธิ"
+
+#. module: l10n_account_withholding_tax
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.account_move_view_form_inherit_l10n_account_withholding_tax
+msgid "Net Due"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_net_residual_amount_currency
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__withholding_net_residual_amount_currency
+msgid "Net Due Amount"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_payment_register__withholding_net_amount
 msgid "Net amount after deducting the withholding lines"
-msgstr ""
+msgstr "จำนวนสุทธิหลังหักรายการหัก ณ ที่จ่าย"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment_register_withholding_line__placeholder_type__not_defined
@@ -263,21 +296,21 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_withholding_line__placeholder_type__not_defined
 #: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_withholding_line__previous_placeholder_type__not_defined
 msgid "Not defined"
-msgstr ""
+msgstr "ไม่ได้กำหนด"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__original_base_amount
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__original_base_amount
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__original_base_amount
 msgid "Original Base Amount"
-msgstr ""
+msgstr "จำนวนเงินฐานเดิม"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__original_tax_amount
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__original_tax_amount
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__original_tax_amount
 msgid "Original Tax Amount"
-msgstr ""
+msgstr "จำนวนภาษีเดิม"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__outstanding_account_id
@@ -303,38 +336,44 @@ msgid "Payment Account"
 msgstr "บัญชีการชำระเงิน"
 
 #. module: l10n_account_withholding_tax
+#: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment__withhold__payment
+#: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment_register__withhold__payment
+msgid "Payment Only"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__payment_register_id
 msgid "Payment Register"
-msgstr ""
+msgstr "สมุดบันทึกการชำระเงิน"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model,name:l10n_account_withholding_tax.model_account_payment_register_withholding_line
 msgid "Payment register withholding line"
-msgstr ""
+msgstr "บรรทัดการหัก ณ ที่จ่ายในสมุดทะเบียนการชำระเงิน"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model,name:l10n_account_withholding_tax.model_account_payment_withholding_line
 msgid "Payment withholding line"
-msgstr ""
+msgstr "บรรทัดรายการภาษีหัก ณ ที่จ่ายในบันทึกการชำระเงิน"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__placeholder_type
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__placeholder_type
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__placeholder_type
 msgid "Placeholder Type"
-msgstr ""
+msgstr "ประเภทของข้อความตัวอย่าง"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__placeholder_value
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__placeholder_value
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__placeholder_value
 msgid "Placeholder Value"
-msgstr ""
+msgstr "ข้อความตัวอย่าง"
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_withholding_line.py:0
-msgid "Please enter the withholding number for the tax %(tax_name)s"
+msgid "Please enter the sequence number for the tax %(tax_name)s"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
@@ -342,14 +381,14 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_payment_withholding_line__placeholder_value
 #: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_withholding_line__placeholder_value
 msgid "Populated by the comodel during edition of the line."
-msgstr ""
+msgstr "ช่องนี้จะถูกเติมข้อมูลโดยอัตโนมัติจากโมดูลที่เชื่อมโยงกัน ในระหว่างที่มีการแก้ไขบรรทัดรายการ"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__previous_placeholder_type
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__previous_placeholder_type
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__previous_placeholder_type
 msgid "Previous Placeholder Type"
-msgstr ""
+msgstr "ประเภทข้อความตัวอย่างก่อนหน้านี้"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model,name:l10n_account_withholding_tax.model_product_template
@@ -383,14 +422,14 @@ msgstr "เลขลำดับ"
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__source_base_amount
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__source_base_amount
 msgid "Source Base Amount"
-msgstr ""
+msgstr "จำนวนฐานแหล่งที่มา"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__source_base_amount_currency
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__source_base_amount_currency
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__source_base_amount_currency
 msgid "Source Base Amount Currency"
-msgstr ""
+msgstr "สกุลเงินของจำนวนฐานแหล่งที่มา"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__source_currency_id
@@ -404,21 +443,21 @@ msgstr "สกุลเงินต้นทาง"
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__source_tax_id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__source_tax_id
 msgid "Source Tax"
-msgstr ""
+msgstr "ภาษี ณ แหล่งเงินได้"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__source_tax_amount
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__source_tax_amount
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__source_tax_amount
 msgid "Source Tax Amount"
-msgstr ""
+msgstr "ยอดเงินภาษี ณ แหล่งเงินได้"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__source_tax_amount_currency
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__source_tax_amount_currency
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__source_tax_amount_currency
 msgid "Source Tax Amount Currency"
-msgstr ""
+msgstr "สกุลเงินยอดเงินภาษี ณ แหล่งเงินได้"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__tax_id
@@ -433,12 +472,49 @@ msgstr "ภาษี"
 #: code:addons/l10n_account_withholding_tax/models/account_withholding_line.py:0
 msgid ""
 "The account \"%(account_name)s\" is not valid to use on withholding lines."
+msgstr "บัญชี \"%(account_name)s\" ไม่สามารถใช้กับบรรทัดการหักภาษี ณ ที่จ่ายได้"
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_payment__withholding_net_amount
+msgid ""
+"The amount that will actually be paid after deducting withholding taxes."
 msgstr ""
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_withholding_line.py:0
 msgid "The base amount of a withholding tax line must be above 0."
+msgstr "จำนวนเงินฐานของรายการหักภาษี ณ ที่จ่ายต้องมากกว่า 0"
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_net_residual_amount_currency
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_move__withholding_net_residual_amount_currency
+msgid "The net amount due after deducting the remaining withholding amount."
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_residual_amount_currency
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_move__withholding_residual_amount_currency
+msgid "The remaining withholding amount to be deducted."
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_move__amount_residual
+msgid ""
+"The total amount due, including the amount to be paid and the withholding "
+"due."
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_deducted_amount_currency
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_move__withholding_deducted_amount_currency
+msgid "The total withholding amount already deducted."
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_total_amount_currency
+#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_move__withholding_total_amount_currency
+msgid "The total withholding amount to be deducted."
 msgstr ""
 
 #. module: l10n_account_withholding_tax
@@ -500,19 +576,27 @@ msgid "Withheld Amount"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
-#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_tax__is_withholding_tax_on_payment
-msgid "Withhold On Payment"
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__withhold
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__withhold
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_tax__is_withholding_tax
+msgid "Withhold"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
-#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__should_withhold_tax
-#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register__should_withhold_tax
-msgid "Withhold Tax Amounts"
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.account_move_view_form_inherit_l10n_account_withholding_tax
+msgid "Withhold Due"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
-#: model:ir.model.fields,help:l10n_account_withholding_tax.field_account_payment__should_withhold_tax
-msgid "Withhold tax amounts from the payment amount."
+#: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment__withhold__withhold
+#: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment_register__withhold__withhold
+msgid "Withhold Only"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment__withhold__withhold_pay
+#: model:ir.model.fields.selection,name:l10n_account_withholding_tax.selection__account_payment_register__withhold__withhold_pay
+msgid "Withhold and Pay"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
@@ -520,6 +604,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_register_form
 msgid "Withholding"
 msgstr "การหัก ณ ที่จ่าย"
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__withholding_amount
+#: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_tree
+msgid "Withholding Amount"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_deducted_amount_currency
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__withholding_deducted_amount_currency
+msgid "Withholding Deducted Amount Currency"
+msgstr ""
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment__withholding_hide_tax_base_account
@@ -542,6 +638,12 @@ msgid ""
 msgstr ""
 
 #. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_residual_amount_currency
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__withholding_residual_amount_currency
+msgid "Withholding Residual Amount Currency"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__withholding_sequence_id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__withholding_sequence_id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_tax__withholding_sequence_id
@@ -553,6 +655,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_res_company__withholding_tax_base_account_id
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_res_config_settings__withholding_tax_base_account_id
 msgid "Withholding Tax Base"
+msgstr ""
+
+#. module: l10n_account_withholding_tax
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_bank_statement_line__withholding_total_amount_currency
+#: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__withholding_total_amount_currency
+msgid "Withholding Total Amount Currency"
 msgstr ""
 
 #. module: l10n_account_withholding_tax
@@ -578,3 +686,14 @@ msgstr ""
 #: model:ir.model,name:l10n_account_withholding_tax.model_account_withholding_line
 msgid "withholding line"
 msgstr ""
+
+#~ msgid ""
+#~ "If enabled, this tax will not affect your accounts until the registration "
+#~ "of payments."
+#~ msgstr "หากเปิดใช้งาน ภาษีนี้จะไม่ส่งผลต่อบัญชีของคุณจนกว่าจะมีการลงทะเบียนการชำระเงิน"
+
+#~ msgid "Please enter the withholding number for the tax %(tax_name)s"
+#~ msgstr "กรุณากรอกหมายเลขหัก ณ ที่จ่ายสำหรับภาษี%(tax_name)s"
+
+#~ msgid "Withhold On Payment"
+#~ msgstr "ภาษีหัก ณ ที่จ่าย"

@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
+
 from freezegun import freeze_time
 
 from odoo.exceptions import ValidationError
@@ -18,12 +20,7 @@ class TestLoyalty(TestSaleCouponCommon):
         cls.env["loyalty.program"].search([]).write({"active": False})
 
         cls.product_a, cls.product_b = cls.env["product.product"].create([
-            {
-                "name": "Product C",
-                "list_price": 100,
-                "sale_ok": True,
-                "taxes_id": [Command.set([])],
-            },
+            {"name": "Product C", "list_price": 100, "sale_ok": True, "taxes_id": False},
             {"name": "Product B", "sale_ok": True},
         ])
 
@@ -54,7 +51,7 @@ class TestLoyalty(TestSaleCouponCommon):
             "partner_id": cls.partner.id,
             "points": 10,
         })
-        cls.ewallet_program.coupon_ids = [Command.set([cls.ewallet.id])]
+        cls.ewallet_program.coupon_ids = [Command.set(cls.ewallet.ids)]
 
         cls.user_salemanager = new_test_user(
             cls.env, login="user_salemanager", groups="sales_team.group_sale_manager"
@@ -84,28 +81,20 @@ class TestLoyalty(TestSaleCouponCommon):
             "trigger": "auto",
             "applies_on": "both",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_point_mode": "unit",
-                        "reward_point_amount": 1,
-                        "product_ids": [self.product_a.id],
-                    },
-                )
+                Command.create({
+                    "reward_point_mode": "unit",
+                    "reward_point_amount": 1,
+                    "product_ids": [self.product_a.id],
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 1.5,
-                        "discount_mode": "per_point",
-                        "discount_applicability": "order",
-                        "required_points": 3,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 1.5,
+                    "discount_mode": "per_point",
+                    "discount_applicability": "order",
+                    "required_points": 3,
+                })
             ],
         })
 
@@ -122,7 +111,7 @@ class TestLoyalty(TestSaleCouponCommon):
         self.ewallet.points = 0
 
         order.write({
-            "order_line": [(0, 0, {"product_id": self.product_a.id, "product_uom_qty": 1})]
+            "order_line": [Command.create({"product_id": self.product_a.id, "product_uom_qty": 1})]
         })
         order._update_programs_and_rewards()
         claimable_rewards = order._get_claimable_rewards()
@@ -156,18 +145,14 @@ class TestLoyalty(TestSaleCouponCommon):
             "program_type": "coupons",
             "applies_on": "current",
             "trigger": "auto",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 10,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                })
             ],
         })
 
@@ -177,7 +162,7 @@ class TestLoyalty(TestSaleCouponCommon):
             .with_user(self.user_salemanager)
             .create({
                 "partner_id": self.partner.id,
-                "order_line": [(0, 0, {"product_id": self.product_a.id})],
+                "order_line": [Command.create({"product_id": self.product_a.id})],
             })
         )
 
@@ -564,6 +549,39 @@ class TestLoyalty(TestSaleCouponCommon):
         order.action_confirm()
         self.assertEqual(loyalty_card.points, 90)
 
+    def test_points_awarded_productless_line_no_domain_program(self):
+        """Check that productless sale order lines award points for all-products programs."""
+        loyalty_program = self.env["loyalty.program"].create(
+            self.env["loyalty.program"]._get_template_values()["loyalty"]
+        )
+        loyalty_card = self.env["loyalty.card"].create({
+            "program_id": loyalty_program.id,
+            "partner_id": self.partner.id,
+            "points": 0,
+        })
+
+        order = (
+            self
+            .env["sale.order"]
+            .with_user(self.user_salemanager)
+            .create({
+                "partner_id": self.partner.id,
+                "order_line": [
+                    Command.create({
+                        "name": "Manual service",
+                        "price_unit": 100,
+                        "product_uom_qty": 1,
+                        "tax_ids": False,
+                    })
+                ],
+            })
+        )
+
+        self.assertFalse(order.order_line.product_id)
+        self.assertEqual(order.amount_total, 100)
+        order.action_confirm()
+        self.assertEqual(loyalty_card.points, 100)
+
     def test_points_awarded_general_discount_code_specific_domain_program(self):
         """Check the calculation for points awarded when there is a discount coupon applied and the
         loyalty program applies on a specific domain.
@@ -697,16 +715,12 @@ class TestLoyalty(TestSaleCouponCommon):
             "program_type": "gift_card",
             "trigger": "auto",
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 1,
-                        "discount_mode": "per_point",
-                        "discount_applicability": "order",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 1,
+                    "discount_mode": "per_point",
+                    "discount_applicability": "order",
+                })
             ],
         })
 
@@ -1037,28 +1051,20 @@ class TestLoyalty(TestSaleCouponCommon):
                 "trigger": "auto",
                 "applies_on": "both",
                 "rule_ids": [
-                    (
-                        0,
-                        0,
-                        {
-                            "reward_point_mode": "unit",
-                            "reward_point_amount": 1,
-                            "product_ids": [self.product_a.id],
-                        },
-                    )
+                    Command.create({
+                        "reward_point_mode": "unit",
+                        "reward_point_amount": 1,
+                        "product_ids": [self.product_a.id],
+                    })
                 ],
                 "reward_ids": [
-                    (
-                        0,
-                        0,
-                        {
-                            "reward_type": "discount",
-                            "discount": 100,
-                            "discount_mode": "percent",
-                            "discount_applicability": "order",
-                            "required_points": 1,
-                        },
-                    )
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount": 100,
+                        "discount_mode": "percent",
+                        "discount_applicability": "order",
+                        "required_points": 1,
+                    })
                 ],
             }
         ])
@@ -1070,7 +1076,11 @@ class TestLoyalty(TestSaleCouponCommon):
         order = self.env["sale.order"].create({
             "partner_id": self.partner.id,
             "order_line": [
-                (0, 0, {"product_id": self.product_A.id, "product_uom_qty": 1, "price_unit": price})
+                Command.create({
+                    "product_id": self.product_A.id,
+                    "product_uom_qty": 1,
+                    "price_unit": price,
+                })
                 for price in (5.60, 8.92, 44.91, 217.26, 2400.00)
             ],
         })
@@ -1090,28 +1100,20 @@ class TestLoyalty(TestSaleCouponCommon):
                 "trigger": "auto",
                 "applies_on": "both",
                 "rule_ids": [
-                    (
-                        0,
-                        0,
-                        {
-                            "reward_point_mode": "unit",
-                            "reward_point_amount": 1,
-                            "product_ids": [self.product_a.id],
-                        },
-                    )
+                    Command.create({
+                        "reward_point_mode": "unit",
+                        "reward_point_amount": 1,
+                        "product_ids": [self.product_a.id],
+                    })
                 ],
                 "reward_ids": [
-                    (
-                        0,
-                        0,
-                        {
-                            "reward_type": "discount",
-                            "discount": 90,
-                            "discount_mode": "percent",
-                            "discount_applicability": "order",
-                            "required_points": 1,
-                        },
-                    )
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount": 90,
+                        "discount_mode": "percent",
+                        "discount_applicability": "order",
+                        "required_points": 1,
+                    })
                 ],
             }
         ])
@@ -1122,7 +1124,7 @@ class TestLoyalty(TestSaleCouponCommon):
         })
         order = self.env["sale.order"].create({
             "partner_id": self.partner.id,
-            "order_line": [(0, 0, {"product_id": self.product_D.id, "product_uom_qty": 1})],
+            "order_line": [Command.create({"product_id": self.product_D.id, "product_uom_qty": 1})],
         })
 
         order._update_programs_and_rewards()
@@ -1421,7 +1423,8 @@ class TestLoyalty(TestSaleCouponCommon):
 
     @freeze_time("2026-01-10")
     def test_expired_ewallet_is_not_claimable(self):
-        self.ewallet.expiration_date = "2026-01-01"
+        with freeze_time("2026-01-01"):
+            self.ewallet.expiration_date = date.today()
         sale_order = self._create_so(order_line=[Command.create({"product_id": self.product_a.id})])
         sale_order.action_open_reward_wizard()
         sale_order._update_programs_and_rewards()

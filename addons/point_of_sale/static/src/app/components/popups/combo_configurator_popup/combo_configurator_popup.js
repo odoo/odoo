@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
@@ -68,7 +67,7 @@ export class ComboConfiguratorPopup extends Component {
             configuration = this.configurationFromValues;
         }
 
-        this.state = useState({
+        this.state = proxy({
             combo,
             configuration,
             qty: Object.fromEntries(
@@ -214,6 +213,13 @@ export class ComboConfiguratorPopup extends Component {
     async onClickProduct(product, combo_item) {
         const productTmpl = product.product_tmpl_id;
         const combo = combo_item.combo_id;
+        if (
+            !this.state.qty[combo.id][combo_item.id] &&
+            this.pos.isProductSnoozed(productTmpl) &&
+            !(await this.pos.canAddProductToCurrentOrder(productTmpl))
+        ) {
+            return;
+        }
         if (productTmpl.needToConfigure()) {
             this.onClickConfigurableProduct(product, combo_item, combo);
         } else {

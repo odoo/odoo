@@ -1,10 +1,9 @@
-import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { useService } from '@web/core/utils/hooks';
 import { ActionContainer } from '@web/webclient/actions/action_container';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { session } from '@web/session';
-import { Component } from "@odoo/owl";
+import { Component, onMounted, useListener } from "@odoo/owl";
 
 export class SubcontractingPortalWebClient extends Component {
     static components = { ActionContainer, MainComponentsContainer };
@@ -14,13 +13,10 @@ export class SubcontractingPortalWebClient extends Component {
         window.parent.document.body.style.margin = "0"; // remove the margin in the parent body
         this.actionService = useService('action');
         useOwnDebugContext({ categories: ["default"] });
-        useLayoutEffect(
-            () => {
-                this._showView();
-            },
-            () => []
-        );
-        useExternalListener(window, "click", this.onGlobalClick, { capture: true });
+        onMounted(() => {
+            this._showView();
+        });
+        useListener(window, "click", this.onGlobalClick.bind(this), { capture: true });
     }
 
     async _showView() {
@@ -57,4 +53,3 @@ export class SubcontractingPortalWebClient extends Component {
         }
     }
 }
-

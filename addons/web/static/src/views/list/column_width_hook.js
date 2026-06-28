@@ -1,4 +1,4 @@
-import { useComponent, useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { utils } from "@web/core/ui/ui_service";
 import { renderToElement } from "@web/core/utils/render";
@@ -11,7 +11,7 @@ import {
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 
-import { onMounted, onWillUnmount, status, xml } from "@odoo/owl";
+import { onMounted, onWillUnmount, status, useListener, xml } from "@odoo/owl";
 
 // This file defines a hook that encapsulates the column width logic of the list view. This logic
 // aims at optimizing the available space between columns and, once computed, at freezing the table
@@ -178,8 +178,8 @@ function computeOptimalDateWidths() {
 
     const template = xml`
         <div class="invisible" style="font-variant-numeric: tabular-nums;">
-            <div t-foreach="Object.keys(values)" t-as="key" t-key="key" t-att-class="key">
-                <div t-foreach="values[key]" t-as="value" t-key="value_index">
+            <div t-foreach="Object.keys(this.values)" t-as="key" t-key="key" t-att-class="key">
+                <div t-foreach="this.values[key]" t-as="value" t-key="value_index">
                     <span t-out="value"/>
                 </div>
             </div>
@@ -350,18 +350,19 @@ function getWidthSpecs(columns) {
             maxWidth = max;
         } else {
             let width;
-            if (column.type === "field") {
-                if (column.field.listViewWidth) {
-                    width = column.field.listViewWidth;
+            if (column.type === "field" || column.type === "column_group") {
+                const fieldCol = column.type === "column_group" ? column.fields[0] : column;
+                if (fieldCol.field.listViewWidth) {
+                    width = fieldCol.field.listViewWidth;
                     if (typeof width === "function") {
                         width = width({
-                            type: column.fieldType,
-                            hasLabel: column.hasLabel,
-                            options: column.options,
+                            type: fieldCol.fieldType,
+                            hasLabel: fieldCol.hasLabel,
+                            options: fieldCol.options,
                         });
                     }
                 } else {
-                    width = FIELD_WIDTHS[column.widget || column.fieldType];
+                    width = FIELD_WIDTHS[fieldCol.widget || fieldCol.fieldType];
                 }
             } else if (column.type === "widget") {
                 width = column.widget.listViewWidth;
@@ -373,7 +374,11 @@ function getWidthSpecs(columns) {
                 minWidth = DEFAULT_MIN_WIDTH;
             }
         }
-        return { minWidth, maxWidth, canShrink: column.type === "field" };
+        return {
+            minWidth,
+            maxWidth,
+            canShrink: column.type === "field" || column.type === "column_group",
+        };
     });
 }
 
@@ -559,7 +564,7 @@ export function useMagicColumnWidths(tableRef, getState) {
     if (renderer.constructor.useMagicColumnWidths) {
         useLayoutEffect(forceColumnWidths);
         // Forget computed widths (and potential manual column resize) on window resize
-        useExternalListener(window, "resize", unsetWidths);
+        useListener(window, "resize", unsetWidths);
         // Listen to width changes on the parent node of the table, to recompute ideal widths
         // Note: we compute the widths once, directly, and once after parent width stabilization.
         // The first call is only necessary to avoid an annoying flickering when opening form views

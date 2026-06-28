@@ -136,13 +136,13 @@ class TestCalendar(SavepointCaseWithUserDemo):
         Check that mail have extra attachement added by the user
         """
 
-        def _test_one_mail_per_attendee(self, partners):
+        def _test_mail_per_attendee(self, partners, target=1):
             # check that every attendee receive a (single) mail for the event
             for partner in partners:
                 mail = self.env['mail.message'].sudo().search([
                     ('notified_partner_ids', 'in', partner.id),
                     ])
-                self.assertEqual(len(mail), 1)
+                self.assertEqual(len(mail), target, "This attendee has an unexpected amount of mails")
 
         def _test_emails_has_attachment(self, partners, attachments_names=["fileText_attachment.txt"]):
             # check that every email has specified extra attachments
@@ -180,7 +180,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             })
 
         # every partner should have 1 mail sent
-        _test_one_mail_per_attendee(self, partners)
+        _test_mail_per_attendee(self, partners, target=1)
         _test_emails_has_attachment(self, partners)
 
         # adding more partners to the event
@@ -196,10 +196,10 @@ class TestCalendar(SavepointCaseWithUserDemo):
         })
 
         # more email should be sent
-        _test_one_mail_per_attendee(self, partners)
+        _test_mail_per_attendee(self, partners, target=1)
 
         # create a new event in the past
-        self.CalendarEvent.create({
+        past_event = self.CalendarEvent.create({
             'name': "NOmailTest",
             'allday': False,
             'recurrency': False,
@@ -209,7 +209,26 @@ class TestCalendar(SavepointCaseWithUserDemo):
         })
 
         # no more email should be sent
-        _test_one_mail_per_attendee(self, partners)
+        _test_mail_per_attendee(self, partners, target=1)
+
+        # adding more partners to the event in past, SHOULD NOT trigger notification
+        partners_added_after_past_date = [
+            self.env['res.partner'].create({'name': 'testuser5', 'email': 'jean@example.com'}),
+            self.env['res.partner'].create({'name': 'testuser6', 'email': 'claude@example.com'}),
+            self.env['res.partner'].create({'name': 'testuser7', 'email': 'vandamme@example.com'}),
+            ]
+        partners.extend(partners_added_after_past_date)
+        partner_ids = [(6, False, [p.id for p in partners])]
+        past_event.write({
+            'partner_ids': partner_ids,
+            'recurrence_update': 'all_events',
+        })
+
+        _test_mail_per_attendee(
+            self, list(set(partners) - set(partners_added_after_past_date)), target=1
+        )
+        _test_mail_per_attendee(self, partners_added_after_past_date, target=0)
+
 
         partner_staff, new_partner = self.env['res.partner'].create([{
             'name': 'partner_staff',
@@ -232,6 +251,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         })
         _test_emails_has_attachment(self, partners=[partner_staff, new_partner], attachments_names=[a.name for a in attachments])
 
+    @freezegun.freeze_time('2011-04-29 10:00:00')
     def test_event_creation_internal_user_invitation_ics(self):
         """ Check that internal user can read invitation.ics attachment """
         internal_user = new_test_user(self.env, login='internal_user', groups='base.group_user')
@@ -517,3 +537,36 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'res_id': 0,
         })
         self.assertTrue(event.res_id)
+
+    def test_contact_details_single_vs_multiple_attendees(self):
+        """Contact Details section should only appear for 1-on-1 meetings
+        (single non-organizer attendee)."""
+        organizer = new_test_user(self.env, login='org_user', groups='base.group_user')
+        attendees = self.env['res.partner'].create([
+            {'name': 'Attendee A', 'email': 'a@test.com', 'phone': '+1000000001'},
+            {'name': 'Attendee B', 'email': 'b@test.com', 'phone': '+1000000002'},
+            {'name': 'Attendee C', 'email': 'c@test.com', 'phone': '+1000000003'},
+        ])
+        # Multiple attendees: only organizer info is shown
+        event_multi = self.env['calendar.event'].with_user(organizer).create({
+            'name': 'Group Meeting',
+            'start': '2026-04-01 10:00:00',
+            'stop': '2026-04-01 11:00:00',
+            'user_id': organizer.id,
+            'partner_ids': [Command.link(pid) for pid in attendees.ids],
+        })
+        self.assertIn('Organized by', event_multi.description)
+        self.assertNotIn('Contact Details', event_multi.description)
+        for attendee in attendees:
+            self.assertNotIn(attendee.name, event_multi.description)
+        # Single attendee: Contact Details should appear
+        event_single = self.env['calendar.event'].with_user(organizer).create({
+            'name': '1-on-1 Meeting',
+            'start': '2026-04-01 12:00:00',
+            'stop': '2026-04-01 13:00:00',
+            'user_id': organizer.id,
+            'partner_ids': [Command.link(attendees[0].id)],
+        })
+        self.assertIn('Organized by', event_single.description)
+        self.assertIn('Contact Details', event_single.description)
+        self.assertIn('Attendee A', event_single.description)

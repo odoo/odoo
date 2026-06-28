@@ -75,7 +75,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'employee_ids': [(4, self.employee.id), (4, self.employee_emp.id)],
             'work_entry_type_id': self.work_entry_type.id,
             'duration': 2,
-            'allocation_type': 'regular',
         })
 
         employee_allocation.action_generate_allocations()
@@ -100,7 +99,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_to': date(2019, 5, 6),
             'employee_ids': (employee_1 + employee_2).ids,
             'duration': 2,
-            'allocation_type': 'regular',
         })
         allocation_wizard.action_generate_allocations()
 
@@ -113,7 +111,6 @@ class TestAllocations(TestHrHolidaysCommon):
         employee_allocation = self.env['hr.leave.allocation'].create({
             'employee_id': self.employee.id,
             'work_entry_type_id': self.work_entry_type.id,
-            'allocation_type': 'regular',
         })
 
         with Form(employee_allocation.with_context(is_employee_allocation=True), 'hr_holidays.hr_leave_allocation_view_form_dashboard') as allocation:
@@ -131,7 +128,6 @@ class TestAllocations(TestHrHolidaysCommon):
         employee_allocation = self.env['hr.leave.allocation'].create({
             'employee_id': self.employee.id,
             'work_entry_type_id': self.work_entry_type.id,
-            'allocation_type': 'regular',
             'type_request_unit': 'half_day',
         })
 
@@ -141,7 +137,7 @@ class TestAllocations(TestHrHolidaysCommon):
 
         self.assertEqual(employee_allocation.name, "Custom Time Off Test (10.0 day(s))")
 
-    def change_allocation_type_day(self):
+    def change_allocation_day_unit(self):
         self.work_entry_type.write({
             'name': 'Custom Time Off Test',
             'allocation_validation_type': 'hr'
@@ -151,17 +147,11 @@ class TestAllocations(TestHrHolidaysCommon):
             'holiday_type': 'employee',
             'employee_id': self.employee.id,
             'work_entry_type_id': self.work_entry_type.id,
-            'allocation_type': 'regular',
         })
-
-        with Form(employee_allocation.with_context(is_employee_allocation=True), 'hr_holidays.hr_leave_allocation_view_form_dashboard') as allocation:
-            allocation.allocation_type = 'extra'
-            allocation.allocation_type = 'regular'
-            employee_allocation = allocation.save()
 
         self.assertEqual(employee_allocation.number_of_days, 1.0)
 
-    def test_allocation_type_hours_with_resource_calendar(self):
+    def test_allocation_hours_with_resource_calendar(self):
         self.work_entry_type.request_unit = 'hour'
         self.work_entry_type.unit_of_measure = 'hour'
         self.employee.resource_calendar_id = self.calendar_35h
@@ -171,7 +161,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'employee_ids': [(4, self.employee.id), (4, self.employee_emp.id)],
             'work_entry_type_id': self.work_entry_type.id,
             'duration': 10,
-            'allocation_type': 'regular',
         })
 
         self.assertEqual(self.employee.resource_calendar_id.hours_per_day, 7.0)
@@ -190,7 +179,7 @@ class TestAllocations(TestHrHolidaysCommon):
         self.assertEqual(employee_allocation.number_of_hours_display, 10)
         self.assertEqual(employee_emp_allocation.number_of_hours_display, 10)
 
-    def change_allocation_type_hours(self):
+    def change_allocation_hours_unit(self):
         self.work_entry_type.write({
             'name': 'Custom Time Off Test',
             'allocation_validation_type': 'hr'
@@ -200,14 +189,8 @@ class TestAllocations(TestHrHolidaysCommon):
             'holiday_type': 'employee',
             'employee_id': self.employee.id,
             'work_entry_type_id': self.work_entry_type.id,
-            'allocation_type': 'regular',
             'type_request_unit': 'hour',
         })
-
-        with Form(employee_allocation.with_context(is_employee_allocation=True), 'hr_holidays.hr_leave_allocation_view_form_dashboard') as allocation:
-            allocation.allocation_type = 'extra'
-            allocation.allocation_type = 'regular'
-            employee_allocation = allocation.save()
 
         self.assertEqual(employee_allocation.number_of_days, 1.0)
 
@@ -292,7 +275,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'employee_id': self.employee.id,
             'work_entry_type_id': work_entry_type.id,
             'number_of_days': 3,
-            'allocation_type': 'regular',
             'date_from': date(2024, 1, 1),
             'date_to': date(2024, 4, 30)
         })
@@ -303,7 +285,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'employee_id': self.employee.id,
             'work_entry_type_id': work_entry_type.id,
             'number_of_days': 9,
-            'allocation_type': 'regular',
             'date_from': date(2024, 5, 1),
             'date_to': date(2024, 12, 31)
         })
@@ -317,7 +298,7 @@ class TestAllocations(TestHrHolidaysCommon):
             default_date_from='2024-08-18 06:00:00',
             default_date_to='2024-08-18 15:00:00'
         ).name_search(domain=[['id', '=', work_entry_type.id]])
-        self.assertEqual(result[0][1], 'Compensatory Time Off (9 remaining out of 9 days)')
+        self.assertEqual(result[0][1], 'Compensatory Time Off (9 remaining out of 9 days) (Generic)')
 
     def test_allocation_hourly_work_entry_type(self):
         """
@@ -341,46 +322,12 @@ class TestAllocations(TestHrHolidaysCommon):
         })
 
         with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as allocation_form:
-            allocation_form.allocation_type = 'regular'
             allocation_form.employee_id = employee
             allocation_form.work_entry_type_id = work_entry_type
             allocation_form.number_of_hours_display = 10
             allocation = allocation_form.save()
 
         self.assertEqual(allocation.number_of_hours_display, 10.0)
-
-    def test_automatic_allocation_type(self):
-        """
-        Make sure that an allocation with an accrual plan imported will automatically set the allocation_type to 'accrual'
-        """
-        work_entry_type = self.env['hr.work.entry.type'].create({
-            'name': 'Hourly Leave Type',
-            'code': 'Hourly Leave Type',
-            'count_as': 'absence',
-            'requires_allocation': True,
-            'allocation_validation_type': 'no_validation',
-            'request_unit': 'hour',
-            'unit_of_measure': 'hour',
-        })
-
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-            'name': 'Accrual Plan For Test',
-        })
-
-        allocation = self.env['hr.leave.allocation'].create({
-            'name': 'Alloc with accrual plan',
-            'employee_id': self.employee.id,
-            'work_entry_type_id': work_entry_type.id,
-            'accrual_plan_id': accrual_plan.id,
-        })
-
-        self.assertEqual(allocation.allocation_type, 'accrual')
-
-        allocation.update({
-            'accrual_plan_id': False,
-        })
-
-        self.assertEqual(allocation.allocation_type, 'regular')
 
     def test_create_allocation_from_company_with_no_employee_for_current_user(self):
         """
@@ -395,6 +342,7 @@ class TestAllocations(TestHrHolidaysCommon):
         allocation = allocation_form.save()
         self.assertTrue(allocation)
 
+    @freeze_time('2026-01-01 12:00:00')
     def test_hr_leave_allocation_balance(self):
         """
             This test makes sure that the time off balance showed on the time off management kanban card is correct
@@ -406,7 +354,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'employee_id': self.employee.id,
             'work_entry_type_id': work_entry_type.id,
             'number_of_days': 5,
-            'allocation_type': 'regular',
             'date_from': date(2024, 1, 1),
             'date_to': date(2024, 4, 30)
         })
@@ -417,7 +364,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'employee_id': self.employee.id,
             'work_entry_type_id': work_entry_type.id,
             'number_of_days': 10,
-            'allocation_type': 'regular',
             'date_from': date(2024, 1, 1),
             'date_to': False
         })
@@ -428,7 +374,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'employee_id': self.employee.id,
             'work_entry_type_id': work_entry_type.id,
             'number_of_days': 12,
-            'allocation_type': 'regular',
             'date_from': date(2025, 1, 1),
             'date_to': date.today()
         })
@@ -515,7 +460,6 @@ class TestAllocations(TestHrHolidaysCommon):
         self.work_entry_type.unit_of_measure = "hour"
         with self.assertRaises(AssertionError):  # AssertionError raised by Form as employee is required
             with Form(self.env['hr.leave.allocation']) as allocation_form:
-                allocation_form.allocation_type = "regular"
                 allocation_form.work_entry_type_id = self.work_entry_type
                 allocation_form.number_of_hours_display = 10
                 allocation_form.employee_id = self.env["hr.employee"]
@@ -635,7 +579,67 @@ class TestAllocations(TestHrHolidaysCommon):
         self.env['hr.leave.allocation'].create({
             'employee_id': self.employee.id,
             'work_entry_type_id': self.work_entry_type.id,
-            'allocation_type': 'regular',
             'date_from': '2023-12-25'
         })
         self.assertEqual(1, self.work_entry_type.allocation_count)
+
+    def test_negative_allocation_open_end_overlap_limit(self):
+        """Ensure ValidationError is raised when overlapping negative allocations exceed max limit
+        """
+        self.work_entry_type.write({
+            'allows_negative': True,
+            'max_allowed_negative': 5,
+        })
+        allocation_1 = self.env['hr.leave.allocation'].create({
+            'name': 'Negative Allocation 1',
+            'employee_id': self.employee.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'number_of_days': -3,
+            'date_from': date(2024, 1, 1),
+        })
+        allocation_1.action_approve()
+        with self.assertRaises(ValidationError):
+            allocation_2 = self.env['hr.leave.allocation'].create({
+                'name': 'Negative Allocation 2',
+                'employee_id': self.employee.id,
+                'work_entry_type_id': self.work_entry_type.id,
+                'number_of_days': -3,
+                'date_from': date(2024, 6, 1),
+                'date_to': date(2024, 6, 30),
+            })
+            allocation_2.action_approve()
+
+    @users('admin')
+    def test_action_generate_group_allocations(self):
+        self.env.user.write({
+            'company_ids': [(4, self.company.id)]
+        })
+        self.work_entry_type.write({
+            'allocation_validation_type': 'hr'
+        })
+
+        wizard_env = self.env['hr.leave.allocation.generate.multi.wizard'].with_company(self.company)
+        wizard_group = wizard_env.create({
+            'name': 'Company Wide Allocation',
+            'work_entry_type_id': self.work_entry_type.id,
+            'duration': 10,
+        })
+        wizard_group.action_generate_allocations()
+        allocations = self.env['hr.leave.allocation'].search([
+            ('work_entry_type_id', '=', self.work_entry_type.id),
+            ('name', '=', 'Company Wide Allocation')
+        ])
+
+        expected_employee_count = self.env['hr.employee'].search_count([
+            ('company_id', '=', self.company.id)
+        ])
+        self.assertTrue(
+            len(allocations) == expected_employee_count,
+            "Group allocation should generate records for all employees in the company."
+        )
+        self.assertIn(self.employee, allocations.mapped('employee_id'))
+        self.assertIn(self.employee_emp, allocations.mapped('employee_id'))
+        self.assertTrue(
+            all(state == 'validate' for state in allocations.mapped('state')),
+            "All group allocations should be automatically validated for an HR admin."
+        )

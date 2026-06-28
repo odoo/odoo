@@ -1,8 +1,7 @@
 import { useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { useChildRef } from "@web/core/utils/hooks";
 import {
-    basicContainerBuilderComponentProps,
     useActionInfo,
     useBuilderComponent,
     useInputBuilderComponent,
@@ -16,34 +15,75 @@ import { pick } from "@web/core/utils/objects";
 
 export class BuilderRange extends Component {
     static template = "html_builder.BuilderRange";
-    static props = {
-        ...basicContainerBuilderComponentProps,
-        min: { type: Number, optional: true },
-        max: { type: Number, optional: true },
-        step: { type: Number, optional: true },
-        default: { type: Number, optional: true },
-        displayRangeValue: { type: Boolean, optional: true },
-        computedOutput: { type: Function, optional: true },
-        unit: { type: String, optional: true },
-        saveUnit: { type: String, optional: true },
-        applyWithUnit: { type: Boolean, optional: true },
-        withNumberInput: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        ...BuilderComponent.defaultProps,
-        min: 0,
-        max: 100,
-        step: 1,
-        default: 0,
-        displayRangeValue: false,
-        applyWithUnit: true,
-        withNumberInput: false,
-    };
+    props = props({
+        // basicContainerBuilderComponentProps (converted inline)
+        id: t.string().optional(),
+        applyTo: t.string().optional(),
+        preview: t.boolean().optional(),
+        inheritedActions: t.array(t.string()).optional(),
+
+        action: t.string().optional(),
+        actionParam: t.any().optional(),
+
+        // Shorthand actions.
+        classAction: t.any().optional(),
+        attributeAction: t.any().optional(),
+        dataAttributeAction: t.any().optional(),
+        styleAction: t.any().optional(),
+
+        min: t.number().optional(0),
+        max: t.number().optional(100),
+        step: t.number().optional(1),
+        default: t.number().optional(0),
+        unit: t.string().optional(),
+        saveUnit: t.string().optional(),
+        applyWithUnit: t.boolean().optional(true),
+        withNumberInput: t.boolean().optional(false),
+        // convertorRatio: controls how values are displayed in input.
+        // - Not passed: displays original value
+        // - Empty object: displays normalized values from 0-100 range
+        // - Custom object: uses provided toRatio/toValue functions
+        convertorRatio: t
+            .object({
+                toRatio: t.function().optional(),
+                toValue: t.function().optional(),
+                ratioStep: t.number().optional(),
+            })
+            .optional(),
+    });
     static components = { BuilderComponent, BuilderNumberInputBase };
 
     setup() {
         if (this.props.saveUnit && !this.props.unit) {
             throw new Error("'unit' must be defined to use the 'saveUnit' props");
+        }
+
+        if (this.props.convertorRatio && !this.props.withNumberInput) {
+            throw new Error("'withNumberInput' must be enabled to use the 'convertorRatio' prop");
+        }
+
+        if (this.props.convertorRatio) {
+            if (Object.keys(this.props.convertorRatio).length === 0) {
+                this.convertorObject = {
+                    toRatio: (value) => {
+                        const ratioValue =
+                            ((parseFloat(value) - this.min) / (this.max - this.min)) * 99 + 1;
+                        return Math.round(ratioValue);
+                    },
+                    toValue: (ratio) => {
+                        const originalValue =
+                            ((parseFloat(ratio) - 1) / 99) * (this.max - this.min) + this.min;
+                        return String(originalValue.toFixed(2));
+                    },
+                };
+            } else {
+                this.convertorObject = this.props.convertorRatio;
+            }
+            if (!this.convertorObject.ratioStep) {
+                this.convertorObject.ratioStep = Math.round(
+                    (this.props.step / (this.max - this.min)) * (this.maxRatio - this.minRatio)
+                );
+            }
         }
 
         if (this.props.withNumberInput) {
@@ -60,6 +100,7 @@ export class BuilderRange extends Component {
         useBuilderComponent();
         const { state, commit, preview } = useInputBuilderComponent({
             id: this.props.id,
+            defaultValue: this.props.default === null ? null : this.props.default?.toString(),
             formatRawValue: this.formatRawValue.bind(this),
             parseDisplayValue: this.parseDisplayValue.bind(this),
         });
@@ -68,16 +109,39 @@ export class BuilderRange extends Component {
         this.debouncedCommitRangeValue = useInputDebouncedCommit(this.inputRefRange);
 
         this.commit = commit;
-        this.preview = (value) => {
+        this.preview = (value, isRatio = false) => {
             if (this.props.withNumberInput) {
+                let ratio;
+                if (isRatio) {
+                    ratio = value;
+                    value = this.convertToValue(ratio);
+                } else {
+                    ratio = this.convertToRatio(value);
+                }
+                this.inputRefNumber.el.value = ratio;
                 // Syncronize the values of range and text inputs during preview
-                this.inputRefNumber.el.value = value;
-                this.inputRefRange.el.value = value;
+                this.inputRefRange.el.value = value || this.min;
                 this.state.value = this.parseDisplayValue(value);
             }
             return preview(value);
         };
         this.state = state;
+    }
+
+    convertToRatio(value) {
+        if (this.convertorObject) {
+            const ratioValue = this.convertorObject.toRatio(value);
+            return this.ensureFiniteValue(ratioValue);
+        }
+        return value;
+    }
+
+    convertToValue(ratio) {
+        if (ratio && this.convertorObject) {
+            const originalValue = this.convertorObject.toValue(ratio);
+            return this.ensureFiniteValue(originalValue, { isRatio: false });
+        }
+        return ratio;
     }
 
     onChangeRange(e) {
@@ -87,9 +151,6 @@ export class BuilderRange extends Component {
 
     onInputRange(e) {
         this.preview(e.target.value);
-        if (this.props.displayRangeValue) {
-            this.state.value = this.parseDisplayValue(e.target.value);
-        }
     }
 
     onKeydownRange(e) {
@@ -112,22 +173,49 @@ export class BuilderRange extends Component {
         this.debouncedCommitNumberValue();
     }
 
-    get inputValueRange() {
-        return this.state.value ? this.formatRawValue(this.state.value) : "0";
+    clampValueForInput(value) {
+        // When convertorObject is defined, the input displays ratioed values.
+        // So we simply clamp to that range. When false, use the original
+        // clampValue.
+        if (this.convertorObject) {
+            return Math.min(this.maxRatio, Math.max(this.minRatio, value));
+        }
+        return this.clampValue(value);
     }
 
-    get displayValueRange() {
-        let value = this.inputValueRange;
-        if (this.props.computedOutput) {
-            value = this.props.computedOutput(value);
-        } else if (this.props.unit) {
-            value = `${value}${this.props.unit}`;
+    previewInput(ratio) {
+        this.preview(ratio, true);
+    }
+
+    commitInput(value) {
+        const originalValue = value ? this.convertToValue(value) : this.min.toString();
+        const committedValue = this.commit(originalValue);
+        return this.convertToRatio(committedValue);
+    }
+
+    /**
+     * Ensures the value is finite. If not, return min in case of -Infinity and
+     * max in case of +Infinity.
+     *
+     * @param {number} value - The value to check.
+     * @param {Object} options - Options for the check.
+     * @param {boolean} options.isRatio - Whether the value is a ratio.
+     * @returns {string} The clamped value as a string.
+     */
+    ensureFiniteValue(value, { isRatio = true } = {}) {
+        if (isRatio) {
+            return Math.min(this.maxRatio, Math.max(this.minRatio, value)).toString();
+        } else {
+            return Math.min(this.max, Math.max(this.min, value)).toString();
         }
-        return value;
+    }
+
+    get inputValueRange() {
+        return this.formatRawValue(this.state.value || this.min);
     }
 
     get displayValueNumber() {
-        return this.formatRawValue(this.state.value).toString();
+        return this.formatRawValue(this.convertToRatio(this.state.value || this.min));
     }
 
     get className() {
@@ -143,7 +231,19 @@ export class BuilderRange extends Component {
         return this.props.min > this.props.max ? this.props.min : this.props.max;
     }
 
+    get minRatio() {
+        return this.convertorObject.toRatio(this.min);
+    }
+
+    get maxRatio() {
+        return this.convertorObject.toRatio(this.max);
+    }
+
     get textInputBaseProps() {
         return pick(this.props, ...Object.keys(textInputBasePassthroughProps));
+    }
+
+    get step() {
+        return this.convertorObject ? this.convertorObject.ratioStep : this.props.step;
     }
 }

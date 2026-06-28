@@ -1,18 +1,18 @@
-import { reactive } from "@web/owl2/utils";
 /**
  * The purpose of this test is to click on every installed App and then open each
  * view. On each view, click on each filter.
  */
 
-import { App } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
+import { App, effect, proxy } from "@odoo/owl";
 import { rpcBus } from "@web/core/network/rpc";
-import { getPopoverForTarget } from "@web/core/popover/popover";
 
 export const SUCCESS_SIGNAL = "clickbot test succeeded";
+export const FAILURE_SIGNAL = "clickbot test failed";
+
+export class ClickbotStopError extends Error {}
 
 const MOUSE_EVENTS = ["mouseover", "mouseenter", "mousedown", "mouseup", "click"];
-const BLACKLISTED_MENUS = [
+const BLACKLISTED_MENUS = new Set([
     "base.menu_theme_store", // Open a new tab
     "base.menu_third_party", // Open a new tab
     "event.menu_event_registration_desk", // there's no way to come back from this menu (tablet mode)
@@ -20,516 +20,739 @@ const BLACKLISTED_MENUS = [
     "hr_attendance.menu_hr_attendance_onboarding", // same here (tablet mode)
     "mrp_workorder.menu_mrp_workorder_root", // same here (tablet mode)
     "pos_enterprise.menu_point_kitchen_display_root", // conditional menu that may leads to frontend
-    "mail.menu_settings", // menut that leads to another App
-];
+    "mail.menu_settings", // menu that leads to another App
+    "website_sale.menu_open_shop", // menu that opens a website editor
+]);
+
+const BLACKLISTED_RECORD_ACTIONS = new Set([
+    "website.menu_website_pages_list", // list/kanban opens the website in website editor not a form
+    "website.menu_website_technical_pages", // list/kanban opens the website in website editor not a form
+    "test_website.menu_test_website_test_model", // list opens the website in website editor not a form
+    "data_cleaning.ir_model_menu_merge_action_manager", // list that checks a checkbox in the list
+    "knowledge.knowledge_menu_article", // list/kanban that opens knowledge articles, in a knowledge article we dont have the breadcrumb and can't go back
+    "sign.sign_template_menu", // opens sign in a iframe.
+    "sign.sign_request_my_documents", // opens sign in a iframe.
+    "sign.sign_request_documents", // opens sign in a iframe.
+    "documents.dashboard", // there is no form view
+    "spreadsheet_dashboard.spreadsheet_dashboard_group_menu_configuration_sections", // there is no form view
+    "website.menu_visitor_view_menu", // there is no form view
+]);
+
+// Actions that don't open a form view when clicking on list/kanban
+const EXCEPTION_RECORD_ACTIONS = {
+    "mail.menu_channel": {
+        list: {
+            toCheck: ".o-mail-ChatWindow",
+            toGoBack: ".o-mail-ChatWindow .o-mail-ActionList-button[name=close]",
+        },
+        kanban: {
+            toCheck: ".o-mail-ChatWindow",
+            toGoBack: ".o-mail-ChatWindow .o-mail-ActionList-button[name=close]",
+        },
+    },
+    "mail.discuss_channel_menu_settings": {
+        list: {
+            toCheck: ".o-mail-ChatWindow",
+            toGoBack: ".o-mail-ChatWindow .o-mail-ActionList-button[name=close]",
+        },
+        kanban: {
+            toCheck: ".o-mail-ChatWindow",
+            toGoBack: ".o-mail-ChatWindow .o-mail-ActionList-button[name=close]",
+        },
+    },
+    "crm.sales_team_menu_team_pipeline": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "sale.report_sales_team": {
+        kanban: {
+            toCheck: ".o_graph_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "ai_app.ai_agent_menu_action": {
+        kanban: {
+            toCheck: ".o-mail-ChatWindow",
+            toGoBack: ".o-mail-ChatWindow .o-mail-ActionList-button[name=close]",
+        },
+    },
+    "ai_app.ai_menu_root": {
+        kanban: {
+            toCheck: ".o-mail-ChatWindow",
+            toGoBack: ".o-mail-ChatWindow .o-mail-ActionList-button[name=close]",
+        },
+    },
+    "project.menu_projects": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "project.menu_main_pm": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "helpdesk.helpdesk_menu_team_dashboard": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "helpdesk.menu_helpdesk_root": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "mass_mailing.menu_email_mass_mailing_lists": {
+        kanban: {
+            toCheck: ".o_list_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "mass_mailing_sms.mailing_list_menu_sms": {
+        kanban: {
+            toCheck: ".o_list_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "im_livechat.support_channels": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "im_livechat.menu_livechat_root": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "fleet.fleet_vehicle_model_brand_menu": {
+        kanban: {
+            toCheck: ".o_list_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "appointment.main_menu_appointments": {
+        kanban: {
+            toCheck: ".o_gantt_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "frontdesk.frontdesk_menu_root": {
+        kanban: {
+            toCheck: ".o_list_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "hr_recruitment.menu_hr_recruitment_root": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "equity.menu_equity": {
+        kanban: {
+            toCheck: ".o_list_renderer",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "lunch.menu_lunch": {
+        kanban: {
+            toCheck: ".o_dialog",
+            toGoBack: ".o_dialog .btn-close",
+        },
+        list: {
+            toCheck: ".o_dialog",
+            toGoBack: ".o_dialog .btn-close",
+        },
+    },
+};
+
 // If you change this selector, adapt Studio test "Studio icon matches the clickbot selector"
 const STUDIO_SYSTRAY_ICON_SELECTOR = ".o_web_studio_navbar_item:not(.o_disabled) i";
 
-let isEnterprise;
-let state;
-let calledRPC;
-let errorRPC;
-let actionCount;
-let env;
-let apps;
-
-/**
- * Hook on specific activities of the webclient to detect when to move forward.
- * This should be done only once.
- */
-function setup(light, currentState) {
-    env = odoo.__WOWL_DEBUG__.root.env;
-    const stopButton = document.createElement("button");
-    stopButton.setAttribute("id", "stop-clickbot");
-    stopButton.classList.add("btn", "btn-danger");
-    stopButton.textContent = "Stop ClickAll!";
-    stopButton.onclick = function () {
-        browser.localStorage.removeItem("running.clickbot");
-        location.reload();
-    };
-    document.body.appendChild(stopButton);
-
-    env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", uiUpdate);
-    rpcBus.addEventListener("RPC:REQUEST", onRPCRequest);
-    rpcBus.addEventListener("RPC:RESPONSE", onRPCResponse);
-    isEnterprise = odoo.info && odoo.info.isEnterprise;
-
-    state = reactive(
-        currentState || {
-            light,
-            studioCount: 0,
-            testedApps: [],
-            testedMenus: [],
-            testedFilters: 0,
-            testedModals: 0,
-            appIndex: 0,
-            menuIndex: 0,
-            subMenuIndex: 0,
-        },
-        () => browser.localStorage.setItem("running.clickbot", JSON.stringify(state))
-    );
-    browser.localStorage.setItem("running.clickbot", JSON.stringify(state));
-
-    actionCount = 0;
-    calledRPC = {};
-    apps = null;
-    errorRPC = undefined;
-}
-
-function onRPCRequest({ detail }) {
-    calledRPC[detail.data.id] = detail.url;
-}
-
-function onRPCResponse({ detail }) {
-    delete calledRPC[detail.data.id];
-    if (detail.error) {
-        errorRPC = { ...detail };
-    }
-}
-
-function uiUpdate() {
-    actionCount++;
-}
-
-function cleanup() {
-    browser.localStorage.removeItem("running.clickbot");
-    env.bus.removeEventListener("ACTION_MANAGER:UI-UPDATED", uiUpdate);
-    rpcBus.removeEventListener("RPC:REQUEST", onRPCRequest);
-    rpcBus.removeEventListener("RPC:RESPONSE", onRPCResponse);
-    const stopButton = document.getElementById("stop-clickbot");
-    stopButton.remove();
-}
-
-/**
- * Returns a promise that resolves after the next animation frame.
- *
- * @returns {Promise}
- */
-async function waitForNextAnimationFrame() {
-    await new Promise(browser.setTimeout);
-    await new Promise((r) => requestAnimationFrame(r));
-}
-
-/**
- * Simulate all of the mouse events triggered during a click action.
- *
- * @param {EventTarget} target the element on which to perform the click
- * @param {string} elDescription description of the item
- * @returns {Promise} resolved after next animation frame
- */
-async function triggerClick(target, elDescription) {
-    if (target) {
-        if (elDescription) {
-            browser.console.log(`Clicking on: ${elDescription}`);
-        }
-    } else {
-        throw new Error(`No element "${elDescription}" found.`);
-    }
-    MOUSE_EVENTS.forEach((type) => {
-        const event = new MouseEvent(type, { bubbles: true, cancelable: true, view: window });
-        target.dispatchEvent(event);
-    });
-    await waitForNextAnimationFrame();
-}
-
-/**
- * Wait a certain amount of time for a condition to occur
- *
- * @param {function} stopCondition a function that returns a boolean
- * @returns {Promise} that is rejected if the timeout is exceeded
- */
-async function waitForCondition(stopCondition) {
-    const interval = 25;
-    const initialTime = 30000;
-    let timeLimit = initialTime;
-
-    function hasPendingRPC() {
-        return Object.keys(calledRPC).length > 0;
-    }
-    function hasScheduledTask() {
-        let size = 0;
-        for (const app of App.apps) {
-            size += app.scheduler.tasks.size;
-        }
-        return size > 0;
-    }
-    function errorDialog() {
-        if (document.querySelector(".o_error_dialog")) {
-            if (errorRPC) {
-                browser.console.error(
-                    "A RPC in error was detected, maybe it's related to the error dialog : " +
-                        JSON.stringify(errorRPC)
-                );
+export class Clickbot {
+    constructor(env, { xmlId, logger, light, currentState } = {}) {
+        this.env = env;
+        this.xmlId = xmlId;
+        this.state = proxy(
+            currentState || {
+                light,
+                logger,
+                studioCount: 0,
+                testedApps: [],
+                testedMenus: [],
+                testedFilters: 0,
+                testedModals: 0,
+                testedViews: 0,
+                testedFormsViews: 0,
+                appIndex: 0,
+                menuIndex: 0,
+                errorMenuCount: 0,
             }
-            throw new Error(
-                "Error dialog detected" + document.querySelector(".o_error_dialog").innerHTML
-            );
-        }
-        return false;
+        );
+        this._actionCount = 0;
+        this._calledRPC = {};
+        this._errorRPC = undefined;
+        this._disposeEffect = () => {};
     }
 
-    while (errorDialog() || !stopCondition() || hasPendingRPC() || hasScheduledTask()) {
-        if (timeLimit <= 0) {
-            let msg = `Timeout, the clicked element took more than ${
-                initialTime / 1000
-            } seconds to load\n`;
-            msg += `Waiting for:\n`;
-            if (Object.keys(calledRPC).length > 0) {
-                msg += ` * ${Object.values(calledRPC).join(", ")} RPC\n`;
-            }
-            let scheduleTasks = "";
-            for (const app of App.apps) {
-                for (const task of app.scheduler.tasks) {
-                    scheduleTasks += task.node.name + ",";
+    async start() {
+        this._setup();
+        if (this.state.logger) {
+            console.log("Starting ClickEverywhere test");
+        }
+        this.state.startTime = this.state.startTime || performance.now();
+        try {
+            if (this.xmlId) {
+                this.state.xmlId = this.xmlId;
+                const app = this.env.services.menu.getApps().find((a) => a.xmlid === this.xmlId);
+                if (!app) {
+                    throw new Error(`No app found for xmlid ${this.xmlId}`);
+                }
+                this.currentAPP = app;
+                await this._testApp(app);
+            } else {
+                const apps = this.env.services.menu.getApps();
+                while (this.state.appIndex < apps.length) {
+                    this.currentAPP = apps[this.state.appIndex];
+                    await this._testApp(apps[this.state.appIndex]);
+                    this.state.appIndex++;
                 }
             }
-            if (scheduleTasks.length > 0) {
-                msg += ` * ${scheduleTasks} scheduled tasks\n`;
+
+            this._logStatistics();
+            if (this.state.errorMenuCount === 0) {
+                console.log(SUCCESS_SIGNAL);
+            } else {
+                this._originalError(FAILURE_SIGNAL);
             }
-            if (!stopCondition()) {
-                msg += ` * stopCondition: ${stopCondition.toString()}`;
+        } catch (err) {
+            this._logStatistics();
+            if (err instanceof ClickbotStopError) {
+                console.log("Clickbot stopped by user");
+                console.log(SUCCESS_SIGNAL);
+            } else {
+                this._originalError(err);
+                this._originalError(FAILURE_SIGNAL);
             }
-            throw new Error(msg);
+        } finally {
+            this._cleanup();
         }
-        await new Promise((resolve) => setTimeout(resolve, interval));
-        timeLimit -= interval;
     }
-}
 
-/**
- * Make sure the home menu is open (enterprise only)
- */
-async function ensureHomeMenu() {
-    const homeMenu = document.querySelector("div.o_home_menu");
-    if (!homeMenu) {
-        let menuToggle = document.querySelector("nav.o_main_navbar > a.o_menu_toggle");
-        if (!menuToggle) {
-            // In the Barcode application, there is no navbar. So you have to click
-            // on the o_stock_barcode_home_menu button which is the equivalent
-            // of the o_menu_toggle button in the navbar.
-            menuToggle = document.querySelector(".o_stock_barcode_home_menu");
-        }
-        await triggerClick(menuToggle, "home menu toggle button");
-        await waitForCondition(() => document.querySelector("div.o_home_menu"));
+    stop() {
+        this._stopped = true;
     }
-}
 
-/**
- * Make sure the apps menu is open (community only)
- */
-async function ensureAppsMenu() {
-    const apps = document.querySelectorAll(".o-dropdown--menu .o_app");
-    if (!apps || !apps.length) {
-        const toggler = document.querySelector(".o_navbar_apps_menu .dropdown-toggle");
-        await triggerClick(toggler, "apps menu toggle button");
-        await waitForCondition(() => document.querySelector(".o-dropdown--menu .o_app"));
-    }
-}
+    // ── PRIVATE ─────────────────────────────────────────────
 
-/**
- * Return the next menu to test, and update the internal counters.
- *
- * @returns {DomElement}
- */
-async function getNextMenu() {
-    const menuToggles = document.querySelectorAll(
-        ".o_menu_sections > .dropdown-toggle, .o_menu_sections > .dropdown-item"
-    );
-    if (state.menuIndex === menuToggles.length) {
-        state.menuIndex = 0;
-        return; // all menus done
+    _createStopButton() {
+        const stopButton = document.createElement("button");
+        stopButton.setAttribute("id", "stop-clickbot");
+        stopButton.classList.add("btn", "btn-danger");
+        stopButton.textContent = "Stop ClickAll!";
+        stopButton.onclick = () => this.stop();
+        document.body.appendChild(stopButton);
     }
-    let menuToggle = menuToggles[state.menuIndex];
-    if (menuToggle.classList.contains("dropdown-toggle")) {
-        // the current menu is a dropdown toggler -> open it and pick a menu inside the dropdown
-        let dropdownMenu = getPopoverForTarget(menuToggle);
-        if (!dropdownMenu) {
-            await triggerClick(menuToggle, "menu toggler");
-            dropdownMenu = getPopoverForTarget(menuToggle);
-        }
-        if (!dropdownMenu) {
-            state.menuIndex = 0; // empty More menu has no dropdown (FIXME?)
+
+    _setup() {
+        this._createStopButton();
+        this.env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", this._uiUpdate);
+        rpcBus.addEventListener("RPC:REQUEST", this._onRPCRequest);
+        rpcBus.addEventListener("RPC:RESPONSE", this._onRPCResponse);
+        this._disposeEffect = effect(() => {
+            localStorage.setItem("running.clickbot", JSON.stringify(this.state));
+        });
+        this._originalWarn = console.warn;
+        console.warn = (...args) => {
+            let msg = `Warning detected:\n`;
+            msg += this._currentTraceback();
+            msg += `The warning is :\n`;
+            msg += args;
+            this._originalWarn(msg);
+        };
+        this._originalError = console.error;
+        console.error = (...args) => {
+            let msg = `Error detected:\n`;
+            msg += this._currentTraceback();
+            msg += `The error is :\n`;
+            msg += args;
+            this._originalError(msg);
+        };
+    }
+
+    _cleanup() {
+        this._disposeEffect();
+        console.warn = this._originalWarn;
+        console.error = this._originalError;
+        localStorage.removeItem("running.clickbot");
+        this.env.bus.removeEventListener("ACTION_MANAGER:UI-UPDATED", this._uiUpdate);
+        rpcBus.removeEventListener("RPC:REQUEST", this._onRPCRequest);
+        rpcBus.removeEventListener("RPC:RESPONSE", this._onRPCResponse);
+        document.getElementById("stop-clickbot")?.remove();
+    }
+
+    _logStatistics() {
+        if (!this.state.logger) {
             return;
         }
-        const items = dropdownMenu.querySelectorAll(".dropdown-item");
-        menuToggle = items[state.subMenuIndex];
-        if (state.subMenuIndex === items.length - 1) {
-            // this is the last item, so go to the next menu
-            state.menuIndex++;
-            state.subMenuIndex = 0;
-        } else {
-            // this isn't the last item, so increment the index inside this dropdown
-            state.subMenuIndex++;
+        console.log(`Test took ${(performance.now() - this.state.startTime) / 1000} seconds`);
+        console.log(`Tested ${this.state.testedApps.length} apps`);
+        console.log(`Tested ${this.state.testedMenus.length} menus`);
+        if (this.state.errorMenuCount > 0) {
+            console.log(`Error found while testing ${this.state.errorMenuCount} menus`);
         }
-    } else {
-        // the current menu isn't a dropdown, so go to the next menu
-        state.menuIndex++;
-    }
-    return menuToggle;
-}
-
-/**
- * Return the next app to test, and update the internal counter.
- *
- * @returns {DomElement}
- */
-async function getNextApp() {
-    if (!apps || !apps.length) {
-        if (isEnterprise) {
-            await ensureHomeMenu();
-            apps = document.querySelectorAll(".o_apps .o_app");
-        } else {
-            await ensureAppsMenu();
-            apps = document.querySelectorAll(".o-dropdown--menu .o_app");
+        console.log(`Tested ${this.state.testedViews} views`);
+        console.log(`Tested ${this.state.testedFormsViews} form views`);
+        console.log(`Tested ${this.state.testedModals} modals`);
+        console.log(`Tested ${this.state.testedFilters} filters`);
+        if (this.state.studioCount > 0) {
+            console.log(`Tested ${this.state.studioCount} views in Studio`);
         }
     }
-    const appName = apps[state.appIndex]?.dataset?.menuXmlid;
-    state.appIndex++;
-    return appName;
-}
 
-/**
- * Test Studio
- * Click on the Studio systray item to enter Studio, and simply leave it once loaded.
- */
-async function testStudio() {
-    const studioIcon = document.querySelector(STUDIO_SYSTRAY_ICON_SELECTOR);
-    if (!studioIcon) {
-        return;
-    }
-    // Open the filter menu dropdown
-    await triggerClick(studioIcon, "entering studio");
-    await waitForCondition(() => document.querySelector(".o_in_studio"));
-    await triggerClick(document.querySelector(".o_web_studio_leave"), "leaving studio");
-    await waitForCondition(() =>
-        document.querySelector(".o_main_navbar:not(.o_studio_navbar) .o_menu_toggle")
-    );
-    state.studioCount++;
-}
-
-/**
- * Test filters
- * Click on each filter in the control pannel
- */
-async function testFilters() {
-    if (state.light === true) {
-        return;
-    }
-    const searchBarMenu = document.querySelector(
-        ".o_control_panel .dropdown-toggle.o_searchview_dropdown_toggler"
-    );
-    if (!searchBarMenu) {
-        return;
-    }
-    // Open the search bar menu dropdown
-    await triggerClick(searchBarMenu);
-    const filterMenuButton = document.querySelector(".o_dropdown_container.o_filter_menu");
-    // Is there a filter menu in the search bar
-    if (!filterMenuButton) {
-        return;
-    }
-
-    // Avoid the "Custom Filter" menu item (it don't have the class .o_menu_item)
-    const simpleFilterSel = ".o_filter_menu > .dropdown-item.o_menu_item:not(.o_add_custom_filter)";
-    const dateFilterSel = ".o_filter_menu > .o_accordion";
-    const filterMenuItems = document.querySelectorAll(`${simpleFilterSel},${dateFilterSel}`);
-    browser.console.log(`Testing ${filterMenuItems.length} filters`);
-    state.testedFilters += filterMenuItems.length;
-    for (const filter of filterMenuItems) {
-        // Date filters
-        if (filter.classList.contains("o_accordion")) {
-            // If a fitler has options, it will simply unfold and show all options.
-            await triggerClick(
-                filter.querySelector(".o_accordion_toggle"),
-                `filter "${filter.innerText.trim()}"`
-            );
-
-            // If a fitler has options, it will simply unfold and show all options.
-            // We then click on the first one.
-            const firstOption = filter.querySelector(
-                ".o_accordion > .o_accordion_values > .dropdown-item"
-            );
-            if (firstOption) {
-                await triggerClick(firstOption, `filter option "${firstOption.innerText.trim()}"`);
-                await waitForCondition(() => true);
-            }
-        } else {
-            await triggerClick(filter, `filter "${filter.innerText.trim()}"`);
-            await waitForCondition(() => true);
+    _currentTraceback() {
+        let msg = ` - Current testing app is ${this.currentAPP.name} (${this.currentAPP.xmlid})\n`;
+        msg += ` - Current testing menu is ${this.currentMenu.name} (${this.currentMenu.xmlid})\n`;
+        if (this.currentView) {
+            msg += ` - Current testing view is ${this.currentView}\n`;
         }
+        if (this.currentFilter) {
+            msg += ` - Current testing filter is ${this.currentFilter}\n`;
+        }
+        return msg;
     }
-}
 
-/**
- * Orchestrate the test of views
- * This function finds the buttons that permit to switch views and orchestrate
- * the click on each of them
- * @returns {Promise}
- */
-async function testViews() {
-    if (state.light === true) {
-        return;
-    }
-    const switchButtons = document.querySelectorAll(
-        "nav.o_cp_switch_buttons > button.o_switch_view:not(.active):not(.o_map)"
-    );
-    for (const switchButton of switchButtons) {
-        // Only way to get the viewType from the switchButton
-        const viewType = [...switchButton.classList]
-            .find((cls) => cls !== "o_switch_view" && cls.startsWith("o_"))
-            .slice(2);
-        browser.console.log(`Testing view switch: ${viewType}`);
-        // timeout to avoid click debounce
-        browser.setTimeout(function () {
-            const target = document.querySelector(
-                `nav.o_cp_switch_buttons > button.o_switch_view.o_${viewType}`
-            );
-            if (target) {
-                triggerClick(target, `${viewType} view switcher`);
-            }
-        }, 250);
-        await waitForCondition(
-            () => document.querySelector(`.o_switch_view.o_${viewType}.active`) !== null
-        );
-        await testStudio();
-        await testFilters();
-    }
-}
+    _onRPCRequest = ({ detail }) => {
+        this._calledRPC[detail.data.id] = detail.url;
+    };
 
-/**
- * Test a menu item by:
- *  1 - clikcing on the menuItem
- *  2 - Orchestrate the view switch
- *
- *  @param {DomElement} element: the menu item
- *  @returns {Promise}
- */
-async function testMenuItem(element) {
-    const menu = element.dataset.menuXmlid;
-    const menuDescription = element.innerText.trim() + " " + menu;
-    if (BLACKLISTED_MENUS.includes(menu)) {
-        browser.console.log(`Skipping blacklisted menu ${menuDescription}`);
-        return Promise.resolve(); // Skip black listed menus
+    _onRPCResponse = ({ detail }) => {
+        delete this._calledRPC[detail.data.id];
+        if (detail.error) {
+            this._errorRPC = { ...detail };
+        }
+    };
+
+    _uiUpdate = () => {
+        this._actionCount++;
+    };
+
+    async _waitForNextAnimationFrame() {
+        await new Promise(setTimeout);
+        await new Promise((r) => requestAnimationFrame(r));
     }
-    browser.console.log(`Testing menu ${menuDescription}`);
-    state.testedMenus.push(menu);
-    const startActionCount = actionCount;
-    await triggerClick(element, `menu item "${element.innerText.trim()}"`);
-    try {
-        let isModal = false;
-        await waitForCondition(() => {
-            if (document.querySelector(".o_dialog:not(.o_error_dialog)")) {
-                isModal = true;
-                browser.console.log(`Modal detected: ${menuDescription}`);
-                state.testedModals++;
-                return true;
-            } else {
-                return startActionCount !== actionCount;
-            }
+
+    async _triggerClick(target, elDescription) {
+        if (!target) {
+            throw new Error(`No element "${elDescription}" found.`);
+        }
+        if (elDescription && this.state.logger) {
+            console.log(`Clicking on: ${elDescription}`);
+        }
+        MOUSE_EVENTS.forEach((type) => {
+            const event = new MouseEvent(type, { bubbles: true, cancelable: true, view: window });
+            target.dispatchEvent(event);
         });
-        if (isModal) {
-            await triggerClick(
-                document.querySelector(".o_dialog header > .btn-close"),
-                "modal close button"
-            );
-        } else {
-            await testStudio();
-            await testFilters();
-            await testViews();
-        }
-    } catch (err) {
-        browser.console.error(`Error while testing ${menuDescription}`);
-        throw err;
-    }
-}
-
-/**
- * Test an "App" menu item by orchestrating the following actions:
- *  1 - clicking on its menuItem
- *  2 - clicking on each view
- *  3 - clicking on each menu
- *  3.1  - clicking on each view
- * @returns {Promise}
- */
-async function testApp() {
-    let element;
-
-    if (!state.testedApps.includes(state.app)) {
-        if (isEnterprise) {
-            await ensureHomeMenu();
-            element = document.querySelector(`a.o_app.o_menuitem[data-menu-xmlid="${state.app}"]`);
-        } else {
-            await ensureAppsMenu();
-            element = document.querySelector(
-                `.o-dropdown--menu .dropdown-item[data-menu-xmlid="${state.app}"]`
-            );
-        }
-        if (!element) {
-            throw new Error(`No app found for xmlid ${state.app}`);
-        }
-        browser.console.log(`Testing app menu: ${state.app}`);
-        state.testedApps.push(state.app);
-        await testMenuItem(element);
-    } else {
-        browser.console.log(`already tested app ${state.app}`);
+        await this._waitForNextAnimationFrame();
     }
 
-    if (state.light === true) {
-        return;
-    }
-    state.menuIndex = 0;
-    state.subMenuIndex = 0;
-    let menu = await getNextMenu();
-    while (menu) {
-        await testMenuItem(menu);
-        menu = await getNextMenu();
-    }
-}
+    async _waitForCondition(stopCondition, message) {
+        const interval = 25;
+        const initialTime = 30000;
+        let timeLimit = initialTime;
 
-/**
- * Main function that starts orchestration of tests
- */
-async function _clickEverywhere(xmlId, light, currentState) {
-    setup(light, currentState);
-    console.log("Starting ClickEverywhere test");
-    console.log(`Odoo flavor: ${isEnterprise ? "Enterprise" : "Community"}`);
-    const startTime = performance.now();
-    try {
-        if (xmlId) {
-            state.xmlId = xmlId;
-            state.app = xmlId;
-            await testApp();
-        } else {
-            if (state.app) {
-                // This is needed to test the last app after a reload
-                await testApp();
+        const hasPendingRPC = () => Object.keys(this._calledRPC).length > 0;
+        const hasScheduledTask = () => {
+            let size = 0;
+            for (const app of App.apps) {
+                size += app.scheduler.tasks.size;
             }
-            while ((state.app = await getNextApp())) {
-                await testApp();
-            }
-        }
+            return size > 0;
+        };
+        const errorDialog = () => {
+            if (document.querySelector(".o_error_dialog")) {
+                let msg = `Error dialog detected when waiting for ${message} : ${
+                    document.querySelector(".o_error_dialog").innerHTML
+                }`;
+                if (this._errorRPC) {
+                    msg += `\nA RPC in error was detected, maybe it's related to the error dialog : ${JSON.stringify(
+                        this._errorRPC
+                    )}`;
+                }
 
-        console.log(`Test took ${(performance.now() - startTime) / 1000} seconds`);
-        browser.console.log(`Successfully tested ${state.testedApps.length} apps`);
-        browser.console.log(
-            `Successfully tested ${state.testedMenus.length - state.testedApps.length} menus`
+                throw new Error(msg);
+            }
+            return false;
+        };
+
+        while (errorDialog() || !stopCondition() || hasPendingRPC() || hasScheduledTask()) {
+            if (this._stopped) {
+                throw new ClickbotStopError("Clickbot stopped by user");
+            }
+            if (timeLimit <= 0) {
+                let msg = `Timeout when: ${message}, it took more than ${
+                    initialTime / 1000
+                } seconds to load\n`;
+                msg += `Waiting for:\n`;
+                if (Object.keys(this._calledRPC).length > 0) {
+                    msg += ` * ${Object.values(this._calledRPC).join(", ")} RPC\n`;
+                }
+                let scheduleTasks = "";
+                for (const app of App.apps) {
+                    for (const task of app.scheduler.tasks) {
+                        scheduleTasks += task.node.name + ",";
+                    }
+                }
+                if (scheduleTasks.length > 0) {
+                    msg += ` * ${scheduleTasks} scheduled tasks\n`;
+                }
+                if (!stopCondition()) {
+                    msg += ` * stopCondition: ${stopCondition.toString()}\n`;
+                }
+                throw new Error(msg);
+            }
+            await new Promise((resolve) => setTimeout(resolve, interval));
+            timeLimit -= interval;
+        }
+    }
+
+    async _testStudio() {
+        const studioIcon = document.querySelector(STUDIO_SYSTRAY_ICON_SELECTOR);
+        if (!studioIcon) {
+            return;
+        }
+        await this._triggerClick(studioIcon, "entering studio");
+        await this._waitForCondition(
+            () => document.querySelector(".o_in_studio"),
+            "entering studio"
         );
-        browser.console.log(`Successfully tested ${state.testedModals} modals`);
-        browser.console.log(`Successfully tested ${state.testedFilters} filters`);
-        if (state.studioCount > 0) {
-            browser.console.log(`Successfully tested ${state.studioCount} views in Studio`);
+        await this._triggerClick(document.querySelector(".o_web_studio_leave"), "leaving studio");
+        await this._waitForCondition(
+            () => document.querySelector(".o_main_navbar:not(.o_studio_navbar) .o_menu_toggle"),
+            "leaving studio"
+        );
+        this.state.studioCount++;
+    }
+
+    async _testFilters() {
+        if (this.state.light === true) {
+            return;
         }
-        browser.console.log(SUCCESS_SIGNAL);
-    } catch (err) {
-        console.log(`Test took ${(performance.now() - startTime) / 1000} seconds`);
-        browser.console.error(err || "test failed");
-    } finally {
-        cleanup();
+        const searchBarMenu = document.querySelector(
+            ".o_control_panel .dropdown-toggle.o_searchview_dropdown_toggler"
+        );
+        if (!searchBarMenu) {
+            return;
+        }
+        await this._triggerClick(searchBarMenu);
+        const filterMenuButton = document.querySelector(".o_dropdown_container.o_filter_menu");
+        if (!filterMenuButton) {
+            return;
+        }
+
+        // Avoid the "Custom Filter" menu item (it doesn't have the class .o_menu_item)
+        const simpleFilterSel =
+            ".o_filter_menu > .dropdown-item.o_menu_item:not(.o_add_custom_filter)";
+        const dateFilterSel = ".o_filter_menu > .o_accordion";
+        const filterMenuItems = document.querySelectorAll(`${simpleFilterSel},${dateFilterSel}`);
+        if (this.state.logger) {
+            console.log(`Testing ${filterMenuItems.length} filters`);
+        }
+        this.state.testedFilters += filterMenuItems.length;
+        for (const filter of filterMenuItems) {
+            if (filter.classList.contains("o_accordion")) {
+                this.currentFilter = filter.innerText.trim();
+                await this._triggerClick(
+                    filter.querySelector(".o_accordion_toggle"),
+                    `filter "${this.currentFilter}"`
+                );
+                // If a filter has options, it will simply unfold and show all options.
+                // We then click on the first one.
+                const firstOption = filter.querySelector(
+                    ".o_accordion > .o_accordion_values > .dropdown-item"
+                );
+                if (firstOption) {
+                    this.currentFilter = `${this.currentFilter} (${firstOption.innerText.trim()})`;
+                    await this._triggerClick(firstOption, `filter "${this.currentFilter}"`);
+                    await this._waitForCondition(() => true, `filter "${this.currentFilter}"`);
+                    await this._testClickingRecord();
+                }
+            } else {
+                this.currentFilter = filter.innerText.trim();
+                await this._triggerClick(filter, `filter "${this.currentFilter}"`);
+                await this._waitForCondition(() => true, `filter "${this.currentFilter}"`);
+                await this._testClickingRecord();
+            }
+        }
+        this.currentFilter = undefined;
+    }
+
+    /**
+     * Test clicking on a record in list or kanban view
+     * @returns {Promise}
+     */
+
+    async _testClickingRecord() {
+        if (BLACKLISTED_RECORD_ACTIONS.has(this.currentMenu.xmlid)) {
+            if (this.state.logger) {
+                console.log(
+                    `Skipping blacklisted form menu ${this.currentMenu.name} (${this.currentMenu.xmlid})`
+                );
+            }
+            return;
+        }
+
+        if (this.recordTested) {
+            return;
+        }
+        const exceptionActions = EXCEPTION_RECORD_ACTIONS[this.currentMenu.xmlid];
+
+        if (document.querySelector(".o_list_view")) {
+            if (this.formviewTested && !exceptionActions?.list) {
+                return;
+            }
+            const records = document.querySelector(".o_view_sample_data")
+                ? false
+                : Boolean(document.querySelector("tr.o_data_row td.o_data_cell.cursor-pointer"));
+            if (records) {
+                this.recordTested = true;
+                const row = document.querySelectorAll(".o_data_row")[0];
+                // Open the first record in the list
+                if (document.querySelector(".o_list_record_open_form_view")) {
+                    await this._triggerClick(
+                        row.querySelector(".o_list_record_open_form_view"),
+                        "open form view from list (View Button)"
+                    );
+                } else {
+                    await this._triggerClick(
+                        row.querySelector(".o_data_cell"),
+                        "open form view from list"
+                    );
+                }
+                if (exceptionActions?.list?.toCheck) {
+                    await this._waitForCondition(
+                        () => document.querySelector(exceptionActions?.list?.toCheck) !== null,
+                        `open record view from list (${exceptionActions?.list?.toCheck})`
+                    );
+                } else {
+                    // Wait for the form view to be loaded or the list to be editable
+                    await this._waitForCondition(
+                        () =>
+                            document.querySelector(".o_form_view") !== null ||
+                            document.querySelector(".o_data_row.o_selected_row") !== null,
+                        `open record view from list`
+                    );
+                }
+
+                // Go back to the list
+                if (exceptionActions?.list?.toGoBack) {
+                    await this._triggerClick(
+                        document.querySelector(exceptionActions?.list?.toGoBack),
+                        "go back to list view (from special record view)"
+                    );
+                } else if (document.querySelector(".o_form_view")) {
+                    this.formviewTested = true;
+                    this.state.testedFormsViews++;
+                    await this._triggerClick(
+                        document.querySelector(".o_back_button"),
+                        "go back to list view (from record view)"
+                    );
+                } else {
+                    await this._triggerClick(
+                        document.querySelector(".o_list_button_discard"),
+                        "discard the editable list"
+                    );
+                }
+                await this._waitForCondition(
+                    () => document.querySelector(`.o_list_view`) !== null,
+                    `go back to list view from record view`
+                );
+            }
+        } else if (document.querySelector(".o_kanban_view")) {
+            if (this.formviewTested && !exceptionActions?.kanban) {
+                return;
+            }
+            const records = document.querySelector(".o_view_sample_data")
+                ? false
+                : Boolean(
+                      document.querySelectorAll(
+                          ".o_kanban_record:not(.o_kanban_ghost).cursor-pointer"
+                      ).length
+                  );
+            if (records) {
+                this.recordTested = true;
+                const card = document.querySelectorAll(
+                    ".o_kanban_record:not(.o_kanban_ghost).cursor-pointer"
+                )[0];
+                // Open the first record in the kanban
+                await this._triggerClick(card, "open form view from kanban");
+                if (exceptionActions?.kanban?.toCheck) {
+                    await this._waitForCondition(
+                        () => document.querySelector(exceptionActions?.kanban?.toCheck) !== null,
+                        `open record view from kanban (${exceptionActions?.kanban?.toCheck})`
+                    );
+                } else {
+                    await this._waitForCondition(
+                        () => document.querySelector(`.o_form_view`) !== null,
+                        `open record view from kanban`
+                    );
+                }
+
+                // Go back to the kanban
+                if (exceptionActions?.kanban?.toGoBack) {
+                    await this._triggerClick(
+                        document.querySelector(exceptionActions?.kanban?.toGoBack),
+                        "go back to kanban view (from special record view)"
+                    );
+                } else {
+                    // form view
+                    this.formviewTested = true;
+                    this.state.testedFormsViews++;
+                    await this._triggerClick(
+                        document.querySelector(".o_back_button"),
+                        "go back to kanban view (from record view)"
+                    );
+                }
+                await this._waitForCondition(
+                    () => document.querySelector(`.o_kanban_view`) !== null,
+                    `go back to kanban view from record view`
+                );
+            }
+        }
+    }
+
+    async _testView(viewType) {
+        this.currentView = viewType;
+        this.recordTested = false;
+        await this._testClickingRecord();
+        await this._testStudio();
+        await this._testFilters();
+        this.currentView = undefined;
+    }
+
+    async _testViews() {
+        this.formviewTested = false;
+        let viewType;
+        if (document.querySelector(".o_view_controller")) {
+            viewType = [...document.querySelector(".o_view_controller").classList]
+                .find((c) => c.startsWith(`o_`) && c.endsWith(`_view`))
+                .split("_")[1];
+        }
+        await this._testView(viewType);
+        this.state.testedViews++;
+        if (this.state.light === true) {
+            return;
+        }
+        const switchButtons = document.querySelectorAll(
+            "nav.o_cp_switch_buttons > button.o_switch_view:not(.active):not(.o_map)"
+        );
+        for (const switchButton of switchButtons) {
+            // Only way to get the viewType from the switchButton
+            const viewType = [...switchButton.classList]
+                .find((cls) => cls !== "o_switch_view" && cls.startsWith("o_"))
+                .slice(2);
+            if (this.state.logger) {
+                console.log(`Testing view switch: ${viewType}`);
+            }
+            // timeout to avoid click debounce
+            setTimeout(() => {
+                const target = document.querySelector(
+                    `nav.o_cp_switch_buttons > button.o_switch_view.o_${viewType}`
+                );
+                if (target) {
+                    this._triggerClick(target, `${viewType} view switcher`);
+                }
+            }, 250);
+            await this._waitForCondition(
+                () => document.querySelector(`.o_switch_view.o_${viewType}.active`) !== null,
+                `switch view (${viewType})`
+            );
+            await this._testView(viewType);
+            this.state.testedViews++;
+        }
+    }
+
+    async _testMenuItem(menu) {
+        this.currentMenu = menu;
+        if (BLACKLISTED_MENUS.has(menu.xmlid)) {
+            if (this.state.logger) {
+                console.log(`Skipping blacklisted menu ${menu.name} (${menu.xmlid})`);
+            }
+            return;
+        }
+        if (this.state.logger) {
+            console.log(`Testing menu ${menu.name} (${menu.xmlid})`);
+        }
+        this.state.testedMenus.push(menu.xmlid);
+        const startActionCount = this._actionCount;
+        try {
+            await this.env.services.menu.selectMenu(menu);
+            let isModal = false;
+            await this._waitForCondition(() => {
+                if (document.querySelector(".o_dialog:not(.o_error_dialog)")) {
+                    isModal = true;
+                    if (this.state.logger) {
+                        console.log(`Modal detected: ${menu.name} (${menu.xmlid})`);
+                    }
+                    this.state.testedModals++;
+                    return true;
+                }
+                return startActionCount !== this._actionCount;
+            }, `selecting menu ${menu.name} (${menu.xmlid})`);
+            if (isModal) {
+                await this._triggerClick(
+                    document.querySelector(".o_dialog header > .btn-close"),
+                    "modal close button"
+                );
+            } else {
+                await this._testViews();
+            }
+        } catch (err) {
+            if (err instanceof ClickbotStopError) {
+                throw err;
+            }
+            this.state.errorMenuCount++;
+            let msg = `Error found:\n`;
+            msg += this._currentTraceback();
+            msg += `The error is :\n`;
+            msg += err.message;
+            this._originalError(msg);
+        }
+    }
+
+    async _testApp(app) {
+        if (this.state.logger) {
+            console.log(`Testing app: ${app.name} (${app.xmlid})`);
+        }
+        if (!this.state.testedApps.includes(app.xmlid)) {
+            this.state.testedApps.push(app.xmlid);
+        }
+
+        if (this.state.light || !app.children.length) {
+            await this._testMenuItem(app);
+            return;
+        }
+
+        const flatten = (node) => {
+            if (!node.childrenTree?.length) {
+                return node.actionID ? [node] : [];
+            }
+            return node.childrenTree.flatMap(flatten);
+        };
+        const menus = this.env.services.menu.getMenuAsTree(app.id).childrenTree.flatMap(flatten);
+
+        while (this.state.menuIndex < menus.length) {
+            await this._testMenuItem(menus[this.state.menuIndex]);
+            this.state.menuIndex++;
+        }
+        this.state.menuIndex = 0;
     }
 }
-
-function clickEverywhere(xmlId, light = false, currentState) {
-    browser.setTimeout(_clickEverywhere, 1000, xmlId, light, currentState);
-}
-
-window.clickEverywhere = clickEverywhere;

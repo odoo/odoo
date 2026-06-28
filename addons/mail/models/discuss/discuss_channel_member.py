@@ -30,6 +30,7 @@ class DiscussChannelMember(models.Model):
     partner_id = fields.Many2one("res.partner", "Partner", ondelete="cascade", index=True)
     guest_id = fields.Many2one("mail.guest", "Guest", ondelete="cascade", index=True)
     is_self = fields.Boolean(compute="_compute_is_self", search="_search_is_self")
+    can_unlink = fields.Boolean(compute="_compute_can_unlink")
     # channel
     channel_id = fields.Many2one("discuss.channel", "Channel", ondelete="cascade", required=True, bypass_search_access=True)
     channel_role = fields.Selection(
@@ -101,10 +102,8 @@ class DiscussChannelMember(models.Model):
             [("id", "in", [row[0] for row in self.env.cr.fetchall()])],
         )
         members.unpin_dt = fields.Datetime.now()
-        stores = Store.Stores()
-        for member, store in members._get_member_store_list(stores):
+        for member, store in members._get_member_store_list():
             store.add(member.channel_id, {"close_chat_window": True})
-        stores.bus_send()
 
     @api.constrains('partner_id')
     def _contrains_no_public_member(self):
@@ -123,6 +122,10 @@ class DiscussChannelMember(models.Model):
                         channel_type=member.channel_id.channel_type,
                     )
                 )
+
+    def _compute_can_unlink(self):
+        for member in self:
+            member.can_unlink = member.has_access("unlink")
 
     @api.depends_context("uid", "guest")
     def _compute_is_self(self):
@@ -253,7 +256,7 @@ class DiscussChannelMember(models.Model):
             Store(bus_channel=channel).add(
                 channel,
                 lambda res: res.many("channel_name_member_ids", "_store_member_fields", sort="id"),
-            ).bus_send()
+            )
         return res
 
     def write(self, vals):
@@ -324,7 +327,6 @@ class DiscussChannelMember(models.Model):
             )
         for channel, members in members_by_channel.items():
             stores[channel].delete(members).add(channel, ["member_count"])
-        stores.bus_send()
         return res
 
     def _bus_channels(self):
@@ -342,9 +344,9 @@ class DiscussChannelMember(models.Model):
                     res.attr("isTyping", is_typing),
                     res.attr("is_typing_dt", fields.Datetime.now()),
                 ),
-            ).bus_send()
+            )
 
-    def _notify_mute(self):
+    def _set_cron_for_unmute(self):
         for member in self:
             if member.mute_until_dt and member.mute_until_dt != -1:
                 self.env.ref("mail.ir_cron_discuss_channel_member_unmute")._trigger(member.mute_until_dt)
@@ -352,16 +354,16 @@ class DiscussChannelMember(models.Model):
     @api.model
     def _cleanup_expired_mutes(self):
         """
-        Cron job for cleanup expired unmute by resetting mute_until_dt and sending bus notifications.
+        Cron job for cleanup expired unmute by resetting mute_until_dt
         """
         members = self.search([("mute_until_dt", "<=", fields.Datetime.now())])
         members.write({"mute_until_dt": False})
-        members._notify_mute()
 
-    def _get_member_store_list(self, stores: Store.Stores):
+    def _get_member_store_list(self):
         """Returns the list of (member, store) combinations.
         This is necessary because members are currently linked to partners,
         which can have multiple users."""
+        stores = Store.Stores()
         return [
             (member, stores[bus_channel])
             for member in self
@@ -375,10 +377,13 @@ class DiscussChannelMember(models.Model):
             partner_fields=lambda res: (
                 res.attr("name"),
                 res.from_method("_store_avatar_fields"),
-                res.from_method("_store_im_status_fields"),
+                res.from_method("_store_im_status_fields", internal=True),
                 res.from_method("_store_mention_fields"),
             ),
-            guest_fields="_store_guest_fields",
+            guest_fields=lambda res: (
+                res.from_method("_store_avatar_fields"),
+                res.from_method("_store_im_status_fields", internal=True),
+            ),
         )
 
     def _store_guest_dynamic_fields(self, res: Store.FieldList):
@@ -395,7 +400,10 @@ class DiscussChannelMember(models.Model):
                 res.from_method("_store_partner_fields"),
                 res.from_method("_store_mention_fields"),
             ),
-            guest_fields="_store_guest_fields",
+            guest_fields=lambda res: (
+                res.from_method("_store_avatar_fields"),
+                res.from_method("_store_im_status_fields", internal=True),
+            ),
         )
 
     def _store_identifying_fields(self, res: Store.FieldList):
@@ -455,7 +463,7 @@ class DiscussChannelMember(models.Model):
                 "_store_rtc_update_fields",
                 fields_params={"added": rtc_updates[0], "removed": rtc_updates[1]},
             )
-            store.add_singleton_values(
+            store.add_model_values(
                 "Rtc",
                 lambda res: (
                     res.attr("iceServers", ice_servers or False),
@@ -532,6 +540,7 @@ class DiscussChannelMember(models.Model):
 
     def _rtc_sync_sessions(self, check_rtc_session_ids=None):
         """Synchronize the RTC sessions for self channel member.
+
             - Inactive sessions of the channel are deleted.
             - Current sessions are returned.
             - Sessions given in check_rtc_session_ids that no longer exists
@@ -587,7 +596,7 @@ class DiscussChannelMember(models.Model):
                     value=members,
                     mode="ADD",
                 ),
-            ).bus_send()
+            )
             devices, private_key, public_key = self.channel_id._web_push_get_partners_parameters(members.partner_id.ids)
             if devices:
                 if self.channel_id.channel_type != 'chat':
@@ -670,7 +679,7 @@ class DiscussChannelMember(models.Model):
         if not notify:
             return
         for bus_channel in bus_channels:
-            Store(bus_channel=bus_channel).add(self, "_store_seen_fields").bus_send()
+            Store(bus_channel=bus_channel).add(self, "_store_seen_fields")
 
     def _set_new_message_separator(self, message_id):
         """
@@ -689,7 +698,7 @@ class DiscussChannelMember(models.Model):
                         res.attr("new_message_separator"),
                         res.from_method("_store_identifying_fields"),
                     ),
-                ).bus_send()
+                )
             return
         self.new_message_separator = message_id
 

@@ -12,7 +12,7 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
 
     def test_simple_formatted_read_grouping_sets(self):
         Model = self.env['test_read_group.aggregate']
-        Partner = self.env['res.partner']
+        Partner = self.env['test_read_group.partner']
         partner_1 = Partner.create({'name': 'z_one'})
         partner_2 = Partner.create({'name': 'a_two'})
         Model.create({'key': 1, 'partner_id': partner_1.id, 'value': 1})
@@ -42,27 +42,27 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
                 SUM("test_read_group_aggregate"."value")
             FROM
                 "test_read_group_aggregate"
-                LEFT JOIN "res_partner" AS "test_read_group_aggregate__partner_id" ON (
+                LEFT JOIN "test_read_group_partner" AS "test_read_group_aggregate__partner_id" ON (
                     "test_read_group_aggregate"."partner_id" = "test_read_group_aggregate__partner_id"."id"
                 )
             GROUP BY
                 GROUPING SETS (
                     (
                         "test_read_group_aggregate"."partner_id",
-                        "test_read_group_aggregate__partner_id"."complete_name",
+                        "test_read_group_aggregate__partner_id"."name",
                         "test_read_group_aggregate__partner_id"."id",
                         "test_read_group_aggregate"."key"
                     ),
                     ("test_read_group_aggregate"."key"),
                     (
                         "test_read_group_aggregate"."partner_id",
-                        "test_read_group_aggregate__partner_id"."complete_name",
+                        "test_read_group_aggregate__partner_id"."name",
                         "test_read_group_aggregate__partner_id"."id"
                     ),
                     ()
                 )
             ORDER BY
-                "test_read_group_aggregate__partner_id"."complete_name" ASC,
+                "test_read_group_aggregate__partner_id"."name" ASC,
                 "test_read_group_aggregate__partner_id"."id" DESC,
                 "test_read_group_aggregate"."key" ASC
         """]):
@@ -319,10 +319,11 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
         ChainInherits = ChainInherits.with_user(self.base_user)
 
         inherits_model = self.env['ir.model']._get(RelatedInherits._name)
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': "AAAAAAA",
             'model_id': inherits_model.id,
-            'domain_force': [('id', 'in', inherits_records[1:].ids)],
+            'operation': 'crud',
+            'domain': [('id', 'in', inherits_records[1:].ids)],
         })
 
         grouping_sets = [['inherited_id.value'], ['inherited_id.base_id.name'], ['inherited_id.foo_id.name'], []]

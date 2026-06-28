@@ -28,6 +28,10 @@ export class PaymentScreenPaymentLines extends Component {
         this.dialog = useService("dialog");
     }
 
+    get paymentLines() {
+        return this.props.paymentLines.filter((line) => line.payment_method_id);
+    }
+
     async selectLine(paymentline) {
         this.props.selectLine(paymentline.uuid);
         if (this.ui.isSmall) {

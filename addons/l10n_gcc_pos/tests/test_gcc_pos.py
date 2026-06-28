@@ -30,6 +30,14 @@ class TestGenericGCC(TestGenericLocalization):
 
     def test_generic_localization(self):
         self.main_pos_config.l10n_gcc_dual_language_receipt = True
+        self.main_pos_config.cash_rounding = True
+        self.main_pos_config.rounding_method = self.env['account.cash.rounding'].create({
+            'name': 'Test rounding',
+            'rounding': 0.05,
+            'rounding_method': 'UP',
+            'profit_account_id': self.company_data['default_account_revenue'].id,
+            'loss_account_id': self.company_data['default_account_expense'].id,
+        })
         _, html = super().test_generic_localization()
         self.assertTrue("Served by / خدم بواسطة" in html)
         self.assertTrue("Ticket / تذكرة" in html)
@@ -39,3 +47,12 @@ class TestGenericGCC(TestGenericLocalization):
         self.assertTrue("Total / اﻹجمالي" in html)
         self.assertTrue("Discount / الخصومات" in html)
         self.assertTrue("Change / الباقي" in html)
+
+    def test_gcc_basic_receipt_title_hidden(self):
+        """check the tax invoice title is hidden on basic receipts for GCC region """
+        self.main_pos_config.write({
+            'basic_receipt': True,
+            'l10n_gcc_dual_language_receipt': True,
+        })
+        self.main_pos_config.open_ui()
+        self.start_pos_tour("test_gcc_basic_receipt_title_hidden")

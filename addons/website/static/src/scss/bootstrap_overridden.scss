@@ -192,10 +192,13 @@ $display-4-margin-bottom: o-website-value('display-4-margin-bottom') or $heading
 $headings-color: o-color('o-cc1-headings') !default;
 
 $lead-font-size: $font-size-base * $o-lead-ratio !default;
-// Note that we currently load only 700 for Google fonts, we may consider trying
-// to load more or this one only instead. Meanwhile, this fallbacks on 700
-// if 600 is not available anyway.
-$font-weight-bold: 600 !default;
+
+$lead-font-weight: o-website-value('lead-font-weight') !default;
+$font-weight-normal: o-website-value('font-weight-normal') !default;
+$font-weight-bolder: o-website-value('font-weight-bolder') !default;
+$headings-font-weight: o-website-value('headings-font-weight') !default;
+$display-font-weight: o-website-value('display-font-weight') !default;
+$btn-font-weight: o-website-value('btn-font-weight') !default;
 
 $text-muted: mute-color($body-color) !default;
 
@@ -277,6 +280,11 @@ $form-check-input-border-radius: if($input-border-radius != null, min($input-bor
 //   a background color on its own is not enough to convey that meaning anyway
 //   (a disabled range should have its *active* part with a different color).
 $form-range-track-bg: $input-disabled-bg !default;
+
+$input-border-top-width: o-website-value('input-border-top-width') !default;
+$input-border-right-width: o-website-value('input-border-right-width') !default;
+$input-border-bottom-width: o-website-value('input-border-bottom-width') !default;
+$input-border-left-width: o-website-value('input-border-left-width') !default;
 
 // Dropdowns
 $dropdown-border-color: $border-color !default;
@@ -410,8 +418,19 @@ $offcanvas-horizontal-width: $o-offcanvas-horizontal-width !default;
 // Bootstrap paddings and margins. See FIXED_TEXT_COLUMNS.
 $--enable-no-overflow-of-text-columns: false !default;
 
-.carousel-instant {
-  .carousel-item {
-    transition-duration: 200ms !important;
-  }
+// A side-specific "form field border width" is only applied if it differs
+// from the global border width that applies to all sides.
+.form-control {
+    @if $input-border-top-width != $input-border-width {
+        border-top-width: $input-border-top-width !important;
+    }
+    @if $input-border-right-width != $input-border-width {
+        border-right-width: $input-border-right-width !important;
+    }
+    @if $input-border-bottom-width != $input-border-width {
+        border-bottom-width: $input-border-bottom-width !important;
+    }
+    @if $input-border-left-width != $input-border-width {
+        border-left-width: $input-border-left-width !important;
+    }
 }

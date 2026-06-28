@@ -8,6 +8,7 @@ class AccountPayment(models.Model):
     _name = 'account.payment'
     _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
     _description = "Payment"
+    _explanation = "Represents incoming (customer) or outgoing (vendor) payments. It handles the actual transfer of money and is used to reconcile open invoices or bills."
     _order = "date desc, name desc"
     _check_company_auto = True
 
@@ -30,7 +31,7 @@ class AccountPayment(models.Model):
     company_id = fields.Many2one(
         comodel_name='res.company',
         compute='_compute_company_id', store=True, readonly=False, precompute=True,
-        index=False,  # covered by account_payment_journal_id_company_id_idx
+        index=True,
         required=True
     )
     state = fields.Selection(
@@ -96,7 +97,8 @@ class AccountPayment(models.Model):
         related='payment_method_line_id.payment_method_id',
         string="Method",
         tracking=True,
-        store=True
+        store=True,
+        index=True,
     )
     available_journal_ids = fields.Many2many(
         comodel_name='account.journal',
@@ -125,9 +127,18 @@ class AccountPayment(models.Model):
         comodel_name='res.partner',
         string="Customer/Vendor",
         ondelete='restrict',
-        domain="['|', ('parent_id','=', False), ('is_company','=', True)]",
         tracking=True,
         check_company=True)
+    commercial_partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Commercial Entity',
+        compute='_compute_commercial_partner_id',
+        store=True,
+        readonly=True,
+        index=True,
+        ondelete='restrict',
+        check_company=True,
+    )
     outstanding_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Outstanding Account",
@@ -296,10 +307,16 @@ class AccountPayment(models.Model):
 
     def _prepare_move_liquidity_lines(self, default_values):
         self.ensure_one()
+
+        if not self.outstanding_account_id:
+            raise UserError(_(
+                "You can't create a new payment without an outstanding payments/receipts account set either on the company or the %(payment_method)s payment method in the %(journal)s journal.",
+                payment_method=self.payment_method_line_id.name, journal=self.journal_id.display_name))
+
         return [{
             'name': default_values['name'],
             'date_maturity': self.date,
-            'partner_id': self.partner_id.id,
+            'partner_id': self.commercial_partner_id.id,
             'account_id': self.outstanding_account_id.id,
             'currency_id': self.currency_id.id,
             'balance': default_values['balance'],
@@ -311,7 +328,7 @@ class AccountPayment(models.Model):
         return [{
             'name': default_values['name'],
             'date_maturity': self.date,
-            'partner_id': self.partner_id.id,
+            'partner_id': self.commercial_partner_id.id,
             'account_id': self.destination_account_id.id,
             'currency_id': self.currency_id.id,
             'balance': default_values['balance'],
@@ -329,11 +346,6 @@ class AccountPayment(models.Model):
             }
         '''
         self.ensure_one()
-
-        if not self.outstanding_account_id:
-            raise UserError(_(
-                "You can't create a new payment without an outstanding payments/receipts account set either on the company or the %(payment_method)s payment method in the %(journal)s journal.",
-                payment_method=self.payment_method_line_id.name, journal=self.journal_id.display_name))
 
         # Compute a default label to set on the journal items.
         line_name = ''.join(x[1] for x in self._get_aml_default_display_name_list() if x[1])
@@ -433,15 +445,20 @@ class AccountPayment(models.Model):
                     )
                 )
 
+    @api.depends('partner_id')
+    def _compute_commercial_partner_id(self):
+        for payment in self:
+            payment.commercial_partner_id = payment.partner_id.commercial_partner_id
+
     @api.depends('company_id', 'partner_id')
     def _compute_journal_id(self):
         for payment in self:
             # default customer payment method logic
-            partner = payment.partner_id
+            partner = payment.commercial_partner_id
             payment_type = payment.payment_type if payment.payment_type in ('inbound', 'outbound') else None
             if not bool(payment._origin) and (partner or payment_type):
                 field_name = f'property_{payment_type}_payment_method_line_id'
-                default_payment_method_line = payment.partner_id.with_company(payment.company_id)[field_name]
+                default_payment_method_line = partner.with_company(payment.company_id)[field_name]
                 journal = default_payment_method_line.journal_id
                 if journal:
                     payment.journal_id = journal
@@ -572,7 +589,7 @@ class AccountPayment(models.Model):
             if pay.payment_type == 'inbound':
                 pay.available_partner_bank_ids = pay.journal_id.bank_account_id
             else:
-                pay.available_partner_bank_ids = pay.partner_id.bank_ids\
+                pay.available_partner_bank_ids = pay.commercial_partner_id.bank_ids\
                         .filtered(lambda x: x.company_id.id in (False, pay.company_id.id))._origin
 
     @api.depends('available_partner_bank_ids', 'journal_id')
@@ -589,8 +606,8 @@ class AccountPayment(models.Model):
         '''
         for pay in self:
             available_payment_method_lines = pay.available_payment_method_line_ids
-            inbound_payment_method = pay.partner_id.property_inbound_payment_method_line_id
-            outbound_payment_method = pay.partner_id.property_outbound_payment_method_line_id
+            inbound_payment_method = pay.commercial_partner_id.property_inbound_payment_method_line_id
+            outbound_payment_method = pay.commercial_partner_id.property_outbound_payment_method_line_id
             if pay.payment_type == 'inbound' and inbound_payment_method.id in available_payment_method_lines.ids:
                 pay.payment_method_line_id = inbound_payment_method
             elif pay.payment_type == 'outbound' and outbound_payment_method.id in available_payment_method_lines.ids:
@@ -648,8 +665,8 @@ class AccountPayment(models.Model):
         for pay in self:
             if pay.partner_type == 'customer':
                 # Receive money from invoice or send money to refund it.
-                if pay.partner_id:
-                    pay.destination_account_id = pay.partner_id.with_company(pay.company_id).property_account_receivable_id
+                if pay.commercial_partner_id:
+                    pay.destination_account_id = pay.commercial_partner_id.with_company(pay.company_id).property_account_receivable_id
                 else:
                     pay.destination_account_id = self.env['account.account'].with_company(pay.company_id).search([
                         *self.env['account.account']._check_company_domain(pay.company_id),
@@ -657,8 +674,8 @@ class AccountPayment(models.Model):
                     ], limit=1)
             elif pay.partner_type == 'supplier':
                 # Send money to pay a bill or receive money to refund it.
-                if pay.partner_id:
-                    pay.destination_account_id = pay.partner_id.with_company(pay.company_id).property_account_payable_id
+                if pay.commercial_partner_id:
+                    pay.destination_account_id = pay.commercial_partner_id.with_company(pay.company_id).property_account_payable_id
                 else:
                     pay.destination_account_id = self.env['account.account'].with_company(pay.company_id).search([
                         *self.env['account.account']._check_company_domain(pay.company_id),
@@ -821,7 +838,7 @@ class AccountPayment(models.Model):
             return {}
 
         # Update tables involved in the query
-        used_fields = ("company_id", "partner_id", "date", "state", "amount", 'payment_type')
+        used_fields = ("company_id", "commercial_partner_id", "date", "state", "amount", 'payment_type')
         self.flush_model(used_fields)
 
         payment_table_and_alias = SQL("account_payment AS payment")
@@ -847,8 +864,8 @@ class AccountPayment(models.Model):
                        ARRAY_AGG(DISTINCT duplicate_payment.id) AS duplicate_payment_ids
                   FROM %(payment_table_and_alias)s
                   JOIN account_payment AS duplicate_payment ON payment.id != duplicate_payment.id
-                                                           AND payment.partner_id = duplicate_payment.partner_id
                                                            AND payment.company_id = duplicate_payment.company_id
+                                                           AND payment.commercial_partner_id = duplicate_payment.commercial_partner_id
                                                            AND payment.date = duplicate_payment.date
                                                            AND payment.payment_type = duplicate_payment.payment_type
                                                            AND payment.amount = duplicate_payment.amount
@@ -1067,7 +1084,7 @@ class AccountPayment(models.Model):
             # If dealing with multiple write-off lines, they are dropped and a new one is generated.
             to_write = {
                 'date': pay.date,
-                'partner_id': pay.partner_id.id,
+                'partner_id': pay.commercial_partner_id.id,
                 'currency_id': pay.currency_id.id,
                 'partner_bank_id': pay.partner_bank_id.id,
                 'line_ids': line_ids_commands,
@@ -1107,7 +1124,7 @@ class AccountPayment(models.Model):
             'date': self.date,
             'journal_id': self.journal_id.id,
             'company_id': self.company_id.id,
-            'partner_id': self.partner_id.id,
+            'partner_id': self.commercial_partner_id.id,
             'currency_id': self.currency_id.id,
             'partner_bank_id': self.partner_bank_id.id,
             'line_ids': line_ids or [
@@ -1178,6 +1195,10 @@ class AccountPayment(models.Model):
         draft_moves = self.move_id.filtered(lambda m: m.state == 'draft')
         draft_moves.unlink()
         (self.move_id - draft_moves).button_cancel()
+
+    def action_print_receipt(self):
+        report_action = self.env.ref("account.action_report_payment_receipt")
+        return report_action.report_action(self)
 
     def button_request_cancel(self):
         return self.move_id.button_request_cancel()

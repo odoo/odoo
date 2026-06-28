@@ -9,50 +9,52 @@ const HISTORY_SNAPSHOT_BUFFER_TIME = 1000 * 10;
  * @typedef { Object } CollaborationPluginConfig
  * @property { string } peerId
  *
- * @typedef { import("../../core/history_plugin").HistoryStep } HistoryStep
+ * @typedef { import("@html_editor/core/history_plugin").HistoryCommit } HistoryCommit
  */
 
 /**
  * @typedef { Object } CollaborationShared
  * @property { CollaborationPlugin['getBranchIds'] } getBranchIds
- * @property { CollaborationPlugin['getSnapshotSteps'] } getSnapshotSteps
- * @property { CollaborationPlugin['historyGetMissingSteps'] } historyGetMissingSteps
- * @property { CollaborationPlugin['onExternalHistorySteps'] } onExternalHistorySteps
- * @property { CollaborationPlugin['resetFromSteps'] } resetFromSteps
- * @property { CollaborationPlugin['setInitialBranchStepId'] } setInitialBranchStepId
+ * @property { CollaborationPlugin['getSnapshotCommits'] } getSnapshotCommits
+ * @property { CollaborationPlugin['historyGetMissingCommits'] } historyGetMissingCommits
+ * @property { CollaborationPlugin['insertRemoteHistoryCommits'] } insertRemoteHistoryCommits
+ * @property { CollaborationPlugin['resetFromCommits'] } resetFromCommits
+ * @property { CollaborationPlugin['setInitialBranchCommitId'] } setInitialBranchCommitId
  */
 
 /**
- * @typedef {(() => void)[]} on_external_history_step_added_handlers
+ * @typedef {(() => void)[]} on_remote_history_commits_applied_handlers
  */
 
 export class CollaborationPlugin extends Plugin {
     static id = "collaboration";
-    static dependencies = ["history", "selection", "sanitize"];
+    static dependencies = ["history", "domObserver", "selection", "sanitize"];
     /** @type {import("plugins").EditorResources} */
     resources = {
+        history_commit_data_properties: ["peerId"],
+
         /** Handlers */
-        on_history_cleaned_handlers: this.onHistoryClean.bind(this),
+        on_will_reset_history_handlers: this.onWillResetHistory.bind(this),
         on_history_reset_handlers: this.onHistoryReset.bind(this),
-        on_step_added_handlers: ({ step }) => this.onStepAdded(step),
 
         /** Overrides */
         set_attribute_overrides: this.setAttribute.bind(this),
 
-        history_step_processors: this.processHistoryStep.bind(this),
-        is_step_reversible_predicates: (step) => {
-            if (step.peerId !== this.peerId) {
+        pending_history_commit_data_processors: (data) => ({ ...data, peerId: this.peerId }),
+        is_history_commit_reversible_predicates: (commit) => {
+            if (commit.data.peerId !== this.peerId) {
                 return false;
             }
         },
+        add_node_mutation_processors: this.sanitizeNode.bind(this),
     };
     static shared = [
         "getBranchIds",
-        "getSnapshotSteps",
-        "historyGetMissingSteps",
-        "onExternalHistorySteps",
-        "resetFromSteps",
-        "setInitialBranchStepId",
+        "getSnapshotCommits",
+        "historyGetMissingCommits",
+        "insertRemoteHistoryCommits",
+        "resetFromCommits",
+        "setInitialBranchCommitId",
     ];
 
     /** @type { CollaborationPluginConfig['peerId'] } */
@@ -74,12 +76,12 @@ export class CollaborationPlugin extends Plugin {
         this._snapshotInterval = false;
     }
 
-    onHistoryClean() {
-        this.branchStepIds = [];
+    onWillResetHistory() {
+        this.branchCommitIds = [];
     }
     onHistoryReset() {
-        const firstStep = this.dependencies.history.getHistorySteps()[0];
-        this.snapshots = [{ step: firstStep }];
+        const firstCommit = this.dependencies.history.getCommits()[0];
+        this.snapshots = [{ commit: firstCommit }];
     }
     /**
      * @param {Node} node
@@ -97,11 +99,11 @@ export class CollaborationPlugin extends Plugin {
      * Get all the history ids for the current history branch.
      */
     getBranchIds() {
-        const steps = this.dependencies.history.getHistorySteps();
-        return (this.initialBranchStepId || "")
+        const commits = this.dependencies.history.getCommits();
+        return (this.initialBranchCommitId || "")
             .split(",")
-            .concat(this.branchStepIds)
-            .concat(steps.map((s) => s.id));
+            .concat(this.branchCommitIds)
+            .concat(commits.map((s) => s.id));
     }
     /**
      * Safely set an attribute on a node.
@@ -120,93 +122,105 @@ export class CollaborationPlugin extends Plugin {
         }
     }
 
+    sanitizeNode(node) {
+        if (node) {
+            const fakeNode = this.document.createElement("fake-el");
+            fakeNode.appendChild(node);
+            this.dependencies.sanitize.sanitize(fakeNode, { FORBID_TAGS: ["form", "input"] });
+            return fakeNode.firstChild;
+        }
+    }
+
     /**
-     * Apply external steps coming from the collaboration.
+     * Insert remote commits coming from the collaboration into the history.
      *
-     * @param {Object} newSteps External steps to be applied
+     * @param { HistoryCommit[] } newCommits Remote commits to be inserted
      */
-    onExternalHistorySteps(newSteps) {
-        let stepIndex = 0;
+    insertRemoteHistoryCommits(newCommits) {
+        let commitIndex = 0;
         const selectionData = this.dependencies.selection.getSelectionData();
 
-        const steps = this.dependencies.history.getHistorySteps();
-        for (const newStep of newSteps) {
-            // todo: add a test that no 2 on_history_missing_parent_step_handlers
+        for (const newCommit of newCommits) {
+            // `insertRemoteCommit` will impact the array of written commits.
+            // Get a new copy at every step of the loop to make sure to have an
+            // updated version.
+            const commits = this.dependencies.history.getCommits();
+            // todo: add a test that no 2 on_history_missing_parent_commit_handlers
             // are called in same stack.
-            const insertIndex = this.getInsertStepIndex(steps, newStep);
-            if (typeof insertIndex === "undefined") {
+            const commitInsertionIndex = this.getCommitInsertionIndex(commits, newCommit);
+            if (typeof commitInsertionIndex === "undefined") {
                 continue;
             }
-            this.dependencies.history.addExternalStep(newStep, insertIndex);
-            stepIndex++;
+            this.dependencies.history.insertRemoteCommit(newCommit, commitInsertionIndex);
+            commitIndex++;
         }
         if (selectionData.documentSelectionIsInEditable) {
             this.dependencies.selection.rectifySelection(selectionData.editableSelection);
         }
 
-        this.trigger("on_external_history_step_added_handlers");
+        this.trigger("on_remote_history_commits_applied_handlers");
 
         // todo: ensure that if the selection was not in the editable before the
         // reset, it remains where it was after applying the snapshot.
 
-        if (stepIndex) {
+        if (commitIndex) {
             this.config.onChange?.();
         }
     }
 
     /**
-     * @param {HistoryStep[]} steps
-     * @param {HistoryStep} newStep
+     * @param { HistoryCommit[] } commits
+     * @param { HistoryCommit } newCommit
      */
-    getInsertStepIndex(steps, newStep) {
-        let index = steps.length - 1;
-        while (index >= 0 && steps[index].id !== newStep.previousStepId) {
-            // Skip steps that are already in the list.
-            if (steps[index].id === newStep.id) {
+    getCommitInsertionIndex(commits, newCommit) {
+        let index = commits.length - 1;
+        while (index >= 0 && commits[index].id !== newCommit.data.previousCommitId) {
+            // Skip commits that are already in the list.
+            if (commits[index].id === newCommit.id) {
                 return;
             }
             index--;
         }
 
-        // When the previousStepId is not present in the steps it
+        // When the previousCommitId is not present in the commits it
         // could be either:
-        // - the previousStepId is before a snapshot of the same history
-        // - the previousStepId has not been received because peers were
+        // - the previousCommitId is before a snapshot of the same history
+        // - the previousCommitId has not been received because peers were
         //   disconnected at that time
-        // - the previousStepId is in another history (in case two totally
-        //   differents `steps` (but it should not arise)).
+        // - the previousCommitId is in another history (in case two totally
+        //   differents `commits` (but it should not arise)).
         if (index < 0) {
-            const historySteps = steps;
-            let index = historySteps.length - 1;
-            // Get the last known step that we are sure the missing step
-            // peer has. It could either be a step that has the same
-            // peerId or the first step.
+            const historyCommits = commits;
+            let index = historyCommits.length - 1;
+            // Get the last known commit that we are sure the missing commit
+            // peer has. It could either be a commit that has the same
+            // peerId or the first commit.
             while (index !== 0) {
-                if (historySteps[index].peerId === newStep.peerId) {
+                if (historyCommits[index].data.peerId === newCommit.data.peerId) {
                     break;
                 }
                 index--;
             }
-            const fromStepId = historySteps[index].id;
-            this.trigger("on_history_missing_parent_step_handlers", {
-                step: newStep,
-                fromStepId: fromStepId,
+            const fromCommitId = historyCommits[index].id;
+            this.trigger("on_history_missing_parent_commit_handlers", {
+                commit: newCommit,
+                fromCommitId,
             });
             return;
         }
 
-        let concurentSteps = [];
+        let concurentCommits = [];
         index++;
-        while (index < steps.length) {
-            if (steps[index].previousStepId === newStep.previousStepId) {
-                if (steps[index].id.localeCompare(newStep.id) === 1) {
+        while (index < commits.length) {
+            if (commits[index].data.previousCommitId === newCommit.data.previousCommitId) {
+                if (commits[index].data.authorTimestamp > newCommit.data.authorTimestamp) {
                     break;
                 } else {
-                    concurentSteps = [steps[index].id];
+                    concurentCommits = [commits[index].id];
                 }
             } else {
-                if (concurentSteps.includes(steps[index].previousStepId)) {
-                    concurentSteps.push(steps[index].id);
+                if (concurentCommits.includes(commits[index].data.previousCommitId)) {
+                    concurentCommits.push(commits[index].id);
                 } else {
                     break;
                 }
@@ -219,88 +233,74 @@ export class CollaborationPlugin extends Plugin {
 
     /**
      * @param {Object} params
-     * @param {string} params.fromStepId
-     * @param {string} [params.toStepId]
+     * @param {string} params.fromCommitId
+     * @param {string} [params.toCommitId]
      */
-    historyGetMissingSteps({ fromStepId, toStepId }) {
-        const steps = this.dependencies.history.getHistorySteps();
-        const fromIndex = steps.findIndex((x) => x.id === fromStepId);
-        const toIndex = toStepId ? steps.findIndex((x) => x.id === toStepId) : steps.length;
+    historyGetMissingCommits({ fromCommitId, toCommitId }) {
+        const commits = this.dependencies.history.getCommits();
+        const fromIndex = commits.findIndex((x) => x.id === fromCommitId);
+        const toIndex = toCommitId ? commits.findIndex((x) => x.id === toCommitId) : commits.length;
         if (fromIndex === -1 || toIndex === -1) {
             return -1;
         }
-        return steps.slice(fromIndex + 1, toIndex);
+        return commits.slice(fromIndex + 1, toIndex);
     }
 
-    getSnapshotSteps() {
-        const historySteps = this.dependencies.history.getHistorySteps();
+    getSnapshotCommits() {
+        const historyCommits = this.dependencies.history.getCommits();
         // If the current snapshot has no time, it means that there is the no
         // other snapshot that have been made (either it is the one created upon
-        // initialization or reseted by history's resetFromSteps).
+        // initialization or reseted by history's resetFromCommits).
         if (!this.snapshots[0].time) {
-            return { steps: historySteps, historyIds: this.getBranchIds() };
+            return { commits: historyCommits, historyIds: this.getBranchIds() };
         }
-        const snapshotSteps = [];
+        const snapshotCommits = [];
         let snapshot;
         if (this.snapshots[0].time + HISTORY_SNAPSHOT_BUFFER_TIME < Date.now()) {
             snapshot = this.snapshots[0];
         } else {
             // this.snapshots[1] has being created at least 1 minute ago
-            // (HISTORY_SNAPSHOT_INTERVAL) or it is the first step.
+            // (HISTORY_SNAPSHOT_INTERVAL) or it is the first commit.
             snapshot = this.snapshots[1];
         }
-        let index = historySteps.length - 1;
-        while (historySteps[index].id !== snapshot.step.id) {
-            snapshotSteps.push(historySteps[index]);
+        let index = historyCommits.length - 1;
+        while (historyCommits[index].id !== snapshot.commit.id) {
+            snapshotCommits.push(historyCommits[index]);
             index--;
         }
-        snapshotSteps.push(snapshot.step);
-        snapshotSteps.reverse();
+        snapshotCommits.push(snapshot.commit);
+        snapshotCommits.reverse();
 
-        return { steps: snapshotSteps, historyIds: this.getBranchIds() };
+        return { commits: snapshotCommits, historyIds: this.getBranchIds() };
     }
-    setInitialBranchStepId(stepId) {
-        this.initialBranchStepId = stepId;
+    setInitialBranchCommitId(commitId) {
+        this.initialBranchCommitId = commitId;
     }
-    resetFromSteps(steps, branchStepIds) {
+    resetFromCommits(commits, branchCommitIds) {
         this.dependencies.selection.resetSelection();
-        this.dependencies.history.resetFromSteps(steps);
-        this.snapshots = [{ step: steps[0] }];
-        this.branchStepIds = branchStepIds;
+        this.dependencies.history.reset(commits);
+        this.snapshots = [{ commit: commits[0] }];
+        this.branchCommitIds = branchCommitIds;
 
         // @todo @phoenix: test that the hint are proprely handeled
         // this._handleCommandHint();
         // @todo @phoenix: make the multiselection
         // this.multiselectionRefresh();
         // @todo @phoenix: check it is still relevant
-        // this.dispatchEvent(new Event("resetFromSteps"));
+        // this.dispatchEvent(new Event("resetFromCommits"));
     }
 
     makeSnapshot() {
-        const historyLength = this.dependencies.history.getHistorySteps().length;
+        const historyLength = this.dependencies.history.getCommits().length;
         if (!this.lastSnapshotLength || this.lastSnapshotLength < historyLength) {
             this.lastSnapshotLength = historyLength;
-            const step = this.dependencies.history.makeSnapshotStep();
+            const commit = this.dependencies.history.createSnapshotCommit();
             const snapshot = {
                 time: Date.now(),
-                step: step,
+                commit,
             };
             this.snapshots = [snapshot, this.snapshots[0]];
+            return snapshot;
         }
-    }
-
-    /**
-     * @param {HistoryStep} step
-     */
-    onStepAdded(step) {
-        step.peerId = this.peerId;
-        this.trigger("on_collaboration_step_added_handlers", step);
-    }
-    /**
-     * @param {HistoryStep} step
-     */
-    processHistoryStep(step) {
-        step.peerId = this.peerId;
-        return step;
     }
 }

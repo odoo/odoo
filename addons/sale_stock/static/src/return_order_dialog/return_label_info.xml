@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<template>
+
+    <t t-name="sale_stock.ReturnLabelInfo">
+        <t name="download_instructions">Please download and print the label, attach it to your package, and send the package to the address below:</t>
+        <br/><br/>
+        <div class="card border">
+            <div class="card-body">
+                <b class="d-block mb-2">
+                    <t t-out="companyName"/>
+                </b>
+                <span class="text-muted">
+                    <t t-out="warehouseAddress"/>
+                </span>
+            </div>
+        </div>
+    </t>
+
+</template>

@@ -1,7 +1,6 @@
 import { animationFrame } from "@odoo/hoot-mock";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { BatchEndpoint, Request, ServerData } from "@spreadsheet/data_sources/server_data";
-import { Deferred } from "@web/core/utils/concurrency";
 import { describe, expect, test } from "@odoo/hoot";
 import { defineSpreadsheetActions, defineSpreadsheetModels } from "../helpers/data";
 
@@ -49,10 +48,10 @@ test("synchronous get which returns an error", async () => {
 });
 
 test("batch get with a single item", async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     const orm = {
         call: async (model, method, args) => {
-            await deferred;
+            await deferred.promise;
             expect.step(`${model}/${method}`);
             return args[0];
         },

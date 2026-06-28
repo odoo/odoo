@@ -25,11 +25,13 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
 
     name = fields.Char("Description")
     work_entry_type_id = fields.Many2one(
-        "hr.work.entry.type", string="Time Off Type", required=True, domain="[('id', 'in', valid_work_entry_type_ids)]")
+        "hr.work.entry.type", string="Time Type", required=True, domain="[('id', 'in', valid_work_entry_type_ids)]")
+    allowed_work_entry_type_ids = fields.Many2many(
+        'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
     employee_ids = fields.Many2many('hr.employee', string='Employees', domain=lambda self: self._get_employee_domain())
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
-    date_from = fields.Date('Start Date', required=True, default=lambda self: fields.Date.today())
-    date_to = fields.Date('End Date', required=True, default=lambda self: fields.Date.today())
+    date_from = fields.Date('Start Date', required=True, default=fields.Date.context_today)
+    date_to = fields.Date('End Date', required=True, default=fields.Date.context_today)
     hour_from = fields.Float(string='Hour from')
     hour_to = fields.Float(string='Hour to')
     work_entry_type_request_unit = fields.Selection(related='work_entry_type_id.request_unit')
@@ -40,6 +42,16 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         ('am', 'Morning'), ('pm', 'Afternoon')],
         string="Date Period End", default='pm')
     valid_work_entry_type_ids = fields.Many2many("hr.work.entry.type", compute="_compute_valid_work_entry_type_ids")
+
+    @api.depends('company_id')
+    def _compute_allowed_work_entry_type_ids(self):
+        for wizard in self:
+            country = wizard.company_id.country_id or self.env.company.country_id
+            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
+                domain = [('country_id', '=', False)]
+            else:
+                domain = [('country_id', '=', country.id)]
+            wizard.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
 
     def _prepare_employees_holiday_values(self, employees, date_from_tz, date_to_tz):
         self.ensure_one()
@@ -76,6 +88,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         else:
             date_from_tz = datetime.combine(self.date_from, datetime.min.time(), tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
             date_to_tz = datetime.combine(self.date_to, datetime.max.time(), tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+        # seems 'tracking_disable' is wanted to speedup batch creation
         conflicting_leaves = self.env['hr.leave'].with_context(
             tracking_disable=True,
             mail_activity_automation_skip=True,

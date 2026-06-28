@@ -327,7 +327,7 @@ class AccountJournal(models.Model):
         return result
 
     def _get_sale_purchase_graph_data(self):
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         day_of_week = int(format_datetime(today, 'e', locale=get_lang(self.env).code))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
         format_month = lambda d: format_date(d, 'MMM', locale=get_lang(self.env).code)
@@ -731,7 +731,7 @@ class AccountJournal(models.Model):
             *self.env['account.move']._check_company_domain(self.env.companies),
             ('journal_id', 'in', self.ids),
             ('payment_state', 'in', ('not_paid', 'partial')),
-            ('move_type', 'in', ('out_invoice', 'out_refund') if journal_type == 'sale' else ('in_invoice', 'in_refund')),
+            ('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt') if journal_type == 'sale' else ('in_invoice', 'in_refund', 'in_receipt')),
             ('state', '=', 'posted'),
         ], bypass_access=True)
         selects = [
@@ -941,7 +941,7 @@ class AccountJournal(models.Model):
         if not partner:
             raise UserError(_('You may only use samples in demo mode, try uploading one of your invoices instead.'))
         context['default_move_type'] = 'in_invoice'
-        invoice_date = fields.Date.today() - timedelta(days=12)
+        invoice_date = fields.Date.context_today(self) - timedelta(days=12)
         company = purchase_journal.company_id
         default_expense_account = company.expense_account_id
         ref = 'DE%s' % invoice_date.strftime('%Y%m')
@@ -986,8 +986,11 @@ class AccountJournal(models.Model):
                 'invoice_date': invoice_date,
                 'invoice_due_date': invoice_date + timedelta(days=30),
             })
-            bodies = self.env['ir.actions.report']._prepare_html(html)[0]
-            content = self.env['ir.actions.report']._run_wkhtmltopdf(bodies)
+            report_service = self.env['ir.actions.report']
+            bodies = report_service._prepare_html(html)[0]
+            report = self.env['account.move.send'].with_company(company)._get_default_pdf_report_id(bill)
+            engine_name = report_service._get_pdf_engine(report)
+            content = report_service._run_pdf_engine_without_processing(engine_name, bodies)
             attachment = self.env['ir.attachment'].create({
                 'type': 'binary',
                 'name': 'INV-%s-0001.pdf' % invoice_date.strftime('%Y-%m'),

@@ -45,7 +45,6 @@
                             <field name="date"/>
                         </group>
                     </group>
-                    <separator/>
                     <notebook>
                         <page string="Description" name="description">
                             <field name="description" nolabel="1" class="o_project_update_description" options="{'resizable': false, 'collaborative': true}"/>
@@ -61,37 +60,23 @@
         <field name="name">project.update.view.kanban</field>
         <field name="model">project.update</field>
         <field name="arch" type="xml">
-            <kanban highlight_color="color" sample="0" js_class="project_update_kanban">
+            <kanban highlight_color="color" sample="0" class="o_project_update_kanban_view">
                 <field name="color"/>
+                <field name="status"/>
+                <field name="closed_task_percentage"/>
                 <templates>
-                    <t t-name="card" class="o_project_update_card column-gap-0 column-gap-md-3 row-gap-2 flex-row flex-wrap align-items-center px-3">
-                        <div class="flex-grow-1 flex-shrink-0 w-50 w-md-auto px-2 px-md-0">
-                            <field name="name_cropped" class="fw-bolder"/>
-                            <div class="d-flex gap-1">
+                    <t t-name="card">
+                        <field name="name" class="fw-bold"/>
+                        <field name="progress" widget="progressbar" class="mt-2"/>
+                        <div id="tasks_stats" class="mt-3">
+                            <span class="fa fa-fw fa-check me-1" title="Tasks"/><field name="closed_task_count"/> / <field name="task_count"/> <field name="label_tasks"/>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="fa fa-fw fa-calendar me-1" title="Date"/><field name="date"/>
+                            <div class="d-flex ms-auto align-items-center gap-1">
+                                <span t-attf-class="o_status_bubble o_color_bubble_{{ record.color.raw_value }}" t-att-title="record.status.value"></span>
                                 <field name="user_id" widget="many2one_avatar_user"/>
-                                <field name="user_id"/>
                             </div>
-                        </div>
-                        <div class="flex-grow-1 flex-shrink-0 w-50 w-md-auto px-2 px-md-0">
-                            <span>Status</span>
-                            <field name="color" invisible="1"/>
-                            <field name="status" class="fw-bolder" readonly="1" widget="status_with_color"/>
-                        </div>
-                        <div class="flex-grow-1 flex-shrink-0 w-50 w-md-auto px-2 px-md-0">
-                            <span>Progress</span>
-                            <field name="progress_percentage" class="fw-bolder" widget="percentage"/>
-                        </div>
-                        <div class="flex-grow-1 flex-shrink-0 w-50 w-md-auto px-2 px-md-0">
-                            <div id="tasks_stats" class="fw-bolder">
-                                <span invisible="not task_count">
-                                    <field name="closed_task_count"/> / <field name="task_count"/> <field name="label_tasks"/> (<field name="closed_task_percentage"/>%)
-                                </span>
-                                <span invisible="task_count">0 <field name="label_tasks"/></span>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 flex-shrink-0 w-50 w-md-auto px-2 px-md-0">
-                            <div>Date</div>
-                            <field name="date" class="fw-bolder"/>
                         </div>
                     </t>
                 </templates>
@@ -103,7 +88,7 @@
         <field name="name">project.update.view.list</field>
         <field name="model">project.update</field>
         <field name="arch" type="xml">
-            <list sample="1" js_class="project_update_list">
+            <list sample="1">
                 <field name="name"/>
                 <field name="user_id" widget="many2one_avatar_user" class="fw-bolder" optional="show"/>
                 <field name="date" optional="show"/>
@@ -113,12 +98,23 @@
             </list>
         </field>
     </record>
+    
+    <record id="project_update_view_graph" model="ir.ui.view">
+        <field name="name">project.update.view.graph</field>
+        <field name="model">project.update</field>
+        <field name="arch" type="xml">
+            <graph>
+                <field name="date" type="row"/>
+                <field name="progress" type="measure"/>
+            </graph>
+        </field>
+    </record>
 
     <record id="project_update_all_action" model="ir.actions.act_window">
         <field name="name">Updates</field>
         <field name="res_model">project.update</field>
         <field name="path">project-dashboard</field>
-        <field name="view_mode">list,kanban,form</field>
+        <field name="view_mode">list,kanban,graph,form</field>
         <field name="domain">[('project_id', '=', active_id)]</field>
         <field name="search_view_id" ref="project_update_view_search"/>
         <field name="help" type="html">

@@ -1,24 +1,24 @@
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 
 import { registry } from "@web/core/registry";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patch } from "@web/core/utils/patch";
 
 registry.category("web_tour.tours").add("discuss_call_invitation.js", {
     steps: () => {
         // Call invitation is cancelled after 30s. Increase this delay for the test.
-        patchWithCleanup(ChannelMember, { CANCEL_CALL_INVITE_DELAY: 1e6 });
+        patch(ChannelMember, { CANCEL_CALL_INVITE_DELAY: 1e6 });
         return [
             { trigger: ".o-discuss-CallInvitation" },
             {
                 trigger:
-                    ".o-mail-CallInvitation-avatar[title='View the bob (base.group_user) and john (base.group_user) channel']",
+                    ".o-mail-CallInvitation-avatar[title='View the A group with user_employee, test_user and guest inside channel']",
             },
             {
                 trigger:
-                    ".o-discuss-CallInvitation-channelName:contains('bob (base.group_user) and john (base.group_user)')",
+                    ".o-discuss-CallInvitation-channelName:text('A group with user_employee, test_user and guest inside')",
             },
             {
-                trigger: ".o-discuss-CallInvitation-description:contains('Incoming call...')",
+                trigger: ".o-discuss-CallInvitation-description:text('Incoming call...')",
             },
             {
                 trigger: ".o-discuss-CallInvitation-cameraPreview:not(:visible)",
@@ -51,15 +51,11 @@ registry.category("web_tour.tours").add("discuss_call_invitation.js", {
                 run: "click",
             },
             {
-                trigger: "label:contains('Blur background')",
+                trigger: "span:contains('Blur background')",
             },
             {
                 trigger: ".o-discuss-CallInvitation button[title='Hide camera preview']",
                 run: "click",
-            },
-            {
-                trigger: ".o-discuss-CallPermissionDeniedDialog",
-                run: "press Escape",
             },
             {
                 trigger: ".o-discuss-CallInvitation-cameraPreview:not(:visible)",

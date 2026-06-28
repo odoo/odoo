@@ -34,7 +34,7 @@ export class TransformImageAction extends BuilderAction {
                     editable: this.editable,
                     destroy: () => closeImageTransformation(),
                     onApply: () => {
-                        this.dependencies.history.addStep();
+                        this.dependencies.history.commit();
                     },
                     onComponentMounted: () => {
                         deferredTillMounted.resolve();

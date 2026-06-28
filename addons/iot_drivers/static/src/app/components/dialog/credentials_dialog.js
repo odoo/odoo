@@ -4,35 +4,37 @@ import useStore from "../../hooks/store_hook.js";
 import { Dialog } from "./dialog.js";
 import { LoadingFullScreen } from "../loading_full_screen.js";
 
-const { Component, xml, useState, toRaw } = owl;
+const { Component, xml, signal } = owl;
 
 export class CredentialsDialog extends Component {
-    static props = {};
     static components = { Dialog, LoadingFullScreen };
 
-    setup() {
-        this.store = toRaw(useStore());
-        this.state = useState({ waitRestart: false });
-        this.form = useState({
-            db_uuid: this.store.base.db_uuid,
-            enterprise_code: "",
-        });
-    }
+    store = useStore();
+
+    waitRestart = signal(false);
+
+    form = {
+        db_uuid: signal(this.store.base().db_uuid),
+        enterprise_code: signal(""),
+    };
 
     async connectToServer() {
         try {
-            if (!this.form.db_uuid || !this.form.enterprise_code) {
+            if (!this.form.db_uuid() || !this.form.enterprise_code()) {
                 return;
             }
 
             const data = await this.store.rpc({
                 url: "/iot_drivers/save_credential",
                 method: "POST",
-                params: this.form,
+                params: {
+                    db_uuid: this.form.db_uuid(),
+                    enterprise_code: this.form.enterprise_code(),
+                },
             });
 
             if (data.status === "success") {
-                this.state.waitRestart = true;
+                this.waitRestart.set(true);
             }
         } catch {
             console.warn("Error while fetching data");
@@ -46,7 +48,7 @@ export class CredentialsDialog extends Component {
             });
 
             if (data.status === "success") {
-                this.state.waitRestart = true;
+                this.waitRestart.set(true);
             }
         } catch {
             console.warn("Error while clearing configuration");
@@ -55,7 +57,7 @@ export class CredentialsDialog extends Component {
 
     static template = xml`
     <t t-translation="off">
-        <LoadingFullScreen t-if="this.state.waitRestart">
+        <LoadingFullScreen t-if="this.waitRestart()">
             <t t-set-slot="body">
                 Your IoT Box is currently processing your request. Please wait.
             </t>
@@ -67,13 +69,13 @@ export class CredentialsDialog extends Component {
                     Set the Database UUID and your Contract Number you want to use to validate your subscription.
                 </div>
                 <div class="d-flex flex-column gap-2 mt-3">
-                    <input type="text" class="form-control" placeholder="Database UUID" t-model="form.db_uuid"/>
-                    <input type="text" class="form-control" placeholder="Odoo contract number" t-model="form.enterprise_code"/>
+                    <input type="text" class="form-control" placeholder="Database UUID" t-model="this.form.db_uuid"/>
+                    <input type="text" class="form-control" placeholder="Odoo contract number" t-model="this.form.enterprise_code"/>
                 </div>
             </t>
             <t t-set-slot="footer">
-                <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="!form.db_uuid" t-on-click="connectToServer">Connect</button>
-                <button class="btn btn-secondary btn-sm" t-on-click="clearConfiguration">Clear configuration</button>
+                <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="!this.form.db_uuid()" t-on-click="this.connectToServer">Connect</button>
+                <button class="btn btn-secondary btn-sm" t-on-click="this.clearConfiguration">Clear configuration</button>
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
         </Dialog>

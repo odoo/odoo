@@ -9,7 +9,7 @@
                 </div>
             </div>
             <div name="partner_info" position="attributes">
-                <attribute name="t-if">not config.get('simplified_partner_id')</attribute>
+                <attribute name="t-if" separator="and" add="(not config.get('is_spanish') or not config.get('simplified_partner_id'))"/>
             </div>
         </template>
     </data>

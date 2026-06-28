@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2025-09-16 21:23+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
@@ -27,11 +27,6 @@ msgid ""
 msgstr ""
 "(object.state ใน ('ร่าง', 'ส่ง') และ 'ใบเสนอราคา - %s' % (object.name)) หรือ "
 "'สั่งซื้อ - %s' % (object.name)"
-
-#. module: sale_pdf_quote_builder
-#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
-msgid "<i class=\"fa fa-arrow-right\"/> Link to the demo video"
-msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -232,11 +227,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "Download"
 msgstr "ดาวน์โหลด"
-
-#. module: sale_pdf_quote_builder
-#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
-msgid "Download examples"
-msgstr "ดาวน์โหลดตัวอย่าง"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -473,6 +463,11 @@ msgid "Only PDF documents can be used as header or footer."
 msgstr "เฉพาะเอกสาร PDF เท่านั้นที่สามารถใช้เป็นส่วนหัวหรือส่วนท้ายได้"
 
 #. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
+msgid "Order Templates"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__original_id
 msgid "Original (unoptimized, unresized) attachment"
 msgstr "ต้นฉบับ (ไม่ได้ปรับให้เหมาะสม ไม่ได้ปรับขนาด) แนบไฟล์"
@@ -518,27 +513,6 @@ msgid "Product Documents"
 msgstr ""
 
 #. module: sale_pdf_quote_builder
-#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
-msgid ""
-"Provide header pages and footer pages to compose an attractive quotation "
-"with more information\n"
-"                        about your company, your products and you services. "
-"<br/>\n"
-"                        The pdf of your quotes will be built by putting "
-"together header pages, product descriptions,\n"
-"                        details of the quote and then the footer pages. <br/"
-">\n"
-"                        If empty, it will use those define in the company "
-"settings. <br/>"
-msgstr ""
-"จัดเตรียมหน้าส่วนหัวและหน้าส่วนท้ายเพื่อเขียนใบเสนอราคาที่น่าสนใจพร้อมข้อมูลเพิ่มเติม\n"
-"                        เกี่ยวกับบริษัท ผลิตภัณฑ์ และบริการของคุณ<br/>\n"
-"                        PDF ของใบเสนอราคาของคุณจะถูกสร้างขึ้นโดยการรวมหน้าส่วนหัว "
-"คำอธิบายผลิตภัณฑ์\n"
-"                        รายละเอียดของใบเสนอราคา และหน้าส่วนท้ายเข้าด้วยกัน <br/>\n"
-"                        หากว่างเปล่า จะใช้สิ่งที่กำหนดไว้ในการตั้งค่าบริษัท <br/>"
-
-#. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
 msgid "Quotation / Order"
 msgstr "ใบเสนอราคา / คำสั่ง"
@@ -554,7 +528,6 @@ msgid "Quotation Documents"
 msgstr ""
 
 #. module: sale_pdf_quote_builder
-#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 msgid "Quotation Template"
 msgstr "เทมเพลตใบเสนอราคา"
@@ -576,11 +549,6 @@ msgid "Quote Builder"
 msgstr ""
 
 #. module: sale_pdf_quote_builder
-#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
-msgid "Quote Builder Demo Video"
-msgstr ""
-
-#. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__ir_attachment_id
 msgid "Related attachment"
 msgstr "ไฟล์แนบที่เกี่ยวข้อง"
@@ -589,6 +557,16 @@ msgstr "ไฟล์แนบที่เกี่ยวข้อง"
 #: model:ir.model,name:sale_pdf_quote_builder.model_ir_actions_report
 msgid "Report Action"
 msgstr "การดําเนินการรายงาน"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_access_read
+msgid "Res Access Read"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_access_write
+msgid "Res Access Write"
+msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_field

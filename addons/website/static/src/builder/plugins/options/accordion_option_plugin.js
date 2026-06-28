@@ -13,6 +13,8 @@ export class accordionOptionPlugin extends Plugin {
         },
         content_not_editable_selectors: [".accordion-button"],
         content_editable_selectors: [".accordion-button span"],
+        auto_unfold_container_providers: { selector: ".accordion-item", target: ".s_accordion" },
+        anchor_allowed_selectors: ".accordion-item",
     };
 }
 

@@ -69,3 +69,24 @@ export function instanceofMarkup(value) {
     }
     return value instanceof Markup;
 }
+
+/**
+ * Check whether the given xml string contains nodes that would be
+ * silently moved when inserted as html by the browser due to qweb
+ * <t> elements, but which still ouputs valid html after rendering.
+ *
+ * @returns {boolean} true if the value does not contain patterns
+ * incompatible with direct html conversion.
+ */
+export function canRenderAsHTML(value) {
+    if (!value) {
+        return false;
+    }
+    const domParser = new DOMParser();
+    const xml = domParser.parseFromString(value, "text/xml");
+    const isIllegalT = (t) => {
+        const ancestor = t.closest("td, th, table");
+        return ancestor?.matches("table") ?? false;
+    };
+    return ![...xml.querySelectorAll("table t")].find(isIllegalT);
+}

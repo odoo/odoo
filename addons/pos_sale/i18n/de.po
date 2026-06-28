@@ -12,17 +12,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
-"PO-Revision-Date: 2026-01-13 11:19+0000\n"
+"POT-Creation-Date: 2026-05-22 17:46+0000\n"
+"PO-Revision-Date: 2026-04-30 09:34+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/"
 "pos_sale/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: pos_sale
 #. odoo-python
@@ -40,12 +40,12 @@ msgstr "%(old_name)s (storniert)"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "(tax incl.)"
-msgstr "(Steuer inkl.)"
+msgstr ""
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_orderline_receipt_information
 msgid "<strong>Sale Order: </strong>"
-msgstr ""
+msgstr "<strong>Verkaufsauftrag: </strong>"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -98,20 +98,9 @@ msgid "Currency Rate"
 msgstr "Wechselkurs"
 
 #. module: pos_sale
-#: model_terms:ir.ui.view,arch_db:pos_sale.message_body
-msgid "Delivered from"
-msgstr "Geliefert aus"
-
-#. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
 msgid "Delivery Quantity"
 msgstr "Liefermenge"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
-msgid "Discard"
-msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
@@ -128,16 +117,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
-#: model:ir.model.fields,field_description:pos_sale.field_stock_picking__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
-msgid "Do you want to load the SN/Lots linked to the Sales Order?"
-msgstr ""
-"Möchten Sie die mit dem Verkaufsauftrag verbundenen Seriennummern/Lose laden?"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -193,7 +174,6 @@ msgstr "Fälliger Saldo: %s"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__id
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__id
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
-#: model:ir.model.fields,field_description:pos_sale.field_stock_picking__id
 msgid "ID"
 msgstr "ID"
 
@@ -220,6 +200,9 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale settings to choose one."
 msgstr ""
+"Es scheint, dass Sie in Ihrem Kassensystem kein Anzahlungsprodukt "
+"konfiguriert haben. Sie können in den Einstellungen Ihres Kassensystems ein "
+"solches Produkt auswählen."
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move
@@ -229,7 +212,7 @@ msgstr "Journalbuchung"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Buchungszeile"
 
 #. module: pos_sale
 #. odoo-python
@@ -298,7 +281,7 @@ msgstr "Kassenauftragszeile"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_receipt
 msgid "Point of Sale Order Receipt Generator"
-msgstr ""
+msgstr "Generator für Kassenbelege"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_session
@@ -324,18 +307,6 @@ msgstr "Gebucht"
 #: model:ir.model,name:pos_sale.model_product_template
 msgid "Product"
 msgstr "Produkt"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
-msgid "Quotation/Order"
-msgstr "Angebot/Auftrag"
-
-#. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
-msgid "SN/Lots Loading"
-msgstr "SN/Lose werden geladen"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -389,12 +360,6 @@ msgstr "Die Verkäufe werden an das folgende Verkaufsteam gemeldet"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
-msgid "Set Sale Order"
-msgstr "Verkaufsauftrag setzen"
-
-#. module: pos_sale
-#. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Settle the order"
 msgstr "Auftrag abwickeln"
@@ -437,11 +402,6 @@ msgid "This product will be used as down payment on a sale order."
 msgstr "Dieses Produkt wird als Anzahlung für einen Verkaufsauftrag verwendet."
 
 #. module: pos_sale
-#: model:ir.model,name:pos_sale.model_stock_picking
-msgid "Transfer"
-msgstr "Transfer"
-
-#. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
 msgid ""
 "Transferred<br/>\n"
@@ -477,3 +437,9 @@ msgstr "Was möchten Sie tun?"
 #: code:addons/pos_sale/models/sale_order.py:0
 msgid "id"
 msgstr "ID"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
+msgid "x"
+msgstr "x"

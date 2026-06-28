@@ -27,7 +27,7 @@ class TestReflection(common.TransactionCase):
 
     def test_models_fields(self):
         """ check that all models and fields are reflected as expected. """
-        model_names = ['domain.bool', 'decimal.precision.test', *(
+        model_names = ['domain.bool', *(
             cls._name
             for cls in MetaModel._module_to_models__['test_orm']
             if cls._name.startswith('test_orm')
@@ -72,11 +72,11 @@ class TestReflection(common.TransactionCase):
                             self.assertTrue(relation)
                             self.assertIn(relation.model.model, [field.model_name, field.comodel_name])
                         if field.type == 'selection':
-                            selection = [(sel.value, sel.name) for sel in ir_field.selection_ids]
-                            if isinstance(field.selection, list):
+                            selection = tuple((sel.value, sel.name) for sel in ir_field.selection_ids)
+                            if isinstance(field.selection, tuple):
                                 self.assertEqual(selection, field.selection)
                             else:
-                                self.assertEqual(selection, [])
+                                self.assertEqual(selection, ())
                             for sel in ir_field.selection_ids:
                                 self.assertSelectionXID(sel)
 
@@ -179,21 +179,15 @@ class TestSchema(common.TransactionCase):
         } | (override or {})
 
     def test_table(self):
-        table = self.model._table
+        table = self.env['test_orm.schema_table']._table
 
         self.assertEqual(
             self._get_table_data(table),
             self._expected_table_data(),
         )
 
-        self.assertEqual(sorted(self.columns_data.keys()), [
-            'binary_without_attachment', 'boolean', 'char', 'create_date', 'create_uid',
-            'currency_id', 'date', 'datetime', 'float_double_precision', 'float_numeric', 'html',
-            'id', 'image_without_attachment', 'index_btree', 'index_btree_not_null',
-            'index_trigram', 'integer', 'json', 'many2one_id', 'many2one_reference', 'monetary',
-            'properties', 'properties_definition', 'reference', 'required', 'res_model',
-            'selection', 'size', 'text', 'very_very_very_very_very_long_field_name_1',
-            'very_very_very_very_very_long_field_name_2', 'write_date', 'write_uid',
+        self.assertEqual(sorted(self._get_columns_data(table).keys()), [
+            'boolean', 'char', 'create_date', 'create_uid', 'float', 'id', 'integer', 'write_date', 'write_uid',
         ])
 
         for column in ('create_uid', 'write_uid'):
@@ -221,7 +215,7 @@ class TestSchema(common.TransactionCase):
 
     def test_float_double_precision_field(self):
         self.assertEqual(
-            self.columns_data.get('float_double_precision'),
+            self.columns_data.get('float'),
             self._expected_column_data(override={
                 'data_type': 'double precision',
                 'numeric_precision': 53,
@@ -232,7 +226,7 @@ class TestSchema(common.TransactionCase):
 
     def test_float_numeric_field(self):
         self.assertEqual(
-            self.columns_data.get('float_numeric'),
+            self.columns_data.get('numeric'),
             self._expected_column_data(override={
                 'data_type': 'numeric',
                 'numeric_precision_radix': 10,
@@ -289,7 +283,7 @@ class TestSchema(common.TransactionCase):
 
     def test_datetime_field(self):
         self.assertEqual(
-            self.columns_data.get('datetime'),
+            self.columns_data.get('moment'),
             self._expected_column_data(override={
                 'data_type': 'timestamp without time zone',
                 'datetime_precision': 6,
@@ -417,7 +411,7 @@ class TestSchema(common.TransactionCase):
             self._get_foreign_keys(self.model._table, 'many2one_id'), {
                 'table_restricted_by_constraint': self.model._table,
                 'column_restricted_by_constraint': 'many2one_id',
-                'table_used_by_constraint': 'test_orm_schema_relations',
+                'table_used_by_constraint': 'test_orm_mixed_relations',
                 'column_used_by_constraint': 'id',
                 'delete_rule': 'SET NULL',
             },

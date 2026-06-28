@@ -14,8 +14,6 @@ class HrEmployee(models.Model):
         groups="fleet.fleet_group_manager,hr.group_hr_user",
     )
     license_plate = fields.Char(compute="_compute_license_plate", search="_search_license_plate", groups="hr.group_hr_user")
-    departure_do_unassign_company_car = fields.Boolean(related='version_id.departure_do_unassign_company_car',
-        inherited=True, readonly=False, groups="hr.group_hr_user")
 
     def action_open_employee_cars(self):
         self.ensure_one()
@@ -23,9 +21,19 @@ class HrEmployee(models.Model):
         return {
             "type": "ir.actions.act_window",
             "res_model": "fleet.vehicle.assignation.log",
-            "views": [[self.env.ref("hr_fleet.fleet_vehicle_assignation_log_employee_view_list").id, "list"], [False, "form"]],
+            "views": [
+                [self.env.ref("hr_fleet.fleet_vehicle_assignation_log_employee_view_list").id, "list"],
+                [False, "form"],
+            ],
             "domain": [("driver_employee_id", "in", self.ids), ("driver_id", "in", self.work_contact_id.ids)],
-            "context": dict(self.env.context, default_driver_id=self.user_id.partner_id.id, default_driver_employee_id=self.id),
+            "context": dict(
+                self.env.context,
+                default_driver_id=self.work_contact_id.id,
+                default_driver_employee_id=self.id,
+                create=False,
+                edit=False,
+                delete=False,
+            ),
             "name": self.env._("Cars History"),
         }
 

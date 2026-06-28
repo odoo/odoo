@@ -37,3 +37,4 @@ from . import test_calendar_leaves_count
 from . import test_work_entry_holidays
 from . import test_timeoff_overview_my_department_tour
 from . import test_hr_leave_report
+from . import test_member_of_department

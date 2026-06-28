@@ -10,10 +10,10 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
     'category': 'Website/Website',
     'depends': ['website', 'mass_mailing', 'google_recaptcha'],
     'data': [
-        'security/ir.model.access.csv',
         'data/ir_model_data.xml',
         'views/snippets_templates.xml',
         'views/snippets/s_newsletter_benefits_popup.xml',
+        'security/ir.access.csv',
     ],
     'auto_install': ['website', 'mass_mailing'],
     'assets': {
@@ -25,13 +25,13 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
             'website_mass_mailing/static/src/xml/*.xml',
         ],
         'website.website_builder_assets': [
-            'website_mass_mailing/static/src/js/mass_mailing_form_editor.js',
             'website_mass_mailing/static/src/plugins/form_option_plugin.js',
             'website_mass_mailing/static/src/website_builder/**/*',
             ('remove', 'website_mass_mailing/static/src/website_builder/**/*.edit.*'),
         ],
         'website.assets_inside_builder_iframe': [
             'website_mass_mailing/static/src/website_builder/mailing_list_subscribe_option.edit.*',
+            'website_mass_mailing/static/src/js/**/*.edit.*',
         ],
         'web.assets_tests': [
             'website_mass_mailing/static/tests/tours/**/*',
@@ -42,6 +42,9 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
         ],
         'web.assets_unit_tests_setup': [
             'website_mass_mailing/static/src/interactions/**/*',
+        ],
+        'html_builder.iframe_add_dialog': [
+            'website_mass_mailing/static/src/snippets/**/*.preview.scss',
         ],
     },
     'author': 'Odoo S.A.',

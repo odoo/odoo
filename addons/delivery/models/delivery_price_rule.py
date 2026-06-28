@@ -28,7 +28,12 @@ class DeliveryPriceRule(models.Model):
     )
     def _compute_name(self):
         for rule in self:
-            name = "if %s %s %.02f then" % (rule.variable, rule.operator, rule.max_value)
+            name = "if %s %s %.02f %s then" % (
+                rule.variable,
+                rule.operator,
+                rule.max_value,
+                rule.variable_unit,
+            )
             if rule.currency_id:
                 base_price = format_amount(self.env, rule.list_base_price, rule.currency_id)
                 price = format_amount(self.env, rule.list_price, rule.currency_id)
@@ -62,6 +67,7 @@ class DeliveryPriceRule(models.Model):
         required=True,
     )
     max_value = fields.Float(string="Maximum Value", required=True)
+    variable_unit = fields.Char(compute="_compute_variable_unit")
     list_base_price = fields.Float(
         string="Sale Base Price", min_display_digits="Product Price", default=0.0, required=True
     )
@@ -71,3 +77,23 @@ class DeliveryPriceRule(models.Model):
     variable_factor = fields.Selection(
         selection=VARIABLE_SELECTION, default="weight", required=True
     )
+
+    @api.depends(
+        "variable", "carrier_id.weight_uom_name", "carrier_id.volume_uom_name", "currency_id"
+    )
+    def _compute_variable_unit(self):
+        for rule in self:
+            carrier_id = rule.carrier_id
+            match rule.variable:
+                case "weight":
+                    rule.variable_unit = carrier_id.weight_uom_name
+                case "volume":
+                    rule.variable_unit = carrier_id.volume_uom_name
+                case "wv":
+                    rule.variable_unit = (
+                        f"{carrier_id.weight_uom_name} * {carrier_id.volume_uom_name}"
+                    )
+                case "price":
+                    rule.variable_unit = rule.currency_id.symbol or rule.currency_id.name or ""
+                case _:
+                    rule.variable_unit = False

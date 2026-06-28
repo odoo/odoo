@@ -5,6 +5,7 @@
         <field name="model">fleet.vehicle.odometer.report</field>
         <field name="arch" type="xml">
             <search>
+                <field name="vehicle_id"/>
                 <filter string="Date" name="groupby_date" context="{'group_by': 'recorded_date:month'}"/>
                 <filter string="Vehicle" name="groupby_vehicle" context="{'group_by': 'vehicle_id'}"/>
                 <filter string="Category" name="groupby_category" context="{'group_by': 'category_id'}"/>
@@ -25,10 +26,26 @@
         </field>
     </record>
 
+    <record id='fleet_vehicle_odometer_report_view_tree' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.odometer.report.view.tree</field>
+        <field name="model">fleet.vehicle.odometer.report</field>
+        <field name="arch" type="xml">
+            <list edit="0" delete="0" create="0">
+                <field name="recorded_date" />
+                <field name="vehicle_id" widget="many2one_avatar"/>
+                <field name="category_id"/>
+                <field name="model_id" widget="many2one_avatar"/>
+                <field name="fuel_type"/>
+                <field name="mileage_delta"/>
+                <field name="odometer_value"/>
+            </list>
+        </field>
+    </record>
+
     <record id="fleet_vehicle_odometer_reporting_action" model="ir.actions.act_window">
         <field name="name">Odometer Analysis</field>
         <field name="res_model">fleet.vehicle.odometer.report</field>
-        <field name="view_mode">graph</field>
+        <field name="view_mode">graph,list</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
               No data for odometer analysis

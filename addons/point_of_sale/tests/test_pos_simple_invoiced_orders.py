@@ -627,7 +627,7 @@ class TestPosSimpleInvoicedOrders(TestPoSCommon):
                 '00100-010-0001': {
                     'invoice': {
                         'line_ids': [
-                            {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False, 'amount_residual': 0},
+                            {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False, 'amount_residual': -100},
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False, 'partially_reconciled': True, 'amount_residual': 50},
                         ]
                     },
@@ -670,7 +670,7 @@ class TestPosSimpleInvoicedOrders(TestPoSCommon):
                 '00100-010-0001': {
                     'invoice': {
                         'line_ids': [
-                            {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False, 'amount_residual': 0},
+                            {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False, 'amount_residual': -100},
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False, 'partially_reconciled': True, 'amount_residual': 50},
                         ]
                     },
@@ -713,7 +713,7 @@ class TestPosSimpleInvoicedOrders(TestPoSCommon):
                 '00100-010-0001': {
                     'invoice': {
                         'line_ids': [
-                            {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False, 'amount_residual': 0},
+                            {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False, 'amount_residual': -100},
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False, 'partially_reconciled': True, 'amount_residual': 50},
                         ]
                     },
@@ -756,7 +756,7 @@ class TestPosSimpleInvoicedOrders(TestPoSCommon):
                 '00100-010-0001': {
                     'invoice': {
                         'line_ids': [
-                            {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False, 'amount_residual': 0},
+                            {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False, 'amount_residual': -100},
                             {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False, 'partially_reconciled': True, 'amount_residual': 50},
                         ]
                     },

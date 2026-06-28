@@ -4,7 +4,7 @@
     <t t-name="web.BinaryField">
         <t t-if="!this.props.readonly">
             <t t-if="this.props.record.data[this.props.name]">
-                <div class="w-100 d-inline-flex gap-1 o_input_box cursor-pointer">
+                <div class="w-100 d-inline-flex gap-1 cursor-pointer">
                     <FileUploader
                         acceptedFileExtensions="this.props.acceptedFileExtensions"
                         allowedMIMETypes="this.props.allowedMIMETypes"
@@ -12,11 +12,12 @@
                     >
                         <t name="download" t-if="this.props.record.resId and !this.props.record.dirty">
                             <button
-                                class="btn btn-link fa fa-download o_download_file_button o_input_box_overlay_end"
+                                class="btn btn-link fa fa-download o_download_file_button"
                                 data-tooltip="Download"
                                 aria-label="Download"
-                                t-on-click="this.onFileDownload"
-                            />
+                                t-on-click.stop="this.onFileDownload"
+                            >
+                            </button>
                         </t>
                         <t t-set-slot="toggler">
                             <span t-if="!this.fileName" class="btn btn-primary o_select_file_button py-0">
@@ -27,7 +28,7 @@
                             </t>
                         </t>
                         <button
-                            class="btn btn-link fa fa-trash o_clear_file_button o_input_box_overlay_end"
+                            class="btn btn-link fa fa-trash o_clear_file_button"
                             data-tooltip="Clear"
                             aria-label="Clear"
                             t-on-click="() => this.update({})"
@@ -43,9 +44,9 @@
                         onUploaded.bind="this.update"
                     >
                         <t t-set-slot="toggler">
-                            <div class="o_input_box text-start">
+                            <div class="d-flex">
                                 Upload your file
-                                <button class="o_input_box_overlay_end btn btn-link fa fa-upload" />
+                                <button class="btn btn-link fa fa-upload ms-auto" />
                             </div>
                         </t>
                     </FileUploader>
@@ -53,11 +54,12 @@
             </t>
         </t>
         <t t-elif="this.props.record.resId and this.props.record.data[this.props.name]">
-            <a class="o_form_uri" href="#" t-on-click.prevent="this.onFileDownload">
+            <a class="o_form_uri" href="#" t-on-click.prevent.stop="this.onFileDownload">
                 <span class="fa fa-download me-2" />
                 <t t-if="this.fileName" t-out="this.fileName" />
             </a>
         </t>
+        <t t-elif="this.props.fileNameField" t-out="this.fileName"/>
     </t>
 
     <t t-name="web.ListBinaryField" t-inherit="web.BinaryField">

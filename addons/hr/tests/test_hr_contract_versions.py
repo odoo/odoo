@@ -194,7 +194,7 @@ class TestHrContractVersions(TransactionCase):
             date(2025, 4, 1),
             None,
             False,
-            expected_contract_versions[0]
+            expected_contract_versions[1]
         )
 
     def test_1contract_5version_w_date_start_date_end(self):
@@ -539,7 +539,7 @@ class TestHrContractVersions(TransactionCase):
             date(2025, 4, 15),
             date(2025, 6, 15),
             False,
-            [contract_1_version[0], contract_2_version[0]]
+            [contract_1_version[1], contract_2_version[0]]
         )
         # the first before the end date, of the contract active in the range
         self.assert_get_contracts(

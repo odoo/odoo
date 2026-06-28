@@ -17,4 +17,6 @@ export const CommandResult = {
     InvalidFieldMatch: "InvalidFieldMatch",
     InvalidDataSourceType: "InvalidDataSourceType",
     InvalidDataSourceId: "InvalidDataSourceId",
+    ListDefinitionUnchanged: "ListDefinitionUnchanged",
+    InvalidListDefinition: "InvalidListDefinition",
 };

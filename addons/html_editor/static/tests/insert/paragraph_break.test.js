@@ -102,16 +102,16 @@ describe("Selection collapsed", () => {
         });
         test("should split block without afecting the uploaded document link", async () => {
             await testEditor({
-                contentBefore: `<p>abc<a href="#" title="document" data-mimetype="application/pdf" class="o_image"></a>[]def</p>`,
+                contentBefore: `<p>abc<span class="o_file_box"><a href="#" title="document" data-mimetype="application/pdf"></a></span>[]def</p>`,
                 stepFunction: splitBlock,
-                contentAfter: `<p>abc<a href="#" title="document" data-mimetype="application/pdf" class="o_image"></a></p><p>[]def</p>`,
+                contentAfter: `<p>abc<span class="o_file_box"><a href="#" title="document" data-mimetype="application/pdf"></a></span></p><p>[]def</p>`,
             });
         });
         test("should split block without afecting the uploaded document link (2)", async () => {
             await testEditor({
-                contentBefore: `<p>abc<a href="#" title="document" data-mimetype="application/pdf" class="o_image"></a>[]</p>`,
+                contentBefore: `<p>abc<span class="o_file_box"><a href="#" title="document" data-mimetype="application/pdf"></a></span>[]</p>`,
                 stepFunction: splitBlock,
-                contentAfter: `<p>abc<a href="#" title="document" data-mimetype="application/pdf" class="o_image"></a></p><p>[]<br></p>`,
+                contentAfter: `<p>abc<span class="o_file_box"><a href="#" title="document" data-mimetype="application/pdf"></a></span></p><p>[]<br></p>`,
             });
         });
         test("should not split block with conditional template", async () => {
@@ -646,7 +646,7 @@ describe("Selection collapsed", () => {
                         '<p><span class="a">ab</span></p><p><span class="b">[]cd</span></p>',
                     stepFunction: splitBlock,
                     contentAfter:
-                        '<p><span class="a">ab</span></p><p><span class="b">\u200b</span><br></p><p><span class="b">[]cd</span></p>',
+                        '<p><span class="a">ab</span></p><p><span class="b" data-oe-zws-empty-inline="">\u200b</span><br></p><p><span class="b">[]cd</span></p>',
                 });
             });
 
@@ -684,7 +684,7 @@ describe("Selection collapsed", () => {
                     stepFunction: splitBlock,
                     contentAfterEdit:
                         '<h1><font style="color: red;" data-oe-zws-empty-inline="">\u200b</font></h1>' +
-                        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><font style="color: red;" data-oe-zws-empty-inline="">[]\u200b</font></p>`,
+                        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                     contentAfter: "<h1><br></h1><p>[]<br></p>",
                 });
             });
@@ -728,7 +728,7 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore: '<p><span style="font-size: 36px;">abc[]</span></p>',
                     stepFunction: splitBlock,
-                    contentAfterEdit: `<p><span style="font-size: 36px;">abc</span></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><span style="font-size: 36px;" data-oe-zws-empty-inline="">[]\u200b</span></p>`,
+                    contentAfterEdit: `<p><span style="font-size: 36px;">abc</span></p><p><span style="font-size: 36px;" data-oe-zws-empty-inline="">[]\u200b</span></p>`,
                     contentAfter: `<p><span style="font-size: 36px;">abc</span></p><p>[]<br></p>`,
                 });
             });

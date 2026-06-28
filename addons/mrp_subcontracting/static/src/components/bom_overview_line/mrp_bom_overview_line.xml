@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp_subcontracting.BomOverviewLine" t-inherit="mrp.BomOverviewLine" t-inherit-mode="extension">
+        <xpath expr="//td[@name='td_mrp_bom_free_to_use']" position="after">
+            <td t-name="td_mrp_bom_free_to_use_subcontract" t-if="this.forecastMode and this.env.isSubcontract" class="text-center">
+                <t t-if="this.data.subcontract_free_qty">
+                    <t t-out="this.formatFloat(this.data.subcontract_free_qty, {'digits': [false, this.precision]})"/> /
+                    <t t-out="this.formatFloat(this.data.subcontract_qty_on_hand, {'digits': [false, this.precision]})"/>
+                </t>
+            </td>
+        </xpath>
+    </t>
+
+</templates>

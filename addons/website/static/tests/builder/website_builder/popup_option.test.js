@@ -83,7 +83,11 @@ describe("Popup options: popup in page before edit", () => {
                     //   modal, and verifies that it did not add mutations
                     // TODO: once the service website_edit runs during the
                     // tests, this plugin should be removed
-                    is_mutation_record_savable_predicates: (record) => {
+                    /**
+                     * @param {import("@html_editor/core/dom_observer_plugin").NativeMutation} record
+                     * @returns { boolean | undefined}
+                     */
+                    is_classlist_mutation_savable_predicates: (record) => {
                         if (record.target.matches?.(".s_popup") && record.className === "d-none") {
                             return false;
                         }
@@ -96,7 +100,7 @@ describe("Popup options: popup in page before edit", () => {
                 <div class="modal fade s_popup_middle modal_shown" style="background-color: var(--black-50)  !important; display: none;" data-show-after="5000" data-display="afterDelay" data-consents-duration="7" data-bs-focus="false" data-bs-backdrop="false" tabindex="-1" aria-label="Popup" aria-hidden="true">
                     <div class="modal-dialog d-flex">
                         <div class="modal-content oe_structure">
-                            <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close" contenteditable="false">×</div>
+                            <button class="s_popup_close js_close_popup border-0 p-0 o_we_no_overlay o_not_editable" aria-label="Close" contenteditable="false">×</button>
                             <section><p>Popup content</p></section>
                         </div>
                     </div>
@@ -125,14 +129,14 @@ describe("Popup options: popup in page before edit", () => {
         expect(":iframe .s_popup .modal").toBeVisible();
         expect(":iframe .s_popup").not.toHaveClass("d-none");
         await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
-            contains(":iframe .s_popup div.js_close_popup").click()
+            contains(":iframe .s_popup button.js_close_popup").click()
         );
         expect(":iframe .s_popup .modal").not.toBeVisible();
         expect(":iframe .s_popup").toHaveClass("d-none");
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
-        // Ensure that no mutations were registered in the history.
-        // `addStep` return the created step, or false if there was no mutations
-        expect(builder.getEditor().shared.history.addStep()).toBe(false);
+        // Ensure that no mutations were registered in the `domObserver` plugin.
+        // `commit` returns the written commit, or `false` if there were no mutations.
+        expect(builder.getEditor().shared.history.commit()).toBe(false);
     });
 
     test("editing s_popup, then closing it, then undo show it again", async () => {
@@ -146,7 +150,7 @@ describe("Popup options: popup in page before edit", () => {
         setSelection({ anchorNode: queryOne(":iframe .s_popup section p"), anchorOffset: 0 });
         await insertText(editor, "Other content");
         await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
-            contains(":iframe .s_popup div.js_close_popup").click()
+            contains(":iframe .s_popup button.js_close_popup").click()
         );
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
         expect(":iframe .s_popup .modal").not.toBeVisible();
@@ -171,7 +175,7 @@ describe("Popup options: popup in page before edit", () => {
             "background-color": "rgb(255, 0, 0)",
         });
         await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
-            contains(":iframe .s_popup div.js_close_popup").click()
+            contains(":iframe .s_popup button.js_close_popup").click()
         );
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
         expect(":iframe .s_popup .modal").not.toBeVisible();

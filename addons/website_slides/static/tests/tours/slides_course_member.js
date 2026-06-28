@@ -1,6 +1,19 @@
 import { delay } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
 
+function checkSidebarListItemIsCompleted(contains) {
+    return {
+        trigger: `.o_wslides_fs_sidebar_list_item.active:contains(${contains}):has(.o_wslides_button_complete)`,
+    };
+}
+
+function checkProgressBar(pc) {
+    return {
+        content: `check progression is ${pc}%`,
+        trigger: `.o_wslides_channel_completion_progressbar:has(.progress-bar[style*="width: ${pc}%"]):has(.o_wslides_progress_percentage:contains(${pc}))`,
+    };
+}
+
 /**
  * Global use case:
  * an user (either employee, website restricted editor or portal) joins a public
@@ -11,7 +24,6 @@ import { registry } from "@web/core/registry";
  * they rate the course;
  */
 registry.category("web_tour.tours").add("course_member", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         // eLearning: go on free course and join it
         {
@@ -47,10 +59,14 @@ registry.category("web_tour.tours").add("course_member", {
             expectUnloadPage: true,
         },
         // eLearning: follow course by cliking on first lesson and going to fullscreen player
+        checkSidebarListItemIsCompleted("Gardening: The Know-How"),
+        checkProgressBar(20),
         {
             trigger: '.o_wslides_fs_slide_name:contains("Home Gardening")',
             run: "click",
         },
+        checkSidebarListItemIsCompleted("Home Gardening"),
+        checkProgressBar(40),
         // eLearning: share the first slide
         {
             trigger: ".o_wslides_share",
@@ -77,42 +93,31 @@ registry.category("web_tour.tours").add("course_member", {
             trigger: ".o_wslides_fs_sidebar_header",
             run: "press ArrowLeft",
         },
+        checkSidebarListItemIsCompleted("Gardening: The Know-How"),
+        checkProgressBar(40),
         {
-            trigger: ".o_wslides_fs_sidebar_list_item.active:contains(Gardening: The Know-How)",
-        },
-        {
-            trigger: '.o_wslides_progress_percentage:contains("40")',
+            trigger: ".o_wslides_fs_sidebar_header",
             run: "press ArrowRight",
         },
+        checkSidebarListItemIsCompleted("Home Gardening"),
+        checkProgressBar(40),
         {
-            trigger: ".o_wslides_fs_sidebar_list_item.active:contains(Home Gardening)",
-        },
-        {
-            // check progression
-            trigger: '.o_wslides_progress_percentage:contains("40")',
+            trigger: ".o_wslides_fs_sidebar_header",
             run: "press ArrowRight",
         },
-        {
-            trigger: ".o_wslides_fs_sidebar_list_item.active:contains(Mighty Carrots)",
-        },
-        {
-            // check progression
-            trigger: '.o_wslides_progress_percentage:contains("60")',
-        },
+        checkSidebarListItemIsCompleted("Mighty Carrots"),
+        checkProgressBar(60),
         {
             trigger:
                 '.o_wslides_fs_slide_name:contains("How to Grow and Harvest The Best Strawberries | Basics")',
-            run: "click",
+            async run({ click }) {
+                // TODO: remove this delay
+                await delay(500);
+                await click();
+            },
         },
-        {
-            // check that video slide is marked as 'done'
-            trigger:
-                '.o_wslides_fs_sidebar_section_slides li:contains("How to Grow and Harvest The Best Strawberries | Basics") .o_wslides_slide_completed',
-        },
-        {
-            // check progression
-            trigger: '.o_wslides_progress_percentage:contains("80")',
-        },
+        checkSidebarListItemIsCompleted("How to Grow and Harvest The Best Strawberries | Basics"),
+        checkProgressBar(80),
         // eLearning: last slide is a quiz, complete it
         {
             trigger: '.o_wslides_fs_slide_name:contains("Test your knowledge")',
@@ -130,8 +135,9 @@ registry.category("web_tour.tours").add("course_member", {
             trigger: ".o_wslides_js_lesson_quiz_submit",
             run: "click",
         },
+        checkSidebarListItemIsCompleted("Test your knowledge"),
         {
-            // check that we have a properly motivational message to motivate us!
+            content: "check that we have a properly motivational message to motivate us!",
             trigger:
                 '.o_wslides_quiz_modal_rank_motivational > div > div:contains("Reach the next rank and gain a very nice mug!")',
             run: "click",
@@ -143,7 +149,7 @@ registry.category("web_tour.tours").add("course_member", {
         },
         // eLearning: ending course redirect to /slides, course is completed now
         {
-            // check that the course is marked as completed
+            content: "check that the course is marked as completed",
             trigger: 'div:contains("Basics of Gardening") span:contains("Completed")',
         },
         // eLearning: go back on course and rate it
@@ -187,10 +193,7 @@ registry.category("web_tour.tours").add("course_member", {
         },
         {
             trigger: ".modal.modal_shown button:contains(review)",
-            async run(helpers) {
-                await delay(500);
-                await helpers.click();
-            },
+            run: "click",
         },
         {
             trigger: 'a[id="review-tab"]',

@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:02+0000\n"
-"PO-Revision-Date: 2026-02-28 13:45+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"PO-Revision-Date: 2026-04-04 12:53+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
 "payment_authorize/fr/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -52,6 +52,11 @@ msgstr "Clé de transaction API"
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Account Number"
 msgstr "Numéro de compte"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_webhook_id
+msgid "Authorize Webhook ID"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__code__authorize
@@ -110,8 +115,8 @@ msgid ""
 "Could not retrieve the transaction details. (error code: %(error_code)s; "
 "error_details: %(error_message)s)"
 msgstr ""
-"Impossible de récupérer les détails de la transaction. (code d'erreur : "
-"%(error_code)s; error_details : %(error_message)s)"
+"Impossible de récupérer les détails de la transaction. (code d'erreur : %"
+"(error_code)s; error_details : %(error_message)s)"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__display_name
@@ -139,6 +144,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Generate Client Key"
 msgstr "Générer Clé Client"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
+msgid "Generate Your Webhook"
+msgstr ""
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
@@ -200,13 +210,18 @@ msgid "Personal Savings"
 msgstr "Compte d’épargne personnel"
 
 #. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
+msgid "Re-generate Your Webhook"
+msgstr ""
+
+#. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
 "Received data with status code \"%(status)s\" and error code \"%(error)s\"."
 msgstr ""
-"Données reçues avec le code de statut \"%(status)s\" et le code d'erreur "
-"\"%(error)s\"."
+"Données reçues avec le code de statut \"%(status)s\" et le code d'erreur \"%"
+"(error)s\"."
 
 #. module: payment_authorize
 #. odoo-python
@@ -218,6 +233,11 @@ msgstr "Réception de données de demande de paiement falsifiées."
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Set Account Currency"
 msgstr "Définir la devise du compte"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_webhook_id
+msgid "The ID of the webhook created in Authorize.net."
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_login
@@ -246,8 +266,8 @@ msgid ""
 "The transaction is not in a status to be refunded. (status: %(status)s, "
 "details: %(message)s)"
 msgstr ""
-"Le statut de la transaction ne permet pas de la rembourser. (statut :"
-"%(status)s, détails : %(message)s)"
+"Le statut de la transaction ne permet pas de la rembourser. (statut :%"
+"(status)s, détails : %(message)s)"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -265,6 +285,23 @@ msgid "This action cannot be performed while the provider is disabled."
 msgstr "Impossible d'exécuter cette action quand le fournisseur est désactivé."
 
 #. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/controllers/main.py:0
+msgid "Transaction not found."
+msgstr "Transaction introuvable."
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
+msgid "Webhook ID"
+msgstr ""
+
+#. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "YY"
 msgstr "AA"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_provider.py:0
+msgid "Your Authorize.Net webhook was successfully set up!"
+msgstr ""

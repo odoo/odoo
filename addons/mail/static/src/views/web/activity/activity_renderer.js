@@ -1,15 +1,15 @@
-import { useState } from "@web/owl2/utils";
 import { MailColumnProgress } from "@mail/core/web/mail_column_progress";
 import { ActivityCell } from "@mail/views/web/activity/activity_cell";
 import { ActivityRecord } from "@mail/views/web/activity/activity_record";
 
-import { Component } from "@odoo/owl";
+import { Component, props, proxy, types } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
+import { Record } from "@web/model/relational_model/record";
 
 export class ActivityRenderer extends Component {
     static components = {
@@ -20,24 +20,50 @@ export class ActivityRenderer extends Component {
         DropdownItem,
         CheckBox,
     };
-    static props = {
-        activityTypes: { type: Object },
-        activityResIds: { type: Array },
-        fields: { type: Object },
-        resModel: { type: String },
-        records: { type: Array },
-        archInfo: { type: Object },
-        groupedActivities: { type: Object },
-        scheduleActivity: { type: Function },
-        onReloadData: { type: Function },
-        onEmptyCell: { type: Function },
-        onSendMailTemplate: { type: Function },
-        openRecord: { type: Function },
-    };
     static template = "mail.ActivityRenderer";
 
     setup() {
-        this.activeFilter = useState({
+        this.props = props({
+            activityResIds: types.array(types.number()),
+            activityTypes: types.array(
+                types.object({
+                    id: types.number(),
+                    name: types.string(),
+                    template_ids: types.array(
+                        types.object({ id: types.number(), name: types.string() })
+                    ),
+                })
+            ),
+            archInfo: types.object({
+                fieldNodes: types.record(),
+                templateDocs: types.record(),
+                title: types.string(),
+            }),
+            fields: types.record(),
+            groupedActivities: types.record(
+                types.record(
+                    types.object({
+                        count_by_state: types.record(types.number()),
+                        ids: types.array(types.number()),
+                        reporting_date: types.or([types.string(), types.boolean()]),
+                        state: types.or([types.string(), types.boolean()]),
+                        summaries: types.array(types.string()),
+                        user_assigned_ids: types.array(types.number()),
+                    })
+                )
+            ),
+            onEmptyCell: types.function([types.number(), types.number()]),
+            onReloadData: types.function([]),
+            onSendMailTemplate: types.function([types.number(), types.number()]),
+            openRecord: types.function([
+                types.instanceOf(Record),
+                types.object({ newWindow: types.boolean().optional() }),
+            ]),
+            records: types.array(types.instanceOf(Record)),
+            resModel: types.string(),
+            scheduleActivity: types.function([]),
+        });
+        this.activeFilter = proxy({
             progressValue: {
                 active: null,
             },
@@ -166,7 +192,7 @@ export class ActivityRenderer extends Component {
     setupStorageActiveColumns() {
         const storageActiveColumnsList = browser.localStorage.getItem(this.storageKey)?.split(",");
 
-        this.storageActiveColumns = useState({});
+        this.storageActiveColumns = proxy({});
         for (const activityType of this.props.activityTypes) {
             if (storageActiveColumnsList) {
                 this.storageActiveColumns[activityType.id] = storageActiveColumnsList.includes(

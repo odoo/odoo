@@ -15,7 +15,7 @@ class StockPickingBatch(models.Model):
     _order = "priority desc, name desc"
 
     name = fields.Char(
-        string='Batch Transfer', default='New',
+        string='Batch Transfer', default=lambda self: _('New'),
         copy=False, required=True, readonly=True)
     description = fields.Char('Description')
     user_id = fields.Many2one(
@@ -29,7 +29,7 @@ class StockPickingBatch(models.Model):
         help='List of transfers associated to this batch')
     show_check_availability = fields.Boolean(
         compute='_compute_show_check_availability',
-        string='Show Check Availability')
+        string='Show Reserve Button')
     show_allocation = fields.Boolean(
         compute='_compute_show_allocation',
         string='Show Allocation Button')
@@ -143,10 +143,9 @@ class StockPickingBatch(models.Model):
     @api.depends('state', 'move_ids', 'picking_type_id')
     def _compute_show_allocation(self):
         self.show_allocation = False
-        if not self.env.user.has_group('stock.group_reception_report'):
-            return
         for batch in self:
-            batch.show_allocation = batch.picking_ids._get_show_allocation(batch.picking_type_id)
+            if batch.picking_type_id.auto_show_allocation_report:
+                batch.show_allocation = batch.picking_ids._get_show_allocation(batch.picking_type_id)
 
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_state(self):
@@ -299,10 +298,8 @@ class StockPickingBatch(models.Model):
         if self.state not in ('done', 'cancel'):
             return self.move_line_ids.action_put_in_pack(package_id=package_id, package_type_id=package_type_id, package_name=package_name)
 
-    def action_view_reception_report(self):
-        action = self.picking_ids[0].action_view_reception_report()
-        action['context'] = {'default_picking_ids': self.picking_ids.ids}
-        return action
+    def action_view_allocation_report(self):
+        return self.env["ir.actions.actions"]._for_xml_id("stock.allocation_report_action")
 
     def action_open_label_layout(self):
         if self.env.user.has_group('stock.group_production_lot') and self.move_line_ids.lot_id:
@@ -315,20 +312,7 @@ class StockPickingBatch(models.Model):
                 'target': 'new',
                 'context': {'default_picking_ids': self.picking_ids.ids},
             }
-        view = self.env.ref('stock.product_label_layout_form_picking')
-        return {
-            'name': _('Choose Labels Layout'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'product.label.layout',
-            'views': [(view.id, 'form')],
-            'view_id': view.id,
-            'target': 'new',
-            'context': {
-                'default_product_ids': self.move_line_ids.product_id.ids,
-                'default_move_ids': self.move_ids.ids,
-                'default_move_quantity': 'move'},
-        }
+        return self.move_line_ids.action_open_label_layout()
 
     def action_merge(self):
         if not self:
@@ -422,7 +406,8 @@ class StockPickingBatch(models.Model):
     # -------------------------------------------------------------------------
     @api.model
     def _prepare_name(self, picking_type, sequence_code, company_id):
-        sequence_prefix, sequence_number = (self.env['ir.sequence'].with_company(company_id).next_by_code(sequence_code) or '/').split('/')
+        sequence = self.env['ir.sequence'].with_company(company_id).next_by_code(sequence_code) or '/'
+        sequence_prefix, sequence_number = sequence.rsplit('/', 1)
         return f"{sequence_prefix}/{picking_type.sequence_code}{sequence_number}"
 
     def _sanity_check(self):
@@ -436,10 +421,10 @@ class StockPickingBatch(models.Model):
                     batch=batch.name,
                     incompatible_transfers=erroneous_pickings.mapped('name')))
 
-    def _track_subtype(self, init_values):
-        if 'state' in init_values:
+    def _track_log_get_default_subtype(self, track_init_values):
+        if 'state' in track_init_values:
             return self.env.ref('stock_picking_batch.mt_batch_state')
-        return super()._track_subtype(init_values)
+        return super()._track_log_get_default_subtype(track_init_values)
 
     def _is_picking_auto_mergeable(self, picking):
         """ Verifies if a picking can be safely inserted into the batch without violating auto_batch_constrains.

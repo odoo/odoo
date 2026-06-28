@@ -1,7 +1,7 @@
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
 import { after, before, beforeEach, createJobScopedGetter } from "@odoo/hoot";
-import { validateType } from "@odoo/owl";
+import { types as t, validateType } from "@odoo/owl";
 
 const { view_info } = odoo.__session_info__ || {};
 delete odoo.__session_info__;
@@ -75,24 +75,24 @@ const SERVER_STATE_VALUES = {
 };
 
 const SERVER_STATE_VALUES_SCHEMA = {
-    companies: { type: Array, element: Object },
-    currencies: { type: Array, element: Object },
-    db: String,
-    debug: String,
-    groupId: [Number, { value: false }],
-    lang: String,
-    multiLang: Boolean,
-    odoobotId: [Number, { value: false }],
-    partnerId: [Number, { value: false }],
-    partnerName: String,
-    publicPartnerId: [Number, { value: false }],
-    publicPartnerName: String,
-    publicUserId: Number,
-    serverVersion: { type: Array, element: [String, Number] },
-    timezone: String,
-    userContext: Object,
-    userId: [Number, { value: false }],
-    view_info: Object,
+    companies: t.array(t.object()),
+    currencies: t.array(t.object()),
+    db: t.string,
+    debug: t.string,
+    groupId: t.or([t.number, t.literal(false)]),
+    lang: t.string,
+    multiLang: t.boolean,
+    odoobotId: t.or([t.number, t.literal(false)]),
+    partnerId: t.or([t.number, t.literal(false)]),
+    partnerName: t.string,
+    publicPartnerId: t.or([t.number, t.literal(false)]),
+    publicPartnerName: t.string,
+    publicUserId: t.number,
+    serverVersion: t.array(t.or([t.string, t.number])),
+    timezone: t.string,
+    userContext: t.object(),
+    userId: t.or([t.number, t.literal(false)]),
+    view_info: t.object(),
 };
 
 const getServerStateValues = createJobScopedGetter(
@@ -116,7 +116,6 @@ const subscriptions = new Map([
                 server_version_info: serverVersion,
                 isEnterprise: serverVersion.slice(-1)[0] === "e",
             },
-            isReady: true,
         }),
     ],
 ]);
@@ -147,7 +146,7 @@ export const serverState = new Proxy(SERVER_STATE_VALUES, {
     },
     set(_target, p, newValue) {
         if (p in SERVER_STATE_VALUES_SCHEMA && newValue !== null && newValue !== undefined) {
-            const errorMessage = validateType(p, newValue, SERVER_STATE_VALUES_SCHEMA[p]);
+            const errorMessage = validateType(newValue, SERVER_STATE_VALUES_SCHEMA[p]).join("\n");
             if (errorMessage) {
                 throw new TypeError(errorMessage);
             }

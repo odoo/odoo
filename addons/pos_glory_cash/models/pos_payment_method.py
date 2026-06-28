@@ -7,9 +7,10 @@ class PosPaymentMethod(models.Model):
     glory_websocket_address = fields.Char('Cash Machine IP')
     glory_username = fields.Char('Cash Machine Username')
     glory_password = fields.Char('Cash Machine Password')
+    glory_use_lna = fields.Boolean('Cash Machine Local Network Access')
 
     def _get_cash_machine_selection(self):
         return super()._get_cash_machine_selection() + [('glory', 'Glory')]
 
     def _load_pos_data_fields(self, config_id):
-        return super()._load_pos_data_fields(config_id) + ['glory_websocket_address', 'glory_username', 'glory_password']
+        return super()._load_pos_data_fields(config_id) + ['glory_websocket_address', 'glory_username', 'glory_password', 'glory_use_lna']

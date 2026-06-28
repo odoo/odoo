@@ -7,12 +7,6 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     # Groups
-    group_show_uom_price = fields.Boolean(
-        string="Base Unit Price",
-        default=False,
-        implied_group="website_sale.group_show_uom_price",
-        group="base.group_user",
-    )
     group_product_price_comparison = fields.Boolean(
         string="Comparison Price",
         implied_group="website_sale.group_product_price_comparison",
@@ -25,13 +19,16 @@ class ResConfigSettings(models.TransientModel):
         implied_group="website_sale.group_product_feed",
         group="base.group_user",
     )
+    group_automate_suggested_products = fields.Boolean(
+        string="Automate suggested products",
+        implied_group="website_sale.group_automate_suggested_products",
+        group="website.group_website_restricted_editor",
+    )
 
     # Modules
-    module_website_sale_autocomplete = fields.Boolean("Address Autocomplete")
     module_website_sale_collect = fields.Boolean("Click & Collect")
 
     # Website-dependent settings
-    add_to_cart_action = fields.Selection(related="website_id.add_to_cart_action", readonly=False)
     cart_recovery_mail_template = fields.Many2one(
         related="website_id.cart_recovery_mail_template_id", readonly=False
     )
@@ -60,6 +57,8 @@ class ResConfigSettings(models.TransientModel):
     rating_email_template_id = fields.Many2one(
         related="website_id.rating_email_template_id", readonly=False
     )
+    restricted_uom_ids = fields.Many2many(related="website_id.restricted_uom_ids", readonly=False)
+    journal_id = fields.Many2one(related="website_id.journal_id", readonly=False)
 
     # Additional settings
     account_on_checkout = fields.Selection(
@@ -71,6 +70,15 @@ class ResConfigSettings(models.TransientModel):
         required=True,
     )
     ecommerce_access = fields.Selection(related="website_id.ecommerce_access", readonly=False)
+    default_allow_out_of_stock_order = fields.Boolean(
+        string="Continue selling when out-of-stock", default=True, default_model="product.template"
+    )
+    default_available_threshold = fields.Float(
+        string="Show Threshold", default=5.0, default_model="product.template"
+    )
+    default_show_availability = fields.Boolean(
+        string="Show availability Qty", default=False, default_model="product.template"
+    )
 
     # === COMPUTE METHODS === #
 
@@ -94,6 +102,9 @@ class ResConfigSettings(models.TransientModel):
     # === CRUD METHODS === #
 
     def set_values(self):
+        had_group_asp = self.default_get(["group_automate_suggested_products"])[
+            "group_automate_suggested_products"
+        ]
         super().set_values()
         if self.website_id:
             website = self.with_context(website_id=self.website_id.id).website_id
@@ -107,10 +118,17 @@ class ResConfigSettings(models.TransientModel):
             if view and not view.active:
                 view.active = True
 
-    # === ACTION METHODS === #
+        # Activate / deactivate the automation of suggested products
+        suggested_products_cron_sudo = self.sudo().env.ref(
+            "website_sale.update_suggested_products_cron"
+        )
+        if self.group_automate_suggested_products and not had_group_asp:  # Enable the feature
+            suggested_products_cron_sudo.active = True
+            suggested_products_cron_sudo._trigger()
+        elif not self.group_automate_suggested_products and had_group_asp:  # Disable the feature
+            suggested_products_cron_sudo.active = False
 
-    def action_view_delivery_provider_modules(self):
-        return self.env["delivery.carrier"].install_more_provider()
+    # === ACTION METHODS === #
 
     @api.readonly
     def action_open_abandoned_cart_mail_template(self):
@@ -145,7 +163,6 @@ class ResConfigSettings(models.TransientModel):
             "type": "ir.actions.act_window",
             "res_model": "product.feed",
             "views": [(False, "list")],
-            "target": "new",
             "context": {"default_website_id": self.website_id.id, "hide_website_column": True},
             "domain": [("website_id", "=", self.website_id.id)],
         }

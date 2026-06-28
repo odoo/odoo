@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import {
@@ -52,7 +52,7 @@ export const notificationPermissionService = {
         } catch {
             // noop
         }
-        const state = reactive({
+        const state = proxy({
             /** @type {"prompt" | "granted" | "denied"} */
             permission:
                 isIosApp() || isAndroidApp()

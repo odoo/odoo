@@ -8,7 +8,6 @@
     'summary': 'Use Coupons, Gift Cards and Loyalty programs in Point of Sale',
     'depends': ['loyalty', 'point_of_sale'],
     'data': [
-        'security/ir.model.access.csv',
         'data/default_barcode_patterns.xml',
         'data/gift_card_data.xml',
         'views/loyalty_card_views.xml',
@@ -18,6 +17,7 @@
         'views/loyalty_program_views.xml',
         'views/res_partner_views.xml',
         'receipt/pos_order_receipt.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/pos_loyalty_demo.xml',

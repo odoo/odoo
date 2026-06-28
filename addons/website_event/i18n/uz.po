@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-10 17:36+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -164,6 +164,14 @@ msgstr ""
 "title=\"LinkedIn\"/>"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
+msgid ""
+"<i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>\n"
+"                                    <span> Los Angeles, CA, United States</"
+"span>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
 #, fuzzy
 msgid ""
@@ -241,10 +249,9 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_badge_preview_data
-#, fuzzy
 msgid ""
-"<span class=\"o_cc o_cc1 d-inline-flex align-items-center justify-content-"
-"center gap-3 border rounded py-2 px-3 rounded-pill\">\n"
+"<span class=\"o_cc o_cc1 d-inline-flex justify-content-center flex-wrap "
+"gap-3 my-3 border py-2 px-3 rounded-pill\">\n"
 "                    <i class=\"fa fa-calendar\" role=\"presentation\"/>\n"
 "                    <strong>Harmony Under the Stars</strong>\n"
 "                    <span class=\"text-muted\">August 23, 2025 - 8:15 PM</"
@@ -253,12 +260,6 @@ msgid ""
 "long-arrow-right\" role=\"presentation\"/></span>\n"
 "                </span>"
 msgstr ""
-"<span class=\"o_cc o_cc1 d-inline-flex align-items-center justify-content-"
-"center gap-3 border rounded py-2 px-3 rounded-pill\"> <i class=\"fa fa-"
-"calendar\" role=\"presentation\"/> <strong>Yulduzlar ostida uyg‘unlik</"
-"strong> <span class=\"text-muted\">2025-yil 23-avgust, soat 20:15</span> "
-"<span class=\"text-primary\">Ro‘yxatdan o‘tish <i class=\"fa fa-long-arrow-"
-"right\" role=\"presentation\"/></span> </span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
@@ -342,7 +343,6 @@ msgstr ""
 "<span><i class=\"fa fa-clock-o me-2\" role=\"presentation\"/>20:15</span>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_offset_preview_data
 #, fuzzy
 msgid ""
@@ -783,13 +783,6 @@ msgstr ""
 "E'tibor bering, tadbirga har doim uning havolasi orqali kirish mumkin."
 
 #. module: website_event
-#. odoo-javascript
-#: code:addons/website_event/static/src/website_builder/event_searchbar_option_plugin.js:0
-#, fuzzy
-msgid "Description"
-msgstr "Tavsif"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Discard"
@@ -825,6 +818,13 @@ msgid "Display community tab on website"
 msgstr "Veb-saytda jamiyat bo‘limini ko‘rsatish"
 
 #. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event__subtitle
+msgid ""
+"Displayed on website and used as description when the event is added to a "
+"third-party calendar."
+msgstr ""
+
+#. module: website_event
 #. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, fuzzy
@@ -842,6 +842,11 @@ msgstr "Barcha chiptalarni yuklab olish"
 #, fuzzy
 msgid "Download Tickets"
 msgstr "Chiptalarni yuklab olish"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.layout
+msgid "Drag blocks here to add them on all events"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_card_preview_data
@@ -863,13 +868,6 @@ msgstr "Tadbir"
 #, fuzzy
 msgid "Event Community Menus"
 msgstr "Tadbir jamoasi menyulari"
-
-#. module: website_event
-#. odoo-javascript
-#: code:addons/website_event/static/src/website_builder/event_searchbar_option_plugin.js:0
-#, fuzzy
-msgid "Event Date"
-msgstr "Tadbir sanasi"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -897,7 +895,7 @@ msgstr "Tadbir menyusi"
 
 #. module: website_event
 #. odoo-javascript
-#: code:addons/website_event/static/src/website_builder/event_page_option_plugin.js:0
+#: code:addons/website_event/static/src/website_builder/event_page_option.xml:0
 #, fuzzy
 msgid "Event Page"
 msgstr "Tadbir sahifasi"
@@ -934,6 +932,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #, fuzzy
 msgid "Event Subtitle"
 msgstr "Tadbir subtitri"
@@ -999,6 +998,7 @@ msgstr ""
 #. odoo-javascript
 #. odoo-python
 #: code:addons/website_event/controllers/main.py:0
+#: code:addons/website_event/models/event_event.py:0
 #: code:addons/website_event/models/website.py:0
 #: code:addons/website_event/static/src/website_builder/dynamic_snippet_events_option.xml:0
 #: code:addons/website_event/static/src/website_builder/event_searchbar_option.xml:0
@@ -1061,7 +1061,7 @@ msgid "Filters"
 msgstr "Saralash"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+#: model_terms:ir.ui.view,arch_db:website_event.opt_event_share_block
 #, fuzzy
 msgid ""
 "Find out what people see and say about this event, and join the conversation."
@@ -1083,12 +1083,6 @@ msgstr "O‘rnatilgan yon panel"
 #, fuzzy
 msgid "Follow Us"
 msgstr "Bizni kuzatib boring"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.layout
-#, fuzzy
-msgid "Following content will appear on all events."
-msgstr "Quyidagi mazmun barcha tadbirlarda ko‘rinadi."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__footer_visible
@@ -1605,15 +1599,6 @@ msgid "Register"
 msgstr "Ro‘yxatdan o‘tish"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
-#, fuzzy
-msgid ""
-"Register <i class=\"fa fa-long-arrow-right ms-2\" role=\"presentation\"/>"
-msgstr ""
-"Ro‘yxatdan o‘tish <i class=\"fa fa-long-arrow-right ms-2\" "
-"role=\"presentation\"/>"
-
-#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__register_menu
 #, fuzzy
 msgid "Register Menu"
@@ -1656,6 +1641,11 @@ msgid ""
 msgstr ""
 "Ro‘yxatdan o‘tish<i class=\"fa fa-long-arrow-right ms-2\" "
 "role=\"presentation\"/>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
+msgid "Register<i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registered_ids
@@ -1817,9 +1807,8 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-#, fuzzy
-msgid "Search an event.."
-msgstr "Tadbir qidirish..."
+msgid "Search an event..."
+msgstr ""
 
 #. module: website_event
 #. odoo-javascript
@@ -1862,10 +1851,15 @@ msgstr ""
 #. module: website_event
 #. odoo-javascript
 #: code:addons/website_event/static/src/website_builder/event_page_option.xml:0
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+#: model_terms:ir.ui.view,arch_db:website_event.opt_event_share_block
 #, fuzzy
 msgid "Share"
 msgstr "Ulashish"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+msgid "Short description for website and calendars."
+msgstr ""
 
 #. module: website_event
 #. odoo-javascript
@@ -1911,6 +1905,7 @@ msgstr "O‘rinlar"
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_question_about_0_answer_0
 #: model:event.question.answer,name:website_event.event_question_about_2_answer_0
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 #, fuzzy
 msgid "Social Media"
 msgstr "Ijtimoiy tarmoqlar"

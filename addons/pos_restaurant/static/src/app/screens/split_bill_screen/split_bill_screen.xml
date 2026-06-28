@@ -19,7 +19,7 @@
                             <t t-set="line" t-value="scope.line" />
                              <Orderline line="line"
                                 mode="'split'"
-                                t-if="line.product_id.id != this.pos.config?.discount_product_id?.id"
+                                t-if="line.product_id.id != this.pos.config?.discount_product_id?.id and line.product_id.id != this.currentOrder.preset_id?.service_fee_product_id?.id"
                                 t-on-click="() => this.onClickLine(line)"
                                 class="{'selected active': this.qtyTracker[line.uuid] and this.qtyTracker[line.uuid] !== 0}" />
                         </OrderDisplay>
@@ -40,7 +40,7 @@
                             </div>
                             <div class="text-dark mt-2"
                                 t-attf-class="{{ this.ui.isSmall ? 'fs-4' : 'fs-2' }}"><t t-out="this.getNumberOfProducts()" /> product(s) selected</div>
-                            <t t-set="discountPc" t-value="this.getGlobalDiscountPc()" />
+                            <t t-set="discountPc" t-value="this.currentOrder.globalDiscountPc" />
                             <div t-if="discountPc.value" class="discount text-dark"
                                 t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
                                 With <t t-out="discountPc.type === 'percent' ? `${discountPc.value}%` : this.env.utils.formatCurrency(discountPc.value)" /> discount

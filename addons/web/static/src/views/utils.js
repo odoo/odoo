@@ -1,4 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
+import { localeCompare } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { unique } from "@web/core/utils/arrays";
 import { exprToBoolean } from "@web/core/utils/strings";
@@ -126,7 +127,7 @@ export const computeReportMeasures = (
         if (m1 === "__count" || m2 === "__count") {
             return m1 === "__count" ? 1 : -1; // Count is always last
         }
-        return f1.string.toLowerCase().localeCompare(f2.string.toLowerCase());
+        return localeCompare(f1.string, f2.string);
     });
 
     return Object.fromEntries(sortedMeasures);

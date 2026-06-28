@@ -6,6 +6,13 @@ from odoo.addons.mail.tests.common import MailCommon
 @tagged("discuss_action")
 class TestDiscussAction(HttpCase, MailCommon):
     def test_go_back_to_thread_from_breadcrumbs(self):
+        admin_partner = self.env.ref("base.user_admin").partner_id
+        self.env["mail.message"].create({
+            "body": "bookmarked message",
+            "bookmarked_partner_ids": [(4, admin_partner.id)],
+            "model": "res.partner",
+            "res_id": admin_partner.id,
+        })
         self.start_tour(
             "/odoo/discuss?active_id=mail.box_inbox",
             "discuss_go_back_to_thread_from_breadcrumbs.js",

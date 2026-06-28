@@ -2,12 +2,16 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add("version_timeline_auto_save_tour", {
-    undeterministicTour_doNotCopy: true,
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
             content: "Open Employees app",
             trigger: ".o_app[data-menu-xmlid='hr.menu_hr_root']",
+            run: "click",
+        },
+        {
+            content: "Open Management menu",
+            trigger: '[data-menu-xmlid="hr.menu_hr_employee_payroll"]',
             run: "click",
         },
         {
@@ -27,7 +31,20 @@ registry.category("web_tour.tours").add("version_timeline_auto_save_tour", {
         },
         {
             content: "Choose date X + 1",
-            trigger: ".o_date_item_cell:nth-child(11) > div",
+            trigger: ".o_datetime_picker .o_date_item_cell:nth-child(11) > div",
+            run: "click",
+        },
+        {
+            trigger: "body:not(:has(.o_datetime_picker))",
+        },
+        {
+            content: "Wait the form is dirty and click on save button",
+            trigger: "body:has(.o_form_dirty) .o_form_button_save",
+            run: "click",
+        },
+        {
+            content: "Close the End of Contract dialog ('Correct terms' button)",
+            trigger: ".modal button.btn-primary",
             run: "click",
         },
         {
@@ -42,12 +59,7 @@ registry.category("web_tour.tours").add("version_timeline_auto_save_tour", {
         },
         {
             content: "Choose date X + 2",
-            trigger: ".o_date_item_cell:nth-child(12) > div",
-            run: "click",
-        },
-        {
-            content: "Wait the form is dirty and click on save button",
-            trigger: "body:has(.o_form_dirty) .o_form_button_save",
+            trigger: ".o_datetime_picker .o_date_item_cell:nth-child(12) > div",
             run: "click",
         },
         {

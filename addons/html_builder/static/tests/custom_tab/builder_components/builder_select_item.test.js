@@ -4,8 +4,9 @@ import {
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { Image } from "@html_builder/core/img";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
-import { expect, test, describe } from "@odoo/hoot";
+import { expect, test, describe, before, getFixture } from "@odoo/hoot";
 import {
     animationFrame,
     click,
@@ -16,7 +17,7 @@ import {
     tick,
 } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -76,6 +77,43 @@ test("set the label of the select from the active select item and be updated on 
     expect(".we-bg-options-container .dropdown").toHaveText("A");
     await contains(".o-snippets-top-actions .fa-repeat").click();
     expect(".we-bg-options-container .dropdown").toHaveText("B");
+});
+test("set the label of the select after SVG Image children are inserted", async () => {
+    patchWithCleanup(Image.prototype, {
+        async getSvg() {
+            const svgEl = new window.DOMParser()
+                .parseFromString(
+                    `<svg width="10" viewBox="0 0 10 10" fill="none">
+                        <rect class="test-svg-child" width="10" height="10"/>
+                    </svg>`,
+                    "text/xml"
+                )
+                .querySelector("svg");
+            return {
+                viewBox: svgEl.getAttribute("viewBox"),
+                width: svgEl.getAttribute("width") || "",
+                fill: svgEl.getAttribute("fill") || "",
+                children: svgEl.children,
+            };
+        },
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderSelect>
+                <BuilderSelectItem classAction="'active'">
+                    <Image src="'/test.svg'"/>
+                </BuilderSelectItem>
+                <BuilderSelectItem classAction="''">None</BuilderSelectItem>
+            </BuilderSelect>
+        `,
+    });
+    await setupHTMLBuilder(`<div class="test-options-target active">x</div>`, {
+        patchImages: false,
+    });
+    await contains(":iframe .test-options-target").click();
+
+    expect(".we-bg-options-container .dropdown-toggle svg .test-svg-child").toHaveCount(1);
 });
 test("consider the priority of the select item", async () => {
     addBuilderOption({
@@ -346,4 +384,110 @@ test("isApplied shouldn't be called when the element is removed from the DOM", a
     await contains(":iframe .test").click();
     await contains(".fa-trash ").click();
     expect(":iframe .test").toHaveCount(0);
+});
+
+describe("LTR - RTL compatibility", () => {
+    before(() => {
+        addBuilderOption({
+            selector: ".selector",
+            template: xml`
+                <BuilderSelect>
+                    <BuilderSelectItem ltrRtlMapping="'left-right'" title="'Left'" classAction="'class-a'">Left</BuilderSelectItem>
+                    <BuilderSelectItem ltrRtlMapping="'left-right'" title="'Right'" classAction="'class-b'">Right</BuilderSelectItem>
+                </BuilderSelect>
+            `,
+        });
+    });
+
+    test("Iframe and Builder LTR", async () => {
+        await setupHTMLBuilder(`<div class="selector">Hello</div>`);
+        await contains(":iframe .selector").click();
+        await contains(".we-bg-options-container .dropdown").click();
+        expect(".o-dropdown--menu div.o-dropdown-item:eq(0)").toHaveAttribute("title", "Left");
+        expect(".o-dropdown--menu div.o-dropdown-item:eq(1)").toHaveAttribute("title", "Right");
+        await contains(".o-dropdown--menu div.o-dropdown-item:eq(0)").click();
+        expect(":iframe .selector").toHaveClass("class-a");
+        expect(":iframe .selector").not.toHaveClass("class-b");
+        await contains(".we-bg-options-container .dropdown").click();
+        await contains(".o-dropdown--menu div.o-dropdown-item:eq(1)").click();
+        expect(":iframe .selector").toHaveClass("class-b");
+        expect(":iframe .selector").not.toHaveClass("class-a");
+    });
+
+    test("Iframe and Builder RTL", async () => {
+        onRpc("/web/webclient/translations", () => ({
+            hash: "aaa",
+            lang: "ar-001",
+            lang_parameters: {
+                direction: "rtl",
+                grouping: "[3,0]",
+                date_format: "%m/%d/%Y",
+                time_format: "%H:%M:%S",
+            },
+            modules: {},
+        }));
+        // Visual styling to run the test in debug.
+        getFixture().style.setProperty("direction", "rtl");
+
+        await setupHTMLBuilder(`<div class="selector">Hello</div>`, {
+            iframeLangDir: "rtl",
+        });
+        await contains(":iframe .selector").click();
+        await contains(".we-bg-options-container .dropdown").click();
+        expect(".o-dropdown--menu div.o-dropdown-item:eq(0)").toHaveAttribute("title", "Right");
+        expect(".o-dropdown--menu div.o-dropdown-item:eq(1)").toHaveAttribute("title", "Left");
+        await contains(".o-dropdown--menu div.o-dropdown-item:eq(0)").click();
+        expect(":iframe .selector").toHaveClass("class-a");
+        expect(":iframe .selector").not.toHaveClass("class-b");
+        await contains(".we-bg-options-container .dropdown").click();
+        await contains(".o-dropdown--menu div.o-dropdown-item:eq(1)").click();
+        expect(":iframe .selector").toHaveClass("class-b");
+        expect(":iframe .selector").not.toHaveClass("class-a");
+    });
+
+    test("Iframe LTR and Builder RTL", async () => {
+        onRpc("/web/webclient/translations", () => ({
+            hash: "aaa",
+            lang: "ar-001",
+            lang_parameters: {
+                direction: "rtl",
+                grouping: "[3,0]",
+                date_format: "%m/%d/%Y",
+                time_format: "%H:%M:%S",
+            },
+            modules: {},
+        }));
+        // Visual styling to run the test in debug.
+        getFixture().style.setProperty("direction", "rtl");
+
+        await setupHTMLBuilder(`<div class="selector">Hello</div>`);
+        await contains(":iframe .selector").click();
+        await contains(".we-bg-options-container .dropdown").click();
+        expect(".o-dropdown--menu div.o-dropdown-item:eq(0)").toHaveAttribute("title", "Right");
+        expect(".o-dropdown--menu div.o-dropdown-item:eq(1)").toHaveAttribute("title", "Left");
+        await contains(".o-dropdown--menu div.o-dropdown-item:eq(0)").click();
+        expect(":iframe .selector").toHaveClass("class-b");
+        expect(":iframe .selector").not.toHaveClass("class-a");
+        await contains(".we-bg-options-container .dropdown").click();
+        await contains(".o-dropdown--menu div.o-dropdown-item:eq(1)").click();
+        expect(":iframe .selector").toHaveClass("class-a");
+        expect(":iframe .selector").not.toHaveClass("class-b");
+    });
+
+    test("Iframe RTL and Builder LTR", async () => {
+        await setupHTMLBuilder(`<div class="selector">Hello</div>`, {
+            iframeLangDir: "rtl",
+        });
+        await contains(":iframe .selector").click();
+        await contains(".we-bg-options-container .dropdown").click();
+        expect(".o-dropdown--menu div.o-dropdown-item:eq(0)").toHaveAttribute("title", "Left");
+        expect(".o-dropdown--menu div.o-dropdown-item:eq(1)").toHaveAttribute("title", "Right");
+        await contains(".o-dropdown--menu div.o-dropdown-item:eq(0)").click();
+        expect(":iframe .selector").toHaveClass("class-b");
+        expect(":iframe .selector").not.toHaveClass("class-a");
+        await contains(".we-bg-options-container .dropdown").click();
+        await contains(".o-dropdown--menu div.o-dropdown-item:eq(1)").click();
+        expect(":iframe .selector").toHaveClass("class-a");
+        expect(":iframe .selector").not.toHaveClass("class-b");
+    });
 });

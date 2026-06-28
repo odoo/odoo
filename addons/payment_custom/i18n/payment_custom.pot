@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
-"PO-Revision-Date: 2025-09-11 13:58+0000\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-19 17:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -55,6 +55,7 @@ msgid "Custom Mode"
 msgstr ""
 
 #. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_method__display_name
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__display_name
 msgid "Display Name"
@@ -71,11 +72,13 @@ msgid "Enable the use of QR-codes when paying by wire transfer."
 msgstr ""
 
 #. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+#. odoo-python
+#: code:addons/payment_custom/models/payment_transaction.py:0
 msgid "Finalize your payment"
 msgstr ""
 
 #. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_method__id
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__id
 msgid "ID"
@@ -89,6 +92,17 @@ msgstr ""
 #. module: payment_custom
 #: model:ir.model.constraint,message:payment_custom.constraint_payment_provider_custom_providers_setup
 msgid "Only custom providers should have a custom mode."
+msgstr ""
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__custom_mode__pay_on_invoice
+#: model:payment.method,name:payment_custom.payment_method_pay_on_invoice
+msgid "Pay on Invoice"
+msgstr ""
+
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_method
+msgid "Payment Method"
 msgstr ""
 
 #. module: payment_custom

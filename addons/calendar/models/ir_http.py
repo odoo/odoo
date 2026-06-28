@@ -10,7 +10,7 @@ class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
     @classmethod
-    def _auth_method_calendar(cls):
+    def _auth_method_calendar(cls, routing: dict):
         token = request.httprequest.args.get('token', '')
 
         error_message = False
@@ -26,4 +26,4 @@ class IrHttp(models.AbstractModel):
         if error_message:
             raise BadRequest(error_message)
 
-        cls._auth_method_public()
+        cls._auth_method_public(routing)

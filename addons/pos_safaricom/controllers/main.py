@@ -6,7 +6,7 @@ from odoo.tools import verify_hash_signed
 
 class SafaricomController(http.Controller):
 
-    @http.route('/pos_safaricom/callback', type='http', auth='public', methods=['POST'])
+    @http.route('/pos_safaricom/callback', type='http', auth='public', methods=['POST'], csrf=False)
     def safaricom_callback(self, payload):
         """
         Handle M-Pesa STK Push callback
@@ -32,7 +32,7 @@ class SafaricomController(http.Controller):
         except ValueError:
             return request.make_json_response({"ResultCode": "1", "ResultDesc": "Error processing callback"})
 
-    @http.route('/c2b/validation/callback', type="http", auth='public', methods=['POST'])
+    @http.route('/c2b/validation/callback', type="http", auth='public', methods=['POST'], csrf=False)
     def c2b_validation_callback(self, payload):
         """
         Validate the payment before charging the customer
@@ -48,7 +48,7 @@ class SafaricomController(http.Controller):
         except ValueError:
             return request.make_json_response({"ResultCode": "C2B00011", "ResultDesc": "Rejected"})
 
-    @http.route('/c2b/confirmation/callback', type='http', auth='public', methods=['POST'])
+    @http.route('/c2b/confirmation/callback', type='http', auth='public', methods=['POST'], csrf=False)
     def c2b_confirmation_callback(self, payload):
         """
         Handle C2B payment confirmation via Lipa na M-PESA
@@ -61,7 +61,7 @@ class SafaricomController(http.Controller):
                 trans_id = data.get('TransID')
                 trans_amount = data.get('TransAmount')
                 msisdn = data.get('MSISDN')
-                name = data.get('FirstName')
+                name = " ".join(filter(None, (data.get('FirstName'), data.get('MiddleName'), data.get('LastName'))))
 
                 payment_method = request.env['pos.payment.method'].sudo().search([
                         ('id', '=', decoded_payload.get('payment_method_id')),

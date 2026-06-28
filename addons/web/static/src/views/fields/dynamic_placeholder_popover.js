@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { registry } from "@web/core/registry";
 
@@ -33,7 +32,7 @@ export class DynamicPlaceholderPopover extends Component {
 
     setup() {
         useAutofocus();
-        this.state = useState({
+        this.state = proxy({
             path: "",
             isPathSelected: false,
             defaultValue: "",

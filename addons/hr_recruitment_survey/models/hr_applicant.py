@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
-from odoo import fields, models
+from datetime import timedelta, datetime
+
+from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 
 
 class HrApplicant(models.Model):
@@ -10,6 +12,27 @@ class HrApplicant(models.Model):
 
     survey_id = fields.Many2one('survey.survey', related='job_id.survey_id', string="Survey", readonly=True)
     response_ids = fields.One2many('survey.user_input', 'applicant_id', string="Responses")
+
+    def _expire_survey_user_inputs(self):
+        self.env['survey.user_input'].search([
+            Domain('partner_id', 'in', self.partner_id.ids),
+            Domain('state', 'in', ['new', 'in_progress']),
+        ]).write({'deadline': datetime.now()})
+
+    def write(self, vals):
+        stage = self.env['hr.recruitment.stage'].browse(vals.get('stage_id'))
+        if stage.hired_stage:
+            self._expire_survey_user_inputs()
+        return super().write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_cancel_user_inputs(self):
+        self._expire_survey_user_inputs()
+
+    def action_archive(self):
+        res = super().action_archive()
+        self._expire_survey_user_inputs()
+        return res
 
     def action_print_survey(self):
         """ If response is available then print this response otherwise print survey form (print template of the survey) """

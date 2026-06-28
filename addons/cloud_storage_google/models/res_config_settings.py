@@ -1,14 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import json
-import requests
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
+import requests
 from google.auth.transport.requests import Request
 
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError, UserError
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools.binary import BinaryBytes
 
 from .ir_attachment import get_cloud_storage_google_credential
 
@@ -29,7 +29,7 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='cloud_storage_google_bucket_name')
     # Google Service Account Key in JSON format
     cloud_storage_google_service_account_key = fields.Binary(
-        string='Google Service Account Key', store=False
+        string='Google Service Account Key', store=False,
     )
     cloud_storage_google_account_info = fields.Char(
         string='Google Service Account Info',
@@ -43,14 +43,14 @@ class ResConfigSettings(models.TransientModel):
     def get_values(self):
         res = super().get_values()
         if account_info := self.env['ir.config_parameter'].get_str('cloud_storage_google_account_info'):
-            res['cloud_storage_google_service_account_key'] = base64.b64encode(account_info.encode())
+            res['cloud_storage_google_service_account_key'] = BinaryBytes(account_info.encode('utf-8'))
         return res
 
     @api.onchange('cloud_storage_google_service_account_key')
     def _compute_cloud_storage_google_account_info(self):
         for setting in self:
             key = setting.cloud_storage_google_service_account_key
-            setting.cloud_storage_google_account_info = base64.b64decode(key) if key else False
+            setting.cloud_storage_google_account_info = key.decode('utf-8') if key else False
 
     def _setup_cloud_storage_provider(self):
         ICP = self.env['ir.config_parameter']
@@ -60,7 +60,7 @@ class ResConfigSettings(models.TransientModel):
         bucket_name = ICP.get_str('cloud_storage_google_bucket_name')
         # use different blob names in case the credentials are allowed to
         # overwrite an existing blob created by previous tests
-        blob_name = f'0/{datetime.now(timezone.utc)}.txt'
+        blob_name = f'0/{datetime.now(UTC)}.txt'
 
         IrAttachment = self.env['ir.attachment']
         # check blob create permission
@@ -88,7 +88,7 @@ class ResConfigSettings(models.TransientModel):
         url = f"https://storage.googleapis.com/storage/v1/b/{bucket_name}?fields=cors"
         headers = {
             'Authorization': f'Bearer {credential.token}',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         }
         data = json.dumps({'cors': cors})
         patch_response = requests.patch(url, data=data, headers=headers, timeout=5)
@@ -116,7 +116,7 @@ class ResConfigSettings(models.TransientModel):
                 WHERE type = 'cloud_storage'
                 AND url LIKE 'https://storage.googleapis.com/%'
                 LIMIT 1
-            """
+            """,
         )
         if cr.fetchone():
             raise UserError(_('Some Google attachments are in use, please migrate cloud storages before disable the provider'))

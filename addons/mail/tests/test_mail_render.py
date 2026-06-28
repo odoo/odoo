@@ -156,7 +156,6 @@ class TestMailRenderCommon(common.MailCommon):
 
 
 @tagged('mail_render')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailRender(TestMailRenderCommon):
 
     @users('employee')
@@ -396,6 +395,7 @@ class TestMailRender(TestMailRenderCommon):
             '<div style="background-image:url(\'/web/path?a=a&b=b\');"/>',
             '<div style="background-image:url(&#34;/web/path?a=a&b=b&#34;);"/>',
             '<div background="/web/path?a=a&b=b"/>',
+            '<div style=\'background-image:url("/web/path?a=a&b=b");\'/>',
         ]
         base_url = self.env['mail.render.mixin'].get_base_url()
         rendered_local_links = [
@@ -407,6 +407,7 @@ class TestMailRender(TestMailRenderCommon):
             '<div style="background-image:url(\'%s/web/path?a=a&b=b\');"/>' % base_url,
             '<div style="background-image:url(&#34;%s/web/path?a=a&b=b&#34;);"/>' % base_url,
             '<div background="%s/web/path?a=a&b=b"/>' % base_url,
+            '<div style=\'background-image:url("%s/web/path?a=a&b=b");\'/>' % base_url,
         ]
         for source, expected in zip(local_links_template_bits, rendered_local_links):
             rendered = self.env['mail.render.mixin']._replace_local_links(source)
@@ -448,8 +449,6 @@ class TestRegexRendering(common.MailCommon):
                     Default
                     </p>''', '<p>Default</p>'),
             ('''<div><p t-out="object.name"/></div>''', '<div><p>Alice</p></div>'),
-            ('''<div/aa t-out="object.name"></div/aa>''', '<div>Alice</div>'),
-            ('''<div/aa='x' t-out="object.name"></div/aa='x'>''', '<div>Alice</div>'),
         )
         o_qweb_render = self.env['ir.qweb']._render
         for template, expected in static_templates:
@@ -498,7 +497,7 @@ class TestRegexRendering(common.MailCommon):
             ('''{{object.contact_name ||| Default}}''', 'Default'),
         )
         for template, expected in static_templates:
-            with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+            with patch('odoo.tools.safe_eval.evaluation.unsafe_eval', side_effect=eval) as unsafe_eval:
                 self.assertEqual(render(template), expected)
                 self.assertFalse(unsafe_eval.called)
                 self.assertFalse(self.env['mail.render.mixin']._has_unsafe_expression_template_inline_template(template, 'res.partner'))
@@ -509,7 +508,7 @@ class TestRegexRendering(common.MailCommon):
             ('''{{object.env.context.get('test')}}''', ''),
         )
         for template, expected in non_static_templates:
-            with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+            with patch('odoo.tools.safe_eval.evaluation.unsafe_eval', side_effect=eval) as unsafe_eval:
                 self.assertEqual(render(template), expected)
                 self.assertTrue(unsafe_eval.called)
                 self.assertTrue(self.env['mail.render.mixin']._has_unsafe_expression_template_inline_template(template, 'res.partner'))

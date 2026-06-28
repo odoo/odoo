@@ -1,10 +1,12 @@
-import { HistoryPlugin } from "@html_editor/core/history_plugin";
+import { DomReferenceMapPlugin } from "@html_editor/core/dom_reference_map_plugin";
 import { CollaborationPlugin } from "@html_editor/others/collaboration/collaboration_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { createDOMPathGenerator } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS } from "@html_editor/utils/position";
+import { HistoryCommit } from "@html_editor/core/history_plugin";
 import { after, expect } from "@odoo/hoot";
 import { setupEditor } from "./editor";
+import { localeCompare } from "@web/core/l10n/utils";
 
 /**
  *
@@ -12,7 +14,7 @@ import { setupEditor } from "./editor";
  *
  * @typedef { Object } PeerInfo
  * @property { string } peerId
- * @property { import("@html_editor/core/history_plugin").HistoryStep[] } steps
+ * @property { import("@html_editor/core/history_plugin").HistoryCommit[] } commits
  * @property { Editor } editor
  * @property { import("@html_editor/collaboration/collaboration_plugin").CollaborationPlugin } collaborationPlugin
  * @property { import("@html_editor/plugin").HistoryPlugin } historyPlugin
@@ -32,15 +34,17 @@ import { setupEditor } from "./editor";
  * @property { number } focusOffset
  */
 
-function historyMissingParentSteps(peerInfos, peerInfo, { step, fromStepId }) {
-    const missingSteps = peerInfos[step.peerId].collaborationPlugin.historyGetMissingSteps({
-        fromStepId,
-        toStepId: step.id,
+function handleMissingParentHistoryCommits(peerInfos, peerInfo, { commit, fromCommitId }) {
+    const missingCommits = peerInfos[
+        commit.data.peerId
+    ].collaborationPlugin.historyGetMissingCommits({
+        fromCommitId,
+        toCommitId: commit.id,
     });
-    if (missingSteps === -1 || !missingSteps.length) {
-        throw new Error("Impossible to get the missing steps.");
+    if (missingCommits === -1 || !missingCommits.length) {
+        throw new Error("Impossible to get the missing commits.");
     }
-    peerInfo.collaborationPlugin.onExternalHistorySteps(missingSteps.concat([step]));
+    peerInfo.collaborationPlugin.insertRemoteHistoryCommits(missingCommits.concat([commit]));
 }
 
 /**
@@ -53,19 +57,21 @@ export const setupMultiEditor = async (spec) => {
     /** @type { Record<string, PeerInfo> } */
     const peerInfos = {};
     const peerIds = spec.peerIds;
-    const initialHystoryPluginGenerateId = HistoryPlugin.prototype.generateId;
+    const initialHistoryCommitGenerateId = HistoryCommit.prototype.generateId;
     after(() => {
-        HistoryPlugin.prototype.generateId = initialHystoryPluginGenerateId;
+        HistoryCommit.prototype.generateId = initialHistoryCommitGenerateId;
     });
 
     for (const peerId of peerIds) {
         const peerInfo = {
             peerId,
-            steps: [],
+            commits: [],
         };
         peerInfos[peerId] = peerInfo;
-        let n = 0;
-        HistoryPlugin.prototype.generateId = () => `fake_id_${n++}`;
+        let commitIndex = 0;
+        HistoryCommit.prototype.generateId = () => `fake_id_${commitIndex++}`;
+        let nodeIndex = 0;
+        DomReferenceMapPlugin.prototype.generateId = () => `node_id_${nodeIndex++}`;
         let selection;
         const defaultPlugins = MAIN_PLUGINS;
         const base = await setupEditor(spec.contentBefore, {
@@ -78,11 +84,11 @@ export const setupMultiEditor = async (spec) => {
                 collaboration: { peerId },
                 resources: {
                     ...spec.resources,
-                    on_collaboration_step_added_handlers: (step) => {
-                        peerInfo.steps.push(step);
+                    on_committed_to_history_handlers: (commit) => {
+                        peerInfo.commits.push(commit);
                     },
-                    on_history_missing_parent_step_handlers: (params) => {
-                        historyMissingParentSteps(peerInfos, peerInfo, params);
+                    on_history_missing_parent_commit_handlers: (params) => {
+                        handleMissingParentHistoryCommits(peerInfos, peerInfo, params);
                     },
                 },
             },
@@ -90,7 +96,7 @@ export const setupMultiEditor = async (spec) => {
         peerInfo.editor = base.editor;
         if (selection && selection.anchorNode) {
             base.editor.shared.selection.setSelection(selection);
-            base.plugins.get("history").stageSelection();
+            base.plugins.get("selection").stageSelection();
         } else {
             base.editor.document.getSelection().removeAllRanges();
         }
@@ -99,18 +105,16 @@ export const setupMultiEditor = async (spec) => {
         const getPlugin = (id) => base.editor.plugins.find((x) => x.constructor.id === id);
         peerInfo.collaborationPlugin = getPlugin("collaboration");
         peerInfo.historyPlugin = getPlugin("history");
+        peerInfo.domReferenceMapPlugin = getPlugin("domReferenceMap");
     }
 
     const peerInfosList = Object.values(peerInfos);
 
     // Init the editors
 
-    // From now, any any step from a peer must have a different ID.
+    // From now, any any commit from a peer must have a different ID.
     let concurrentNextId = 1;
-    for (const { historyPlugin } of peerInfosList) {
-        historyPlugin.generateId = () => "fake_concurrent_id_" + concurrentNextId++;
-        historyPlugin.currentStep.id = historyPlugin.generateId();
-    }
+    HistoryCommit.generateId = () => "fake_concurrent_id_" + concurrentNextId++;
 
     after(() => {
         for (const peerInfo of peerInfosList) {
@@ -147,16 +151,16 @@ export const applyConcurrentActions = (peerInfos, concurrentActions) => {
     }
 };
 
-export const mergePeersSteps = (peerInfos) => {
+export const mergePeersCommits = (peerInfos) => {
     const peerInfosList = Object.values(peerInfos);
     for (const peerInfoA of peerInfosList) {
         for (const peerInfoB of peerInfosList) {
             if (peerInfoA === peerInfoB) {
                 continue;
             }
-            for (const step of peerInfoB.steps) {
-                peerInfoA.collaborationPlugin.onExternalHistorySteps([
-                    JSON.parse(JSON.stringify(step)),
+            for (const commit of peerInfoB.commits) {
+                peerInfoA.collaborationPlugin.insertRemoteHistoryCommits([
+                    JSON.parse(JSON.stringify(commit)),
                 ]);
             }
         }
@@ -170,16 +174,19 @@ export const validateSameHistory = (peerInfos) => {
     const peerInfosList = Object.values(peerInfos);
 
     const PeerInfo = peerInfosList[0];
-    const historyLength = PeerInfo.historyPlugin.steps.length;
+    const historyLength = PeerInfo.historyPlugin.commits.length;
 
     for (const peerInfo of peerInfosList.slice(1)) {
-        expect(peerInfo.historyPlugin.steps.length).toBe(historyLength, {
+        expect(peerInfo.historyPlugin.commits.length).toBe(historyLength, {
             message: "The history size should be the same.",
         });
         for (let i = 0; i < historyLength; i++) {
-            expect(PeerInfo.historyPlugin.steps[i].id).toBe(peerInfo.historyPlugin.steps[i].id, {
-                message: `History steps are not consistent accross peers.`,
-            });
+            expect(PeerInfo.historyPlugin.commits[i].id).toBe(
+                peerInfo.historyPlugin.commits[i].id,
+                {
+                    message: `History commits are not consistent accross peers.`,
+                }
+            );
         }
     }
 };
@@ -201,7 +208,7 @@ export function renderTextualSelection(peerInfos) {
     const cursorNodes = {};
     for (const peerInfo of peerInfosList) {
         const iframeDocument = peerInfo.editor.document;
-        const historyPlugin = peerInfo.historyPlugin;
+        const domReferenceMapPlugin = peerInfo.domReferenceMapPlugin;
         const peerSelection = iframeDocument.getSelection();
         if (peerSelection.anchorNode === null) {
             continue;
@@ -210,8 +217,8 @@ export function renderTextualSelection(peerInfos) {
         const { anchorNode, anchorOffset, focusNode, focusOffset } = peerSelection;
 
         const peerId = peerInfo.peerId;
-        const focusNodeId = historyPlugin.nodeMap.getId(focusNode);
-        const anchorNodeId = historyPlugin.nodeMap.getId(anchorNode);
+        const focusNodeId = domReferenceMapPlugin.getNodeId(focusNode);
+        const anchorNodeId = domReferenceMapPlugin.getNodeId(anchorNode);
         cursorNodes[focusNodeId] = cursorNodes[focusNodeId] || [];
         cursorNodes[focusNodeId].push({ type: "focus", peerId, offset: focusOffset });
         cursorNodes[anchorNodeId] = cursorNodes[anchorNodeId] || [];
@@ -220,14 +227,14 @@ export function renderTextualSelection(peerInfos) {
 
     for (const nodeId of Object.keys(cursorNodes)) {
         cursorNodes[nodeId] = cursorNodes[nodeId].sort(
-            (a, b) => b.offset - a.offset || b.peerId.localeCompare(a.peerId)
+            (a, b) => b.offset - a.offset || localeCompare(b.peerId, a.peerId)
         );
     }
 
     for (const peerInfo of peerInfosList) {
-        const historyPlugin = peerInfo.historyPlugin;
+        const domReferenceMapPlugin = peerInfo.domReferenceMapPlugin;
         for (const [nodeId, cursorsData] of Object.entries(cursorNodes)) {
-            const node = historyPlugin.nodeMap.getNode(nodeId);
+            const node = domReferenceMapPlugin.getNodeById(nodeId);
             for (const cursorData of cursorsData) {
                 const cursorString =
                     cursorData.type === "anchor"

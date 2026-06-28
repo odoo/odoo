@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps, status } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, props, proxy, status, t } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { useDomState } from "@html_builder/core/utils";
@@ -9,30 +8,25 @@ import { BasicMany2Many } from "./basic_many2many";
 
 export class ModelMany2Many extends Component {
     static template = "html_builder.ModelMany2Many";
-    static props = {
+    props = props({
         //...basicContainerBuilderComponentProps,
-        baseModel: String,
-        recordId: Number,
-        m2oField: String,
-        fields: { type: Array, element: String, optional: true },
-        domain: { type: Array, optional: true },
-        limit: { type: Number, optional: true },
-        createAction: { type: String, optional: true },
-        id: { type: String, optional: true },
+        baseModel: t.string(),
+        recordId: t.number(),
+        m2oField: t.string(),
+        fields: t.array(t.string()).optional([]),
+        domain: t.array().optional([]),
+        limit: t.number().optional(10),
+        createAction: t.string().optional(),
+        id: t.string().optional(),
         // currently always allowDelete
-        applyTo: { type: String, optional: true },
-    };
-    static defaultProps = {
-        fields: [],
-        domain: [],
-        limit: 10,
-    };
+        applyTo: t.string().optional(),
+    });
     static components = { BuilderComponent, BasicMany2Many };
 
     setup() {
         this.fields = useService("field");
         this.cachedModel = useCachedModel();
-        this.state = useState({
+        this.state = proxy({
             searchModel: undefined,
         });
         this.modelEdit = undefined;
@@ -89,7 +83,7 @@ export class ModelMany2Many extends Component {
     }
     setSelection(newSelection) {
         this.modelEdit.set(this.props.m2oField, newSelection);
-        this.env.editor.shared.history.addStep();
+        this.env.editor.shared.history.commit();
     }
     create(name) {
         // TODO maybe this can be in base layer

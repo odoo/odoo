@@ -14,6 +14,7 @@ from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.service.model import call_kw
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 from odoo.tests import tagged
 from odoo.tools import email_normalize, formataddr, mute_logger
 from odoo.tests.common import users
@@ -24,6 +25,9 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        # avoid mobile rewriting links
+        cls.env["ir.config_parameter"].sudo().set_bool("mail_mobile.disable_redirect_firebase_dynamic_link", True)
 
         # portal user, notably for ACLS / notifications
         cls.user_portal = cls._create_portal_user()
@@ -42,7 +46,7 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
         )
         cls.partner_employee_2 = cls.user_employee_2.partner_id
 
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['mail.test.simple'].create({
             'name': 'Test',
             'email_from': 'ignasse@example.com'
         })
@@ -228,7 +232,7 @@ class TestMailNotifyAPI(TestMessagePostCommon):
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_notify_by_mail_add_signature(self):
-        test_track = self.env['mail.test.track'].with_context(self._test_context).with_user(self.user_employee).create({
+        test_track = self.env['mail.test.track'].with_user(self.user_employee).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com'
         })
@@ -275,11 +279,11 @@ class TestMailNotifyAPI(TestMessagePostCommon):
         # TOFIX: the test is actually broken because test_message cannot be
         # read; this populates the cache to make it work, but that's cheating...
         test_message.sudo().email_add_signature
-        template_values = test_record._notify_by_email_prepare_rendering_context(test_message, {})
+        template_values = test_record._notify_by_email_prepare_rendering_context(test_message)
         self.assertNotEqual(escape(template_values['signature']), escape('<p>-- <br/>Steve</p>'))
 
         self.test_message.author_id = None
-        template_values = test_record._notify_by_email_prepare_rendering_context(test_message, {})
+        template_values = test_record._notify_by_email_prepare_rendering_context(test_message)
         self.assertEqual(template_values['signature'], '')
 
     @users('employee')
@@ -300,7 +304,7 @@ class TestMailNotifyAPI(TestMessagePostCommon):
         # self.env.company.id = Main Company    AND    test_record.company_id = False
         self.assertEqual(self.env.company.id, main_company.id)
         self.assertEqual(test_record.company_id.id, False)
-        template_values = test_record._notify_by_email_prepare_rendering_context(test_record.message_ids, {})
+        template_values = test_record._notify_by_email_prepare_rendering_context(test_record.message_ids)
         self.assertEqual(template_values.get('company').id, self.env.company.id)
 
         # self.env.company.id = Other Company    AND    test_record.company_id = False
@@ -308,7 +312,7 @@ class TestMailNotifyAPI(TestMessagePostCommon):
         test_record = self.env['mail.test.multi.company'].browse(test_record.id)
         self.assertEqual(self.env.company.id, other_company.id)
         self.assertEqual(test_record.company_id.id, False)
-        template_values = test_record._notify_by_email_prepare_rendering_context(test_record.message_ids, {})
+        template_values = test_record._notify_by_email_prepare_rendering_context(test_record.message_ids)
         self.assertEqual(template_values.get('company').id, self.env.company.id)
 
         # self.env.company.id = Other Company    AND    test_record.company_id = Main Company
@@ -316,7 +320,7 @@ class TestMailNotifyAPI(TestMessagePostCommon):
         test_record = self.env['mail.test.multi.company'].browse(test_record.id)
         self.assertEqual(self.env.company.id, other_company.id)
         self.assertEqual(test_record.company_id.id, main_company.id)
-        template_values = test_record._notify_by_email_prepare_rendering_context(test_record.message_ids, {})
+        template_values = test_record._notify_by_email_prepare_rendering_context(test_record.message_ids)
         self.assertEqual(template_values.get('company').id, main_company.id)
 
     @users('employee')
@@ -329,18 +333,11 @@ class TestMailNotifyAPI(TestMessagePostCommon):
             'res_id': base_record.id,
             'subject': 'Message subject',
         }
-        link_vals = {
-            'token': 'token_val',
-            'access_token': 'access_token_val',
-            'auth_signup_token': 'auth_signup_token_val',
-            'auth_login': 'auth_login_val',
-        }
-        notify_msg_vals = dict(msg_vals, **link_vals)
+        message = self.env['mail.message'].create(msg_vals)
 
         # test notifying the class (void recordset)
         classify_res = self.env[base_record._name]._notify_get_recipients_classify(
-            self.env['mail.message'], pdata, 'My Custom Model Name',
-            msg_vals=notify_msg_vals,
+            message, pdata, 'My Custom Model Name',
         )
         # find back information for each recipients
         partner_info = next(item for item in classify_res if item['recipients_ids'] == self.partner_1.ids)
@@ -349,8 +346,6 @@ class TestMailNotifyAPI(TestMessagePostCommon):
         self.assertFalse(partner_info['has_button_access'])
         # employee: access button and link
         self.assertTrue(emp_info['has_button_access'])
-        for param, value in link_vals.items():
-            self.assertIn(f'{param}={value}', emp_info['button_access']['url'])
         self.assertIn(f'model={base_record._name}', emp_info['button_access']['url'])
         self.assertIn(f'res_id={base_record.id}', emp_info['button_access']['url'])
         self.assertNotIn('body', emp_info['button_access']['url'])
@@ -362,13 +357,8 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                               ('mail.thread', False),
                               ('mail.thread', base_record.id)):
             with self.subTest(model=model, res_id=res_id):
-                notify_msg_vals.update({
-                    'model': model,
-                    'res_id': res_id,
-                })
                 classify_res = self.env[model].browse(res_id)._notify_get_recipients_classify(
                     self.env['mail.message'], pdata, 'Test',
-                    msg_vals=notify_msg_vals,
                 )
                 # find back information for partner
                 partner_info = next(item for item in classify_res if item['recipients_ids'] == self.partner_1.ids)
@@ -378,21 +368,24 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                 self.assertFalse(emp_info['has_button_access'])
 
         # test when notifying based a valid record, but asking for a falsy record in msg_vals
-        for model, res_id in ((base_record._name, False),
-                              (base_record._name, 0),  # browse(0) does not return a valid recordset
-                              (False, base_record.id),
-                              (False, False),
-                              ('mail.thread', False),
-                              ('mail.thread', base_record.id)):
+        for model, res_id in (
+            (base_record._name, False),
+            (base_record._name, 0),  # browse(0) does not return a valid recordset
+            (False, base_record.id),
+            (False, False),
+            ('mail.thread', False),
+        ):
             with self.subTest(model=model, res_id=res_id):
-                # note that msg_vals wins over record on which method is called
-                notify_msg_vals.update({
+                # note that message wins over record on which method is called
+                message = self.env['mail.message'].create({
+                    'body': 'Message body',
                     'model': model,
+                    'reply_to': False,
                     'res_id': res_id,
+                    'subject': 'Message subject',
                 })
                 classify_res = base_record._notify_get_recipients_classify(
-                    self.env['mail.message'], pdata, 'Test',
-                    msg_vals=notify_msg_vals,
+                    message, pdata, 'Test',
                 )
                 # find back information for partner
                 partner_info = next(item for item in classify_res if item['recipients_ids'] == self.partner_1.ids)
@@ -401,9 +394,27 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                 self.assertFalse(partner_info['has_button_access'])
                 self.assertFalse(emp_info['has_button_access'])
 
+    @users('employee')
+    def test_notify_recipients_internals_links(self):
+        base_record = self.test_record.with_env(self.env)
+        link_vals = {
+            'token': 'token_val',
+            'access_token': 'access_token_val',
+            'auth_signup_token': 'auth_signup_token_val',
+            'auth_login': 'auth_login_val',
+        }
+        link_not_propagated_vals = {
+            'zboing': 'coucouhibou',
+        }
+        link = base_record._notify_get_action_link('view', **link_vals, **link_not_propagated_vals)
+        for key, val in link_vals.items():
+            self.assertIn(f'{key}={val}', link)
+        for key, val in link_not_propagated_vals.items():
+            self.assertNotIn(key, link)
+            self.assertNotIn(val, link)
+
 
 @tagged('mail_post', 'mail_notify')
-@tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestMessageNotify(TestMessagePostCommon):
 
     @users('employee')
@@ -777,7 +788,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
     def test_assert_initial_values(self):
         """ Be sure of what we are testing """
-        self.assertFalse(self.test_record.message_ids)
+        self.assertEqual(len(self.test_record.message_ids), 1, 'Should have only creationg log')
         self.assertFalse(self.test_record.message_follower_ids)
         self.assertFalse(self.test_record.message_partner_ids)
 
@@ -849,6 +860,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             'X-Custom': 'Done',  # mail.test.simple override
             # contains external people: partner_1 (follower) and asked outgoing email
             'X-Msg-To-Add': f'{additional_to},{self.partner_1.email_formatted}',
+            'X-Msg-Cc-Add': '',
             'X-Odoo-Objects': f'{test_record._name}-{test_record.id}',
         }
         with self.assertSinglePostNotifications(
@@ -1494,7 +1506,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         octet_attachment_data.write({'mimetype': 'application/octet-stream'})
         pdf_attachment_data.write({'mimetype': 'application/pdf'})
 
-        test_record = self.env['mail.test.simple.main.attachment'].with_context(self._test_context).create({
+        test_record = self.env['mail.test.simple.main.attachment'].create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
         })
@@ -1559,7 +1571,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         )
         _attachment_records[1].write({'mimetype': 'image/png'})  # to test message_main_attachment heuristic
 
-        test_record = self.env['mail.test.simple.main.attachment'].with_context(self._test_context).create({
+        test_record = self.env['mail.test.simple.main.attachment'].create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
         })
@@ -1613,17 +1625,21 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             )
         self.assertEqual(msg.subject, '1st line 2nd line')
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.addons.mail.models.mail_mail')
     def test_portal_acls(self):
         self.test_record.message_subscribe((self.partner_1 | self.user_employee.partner_id).ids)
+        record_asportal = self.test_record.with_user(self.user_portal)
 
         with self.assertPostNotifications(
                 [{'content': '<p>Test</p>', 'notif': [
                     {'partner': self.partner_employee, 'type': 'inbox'},
                     {'partner': self.partner_1, 'type': 'email'}]}
                 ]
-            ), patch.object(MailTestSimple, '_check_access', return_value=None):
-            new_msg = self.test_record.with_user(self.user_portal).message_post(
+            ), patch.object(MailTestSimple, '_access_domain', return_value=Domain.TRUE):
+            self.assertTrue(record_asportal.has_access('read'))
+            self.assertTrue(record_asportal.has_access('write'))
+
+            new_msg = record_asportal.message_post(
                 body=Markup('<p>Test</p>'),
                 message_type='comment',
                 subject='Subject',
@@ -1632,7 +1648,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertEqual(new_msg.sudo().notified_partner_ids, (self.partner_1 | self.user_employee.partner_id))
 
         with self.assertRaises(AccessError):
-            self.test_record.with_user(self.user_portal).message_post(
+            record_asportal.message_post(
                 body=Markup('<p>Test</p>'),
                 message_type='comment',
                 subject='Subject',
@@ -1743,6 +1759,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
     @users('employee')
     def test_post_internal(self):
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        create_log = test_record.message_ids
 
         test_record.message_subscribe([self.user_admin.partner_id.id])
         with self.mock_mail_gateway():
@@ -1762,7 +1779,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             msg_id='<1198923581.41972151344608186800.JavaMail.diff1@agrolait.example.com>',
             extra=f'In-Reply-To:\r\n\t{msg.message_id}\n',
             target_model='mail.test.simple')
-        reply = test_record.message_ids - msg
+        reply = test_record.message_ids - msg - create_log
         self.assertTrue(reply)
         self.assertTrue(reply.is_internal)
         self.assertEqual(reply.notified_partner_ids, self.user_employee.partner_id)
@@ -1972,10 +1989,13 @@ class TestMessagePostHelpers(TestMessagePostCommon):
 
         # sent emails (mass mail mode)
         for test_record in test_records:
-            all_partners = new_partners + self.partner_1 + self.partner_2 + test_record.customer_id
+            partners_to = new_partners + self.partner_2 + test_record.customer_id
+            partners_cc = self.partner_1
+            all_partners = partners_to + partners_cc
             self.assertMailMail(
-                all_partners,
+                partners_to,
                 'sent',
+                recipients_cc=partners_cc,
                 author=self.user_employee.partner_id,
                 email_values={
                     'attachments': [

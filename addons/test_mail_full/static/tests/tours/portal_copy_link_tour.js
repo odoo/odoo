@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add("portal_copy_link_tour", {
             run: "hover && click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message-actions [title='Copy Link']",
+            trigger: "#chatterRoot:shadow .o-mail-Message-actions [title='Copy Message Link']",
         },
     ],
 });

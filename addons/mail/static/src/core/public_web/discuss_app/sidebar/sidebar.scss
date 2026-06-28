@@ -1,9 +1,5 @@
-.o-mail-DiscussSidebar {
-    max-width: $o-mail-Discuss-inspector;
-}
-
-.o-mail-DiscussSidebar-resizablePanelContainer {
-    max-width: $o-mail-Discuss-inspector;
+.o-mail-DiscussSidebar-resizablePanelContainer, .o-mail-DiscussSidebar {
+    max-width: 30vw;
 }
 
 .o-mail-DiscussSidebar-optionsBtn {
@@ -33,7 +29,7 @@
 
 .o-mail-DiscussSidebar-item {
     outline: 1px solid transparent !important;
-    outline-offset: -1px;
+    outline-offset: var(--discuss-sidebar-item-outline-offset, -1px);
     padding-top: map-get($spacers, 1) / 2;
     padding-bottom: map-get($spacers, 1) / 2;
     line-height: 2; // so that same height as actions
@@ -57,8 +53,12 @@
         outline-color: var(--mail-DiscussSidebar-itemActiveOutlineColor, mix($o-view-background-color, $o-action, 50%)) !important;
     }
 
+    &:not(:hover):not(.o-unread):not(.o-active) .o-mail-DiscussSidebar-itemName {
+        opacity: 75%;
+    }
+
     &.o-active, &:hover {
-        .o-mail-DiscussSidebarChannel-itemName {
+        .o-mail-DiscussSidebar-itemName {
             filter: brightness(1.1);
         }
     }

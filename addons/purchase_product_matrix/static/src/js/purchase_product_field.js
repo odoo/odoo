@@ -37,13 +37,19 @@ export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteFie
         return this.props.record.data.is_configurable_product;
     }
 
+    get label() {
+        let label = this.props.record.data.name;
+        if (label.includes(this.productName)) {
+            label = label.replace(this.productName, "");
+        }
+        return label;
+    }
+
     async _onProductTemplateUpdate() {
-        const result = await this.orm.call(
-            'product.template',
-            'get_single_product_variant',
-            [this.props.record.data.product_template_id.id],
-        );
-        if(result && result.product_id) {
+        const result = await this.orm.call("product.template", "get_single_product_variant", [
+            this.props.record.data.product_template_id.id,
+        ]);
+        if (result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {
                 this.props.record.update({
                     // TODO right name get (same problem as configurator)

@@ -16,6 +16,7 @@ export const computeComboItems = (
 
     const getAttributesPriceExtra = (attributeValueIds) =>
         (attributeValueIds ?? [])
+            .filter((attr) => attr?.attribute_id?.create_variant !== "always")
             .map((attr) => attr?.price_extra || 0)
             .reduce((acc, price) => acc + price, 0);
 
@@ -43,7 +44,8 @@ export const computeComboItems = (
         comboItems.push({
             combo_item_id: comboItem,
             price_unit: totalPriceExtra,
-            attribute_value_ids,
+            attribute_value_ids:
+                attribute_value_ids || comboItem.product_id?.product_template_attribute_value_ids,
             attribute_custom_values: conf.configuration?.attribute_custom_values || {},
             qty: conf.qty,
         });
@@ -81,11 +83,25 @@ export const computeComboItems = (
         comboItems.push({
             combo_item_id: comboItem,
             price_unit: totalPriceExtra,
-            attribute_value_ids,
+            attribute_value_ids:
+                attribute_value_ids || comboItem.product_id?.product_template_attribute_value_ids,
             attribute_custom_values: extra.configuration?.attribute_custom_values || {},
             qty: extra.qty,
         });
     }
 
+    let sequenceCounter = 0;
+    const mapSequence = parentProduct.combo_ids.reduce((acc, combo) => {
+        combo.combo_item_ids.forEach((item) => {
+            acc[item.id] = sequenceCounter++;
+        });
+        return acc;
+    }, {});
+
+    comboItems.sort(
+        (a, b) =>
+            (mapSequence[a.combo_item_id.id] ?? Infinity) -
+            (mapSequence[b.combo_item_id.id] ?? Infinity)
+    );
     return comboItems;
 };

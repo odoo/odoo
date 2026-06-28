@@ -3,7 +3,6 @@ import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tou
 registerWebsitePreviewTour(
     "website_image_quality",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [
@@ -25,7 +24,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Wait for image update: NOT original image",
-            trigger: ':iframe .s_text_image img:not([src$="s_text_image_default_image"])',
+            trigger: ':iframe .s_text_image img:not([src$="landscape_md_9"])',
         },
         {
             content: "Check image size",

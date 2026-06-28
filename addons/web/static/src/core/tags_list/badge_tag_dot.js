@@ -1,18 +1,13 @@
+import { t } from "@odoo/owl";
 import { BadgeTag } from "./badge_tag";
 
 export class BadgeTagDot extends BadgeTag {
     static hexRegex = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
     static template = "web.BadgeTagDot";
-    static defaultProps = {
-        color: "",
-    };
-    static props = {
-        ...BadgeTag.props,
-        color: { type: String, optional: true },
-    };
+    static colorType = t.string().optional("");
 
     get dotColor() {
-        const dotColor = this.props.color;
+        const dotColor = this.color.color;
         return BadgeTagDot.hexRegex.test(dotColor) ? dotColor : null;
     }
 

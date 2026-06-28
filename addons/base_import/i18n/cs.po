@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2025-09-16 10:03+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
@@ -108,7 +108,7 @@ msgstr "Mapování importního jádra"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Batch"
-msgstr "Šarže"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -144,11 +144,11 @@ msgstr "Sloupec %(column)s obsahuje nesprávné hodnoty (hodnota: %(value)s)"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: "
-"%(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: %"
+"(error)s"
 msgstr ""
-"Sloupec %(column)s obsahuje nesprávné hodnoty. Chyba v řádku %(line)d: "
-"%(error)s"
+"Sloupec %(column)s obsahuje nesprávné hodnoty. Chyba v řádku %(line)d: %"
+"(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -167,8 +167,8 @@ msgstr "Čárka"
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
-"URL se nepodařilo načíst: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"URL se nepodařilo načíst: %(url)s [%(field_name)s: L%(line_number)d]: %"
+"(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -295,12 +295,12 @@ msgstr "Chyba při importu záznamů: oddělovač textu by měl být jediný zna
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has "
-"%(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has %"
+"(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "Chyba při importu záznamů: všechny řádky by měly stejný počet pozic, ale "
-"řádek záhlaví má %(title_row_entries)d pozic, zatímco první řádek má "
-"%(first_row_entries)d. Možná byste měli změnit znak oddělovače."
+"řádek záhlaví má %(title_row_entries)d pozic, zatímco první řádek má %"
+"(first_row_entries)d. Možná byste měli změnit znak oddělovače."
 
 #. module: base_import
 #. odoo-javascript
@@ -361,7 +361,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Finalizing current batch before interrupting..."
-msgstr "Před přerušením dokončuji aktuální dávku...."
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -427,11 +427,6 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
-"Pokud soubor obsahuje\n"
-"                    názvy sloupců, může Odoo zkusit automatickou detekci\n"
-"                    pole odpovídajícího sloupci. Díky tomu je import "
-"jednodušší,\n"
-"                    zejména pokud má soubor mnoho sloupců."
 
 #. module: base_import
 #. odoo-python
@@ -466,7 +461,7 @@ msgstr "Importní soubor nemá obsah nebo je poškozen"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Import preview failed due to: \""
-msgstr "Náhled importu se nezdařil z důvodu: ''"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -534,7 +529,7 @@ msgstr "Model"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "Multiple errors occurred"
-msgstr "Vyskytlo se vícero chyb"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -564,7 +559,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "No matching records found for the following name"
-msgstr "Žádné odpovídající záznamy pro název"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -647,7 +642,7 @@ msgstr "Vyhledat pole..."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "See possible values"
-msgstr "Podívejte se na možné hodnoty"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -858,7 +853,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Use first row as header"
-msgstr "Použít první žádek pro záhlaví"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -903,19 +898,19 @@ msgstr "Musíte importovat alespoň jedno pole"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "at multiple rows"
-msgstr "ve více řádcích"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "at row"
-msgstr "v řádku"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "in field"
-msgstr "v poli"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -927,7 +922,7 @@ msgstr "minut"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "more"
-msgstr "více"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -939,7 +934,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "out of"
-msgstr "z"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript

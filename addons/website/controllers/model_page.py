@@ -18,9 +18,7 @@ class ModelPageController(Controller):
         if not page_name_slugified:
             raise werkzeug.exceptions.NotFound()
 
-        website = request.website
-
-        website_page_domain = Domain("name_slugified", "=", page_name_slugified) & website.website_domain()
+        website_page_domain = Domain("name_slugified", "=", page_name_slugified) & self.env.website.website_domain()
         page = request.env["website.controller.page"].search(website_page_domain, limit=1)
         if not page or\
             (not page.website_published and not request.env.user.has_group('website.group_website_designer')):
@@ -85,7 +83,7 @@ class ModelPageController(Controller):
                 domains.append(name_domain)
 
         search_count = Model.search_count(Domain.AND(domains))
-        pager = website.pager(
+        pager = self.env.website.pager(
             url=f"/model/{page.name_slugified}",
             url_args=searches,
             total=search_count,

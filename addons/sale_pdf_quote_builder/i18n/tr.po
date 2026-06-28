@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
 "PO-Revision-Date: 2025-11-21 14:46+0000\n"
 "Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -30,11 +30,6 @@ msgid ""
 msgstr ""
 "(object.state in ('draft', 'sent') and 'Teklif - %s' % (object.name)) or "
 "'Sipariş - %s' % (object.name)"
-
-#. module: sale_pdf_quote_builder
-#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
-msgid "<i class=\"fa fa-arrow-right\"/> Link to the demo video"
-msgstr "<i class=\"fa fa-arrow-right\"/> Demo videosunun bağlantısı"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -241,11 +236,6 @@ msgstr "Belge Türü"
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "Download"
 msgstr "İndir"
-
-#. module: sale_pdf_quote_builder
-#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
-msgid "Download examples"
-msgstr "Örnekleri indir"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -486,6 +476,11 @@ msgid "Only PDF documents can be used as header or footer."
 msgstr "Üstbilgi veya altbilgi olarak yalnızca PDF belgeleri kullanılabilir."
 
 #. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
+msgid "Order Templates"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__original_id
 msgid "Original (unoptimized, unresized) attachment"
 msgstr "Orijinal (optimize edilmemiş, yeniden boyutlandırılmamış) ek"
@@ -533,31 +528,6 @@ msgid "Product Documents"
 msgstr "Ürün Belgeleri"
 
 #. module: sale_pdf_quote_builder
-#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
-msgid ""
-"Provide header pages and footer pages to compose an attractive quotation "
-"with more information\n"
-"                        about your company, your products and you services. "
-"<br/>\n"
-"                        The pdf of your quotes will be built by putting "
-"together header pages, product descriptions,\n"
-"                        details of the quote and then the footer pages. <br/"
-">\n"
-"                        If empty, it will use those define in the company "
-"settings. <br/>"
-msgstr ""
-"Daha fazla bilgi içeren çekici bir teklif oluşturmak için üstbilgi sayfaları "
-"ve altbilgi sayfaları ekleyin\n"
-"                        Şirketiniz, ürünleriniz ve hizmetleriniz hakkında. "
-"<br/>\n"
-"                        Tekliflerinizin pdf'i, başlık sayfaları, ürün "
-"açıklamaları bir araya getirilerek oluşturulacaktır,\n"
-"                        teklifin ayrıntıları ve ardından altbilgi sayfaları. "
-"<br/>\n"
-"                        Boşsa, şirket ayarlarında tanımlananları "
-"kullanacaktır. <br/>"
-
-#. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
 msgid "Quotation / Order"
 msgstr "Teklif / Sipariş"
@@ -573,7 +543,6 @@ msgid "Quotation Documents"
 msgstr "Teklif Belgeleri"
 
 #. module: sale_pdf_quote_builder
-#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 msgid "Quotation Template"
 msgstr "Teklif Şablonu"
@@ -595,11 +564,6 @@ msgid "Quote Builder"
 msgstr "Teklif Oluşturucu"
 
 #. module: sale_pdf_quote_builder
-#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
-msgid "Quote Builder Demo Video"
-msgstr "Teklif Oluşturucu Demo Videosu"
-
-#. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__ir_attachment_id
 msgid "Related attachment"
 msgstr "İlgili ekli dosya"
@@ -608,6 +572,16 @@ msgstr "İlgili ekli dosya"
 #: model:ir.model,name:sale_pdf_quote_builder.model_ir_actions_report
 msgid "Report Action"
 msgstr "Rapor işlemi"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_access_read
+msgid "Res Access Read"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_access_write
+msgid "Res Access Write"
+msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_field

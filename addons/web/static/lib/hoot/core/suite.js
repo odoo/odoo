@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Callbacks, HootError, createReporting, stringify } from "../hoot_utils";
+import { Callbacks, HootError, TestReporting, stringify } from "../hoot_utils";
 import { Job } from "./job";
 
 /**
@@ -59,7 +59,7 @@ export class Suite extends Job {
     currentJobs = [];
     /** @type {(Suite | Test)[]} */
     jobs = [];
-    reporting = createReporting();
+    reporting = new TestReporting();
 
     totalSuiteCount = 0;
     totalTestCount = 0;

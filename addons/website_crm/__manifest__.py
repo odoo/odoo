@@ -13,24 +13,28 @@ Forms has to be customized inside the *Website Builder* in order to generate lea
 This module includes contact phone and mobile numbers validation.""",
     'depends': ['website', 'crm'],
     'data': [
-        'security/ir.model.access.csv',
         'data/crm_lead_merge_template.xml',
         'data/ir_actions_data.xml',
         'data/ir_model_data.xml',
         'views/crm_lead_views.xml',
         'views/website_visitor_views.xml',
         'views/website_templates_contactus.xml',
+        'security/ir.access.csv',
     ],
     'auto_install': True,
     'assets': {
         'website.website_builder_assets': [
             'website_crm/static/src/js/website_crm_editor.js',
         ],
+        "website.assets_inside_builder_iframe": [
+            'website_crm/static/src/js/*.edit.js',
+        ],
         'web.assets_tests': [
             'website_crm/static/tests/**/*',
         ],
         'web.assets_backend': [
             'website_crm/static/src/**/*',
+            ('remove', 'website_crm/static/src/js/website_crm_editor.*'),
         ]
     },
     'author': 'Odoo S.A.',

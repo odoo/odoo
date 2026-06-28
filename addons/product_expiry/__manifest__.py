@@ -16,7 +16,7 @@ Following dates can be tracked:
 
 Also implements the removal strategy First Expiry First Out (FEFO) widely used, for example, in food industries.
 """,
-    'data': ['security/ir.model.access.csv',
+    'data': [
              'security/stock_security.xml',
              'views/production_lot_views.xml',
              'views/product_template_views.xml',
@@ -26,7 +26,10 @@ Also implements the removal strategy First Expiry First Out (FEFO) widely used, 
              'wizard/confirm_expiry_view.xml',
              'report/report_deliveryslip.xml',
              'report/report_lot_barcode.xml',
+             'report/report_package_barcode.xml',
+             'report/report_stock_traceability.xml',
              'data/product_expiry_data.xml',
+        'security/ir.access.csv',
             ],
     'post_init_hook': '_enable_tracking_numbers',
     'assets': {

@@ -29,10 +29,32 @@ export function initMockRpc() {
         return Object.fromEntries(Object.entries(response).filter(([key]) => models.includes(key)));
     };
 
+    const mockSyncOrder = async (request) => {
+        const { params } = await request.json();
+        const { order } = params;
+        const configId = order.config_id;
+
+        const response = MockServer.env["pos.order"].sync_from_ui([order]);
+
+        const partnerFields = MockServer.env["res.partner"]._load_pos_data_fields(configId);
+        const partnerIds = response["pos.order"]
+            .map((o) => o.partner_id)
+            .flat()
+            .filter((p) => !!p);
+        return {
+            "pos.order": response["pos.order"],
+            "pos.order.line": response["pos.order.line"],
+            "product.attribute.custom.value": response["product.attribute.custom.value"],
+            "pos.payment": response["pos.payment"],
+            "res.partner": MockServer.env["res.partner"].read(partnerIds, partnerFields, false),
+        };
+    };
+
     onRpc("/pos-self-order/process-order/kiosk", mockProcssOrder);
     onRpc("/pos-self-order/process-order/mobile", mockProcssOrder);
     onRpc("/pos-self-order/get-slots/", () => ({ usage_utc: {} }));
     onRpc("/pos-self-order/remove-order", () => ({}));
+    onRpc("/pos-self-order/sync-from-ui", mockSyncOrder);
 }
 
 export const setupPoSEnvForSelfOrder = async () => {
@@ -46,6 +68,9 @@ export const setupSelfPosEnv = async (
     pay_after = "each"
 ) => {
     // Do not change these variables, they are in accordance with the setup data
+    odoo.pos_session_id = 1;
+    odoo.pos_config_id = 1;
+    odoo.self_ordering_mode = mode;
     odoo.access_token = uuidv4();
     odoo.info = {
         isEnterprise: true,
@@ -131,7 +156,7 @@ export async function checkKioskPreparationTicketData(store, expectedData) {
         return `Mismatch in number of lines. Expected ${expectedData.length}, got ${printedLines.length}`;
     }
     for (const expected of expectedData) {
-        const found = printedLines.find((line) => line.name === expected.name);
+        const found = printedLines.find((line) => line.basic_name === expected.name);
         if (!found) {
             return `Product ${expected.name} not found in preparation data`;
         }

@@ -2,7 +2,6 @@
 <templates xml:space="preserve">
     <t t-name="web.SearchableSetting" t-inherit="web.Setting" t-inherit-mode="primary">
         <div t-att-class="this.classNames" position="attributes">
-            <attribute name="t-ref">setting</attribute>
             <attribute name="t-if">this.visible()</attribute>
         </div>
         <span class="o_form_label" position="replace">

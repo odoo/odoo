@@ -13,7 +13,7 @@ class TestWebsiteSaleReorderFromPortal(HttpCaseWithUserPortal):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.website = cls.env["website"].get_current_website()
+        cls.website = cls.env.ref('base.default_website')
         cls.website.write({"prevent_sale": False})
         cls.empty_cart = cls.env["sale.order"].create({"partner_id": cls.partner_portal.id})
         cls.product_1, cls.product_2 = cls.env["product.product"].create([

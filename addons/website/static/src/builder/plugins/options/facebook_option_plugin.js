@@ -6,7 +6,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class FacebookOptionPlugin extends Plugin {
     static id = "facebookOption";
-    static dependencies = ["history"];
+    static dependencies = ["domObserver"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         so_content_addition_selectors: [".o_facebook_page"],
@@ -37,6 +37,7 @@ export class FacebookOptionPlugin extends Plugin {
         if (nodes.length) {
             this.loadAndSetEmptyLink(nodes);
         }
+        return root;
     }
 
     async loadAndSetEmptyLink(nodes) {
@@ -45,20 +46,18 @@ export class FacebookOptionPlugin extends Plugin {
             this.setEmptyLink(nodes);
             return;
         }
-        // Fetches the default url for facebook page from website config
+        // Fetches the default url for facebook page from company config
         const res = await this.services.orm.read(
-            "website",
-            [this.services.website.currentWebsite.id],
+            "res.company",
+            [this.services.website.currentWebsite.company_id],
             ["social_facebook"]
         );
         if (res) {
             this.facebookUrl = res[0].social_facebook || "https://www.facebook.com/Odoo";
 
-            // WARNING: the call to ignoreDOMMutations is very dangerous,
+            // WARNING: the call to ignore is very dangerous,
             // and should be avoided in most cases (if you think you need those, ask html_editor team)
-            const hasChanged = this.dependencies.history.ignoreDOMMutations(() =>
-                this.setEmptyLink(nodes)
-            );
+            const hasChanged = this.dependencies.domObserver.ignore(() => this.setEmptyLink(nodes));
 
             if (hasChanged) {
                 const commonAncestor = getCommonAncestor(nodes, this.editable);

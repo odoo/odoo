@@ -700,3 +700,100 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             with file_open("l10n_es_edi_facturae/tests/data/expected_out_invoice_round_glob.xml", "rt") as f:
                 expected_xml = lxml.etree.fromstring(f.read().encode())
             self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
+    def test_out_invoice_rounding_2(self):
+        company = self.company_data['company']
+        company.tax_calculation_rounding_method = 'round_globally'
+        with freeze_time(self.frozen_today):
+            invoice = self._create_invoice(
+                partner_id=self.partner_a.id,
+                move_type='out_invoice',
+                invoice_line_ids=[
+                    self._prepare_invoice_line(product_id=self.product_a.id, price_unit=2478.1355, quantity=1.0, tax_ids=self.tax),
+                    self._prepare_invoice_line(product_id=self.product_a.id, price_unit=1062.50, quantity=1.0, tax_ids=self.tax),
+                    self._prepare_invoice_line(product_id=self.product_a.id, price_unit=1488.125, quantity=1.0, tax_ids=self.tax),
+                ],
+                post=True,
+            )
+            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
+            self.assertTrue(generated_file)
+
+            with file_open("l10n_es_edi_facturae/tests/data/expected_out_invoice_round_2.xml", "rt") as f:
+                expected_xml = lxml.etree.fromstring(f.read().encode())
+            self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
+    def test_refund_invoice_corrective_invoice_number_prefers_linked_invoice_over_manual_original(self):
+        def get_invoice_numbers(xml_bytes):
+            tree = lxml.etree.fromstring(xml_bytes)
+            return (
+                tree.findtext('.//Invoice/InvoiceHeader/InvoiceNumber'),
+                tree.findtext('.//Invoice/InvoiceHeader/Corrective/InvoiceNumber'),
+            )
+
+        with freeze_time(self.frozen_today), \
+                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
+                self._mock_sha1():
+            invoice = self._create_invoice_es(
+                partner_id=self.partner_a.id,
+                move_type='out_invoice',
+                invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}],
+            )
+            invoice.action_post()
+
+            reversal_wizard = self.env['account.move.reversal'].create({
+                'move_ids': invoice.ids,
+                'journal_id': invoice.journal_id.id,
+                'date': self.frozen_today,
+                'company_id': self.company_data['company'].id,
+                'l10n_es_edi_facturae_reason_code': '01',
+            })
+            reversal_wizard.modify_moves()
+            refund = invoice.reversal_move_ids
+
+            xml_before, errors = refund._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
+            refund_number, corrective_number_before = get_invoice_numbers(xml_before)
+            self.assertEqual(corrective_number_before, invoice.name)
+
+            new_original = 'INV/MANUAL/00099'
+            refund.l10n_es_original_invoice_credited = new_original
+
+            xml_after, errors = refund._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
+            refund_number_after, corrective_number_after = get_invoice_numbers(xml_after)
+
+            self.assertEqual(corrective_number_after, invoice.name)
+            self.assertEqual(corrective_number_after, corrective_number_before)
+            self.assertNotEqual(corrective_number_after, new_original)
+            self.assertEqual(refund_number_after, refund_number)
+
+    def test_refund_invoice_manual_original_from_scratch_can_be_sent(self):
+        with freeze_time(self.frozen_today), \
+                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
+                self._mock_sha1():
+            refund = self._create_invoice_es(
+                partner_id=self.partner_a.id,
+                move_type='out_refund',
+                invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}],
+                l10n_es_original_invoice_credited='INV/MANUAL/00042',
+                l10n_es_edi_facturae_reason_code='01',
+                l10n_es_invoicing_period_start_date='2022-12-01',
+                l10n_es_invoicing_period_end_date='2022-12-31',
+            )
+            refund.action_post()
+
+            generated_file, errors = refund._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
+            self.assertTrue(generated_file)
+
+            tree = lxml.etree.fromstring(generated_file)
+            self.assertEqual(tree.findtext('.//Invoice/InvoiceHeader/Corrective/InvoiceNumber'), 'INV/MANUAL/00042')
+            self.assertEqual(tree.findtext('.//Invoice/InvoiceHeader/Corrective/ReasonCode'), '01')
+            self.assertEqual(tree.findtext('.//Invoice/InvoiceHeader/Corrective/TaxPeriod/StartDate'), '2022-12-01')
+            self.assertEqual(tree.findtext('.//Invoice/InvoiceHeader/Corrective/TaxPeriod/EndDate'), '2022-12-31')
+
+            wizard = self.create_send_and_print(refund)
+            result = wizard.action_send_and_print()
+            self.assertEqual(result['type'], 'ir.actions.act_window_close')
+            self.assertTrue(refund.l10n_es_edi_facturae_xml_id)

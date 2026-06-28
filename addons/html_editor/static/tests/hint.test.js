@@ -1,5 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, tick } from "@odoo/hoot-mock";
+import { waitFor } from "@odoo/hoot-dom";
 import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import {
@@ -58,18 +59,22 @@ test("placeholder must not be visible if there is content in the editor", async 
 
 test("placeholder must not be visible if there is content in the editor (2)", async () => {
     const content =
-        '<p><a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a></p>';
+        '<p><span class="o_file_box" contenteditable="false"><a href="#" title="document" data-mimetype="application/pdf"></a></span></p>';
     const { el } = await setupEditor(content, { config: { placeholder: "test" } });
     // Unchanged, no placeholder hint.
-    expect(getContent(el)).toBe(content);
+    expect(getContent(el)).toBe(
+        '<p>\ufeff<span class="o_file_box" contenteditable="false"><a href="#" title="document" data-mimetype="application/pdf"></a></span>\ufeff</p>'
+    );
 });
 
 test("should not display hint in paragraph with media content", async () => {
     const content =
-        '<p><a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a>[]</p>';
+        '<p><span class="o_file_box" contenteditable="false"><a href="#" title="document" data-mimetype="application/pdf"></a></span>[]</p>';
     const { el } = await setupEditor(content);
     // Unchanged, no empty paragraph hint.
-    expect(getContent(el)).toBe(content);
+    expect(getContent(el)).toBe(
+        '<p>\ufeff<span class="o_file_box" contenteditable="false"><a href="#" title="document" data-mimetype="application/pdf"></a></span>\ufeff[]</p>'
+    );
 });
 
 test("should not display hint in a non-editable paragraph", async () => {
@@ -131,7 +136,7 @@ test("should not lose track of temporary hints on split block", async () => {
         `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
     );
     editor.shared.split.splitBlock();
-    editor.shared.history.addStep();
+    editor.shared.history.commit();
     await animationFrame();
     expect(getContent(el)).toBe(
         unformat(`
@@ -156,8 +161,8 @@ test("should not lose track of temporary hints on split block", async () => {
             <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
         `)
     );
-    // Changing the selection should not generate mutations for the next step
-    expect(plugins.get("history").currentStep.mutations.length).toBe(0);
+    // Changing the selection should not generate mutations for the next commit.
+    expect(plugins.get("domObserver").mutations.length).toBe(0);
 });
 
 test("hint should only Be display for focused empty block element", async () => {
@@ -170,7 +175,7 @@ test("hint should only Be display for focused empty block element", async () => 
     // @todo @phoenix: getContent does not place the selection when anchor is BR
     expect(el.innerHTML).toBe(`<h1 o-we-hint-text="Heading 1" class="o-we-hint"><br></h1>`);
     editor.shared.split.splitBlock();
-    editor.shared.history.addStep();
+    editor.shared.history.commit();
     await animationFrame();
     expect(getContent(el)).toBe(
         unformat(`
@@ -231,13 +236,22 @@ test("should debounce hint on selection change", async () => {
             config: { debounceHints: true },
         }
     );
-    expect(getContent(el)).toBe(`<p>[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>`);
+    await waitFor(".o-we-hint"); // Let the initial state settle.
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>`
+    );
     await simulateArrowKeyPress(editor, "ArrowDown");
-    expect(getContent(el)).toBe(`<p><br></p><p>[]<br></p><p><br></p><p><br></p><p><br></p>`);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><br></p><p>[]<br></p><p><br></p><p><br></p><p><br></p>`
+    );
     await simulateArrowKeyPress(editor, "ArrowDown");
-    expect(getContent(el)).toBe(`<p><br></p><p><br></p><p>[]<br></p><p><br></p><p><br></p>`);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><br></p><p><br></p><p>[]<br></p><p><br></p><p><br></p>`
+    );
     await simulateArrowKeyPress(editor, "ArrowDown");
-    expect(getContent(el)).toBe(`<p><br></p><p><br></p><p><br></p><p>[]<br></p><p><br></p>`);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><br></p><p><br></p><p><br></p><p>[]<br></p><p><br></p>`
+    );
     await simulateArrowKeyPress(editor, "ArrowDown");
     await animationFrame();
     await new Promise((resolve) => setTimeout(resolve, 30));

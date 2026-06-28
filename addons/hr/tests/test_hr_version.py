@@ -674,7 +674,6 @@ class TestHrVersion(TestHrCommon):
             "rating_ids",
             "template_warning",
             "tz",
-            "website_message_ids",
             "work_location_name",
             "work_location_type",
             "write_date",
@@ -713,7 +712,7 @@ class TestHrVersion(TestHrCommon):
         )
 
     def test_search_on_version_fields(self):
-        Department = self.env['hr.department'].with_context(tracking_disable=True)
+        Department = self.env['hr.department']
         rd_dep = Department.create({
             'name': 'Research and devlopment',
         })
@@ -762,8 +761,6 @@ class TestHrVersion(TestHrCommon):
         HrEmployee_with_office_user = self.env['hr.employee'].with_user(self.res_users_hr_officer)
         self.employee.user_id = self.res_users_hr_officer
         with self.assertRaises(AccessError, msg="HR Officer should not be able to access to 'payroll fields'"):
-            HrEmployee_with_office_user.search([('contract_date_start', '<', '2022-01-01'), ('id', 'in', employees.ids)])
-        with self.assertRaises(AccessError, msg="HR Officer should not be able to access to 'payroll fields'"):
             HrEmployee_with_office_user.search([('wage', '=', 2000), ('id', 'in', employees.ids)])
         with self.assertRaises(AccessError, msg="HR Officer should not be able to access to 'payroll fields'"):
             HrEmployee_with_office_user.search([('version_id.wage', '=', 2000), ('id', 'in', employees.ids)])
@@ -776,7 +773,6 @@ class TestHrVersion(TestHrCommon):
             self.res_users_hr_manager.group_ids += payroll_group
         HrEmployee_with_manager_user = self.env['hr.employee'].with_user(self.res_users_hr_manager)
         self.employee.user_id = self.res_users_hr_manager
-        self.assertEqual(HrEmployee_with_manager_user.search([('contract_date_start', '<', '2022-01-01'), ('id', 'in', employees.ids)]), employee1)
         self.assertEqual(HrEmployee_with_manager_user.search([('wage', '=', 2000), ('id', 'in', employees.ids)]), employee2)
         self.assertEqual(HrEmployee_with_manager_user.search([('version_id.wage', '=', 2000), ('id', 'in', employees.ids)]), employee2)
         self.assertEqual(HrEmployee_with_manager_user.search([('hr_responsible_id', '=', self.res_users_hr_manager.id), ('id', 'in', employees.ids)]), employee1)
@@ -878,3 +874,22 @@ class TestHrVersion(TestHrCommon):
         version_1.unlink()
 
         self.assertEqual(employee.first_contract_date, date(2026, 2, 1))
+
+    def test_version_date_start_end_search(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2026-01-01',
+        })
+        employee.write({'contract_date_start': '2026-01-01', 'contract_date_end': '2026-12-31'})
+        v1 = employee.version_id
+        v2 = employee.create_version({
+            'date_version': '2026-06-01',
+        })
+        versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_start', '>', '2026-02-01')])
+        self.assertEqual(versions, v2)
+        versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_start', '<', '2026-02-01')])
+        self.assertEqual(versions, v1)
+        versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_end', '<', '2026-06-01')])
+        self.assertEqual(versions, v1)
+        versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_end', '>', '2026-06-01')])
+        self.assertEqual(versions, v2)

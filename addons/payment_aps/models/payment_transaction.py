@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.tools import urls
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
-from odoo.addons.payment_aps import utils as aps_utils
 from odoo.addons.payment_aps.const import PAYMENT_STATUS_MAPPING
 from odoo.addons.payment_aps.controllers.main import APSController
 
@@ -52,7 +51,6 @@ class PaymentTransaction(models.Model):
 
         converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency_id)
         base_url = self.provider_id.get_base_url()
-        payment_option = aps_utils.get_payment_option(self.payment_method_id.code)
         url_params = {
             "command": "PURCHASE",
             "access_code": self.provider_id.aps_access_code,
@@ -62,10 +60,9 @@ class PaymentTransaction(models.Model):
             "currency": self.currency_id.name,
             "language": self.partner_lang[:2],
             "customer_email": self.partner_id.email_normalized,
+            "payment_option": self.payment_method_id.code.upper(),
             "return_url": urls.urljoin(base_url, APSController._return_url),
         }
-        if payment_option:  # Not included if the payment method is 'card'.
-            url_params["payment_option"] = payment_option
         url_params["signature"] = self.provider_id._aps_calculate_signature(
             url_params, incoming=False
         )
@@ -78,16 +75,6 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("merchant_reference")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "aps":
-            return super()._extract_amount_data(payment_data)
-
-        amount = payment_utils.to_major_currency_units(
-            float(payment_data.get("amount", 0)), self.currency_id
-        )
-        return {"amount": amount, "currency_code": payment_data.get("currency")}
-
     def _apply_updates(self, payment_data):
         """Override of `payment' to update the transaction based on the payment data."""
         if self.provider_code != "aps":
@@ -98,13 +85,13 @@ class PaymentTransaction(models.Model):
 
         # Update the payment method.
         payment_option = payment_data.get("payment_option", "")
-        payment_method = self.env["payment.method"]._get_from_code(payment_option.lower())
+        payment_method = self.provider_id._get_pm_from_code(payment_option.lower())
         self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
         status = payment_data.get("status")
         if not status:
-            self._set_error(_("Received data with missing payment state."))
+            self._set_error(self.env._("Received data with missing payment state."))
         elif status in PAYMENT_STATUS_MAPPING["pending"]:
             self._set_pending()
         elif status in PAYMENT_STATUS_MAPPING["done"]:
@@ -117,9 +104,19 @@ class PaymentTransaction(models.Model):
                 {"status": status, "reason": status_description, "ref": self.reference},
             )
             self._set_error(
-                _(
+                self.env._(
                     "Received invalid transaction status %(status)s and reason '%(reason)s'.",
                     status=status,
                     reason=status_description,
                 )
             )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "aps":
+            return super()._extract_amount_data(payment_data)
+
+        amount = payment_utils.to_major_currency_units(
+            float(payment_data.get("amount", 0)), self.currency_id
+        )
+        return {"amount": amount, "currency_code": payment_data.get("currency")}

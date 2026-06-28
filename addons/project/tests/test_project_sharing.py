@@ -263,7 +263,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.project_portal.write({'collaborator_ids': [Command.create({'partner_id': self.user_portal.partner_id.id})]})
         self.assertTrue(self.project_portal.with_user(self.user_portal)._check_project_sharing_access(), 'The portal user can access to project sharing feature of the portal project.')
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_create_task_in_project_sharing(self):
         """ Test when portal user creates a task in project sharing views.
 
@@ -274,7 +274,7 @@ class TestProjectSharing(TestProjectSharingCommon):
             3) Give the 'edit' access mode to a portal user in a project and try to create task with this user.
             3.1) Try to change the project of the new task with this user.
         """
-        Task = self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_portal.id, 'default_user_ids': [(4, self.user_portal.id)]})
+        Task = self.env['project.task'].with_context({'default_project_id': self.project_portal.id, 'default_user_ids': [(4, self.user_portal.id)]})
         # 1) Give the 'read' access mode to a portal user in a project and try to create task with this user.
         with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
             with self.get_project_sharing_form_view(Task, self.user_portal) as form:
@@ -334,17 +334,15 @@ class TestProjectSharing(TestProjectSharingCommon):
         # However, cache is updated, but nothing is written.
         with self.assertRaisesRegex(AccessError, "top-secret records"):
             Task.with_context(default_child_ids=[Command.update(self.task_no_collabo.id, {'name': 'Foo'})]).create({'name': 'foo'})
-        with Task.env.cr.savepoint() as sp:
+        with self.assertRaisesRegex(AccessError, "not allowed to delete"):
             task = Task.with_context(default_child_ids=[Command.delete(self.task_no_collabo.id)]).create({'name': 'foo'})
             task.env.invalidate_all()
             self.assertTrue(self.task_no_collabo.exists(), "Task should still be there, no delete is sent")
-            sp.rollback()
-        with self.env.cr.savepoint() as sp:
+        with self.assertRaisesRegex(AccessError, "top-secret records"):
             self.task_no_collabo.parent_id = self.task_no_collabo.create({'name': 'parent collabo'})
             task = Task.with_context(default_child_ids=[Command.unlink(self.task_no_collabo.id)]).create({'name': 'foo'})
             task.env.invalidate_all()
             self.assertTrue(self.task_no_collabo.parent_id, "Task should still be there, no delete is sent")
-            sp.rollback()
         with self.assertRaisesRegex(AccessError, "top-secret records"):
             task = Task.with_context(default_child_ids=[Command.link(self.task_no_collabo.id)]).create({'name': 'foo'})
             task.env.invalidate_all()
@@ -365,16 +363,14 @@ class TestProjectSharing(TestProjectSharingCommon):
         # Same thing but using context defaults
         with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tag'"):
             Task.with_context(default_tag_ids=[Command.create({'name': 'Bar'})]).create({'name': 'foo'})
-        with Task.env.cr.savepoint() as sp:
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tag'"):
             task = Task.with_context(default_tag_ids=[Command.update(self.task_tag.id, {'name': 'Bar'})]).create({'name': 'foo'})
             task.env.invalidate_all()
             self.assertNotEqual(self.task_tag.name, 'Bar')
-            sp.rollback()
-        with Task.env.cr.savepoint() as sp:
+        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tag'"):
             Task.with_context(default_tag_ids=[Command.delete(self.task_tag.id)]).create({'name': 'foo'})
             task.env.invalidate_all()
             self.assertTrue(self.task_tag.exists())
-            sp.rollback()
 
         task = Task.create({'name': 'foo', 'color': 1, 'tag_ids': [Command.link(self.task_tag.id)]})
         self.assertEqual(task.color, 1)
@@ -384,7 +380,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.assertEqual(task.color, 4)
         self.assertEqual(task.tag_ids, self.task_tag)
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_edit_task_in_project_sharing(self):
         """ Test when portal user creates a task in project sharing views.
 
@@ -401,7 +397,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         """
         # 1) Give the 'read' access mode to a portal user in a project and try to create task with this user.
         with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
-            with self.get_project_sharing_form_view(self.task_cow.with_context({'tracking_disable': True, 'default_project_id': self.project_cows.id}), self.user_portal) as form:
+            with self.get_project_sharing_form_view(self.task_cow.with_context({'default_project_id': self.project_cows.id}), self.user_portal) as form:
                 form.name = 'Test'
                 task = form.save()
 
@@ -415,7 +411,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         project_share_wizard.action_send_mail()
         # the portal user is set as follower for the task_cow. Without it he does not have read access to the task, and thus can not access its view form
         self.task_cow.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
-        with self.get_project_sharing_form_view(self.task_cow.with_context({'tracking_disable': True, 'default_project_id': self.project_cows.id, 'uid': self.user_portal.id}), self.user_portal) as form:
+        with self.get_project_sharing_form_view(self.task_cow.with_context({'default_project_id': self.project_cows.id, 'uid': self.user_portal.id}), self.user_portal) as form:
             form.name = 'Test'
             task = form.save()
             self.assertEqual(task.name, 'Test')
@@ -439,7 +435,6 @@ class TestProjectSharing(TestProjectSharingCommon):
 
         task2 = self.env['project.task'] \
             .with_context({
-                'tracking_disable': True,
                 'default_project_id': self.project_cows.id,
                 'default_user_ids': [Command.set(self.user_portal.ids)],
             }) \
@@ -634,7 +629,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         # Reading the milestone should no longer trigger an access error.
         project_milestone.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError, msg="Should not accept the portal user to update a milestone."):
-            project_milestone.with_user(self.user_portal).write(['name'])
+            project_milestone.with_user(self.user_portal).write({'name': 'test_milestone'})
         with self.assertRaises(AccessError, msg="Should not accept the portal user to delete a milestone."):
             project_milestone.with_user(self.user_portal).unlink()
         with self.assertRaises(AccessError, msg="Should not accept the portal user to create a milestone."):

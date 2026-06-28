@@ -3,6 +3,7 @@
 import difflib
 import logging
 import time
+from collections import defaultdict
 from markupsafe import Markup
 
 from odoo import api, fields, models, Command, _
@@ -16,6 +17,12 @@ TOLERANCE = 0.02  # tolerance applied to the total when searching for a matching
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
+    purchase_vendor_bill_id = fields.Many2one(
+        'purchase.bill.union',
+        store=False,
+        readonly=False,
+        help="Auto-complete from a previous bill, refund, or purchase order."
+    )
     purchase_id = fields.Many2one('purchase.order', store=False, readonly=False,
         string='Purchase Order',
         help="Auto-complete from a past purchase order.")
@@ -23,13 +30,28 @@ class AccountMove(models.Model):
     display_auto_complete_field = fields.Boolean(compute="_compute_display_auto_complete", groups='purchase.group_purchase_user')
     purchase_order_name = fields.Char(compute='_compute_purchase_order_name')
     is_purchase_matched = fields.Boolean(compute='_compute_is_purchase_matched')  # 0: PO not required or partially linked. 1: All lines linked
+    purchase_matched_ratio = fields.Float(compute='_compute_is_purchase_matched', string='Purchase Matched Ratio')
     purchase_warning_text = fields.Text(
         "Purchase Warning",
         help="Internal warning for the partner or the products as set by the user.",
         compute='_compute_purchase_warning_text')
 
-    @api.onchange('purchase_id')
+    @api.onchange('purchase_vendor_bill_id', 'purchase_id')
     def _onchange_purchase_auto_complete(self):
+        r''' Load from either an old purchase order, either an old vendor bill.
+
+        When setting a 'purchase.bill.union' in 'purchase_vendor_bill_id':
+        * If it's a vendor bill, 'invoice_vendor_bill_id' is set and the loading is done by '_onchange_invoice_vendor_bill'.
+        * If it's a purchase order, 'purchase_id' is set and this method will load lines.
+
+        /!\ All this not-stored fields must be empty at the end of this function.
+        '''
+        if self.purchase_vendor_bill_id.vendor_bill_id:
+            self.invoice_vendor_bill_id = self.purchase_vendor_bill_id.vendor_bill_id
+            self._onchange_invoice_vendor_bill()
+        elif self.purchase_vendor_bill_id.purchase_order_id:
+            self.purchase_id = self.purchase_vendor_bill_id.purchase_order_id
+        self.purchase_vendor_bill_id = False
 
         if not self.purchase_id:
             return
@@ -46,7 +68,17 @@ class AccountMove(models.Model):
 
         # Copy purchase lines.
         po_lines = self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id')
-        self._add_purchase_order_lines(po_lines)
+        initial_po_lines_count = len(po_lines)
+        if self.env.context.get('from_edi'):
+            # EDI matching as its own way of adjusting the bill lines after matching, no need to interfere here.
+            self._add_purchase_order_lines(po_lines)
+        else:
+            should_create_new_lines = all(line.purchase_line_id for line in self.invoice_line_ids if line.display_type == 'product')
+            po_lines = self._update_purchase_order_lines(po_lines)
+
+            if should_create_new_lines:
+                # Only create new lines if at least one line has no purchase line associated
+                self._add_purchase_order_lines(po_lines)
 
         # Compute invoice_origin.
         origins = set(self.invoice_line_ids.mapped('purchase_line_id.order_id.name'))
@@ -57,6 +89,34 @@ class AccountMove(models.Model):
             self.company_id = self.purchase_id.company_id
 
         self.purchase_id = False
+
+        if self.env.context.get('from_edi'):
+            return
+
+        unmatched_lines = self.invoice_line_ids.filtered(lambda il: not il.purchase_line_id)
+        warning_notification = {
+            'warning': {
+                'title': self.env._("Update"),
+                'type': 'notification',
+            }
+        }
+        if should_create_new_lines:
+            warning_notification['warning']['message'] = self.env._(
+                "%(added_lines_count)s PO lines added to the bill.",
+                added_lines_count=len(po_lines),
+            )
+        else:
+            if initial_po_lines_count == len(po_lines):
+                warning_notification['warning']['message'] = self.env._(
+                    "0 bill lines matched with this PO.",
+                )
+            else:
+                warning_notification['warning']['message'] = self.env._(
+                    "%(matched_lines_count)s bill lines matched, %(unmatched_lines_count)s unmatched remaining.",
+                    matched_lines_count=len(self.invoice_line_ids - unmatched_lines),
+                    unmatched_lines_count=len(unmatched_lines),
+                )
+        return warning_notification
 
     @api.onchange('partner_id', 'company_id')
     def _onchange_partner_id(self):
@@ -104,15 +164,26 @@ class AccountMove(models.Model):
     @api.depends('line_ids.purchase_line_id')
     def _compute_is_purchase_matched(self):
         for move in self:
-            if any(il.display_type == 'product' and not bool(il.purchase_line_id) for il in move.invoice_line_ids):
-                move.is_purchase_matched = False
-                continue
-            move.is_purchase_matched = True
+            product_lines = move.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+            total = len(product_lines)
+            matched = len(product_lines.filtered('purchase_line_id'))
+            move.purchase_matched_ratio = 100.0 * matched / total if total else 0.0
+            move.is_purchase_matched = matched == total and total > 0
 
-    @api.depends('line_ids.purchase_line_id')
+    @api.depends("purchase_id")
+    def _compute_incoterm_location(self):
+        super()._compute_incoterm_location()
+        for move in self:
+            purchase_locations = move.line_ids.purchase_line_id.order_id.mapped("incoterm_location")
+            incoterm_res = next((incoterm for incoterm in purchase_locations if incoterm), False)
+            # if multiple purchase order we take an incoterm that is not false
+            if incoterm_res:
+                move.incoterm_location = incoterm_res
+
+    @api.depends('invoice_line_ids.purchase_line_id')
     def _compute_origin_po_count(self):
         for move in self:
-            move.purchase_order_count = len(move.line_ids.purchase_line_id.order_id)
+            move.purchase_order_count = len(move.invoice_line_ids.purchase_line_id.order_id)
 
     @api.depends('purchase_order_count')
     def _compute_purchase_order_name(self):
@@ -142,17 +213,32 @@ class AccountMove(models.Model):
                     warnings.add(product.display_name + ' - ' + product_msg)
             move.purchase_warning_text = '\n'.join(warnings)
 
+    @api.depends_context('uid')
+    def _compute_show_invoice_vendor_bill(self):
+        super()._compute_show_invoice_vendor_bill()
+        # If the user doesn't have purchase access, `invoice_vendor_bill_id` is displayed,
+        # as the user doesn't have access to `purchase_vendor_bill_id`.
+        for move in self:
+            move.show_invoice_vendor_bill &= not self.env.user.has_group('purchase.group_purchase_user')
+
     def action_purchase_matching(self):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
             'name': _("Purchase Matching"),
             'res_model': 'purchase.bill.line.match',
+            'context': {
+                'partner_id': self.partner_id.id,
+            },
             'domain': [
                 ('partner_id', 'in', (self.partner_id | self.partner_id.commercial_partner_id).ids),
                 ('company_id', 'in', self.env.companies.ids),
                 ('company_id', 'child_of', self.company_id.ids),
-                ('account_move_id', 'in', [self.id, False]),
+                '|', '|', '|',
+                ('account_move_id', 'in', self.ids),
+                ('pol_id.invoice_lines.move_id', 'in', self.ids),
+                ('qty_to_invoice_raw', '!=', 0),
+                ('qty_to_invoice', '!=', 0),
             ],
             'views': [(self.env.ref('purchase.purchase_bill_line_match_tree').id, 'list')],
         }
@@ -200,8 +286,46 @@ class AccountMove(models.Model):
                 move.message_post(body=message)
         return res
 
+    def _update_purchase_order_lines(self, purchase_order_lines):
+        self.ensure_one()
+        unmatched_po_line_ids = set()
+        candidates_by_product = defaultdict(lambda: self.env['account.move.line'])
+        for aml in self.invoice_line_ids:
+            if not aml.product_id or aml.purchase_line_id:
+                continue
+            candidates_by_product[aml.product_id.id] |= aml
+
+        for po_line in purchase_order_lines:
+            candidates = candidates_by_product.get(po_line.product_id.id, self.env['account.move.line'])
+            if not candidates:
+                unmatched_po_line_ids.add(po_line.id)
+                continue
+            candidates = candidates.sorted(lambda aml: (
+                abs(aml.product_uom_id._compute_quantity(aml.quantity, po_line.uom_id) - po_line.product_qty),
+                abs(aml.price_unit - po_line.price_unit),
+            ))
+
+            po_quantity_to_match = po_line.qty_to_invoice_raw
+            while candidates:
+                # Try to match with the most suitable line for the missing qty left to invoice.
+                best = min(candidates, key=lambda aml: (
+                    abs(aml.product_uom_id._compute_quantity(aml.quantity, po_line.uom_id) - po_quantity_to_match),
+                    abs(aml.price_unit - po_line.price_unit),
+                ))
+                best.purchase_line_id = po_line
+                candidates_by_product[po_line.product_id.id] -= best
+                po_quantity_to_match -= best.product_uom_id._compute_quantity(best.quantity, po_line.uom_id)
+                candidates -= best
+                if po_line.uom_id.compare(po_quantity_to_match, 0) <= 0:
+                    # Match at least the best candidate, then continue if there's still quantity to match.
+                    break
+
+        return purchase_order_lines.filtered(lambda l: l.id in unmatched_po_line_ids)
+
     def _add_purchase_order_lines(self, purchase_order_lines):
         """ Creates new invoice lines from purchase order lines """
+        if not purchase_order_lines:
+            return
         self.ensure_one()
         new_line_ids = self.env['account.move.line']
 
@@ -344,7 +468,7 @@ class AccountMove(models.Model):
                         'name': _('From %s', purchase_order.name)
                     })]
                     invoice.purchase_id = purchase_order
-                    invoice._onchange_purchase_auto_complete()
+                    invoice.with_context(from_edi=True)._onchange_purchase_auto_complete()
 
     def _match_purchase_orders(self, po_references, partner_id, amount_total, from_ocr, timeout):
         """Tries to match open purchase order lines with this invoice given the information we have.
@@ -527,6 +651,7 @@ class AccountMoveLine(models.Model):
     is_downpayment = fields.Boolean()
     purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index='btree_not_null', copy=False)
     purchase_order_id = fields.Many2one('purchase.order', 'Purchase Order', related='purchase_line_id.order_id', readonly=True)
+    purchase_matching_issue_msg = fields.Char(compute='_compute_purchase_matching_issue_msg')
     purchase_line_warn_msg = fields.Text(compute='_compute_purchase_line_warn_msg')
 
     def _copy_data_extend_business_fields(self, values):
@@ -549,12 +674,45 @@ class AccountMoveLine(models.Model):
     def _related_analytic_distribution(self):
         # EXTENDS 'account'
         vals = super()._related_analytic_distribution()
-        if self.purchase_line_id and not self.analytic_distribution:
+        if self.purchase_line_id:
             vals |= self.purchase_line_id.analytic_distribution or {}
         return vals
+
+    @api.depends('purchase_line_id.analytic_distribution')
+    def _compute_analytic_distribution(self):
+        super()._compute_analytic_distribution()
 
     @api.depends('product_id.purchase_line_warn_msg')
     def _compute_purchase_line_warn_msg(self):
         has_group = self.env.user.has_group('purchase.group_warning_purchase')
         for line in self:
             line.purchase_line_warn_msg = line.product_id.purchase_line_warn_msg if has_group else ""
+
+    @api.depends('purchase_line_id', 'price_unit', 'purchase_line_id.price_unit', 'quantity')
+    def _compute_purchase_matching_issue_msg(self):
+        self.purchase_matching_issue_msg = False
+        lines_per_po_line = self.grouped('purchase_line_id')
+        aml_qties_per_po_line = {
+            pol: sum(aml.product_uom_id._compute_quantity(aml.quantity if not aml.is_refund else -aml.quantity, pol.uom_id) for aml in lines_per_po_line[pol])
+            for pol in lines_per_po_line
+        }
+        invoiced_quantities = self.purchase_line_id.with_context(excluded_aml_ids=self.ids)._prepare_qty_invoiced()
+
+        for line in self:
+            if not line.product_id:
+                continue
+            if po_line := line.purchase_line_id:
+                msg = ""
+                discounted_price = line.price_unit * (1 - line.discount / 100)
+                if price_compare := line.currency_id.compare_amounts(po_line.price_unit_discounted, discounted_price):
+                    msg += f" {'⬇' if price_compare > 0 else '⬆'} {po_line.currency_id.format(po_line.price_unit_discounted)}"
+
+                pol_qty = po_line.product_qty if po_line.product_id.purchase_method == 'purchase' else po_line.qty_received
+                if po_line.uom_id.compare(invoiced_quantities[po_line] + aml_qties_per_po_line[po_line], pol_qty):
+                    aml_qty = line.product_uom_id._compute_quantity(line.quantity, po_line.uom_id)
+                    if line.is_refund:
+                        aml_qty = -aml_qty
+                    expected_qty = pol_qty - (invoiced_quantities[po_line] + aml_qties_per_po_line[po_line] - aml_qty)
+                    msg += f" ⚠ {expected_qty} {po_line.uom_id.display_name}"
+
+                line.purchase_matching_issue_msg = msg

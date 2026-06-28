@@ -1,5 +1,7 @@
 import base64
 import io
+import inspect
+import logging
 from collections import OrderedDict
 from datetime import date, datetime
 from unittest.mock import patch
@@ -19,13 +21,13 @@ from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.base.tests.files import SVG_RAW, ZIP_RAW
 from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
 
+_logger = logging.getLogger(__name__)
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+
+@tagged('at_install', '-post_install')
 class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def setUp(self):
         # for tests methods that create custom models/fields
-        self.addCleanup(self.registry.reset_changes)
-        self.addCleanup(self.registry.clear_all_caches)
         super().setUp()
         self.env.ref('test_orm.discussion_0').write({'participants': [Command.link(self.user_demo.id)]})
         # YTI FIX ME: The cache shouldn't be inconsistent (rco is gonna fix it)
@@ -311,8 +313,8 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(message2.size, 3)
 
         # special case: computed field without dependency must be computed
-        record = self.env['test_orm.mixed'].create({})
-        self.assertTrue(record.now)
+        record = self.env['test_orm.mixed_computes'].create({})
+        self.assertTrue(record.compute_without_dependency)
 
     def test_10_non_stored_cache_only(self):
         """Test create and write behavior for fields.Char(store=False).
@@ -434,9 +436,11 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         user2 = User.create({'name': 'Boooh', 'login': 'b'})
         user3 = User.create({'name': 'Crrrr', 'login': 'c'})
         # add a rule to not give access to user2
-        self.env['ir.rule'].create({
-            'model_id': self.env['ir.model'].search([('model', '=', 'res.users')]).id,
-            'domain_force': "[('id', '!=', %d)]" % user2.id,
+        self.env['ir.access'].create({
+            'name': 'Global access to forbid access to user2',
+            'model_id': self.env['ir.model']._get('res.users').id,
+            'operation': 'crud',
+            'domain': f"[('id', '!=', {user2.id})]",
         })
         # DLE P72: Since we decided that we do not raise security access errors for data to which we had the occassion
         # to put the value in the cache, we need to invalidate the cache for user1, user2 and user3 in order
@@ -603,7 +607,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_12_unlink_cascade_ir_rule_using_related(self):
         """ Test that `unlink` on many records doesn't raise a RecursionError
-        when there is an ir.rule with a stored related field to compute.
+        when there is an ir.access with a stored related field to compute.
         """
         message = self.env['test_orm.message'].create({
             'active': False,
@@ -612,11 +616,13 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             [{'message': message.id}] * 101,
         )
 
-        # Create an ir.rule, which forces to flush field 'active'
-        self.env['ir.rule'].create({
+        # add ir.access to force field 'active' to be flushed
+        self.env['ir.access'].create({
+            'name': 'mail message active',
             'model_id': self.env['ir.model']._get_id('test_orm.emailmessage'),
-            'groups': [self.env.ref('base.group_user').id],
-            'domain_force': str([('active', '=', False)]),
+            'group_id': self.env.ref('base.group_user').id,
+            'operation': 'crud',
+            'domain': "[('active', '=', False)]",
         })
 
         message.with_user(self.user_demo).unlink()
@@ -900,7 +906,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         # alter access rights: regular users cannot read 'records'
         access = self.env.ref('test_orm.access_test_orm_compute_unassigned')
-        access.perm_read = False
+        access.for_read = False
         self.env.flush_all()
 
         # switch to environment with user demo
@@ -1039,7 +1045,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_21_float_digits(self):
         """ test field description """
         precision = self.env.ref('test_orm.decimal_orm_number')
-        description = self.env['test_orm.mixed'].fields_get()['number2']
+        description = self.env['test_orm.mixed'].fields_get()['float_precision']
         self.assertEqual(description['digits'], (16, precision.digits))
 
     def check_monetary(self, record, amount, currency, msg=None):
@@ -1054,11 +1060,11 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(record.currency_id, currency)
 
         # check the value on the record
-        self.assertIn(record.amount, [ramount, samount], msg)
+        self.assertIn(record.monetary, [ramount, samount], msg)
 
         # check the value in the database
         self.env.flush_all()
-        self.cr.execute('SELECT amount FROM test_orm_mixed WHERE id=%s', [record.id])
+        self.cr.execute('SELECT monetary FROM test_orm_mixed WHERE id=%s', [record.id])
         value = self.cr.fetchone()[0]
         self.assertEqual(value, samount, msg)
 
@@ -1078,30 +1084,30 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
                 currency = currency.browse()
 
             # case 1: create with amount and currency
-            record = model.create({'amount': amount, 'currency_id': currency.id})
-            self.check_monetary(record, amount, currency, 'create(amount, currency)')
+            record = model.create({'monetary': amount, 'currency_id': currency.id})
+            self.check_monetary(record, amount, currency, 'create(monetary, currency)')
 
             # case 2: assign amount
-            record.amount = 0
-            record.amount = amount
-            self.check_monetary(record, amount, currency, 'assign(amount)')
+            record.monetary = 0
+            record.monetary = amount
+            self.check_monetary(record, amount, currency, 'assign(monetary)')
 
             # case 3: write with amount and currency
-            record.write({'amount': 0, 'currency_id': False})
-            record.write({'amount': amount, 'currency_id': currency.id})
-            self.check_monetary(record, amount, currency, 'write(amount, currency)')
+            record.write({'monetary': 0, 'currency_id': False})
+            record.write({'monetary': amount, 'currency_id': currency.id})
+            self.check_monetary(record, amount, currency, 'write(monetary, currency)')
 
             # case 4: write with amount only
-            record.write({'amount': 0})
-            record.write({'amount': amount})
-            self.check_monetary(record, amount, currency, 'write(amount)')
+            record.write({'monetary': 0})
+            record.write({'monetary': amount})
+            self.check_monetary(record, amount, currency, 'write(monetary)')
 
             # case 5: write with amount on several records
             records = record + model.create({'currency_id': currency.id})
-            records.write({'amount': 0})
-            records.write({'amount': amount})
+            records.write({'monetary': 0})
+            records.write({'monetary': amount})
             for record in records:
-                self.check_monetary(record, amount, currency, 'multi write(amount)')
+                self.check_monetary(record, amount, currency, 'multi write(monetary)')
 
     def test_20_monetary_related(self):
         """ test value rounding with related currency """
@@ -1136,9 +1142,9 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_20_like_multiline(self):
         """ test filtered_domain() on multiline fields. """
-        record = self.env['test_orm.mixed'].create({'comment1': 'Foo\nBar'})
-        self.assertTrue(record.filtered_domain([('comment1', 'like', 'Bar')]))
-        self.assertTrue(record.filtered_domain([('comment1', 'ilike', 'bar')]))
+        record = self.env['test_orm.mixed'].create({'html_dirty': 'Foo\nBar'})
+        self.assertTrue(record.filtered_domain([('html_dirty', 'like', 'Bar')]))
+        self.assertTrue(record.filtered_domain([('html_dirty', 'ilike', 'bar')]))
 
     def test_21_date(self):
         """ test date fields """
@@ -1228,26 +1234,26 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_22_selection(self):
         """ test selection fields """
         record_list = self.env['test_orm.selection'].create({})
-        self.assertIsInstance(record_list._fields['state'].selection, list)
+        self.assertIsInstance(record_list._fields['state'].selection, tuple)
 
         # the following selection is defined by a callable (method name)
         record_call = self.env['test_orm.mixed'].create({})
-        self.assertIsInstance(record_call._fields['lang'].selection, str)
+        self.assertIsInstance(record_call._fields['selection_str'].selection, str)
 
         # one may assign a value
         record_list.state = 'foo'
-        record_call.lang = self.env['res.lang'].search([], limit=1).code
+        record_call.selection_str = self.env['res.lang'].search([], limit=1).code
 
         # one may assign False or None
         record_list.state = None
         self.assertFalse(record_list.state)
-        record_call.lang = None
-        self.assertFalse(record_call.lang)
+        record_call.selection_str = None
+        self.assertFalse(record_call.selection_str)
 
         # the assigned value is only checked for the list case
         with self.assertRaises(ValueError):
             record_list.state = 'zz_ZZ'
-        record_call.lang = 'zz_ZZ'
+        record_call.selection_str = 'zz_ZZ'
 
     def test_23_relation(self):
         """ test relation fields """
@@ -1395,10 +1401,11 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         foo2 = self.env['test_orm.related_foo'].create({'name': 'F2', 'bar_id': bar2.id})
         record1 = model.create({'name': 'A1', 'foo_id': foo1.id})
         record2 = model.create({'name': 'A2', 'foo_id': foo2.id})
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'related_foo',
             'model_id': self.env['ir.model']._get('test_orm.related_foo').id,
-            'domain_force': f"[('id', '=', {foo1.id})]",
+            'operation': 'crud',
+            'domain': f"[('id', '=', {foo1.id})]",
         })
 
         # check access to fields
@@ -1504,14 +1511,14 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         null_record.invalidate_recordset()
         null_record_normal.invalidate_recordset()
         field_correspondence = [
-            ('foo', 'foo', ''),
+            ('foo', 'char', ''),
             ('text', 'text', ''),
             ('date', 'date', False),
             ('moment', 'moment', False),
-            ('truth', 'truth', False),
-            ('count', 'count', 0),
-            ('phi', 'number2', 0.0),
-            ('html1', 'comment1', ''),
+            ('truth', 'boolean', False),
+            ('count', 'integer', 0),
+            ('phi', 'float_precision', 0.0),
+            ('html1', 'html_dirty', ''),
         ]
         # Check null values
         for field, normal_field, value_to_write in field_correspondence:
@@ -1551,8 +1558,8 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.env['ir.default'].set('test_orm.company', 'tag_id', tag0.id)
 
         # assumption: users don't have access to 'ir.default'
-        accesses = self.env['ir.model.access'].search([('model_id.model', '=', 'ir.default')])
-        accesses.write(dict.fromkeys(['perm_read', 'perm_write', 'perm_create', 'perm_unlink'], False))
+        accesses = self.env['ir.access'].search([('model_id', '=', 'ir.default')])
+        accesses.active = False
 
         # create/modify a record, and check the value for each user
         record = self.env['test_orm.company'].create({
@@ -1625,13 +1632,10 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         user0.write({'group_ids': [Command.link(self.env.ref('base.group_system').id)]})
         record.with_user(user0).foo = 'yes we can'
 
-        # add ir.rule to prevent access on record
+        # modify ir.access to prevent access on record
         self.assertTrue(user0._is_internal())
-        self.env['ir.rule'].create({
-            'model_id': self.env['ir.model']._get_id(record._name),
-            'groups': [self.env.ref('base.group_user').id],
-            'domain_force': str([('id', '!=', record.id)]),
-        })
+        access = self.env.ref('test_orm.access_test_orm_company')
+        access.domain = f"[('id', '!=', {record.id})]"
         with self.assertRaises(AccessError):
             record.with_user(user0).foo = 'forbidden'
 
@@ -1696,6 +1700,90 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             record.search([('id', '=', record.id), ('tag_id', '=', False)]),
             record,
         )
+
+    def test_27_company_dependent_default_check_default(self):
+        # the default value is added on companies existing before the module install as well as after
+        company0 = self.env.ref('base.main_company')
+        company1 = self.env['res.company'].create({'name': 'A'})
+        record = self.env['test_orm.company_default_for'].create({})
+        self.assertEqual(record.with_company(company0).credit_limit, 1000)
+        self.assertEqual(record.with_company(company1).credit_limit, 1000)
+
+    def test_27_company_dependent_default_check_sync_float(self):
+        # updating the value on the company affects the company dependent field
+        company0 = self.env.ref('base.main_company')
+        company1 = self.env['res.company'].create({'name': 'A'})
+        record = self.env['test_orm.company_default_for'].create({})
+        company0.credit_limit = 2000
+        self.assertEqual(record.with_company(company0).credit_limit, 2000)
+        self.assertEqual(record.with_company(company1).credit_limit, 1000)
+        companies_query = (company0 + company1)._as_query()
+        self.assertEqual(self.env.execute_query(companies_query.select(
+            companies_query.table.credit_limit,
+        )), [(2000,), (1000,)])
+
+    def test_27_company_dependent_default_check_sync_many2one(self):
+        # updating the value on the company affects the company dependent field
+        company0 = self.env.ref('base.main_company')
+        record = self.env['test_orm.company_default_for'].create({})
+        partner = self.env.company.partner_id
+        self.assertFalse(record.with_company(company0).partner_id)
+        company0.default_partner_id = partner
+        self.assertEqual(record.with_company(company0).partner_id, partner)
+        company0_query = company0._as_query()
+        self.assertEqual(self.env.execute_query(company0_query.select(
+            company0_query.table.default_partner_id,
+        )), [(partner.id,)])
+        company0.default_partner_id = False
+        company0_query = company0._as_query()
+        self.assertEqual(self.env.execute_query(company0_query.select(
+            company0_query.table.default_partner_id,
+        )), [(None,)])
+
+    def test_27_company_dependent_default_check_global_default(self):
+        # The default is set on all the companies, so a global default doesn't change anything
+        company0 = self.env.ref('base.main_company')
+        record = self.env['test_orm.company_default_for'].create({})
+        self.env['ir.default'].set(
+            'test_orm.company_default_for',
+            'credit_limit',
+            2000,
+        )
+        self.assertEqual(record.with_company(company0).credit_limit, 1000)
+
+    def test_27_company_dependent_default_compute_sql_nullish_values(self):
+        company0 = self.env.ref('base.main_company')
+        self.env['ir.default'].search([('field_id', 'in', [
+            self.env['ir.model.fields']._get('test_orm.company_default_for', 'credit_limit').id,
+            self.env['ir.model.fields']._get('test_orm.company_default_for', 'partner_id').id,
+        ])]).json_value = 'false'
+        company0_query = company0._as_query()
+        self.assertEqual(self.env.execute_query(company0_query.select(
+            company0_query.table.credit_limit,
+            company0_query.table.default_partner_id,
+        )), [(0, None)])
+
+    def test_27_company_dependent_default_non_existing_m2o(self):
+        # even though it is stored, we return NULL as the related record doesn't exist
+        company0 = self.env.ref('base.main_company')
+        company0.default_partner_id = 97979797
+        self.assertFalse(company0.default_partner_id)
+        company0_query = company0._as_query()
+        self.assertEqual(self.env.execute_query(company0_query.select(
+            company0_query.table.default_partner_id,
+        )), [(None,)])
+
+    def test_27_company_dependent_default_compute_sql_no_default(self):
+        company0 = self.env.ref('base.main_company')
+        self.env['ir.default'].search([('field_id', 'in', [
+            self.env['ir.model.fields']._get('test_orm.company_default_for', 'credit_limit').id,
+            self.env['ir.model.fields']._get('test_orm.company_default_for', 'partner_id').id,
+        ])]).unlink()
+        company0_query = company0._as_query()
+        self.assertEqual(self.env.execute_query(company0_query.select(
+            company0_query.table.credit_limit,
+            company0_query.table.default_partner_id,
+        )), [(0, None)])
 
     def test_28_company_dependent_search(self):
         """ Test the search on company-dependent fields in all corner cases.
@@ -1965,18 +2053,9 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         """ Test that prefetching non-column fields works in the presence of deleted records. """
         Discussion = self.env['test_orm.discussion']
 
-        # add an ir.rule that forces reading field 'name'
-        self.env['ir.model.access'].create({
-            'name': 'demo',
-            'model_id': self.env['ir.model']._get(Discussion.categories._name).id,
-            'group_id': self.env.ref('base.group_user').id,
-            'perm_read': True,
-        })
-        self.env['ir.rule'].create({
-            'model_id': self.env['ir.model']._get(Discussion._name).id,
-            'groups': [self.env.ref('base.group_user').id],
-            'domain_force': "[('name', '!=', 'Super Secret discution')]",
-        })
+        # modify ir.access to force reading field 'name'
+        access = self.env.ref('test_orm.access_discussion')
+        access.domain = "[('name', '!=', 'Super Secret discussion')]"
 
         records = Discussion.with_user(self.user_demo).create([
             {'name': 'EXISTING'},
@@ -1994,23 +2073,19 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         existing.categories
 
         # invalidate 'categories' for the assertQueryCount
-        self.env.transaction.clear_access_cache()
+        self.env.transaction.invalidate_access_cache()
         records.invalidate_model(['categories'])
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(4):
             # <categories>.__get__(existing)
-            #  -> records.check_access('read')
-            #      -> records._check_access('read')
-            #          -> records.sudo().filtered_domain(...)
-            #              -> <name>.__get__(existing)
-            #                  -> records._fetch_field(<name>)
-            #                      -> records.fetch(['name', ...])
-            #                          -> ONE QUERY to read ['name', ...] of records
-            #                          -> ONE QUERY for deleted.exists() / code: forbidden = missing.exists()
-            #      -> ONE QUERY for records.exists() / MissingError during _check_access
-            #  -> ONE QUERY for records.exists()
-            #  -> records._fetch_field(<categories>)
-            #      -> records.fetch(['categories'])
-            #              -> ONE QUERY to read the many2many of existing
+            #  -> records.fetch(['categories'])
+            #      -> records.check_access('read')
+            #          -> records.__check_access_fill_cache(...)
+            #              -> records.filtered_domain(...)
+            #                  -> <name>.__get__(record)
+            #                      -> ONE QUERY to read ['name', ...] of records
+            #              -> ONE QUERY for records.exists() / MissingError
+            #      -> ONE QUERY for records.exists() / MissingError
+            #      -> ONE QUERY to read the many2many of existing
             existing.categories
 
         # this one must trigger a MissingError
@@ -2377,12 +2452,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         # the patches on new_group.all_user_ids should not have changed group.all_user_ids
         self.assertEqual(group.user_ids, user0)
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_41_new_related(self):
         """ test the behavior of related fields starting on new records. """
         # make discussions unreadable for demo user
         access = self.env.ref('test_orm.access_discussion')
-        access.write({'perm_read': False})
+        access.for_read = False
 
         # create an environment for demo user
         env = self.env(user=self.user_demo)
@@ -2402,12 +2477,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         # with self.assertRaises(AccessError):
         #     message.discussion.name
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_42_new_related(self):
         """ test the behavior of related fields traversing new records. """
         # make discussions unreadable for demo user
         access = self.env.ref('test_orm.access_discussion')
-        access.write({'perm_read': False})
+        access.for_read = False
 
         # create an environment for demo user
         env = self.env(user=self.user_demo)
@@ -2424,7 +2499,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_43_new_related(self):
         """ test the behavior of one2many related fields """
-        partner = self.env['res.partner'].create({
+        partner = self.env['test_orm.partner'].create({
             'name': 'Foo',
             'child_ids': [Command.create({'name': 'Bar'})],
         })
@@ -2438,8 +2513,8 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         defaults = self.env['test_orm.message'].default_get(fields)
         self.assertEqual(defaults, {'author': self.env.uid})
 
-        defaults = self.env['test_orm.mixed'].default_get(['number'])
-        self.assertEqual(defaults, {'number': 3.14})
+        defaults = self.env['test_orm.mixed'].default_get(['float_default'])
+        self.assertEqual(defaults, {'float_default': 3.14})
 
     def test_50_search_many2one(self):
         """ test search through a path of computed fields"""
@@ -3012,10 +3087,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             record_user.invalidate_recordset(['tags'])
             record_user.read(['tags'])
 
-        # create a passing ir.rule
-        self.env['ir.rule'].create({
+        # create a passing ir.access
+        self.env['ir.access'].create({
+            'name': 'passing',
             'model_id': self.env['ir.model']._get(record._name).id,
-            'domain_force': "[('id', '=', %d)]" % record.id,
+            'operation': 'crud',
+            'domain': f"[('id', '=', {record.id})]",
         })
 
         # prep the following query count by caching access check related data
@@ -3029,13 +3106,15 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             record_user.invalidate_recordset(['tags'])
             record_user.read(['tags'])
 
-        # create a blocking ir.rule
-        self.env['ir.rule'].create({
+        # create a blocking ir.access
+        self.env['ir.access'].create({
+            'name': 'blocking',
             'model_id': self.env['ir.model']._get(record._name).id,
-            'domain_force': "[('id', '!=', %d)]" % record.id,
+            'operation': 'crud',
+            'domain': f"[('id', '!=', {record.id})]",
         })
 
-        # ensure ir.rule is applied even when reading m2m
+        # ensure ir.access is applied even when reading m2m
         with self.assertRaises(AccessError):
             record_user.read(['tags'])
 
@@ -3060,10 +3139,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         line = move.line_ids
         self.assertEqual(move.quantity, 42)
 
-        # create an ir.rule for lines that uses move.quantity
-        self.env['ir.rule'].create({
+        # create an ir.access for lines that uses move.quantity
+        self.env['ir.access'].create({
+            'name': 'global rule',
             'model_id': self.env['ir.model']._get(line._name).id,
-            'domain_force': "[('move_id.quantity', '>=', 0)]",
+            'operation': 'crud',
+            'domain': "[('move_id.quantity', '>=', 0)]",
         })
 
         # unlink the line, and check the recomputation of move.quantity
@@ -3232,10 +3313,10 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_html_sanitize(self):
         record = self.env['test_orm.mixed'].create({})
         record_value = write_value = "<div>EXTERNAL SUBMISSION - Customer not verified<br>\n<br>\n<p>### TOUR DATA ###</p></div>"
-        record.comment0 = write_value
-        self.assertEqual(record.comment0, record_value)
+        record.html = write_value
+        self.assertEqual(record.html, record_value)
         record.invalidate_recordset()
-        self.assertEqual(record.comment0, record_value)
+        self.assertEqual(record.html, record_value)
 
     def test_related_column_type(self):
         related_float_field = self.env['test_orm.related']._fields['foo_float_id']
@@ -3453,6 +3534,21 @@ class TestX2many(TransactionExpressionCase):
         self.assertIn(parent, self._search(Model, [('all_relatives_ids', 'child_of', child_b.id)]))
         self.assertIn(parent, self._search(Model, [('all_relatives_ids', 'child_of', 'B')]))
 
+    def test_13_active_test_many2many_write(self):
+        Model = self.env['test_orm.model_active_field']
+        parent = Model.create({
+            'relatives_ids': [
+                Command.create({'name': 'A', 'active': True}),
+                Command.create({'name': 'B', 'active': False}),
+            ],
+        })
+        child_a, child_b = parent.with_context(active_test=False).relatives_ids
+
+        # parent has active_test=True
+        self.assertEqual(parent.relatives_ids, child_a)
+        parent.relatives_ids = child_a  # should leave the ids unchanged
+        self.assertEqual(parent.with_context(active_test=False).relatives_ids, child_a + child_b)
+
     def test_search_many2many(self):
         """ Tests search on many2many fields. """
         tags = self.env['test_orm.multi.tag']
@@ -3603,7 +3699,7 @@ class TestX2many(TransactionExpressionCase):
 
 class SudoCommands(TransactionCaseWithUserDemo):
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     @users('demo')
     def test_sudo_commands(self):
         """Test manipulating a x2many field using Commands with `sudo` or with another user (`with_user`)
@@ -3743,11 +3839,11 @@ class TestHtmlField(TransactionCase):
         self.model = self.env['test_orm.mixed']
 
     def test_00_sanitize(self):
-        self.assertEqual(self.model._fields['comment1'].sanitize, False)
-        self.assertEqual(self.model._fields['comment2'].sanitize_attributes, True)
-        self.assertEqual(self.model._fields['comment2'].strip_classes, False)
-        self.assertEqual(self.model._fields['comment3'].sanitize_attributes, True)
-        self.assertEqual(self.model._fields['comment3'].strip_classes, True)
+        self.assertEqual(self.model._fields['html_dirty'].sanitize, False)
+        self.assertEqual(self.model._fields['html'].sanitize_attributes, True)
+        self.assertEqual(self.model._fields['html'].strip_classes, False)
+        self.assertEqual(self.model._fields['html_strip_classes'].sanitize_attributes, True)
+        self.assertEqual(self.model._fields['html_strip_classes'].strip_classes, True)
 
         some_ugly_html = """<p>Oops this should maybe be sanitized
 % if object.some_field and not object.oriented:
@@ -3767,28 +3863,28 @@ class TestHtmlField(TransactionCase):
 %endif"""
 
         record = self.model.create({
-            'comment1': some_ugly_html,
-            'comment2': some_ugly_html,
-            'comment3': some_ugly_html,
-            'comment4': some_ugly_html,
+            'html_dirty': some_ugly_html,
+            'html': some_ugly_html,
+            'html_strip_classes': some_ugly_html,
+            'html_strip_style': some_ugly_html,
         })
 
-        self.assertEqual(record.comment1, some_ugly_html, 'Error in HTML field: content was sanitized but field has sanitize=False')
+        self.assertEqual(record.html_dirty, some_ugly_html, 'Error in HTML field: content was sanitized but field has sanitize=False')
 
-        self.assertIn('<tr class="', record.comment2)
+        self.assertIn('<tr class="', record.html)
 
         # sanitize should have closed tags left open in the original html
-        self.assertIn('</table>', record.comment3, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
-        self.assertIn('</td>', record.comment3, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
-        self.assertIn('<tr style="', record.comment3, 'Style attr should not have been stripped')
+        self.assertIn('</table>', record.html_strip_classes, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+        self.assertIn('</td>', record.html_strip_classes, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+        self.assertIn('<tr style="', record.html_strip_classes, 'Style attr should not have been stripped')
         # sanitize does not keep classes if asked to
-        self.assertNotIn('<tr class="', record.comment3)
+        self.assertNotIn('<tr class="', record.html_strip_classes)
 
-        self.assertNotIn('<tr style="', record.comment4, 'Style attr should have been stripped')
+        self.assertNotIn('<tr style="', record.html_strip_style, 'Style attr should have been stripped')
 
     def test_01_sanitize_groups(self):
-        self.assertEqual(self.model._fields['comment5'].sanitize, True)
-        self.assertEqual(self.model._fields['comment5'].sanitize_overridable, True)
+        self.assertEqual(self.model._fields['html_sanitize_override'].sanitize, True)
+        self.assertEqual(self.model._fields['html_sanitize_override'].sanitize_overridable, True)
 
         internal_user = self.env['res.users'].create({
             'name': 'test internal user',
@@ -3806,28 +3902,28 @@ class TestHtmlField(TransactionCase):
         #    changes
         val = '<blockquote>Something</blockquote>'
         normalized_val = '<blockquote data-o-mail-quote-node="1" data-o-mail-quote="1">Something</blockquote>'
-        write_vals = {'comment5': val}
+        write_vals = {'html_sanitize_override': val}
 
         record.with_user(internal_user).write(write_vals)
-        self.assertEqual(record.comment5, normalized_val,
+        self.assertEqual(record.html_sanitize_override, normalized_val,
                          "should be normalized (not in groups)")
         record.with_user(bypass_user).write(write_vals)
-        self.assertEqual(record.comment5, val,
+        self.assertEqual(record.html_sanitize_override, val,
                          "should not be normalized (has group)")
         record.with_user(internal_user).write(write_vals)
-        self.assertEqual(record.comment5, normalized_val,
+        self.assertEqual(record.html_sanitize_override, normalized_val,
                          "should be normalized (not in groups) despite admin previous diff")
 
         # 2. Test main use case: prevent restricted user to wipe non restricted
         #    user previous change
         val = '<script></script>'
-        write_vals = {'comment5': val}
+        write_vals = {'html_sanitize_override': val}
 
         record.with_user(internal_user).write(write_vals)
-        self.assertEqual(record.comment5, '',
+        self.assertEqual(record.html_sanitize_override, '',
                          "should be sanitized (not in groups)")
         record.with_user(bypass_user).write(write_vals)
-        self.assertEqual(record.comment5, val,
+        self.assertEqual(record.html_sanitize_override, val,
                          "should not be sanitized (has group)")
         with self.assertRaises(UserError):
             # should crash (not in groups and sanitize would break content of
@@ -3837,7 +3933,7 @@ class TestHtmlField(TransactionCase):
         # 3. Make sure field compare in `_convert` is working as expected with
         #    special content / format
         val = '<span  attr1 ="att1"   attr2=\'attr2\'>é@&nbsp;</span><p><span/></p>'
-        write_vals = {'comment5': val}
+        write_vals = {'html_sanitize_override': val}
         # Once sent through `html_sanitize()` this is becoming:
         # `<span attr1="att1" attr2="attr2">é@\xa0</span><p><span></span></p>`
         # Notice those change:
@@ -3853,25 +3949,25 @@ class TestHtmlField(TransactionCase):
 
         # 4. Ensure our exception handling is fine
         val = '<!-- I am a comment -->'
-        write_vals = {'comment5': val}
+        write_vals = {'html_sanitize_override': val}
         record.with_user(internal_user).write(write_vals)
-        self.assertEqual(record.comment5, '',
+        self.assertEqual(record.html_sanitize_override, '',
                          "should be sanitized (not in groups)")
 
         # extra test with new record having 'record' as origin
         new_record = record.new(origin=record)
-        new_record.with_user(bypass_user).comment5
+        new_record.with_user(bypass_user).html_sanitize_override
 
         # this was causing an infinite recursion (see explanation in fields.py)
         new_record.invalidate_recordset()
-        new_record.with_user(internal_user).comment5
+        new_record.with_user(internal_user).html_sanitize_override
 
     @patch('odoo.orm.fields_textual.html_sanitize', return_value='<p>comment</p>')
     def test_onchange_sanitize(self, patch):
-        self.assertTrue(self.registry['test_orm.mixed'].comment2.sanitize)
+        self.assertTrue(self.registry['test_orm.mixed'].html.sanitize)
 
         record = self.env['test_orm.mixed'].create({
-            'comment2': '<p>comment</p>',
+            'html': '<p>comment</p>',
         })
 
         # the new value is sanitized upon insertion in db,
@@ -3879,7 +3975,7 @@ class TestHtmlField(TransactionCase):
         self.assertEqual(patch.call_count, 1)
 
         # new value sanitized for insertion in cache
-        record.comment2 = '<p>comment</p>'
+        record.html = '<p>comment</p>'
         self.assertEqual(patch.call_count, 2)
 
         # the value in cache is dirty -> convert_to_column_update(..., validate=False),
@@ -3889,12 +3985,12 @@ class TestHtmlField(TransactionCase):
 
         # value coming from db does not need to be sanitized
         record.invalidate_recordset()
-        record.comment2
+        record.html
         self.assertEqual(patch.call_count, 2)
 
         # value coming from db during an onchange does not need to be sanitized
         new_record = record.new(origin=record)
-        new_record.comment2
+        new_record.html
         self.assertEqual(patch.call_count, 2)
 
 
@@ -4129,10 +4225,11 @@ class TestParentStore(TransactionCaseWithUserDemo):
             self.assertEqual(cat.depth, 2)
 
     def test_with_ir_rule_behavior(self):
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'category rule',
             'model_id': self.env['ir.model']._get('test_orm.category').id,
-            'domain_force': str([('id', 'in', self.cats(3).ids)]),
+            'operation': 'crud',
+            'domain': str([('id', 'in', self.cats(3).ids)]),
         })
 
         # Ensure that we don't have access to inaccessible records
@@ -4178,7 +4275,7 @@ class TestRequiredMany2one(TransactionCase):
         field = Model._fields['foo']
 
         # clean up registry after this test
-        self.addCleanup(self.registry.reset_changes)
+        self.env.transaction.will_change_registry()
         self.patch(field, 'ondelete', 'set null')
 
         with self.assertRaises(ValueError):
@@ -4201,7 +4298,7 @@ class TestRequiredMany2oneTransient(TransactionCase):
         field = Model._fields['foo']
 
         # clean up registry after this test
-        self.addCleanup(self.registry.reset_changes)
+        self.env.transaction.will_change_registry()
         self.patch(field, 'ondelete', 'set null')
 
         with self.assertRaises(ValueError):
@@ -4298,6 +4395,69 @@ class TestSelectionUpdates(TransactionCase):
             record = self.env[self.MODEL_RELATED_UPDATE].create({'selection_id': related_record.id})
         with self.assertQueryCount(2):
             record.related_selection = 'bar'
+
+
+@tagged('selection_manual_related_update')
+class TestSelectionManualRelatedUpdate(TransactionCase):
+    """
+    Regression test: adding a value to a manual selection field must update
+    the registry for models that have a manual related field pointing to it.
+    """
+
+    MODEL_BASE = 'test_orm.model_selection_base'
+    MODEL_RELATED = 'test_orm.model_selection_related'
+
+    def test_manual_related_selection_reflects_new_value(self):
+        self.env.flush_all()
+        base_model_id = self.env['ir.model']._get_id(self.MODEL_BASE)
+        related_model_id = self.env['ir.model']._get_id(self.MODEL_RELATED)
+
+        # Create a manual selection field with two initial options
+        x_sel = self.env['ir.model.fields'].create({
+            'name': 'x_sel',
+            'field_description': 'Manual Selection',
+            'model_id': base_model_id,
+            'ttype': 'selection',
+            'selection_ids': [
+                Command.create({'value': 'a', 'name': 'A', 'sequence': 0}),
+                Command.create({'value': 'b', 'name': 'B', 'sequence': 1}),
+            ],
+        })
+
+        # Create a manual related field on MODEL_RELATED pointing to the new field
+        self.env['ir.model.fields'].create({
+            'name': 'x_related_sel',
+            'field_description': 'Related Manual Selection',
+            'model_id': related_model_id,
+            'ttype': 'selection',
+            'related': 'selection_id.x_sel',
+        })
+
+        # Sanity check: the related field initially knows only 'a' and 'b'
+        related_field = self.env[self.MODEL_RELATED]._fields['x_related_sel']
+        initial_values = [v for v, _ in related_field._description_selection(self.env)]
+        self.assertIn('a', initial_values)
+        self.assertIn('b', initial_values)
+        self.assertNotIn('c', initial_values)
+
+        # Add a third option to the manual selection field
+        self.env['ir.model.fields.selection'].create({
+            'field_id': x_sel.id,
+            'value': 'c',
+            'name': 'C',
+            'sequence': 2,
+        })
+
+        # The manual related field must reflect the new option
+        related_field = self.env[self.MODEL_RELATED]._fields['x_related_sel']
+        updated_values = [v for v, _ in related_field._description_selection(self.env)]
+        self.assertIn('c', updated_values,
+            "Manual related selection field must reflect new values added to its target field")
+
+        # Also verify that reading a record with the new value via the related field works
+        base_record = self.env[self.MODEL_BASE].create({'x_sel': 'c'})
+        related_record = self.env[self.MODEL_RELATED].create({'selection_id': base_record.id})
+        self.assertEqual(related_record.x_related_sel, 'c')
 
 
 @tagged('selection_ondelete_base')
@@ -4447,7 +4607,7 @@ class TestSelectionOndelete(TransactionCase):
         self._unlink_option(self.MODEL_REQUIRED, 'foo')
         self.assertEqual(rec.my_selection, 'foo')
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_write_override_selection(self):
         # test that on override to write that raises an error does not prevent the ondelete
         # policy from executing and cleaning up what needs to be cleaned up
@@ -4925,7 +5085,7 @@ class TestPrecomputeModel(TransactionCase):
         self.assertTrue(Model.upper.precompute)
 
         # see what happens if not both are precompute
-        self.addCleanup(self.registry.reset_changes)
+        self.env.transaction.will_change_registry()
         self.patch(Model.upper, 'precompute', False)
         with self.assertWarns(UserWarning):
             self.registry._setup_models__(self.cr, ['test_orm.precompute'])
@@ -4936,10 +5096,9 @@ class TestPrecomputeModel(TransactionCase):
         self.assertTrue(Model.lower.precompute)
         self.assertTrue(Model.upper.precompute)
         self.assertTrue(Model.lowup.precompute)
+        self.env.transaction.will_change_registry()
 
         # see what happens if precompute depends on non-precompute
-        self.addCleanup(self.registry.reset_changes)
-
         def reset():
             Model.lowup.precompute = True
         self.addCleanup(reset)
@@ -4964,9 +5123,9 @@ class TestPrecomputeModel(TransactionCase):
         Line = self.registry['test_orm.precompute.line']
         self.assertTrue(Model.size.precompute)
         self.assertTrue(Line.size.precompute)
+        self.env.transaction.will_change_registry()
 
         # see what happens if precompute depends on non-precompute
-        self.addCleanup(self.registry.reset_changes)
         # ensure that Model.size.precompute is restored after _setup_models__()
         self.patch(Model.size, 'precompute', True)
         self.patch(Line.size, 'precompute', False)
@@ -5064,6 +5223,33 @@ class TestPrecompute(TransactionCase):
         self.assertEqual(record.bar, 'bar')
         self.assertEqual(record.baz, 'baz')
         self.assertEqual(record.baz2, 'baz')
+
+    def test_precompute_editable_multi(self):
+        model = self.env['test_orm.precompute.editable']
+
+        # no value for boo1, no value for boo2
+        record = model.create({'foo': 'foo'})
+        self.assertEqual(record.boo1, 'COMPUTED')
+        self.assertEqual(record.boo2, 'COMPUTED')
+        self.assertEqual(record.choo, 'COMPUTED')
+
+        # value for boo1, no value for boo2: boo1 prevents boo2 from being computed
+        record = model.create({'foo': 'foo', 'boo1': 'boo1'})
+        self.assertEqual(record.boo1, 'boo1')
+        self.assertEqual(record.boo2, False)
+        self.assertEqual(record.choo, False)
+
+        # no value for boo1, value for boo2: boo2 prevents boo1 from being computed
+        record = model.create({'foo': 'foo', 'boo2': 'boo2'})
+        self.assertEqual(record.boo1, False)
+        self.assertEqual(record.boo2, 'boo2')
+        self.assertEqual(record.choo, 'boo2')
+
+        # value for boo1, value for boo2
+        record = model.create({'foo': 'foo', 'boo1': 'boo1', 'boo2': 'boo2'})
+        self.assertEqual(record.boo1, 'boo1')
+        self.assertEqual(record.boo2, 'boo2')
+        self.assertEqual(record.choo, 'boo2')
 
     def test_precompute_readonly(self):
         """
@@ -5293,3 +5479,67 @@ class TestCompanyDependent(TransactionCase):
                              f'Please override the unlink method of {comodel_field.comodel_name} and do the ORM on '
                              f'delete cascade logic and remove/override the ondelete="cascade" of {comodel_field}')
                         )
+
+
+class TestWriteOverrideTranslatedFields(TransactionCase):
+    CHECKED_FIELD_NAMES = {  # {module_name: [model_name.field_name, ...]}
+        'base': ['res.groups.name'],
+        'web_studio': ['ir.ui.menu.name'],
+        'website_sale': ['product.template.description_ecommerce'],
+        'point_of_sale': ['product.template.public_description', 'product.tag.pos_description'],
+        'project': ['project.project.name'],
+        'account': ['account.journal.name'],
+        'documents': ['documents.document.name'],
+        'im_livechat': ['chatbot.script.title'],
+        'documents_project': ['project.project.name'],
+        'website_slides': ['slide.channel.description'],
+    }
+
+    def test_write_override_translated_field(self):
+        base_write = self.env.registry['base'].write
+        violations = []
+        modules_to_check = set(self.env['ir.module.module'].search([
+            ('name', 'in', list(self.CHECKED_FIELD_NAMES)),
+            ('state', '=', 'installed'),
+        ]).mapped('name'))
+        checked_field_names = {
+            module_name: field_names.copy()
+            for module_name, field_names in self.CHECKED_FIELD_NAMES.items()
+            if module_name in modules_to_check
+        }
+        for model in self.env.registry.values():
+            if model.write is base_write:
+                continue
+            translated_field_names = [
+                field.name for field in model._fields.values() if field.translate
+            ]
+            if not translated_field_names:
+                continue
+            for cls in model.__mro__:
+                if 'write' not in cls.__dict__:
+                    continue
+                write_method = cls.__dict__['write']
+                if write_method is base_write:
+                    break
+                source = inspect.getsource(write_method)
+                for field_name in translated_field_names:
+                    full_name = f'{model._name}.{field_name}'
+                    patterns = [
+                        f"vals['{field_name}']",
+                        f'vals["{field_name}"]',
+                        f"vals.get('{field_name}'",
+                        f'vals.get("{field_name}"',
+                    ]
+                    if matched_pattern := next(iter(p for p in patterns if p in source), None):
+                        module_name = cls.__module__.split('.')[2]  # odoo.addons.module_name.xxx
+                        if full_name in checked_field_names.get(module_name, []):
+                            checked_field_names[module_name].remove(full_name)
+                        else:
+                            violations.append(
+                                f"find pattern {matched_pattern} in the write method of model {model._name} ({cls.__module__})"
+                            )
+
+        checked_field_names = {k: v for k, v in checked_field_names.items() if v}
+        if checked_field_names:
+            _logger.warning("Some checked fields maybe not be used in the write anymore %s", checked_field_names)
+        self.assertFalse(len(violations), "Override `write`(maybe also `create`) for translated fields \n" + '\n'.join(violations))

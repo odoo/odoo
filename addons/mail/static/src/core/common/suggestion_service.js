@@ -1,10 +1,13 @@
+import { COMPOSER_TYPES } from "@mail/core/common/composer";
 import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
-import { cleanTerm } from "@mail/utils/common/format";
-import { toRaw } from "@odoo/owl";
-import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
 
+import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
+import { localeCompare, normalize } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { fuzzyLookup } from "@web/core/utils/search";
+
+/** @typedef {import("@mail/core/common/suggestion_hook").SuggestionDelimiter} SuggestionDelimiter */
 
 export class SuggestionService {
     /**
@@ -16,7 +19,6 @@ export class SuggestionService {
         this.orm = services.orm;
         this.store = services["mail.store"];
         this.composer = services["mail.composer"];
-        this.emojis;
     }
 
     /**
@@ -27,27 +29,44 @@ export class SuggestionService {
      * - c: (optional) if set, this is the minimum amount of extra char after delimiter to allow using this delimiter
      *
      * @param {import('models').Thread} thread
-     * @returns {Array<[string, number, number]>}
+     * @returns {Array<[SuggestionDelimiter, number, number]>}
      */
     getSupportedDelimiters(thread, env) {
-        return [["@"], ["#"], ["::"], [":", undefined, 2]];
+        const delimiters = [
+            [SUGGESTION_DELIMITERS.PARTNER],
+            [SUGGESTION_DELIMITERS.CANNED_RESPONSE],
+        ];
+        // the emoji plugin handles the emoji suggestions already
+        if (!this.composer.htmlEnabled) {
+            delimiters.push([SUGGESTION_DELIMITERS.EMOJI, undefined, 2]);
+        }
+        return delimiters;
     }
 
-    async fetchSuggestions({ delimiter, term }, { thread, abortSignal } = {}) {
-        const cleanedSearchTerm = cleanTerm(term);
+    /**
+     * @param {Object} [param0={}]
+     * @param {SuggestionDelimiter} [param0.delimiter]
+     * @param {string} [param0.term]
+     * @param {Object} [options={}]
+     * @param {import("models").Thread} [options.thread]
+     * @param {AbortSignal} [options.abortSignal]
+     * @param {COMPOSER_TYPES} [options.composerType]
+     */
+    async fetchSuggestions({ delimiter, term }, { thread, abortSignal, composerType } = {}) {
+        const cleanedSearchTerm = normalize(term);
         switch (delimiter) {
-            case "@":
-                await this.fetchPartnersRoles(cleanedSearchTerm, thread, { abortSignal });
+            case SUGGESTION_DELIMITERS.PARTNER:
+                await this.fetchPartnersRoles(cleanedSearchTerm, {
+                    abortSignal,
+                    internalUsersOnly: composerType === COMPOSER_TYPES.NOTE,
+                    thread,
+                });
                 break;
-            case "#":
-                await this.fetchThreads(cleanedSearchTerm, { abortSignal });
-                break;
-            case "::":
+            case SUGGESTION_DELIMITERS.CANNED_RESPONSE:
                 await this.store.cannedReponses.fetch();
                 break;
-            case ":": {
-                const { emojis } = await loadEmoji();
-                this.emojis = emojis;
+            case SUGGESTION_DELIMITERS.EMOJI: {
+                await emojiLoader.load();
                 break;
             }
         }
@@ -82,12 +101,17 @@ export class SuggestionService {
     }
     /**
      * @param {string} term
-     * @param {import("models").Thread} [thread]
+     * @param {Object} [options={}]
+     * @param {AbortSignal} [options.abortSignal]
+     * @param {boolean} [options.internalUsersOnly]
+     * @param {import("models").Thread} [options.thread]
      */
-    async fetchPartnersRoles(term, thread, { abortSignal } = {}) {
+    async fetchPartnersRoles(term, { abortSignal, internalUsersOnly, thread } = {}) {
         const kwargs = { search: term };
         if (thread?.channel) {
             kwargs.channel_id = thread.id;
+        } else {
+            kwargs.internal_users_only = internalUsersOnly;
         }
         const data = await this.makeOrmCall(
             "res.partner",
@@ -99,27 +123,13 @@ export class SuggestionService {
         this.store.insert(data);
     }
 
-    /**
-     * @param {string} term
-     */
-    async fetchThreads(term, { abortSignal } = {}) {
-        const data = await this.makeOrmCall(
-            "discuss.channel",
-            "get_mention_suggestions",
-            [],
-            { search: term },
-            { abortSignal }
-        );
-        this.store.insert(data);
-    }
-
     searchCannedResponseSuggestions(cleanedSearchTerm) {
         const cannedResponses = Object.values(this.store["mail.canned.response"].records).filter(
-            (cannedResponse) => cleanTerm(cannedResponse.source).includes(cleanedSearchTerm)
+            (cannedResponse) => normalize(cannedResponse.source).includes(cleanedSearchTerm)
         );
         const sortFunc = (c1, c2) => {
-            const cleanedName1 = cleanTerm(c1.source);
-            const cleanedName2 = cleanTerm(c2.source);
+            const cleanedName1 = normalize(c1.source);
+            const cleanedName2 = normalize(c2.source);
             if (
                 cleanedName1.startsWith(cleanedSearchTerm) &&
                 !cleanedName2.startsWith(cleanedSearchTerm)
@@ -132,13 +142,7 @@ export class SuggestionService {
             ) {
                 return 1;
             }
-            if (cleanedName1 < cleanedName2) {
-                return -1;
-            }
-            if (cleanedName1 > cleanedName2) {
-                return 1;
-            }
-            return c1.id - c2.id;
+            return localeCompare(c1.source, c2.source) || c1.id - c2.id;
         };
         return {
             type: "mail.canned.response",
@@ -148,8 +152,12 @@ export class SuggestionService {
 
     searchEmojisSuggestions(cleanedSearchTerm) {
         let emojis = [];
-        if (this.emojis && cleanedSearchTerm) {
-            emojis = fuzzyLookup(cleanedSearchTerm, this.emojis, (emoji) => emoji.shortcodes);
+        if (emojiLoader.loaded && cleanedSearchTerm) {
+            emojis = fuzzyLookup(
+                cleanedSearchTerm,
+                emojiLoader.emojis,
+                (emoji) => emoji.shortcodes
+            );
         }
         return {
             type: "emoji",
@@ -161,30 +169,31 @@ export class SuggestionService {
      * Returns suggestions that match the given search term from specified type.
      *
      * @param {Object} [param0={}]
-     * @param {String} [param0.delimiter] can be one one of the following: ["@", "#"]
+     * @param {SuggestionDelimiter} [param0.delimiter]
      * @param {String} [param0.term]
      * @param {Object} [options={}]
+     * @param {COMPOSER_TYPES} [options.composerType]
      * @param {import("models").Thread} [options.thread] prioritize and/or restrict
      *  result in the context of given thread
      * @returns {{ type: String, suggestions: Array }}
      */
-    searchSuggestions({ delimiter, term }, { thread } = {}) {
-        thread = toRaw(thread);
-        const cleanedSearchTerm = cleanTerm(term);
+    searchSuggestions({ delimiter, term }, { composerType, thread } = {}) {
+        const cleanedSearchTerm = normalize(term);
         switch (delimiter) {
-            case "@": {
-                const partners = this.searchPartnerSuggestions(cleanedSearchTerm, thread);
+            case SUGGESTION_DELIMITERS.PARTNER: {
+                const partners = this.searchPartnerSuggestions(cleanedSearchTerm, {
+                    composerType,
+                    thread,
+                });
                 const roles = this.searchRoleSuggestions(cleanedSearchTerm);
                 return {
                     type: "Partner",
                     suggestions: [...partners.suggestions, ...roles.suggestions],
                 };
             }
-            case "#":
-                return this.searchChannelSuggestions(cleanedSearchTerm);
-            case "::":
+            case SUGGESTION_DELIMITERS.CANNED_RESPONSE:
                 return this.searchCannedResponseSuggestions(cleanedSearchTerm);
-            case ":":
+            case SUGGESTION_DELIMITERS.EMOJI:
                 return this.searchEmojisSuggestions(cleanedSearchTerm);
         }
         return {
@@ -195,11 +204,11 @@ export class SuggestionService {
 
     searchRoleSuggestions(cleanedSearchTerm) {
         const roles = Object.values(this.store["res.role"].records).filter((role) =>
-            cleanTerm(role.name).includes(cleanedSearchTerm)
+            normalize(role.name).includes(cleanedSearchTerm)
         );
         const sortFunc = (r1, r2) => {
-            const cleanedName1 = cleanTerm(r1.name);
-            const cleanedName2 = cleanTerm(r2.name);
+            const cleanedName1 = normalize(r1.name);
+            const cleanedName2 = normalize(r2.name);
             if (
                 cleanedName1.startsWith(cleanedSearchTerm) &&
                 !cleanedName2.startsWith(cleanedSearchTerm)
@@ -212,42 +221,57 @@ export class SuggestionService {
             ) {
                 return 1;
             }
-            if (cleanedName1 < cleanedName2) {
-                return -1;
-            }
-            if (cleanedName1 > cleanedName2) {
-                return 1;
-            }
-            return r1.id - r2.id;
+            return localeCompare(r1.name, r2.name) || r1.id - r2.id;
         };
         return {
             suggestions: roles.sort(sortFunc),
         };
     }
 
-    isSuggestionValid(partner, thread) {
+    /**
+     * @param {import("models").Persona} [partner]
+     * @param {Object} [options={}]
+     * @param {COMPOSER_TYPES} [options.composerType]
+     * @param {import("models").Thread} [options.thread]
+     */
+    isPartnerSuggestionValid(partner, { composerType, thread } = {}) {
+        if (composerType === COMPOSER_TYPES.NOTE) {
+            return partner.partner_share === false && partner.notEq(this.store.odoobot);
+        }
         return (
             (this.store.self_user?.share === false || partner.mention_token) &&
             partner.notEq(this.store.odoobot)
         );
     }
 
-    getPartnerSuggestions(thread) {
+    /**
+     * @param {Object} [options={}]
+     * @param {COMPOSER_TYPES} [options.composerType]
+     * @param {import("models").Thread} [options.thread]
+     */
+    getPartnerSuggestions({ composerType, thread } = {}) {
         return Object.values(this.store["res.partner"].records).filter((partner) =>
-            this.isSuggestionValid(partner, thread)
+            this.isPartnerSuggestionValid(partner, {
+                composerType,
+                thread,
+            })
         );
     }
 
-    searchPartnerSuggestions(cleanedSearchTerm, thread) {
-        const partners = this.getPartnerSuggestions(thread);
+    /**
+     * @param {string} cleanedSearchTerm
+     * @param {Object} [options={}]
+     * @param {COMPOSER_TYPES} [options.composerType]
+     * @param {import("models").Thread} [options.thread]
+     */
+    searchPartnerSuggestions(cleanedSearchTerm, { composerType, thread } = {}) {
+        const partners = this.getPartnerSuggestions({ composerType, thread });
         const suggestions = [];
         for (const partner of partners) {
-            if (!partner.name) {
-                continue;
-            }
+            const name = thread?.getPersonaName(partner) ?? partner.displayName;
             if (
-                cleanTerm(partner.name).includes(cleanedSearchTerm) ||
-                (partner.email && cleanTerm(partner.email).includes(cleanedSearchTerm))
+                (name && normalize(name).includes(cleanedSearchTerm)) ||
+                (partner.email && normalize(partner.email).includes(cleanedSearchTerm))
             ) {
                 suggestions.push(partner);
             }
@@ -259,7 +283,7 @@ export class SuggestionService {
                     special.channel_types.includes(thread.channel?.channel_type) &&
                     cleanedSearchTerm.length >= Math.min(4, special.label.length) &&
                     (special.label.startsWith(cleanedSearchTerm) ||
-                        cleanTerm(special.description.toString()).includes(cleanedSearchTerm))
+                        normalize(special.description).includes(cleanedSearchTerm))
             )
         );
         return {
@@ -275,12 +299,10 @@ export class SuggestionService {
      * @returns {[import("models").Persona]}
      */
     sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
-        const cleanedSearchTerm = cleanTerm(searchTerm);
+        const cleanedSearchTerm = normalize(searchTerm);
         const compareFunctions = partnerCompareRegistry.getAll();
         const context = this.sortPartnerSuggestionsContext(thread);
         return partners.sort((p1, p2) => {
-            p1 = toRaw(p1);
-            p2 = toRaw(p2);
             if (p1.isSpecial || p2.isSpecial) {
                 return 0;
             }
@@ -295,61 +317,19 @@ export class SuggestionService {
                     return result;
                 }
             }
+            return 0;
         });
     }
 
-    sortPartnerSuggestionsContext() {
-        return {};
-    }
-
-    searchChannelSuggestions(cleanedSearchTerm) {
-        const suggestionList = Object.values(this.store["discuss.channel"].records).filter(
-            (channel) =>
-                channel.channel_type === "channel" &&
-                channel.displayName &&
-                cleanTerm(channel.displayName).includes(cleanedSearchTerm)
-        );
-        const sortFunc = (c1, c2) => {
-            const isPublicChannel1 = c1.channel_type === "channel" && !c2.group_public_id;
-            const isPublicChannel2 = c2.channel_type === "channel" && !c2.group_public_id;
-            if (isPublicChannel1 && !isPublicChannel2) {
-                return -1;
+    /** @param {import("models").Thread} thread The thread from which the suggestions are triggered. */
+    sortPartnerSuggestionsContext(thread) {
+        const latestMessageIdByAuthorId = new Map();
+        for (const { author_id, id } of thread?.messages || []) {
+            if (author_id && !latestMessageIdByAuthorId.has(author_id.id)) {
+                latestMessageIdByAuthorId.set(author_id.id, id);
             }
-            if (!isPublicChannel1 && isPublicChannel2) {
-                return 1;
-            }
-            if (c1.self_member_id && !c2.self_member_id) {
-                return -1;
-            }
-            if (!c1.self_member_id && c2.self_member_id) {
-                return 1;
-            }
-            const cleanedDisplayName1 = cleanTerm(c1.displayName);
-            const cleanedDisplayName2 = cleanTerm(c2.displayName);
-            if (
-                cleanedDisplayName1.startsWith(cleanedSearchTerm) &&
-                !cleanedDisplayName2.startsWith(cleanedSearchTerm)
-            ) {
-                return -1;
-            }
-            if (
-                !cleanedDisplayName1.startsWith(cleanedSearchTerm) &&
-                cleanedDisplayName2.startsWith(cleanedSearchTerm)
-            ) {
-                return 1;
-            }
-            if (cleanedDisplayName1 < cleanedDisplayName2) {
-                return -1;
-            }
-            if (cleanedDisplayName1 > cleanedDisplayName2) {
-                return 1;
-            }
-            return c1.id - c2.id;
-        };
-        return {
-            type: "discuss.channel",
-            suggestions: suggestionList.sort(sortFunc),
-        };
+        }
+        return { latestMessageIdByAuthorId };
     }
 }
 

@@ -1,8 +1,12 @@
 import { after, before, describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
-import { setColor } from "./_helpers/user_actions";
+import { insertText, setColor } from "./_helpers/user_actions";
+import { execCommand } from "./_helpers/userCommands";
 import { getContent } from "./_helpers/selection";
+import { animationFrame, press } from "@odoo/hoot-dom";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 const redToBlueGradient = "linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255))";
 const greenToBlueGradient = "linear-gradient(rgb(0, 255, 0), rgb(0, 0, 255))";
@@ -20,7 +24,8 @@ test("should apply a color to the qweb tag (1)", async () => {
     await testEditor({
         contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
-        contentAfter: `<div>[<p t-out="'Test'" contenteditable="false" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-out="'Test'" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 
@@ -28,7 +33,8 @@ test("should apply a color to the qweb tag (2)", async () => {
     await testEditor({
         contentBefore: `<div><p t-field="record.display_name" contenteditable="false">[Test]</p></div>`,
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
-        contentAfter: `<div>[<p t-field="record.display_name" contenteditable="false" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-field="record.display_name" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 
@@ -42,19 +48,44 @@ test("should apply a background color to a slice of text in a span in a font", a
 });
 
 test("should get ready to type with a different color", async () => {
-    await testEditor({
-        contentBefore: "<p>ab[]cd</p>",
-        stepFunction: setColor("rgb(255, 0, 0)", "color"),
-        contentAfter: '<p>ab<font style="color: rgb(255, 0, 0);">[]\u200B</font>cd</p>',
-    });
+    const { el, editor } = await setupEditor("<p>ab[]cd</p>");
+    await setColor("rgb(255, 0, 0)", "color")(editor);
+    expect(getContent(el)).toBe("<p>ab[]cd</p>");
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe('<p>ab<font style="color: rgb(255, 0, 0);">x[]</font>cd</p>');
 });
 
 test("should get ready to type with a different background color", async () => {
-    await testEditor({
-        contentBefore: "<p>ab[]cd</p>",
-        stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
-        contentAfter: '<p>ab<font style="background-color: rgb(255, 0, 0);">[]\u200B</font>cd</p>',
-    });
+    const { el, editor } = await setupEditor("<p>ab[]cd</p>");
+    await setColor("rgb(255, 0, 0)", "backgroundColor")(editor);
+    expect(getContent(el)).toBe("<p>ab[]cd</p>");
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(
+        '<p>ab<font style="background-color: rgb(255, 0, 0);">x[]</font>cd</p>'
+    );
+});
+
+test("should get ready to type without color after removing format on a collapsed selection", async () => {
+    const { el, editor } = await setupEditor(
+        '<p>ab<font style="color: rgb(255, 0, 0);">cd[]ef</font>gh</p>'
+    );
+    execCommand(editor, "removeFormat");
+    expect(getContent(el)).toBe('<p>ab<font style="color: rgb(255, 0, 0);">cd[]ef</font>gh</p>');
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(
+        '<p>ab<font style="color: rgb(255, 0, 0);">cd</font>x[]<font style="color: rgb(255, 0, 0);">ef</font>gh</p>'
+    );
+});
+
+test("collapsed remove-format defers color removal when the color is on an ancestor", async () => {
+    const { el, editor } = await setupEditor(
+        '<p><font style="color: rgb(255, 0, 0);"><strong>ab[]cd</strong></font></p>'
+    );
+    execCommand(editor, "removeFormat");
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(
+        `<p><font style="color: rgb(255, 0, 0);"><strong>ab</strong></font>x[]<font style="color: rgb(255, 0, 0);"><strong>cd</strong></font></p>`
+    );
 });
 
 test("should apply a color on empty selection", async () => {
@@ -205,6 +236,7 @@ test("should not apply font tag to t nodes (protects if else nodes separation)",
                 </t>
             </p>
         ]`),
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 
@@ -444,7 +476,7 @@ test("should break gradient color on selected text", async () => {
         ),
         contentAfter:
             '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab</font>' +
-            '<font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ca]</font>' +
+            '<font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%); background-color: transparent;">[ca]</font>' +
             '<font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">bc</font></p>',
     });
 });
@@ -499,7 +531,7 @@ test("should apply gradient color on selected text", async () => {
             "backgroundColor"
         ),
         contentAfter:
-            '<div style="background-image:none"><p><font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ab<strong>cd</strong>ef]</font></p></div>',
+            '<div style="background-image:none"><p><font style="background-color: transparent; background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ab<strong>cd</strong>ef]</font></p></div>',
     });
 });
 test("should apply gradient text color on selected text", async () => {
@@ -513,12 +545,20 @@ test("should apply gradient text color on selected text", async () => {
             '<div style="background-image:none"><p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ab<strong>cd</strong>ef]</font></p></div>',
     });
 });
-test("should remove text gradient and apply new text color if gradient is fully selected", async () => {
+test("should remove text gradient and apply new text color if gradient is fully selected (1)", async () => {
     await testEditor({
         contentBefore:
             '<p><font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);" class="text-gradient">[abcd]</font></p>',
         stepFunction: setColor("#ff0000", "color"),
         contentAfter: '<p><font style="color: rgb(255, 0, 0);">[abcd]</font></p>',
+    });
+});
+test("should remove text gradient and apply new text color if gradient is fully selected (2)", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);" class="text-gradient">[abcd]</font></p>',
+        stepFunction: setColor("text-o-color-1", "color"),
+        contentAfter: '<p><font class="text-o-color-1">[abcd]</font></p>',
     });
 });
 test("should remove background gradient and apply new background color if gradient is fully selected", async () => {
@@ -658,7 +698,7 @@ describe("colorElement", () => {
                     "backgroundColor"
                 );
             },
-            contentAfter: `<div style='background-image: url("https://example.com/image.png"), ${greenToBlueGradient};'>a</div>`,
+            contentAfter: `<div style='background-image: url("https://example.com/image.png"), ${greenToBlueGradient}; background-color: transparent;'>a</div>`,
         });
     });
     test("should keep the background image when switching o_cc class", async () => {
@@ -848,7 +888,7 @@ describe("colorElement", () => {
                             "backgroundColor"
                         );
                     },
-                    contentAfter: `<div class="o_cc o_cc1" style="background-image: ${greenToBlueGradient};">a</div>`,
+                    contentAfter: `<div class="o_cc o_cc1" style="background-image: ${greenToBlueGradient}; background-color: transparent;">a</div>`,
                 });
             });
         });
@@ -885,7 +925,7 @@ test("should be able to apply color on icon along with text", async () => {
             '<p>a[bc\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeffde]f</p>',
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfterEdit:
-            '<p>a<font style="color: rgb(255, 0, 0);">[bc</font><font style="color: rgb(255, 0, 0);">\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</font><font style="color: rgb(255, 0, 0);">de]</font>f</p>',
+            '<p>a<font style="color: rgb(255, 0, 0);">[bc\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeffde]</font>f</p>',
         contentAfter:
             '<p>a<font style="color: rgb(255, 0, 0);">[bc<span class="fa fa-glass"></span>de]</font>f</p>',
     });
@@ -909,7 +949,7 @@ test("should be able to remove color of an icon", async () => {
             '<p><font style="color: rgb(255, 0, 0);">\ufeff<span class="fa fa-glass" contenteditable="false">[]\u200b</span>\ufeff</font></p>',
         stepFunction: setColor("", "color"),
         contentAfterEdit:
-            '<p>[\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff]</p>',
+            '<p>\ufeff[<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff]</p>',
         contentAfter: '<p>[<span class="fa fa-glass"></span>]</p>',
     });
 });
@@ -1028,4 +1068,47 @@ test("should change text color for text with color and background gradient", asy
         stepFunction: setColor("rgb(0, 0, 255)", "color"),
         contentAfter: `<p><font style="color: rgb(255, 0, 0);">this <font style="background-image: ${redToBlueGradient};">is a <font style="color: rgb(0, 0, 255);">[tes]</font>t</font> line</font></p>`,
     });
+});
+
+test("should not apply color to selection placeholder nodes", async () => {
+    const { el, editor } = await setupEditor(
+        unformat(`
+            <table>
+                <tbody>
+                    <tr>
+                        <td>1[]</td>
+                    </tr>
+                </tbody>
+            </table>
+        `)
+    );
+    await press(["ctrl", "a"]);
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder="">[<br></p>
+            <table class="o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td">1</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="">]<br></p>
+        `)
+    );
+    setColor("#FF0000", "color")(editor);
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder="">[<br></p>
+            <table class="o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td"><font style="color: rgb(255, 0, 0);">1</font></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="">]<br></p>
+        `)
+    );
 });

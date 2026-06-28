@@ -43,14 +43,12 @@ class BaseTestUi(AccountTestMockOnlineSyncCommon):
         a_recv = self.env['account.account'].create({
             'code': 'X1012',
             'name': 'Debtors - (test)',
-            'reconcile': True,
             'account_type': 'asset_receivable',
         })
         a_pay = self.env['account.account'].create({
             'code': 'X1111',
             'name': 'Creditors - (test)',
             'account_type': 'liability_payable',
-            'reconcile': True,
         })
         a_sale = self.env['account.account'].create({
             'code': 'X2020',
@@ -116,10 +114,11 @@ class TestUi(BaseTestUi):
             "company_ids": [Command.clear(), Command.link(company1.id), Command.link(company2.id)]
         })
 
-        self.env["ir.rule"].create({
+        self.env["ir.access"].create({
             "name": "multiCompany rule",
-            "domain_force": '["|", ("company_id", "=", False), ("company_id", "in", company_ids)]',
-            "model_id": self.env["ir.model"]._get("test.model_multicompany").id
+            "model_id": self.env["ir.model"]._get("test.model_multicompany").id,
+            'operation': 'crud',
+            "domain": '["|", ("company_id", "=", False), ("company_id", "in", company_ids)]',
         })
 
         self.env["test.model_multicompany"].create({"name": "p1"})
@@ -146,10 +145,11 @@ class TestUi(BaseTestUi):
             "company_ids": [Command.clear(), Command.link(company1.id), Command.link(company2.id)]
         })
 
-        self.env["ir.rule"].create({
+        self.env["ir.access"].create({
             "name": "multiCompany rule",
-            "domain_force": '["|", ("company_id", "=", False), ("company_id", "in", company_ids)]',
-            "model_id": self.env["ir.model"]._get("test.model_multicompany").id
+            "model_id": self.env["ir.model"]._get("test.model_multicompany").id,
+            'operation': 'crud',
+            "domain": '["|", ("company_id", "=", False), ("company_id", "in", company_ids)]',
         })
 
         self.env["test.model_multicompany"].create({"name": "p1"})
@@ -177,10 +177,11 @@ class TestUi(BaseTestUi):
             "company_ids": [Command.clear(), Command.link(company1.id), Command.link(company2.id)]
         })
 
-        self.env["ir.rule"].create({
+        self.env["ir.access"].create({
             "name": "multiCompany rule",
-            "domain_force": '["|", ("company_id", "=", False), ("company_id", "in", company_ids)]',
-            "model_id": self.env["ir.model"]._get("test.model_multicompany").id
+            "model_id": self.env["ir.model"]._get("test.model_multicompany").id,
+            'operation': 'crud',
+            "domain": '["|", ("company_id", "=", False), ("company_id", "in", company_ids)]',
         })
 
         self.env["test.model_multicompany"].create({"name": "p1"})

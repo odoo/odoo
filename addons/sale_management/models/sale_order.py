@@ -4,6 +4,7 @@ from datetime import timedelta
 from itertools import starmap, zip_longest
 
 from odoo import api, fields, models
+from odoo.fields import Command
 from odoo.tools import is_html_empty
 
 
@@ -12,27 +13,20 @@ class SaleOrder(models.Model):
 
     sale_order_template_id = fields.Many2one(
         comodel_name="sale.order.template",
-        string="Quotation Template",
-        compute="_compute_sale_order_template_id",
+        string="Template",
         store=True,
         readonly=False,
         check_company=True,
-        precompute=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        index="btree_not_null",
+        domain="""[
+            ('template_type', '=', 'quotation'),
+            '|',
+            ('company_id', '=', False),
+            ('company_id', '=', company_id),
+        ]""",
     )
 
     # === COMPUTE METHODS ===#
-
-    # Do not make it depend on `company_id` field
-    # It is triggered manually by the _onchange_company_id below iff the SO has not been saved.
-    def _compute_sale_order_template_id(self):
-        for order in self:
-            company_template = order.company_id.sale_order_template_id
-            if company_template and order.sale_order_template_id != company_template:
-                if "website_id" in self._fields and order.website_id:
-                    # don't apply quotation template for order created via eCommerce
-                    continue
-                order.sale_order_template_id = order.company_id.sale_order_template_id.id
 
     @api.depends("partner_id", "sale_order_template_id")
     def _compute_note(self):
@@ -76,24 +70,20 @@ class SaleOrder(models.Model):
 
     # === ONCHANGE METHODS ===#
 
-    @api.onchange("company_id")
-    def _onchange_company_id(self):
-        """Trigger quotation template recomputation on unsaved records company change."""
-        super()._onchange_company_id()
-        if self._origin.id:
-            return
-        self._compute_sale_order_template_id()
-
     @api.onchange("sale_order_template_id")
     def _onchange_sale_order_template_id(self):
         if not self.sale_order_template_id:
             return
 
-        sale_order_template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
+        sale_order_template = self.sale_order_template_id.with_context(
+            lang=self.partner_id.lang
+        ).with_company(self.company_id)
 
-        order_lines_data = [fields.Command.clear()]
+        order_lines_data = [Command.clear()]
         order_lines_data += [
-            fields.Command.create(line._prepare_order_line_values())
+            Command.create(
+                line._prepare_order_line_values(self.fiscal_position_id, self.currency_id)
+            )
             for line in sale_order_template.sale_order_template_line_ids
         ]
 
@@ -145,3 +135,39 @@ class SaleOrder(models.Model):
             if order.sale_order_template_id.mail_template_id:
                 order._send_order_notification_mail(order.sale_order_template_id.mail_template_id)
         return res
+
+    def action_create_quotation_template(self):
+        self.ensure_one()
+
+        template_vals = self._prepare_template_order_values()
+        new_template = self.env["sale.order.template"].create(template_vals)
+
+        # Assign the newly created template to the current SO
+        self.sale_order_template_id = new_template.id
+
+        return new_template.get_record_default_action()
+
+    # === TOOLING METHODS ===#
+
+    def _prepare_template_order_values(self):
+        """Prepare the dictionary of values to create a new quotation template from the current
+        order.
+
+        :return: `sale.order.template` create values
+        :rtype: dict
+        """
+        self.ensure_one()
+        template_lines = [
+            Command.create(line._prepare_template_line_values()) for line in self.order_line
+        ]
+
+        return {
+            "name": self.env._("Template from %s", self.name),
+            "company_id": self.company_id.id,
+            "journal_id": self.journal_id.id,
+            "note": self.note,
+            "require_signature": self.require_signature,
+            "require_payment": self.require_payment,
+            "prepayment_percent": self.prepayment_percent,
+            "sale_order_template_line_ids": template_lines,
+        }

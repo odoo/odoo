@@ -1,19 +1,40 @@
+import { props, t } from "@odoo/owl";
 import { BuilderInputBase } from "./builder_input_base";
 
 export class BuilderNumberInputBase extends BuilderInputBase {
     static template = "html_builder.BuilderNumberInputBase";
-    static props = {
-        ...super.props,
-        onKeydownArrow: { type: Function, optional: true },
-        clampValue: { type: Function, optional: false },
-        composable: { type: Boolean, optional: true },
-        min: { type: Number, optional: true },
-        max: { type: Number, optional: true },
-        step: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        composable: false,
-    };
+    props = props({
+        // BuilderInputBase props (converted inline)
+        slots: t.object().optional(),
+        inputRef: t.function().optional(),
+        // textInputBasePassthroughProps (converted inline)
+        action: t.string().optional(),
+        placeholder: t.string().optional(),
+        title: t.string().optional(),
+        style: t.string().optional(),
+        tooltip: t.string().optional(),
+        classes: t.string().optional(),
+        inputClasses: t.string().optional(),
+        prefix: t.string().optional(),
+        prefixIcon: t.string().optional(),
+        selectTextOnFocus: t.boolean().optional(),
+
+        commit: t.function(),
+        preview: t.function(),
+        onFocus: t.function().optional(),
+        onInput: t.function().optional(),
+        onChange: t.function().optional(),
+        onKeydown: t.function().optional(),
+        onBeforeInput: t.function().optional(),
+        value: t.or([t.string(), t.literal(null)]).optional(),
+
+        onKeydownArrow: t.function().optional(),
+        clampValue: t.function(),
+        composable: t.boolean().optional(false),
+        min: t.number().optional(),
+        max: t.number().optional(),
+        step: t.number().optional(),
+    });
 
     onKeydown(e) {
         if (["ArrowUp", "ArrowDown"].includes(e.key)) {
@@ -25,7 +46,8 @@ export class BuilderNumberInputBase extends BuilderInputBase {
             values.forEach((value, i) => {
                 values[i] = this.props.clampValue(value + (e.key === "ArrowUp" ? step : -step));
             });
-            e.target.value = values.join(" ");
+            this.state.value = values.join(" ");
+            e.target.value = this.state.value;
             this.props.preview(e.target.value);
             this.props.onKeydownArrow?.(e);
         }

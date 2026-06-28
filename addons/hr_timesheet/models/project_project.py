@@ -84,43 +84,29 @@ class ProjectProject(models.Model):
     @api.depends('allow_timesheets', 'total_timesheet_time', 'allocated_hours', 'timesheet_encode_uom_id')
     def _compute_timesheet_stat_values(self):
         for project in self:
-            if not project.allow_timesheets or not self.env.user.has_group("hr_timesheet.group_hr_timesheet_user"):
-                project.stat_timesheet_value = False
-                project.stat_extra_time_value = False
-                project.stat_success_rate = False
-                return
             encode_uom = project.timesheet_encode_uom_id
             uom_ratio = self.env.ref('uom.product_uom_hour').factor / encode_uom.factor
-
-            allocated = project.allocated_hours * uom_ratio
-            effective = project.total_timesheet_time
 
             stat_timesheet_value = False
             stat_extra_time_value = False
             success_rate = False
+
+            allocated = project.allocated_hours * uom_ratio
+            effective = project.total_timesheet_time
             if allocated:
-                stat_timesheet_value = f"{round(effective)} / {round(allocated)} {encode_uom.name}"
                 success_rate = round(100 * effective / allocated)
-                if success_rate > 100:
-                    stat_timesheet_value = self.env._(
+                stat_timesheet_value = self.env._(
                         "%(effective)s / %(allocated)s %(uom_name)s",
                         effective=round(effective),
                         allocated=round(allocated),
                         uom_name=encode_uom.name,
                     )
+                if success_rate > 100:
                     stat_extra_time_value = self.env._(
                         "%(exceeding_hours)s %(uom_name)s (+%(exceeding_rate)s%%)",
                         exceeding_hours=round(effective - allocated),
                         uom_name=encode_uom.name,
                         exceeding_rate=round(100 * (effective - allocated) / allocated),
-                    )
-                else:
-                    stat_timesheet_value = self.env._(
-                        "%(effective)s / %(allocated)s %(uom_name)s (%(success_rate)s%%)",
-                        effective=round(effective),
-                        allocated=round(allocated),
-                        uom_name=encode_uom.name,
-                        success_rate=success_rate,
                     )
             else:
                 stat_timesheet_value = self.env._(
@@ -190,16 +176,7 @@ class ProjectProject(models.Model):
         """ Create an analytic account if project allow timesheet and don't provide one
             Note: create it before calling super() to avoid raising the ValidationError from _check_allow_timesheet
         """
-        defaults = self.default_get(['allow_timesheets', 'account_id', 'is_template'])
-        analytic_accounts_vals = [
-            vals for vals in vals_list
-            if (
-                vals.get('allow_timesheets', defaults.get('allow_timesheets')) and
-                not vals.get('account_id', defaults.get('account_id')) and not vals.get('is_template', defaults.get('is_template'))
-            )
-        ]
-
-        if analytic_accounts_vals:
+        if analytic_accounts_vals := self._get_processed_analytic_account_vals(vals_list):
             analytic_accounts = self.env['account.analytic.account'].create(self._get_values_analytic_account_batch(analytic_accounts_vals))
             for vals, analytic_account in zip(analytic_accounts_vals, analytic_accounts):
                 vals['account_id'] = analytic_account.id
@@ -260,6 +237,22 @@ class ProjectProject(models.Model):
         if not self.env.context.get('from_embedded_action'):
             action['display_name'] = _("%(name)s's Timesheets", name=self.name)
         return action
+
+    def _get_processed_analytic_account_vals(self, vals_list):
+        """
+        Filters the values list to return the values for analytic accounts creation.
+        Allows values modifications through overrides.
+        """
+        defaults = self.default_get(['allow_timesheets', 'account_id', 'is_template'])
+        analytic_accounts_vals = []
+        for vals in vals_list:
+            if (
+                vals.get('allow_timesheets', defaults.get('allow_timesheets'))
+                and not vals.get('account_id', defaults.get('account_id'))
+                and not vals.get('is_template', defaults.get('is_template'))
+            ):
+                analytic_accounts_vals.append(vals)
+        return analytic_accounts_vals
 
     # ----------------------------
     #  Project Updates

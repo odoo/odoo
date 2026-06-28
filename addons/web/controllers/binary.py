@@ -87,9 +87,10 @@ class Binary(Controller):
         assets_params = assets_params or {}
         assert isinstance(assets_params, dict)
         debug_assets = unique == 'debug'
+        stream = None
+
         if unique in ('any', '%'):
             unique = ANY_UNIQUE
-        attachment = None
         if unique != 'debug':
             url = env['ir.asset']._get_asset_bundle_url(filename, unique, assets_params)
             assert not '%' in url
@@ -102,7 +103,9 @@ class Binary(Controller):
                 ('create_uid', '=', api.SUPERUSER_ID),
             ]
             attachment = env['ir.attachment'].sudo().search(domain, limit=1)
-        if not attachment:
+            if attachment:
+                stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
+        if stream is None:
             # try to generate one
             if env.cr.readonly:
                 env.cr.rollback()  # reset state to detect newly generated assets
@@ -111,7 +114,7 @@ class Binary(Controller):
                 # if we don't have a replica, the cursor is not readonly, use the same one to avoid a rollback
                 cursor_manager = nullcontext(env.cr)
             with cursor_manager as rw_cr:
-                rw_env = api.Environment(rw_cr, env.user.id, {})
+                rw_env = api.Environment(rw_cr, env.user.id, request.env.context)
                 try:
                     if filename.endswith('.map'):
                         _logger.error(".map should have been generated through debug assets, (version %s most likely outdated)", unique)
@@ -121,6 +124,8 @@ class Binary(Controller):
                     js = asset_type == 'js'
                     binary = asset_type == 'binary'
                     extension = '' if '.' not in filename else filename.split('.')[-1]
+                    if binary:
+                        asset_type = extension
                     bundle = rw_env['ir.qweb']._get_asset_bundle(
                         bundle_name,
                         css=css,
@@ -132,21 +137,22 @@ class Binary(Controller):
                         assets_params=assets_params,
                     )
                     # check if the version matches. If not, redirect to the last version
-                    if not debug_assets and unique != ANY_UNIQUE \
-                            and unique != bundle.get_version(extension if binary else asset_type):
+                    if not debug_assets and unique != ANY_UNIQUE and unique != bundle.get_version(asset_type):
                         return request.redirect(bundle.get_link(asset_type))
+                    attachment = None
                     if css and bundle.stylesheets:
-                        attachment = env['ir.attachment'].sudo().browse(bundle.css().id)
+                        attachment = bundle.css()
                     elif js and bundle.javascripts:
-                        attachment = env['ir.attachment'].sudo().browse(bundle.js().id)
+                        attachment = bundle.js()
                     elif binary and bundle.binaries:
-                        attachment = env['ir.attachment'].sudo().browse(bundle.bin(extension).id)
+                        attachment = bundle.bin(extension)
+                    if attachment:
+                        stream = rw_env['ir.binary']._get_stream_from(attachment, 'raw', filename)
                 except ValueError as e:
                     _logger.warning("Parsing asset bundle %s has failed: %s", filename, e)
                     raise request.not_found() from e
-        if not attachment:
+        if stream is None:
             raise request.not_found()
-        stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
         send_file_kwargs = {'as_attachment': False, 'content_security_policy': None}
         if unique and unique != 'debug':
             send_file_kwargs['immutable'] = True
@@ -210,13 +216,9 @@ class Binary(Controller):
         return stream.get_response(**send_file_kwargs)
 
     @route('/web/binary/upload_attachment', type='http', auth="user")
-    def upload_attachment(self, model, id, ufile, callback=None):
+    def upload_attachment(self, model, id, ufile):
         files = request.httprequest.files.getlist('ufile')
         Model = request.env['ir.attachment']
-        out = """<script language="javascript" type="text/javascript">
-                    var win = window.top.window;
-                    win.jQuery(win).trigger(%s, %s);
-                </script>"""
         args = []
         for ufile in files:
 
@@ -246,7 +248,7 @@ class Binary(Controller):
                     'id': attachment.id,
                     'size': attachment.file_size,
                 })
-        return out % (json.dumps(clean(callback)), json.dumps(args)) if callback else json.dumps(args)
+        return json.dumps(args)
 
     @route([
         '/web/binary/company_logo',

@@ -320,7 +320,7 @@ registerWebsitePreviewTour("website_page_properties_website_page", {}, () => [
     ...openCreatePageDialog,
     {
         content: "Use blank template",
-        trigger: ".o_page_template .o_button_area:hidden",
+        trigger: ".o_website_page_templates_dialog [data-name='add_blank_page']",
         run: "click",
     },
     {

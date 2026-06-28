@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- https://paymentservices.amazon.com/docs/payment-methods/payment-methods-support -->
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_amex" model="payment.method">
+        <field name="name">American Express</field>
+        <field name="code">amex</field>
+        <field name="provider_id" ref="payment.payment_provider_aps"/>
+        <field name="image" type="bytes" file="payment/static/img/amex.png"/>
+    </record>
+
+    <record id="payment_method_benefit" model="payment.method">
+        <field name="name">Benefit</field>
+        <field name="code">benefit</field>
+        <field name="provider_id" ref="payment.payment_provider_aps"/>
+        <field name="image" type="bytes" file="payment/static/img/benefit.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bh')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BHD')])]"/>
+    </record>
+
+    <record id="payment_method_knet" model="payment.method">
+        <field name="name">KNET</field>
+        <field name="code">knet</field>
+        <field name="provider_id" ref="payment.payment_provider_aps"/>
+        <field name="image" type="bytes" file="payment/static/img/knet.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.kw')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.KWD')])]"/>
+    </record>
+
+    <record id="payment_method_mada" model="payment.method">
+        <field name="name">Mada</field>
+        <field name="code">mada</field>
+        <field name="provider_id" ref="payment.payment_provider_aps"/>
+        <field name="image" type="bytes" file="payment/static/img/mada.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.sa')])]"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field name="provider_id" ref="payment.payment_provider_aps"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_meeza" model="payment.method">
+        <field name="name">Meeza</field>
+        <field name="code">meeza</field>
+        <field name="provider_id" ref="payment.payment_provider_aps"/>
+        <field name="image" type="bytes" file="payment/static/img/meeza.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.eg')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EGP')])]"/>
+    </record>
+
+    <record id="payment_method_naps" model="payment.method">
+        <field name="name">NAPS</field>
+        <field name="code">naps</field>
+        <field name="provider_id" ref="payment.payment_provider_aps"/>
+        <field name="image" type="bytes" file="payment/static/img/naps.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.qa')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.QAR')])]"/>
+    </record>
+
+    <record id="payment_method_omannet" model="payment.method">
+        <field name="name">OmanNet</field>
+        <field name="code">omannet</field>
+        <field name="provider_id" ref="payment.payment_provider_aps"/>
+        <field name="image" type="bytes" file="payment/static/img/omannet.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.om')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.OMR')])]"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field name="provider_id" ref="payment.payment_provider_aps"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+</odoo>

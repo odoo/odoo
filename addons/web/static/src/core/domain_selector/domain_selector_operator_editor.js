@@ -22,7 +22,7 @@ export function getDomainDisplayedOperators(fieldDef) {
         case "char":
         case "text":
         case "html":
-            return ["=", "!=", "ilike", "not ilike", "starts with", "set", "not set"];
+            return ["ilike", "not ilike", "=", "!=", "starts with", "set", "not set"];
         case "date":
         case "datetime":
             return ["in range", "=", "<", ">", "set", "not set"];

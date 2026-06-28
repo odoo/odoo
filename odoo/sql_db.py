@@ -145,6 +145,7 @@ class _FlushingSavepoint(Savepoint):
         cr = self._cr
         assert isinstance(cr, Cursor)
         super().rollback()
+        cr.precommit.clear()  # they were flushed in the init
         if cr.transaction is not None:
             cr.transaction.restore_state()
 
@@ -255,6 +256,7 @@ class Cursor(_CursorProtocol):
         # avoid the call of close() (by __del__) if an exception
         # is raised by any of the following initializations
         self._closed: bool = True
+        self._closing: bool = False
 
         self.dbname = dbname
         self._cnx = cnx
@@ -306,8 +308,9 @@ class Cursor(_CursorProtocol):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
+        self._closing = True
         try:
-            if exc_type is None:
+            if exc_type is None and not self.closed:
                 self.commit()
         finally:
             self.close()
@@ -380,6 +383,13 @@ class Cursor(_CursorProtocol):
             raise ValueError(f"SQL query parameters should be a tuple, list or dict; got {params!r}")
 
         start = real_time()
+        update_query_endtime_functions = []
+        current_thread = threading.current_thread()
+        for hook in getattr(current_thread, 'query_hooks', ()):
+            func = hook(self, query, params, start, 10)
+            if func and callable(func):
+                update_query_endtime_functions.append(func)
+
         try:
             self._obj.execute(query, params)
         except Exception as e:
@@ -395,15 +405,14 @@ class Cursor(_CursorProtocol):
         self.sql_log_count += 1
         sql_counter += 1
 
-        current_thread = threading.current_thread()
         if hasattr(current_thread, 'query_count'):
             current_thread.query_count += 1
         if hasattr(current_thread, 'query_time'):
             current_thread.query_time += delay
 
         # optional hooks for performance and tracing analysis
-        for hook in getattr(current_thread, 'query_hooks', ()):
-            hook(self, query, params, start, delay)
+        for update_query_endtime_function in update_query_endtime_functions:
+            update_query_endtime_function(delay)
 
         # advanced stats
         if _logger.isEnabledFor(logging.DEBUG):
@@ -434,9 +443,6 @@ class Cursor(_CursorProtocol):
     def print_log(self) -> None:
         global sql_counter
 
-        if not _logger.isEnabledFor(logging.DEBUG):
-            return
-
         def process(log_type: str):
             sqllogs = {'from': self.sql_from_log, 'into': self.sql_into_log}
             sqllog = sqllogs[log_type]
@@ -453,7 +459,6 @@ class Cursor(_CursorProtocol):
 
         process('from')
         process('into')
-        self.sql_log_count = 0
 
     @contextmanager
     def _enable_logging(self):
@@ -469,6 +474,7 @@ class Cursor(_CursorProtocol):
             _logger.setLevel(level)
 
     def close(self) -> None:
+        self._closing = True
         if self._closed:
             return
 
@@ -476,11 +482,6 @@ class Cursor(_CursorProtocol):
         # logic.
         try:
             self.rollback()
-            if self.transaction is not None:
-                self.transaction.default_env = None  # break the cyclic reference
-                self.transaction.reset()
-
-            self.cache.clear()
 
         except psycopg2.InterfaceError:
             # mask 'connection already closed' error
@@ -488,29 +489,40 @@ class Cursor(_CursorProtocol):
                 raise
 
         finally:
-            # The connection may have been closed, so give it back in finally block.
-            self._closed = True
+            # Close even if we had failures during rollback
+            if not self._closed:
+                self._close()
 
-            # Advanced stats only at logging.DEBUG level
+    def _close(self) -> None:
+        # The connection may have been closed, so give it back in finally block.
+        assert not self._closed, "Connection already closed"
+        self._closed = True
+
+        # Advanced stats only at logging.DEBUG level
+        if _logger.isEnabledFor(logging.DEBUG):
             self.print_log()
 
-            # This force the cursor to be freed, and thus, available again. It is
-            # important because otherwise we can overload the server very easily
-            # because of a cursor shortage (because cursors are not garbage
-            # collected as fast as they should). The problem is probably due in
-            # part because browse records keep a reference to the cursor.
-            self._obj.close()
-            del self._obj
+        # This force the cursor to be freed, and thus, available again. It is
+        # important because otherwise we can overload the server very easily
+        # because of a cursor shortage (because cursors are not garbage
+        # collected as fast as they should). The problem is probably due in
+        # part because browse records keep a reference to the cursor.
+        self._obj.close()
+        del self._obj
 
-            # Put the connection back to the pool
-            # Forget already closed connections and system-related databases
-            keep_in_pool = not self._cnx.closed and self.dbname not in (
-                'template0', 'template1',
-                # keep open if one of preloaded databases
-                config['db_system'] if config['db_system'] not in config['db_name'] else '',
-                config['db_template'],
-            )
-            self._cnx.give_back(keep_in_pool=keep_in_pool)
+        # Put the connection back to the pool
+        # Forget already closed connections and system-related databases
+        keep_in_pool = not self._cnx.closed and self.dbname not in (
+            'template0', 'template1',
+            # keep open if one of preloaded databases
+            config['db_system'] if config['db_system'] not in config['db_name'] else '',
+            config['db_template'],
+        )
+        self._cnx.give_back(keep_in_pool=keep_in_pool)
+
+        if self.transaction is not None:
+            self.transaction._free_resources()
+        self.cache.clear()
 
     def commit(self) -> None:
         """ Commit the current transaction. """
@@ -521,6 +533,8 @@ class Cursor(_CursorProtocol):
             self._now = None
         self.prerollback.clear()
         self.postrollback.clear()
+        if self._closing:
+            self._close()
         self.postcommit.run()
 
     def rollback(self) -> None:
@@ -532,6 +546,8 @@ class Cursor(_CursorProtocol):
         with rollbacking:
             self._cnx.rollback()
             self._now = None
+        if self._closing:
+            self._close()
         self.postrollback.run()
 
     def __getattr__(self, name):

@@ -21,8 +21,8 @@ $o-base-color-palette: map-merge($o-base-color-palette, (
     'footer-custom': null,
     'copyright': null,
     'copyright-custom': null,
-    'portal-card': null,
-    "portal-card-custom":null,
+    'portal-card': 2,
+    'portal-card-custom': null,
     'portal-gradient': null,
     'portal-card-border-color': null,
     'breadcrumb': 1, // o_cc1
@@ -81,7 +81,11 @@ $o-color-palettes: map-merge($o-color-palettes,
         'default-6':  o-make-palette(#3DD5F3),
         'default-7':  o-make-palette(#6EA8FE, #474973),
         'default-8':  o-make-palette(#0AA2C0),
-        'default-9':  o-make-palette(#0A58CA),
+        'default-9':  o-make-palette(#0A58CA, null, (
+            'body': 'o-color-5',
+            'o-cc1-bg': 'o-color-5',
+            'o-cc1-text': 'o-color-4',
+        )),
         'default-10': o-make-palette(#6610F2, #C97064),
         'default-11': o-make-palette(#6F42C1, #114B5F),
         'default-12': o-make-palette(#A370F7, #504746),
@@ -101,7 +105,7 @@ $o-color-palettes: map-merge($o-color-palettes,
         'default-22': o-make-palette(#a4193d, #ffdfb9),
         'default-23': o-make-palette(#195190, #a2a2a1),
         'default-24': o-make-palette(#ffdfde, #6a7ba2),
-        'default-25': o-make-palette(#5f4b8b, #e69a8d),
+        'default-25': o-make-palette(#5f4b8b, #C8491B),
         'default-26': o-make-palette(#ed6f63, #2d2926),
         'default-27': o-make-palette(#949398, #f4df4e),
         'default-28': o-make-palette(#00203f, #adefd1),
@@ -2149,6 +2153,10 @@ $o-base-website-values-palette: (
     'input-padding-x-lg': null, // Default to BS
     'input-font-size-lg': null, // Default to BS
     'input-border-width': null, // Default to BS
+    'input-border-top-width': null,
+    'input-border-right-width': null,
+    'input-border-bottom-width': null,
+    'input-border-left-width': null,
     'input-border-radius': null, // Default to BS
     'input-border-radius-sm': null, // Default to BS
     'input-border-radius-lg': null, // Default to BS
@@ -2159,6 +2167,17 @@ $o-base-website-values-palette: (
     'headings-font': null,
     'navbar-font': null,
     'buttons-font': null,
+
+    // Font weight mappings by context.
+    'font-weight-normal': null, // Default to BS
+    'lead-font-weight': null, // Default to BS
+    'font-weight-bolder': null, // Default to BS
+    'headings-font-weight': null, // Default to BS
+    'headings-font-weight-bold': null,
+    'display-font-weight': null, // Default to BS
+    'display-font-weight-bold': null,
+    'btn-font-weight': null, // Default to BS
+    'btn-font-weight-bold': null,
 
     // Gradients
     'menu-gradient': null,
@@ -2184,6 +2203,7 @@ $o-base-website-values-palette: (
     'portal-card-border-width': null,  // Portal width
     'portal-card-border-radius': null,  // Portal Radius
     'portal-card-border-style': solid,  // portal style
+    'portal-card-gap': 0.5rem,
 
     'footer-template': 'default',
     'footer-effect': null, // null / 'slideout_slide_hover' / 'slideout_shadow'
@@ -2288,35 +2308,35 @@ $o-base-theme-font-configs: (
 $o-theme-font-configs: (
     'Roboto': (
         'family': ('Roboto', sans-serif),
-        'url': 'Roboto:300,300i,400,400i,700,700i',
+        'url': 'Roboto:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i',
     ),
     'Open Sans': (
         'family': ('Open Sans', sans-serif),
-        'url': 'Open+Sans:300,300i,400,400i,700,700i',
+        'url': 'Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i',
     ),
     'Source Sans Pro': (
         'family': ('Source Sans Pro', sans-serif),
-        'url': 'Source+Sans+Pro:300,300i,400,400i,700,700i',
+        'url': 'Source+Sans+Pro:200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i',
     ),
     'Raleway': (
         'family': ('Raleway', sans-serif),
-        'url': 'Raleway:300,300i,400,400i,700,700i',
+        'url': 'Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i',
     ),
     'Noto Serif': (
         'family': ('Noto Serif', serif),
-        'url': 'Noto+Serif:300,300i,400,400i,700,700i',
+        'url': 'Noto+Serif:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i',
     ),
     'Arvo': (
         'family': ('Arvo', Times, serif),
-        'url': 'Arvo:300,300i,400,400i,700,700i',
+        'url': 'Arvo:400,400i,700,700i',
     ),
     'Inter Tight': (
         'family': ('Inter Tight', sans-serif),
-        'url': 'Inter+Tight:300,300i,400,400i,500,500i,700,700i',
+        'url': 'Inter+Tight:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i',
     ),
     'Inter': (
         'family': ('Inter', sans-serif),
-        'url': 'Inter:300,300i,400,400i,700,700i',
+        'url': 'Inter:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i',
     ),
 ) !default;
 

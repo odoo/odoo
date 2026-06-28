@@ -151,12 +151,12 @@
         </record>
         <function model="discuss.channel" name="_add_members">
             <value eval="[ref('im_livechat.support_bot_session_4_demo')]"/>
-            <value name="partners" model="res.partner" eval="obj().env['res.partner'].browse(ref('base.partner_admin'))"/>
+            <value name="users" model="res.users" eval="obj(ref('base.user_admin'))"/>
             <value name="create_member_params" eval="{
                 'livechat_member_type': 'agent',
                 'agent_expertise_ids': [ref('im_livechat.chatbot_script_expertise_livechat_demo')]
             }"/>
-            <value name="inviting_partner" model="res.partner" eval="obj().env['res.partner'].browse(ref('support_bot_operator_partner_demo'))"/>
+            <value name="inviting_partner" model="res.partner" eval="obj(ref('support_bot_operator_partner_demo'))"/>
         </function>
         <record id="support_bot_session_4_message_8" model="mail.message">
             <field name="model">discuss.channel</field>

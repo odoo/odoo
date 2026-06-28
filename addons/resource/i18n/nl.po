@@ -14,17 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2026-01-14 16:34+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"PO-Revision-Date: 2026-04-11 14:28+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/"
 "resource/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
@@ -42,6 +42,12 @@ msgstr "%s (kopie)"
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "2 Week's Calendar"
 msgstr "Kalender van 2 weken"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/res_company.py:0
+msgid "40 hours/week"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -66,7 +72,7 @@ msgstr "<span>uur/week</span>"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__count_as__absence
 msgid "Absence"
-msgstr ""
+msgstr "Afwezigheid"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__active
@@ -159,17 +165,17 @@ msgstr "Bedrijf"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__count_as
 msgid "Count As"
-msgstr ""
+msgstr "Tellen als"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__country_id
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__country_code
 msgid "Country Code"
-msgstr ""
+msgstr "Landcode"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__create_uid
@@ -241,7 +247,7 @@ msgstr "Weergavenaam"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_based
 msgid "Duration Based"
-msgstr ""
+msgstr "Op basis van duur"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__time_efficiency
@@ -325,7 +331,7 @@ msgstr "Uur"
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__hours_per_day
 #: model:ir.model.fields,field_description:resource.field_resource_resource__hours_per_day
 msgid "Hours per Day"
-msgstr ""
+msgstr "Uren per dag"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_week
@@ -580,12 +586,6 @@ msgid "Share User"
 msgstr "Deel gebruiker"
 
 #. module: resource
-#. odoo-python
-#: code:addons/resource/models/res_company.py:0
-msgid "Standard 40 hours/week"
-msgstr "Standaard 40 uren/week"
-
-#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
 msgid "Start Date"
 msgstr "Startdatum"
@@ -630,6 +630,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"De ISO-landcode in twee letters.\n"
+"Je kunt dit veld gebruiken voor snelzoeken."
 
 #. module: resource
 #. odoo-python
@@ -638,6 +640,8 @@ msgid ""
 "The average hours per day is too high compared to the number of hours per "
 "week"
 msgstr ""
+"Het gemiddelde aantal uren per dag is te hoog in vergelijking met het aantal "
+"uren per week"
 
 #. module: resource
 #. odoo-python
@@ -645,16 +649,18 @@ msgstr ""
 msgid ""
 "The average hours per day is too low compared to the number of hours per week"
 msgstr ""
+"Het gemiddelde aantal uren per dag is te laag in vergelijking met het aantal "
+"uren per week"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid ""
-"The current week (from %(first_day)s to %(last_day)s) corresponds to "
-"%(number)s week."
+"The current week (from %(first_day)s to %(last_day)s) corresponds to %"
+"(number)s week."
 msgstr ""
-"De huidige week (van %(first_day)s tot %(last_day)s) komt overeen met week "
-"%(number)s."
+"De huidige week (van %(first_day)s tot %(last_day)s) komt overeen met week %"
+"(number)s."
 
 #. module: resource
 #. odoo-python
@@ -737,7 +743,6 @@ msgid "User"
 msgstr "Gebruiker"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 msgid "Visible to all"
 msgstr "Voor iedereen zichtbaar"
@@ -857,6 +862,8 @@ msgstr "Werktijd 2e week"
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "You cannot compute the intervals without a calendar on no resource."
 msgstr ""
+"Je kunt de intervallen niet berekenen zonder een agenda of geen enkele "
+"resource."
 
 #. module: resource
 #. odoo-python
@@ -864,6 +871,8 @@ msgstr ""
 msgid ""
 "You cannot define hours and duration based attendances for the same day."
 msgstr ""
+"Je kunt geen aanwezigheden op basis van uren en duur voor dezelfde dag "
+"definiëren."
 
 #. module: resource
 #. odoo-python

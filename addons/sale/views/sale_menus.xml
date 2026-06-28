@@ -43,7 +43,7 @@
             <menuitem
                 id="menu_service_material"
                 action="action_service_material"
-                groups="analytic.group_analytic_accounting"
+                groups="sale.group_services_and_material"
                 sequence="10"
             />
 
@@ -65,17 +65,39 @@
             <menuitem id="menu_product_template_action"
                 action="product_template_action"
                 sequence="10"/>
-            <menuitem id="menu_products"
-                action="product.product_normal_action_sell"
-                groups="product.group_product_variant"
-                sequence="20"/>
             <menuitem id="menu_product_pricelist_main"
                 name="Pricelists"
                 action="product.product_pricelist_action2"
                 groups="product.group_product_pricelist"
                 sequence="30"/>
 
+            <menuitem
+                id="menu_product_attribute_action"
+                action="product.attribute_action"
+                groups="product.group_product_variant"
+                sequence="40"
+            />
+            <menuitem
+                name="Combo Choices"
+                id="menu_product_combos"
+                action="product.product_combo_action"
+                sequence="50"
+            />
+            <menuitem
+                id="menu_product_categories"
+                action="product.product_category_action_form"
+                sequence="60"
+            />
+            <menuitem
+                name="Units &amp; Packagings"
+                id="uom_uom_menu_list"
+                action="uom.uom_uom_action_list"
+                groups="uom.group_uom"
+                sequence="70"
+            />
         </menuitem>
+
+        <menuitem name="Marketplaces" id="menu_sale_marketplaces" sequence="37"/>
 
         <menuitem id="menu_sale_report"
             name="Reporting"
@@ -101,89 +123,37 @@
 
         </menuitem>
 
-        <menuitem id="menu_sale_config"
+        <menuitem
             name="Configuration"
+            id="menu_sale_config"
             groups="sales_team.group_sale_manager"
             sequence="50">
 
-            <menuitem id="menu_sale_general_settings"
+            <menuitem
                 name="Settings"
+                id="menu_sale_general_settings"
                 sequence="10"
                 action="action_sale_config_settings"
                 groups="base.group_system"/>
 
-            <menuitem id="sales_team_config"
+            <menuitem
                 name="Sales Teams"
+                id="sales_team_config"
                 action="sales_team.crm_team_action_config"
                 sequence="20"/>
 
-            <menuitem id="menu_sales_config"
+            <menuitem
+                name="Payments"
+                id="payment_provider_menu"
+                action="payment.action_payment_provider"
                 sequence="30"
-                name="Sales Orders">
+            />
 
-                <menuitem id="menu_tag_config"
-                    name="Tags"
-                    action="sales_team.sales_team_crm_tag_action"
-                    sequence="10"/>
-
-            </menuitem>
-
-            <menuitem id="prod_config_main"
-                name="Products"
-                sequence="40">
-
-                <menuitem id="menu_product_attribute_action"
-                    action="product.attribute_action"
-                    groups="product.group_product_variant"
-                    sequence="10"/>
-
-                <menuitem
-                    id="menu_product_combos"
-                    name="Combo Choices"
-                    action="product.product_combo_action"
-                    sequence="15"
-                />
-
-                <menuitem id="menu_product_categories"
-                    action="product.product_category_action_form"
-                    sequence="20"/>
-
-                <menuitem id="menu_product_tags"
-                    action="product.product_tag_action"
-                    sequence="30"/>
-
-                <menuitem id="menu_product_uom_form_action"
-                    name="Units &amp; Packagings"
-                    action="uom.product_uom_form_action"
-                    groups="uom.group_uom"
-                    sequence="35"/>
-
-            </menuitem>
-
-            <menuitem id="payment_menu"
-                      name="Online Payments"
-                      groups="base.group_system"
-                      sequence="45"
-            >
-                <menuitem id="payment_provider_menu"
-                          action="payment.action_payment_provider"
-                          sequence="10"
-                />
-                <menuitem id="payment_method_menu"
-                          action="payment.action_payment_method"
-                          sequence="20"
-                />
-                <menuitem id="payment_token_menu"
-                          action="payment.action_payment_token"
-                          groups="base.group_no_one"
-                          sequence="30"
-                />
-                <menuitem id="payment_transaction_menu"
-                          action="payment.action_payment_transaction"
-                          groups="base.group_no_one"
-                          sequence="40"
-                />
-            </menuitem>
+            <menuitem
+                name="Sales Orders"
+                id="menu_sales_config"
+                sequence="40"
+            />
 
             <menuitem
                 id="sale_menu_config_activities"

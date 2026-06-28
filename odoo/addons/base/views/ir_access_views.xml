@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ir.access -->
+    <record id="ir_access_list_view" model="ir.ui.view">
+        <field name="name">ir.access.view.list</field>
+        <field name="model">ir.access</field>
+        <field name="arch" type="xml">
+            <list string="Access Rights">
+                <field name="name" width="200px"/>
+                <field name="model_id" width="200px"/>
+                <field name="group_id" width="200px"/>
+                <field name="for_create"/>
+                <field name="for_read"/>
+                <field name="for_write"/>
+                <field name="for_unlink"/>
+                <field name="domain"/>
+                <field name="kind" widget="label_selection" string="Type"
+                    options="{
+                        'classes': {
+                            'permission': 'success',
+                            'restriction': 'danger',
+                        }
+                    }"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ir_access_form_view" model="ir.ui.view">
+        <field name="model">ir.access</field>
+        <field name="arch" type="xml">
+            <form string="Access Rights">
+                <header>
+                    <button name="customize" type="object" invisible="not is_standard"
+                        string="Customize" help="Duplicate this access to customize it"/>
+                </header>
+                <sheet>
+                   <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                   <widget name="web_ribbon" title="Permission" bg_color="text-bg-success" invisible="not active or kind != 'permission'"/>
+                   <widget name="web_ribbon" title="Restriction" bg_color="text-bg-warning" invisible="not active or kind != 'restriction'"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" nolabel="1" placeholder="Access name..." readonly="is_standard"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="model_id" readonly="is_standard"/>
+                            <field name="group_id" readonly="is_standard" placeholder="Restriction globally applied"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Operations">
+                            <group>
+                                <group>
+                                    <group>
+                                        <field name="for_create" readonly="is_standard"/>
+                                    </group>
+                                    <group>
+                                        <field name="for_read" readonly="is_standard"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group>
+                                        <field name="for_write" readonly="is_standard"/>
+                                    </group>
+                                    <group>
+                                        <field name="for_unlink" readonly="is_standard"/>
+                                    </group>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="domain" readonly="is_standard" widget="text"/>
+                            </group>
+                        </page>
+                        <page string="Help">
+                            <p>
+                            Access rights without group apply global restrictions that cannot be bypassed.<br/>
+                            Access rights associated with a group grant permissions. These are constrained by their domain and the restrictions.
+                            </p>
+                            <p>
+                            Restrictions are combined together with a logical AND operator.<br/>
+                            Permissions are combined together with a logical OR operator.<br/>
+                            If a user belongs to several groups, the permissions are combined with a logical OR operator.
+                            </p>
+                            <a class="oe_link" target="_blank" href="https://www.odoo.com/documentation/19.0/applications/general/users/access_rights.html#create-and-modify-groups">
+                                <i class="o_button_icon oi oi-fw oi oi-arrow-right"/>
+                                Access rights documentation
+                            </a>
+                        </page>
+                        <page string="Notes">
+                            <field name="note" placeholder="Keep track of what this access right does and why it exists..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ir_access_kanban_view" model="ir.ui.view">
+        <field name="model">ir.access</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <div class="p-2">
+                            <div class="mb-2">
+                                <field name="name" class="fw-bolder"/>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="me-1">On</span>
+                                <field name="model_id" class="text-primary"/>
+                            </div>
+                            <t t-if="record.group_id.raw_value">
+                                <div class="d-flex align-items-center">
+                                    <span class="me-1">For</span>
+                                    <field name="group_id" class="text-primary"/>
+                                </div>
+                            </t>
+                        </div>
+                        <footer class="flex-column">
+                            <div class="d-flex justify-content-evenly w-100">
+                                <div class="text-center fw-bold">Create</div>
+                                <div class="text-center fw-bold">Read</div>
+                                <div class="text-center fw-bold">Update</div>
+                                <div class="text-center fw-bold">Delete</div>
+                            </div>
+                            <div class="d-flex justify-content-evenly w-100">
+                                <field name="for_create" class="ms-2"/>
+                                <field name="for_read" class="ms-2"/>
+                                <field name="for_write" class="ms-2"/>
+                                <field name="for_unlink" class="ms-2"/>
+                            </div>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="ir_access_search_view" model="ir.ui.view">
+        <field name="model">ir.access</field>
+        <field name="arch" type="xml">
+            <search string="Access Rights">
+                <field name="name" string="Access Right"/>
+                <filter string="Operations">
+                    <filter string="Full" name="full_access" domain="[
+                            ('for_read', '=', True),
+                            ('for_write', '=', True),
+                            ('for_create', '=', True),
+                            ('for_unlink', '=', True)
+                        ]"/>
+                    <filter string="Create" name="create_access" domain="[
+                            ('for_create', '=', True)
+                        ]"/>
+                    <filter string="Read" name="read_access" domain="[
+                            ('for_read', '=', True)
+                        ]"/>
+                    <filter string="Update" name="update_access" domain="[
+                            ('for_write', '=', True)
+                        ]"/>
+                    <filter string="Delete" name="delete_access" domain="[
+                            ('for_unlink', '=', True)
+                        ]"/>
+                </filter>
+                <separator/>
+                <filter string="Custom" name="custom" domain="[('is_standard', '=', False)]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <field name="model_id"/>
+                <field name="group_id"/>
+                <group>
+                    <filter string="Group" name="groupby_group" context="{'group_by': 'group_id'}"/>
+                    <filter string="Model" name="groupby_model" context="{'group_by': 'model_id'}"/>
+                    <filter string="Type" name="groupby_kind" context="{'group_by': 'kind'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="ir_access_action" model="ir.actions.act_window">
+        <field name="name">Access Rights</field>
+        <field name="res_model">ir.access</field>
+        <field name="path">access</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="ir_access_search_view"/>
+    </record>
+
+</odoo>

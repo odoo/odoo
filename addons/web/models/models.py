@@ -22,11 +22,12 @@ from odoo.tools.translate import LazyTranslate
 
 if typing.TYPE_CHECKING:
     from collections.abc import Sequence
-    from odoo.orm.types import DomainType
+    from odoo.orm.types import DomainType, ValuesType
 
 _lt = LazyTranslate(__name__)
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
 MAX_NUMBER_OPENED_GROUPS = 10
+PENDING_ATTACHMENTS_KEY = "pending_attachment_ids"
 
 
 class lazymapping(defaultdict):
@@ -41,26 +42,133 @@ class Base(models.AbstractModel):
 
     @api.model
     @api.readonly
-    def web_name_search(self, name, specification, domain=None, operator='ilike', limit=100):
+    def web_name_search(
+        self,
+        name: str,
+        specification: dict[str, dict],
+        domain: DomainType | None = None,
+        operator: str = 'ilike',
+        limit: int = 100
+    ) -> list[dict]:
+        """
+        Search for records that have a display name matching the given
+        ``name`` pattern when compared with the given ``operator``, while also
+        matching the optional search domain (``domain``).
+        The result is a dictionnary formatted according to the given
+        ``specification``.
+
+        Unlike the standard ``name_search()`` method, ``web_name_search()``
+        can traverse relational fields to fetch nested field values in a
+        single call.
+
+        Example::
+
+            records.web_name_search(
+                name = "Note",
+                operator = "ilike",
+                specification = {
+                    'display_name': {},
+                    'author_id': {
+                        'fields': {
+                            'display_name': {}
+                        }
+                    },
+                    'line_ids': {
+                        'fields': {
+                            'name': {}
+                        },
+                        'limit': 5,
+                        'order': 'sequence asc'
+                    }
+                }
+            )
+
+            >>> [{
+                'id': 1,
+                'display_name': 'Note G',
+                'author_id': {
+                    'id': 42,
+                    'display_name': 'Ada Lovelace'
+                },
+                'line_ids': [
+                    {'id': 10, 'name': 'Intro'},
+                    {'id': 11, 'name': 'Body'}
+                ],
+                '__formatted_display_name': "Note G"
+            }]
+
+        :param name: the name pattern to match
+        :param domain: search domain specifying further restrictions
+        :param operator: domain operator for matching ``name``, such as
+            ``'like'`` or ``'='``.
+        :param limit: max number of records to return
+        :param specification: A dictionary defining the fields to read.
+            The keys are field names, and the values are configuration dictionaries.
+            Passing an empty dictionary as a value simply reads the field's value.
+
+            Supported keys inside a field's configuration dictionary:
+
+            * ``fields`` (dict): Nested specification for relational or property fields.
+            * ``context`` (dict): Context to apply when evaluating the relational field.
+            * ``limit`` (int): Maximum number of records to fetch (for x2many fields).
+            * ``order`` (str): Sorting order to apply (for x2many fields).
+
+        :return: A list of dictionaries representing the requested records.
+        """
         id_name_pairs = self.name_search(name, domain, operator, limit)
-        if len(specification) == 1 and 'display_name' in specification:
-            return [{'id': id, 'display_name': name, '__formatted_display_name': self.with_context(formatted_display_name=True).browse(id).display_name} for id, name in id_name_pairs]
         records = self.browse([id for id, _ in id_name_pairs])
-        results = records.with_context(formatted_display_name=True).web_read(specification)
+        read_vals_list = records.web_read(specification)
         if 'display_name' in specification:
-            for i, result in enumerate(results):
-                result["__formatted_display_name"] = result.get("display_name")
-                result["display_name"] = records[i].display_name
-        return results
+            for read_vals, record in zip(read_vals_list, records):
+                read_vals['__formatted_display_name'] = record.with_context(formatted_display_name=True).display_name
+        return read_vals_list
 
     @api.model
     @api.readonly
-    def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
-        records = self.search_fetch(domain, specification.keys(), offset=offset, limit=limit, order=order)
+    def web_search_read(
+        self,
+        domain: DomainType,
+        specification: dict[str, dict],
+        offset: int = 0,
+        limit: int | None = None,
+        order: str | None = None,
+        count_limit: int | None = None
+    ) -> dict[str, int | list[dict]]:
+        """
+        Perform a search followed by a structured read.
+        Unlike the standard :meth:`search_read()`, ``web_search_read()`` can traverse
+        relational fields to fetch nested field values in a single call.
+
+        :param domain: search domain specifying further restrictions
+        :param offset: number of results to ignore (default: none)
+        :param limit: maximum number of records to return (default: all)
+        :param order: sort string
+        :param specification: A dictionary defining the fields to read.
+            The keys are field names, and the values are configuration dictionaries.
+            Passing an empty dictionary as a value simply reads the field's value.
+
+            Supported keys inside a field's configuration dictionary:
+
+            * ``fields`` (dict): Nested specification for relational or property fields.
+            * ``context`` (dict): Context to apply when evaluating the relational field.
+            * ``limit`` (int): Maximum number of records to fetch (for x2many fields).
+            * ``order`` (str): Sorting order to apply (for x2many fields).
+
+        :return: A dictionary containing a 'length' key containing the number of records
+            and a 'records' key containing a list of records.
+        """
+        records = self.search_fetch(domain, list(specification), offset=offset, limit=limit, order=order)
         values_records = records.web_read(specification)
         return self._format_web_search_read_results(domain, values_records, offset, limit, count_limit)
 
-    def _format_web_search_read_results(self, domain, records, offset=0, limit=None, count_limit=None):
+    def _format_web_search_read_results(
+        self,
+        domain: DomainType,
+        records: list[dict],
+        offset: int = 0,
+        limit: int | None = None,
+        count_limit: int | None = None
+    ) -> dict[str, int | list[dict]]:
         if not records:
             return {
                 'length': 0,
@@ -79,16 +187,68 @@ class Base(models.AbstractModel):
             'records': records,
         }
 
-    def web_save(self, vals, specification: dict[str, dict], next_id=None) -> list[dict]:
-        if self:
-            self.write(vals)
+    def web_save(self, vals: ValuesType, specification: dict[str, dict], next_id=None) -> list[dict]:
+        """
+        Save the provided values to the current recordset, either by updating
+        existing records or creating a new one if the recordset is empty. After
+        saving, fetch and return the requested fields based on the provided
+        specification.
+
+        :param vals: fields to update and the value to set on them
+        :param specification: A dictionary defining the fields to read.
+            The keys are field names, and the values are configuration dictionaries.
+            Passing an empty dictionary as a value simply reads the field's value.
+
+            Supported keys inside a field's configuration dictionary:
+
+            * ``fields`` (dict): Nested specification for relational or property fields.
+            * ``context`` (dict): Context to apply when evaluating the relational field.
+            * ``limit`` (int): Maximum number of records to fetch (for x2many fields).
+            * ``order`` (str): Sorting order to apply (for x2many fields).
+        :param next_id: An optional record ID to browse and return instead of the
+            currently saved record.
+        :return: A list of dictionaries representing the requested records.
+        """
+        ctx = self.env.context
+        attachments = self.env['ir.attachment'].browse(ctx.get(PENDING_ATTACHMENTS_KEY, ()))
+        if attachments:
+            attachments.check_access('read')
+            ctx = {k: v for k, v in ctx.items() if k != PENDING_ATTACHMENTS_KEY}
+        record = self.with_context(ctx)
+        if record:
+            record.write(vals)
         else:
-            self = self.create(vals)
+            record = record.create(vals)
+
+        if attachments and len(record) == 1:
+            attachments.filtered(lambda a: not a.res_id).write({
+                'res_model': record._name,
+                'res_id': record.id,
+            })
         if next_id:
-            self = self.browse(next_id)
-        return self.with_context(bin_size=True).web_read(specification)
+            record = record.browse(next_id)
+        return record.with_context(bin_size=True).web_read(specification)
 
     def web_save_multi(self, vals_list: list[dict], specification: dict[str, dict]) -> list[dict]:
+        """
+        Save the provided list of values to the current recordset, either by updating
+        existing records or creating a new one if the recordset is empty. After
+        saving, fetch and return the requested fields based on the provided
+        specification.
+
+        :param vals_list: values for the model's fields, as a list of dictionaries
+        :param specification: A dictionary defining the fields to read.
+            The keys are field names, and the values are configuration dictionaries.
+            Passing an empty dictionary as a value simply reads the field's value.
+
+            Supported keys inside a field's configuration dictionary:
+
+            * ``fields`` (dict): Nested specification for relational or property fields.
+            * ``context`` (dict): Context to apply when evaluating the relational field.
+            * ``limit`` (int): Maximum number of records to fetch (for x2many fields).
+            * ``order`` (str): Sorting order to apply (for x2many fields).
+        :return: A list of dictionaries representing the requested records.
+        """
         if len(self) != len(vals_list):
             raise ValueError("Each record must have a corresponding vals entry.")
 
@@ -99,6 +259,57 @@ class Base(models.AbstractModel):
 
     @api.readonly
     def web_read(self, specification: dict[str, dict]) -> list[dict]:
+        """
+        Read the requested fields for the records in ``self``, returning their values
+        as a list of dicts according to the provided specification.
+
+        Unlike the standard :meth:`read()` method, ``web_read()`` can traverse relational
+        fields to fetch nested field values in a single call.
+
+        Example::
+
+            records.web_read({
+                'display_name': {},
+                'author_id': {
+                    'fields': {
+                        'display_name': {}
+                    }
+                },
+                'line_ids': {
+                    'fields': {
+                        'name': {}
+                    },
+                    'limit': 5,
+                    'order': 'sequence asc'
+                }
+            })
+
+            >>> [{
+                'id': 1,
+                'display_name': 'Note G',
+                'author_id': {
+                    'id': 42,
+                    'display_name': 'Ada Lovelace'
+                },
+                'line_ids': [
+                    {'id': 10, 'name': 'Intro'},
+                    {'id': 11, 'name': 'Body'}
+                ]
+            }]
+
+        :param specification: A dictionary defining the fields to read.
+            The keys are field names, and the values are configuration dictionaries.
+            Passing an empty dictionary as a value simply reads the field's value.
+
+            Supported keys inside a field's configuration dictionary:
+
+            * ``fields`` (dict): Nested specification for relational or property fields.
+            * ``context`` (dict): Context to apply when evaluating the relational field.
+            * ``limit`` (int): Maximum number of records to fetch (for x2many fields).
+            * ``order`` (str): Sorting order to apply (for x2many fields).
+
+        :return: A list of dictionaries representing the requested records.
+        """
         fields_to_read = list(specification) or ['id']
 
         if fields_to_read == ['id']:
@@ -273,7 +484,7 @@ class Base(models.AbstractModel):
         return values_list
 
     def web_resequence(self, specification: dict[str, dict], field_name: str = 'sequence', offset: int = 0) -> list[dict]:
-        """ Re-sequences a number of records in the model, by their ids.
+        """ Re-sequence a number of records in the model, by their ids.
 
         The re-sequencing starts at the first record of ``ids``, the
         sequence number starts at ``offset`` and is incremented by one
@@ -315,7 +526,7 @@ class Base(models.AbstractModel):
         groupby_read_specification: dict[str, dict] | None = None,
     ) -> dict[str, int | list]:
         """
-        Serves as the primary method for loading grouped data in list and kanban views.
+        Serve as the primary method for loading grouped data in list and kanban views.
 
         This method wraps :meth:`~.formatted_read_group` to return both the grouped
         data and the total number of groups matching the search domain. It also
@@ -514,10 +725,15 @@ class Base(models.AbstractModel):
                     groupby.remove(group)
                     order_spec.append(f"{group} {direction}")
                     break
-            for agg_spec in aggregates:
-                if agg_spec.startswith(f"{fname}:"):
-                    order_spec.append(f"{agg_spec} {direction}")
-                    break
+            else:
+                for agg_spec in aggregates:
+                    if agg_spec.startswith(f"{fname}:"):
+                        order_spec.append(f"{agg_spec} {direction}")
+                        break
+                else:
+                    field = self._fields.get(fname)
+                    if field and field.aggregator:
+                        order_spec.append(f"{fname}:{field.aggregator} {direction}")
 
         return ", ".join(order_spec + groupby)
 
@@ -1302,9 +1518,14 @@ class Base(models.AbstractModel):
 
     @api.model
     @api.readonly
-    def read_progress_bar(self, domain, group_by, progress_bar):
+    def read_progress_bar(
+        self,
+        domain: DomainType,
+        group_by: str,
+        progress_bar: dict[str, str | dict]
+    ) -> dict[str, dict]:
         """
-        Gets the data needed for all the kanban column progressbars.
+        Get the data needed for all the kanban column progressbars.
         These are fetched alongside read_group operation.
 
         :param domain: the domain used in the kanban view to filter records
@@ -1312,22 +1533,26 @@ class Base(models.AbstractModel):
             kanban columns
         :param progress_bar: the ``<progressbar/>`` declaration
             attributes (field, colors, sum)
-        :return: a dictionnary mapping group_by values to dictionnaries mapping
+        :return: a dictionary mapping group_by values to dictionaries mapping
             progress bar field values to the related number of records
         """
         def adapt(value):
-            if isinstance(value, BaseModel):
-                return value.id
+            if isinstance(value, tuple):
+                return value[0]
             return value
 
         result = defaultdict(lambda: dict.fromkeys(progress_bar['colors'], 0))
 
-        for main_group, field_value, count in self._read_group(
+        # formatted_read_group produces the same group_by keys the kanban
+        # client uses to look up progress bar counts, so the two sides match
+        # for every field type (m2o, selection, date granularities, ...).
+        for group in self.formatted_read_group(
             domain, [group_by, progress_bar['field']], ['__count'],
         ):
+            field_value = group[progress_bar['field']]
             if field_value in progress_bar['colors']:
-                group_by_value = str(adapt(main_group))
-                result[group_by_value][field_value] += count
+                group_by_value = str(adapt(group[group_by]))
+                result[group_by_value][field_value] += group['__count']
 
         return result
 
@@ -1539,8 +1764,6 @@ class Base(models.AbstractModel):
             with key ``'__count'`` set if ``enable_counters`` is
             ``True``.
         """
-
-
         enable_counters = kwargs.get('enable_counters')
         expand = kwargs.get('expand')
 
@@ -1567,7 +1790,7 @@ class Base(models.AbstractModel):
 
 
     @api.model
-    def search_panel_select_range(self, field_name, **kwargs):
+    def search_panel_select_range(self, field_name: str, **kwargs) -> dict[str, str | typing.Literal[False] | list[str]]:
         """
         Return possible values of the field field_name (case select="one"),
         possibly with counters, and the parent field (if any and required)
@@ -1708,7 +1931,7 @@ class Base(models.AbstractModel):
 
 
     @api.model
-    def search_panel_select_multi_range(self, field_name, **kwargs):
+    def search_panel_select_multi_range(self, field_name: str, **kwargs) -> dict[str, str | list[dict]]:
         """
         Return possible values of the field field_name (case select="multi"),
         possibly with counters and groups.
@@ -1768,9 +1991,12 @@ class Base(models.AbstractModel):
 
         if field.type == 'selection':
             return {
-                'values': self._search_panel_selection_range(field_name, model_domain=model_domain,
-                                extra_domain=extra_domain, **kwargs
-                            )
+                'values': self._search_panel_selection_range(
+                    field_name,
+                    model_domain=model_domain,
+                    extra_domain=extra_domain,
+                    **kwargs
+                )
             }
 
         Comodel = self.env.get(field.comodel_name).with_context(hierarchical_naming=False)
@@ -1836,11 +2062,14 @@ class Base(models.AbstractModel):
         if field.type == 'many2one':
             if enable_counters or not expand:
                 extra_domain &= Domain(kwargs.get('group_domain', true))
-                domain_image = self._search_panel_field_image(field_name,
-                                    model_domain=model_domain, extra_domain=extra_domain,
-                                    only_counters=expand,
-                                    set_limit=limit and not (expand or group_by or comodel_domain), **kwargs
-                                )
+                domain_image = self._search_panel_field_image(
+                    field_name,
+                    model_domain=model_domain,
+                    extra_domain=extra_domain,
+                    only_counters=expand,
+                    set_limit=limit and not (expand or group_by or comodel_domain),
+                    **kwargs
+                )
 
             if not (expand or group_by or comodel_domain):
                 values = list(domain_image.values())
@@ -1874,6 +2103,9 @@ class Base(models.AbstractModel):
                 field_range.append(values)
 
             return { 'values': field_range, }
+
+        assert False, "unreachable"
+
 
     def onchange(self, values: dict, field_names: list[str], fields_spec: dict):
         """
@@ -2092,7 +2324,7 @@ class Base(models.AbstractModel):
 
         return result
 
-    def web_override_translations(self, values):
+    def web_override_translations(self, values: dict[str, str]) -> None:
         """
         This method is used to override all the modal translations of the given fields
         with the provided value for each field.
@@ -2101,12 +2333,12 @@ class Base(models.AbstractModel):
             ex: ``{ "field_name": "new_value" }``
         """
         self.ensure_one()
-        for field_name in values:
+        for field_name, new_value in values.items():
             field = self._fields[field_name]
             if field.translate is True:
                 translations = {lang: False for lang, _ in self.env['res.lang'].get_installed()}
-                translations['en_US'] = values[field_name]
-                translations[self.env.lang or 'en_US'] = values[field_name]
+                translations['en_US'] = new_value
+                translations[self.env.lang or 'en_US'] = new_value
                 self.update_field_translations(field_name, translations)
 
 

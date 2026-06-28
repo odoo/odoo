@@ -9,6 +9,13 @@
         <field name="back_button_label">Back to cart</field>
     </record>
 
+    <record id="website_sale.checkout_step_address" model="website.checkout.step">
+        <field name="name">Address</field>
+        <field name="sequence">125</field>
+        <field name="step_href">/shop/address</field>
+        <field name="show_in_breadcrumb">False</field>
+    </record>
+
     <record id="website_sale.checkout_step_delivery" model="website.checkout.step">
         <field name="name">Address</field>
         <field name="sequence">250</field>
@@ -30,6 +37,13 @@
         <field name="sequence">999</field>
         <field name="step_href">/shop/payment</field>
         <field name="main_button_label">Confirm</field>
+    </record>
+
+    <record id="website_sale.checkout_step_confirmation" model="website.checkout.step">
+        <field name="name">Payment Confirmation</field>
+        <field name="sequence">1500</field>
+        <field name="step_href">/shop/payment/transaction</field>
+        <field name="show_in_breadcrumb">False</field>
     </record>
 
 </odoo>

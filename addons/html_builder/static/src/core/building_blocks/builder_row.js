@@ -1,44 +1,50 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
-import { localization } from "@web/core/l10n/localization";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, onMounted, props, proxy, t } from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
-import {
-    basicContainerBuilderComponentProps,
-    useApplyVisibility,
-    useBuilderComponent,
-    useVisibilityObserver,
-} from "../utils";
+import { useApplyVisibility, useBuilderComponent, useVisibilityObserver } from "../utils";
 import { BuilderComponent } from "./builder_component";
 
 export class BuilderRow extends Component {
     static template = "html_builder.BuilderRow";
     static components = { BuilderComponent };
-    static props = {
-        ...basicContainerBuilderComponentProps,
-        label: { type: String, optional: true },
-        tooltip: { type: String, optional: true },
-        slots: { type: Object, optional: true },
-        level: { type: Number, optional: true },
-        expand: { type: Boolean, optional: true },
-        initialExpandAnim: { type: Boolean, optional: true },
-        extraLabelClass: { type: String, optional: true },
-        observeCollapseContent: { type: Boolean, optional: true },
-        disabled: { type: Boolean, optional: true },
-        fullRowToggler: { type: Boolean, optional: true },
-    };
-    static defaultProps = { expand: false, observeCollapseContent: false, fullRowToggler: false };
+    props = props({
+        // basicContainerBuilderComponentProps (converted inline)
+        id: t.string().optional(),
+        applyTo: t.string().optional(),
+        preview: t.boolean().optional(),
+        inheritedActions: t.array(t.string()).optional(),
+
+        action: t.string().optional(),
+        actionParam: t.any().optional(),
+
+        // Shorthand actions.
+        classAction: t.any().optional(),
+        attributeAction: t.any().optional(),
+        dataAttributeAction: t.any().optional(),
+        styleAction: t.any().optional(),
+
+        label: t.string().optional(),
+        tooltip: t.string().optional(),
+        slots: t.object().optional(),
+        level: t.number().optional(),
+        expand: t.boolean().optional(false),
+        initialExpandAnim: t.boolean().optional(),
+        extraLabelClass: t.string().optional(),
+        observeCollapseContent: t.boolean().optional(false),
+        disabled: t.boolean().optional(),
+        fullRowToggler: t.boolean().optional(false),
+    });
 
     setup() {
         useBuilderComponent();
         useVisibilityObserver("content", useApplyVisibility("root"));
 
-        this.state = useState({
+        this.state = proxy({
             expanded: this.props.expand,
         });
-        this.hasTooltip = this.props.tooltip ? true : undefined;
-        this.isBackendRTL = localization.direction === "rtl";
+        this.tooltipText = undefined;
 
         if (this.props.slots.collapse) {
             useVisibilityObserver("collapse-content", useApplyVisibility("collapse"));
@@ -46,6 +52,7 @@ export class BuilderRow extends Component {
             this.collapseContentId = uniqueId("builder_collapse_content_");
         }
 
+        this.labelWrapperRef = useRef("label-wrapper");
         this.labelRef = useRef("label");
         this.rootRef = useRef("root");
         this.collapseContentRef = useRef("collapse-content");
@@ -131,13 +138,23 @@ export class BuilderRow extends Component {
     }
 
     openTooltip() {
-        if (this.hasTooltip === undefined) {
-            const labelEl = this.labelRef.el;
-            this.hasTooltip = labelEl && labelEl.clientWidth < labelEl.scrollWidth;
+        const labelEl = this.labelRef.el;
+        if (this.tooltipText === undefined) {
+            const isLabelTooLong = labelEl.offsetWidth < labelEl.scrollWidth;
+            if (isLabelTooLong) {
+                this.tooltipText = this.props.tooltip
+                    ? `${this.props.label}\u00A0: ${this.props.tooltip}`
+                    : this.props.label;
+            } else if (this.props.tooltip) {
+                this.tooltipText = this.props.tooltip;
+            } else {
+                this.tooltipText = "";
+            }
         }
-        if (this.hasTooltip) {
-            const tooltip = this.props.tooltip || this.props.label;
-            this.removeTooltip = this.tooltip.add(this.labelRef.el, { tooltip });
+        if (this.tooltipText) {
+            this.removeTooltip = this.tooltip.add(this.labelWrapperRef.el, {
+                tooltip: this.tooltipText,
+            });
         }
     }
 

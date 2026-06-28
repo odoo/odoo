@@ -7,10 +7,10 @@ export class DocumentAttachment extends Attachment {
 }
 
 export class DocumentSelector extends FileSelector {
-    static mediaSpecificClasses = ["o_image"];
+    static mediaSpecificClasses = ["o_file_box"];
     static mediaSpecificStyles = [];
     static mediaExtraClasses = [];
-    static tagNames = ["A"];
+    static tagNames = ["SPAN"];
     static attachmentsListTemplate = "html_editor.DocumentsListTemplate";
     static components = {
         ...FileSelector.components,
@@ -48,7 +48,7 @@ export class DocumentSelector extends FileSelector {
             for (const attachment of attachments) {
                 if (
                     `/web/content/${attachment.id}` ===
-                    this.props.media.getAttribute("href").replace(/[?].*/, "")
+                    this.props.media.querySelector("a").getAttribute("href").replace(/[?].*/, "")
                 ) {
                     this.selectAttachment(attachment);
                 }
@@ -60,7 +60,7 @@ export class DocumentSelector extends FileSelector {
     /**
      * Utility method used by the MediaDialog component.
      */
-    static async createElements(selectedMedia, { orm }) {
+    static async createElements(selectedMedia, { orm, document = window.document } = {}) {
         return Promise.all(
             selectedMedia.map(async (attachment) => {
                 let url = `/web/content/${encodeURIComponent(
@@ -75,22 +75,29 @@ export class DocumentSelector extends FileSelector {
                     }
                     url += `&access_token=${encodeURIComponent(accessToken)}`;
                 }
-                return this.renderFileElement(attachment, url);
+                return this.renderFileElement(attachment, url, document);
             })
         );
     }
 
-    static renderFileElement(attachment, downloadUrl) {
+    static renderFileElement(attachment, downloadUrl, document) {
         return renderStaticFileBox(
             attachment.name,
             attachment.mimetype,
             downloadUrl,
-            attachment.id
+            attachment.id,
+            document
         );
     }
 }
 
-export function renderStaticFileBox(filename, mimetype, downloadUrl, id) {
+export function renderStaticFileBox(
+    filename,
+    mimetype,
+    downloadUrl,
+    id,
+    document = window.document
+) {
     const rootSpan = document.createElement("span");
     rootSpan.classList.add("o_file_box", "o-contenteditable-false");
     rootSpan.contentEditable = false;
@@ -98,6 +105,6 @@ export function renderStaticFileBox(filename, mimetype, downloadUrl, id) {
     const bannerElement = renderToElement("html_editor.StaticFileBox", {
         fileModel: { filename, mimetype, downloadUrl },
     });
-    rootSpan.append(bannerElement);
+    rootSpan.append(document.importNode(bannerElement, true));
     return rootSpan;
 }

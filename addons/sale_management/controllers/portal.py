@@ -39,7 +39,7 @@ class CustomerPortal(portal.CustomerPortal):
         if not order_sudo._can_be_edited_on_portal():
             return None
 
-        order_line = request.env["sale.order.line"].sudo().browse(int(line_id)).exists()
+        order_line = self.env["sale.order.line"].sudo().browse(int(line_id)).exists()
         if (
             not order_line
             or order_line.order_id != order_sudo
@@ -59,4 +59,7 @@ class CustomerPortal(portal.CustomerPortal):
             combo_item_lines = order_line._get_linked_lines().filtered("combo_item_id")
             combo_item_lines.update({"product_uom_qty": quantity})
 
-        order_line.product_uom_qty = quantity
+        with self.env.protecting(
+            [order_line._fields["discount"], order_line._fields["price_unit"]], order_line
+        ):
+            order_line.product_uom_qty = quantity

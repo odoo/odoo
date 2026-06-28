@@ -2,6 +2,7 @@ import { Plugin } from "../plugin";
 import { isProtecting, isUnprotecting } from "../utils/dom_info";
 import { childNodes } from "../utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
+import { NATIVE_MUTATION_TYPES } from "./dom_observer_plugin";
 
 const PROTECTED_SELECTOR = `[data-oe-protected="true"],[data-oe-protected=""]`;
 const UNPROTECTED_SELECTOR = `[data-oe-protected="false"]`;
@@ -9,8 +10,6 @@ const UNPROTECTED_SELECTOR = `[data-oe-protected="false"]`;
 /**
  * @typedef { Object } ProtectedNodeShared
  * @property { ProtectedNodePlugin['setProtectingNode'] } setProtectingNode
- *
- * @typedef { import("./history_plugin").HistoryMutationRecord } HistoryMutationRecord
  */
 
 export class ProtectedNodePlugin extends Plugin {
@@ -19,7 +18,7 @@ export class ProtectedNodePlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
-        on_will_filter_mutation_record_handlers: this.beforeFilteringMutationRecords.bind(this),
+        on_will_filter_mutations_handlers: this.beforeFilteringMutations.bind(this),
 
         /** Processors */
         clean_for_save_processors: (root) => this.cleanForSave(root),
@@ -39,7 +38,7 @@ export class ProtectedNodePlugin extends Plugin {
                 }
             },
         ],
-        is_mutation_record_savable_predicates: this.isMutationRecordSavable.bind(this),
+        is_mutation_savable_predicates: this.isMutationSavable.bind(this),
 
         /** Providers */
         removable_descendants_providers: this.filterDescendantsToRemove.bind(this),
@@ -107,26 +106,26 @@ export class ProtectedNodePlugin extends Plugin {
     }
 
     /**
-     * @param {HistoryMutationRecord[]} records
+     * @param {import("./dom_observer_plugin").NativeMutation[]} mutations
      */
-    beforeFilteringMutationRecords(records) {
-        for (const record of records) {
-            if (record.type === "childList") {
-                if (record.target.nodeType !== Node.ELEMENT_NODE) {
+    beforeFilteringMutations(mutations) {
+        for (const mutation of mutations) {
+            if (mutation.type === NATIVE_MUTATION_TYPES.CHILD_LIST) {
+                if (mutation.target.nodeType !== Node.ELEMENT_NODE) {
                     return;
                 }
-                const addedNodes = record.addedTrees.map((tree) => tree.node);
+                const addedNodes = mutation.addedNodes;
                 if (
-                    (this.protectedNodes.has(record.target) &&
-                        !record.target.matches(UNPROTECTED_SELECTOR)) ||
-                    record.target.matches(PROTECTED_SELECTOR)
+                    (this.protectedNodes.has(mutation.target) &&
+                        !mutation.target.matches(UNPROTECTED_SELECTOR)) ||
+                    mutation.target.matches(PROTECTED_SELECTOR)
                 ) {
                     for (const addedNode of addedNodes) {
                         this.protectNode(addedNode);
                     }
                 } else if (
-                    !this.protectedNodes.has(record.target) ||
-                    record.target.matches(UNPROTECTED_SELECTOR)
+                    !this.protectedNodes.has(mutation.target) ||
+                    mutation.target.matches(UNPROTECTED_SELECTOR)
                 ) {
                     for (const addedNode of addedNodes) {
                         this.unProtectNode(addedNode);
@@ -137,19 +136,19 @@ export class ProtectedNodePlugin extends Plugin {
     }
 
     /**
-     * @param {HistoryMutationRecord} record
+     * @param {import("./dom_observer_plugin").NativeMutation} mutation
      * @return {boolean}
      */
-    isMutationRecordSavable(record) {
-        if (record.type === "childList") {
+    isMutationSavable(mutation) {
+        if (mutation.type === NATIVE_MUTATION_TYPES.CHILD_LIST) {
             if (
-                (this.protectedNodes.has(record.target) &&
-                    !record.target.matches(UNPROTECTED_SELECTOR)) ||
-                record.target.matches(PROTECTED_SELECTOR)
+                (this.protectedNodes.has(mutation.target) &&
+                    !mutation.target.matches(UNPROTECTED_SELECTOR)) ||
+                mutation.target.matches(PROTECTED_SELECTOR)
             ) {
                 return false;
             }
-        } else if (this.protectedNodes.has(record.target)) {
+        } else if (this.protectedNodes.has(mutation.target)) {
             return false;
         }
     }
@@ -171,6 +170,7 @@ export class ProtectedNodePlugin extends Plugin {
 
     normalize(elem) {
         this.forEachProtectingElem(elem, this.setProtectingNode.bind(this));
+        return elem;
     }
 
     setProtectingNode(elem, protecting) {
@@ -201,5 +201,6 @@ export class ProtectedNodePlugin extends Plugin {
         this.forEachProtectingElem(clone, (protectingNode) => {
             protectingNode.removeAttribute("contenteditable");
         });
+        return clone;
     }
 }

@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export class SlideUploadSourceTypes extends Component {
     static props = {
@@ -21,6 +20,6 @@ export class SlideUploadSourceTypes extends Component {
     static template = "website_slides.SlideUploadSourceTypes";
 
     setup() {
-        this.state = useState({ url: "" });
+        this.state = proxy({ url: "" });
     }
 }

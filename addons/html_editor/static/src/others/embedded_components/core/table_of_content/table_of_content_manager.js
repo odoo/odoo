@@ -1,12 +1,12 @@
-import { reactive } from "@web/owl2/utils";
-import { batched } from "@odoo/owl";
+import { batched, proxy } from "@odoo/owl";
+import { closestScrollableY, scrollTo } from "@web/core/utils/scrolling";
 
 export const HEADINGS = ["H1", "H2", "H3", "H4", "H5", "H6"];
 
 export class TableOfContentManager {
     constructor(containerRef) {
         this.containerRef = containerRef;
-        this.structure = reactive({
+        this.structure = proxy({
             headings: [],
             isNew: true,
         });
@@ -42,7 +42,18 @@ export class TableOfContentManager {
             return;
         }
         const { target } = heading;
-        target.scrollIntoView({ behavior: "smooth" });
+        let offset = 0;
+        const scrollable = closestScrollableY(target);
+        for (const el of scrollable.children) {
+            const { position, top, height } = getComputedStyle(el);
+            if (position === "sticky" && parseInt(top) === 0) {
+                offset = Math.max(offset, parseInt(height));
+            }
+        }
+        scrollTo(target, { behavior: "smooth", offset: -offset }).then(() => {
+            // Scroll again in case we actually went downwards.
+            scrollTo(target, { behavior: "smooth" });
+        });
         target.classList.add("o_embedded_toc_header_highlight");
         window.setTimeout(() => {
             target.classList.remove("o_embedded_toc_header_highlight");

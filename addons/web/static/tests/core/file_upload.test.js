@@ -7,7 +7,7 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { FileUploadProgressContainer } from "@web/core/file_upload/file_upload_progress_container";
 import { FileUploadProgressRecord } from "@web/core/file_upload/file_upload_progress_record";
 import { useService } from "@web/core/utils/hooks";
@@ -16,11 +16,11 @@ import { Component, xml } from "@odoo/owl";
 
 class FileUploadProgressTestRecord extends FileUploadProgressRecord {
     static template = xml`
-        <t t-set="progressTexts" t-value="getProgressTexts()"/>
+        <t t-set="progressTexts" t-value="this.getProgressTexts()"/>
         <div class="file_upload">
             <div class="file_upload_progress_text_left" t-out="progressTexts.left"/>
             <div class="file_upload_progress_text_right" t-out="progressTexts.right"/>
-            <FileUploadProgressBar fileUpload="props.fileUpload"/>
+            <FileUploadProgressBar fileUpload="this.props.fileUpload"/>
         </div>
     `;
 }
@@ -30,7 +30,7 @@ class Parent extends Component {
     };
     static template = xml`
         <div class="parent">
-            <FileUploadProgressContainer fileUploads="fileUploadService.uploads" shouldDisplay="props.shouldDisplay" Component="FileUploadProgressTestRecord"/>
+            <FileUploadProgressContainer fileUploads="this.fileUploadService.uploads" shouldDisplay="this.props.shouldDisplay" Component="this.FileUploadProgressTestRecord"/>
         </div>
     `;
     static props = ["*"];
@@ -40,7 +40,7 @@ class Parent extends Component {
     }
 }
 
-onRpc("/test/", () => new Deferred());
+onRpc("/test/", () => new Promise(() => {}));
 
 test("can be rendered", async () => {
     await mountWithCleanup(Parent);
@@ -132,7 +132,7 @@ test("handles error", async () => {
     });
     const fileUploadService = await getService("file_upload");
     fileUploadService.upload("/test/", []);
-    await waitFor(".o_notification:has(.bg-danger):contains(An error occured while uploading)");
+    await waitFor(".o_notification:has(.bg-danger):contains(An error occurred while uploading)");
 });
 
 test("handles http not success", async () => {

@@ -1,5 +1,5 @@
-import { useState, useSubEnv } from "@web/owl2/utils";
-import { Component, onWillDestroy, onWillStart } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, onWillDestroy, onWillStart, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { generatePdfThumbnail } from "@web/core/utils/pdfjs";
 import { ShareTargetItem } from "@web/webclient/share_target/share_target_item";
@@ -21,7 +21,7 @@ export class ShareTargetDialog extends Component {
             .category("share_target_items")
             .getAll()
             .sort(({ sequence: sequenceA }, { sequence: sequenceB }) => sequenceA - sequenceB);
-        this.state = useState({
+        this.state = proxy({
             selectedShareTargetItemIndex: 0,
             previewFileUrl: URL.createObjectURL(this.props.files[0]),
             previewFileIndex: 0,

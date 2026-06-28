@@ -204,6 +204,10 @@ export function clickPayButton(shouldCheck = true) {
         steps.push({
             content: "now in payment screen",
             trigger: ".pos-content .payment-screen",
+            async run() {
+                // Wait this.pos_order_id is set
+                await new Promise((r) => setTimeout(r, 500));
+            },
         });
     }
     return steps;
@@ -251,8 +255,14 @@ export function customerIsSelected(name) {
     return [
         clickReview(),
         {
+            isActive: ["desktop"],
             content: `customer '${name}' is selected`,
             trigger: `.product-screen .set-partner:contains("${name}")`,
+        },
+        {
+            isActive: ["mobile"],
+            content: `customer is selected`,
+            trigger: `.product-screen .set-partner.btn-outline-secondary.active`,
         },
     ];
 }
@@ -383,9 +393,16 @@ export function enterOpeningAmount(amount) {
     return [
         {
             content: "enter opening amount",
-            trigger: ".cash-input-sub-section input",
-            run: "edit " + amount,
+            trigger: ".modal:contains(Opening Control) .cash-input-sub-section input",
+            run: `edit ${amount}`,
         },
+        {
+            trigger: `.modal input:value(${amount})`,
+            async run() {
+                await new Promise((r) => setTimeout(r, 500));
+            },
+        },
+        Dialog.proceed({ title: "Opening control", body: "Opening note", button: "Open Register" }),
     ];
 }
 /**
@@ -442,7 +459,6 @@ export function checkFiscalPosition(name) {
         {
             content: `check fiscal position '${name}' is selected`,
             trigger: `.o_fiscal_position_button:contains("${name}")`,
-            run: () => {},
         },
         Dialog.cancel(),
     ];
@@ -463,175 +479,9 @@ export function closeWithCashAmount(val) {
         },
     ];
 }
-export function clickCloseSession() {
-    return [
-        {
-            trigger: "footer .button:contains('Close Session')",
-        },
-    ];
-}
 export function back() {
     return utilsBack();
 }
-export function clickLotIcon() {
-    return [
-        {
-            content: "click lot icon",
-            trigger: ".line-lot-icon",
-            run: "click",
-        },
-    ];
-}
-export function deleteNthLotNumber(number) {
-    return [
-        {
-            content: "delete lot number",
-            trigger: `.lot-container .lot-item:eq(${number - 1}) .btn`,
-            run: "click",
-        },
-    ];
-}
-export function selectNthLotNumber(number) {
-    return [
-        {
-            trigger: `.o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item:eq(${
-                number - 1
-            })`,
-            run: "click",
-        },
-        Dialog.confirm(),
-    ];
-}
-export function enterLotNumber(number, tracking = "serial", click = false) {
-    const steps = [];
-    if (click) {
-        steps.push({
-            trigger: ".o-autocomplete input",
-            run: "click",
-        });
-    }
-    steps.push(
-        {
-            trigger:
-                ".o-autocomplete--dropdown-item a:contains('No existing Lot/Serial number found...')",
-        },
-        {
-            content: "enter lot number",
-            trigger: ".o-autocomplete input",
-            run: "edit " + number,
-        },
-        {
-            trigger: ".o-autocomplete--dropdown-item a:contains('Create Lot/Serial number...')",
-        },
-        {
-            trigger: ".o-autocomplete input",
-            run: "press Enter",
-        }
-    );
-    if (tracking === "serial") {
-        steps.push(...serialCheckStep(number));
-    }
-    steps.push(Dialog.confirm());
-    return steps;
-}
-
-export function serialCheckStep(number) {
-    return [
-        {
-            content: "Check entered lot/serial number",
-            trigger: `.lot-container .lot-item:eq(-1) span:contains(${number})`,
-        },
-        {
-            trigger: ".o-autocomplete input:value()",
-        },
-    ];
-}
-
-export function enterExistingLotNumber(number, tracking = "serial") {
-    const steps = [];
-    steps.push(
-        {
-            content: "enter lot number",
-            trigger: ".o-autocomplete input",
-            run: "edit " + number,
-        },
-        {
-            trigger: ".o-autocomplete input",
-            run: "press Enter",
-        }
-    );
-    if (tracking === "serial") {
-        steps.push(...serialCheckStep(number));
-    }
-    steps.push(Dialog.confirm());
-    return steps;
-}
-
-export function enterLotNumbers(numbers) {
-    const steps = [
-        {
-            trigger: ".o-autocomplete input",
-            run: "click",
-        },
-    ];
-    for (const lot of numbers) {
-        steps.push(
-            {
-                content: "enter lot number",
-                trigger: ".o-autocomplete input",
-                run: "edit " + lot,
-            },
-            {
-                trigger: ".o-autocomplete--dropdown-item a:contains('Create Lot/Serial number...')",
-            },
-            {
-                trigger: ".o-autocomplete input",
-                run: "press Enter",
-            },
-            {
-                content: "check entered lot number",
-                trigger: `.lot-container .lot-item:eq(-1) span:contains(${lot})`,
-            },
-            {
-                trigger: ".o-autocomplete input:value()",
-            }
-        );
-    }
-    steps.push(Dialog.confirm());
-    return steps;
-}
-
-export function enterExistingLotNumbers(numbers) {
-    const steps = [
-        {
-            trigger: ".o-autocomplete input",
-            run: "click",
-        },
-    ];
-    for (const lot of numbers) {
-        steps.push(
-            {
-                content: "enter lot number",
-                trigger: ".o-autocomplete input",
-                run: "edit " + lot,
-            },
-            {
-                trigger: ".o-autocomplete input",
-                run: "press Enter",
-            },
-            {
-                content: "check entered lot number",
-                trigger: `.lot-container .lot-item:eq(-1) span:contains(${lot})`,
-            },
-            {
-                trigger: ".o-autocomplete input:value()",
-            }
-        );
-    }
-    steps.push(Dialog.confirm());
-    return steps;
-}
-
 export function isShown() {
     return [
         {
@@ -728,15 +578,6 @@ export function productCardQtyIs(productName, qty) {
         {
             content: `'${productName}' should have '${qty}' quantity`,
             trigger: `article.product .product-content:has(.product-name:contains("${productName}")):has(.product-cart-qty:contains("${qty}"))`,
-        },
-    ];
-}
-
-export function checkFirstLotNumber(number) {
-    return [
-        {
-            content: "Check lot number",
-            trigger: `.lot-container .lot-item:eq(0) span:contains(${number})`,
         },
     ];
 }
@@ -860,12 +701,6 @@ export function checkRoundingAmountIsNotThere() {
             },
         },
     ];
-}
-
-export function checkRoundingAmount(amount) {
-    return {
-        trigger: `.order-summary .rounding:contains(${amount})`,
-    };
 }
 
 export function customerIs(name) {
@@ -1017,8 +852,8 @@ export function longPressProduct(productName) {
             content: `Long pressing product "${productName}"...`,
             trigger: `.product-list .product-name:contains("${productName}")`,
             run: async (el) => {
-                const mouseDown = new MouseEvent("mousedown", { bubbles: true });
-                const mouseUp = new MouseEvent("mouseup", { bubbles: true });
+                const mouseDown = new MouseEvent("pointerdown", { bubbles: true });
+                const mouseUp = new MouseEvent("pointerup", { bubbles: true });
                 el.anchor.dispatchEvent(mouseDown);
                 await new Promise((resolve) => setTimeout(resolve, LONG_PRESS_DURATION + 50));
                 el.anchor.dispatchEvent(mouseUp);
@@ -1086,6 +921,7 @@ export function clickApplyCombo(
     optionToChoose = "",
     dialogStillPresent = false
 ) {
+    let id;
     const steps = [
         {
             content: "Check apply combo button is there",
@@ -1098,14 +934,28 @@ export function clickApplyCombo(
         },
     ];
     if (isOptionShown) {
-        steps.push(ChoseComboPopup.isShown());
+        steps.push({
+            content: "Chose combo popup is shown",
+            trigger: ".chose-combo-popup",
+            run({ queryFirst }) {
+                id = queryFirst(`.o_dialog`).getAttribute("id");
+            },
+        });
         for (const option of optionsShown) {
             steps.push(ChoseComboPopup.isOptionShown(option));
         }
         steps.push(ChoseComboPopup.apply(optionToChoose));
     }
     if (dialogStillPresent) {
-        steps.push(ChoseComboPopup.isShown());
+        steps.push({
+            content: "Check the modal has been rendered before to close it",
+            trigger: "body",
+            async run({ waitFor }) {
+                await waitFor(`.o_dialog:not(#${id}) .chose-combo-popup`, {
+                    timeout: 1000,
+                });
+            },
+        });
         steps.push(Dialog.cancel());
     }
     return inLeftSide(steps.flat());

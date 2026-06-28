@@ -1,4 +1,3 @@
-import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
@@ -71,8 +70,8 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o_project_task_kanban_view",
 },
 {
-    content: "Click on invisible caret. Should hover on card to be visible",
-    trigger: ".o_dropdown_kanban .btn.o-no-caret:not(:visible)",
+    content: "Click on caret",
+    trigger: ".o_dropdown_kanban .btn.o-no-caret",
     run: "click",
 }, {
     trigger: "a:contains('Set Cover Image')",
@@ -164,7 +163,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     run: "click",
 }, {
     trigger: ".o_form_view .breadcrumb-item:nth-child(1)",
-    content: markup`Let's go back to the <b>kanban view</b> to have an overview of your next tasks.`,
+    content: `Let's go back to the kanban view to have an overview of your next tasks.`,
     run: "click",
 }, {
     trigger: ".o_kanban_view",

@@ -97,7 +97,7 @@ class MailMessage(models.Model):
             related_attachments = {
                 att_read_values['id']: att_read_values
                 for att_read_values in attachments_sudo.read(
-                    ["checksum", "id", "mimetype", "name", "res_id", "res_model"]
+                    ["checksum", "has_thumbnail", "id", "mimetype", "name", "res_id", "res_model"],
                 )
             }
             message_to_attachments = {
@@ -149,10 +149,28 @@ class MailMessage(models.Model):
                         "id": message.author_id.id,
                         "name": message.author_id.name,
                         "avatar_128_access_token": message.author_id._get_avatar_128_access_token(),
-                    },
-                    "thread": {"model": values["model"], "id": values["res_id"]},
-                }
+                    } if message.author_id else False,
+                    "thread": {
+                       "has_mail_thread": isinstance(self.env[values["model"]], self.pool["mail.thread"]),
+                       "id": values["res_id"],
+                       "model": values["model"],
+                   },
+                },
             )
+        linked_messages = self.linked_message_ids - self
+        linked_messages_vals_list = linked_messages._read_format({"id", "model", "res_id"})
+        record_by_linked_message = linked_messages._record_by_message()
+        for message, values in zip(linked_messages, linked_messages_vals_list):
+            if record := record_by_linked_message.get(message):
+                values["thread"] = {
+                    "id": record.id,
+                    "model": record._name,
+                    # sudo: mail.thread - reading display_name of accessed thread is acceptable
+                    "display_name": record.sudo().display_name,
+                }
+            else:
+                values["thread"] = False
+        vals_list.extend(linked_messages_vals_list)
         return vals_list
 
     def _portal_message_format_attachments(self, attachment_values):
@@ -173,6 +191,7 @@ class MailMessage(models.Model):
             else attachment_values["mimetype"])
         attachment = self.env['ir.attachment'].browse(attachment_values['id'])
         attachment_values["raw_access_token"] = attachment._get_raw_access_token()
+        attachment_values["thumbnail_access_token"] = attachment._get_thumbnail_token()
         if self.is_current_user_or_guest_author:
             attachment_values["ownership_token"] = attachment._get_ownership_token()
         return attachment_values

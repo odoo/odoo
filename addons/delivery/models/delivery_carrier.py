@@ -4,10 +4,10 @@ import re
 
 import psycopg2
 
-from odoo import SUPERUSER_ID, Command, _, api, fields, models
+from odoo import SUPERUSER_ID, Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import expr_eval
 
 
 class DeliveryCarrier(models.Model):
@@ -41,6 +41,7 @@ class DeliveryCarrier(models.Model):
         default="fixed",
         required=True,
     )
+    supports_cash_on_delivery = fields.Boolean(compute="_compute_supports_cash_on_delivery")
     allow_cash_on_delivery = fields.Boolean(
         string="Cash on Delivery",
         help="Allow customers to choose Cash on Delivery as their payment method.",
@@ -192,7 +193,7 @@ class DeliveryCarrier(models.Model):
         for carrier in self:
             if carrier.must_have_tag_ids & carrier.excluded_tag_ids:
                 raise UserError(
-                    _(
+                    carrier.env._(
                         "Delivery method %(name)s cannot have the same tag in both Must Have Tags"
                         " and Excluded Tags.",
                         name=carrier.name,
@@ -215,6 +216,11 @@ class DeliveryCarrier(models.Model):
             carrier.can_generate_return = False
 
     @api.depends("delivery_type")
+    def _compute_supports_cash_on_delivery(self):
+        for carrier in self:
+            carrier.supports_cash_on_delivery = carrier.delivery_type in {"base_on_rule", "fixed"}
+
+    @api.depends("delivery_type")
     def _compute_supports_shipping_insurance(self):
         for carrier in self:
             carrier.supports_shipping_insurance = False
@@ -230,7 +236,7 @@ class DeliveryCarrier(models.Model):
     def install_more_provider(self):
         exclude_apps = ["delivery_barcode", "delivery_stock_picking_batch", "delivery_iot"]
         return {
-            "name": _("New Providers"),
+            "name": self.env._("New Providers"),
             "res_model": "ir.module.module",
             "view_mode": "kanban,list",
             "views": [
@@ -239,7 +245,7 @@ class DeliveryCarrier(models.Model):
             ],
             "domain": [["name", "=like", "delivery_%"], ["name", "not in", exclude_apps]],
             "type": "ir.actions.act_window",
-            "help": _("""<p class="o_view_nocontent">
+            "help": self.env._("""<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
                 </p>"""),
         }
@@ -289,7 +295,7 @@ class DeliveryCarrier(models.Model):
         elif source._name == "stock.picking":
             products = source.move_ids.with_prefetch().mapped("product_id")
         else:
-            raise UserError(_("Invalid source document type"))
+            raise UserError(self.env._("Invalid source document type"))
         return not self.must_have_tag_ids or any(
             tag in products.all_product_tag_ids for tag in self.must_have_tag_ids
         )
@@ -301,7 +307,7 @@ class DeliveryCarrier(models.Model):
         elif source._name == "stock.picking":
             products = source.move_ids.with_prefetch().mapped("product_id")
         else:
-            raise UserError(_("Invalid source document type"))
+            raise UserError(self.env._("Invalid source document type"))
         return not any(tag in products.all_product_tag_ids for tag in self.excluded_tag_ids)
 
     def _match_weight(self, source):
@@ -315,7 +321,7 @@ class DeliveryCarrier(models.Model):
                 move.product_id.weight * move.product_uom_qty for move in source.move_ids
             )
         else:
-            raise UserError(_("Invalid source document type"))
+            raise UserError(self.env._("Invalid source document type"))
         return not self.max_weight or total_weight <= self.max_weight
 
     def _match_volume(self, source):
@@ -329,7 +335,7 @@ class DeliveryCarrier(models.Model):
                 move.product_id.volume * move.product_uom_qty for move in source.move_ids
             )
         else:
-            raise UserError(_("Invalid source document type"))
+            raise UserError(self.env._("Invalid source document type"))
         return not self.max_volume or total_volume <= self.max_volume
 
     @api.onchange("integration_level")
@@ -354,6 +360,11 @@ class DeliveryCarrier(models.Model):
         )
         if not self.country_ids:
             self.zip_prefix_ids = [Command.clear()]
+
+    def write(self, vals):
+        if "delivery_type" in vals:
+            vals["allow_cash_on_delivery"] = False
+        return super().write(vals)
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
@@ -427,7 +438,7 @@ class DeliveryCarrier(models.Model):
                 and self._compute_currency(order, amount_without_delivery, "pricelist_to_company")
                 >= self.amount
             ):
-                res["warning_message"] = _(
+                res["warning_message"] = self.env._(
                     "The shipping is free since the order amount exceeds %.2f.", self.amount
                 )
                 res["price"] = 0.0
@@ -435,7 +446,7 @@ class DeliveryCarrier(models.Model):
         return {
             "success": False,
             "price": 0.0,
-            "error_message": _("Error: this delivery method is not available."),
+            "error_message": self.env._("Error: this delivery method is not available."),
             "warning_message": False,
         }
 
@@ -491,7 +502,7 @@ class DeliveryCarrier(models.Model):
             return {
                 "success": False,
                 "price": 0.0,
-                "error_message": _(
+                "error_message": self.env._(
                     "Error: this delivery method is not available for this address."
                 ),
                 "warning_message": False,
@@ -509,7 +520,7 @@ class DeliveryCarrier(models.Model):
             return {
                 "success": False,
                 "price": 0.0,
-                "error_message": _(
+                "error_message": self.env._(
                     "Error: this delivery method is not available for this address."
                 ),
                 "warning_message": False,
@@ -549,24 +560,19 @@ class DeliveryCarrier(models.Model):
         from_currency, to_currency = self._get_conversion_currencies(order, conversion)
         if from_currency.id == to_currency.id:
             return price
-        return from_currency._convert(
-            price, to_currency, order.company_id, order.date_order or fields.Date.today()
-        )
+        return from_currency._convert(price, to_currency, order.company_id, order.date_order)
 
     def _get_price_available(self, order):
         self.ensure_one()
         self = self.sudo()
         order = order.sudo()
         total = weight = volume = quantity = wv = 0
-        total_delivery = 0.0
         for line in order.order_line:
             if line.state == "cancel":
                 continue
-            if line.is_delivery:
-                total_delivery += line.price_total
             if not line.product_id or line.is_delivery:
                 continue
-            if line.product_id.type == "service":
+            if line.product_id.type in {"service", "combo"}:
                 continue
             qty = line.product_uom_id._compute_quantity(
                 line.product_uom_qty, line.product_id.uom_id
@@ -575,7 +581,7 @@ class DeliveryCarrier(models.Model):
             volume += (line.product_id.volume or 0.0) * qty
             wv += (line.product_id.weight or 0.0) * (line.product_id.volume or 0.0) * qty
             quantity += qty
-        total = (order.amount_total or 0.0) - total_delivery
+        total = order._compute_amount_total_without_delivery()
 
         total = self._compute_currency(order, total, "pricelist_to_company")
         # weight is either,
@@ -604,12 +610,12 @@ class DeliveryCarrier(models.Model):
         criteria_found = False
         price_dict = self._get_price_dict(total, weight, volume, quantity, wv=wv)
         for line in self.price_rule_ids:
-            test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
+            test = expr_eval(line.variable + line.operator + str(line.max_value), price_dict)
             if test:
                 price = line.list_base_price + line.list_price * price_dict[line.variable_factor]
                 criteria_found = True
                 break
         if not criteria_found:
-            raise UserError(_("Not available for current order"))
+            raise UserError(self.env._("Not available for current order"))
 
         return price

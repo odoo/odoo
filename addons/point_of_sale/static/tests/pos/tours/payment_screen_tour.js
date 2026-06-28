@@ -11,7 +11,6 @@ import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 import { inLeftSide } from "./utils/common";
 
 registry.category("web_tour.tours").add("PaymentScreenTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -60,7 +59,7 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
             // Multiple paymentlines
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickNumpad("1"),
-            PaymentScreen.fillPaymentLineAmountMobile("Cash", "1"),
+            PaymentScreen.fillPaymentLineAmountMobile("52.80", "1", 1),
             PaymentScreen.remainingIs("51.8"),
             PaymentScreen.validateButtonIsHighlighted(false),
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -81,10 +80,6 @@ registry.category("web_tour.tours").add("PaymentScreenTour2", {
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Letter Tray", "1", "10"),
             ProductScreen.clickPayButton(),
-
-            // check that ship later button is present
-            { trigger: ".payment-buttons button:contains('Ship Later')" },
-            // payment line is been in case of mobile as paymentlines are required to manually enter the amount
             {
                 isActive: ["mobile"],
                 content: "click payment method",
@@ -157,7 +152,6 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
 });
 
 registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -169,23 +163,6 @@ registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", 
             PaymentScreen.enterPaymentLineAmount("Cash", "5", true, {
                 change: "3",
             }),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("InvoiceShipLaterAccessRight", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            ProductScreen.confirmOpeningPopup(),
-            ProductScreen.clickHomeCategory(),
-            ProductScreen.addOrderline("Whiteboard Pen", "1"),
-            ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Acme Corporation"),
-            ProductScreen.clickPayButton(),
-
-            PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickShipLaterButton(),
-            PaymentScreen.clickValidate(),
         ].flat(),
 });
 
@@ -215,7 +192,6 @@ registry.category("web_tour.tours").add("PaymentScreenInvoiceOrder", {
 });
 
 registry.category("web_tour.tours").add("test_pos_large_amount_confirmation_dialog", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -234,7 +210,6 @@ registry.category("web_tour.tours").add("test_pos_large_amount_confirmation_dial
 });
 
 registry.category("web_tour.tours").add("test_add_money_button_with_different_decimal_separator", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),

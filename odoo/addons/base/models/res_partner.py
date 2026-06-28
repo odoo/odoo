@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import collections
 import datetime
+import logging
 import re
 import typing
 from collections import defaultdict
@@ -14,6 +15,19 @@ from werkzeug import urls
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.date_utils import all_timezones
+from odoo.tools.translate import LazyGettext
+from odoo.tools.partner_identifiers import (
+    ADDITIONAL_IDENTIFIERS_METADATA,
+    ALL_IDENTIFIERS_METADATA,
+    get_deduced_identifiers,
+    get_tin_metadata_of_country,
+    is_identifier_void,
+    pick_preferred_identifier,
+    validate_identifier,
+    validation_error_message,
+)
+
+_logger = logging.getLogger(__name__)
 
 if typing.TYPE_CHECKING:
     from .res_users import ResUsers
@@ -175,9 +189,10 @@ class ResPartnerCategory(models.Model):
 class ResPartner(models.Model):
     _name = 'res.partner'
     _description = 'Contact'
+    _explanation = "Foundational model for all people and companies (customers, vendors, employees, etc.). Used for identifying individuals or organizations."
     _inherit = ['format.address.mixin', 'format.vat.label.mixin', 'avatar.mixin', 'properties.base.definition.mixin']
     _order = "complete_name ASC, id DESC"
-    _rec_names_search = ['complete_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
+    _rec_names_search = ['complete_name', 'email', 'ref', 'vat']  # TODO vat must be sanitized the same way for storing/searching
     _allow_sudo_commands = False
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
@@ -226,14 +241,11 @@ class ResPartner(models.Model):
         precompute=True,  # avoid queries post-create
         readonly=False, store=True,
         help='The internal user in charge of this contact.')
-    vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.")
+    vat = fields.Char(string='Tax ID', index=True, inverse='_inverse_vat', help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.")
+    additional_identifiers = fields.Json(string="Additional Identifiers", copy=False)
+    available_additional_identifiers_metadata = fields.Json(compute='_compute_available_additional_identifiers_metadata')
     vat_label = fields.Char(string='Tax ID Label', compute='_compute_vat_label')
     same_vat_partner_id: ResPartner = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
-    same_company_registry_partner_id: ResPartner = fields.Many2one('res.partner', string='Partner with same Company Registry', compute='_compute_same_vat_partner_id', store=False)
-    company_registry = fields.Char(string="Company ID", compute='_compute_company_registry', store=True, readonly=False, index='btree_not_null',
-       help="The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of a same country")
-    company_registry_label = fields.Char(string='Company ID Label', compute='_compute_company_registry_label')
-    company_registry_placeholder = fields.Char(compute='_compute_company_registry_placeholder')
     bank_ids: ResPartnerBank = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     website = fields.Char('Website Link')
     comment = fields.Html(string='Notes')
@@ -256,8 +268,8 @@ class ResPartner(models.Model):
     street2 = fields.Char()
     zip = fields.Char(change_default=True)
     city = fields.Char()
-    state_id: ResCountryState = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
-    country_id: ResCountry = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    state_id: ResCountryState = fields.Many2one("res.country.state", string='State', ondelete='restrict', index='btree_not_null', domain="[('country_id', '=?', country_id)]")
+    country_id: ResCountry = fields.Many2one('res.country', string='Country', ondelete='restrict', index='btree_not_null')
     country_code = fields.Char(related='country_id.code', string="Country Code")
     partner_latitude = fields.Float(string='Latitude', digits=(10, 7))
     partner_longitude = fields.Float(string='Longitude', digits=(10, 7))
@@ -392,8 +404,11 @@ class ResPartner(models.Model):
     def _compute_lang(self):
         """ While creating / updating child contact, take the parent lang by
         default if any. 0therwise, fallback to default context / DB lang """
-        for partner in self.filtered('parent_id'):
-            partner.lang = partner.parent_id.lang or self.default_get(['lang']).get('lang') or self.env.lang
+        for partner in self:
+            if partner.parent_id:
+                partner.lang = partner.parent_id.lang or partner.default_get(['lang']).get('lang') or partner.env.lang
+            elif not partner.lang:
+                partner.lang = partner.default_get(['lang']).get('lang') or partner.env.lang
 
     @api.depends('lang')
     def _compute_active_lang_count(self):
@@ -436,7 +451,7 @@ class ResPartner(models.Model):
         for partner in self - super_partner:
             partner.partner_share = not partner.user_ids or not any(not user.share for user in partner.user_ids)
 
-    @api.depends('vat', 'company_id', 'company_registry', 'country_id')
+    @api.depends('vat', 'company_id', 'country_id')
     def _compute_same_vat_partner_id(self):
         for partner in self:
             # use _origin to deal with onchange()
@@ -466,14 +481,6 @@ class ResPartner(models.Model):
             # For VAT number being only one character, we will skip the check just like the regular check_vat
 
             partner.same_vat_partner_id = should_check_vat and not partner.parent_id and Partner.search(domain, limit=1)
-            # check company_registry
-            domain = [
-                ('company_registry', '=', partner.company_registry),
-                ('company_id', 'in', [False, partner.company_id.id]),
-            ]
-            if partner_id:
-                domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
-            partner.same_company_registry_partner_id = bool(partner.company_registry) and not partner.parent_id and Partner.search(domain, limit=1)
 
     @api.depends_context('company')
     def _compute_vat_label(self):
@@ -509,24 +516,6 @@ class ResPartner(models.Model):
                 partner.commercial_partner_id = partner
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
-
-    def _compute_company_registry(self):
-        # exists to allow overrides
-        for company in self:
-            company.company_registry = company.company_registry
-
-    @api.depends('country_id')
-    def _compute_company_registry_label(self):
-        label_by_country = self._get_company_registry_labels()
-        for company in self:
-            country_code = company.country_id.code
-            company.company_registry_label = label_by_country.get(country_code, _("Company ID"))
-
-    def _get_company_registry_labels(self):
-        return {}
-
-    def _compute_company_registry_placeholder(self):
-        self.company_registry_placeholder = False
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
@@ -662,14 +651,14 @@ class ResPartner(models.Model):
         at update (if present in _synced_commercial_fields), and will be
         delegated to the parent `commercial entity`. The list is meant to be
         extended by inheriting classes. """
-        return self._synced_commercial_fields() + ['company_registry', 'industry_id']
+        return self._synced_commercial_fields() + ['industry_id']
 
     @api.model
     def _synced_commercial_fields(self):
         """ Returns the list of fields that are managed by the commercial entity
         to which a partner belongs. When modified on a children, update is
         propagated until the commercial entity. """
-        return ['vat']
+        return ['vat', 'additional_identifiers']
 
     def _get_commercial_values(self):
         """ Get commercial values from record. Return only set values, as they
@@ -688,6 +677,37 @@ class ResPartner(models.Model):
             return self._convert_fields_to_values(set_synced_fields)
         return {}
 
+    def _apply_synced_identifiers(self, source_identifiers):
+        """ Mirror the *synced* identifiers of ``source_identifiers`` onto every record
+        in ``self``, while keeping per-contact identifiers untouched.
+        Per-contact identifiers are those flagged ``synced=False`` in their metadata
+        """
+        all_metadata = self._get_all_identifiers_metadata()
+        synced = {
+            key: value
+            for key, value in (source_identifiers or {}).items()
+            if all_metadata.get(key, {}).get('synced', True)
+        }
+        for record in self:
+            existing = record.additional_identifiers or {}
+            merged = {
+                key: value
+                for key, value in existing.items()
+                if not all_metadata.get(key, {}).get('synced', True)
+            } | synced
+            if merged != existing:
+                record.write({'additional_identifiers': merged})
+
+    def _write_commercial_sync(self, sync_vals):
+        """ Apply commercial-fields ``sync_vals`` to ``self``.
+        ``additional_identifiers`` is special-cased so only its flagged synced keys
+        are propagated; the remaining fields are written as-is.
+        """
+        if 'additional_identifiers' in sync_vals:
+            sync_vals = dict(sync_vals)
+            self._apply_synced_identifiers(sync_vals.pop('additional_identifiers'))
+        self.write(sync_vals)
+
     @api.model
     def _company_dependent_commercial_fields(self):
         return [
@@ -702,7 +722,7 @@ class ResPartner(models.Model):
         if commercial_partner != self:
             sync_vals = commercial_partner._get_commercial_values()
             if sync_vals:
-                self.write(sync_vals)
+                self._write_commercial_sync(sync_vals)
                 self._commercial_sync_to_descendants()
             self._company_dependent_commercial_sync()
 
@@ -729,7 +749,7 @@ class ResPartner(models.Model):
         sync_children = self.child_ids.filtered(lambda c: not c.is_company)
         for child in sync_children:
             child._commercial_sync_to_descendants(fields_to_sync)
-        sync_children.write(sync_vals)
+        sync_children._write_commercial_sync(sync_vals)
 
     def _fields_sync(self, values):
         """ Sync commercial fields and address fields from company and to children.
@@ -776,7 +796,7 @@ class ResPartner(models.Model):
         )
         if commercial_to_upstream:
             new_synced_commercials = self._get_synced_commercial_values()
-            self.parent_id.write(new_synced_commercials)
+            self.parent_id._write_commercial_sync(new_synced_commercials)
 
         # 3. To DOWNSTREAM: sync children
         self._children_sync(values)
@@ -834,6 +854,7 @@ class ResPartner(models.Model):
             partner.is_public = users and any(user._is_public() for user in users)
 
     def write(self, vals):
+        self._clean_additional_identifiers(vals)
         if vals.get('active') is False:
             # DLE: It should not be necessary to modify this to make work the ORM. The problem was just the recompute
             # of partner.user_ids when you create a new user for this partner, see test test_70_archive_internal_partners
@@ -901,13 +922,14 @@ class ResPartner(models.Model):
         if self.env.context.get('import_file'):
             self._check_import_consistency(vals_list)
         for vals in vals_list:
+            self._clean_additional_identifiers(vals)
             if vals.get('website'):
                 vals['website'] = self._clean_website(vals['website'])
         partners = super().create(vals_list)
         # due to ir.default, compute is not called as there is a default value
         # hence calling the compute manually
         for partner, values in zip(partners, vals_list):
-            if 'lang' not in values and partner.parent_id:
+            if 'lang' not in values:
                 partner._compute_lang()
             if values.get('parent_name') and not partner.parent_id:
                 # Create parent company if we got 'parent_name'
@@ -1237,6 +1259,247 @@ class ResPartner(models.Model):
             'city': self.city,
             'country': self.country_id.code,
         }]
+
+    @api.model
+    def _get_res_city_by_name(self, name, country_id):
+        pass
+
+    # -------------------------------------------------------------------------
+    # PARTNER IDENTIFIERS (VAT + additional identifiers)
+    # -------------------------------------------------------------------------
+
+    @api.constrains('additional_identifiers')
+    def _check_additional_identifiers(self):
+        """Safety guard for paths that bypass `_clean_additional_identifiers`, so malformed values
+        never reach the JSON.
+        """
+        for partner in self:
+            for key, value in (partner.additional_identifiers or {}).items():
+                result = validate_identifier(key, value)
+                if not result['valid']:
+                    raise ValidationError(validation_error_message(self.env, key, result['example']))
+
+    @api.onchange('vat', 'country_id')
+    def _onchange_vat(self):
+        self._check_vat(validation=False)
+
+    def _inverse_vat(self):
+        self._check_vat()
+        self._deduce_additional_identifiers_from_vat()
+
+    def _check_vat(self, validation="error"):
+        for partner in self:
+            vat, _country_code = self._run_vat_checks(partner.commercial_partner_id.country_id, partner.vat,
+                                               partner_name=partner.name, validation=validation)
+            if vat != partner.vat:  # To avoid unnecessary queries (perf tested)
+                partner.vat = vat
+
+    @api.model
+    def _run_vat_checks(self, country, vat, partner_name='', validation='error'):
+        """ Checks a VAT number syntactically to ensure its validity upon saving.
+
+        :param country: a country to check for
+        :param vat: a string with the VAT number to check.
+        :param partner_name: to put into the error message
+        :param validation: if False, it will only return the formatted vat without checking if it valid.
+            if 'error', an incorrect number will raise and if 'setnull' it will just return an empty vat
+
+        :return: A two-elements tuple with:
+
+            1. The vat number
+            2. The country code of the country the VAT number was validated for, if it was validated.
+               False if it could not be validated against the provided or guessed country.
+        """
+        assert validation in (False, 'error', 'setnull')
+        return vat, country and country.code or ''
+
+    @api.depends('country_id')
+    def _compute_available_additional_identifiers_metadata(self):
+        for partner in self:
+            vals = {
+                key: {
+                    # Resolve lazy translations now: JSON would otherwise stringify them in a frame where
+                    # no language can be detected.
+                    k: self.env._(v) if isinstance(v, LazyGettext) else v  # pylint: disable=gettext-variable
+                    for k, v in metadata.items()
+                }
+                for key, metadata in self._get_all_additional_identifiers_metadata().items()
+                if not metadata.get('countries') or partner.country_code in metadata['countries']  # includes international
+            }
+            if {key: metadata for key, metadata in vals.items() if metadata.get('category') == 'EN' and key != 'OTHER'}:
+                # Pops out the default 'OTHER' only if another 'EN' identifier is available
+                vals.pop('OTHER', None)
+            partner.available_additional_identifiers_metadata = vals
+
+    def _get_additional_identifier(self, identifier_type):
+        """Convenience getter for an entry of the JSON."""
+        if not self:
+            return None
+        self.ensure_one()
+        return (self.additional_identifiers or {}).get(identifier_type)
+
+    def _set_additional_identifier(self, identifier_type, value):
+        """ Write helper for adding identifier in the JSON.
+        It validates, normalizes, deduce siblings and inserts the value.
+        """
+        self.ensure_one()
+        if not identifier_type:
+            return
+        identifiers = self.additional_identifiers or {}
+        if not value:
+            identifiers.pop(identifier_type, None)
+            self.additional_identifiers = identifiers
+            return
+        validation = validate_identifier(identifier_type, value)
+        if not validation['valid']:
+            raise ValidationError(validation_error_message(self.env, identifier_type, validation['example']))
+        normalized_value = validation['value']
+        identifiers[identifier_type] = normalized_value  # set the normalized value
+        deduced_identifiers = get_deduced_identifiers(identifier_type, normalized_value)
+        self.additional_identifiers = {**identifiers, **deduced_identifiers}  # json needs to be fully reassigned each time
+
+    def _get_all_identifiers(self, enrich=False):
+        """Combined VAT + additional identifiers of the commercial partner.
+        With `enrich`, also include identifiers derivable from the stored ones (e.g. FR_SIRET => FR_SIREN).
+        """
+        self.ensure_one()
+        partner = self.commercial_partner_id
+        identifiers = partner.additional_identifiers or {}
+        if not is_identifier_void(partner.vat):
+            country_code = partner._deduce_country_code()
+            vat_prefix = partner.vat[:2].upper()
+            tin_country = vat_prefix if get_tin_metadata_of_country(vat_prefix) else country_code
+            key = get_tin_metadata_of_country(tin_country).get('key', 'TIN')
+            identifiers = {key: partner.vat, **identifiers}
+        enriched_identifiers = {}
+        if enrich:
+            for identifier_type, value in identifiers.items():
+                enriched_identifiers.update(get_deduced_identifiers(identifier_type, value))
+        return {**enriched_identifiers, **identifiers}
+
+    @api.model
+    def _get_all_identifiers_metadata(self):
+        """ Returns a dict with the metadata of the additional identifiers.
+        TO BE OVERRIDEN by modules that want to add or modify the default metadata.
+        """
+        return ALL_IDENTIFIERS_METADATA
+
+    @api.model
+    def _get_all_additional_identifiers_metadata(self):
+        """ Returns a dict with the metadata of the additional identifiers.
+        TO BE OVERRIDEN by modules that want to add or modify the default metadata.
+        """
+        return ADDITIONAL_IDENTIFIERS_METADATA
+
+    @api.model
+    def _get_legal_entity_category_priority(self):
+        return {'EN': 0, 'VAT': 1, 'TIN': 1, 'GST': 1, 'CN': 2}
+
+    @api.model
+    def _get_tax_category_priority(self):
+        return {'VAT': 0, 'TIN': 0, 'GST': 0}
+
+    def _get_preferred_legal_entity_identifier_vals(self):
+        """Return a dict {'scheme': scheme, 'value': value, ...metadata} of the preferred legal entity identifier for the given partner.
+        The selection is based on the following rules:
+        1. It must be a legal entity identifier (e.g. company number, Tax ID, citizen card number).
+        2. Among those, it picks the one with the lowest sequence, THEN the "best" category (see _get_legal_entity_category_priority).
+        3. If no such identifier is found, an empty dict is returned.
+        """
+        self.ensure_one()
+        partner = self.commercial_partner_id
+        priorities = self._get_legal_entity_category_priority()
+        identifier_vals = pick_preferred_identifier(
+            partner._get_all_identifiers(enrich=True),
+            filter_func=lambda k, v, m: m.get('category') in priorities or k == 'TIN',
+            sort_key=lambda k, v, m: (m.get('sequence', 100), priorities.get(m.get('category'), 100)),
+        )
+        return identifier_vals or {}
+
+    def _get_preferred_tax_identifier_vals(self):
+        """Return a dict {'scheme': scheme, 'value': value, ...metadata} of the preferred tax identifier for the given partner.
+        The selection is based on the following rules:
+        1. It must be a valid tax identifier (e.g. company number, Tax ID).
+        2. Among those, it picks the one with the "best" category (see _get_tax_category_priority), THEN ties with the sequence.
+        3. If no such identifier is found, an empty dict is returned.
+        """
+        self.ensure_one()
+        partner = self.commercial_partner_id
+        priorities = self._get_tax_category_priority()
+        identifier_vals = pick_preferred_identifier(
+            partner._get_all_identifiers(enrich=True),
+            filter_func=lambda k, v, m: m.get('category') in priorities or k == 'TIN',
+            sort_key=lambda k, v, m: (priorities.get(m.get('category'), 100), m.get('sequence', 100)),
+        )
+        return identifier_vals or {}
+
+    def _deduce_additional_identifiers_from_vat(self):
+        """Populate companion identifiers freely derivable from the VAT (e.g. BE_VAT → BE_EN,
+        AT_VAT → AT_EN) so users only enter the VAT and don't have to retype the same digits.
+        Pre-existing entries are kept as-is and tracking is muted to avoid recomputing
+        VAT-tracked computed fields mid-inverse."""
+        for partner in self:
+            if not partner.vat or not partner.country_code:
+                continue
+            vat_key = get_tin_metadata_of_country(partner.country_code).get('key')
+            if not vat_key:
+                continue
+            deduced_identifiers = get_deduced_identifiers(vat_key, partner.vat)
+            identifiers = partner.additional_identifiers or {}
+            # Only keep deduced identifiers that are actually valid: a VAT does not always map to a
+            # well-formed companion id (e.g. a 13-digit RO fiscal code is not a valid 10-digit CUI).
+            new_identifiers = {
+                k: v for k, v in deduced_identifiers.items()
+                if k not in identifiers and validate_identifier(k, v)['valid']
+            }
+            if not new_identifiers:
+                continue
+            try:
+                # Use mail_notrack to avoid triggering mail tracking, which would
+                # recompute tracked computed fields (e.g. vies_valid) mid-inverse.
+                partner.with_context(mail_notrack=True).additional_identifiers = {**identifiers, **new_identifiers}
+            except ValidationError:
+                _logger.info("Skipped %s: deduced identifier from %s could not be validated.", deduced_identifiers, vat_key)
+                continue
+
+    def _clean_additional_identifiers(self, vals):
+        """ Pre-write filter on a `vals` dict:
+        - drop unknown keys (with a warning log)
+        - reject malformed values (raises ValidationError)
+        - normalize
+        - add deduced identifiers.
+        Mutates `vals` in place.
+        """
+        if 'additional_identifiers' not in vals or not isinstance(vals['additional_identifiers'], dict):
+            return vals
+        cleaned = {}
+        for key, value in vals['additional_identifiers'].items():
+            if not self._get_all_additional_identifiers_metadata().get(key):
+                _logger.warning(" Skipped %s: identifier %s is not in supported identifiers.", value, key)
+                continue
+            if not value:
+                continue
+            result = validate_identifier(key, value)
+            if not result['valid']:
+                raise ValidationError(validation_error_message(self.env, key, result['example']))
+            cleaned[key] = result['value']
+        # Compute deduced identifiers (e.g. FR_SIRET => FR_SIREN). Only keep the well-formed ones.
+        for key, value in list(cleaned.items()):
+            for deduced_key, deduced_value in get_deduced_identifiers(key, value).items():
+                if deduced_key not in cleaned and validate_identifier(deduced_key, deduced_value)['valid']:
+                    cleaned[deduced_key] = deduced_value
+        vals['additional_identifiers'] = cleaned
+
+    def _deduce_country_code(self):
+        """ deduce the country code based on the information available.
+        we have three cases:
+        - country_code is BE but the VAT number starts with FR, the country code is FR, not BE
+        - if a country-specific field is set (e.g. the codice_fiscale), that country is used for the country code
+        - if the VAT number has no ISO country code, use the country_code in that case.
+        """
+        self.ensure_one()
+        _vat, country_code = self._run_vat_checks(self.country_id, self.vat, validation=False)
+        return country_code or self.country_code
 
 
 class ResPartnerIndustry(models.Model):

@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_50_tawi_document">
+        <!-- We used &#8203; to ensure long strings of text written without spaces (like Thai) wrap correctly across lines without adding any visible gaps when using wkhtmltopdf-->
+        <t t-call="web.basic_layout">
+            <div class="page" style="font-size: 11.48px;">
+                <span><strong>ฉบับที่ 1</strong> (สำหรับผู้ถูกหักภาษี ณ ที่จ่าย ใช้แนบพร้อมกับแบบแสดงรายการภาษี)</span><br/>
+                <span><strong>ฉบับที่ 2</strong> (สำหรับผู้ถูกหักภาษี ณ ที่จ่าย เก็บไว้เป็นหลักฐาน)</span>
+
+                <div class="border border-dark">
+                    <div class="row">
+                        <table class="table table-borderless m-0">
+                            <tbody>
+                                <tr>
+                                    <td class="w-25"/>
+                                    <td class="w-50 text-center">
+                                        <strong style="font-size: 15px;">หนังสือรับรองการหักภาษี ณ ที่จ่าย</strong><br/>
+                                        <strong>ตามมาตรา 50 ทวิ แห่งประมวลรัษฎากร</strong>
+                                    </td>
+                                    <td class="w-25 text-end">
+                                        <span>เล่มที่&#8203;...................................................</span><br/>
+                                        เลขที่: <span t-field="o.name"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="border border-dark m-1">
+                        <div class="row m-2">
+                            <div class="col-4">
+                                <strong>ผู้มีหน้าที่หักภาษี ณ ที่จ่าย</strong>
+                            </div>
+                            <div class="col-8 d-flex justify-content-end p-0">
+                                <div class="d-inline-block">
+                                    <t t-call="l10n_th.tawi_square" title="'เลขประจำตัวผู้เสียภาษีอากร (13 หลัก)*'" group_sizes="[1, 4, 5, 2, 1]" box_values="o.company_id.vat"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row m-2">
+                            <div class="col-1 p-0" style="width:2.5%">
+                                <span>ชื่อ: </span>
+                            </div>
+                            <div class="col-6 p-0" style="width:56.3%; border-bottom: 1px dotted black;">
+                                <span t-field="o.company_id.partner_id.complete_name"/>
+                            </div>
+                            <div class="col-5 d-flex justify-content-end p-0" style="width:41.2%">
+                                <div class="d-inline-block">
+                                    <t t-call="l10n_th.tawi_square" title="'เลขประจำตัวผู้เสียภาษีอากร'" group_sizes="[1, 4, 4, 1]" box_values=""/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row m-2">
+                            <div class="col-12">
+                                <span style="font-size: 9px;">(ให้ระบุว่าเป็น บุคคล นิติบุคคล บริษัท สมาคม หรือคณะบุคคล)</span>
+                            </div>
+                        </div>
+
+                        <div class="row m-2">
+                            <div class="col-1 p-0" style="width:3.3%">
+                                <span>ที่อยู่: </span>
+                            </div>
+                            <div class="col-11" style="border-bottom: 1px dotted black; width: 96.7%">
+                                <span t-field="o.company_id.partner_id.l10n_th_address_no_country"/>
+                            </div>
+                        </div>
+                        <div class="row m-2">
+                            <div class="col-12">
+                                <span style="font-size: 9px;">(ให้ระบุชื่ออาคาร/หมู่บ้าน ห้องเลขที่ ชั้นที่ เลขที่ ตรอก/ซอย หมู่ที่ ถนน ตำบล/แขวง อำเภอ/เขต จังหวัด)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border border-dark m-1">
+                        <div class="row m-2">
+                            <div class="col-4">
+                                <strong>ผู้ถูกหักภาษี ณ ที่จ่าย</strong>
+                            </div>
+                            <div class="col-8 d-flex justify-content-end p-0">
+                                <div class="d-inline-block">
+                                    <t t-call="l10n_th.tawi_square" title="'เลขประจำตัวผู้เสียภาษีอากร (13 หลัก)*'" group_sizes="[1, 4, 5, 2, 1]" box_values="o.partner_id.commercial_partner_id.vat"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row m-2">
+                            <div class="col-1 p-0" style="width:2.5%">
+                                <span>ชื่อ: </span>
+                            </div>
+                            <div class="col-5 p-0" style="width:56.3%; border-bottom: 1px dotted black;">
+                                <span t-field="o.partner_id.commercial_partner_id.complete_name"/>
+                            </div>
+                            <div class="col-6 d-flex justify-content-end p-0" style="width:41.2%">
+                                <div class="d-inline-block">
+                                    <t t-call="l10n_th.tawi_square" title="'เลขประจำตัวผู้เสียภาษีอากร'" group_sizes="[1, 4, 4, 1]" box_values=""/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row m-2">
+                            <div class="col-12">
+                                <span style="font-size: 9px;">(ให้ระบุว่าเป็น บุคคล นิติบุคคล บริษัท สมาคม หรือคณะบุคคล)</span>
+                            </div>
+                        </div>
+
+                        <div class="row m-2">
+                            <div class="col-1 p-0" style="width:3.3%">
+                                <span>ที่อยู่: </span>
+                            </div>
+                            <div class="col-11" style="border-bottom: 1px dotted black; width: 96.7%">
+                                 <span t-field="o.partner_id.l10n_th_address_no_country"/>
+                            </div>
+                        </div>
+                        <div class="row m-2">
+                            <div class="col-12">
+                                <span style="font-size: 9px;">(ให้ระบุชื่ออาคาร/หมู่บ้าน ห้องเลขที่ ชั้นที่ เลขที่ ตรอก/ซอย หมู่ที่ ถนน ตำบล/แขวง อำเภอ/เขต จังหวัด)</span>
+                            </div>
+                        </div>
+
+                        <div class="row m-2">
+                            <t t-set="tags" t-value="o.move_id.line_ids.mapped('tax_tag_ids.name')"/>
+                            <t t-set="pnd" t-value="'53' if 'PND53' in tags else ('3' if 'PND3' in tags else False)"/>
+
+                            <div class="col-3" style="width:30%">
+                                <div class="d-flex flex-nowrap">
+                                    <span class="text-nowrap me-1">ลำดับที่</span>
+                                    <div class="text-center border border-dark" style="width: 65px; height: 17px; line-height: 17px;"/>
+                                    <span class="ms-2">ในแบบ</span>
+                                </div>
+                            </div>
+                            <div class="col-9 d-flex align-items-start gap-4" style="width:70%">
+                                <div class="row w-100">
+                                    <div class="col-3">
+                                        <t t-call="l10n_th.tickbox_with_desc" title="'(1) ภ&#8203;.ง&#8203;.ด&#8203;.1ก'" is_checked="False"/>
+                                    </div>
+                                    <div class="col-3">
+                                        <t t-call="l10n_th.tickbox_with_desc" title="'(2) ภ&#8203;.ง&#8203;.ด&#8203;.1ก พิเศษ'" is_checked="False"/>
+                                    </div>
+                                    <div class="col-3">
+                                        <t t-call="l10n_th.tickbox_with_desc" title="'(3) ภ&#8203;.ง&#8203;.ด&#8203;.2'" is_checked="False"/>
+                                    </div>
+                                    <div class="col-3">
+                                        <t t-call="l10n_th.tickbox_with_desc" title="'(4) ภ&#8203;.ง&#8203;.ด&#8203;.3'" is_checked="pnd == '3'"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m-2">
+                            <div class="col-3" style="width:30%">
+                                <span style="font-size: 9px;">(ให้สามารถอ้างอิงหรือสอบยันกันได้ระหว่างลำดับที่ตาม หนังสือรับรองฯ กับแบบยื่นรายการภาษีหัก ณ ที่จ่าย)</span>
+                            </div>
+                            <div class="col-9 d-flex align-items-start gap-4" style="width:70%">
+                                <div class="row w-100">
+                                    <div class="col-3">
+                                        <t t-call="l10n_th.tickbox_with_desc" title="'(5) ภ&#8203;.&#8203;ง&#8203;.&#8203;ด&#8203;.&#8203;2ก'" is_checked="False"/>
+                                    </div>
+                                    <div class="col-3">
+                                        <t t-call="l10n_th.tickbox_with_desc" title="'(6) ภ&#8203;.&#8203;ง&#8203;.&#8203;ด&#8203;.&#8203;3ก'" is_checked="False"/>
+                                    </div>
+                                    <div class="col-3">
+                                        <t t-call="l10n_th.tickbox_with_desc" title="'(7) ภ&#8203;.&#8203;ง&#8203;.&#8203;ด&#8203;.&#8203;53'" is_checked="pnd == '53'"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border border-dark m-1">
+                        <table class="w-100 table-borderless">
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle fw-bold border-bottom border-dark p-1" style="width: 58%;">ประเภทเงินได้พึงประเมินที่จ่าย</th>
+                                    <th class="text-center align-middle fw-bold border-bottom border-dark p-1" style="width: 14%;">วัน เดือน<br/>หรือปีภาษีที่จ่าย</th>
+                                    <th class="text-center align-middle fw-bold border-bottom border-dark p-1" style="width: 14%;" colspan="2">จำนวนเงินที่จ่าย</th>
+                                    <th class="text-center align-middle fw-bold border-bottom border-dark p-1" style="width: 14%;" colspan="2">ภาษีที่หัก<br/>และนำส่งไว้</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="income_rows_data" t-value="[
+                                        {'label': '1. เงินเดือน ค่าจ้าง เบี้ยเลี้ยง โบนัส ฯลฯ ตามมาตรา 40 (1)', 'type': False, 'pad': 'pt-1'},
+                                        {'label': '2. ค่าธรรมเนียม ค่านายหน้า ฯลฯ ตามมาตรา 40 (2)', 'type': ['service', 'commission'], '40_2_col': True, 'pad': ''},
+                                        {'label': '3. ค่าแห่งลิขสิทธิ์ ฯลฯ ตามมาตรา 40 (3)', 'type': ['royalties'], 'pad': ''},
+                                        {'label': '4. (ก) ดอกเบี้ย ฯลฯ ตามมาตรา 40 (4) (ก)', 'type': ['interest'], 'pad': ''},
+                                        {'label': '(ข) เงินปันผล เงินส่วนแบ่งกำไร ฯลฯ ตามมาตรา 40 (4) (ข)', 'type': ['dividend'], 'pad': 'ps-3'},
+                                        {'label': '(1) กรณีผู้ได้รับเงินปันผลได้รับเครดิตภาษี โดยจ่ายจากกำไรสุทธิของกิจการที่ต้องเสียภาษีเงินได้นิติบุคคลในอัตราดังนี้', 'type': False, 'pad': 'ps-4'},
+                                        {'label': '(1.1) อัตราร้อยละ 30 ของกำไรสุทธิ', 'type': False, 'pad': 'ps-5'},
+                                        {'label': '(1.2) อัตราร้อยละ 25 ของกำไรสุทธิ', 'type': False, 'pad': 'ps-5'},
+                                        {'label': '(1.3) อัตราร้อยละ 20 ของกำไรสุทธิ', 'type': False, 'pad': 'ps-5'},
+                                        {'label': '(1.4) อัตราอื่น ๆ (ระบุ)............ของกำไรสุทธิ', 'type': False, 'pad': 'ps-5'},
+                                        {'label': '(2) กรณีผู้ได้รับเงินปันผลไม่ได้รับเครดิตภาษี เนื่องจากจ่ายจาก', 'type': False, 'pad': 'ps-4'},
+                                        {'label': '(2.1) กำไรสุทธิของกิจการที่ได้รับยกเว้นภาษีเงินได้นิติบุคคล', 'type': False, 'pad': 'ps-5'},
+                                        {'label': '&#8203;(2.2) เงินปันผลหรือเงินส่วนแบ่งของกำไรที่ได้รับยกเว้นไม่ต้องนำมารวมคำนวณเป็นรายได้เพื่อเสียภาษีเงินได้นิติบุคคล', 'type': False, 'pad': 'ps-5'},
+                                        {'label': '(2.3) กำไรสุทธิส่วนที่ได้หักผลขาดทุนสุทธิยกมาไม่เกิน 5 ปีก่อนรอบระยะเวลาบัญชีปีปัจจุบัน', 'type': False, 'pad': 'ps-5'},
+                                        {'label': '(2.4) กำไรที่รับรู้ทางบัญชีโดยวิธีส่วนได้เสีย (equity method)', 'type': False, 'pad': 'ps-5'},
+                                        {'label': '(2.5) อื่น ๆ (ระบุ)....................................', 'type': False, 'pad': 'ps-5'},
+                                        {'label': '5. การจ่ายเงินได้ที่ต้องหักภาษี ณ ที่จ่าย ตามคำสั่งกรมสรรพากรที่ออกตามมาตรา 3 เตรส เช่น รางวัล ส่วนลดหรือประโยชน์ใด ๆ เนื่องจากการส่งเสริมการขาย รางวัลในการประกวด การแข่งขัน การชิงโชค ค่าแสดงของนักแสดงสาธารณะ ค่าจ้างทำของ ค่าโฆษณา ค่าเช่า ค่าขนส่ง ค่าบริการ ค่าเบี้ยประกันวินาศภัย ฯลฯ', 'type': ['rentals', 'prof_fees', 'contract', 'transportation', 'advertising', 'insurance', 'public_actor', 'prize', 'hire_of_work'], '40_8_col': True, 'pad': ''},
+                                        {'label': '6. อื่น ๆ (ระบุ): ', 'type': ['others'], 'pad': 'pb-1'}
+                                    ]"/>
+
+                                <t t-set="total_amount" t-value="0"/>
+                                <t t-set="total_tax" t-value="0"/>
+                                <t t-foreach="income_rows_data" t-as="row">
+                                    <t t-set="label" t-value="row.get('label')"/>
+                                    <t t-set="income_tax_types" t-value="row.get('type')"/>
+                                    <t t-set="padding_class" t-value="row.get('pad')"/>
+
+                                    <t t-set="amount_paid" t-value="[]"/>
+                                    <t t-foreach="income_tax_types" t-as="tax_type">
+                                        <t t-set="val" t-value="sum(o.move_id.line_ids.filtered(lambda l: l.tax_ids.filtered(lambda t: t.l10n_th_income_tax_type == tax_type)).mapped('debit')) if tax_type else 0"/>
+                                        <t t-set="amount_paid" t-value="amount_paid + [val]"/>
+                                    </t>
+
+                                    <t t-set="tax_withhold" t-value="[]"/>
+                                    <t t-foreach="income_tax_types" t-as="tax_type">
+                                        <t t-set="val_w" t-value="sum(o.move_id.line_ids.filtered(lambda l: l.tax_line_id.l10n_th_income_tax_type == tax_type).mapped('credit')) if tax_type else 0"/>
+                                        <t t-set="tax_withhold" t-value="tax_withhold + [val_w]"/>
+                                    </t>
+
+                                    <t t-if="row.get('40_2_col')">
+                                        <t t-set="amount_paid" t-value="[sum(amount_paid)]"/>
+                                        <t t-set="tax_withhold" t-value="[sum(tax_withhold)]"/>
+                                    </t>
+
+                                    <t t-if="row.get('40_8_col')">
+                                        <t t-set="amount_paid" t-value="amount_paid[:3] + [sum(amount_paid[3:9])]"/>
+                                        <t t-set="tax_withhold" t-value="tax_withhold[:3] + [sum(tax_withhold[3:9])]"/>
+                                    </t>
+
+                                    <t t-set="others_text" t-value="False"/>
+                                    <t t-if="income_tax_types and 'others' in income_tax_types">
+                                        <t t-set="others_taxes" t-value="o.withholding_line_ids.mapped('tax_id').filtered(lambda t: t.l10n_th_income_tax_type == 'others' and t.l10n_th_income_tax_type_others)"/>
+                                        <t t-set="others_text" t-value="', '.join(others_taxes.mapped('l10n_th_income_tax_type_others'))"/>
+                                    </t>
+
+                                    <t t-set="tax_type_indexes" t-value="len(amount_paid)"/>
+                                    <t t-set="loop_count" t-value="tax_type_indexes if tax_type_indexes > 0 else 1"/>
+
+                                    <t t-foreach="loop_count" t-as="index">
+                                        <tr style="height: 20px;">
+                                            <t t-if="index == 0">
+                                                <td t-att-rowspan="loop_count" t-attf-class="align-middle #{padding_class} px-1">
+                                                    <span t-out="label"/>
+                                                    <span t-if="others_text" class="ms-1" t-out="others_text"/>
+                                                </td>
+                                            </t>
+
+                                            <t t-set="b_dotted" t-value="'border-bottom: 1px dotted black;' if index == loop_count - 1 else ''"/>
+                                            <td class="text-center align-middle border-start border-dark px-1" t-attf-style="#{b_dotted}">
+                                                <span t-if="tax_type_indexes > index and (amount_paid[index] > 0 or tax_withhold[index] > 0)" t-out="o.date.strftime('%d/%m/') + str(o.date.year + 543) if o.date else ''"/>
+                                            </td>
+                                            <td class="text-end align-middle border-start border-dark px-1" t-attf-style="#{b_dotted}">
+                                                <span t-if="tax_type_indexes > index and amount_paid[index] > 0" t-out="'{:,.2f}'.format(amount_paid[index]).split('.')[0]"/>
+                                            </td>
+                                            <td class="text-start align-middle px-1" t-attf-style="border-left: 1px dotted black; width: 4%; #{b_dotted}">
+                                                <span t-if="tax_type_indexes > index and amount_paid[index] > 0" t-out="'{:,.2f}'.format(amount_paid[index]).split('.')[1]"/>
+                                            </td>
+                                            <td class="text-end align-middle border-start border-dark px-1" t-attf-style="#{b_dotted}">
+                                                <span t-if="tax_type_indexes > index and tax_withhold[index] > 0" t-out="'{:,.2f}'.format(tax_withhold[index]).split('.')[0]"/>
+                                            </td>
+                                            <td class="text-start align-middle px-1" t-attf-style="border-left: 1px dotted black; width: 4%; #{b_dotted}">
+                                                <span t-if="tax_type_indexes > index and tax_withhold[index] > 0" t-out="'{:,.2f}'.format(tax_withhold[index]).split('.')[1]"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-set="total_amount" t-value="total_amount + sum(amount_paid)"/>
+                                    <t t-set="total_tax" t-value="total_tax + sum(tax_withhold)"/>
+                                </t>
+
+                                <tr>
+                                    <td class="text-end align-top border-top border-dark p-1" colspan="2">
+                                        รวมเงินที่จ่ายและภาษีที่หักนำส่ง
+                                    </td>
+                                    <td class="text-end align-top border-top border-start border-bottom border-dark p-1">
+                                        <span t-out="'{:,.2f}'.format(total_amount).split('.')[0]"/>
+                                    </td>
+                                    <td class="text-start align-top border-top border-bottom border-dark p-1" style="border-left: 1px dotted black; width: 4%;">
+                                        <span t-out="'{:,.2f}'.format(total_amount).split('.')[1]"/>
+                                    </td>
+                                    <td class="text-end align-top border-top border-start border-bottom border-dark p-1">
+                                        <span t-out="'{:,.2f}'.format(total_tax).split('.')[0]"/>
+                                    </td>
+                                    <td class="text-start align-top border-top border-bottom border-dark p-1" style="border-left: 1px dotted black; width: 4%;">
+                                        <span t-out="'{:,.2f}'.format(total_tax).split('.')[1]"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" class="align-middle border-bottom-0 p-1">
+                                        <span>รวมเงินภาษีที่หักนำส่ง (ตัวอักษร): </span>
+                                        <span t-out="o.env.ref('base.THB').with_context(lang=report_lang).amount_to_text(total_tax)"/>
+                                        <span t-if="total_tax.is_integer()"> ถ้วน</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                     </div>
+
+                     <div class="border border-dark m-1 p-1">
+                        <span class="me-3"><strong>เงินที่จ่ายเข้า</strong> กบข./กสจ./กองทุนสงเคราะห์ครูโรงเรียนเอกชน&#8203;.................&#8203;บาท</span>
+                        <span class="me-3">กองทุนประกันสังคม&#8203;.................&#8203;บาท</span>
+                        <span>กองทุนสำรองเลี้ยงชีพ&#8203;.................&#8203;บาท</span>
+                    </div>
+
+                     <div class="border border-dark m-1">
+                        <div class="row m-1">
+                            <div class="col-1">
+                                <strong>ผู้จ่ายเงิน</strong>
+                            </div>
+                            <div class="col-11 d-flex align-items-start gap-4">
+                                <t t-call="l10n_th.tickbox_with_desc" title="'(1) หัก ณ ที่จ่าย'" is_checked="o.l10n_th_wth_condition == 'at_source'"/>
+                                <t t-call="l10n_th.tickbox_with_desc" title="'(2) ออกให้ตลอดไป'" is_checked="o.l10n_th_wth_condition == 'forever'"/>
+                                <t t-call="l10n_th.tickbox_with_desc" title="'(3) ออกให้ครั้งเดียว'" is_checked="o.l10n_th_wth_condition == 'one_time'"/>
+                                <t t-call="l10n_th.tickbox_with_desc" title="'(4) อื่น ๆ (ระบุ)............................................'" is_checked="False"/>
+                            </div>
+                        </div>
+                     </div>
+
+                    <div class="row m-1 mt-2 me-2">
+                        <div class="col-5 border border-dark p-1 me-1">
+                            <div class="row">
+                                <div class="col-2"><strong>คำเตือน</strong></div>
+                                <div class="col-10">ผู้มีหน้าที่ออกหนังสือรับรองการหักภาษี ณ ที่จ่าย ฝ่าฝืนไม่ปฏิบัติตามมาตรา 50 ทวิ แห่งประมวลรัษฎากร ต้องรับโทษทางอาญาตามมาตรา 35 แห่งประมวลรัษฎากร</div>
+                            </div>
+                        </div>
+                        <div class="col-7 border border-dark p-1">
+                            <div class="text-center">
+                                ขอรับรองว่าข้อความและตัวเลขดังกล่าวข้างต้นถูกต้องตรงกับความจริงทุกประการ
+                            </div>
+                            <div class="d-flex justify-content-between align-items-end">
+                                <div class="text-center flex-grow-1 mt-5">
+                                    ลงชื่อ&#8203;.........................................................................&#8203;ผู้จ่ายเงิน<br/>
+                                    <span t-out="o.date.strftime('%d/%m/') + str(o.date.year + 543) if o.date else ''"/><br/>(วัน เดือน ปี ที่ออกหนังสือรับรองฯ)
+                                </div>
+                                <div class="border border-dark rounded-circle d-flex align-items-center justify-content-center text-center" style="width: 55px; height: 55px; font-size: 8.72px;">
+                                    ประทับตรา<br/>นิติบุคคล<br/>(ถ้ามี)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row m-1">
+                    <div class="col-5">
+                        <strong>หมายเหตุ</strong>  เลขประจำตัวผู้เสียภาษีอากร (13 หลัก)* หมายถึง<br/>
+                    </div>
+                    <div class="col-7">
+                        1. กรณีบุคคลธรรมดาไทย ให้ใช้เลขประจำตัวประชาชนของกรมการปกครอง<br/>
+                        2. กรณีนิติบุคคล ให้ใช้เลขทะเบียนนิติบุคคลของกรมพัฒนาธุรกิจการค้า<br/>
+                        3. กรณีอื่น ๆ นอกเหนือจาก 1. และ 2. ให้ใช้เลขประจำตัวผู้เสียภาษีอากร (13 หลัก) ของกรมสรรพากร
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="tawi_square">
+        <div class="d-flex flex-nowrap">
+            <span t-out="title" class="text-nowrap me-1"/>
+            <t t-set="index" t-value="0"/>
+            <t t-foreach="group_sizes" t-as="size">
+                <t t-foreach="range(size)" t-as="box">
+                    <div t-attf-class="text-center border border-dark #{'border-end-0' if not box_last else ''}" style="width: 15px; height: 17px; line-height: 17px;">
+                        <t t-out="box_values[index]" t-if="box_values and len(box_values) &gt;= index + 1"/>
+                    </div>
+                    <t t-set="index" t-value="index + 1"/>
+                </t>
+
+                <div t-if="not size_last" class="d-flex align-items-center justify-content-center" style="width: 14px;">
+                    <div class="w-100 border-top border-dark"/>
+                </div>
+            </t>
+        </div>
+    </template>
+
+    <template id="tickbox_with_desc">
+        <div class="d-flex flex-nowrap ms-5">
+            <div class="text-center border border-dark" style="width: 15px; height: 17px; line-height: 17px;">
+                <span t-if="is_checked">&#10003;</span>
+            </div>
+            <span t-out="title" class="text-nowrap ms-1"/>
+        </div>
+    </template>
+
+    <template id="report_50_tawi">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="l10n_th.report_50_tawi_document" t-lang="report_lang"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_50_tawi" model="ir.actions.report">
+        <field name="name">50 Tawi</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_th.report_50_tawi</field>
+        <field name="report_file">l10n_th.report_50_tawi</field>
+        <field name="paperformat_id" ref="l10n_th.paperformat_tawi"/>
+        <field name="print_report_name">'WHT_%s' % (object.name.replace('/', '-'))</field>
+    </record>
+</odoo>

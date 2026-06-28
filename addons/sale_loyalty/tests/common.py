@@ -2,7 +2,6 @@
 
 from collections import defaultdict
 
-from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 
@@ -75,28 +74,28 @@ class TestSaleCouponCommon(SaleCommon):
             "name": "Product A",
             "list_price": 100,
             "sale_ok": True,
-            "taxes_id": [(6, 0, [cls.tax_15pc_excl.id])],
+            "taxes_id": [Command.set(cls.tax_15pc_excl.ids)],
         })
 
         cls.product_B = cls.env["product.product"].create({
             "name": "Product B",
             "list_price": 5,
             "sale_ok": True,
-            "taxes_id": [(6, 0, [cls.tax_15pc_excl.id])],
+            "taxes_id": [Command.set(cls.tax_15pc_excl.ids)],
         })
 
         cls.product_C = cls.env["product.product"].create({
             "name": "Product C",
             "list_price": 100,
             "sale_ok": True,
-            "taxes_id": [(6, 0, [])],
+            "taxes_id": False,
         })
 
         cls.product_D = cls.env["product.product"].create({
             "name": "Product D",
             "list_price": 100,
             "sale_ok": True,
-            "taxes_id": [(6, 0, [cls.tax_group.id])],
+            "taxes_id": [Command.set(cls.tax_group.ids)],
         })
 
         cls.product_gift_card = cls.env["product.product"].create({
@@ -115,28 +114,20 @@ class TestSaleCouponCommon(SaleCommon):
             "program_type": "gift_card",
             "trigger": "auto",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "product_ids": cls.product_gift_card,
-                        "reward_point_amount": 1,
-                        "reward_point_mode": "money",
-                        "reward_point_split": True,
-                    },
-                )
+                Command.create({
+                    "product_ids": cls.product_gift_card,
+                    "reward_point_amount": 1,
+                    "reward_point_mode": "money",
+                    "reward_point_split": True,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 1,
-                        "discount_mode": "per_point",
-                        "discount_applicability": "order",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 1,
+                    "discount_mode": "per_point",
+                    "discount_applicability": "order",
+                })
             ],
         })
         cls.immediate_promotion_program = cls.env["loyalty.program"].create({
@@ -146,28 +137,20 @@ class TestSaleCouponCommon(SaleCommon):
             "company_id": cls.env.company.id,
             "trigger": "auto",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "product_ids": cls.product_A,
-                        "reward_point_amount": 1,
-                        "reward_point_mode": "order",
-                        "minimum_qty": 1,
-                    },
-                )
+                Command.create({
+                    "product_ids": cls.product_A,
+                    "reward_point_amount": 1,
+                    "reward_point_mode": "order",
+                    "minimum_qty": 1,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "product",
-                        "reward_product_id": cls.product_B.id,
-                        "reward_product_qty": 1,
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "product",
+                    "reward_product_id": cls.product_B.id,
+                    "reward_product_qty": 1,
+                    "required_points": 1,
+                })
             ],
         })
         cls.code_promotion_program = cls.env["loyalty.program"].create({
@@ -177,28 +160,20 @@ class TestSaleCouponCommon(SaleCommon):
             "applies_on": "current",
             "company_id": cls.env.company.id,
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "product_ids": cls.product_A,
-                        "reward_point_amount": 1,
-                        "reward_point_mode": "order",
-                        "minimum_qty": 1,
-                    },
-                )
+                Command.create({
+                    "product_ids": cls.product_A,
+                    "reward_point_amount": 1,
+                    "reward_point_mode": "order",
+                    "minimum_qty": 1,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "product",
-                        "reward_product_id": cls.product_A.id,
-                        "reward_product_qty": 1,
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "product",
+                    "reward_product_id": cls.product_A.id,
+                    "reward_product_qty": 1,
+                    "required_points": 1,
+                })
             ],
         })
         cls.code_promotion_program_with_discount = cls.env["loyalty.program"].create({
@@ -208,31 +183,23 @@ class TestSaleCouponCommon(SaleCommon):
             "applies_on": "current",
             "company_id": cls.env.company.id,
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "mode": "with_code",
-                        "code": "promotion_code_disc",
-                        "product_ids": cls.product_C,
-                        "reward_point_amount": 1,
-                        "reward_point_mode": "order",
-                        "minimum_qty": 1,
-                    },
-                )
+                Command.create({
+                    "mode": "with_code",
+                    "code": "promotion_code_disc",
+                    "product_ids": cls.product_C,
+                    "reward_point_amount": 1,
+                    "reward_point_mode": "order",
+                    "minimum_qty": 1,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount_mode": "percent",
-                        "discount": 10,
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "percent",
+                    "discount": 10,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
 
@@ -248,7 +215,7 @@ class TestSaleCouponCommon(SaleCommon):
             raise ValidationError(status["error"])
         if not status and no_reward_fail:
             # Can happen if global discount got filtered out in `_get_claimable_rewards`
-            raise ValidationError(_("No reward to claim with this coupon"))
+            raise ValidationError(self.env._("No reward to claim with this coupon"))
         coupons = self.env["loyalty.card"]
         rewards = self.env["loyalty.reward"]
         for coupon, coupon_rewards in status.items():
@@ -329,19 +296,15 @@ class TestSaleCouponNumbersCommon(TestSaleCouponCommon):
             "trigger": "with_code",
             "program_type": "promotion",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {"mode": "with_code", "code": "test_10pc"})],
+            "rule_ids": [Command.create({"mode": "with_code", "code": "test_10pc"})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount_mode": "percent",
-                        "discount": 10,
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "percent",
+                    "discount": 10,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
         cls.p2 = cls.env["loyalty.program"].create({
@@ -350,27 +313,19 @@ class TestSaleCouponNumbersCommon(TestSaleCouponCommon):
             "program_type": "promotion",
             "applies_on": "current",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "product_ids": cls.largeCabinet,
-                        "reward_point_mode": "unit",
-                        "minimum_qty": 3,
-                    },
-                )
+                Command.create({
+                    "product_ids": cls.largeCabinet,
+                    "reward_point_mode": "unit",
+                    "minimum_qty": 3,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "product",
-                        "reward_product_id": cls.largeCabinet.id,
-                        "reward_product_qty": 1,
-                        "required_points": 3,
-                    },
-                )
+                Command.create({
+                    "reward_type": "product",
+                    "reward_product_id": cls.largeCabinet.id,
+                    "reward_product_qty": 1,
+                    "required_points": 3,
+                })
             ],
         })
         cls.p3 = cls.env["loyalty.program"].create({
@@ -379,27 +334,19 @@ class TestSaleCouponNumbersCommon(TestSaleCouponCommon):
             "program_type": "promotion",
             "applies_on": "current",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "product_ids": cls.drawerBlack,
-                        "reward_point_mode": "order",
-                        "minimum_qty": 1,
-                    },
-                )
+                Command.create({
+                    "product_ids": cls.drawerBlack,
+                    "reward_point_mode": "order",
+                    "minimum_qty": 1,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "product",
-                        "reward_product_id": cls.largeMeetingTable.id,
-                        "reward_product_qty": 1,
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "product",
+                    "reward_product_id": cls.largeMeetingTable.id,
+                    "reward_product_qty": 1,
+                    "required_points": 1,
+                })
             ],
         })
         cls.discount_coupon_program = cls.env["loyalty.program"].create({
@@ -407,19 +354,15 @@ class TestSaleCouponNumbersCommon(TestSaleCouponCommon):
             "program_type": "coupons",
             "trigger": "with_code",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {"minimum_amount": 100})],
+            "rule_ids": [Command.create({"minimum_amount": 100})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount_mode": "per_point",
-                        "discount": 100,
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "per_point",
+                    "discount": 100,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
             ],
         })
         cls.all_programs = cls.env["loyalty.program"].search([])

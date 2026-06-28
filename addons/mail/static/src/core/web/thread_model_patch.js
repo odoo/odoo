@@ -30,18 +30,30 @@ const threadPatch = {
         if (res) {
             return res;
         }
+        const actionService = this.store.env.services.action;
         if (this.model === "mail.box") {
             if (this.store.discuss.isActive) {
                 this.setAsDiscussThread();
             } else {
-                this.store.env.services.action.doAction({
+                actionService.doAction({
                     context: { active_id: `mail.box_${this.id}` },
                     tag: "mail.action_discuss",
                     type: "ir.actions.client",
                 });
             }
         } else {
-            this.store.env.services.action.doAction(this.openRecordActionRequest);
+            actionService.doAction(this.openRecordActionRequest).catch((error) => {
+                if (options?.fromMessagingMenu) {
+                    this.store.inbox.highlightMessage = this.needactionMessages.at(-1);
+                    actionService.doAction({
+                        context: { active_id: "mail.box_inbox" },
+                        tag: "mail.action_discuss",
+                        type: "ir.actions.client",
+                    });
+                } else {
+                    throw error;
+                }
+            });
         }
         return true;
     },

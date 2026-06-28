@@ -25,8 +25,9 @@ class AdyenCommon(PaymentCommon):
 
         cls.psp_reference = "0123456789ABCDEF"
         cls.original_reference = "FEDCBA9876543210"
+        cls.webhook_notification_payload_signature = "VcoiMGe4ClMsMhLlgSOgZRZMBNqaVh1NfTTn+vAuXa8="
         cls.webhook_notification_payload = {
-            "additionalData": {"hmacSignature": "VcoiMGe4ClMsMhLlgSOgZRZMBNqaVh1NfTTn+vAuXa8="},
+            "additionalData": {"hmacSignature": cls.webhook_notification_payload_signature},
             "amount": {
                 "currency": cls.currency.name,
                 "value": payment_utils.to_minor_currency_units(cls.amount, cls.currency),

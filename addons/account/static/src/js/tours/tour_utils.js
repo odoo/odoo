@@ -1,14 +1,15 @@
-export function showProductColumn() {
-    // Show product column if Sale is not installed.
+export function showProductColumn(fieldName = "product_id") {
     return [
         {
+            isActive: ["desktop"],
             content: "Open line fields list",
             trigger: ".o_optional_columns_dropdown_toggle",
             run: "click",
         },
         {
+            isActive: ["desktop"],
             content: "Show product column",
-            trigger: '.o-dropdown-item input[name="product_id"], .o-dropdown-item input[name="product_template_id"]',
+            trigger: `.o-dropdown-item input[name="${fieldName}"]`,
             run: function ({ anchor }) {
                 if (!anchor.checked) {
                     anchor.click();
@@ -16,6 +17,7 @@ export function showProductColumn() {
             },
         },
         {
+            isActive: ["desktop"],
             content: "Close line fields list",
             trigger: ".o_optional_columns_dropdown_toggle",
             run: "click",
@@ -69,14 +71,15 @@ export function addSectionFromProductCatalog() {
             trigger: '.o-kanban-button-back',
             run: 'click',
         },
-        ...showProductColumn(),
         {
             content: "Ensure Section is first row",
             trigger: '.o_section_and_note_list_view tr:nth-child(1).o_is_line_section',
         },
         {
             content: "Ensure Product is second row",
-            trigger: 'tbody tr:nth-child(2) .o_field_product_label_section_and_note_cell:contains("Test Product")',
+            trigger:
+                "tbody tr:nth-child(2) .o_field_product_label_section_and_note_cell:contains(Test Product)," +
+                "tbody tr:nth-child(2) div[name=account_label_text_readonly]:contains(Test Product)",
         },
     ];
 }

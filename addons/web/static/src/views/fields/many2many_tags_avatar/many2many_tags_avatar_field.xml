@@ -40,7 +40,7 @@
         <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
             <img t-if="autoCompleteItemScope.record.id" class="rounded me-1"
                 t-attf-src="/web/image/{{this.relation}}/{{autoCompleteItemScope.record.id}}/avatar_128"/>
-            <span t-att-class="{ 'fw-bold': this.isSelected(autoCompleteItemScope.record) }" t-out="autoCompleteItemScope.label"/>
+            <span t-att-class="{ 'fw-bold': this.isSelected(autoCompleteItemScope.record) }" class="text-truncate" t-out="autoCompleteItemScope.label"/>
         </span>
     </t>
 
@@ -53,8 +53,9 @@
         </xpath>
         <Many2XAutocomplete position="attributes">
             <attribute name="dropdown">false</attribute>
-            <attribute name="placeholder">props.placeholder</attribute>
+            <attribute name="placeholder">this.props.placeholder</attribute>
             <attribute name="autofocus">true</attribute>
+            <attribute name="specification">this.props.specification</attribute>
         </Many2XAutocomplete>
     </t>
 

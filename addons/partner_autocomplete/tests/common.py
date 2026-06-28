@@ -25,7 +25,8 @@ class MockIAPPartnerAutocomplete(common.BaseCase):
       'street': 'Rue Perdues 27',
       'country_code': 'de',
       'country_name': 'Germany',
-      'state_id': False
+      'state_id': False,
+      'duns': "282744309",
     }
     """
 
@@ -50,6 +51,7 @@ class MockIAPPartnerAutocomplete(common.BaseCase):
                 'country_code': self.base_de.code,
                 'country_name': self.base_de.name,
                 'state_id': False,
+                'duns': "123456789",
             }
             if default_data:
                 sim_result.update(default_data)

@@ -26,15 +26,22 @@ class TestPerfSessionInfo(common.HttpCase):
     def setUp(self):
         super().setUp()
         self.uid = self.user
+        self._prepare()
+
+    def _prepare(self):
+        self.env.invalidate_all()
+        for cache_name in self.env.registry.registry_caches__:
+            if '.' not in cache_name:
+                self.env.transaction.invalidate_ormcache(cache_name)
 
     def test_performance_session_info(self):
         self.authenticate(self.user.login, "info")
+        self._prepare()
 
-        self.env.registry.clear_all_caches()
         # cold ormcache:
-        # - Only web: 43
-        # - All modules: 122
-        with self.assertQueryCount(122):
+        # - Only web: 35
+        # - All modules: 84
+        with self.assertQueryCount(84):
             self.url_open(
                 "/web/session/get_session_info",
                 data=json.dumps({'jsonrpc': "2.0", 'method': "call", 'id': str(uuid4())}),
@@ -42,9 +49,9 @@ class TestPerfSessionInfo(common.HttpCase):
             )
 
         # cold fields cache - warm ormcache:
-        # - Only web: 5
-        # - All modules: 32
-        with self.assertQueryCount(32):
+        # - Only web: 6
+        # - All modules: 30
+        with self.assertQueryCount(30):
             self.url_open(
                 "/web/session/get_session_info",
                 data=json.dumps({'jsonrpc': "2.0", 'method': "call", 'id': str(uuid4())}),
@@ -52,44 +59,42 @@ class TestPerfSessionInfo(common.HttpCase):
             )
 
     def test_load_web_menus_perf(self):
-        self.env.registry.clear_all_caches()
-        self.env.invalidate_all()
         # cold orm/fields cache:
-        # - Web only: 14
-        # - All modules 62
-        with self.assertQueryCount(62):
+        # - Web only: 17
+        # - All modules 60
+        with self.assertQueryCount(60):
             self.env['ir.ui.menu'].load_web_menus(False)
 
         # cold fields cache:
         # - Web only: 0
         # - All modules: 1 (web_studio + 1)
+        has_studio = self.env['ir.module.module'].sudo().search_count(
+            [('name', '=', 'web_studio'), ('state', '=', 'installed')])
         self.env.invalidate_all()
-        with self.assertQueryCount(1):
+        with self.assertQueryCount(has_studio):
             self.env['ir.ui.menu'].load_web_menus(False)
 
     def test_load_menus_perf(self):
-        self.env.registry.clear_all_caches()
-        self.env.invalidate_all()
         # cold orm/fields cache:
-        # - Web only: 14
-        # - All modules 62
-        with self.assertQueryCount(62):
+        # - Web only: 17
+        # - All modules 60
+        with self.assertQueryCount(60):
             self.env['ir.ui.menu'].load_menus(False)
 
         # cold fields cache:
         # - Web only: 0
         # - All modules: 1 (web_studio + 1)
+        has_studio = self.env['ir.module.module'].sudo().search_count(
+            [('name', '=', 'web_studio'), ('state', '=', 'installed')])
         self.env.invalidate_all()
-        with self.assertQueryCount(1):
+        with self.assertQueryCount(has_studio):
             self.env['ir.ui.menu'].load_menus(False)
 
     def test_visible_menu_ids(self):
-        self.env.registry.clear_all_caches()
-        self.env.invalidate_all()
         # cold ormcache:
-        # - Only web 13
-        # - All modules: 21
-        with self.assertQueryCount(21):
+        # - Only web 16
+        # - All modules: 28
+        with self.assertQueryCount(28):
             self.env['ir.ui.menu']._visible_menu_ids()
 
         # cold fields cache - warm orm cache (only web: 0, all module: 0)

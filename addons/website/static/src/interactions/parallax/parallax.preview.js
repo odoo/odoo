@@ -1,5 +1,6 @@
 import { Parallax } from "@website/interactions/parallax/parallax";
 import { registry } from "@web/core/registry";
+import { MEDIAS_BREAKPOINTS, SIZES } from "@web/core/ui/ui_service";
 
 // A manual parallax implementation is required for snippet previews because
 // snippets are scaled down in preview, and `background-attachment: fixed`
@@ -11,10 +12,9 @@ import { registry } from "@web/core/registry";
 
 const ParallaxPreview = (I) =>
     class extends I {
-        // The PARALLAX_RATE controls how fast the background moves.
-        // A higher PARALLAX_RATE means faster movement, which requires a larger
+        // Parallax rate controls how fast the background moves.
+        // A higher parallax rate means faster movement, which requires a larger
         // background SCALE to prevent background cutoff.
-        PARALLAX_RATE = 16;
         SCALE = 2.4;
         dynamicContent = {};
 
@@ -26,6 +26,10 @@ const ParallaxPreview = (I) =>
             this.isZoomOut = this.el.dataset.parallaxType === "zoomOut";
             this.isZoom = this.isZoomIn || this.isZoomOut;
             this.baseScale = this.isZoom ? 1 : this.SCALE;
+            this.isMobilePreviewMode =
+                this.el.ownerDocument.documentElement.clientWidth <
+                MEDIAS_BREAKPOINTS[SIZES.SM].minWidth;
+            this.parallaxRate = this.isMobilePreviewMode ? 2 : 4.8;
         }
 
         start() {
@@ -96,12 +100,12 @@ const ParallaxPreview = (I) =>
             const viewportHeight = this.el.ownerDocument.documentElement.clientHeight;
             const relativeScrollProgress = viewportHeight ? rect.top / viewportHeight : 0;
 
-            const parallaxShift = relativeScrollProgress * this.PARALLAX_RATE * 100;
+            const parallaxShift = relativeScrollProgress * this.parallaxRate * 100;
             let scale = this.baseScale;
             let translateY = `calc(50% - ${parallaxShift}px)`;
             if (this.isZoom) {
                 const minScrollPos = -rect.height;
-                const maxScrollPos = viewportHeight;
+                const maxScrollPos = viewportHeight * 3.33;
                 const scrollRange = maxScrollPos - minScrollPos;
                 const progress = scrollRange ? clamp((rect.top - minScrollPos) / scrollRange) : 0;
                 const zoomProgress = this.isZoomIn ? Math.min(1, progress * 2.5) : progress;

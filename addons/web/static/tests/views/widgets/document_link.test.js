@@ -30,24 +30,24 @@ test("documentation_link: default label and icon", async () => {
     expect(".o_doc_link .fa-external-link").toHaveCount(1);
 });
 
-test("documentationLink: alert-link", async () => {
+test("documentationLink: add alert-link class", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
         <form>
             <field name="bar"/>
-            <widget name="documentation_link" path="/this_is_a_test.html" alert_link="true"/>
+            <widget name="documentation_link" path="/this_is_a_test.html" class="alert-link"/>
         </form>`,
     });
     expect("a.alert-link").toHaveCount(1);
 });
 
-test("DocumentationLink Component: alert-link", async () => {
+test("DocumentationLink Component: add alert-link class", async () => {
     class Parent extends Component {
         static components = { DocumentationLink };
         static template = xml`
-        <DocumentationLink path="'/this_is_a_test.html'" alertLink="true"/>`;
+        <DocumentationLink path="'/this_is_a_test.html'" class="'alert-link'"/>`;
         static props = ["*"];
     }
     await mountWithCleanup(Parent);

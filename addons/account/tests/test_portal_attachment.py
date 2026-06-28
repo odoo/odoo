@@ -15,7 +15,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.out_invoice = cls.env['account.move'].with_context(tracking_disable=True).create({
+        cls.out_invoice = cls.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
             'invoice_date': '2019-05-01',

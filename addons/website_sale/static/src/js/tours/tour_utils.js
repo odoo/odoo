@@ -1,4 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
 import { clickOnElement } from '@website/js/tours/tour_utils';
 
 export function goToProductPage({
@@ -236,16 +235,10 @@ export function fillAddressForm(
     return steps;
 }
 
-export function goToCart({
-    quantity = 1,
-    position = "bottom",
-    backend = false,
-    expectUnloadPage = true,
-} = {}) {
+export function goToCart({ quantity = 1, backend = false, expectUnloadPage = true } = {}) {
     return {
-        content: _t("Go to cart"),
+        content: "Go to cart",
         trigger: `${backend ? ":iframe" : ""} a sup.my_cart_quantity:text(${quantity})`,
-        tooltipPosition: position,
         run: "click",
         expectUnloadPage,
     };
@@ -289,7 +282,7 @@ export function pay({ expectUnloadPage = false, waitFinalizeYourPayment = false 
     ];
     if (waitFinalizeYourPayment) {
         steps.push({
-            trigger: "h1:contains(finalize your payment)",
+            trigger: "h1:contains(Please wait...)",
             expectUnloadPage: true,
         });
     }
@@ -352,16 +345,25 @@ export function payWithTransfer({
     }
 }
 
-export function searchProduct(productName, { select = false } = {}) {
+export function searchProduct(productName, { select = false, willOpenModel = false } = {}) {
+    const searchInputTrigger = willOpenModel
+        ? ".modal_shown form input[name='search']"
+        : "form input[name='search']";
+
     const steps = [
         {
+            content: "Click the Search bar",
+            trigger: "form input[name='search']",
+            run: "click",
+        },
+        {
             content: "Search for the product",
-            trigger: 'form input[name="search"]',
+            trigger: searchInputTrigger,
             run: `edit ${productName}`,
         },
         {
             content: `Search ${productName}`,
-            trigger: `form:has(input[name="search"]) .oe_search_button`,
+            trigger: `${searchInputTrigger.replace(" input[name='search']", "")} .oe_search_button`,
             run: "click",
             expectUnloadPage: true,
         },

@@ -2,6 +2,7 @@
 
 import collections
 import logging
+from urllib.parse import urlsplit
 
 import babel.messages.pofile
 import werkzeug
@@ -14,6 +15,26 @@ from odoo.tools.misc import file_open
 from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT
 
 _logger = logging.getLogger(__name__)
+
+
+def og_title_from_path(env, path):
+    if not path:
+        return "Odoo"
+    odoo_path = urlsplit(path).path.removeprefix('/odoo')
+    if not odoo_path or odoo_path == '/':
+        return "Odoo"
+    try:
+        triples = list(get_action_triples(env(su=True), odoo_path))
+        if not triples:
+            return "Odoo"
+        _, action, _ = triples[-1]
+        return action.name or "Odoo"
+    except ValueError:
+        _logger.debug("og_title_from_path failed for path %r", path, exc_info=True)
+        return "Odoo"
+    except Exception:
+        _logger.warning("og_title_from_path failed for path %r", path, exc_info=True)
+        return "Odoo"
 
 
 def clean_action(action, env):
@@ -167,7 +188,7 @@ def get_action(env, path_part):
                 ('res_model', '=', model)], limit=1)
             if not action:
                 action = env['ir.actions.act_window'].new(
-                    env[model].get_formview_action()
+                    env[model].get_record_default_action()
                 )
         else:
             action = Actions

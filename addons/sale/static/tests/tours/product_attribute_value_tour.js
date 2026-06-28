@@ -5,7 +5,7 @@ const openProductAttribute = (product_attribute) => [
     ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
     {
         content: 'Open configuration menu',
-        trigger: '.o-dropdown[data-menu-xmlid="sale.menu_sale_config"]',
+        trigger: '.o-dropdown[data-menu-xmlid="sale.product_menu_catalog"]',
         run: "click",
     },
     {

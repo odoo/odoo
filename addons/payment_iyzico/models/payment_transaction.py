@@ -96,13 +96,6 @@ class PaymentTransaction(models.Model):
 
     # === BUSINESS METHODS - PROCESSING === #
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "iyzico":
-            return super()._extract_amount_data(payment_data)
-
-        return {"amount": payment_data.get("price"), "currency_code": payment_data.get("currency")}
-
     def _apply_updates(self, payment_data):
         """Override of payment to update the transaction based on the payment data."""
         if self.provider_code != "iyzico":
@@ -112,15 +105,14 @@ class PaymentTransaction(models.Model):
         self.provider_reference = payment_data.get("paymentId")
 
         # Update the payment method.
+        payment_method_code = ""
         if bool(payment_data.get("cardType")):
             payment_method_code = payment_data.get("cardAssociation", "")
-            payment_method = self.env["payment.method"]._get_from_code(
-                payment_method_code.lower(), mapping=const.PAYMENT_METHODS_MAPPING
-            )
         elif bool(payment_data.get("bankName")):
-            payment_method = self.env.ref("payment.payment_method_bank_transfer")
-        else:
-            payment_method = self.env.ref("payment.payment_method_unknown")
+            payment_method_code = "bank_transfer"
+        payment_method = self.provider_id._get_pm_from_code(
+            payment_method_code.lower(), mapping=const.PAYMENT_METHODS_MAPPING
+        )
         self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
@@ -145,3 +137,10 @@ class PaymentTransaction(models.Model):
                 self.reference,
             )
             self._set_error(self.env._("Unknown status code: %s", status))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "iyzico":
+            return super()._extract_amount_data(payment_data)
+
+        return {"amount": payment_data.get("price"), "currency_code": payment_data.get("currency")}

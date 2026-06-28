@@ -1,18 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
-
-    # Defaults
-    default_invoice_policy = fields.Selection(
-        selection=[("order", "Invoice what is ordered"), ("delivery", "Invoice what is delivered")],
-        string="Invoicing Policy",
-        default="order",
-        default_model="product.template",
-    )
 
     # Groups
     group_auto_done_setting = fields.Boolean(
@@ -29,18 +21,11 @@ class ResConfigSettings(models.TransientModel):
     group_warning_sale = fields.Boolean(
         string="Sale Order Warnings", implied_group="sale.group_warning_sale"
     )
-
-    # Config params
-    automatic_invoice = fields.Boolean(
-        string="Automatic Invoice",
-        help="The invoice is generated automatically and available in the customer portal when the "
-        "transaction is confirmed by the payment provider.\nThe invoice is marked as paid and "
-        "the payment is registered in the payment journal defined in the configuration of the "
-        "payment provider.\nThis mode is advised if you issue the final invoice at the order "
-        "and not after the delivery.",
-        config_parameter="sale.automatic_invoice",
+    group_services_and_material = fields.Boolean(
+        string="Services & Materials", implied_group="sale.group_services_and_material"
     )
 
+    # Config params
     invoice_mail_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Email Template",
@@ -48,6 +33,12 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="sale.default_invoice_email_template",
         help="Email sent to the customer once the invoice is available.",
     )
+
+    sale_order_mandatory_product = fields.Boolean(
+        string="Mandatory Product", config_parameter="sale.mandatory_product"
+    )
+
+    # Company dependent
     quotation_validity_days = fields.Integer(
         related="company_id.quotation_validity_days", readonly=False
     )
@@ -58,22 +49,22 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.portal_confirmation_pay", readonly=False
     )
     prepayment_percent = fields.Float(related="company_id.prepayment_percent", readonly=False)
+    display_product_images_on_so = fields.Boolean(
+        related="company_id.display_product_images_on_so", readonly=False
+    )
     downpayment_account_id = fields.Many2one(
         related="company_id.downpayment_account_id", readonly=False
+    )
+    downpayment_account_active = fields.Boolean(
+        related="downpayment_account_id.active", string="Down payment Account Active"
+    )
+    sale_invoice_policy = fields.Selection(related="company_id.sale_invoice_policy", readonly=False)
+    sale_automatic_invoice = fields.Boolean(
+        related="company_id.sale_automatic_invoice", readonly=False
     )
 
     # Modules
     module_delivery = fields.Boolean("Delivery Methods")
-    module_delivery_bpost = fields.Boolean("bpost Connector")
-    module_delivery_dhl = fields.Boolean("DHL Express Connector")
-    module_delivery_easypost = fields.Boolean("Easypost Connector")
-    module_delivery_envia = fields.Boolean("Envia.com Connector")
-    module_delivery_fedex_rest = fields.Boolean("FedEx Connector")
-    module_delivery_sendcloud = fields.Boolean("Sendcloud Connector")
-    module_delivery_shiprocket = fields.Boolean("Shiprocket Connector")
-    module_delivery_starshipit = fields.Boolean("Starshipit Connector")
-    module_delivery_ups_rest = fields.Boolean("UPS Connector")
-    module_delivery_usps_rest = fields.Boolean("USPS Connector")
 
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_amazon = fields.Boolean("Amazon Sync")
@@ -115,19 +106,24 @@ class ResConfigSettings(models.TransientModel):
             ])["quotation_validity_days"]
             return {
                 "warning": {
-                    "title": _("Warning"),
-                    "message": _(
+                    "title": self.env._("Warning"),
+                    "message": self.env._(
                         "Quotation Validity is required and must be greater or equal to 0."
                     ),
                 }
             }
 
-    # === CRUD METHODS ===#
+    @api.onchange("sale_invoice_policy")
+    def _onchange_sale_invoice_policy(self):
+        if self.sale_invoice_policy != "order":
+            self.sale_automatic_invoice = False
 
     def set_values(self):
         super().set_values()
-        if self.default_invoice_policy != "order":
-            self.env["ir.config_parameter"].set_bool("sale.automatic_invoice", False)
+        if mandatory_product_view := self.env.ref(
+            "sale.view_order_form_mandatory_product", raise_if_not_found=False
+        ):
+            mandatory_product_view.active = self.sale_order_mandatory_product
 
     # === ACTION METHODS === #
 

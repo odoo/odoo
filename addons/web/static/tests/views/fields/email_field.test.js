@@ -1,4 +1,4 @@
-import { beforeEach, expect, getFixture, test } from "@odoo/hoot";
+import { expect, getFixture, test } from "@odoo/hoot";
 import {
     contains,
     defineModels,
@@ -7,10 +7,8 @@ import {
     models,
     mountView,
     onRpc,
-    patchWithCleanup,
-} from "../../web_test_helpers";
+} from "@web/../tests/web_test_helpers";
 import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { browser } from "@web/core/browser/browser";
 
 class Contact extends models.Model {
     email = fields.Char();
@@ -19,21 +17,6 @@ class Contact extends models.Model {
 defineModels([Contact]);
 
 onRpc("has_group", () => true);
-
-async function assertUrl(target, url) {
-    await contains(target, {
-        visible: false,
-    }).click();
-    expect.verifySteps([url]);
-}
-
-beforeEach(() => {
-    patchWithCleanup(browser, {
-        open(url) {
-            expect.step(url);
-        },
-    });
-});
 
 test("in form view", async () => {
     Contact._records = [{ id: 1, email: "john.doe@odoo.com" }];
@@ -45,8 +28,8 @@ test("in form view", async () => {
     });
     expect(`.o_field_email input[type="email"]`).toHaveCount(1);
     expect(`.o_field_email input[type="email"]`).toHaveValue("john.doe@odoo.com");
-    expect(`.o_field_email button i.fa-envelope`).toHaveCount(1);
-    await assertUrl(`.o_field_email button i.fa-envelope`, "mailto:john.doe@odoo.com");
+    expect(`.o_field_email a i.fa-envelope`).toHaveCount(1);
+    expect(`.o_field_email a`).toHaveAttribute("href", "mailto:john.doe@odoo.com");
     await fieldInput("email").edit("new@odoo.com");
     expect(`.o_field_email input[type="email"]`).toHaveValue("new@odoo.com");
 });

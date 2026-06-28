@@ -9,6 +9,7 @@ from . import mail
 from . import mailbox
 from . import message_reaction
 from . import poll
+from . import store
 from . import thread
 from . import webclient
 from . import webmanifest

@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
@@ -15,7 +14,7 @@ export class PosPaymentProviderCards extends Component {
         super.setup();
         this.orm = useService("orm");
         this.action = useService("action");
-        this.state = useState({
+        this.state = proxy({
             allProviders: [],
             disabled: false,
         });
@@ -57,14 +56,11 @@ export class PosPaymentProviderCards extends Component {
             });
     }
 
-    async setupProvider(moduleId) {
-        const provider = this.providers.find((p) => p.id === moduleId);
-        if (provider) {
-            this.props.record.update({
-                payment_provider: provider.provider,
-                name: provider.name,
-            });
-        }
+    async setupProvider(provider) {
+        this.props.record.update({
+            payment_provider: provider.provider,
+            name: provider.name,
+        });
     }
 }
 

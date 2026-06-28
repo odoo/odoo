@@ -1,6 +1,6 @@
-import { registry } from "@web/core/registry";
+import { waitForMessage } from "@im_livechat/../tests/tours/livechat_tour_utils";
 
-const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour", {
     steps: () => [
@@ -8,20 +8,14 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
             trigger:
                 ".o-livechat-root:shadow .o-mail-ChatHub:has(.o-mail-ChatWindow .o-mail-ChatWindow-header:text(Testing Bot)):count(1) .o-mail-Message-body:text(Hello! I'm a bot!)",
         },
-        {
-            trigger: messagesContain("I help lost visitors find their way."),
-            run: "click",
-        },
-        {
-            trigger: messagesContain("How can I help you?"),
-            run: "click",
-        },
+        waitForMessage("I help lost visitors find their way."),
+        waitForMessage("How can I help you?"),
         {
             trigger: '.o-livechat-root:shadow button:contains("I\'d like to buy the software")',
             run: "click",
         },
         {
-            trigger: messagesContain("Can you give us your email please?"),
+            ...waitForMessage("Can you give us your email please?"),
             run() {
                 window.location.reload();
             },
@@ -36,8 +30,8 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
             run: "click",
         },
         {
-            trigger: messagesContain("Please find documentation at"),
-            run: () => {},
+            trigger:
+                ".o-livechat-root:shadow .o-mail-Message:contains('Please find documentation at')",
         },
         {
             trigger: ".o-livechat-root:shadow [title='Close Chat Window (ESC)']",

@@ -96,18 +96,18 @@ class TestUi(AccountTestInvoicingHttpCommon):
         })
         self.start_tour("/odoo/customer-invoices/new", 'test_use_product_catalog_on_invoice', login="admin")
 
-    def test_deductible_amount_column(self):
+    def test_deductible_percentage_column(self):
         self.assertFalse(self.env.user.has_group('account.group_partial_purchase_deductibility'))
         partner = self.env['res.partner'].create({'name': "Test Partner", 'email': "test@test.odoo.com"})
         move = self.env['account.move'].create({
             'move_type': 'in_invoice',
             'partner_id': partner.id,
             'invoice_date': fields.Date.today(),
-            'line_ids': [Command.create({'name': "T-shirt", 'deductible_amount': 50.0})],
+            'line_ids': [Command.create({'name': "T-shirt", 'deductible_percentage': 0.5})],
         })
         move.action_post()
         self.assertTrue(self.env.user.has_group('account.group_partial_purchase_deductibility'))
-        self.start_tour("/odoo/vendor-bills/new", 'deductible_amount_column', login=self.env.user.login)
+        self.start_tour("/odoo/vendor-bills/new", 'deductible_percentage_column', login=self.env.user.login)
 
     def test_add_section_from_product_catalog_on_invoice_tour(self):
         self.product.write({'is_favorite': True})

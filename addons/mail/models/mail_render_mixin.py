@@ -109,7 +109,14 @@ class MailRenderMixin(models.AbstractModel):
         if self._unrestricted_rendering:
             # If the rendering is unrestricted (e.g. mail.template),
             # check the user is part of the mail editor group to create a new template if the template is dynamic
-            record._check_access_right_dynamic_template()
+            langs = tools.OrderedSet([self.env.lang])
+            for vals in vals_list:
+                for fname, value in vals.items():
+                    field = self._fields[fname]
+                    if field.translate and isinstance(value, dict):
+                        langs.update(value)
+            for lang in langs:
+                record.with_context(lang=lang)._check_access_right_dynamic_template()
         return record
 
     def write(self, vals):
@@ -117,7 +124,13 @@ class MailRenderMixin(models.AbstractModel):
         if self._unrestricted_rendering:
             # If the rendering is unrestricted (e.g. mail.template),
             # check the user is part of the mail editor group to modify a template if the template is dynamic
-            self._check_access_right_dynamic_template()
+            langs = tools.OrderedSet([self.env.lang])
+            for fname, value in vals.items():
+                field = self._fields[fname]
+                if field.translate and isinstance(value, dict):
+                    langs.update(value)
+            for lang in langs:
+                self.with_context(lang=lang)._check_access_right_dynamic_template()
         return True
 
     def _update_field_translations(self, field_name, translations, digest=None, source_lang=''):
@@ -165,9 +178,9 @@ class MailRenderMixin(models.AbstractModel):
         html = re.sub(r"""(<[\w-]+(?=\s)[^>]*\sbackground=")(/[^/][^"]+)""", _sub_relative2absolute, html)
         html = re.sub(re.compile(
             r"""( # Group 1: element up to url in style
-                <[^>]+\bstyle=" # Element with a style attribute
-                [^"]+\burl\( # Style attribute contains "url(" style
-                (?:&\#34;|'|&quot;|&\#39;)?) # url style may start with (escaped) quote: capture it
+                <[^>]+\bstyle=['"] # Element with a style attribute
+                [^'"]+\burl\( # Style attribute contains "url(" style
+                (?:&\#34;|'|&quot;|&\#39;|")?) # url style may start with (escaped) quote: capture it
             ( # Group 2: url itself
                 /(?:[^'")]|(?!&\#34;)|(?!&\#39;))+ # stop at the first closing quote
         )""", re.VERBOSE), _sub_relative2absolute, html)
@@ -208,11 +221,14 @@ class MailRenderMixin(models.AbstractModel):
             if 'subtype_internal' not in template_ctx:
                 template_ctx['subtype_internal'] = subtype.is_internal
         template_ctx.setdefault('subtype', subtype)
-        template_ctx.setdefault('tracking_values', [])
         # record info
         if 'model_description' not in template_ctx:
             template_ctx['model_description'] = self.env['ir.model']._get(context_record._name).display_name if context_record else False
-        template_ctx.setdefault('subtitles', self.env.context.get('email_notification_subtitles', [record_name]))
+        if 'subtitles' not in template_ctx:
+            subtitles = self.env.context.get('email_notification_subtitles', [record_name])
+        else:
+            subtitles = template_ctx['subtitles']
+        template_ctx['subtitles'] = [str(sub) for sub in subtitles]
         template_ctx.setdefault('subtitles_highlight_index',
                                 self.env.context.get('email_notification_subtitles_highlight_index', 0))
         # user / environment
@@ -343,6 +359,7 @@ class MailRenderMixin(models.AbstractModel):
 
         In addition to the generic evaluation context available, some other
         variables are added:
+
           * ``object``: record based on which the template is rendered;
 
         :param str template_src: raw QWeb template to render;
@@ -393,12 +410,62 @@ class MailRenderMixin(models.AbstractModel):
                         _('Only members of %(group_name)s group are allowed to edit templates containing sensible placeholders',
                            group_name=group.name)
                     ) from e
-                _logger.info("Failed to render template: %s", template_src, exc_info=True)
+                elif isinstance(e, QWebError):
+                    # We extract the message before the template dump to clean out the full template
+                    # source, since it will be added later again
+                    error_details = str(e).split('\nTemplate:')[0].strip()
+                else:
+                    error_details = str(e)
+                error_traceback = traceback.format_exc()
+
+                # Identify the template safely
+                template_label = _("Template name not identified")
+
+                if self._name == 'mail.template' and self.id:
+                    template_label = _("Mail Template: '%(name)s' (ID: %(record_id)s)",
+                                       name=self.name or _("Unnamed Mail Template"),
+                                       record_id=self.id)
+                    is_identified = True
+                elif self._name == 'mail.compose.message' and self.mass_mailing_id:
+                    template_label = _("Mass Mailing Template: '%(name)s' (ID: %(record_id)s)",
+                                       name=self.mass_mailing_id.display_name or _("Unnamed Mailing"),
+                                       record_id=self.mass_mailing_id.id)
+                    is_identified = True
+                else:
+                    # if we can't name the template, we output the full template src, so that we
+                    # can try to find the failing template by it's src
+                    template_label = _("Template name not identified")
+                    is_identified = False
+
+                # Truncation of the source to prevent log bloat
+                truncated_src = template_src
+                if len(template_src) > 1000 and is_identified:
+                    truncated_src = f"{template_src[:500]}\n[...] (content truncated) [...]\n{template_src[-500:]}"
+
+                lang_context = self.env.context.get('lang', _("No language detected in context"))
+                _logger.error(
+                    "Failed to render QWeb template for %s - Context language:%s\nTarget Model: %s\nError: %s\n%s",
+                    template_label, lang_context, model, error_details, truncated_src
+                )
+                # Log the full technical traceback for the sysadmin/developer
+                _logger.debug(
+                    "Failed to render QWeb template for %s - Context language:%s\nTarget Model: %s\nError: %s\n%s",
+                    template_label, lang_context, model, error_details, error_traceback
+                )
+
+                # Raise a cleaner error for the UI
                 raise UserError(
-                    _("Failed to render QWeb template: %(template_src)s\n\n%(template_traceback)s)",
-                      template_src=template_src,
-                      template_traceback=traceback.format_exc())
-                    ) from e
+                    _("Failed to render QWeb template for %(template_label)s\n"
+                    "Target Model: %(model_name)s\n"
+                    "Language context: %(lang_context)s\n"
+                    "Error: %(error_details)s\n\n"
+                    "Template Source Snippet:\n%(template_src)s",
+                    template_label=template_label,
+                    model_name=model,
+                    lang_context=lang_context,
+                    error_details=error_details,
+                    template_src=truncated_src)
+                ) from e
             results[record.id] = render_result
 
         return results
@@ -447,6 +514,7 @@ class MailRenderMixin(models.AbstractModel):
 
         In addition to the generic evaluation context available, some other
         variables are added:
+
           * ``object``: record based on which the template is rendered;
 
         :param str/int/record view_ref: source QWeb template. It should be an
@@ -501,6 +569,7 @@ class MailRenderMixin(models.AbstractModel):
 
         In addition to the generic evaluation context available, some other
         variables are added:
+
           * ``object``: record based on which the template is rendered;
 
         :param str template_txt: template text to render
@@ -549,8 +618,10 @@ class MailRenderMixin(models.AbstractModel):
             except Exception as e:
                 _logger.info("Failed to render inline_template: \n%s", str(template_txt), exc_info=True)
                 raise UserError(
-                    _("Failed to render inline_template template: %(template_txt)s",
-                      template_txt=template_txt)
+                    _("Failed to render inline_template template: %(template_txt)s\n"
+                    "Error details: %(error)s",
+                    template_txt=template_txt,
+                    error=str(e))
                 ) from e
 
         return results

@@ -42,6 +42,33 @@ class TestMassMailCommon(MassSMSCommon):
             'reply_to_mode': 'update',
         })
 
+        cls.mailings_mc = cls.env['mailing.mailing'].with_user(cls.user_marketing).create([{
+            'subject': 'MailingOne',
+            # `+ ""` is for insuring that _prepend_preview rule out that case
+            'preview': 'Hi {{ object.name + "" }} :)',
+            'body_html': """<div><p>Hello <t t-out="object.name"/></p>,
+<t t-set="url" t-value="'www.odoo.com'"/>
+<t t-set="httpurl" t-value="'https://www.odoo.eu'"/>f
+<span>Website1: <a id="url1" href="https://www.odoo.be">https://www.odoo.be</a></span>
+</div>""",
+            'mailing_type': 'mail',
+            'mailing_model_id': cls.env['ir.model']._get('mailing.contact').id,
+            'reply_to_mode': 'update',
+        },
+        {
+            'subject': 'MailingTwo',
+            # `+ ""` is for insuring that _prepend_preview rule out that case
+            'preview': 'Hi {{ object.name + "" }} :)',
+            'body_html': """<div><p>Hello <t t-out="object.name"/></p>,
+<t t-set="url" t-value="'www.odoo.com'"/>
+<t t-set="httpurl" t-value="'https://www.odoo.eu'"/>f
+<span>Website1: <a id="url1" href="https://www.odoo.be">https://www.odoo.be</a></span>
+</div>""",
+            'mailing_type': 'mail',
+            'mailing_model_id': cls.env['ir.model']._get('mailing.contact').id,
+            'reply_to_mode': 'update',
+        }])
+
         cls.mailing_sms = cls.env['mailing.mailing'].with_user(cls.user_marketing).create({
             'subject': 'Xmas SMS for {object.name}',
             'mailing_model_id': cls.env['ir.model']._get('mail.test.sms').id,
@@ -96,6 +123,18 @@ class TestMassMailCommon(MassSMSCommon):
             vals_list.append(vals)
 
         return cls.env[model].create(vals_list)
+
+    @classmethod
+    def _create_mailing_contact_test_records(cls, count=1):
+        """Helper to create mailing.contact data"""
+        vals_list = []
+        for x in range(0, count):
+            vals = {
+                'name': 'TestContact_%02d' % x,
+                'email': 'test.record.%02d@test.example.com' % x,
+            }
+            vals_list.append(vals)
+        return cls.env['mailing.contact'].create(vals_list)
 
 
 class TestMassSMSCommon(TestMassMailCommon):
@@ -152,5 +191,6 @@ class TestMassSMSCommon(TestMassMailCommon):
             'customer_id': partner.id,
             'phone_nbr': mobile_number
         } for x, (mobile_number, partner) in enumerate(zip(mobile_numbers, partners))])
+        records = cls._reset_mail_context(records)
 
         return records

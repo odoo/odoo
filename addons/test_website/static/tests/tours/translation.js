@@ -21,7 +21,7 @@ function createNewPage() {
         },
         {
             content: "Select Blank page",
-            trigger: ".o_page_template:has(div.text-muted) .o_button_area:not(:visible)",
+            trigger: ".o_website_page_templates_dialog [data-name='add_blank_page']",
             run: "click",
         },
         {
@@ -69,7 +69,7 @@ function createNewPage() {
             trigger: ".o-we-linkpopover .btn-primary",
             run: "click",
         },
-        ...clickOnSave("bottom", 50000, false),
+        ...clickOnSave(50000, false),
     ];
 }
 
@@ -97,7 +97,8 @@ function saveHtmlEditor() {
     return [
         {
             content: "Save the html editor",
-            trigger: ".o_resource_editor button.btn-primary",
+            // In debug, there is another primary button "Filter"
+            trigger: ".o_resource_editor button.btn-primary:not(.o_resource_editor_filter button)",
             run: "click",
         },
         {
@@ -148,7 +149,7 @@ function singleLanguage() {
             trigger: ":iframe main p.o_savable[data-oe-field='arch'][contenteditable='true']",
             run: "editor Modified Text",
         },
-        ...clickOnSave("bottom", 50000, false),
+        ...clickOnSave(50000, false),
         ...openHtmlEditor(),
         {
             content: "Change text",
@@ -289,7 +290,6 @@ function saveTranslation(timeout = 50000) {
         },
         {
             trigger: "body:not(.o_builder_open)",
-            noPrepend: true,
             timeout,
         },
         stepUtils.waitIframeIsReady(),
@@ -351,7 +351,7 @@ function multiLanguage(mainLanguage, secondLanguage) {
             trigger: ":iframe h1",
             run: "editor Yet another version of the text.",
         },
-        ...clickOnSave("bottom", 50000, false),
+        ...clickOnSave(50000, false),
         ...switchLanguage(secondLanguage),
         {
             content: "Ensure English page is NOT updated",
@@ -389,7 +389,7 @@ function multiLanguage(mainLanguage, secondLanguage) {
             trigger: ":iframe main p.o_savable[contenteditable='true']",
             run: "editor Modified View",
         },
-        ...clickOnSave("bottom", 50000, false),
+        ...clickOnSave(50000, false),
         ...switchLanguage(secondLanguage),
         ...openTranslate(),
         {
@@ -425,7 +425,7 @@ function multiLanguage(mainLanguage, secondLanguage) {
             trigger: ":iframe main p.o_savable[data-oe-field='arch'][contenteditable='true']",
             run: "editor Even more modified Text",
         },
-        ...clickOnSave("bottom", 50000, false),
+        ...clickOnSave(50000, false),
         ...switchLanguage(secondLanguage),
         {
             content: "Check old translation is displayed",
@@ -449,34 +449,26 @@ function multiLanguage(mainLanguage, secondLanguage) {
     ];
 }
 
-registerWebsitePreviewTour(
-    "translation_multi_language_fr_user_fr_en_site",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    },
-    () => [ensureFrUser, ensureFrSite, ...multiLanguage("fr", "en")]
-);
+registerWebsitePreviewTour("translation_multi_language_fr_user_fr_en_site", {}, () => [
+    ensureFrUser,
+    ensureFrSite,
+    ...multiLanguage("fr", "en"),
+]);
 
-registerWebsitePreviewTour(
-    "translation_multi_language_fr_user_en_fr_site",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    },
-    () => [ensureFrUser, ensureEnSite, ...multiLanguage("en", "fr")]
-);
+registerWebsitePreviewTour("translation_multi_language_fr_user_en_fr_site", {}, () => [
+    ensureFrUser,
+    ensureEnSite,
+    ...multiLanguage("en", "fr"),
+]);
 
-registerWebsitePreviewTour(
-    "translation_multi_language_en_user_fr_en_site",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    },
-    () => [ensureEnUser, ensureFrSite, ...multiLanguage("fr", "en")]
-);
+registerWebsitePreviewTour("translation_multi_language_en_user_fr_en_site", {}, () => [
+    ensureEnUser,
+    ensureFrSite,
+    ...multiLanguage("fr", "en"),
+]);
 
-registerWebsitePreviewTour(
-    "translation_multi_language_en_user_en_fr_site",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    },
-    () => [ensureEnUser, ensureEnSite, ...multiLanguage("en", "fr")]
-);
+registerWebsitePreviewTour("translation_multi_language_en_user_en_fr_site", {}, () => [
+    ensureEnUser,
+    ensureEnSite,
+    ...multiLanguage("en", "fr"),
+]);

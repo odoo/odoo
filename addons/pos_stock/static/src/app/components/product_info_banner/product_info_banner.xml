@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_stock.ProductInfoBanner" t-inherit="point_of_sale.ProductInfoBanner" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('section-product-info-title')]" position="inside">
+            <AccordionItem t-if="this.state.other_warehouses?.length">
+                <t t-set-slot="header">
+                    Inventory
+                </t>
+                <t t-set-slot="content">
+                    <div class="border-start border-info text-muted small text-muted d-flex flex-column ps-2 ms-1">
+                        <t t-foreach="this.state.other_warehouses" t-as="warehouse" t-key="warehouse.id">
+                            <div class="d-flex gap-2">
+                                <div>
+                                    <t t-out="warehouse.name"/>
+                                    :
+                                </div>
+                                <div>
+                                    <span class="me-1 fw-bolder"><t t-out="warehouse.available_quantity"/></span>
+                                    <t t-out="warehouse.uom"/> available,
+                                </div>
+                                <div>
+                                    <span class="me-1 fw-bolder"><t t-out="warehouse.forecasted_quantity"/></span>
+                                    forecasted
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </AccordionItem>
+        </xpath>
+    </t>
+</templates>

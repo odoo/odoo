@@ -1,11 +1,11 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
 export function useKEProxy({onAllSent}) {
     onAllSent = onAllSent || (() => {});
-    const state = useState({
+    const state = proxy({
         successfullySent: 0,
         error: false,
         message: "",

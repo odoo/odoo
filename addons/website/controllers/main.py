@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import colorsys
 import datetime
 import logging
+import math
 import os
 import re
 import urllib.parse
@@ -26,9 +28,11 @@ from odoo.http import request
 from odoo.http.router import serve_ir_http
 from odoo.http.session import SessionExpiredException
 from odoo.http.stream import STATIC_CACHE_LONG
-from odoo.tools import OrderedSet, escape_psql, py_to_js_locale
+from odoo.tools import OrderedSet, py_to_js_locale
 from odoo.tools import html_escape as escape
+from odoo.tools.image import hex_to_rgb
 from odoo.tools.json import scriptsafe as json
+from odoo.tools.sql import escape_like_value
 from odoo.tools.translate import LazyTranslate, TRANSLATED_ELEMENTS
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
@@ -47,6 +51,59 @@ LOC_PER_SITEMAP = 45000
 SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
 MAX_FONT_FILE_SIZE = 10 * 1024 * 1024
 SUPPORTED_FONT_EXTENSIONS = ['ttf', 'woff', 'woff2', 'otf']
+FORCE_SHOW_FIELDS = ['name', 'search_item_metadata', 'tags']
+API_WEBSITE_IMAGES_URL = 'https://website-image.api.odoo.com/images/'
+CONFIGURATOR_PREVIEW_FALLBACK_IMAGES = {
+    f'website.{image_name}': f'website.{fallback_image_name}'
+    for image_name, fallback_image_name in [
+        ('s_intro_pill_default_image', 'library_image_10'),
+        ('s_intro_pill_default_image_2', 'library_image_14'),
+        ('s_banner_default_image_2', 's_image_text_default_image'),
+        ('s_banner_default_image_3', 's_product_list_default_image_1'),
+        ('s_striped_top_default_image', 's_picture_default_image'),
+        ('s_text_cover_default_image', 's_cover_default_image'),
+        ('s_showcase_default_image', 's_image_text_default_image'),
+        ('s_image_hexagonal_default_image', 's_cover_default_image'),
+        ('s_image_hexagonal_default_image_1', 's_company_team_image_1'),
+        ('s_accordion_image_default_image', 's_image_text_default_image'),
+        ('s_pricelist_boxed_default_background', 's_product_catalog_default_image'),
+        ('s_image_title_default_image', 's_cover_default_image'),
+        ('s_key_images_default_image_1', 's_media_list_default_image_1'),
+        ('s_key_images_default_image_2', 's_image_text_default_image'),
+        ('s_key_images_default_image_3', 's_media_list_default_image_2'),
+        ('s_key_images_default_image_4', 's_text_image_default_image'),
+        ('s_kickoff_default_image', 's_cover_default_image'),
+        ('s_quadrant_default_image_1', 'library_image_03'),
+        ('s_quadrant_default_image_2', 'library_image_10'),
+        ('s_quadrant_default_image_3', 'library_image_13'),
+        ('s_quadrant_default_image_4', 'library_image_05'),
+        ('s_sidegrid_default_image_1', 'library_image_03'),
+        ('s_sidegrid_default_image_2', 'library_image_10'),
+        ('s_sidegrid_default_image_3', 'library_image_13'),
+        ('s_sidegrid_default_image_4', 'library_image_05'),
+        ('s_cta_box_default_image', 'library_image_02'),
+        ('s_image_punchy_default_image', 's_cover_default_image'),
+        ('s_image_frame_default_image', 's_carousel_default_image_2'),
+        ('s_carousel_intro_default_image_1', 's_cover_default_image'),
+        ('s_carousel_intro_default_image_2', 's_image_text_default_image'),
+        ('s_carousel_intro_default_image_3', 's_text_image_default_image'),
+        ('s_website_form_overlay_default_image', 's_cover_default_image'),
+        ('s_website_form_cover_default_image', 's_cover_default_image'),
+        ('s_split_intro_default_image', 's_cover_default_image'),
+        ('s_framed_intro_default_image', 's_cover_default_image'),
+        ('s_splash_intro_default_image', 's_cover_default_image'),
+        ('s_wavy_grid_default_image_1', 's_cover_default_image'),
+        ('s_wavy_grid_default_image_2', 's_image_text_default_image'),
+        ('s_wavy_grid_default_image_3', 's_text_image_default_image'),
+        ('s_wavy_grid_default_image_4', 's_carousel_default_image_1'),
+        ('s_timeline_images_default_image_1', 's_media_list_default_image_1'),
+        ('s_timeline_images_default_image_2', 's_media_list_default_image_2'),
+        ('s_carousel_cards_default_image_1', 's_carousel_default_image_1'),
+        ('s_carousel_cards_default_image_2', 's_carousel_default_image_2'),
+        ('s_carousel_cards_default_image_3', 's_carousel_default_image_3'),
+        ('s_banner_connected_default_image', 's_cover_default_image'),
+    ]
+}
 
 
 class QueryURL:
@@ -88,9 +145,6 @@ class QueryURL:
 class Website(Home):
 
     def sitemap_index(env, rule, qs):
-        Website = env['website'].get_current_website()
-        homepage_url = Website.homepage_url
-
         def match(loc):
             return not qs or qs.lower() in loc.lower()
 
@@ -102,8 +156,8 @@ class Website(Home):
             yield {'loc': '/'}
             return
 
-        top_menu = Website.menu_id
-        reachable_menus = top_menu.child_id.filtered(Website.is_reachable)
+        top_menu = env.website.menu_id
+        reachable_menus = top_menu.child_id.filtered(env.website.is_reachable)
         if reachable_menus:
             loc = reachable_menus[0].url
             if match(loc):
@@ -126,7 +180,7 @@ class Website(Home):
         Most DBs will just have a website.page with '/' as URL and keep the
         homepage_url setting empty.
         """
-        homepage_url = request.website.homepage_url
+        homepage_url = self.env.website.homepage_url
         if homepage_url and homepage_url != '/':
             request.reroute(homepage_url)
 
@@ -144,8 +198,8 @@ class Website(Home):
                 pass
 
         # prefetch all menus (it will prefetch website.page too)
-        top_menu = request.website.menu_id
-        reachable_menus = top_menu.child_id.filtered(request.website.is_reachable)
+        top_menu = self.env.website.menu_id
+        reachable_menus = top_menu.child_id.filtered(self.env.website.is_reachable)
         if reachable_menus:
             return request.redirect(reachable_menus[0].url)
 
@@ -184,6 +238,10 @@ class Website(Home):
         website._force()
         return request.redirect(path)
 
+    @http.route('/website/get_current_website_id', type='jsonrpc', auth="user", readonly=True)
+    def get_current_website(self):
+        return self.env.context.get('host_id')
+
     @http.route(['/@/', '/@/<path:path>'], type='http', auth='public', website=True, sitemap=False, multilang=False, readonly=True)
     def client_action_redirect(self, path='', **kw):
         """ Redirect internal users to the backend preview of the requested path
@@ -198,7 +256,7 @@ class Website(Home):
             path += '?' + werkzeug.urls.url_encode(kw)
 
         if request.env.user._is_internal():
-            path = request.website.get_client_action_url(path, mode_edit, mode_debug)
+            path = self.env.website.get_client_action_url(path, mode_edit, mode_debug)
 
         return request.redirect(path)
 
@@ -224,12 +282,39 @@ class Website(Home):
         return super().web_login(*args, **kw)
 
     # ------------------------------------------------------
+    # Tracking
+    # ------------------------------------------------------
+
+    @http.route('/website/odoo_track', type='jsonrpc', auth='public', methods=['POST'], website=True, csrf=True)
+    def track(self, res_model, res_id, **kwargs):
+        if request.env['ir.http'].is_a_bot():
+            return {}
+        url = request.httprequest.referrer
+        extra_tracking_vals = {}
+        if (
+            res_model and res_id
+            and res_model in request.env
+            and hasattr(request.env[res_model], '_get_extra_tracking_values')
+        ):
+            params = dict(kwargs, res_model=res_model, res_id=res_id, url=url)
+            extra_tracking_vals = request.env[res_model].browse(res_id).sudo()._get_extra_tracking_values(**params)
+
+        request.env['ir.http']._get_visitor_from_request(
+            force_create=True,
+            force_track_values={
+                'url': url,
+                **extra_tracking_vals,
+            },
+        )
+        return {}
+
+    # ------------------------------------------------------
     # Business
     # ------------------------------------------------------
 
     @http.route('/website/get_languages', type='jsonrpc', auth="user", website=True, readonly=True)
     def website_languages(self, **kwargs):
-        return [(py_to_js_locale(lg.code), lg.url_code, lg.name) for lg in request.website.language_ids]
+        return [(py_to_js_locale(lg.code), lg.url_code, lg.name) for lg in self.env.website.language_ids]
 
     @http.route('/website/get_translated_elements', type='jsonrpc', auth="user", readonly=True)
     def translated_elements(self, **kwargs):
@@ -239,7 +324,7 @@ class Website(Home):
     def change_lang(self, lang, r='/', **kwargs):
         """ :param lang: supposed to be value of `url_code` field """
         if lang == 'default':
-            lang = request.website.default_lang_id.url_code
+            lang = self.env.website.default_lang_id.url_code
             r = '/%s%s' % (lang, r or '/')
         lang_code = request.env['res.lang']._get_data(url_code=lang).code or lang
         # replace context with correct lang, to avoid that the url_for of request.redirect remove the
@@ -256,7 +341,7 @@ class Website(Home):
 
     @http.route(['/robots.txt'], type='http', auth="public", website=True, multilang=False, sitemap=False)
     def robots(self, **kwargs):
-        # Don't use `request.website.domain` here, the template is in charge of
+        # Don't use the current website domain here, the template is in charge of
         # detecting if the current URL is the domain one and add a `Disallow: /`
         # if it's not the case to prevent the crawler to continue.
         return request.render('website.robots', {
@@ -266,15 +351,13 @@ class Website(Home):
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False, sitemap=False)
     def sitemap_xml_index(self, **kwargs):
-        current_website = request.website
         Attachment = request.env['ir.attachment'].sudo()
-        View = request.env['ir.ui.view'].sudo()
         mimetype = 'application/xml;charset=utf-8'
         content = None
         url_root = request.httprequest.url_root
         # For a same website, each domain has its own sitemap (cache)
         hashed_url_root = md5(url_root.encode()).hexdigest()[:8]
-        sitemap_base_url = '/sitemap-%d-%s' % (current_website.id, hashed_url_root)
+        sitemap_base_url = '/sitemap-%d-%s' % (self.env.website.id, hashed_url_root)
 
         def create_sitemap(url, content):
             return Attachment.create({
@@ -291,7 +374,7 @@ class Website(Home):
             create_date = fields.Datetime.from_string(sitemap.create_date)
             delta = datetime.datetime.now() - create_date
             if delta < SITEMAP_CACHE_TIME:
-                content = sitemap.raw
+                content = sitemap.raw.content
 
         if not content:
             # Remove all sitemaps in ir.attachments as we're going to regenerated them
@@ -301,15 +384,15 @@ class Website(Home):
             sitemaps.unlink()
 
             pages = 0
-            locs = request.website.with_user(request.website.user_id)._enumerate_pages(ignore_custom_homepage=True)
+            locs = self.env.website.with_user(self.env.website.user_id)._enumerate_pages(ignore_custom_homepage=True)
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
                     'url_root': url_root[:-1],
                 }
-                urls = View._render_template('website.sitemap_locs', values)
+                urls = self.env.website._render_template('website.sitemap_locs', values)
                 if urls.strip():
-                    content = View._render_template('website.sitemap_xml', {'content': urls})
+                    content = self.env.website._render_template('website.sitemap_xml', {'content': urls})
                     pages += 1
                     last_sitemap = create_sitemap('%s-%d.xml' % (sitemap_base_url, pages), content)
                 else:
@@ -325,10 +408,10 @@ class Website(Home):
                 })
             else:
                 # TODO: in master/saas-15, move current_website_id in template directly
-                pages_with_website = ["%d-%s-%d" % (current_website.id, hashed_url_root, p) for p in range(1, pages + 1)]
+                pages_with_website = ["%d-%s-%d" % (self.env.website.id, hashed_url_root, p) for p in range(1, pages + 1)]
 
                 # Sitemaps must be split in several smaller files with a sitemap index
-                content = View._render_template('website.sitemap_index_xml', {
+                content = self.env.website._render_template('website.sitemap_index_xml', {
                     'pages': pages_with_website,
                     # URLs inside the sitemap index have to be on the same
                     # domain as the sitemap index itself
@@ -342,8 +425,7 @@ class Website(Home):
     # opening an order pdf
     @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False, readonly=True)
     def favicon(self, **kw):
-        website = request.website
-        response = request.redirect(website.image_url(website, 'favicon'), code=301)
+        response = request.redirect(self.env.website.image_url(self.env.website, 'favicon'), code=301)
         response.headers['Cache-Control'] = f'public, max-age={STATIC_CACHE_LONG}'
         return response
 
@@ -367,29 +449,335 @@ class Website(Home):
     def website_configurator(self, step=1, **kwargs):
         if not request.env.user.has_group('website.group_website_designer'):
             raise werkzeug.exceptions.NotFound()
-        if request.website.configurator_done:
+        if self.env.website.configurator_done:
             return request.redirect('/')
-        if request.env.lang != request.website.default_lang_id.code:
-            return request.redirect('/%s%s' % (request.website.default_lang_id.url_code, request.httprequest.path))
+        if request.env.lang != self.env.website.default_lang_id.code:
+            return request.redirect('/%s%s' % (self.env.website.default_lang_id.url_code, request.httprequest.path))
         action_url = f"/odoo/action-website.website_configurator?menu_id={request.env.ref('website.menu_website_configuration').id}"
         if step > 1:
             action_url += '&step=' + str(step)
         return request.redirect(action_url)
 
-    @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
-    def social(self, social, **kwargs):
-        url = getattr(request.website, 'social_%s' % social, False)
-        if not url:
-            raise werkzeug.exceptions.NotFound()
-        return request.redirect(url, local=False)
+    @http.route('/website/cookie-policy', type='http', auth="public", website=True, sitemap=False, readonly=True)
+    def cookie_policy_redirect(self, **kwargs):
+        url = self.env.website.cookie_policy_id.sudo().url or '/cookie-policy'
+        return request.redirect(url)
+
+    def _load_configurator_preview_html(self, preview_url):
+        """Load the static HTML used by the configurator theme preview.
+
+        :param str preview_url: local static file path
+        :return: preview HTML
+        :rtype: str
+        """
+        if not preview_url.startswith('/'):
+            raise NotFound()
+        try:
+            with tools.file_open(preview_url.lstrip('/'), 'rb') as file:
+                return file.read().decode('utf-8')
+        except FileNotFoundError as exc:
+            raise NotFound() from exc
+
+    def _get_configurator_preview_images_map(self, theme_name, industry_id):
+        """Fetch the industry image replacements for a theme preview.
+
+        :param str theme_name: name of the previewed theme
+        :param int industry_id: selected website industry id
+        :return: mapping from original image names to replacement URLs
+        :rtype: dict
+        """
+        if not theme_name or industry_id <= 0:
+            return {}
+        return request.env['website'].configurator_get_images(industry_id, theme_name)
+
+    def _get_theme_static_preview_image_url(self, theme_name, image_name):
+        """Find an image directly in the theme static preview files.
+
+        :param str theme_name: name of the previewed theme
+        :param str image_name: original image name or URL segment
+        :return: static URL to the theme image, if found
+        :rtype: str | None
+        """
+        if not theme_name:
+            return None
+        image_name = urllib.parse.unquote(image_name).split('?', 1)[0]
+        image_basename = image_name.split('.', 1)[1] if '.' in image_name else image_name
+        image_basename = image_basename.rsplit('/', 1)[-1]
+        image_extension_index = image_basename.rfind('.')
+        image_stem = image_basename[:image_extension_index] if image_extension_index > 0 else image_basename
+        image_ext = image_basename[image_extension_index:] if image_extension_index > 0 else ''
+        candidate_names = [image_basename] if image_ext else [
+            f'{image_basename}.{ext}'
+            for ext in ('png', 'jpg', 'jpeg', 'webp', 'svg', 'gif')
+        ]
+        image_folders = ('configurator', 'content', 'backgrounds', 'pictures', 'snippets')
+        for folder in image_folders:
+            for candidate_name in candidate_names:
+                candidate_path = f'{theme_name}/static/src/img/{folder}/{candidate_name}'
+                try:
+                    with tools.file_open(candidate_path, 'rb'):
+                        return f'/{candidate_path}'
+                except FileNotFoundError:
+                    continue
+        if image_stem and image_stem != image_basename:
+            for folder in image_folders:
+                for ext in ('png', 'jpg', 'jpeg', 'webp', 'svg', 'gif'):
+                    candidate_path = f'{theme_name}/static/src/img/{folder}/{image_stem}.{ext}'
+                    try:
+                        with tools.file_open(candidate_path, 'rb'):
+                            return f'/{candidate_path}'
+                    except FileNotFoundError:
+                        continue
+        return None
+
+    def _get_configurator_preview_image_url(self, theme_name, images_map, image_name):
+        """Return the replacement URL for a preview image.
+
+        :param str theme_name: name of the previewed theme
+        :param dict images_map: industry image replacement mapping
+        :param str image_name: original image name or URL segment
+        :return: replacement image URL, if any
+        :rtype: str | None
+        """
+        image_name = urllib.parse.unquote(image_name).split('?', 1)[0]
+        if image_name not in images_map:
+            image_name = CONFIGURATOR_PREVIEW_FALLBACK_IMAGES.get(image_name, image_name)
+        image_url = images_map.get(image_name)
+        if image_url:
+            return image_url.replace('/small/', '/')
+        return self._get_theme_static_preview_image_url(theme_name, image_name)
+
+    def _apply_configurator_preview_images(self, final_html, theme_name, images_map):
+        """Replace preview image URLs with industry-specific images.
+
+        :param str final_html: preview HTML
+        :param str theme_name: name of the previewed theme
+        :param dict images_map: industry image replacement mapping
+        :return: preview HTML with updated image URLs
+        :rtype: str
+        """
+        for image_url in set(re.findall(r'/web/image/[^"\'\s,)]+', final_html)):
+            mapped_image_url = self._get_configurator_preview_image_url(
+                theme_name,
+                images_map,
+                image_url.replace('/web/image/', '', 1),
+            )
+            if mapped_image_url:
+                final_html = final_html.replace(image_url, mapped_image_url)
+
+        shape_urls = set(re.findall(r'/html_editor/image_shape/([^/"\']+)/([^"\'\s)]+)', final_html))
+        for image_name, shape_path in shape_urls:
+            mapped_image_url = self._get_configurator_preview_image_url(theme_name, images_map, image_name)
+            if not mapped_image_url:
+                continue
+            if (
+                not mapped_image_url.startswith(API_WEBSITE_IMAGES_URL)
+                and not re.match(r'^/[^/]+/static/', mapped_image_url)
+            ):
+                continue
+            shape_src = f'/html_editor/image_shape/{image_name}/{shape_path}'
+            shape_file_path, _, shape_query = shape_path.partition('?')
+            module, _, shape_filename = shape_file_path.partition('/')
+            if not shape_filename:
+                continue
+            shaped_url = f'/html_editor/image_shape_url/{module}/{shape_filename}'
+            image_url = (
+                f"{request.httprequest.host_url.rstrip('/')}{mapped_image_url}"
+                if mapped_image_url.startswith('/')
+                else mapped_image_url
+            )
+            image_query = werkzeug.urls.url_encode({'image_url': image_url})
+            shaped_url = f'{shaped_url}?{shape_query}&{image_query}' if shape_query else f'{shaped_url}?{image_query}'
+            final_html = final_html.replace(shape_src, shaped_url)
+        return final_html
+
+    def _get_configurator_preview_shape_url(self, shape_url, palette_map):
+        """Replace palette references in a shape URL query string.
+
+        :param str shape_url: original shape URL
+        :param dict palette_map: mapping from ``o-color-X`` names to hex colors
+        :return: shape URL with resolved palette colors
+        :rtype: str
+        """
+        decoded_shape_url = shape_url.replace('&amp;', '&')
+        parsed_shape_url = urllib.parse.urlsplit(decoded_shape_url)
+        shape_query_items = urllib.parse.parse_qsl(
+            parsed_shape_url.query, keep_blank_values=True
+        )
+        has_palette_color = False
+        updated_shape_query_items = []
+        for key, value in shape_query_items:
+            palette_color = palette_map.get(value)
+            if palette_color:
+                value = palette_color
+                has_palette_color = True
+            updated_shape_query_items.append((key, value))
+        if not has_palette_color:
+            return shape_url
+        updated_shape_url = urllib.parse.urlunsplit(
+            (
+                parsed_shape_url.scheme,
+                parsed_shape_url.netloc,
+                parsed_shape_url.path,
+                urllib.parse.urlencode(updated_shape_query_items),
+                parsed_shape_url.fragment,
+            )
+        )
+        return updated_shape_url.replace('&', '&amp;') if '&amp;' in shape_url else updated_shape_url
+
+    def _apply_configurator_preview_shape_colors(self, final_html, palette_map):
+        """Apply selected palette colors to preview shape URLs.
+
+        :param str final_html: preview HTML
+        :param dict palette_map: mapping from ``o-color-X`` names to hex colors
+        :return: preview HTML with updated shape URLs
+        :rtype: str
+        """
+        for shape_url in set(re.findall(r'/(?:html_editor|web_editor)/shape/[^"\'\s)]+', final_html)):
+            updated_shape_url = self._get_configurator_preview_shape_url(shape_url, palette_map)
+            if updated_shape_url != shape_url:
+                final_html = final_html.replace(shape_url, updated_shape_url)
+        return final_html
+
+    def _get_configurator_preview_contrast_color(self, background_color):
+        """Pick a readable text color for a preview background color.
+
+        :param str background_color: background color as a ``#RRGGBB`` value
+        :return: dark or light text color, or an empty string for invalid input
+        :rtype: str
+        """
+        background_color = background_color.strip()
+        if not re.fullmatch(r'#[0-9a-fA-F]{6}', background_color):
+            return ''
+        background_rgb = hex_to_rgb(background_color)
+        _, _, value = colorsys.rgb_to_hsv(*(channel / 255 for channel in background_rgb))
+        # Preview-only fallback to avoid dark text on dark generated previews.
+        return '#212529' if value > 0.5 else '#FFFFFF'
+
+    def _get_configurator_preview_color_combination_text_variables(self, final_html, palette):
+        """Build text color variables for preview color combinations.
+
+        :param str final_html: preview HTML containing the color-combination
+            background variables
+        :param list[str] palette: selected palette colors ordered from
+            ``o-color-1`` to ``o-color-5``
+        :return: CSS variable declarations for color-combination text colors
+        :rtype: str
+        """
+        palette_map = {
+            f'o-color-{index}': color
+            for index, color in enumerate(palette, start=1)
+            if color
+        }
+        color_combination_backgrounds = {}
+        background_regex = (
+            r'--o-cc([1-5])-bg\s*:\s*'
+            r'(?:var\(--(o-color-[1-5])\)|(#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?))\s*;'
+        )
+        for color_combination, color_name, color_value in re.findall(background_regex, final_html):
+            background_color = palette_map.get(color_name) if color_name else color_value
+            if background_color:
+                color_combination_backgrounds[color_combination] = background_color
+
+        text_variables = []
+        for color_combination, background_color in sorted(color_combination_backgrounds.items()):
+            text_color = self._get_configurator_preview_contrast_color(background_color)
+            if text_color:
+                text_variables.append(f'--o-cc{color_combination}-text:{text_color};')
+        return ''.join(text_variables)
+
+    def _get_configurator_preview_overrides(self, palette, final_html):
+        """Return the CSS variables injected into static configurator previews.
+
+        The selected palette overrides the preview's base colors. Text color
+        variables are derived from the preview color-combination backgrounds to
+        keep text readable after the palette changes.
+
+        :param list[str] palette: selected palette colors ordered from
+            ``o-color-1`` to ``o-color-5``
+        :param str final_html: static preview HTML used to read the original
+            color-combination backgrounds
+        :return: style tag containing the configurator preview CSS variables
+        :rtype: str
+        """
+        root_variables = ''.join(
+            f'--o-color-{index}: {color};'
+            for index, color in enumerate(palette, start=1)
+            if color
+        )
+        root_variables += self._get_configurator_preview_color_combination_text_variables(final_html, palette)
+        return (
+            '<style id="o_configurator_theme_preview_overrides">'
+            f':root{{{root_variables}}}'
+            '</style>'
+        )
+
+    def _inject_configurator_preview_overrides(self, final_html, preview_url, preview_overrides):
+        """Inject the preview base URL and CSS overrides into the HTML head.
+
+        :param str final_html: preview HTML
+        :param str preview_url: original preview URL used as the document base
+        :param str preview_overrides: style tag with configurator CSS variables
+        :return: preview HTML with the base tag and CSS overrides
+        :rtype: str
+        """
+        base_tag = f'<base href="{markup_escape(preview_url)}">'
+        head_match = re.search(r'<head\b[^>]*>', final_html, flags=re.IGNORECASE)
+        if head_match:
+            final_html = final_html[:head_match.end()] + base_tag + final_html[head_match.end():]
+            head_end_match = re.search(r'</head>', final_html, flags=re.IGNORECASE)
+            if head_end_match:
+                return (
+                    final_html[:head_end_match.start()]
+                    + preview_overrides
+                    + final_html[head_end_match.start():]
+                )
+            return final_html + preview_overrides
+        return base_tag + preview_overrides + final_html
+
+    @http.route('/website/configurator/preview', type='http', auth="user", website=True, multilang=False)
+    def website_configurator_preview(
+        self,
+        preview_url,
+        theme_name=None,
+        industry_id=-1,
+        color1='',
+        color2='',
+        color3='',
+        color4='',
+        color5='',
+        **kwargs,
+    ):
+        if not preview_url:
+            raise NotFound()
+
+        industry_id = int(industry_id)
+        palette = [color1, color2, color3, color4, color5]
+        palette_map = {
+            f'o-color-{index}': color
+            for index, color in enumerate(palette, start=1)
+            if color
+        }
+        images_map = self._get_configurator_preview_images_map(theme_name, industry_id)
+
+        final_html = self._load_configurator_preview_html(preview_url)
+        final_html = self._apply_configurator_preview_images(final_html, theme_name, images_map)
+        final_html = self._apply_configurator_preview_shape_colors(final_html, palette_map)
+        # Add palette variables to make static previews reflect the current configurator selection.
+        preview_overrides = self._get_configurator_preview_overrides(palette, final_html)
+        final_html = self._inject_configurator_preview_overrides(
+            final_html,
+            preview_url,
+            preview_overrides,
+        )
+
+        return request.make_response(final_html, [('Content-Type', 'text/html; charset=utf-8')])
 
     @http.route('/website/get_suggested_links', type='jsonrpc', auth="user", website=True, readonly=True)
     def get_suggested_link(self, needle, limit=10):
-        current_website = request.website
-
         matching_pages = []
         limit = None if limit == "no_limit" else int(limit)
-        for page in current_website.search_pages(needle, limit):
+        for page in self.env.website.search_pages(needle, limit):
             matching_pages.append({
                 'value': page['loc'],
                 'label': 'name' in page and '%s (%s)' % (page['loc'], page['name']) or page['loc'],
@@ -397,7 +785,7 @@ class Website(Home):
         matching_urls = {match['value'] for match in matching_pages}
 
         matching_last_modified = []
-        last_modified_pages = current_website._get_website_pages(order='write_date desc', limit=5)
+        last_modified_pages = self.env.website._get_website_pages(order='write_date desc', limit=5)
         for url, name in last_modified_pages.mapped(lambda p: (p.url, p.name)):
             if needle.lower() in name.lower() or needle.lower() in url.lower() and url not in matching_urls:
                 matching_last_modified.append({
@@ -406,7 +794,7 @@ class Website(Home):
                 })
 
         suggested_controllers = []
-        for name, url, mod in current_website.get_suggested_controllers():
+        for name, url, mod in self.env.website.get_suggested_controllers():
             if needle.lower() in name.lower() or needle.lower() in url.lower():
                 module_sudo = mod and request.env.ref('base.module_%s' % mod, False).sudo()
                 icon = mod and '%s' % (module_sudo and module_sudo.icon or mod) or ''
@@ -426,7 +814,7 @@ class Website(Home):
 
     @http.route('/website/check_existing_link', type='jsonrpc', auth="user", website=True, readonly=True)
     def check_existing_link(self, link):
-        return request.website.check_existing_page(link)
+        return self.env.website.check_existing_page(link)
 
     @http.route('/website/save_session_layout_mode', type='jsonrpc', auth='public', website=True, readonly=True)
     def save_session_layout_mode(self, layout_mode, view_id):
@@ -438,7 +826,7 @@ class Website(Home):
         dynamic_filter_sudo = request.env['website.snippet.filter'].sudo()
         if filter_id:
             dynamic_filter_sudo = dynamic_filter_sudo.search(
-                Domain('id', '=', filter_id) & request.website.website_domain()
+                Domain('id', '=', filter_id) & self.env.website.website_domain()
             )
         single_record_filter = kwargs.get('limit') == 1 and kwargs.get('res_model') and kwargs.get('res_id')
         dynamic_filter_found = single_record_filter or dynamic_filter_sudo
@@ -448,7 +836,7 @@ class Website(Home):
     def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.NotFound()
-        domain = request.website.website_domain()
+        domain = self.env.website.website_domain()
         if search_domain:
             search_domain = Domain(search_domain)
             assert all(condition.field_expr in request.env['website.snippet.filter']._fields for condition in search_domain.iter_conditions())
@@ -467,7 +855,7 @@ class Website(Home):
     def get_dynamic_snippet_templates(self, filter_name=False):
         domain = [['key', 'ilike', '.dynamic_filter_template_'], ['type', '=', 'qweb']]
         if filter_name:
-            domain.append(['key', 'ilike', escape_psql('_%s_' % filter_name)])
+            domain.append(['key', 'ilike', escape_like_value('_%s_' % filter_name)])
         templates = request.env['ir.ui.view'].sudo().search_read(domain, ['key', 'name', 'arch_db'])
 
         for t in templates:
@@ -486,10 +874,11 @@ class Website(Home):
 
     @http.route('/website/get_current_currency', type='jsonrpc', auth="public", website=True, readonly=True)
     def get_current_currency(self, **kwargs):
+        currency_id = self.env.website.company_id.currency_id
         return {
-            'id': request.website.company_id.currency_id.id,
-            'symbol': request.website.company_id.currency_id.symbol,
-            'position': request.website.company_id.currency_id.position,
+            'id': currency_id.id,
+            'symbol': currency_id.symbol,
+            'position': currency_id.position,
         }
 
     @http.route("/website/get_new_pages", type="jsonrpc", auth="user")
@@ -590,21 +979,28 @@ class Website(Home):
         return 'is_published desc, %s, id desc' % order
 
     @http.route('/website/snippet/autocomplete', type='jsonrpc', auth='public', website=True, readonly=True)
-    def autocomplete(self, search_type=None, term=None, order=None, limit=5, max_nb_chars=999, options=None):
+    def autocomplete(self, search_type=None, term=None, order=None, offset=0, limit=6, max_nb_chars=999, options=None):
         """
         Returns list of results according to the term and options
 
         :param str search_type: indicates what to search within, 'all' matches all available types
         :param str term: search term written by the user
         :param str order:
-        :param int limit: number of results to consider, defaults to 5
+        :param int offset: number of results to skip, defaults to 0
+        :param int limit: number of results to consider, defaults to 6
         :param int max_nb_chars: max number of characters for text fields
         :param dict options: options map containing
             allowFuzzy: enables the fuzzy matching when truthy
             fuzzy (boolean): True when called after finding a name through fuzzy matching
+            renderTemplate (bool): If True, returns rendered HTML instead of grouped dict results
 
         :returns: dict (or False if no result) containing
-            - 'results' (list): results (only their needed field values)
+            - 'results' (dict | str):
+                    - dict: contain multiple groups of results, each group is a dict with:
+                            - 'groupName' (str): the name of the group of results
+                            - 'searchCount' (int): the number of results in this group
+                            - 'data' (list of dict): the actual results (only their needed field values)
+                    - str: rendered HTML template (if `renderTemplate=True`)
                     note: the monetary fields will be strings properly formatted and
                     already containing the currency
             - 'results_count' (int): the number of results in the database
@@ -614,55 +1010,107 @@ class Website(Home):
         """
         order = self._get_search_order(order)
         options = options or {}
-        results_count, search_results, fuzzy_term = request.website._search_with_fuzzy(search_type, term, limit, order, options)
+        results_count, search_results, fuzzy_term = self.env.website._search_with_fuzzy(search_type, term, offset, limit, order, options)
+        # Sort results based on sequence for ordered results.
+        search_results.sort(key=lambda d: d.get('sequence', float('inf')))
         if not results_count:
             return {
-                'results': [],
+                'results': "" if options.get('renderTemplate') else {},
                 'results_count': 0,
                 'parts': {},
             }
+
+        if options.get("proportionateAllocation") and results_count > limit:
+            """
+            Distribute a global result limit proportionally across groups
+            based on their contribution to the total results.
+
+            Example:
+                Total retrieved results across 3 models = 50
+                    - M1: 5   (10%)
+                    - M2: 10  (20%)
+                    - M3: 35  (70%)
+
+                With limit = 30:
+                    - M1 → 10% of 30 ≈ 3
+                    - M2 → 20% of 30 ≈ 6
+                    - M3 → 70% of 30 ≈ 21
+
+            Note:
+                Due to rounding and minimum allocation guarantees,
+                the total number of allocated results may slightly exceed `limit`.
+            """
+            total_obtained_results = sum(len(m.get("results", [])) for m in search_results)
+            for model in search_results:
+                results_data = model.get("results")
+                if results_data:
+                    # Calculate proportional allocation for this group
+                    allocated_count = math.ceil(
+                        (len(results_data) / total_obtained_results) * limit
+                    )
+                    # Ensure at least 1 result per group to maintain visibility
+                    allocated_count = max(allocated_count, 1)
+                    model["results"] = results_data[:allocated_count]
+
         term = fuzzy_term or term
-        search_results = request.website._search_render_results(search_results, limit)
+        search_results = self.env.website._search_render_results(search_results, limit)
 
         mappings = []
-        results_data = []
+        result = {}
         for search_result in search_results:
-            for result in search_result['results_data']:
-                result['model'] = search_result['model']
-                results_data.append(result)
+            if not search_result['results_data']:
+                continue
             mappings.append(search_result['mapping'])
-        if search_type == 'all':
-            # Only supported order for 'all' is on name
-            results_data.sort(key=lambda r: r.get('name', ''), reverse='name desc' in order)
-        results_data = results_data[:limit]
-        result = []
-        for record in results_data:
-            mapping = record['_mapping']
-            model = request.env[record['model']]
-            mapped = {
-                '_fa': record.get('_fa'),
-            }
-            for mapped_name, field_meta in mapping.items():
-                value = record.get(field_meta.get('name'))
-                if not value:
-                    mapped[mapped_name] = ''
-                    continue
-                field_type = field_meta.get('type')
-                if field_type == 'text' and field_meta.get('truncate', True):
-                    value = self._shorten_around_match(value, term, max_nb_chars)
-
-                if field_meta.get('match'):
-                    skip_field, value, field_type = model._search_highlight_field(field_meta, value, term)
-                    if skip_field:
+            group_name = search_result.get('group_name')
+            group_key = search_result.get('model').replace('.', '_')
+            result_data = []
+            model = request.env[search_result['model']]
+            for record in search_result['results_data']:
+                mapping = record['_mapping']
+                mapped = {
+                    '_fa': record.get('_fa'),
+                }
+                skip_matching_area = False
+                for mapped_name, field_meta in mapping.items():
+                    value = record.get(field_meta.get('name'))
+                    if not value:
+                        mapped[mapped_name] = ''
                         continue
+                    field_type = field_meta.get('type')
+                    if field_type == 'text' and field_meta.get('truncate', True):
+                        value = self._shorten_around_match(value, term, max_nb_chars)
 
-                if field_type not in ('image', 'binary') and ('ir.qweb.field.%s' % field_type) in request.env:
-                    opt = {}
-                    if field_type == 'monetary':
-                        opt['display_currency'] = options['display_currency']
-                    value = request.env[('ir.qweb.field.%s' % field_type)].value_to_html(value, opt)
-                mapped[mapped_name] = escape(value)
-            result.append(mapped)
+                    if field_meta.get('match'):
+                        # If one field matches, we skip matching areas.
+                        if skip_matching_area and mapped_name not in FORCE_SHOW_FIELDS and not field_meta.get('force_show'):
+                            continue
+                        skip_field, value, field_type = model._search_highlight_field(field_meta, value, term)
+                        if skip_field:
+                            continue
+                        if field_type == 'html':
+                            skip_matching_area = True
+
+                    qweb_field = f'''ir.qweb.field.{field_type}'''
+                    if field_type not in ('image', 'binary') and qweb_field in request.env:
+                        opt = {}
+                        if field_type == 'monetary':
+                            opt['display_currency'] = options.get('display_currency')
+                        elif field_type == 'float':
+                            opt['precision'] = field_meta.get('precision', 2)
+                        value = request.env[qweb_field].value_to_html(value, opt)
+                    mapped[mapped_name] = escape(value)
+                result_data.append(mapped)
+
+            result[group_key] = {
+                'groupName': group_name,
+                'searchCount': search_result.get('count') or 0,
+                'data': result_data,
+                'has_more': search_result.get('count') > offset + limit
+            }
+
+        if options.get('renderTemplate'):
+            values = [item for group in result.values() for item in group['data']]
+            result = self.env['ir.ui.view']._render_template('website.search_result_items', {'results': values})
 
         return {
             'results': result,
@@ -673,11 +1121,6 @@ class Website(Home):
 
     def _get_page_search_options(self, **post):
         return {
-            'displayDescription': False,
-            'displayDetail': False,
-            'displayExtraDetail': False,
-            'displayExtraLink': False,
-            'displayImage': False,
             'allowFuzzy': not post.get('noFuzzy'),
         }
 
@@ -685,8 +1128,8 @@ class Website(Home):
     def pages_list(self, page=1, search='', **kw):
         options = self._get_page_search_options(**kw)
         step = 50
-        pages_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
-            "pages", search, limit=page * step, order='name asc, website_id desc, id',
+        pages_count, details, fuzzy_search_term = self.env.website._search_with_fuzzy(
+            "pages", search, offset=0, limit=page * step, order='name asc, website_id desc, id',
             options=options)
         pages = details[0].get('results', request.env['website.page'])
 
@@ -711,58 +1154,40 @@ class Website(Home):
 
     def _get_hybrid_search_options(self, **post):
         return {
-            'displayDescription': True,
-            'displayDetail': True,
-            'displayExtraDetail': True,
-            'displayExtraLink': True,
-            'displayImage': True,
             'allowFuzzy': not post.get('noFuzzy'),
         }
 
     @http.route([
         '/website/search',
-        '/website/search/page/<int:page>',
         '/website/search/<string:search_type>',
-        '/website/search/<string:search_type>/page/<int:page>',
     ], type='http', auth="public", website=True, sitemap=False, readonly=True)
-    def hybrid_list(self, page=1, search='', search_type='all', **kw):
+    def hybrid_list(self, search='', limit=24, search_type='all', **kw):
         if not search:
-            return request.render("website.list_hybrid")
+            return request.render('website.list_hybrid')
 
         options = self._get_hybrid_search_options(**kw)
-        data = self.autocomplete(search_type=search_type, term=search, order='name asc', limit=500, max_nb_chars=200, options=options)
+        data = self.autocomplete(search_type=search_type, term=search, order='name asc', limit=limit, offset=0, max_nb_chars=75, options=options)
 
         results = data.get('results', [])
-        search_count = len(results)
+        search_count = data.get('results_count', 0)
         parts = data.get('parts', {})
 
-        step = 50
-        pager = portal_pager(
-            url="/website/search/%s" % search_type,
-            url_args={'search': search},
-            total=search_count,
-            page=page,
-            step=step
-        )
-
-        results = results[(page - 1) * step:page * step]
-
         values = {
-            'pager': pager,
             'results': results,
             'parts': parts,
             'search': search,
+            'limit': limit,
             'fuzzy_search': data.get('fuzzy_search'),
             'search_count': search_count,
         }
-        return request.render("website.list_hybrid", values)
+        return request.render('website.list_hybrid', values)
 
     # ------------------------------------------------------
     # Edit
     # ------------------------------------------------------
 
     @http.route(['/website/add', '/website/add/<path:path>'], type='http', auth="user", website=True, methods=['POST'])
-    def pagenew(self, path="", add_menu=False, template=False, redirect=False, **kwargs):
+    def pagenew(self, path="", website_id=False, add_menu=False, template=False, redirect=False, **kwargs):
         # for supported mimetype, get correct default template
         _, ext = os.path.splitext(path)
         ext_special_case = ext != '.html' and ext in EXTENSION_TO_WEB_MIMETYPES
@@ -777,7 +1202,10 @@ class Website(Home):
         if website_id:
             website = request.env['website'].browse(int(website_id))
             website._force()
-        page = request.env['website'].new_page(
+        else:
+            website = self.env.website
+
+        page = website.new_page(
             path,
             add_menu=add_menu,
             sections_arch=kwargs.get('sections_arch'),
@@ -790,7 +1218,10 @@ class Website(Home):
         # If that URL is also a menu, we update it accordingly.
         # NB: we don't want to slugify on menu creation as it could redirect
         # towards files (with spaces, apostrophes, etc.).
-        menu = request.env['website.menu'].search([('url', '=', '/' + path), ('page_id', '=', False)])
+        # When searching for a menu, we also match URLs with or without a
+        # leading slash to prevent mismatches when records were created without
+        # a leading slash.
+        menu = request.env['website.menu'].search([('url', 'in', ['/' + path, path]), ('page_id', '=', False)])
         if menu:
             menu.page_id = page['page_id']
 
@@ -807,7 +1238,7 @@ class Website(Home):
     def get_new_page_templates(self, **kw):
         View = request.env['ir.ui.view']
         result = []
-        groups_html = View._render_template("website.new_page_template_groups")
+        groups_html = self.env.website._render_template("website.new_page_template_groups")
         groups_el = etree.fromstring(f'<data>{groups_html}</data>')
         for group_el in groups_el.getchildren():
             group = {
@@ -816,8 +1247,8 @@ class Website(Home):
                 'templates': [],
             }
             if group_el.attrib['id'] == 'custom':
-                for page in request.website._get_website_pages(domain=[('is_new_page_template', '=', True)]):
-                    html_tree = html.fromstring(View.with_context(inherit_branding=False)._render_template(
+                for page in self.env.website._get_website_pages(domain=[('is_new_page_template', '=', True)]):
+                    html_tree = html.fromstring(self.env.website.with_context(inherit_branding=False)._render_template(
                         page.key,
                     ))
                     wrap_el = html_tree.xpath('//div[@id="wrap"]')[0]
@@ -832,12 +1263,12 @@ class Website(Home):
             for template in View.search([
                 ('mode', '=', 'primary'),
                 '|',
-                ('key', 'like', escape_psql(f'new_page_template_sections_{group["id"]}_')),
+                ('key', 'like', escape_like_value(f'new_page_template_sections_{group["id"]}_')),
                 ('key', 'like', f'configurator_pages_{group["id"]}'),
-                request.website.website_domain(),
+                self.env.website.website_domain(),
             ], order='key'):
                 try:
-                    html_tree = html.fromstring(View.with_context(inherit_branding=False)._render_template(
+                    html_tree = html.fromstring(self.env.website.with_context(inherit_branding=False)._render_template(
                         template.key,
                     ))
                     for section_el in html_tree.xpath("//section[@data-snippet]"):
@@ -845,9 +1276,9 @@ class Website(Home):
                         snippet = section_el.attrib['data-snippet']
                         # Because the templates are generated from specific
                         # t-snippet-calls such as:
-                        # "website.new_page_template_about_0_s_text_block",
+                        # "website.new_page_template_about_us_0_s_text_block",
                         # the generated data-snippet looks like:
-                        # "new_page_template_about_0_s_text_block"
+                        # "new_page_template_about_us_0_s_text_block"
                         # while it should be "s_text_block" only.
                         if '_s_' in snippet:
                             section_el.attrib['data-snippet'] = f's_{snippet.split("_s_")[-1]}'
@@ -869,9 +1300,12 @@ class Website(Home):
 
     @http.route('/website/save_xml', type='jsonrpc', auth='user', website=True)
     def save_xml(self, view_id, arch):
+        disable_delay_translations = self.env['ir.config_parameter'].sudo().get_bool(
+            'website.disable_delay_translations'
+        )
         request.env['ir.ui.view'].browse(view_id).with_context(
-            lang=request.website.default_lang_id.code,
-            delay_translations=True,
+            lang=self.env.website.default_lang_id.code,
+            delay_translations=not disable_delay_translations,
         ).arch = arch
 
     @http.route("/website/get_switchable_related_views", type="jsonrpc", auth="user", website=True, readonly=True)
@@ -927,15 +1361,18 @@ class Website(Home):
         pattern = r'^([a-zA-Z]+)(?:_(\w+))?(?:@(\w+))?$'
         match = re.match(pattern, lang)
         language = [match.group(1), match.group(2) or ''] if match else ['en', 'US']
-        url = "http://google.com/complete/search"
+        url = "https://google.com/complete/search"
         try:
             req = requests.get(url, params={
                 'ie': 'utf8', 'oe': 'utf8', 'output': 'toolbar', 'q': keywords, 'hl': language[0], 'gl': language[1]})
             req.raise_for_status()
             response = req.content
-        except OSError:
+        except (OSError, requests.RequestException):
             return json.dumps([])
-        xmlroot = ET.fromstring(response)
+        try:
+            xmlroot = ET.fromstring(response)
+        except ET.ParseError:
+            return json.dumps([])
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
     @http.route(['/website/get_alt_images'], type='jsonrpc', auth="user", website=True)
@@ -1014,6 +1451,47 @@ class Website(Home):
 
     @http.route(['/website/get_seo_data'], type='jsonrpc', auth="user", website=True, readonly=True)
     def get_seo_data(self, res_id, res_model):
+        """
+        Fetch SEO metadata for a given record.
+
+        This endpoint is used by the website editor to retrieve meta fields
+        (title, description, keywords, OpenGraph image, etc.) in the context
+        of the current user and language. Access is granted if the user has
+        the `website.group_website_restricted_editor` group, or if they have
+        sufficient access rights on the record itself.
+
+        Args:
+            res_id (int): ID of the record to fetch metadata for.
+            res_model (str): Model name of the record (e.g. ``website.page``).
+
+        Returns:
+            dict: A mapping of SEO data including:
+                - `lang` (object): Current language (object with at least `code` and `name`).
+                - `multi_lang` (bool): Whether the website supports multiple languages.
+                - `can_edit_seo` (bool): Whether the current user can edit SEO fields.
+                - `website_is_published` (bool, optional): Page publication status (for website pages).
+                - `website_indexed` (bool, optional): Whether the page is indexed (for website pages).
+                - `website_id` (int, optional): ID of the related website (for website pages).
+                - `website_meta_title` (str): Title for SEO.
+                - `website_meta_description` (str): Description for SEO.
+                - `website_meta_keywords` (str): Keywords for SEO.
+                - `website_meta_og_img` (str): URL of the OpenGraph image.
+                - `has_social_default_image` (bool): Whether the site has a default social sharing image.
+                - `seo_name` (str, optional): Slugified custom SEO name (if supported).
+                - `seo_name_default` (str, optional): Default slugified name (fallback).
+
+        Raises:
+            werkzeug.exceptions.Forbidden: If the user lacks the required access rights.
+        """
+        def _get_translation(record, field_name, lang_code=None):
+            """ Return the translation for a field in the current language, or ''. """
+            field = record._fields.get(field_name)
+            if not field.store:
+                return record[field_name] or ''
+            translations = field._get_stored_translations(record) or {}
+            return translations.get(lang_code or request.lang.code, '')
+
+        # Access checks
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             # Still ok if user can access the record anyway.
             try:
@@ -1022,26 +1500,51 @@ class Website(Home):
             except AccessError:
                 raise werkzeug.exceptions.Forbidden()
 
-        fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
-        res = {'can_edit_seo': True}
         record = request.env[res_model].browse(res_id)
+        res = {
+            'lang': request.lang,
+            'multi_lang': self.env.website.language_count > 1,
+            'default_lang_code': self.env.website.default_lang_id.code,
+            'can_edit_seo': True,
+        }
         if res_model == 'website.page':
-            fields.extend(['website_indexed', 'website_id'])
             res["website_is_published"] = record.website_published
 
         try:
-            request.website._check_user_can_modify(record)
+            self.env.website._check_user_can_modify(record)
         except AccessError:
             res['can_edit_seo'] = False
         if request.env.user.has_group('website.group_website_restricted_editor'):
             record = record.sudo()
 
-        res.update(record.read(fields)[0])
-        res['has_social_default_image'] = request.website.has_social_default_image
+        # Basic field values
+        base_fields = ['website_meta_og_img']
+        if res_model == "website.page":
+            base_fields.extend(['website_indexed', 'website_id'])
+        res.update(record.read(base_fields)[0])
 
-        if res_model not in ('website.page', 'ir.ui.view') and 'seo_name' in record:  # allow custom slugify
-            res['seo_name_default'] = request.env['ir.http']._slugify(record.display_name or '')  # default slug, if seo_name become empty
-            res['seo_name'] = record.seo_name and request.env['ir.http']._slugify(record.seo_name) or ''
+        # Translatable fields
+        # Use view_id for website.page translations
+        source_record = record.view_id if res_model == 'website.page' else record
+        for field_name in ['website_meta_title', 'website_meta_description', 'website_meta_keywords']:
+            res[field_name] = _get_translation(source_record, field_name)
+            # The client needs to know whether the default language is empty
+            # before writing from another language, otherwise the translated
+            # value may become the fallback/base value.
+            res[f'default_{field_name}'] = _get_translation(
+                source_record, field_name, self.env.website.default_lang_id.code
+            )
+
+        res['has_social_default_image'] = self.env.website.has_social_default_image
+
+        # SEO name handling (custom slugify)
+        if res_model not in ('website.page', 'ir.ui.view') and 'seo_name' in record:
+            res['seo_name_default'] = request.env['ir.http']._slugify(record.display_name or '')
+            res['seo_name'] = (
+                request.env['ir.http']._slugify(record.seo_name)
+                if record.seo_name
+                else ''
+            )
 
         return res
 
@@ -1053,7 +1556,7 @@ class Website(Home):
         for rec in records:
             try:
                 record = request.env[rec['res_model']].browse(rec['res_id'])
-                request.website._check_user_can_modify(record)
+                self.env.website._check_user_can_modify(record)
                 return True
             except AccessError as e:
                 if not first_error:
@@ -1063,25 +1566,25 @@ class Website(Home):
 
     @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False, readonly=True)
     def google_console_search(self, key, **kwargs):
-        if not request.website.google_search_console:
+        if not self.env.website.google_search_console:
             logger.warning('Google Search Console not enable')
             raise werkzeug.exceptions.NotFound()
-        gsc = request.website.google_search_console
+        gsc = self.env.website.google_search_console
         trusted = gsc[gsc.startswith('google') and len('google'):gsc.endswith('.html') and -len('.html') or None]
 
         if key != trusted:
             if key.startswith(trusted):
-                request.website.sudo().google_search_console = "google%s.html" % key
+                self.env.website.sudo().google_search_console = "google%s.html" % key
             else:
                 logger.warning('Google Search Console %s not recognize' % key)
                 raise werkzeug.exceptions.NotFound()
 
-        return request.make_response("google-site-verification: %s" % request.website.google_search_console)
+        return request.make_response("google-site-verification: %s" % self.env.website.google_search_console)
 
     @http.route('/website/google_maps_api_key', type='jsonrpc', auth='public', website=True, readonly=True)
     def google_maps_api_key(self):
         return json.dumps({
-            'google_maps_api_key': request.website.google_maps_api_key or ''
+            'google_maps_api_key': self.env.website.google_maps_api_key or ''
         })
 
     # ------------------------------------------------------
@@ -1119,7 +1622,7 @@ class Website(Home):
     def _get_customize_data(self, keys, is_view_data):
         model = 'ir.ui.view' if is_view_data else 'ir.asset'
         Model = request.env[model].with_context(active_test=False)
-        domain = Domain("key", "in", keys) & request.website.website_domain()
+        domain = Domain("key", "in", keys) & self.env.website.website_domain()
         return Model.search(domain).filter_duplicate()
 
     @http.route(['/website/theme_customize_data_get'], type='jsonrpc', auth='user', website=True, readonly=True)

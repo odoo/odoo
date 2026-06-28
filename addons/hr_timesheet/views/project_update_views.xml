@@ -17,10 +17,17 @@
             <field name="model">project.update</field>
             <field name="inherit_id" ref="project.project_update_view_kanban"/>
             <field name="arch" type="xml">
-                <div id="tasks_stats" position='after'>
-                    <field name="display_timesheet_stats" invisible="1"/>
-                    <div class="o_pupdate_kanban_width flex-grow-1 fw-bolder" invisible="not display_timesheet_stats">
-                        <field name="timesheet_time"/><span invisible="not allocated_time"> / <field name="allocated_time"/></span> <field name="uom_id" no_open="1"/><span invisible="not allocated_time"> (<field name="timesheet_percentage"/>%)</span>
+                <xpath expr="//field[@name='closed_task_percentage']" position="after">
+                    <field name="display_timesheet_stats"/>
+                    <field name="timesheet_percentage"/>
+                </xpath>
+                <div id="tasks_stats" position="after">
+                    <div t-if="record.display_timesheet_stats.raw_value"
+                         t-attf-class="{{ record.timesheet_percentage.raw_value > 100 ? 'text-danger' : (record.timesheet_percentage.raw_value >= 80 ? 'text-warning' : '') }}">
+                        <span class="fa fa-fw fa-clock-o me-1" title="Time"/><field name="timesheet_time"/>
+                        <t t-if="record.allocated_time.raw_value">
+                            / <field name="allocated_time"/>
+                        </t> <field name="uom_id"/>
                     </div>
                 </div>
             </field>

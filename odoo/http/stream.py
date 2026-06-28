@@ -14,11 +14,12 @@ from werkzeug.utils import send_file as _send_file
 
 from odoo.tools import config, file_path
 
+from . import request
+from .response import Response
+
 if typing.TYPE_CHECKING:
     from datetime import datetime
     from typing import Self
-
-    from .response import Response
 
 STATIC_CACHE = 60 * 60 * 24 * 7  # 1 week
 """ The cache duration for static content from the filesystem. """
@@ -222,8 +223,3 @@ class Stream:
             res.cache_control['immutable'] = None  # None sets the directive
 
         return res
-
-
-# ruff: noqa: E402
-from .requestlib import request
-from .response import Response

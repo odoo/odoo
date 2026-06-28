@@ -21,7 +21,7 @@ class TestWebsiteLinksRussian(HttpCase):
         })
 
         # Courtesy of website/tests/test_lang_url.py
-        website = cls.env.ref('website.default_website')
+        website = cls.env.ref('base.default_website')
         lang_en = cls.env.ref('base.lang_en')
         lang_ru = cls.env['res.lang']._activate_lang('ru_RU')
         website.language_ids = lang_en + lang_ru

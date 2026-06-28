@@ -2,19 +2,24 @@ import { useSubEnv } from "@web/owl2/utils";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
+
 import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
+import { RenameThreadPlugin } from "@mail/core/common/rename_thread_plugin";
+import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { MeetingChat } from "@mail/discuss/call/common/meeting_chat";
+import { maybePlugin } from "@mail/utils/common/misc";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
 /** @typedef {import("@odoo/owl").Component} Component */
-/** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
 /** @typedef {import("models").Thread} Thread */
-
 /**
- * @typedef {ActionDefinition} ThreadActionDefinition
+ * @typedef {Object} ThreadActionSpecificParams
+ * @property {import("models").DiscussChannel} channel
+ * @property {Thread} thread
  */
+/** @typedef {import("@mail/core/common/action").ActionParams<ThreadAction, UseThreadActions_Def> & ThreadActionSpecificParams} ThreadActionParams */
+/** @typedef {import("@mail/core/common/action").ActionDefinition<ThreadActionParams, ThreadAction>} ThreadActionDefinition */
 
 /**
  * @param {string} id
@@ -34,16 +39,13 @@ registerThreadAction("fold-chat-window", {
     sequenceQuick: 20,
 });
 registerThreadAction("rename-thread", {
-    condition: ({ channel, owner, thread }) =>
-        channel &&
-        channel.isAllowedToRename &&
-        owner.props.chatWindow?.isOpen &&
-        !owner.isDiscussSidebarChannelActions,
+    condition: ({ action, channel }) => channel && channel.isAllowedToRename && action.editingName,
     icon: "fa fa-fw fa-pencil",
     name: _t("Rename Thread"),
-    onSelected: ({ owner }) => (owner.state.editingName = true),
+    onSelected: ({ action }) => action.editingName.set(true),
     sequence: 30,
     sequenceGroup: 20,
+    setup: ({ action }) => (action.editingName = maybePlugin(RenameThreadPlugin)?.editingName),
 });
 registerThreadAction("close", {
     condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
@@ -116,14 +118,15 @@ export class ThreadAction extends Action {
     }
 }
 
-class UseThreadActions extends UseActions {
+/** @typedef {UseActions<ThreadActionParams, ThreadAction>} UseThreadActions_Def */
+export class UseThreadActions extends UseActions {
     ActionClass = ThreadAction;
 }
 
 /**
- * @param {Object} [params0={}]
- * @param {Thread|() => Thread} thread
+ * @param {import("@mail/core/common/action").ActionRootRefParam & {thread?: Thread|() => Thread}} [params0={}]
+ * @returns {UseThreadActions_Def}
  */
-export function useThreadActions({ thread } = {}) {
-    return useAction(threadActionsRegistry, UseThreadActions, ThreadAction, { thread });
+export function useThreadActions({ thread, rootRef } = {}) {
+    return useAction(threadActionsRegistry, UseThreadActions, ThreadAction, { rootRef, thread });
 }

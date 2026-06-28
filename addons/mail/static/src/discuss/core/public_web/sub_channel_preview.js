@@ -1,22 +1,37 @@
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { isToday } from "@mail/utils/common/dates";
+import { htmlToTextContentInline } from "@mail/utils/common/format";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
 
 export class SubChannelPreview extends Component {
     static components = { AvatarStack };
     static template = "mail.SubChannelPreview";
-    static props = ["channel", "class?", "onClick?"];
+
+    setup() {
+        super.setup(...arguments);
+        this.store = useService("mail.store");
+        this.props = props({
+            channel: t.instanceOf(this.store["discuss.channel"].Class),
+            class: t.string().optional(),
+            onClick: t.function([]).optional(),
+        });
+    }
 
     dateText(message) {
         if (isToday(message.datetime)) {
             return message.datetime?.toLocaleString(DateTime.TIME_SIMPLE);
         }
         return message.datetime?.toLocaleString(DateTime.DATE_MED);
+    }
+
+    bodyText(message) {
+        return htmlToTextContentInline(message.body);
     }
 
     onClick() {

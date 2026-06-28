@@ -328,7 +328,6 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
         [
             Chrome.startPoS(),
             ProductScreen.enterOpeningAmount("0"),
-            Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Desk Organizer", "10"), //5.1 per item
             ProductScreen.totalAmountIs("51.00"),
             ProductScreen.clickPayButton(),
@@ -377,16 +376,7 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
 
             scan_barcode("0100100"),
             ProductScreen.selectedOrderlineHas("Test Product 1", "1", "80.0"),
-
-            scan_barcode("0100201"),
-            ProductScreen.enterLotNumber("1", "lot"),
-            ProductScreen.selectedOrderlineHas("Test Product 2", "1", "100.0", "White"),
-
-            scan_barcode("0100202"),
-            ProductScreen.enterLotNumber("1", "lot"),
-            ProductScreen.selectedOrderlineHas("Test Product 2", "1", "120.0", "Red"),
-
-            ProductScreen.totalAmountIs("300.0"),
+            ProductScreen.totalAmountIs("80.0"),
 
             refresh(),
             inLeftSide([
@@ -395,7 +385,6 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
                 Numpad.click("2"),
                 ...ProductScreen.selectedOrderlineHasDirect("Test Product 1", "2", "140.0"),
             ]),
-
             scan_barcode("0100300"),
             ProductScreen.selectedOrderlineHas("Test Product 3", "1", "50.0"),
             Chrome.endTour(),
@@ -594,6 +583,10 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            {
+                content: "category selector keeps category-list styling",
+                trigger: ".category-list",
+            },
             ProductScreen.verifyCategorySequence(["AAA", "AAB", "AAC"]),
             {
                 trigger: '.category-button:eq(1) > div span:contains("AAB")',
@@ -783,27 +776,6 @@ registry.category("web_tour.tours").add("ProductCardUoMPrecision", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("AddMultipleSerialsAtOnce", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product A"),
-            ProductScreen.enterLotNumbers(["SN001", "SN002", "SN003"]),
-            ProductScreen.selectedOrderlineHas("Product A", "3.0"),
-            ProductScreen.clickDisplayedProduct("Product A"),
-            [
-                {
-                    trigger: ".fa-trash-o",
-                    run: "click",
-                },
-            ],
-            ProductScreen.enterLotNumbers(["SN005", "SN006"]),
-            ProductScreen.selectedOrderlineHas("Product A", "4.0"),
-            Chrome.endTour(),
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("test_pricelist_parent_category_rule", {
     steps: () =>
         [
@@ -902,21 +874,10 @@ registry.category("web_tour.tours").add("test_fiscal_position_tax_group_labels",
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
-                orderlines: [
-                    {
-                        name: "Test Product",
-                        cssRules: [
-                            {
-                                css: ".tax-group",
-                                text: "Tax Group 1",
-                            },
-                        ],
-                    },
-                ],
                 cssRules: [
                     {
-                        css: ".pos-receipt-taxes",
-                        text: "Tax Group 1  ",
+                        css: "tr[name='taxes_line']",
+                        text: "Tax Group 15%",
                     },
                 ],
             }),
@@ -930,21 +891,10 @@ registry.category("web_tour.tours").add("test_fiscal_position_tax_group_labels",
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
-                orderlines: [
-                    {
-                        name: "Test Product",
-                        cssRules: [
-                            {
-                                css: ".tax-group",
-                                text: "Tax Group 2",
-                            },
-                        ],
-                    },
-                ],
                 cssRules: [
                     {
-                        css: ".pos-receipt-taxes",
-                        text: "Tax Group 2  ",
+                        css: "tr[name='taxes_line']",
+                        text: "Tax Group 5%",
                     },
                 ],
             }),
@@ -976,7 +926,7 @@ registry.category("web_tour.tours").add("test_product_long_press", {
             Dialog.is(),
             {
                 content: "Check On hand quantity is display on product info popup",
-                trigger: ".section-inventory-body div:contains('On hand: 0')",
+                trigger: "div:contains('On hand: 0')",
             },
             {
                 content: "Check that VAT label is present in the product details popup",
@@ -1101,6 +1051,35 @@ registry.category("web_tour.tours").add("test_preset_timing_retail", {
             TicketScreen.nthRowContains(2, "Delivery", false),
             TicketScreen.nthRowContains(1, "002"),
             TicketScreen.nthRowContains(1, "Dine in", false),
+            TicketScreen.selectOrder("002"),
+            TicketScreen.loadSelectedOrder(),
+            ProductScreen.selectPreset("Dine in", "Delivery", false),
+            PartnerList.clickPartner("A simple PoS man!"),
+            Chrome.presetTimingSlotHourNotExists("9:00am"),
+            Chrome.selectPresetTimingSlotHour({ title: "delivery", hour: "5:00pm" }),
+            Chrome.presetTimingSlotIs("5:00pm"),
+            Chrome.clickOrders(),
+            TicketScreen.nthRowContains(2, "002"),
+            TicketScreen.nthRowContains(2, "Delivery", false),
+            {
+                content:
+                    "Simulate order cancellation from backend and check that the order is removed from the PoS",
+                trigger: "body",
+                run: async () => {
+                    const latestOrder = posmodel.models["pos.order"].getAll()[0];
+                    await posmodel.data.call(
+                        "pos.order",
+                        "action_pos_order_cancel",
+                        [latestOrder.id],
+                        {
+                            context: {
+                                active_ids: [latestOrder.id],
+                            },
+                        }
+                    );
+                },
+            },
+            negateStep(...TicketScreen.nthRowContains(2, "002")),
         ].flat(),
 });
 
@@ -1111,15 +1090,15 @@ registry
             [
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
-                PartnerList.searchCustomerValue("Partner Full", true),
-                PartnerList.clickPartner("Partner Full"),
+                PartnerList.searchCustomerValue("APartner Full", true),
+                PartnerList.clickPartner("APartner Full"),
                 ProductScreen.clickDisplayedProduct("Desk Organizer"),
                 ProductScreen.clickFastPaymentButton("Bank"),
                 FeedbackScreen.isShown(),
                 PartnerList.isShown().map(negateStep),
                 FeedbackScreen.clickNextOrder(),
-                PartnerList.searchCustomerValue("Partner Full", true),
-                PartnerList.clickPartner("Partner Full"),
+                PartnerList.searchCustomerValue("APartner Full", true),
+                PartnerList.clickPartner("APartner Full"),
                 ProductScreen.clickDisplayedProduct("Desk Organizer"),
                 ProductScreen.clickPayButton(),
                 PaymentScreen.clickPaymentMethod("Bank"),
@@ -1152,21 +1131,6 @@ registry
                 ProductScreen.isShown(),
             ].flat(),
     });
-
-registry.category("web_tour.tours").add("test_only_existing_lots", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product with existing lots"),
-            ProductScreen.selectNthLotNumber(1),
-            ProductScreen.selectedOrderlineHas("Product with existing lots", "1.0"),
-            inLeftSide({
-                trigger: ".order-container .orderline .lot-number:contains('Lot Number 1001')",
-            }),
-            Chrome.endTour(),
-        ].flat(),
-});
 
 registry.category("web_tour.tours").add("test_delete_line", {
     steps: () =>
@@ -1306,36 +1270,12 @@ registry.category("web_tour.tours").add("test_preset_customer_selection", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            PartnerList.searchCustomerValue("Test Partner", true),
-            PartnerList.clickPartner("Test Partner"),
-            ProductScreen.customerIsSelected("Test Partner"),
+            PartnerList.searchCustomerValue("APartner Full", true),
+            PartnerList.clickPartner("APartner Full"),
+            ProductScreen.customerIsSelected("APartner Full"),
+            Chrome.clickOrders(),
+            TicketScreen.checkCustomerAddress("77 Santa Barbara Rd Pleasant Hill"),
             Chrome.endTour(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("test_product_info_product_inventory", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-
-            inLeftSide([
-                ...scan_barcode("product_variant_0"),
-                ...ProductScreen.clickControlButton("Info"),
-                {
-                    trigger: ".section-inventory-body :contains(100)",
-                },
-                Dialog.confirm("Close"),
-            ]),
-
-            inLeftSide([
-                ...scan_barcode("product_variant_1"),
-                ...ProductScreen.clickControlButton("Info"),
-                {
-                    trigger: ".section-inventory-body :contains(200)",
-                },
-                Dialog.confirm("Close"),
-            ]),
         ].flat(),
 });
 

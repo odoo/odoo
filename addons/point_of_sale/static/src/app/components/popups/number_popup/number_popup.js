@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Numpad, buttonsType } from "@point_of_sale/app/components/numpad/numpad";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -9,38 +8,28 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 export class NumberPopup extends Component {
     static template = "point_of_sale.NumberPopup";
     static components = { Numpad, Dialog };
-    static props = {
-        title: { type: String, optional: true },
-        subtitle: { type: String, optional: true },
-        buttons: { type: buttonsType, optional: true },
-        startingValue: { type: [Number, String], optional: true },
-        types: {
-            type: Array,
-            optional: true,
-            element: {
-                type: Object,
-                shape: {
-                    name: String,
-                    symbol: String,
-                },
-            },
-        },
-        startingType: { type: String, optional: true },
-        feedback: { type: Function, optional: true },
-        formatDisplayedValue: { type: Function, optional: true },
-        placeholder: { type: String, optional: true },
-        isValid: { type: Function, optional: true },
-        confirmButtonLabel: { type: String, optional: true },
-        getPayload: Function,
-        close: Function,
-    };
-    static defaultProps = {
-        title: _t("Amount of guests"),
-        startingValue: "",
-        isValid: () => true,
-        formatDisplayedValue: (x) => x,
-        feedback: () => false,
-    };
+    props = props({
+        title: t.string().optional(_t("Amount of guests")),
+        subtitle: t.string().optional(),
+        buttons: buttonsType.optional(),
+        startingValue: t.or([t.number(), t.string()]).optional(""),
+        types: t
+            .array(
+                t.object({
+                    name: t.string(),
+                    symbol: t.string(),
+                })
+            )
+            .optional(),
+        startingType: t.string().optional(),
+        feedback: t.function().optional(() => () => false),
+        formatDisplayedValue: t.function().optional(() => (x) => x),
+        placeholder: t.string().optional(),
+        isValid: t.function().optional(() => () => true),
+        confirmButtonLabel: t.string().optional(),
+        getPayload: t.function(),
+        close: t.function(),
+    });
 
     setup() {
         this.numberBuffer = useService("number_buffer");
@@ -53,7 +42,7 @@ export class NumberPopup extends Component {
         const defaultType =
             this.props.types?.find((type) => type.name === this.props.startingType) ||
             this.props.types?.[0];
-        this.state = useState({
+        this.state = proxy({
             buffer: this.props.startingValue,
             type: defaultType,
         });

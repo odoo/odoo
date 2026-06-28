@@ -134,9 +134,10 @@ class AccountMoveSend(models.AbstractModel):
             if invoice.l10n_vn_edi_invoice_state != 'sent':
                 continue
 
-            error = invoice._l10n_vn_edi_fetch_invoice_files()
-            if error:
-                invoice_data['error'] = error
+            if not self.env.context.get('skip_fetch_sinvoice_files'):
+                error = invoice._l10n_vn_edi_fetch_invoice_files()
+                if error:
+                    invoice_data['error'] = error
 
             if self._can_commit():
                 self.env.cr.commit()

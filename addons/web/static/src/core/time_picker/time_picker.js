@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -25,32 +25,25 @@ export class TimePicker extends Component {
         Dropdown,
         DropdownItem,
     };
-    static props = {
-        cssClass: { type: [String, Array, Object], optional: true },
-        inputCssClass: { type: [String, Array, Object], optional: true },
-        value: { type: [String, Time, { value: false }, { value: null }], optional: true },
-        onChange: { type: Function, optional: true },
-        onInvalid: { type: Function, optional: true },
-        showSeconds: { type: Boolean, optional: true },
-        minutesRounding: { type: Number, optional: true },
-        placeholder: { type: String, optional: true },
-    };
-    static defaultProps = {
-        cssClass: {},
-        inputCssClass: {},
-        value: "00:00",
-        onChange: () => {},
-        onInvalid: () => {},
-        showSeconds: false,
-        minutesRounding: 5,
-    };
+    props = props({
+        cssClass: t.or([t.string(), t.array(), t.object()]).optional({}),
+        inputCssClass: t.or([t.string(), t.array(), t.object()]).optional({}),
+        value: t
+            .or([t.string(), t.instanceOf(Time), t.literal(false), t.literal(null)])
+            .optional("00:00"),
+        onChange: t.function().optional(() => () => {}),
+        onInvalid: t.function().optional(() => () => {}),
+        showSeconds: t.boolean().optional(false),
+        minutesRounding: t.number().optional(5),
+        placeholder: t.string().optional(),
+    });
 
     setup() {
         this.inputRef = useRef("inputRef");
         this.menuRef = useChildRef();
         this.dropdownState = useDropdownState();
 
-        this.state = useState({
+        this.state = proxy({
             value: null,
             inputValue: "",
             isValid: true,

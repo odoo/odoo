@@ -16,15 +16,23 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, getFixture, test } from "@odoo/hoot";
+import { describe, getFixture, queryFirst, test } from "@odoo/hoot";
 
-import { queryFirst } from "@odoo/hoot-dom";
+import { signal } from "@odoo/owl";
+import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 
 describe.current.tags("desktop");
 defineMailModels();
 preloadBundle("web.assets_emoji");
 
 test("emoji picker correctly handles translations with special characters", async () => {
+    // Reset emoji loader to reload translations *for* the current test
+    patchWithCleanup(emojiLoader, {
+        _categories: signal.Array([]),
+        _emojis: signal.Array([]),
+        _loadingPromise: null,
+        _map: null,
+    });
     defineParams({
         translations: {
             "Japanese “here” button": `Bouton "ici" japonais`,
@@ -243,15 +251,13 @@ test("shortcodes shown in emoji title in message", async () => {
 });
 
 test("Emoji picker shows failure to load emojis", async () => {
-    // Simulate failure to load emojis
-    patchWithCleanup(odoo.loader.modules.get("@web/core/emoji_picker/emoji_data"), {
-        getEmojis() {
-            return [];
-        },
-    });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
+    // Simulate failure to load emojis
+    patchWithCleanup(emojiLoader, {
+        _emojis: signal.Array([]),
+    });
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
     await contains(".o-EmojiPicker:text('😵‍💫 Failed to load emojis...')");

@@ -8,7 +8,7 @@ import {
     queryOne,
     freezeTime,
 } from "@odoo/hoot-dom";
-import { advanceTime, Deferred } from "@odoo/hoot-mock";
+import { advanceTime } from "@odoo/hoot-mock";
 import { Component, onWillDestroy, markup, xml } from "@odoo/owl";
 import { clearRegistry, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
@@ -184,14 +184,14 @@ describe("adding listeners", () => {
         expect.verifySteps(["click"]);
     });
     test("updateContent after async listener", async () => {
-        const def = new Deferred();
+        const def = Promise.withResolvers();
         let clicked = 0;
         class Test extends Interaction {
             static selector = ".test";
             dynamicContent = {
                 span: {
                     "t-on-click": async () => {
-                        await def;
+                        await def.promise;
                         clicked++;
                     },
                     "t-att-x": () => clicked.toString(),
@@ -893,7 +893,7 @@ describe("lifecycle", () => {
     });
 
     test("willstart delayed, then destroy => start should not be called", async () => {
-        const def = new Deferred();
+        const def = Promise.withResolvers();
         class Test extends Interaction {
             static selector = ".test";
             setup() {
@@ -901,7 +901,7 @@ describe("lifecycle", () => {
             }
             async willStart() {
                 expect.step("willStart");
-                return def;
+                return def.promise;
             }
             start() {
                 expect.step("start");
@@ -920,7 +920,7 @@ describe("lifecycle", () => {
     });
 
     test("willstart delayed => update => willstart complete", async () => {
-        const def = new Deferred();
+        const def = Promise.withResolvers();
         let interaction;
         class Test extends Interaction {
             static selector = ".test";
@@ -929,7 +929,7 @@ describe("lifecycle", () => {
             }
             async willStart() {
                 expect.step("willStart");
-                return def;
+                return def.promise;
             }
             start() {
                 expect.step("start");
@@ -1109,7 +1109,7 @@ describe("waitFor...", () => {
             class Test extends Interaction {
                 static selector = ".test";
                 async willStart() {
-                    await this.waitForTimeout(() => expect.step("waitfortimeout"), 50);
+                    this.waitForTimeout(() => expect.step("waitfortimeout"), 50);
                     expect.step("willstart");
                     return new Promise((resolve) => {
                         setTimeout(() => {
@@ -1124,9 +1124,9 @@ describe("waitFor...", () => {
             }
             await startInteraction(Test, TemplateTest, { waitForStart: false });
             expect.verifySteps(["willstart"]);
-            await advanceTime(75);
+            await advanceTime(50, { animationFrame: false });
             expect.verifySteps(["waitfortimeout"]);
-            await advanceTime(75);
+            await advanceTime(50, { animationFrame: false });
             expect.verifySteps(["timeout", "start"]);
         });
 
@@ -1998,7 +1998,7 @@ describe("components", () => {
     test("can insert a component with props with t-component", async () => {
         let isCDestroyed = false;
         class C extends Component {
-            static template = xml`<p>component<span t-out="props.prop"></span></p>`;
+            static template = xml`<p>component<span t-out="this.props.prop"></span></p>`;
             static props = {
                 prop: { optional: true, type: String },
             };
@@ -2031,7 +2031,7 @@ describe("components", () => {
     test("can receive the selected element with t-component", async () => {
         let isCDestroyed = false;
         class C extends Component {
-            static template = xml`<p>component<span t-out="props.prop"></span></p>`;
+            static template = xml`<p>component<span t-out="this.props.prop"></span></p>`;
             static props = {
                 prop: { optional: true, type: String },
             };
@@ -2108,7 +2108,7 @@ describe("components", () => {
 
     test("can insert a component with props with mountComponent", async () => {
         class C extends Component {
-            static template = xml`<p>component<span t-out="props.prop"></span></p>`;
+            static template = xml`<p>component<span t-out="this.props.prop"></span></p>`;
             static props = {
                 prop: { optional: true, type: String },
             };
@@ -2795,14 +2795,14 @@ describe("debounced (2)", () => {
     });
 
     test("debounced handles async event handler", async () => {
-        const def = new Deferred();
+        const def = Promise.withResolvers();
         let clicked = 0;
         class Test extends Interaction {
             static selector = ".test";
             dynamicContent = {
                 span: {
                     "t-on-click": this.debounced(async () => {
-                        await def;
+                        await def.promise;
                         clicked++;
                     }, 100),
                     "t-att-x": () => clicked.toString(),
@@ -2994,14 +2994,14 @@ describe("throttled_for_animation (2)", () => {
     });
 
     test("throttled handles async event handler", async () => {
-        const def = new Deferred();
+        const def = Promise.withResolvers();
         let clicked = 0;
         class Test extends Interaction {
             static selector = ".test";
             dynamicContent = {
                 span: {
                     "t-on-click": this.throttled(async () => {
-                        await def;
+                        await def.promise;
                         clicked++;
                     }, 100),
                     "t-att-x": () => clicked.toString(),

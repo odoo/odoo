@@ -84,6 +84,7 @@ PLS_UPDATE_BATCH_STEP = 5000
 class CrmLead(models.Model):
     _name = 'crm.lead'
     _description = "Lead"
+    _explanation = "Represents a potential sales opportunity or lead. Use this to track interactions, estimated revenue, and the progress of a potential sale through different stages of your sales pipeline."
     _order = "priority desc, id desc"
     _inherit = [
                 'mail.thread.subject.suggested',
@@ -134,7 +135,6 @@ class CrmLead(models.Model):
         compute='_compute_stage_id', readonly=False, store=True,
         copy=False, group_expand='_read_group_stage_ids', ondelete='restrict',
         domain="['|', ('team_ids', '=', False), ('team_ids', 'in', team_id)]")
-    stage_id_color = fields.Integer(string='Stage Color', related="stage_id.color", export_string_translation=False)
     tag_ids = fields.Many2many(
         'crm.tag', 'crm_tag_rel', 'lead_id', 'tag_id', string='Tags',
         help="Classify and analyze your lead/opportunity categories like: Training, Service")
@@ -143,7 +143,7 @@ class CrmLead(models.Model):
     expected_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True, default=0.0)
     prorated_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_prorated_revenue")
     recurring_revenue = fields.Monetary('Recurring Revenues', currency_field='company_currency', tracking=True, default=0.0)
-    recurring_plan = fields.Many2one('crm.recurring.plan', string="Recurring Plan")
+    recurring_plan = fields.Many2one('crm.recurring.plan', string="Recurring Plan", index='btree_not_null')
     recurring_revenue_monthly = fields.Monetary('Expected MRR', currency_field='company_currency', store=True,
                                                 compute="_compute_recurring_revenue_monthly")
     recurring_revenue_monthly_prorated = fields.Monetary('Prorated MRR', currency_field='company_currency', store=True,
@@ -199,7 +199,7 @@ class CrmLead(models.Model):
     website = fields.Char('Website', help="Website of the contact", compute="_compute_website", readonly=False, store=True, tracking=35)
     lang_id = fields.Many2one(
         'res.lang', string='Language',
-        compute='_compute_lang_id', readonly=False, store=True)
+        compute='_compute_lang_id', readonly=False, store=True, index=True)
     lang_code = fields.Char(related='lang_id.code')
     lang_active_count = fields.Integer(compute='_compute_lang_active_count')
     # Address fields
@@ -213,7 +213,7 @@ class CrmLead(models.Model):
         domain="[('country_id', '=?', country_id)]", tracking=64)
     country_id = fields.Many2one(
         'res.country', string='Country',
-        compute='_compute_partner_address_values', readonly=False, store=True, tracking=65)
+        compute='_compute_partner_address_values', readonly=False, store=True, index=True, tracking=65)
     # Probability (Opportunity only)
     probability = fields.Float(
         'Probability', aggregator="avg", copy=False,
@@ -636,11 +636,6 @@ class CrmLead(models.Model):
         for lead in self:
             lead.partner_phone_update = lead._get_partner_phone_update(force_void=False)
 
-    @api.onchange('phone', 'country_id', 'company_id')
-    def _onchange_phone_validation(self):
-        if self.phone:
-            self.phone = self._phone_format(fname='phone', force_format='INTERNATIONAL') or self.phone
-
     def _prepare_values_from_partner(self, partner):
         """ Get a dictionary with values coming from partner information to
         copy on a lead. Non-address fields get the current lead
@@ -721,9 +716,9 @@ class CrmLead(models.Model):
         return False
 
     def _evaluate_context_from_action(self, action):
-        context_str = action.get('context', '{}')
+        context_str = action.get('context', '{}').strip()
         context_str = re.sub(r'\buid\b', str(self.env.uid), context_str)
-        context_str = re.sub(r'\bactive_id\b', str(self.id), context_str)
+        context_str = re.sub(r'\bactive_id\b', str(self.id or self.env.context.get('force_active_id')), context_str)
         return literal_eval(context_str)
 
     # ------------------------------------------------------------
@@ -1187,7 +1182,7 @@ class CrmLead(models.Model):
         # use duration tracking field to determine if the task jumped from first to last stage
         # only takes into accounts stages on which the lead has spent at least a minute,
         # to only account for valid stage movements
-        elif len(stage_ids := [int(stage_id) for stage_id, duration in self.duration_tracking.items() if duration >= 60]) == 1:
+        elif len(stage_ids := [int(stage_id) for stage_id, duration in self.duration_tracking.items() if stage_id.isdigit() and duration >= 60]) == 1:
             first_stage = self.env['crm.stage'].search([
                 '|', ('team_ids', 'in', False), ('team_ids', 'in', self.team_id.id),
             ], order='sequence ASC', limit=1)
@@ -1218,6 +1213,7 @@ class CrmLead(models.Model):
             'default_opportunity_id': current_opportunity_id,
             'default_partner_id': self.partner_id.id,
             'default_partner_ids': partner_ids,
+            'calendar_include_user_events': True,
             'default_team_id': self.team_id.id,
             'default_name': self.name,
         }
@@ -1320,6 +1316,14 @@ class CrmLead(models.Model):
             'create': False
         }
         return action
+
+    def action_convert_to_opportunity(self):
+        self.ensure_one()
+        self.convert_opportunity(self.partner_id)
+        self._handle_partner_assignment(
+            force_partner_id=self._find_matching_partner().id,
+            create_missing=True,
+        )
 
     # ------------------------------------------------------------
     # VIEWS
@@ -1838,7 +1842,7 @@ class CrmLead(models.Model):
 
         return True
 
-    def _handle_partner_assignment(self, force_partner_id=False, create_missing=True, with_parent=None):
+    def _handle_partner_assignment(self, force_partner_id=False, create_missing=True):
         """ Update customer (partner_id) of leads. Purpose is to set the same
         partner on most leads; either through a newly created partner either
         through a given partner_id.
@@ -1846,13 +1850,12 @@ class CrmLead(models.Model):
         :param int force_partner_id: if set, update all leads to that customer;
         :param create_missing: for leads without customer, create a new one
           based on lead information;
-        :param with_parent: if set, create the new partner with the given parent
         """
         for lead in self:
             if force_partner_id:
                 lead.partner_id = force_partner_id
             if not lead.partner_id and create_missing:
-                partner = lead._create_customer(with_parent=with_parent)
+                partner = lead._create_customer()
                 lead.partner_id = partner.id
 
     def _handle_salesmen_assignment(self, user_ids=False, team_id=False):
@@ -1960,10 +1963,9 @@ class CrmLead(models.Model):
             )
         return partner
 
-    def _create_customer(self, with_parent=None):
+    def _create_customer(self):
         """ Create a partner from lead data and link it to the lead.
 
-        :param with_parent: if set, create the new partner with the given parent
         :return: newly-created partner browse record
         """
         Partner = self.env['res.partner']
@@ -1971,11 +1973,7 @@ class CrmLead(models.Model):
         if not contact_name:
             contact_name = parse_contact_from_email(self.email_from)[0] if self.email_from else False
 
-        if with_parent:
-            partner_company = with_parent
-        elif self.partner_name:
-            partner_company = Partner.create(self._prepare_customer_values(self.partner_name))
-        elif self.partner_id:
+        if self.partner_id:
             partner_company = self.partner_id
         else:
             partner_company = self.env['res.partner']
@@ -2067,25 +2065,25 @@ class CrmLead(models.Model):
             "street", "street2", "city", "zip", "state_id", "country_id"
         ])
 
-    def _track_subtype(self, init_values):
+    def _track_log_get_default_subtype(self, track_init_values):
         self.ensure_one()
-        if 'stage_id' in init_values and self.won_status == 'won':
+        if 'stage_id' in track_init_values and self.won_status == 'won':
             return self.env.ref('crm.mt_lead_won')
-        elif 'lost_reason_id' in init_values and self.lost_reason_id:
+        elif 'lost_reason_id' in track_init_values and self.lost_reason_id:
             return self.env.ref('crm.mt_lead_lost')
-        elif 'stage_id' in init_values:
+        elif 'stage_id' in track_init_values:
             return self.env.ref('crm.mt_lead_stage')
-        elif 'won_status' in init_values and self.won_status != 'lost':
+        elif 'won_status' in track_init_values and self.won_status != 'lost':
             return self.env.ref('crm.mt_lead_restored')
-        elif 'won_status' in init_values and self.won_status == 'lost':
+        elif 'won_status' in track_init_values and self.won_status == 'lost':
             return self.env.ref('crm.mt_lead_lost')
-        return super()._track_subtype(init_values)
+        return super()._track_log_get_default_subtype(track_init_values)
 
-    def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
+    def _notify_by_email_prepare_rendering_context(self, message, model_description=False,
                                                    force_email_company=False, force_email_lang=False,
                                                    force_record_name=False, force_header=False, force_footer=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
-            message, msg_vals=msg_vals, model_description=model_description,
+            message, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang,
             force_header=force_header, force_footer=force_footer, force_record_name=force_record_name,
         )
@@ -2127,7 +2125,7 @@ class CrmLead(models.Model):
         new_lead._assign_userless_lead_in_team(_('incoming email'))
         return new_lead
 
-    def _message_post_after_hook(self, message, msg_vals):
+    def _message_post_after_hook(self, message):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -2143,7 +2141,7 @@ class CrmLead(models.Model):
                 self.search([
                     ('partner_id', '=', False), email_domain, ('stage_id.fold', '=', False)
                 ]).write({'partner_id': new_partner[0].id})
-        return super()._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message)
 
     @api.model
     def get_import_templates(self):

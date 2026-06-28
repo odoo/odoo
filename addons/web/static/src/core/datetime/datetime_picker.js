@@ -1,5 +1,5 @@
-import { onWillRender, useState } from "@web/owl2/utils";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { onWillRender } from "@web/owl2/utils";
+import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { MAX_VALID_DATE, MIN_VALID_DATE, clampDate, isInRange, today } from "../l10n/dates";
 import { localization } from "../l10n/localization";
@@ -275,60 +275,37 @@ const PRECISION_LEVELS = new Map()
 // Other constants
 const GRID_COUNT = 10;
 const GRID_MARGIN = 1;
-const NULLABLE_DATETIME_PROPERTY = [DateTime, { value: false }, { value: null }];
 
 const DAYS_PER_WEEK = 7;
 const WEEKS_PER_MONTH = 6;
 
+const NULLABLE_DATETIME_TYPE = t.or([t.instanceOf(DateTime), t.literal(false), t.literal(null)]);
+
+export const dateTimePickerProps = {
+    focusedDateIndex: t.number().optional(0),
+    showWeekNumbers: t.boolean().optional(true),
+    daysOfWeekFormat: t.string().optional("narrow"),
+    maxDate: t.or([NULLABLE_DATETIME_TYPE, t.literal("today")]).optional(),
+    maxPrecision: t.selection([...PRECISION_LEVELS.keys()]).optional("decades"),
+    minDate: t.or([NULLABLE_DATETIME_TYPE, t.literal("today")]).optional(),
+    minPrecision: t.selection([...PRECISION_LEVELS.keys()]).optional("days"),
+    onReset: t.function().optional(),
+    onSelect: t.function().optional(),
+    onToggleRange: t.function().optional(),
+    range: t.boolean().optional(),
+    rounding: t.number().optional(5),
+    showRangeToggler: t.boolean().optional(),
+    slots: t.object({ buttons: t.object().optional() }).optional(),
+    type: t.selection(["date", "datetime"]).optional("datetime"),
+    value: t.or([NULLABLE_DATETIME_TYPE, t.array(NULLABLE_DATETIME_TYPE)]).optional(),
+    isDateValid: t.function().optional(),
+    dayCellClass: t.function().optional(),
+    tz: t.string().optional(),
+};
+
 /** @extends {Component<DateTimePickerProps>} */
 export class DateTimePicker extends Component {
-    static props = {
-        focusedDateIndex: { type: Number, optional: true },
-        showWeekNumbers: { type: Boolean, optional: true },
-        daysOfWeekFormat: { type: String, optional: true },
-        maxDate: { type: [NULLABLE_DATETIME_PROPERTY, { value: "today" }], optional: true },
-        maxPrecision: {
-            type: [...PRECISION_LEVELS.keys()].map((value) => ({ value })),
-            optional: true,
-        },
-        minDate: { type: [NULLABLE_DATETIME_PROPERTY, { value: "today" }], optional: true },
-        minPrecision: {
-            type: [...PRECISION_LEVELS.keys()].map((value) => ({ value })),
-            optional: true,
-        },
-        onReset: { type: Function, optional: true },
-        onSelect: { type: Function, optional: true },
-        onToggleRange: { type: Function, optional: true },
-        range: { type: Boolean, optional: true },
-        rounding: { type: Number, optional: true },
-        showRangeToggler: { type: Boolean, optional: true },
-        slots: {
-            type: Object,
-            shape: { buttons: { type: Object, optional: true } },
-            optional: true,
-        },
-        type: { type: [{ value: "date" }, { value: "datetime" }], optional: true },
-        value: {
-            type: [
-                NULLABLE_DATETIME_PROPERTY,
-                { type: Array, element: NULLABLE_DATETIME_PROPERTY },
-            ],
-            optional: true,
-        },
-        isDateValid: { type: Function, optional: true },
-        dayCellClass: { type: Function, optional: true },
-        tz: { type: String, optional: true },
-    };
-
-    static defaultProps = {
-        focusedDateIndex: 0,
-        daysOfWeekFormat: "narrow",
-        maxPrecision: "decades",
-        minPrecision: "days",
-        rounding: 5,
-        showWeekNumbers: true,
-        type: "datetime",
-    };
+    props = props(dateTimePickerProps);
 
     static template = "web.DateTimePicker";
     static components = { TimePicker };
@@ -364,7 +341,7 @@ export class DateTimePicker extends Component {
         this.title = "";
         this.shouldAdjustFocusDate = false;
 
-        this.state = useState({
+        this.state = proxy({
             /** @type {DateTime | null} */
             focusDate: null,
             /** @type {DateTime | null} */

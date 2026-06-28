@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="mail.ChatterComposer" t-inherit="mail.Composer" t-inherit-mode="extension">
-        <xpath expr="//div[@t-custom-ref='root']" position="before">
-            <div t-if="this.props.withMessageFields and this.props.type === 'message'" class="py-1">
+        <xpath expr="//div[@t-ref='this.rootRef']" position="before">
+            <div t-if="this.webComposerProps.withMessageFields and this.props.type === 'message'" class="py-1">
                 <div class="d-flex">
                     <span class="flex-shrink-0 text-end fw-bold" style="width:55px">To: </span>
-                    <RecipientsInput thread="this.props.thread"/>
+                    <RecipientsInput thread="this.webComposerProps.thread"
+                        recipientType="'to'"
+                        placeholder.translate="Followers only"/>
+                    <button class="btn btn-sm" t-if="!this.chatterState.isCcEnabled"
+                        t-on-click="() => (this.chatterState.isCcEnabled = true)">Cc</button>
                 </div>
-                <div class="d-flex" t-if="this.props.thread.showSubjectInSmallComposer">
+                <div t-if="this.chatterState.isCcEnabled" class="d-flex">
+                    <span class="flex-shrink-0 text-end fw-bold" style="width:55px">Cc: </span>
+                    <RecipientsInput thread="this.webComposerProps.thread"
+                        recipientType="'cc'"
+                        placeholder.translate="Cc recipients"/>
+                </div>
+                <div class="d-flex" t-if="this.webComposerProps.thread.showSubjectInSmallComposer">
                     <span class="flex-shrink-0 text-end fw-bold me-1" style="width:55px">Subject: </span>
                     <input t-custom-ref="subjectInput"
                            type="text" name="subject" class="o_input border-0"
-                           t-att-placeholder="this.props.thread.defaultSubject"
+                           t-att-placeholder="this.webComposerProps.thread.defaultSubject"
                     />
                 </div>
             </div>

@@ -17,18 +17,8 @@ if typing.TYPE_CHECKING:
 import psycopg2
 from psycopg2.extensions import quote_ident
 
+from .func import deprecated
 from .misc import named_to_positional_printf
-
-__all__ = [
-    "SQL",
-    "create_index",
-    "drop_view_if_exists",
-    "escape_psql",
-    "index_exists",
-    "make_identifier",
-    "make_index_name",
-    "reverse_order",
-]
 
 _schema = logging.getLogger('odoo.schema')
 
@@ -501,6 +491,7 @@ def get_foreign_keys(cr, tablename1, columnname1, tablename2, columnname2, ondel
     return [r[0] for r in cr.fetchall()]
 
 
+@deprecated("Removed after 20.0")
 def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete):
     """ Update the foreign keys between tables to match the given one, and
         return ``True`` if the given foreign key has been recreated.
@@ -538,6 +529,7 @@ def index_exists(cr, indexname):
     return cr.rowcount
 
 
+@deprecated("Removed after 20.0")
 def check_index_exist(cr, indexname):
     assert index_exists(cr, indexname), f"{indexname} does not exist"
 
@@ -625,19 +617,24 @@ def drop_view_if_exists(cr, viewname):
         cr.execute(SQL("DROP MATERIALIZED VIEW %s CASCADE", SQL.identifier(viewname)))
 
 
-def escape_psql(to_escape):
+@deprecated("Since 20.0, use escape_like_value")
+def escape_psql(to_escape: str) -> str:
+    return escape_like_value(to_escape)
+
+
+def escape_like_value(to_escape: str) -> str:
+    """ Escapes a string for injection into a LIKE statement. """
     return to_escape.replace('\\', r'\\').replace('%', r'\%').replace('_', r'\_')
 
 
-def pg_varchar(size=0):
+def pg_varchar(size: int = 0) -> str:
     """ Returns the VARCHAR declaration for the provided size:
 
     * If no size (or an empty or negative size is provided) return an
       'infinite' VARCHAR
     * Otherwise return a VARCHAR(n)
 
-    :param int size: varchar size, optional
-    :rtype: str
+    :param size: varchar size, optional
     """
     if size:
         if not isinstance(size, int):
@@ -647,6 +644,7 @@ def pg_varchar(size=0):
     return 'VARCHAR'
 
 
+@deprecated("Removed after 20.0")
 def reverse_order(order):
     """ Reverse an ORDER BY clause """
     items = []
@@ -674,6 +672,7 @@ def increment_fields_skiplock(records, *fields):
     for field in fields:
         assert records._fields[field].type == 'integer'
 
+    records.invalidate_recordset(fields)
     cr = records.env.cr
     tablename = records._table
     cr.execute(SQL(

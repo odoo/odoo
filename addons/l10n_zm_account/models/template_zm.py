@@ -11,8 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_zm_template_data(self):
         return {
             'code_digits': '7',
-            'property_account_receivable_id': 'zm_account_8000000',
-            'property_account_payable_id': 'zm_account_9000000',
         }
 
     @template('zm', 'res.company')
@@ -35,5 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'zm_tax_purchase_16',
                 'income_account_id': 'zm_account_1000000',
                 'expense_account_id': 'zm_account_3800000',
+                'receivable_account_id': 'zm_account_8000000',
+                'payable_account_id': 'zm_account_9000000',
             }
         }

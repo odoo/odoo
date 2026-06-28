@@ -4,7 +4,7 @@
     <t t-name="mail.DiscussSidebarMailboxes">
         <div class="d-flex flex-column flex-grow-0 o-gap-0_5 bg-inherit">
             <Mailbox t-if="this.store.self_user?.notification_type === 'inbox'" mailbox="this.store.inbox"/>
-            <Mailbox mailbox="this.store.bookmarkBox"/>
+            <Mailbox t-if="this.store.bookmarkBox.counter" mailbox="this.store.bookmarkBox"/>
             <Mailbox t-if="this.store.self_user?.notification_type === 'inbox'" mailbox="this.store.history"/>
         </div>
     </t>
@@ -38,14 +38,14 @@
         >
             <ThreadIcon className="'bg-inherit opacity-75 justify-content-center ' + (this.store.discuss.isSidebarCompact ? '' : 'o-ms-1_5 me-2 pt-1')" thread="this.mailbox" size="this.store.discuss.isSidebarCompact ? 'large' : 'medium'"/>
             <t t-if="!this.store.discuss.isSidebarCompact">
-                <div class="me-2 text-truncate small opacity-75 opacity-100-hover" t-out="this.mailbox.display_name"/>
+                <div class="o-mail-DiscussSidebar-itemName me-2 text-truncate small" t-out="this.mailbox.display_name"/>
                 <div t-attf-class="flex-grow-1 {{ this.mailbox.counter === 0 ? 'me-3': '' }}"/>
             </t>
-            <t t-if="this.mailbox.counter > 0" t-call="mail.discuss_badge">
-                <t t-set="counter" t-value="this.mailbox.counter"/>
-                <t t-set="badgeClass" t-value="'o-mail-DiscussSidebar-badge ' + (this.store.discuss.isSidebarCompact ? 'position-absolute o-compact' : 'mx-1')"/>
-                <t t-set="counterClass" t-value="(this.mailbox.id === 'bookmark' ? 'o-muted' : '')"/>
-                <t t-set="floating" t-value="this.store.discuss.isSidebarCompact"/>
+            <t t-if="this.mailbox.counter > 0" t-call="mail.discuss_badge"
+                counter="this.mailbox.counter"
+                badgeClass="'o-mail-DiscussSidebar-badge ' + (this.store.discuss.isSidebarCompact ? 'position-absolute o-compact' : 'mx-1')"
+                counterClass="(this.mailbox.id === 'bookmark' ? 'o-muted' : '')"
+                floating="this.store.discuss.isSidebarCompact">
             </t>
         </button>
     </t>

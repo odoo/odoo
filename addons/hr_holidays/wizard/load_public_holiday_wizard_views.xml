@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="load_public_holiday_wizard_view_form" model="ir.ui.view">
+        <field name="model">load.public.holiday.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Load Public Holidays">
+                <div class="alert alert-warning mb-3" role="alert" invisible="not warning_message">
+                    <field name="warning_message" nolabel="1" class="mb-0"/>
+                </div>
+                <group>
+                    <group>
+                        <field name="year" widget="integer" options="{'type': 'number'}"/>
+                    </group>
+                </group>
+                <separator string="Public Holidays" class="mt-0 mb-3" invisible="not line_ids"/>
+                <field name="line_ids" nolabel="1" invisible="not line_ids">
+                    <list create="0" delete="1" editable="bottom" open_form_view="0">
+                        <field name="name"/>
+                        <field name="start_date"/>
+                        <field name="allowed_work_entry_type_ids" column_invisible="1"/>
+                        <field name="work_entry_type_id" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="company_id" options="{'no_open': True, 'no_create': True}"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_add_public_holidays" type="object" class="btn-primary" string="Add Public Holidays" invisible="not line_ids"/>
+                    <button name="action_add_public_holidays" type="object" class="btn-primary disabled" string="Add Public Holidays" invisible="line_ids"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

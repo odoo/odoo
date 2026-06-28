@@ -127,10 +127,11 @@ class PurchaseRequisition(models.Model):
 
     def action_confirm(self):
         self.ensure_one()
-        if not self.line_ids:
+        product_lines = self.line_ids.filtered(lambda line: not line.display_type)
+        if not product_lines:
             raise UserError(_("You cannot confirm agreement '%(agreement)s' because it does not contain any product lines.", agreement=self.name))
         if self.requisition_type == 'blanket_order':
-            for requisition_line in self.line_ids:
+            for requisition_line in product_lines:
                 if requisition_line.price_unit <= 0.0:
                     raise UserError(_('You cannot confirm a blanket order with lines missing a price.'))
                 if requisition_line.product_qty <= 0.0:
@@ -165,8 +166,16 @@ class PurchaseRequisitionLine(models.Model):
     _inherit = ['analytic.mixin']
     _description = "Purchase Requisition Line"
     _rec_name = 'product_id'
+    _order = 'sequence, id'
 
-    product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], required=True)
+    sequence = fields.Integer(string='Sequence', default=10)
+    display_type = fields.Selection([
+        ('line_section', "Section"),
+        ('line_subsection', "Subsection"),
+        ('line_note', "Note"),
+    ], default=False, help="Technical field for UX purpose.")
+    name = fields.Text(string='Line Description')
+    product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)])
     uom_id = fields.Many2one(
         'uom.uom', 'Unit',
         compute='_compute_uom_id', store=True, readonly=False, precompute=True)
@@ -175,15 +184,59 @@ class PurchaseRequisitionLine(models.Model):
     price_unit = fields.Float(
         string='Unit Price', min_display_digits='Product Price', default=0.0,
         compute="_compute_price_unit", readonly=False, store=True)
+    price_subtotal = fields.Monetary(compute='_compute_price_subtotal', string='Amount', store=True)
     qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered')
     requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade', index=True)
+    currency_id = fields.Many2one('res.currency', related='requisition_id.currency_id')
     company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True)
     supplier_info_ids = fields.One2many('product.supplierinfo', 'purchase_requisition_line_id')
+    parent_id = fields.Many2one(
+        'purchase.requisition.line',
+        string="Parent Section Line",
+        compute='_compute_parent_id',
+    )
+
+    @api.constrains('display_type', 'product_id')
+    def _check_line_type(self):
+        for line in self:
+            if line.display_type and line.product_id:
+                raise ValidationError(_("A section or note line cannot have a product."))
+            if not line.display_type and not line.product_id:
+                raise ValidationError(_("A product is required on purchase agreement lines."))
+
+    @api.depends('display_type', 'product_qty', 'price_unit')
+    def _compute_price_subtotal(self):
+        for line in self:
+            line.price_subtotal = 0.0 if line.display_type else line.product_qty * line.price_unit
+
+    def _compute_parent_id(self):
+        purchase_requisition_lines = set(self)
+        for requisition, lines in self.grouped('requisition_id').items():
+            if not requisition:
+                lines.parent_id = False
+                continue
+            last_section = False
+            last_subsection = False
+            for line in requisition.line_ids.sorted('sequence'):
+                if line.display_type == 'line_section':
+                    last_section = line
+                    if line in purchase_requisition_lines:
+                        line.parent_id = False
+                    last_subsection = False
+                elif line.display_type == 'line_subsection':
+                    if line in purchase_requisition_lines:
+                        line.parent_id = last_section
+                    last_subsection = line
+                elif line in purchase_requisition_lines:
+                    line.parent_id = last_subsection or last_section
 
     @api.depends('requisition_id.purchase_ids.state')
     def _compute_ordered_qty(self):
         line_found = defaultdict(set)
         for line in self:
+            if line.display_type:
+                line.qty_ordered = 0
+                continue
             total = 0.0
             for po in line.requisition_id.purchase_ids.filtered(lambda purchase_order: purchase_order.state == 'purchase'):
                 for po_line in po.order_line.filtered(lambda order_line: order_line.product_id == line.product_id):
@@ -214,13 +267,18 @@ class PurchaseRequisitionLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('display_type'):
+                vals.update(self._get_display_line_vals())
         lines = super().create(vals_list)
-        for line, vals in zip(lines, vals_list):
+        for line in lines:
+            if line.display_type:
+                continue
             if line.requisition_id.requisition_type == 'blanket_order' and line.requisition_id.state not in ['draft', 'cancel', 'done']:
-                if vals['price_unit'] <= 0.0:
+                if line.price_unit <= 0.0:
                     raise UserError(_("You cannot have a negative or unit price of 0 for an already confirmed blanket order."))
                 supplier_infos = self.env['product.supplierinfo'].search([
-                    ('product_id', '=', vals.get('product_id')),
+                    ('product_id', '=', line.product_id.id),
                     ('partner_id', '=', line.requisition_id.vendor_id.id),
                 ])
                 if not any(s.purchase_requisition_id for s in supplier_infos):
@@ -228,6 +286,10 @@ class PurchaseRequisitionLine(models.Model):
         return lines
 
     def write(self, vals):
+        if 'display_type' in vals and self.filtered(lambda line: line.display_type != vals.get('display_type')):
+            raise UserError(_("You cannot change the type of a purchase agreement line. Instead you should delete the current line and create a new line of the proper type."))
+        if vals.get('display_type'):
+            vals = dict(vals, **self._get_display_line_vals())
         res = super().write(vals)
         if 'price_unit' not in vals:
             return res
@@ -239,6 +301,15 @@ class PurchaseRequisitionLine(models.Model):
         self.supplier_info_ids.write({'price': vals['price_unit']})
         return res
 
+    @api.model
+    def _get_display_line_vals(self):
+        return {
+            'product_id': False,
+            'product_qty': 0.0,
+            'uom_id': False,
+            'price_unit': 0.0,
+        }
+
     def unlink(self):
         to_unlink = self.filtered(lambda r: r.requisition_id.state not in ['draft', 'cancel', 'done'])
         to_unlink.supplier_info_ids.unlink()
@@ -247,7 +318,7 @@ class PurchaseRequisitionLine(models.Model):
     def _create_supplier_info(self):
         self.ensure_one()
         purchase_requisition = self.requisition_id
-        if purchase_requisition.requisition_type == 'blanket_order' and purchase_requisition.vendor_id:
+        if not self.display_type and purchase_requisition.requisition_type == 'blanket_order' and purchase_requisition.vendor_id:
             # create a supplier_info only in case of blanket order
             self.env['product.supplierinfo'].sudo().create({
                 'partner_id': purchase_requisition.vendor_id.id,
@@ -259,8 +330,36 @@ class PurchaseRequisitionLine(models.Model):
                 'purchase_requisition_line_id': self.id,
             })
 
+    def _get_section_totals(self, totals_field):
+        """Return the total/subtotal amount of purchase agreement lines linked to section."""
+        self.ensure_one()
+        section_lines = self._get_section_lines()
+        return sum(section_lines.mapped(totals_field))
+
+    def _get_section_lines(self):
+        self.ensure_one()
+        return self.requisition_id.line_ids.filtered(self._is_line_in_section)
+
+    def _is_line_in_section(self, line):
+        """Return whether the line is a direct or indirect child of the section."""
+        self.ensure_one()
+        is_direct_child = line.parent_id == self
+        is_indirect_child = (
+            self.display_type == 'line_section'
+            and line.parent_id
+            and line.parent_id.display_type == 'line_subsection'
+            and line.parent_id.parent_id == self
+        )
+        return is_direct_child or is_indirect_child
+
     def _prepare_purchase_order_line(self, name, product_qty=0.0, price_unit=0.0, taxes_ids=False):
         self.ensure_one()
+        if self.display_type:
+            return {
+                'display_type': self.display_type,
+                'name': self.name,
+                'sequence': self.sequence,
+            }
         if self.product_description_variants:
             name += '\n' + self.product_description_variants
         date_planned = fields.Datetime.now()
@@ -275,4 +374,5 @@ class PurchaseRequisitionLine(models.Model):
             'tax_ids': [(6, 0, taxes_ids)],
             'date_planned': date_planned,
             'analytic_distribution': self.analytic_distribution,
+            'sequence': self.sequence,
         }

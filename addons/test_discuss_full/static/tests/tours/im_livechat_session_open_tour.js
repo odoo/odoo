@@ -11,7 +11,7 @@ registry.category("web_tour.tours").add("im_livechat_session_open", {
             run: "click",
         },
         {
-            trigger: ".o-mail-Thread:contains('The conversation is empty.')",
+            trigger: ".o-mail-Thread:contains('No messages yet.')",
         },
     ],
 });

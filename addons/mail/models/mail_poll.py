@@ -57,7 +57,6 @@ class MailPoll(models.Model):
                 subtype_xmlid="mail.mt_comment",
             )
             stores[thread_by_poll[poll]._store_target()].add(poll, "_store_poll_fields")
-        stores.bus_send()
 
     @api.model
     def _end_expired_polls(self):
@@ -73,8 +72,7 @@ class MailPoll(models.Model):
             stores[thread_by_message[message]._store_target()].add(
                 message,
                 lambda res: (
-                    res.many("started_poll_ids", [], mode="DELETE"),
-                    res.many("ended_poll_ids", [], mode="DELETE"),
+                    res.many("started_poll_ids", []),
+                    res.many("ended_poll_ids", []),
                 ),
             )
-        stores.bus_send()

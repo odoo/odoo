@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
+    <record id="payment.payment_provider_pay_on_invoice" model="payment.provider">
+        <field name="code">custom</field>
+        <field name="custom_mode">pay_on_invoice</field>
+        <field name="is_live">True</field>
+        <field name="sequence">50</field>
+        <field name="redirect_form_view_id" ref="payment.generic_redirect_form"/>
+        <field name="done_msg" type="html">
+            <p>Your order is confirmed, you will receive your invoice shortly.</p>
+        </field>
+    </record>
+
     <record id="payment.payment_provider_transfer" model="payment.provider">
         <field name="code">custom</field>
+        <field name="custom_mode">wire_transfer</field>
+        <field name="is_live">True</field>
         <field name="redirect_form_view_id" ref="payment.generic_redirect_form"/>
         <!-- Clear the default value before recomputing the pending_msg -->
         <field name="pending_msg" eval="False"/>
-        <field name="custom_mode">wire_transfer</field>
-        <field name="payment_method_ids"
-               eval="[Command.set([
-                         ref('payment_custom.payment_method_wire_transfer'),
-                     ])]"
-        />
     </record>
 
     <function model="payment.provider"

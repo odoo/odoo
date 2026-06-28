@@ -1,4 +1,4 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Domain } from "@web/core/domain";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
@@ -8,7 +8,7 @@ import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_se
 import { fuzzyTest } from "@web/core/utils/search";
 import { _t } from "@web/core/l10n/translation";
 import { SearchBarMenu } from "../search_bar_menu/search_bar_menu";
-import { Component, status } from "@odoo/owl";
+import { Component, props, proxy, status, t } from "@odoo/owl";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -50,24 +50,16 @@ export class SearchBar extends Component {
         Dropdown,
         DropdownItem,
     };
-    static props = {
-        autofocus: { type: Boolean, optional: true },
-        slots: {
-            type: Object,
-            optional: true,
-            shape: {
-                default: { optional: true },
-                "search-bar-additional-menu": { optional: true },
-            },
-        },
-        toggler: {
-            type: Object,
-            optional: true,
-        },
-    };
-    static defaultProps = {
-        autofocus: true,
-    };
+    props = props({
+        autofocus: t.boolean().optional(true),
+        slots: t
+            .object({
+                default: t.any().optional(),
+                "search-bar-additional-menu": t.any().optional(),
+            })
+            .optional(),
+        toggler: t.object().optional(),
+    });
 
     setup() {
         this.dialogService = useService("dialog");
@@ -77,17 +69,17 @@ export class SearchBar extends Component {
         this.root = useRef("root");
         this.ui = useService("ui");
 
-        this.visibilityState = useState(this.props.toggler?.state || { showSearchBar: true });
+        this.visibilityState = proxy(this.props.toggler?.state || { showSearchBar: true });
 
         // core state
-        this.state = useState({
+        this.state = proxy({
             expanded: [],
             query: "",
             subItemsLimits: {},
         });
 
         // derived state
-        this.items = useState([]);
+        this.items = proxy([]);
         this.subItems = {};
 
         this.facetContainerRef = useRef("facetContainerRef");
@@ -620,10 +612,7 @@ export class SearchBar extends Component {
 
     onFacetLabelClick(target, facet) {
         const { domain, groupId } = facet;
-        if (this.env.searchModel.canOrderByCount && facet.type === "groupBy") {
-            this.env.searchModel.switchGroupBySort();
-            return;
-        } else if (!domain) {
+        if ((this.env.searchModel.canOrderByCount && facet.type === "groupBy") || !domain) {
             return;
         }
         const { resModel } = this.env.searchModel;

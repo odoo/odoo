@@ -125,7 +125,7 @@
                     t-att-data-slug="slug(slide)"
                     t-att-data-has-question="True if slide.question_ids else None"
                     t-att-data-completed="slide_completed"
-                    t-att-data-embed-code="slide.embed_code if slide.slide_category in ['video', 'document', 'infographic'] else False"
+                    t-att-data-embed-code="slide.embed_code_external if slide.slide_category in ['video', 'document', 'infographic'] else False"
                     t-att-data-can-self-mark-completed="slide.can_self_mark_completed"
                     t-att-data-can-self-mark-uncompleted="slide.can_self_mark_uncompleted"
                     t-att-data-is-member="is_member"

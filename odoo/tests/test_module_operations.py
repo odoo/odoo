@@ -10,13 +10,12 @@ import time
 if __name__ == '__main__':
     sys.path.append(os.path.abspath(os.path.join(__file__, '../../../')))
 
-import odoo.tests.loader
 from odoo import api
 from odoo.modules.db import _check_faketime_mode
 from odoo.modules.module import initialize_sys_path
 from odoo.modules.registry import Registry
 from odoo.netsvc import init_logger
-from odoo.tests import standalone_tests
+from odoo.tests import standalone_tests, loader
 from odoo.tools import config, profiler, topological_sort, unique
 
 _logger = logging.getLogger('odoo.tests.test_module_operations')
@@ -188,7 +187,7 @@ def test_standalone(args):
     registry = Registry(args.database)
     for module_name in registry._init_modules:
         # import tests for loaded modules
-        odoo.tests.loader.get_test_modules(module_name)
+        loader.get_test_modules(module_name)
 
     # fetch and filter scripts to test
     funcs = list(unique(
@@ -200,7 +199,7 @@ def test_standalone(args):
     start_time = time.time()
     for index, func in enumerate(funcs, start=1):
         with Registry(args.database).cursor() as cr:
-            env = api.Environment(cr, odoo.api.SUPERUSER_ID, {})
+            env = api.Environment(cr, api.SUPERUSER_ID, {})
             _logger.info("Executing standalone script: %s (%d / %d)",
                          func.__name__, index, len(funcs))
             try:
@@ -231,7 +230,7 @@ if __name__ == '__main__':
             'odoo.modules.loading': {'level': 'CRITICAL'},
             'odoo.sql_db': {'level': 'CRITICAL'},
             'odoo.models.unlink': {'level': 'WARNING'},
-            'odoo.addons.base.models.ir_model': {'level': "WARNING"},
+            'odoo.addons.base.models.ir_access': {'level': "WARNING"},
         },
     })
 

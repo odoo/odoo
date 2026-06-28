@@ -381,7 +381,6 @@ GMAIL_1 = u"""Hello,<div><br></div><div>Ok for me. I am replying directly in gma
     </div>
 </div>
 </div><br></div>"""
-
 GMAIL_1_IN = [
     u'Ok for me. I am replying directly in gmail, with signature.',
     '<div class="gmail_quote" data-o-mail-quote-container="1" data-o-mail-quote="1">',
@@ -391,7 +390,31 @@ GMAIL_1_IN = [
     '<div data-o-mail-quote="1"><br clear="all" data-o-mail-quote="1"></div>\n'
     '<div data-o-mail-quote="1"><br data-o-mail-quote="1"></div>',
 ]
-GMAIL_1_OUT = []
+
+GMAIL_2 = """<p>This is the main email content that should be kept.</p>
+<p>Some more important content here.</p>
+<div id="Signature">
+<p>John Smith</p>
+<p>Software Developer</p>
+</div>"""
+GMAIL_2_IN = [
+    '<div id="Signature" data-o-mail-quote-container="1" data-o-mail-quote="1">',
+    '<p data-o-mail-quote="1">John Smith</p>',
+    '<p data-o-mail-quote="1">Software Developer</p>',
+]
+
+GMAIL_3 = """<p>This is the main email content that should be kept.</p>
+<p>Some more important content here.</p>
+<span>--</span>
+<div data-smartmail="gmail_signature">
+<p>John Doe</p>
+<p>Software Engineer</p>
+</div>"""
+GMAIL_3_IN = [
+    '<div data-smartmail="gmail_signature" data-o-mail-quote-container="1" data-o-mail-quote="1">',
+    '<p data-o-mail-quote="1">John Doe</p>',
+    '<p data-o-mail-quote="1">Software Engineer</p>',
+]
 
 HOTMAIL_1 = u"""<div>
     <div dir="ltr"><br>

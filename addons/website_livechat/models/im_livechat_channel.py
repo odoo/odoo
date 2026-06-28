@@ -16,7 +16,7 @@ class Im_LivechatChannel(models.Model):
         )
         if not discuss_channel_vals:
             return False
-        visitor_sudo = self.env['website.visitor']._get_visitor_from_request()
+        visitor_sudo = self.env['ir.http']._get_visitor_from_request()
         if visitor_sudo:
             discuss_channel_vals['livechat_visitor_id'] = visitor_sudo.id
             # As chat requested by the visitor, delete the chat requested by an operator if any to avoid conflicts between two flows
@@ -44,9 +44,8 @@ class Im_LivechatChannel(models.Model):
     def create(self, vals_list):
         channels = super().create(vals_list)
         if self.env.context.get("create_from_website"):
-            website = self.env['website'].get_current_website()
             bot = self.env.ref("im_livechat.chatbot_script_welcome_bot", raise_if_not_found=False)
-            website.channel_id = channels[0].id
+            self.env.website.channel_id = channels[0].id
             channel_rule_vals = []
             for channel in channels:
                 if bot:

@@ -1,37 +1,46 @@
 /** @odoo-module */
 
-import { after, destroy, getFixture } from "@odoo/hoot";
+import { after, getFixture } from "@odoo/hoot";
 import { App, Component, xml } from "@odoo/owl";
+import { Runner } from "../core/runner";
+import { undefineTags } from "../core/tag";
+import { RunnerPlugin } from "../ui/runner_plugin";
+import { UiPlugin } from "../ui/ui_plugin";
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
+export function makeTestRunner() {
+    const runner = new Runner();
+    after(() => undefineTags(runner.tags.keys()));
+    return runner;
+}
+
 /**
  * @param {import("@odoo/owl").ComponentConstructor} ComponentClass
- * @param {ConstructorParameters<typeof App>[1]} [config]
+ * @param {Parameters<import("@odoo/owl").mount>[2]} [params]
  */
-export async function mountForTest(ComponentClass, config) {
+export async function mountForTest(ComponentClass, params) {
     if (typeof ComponentClass === "string") {
         ComponentClass = class extends Component {
             static name = "anonymous component";
-            static props = {};
             static template = xml`${ComponentClass}`;
         };
     }
 
-    const app = new App(ComponentClass, {
+    const app = new App({
         name: "TEST",
+        plugins: [RunnerPlugin, UiPlugin],
         test: true,
-        warnIfNoStaticProps: true,
-        ...config,
+        config: params?.config,
     });
     const fixture = getFixture();
 
-    after(() => destroy(app));
+    after(() => app.destroy());
 
     fixture.style.backgroundColor = "#fff";
-    await app.mount(fixture);
+    await app.createRoot(ComponentClass, { props: params?.props }).mount(fixture);
     if (fixture.hasIframes) {
         await fixture.waitForIframes();
     }

@@ -4,7 +4,7 @@ import json
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import expr_eval
 
 from odoo.addons.account_tax_python.tools.formula_utils import check_formula, normalize_formula
 
@@ -109,7 +109,7 @@ class AccountTax(models.Model):
         except TypeError:
             raise ValidationError(_("Only primitive types are allowed in python tax formula context."))
         try:
-            return safe_eval(normalized_formula, formula_context)
+            return expr_eval(normalized_formula, formula_context)
         except ZeroDivisionError:
             return 0.0
 

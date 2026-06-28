@@ -88,7 +88,7 @@ export class CalendarArchParser {
                                 context: fieldInfo.context || "{}",
                                 fieldName,
                                 filterFieldName: null,
-                                label: field.string,
+                                label: node.getAttribute("string") || field.string,
                                 resModel: field.relation,
                                 writeFieldName: null,
                                 writeResModel: null,

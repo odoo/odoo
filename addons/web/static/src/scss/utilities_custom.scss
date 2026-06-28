@@ -207,10 +207,18 @@ $utilities: map-merge(
     font-size: $o-font-size-base-smaller;
 }
 
-// Multiline text truncation utility : limits visible text to N lines (2 by default)
+// Multiline text truncation utility: limits visible text to N lines.
+// Use .o_line_clamp with .o_line_clamp_N for a predefined count (1, 3, 5, 7, 10),
+// or .o_line_clamp with a --lines-clamp CSS variable for other values (default: 2).
 .o_line_clamp {
     display: -webkit-box;
     -webkit-line-clamp: var(--lines-clamp, 2);
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+@each $lines in 1, 3, 5, 7, 10 {
+    .o_line_clamp_#{$lines} {
+        --lines-clamp: #{$lines};
+    }
 }

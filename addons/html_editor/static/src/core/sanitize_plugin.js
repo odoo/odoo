@@ -28,7 +28,7 @@ export class SanitizePlugin extends Plugin {
      * @param {HTMLElement} elem
      * @returns {HTMLElement} the element itself
      */
-    sanitize(elem) {
+    sanitize(elem, config = {}) {
         for (const cb of this.getResource("before_sanitize_processors")) {
             elem = cb(elem);
         }
@@ -36,6 +36,7 @@ export class SanitizePlugin extends Plugin {
             IN_PLACE: true,
             ADD_TAGS: ["#document-fragment", "fake-el", "t"],
             ADD_ATTR: ["contenteditable", "t-field", "t-out", "t-esc"],
+            ...config,
         });
         for (const cb of this.getResource("after_sanitize_processors")) {
             elem = cb(elem);
@@ -56,6 +57,7 @@ export class SanitizePlugin extends Plugin {
         for (const el of selectElements(element, "[data-oe-aria-label]")) {
             el.setAttribute("aria-label", el.dataset.oeAriaLabel);
         }
+        return element;
     }
 
     /**
@@ -81,5 +83,6 @@ export class SanitizePlugin extends Plugin {
         for (const el of selectElements(root, "[data-oe-aria-label]")) {
             el.removeAttribute("aria-label");
         }
+        return root;
     }
 }

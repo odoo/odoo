@@ -1,29 +1,25 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 
 export class UploadDropZone extends Component {
     static template = "account.UploadDropZone";
-    static props = {
-        visible: { type: Boolean, optional: true },
-        hideZone: { type: Function, optional: true },
-        dragIcon: { type: String, optional: true },
-        dragText: { type: String, optional: true },
-        dragTitle: { type: String, optional: true },
-        dragCompany: { type: String, optional: true },
-        dragShowCompany: { type: Boolean, optional: true },
-        dropZoneTitle: { type: String, optional: true },
-        dropZoneDescription: { type: String, optional: true },
-    };
-    static defaultProps = {
-        hideZone: () => {},
-    };
+    props = props({
+        visible: t.boolean().optional(),
+        hideZone: t.function().optional(() => () => {}),
+        dragIcon: t.string().optional(),
+        dragText: t.string().optional(),
+        dragTitle: t.string().optional(),
+        dragCompany: t.string().optional(),
+        dragShowCompany: t.boolean().optional(),
+        dropZoneTitle: t.string().optional(),
+        dropZoneDescription: t.string().optional(),
+    });
 
     setup() {
         this.notificationService = useService("notification");
-        this.dashboardState = useState(this.env.dashboardState || {});
+        this.dashboardState = proxy(this.env.dashboardState || {});
     }
 
     onDrop(ev) {

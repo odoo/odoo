@@ -75,6 +75,15 @@ export function clickPaymentlineDelButton(name, amount, mobile = false) {
         },
     ];
 }
+export function clickSendButton() {
+    return [
+        {
+            content: "Send the payment request using the payment terminal.",
+            trigger: ".paymentline_status_actions .paymentline_status_actions_button_send",
+            run: "click",
+        },
+    ];
+}
 export function clickCancelButton() {
     return [
         {
@@ -168,7 +177,11 @@ export function clickValidate() {
         {
             content: "validate payment",
             trigger: `.payment-screen button.validation-button.next`,
-            run: "click",
+            async run({ click }) {
+                //FIXME. Find why we must wait few ms before click to avoid undeterministic behaviors.
+                await new Promise((r) => setTimeout(r, 500));
+                await click();
+            },
         },
     ];
 }
@@ -274,6 +287,10 @@ export function fillPaymentLineAmountMobile(lineName, keys, nth = null) {
             isActive: ["mobile"],
             run: "click",
         })),
+        {
+            isActive: ["mobile"],
+            trigger: `.modal .popup-input .input-value:contains(/^${keys}$/)`,
+        },
         {
             ...Dialog.confirm(),
             isActive: ["mobile"],
@@ -395,21 +412,6 @@ export function isInvoiceButtonChecked() {
     ];
 }
 
-export function clickShipLaterButton() {
-    return [
-        {
-            content: "click ship later button",
-            trigger: ".button:contains('Ship Later')",
-            run: "click",
-        },
-        {
-            content: "click confirm button",
-            trigger: ".btn:contains('Confirm')",
-            run: "click",
-        },
-    ];
-}
-
 export function clickPartnerButton() {
     return [
         {
@@ -426,13 +428,6 @@ export function clickPartnerButton() {
 
 export function clickCustomer(name, pressEnter = false) {
     return [...PartnerList.searchCustomerValue(name, pressEnter), PartnerList.clickPartner(name)];
-}
-
-export function shippingLaterHighlighted() {
-    return {
-        content: "Shipping later button is highlighted",
-        trigger: ".button:contains('Ship Later').highlight",
-    };
 }
 
 // This method is used to simulate payment with a payment terminal, before using terminal the order
@@ -491,14 +486,6 @@ export function qrPopupIsNotShown() {
     };
 }
 
-export function confirmQrPopup() {
-    return {
-        content: "confirm QR code popup",
-        trigger: ".o_qr_popup .qr-code-popup-footer .confirm-button",
-        run: "click",
-    };
-}
-
 export function closeQrPopup() {
     return {
         content: "close QR code popup",
@@ -522,5 +509,21 @@ export function showQrPopupIsDisabled(opts) {
     return {
         content: `open QR code popup from paymentline is disabled (opts: ${JSON.stringify(opts)})`,
         trigger: ` ${_getPaymentlineSelector(opts)} .paymentline_show_qr_code[disabled]`,
+    };
+}
+
+export function checkPaymentLines(lines) {
+    return {
+        content: "Check payment lines",
+        trigger:
+            ".paymentlines" +
+            lines
+                .map(
+                    (line, i) =>
+                        `:has(.paymentline:eq(${i})${line.selected ? ".selected" : ""}:contains(${
+                            line.name
+                        }):contains(${line.amount}))`
+                )
+                .join(""),
     };
 }

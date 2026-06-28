@@ -114,7 +114,7 @@ class IrAsset(models.Model):
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('bundle', 'tuple(sorted(assets_params.items()))', cache='assets'),
+        api.ormcache('bundle', 'tuple(sorted(assets_params.items()))', cache='assets'),
     )
     def _get_asset_paths(self, bundle, assets_params):
         """
@@ -155,9 +155,10 @@ class IrAsset(models.Model):
         See `_get_asset_paths` for more information.
 
         :param bundle: name of the bundle from which to fetch the file paths
-        :param addons: list of addon names as strings
         :param asset_paths: the AssetPath object to fill
         :param seen: a list of bundles already checked to avoid circularity
+        :param addons: list of addon names as strings
+        :param installed: installed addons list
         :param assets_params: Keyword arguments:
 
             * css: bool: whether or not to include style files
@@ -273,7 +274,7 @@ class IrAsset(models.Model):
         return self._get_installed_addons_list()
 
     @api.model
-    @tools.ormcache('addons_tuple')
+    @api.ormcache('addons_tuple')
     def _topological_sort(self, addons_tuple):
         """Returns a list of sorted modules name accord to the spec in ir.module.module
         that is, application desc, sequence, name then topologically sorted"""
@@ -296,7 +297,7 @@ class IrAsset(models.Model):
         return misc.topological_sort({manif['name']: tuple(manif['depends']) for manif in manifs})
 
     @api.model
-    @tools.ormcache()
+    @api.ormcache()
     def _get_installed_addons_list(self):
         """
         Returns the list of all installed addons.

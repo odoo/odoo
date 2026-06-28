@@ -17,7 +17,7 @@ class TestMailComposer(MailCommon):
         super(TestMailComposer, cls).setUpClass()
         cls.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', True)
         cls.user_employee.group_ids -= cls.env.ref('mail.group_mail_template_editor')
-        cls.test_record = cls.env['res.partner'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['res.partner'].create({
             'name': 'Test',
         })
         cls.body_html = """<h1>Hello sir!</h1>
@@ -138,7 +138,7 @@ class TestMailComposerForm(TestMailComposer):
         self.assertEqual(message.partner_ids, partner_private + partner_classic)
         self.assertEqual(message.subject, f'{test_record.name}')
 
-    @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.addons.mail.models.mail_mail')
     @users('employee')
     def test_composer_default_recipients_private_norights(self):
         """ Test usage of a private partner in composer when not having the
@@ -152,12 +152,13 @@ class TestMailComposerForm(TestMailComposer):
         partner_classic = self.partner_classic.with_env(self.env)
         test_record = self.test_record.with_env(self.env)
 
-        with self.assertRaises(AccessError):
-            _form = Form(self.env['mail.compose.message'].with_context({
-                'default_partner_ids': (self.partner_private + partner_classic).ids,
-                'default_model': test_record._name,
-                'default_res_ids': test_record.ids,
-            }))
+        form = Form(self.env['mail.compose.message'].with_context({
+            'default_partner_ids': (self.partner_private + partner_classic).ids,
+            'default_model': test_record._name,
+            'default_res_ids': test_record.ids,
+        }))
+        msg = form.save()
+        self.assertEqual(partner_classic, msg.sudo().partner_ids, 'partner_private must not be saved')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('employee')

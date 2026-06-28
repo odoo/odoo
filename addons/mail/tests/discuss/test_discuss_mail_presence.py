@@ -10,7 +10,7 @@ except ImportError:
 from itertools import product
 
 from odoo.tests import new_test_user
-from odoo.addons.bus.tests.common import WebsocketCase
+from odoo.addons.bus.tests.common import WebsocketCase, BusResult
 from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 
@@ -18,7 +18,6 @@ from odoo.addons.bus.models.bus import channel_with_db, json_dump
 class TestMailPresence(WebsocketCase, MailCommon):
     def _receive_presence(self, requested_by, target, has_token=False):
         self.env["mail.presence"].search([]).unlink()
-        target_user = isinstance(target, self.env.registry["res.users"])
         if isinstance(requested_by, self.env.registry["res.users"]):
             session = self.authenticate(requested_by.login, requested_by.login)
             auth_cookie = f"session_id={session.sid};"
@@ -26,13 +25,12 @@ class TestMailPresence(WebsocketCase, MailCommon):
             self.authenticate(None, None)
             auth_cookie = f"{requested_by._cookie_name}={requested_by._format_auth_cookie()};"
         websocket = self.websocket_connect(cookie=auth_cookie)
-        target_channel = target.partner_id if target_user else target
-        channel_parts = ["odoo-presence", f"{target_channel._name}_{target_channel.id}"]
+        channel_parts = ["odoo-presence", f"{target._name}_{target.id}"]
         if has_token:
-            channel_parts.append(target_channel._get_im_status_access_token())
+            channel_parts.append(target._get_im_status_access_token())
         self.subscribe(websocket, ["-".join(channel_parts)], self.env["bus.bus"]._bus_last_id())
         self.env["mail.presence"]._update_presence(target)
-        self.trigger_notification_dispatching([(target, "presence")])
+        self.trigger_notification_dispatching()
         notifications = json.loads(websocket.recv())
         self._close_websockets()
         bus_record = self.env["bus.bus"].search([("id", "=", int(notifications[0]["id"]))])
@@ -42,13 +40,10 @@ class TestMailPresence(WebsocketCase, MailCommon):
         )
         self.assertEqual(notifications[0]["message"]["type"], "mail.record/insert")
         self.assertEqual(
-            notifications[0]["message"]["payload"][target_channel._name][0]["im_status"],
+            notifications[0]["message"]["payload"][target._name][0]["im_status"],
             "online",
         )
-        self.assertEqual(
-            notifications[0]["message"]["payload"][target_channel._name][0]["id"],
-            target_channel.id,
-        )
+        self.assertEqual(notifications[0]["message"]["payload"][target._name][0]["id"], target.id)
 
     @freeze_all_time()
     def test_presence_access(self):
@@ -79,16 +74,18 @@ class TestMailPresence(WebsocketCase, MailCommon):
     def test_manual_im_status(self):
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
         session = self.authenticate(bob.login, bob.login)
-        with self.assertBus(
-            [(bob, "presence")],
-            [
+        expected_payload = {
+            "res.users": self._filter_users_fields(
                 {
-                    "type": "mail.record/insert",
-                    "payload": {
-                        "res.partner": [{"id": bob.partner_id.id, "im_status": "offline"}],
-                    },
+                    "should_display_in_call_im_status": False,
+                    "id": bob.id,
+                    "im_status": "offline",
                 },
-            ],
+            ),
+        }
+
+        with self.assertBus(
+            BusResult((bob, "presence"), "mail.record/insert", expected_payload),
         ):
             self.make_jsonrpc_request(
                 "/mail/set_manual_im_status",
@@ -98,34 +95,18 @@ class TestMailPresence(WebsocketCase, MailCommon):
 
     def test_presence_status_only_sent_to_self(self):
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
-        self._reset_bus()
-        self.env["mail.presence"].with_user(bob)._update_presence(bob)
-        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
-        presence_channel_notif, self_channel_notif = self.env["bus.bus"].search([])
-        self.assertEqual(presence_channel_notif.channel, json_dump(channel_with_db(self.env.cr.dbname, (bob, "presence"))))
-        self.assertEqual(self_channel_notif.channel, json_dump(channel_with_db(self.env.cr.dbname, bob)))
-        presence_payload = json.loads(presence_channel_notif.message)["payload"]
-        self.assertEqual(
-            presence_payload,
-            {"res.partner": [{"id": bob.partner_id.id, "im_status": "online"}]},
-        )
-        self_payload = json.loads(self_channel_notif.message)["payload"]
-        self.assertEqual(
-            self_payload,
-            {"res.partner": [{"id": bob.partner_id.id, "presence_status": "online"}]},
-        )
-        other_user = new_test_user(self.env, login="other_user", groups="base.group_user")
-        self._reset_bus()
-        bob_presence = self.env["mail.presence"].search([("user_id", "=", bob.id)])
-        bob_presence._send_presence(bus_target=other_user)
-        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
-        notifications = self.env["bus.bus"].search([])
-        self.assertEqual(len(notifications), 1)  # Only im_status notification was dispatched, and only for bus_target.
-        self.assertEqual(
-            notifications.channel,
-            json_dump(channel_with_db(self.env.cr.dbname, other_user)),
-        )
-        self.assertEqual(
-           json.loads(notifications.message)["payload"],
-            {"res.partner": [{"id": bob.partner_id.id, "im_status": "online"}]},
-        )
+        with self.assertBus(
+            [
+                BusResult(
+                    (bob, "presence"),
+                    "mail.record/insert",
+                    {"res.users": [{"id": bob.id, "im_status": "online"}]},
+                ),
+                BusResult(
+                    bob,
+                    "mail.record/insert",
+                    {"res.users": [{"id": bob.id, "presence_status": "online"}]},
+                ),
+            ],
+        ):
+            self.env["mail.presence"].with_user(bob)._update_presence(bob)

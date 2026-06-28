@@ -6,9 +6,7 @@ import hashlib
 import hmac
 import pprint
 
-from werkzeug.exceptions import Forbidden
-
-from odoo import _, http, release
+from odoo import http, release
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import py_to_js_locale, urls
@@ -33,14 +31,14 @@ class AdyenController(http.Controller):
         :return: The JSON-formatted content of the response
         :rtype: dict
         """
-        provider_sudo = request.env["payment.provider"].sudo().browse(provider_id)
-        partner_sudo = partner_id and request.env["res.partner"].sudo().browse(partner_id).exists()
+        provider_sudo = self.env["payment.provider"].sudo().browse(provider_id)
+        partner_sudo = partner_id and self.env["res.partner"].sudo().browse(partner_id).exists()
         # The lang is taken from the context rather than from the partner because it is not required
         # to be logged in to make a payment, and because the lang is not always set on the partner.
         # Adyen only supports a limited set of languages but, instead of looking for the closest
         # match in https://docs.adyen.com/checkout/components-web/localization-components, we simply
         # provide the lang string as is (after adapting the format) and let Adyen find the best fit.
-        lang_code = py_to_js_locale(request.env.context.get("lang")) or "en-US"
+        lang_code = py_to_js_locale(self.env.context.get("lang")) or "en-US"
         shopper_reference = partner_sudo and f"ODOO_PARTNER_{partner_sudo.id}"
         partner_country_code = (
             partner_sudo.country_id.code or provider_sudo.company_id.country_id.code or "NL"
@@ -87,12 +85,12 @@ class AdyenController(http.Controller):
         if not payment_utils.check_access_token(
             access_token, reference, converted_amount, currency_id, partner_id
         ):
-            raise ValidationError(_("Received tampered payment request data."))
+            raise ValidationError(self.env._("Received tampered payment request data."))
 
         # Prepare the payment request to Adyen
-        provider_sudo = request.env["payment.provider"].sudo().browse(provider_id).exists()
+        provider_sudo = self.env["payment.provider"].sudo().browse(provider_id).exists()
         tx_sudo = (
-            request
+            self
             .env["payment.transaction"]
             .sudo()
             .search([("provider_id", "=", provider_sudo.id), ("reference", "=", reference)])
@@ -104,7 +102,7 @@ class AdyenController(http.Controller):
             "merchantAccount": provider_sudo.adyen_merchant_account,
             "amount": {
                 "value": converted_amount,
-                "currency": request.env["res.currency"].browse(currency_id).name,  # ISO 4217
+                "currency": self.env["res.currency"].browse(currency_id).name,  # ISO 4217
             },
             "applicationInfo": {
                 "externalPlatform": {
@@ -159,7 +157,7 @@ class AdyenController(http.Controller):
         response_content = provider_sudo._send_api_request(
             "POST", "/payments", json=data, idempotency_key=idempotency_key
         )
-        tx_sudo._process("adyen", dict(response_content, merchantReference=reference))
+        tx_sudo._record(dict(response_content, merchantReference=reference))
         return response_content
 
     @http.route("/payment/adyen/payments/details", type="jsonrpc", auth="public")
@@ -176,9 +174,9 @@ class AdyenController(http.Controller):
         :rtype: dict
         """
         # Make the payment details request to Adyen
-        provider_sudo = request.env["payment.provider"].browse(provider_id).sudo()
+        provider_sudo = self.env["payment.provider"].browse(provider_id).sudo()
         tx_sudo = (
-            request
+            self
             .env["payment.transaction"]
             .sudo()
             .search([("provider_id", "=", provider_sudo.id), ("reference", "=", reference)])
@@ -192,10 +190,9 @@ class AdyenController(http.Controller):
             "POST", "/payments/details", json=payment_details, idempotency_key=idempotency_key
         )
 
-        # Process the payment data request response.
-        request.env["payment.transaction"].sudo()._process(
-            "adyen", dict(response_content, merchantReference=reference)
-        )
+        # Process the payment details request response.
+        if tx_sudo:
+            tx_sudo._record(dict(response_content, merchantReference=reference))
 
         return response_content
 
@@ -215,7 +212,7 @@ class AdyenController(http.Controller):
                           the request to allow matching the transaction when redirected here.
         """
         # Retrieve the transaction based on the reference included in the return url
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("adyen", data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("adyen", data)
         if not tx_sudo:
             return request.redirect("/payment/status")
 
@@ -223,7 +220,10 @@ class AdyenController(http.Controller):
         # though Adyen is implemented as a direct payment provider, it will redirect the user out
         # of Odoo in some cases. For instance, when a 3DS1 authentication is required, or for
         # special payment methods that are not handled by the drop-in (e.g. Sofort).
-        tx_sudo.operation = "online_redirect"
+        tx_sudo.with_context(
+            # The /payments/details request uses an idempotency key; the handler is safe to replay
+            payment_safe_write=True
+        ).operation = "online_redirect"
 
         # Query and process the result of the additional actions that have been performed
         _logger.info(
@@ -259,13 +259,13 @@ class AdyenController(http.Controller):
             )
             # Check the integrity of the notification.
             tx_sudo = (
-                request
-                .env["payment.transaction"]
-                .sudo()
-                ._search_by_reference("adyen", payment_data)
+                self.env["payment.transaction"].sudo()._search_by_reference("adyen", payment_data)
             )
             if tx_sudo:
-                self._verify_signature(payment_data, tx_sudo)
+                received_signature = payment_data.get("additionalData", {}).get("hmacSignature")
+                hmac_key = tx_sudo.provider_id.adyen_hmac_key
+                expected_signature = AdyenController._compute_signature(payment_data, hmac_key)
+                payment_utils.verify_signature(received_signature, expected_signature)
 
                 # Check whether the event of the notification succeeded and reshape the notification
                 # data for parsing
@@ -282,30 +282,8 @@ class AdyenController(http.Controller):
                     payment_data["resultCode"] = "Error"
                 else:
                     continue  # Don't handle unsupported event codes and failed events
-                tx_sudo._process("adyen", payment_data)
+                tx_sudo._record(payment_data)
         return request.make_json_response("[accepted]")  # Acknowledge the notification
-
-    @staticmethod
-    def _verify_signature(payment_data, tx_sudo):
-        """Check that the received signature matches the expected one.
-
-        :param dict payment_data: The payment data containing the received signature.
-        :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
-        :return: None
-        :raise Forbidden: If the signatures don't match.
-        """
-        # Retrieve the received signature from the payload
-        received_signature = payment_data.get("additionalData", {}).get("hmacSignature")
-        if not received_signature:
-            _logger.warning("received payment data with missing signature")
-            raise Forbidden
-
-        # Compare the received signature with the expected signature computed from the payload
-        hmac_key = tx_sudo.provider_id.adyen_hmac_key
-        expected_signature = AdyenController._compute_signature(payment_data, hmac_key)
-        if not hmac.compare_digest(received_signature, expected_signature):
-            _logger.warning("received payment data with invalid signature")
-            raise Forbidden
 
     @staticmethod
     def _compute_signature(payload, hmac_key):

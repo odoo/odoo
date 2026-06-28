@@ -29,11 +29,8 @@ PAYMENT_METHODS_MAPPING = {
     "JAZZCASH": "jazzcash",
 }
 
-# The codes of the payment methods to activate when Paymob is activated.
-DEFAULT_PAYMENT_METHOD_CODES = {
-    # Primary payment methods.
-    "card"
-}
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"card"}
 
 # The fields to read from the response and order alphabetically to compute the signature.
 SIGNATURE_FIELDS = [

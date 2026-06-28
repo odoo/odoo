@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ImageFilterOption">
-    <BuilderRow label.translate="Filter" level="this.props.level" t-if="state.showFilter" disabled="state.disableFilter" tooltip="state.tooltip">
-        <BuilderSelect disabled="state.disableFilter">
+    <BuilderRow label.translate="Filter" level="this.props.level" t-if="this.state.showFilter" disabled="this.state.disableFilter" tooltip="this.state.tooltip">
+        <BuilderSelect disabled="this.state.disableFilter">
             <BuilderSelectItem action="'glFilter'" actionParam="''">None</BuilderSelectItem>
             <BuilderSelectItem action="'glFilter'" actionParam="'blur'">Blur</BuilderSelectItem>
             <BuilderSelectItem action="'glFilter'" actionParam="'1977'">1977</BuilderSelectItem>
@@ -16,10 +16,10 @@
             <BuilderSelectItem action="'glFilter'" actionParam="'walden'">Walden</BuilderSelectItem>
             <BuilderSelectItem action="'glFilter'" actionParam="'valencia'">Valencia</BuilderSelectItem>
             <BuilderSelectItem action="'glFilter'" actionParam="'xpro'">Xpro</BuilderSelectItem>
-            <BuilderSelectItem action="'glFilter'" actionParam="'custom'" id="custom_glfilter_opt">Custom</BuilderSelectItem>
+            <BuilderSelectItem action="'glFilter'" actionParam="'custom'" id="this.custom_glfilter_opt">Custom</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <t t-if="state.isCustomFilter">
+    <t t-if="this.state.isCustomFilter">
         <BuilderRow level="this.props.level + 1" label.translate="Color">
             <BuilderSelect action="'setCustomFilter'" actionParam="'blend'">
                 <BuilderSelectItem actionValue="'normal'">Normal</BuilderSelectItem>
@@ -39,7 +39,11 @@
                 actionParam="'saturation'"
                 min="-100"
                 max="100"
-                step="10" />
+                step="10"
+                unit="'%'"
+                applyWithUnit="false"
+                withNumberInput="true"
+                convertorRatio="{}" />
         </BuilderRow>
         <BuilderRow level="this.props.level + 1" label.translate="Contrast">
             <BuilderRange
@@ -47,7 +51,11 @@
                 actionParam="'contrast'"
                 min="-100"
                 max="100"
-                step="10" />
+                step="10"
+                unit="'%'"
+                applyWithUnit="false"
+                withNumberInput="true"
+                convertorRatio="{}" />
         </BuilderRow>
         <BuilderRow level="this.props.level + 1" label.translate="Brightness">
             <BuilderRange
@@ -55,7 +63,11 @@
                 actionParam="'brightness'"
                 min="-100"
                 max="100"
-                step="10" />
+                step="10"
+                unit="'%'"
+                applyWithUnit="false"
+                withNumberInput="true"
+                convertorRatio="{}" />
         </BuilderRow>
         <BuilderRow level="this.props.level + 1" label.translate="Sepia">
             <BuilderRange
@@ -63,7 +75,10 @@
                 actionParam="'sepia'"
                 min="0"
                 max="100"
-                step="5" />
+                step="5"
+                unit="'%'"
+                applyWithUnit="false"
+                withNumberInput="true" />
         </BuilderRow>
         <BuilderRow level="this.props.level + 1" label.translate="Blur">
             <BuilderRange
@@ -71,7 +86,11 @@
                 actionParam="'blur'"
                 min="0"
                 max="2000"
-                step="100" />
+                step="100"
+                unit="'%'"
+                applyWithUnit="false"
+                withNumberInput="true"
+                convertorRatio="{}" />
         </BuilderRow>
     </t>
 </t>

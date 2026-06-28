@@ -4,11 +4,13 @@ from unittest.mock import patch
 from unittest.mock import DEFAULT
 
 from odoo import exceptions, tools
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tests import Form, users, warmup, tagged
+from odoo.fields import Domain
+from odoo.tests import HttpCase, Form, users, warmup, tagged
 from odoo.tools import mute_logger
 
 
@@ -377,6 +379,60 @@ class TestAPI(ThreadRecipients):
         self.assertEqual(partner.name, 'Forced Name', 'Forced by additional values')
         self.assertEqual(partner.phone, '+32455998877')
 
+    @users('admin')
+    def test_message_change_thread_move_preserves_subtype(self):
+        lead_src, lead_dst = self.env['mail.test.lead'].create([
+            {'partner_id': self.partner_1.id},
+            {'partner_id': self.user_portal.partner_id.id},
+        ])
+
+        ticket = self.ticket_record.with_env(self.env)
+
+        subtype_with_description, generic_subtype = self.env['mail.message.subtype'].create([
+            {
+                'name': 'Subtype With Description',
+                'description': 'Important Action Done',
+                'res_model': lead_src._name,
+            }, {
+                'name': 'Generic Subtype',
+                'description': 'Generic',
+                'res_model': False,
+            },
+        ])
+
+        # Lead1 message
+        posted_msg = lead_src.message_post(
+            body="Hello message",
+            subtype_id=subtype_with_description.id,
+        )
+        lead_src.message_change_thread(ticket)
+        self.assertMessageFields(posted_msg, {
+            'body': Markup('<p>Important Action Done\n</p><p></p><p>Hello message</p>\n'),  # removed subtype description + old body
+            'subtype_id': self.env['mail.message.subtype'],
+        })
+
+        # Move to lead_dst(same model)
+        posted_msg_2 = lead_src.message_post(
+            body="Hello message",
+            subtype_id=subtype_with_description.id,
+        )
+        lead_src.message_change_thread(lead_dst)
+        self.assertMessageFields(posted_msg_2, {
+            'body': Markup('<p>Hello message</p>'),  # old body only
+            'subtype_id': subtype_with_description,
+        })
+
+        # Generic subtype test (different model)
+        posted_msg_3 = lead_src.message_post(
+            body="Hello message",
+            subtype_id=generic_subtype.id,
+        )
+        lead_src.message_change_thread(ticket)
+        self.assertMessageFields(posted_msg_3, {
+            'body': Markup('<p>Hello message</p>'),  # old body only
+            'subtype_id': generic_subtype,
+        })
+
     @users('employee')
     @warmup
     def test_message_get_default_recipients(self):
@@ -415,7 +471,7 @@ class TestAPI(ThreadRecipients):
 
         # test default computation of recipients
         self.env.invalidate_all()
-        with self.assertQueryCount(22):
+        with self.assertQueryCount(14):
             defaults_withcc = test_records.with_context()._message_get_default_recipients(with_cc=True)
             defaults_withoutcc = test_records.with_context()._message_get_default_recipients()
         for record, expected in zip(test_records, [
@@ -546,6 +602,7 @@ class TestAPI(ThreadRecipients):
             'email': self.user_employee.email_normalized,
             'name': self.user_employee.name,
             'partner_id': self.partner_employee.id,
+            'recipient_type': 'to',
         }, {
             'create_values': {
                 'company_id': self.env.user.company_id.id,
@@ -554,6 +611,7 @@ class TestAPI(ThreadRecipients):
             'email': 'paulette@test.example.com',
             'name': 'Paulette Vachette',
             'partner_id': False,
+            'recipient_type': 'to',
         }], strict=True):
             self.assertDictEqual(suggestion, expected)
 
@@ -608,6 +666,7 @@ class TestAPI(ThreadRecipients):
                             'email': sugg_partner.email_normalized,
                             'name': sugg_partner.name,
                             'partner_id': sugg_partner.id,
+                            'recipient_type': 'to',
                         }
                     )
                 else:
@@ -674,6 +733,7 @@ class TestAPI(ThreadRecipients):
                     'email': self.test_partner.email_normalized,
                     'name': self.test_partner.name,
                     'partner_id': self.test_partner.id,
+                    'recipient_type': 'to',
                 },
             ],
             # only valid is the customer (and not aliases nor partner with alias email)
@@ -683,6 +743,7 @@ class TestAPI(ThreadRecipients):
                     'email': self.test_partner_archived.email_normalized,
                     'name': self.test_partner_archived.name,
                     'partner_id': self.test_partner_archived.id,
+                    'recipient_type': 'to',
                 },
             ],
         ]
@@ -747,16 +808,19 @@ class TestAPI(ThreadRecipients):
                 'email': self.user_portal.email_normalized,
                 'name': self.user_portal.name,
                 'partner_id': self.user_portal.partner_id.id,
+                'recipient_type': 'to',
             }, {  # replying message to
                 'create_values': {},
                 'email': test_to_tuples[0][1],
                 'name': test_to_tuples[0][0],
                 'partner_id': False,
+                'recipient_type': 'to',
             }, {  # replying message  cc
                 'create_values': {},
                 'email': test_cc_tuples[1][1],
                 'name': test_cc_tuples[1][0],
                 'partner_id': False,
+                'recipient_type': 'cc',
             },
         ], strict=True):
             with self.subTest():
@@ -769,6 +833,7 @@ class TestAPI(ThreadRecipients):
                 'email': self.user_portal.email_normalized,
                 'name': self.user_portal.name,
                 'partner_id': self.user_portal.partner_id.id,
+                'recipient_type': 'to',
             },  # and not author, as it is odoobot's email
         ], strict=True):
             with self.subTest():
@@ -782,11 +847,13 @@ class TestAPI(ThreadRecipients):
                 'email': test_to_tuples[1][1],
                 'name': test_to_tuples[1][0],
                 'partner_id': False,
+                'recipient_type': 'to',
             }, {  # replying message  cc
                 'create_values': {},
                 'email': test_cc_tuples[2][1],
                 'name': test_cc_tuples[2][0],
                 'partner_id': False,
+                'recipient_type': 'cc',
             },  # and not author as he is already follower
         ], strict=True):
             with self.subTest():
@@ -803,16 +870,19 @@ class TestAPI(ThreadRecipients):
                 'email': self.user_portal.email_normalized,
                 'name': self.user_portal.name,
                 'partner_id': self.user_portal.partner_id.id,
+                'recipient_type': 'to',
             }, {  # replying message to
                 'email': test_to_tuples[0][1],
                 'name': test_to_tuples[0][0],
                 'partner_id': new_to.id,
                 'create_values': {},
+                'recipient_type': 'to',
             }, {  # replying message  cc
                 'email': test_cc_tuples[1][1],
                 'name': test_cc_tuples[1][0],
                 'partner_id': new_cc_0.id,
                 'create_values': {},
+                'recipient_type': 'cc',
             },
         ], strict=True):
             with self.subTest():
@@ -852,6 +922,7 @@ class TestAPI(ThreadRecipients):
                     'email': 'outdated@test.example.com',
                     'name': 'Outdated',
                     'partner_id': False,
+                    'recipient_type': 'to',
                 }],
                 'Increase order quantity',
             ), (
@@ -868,11 +939,13 @@ class TestAPI(ThreadRecipients):
                     'email': self.user_portal.email_normalized,
                     'name': self.user_portal.name,
                     'partner_id': self.user_portal.partner_id.id,
+                    'recipient_type': 'to',
                 }, {
                     'create_values': {},
                     'email': self.user_employee.email_normalized,
                     'name': self.user_employee.name,
                     'partner_id': self.user_employee.partner_id.id,
+                    'recipient_type': 'to',
                 }],
                 'Order for 100 chairs',
             ), (
@@ -889,11 +962,13 @@ class TestAPI(ThreadRecipients):
                     'email': self.user_portal.email_normalized,
                     'name': self.user_portal.name,
                     'partner_id': self.user_portal.partner_id.id,
+                    'recipient_type': 'to',
                 }, {
                     'create_values': {},
                     'email': self.user_employee.email_normalized,
                     'name': self.user_employee.name,
                     'partner_id': self.user_employee.partner_id.id,
+                    'recipient_type': 'to',
                 }],
                 'Order for 100 chairs',
             ),
@@ -998,7 +1073,7 @@ class TestChatterTweaks(ThreadRecipients):
     @classmethod
     def setUpClass(cls):
         super(TestChatterTweaks, cls).setUpClass()
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        cls.test_record = cls.env['mail.test.simple'].create({'name': 'Test', 'email_from': 'ignasse@example.com'})
 
     @users('employee')
     def test_post_headers_recipients_limit(self):
@@ -1024,6 +1099,7 @@ class TestChatterTweaks(ThreadRecipients):
             }
             if has_header:
                 headers['X-Msg-To-Add'] = f'{self.test_partner.email_formatted},{self.test_partner_catchall.email_formatted}'
+                headers['X-Msg-Cc-Add'] = ''
             for recipient in self.test_partner + self.test_partner_catchall:
                 self.assertMailMail(
                     recipient,
@@ -1146,12 +1222,12 @@ class TestChatterTweaks(ThreadRecipients):
 
 
 @tagged('mail_thread')
-class TestDiscuss(MailCommon, TestRecipients):
+class TestDiscuss(HttpCase, MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
         super(TestDiscuss, cls).setUpClass()
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['mail.test.simple'].create({
             'name': 'Test',
             'email_from': 'ignasse@example.com'
         })
@@ -1161,10 +1237,10 @@ class TestDiscuss(MailCommon, TestRecipients):
         def _employee_crash(recordset, operation):
             """ If employee is test employee, consider they have no access on document """
             if recordset.env.uid == self.user_employee.id and not recordset.env.su:
-                return recordset, lambda: exceptions.AccessError('Hop hop hop Ernest, please step back.')
+                return Domain.FALSE
             return DEFAULT
 
-        with patch.object(MailTestSimple, '_check_access', autospec=True, side_effect=_employee_crash):
+        with patch.object(MailTestSimple, '_access_domain', autospec=True, side_effect=_employee_crash):
             with self.assertRaises(exceptions.AccessError):
                 self.env['mail.test.simple'].with_user(self.user_employee).browse(self.test_record.ids).read(['name'])
 
@@ -1173,14 +1249,15 @@ class TestDiscuss(MailCommon, TestRecipients):
             # mark all as read clear needactions
             msg1 = self.test_record.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[employee_partner.id])
             with self.assertBus(
-                    [self.user_employee],
-                    message_items=[{
-                        'type': 'mail.message/mark_as_read',
-                        'payload': {
-                            'message_ids': [msg1.id],
-                            'needaction_inbox_counter': 0,
-                        },
-                    }]):
+                BusResult(
+                    self.user_employee,
+                    "mail.message/mark_as_read",
+                    {
+                        "message_ids": [msg1.id],
+                        "needaction_inbox_counter": 0,
+                    },
+                ),
+            ):
                 employee_partner.env['mail.message'].mark_all_as_read(domain=[])
             na_count = employee_partner._get_needaction_count()
             self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
@@ -1199,14 +1276,15 @@ class TestDiscuss(MailCommon, TestRecipients):
             self.assertEqual(na_count, 1, "message not accessible is currently still counted")
 
             with self.assertBus(
-                    [self.user_employee],
-                    message_items=[{
-                        'type': 'mail.message/mark_as_read',
-                        'payload': {
-                            'message_ids': [msg2.id],
-                            'needaction_inbox_counter': 0,
-                        },
-                    }]):
+                BusResult(
+                    self.user_employee,
+                    "mail.message/mark_as_read",
+                    {
+                        "message_ids": [msg2.id],
+                        "needaction_inbox_counter": 0,
+                    },
+                )
+            ):
                 employee_partner.env['mail.message'].mark_all_as_read(domain=[])
             na_count = employee_partner._get_needaction_count()
             self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")
@@ -1250,6 +1328,21 @@ class TestDiscuss(MailCommon, TestRecipients):
         self.assertEqual(len(message), 1, "Test message should have been posted")
         self.test_record.unlink()
         self.assertFalse(message.exists(), "Test message should have been deleted")
+
+    @mute_logger("odoo.http")
+    def test_access_inbox_records(self):
+        for access, name in [("admin", "Inaccessible Record"), ("internal", "Accessible Record")]:
+            self.env["mail.test.access"].create(
+                {
+                    "access": access,
+                    "name": name,
+                }
+            ).message_post(
+                body=f"Message in {name.lower()}",
+                message_type="comment",
+                partner_ids=[self.user_employee.partner_id.id],
+            )
+        self.start_tour("/odoo", "access_inbox_records_tour", login=self.user_employee.login)
 
 
 @tagged('mail_thread')
@@ -1386,13 +1479,13 @@ class TestNoThread(MailCommon, TestRecipients):
             'model': test_record._name,
             'res_id': test_record.id,
         })
-        formatted = Store().add(message, "_store_message_fields").get_result()["mail.message"][0]
+        formatted = Store().add(message, "_store_message_fields")._build_result()["mail.message"][0]
         self.assertEqual(formatted['default_subject'], test_record.name)
         self.assertEqual(formatted['record_name'], test_record.name)
 
         test_record.write({'name': 'Just Test'})
         message.invalidate_recordset(['record_name'])
-        formatted = Store().add(message, "_store_message_fields").get_result()["mail.message"][0]
+        formatted = Store().add(message, "_store_message_fields")._build_result()["mail.message"][0]
         self.assertEqual(formatted['default_subject'], 'Just Test')
         self.assertEqual(formatted['record_name'], 'Just Test')
 

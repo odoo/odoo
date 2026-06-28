@@ -1,6 +1,7 @@
+import { props, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { createElement, append } from "@web/core/utils/xml";
-import { Notebook } from "@web/core/notebook/notebook";
+import { Notebook, notebookProps } from "@web/core/notebook/notebook";
 import { formView } from "@web/views/form/form_view";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { FormRenderer } from "@web/views/form/form_renderer";
@@ -39,10 +40,10 @@ export class AccountMoveFormController extends FormController {
 
 export class AccountMoveFormNotebook extends Notebook {
     static template = "account.AccountMoveFormNotebook";
-    static props = {
-        ...Notebook.props,
-        onBeforeTabSwitch: { type: Function, optional: true },
-    };
+    props = props({
+        ...notebookProps,
+        onBeforeTabSwitch: t.function().optional(),
+    });
 
     async changeTabTo(page_id) {
         if (this.props.onBeforeTabSwitch) {

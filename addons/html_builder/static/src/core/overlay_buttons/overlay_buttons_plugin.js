@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
@@ -33,9 +33,9 @@ export class OverlayButtonsPlugin extends Plugin {
     resources = {
         on_selectionchange_handlers: this.shouldShowToolbar.bind(this),
         on_selection_leave_handlers: this.showOverlayButtonsUi.bind(this),
-        on_step_added_handlers: this.refreshButtons.bind(this),
+        on_committed_to_history_handlers: this.refreshButtons.bind(this),
         on_current_options_containers_changed_handlers: this.addOverlayButtons.bind(this),
-        on_mobile_preview_clicked_handlers: withSequence(20, this.refreshButtons.bind(this)),
+        on_mobile_view_switched_handlers: withSequence(20, this.refreshButtons.bind(this)),
     };
 
     setup() {
@@ -50,13 +50,13 @@ export class OverlayButtonsPlugin extends Plugin {
                         const iframeRect = this.iframe.getBoundingClientRect();
                         if (this.target && position.top < iframeRect.top) {
                             const targetRect = this.target.getBoundingClientRect();
-                            const newTop = iframeRect.top + targetRect.bottom + 15;
+                            const newTop = iframeRect.top + targetRect.bottom + 1;
                             position.top = newTop;
                             overlayEl.style.top = `${newTop}px`;
                         }
                         return;
                     },
-                    margin: 15,
+                    margin: 1,
                     flip: false,
                 },
                 closeOnPointerdown: false,
@@ -66,7 +66,7 @@ export class OverlayButtonsPlugin extends Plugin {
             { sequence: 49 }
         );
         this.target = null;
-        this.state = reactive({
+        this.state = proxy({
             isVisible: true,
             showUi: true,
             buttons: [],
@@ -132,7 +132,7 @@ export class OverlayButtonsPlugin extends Plugin {
             button.handler = (...args) => {
                 this.dependencies.operation.next(async () => {
                     await handler(...args);
-                    this.dependencies.history.addStep();
+                    this.dependencies.history.commit();
                 });
             };
         }

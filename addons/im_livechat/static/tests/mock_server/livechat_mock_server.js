@@ -3,7 +3,8 @@ import {
     parseRequestParams,
     registerRoute,
 } from "@mail/../tests/mock_server/mail_mock_server";
-import { Command, makeKwArgs, serverState } from "@web/../tests/web_test_helpers";
+import { Store } from "@mail/../tests/mock_server/store";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
 import { patch } from "@web/core/utils/patch";
 
@@ -48,40 +49,45 @@ async function get_session(request) {
         }
     }
     if (!persisted) {
-        const store = new mailDataHelpers.Store();
+        const store = new Store();
         ResUsers._init_store_data(store);
-        store.add("discuss.channel", {
-            channel_type: "livechat",
-            fetchChannelInfoState: "fetched",
-            id: -1,
-            isLoaded: true,
-            livechat_channel_member_history_ids: [-1],
-            scrollUnread: false,
-        });
-        store.add("im_livechat.channel.member.history", {
-            id: -1,
-            channel_id: -1,
-            livechat_member_type: "agent",
-            partner_id: mailDataHelpers.Store.one(
-                ResPartner.browse(agent.partner_id),
-                makeKwArgs({ fields: ["avatar_128", "user_livechat_username"] })
-            ),
-        });
-        return { store_data: store.get_result(), channel_id: -1 };
+        store.add_model_values(
+            "discuss.channel",
+            {
+                channel_type: "livechat",
+                fetchChannelInfoState: "fetched",
+                isLoaded: true,
+                livechat_channel_member_history_ids: [-1],
+                scrollUnread: false,
+            },
+            { id_data: { id: -1 } }
+        );
+        store.add_model_values(
+            "im_livechat.channel.member.history",
+            (res) => {
+                res.attr("channel_id", -1);
+                res.attr("livechat_member_type", "agent");
+                res.one("partner_id", "_store_livechat_member_fields", {
+                    value: ResPartner.browse(agent.partner_id),
+                });
+            },
+            { id_data: { id: -1 } }
+        );
+        return { store_data: store.as_dict(), channel_id: -1 };
     }
     const channelVals = LivechatChannel._get_livechat_discuss_channel_vals(channel_id, {
         agent: agent,
     });
     channelVals.country_id = country_id;
     const channelId = DiscussChannel.create(channelVals);
-    const store = new mailDataHelpers.Store();
+    const store = new Store();
     ResUsers._init_store_data(store);
-    store.add(DiscussChannel.browse(channelId));
+    store.add(DiscussChannel.browse(channelId), "_store_channel_fields");
     store.add(DiscussChannel.browse(channelId), {
         isLoaded: true,
         scrollUnread: false,
     });
-    return { store_data: store.get_result(), channel_id: channelId };
+    return { store_data: store.as_dict(), channel_id: channelId };
 }
 
 registerRoute("/im_livechat/visitor_leave_session", visitor_leave_session);
@@ -102,30 +108,13 @@ registerRoute("/im_livechat/feedback", feedback);
 async function feedback(request) {
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    /** @type {import("mock_models").RatingRating} */
-    const RatingRating = this.env["rating.rating"];
 
-    const { channel_id, rate, reason } = await parseRequestParams(request);
-    let [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
+    const { channel_id, rate } = await parseRequestParams(request);
+    const [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
     if (!channel) {
         return false;
     }
-    const values = {
-        rating: rate,
-        consumed: true,
-        feedback: reason,
-        is_internal: false,
-        res_id: channel.id,
-        res_model: "discuss.channel",
-        rated_partner_id: channel.channel_partner_ids[0],
-    };
-    if (channel.rating_ids.length === 0) {
-        RatingRating.create(values);
-    } else {
-        RatingRating.write([channel.rating_ids[0]], values);
-    }
-    [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
-    return channel.rating_ids[0];
+    DiscussChannel.write([channel_id], { livechat_rating: rate });
 }
 
 registerRoute("/im_livechat/init", livechat_init);
@@ -235,13 +224,10 @@ patch(mailDataHelpers, {
         const ResPartner = this.env["res.partner"];
         const ResUsers = this.env["res.users"];
         super._process_request_for_all(...arguments);
-        store.add({ livechat_available: true });
+        store.add_global_values({ livechat_available: true });
         if (name === "init_livechat") {
             if (this.env.user && !ResUsers._is_public(this.env.uid)) {
-                store.add(
-                    ResPartner.browse(this.env.user.partner_id),
-                    makeKwArgs({ fields: ["email"] })
-                );
+                store.add(ResPartner.browse(this.env.user.partner_id), ["email"]);
             }
         }
     },
@@ -249,10 +235,10 @@ patch(mailDataHelpers, {
         super._process_request_for_internal_user(...arguments);
         if (name === "im_livechat.channel") {
             const LivechatChannel = this.env["im_livechat.channel"];
-            store.add(
-                LivechatChannel.browse(LivechatChannel.search([])),
-                makeKwArgs({ fields: ["are_you_inside", "name"] })
-            );
+            store.add(LivechatChannel.browse(LivechatChannel.search([])), [
+                "are_you_inside",
+                "name",
+            ]);
             return;
         }
         if (name === "/im_livechat/looking_for_help") {
@@ -260,7 +246,8 @@ patch(mailDataHelpers, {
             store.add(
                 DiscussChannel.browse(
                     DiscussChannel.search([["livechat_status", "=", "need_help"]])
-                )
+                ),
+                "_store_channel_fields"
             );
         }
         if (name === "/im_livechat/fetch_self_expertise") {

@@ -111,10 +111,6 @@ export default class OrderPaymentValidation {
         if (!this.checkCashRoundingHasBeenWellApplied()) {
             return false;
         }
-        const linesToRemove = this.order.lines.filter((line) => line.canBeRemoved);
-        for (const line of linesToRemove) {
-            this.order.removeOrderline(line);
-        }
         if (await this.isOrderValid(isForceValidate)) {
             // remove pending payments before finalizing the validation
             const toRemove = [];
@@ -153,6 +149,7 @@ export default class OrderPaymentValidation {
         this.pos.addPendingOrder([this.order.id]);
         this.order.state = "paid";
 
+        this.order.processingValidation = true;
         try {
             // 1. Save order to server.
             const syncOrderResult = await this.pos.syncAllOrders({ throw: true });
@@ -161,8 +158,12 @@ export default class OrderPaymentValidation {
             }
 
             // 2. Invoice, should not stop the validation process but a dialog is shown if an
-            // error occured.
-            if (this.shouldDownloadInvoice() && this.order.isToInvoice()) {
+            // error occurred.
+            if (
+                this.pos.config.use_download_invoice &&
+                this.shouldDownloadInvoice() &&
+                this.order.isToInvoice()
+            ) {
                 if (this.order.raw.account_move) {
                     await this.pos.env.services.account_move.downloadPdf(
                         this.order.raw.account_move
@@ -186,6 +187,8 @@ export default class OrderPaymentValidation {
             return await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
         } catch (error) {
             return this.handleValidationError(error);
+        } finally {
+            this.order.processingValidation = false;
         }
     }
 
@@ -288,7 +291,7 @@ export default class OrderPaymentValidation {
             return false;
         }
 
-        if ((this.order.isToInvoice() || this.order.shipping_date) && !this.order.getPartner()) {
+        if (this.shouldAskForPartner()) {
             const confirmed = await ask(this.pos.dialog, {
                 title: _t("Please select the Customer"),
                 body: _t("Select a customer with a valid address."),
@@ -302,18 +305,6 @@ export default class OrderPaymentValidation {
             } else {
                 return false;
             }
-        }
-
-        const partner = this.order.getPartner();
-        if (
-            this.order.shipping_date &&
-            !(partner.name && partner.street && partner.city && partner.country_id)
-        ) {
-            this.pos.dialog.add(AlertDialog, {
-                title: _t("Incorrect address for shipping"),
-                body: _t("The selected customer needs an address."),
-            });
-            return false;
         }
 
         if (!this.order.presetRequirementsFilled) {
@@ -381,6 +372,10 @@ export default class OrderPaymentValidation {
         }
 
         return true;
+    }
+
+    shouldAskForPartner() {
+        return this.order.isToInvoice() && !this.order.getPartner();
     }
 
     async _askForCustomerIfRequired() {

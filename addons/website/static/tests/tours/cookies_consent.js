@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add("cookie_bar_updates_gtag_consent", {
         },
         {
             content: "Go to Cookie Policy page",
-            trigger: "footer a[href='/cookie-policy']",
+            trigger: "footer a[href='/website/cookie-policy']",
             run: "click",
             expectUnloadPage: true,
         },

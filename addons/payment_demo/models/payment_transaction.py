@@ -2,7 +2,7 @@
 
 import logging
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -25,8 +25,11 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "demo":
             return
 
+        # Update the transaction through _process instead of _record to provide immediate feedback
         payment_data = {"reference": self.reference, "simulated_state": "done"}
-        self._process("demo", payment_data)
+        self.with_context(
+            payment_safe_write=True  # No API call was made; safe to replay
+        )._process(payment_data)
 
     def action_demo_set_canceled(self):
         """Set the state of the demo transaction to 'cancel'.
@@ -39,8 +42,11 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "demo":
             return
 
+        # Update the transaction through _process instead of _record to provide immediate feedback
         payment_data = {"reference": self.reference, "simulated_state": "cancel"}
-        self._process("demo", payment_data)
+        self.with_context(
+            payment_safe_write=True  # No API call was made; safe to replay
+        )._process(payment_data)
 
     def action_demo_set_error(self):
         """Set the state of the demo transaction to 'error'.
@@ -53,8 +59,11 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "demo":
             return
 
+        # Update the transaction through _process instead of _record to provide immediate feedback
         payment_data = {"reference": self.reference, "simulated_state": "error"}
-        self._process("demo", payment_data)
+        self.with_context(
+            payment_safe_write=True  # No API call was made; safe to replay
+        )._process(payment_data)
 
     # === BUSINESS METHODS === #
 
@@ -65,7 +74,7 @@ class PaymentTransaction(models.Model):
 
         simulated_state = self.token_id.demo_simulated_state
         payment_data = {"reference": self.reference, "simulated_state": simulated_state}
-        self._process("demo", payment_data)
+        self._record(payment_data)
 
     def _send_capture_request(self):
         """Override of `payment` to simulate a capture request."""
@@ -77,7 +86,7 @@ class PaymentTransaction(models.Model):
             "simulated_state": "done",
             "manual_capture": True,  # Distinguish manual captures from regular one-step captures.
         }
-        self._process("demo", payment_data)
+        self._record(payment_data)
 
     def _send_void_request(self):
         """Override of `payment` to simulate a void request."""
@@ -85,7 +94,7 @@ class PaymentTransaction(models.Model):
             return super()._send_void_request()
 
         payment_data = {"reference": self.reference, "simulated_state": "cancel"}
-        self._process("demo", payment_data)
+        self._record(payment_data)
 
     def _send_refund_request(self):
         """Override of `payment` to simulate a refund."""
@@ -93,13 +102,7 @@ class PaymentTransaction(models.Model):
             return super()._send_refund_request()
 
         payment_data = {"reference": self.reference, "simulated_state": "done"}
-        self._process("demo", payment_data)
-
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to skip the amount validation for demo flows."""
-        if self.provider_code != "demo":
-            return super()._extract_amount_data(payment_data)
-        return None
+        self._record(payment_data)
 
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
@@ -133,7 +136,13 @@ class PaymentTransaction(models.Model):
         elif state == "cancel":
             self._set_canceled()
         else:  # Simulate an error state.
-            self._set_error(_("You selected the following demo payment status: %s", state))
+            self._set_error(self.env._("You selected the following demo payment status: %s", state))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to skip the amount validation for demo flows."""
+        if self.provider_code != "demo":
+            return super()._extract_amount_data(payment_data)
+        return None
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""

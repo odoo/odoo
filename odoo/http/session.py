@@ -8,6 +8,7 @@ import os
 import re
 import secrets
 import tempfile
+import threading
 import time
 import typing
 from collections.abc import MutableMapping
@@ -19,10 +20,13 @@ from zlib import adler32
 from odoo.api import Environment
 from odoo.tools import config, consteq, get_lang
 
+from . import request
+from .geoip import GeoIP
+
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable
-    from .requestlib import Request
 
+    from .requestlib import Request
 
 _logger = logging.getLogger('odoo.http')
 
@@ -49,6 +53,9 @@ SESSION_ROTATION_INTERVAL = 60 * 60 * 3  # 3 hours
 The default duration before a session is rotated, changing the session
 id (also on the cookie) but keeping the same content.
 """
+
+SESSION_ROTATION_INTERVAL_HEADER_SKIP = "X-Odoo-Skip-Session-Rotation-Interval"
+""" The header to pass in a request to skip the soft session rotation. """
 
 SESSION_DELETION_TIMER = 120
 """
@@ -179,7 +186,11 @@ class Session(MutableMapping):
 def get_default_session() -> dict:
     """ The dictionary to initialise a new session with. """
     return {
-        'context': {},  # 'lang': request.default_lang()  # must be set at runtime
+        'context': {
+            # the following keys must be set at runtime:
+            # 'lang': request.default_lang(),
+            # 'host_id': env['ir.http']._get_host_id_from_domain(request.httprequest.host),
+        },
         'create_time': time.time(),
         'db': None,
         'debug': '',
@@ -524,7 +535,7 @@ class SessionStore:
             recent_session = self.get(session.sid)
             if 'next_sid' in recent_session:
                 # A new session has already been saved on disk by a concurrent request,
-                # the _save_session is going to simply use session.sid to set a new cookie.
+                # the save_session is going to simply use session.sid to set a new cookie.
                 session.sid = recent_session['next_sid']
                 return
             next_sid = static + self.generate_key()[STORED_SESSION_BYTES:]
@@ -539,6 +550,11 @@ class SessionStore:
         else:
             self.delete(session)
             session.sid = self.generate_key()
+            if hasattr(threading.current_thread(), 'sess_id'):
+                _logger.info(
+                    'Session rotated: %s -> %s', threading.current_thread().sess_id, session.sid[:8]
+                )
+            threading.current_thread().sess_id = session.sid[:8]
         if session.uid:
             assert env, "saving this session requires an environment"
             update_session_token(session, env)
@@ -608,6 +624,38 @@ def session_store():
     return SessionStore(path=config.session_dir)
 
 
-# ruff: noqa: E402
-from .geoip import GeoIP
-from .requestlib import request
+def save_session(request: Request, env: Environment | None = None) -> None:
+    """
+    Save a modified session on disk.
+
+    :param env: an environment to compute the session token.
+        MUST be left ``None`` (in which case it uses the request's
+        env) UNLESS the database changed.
+    """
+    sess = request.session
+    if env is None:
+        env = request.env
+
+    if not sess.can_save:
+        return
+
+    if sess.should_rotate:
+        session_store().rotate(sess, env)  # it saves
+    elif (
+        sess.uid
+        and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL
+        and request.httprequest.path not in SESSION_ROTATION_EXCLUDED_PATHS
+        and not request.httprequest.headers.get(SESSION_ROTATION_INTERVAL_HEADER_SKIP)
+    ):
+        session_store().rotate(sess, env, soft=True)
+    elif sess.is_dirty:
+        session_store().save(sess)
+
+    cookie_sid = request.cookies.get('session_id')
+    if sess.is_dirty or cookie_sid != sess.sid:
+        request.future_response.set_cookie(
+            'session_id',
+            sess.sid,
+            max_age=get_session_max_inactivity(env),
+            httponly=True,
+        )

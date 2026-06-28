@@ -4,35 +4,60 @@
     <record model="ir.ui.view" id="view_mail_mass_mailing_test_form">
         <field name="name">mailing.mailing.test.form</field>
         <field name="model">mailing.mailing.test</field>
+        <field name="priority">5</field>
         <field name="arch" type="xml">
-            <form string="Preview &amp; Test" js_class="mailing_preview_form_view">
+            <form string="Preview" js_class="mailing_preview_form_view">
+                <!-- Alternate header with title and cancel button, as we want to hide the default dialog header -->
+                <header class="modal-header py-3 px-3 mx-n3">
+                    <h4 class="modal-title text-wrap text-break fs-3 ps-1 flex-grow-1">Preview Mailing</h4>
+                    <widget name="mailing_preview_display_mode_toggle" class="ms-auto"/>
+                    <button special="cancel" class="btn btn-close ms-2" data-hotkey="x" close="1" string=""/>
+                </header>
                 <sheet>
                     <group>
-                        <field name="email_from"/>
-                        <label for="subject" string="Subject"/>
-                        <div class="d-flex">
-                            <field name="subject" class="w-auto me-1 fw-bold"/>
-                            <field name="preview_text" class="text-muted w-auto"/>
-                        </div>
-                        <field name="reply_to"/>
+                        <group>
+                            <field name="email_from"/>
+                            <label for="subject" string="Subject"/>
+                            <div class="d-flex">
+                                <field name="subject" class="w-auto me-1 fw-bold"/>
+                                <field name="preview_text" class="text-muted w-auto"/>
+                            </div>
+                            <field name="reply_to"/>
+                        </group>
+                        <group>
+                            <div class="row justify-content-end">
+                                <div class="col-12 col-lg-8 d-flex align-items-center justify-content-end pe-0 me-n3">
+                                    <field name="preview_record_ref" nolabel="1"
+                                        options="{'hide_model': True, 'no_create': True, 'no_open': True}"
+                                        placeholder="Select a record"
+                                        widget="mail_preview_record_field"/>
+                                </div>
+                            </div>
+                        </group>
                     </group>
-                    <div class="row">
-                        <div class="col-12 col-lg-8 d-flex align-items-center gap-2">
-                            <label for="email_to" string="Send test to" class="text-nowrap"/>
-                            <field name="email_to" widget="char" class="o_field_highlight m-0 w-50"
-                                placeholder="email1@example.com, email2@example.com"/>
-                            <button name="send_mail_test" type="object" string="Send Test" class="btn-secondary text-nowrap"/>
-                        </div>
-                        <div class="col-12 col-lg-4 d-flex align-items-center justify-content-end gap-2">
-                            <widget name="mailing_preview_display_mode_toggle"/>
-                            <field name="preview_record_ref" nolabel="1" class="w-100"
-                                   options="{'hide_model': True, 'no_create': True, 'no_open': True}"
-                                   widget="mail_preview_record_field"/>
-                        </div>
-                    </div>
                     <field name="body_html" class="w-100" widget="mailing_preview_iframe"/>
                 </sheet>
                 <footer/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_mail_mass_mailing_test_send_test_form" model="ir.ui.view">
+        <field name="name">mailing.mailing.send.test.form</field>
+        <field name="model">mailing.mailing.test</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Send a Sample Mail">
+                <p class="text-muted">
+                    Send a sample mailing for testing purpose to the address below.
+                </p>
+                <group>
+                    <field name="email_to" placeholder="email1@example.com&#10;email2@example.com"/>
+                </group>
+                <footer>
+                    <button string="Send test" name="send_mail_test" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
             </form>
         </field>
     </record>

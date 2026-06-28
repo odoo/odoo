@@ -5,8 +5,8 @@
         <div class="border rounded p-3 w-100">
             <div
                 name="click_and_collect_availability"
-                t-on-click="this.openLocationSelector"
-                class="cursor-pointer"
+                t-on-click="() => this.state.inStoreStockData?.in_stock ? this.openLocationSelector() : null"
+                t-att-class="this.state.inStoreStockData?.in_stock ? 'cursor-pointer' : ''"
             >
                 <div class="h6">
                     <i class="fa fa-fw fa-map-marker text-muted"/>
@@ -33,7 +33,7 @@
                     <div t-else="" class="text-muted">
                         <i class="fa fa-fw fa-circle text-danger"/> Not available
                     </div>
-                    <a t-if="this.props.showSelectStoreButton" role="button" href="#">
+                    <a t-if="this.props.showSelectStoreButton and this.state.inStoreStockData?.in_stock" role="button" href="#">
                         <t t-if="this.state.selectedLocationData.id">Change store</t>
                         <t t-elif="this.state.inStoreStockData.in_stock">Select store</t>
                     </a>

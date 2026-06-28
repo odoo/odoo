@@ -51,7 +51,7 @@ test("base rendering editable", async () => {
     await contains(".o-mail-Follower-details");
     await contains(".o-mail-Follower-avatar");
     await contains(".o-mail-Follower");
-    await contains("[title='Edit subscription']");
+    await contains("[title='Edit Notification Preferences']");
     await contains("[title='Remove this follower']");
 });
 
@@ -87,8 +87,8 @@ test("click on edit follower", async () => {
     await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
-    await contains("[title='Edit subscription']");
-    await click("[title='Edit subscription']");
+    await contains("[title='Edit Notification Preferences']");
+    await click("[title='Edit Notification Preferences']");
     await contains(".o-mail-Follower", { count: 0 });
     await expect.waitForSteps(["fetch_subtypes"]);
     await contains(".o-mail-FollowerSubtypeDialog");
@@ -108,8 +108,8 @@ test("edit follower and close subtype dialog", async () => {
     await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
-    await contains("[title='Edit subscription']");
-    await click("[title='Edit subscription']");
+    await contains("[title='Edit Notification Preferences']");
+    await click("[title='Edit Notification Preferences']");
     await contains(".o-mail-FollowerSubtypeDialog");
     await expect.waitForSteps(["fetch_subtypes"]);
     await click(".o-mail-FollowerSubtypeDialog button:text('Discard')");

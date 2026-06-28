@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import Domain
+from odoo.models import TableSQL
+from odoo.tools import SQL
 
 from odoo.addons.sale.models.sale_order import SALE_ORDER_STATE
 
@@ -26,6 +29,7 @@ class SaleReport(models.Model):
 
     # sale.order fields
     name = fields.Char(string="Order Reference", readonly=True)
+    line_name = fields.Char(string="Order Line Name", readonly=True)
     date = fields.Datetime(string="Order Date", readonly=True)
     partner_id = fields.Many2one(comodel_name="res.partner", string="Customer", readonly=True)
     company_id = fields.Many2one(comodel_name="res.company", readonly=True)
@@ -113,166 +117,88 @@ class SaleReport(models.Model):
     nbr = fields.Integer(string="# of Lines", readonly=True)
     currency_id = fields.Many2one(comodel_name="res.currency", readonly=True)
 
-    def _with_sale(self):
-        return ""
+    @property
+    def _table_query(self) -> SQL:
+        today = fields.Date.today()
+        query = self.env['sale.order.line'].sudo().with_context(date_to=today)._search(self._order_line_domain())
+        query.groupby = SQL(", ").join(self._groupby_list(query.table))
+        return query.subselect(*self._select_dict_to_list(self._select_dict(query.table)))
 
-    def _select_sale(self):
-        select_ = f"""
-            MIN(l.id) AS id,
-            l.product_id AS product_id,
-            l.invoice_status AS line_invoice_status,
-            t.uom_id AS product_uom_id,
-            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.product_uom_qty * u.factor / u2.factor) ELSE 0 END AS product_uom_qty,
-            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_delivered * u.factor / u2.factor) ELSE 0 END AS qty_delivered,
-            CASE WHEN l.product_id IS NOT NULL THEN SUM((l.product_uom_qty - l.qty_delivered) * u.factor / u2.factor) ELSE 0 END AS qty_to_deliver,
-            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_invoiced * u.factor / u2.factor) ELSE 0 END AS qty_invoiced,
-            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_to_invoice * u.factor / u2.factor) ELSE 0 END AS qty_to_invoice,
-            CASE WHEN l.product_id IS NOT NULL THEN AVG(l.price_unit
-                / {self._case_value_or_one("s.currency_rate")}
-                * {self._case_value_or_one("account_currency_table.rate")}
-                ) ELSE 0
-            END AS price_unit,
-            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_total
-                / {self._case_value_or_one("s.currency_rate")}
-                * {self._case_value_or_one("account_currency_table.rate")}
-                ) ELSE 0
-            END AS price_total,
-            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_subtotal
-                / {self._case_value_or_one("s.currency_rate")}
-                * {self._case_value_or_one("account_currency_table.rate")}
-                ) ELSE 0
-            END AS price_subtotal,
-            CASE WHEN l.product_id IS NOT NULL OR l.is_downpayment THEN SUM(l.untaxed_amount_to_invoice
-                / {self._case_value_or_one("s.currency_rate")}
-                * {self._case_value_or_one("account_currency_table.rate")}
-                ) ELSE 0
-            END AS untaxed_amount_to_invoice,
-            CASE WHEN l.product_id IS NOT NULL OR l.is_downpayment THEN SUM(l.untaxed_amount_invoiced
-                / {self._case_value_or_one("s.currency_rate")}
-                * {self._case_value_or_one("account_currency_table.rate")}
-                ) ELSE 0
-            END AS untaxed_amount_invoiced,
-            CASE WHEN l.product_id IS NOT NULL OR l.is_downpayment THEN SUM((l.price_unit * l.qty_delivered)
-                / {self._case_value_or_one("s.currency_rate")}
-                * {self._case_value_or_one("account_currency_table.rate")}
-                ) ELSE 0
-            END AS untaxed_delivered_amount,
-            COUNT(*) AS nbr,
-            s.name AS name,
-            s.date_order AS date,
-            s.state AS state,
-            s.invoice_status as invoice_status,
-            s.partner_id AS partner_id,
-            s.user_id AS user_id,
-            s.company_id AS company_id,
-            s.campaign_id AS campaign_id,
-            s.medium_id AS medium_id,
-            s.source_id AS source_id,
-            s.utm_reference AS utm_reference,
-            t.categ_id AS categ_id,
-            s.pricelist_id AS pricelist_id,
-            s.team_id AS team_id,
-            p.product_tmpl_id,
-            partner.commercial_partner_id AS commercial_partner_id,
-            partner.country_id AS country_id,
-            partner.industry_id AS industry_id,
-            partner.state_id AS state_id,
-            partner.zip AS partner_zip,
-            CASE WHEN l.product_id IS NOT NULL THEN SUM(p.weight * l.product_uom_qty * u.factor / u2.factor) ELSE 0 END AS weight,
-            CASE WHEN l.product_id IS NOT NULL THEN SUM(p.volume * l.product_uom_qty * u.factor / u2.factor) ELSE 0 END AS volume,
-            l.discount AS discount,
-            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_unit * l.product_uom_qty * l.discount / 100.0
-                / {self._case_value_or_one("s.currency_rate")}
-                * {self._case_value_or_one("account_currency_table.rate")}
-                ) ELSE 0
-            END AS discount_amount,
-            {self.env.company.currency_id.id} AS currency_id,
-            concat('sale.order', ',', s.id) AS order_reference"""  # noqa: E501
+    def _order_line_domain(self):
+        return Domain('display_type', '=', False)
 
-        additional_fields_info = self._select_additional_fields()
-        template = """,
-            %s AS %s"""
-        for fname, query_info in additional_fields_info.items():
-            select_ += template % (query_info, fname)
+    def _select_dict_to_list(self, select_dict):
+        return [SQL("%s AS %s", select_dict.get(fname, SQL("NULL")), SQL.identifier(fname)) for fname, field in self._fields.items() if field.store]
 
-        return select_
+    def _select_dict(self, table: TableSQL):
+        uom_ratio = SQL("(COALESCE(%s, 1) / NULLIF(COALESCE(%s, 1), 0.0))", table.product_uom_id.factor, table.product_id.uom_id.factor)
+        order_rate = self._case_value_or_one(table.order_id.currency_rate)
+        rate = SQL("%s / %s", table.consolidation_rate, order_rate)
+        return {
+            'id': SQL("MIN(%s)", table.id),
+            'product_id': table.product_id,
+            'line_name': table.name,
+            'line_invoice_status': SQL("%s", table.invoice_status),
+            'product_uom_id': SQL("CASE WHEN %s IS NULL THEN %s ELSE %s END", table.product_id, table.product_id.uom_id, table.product_uom_id),
+            'product_uom_qty': SQL("CASE WHEN %s IS NOT TRUE THEN SUM(%s * %s) ELSE 0 END", table.is_downpayment, table.product_uom_qty, uom_ratio),
+            'qty_delivered': SQL("CASE WHEN %s IS NOT TRUE THEN SUM(%s * %s) ELSE 0 END", table.is_downpayment, table.qty_delivered, uom_ratio),
+            'qty_to_deliver': SQL("CASE WHEN %s IS NOT TRUE THEN SUM((%s - %s) * %s) ELSE 0 END", table.is_downpayment, table.product_uom_qty, table.qty_delivered, uom_ratio),
+            'qty_invoiced': SQL("CASE WHEN %s IS NOT TRUE THEN SUM(%s * %s) ELSE 0 END", table.is_downpayment, table.qty_invoiced, uom_ratio),
+            'qty_to_invoice': SQL("CASE WHEN %s IS NOT TRUE THEN SUM(%s * %s) ELSE 0 END", table.is_downpayment, table.qty_to_invoice, uom_ratio),
+            'price_unit': SQL("CASE WHEN %s IS NOT TRUE THEN AVG(%s * %s) ELSE 0 END", table.is_downpayment, table.price_unit, rate),
+            'price_total': SQL("CASE WHEN %s IS NOT TRUE THEN SUM(%s * %s) ELSE 0 END", table.is_downpayment, table.price_total, rate),
+            'price_subtotal': SQL("CASE WHEN %s IS NOT TRUE THEN SUM(%s * %s) ELSE 0 END", table.is_downpayment, table.price_subtotal, rate),
+            'untaxed_amount_to_invoice': SQL("SUM(%s * %s)", table.untaxed_amount_to_invoice, rate),
+            'untaxed_amount_invoiced': SQL("SUM(%s * %s)", table.untaxed_amount_invoiced, rate),
+            'untaxed_delivered_amount': SQL("SUM(%s * %s * %s)", table.price_unit, table.qty_delivered, rate),
+            'nbr': SQL("COUNT(*)"),
+            'name': table.order_id.name,
+            'date': SQL("%s", table.order_id.date_order),
+            'state': table.order_id.state,
+            'invoice_status': table.order_id.invoice_status,
+            'partner_id': table.order_id.partner_id,
+            'user_id': table.order_id.user_id,
+            'company_id': table.order_id.company_id,
+            'campaign_id': table.order_id.campaign_id,
+            'medium_id': table.order_id.medium_id,
+            'source_id': table.order_id.source_id,
+            'utm_reference': table.order_id.utm_reference,
+            'categ_id': table.product_id.categ_id,
+            'pricelist_id': table.order_id.pricelist_id,
+            'team_id': table.order_id.team_id,
+            'product_tmpl_id': table.product_id.product_tmpl_id,
+            'commercial_partner_id': table.order_id.partner_id.commercial_partner_id,
+            'country_id': table.order_id.partner_id.country_id,
+            'industry_id': table.order_id.partner_id.industry_id,
+            'state_id': table.order_id.partner_id.state_id,
+            'partner_zip': SQL("%s", table.order_id.partner_id.zip),
+            'weight': SQL("SUM(%s * %s * %s)", table.product_id.weight, table.product_uom_qty, uom_ratio),
+            'volume': SQL("SUM(%s * %s * %s)", table.product_id.volume, table.product_uom_qty, uom_ratio),
+            'discount': table.discount,
+            'discount_amount': SQL("SUM(%s * %s * %s * %s)", table.price_unit, table.product_uom_qty, table.discount, rate),
+            'currency_id': SQL("%s", self.env.company.currency_id.id),
+            'order_reference': SQL("concat('sale.order', ',', %s)", table.order_id),
+        }
+
+    def _groupby_list(self, table: TableSQL):
+        return [
+            table.product_id,
+            table.price_unit,
+            table.invoice_status,
+            table.name,
+            table.product_uom_id,
+            table.is_downpayment,
+            table.discount,
+            table.order_id,
+            table.order_id.id,
+            table.product_id.uom_id,
+            table.product_id.product_tmpl_id,
+            table.product_id.product_tmpl_id.id,
+            table.order_id.partner_id.id,
+        ]
 
     def _case_value_or_one(self, value):
-        return f"""CASE COALESCE({value}, 0) WHEN 0 THEN 1.0 ELSE {value} END"""
-
-    def _select_additional_fields(self):
-        """Allow to return additional fields SQL specification for select part of the table query.
-
-        :returns: mapping field -> SQL computation of field, will be converted to '_ AS _field' in
-                  the final table definition
-        :rtype: dict
-        """
-        return {}
-
-    def _from_sale(self):
-        currency_table = self.env["res.currency"]._get_simple_currency_table(self.env.companies)
-        currency_table = self.env.cr.mogrify(currency_table).decode(self.env.cr.connection.encoding)
-        return f"""
-            sale_order_line l
-            LEFT JOIN sale_order s ON s.id=l.order_id
-            JOIN res_partner partner ON s.partner_id = partner.id
-            LEFT JOIN product_product p ON l.product_id=p.id
-            LEFT JOIN product_template t ON p.product_tmpl_id=t.id
-            LEFT JOIN uom_uom u ON u.id=l.product_uom_id
-            LEFT JOIN uom_uom u2 ON u2.id=t.uom_id
-            JOIN {currency_table} ON account_currency_table.company_id = s.company_id
-            """
-
-    def _where_sale(self):
-        return """
-            l.display_type IS NULL"""
-
-    def _group_by_sale(self):
-        return """
-            l.product_id,
-            l.order_id,
-            l.price_unit,
-            l.invoice_status,
-            t.uom_id,
-            t.categ_id,
-            s.name,
-            s.date_order,
-            s.partner_id,
-            s.user_id,
-            s.state,
-            s.invoice_status,
-            s.company_id,
-            s.campaign_id,
-            s.medium_id,
-            s.source_id,
-            s.utm_reference,
-            s.pricelist_id,
-            s.team_id,
-            p.product_tmpl_id,
-            partner.commercial_partner_id,
-            partner.country_id,
-            partner.industry_id,
-            partner.state_id,
-            partner.zip,
-            l.is_downpayment,
-            l.discount,
-            s.id,
-            account_currency_table.rate"""
-
-    def _query(self):
-        with_ = self._with_sale()
-        return f"""
-            {"WITH" + with_ + "(" if with_ else ""}
-            SELECT {self._select_sale()}
-            FROM {self._from_sale()}
-            WHERE {self._where_sale()}
-            GROUP BY {self._group_by_sale()}
-            {")" if with_ else ""}
-        """
-
-    @property
-    def _table_query(self):
-        return self._query()
+        return SQL("CASE COALESCE(%(value)s, 0) WHEN 0 THEN 1.0 ELSE %(value)s END", value=value)
 
     @api.readonly
     def action_open_order(self):

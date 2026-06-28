@@ -84,3 +84,48 @@ class TestSaleOrderTemplate(SaleManagementCommon):
         # Template cannot hold products from other companies
         with self.assertRaises(ValidationError):
             self.empty_order_template.company_id = self.other_company.id
+
+    def test_template_visibility(self):
+        def is_visible(user):
+            return bool(
+                self
+                .env["sale.order.template"]
+                .with_user(user)
+                .search([("id", "=", self.empty_order_template.id)])
+            )
+
+        # Initially: shared + no teams → visible to everyone
+        self.assertTrue(
+            is_visible(self.sale_user), "Shared template with no teams should be visible."
+        )
+
+        # Disable sharing → visible only to creator
+        self.empty_order_template.share_template = False
+        self.assertFalse(
+            is_visible(self.sale_user), "Non-shared template should not be visible to other users."
+        )
+        self.assertTrue(
+            is_visible(self.env.user), "Non-shared template should remain visible to its creator."
+        )
+
+        # Enable sharing + restrict to team (no members yet)
+        self.empty_order_template.write({
+            "share_template": True,
+            "team_ids": [Command.link(self.sale_team.id)],
+        })
+        self.assertFalse(
+            is_visible(self.sale_user),
+            "Shared team-specific template should not be visible to non-members.",
+        )
+
+        # Add user to team → becomes visible
+        self.sale_team.member_ids = [Command.link(self.sale_user.id)]
+        self.assertTrue(
+            is_visible(self.sale_user),
+            "Shared team-specific template should be visible to team members.",
+        )
+
+        with self.assertRaises(
+            UserError, msg="Only the creator of a shared template can delete it."
+        ):
+            self.empty_order_template.with_user(self.sale_user).unlink()

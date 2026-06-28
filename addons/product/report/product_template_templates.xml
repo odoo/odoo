@@ -21,15 +21,7 @@
 <template id="report_producttemplatelabel4x12">
     <t t-call="web.basic_layout">
         <div class="page">
-            <t t-call="product.report_productlabel" columns="4" rows="12" price_included="True"/>
-        </div>
-    </t>
-</template>
-
-<template id="report_producttemplatelabel4x12noprice">
-    <t t-call="web.basic_layout">
-        <div class="page">
-            <t t-call="product.report_productlabel" columns="4" rows="12" price_included="False"/>
+            <t t-call="product.report_productlabel" columns="4" rows="12"/>
         </div>
     </t>
 </template>
@@ -40,6 +32,10 @@
             <t t-call="product.report_productlabel_dymo"/>
         </div>
     </t>
+</template>
+
+<template id="report_producttemplatelabel_zpl">
+    <t t-call="product.report_productlabel_zpl"/>
 </template>
 
 </odoo>

@@ -1,6 +1,6 @@
 import { MAIN_PLUGINS, TOUCH_EXCLUDED_PLUGINS } from "./plugin_sets";
 import { createBaseContainer, SUPPORTED_BASE_CONTAINER_NAMES } from "./utils/base_container";
-import { fillShrunkPhrasingParent, removeClass } from "./utils/dom";
+import { removeClass } from "./utils/dom";
 import { isEmpty } from "./utils/dom_info";
 import { resourceSequenceSymbol, warnOfNamingConvention, withSequence } from "./utils/resource";
 import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
@@ -61,9 +61,9 @@ import { hasTouch } from "@web/core/browser/feature_detection";
  */
 
 /**
- * Clean up DOM before taking into account for next history step remaining in
+ * Clean up DOM before taking into account for next history commit remaining in
  * edit mode
- * @typedef {((root: EditorContext["editable"] | HTMLElement, stepType?: "original"|"undo"|"redo"|"restore") => void)[]} normalize_processors
+ * @typedef {((root: EditorContext["editable"] | HTMLElement) => EditorContext["editable"] | HTMLElement)[]} normalize_processors
  */
 
 /**
@@ -137,7 +137,6 @@ export class Editor {
                     this.config.baseContainers[0],
                     this.document
                 );
-                fillShrunkPhrasingParent(baseContainer);
                 editable.replaceChildren(baseContainer);
             }
         }
@@ -387,8 +386,8 @@ export class Editor {
      * its intent.
      *
      * An item is processed by each processor in sequence, each processor
-     * returning the new value of the item. If a processor returns a falsy
-     * value, the item remains unchanged.
+     * returning the new value of the item. Processors mutating the item in
+     * place must return that item.
      *
      * Example:
      * ```js
@@ -406,7 +405,7 @@ export class Editor {
             warnOfNamingConvention("processThrough", resourceId, { suffix: "processors" });
         }
         this.getResource(resourceId).forEach((processor) => {
-            item = processor(item, ...args) || item;
+            item = processor(item, ...args);
         });
         return item;
     }

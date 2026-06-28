@@ -1,4 +1,3 @@
-import { onWillRender } from "@web/owl2/utils";
 import { parseEmail } from "@mail/utils/common/format";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { _t } from "@web/core/l10n/translation";
@@ -6,32 +5,31 @@ import { isEmail } from "@web/core/utils/strings";
 import { highlightText, odoomark } from "@web/core/utils/html";
 import { useService } from "@web/core/utils/hooks";
 import { useSelectCreate } from "@web/views/fields/relational_utils";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
 
 import { rpc } from "@web/core/network/rpc";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 import { uniqueId } from "@web/core/utils/functions";
 import { RecipientTag, useRecipientChecker } from "./recipient_tag";
 
-import { Component } from "@odoo/owl";
+import { Component, computed, props, types } from "@odoo/owl";
 
 export class RecipientsInput extends Component {
     static template = "mail.RecipientsInput";
-    static components = { AutoComplete, RecipientTag };
-    static props = {
-        thread: { type: Object },
-    };
+    static components = { AutoComplete, RecipientTag, BadgeTag };
 
     setup() {
         this.orm = useService("orm");
         this.store = useService("mail.store");
-        this.recipientCheckerBus = useRecipientChecker(() => this.tags);
+        this.props = props({
+            thread: types.instanceOf(this.store["mail.thread"].Class),
+            recipientType: types.string(),
+            placeholder: types.string(),
+        });
+        this.tags = computed(() => this.getTagsFromMailThread());
+        this.recipientCheckerBus = useRecipientChecker(this.tags);
         useTagNavigation("recipientsInputRef", {
             delete: this.deleteTagByIndex.bind(this),
-        });
-
-        this.tags = [];
-        onWillRender(() => {
-            this.tags = this.getTagsFromMailThread();
         });
 
         this.openListViewToSelectResPartner = useSelectCreate({
@@ -59,9 +57,7 @@ export class RecipientsInput extends Component {
     }
 
     deleteTagByIndex(index) {
-        if (this.tags[index]) {
-            this.tags[index].onDelete();
-        }
+        this.tags()[index]?.onDelete();
     }
 
     getAutoCompleteSources() {
@@ -82,27 +78,32 @@ export class RecipientsInput extends Component {
                     const options = [];
 
                     const limit = 8;
-                    const matches = await this.orm.searchRead(
-                        "res.partner",
-                        [
-                            ["id", "not in", Array.from(partnerIds)],
-                            ["display_name", "ilike", term],
-                        ],
-                        ["email", "id", "lang", "name", "parent_name", "display_name"],
-                        { limit, context: { formatted_display_name: true, show_email: true } }
-                    );
+                    const matches = await this.orm.call("res.partner", "web_name_search", [], {
+                        name: term,
+                        specification: {
+                            email: {},
+                            lang: {},
+                            name: {},
+                            parent_name: {},
+                            display_name: {},
+                        },
+                        limit,
+                        domain: [["id", "not in", Array.from(partnerIds)]],
+                        context: { show_email: true },
+                    });
 
                     options.push(
                         ...matches.map((match) => ({
                             label: match.display_name
                                 ? highlightText(
                                       term,
-                                      odoomark(match.display_name),
+                                      odoomark(match.__formatted_display_name),
                                       "fw-bolder text-primary"
                                   )
                                 : _t("Unnamed"),
                             onSelect: () => {
                                 this.insertAdditionalRecipient({
+                                    display_name: match.display_name,
                                     email: match.email,
                                     name: match.name,
                                     partner_id: match.id,
@@ -161,26 +162,53 @@ export class RecipientsInput extends Component {
                             });
                         };
                     }
-                    options.push(createOption);
+                    if (name.trim() || email) {
+                        options.push(createOption);
+                    }
                     return options;
                 },
             },
         ];
     }
 
+    get otherFollowersCount() {
+        return this.props.thread.selfFollower
+            ? this.props.thread.followersCount - 1
+            : this.props.thread.followersCount;
+    }
+
+    get followersBadge() {
+        const text =
+            this.otherFollowersCount === 1
+                ? _t("1 Follower")
+                : _t("%(followersCount)s Followers", { followersCount: this.otherFollowersCount });
+        return {
+            color: 4,
+            text,
+            tooltip: this.props.thread.followers
+                .map(
+                    (f) =>
+                        `${this.props.thread.getPersonaName(f.partner_id) || _t("Unnamed")} ${
+                            f.partner_id.email ? "<" + f.partner_id.email + ">" : ""
+                        }`
+                )
+                .join("\n"),
+        };
+    }
+
     /** @returns {Object} */
     getTagsFromMailThread() {
         const tags = [];
         const createTagForRecipient = (recipient, recipientField) => {
-            const tooltip = `${recipient.name || _t("Unnamed")} ${
+            const tooltip = `${recipient.name || recipient.display_name || _t("Unnamed")} ${
                 recipient.email ? "<" + recipient.email + ">" : ""
             }`;
             tooltip.trim();
             tags.push({
                 id: uniqueId("tag_"),
                 resId: recipient.partner_id,
-                text: recipient.name || recipient.email || _t("Unnamed"),
-                name: recipient.name || _t("Unnamed"),
+                text: recipient.name || recipient.display_name || recipient.email || _t("Unnamed"),
+                name: recipient.name || recipient.display_name || _t("Unnamed"),
                 email: recipient.email || "",
                 tooltip,
                 onDelete: () => {
@@ -194,11 +222,12 @@ export class RecipientsInput extends Component {
                 bus: this.recipientCheckerBus,
             });
         };
-        for (const recipient of this.props.thread.suggestedRecipients) {
-            createTagForRecipient(recipient, "suggestedRecipients");
-        }
-        for (const recipient of this.props.thread.additionalRecipients) {
-            createTagForRecipient(recipient, "additionalRecipients");
+        for (const recipientField of ["suggestedRecipients", "additionalRecipients"]) {
+            for (const recipient of this.props.thread[recipientField].filter(
+                (r) => r.recipient_type === this.props.recipientType
+            )) {
+                createTagForRecipient(recipient, recipientField);
+            }
         }
         return tags;
     }
@@ -208,7 +237,7 @@ export class RecipientsInput extends Component {
         return [
             ...this.props.thread.suggestedRecipients,
             ...this.props.thread.additionalRecipients,
-        ];
+        ].filter((r) => r.recipient_type === this.props.recipientType);
     }
 
     /**
@@ -231,14 +260,14 @@ export class RecipientsInput extends Component {
 
     /** @param {SuggestedRecipient} recipient */
     insertAdditionalRecipient(recipient) {
-        this.props.thread.additionalRecipients.push(recipient);
+        this.props.thread.additionalRecipients.push({
+            ...recipient,
+            recipient_type: this.props.recipientType,
+        });
     }
 
     /** @returns {string} */
     getPlaceholder() {
-        const hasRecipients =
-            this.props.thread.suggestedRecipients.length ||
-            this.props.thread.additionalRecipients.length;
-        return hasRecipients ? "" : _t("Followers only");
+        return this.getAllMailThreadRecipients().length ? "" : this.props.placeholder;
     }
 }

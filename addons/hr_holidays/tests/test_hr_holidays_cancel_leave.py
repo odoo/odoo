@@ -26,7 +26,7 @@ class TestHrHolidaysCancelLeave(TestHrHolidaysCommon):
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
-        cls.holiday = cls.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True).with_user(cls.user_employee).create({
+        cls.holiday = cls.env['hr.leave'].with_user(cls.user_employee).create({
             'name': 'Time Off 1',
             'employee_id': cls.employee_emp.id,
             'work_entry_type_id': cls.hr_work_entry_type.id,

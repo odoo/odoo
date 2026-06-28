@@ -5,11 +5,11 @@ import { Component, xml } from "@odoo/owl";
 export class Meter extends Component {
     static template = xml`
         <div class="o_password_meter_container d-flex align-items-center">
-            <span t-out="passwordStrengthParams.text"
-                t-attf-class="me-2 #{passwordStrengthParams.className}"/>
+            <span t-out="this.passwordStrengthParams.text"
+                t-attf-class="me-2 #{this.passwordStrengthParams.className}"/>
             <meter class="o_password_meter"
                 min="0" low="0.5" high="0.99" max="1" optimum="1"
-                t-att-title="title" t-att-value="value"/>
+                t-att-title="this.title" t-att-value="this.value"/>
         </div>
     `;
     static props = {

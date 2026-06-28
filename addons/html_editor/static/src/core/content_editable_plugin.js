@@ -63,6 +63,7 @@ export class ContentEditablePlugin extends Plugin {
                 contentEditableEl.setAttribute("contenteditable", true);
             }
         }
+        return root;
     }
 
     cleanForSave(root) {
@@ -71,5 +72,6 @@ export class ContentEditablePlugin extends Plugin {
         for (const contenteditableEl of contenteditableEls) {
             contenteditableEl.removeAttribute("contenteditable");
         }
+        return root;
     }
 }

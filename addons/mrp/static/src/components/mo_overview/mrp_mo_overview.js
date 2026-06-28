@@ -1,5 +1,5 @@
-import { useState, useSubEnv } from "@web/owl2/utils";
-import { Component, EventBus, onWillStart } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, EventBus, onWillStart, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
@@ -26,7 +26,7 @@ export class MoOverview extends Component {
         this.unfoldedIds = new Set();
         this.context = {};
 
-        this.state = useState({
+        this.state = proxy({
             data: {},
             showOptions: this.getDefaultConfig(),
         });

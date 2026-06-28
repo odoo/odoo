@@ -1,17 +1,28 @@
-import { defineMailModels } from '@mail/../tests/mail_test_helpers';
 import { expect, test } from '@odoo/hoot';
 import { queryAllTexts } from '@odoo/hoot-dom';
+import { saleManagementModels } from "@sale_management/../tests/sale_management_test_helpers";
 import {
     clickSave,
     contains,
     defineModels,
     fields,
+    models,
     mountView,
     onRpc,
 } from '@web/../tests/web_test_helpers';
-import { saleModels } from '@sale/../tests/sale_test_helpers';
 
-class SaleOrderLine extends saleModels.SaleOrderLine {
+class AccountFiscalPosition extends models.ServerModel {
+    _name = "account.fiscal.position";
+
+    _records = [
+        {
+            id: 1,
+            name: "Test Fiscal Position",
+        },
+    ];
+}
+
+class SaleOrderLine extends saleManagementModels.SaleOrderLine {
     // for skipping tax setup required for prices computation to run correctly
     price_unit = fields.Float({ default: 3.00 });
     price_total = fields.Float({ default: 3.00 });
@@ -101,17 +112,23 @@ class SaleOrderLine extends saleModels.SaleOrderLine {
     ];
 }
 
-class SaleOrder extends saleModels.SaleOrder {
+class SaleOrder extends saleManagementModels.SaleOrder {
     _records = [
         {
             id: 1,
             name: "Optional Sections Sale order",
             order_line: SaleOrderLine._records.map(record => record.id),
+            company_id: 1,
+            fiscal_position_id: 1,
+            currency_id: 1,
         },
     ];
     _views = {
         form: `
             <form>
+                <field name="company_id" invisible="1"/>
+                <field name="fiscal_position_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
                 <field
                     name="order_line"
                     widget="sol_o2m"
@@ -140,8 +157,7 @@ class SaleOrder extends saleModels.SaleOrder {
     };
 }
 
-defineModels({ SaleOrderLine, SaleOrder });
-defineMailModels();
+defineModels({ ...saleManagementModels, SaleOrderLine, SaleOrder, AccountFiscalPosition });
 
 const EXPECTED_LINE_RECORDS = [
     "r1",
@@ -379,3 +395,53 @@ test("Moving Optional Sections to exclude some lines should set quantity to 1", 
     await clickSave();
     await expect.verifySteps(['web_save']);
 })
+
+test("Drag and drop optional subsection under hidden section resets its optional state", async () => {
+    SaleOrderLine._records[7].is_optional = true;
+
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+
+        expect(args[1].order_line.find((commands) => commands[1] === 8)[2].is_optional).toBe(
+            false,
+            {
+                message: "is_optional should reset to false for subsection Sec3-sub1",
+            }
+        );
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: 1,
+    });
+
+    expect(queryAllTexts(".o_data_row .o_list_text")).toEqual(EXPECTED_LINE_RECORDS);
+
+    await contains(".o_data_row:contains(Sec3-sub1):first .o_row_handle").dragAndDrop(
+        ".o_data_row:contains(Sec3):first"
+    );
+
+    await clickSave();
+    expect.verifySteps(["web_save"]);
+});
+
+test.tags("desktop");
+test("Selecting a section template should append its section and lines to the order", async () => {
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: 1,
+    });
+
+    await contains("button:contains(Add Section)").click();
+    expect(".o_section_templates_dropdown").toBeVisible();
+
+    await contains("span.o-dropdown-item:contains(Section Template 1)").click();
+    expect(queryAllTexts(".o_data_row .o_list_text")).toEqual([
+        ...EXPECTED_LINE_RECORDS,
+        "Section Template 1",
+        "line1",
+        "line2",
+    ]);
+});

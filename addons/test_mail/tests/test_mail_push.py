@@ -31,7 +31,7 @@ class TestWebPushNotification(SMSCommon):
             notification_type='inbox'
         )
 
-        cls.record_simple = cls.env['mail.test.simple'].with_context(cls._test_context).create({
+        cls.record_simple = cls.env['mail.test.simple'].create({
             'name': 'Test',
             'email_from': 'ignasse@example.com'
         })
@@ -348,10 +348,8 @@ class TestWebPushNotification(SMSCommon):
         inviting_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         channel = self.env['discuss.channel'].with_user(inviting_user)._get_or_create_chat(
             partners_to=[self.user_email.partner_id.id])
-        inviting_channel_member = channel.sudo().channel_member_ids.filtered(
-            lambda channel_member: channel_member.partner_id == inviting_user.partner_id)
-
-        inviting_channel_member._rtc_join_call()
+        inviting_channel_member = channel.with_user(inviting_user).self_member_id
+        inviting_channel_member.sudo()._rtc_join_call()
         push_to_end_point.assert_called_once()
         payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
         self.assertEqual(
@@ -378,8 +376,7 @@ class TestWebPushNotification(SMSCommon):
         self.assertEqual(data['res_id'], channel.id)
         self.assertEqual(data['model'], "discuss.channel")
         push_to_end_point.reset_mock()
-
-        inviting_channel_member._rtc_leave_call()
+        inviting_channel_member.sudo()._rtc_leave_call()
         push_to_end_point.assert_called_once()
         payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
         self.assertEqual(payload_value['options']['data']['type'], "CANCEL")
@@ -421,8 +418,8 @@ class TestWebPushNotification(SMSCommon):
         self._assert_notification_count_for_cron(0)
         push_to_end_point.assert_called_once()
         payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
-        self.assertIn(
-            f'{container_update_subtype.description}\nContainer: {container.name} → {container2.name}',
+        self.assertEqual(
+            f'{container_update_subtype.description}\n{container.name}*{container2.name}* {container.name}',
             payload_value['options']['body'],
             'Tracking changes should be included in push notif payload'
         )

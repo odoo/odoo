@@ -64,7 +64,7 @@ class SaleOrder(models.Model):
         """Override of `sale` to set/update `customer_product_ref_ids` on product."""
         res = super()._action_confirm()
         for line in self.order_line:
-            if not line.edi_customer_product_ref:
+            if not line.edi_customer_product_ref or not line.product_id:
                 continue
             self.env['customer.product.reference'].sudo().create_or_update_product_reference(
                 line.order_id.partner_id,

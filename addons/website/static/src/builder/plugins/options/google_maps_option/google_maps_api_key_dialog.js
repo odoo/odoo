@@ -1,8 +1,8 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useChildRef, useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 /**
  * @typedef {import('./google_map_option_plugin.js').ApiKeyValidation} ApiKeyValidation
@@ -20,7 +20,7 @@ export class GoogleMapsApiKeyDialog extends Component {
     setup() {
         this.modalRef = useChildRef();
         /** @type {{ apiKey?: string, apiKeyValidation: ApiKeyValidation }} */
-        this.state = useState({
+        this.state = proxy({
             apiKey: this.props.originalApiKey,
             apiKeyValidation: { isValid: false },
         });

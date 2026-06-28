@@ -53,10 +53,13 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             inLeftSide([
                 ...ProductScreen.selectedOrderlineHasDirect("Office Combo", "1", "62.1"),
                 ...ProductScreen.clickLine("Combo Product 3"),
+                ...Order.hasLine({ withClass: ":eq(3).selected" }),
                 ...ProductScreen.selectedOrderlineHasDirect("Combo Product 3", "1"),
                 ...ProductScreen.clickLine("Combo Product 5"),
+                ...Order.hasLine({ withClass: ":eq(1).selected" }),
                 ...ProductScreen.selectedOrderlineHasDirect("Combo Product 5", "1"),
                 ...ProductScreen.clickLine("Combo Product 8"),
+                ...Order.hasLine({ withClass: ":eq(2).selected" }),
                 ...ProductScreen.selectedOrderlineHasDirect("Combo Product 8", "1"),
             ]),
             // check that you can select a customer which triggers a recomputation of the price
@@ -193,7 +196,6 @@ registry.category("web_tour.tours").add("test_combo_refund_different_qty", {
 });
 
 registry.category("web_tour.tours").add("ProductComboMaxFreeQtyTour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -209,6 +211,7 @@ registry.category("web_tour.tours").add("ProductComboMaxFreeQtyTour", {
             combo.select("Combo Product 5"),
             combo.checkProductQty("Combo Product 5", "1"),
             combo.select("Combo Product 5"),
+            combo.checkProductQty("Combo Product 5", "1"),
             combo.select("Combo Product 5"),
             // Check that we cannot exceed the combo 'max_qty' which is 2
             combo.checkProductQty("Combo Product 5", "2"),
@@ -291,7 +294,6 @@ registry.category("web_tour.tours").add("ProductComboDiscountTour", {
 });
 
 registry.category("web_tour.tours").add("test_convert_orderlines_to_combo", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -327,14 +329,14 @@ registry.category("web_tour.tours").add("test_convert_orderlines_to_combo", {
             // Select attributes
             ProductConfiguratorPopup.pickColor("Blue"),
             ProductConfiguratorPopup.selectedColor("Blue"),
-            Dialog.confirm(),
+            Dialog.proceed({ title: `Second Product 9`, button: "add" }),
 
             // Convert to combo
             ProductScreen.clickApplyCombo(
                 true,
                 ["Second Combo Product", "Office Combo"],
                 "Second Combo Product",
-                true
+                "Office Combo"
             ),
 
             // Check that orderline is now a combo
@@ -457,28 +459,5 @@ registry.category("web_tour.tours").add("test_combo_no_free_item", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("test_combo_price_unchanged_with_lot_tracked_product", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Test Combo"),
-            inLeftSide([
-                ...ProductScreen.selectedOrderlineHasDirect("Test Combo"),
-                ...ProductScreen.orderLineHas("Product A", "1.0"),
-            ]),
-            ProductScreen.totalAmountIs("8.05"),
-            inLeftSide([
-                ...ProductScreen.clickLotIcon(),
-                ...ProductScreen.enterLotNumber("1", "lot"),
-                ...ProductScreen.orderLineHas("Product A", "1.0"),
-                {
-                    trigger: ".info-list:contains('Lot Number 1')",
-                },
-            ]),
-            ProductScreen.totalAmountIs("8.05"),
         ].flat(),
 });

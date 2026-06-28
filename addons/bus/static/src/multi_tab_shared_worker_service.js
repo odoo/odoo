@@ -1,5 +1,4 @@
 import { browser } from "@web/core/browser/browser";
-import { Deferred } from "@web/core/utils/concurrency";
 import { EventBus } from "@odoo/owl";
 
 const STATE = Object.freeze({
@@ -13,7 +12,8 @@ export const multiTabSharedWorkerService = {
     dependencies: ["worker_service"],
     start(env, { worker_service: workerService }) {
         const bus = new EventBus();
-        let responseDeferred = null;
+        /** @type {?PromiseWithResolvers<boolean>} */
+        let isMasterTabPromWithResolvers = null;
         let state = STATE.INIT;
         browser.addEventListener("pagehide", unregister);
 
@@ -24,8 +24,8 @@ export const multiTabSharedWorkerService = {
             }
             switch (type) {
                 case "ELECTION:IS_MASTER_RESPONSE":
-                    responseDeferred?.resolve(data.answer);
-                    responseDeferred = null;
+                    isMasterTabPromWithResolvers?.resolve(data.answer);
+                    isMasterTabPromWithResolvers = null;
                     break;
                 case "ELECTION:HEARTBEAT_REQUEST":
                     workerService.send("ELECTION:HEARTBEAT");
@@ -69,9 +69,11 @@ export const multiTabSharedWorkerService = {
                 if (state === STATE.INIT) {
                     await startWorker();
                 }
-                responseDeferred = new Deferred();
-                workerService.send("ELECTION:IS_MASTER?");
-                return responseDeferred;
+                if (!isMasterTabPromWithResolvers) {
+                    isMasterTabPromWithResolvers = Promise.withResolvers();
+                    workerService.send("ELECTION:IS_MASTER?");
+                }
+                return isMasterTabPromWithResolvers.promise;
             },
             unregister,
         };

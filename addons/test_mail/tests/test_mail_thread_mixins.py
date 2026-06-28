@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from odoo import exceptions, tools
+from odoo import exceptions, fields, tools
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tests.common_tracking import MailTrackingDurationMixinCase
 from odoo.addons.test_mail.tests.common import TestRecipients
@@ -10,7 +10,7 @@ from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged('mail_thread', 'mail_track', 'is_query_count', 'mail_duration_mixin')
+@tagged('mail_thread', 'mail_track', 'mail_duration_mixin')
 class TestMailTrackingDurationMixin(MailTrackingDurationMixinCase):
 
     @classmethod
@@ -20,6 +20,7 @@ class TestMailTrackingDurationMixin(MailTrackingDurationMixinCase):
     def test_mail_tracking_duration(self):
         self._test_record_duration_tracking()
 
+    @users('employee')
     def test_mail_tracking_duration_create(self):
         now = datetime(2025, 11, 27, 8, 46, 0)
         for create_stage, exp_key in zip(
@@ -33,20 +34,24 @@ class TestMailTrackingDurationMixin(MailTrackingDurationMixinCase):
                         'stage_id': create_stage.id,
                     })
                     self.flush_tracking()
+                    expected_now = {'d': fields.Datetime.to_string(now), 's': int(exp_key)}
+                    self.assertDictEqual(new.duration_tracking, expected_now)
+
                 with self.mock_datetime_and_now(now):
                     new.invalidate_recordset(fnames=['duration_tracking'])
-                    self.assertDictEqual(new.duration_tracking, {exp_key: 0})
+                    self.assertDictEqual(new.duration_tracking, expected_now, 'Invalidate should not interfere (stored field now anyway)')
+
                 with self.mock_datetime_and_now(now + timedelta(minutes=10)):
                     new.invalidate_recordset(fnames=['duration_tracking'])
-                    self.assertDictEqual(new.duration_tracking, {exp_key: 600})
+                    self.assertDictEqual(new.duration_tracking, expected_now, 'Since it is stored (19.3+) current time does not change anything on stored data')
+
                 with self.mock_datetime_and_now(now + timedelta(minutes=20)):
                     new.write({'stage_id': self.stage_2.id})
-                    self.flush_tracking()
-                    new.invalidate_recordset(fnames=['duration_tracking'])
-                    self.assertDictEqual(new.duration_tracking, {exp_key: 1200, str(self.stage_2.id): 0})
-
-    def test_queries_batch_mail_tracking_duration(self):
-        self._test_queries_batch_duration_tracking()
+                    self.assertDictEqual(new.duration_tracking, {
+                        'd': fields.Datetime.to_string(now + timedelta(minutes=20)),
+                        's': self.stage_2.id,
+                        exp_key: 20,
+                    })
 
 
 @tagged('mail_thread', 'mail_track', 'mail_duration_mixin')

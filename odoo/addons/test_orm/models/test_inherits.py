@@ -60,6 +60,7 @@ class TestAnother_Unit(models.Model):
     _description = 'Another Test Unit'
 
     val1 = fields.Integer('Value 1', required=True)
+    ro_with_default = fields.Char(groups=fields.NO_ACCESS, default='roro')
 
 
 # We want to _inherits from the parent model, add a field and check

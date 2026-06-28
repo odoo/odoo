@@ -1,5 +1,7 @@
 import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { execCommand } from "@html_editor/../tests/_helpers/userCommands";
 import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
@@ -20,7 +22,7 @@ describe("replicate changes", () => {
         });
         queryOne(":iframe .test-2 span").append(" ici");
         const editor = getEditor();
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         expect(":iframe span:contains(Contactez-nous ici)").toHaveCount(2);
     });
 
@@ -47,14 +49,14 @@ describe("replicate changes", () => {
         );
         const editor = getEditor();
         queryOne(":iframe .test-1 b").append(" Abroad");
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         expect(":iframe .test-1 b").toHaveText("Travel Abroad");
         expect(":iframe .test-2 a").toHaveText("Travel Abroad");
         expect(":iframe .test-3 span").toHaveText("Travel Abroad");
         expect(":iframe .test-4 a").toHaveInnerHTML("\u{FEFF}Travel Abroad\u{FEFF}"); // link in editable get feff
 
         queryOne(":iframe .test-4 a").append("!"); // the feff should not be forwarded
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         expect(":iframe .test-1 b").toHaveText("Travel Abroad!");
         expect(":iframe .test-2 a").toHaveText("Travel Abroad!", { raw: true });
         expect(":iframe .test-3 span").toHaveText("Travel Abroad!");
@@ -74,7 +76,7 @@ describe("replicate changes", () => {
         });
         queryOne(":iframe .test-1 span").append("y");
         const editor = getEditor();
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         expect(":iframe span:contains(Homey)").toHaveCount(2);
     });
 
@@ -143,14 +145,14 @@ describe("replicate changes", () => {
 
         const editor = getEditor();
         span2.append(" ici");
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         expect(span1).not.toHaveClass("o_dirty");
         expect(span2).toHaveClass("o_dirty");
         expect(span3).not.toHaveClass("o_dirty");
         expect([span1, span2, span3]).toHaveText("Contactez-nous ici");
 
         span1.append("!");
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         expect(span1).toHaveClass("o_dirty");
         expect(span2).toHaveClass("o_dirty");
         expect(span3).not.toHaveClass("o_dirty");
@@ -184,10 +186,31 @@ describe("replicate changes", () => {
         span2.append(" ici");
         span1.append("!");
         const editor = getEditor();
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         expect(span1).toHaveClass("o_dirty");
         expect(span2).toHaveClass("o_dirty");
         expect(span3).not.toHaveClass("o_dirty");
         expect([span2, span3]).toHaveText(span1.textContent); // all the same text
+    });
+
+    test("should replicate a delete of a full text node", async () => {
+        const { getEditor } = await setupHTMLBuilder("", {
+            headerContent: `
+        <div class="test-1">
+            <span data-oe-model="ir.ui.view" data-oe-id="600" data-oe-field="arch_db" data-oe-translation-state="translated" data-oe-translation-source-sha="4242">Contactez-nous</span>
+        </div>
+        <div class="test-2">
+            <span data-oe-model="ir.ui.view" data-oe-id="600" data-oe-field="arch_db" data-oe-translation-state="translated" data-oe-translation-source-sha="4242">Contactez-nous</span>
+        </div>
+    `,
+        });
+        const span = queryOne(":iframe .test-2 span");
+        setSelection({ anchorNode: span, anchorOffset: span.childNodes.length });
+        const editor = getEditor();
+        editor.shared.dom.insert("x");
+        editor.shared.history.commit();
+        expect(":iframe span:contains(Contactez-nousx)").toHaveCount(2);
+        execCommand(editor, "deleteBackward");
+        expect(":iframe span:contains(Contactez-nousx)").toHaveCount(0);
     });
 });

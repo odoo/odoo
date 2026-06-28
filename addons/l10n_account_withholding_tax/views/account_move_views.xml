@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="account_move_view_form_inherit_l10n_account_withholding_tax" model="ir.ui.view">
+        <field name="name">account.move.view.form.inherit.l10n_account_withholding_tax</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_residual']/.." position="attributes">
+                <attribute name="class">d-grid column-gap-md-0 column-gap-3 justify-content-end</attribute>
+                <attribute name="style">grid-template-columns:max-content max-content;</attribute>
+            </xpath>
+            <xpath expr="//label[@for='amount_residual']" position="attributes">
+                <attribute name="class">text-end</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_residual']" position="attributes">
+                <attribute name="class" remove="w-auto"/>
+            </xpath>
+            <xpath expr="//field[@name='amount_residual']" position="after">
+                <label for="withholding_residual_amount_currency" string="Withhold Due" class="text-end"
+                    invisible="not withholding_total_amount_currency and not withholding_deducted_amount_currency"/>
+                <field name="withholding_residual_amount_currency" class="fw-bold"
+                    invisible="not withholding_total_amount_currency and not withholding_deducted_amount_currency"/>
+                <label for="withholding_net_residual_amount_currency" string="Net Due" class="text-end"
+                    invisible="not withholding_total_amount_currency and not withholding_deducted_amount_currency"/>
+                <field name="withholding_net_residual_amount_currency" class="fw-bold"
+                    invisible="not withholding_total_amount_currency and not withholding_deducted_amount_currency"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

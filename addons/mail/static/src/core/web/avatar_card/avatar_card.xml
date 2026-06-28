@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.AvatarCard">
+        <div class="o_avatar_card card border-0 rounded">
+            <div class="card-body bg-inherit rounded">
+                <div class="d-flex align-items-start gap-2 bg-inherit">
+                    <span t-if="this.displayAvatar" class="o_avatar pt-1 position-relative o_card_avatar bg-inherit">
+                        <img t-att-src="this.avatarUrl" class="rounded"/>
+                        <span t-if="this.user?.imStatusUI or this.partner?.imStatusUI" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center bg-inherit">
+                            <ImStatus user="this.user" persona="this.partner"/>
+                        </span>
+                    </span>
+                    <div class="d-flex flex-column o_card_user_infos overflow-hidden">
+                        <span t-if="this.name" class="o-mail-avatar-card-name fw-bold" t-out="this.name"/>
+                        <a t-if="this.email" t-att-href="'mailto:'+this.email" t-att-title="this.email" class="text-truncate">
+                            <i class="fa fa-fw fa-envelope me-1"/><t t-out="this.email"/>
+                        </a>
+                        <a t-if="this.phone" class="o-mail-avatar-card-tel text-truncate" t-att-title="this.phone" t-att-href="'tel:'+this.phone">
+                            <i class="fa fa-fw fa-phone me-1"/><t t-out="this.phone"/>
+                        </a>
+                        <div t-if="this.partnerLocalDateTimeFormatted()" class="o-mail-avatar-card-localtime text-muted">
+                            <i class="fa fa-fw fa-clock-o me-1"/><t t-out="this.partnerLocalDateTimeFormatted()"/>
+                        </div>
+                        <div t-if="this.store.self_user?.share === false" class="o_avatar_card_buttons d-flex gap-2 mt-2">
+                            <button t-if="this.user?.share === false" class="btn btn-secondary btn-sm" t-on-click.stop="this.onSendClick">Send message</button>
+                            <button t-if="this.showViewProfileBtn" class="btn btn-secondary btn-sm" t-custom-click.stop="(ev, isMiddleClick) => this.onClickViewProfile(isMiddleClick)" t-custom-ref="viewProfileBtn">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div t-if="this.hasFooter" class="o_avatar_card_details card-footer d-flex flex-column gap-3 rounded-bottom bg-100"/>
+        </div>
+    </t>
+</templates>

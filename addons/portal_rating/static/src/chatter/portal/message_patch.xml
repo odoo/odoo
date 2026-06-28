@@ -3,9 +3,7 @@
     <t t-inherit="mail.Message" t-inherit-mode="extension">
         <xpath expr="//div[@name='header']" position="after">
             <div t-if="this.ratingValue" class="mb-2">
-                <t t-call="portal_rating.rating_stars_static">
-                    <t t-set="val" t-value="this.ratingValue"/>
-                </t>
+                <t t-call="portal_rating.rating_stars_static" val="this.ratingValue"/>
             </div>
         </xpath>
         <xpath expr="//*[@t-custom-ref='messageContent']" position="inside">
@@ -30,7 +28,7 @@
                                      t-att-src="this.message.rating_id.publisher_avatar" t-att-class="this.authorAvatarAttClass"/>
                             </div>
                         </div>
-                        <div class="w-100 o-min-width-0">
+                        <div class="w-100 min-w-0">
                             <div class="o-mail-Message-header d-flex flex-wrap align-items-baseline mb-1 lh-1">
                                 <strong class="me-1 text-truncate"><t t-out="this.message.rating_id.publisher_name"/></strong>
                                 <small class="text-muted opacity-50 me-2">Published on <t t-out="this.message.rating_id.publisher_datetime"/></small>
@@ -51,7 +49,7 @@
                                 </div>
                             </div>
                             <div class="position-relative d-flex">
-                                <div class="o-min-width-0 position-relative d-flex overflow-x-auto d-inline-block">
+                                <div class="min-w-0 position-relative d-flex overflow-x-auto d-inline-block">
                                     <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100 bg-info-light opacity-25 rounded-end-3"/>
                                     <div class="position-relative text-break o-mail-Message-body mb-0 py-2 px-3 align-self-start rounded-end-3 rounded-bottom-3">
                                         <p><t t-out="this.message.rating_id.publisher_comment"/></p>

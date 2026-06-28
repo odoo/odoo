@@ -2,7 +2,7 @@ import { render } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import {
     clickPrev,
     followRelation,
@@ -22,6 +22,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
+import { localeCompare } from "@web/core/l10n/utils";
 
 class Partner extends models.Model {
     foo = fields.Char();
@@ -73,7 +74,7 @@ test("creating a field chain from scratch", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 isDebugMode="false"
                 update="(path) => this.onUpdate(path)"
             />
@@ -196,7 +197,7 @@ test("use the sort option", async () => {
             resModel: "partner",
             sort: (fields) =>
                 Object.keys(fields).sort((a, b) =>
-                    fields[b].string.localeCompare(fields[a].string)
+                    localeCompare(fields[b].string, fields[a].string)
                 ),
         },
     });
@@ -316,7 +317,7 @@ test("Using back button in popover", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 update="(path) => this.onUpdate(path)"
             />
         `;
@@ -401,7 +402,7 @@ test("can follow relations", async () => {
             readonly: false,
             path: "",
             resModel: "partner",
-            followRelations: true, // default
+            followRelation: true, // default
             update(path) {
                 expect(path).toBe("product_id");
             },
@@ -436,7 +437,7 @@ test("cannot follow relations", async () => {
             readonly: false,
             path: "",
             resModel: "partner",
-            followRelations: false,
+            followRelation: false,
             update(path) {
                 expect(path).toBe("product_id");
             },
@@ -470,7 +471,7 @@ test("Edit path in popover debug input", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 isDebugMode="true"
                 update="(pathInfo) => this.onUpdate(pathInfo)"
             />
@@ -582,10 +583,10 @@ test("start on complex path and click prev", async () => {
 test("support of invalid paths (allowEmpty=false)", async () => {
     class Parent extends Component {
         static components = { ModelFieldSelector };
-        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" />`;
+        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="this.state.path" />`;
         static props = ["*"];
         setup() {
-            this.state = useState({ path: `` });
+            this.state = proxy({ path: `` });
         }
     }
 
@@ -627,10 +628,10 @@ test("support of invalid paths (allowEmpty=false)", async () => {
 test("support of invalid paths (allowEmpty=true)", async () => {
     class Parent extends Component {
         static components = { ModelFieldSelector };
-        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" allowEmpty="true" />`;
+        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="this.state.path" allowEmpty="true" />`;
         static props = ["*"];
         setup() {
-            this.state = useState({ path: `` });
+            this.state = proxy({ path: `` });
         }
     }
 
@@ -674,10 +675,10 @@ test("debug input", async () => {
     let num = 1;
     class Parent extends Component {
         static components = { ModelFieldSelector };
-        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" isDebugMode="true" path="state.path" update.bind="update"/>`;
+        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" isDebugMode="true" path="this.state.path" update.bind="this.update"/>`;
         static props = ["*"];
         setup() {
-            this.state = useState({ path: `` });
+            this.state = proxy({ path: `` });
         }
         update(path, fieldInfo) {
             if (num === 1) {
@@ -730,10 +731,10 @@ test("debug input", async () => {
 test("focus on search input", async () => {
     class Parent extends Component {
         static components = { ModelFieldSelector };
-        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" update.bind="update"/>`;
+        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="this.state.path" update.bind="this.update"/>`;
         static props = ["*"];
         setup() {
-            this.state = useState({ path: `foo` });
+            this.state = proxy({ path: `foo` });
         }
         update() {}
     }
@@ -755,7 +756,7 @@ test("support properties", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 isDebugMode="true"
                 update="(path, fieldInfo) => this.onUpdate(path)"
             />
@@ -849,7 +850,7 @@ test("clear button (allowEmpty=true)", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 allowEmpty="true"
                 isDebugMode="true"
                 update="(path, fieldInfo) => this.onUpdate(path)"
@@ -902,9 +903,9 @@ test("Modify path in popover debug input and click away", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 isDebugMode="true"
-                update.bind="update"
+                update.bind="this.update"
             />
         `;
         static props = ["*"];
@@ -982,4 +983,43 @@ test("models with a m2o of the same name should show the correct page data", asy
         "Last Modified on",
         "Link",
     ]);
+});
+
+test("Fields can be selected but not followable", async () => {
+    class Cat extends models.Model {
+        cat_name = fields.Char();
+        link = fields.Many2one({ relation: "dog" });
+        cats = fields.One2many({ relation: "cat" });
+    }
+
+    class Dog extends models.Model {}
+
+    defineModels([Cat, Dog]);
+
+    await mountWithCleanup(ModelFieldSelector, {
+        props: {
+            followRelation: ({ fieldDef }) => (fieldDef.type === "one2many" ? false : null),
+            readonly: false,
+            path: "",
+            resModel: "cat",
+        },
+    });
+
+    await openModelFieldSelectorPopover();
+    expect(getDisplayedFieldNames()).toEqual([
+        "Cat name",
+        "Cats",
+        "Created on",
+        "Display name",
+        "Id",
+        "Last Modified on",
+        "Link",
+    ]);
+
+    expect(
+        ".o_model_field_selector_popover_item:contains(Cats):not(:has(.o_model_field_selector_popover_item_relation))"
+    ).toHaveCount(1);
+    expect(
+        ".o_model_field_selector_popover_item:contains(Link):has(.o_model_field_selector_popover_item_relation)"
+    ).toHaveCount(1);
 });

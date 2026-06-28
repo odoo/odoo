@@ -122,3 +122,33 @@ export function getAffineApproximation(projective, [[x0, y0], [x1, y1], [x2, y2]
         ])
     );
 }
+
+/**
+ * Determine which edge of an element is currently near the pointer.
+ * The edge is detected by comparing the pointer’s position with the
+ * element's bounding box, using a small sensitivity threshold.
+ *
+ * @param {{ x: number, y: number }} position - Pointer position (client coordinates).
+ * @param {HTMLElement} element - The element whose edges are tested.
+ * @returns {string|false} - The hovered edge, or false if none match.
+ */
+export function getElementHoveredEdge(position, element) {
+    if (!element || !element.isContentEditable) {
+        return false;
+    }
+
+    const BORDER_SENSITIVITY = 5;
+    const rect = element.getBoundingClientRect();
+
+    if (position.x <= rect.left + BORDER_SENSITIVITY) {
+        return "left";
+    } else if (position.x >= rect.right - BORDER_SENSITIVITY) {
+        return "right";
+    } else if (position.y <= rect.top + BORDER_SENSITIVITY) {
+        return "top";
+    } else if (position.y >= rect.bottom - BORDER_SENSITIVITY) {
+        return "bottom";
+    }
+
+    return false;
+}

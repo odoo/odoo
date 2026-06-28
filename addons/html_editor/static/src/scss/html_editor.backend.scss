@@ -58,6 +58,14 @@
         }
     }
 }
+@include media-breakpoint-down(md) {
+    .o_form_renderer:not(.o_field_highlight) {
+        .o_field_html .note-editable {
+            border: none;
+            padding: 0;
+        }
+    }
+}
 
 .o_field_html:not(.o_readonly_modifier) {
     .o_editor_banner_icon {

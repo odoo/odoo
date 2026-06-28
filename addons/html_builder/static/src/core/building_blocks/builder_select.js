@@ -1,19 +1,14 @@
 import { useRef, useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, xml } from "@odoo/owl";
+import { Component, onMounted, props, t, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import {
-    basicContainerBuilderComponentProps,
-    useVisibilityObserver,
-    useApplyVisibility,
-    useSelectableComponent,
-} from "../utils";
+import { useVisibilityObserver, useApplyVisibility, useSelectableComponent } from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { setElementContent } from "@web/core/utils/html";
 
 export class WithIgnoreItem extends Component {
-    static template = xml`<t t-slot="default"/>`;
+    static template = xml`<t t-call-slot="default"/>`;
     static props = {
         slots: { type: Object },
     };
@@ -26,21 +21,31 @@ export class WithIgnoreItem extends Component {
 
 export class BuilderSelect extends Component {
     static template = "html_builder.BuilderSelect";
-    static props = {
-        ...basicContainerBuilderComponentProps,
-        className: { type: String, optional: true },
-        dropdownContainerClass: { type: String, optional: true },
-        disabled: { type: Boolean, optional: true },
-        slots: {
-            type: Object,
-            shape: {
-                default: Object, // Content is not optional
-                fixedButton: { type: Object, optional: true },
-            },
-        },
-        dropdownClass: { type: String, optional: true },
-    };
-    static defaultProps = { dropdownClass: "o-hb-select-dropdown" };
+    props = props({
+        // basicContainerBuilderComponentProps (converted inline)
+        id: t.string().optional(),
+        applyTo: t.string().optional(),
+        preview: t.boolean().optional(),
+        inheritedActions: t.array(t.string()).optional(),
+
+        action: t.string().optional(),
+        actionParam: t.any().optional(),
+
+        // Shorthand actions.
+        classAction: t.any().optional(),
+        attributeAction: t.any().optional(),
+        dataAttributeAction: t.any().optional(),
+        styleAction: t.any().optional(),
+
+        className: t.string().optional(),
+        dropdownContainerClass: t.string().optional(),
+        disabled: t.boolean().optional(),
+        slots: t.object({
+            default: t.object(), // Content is not optional
+            fixedButton: t.object().optional(),
+        }),
+        dropdownClass: t.string().optional("o-hb-select-dropdown"),
+    });
     static components = {
         Dropdown,
         BuilderComponent,

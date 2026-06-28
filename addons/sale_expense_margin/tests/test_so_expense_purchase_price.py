@@ -18,7 +18,6 @@ class TestExpenseMargin(TestExpenseCommon):
 
         # create SO line and confirm SO (with only one line)
         sale_order = self.env['sale.order'].with_context(
-            mail_notrack=True,
             mail_create_nolog=True,
         ).sudo().create({
             'partner_id': self.partner_a.id,

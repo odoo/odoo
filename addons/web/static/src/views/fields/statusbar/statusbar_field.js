@@ -1,5 +1,5 @@
-import { onWillRender, render, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { onWillRender, render, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, useListener } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -56,6 +56,7 @@ export class StatusBarField extends Component {
         isDisabled: { type: Boolean, optional: true },
         visibleSelection: { type: Array, element: String, optional: true },
         withCommand: { type: Boolean, optional: true },
+        context: { type: Object, optional: true },
     };
 
     setup() {
@@ -91,20 +92,20 @@ export class StatusBarField extends Component {
             forceRecomputeItems = false;
         });
 
-        useExternalListener(window, "resize", throttleForAnimation(adjust));
+        useListener(window, "resize", throttleForAnimation(adjust));
 
         // Special data
         if (this.field.type === "many2one") {
             this.specialData = useSpecialData(async (orm, props) => {
-                const { foldField, name: fieldName, record } = props;
+                const { foldField, name: fieldName, record, context } = props;
                 const { relation } = record.fields[fieldName];
-                const fieldNames = ["display_name"];
+                const fieldNames = this.getFieldNames(props);
                 if (foldField) {
                     fieldNames.push(foldField);
                 }
                 let domain = getFieldDomain(record, fieldName, props.domain);
-                domain = Domain.and([this.getDomain(), domain]).toList();
-                const res = await orm.searchRead(relation, domain, fieldNames).catch((error) => {
+                domain = Domain.and([this.getDomain(props), domain]).toList();
+                const res = await orm.searchRead(relation, domain, fieldNames, { context }).catch((error) => {
                     if (error instanceof ConnectionLostError) {
                         if (this.props.record.data[this.props.name]) {
                             return [this.props.record.data[this.props.name]];
@@ -173,8 +174,15 @@ export class StatusBarField extends Component {
     /**
      * Override this to force a dynamic domain on the records
      */
-    getDomain() {
+    getDomain(props) {
         return [];
+    }
+
+    /**
+     * Override this to change the fields to fetch
+     */
+    getFieldNames(props) {
+        return ["display_name"];
     }
 
     /**
@@ -340,7 +348,6 @@ export class StatusBarField extends Component {
                 ? { id: item.value, display_name: item.label }
                 : item.value;
         await record.update({ [name]: value });
-        await record.save();
     }
 
     /**
@@ -379,6 +386,7 @@ export const statusBarField = {
         withCommand: viewType === "form",
         foldField: options.fold_field,
         domain: dynamicInfo.domain,
+        context: dynamicInfo.context,
     }),
 };
 

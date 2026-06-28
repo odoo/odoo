@@ -22,21 +22,21 @@ test("images lazy loading removes height then restores it", async () => {
         `
         <div>Fake surrounding
             <div id="wrapwrap">
-                <img src="/web/image/website.library_image_08" loading="lazy" style="min-height: 100px;"/>
+                <img src="/web/image/website.landscape_md_5" loading="lazy" style="min-height: 100px;"/>
             </div>
         </div>
     `,
         { waitForStart: false }
     );
     expect(core.interactions).toHaveLength(1);
-    expect("img").toHaveAttribute("src", "/web/image/website.library_image_08");
+    expect("img").toHaveAttribute("src", "/web/image/website.landscape_md_5");
     expect("img").toHaveAttribute("loading", "lazy");
     expect("img").toHaveStyle({ "min-height": "1px" });
 
     await onceAllImagesLoaded(queryOne("#wrapwrap img"));
     def.resolve();
     await tick();
-    expect("img").toHaveAttribute("src", "/web/image/website.library_image_08");
+    expect("img").toHaveAttribute("src", "/web/image/website.landscape_md_5");
     expect("img").toHaveAttribute("loading", "lazy");
     expect("img").toHaveStyle({ "min-height": "100px" });
 });

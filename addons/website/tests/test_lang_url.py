@@ -13,7 +13,7 @@ class TestLangUrlCommon(HttpCase):
         super().setUp()
 
         # Simulate multi lang without loading translations
-        self.website = self.env.ref('website.default_website')
+        self.website = self.env.ref('base.default_website')
         self.lang_fr = self.env['res.lang']._activate_lang('fr_FR')
         self.lang_fr.write({'url_code': 'fr'})
         self.website.language_ids = self.env.ref('base.lang_en') + self.lang_fr

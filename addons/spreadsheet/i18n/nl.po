@@ -10,17 +10,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2026-03-07 14:46+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
+"PO-Revision-Date: 2026-05-06 06:25+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/"
 "spreadsheet/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -96,6 +96,12 @@ msgstr "%(hour_number)sh"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/list/plugins/list_ui_plugin.js:0
+msgid "%(list_name)s (List #%(list_id)s)"
+msgstr "%(list_name)s (Lijst #%(list_id)s)"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(matches)s matches in %(sheetName)s"
 msgstr "%(matches)s komt overeen in %(sheetName)s"
@@ -105,6 +111,12 @@ msgstr "%(matches)s komt overeen in %(sheetName)s"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
 msgstr "%(matches)s komt overeen met in bereik %(range)s van %(sheetName)s"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "%(milliseconds)s ms"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -125,6 +137,9 @@ msgid ""
 "%(replaceable_count)s match(es) replaced. %(irreplaceable_count)s match(es) "
 "cannot be replaced as they are part of a formula or inside a locked sheet"
 msgstr ""
+"%(replaceable_count)s overeenkomst(en) vervangen. %(irreplaceable_count)s "
+"overeenkomst(en) kunnen niet worden vervangen omdat ze deel uitmaken van een "
+"formule of zich in een vergrendeld werkblad bevinden"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -141,11 +156,18 @@ msgstr "%(second_number)s''"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "%(seconds)s s"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(zoom_percentage)s%"
 msgstr "%(zoom_percentage)s%"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/list/plugins/list_ui_plugin.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -266,6 +288,12 @@ msgstr "%s komt overeen in alle bladen"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "'${str}'"
+msgstr "'${str}'"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "(Blanks)"
 msgstr "(Spaties)"
@@ -293,6 +321,12 @@ msgstr "(vorige)"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "+ \"Others\" group"
 msgstr "+ groep \"Andere\""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "+ Add a new named range"
+msgstr "+ Voeg een nieuw benoemd bereik toe"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -345,6 +379,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "0 = replace all matches. A negative number counts from the end."
 msgstr ""
+"0 = vervang alle overeenkomsten. Een negatief getal telt vanaf het einde."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -387,6 +422,12 @@ msgstr "Rotatie 90°"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "=PIVOT(${"
 msgstr "=PIVOT(${"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "A"
+msgstr "A"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -463,6 +504,18 @@ msgstr "Er is een maximale bereiklimiet nodig"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "A minimum range limit value is needed"
 msgstr "Er is een minimale bereiklimiet nodig"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "A named range name cannot resemble a cell reference."
+msgstr "Een bereiknaam mag niet lijken op een celverwijzing."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "A named range with this name already exists."
+msgstr "Er bestaat al een benoemd bereik met deze naam."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -640,6 +693,24 @@ msgstr "A1-stijl (standaard)"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "A3 (297 x 420 mm)"
+msgstr "A3 (297 x 420 mm)"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "A4 (210 x 297 mm)"
+msgstr "A4 (210 x 297 mm)"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "A5 (148 x 210 mm)"
+msgstr "A5 (148 x 210 mm)"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "ABOUT"
 msgstr "OVER"
@@ -676,6 +747,12 @@ msgstr "Absolute waarde van een getal."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+msgid "Access Error"
+msgstr "Toegangsfout"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Access to the clipboard denied by the browser. Please enable clipboard "
@@ -707,6 +784,12 @@ msgstr "Op de vervaldag te betalen opgelopen rente van effecten."
 #: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_core_view_plugin.js:0
 msgid "Active Filters"
 msgstr "Actieve filters"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Actual size"
+msgstr "Werkelijke grootte"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -788,19 +871,19 @@ msgstr "Filters toevoegen"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Add missing columns"
-msgstr ""
+msgstr "Ontbrekende kolommen toevoegen"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Add missing columns and rows"
-msgstr ""
+msgstr "Ontbrekende kolommen en rijen toevoegen"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Add missing rows"
-msgstr ""
+msgstr "Ontbrekende rijen toevoegen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1027,30 +1110,16 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          Additional information can be found in the browser console."
-msgstr ""
-"Er is een onverwachte fout opgetreden bij het plakken van inhoud.\n"
-"          Meer informatie is te vinden in de browserconsole."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"Er is een onverwachte fout opgetreden tijdens het plakken van inhoud.\n"
-"          Dit komt waarschijnlijk door een versieverschil van de spreadsheet."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An unexpected error occurred. Submit a support ticket at odoo.com/help."
 msgstr ""
 "Er is een onverwachte fout opgetreden. Dien een ondersteuningsticket in bij "
 "odoo.com/help."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Analyze performance"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1230,7 +1299,6 @@ msgstr "Weet je zeker dat je dit blad wilt verwijderen?"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Area"
 msgstr "Zone"
@@ -1240,12 +1308,6 @@ msgstr "Zone"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Argument ignore must be between 0 and 3"
 msgstr "Argument negeren moet tussen 0 en 3 liggen"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Argument must be a reference to a cell or range."
-msgstr "Argument moet een verwijzing naar een cel of bereik zijn."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1275,10 +1337,10 @@ msgstr "Matrix of bereik met de dataset waarmee rekening moet worden gehouden."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Array result was not expanded because it would overwrite data in %s."
+msgid "Array result was not expanded because it would overwrite data."
 msgstr ""
-"Het resultaat van de matrix werd niet uitgebreid omdat het de gegevens in %s "
-"zou overschrijven."
+"Het resultaat van de matrix werd niet uitgebreid omdat het gegevens zou "
+"overschrijven."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1398,8 +1460,26 @@ msgstr "Assen"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Axis range"
+msgstr "Asbereik"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Axis title"
 msgstr "Titel van de as"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "B4 (250 x 353 mm)"
+msgstr "B4 (250 x 353 mm)"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "B5 (176 x 250 mm)"
+msgstr "B5 (176 x 250 mm)"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1425,12 +1505,10 @@ msgstr "Gestreepte rijen"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Banded rows:"
-msgstr ""
+msgstr "Gestreepte rijen:"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
-#: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_bar_chart.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Bar"
 msgstr "Balk"
@@ -1505,7 +1583,7 @@ msgstr "Zwart"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Blue"
-msgstr ""
+msgstr "Blauw"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1569,6 +1647,36 @@ msgstr "Linksonder"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Bottom right"
 msgstr "Rechtsonder"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Bubble"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Bubble chart design"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Bubble color"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Bubble labels"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Bubble sizes"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1746,6 +1854,12 @@ msgstr "Agenda-grafiekopties"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot do a special paste of a figure."
 msgstr "Kan geen speciale plak van een figuur doen."
@@ -1817,11 +1931,10 @@ msgstr "Kan de selectie niet splitsen voor een onbekende reden"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
-#, fuzzy
 msgid "Cannot use custom pivot groups with \"Count Distinct\" measure"
 msgstr ""
-"Aangepaste draaitabelgroepen kunnen niet worden gebruikt met de maatstaf "
-"'Aantal unieke waarden'"
+"Kan geen aangepaste draaitabelgroepen gebruiken met de maatstaf ‘Aantal "
+"unieke waarden’"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1915,6 +2028,12 @@ msgstr "Celwaarden"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Cells"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Center"
 msgstr "Gecentreerd"
@@ -1994,6 +2113,8 @@ msgstr "Selectievakje"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Checks whether a string matches the supplied regular expression."
 msgstr ""
+"Controleert of een tekenreeks overeenkomt met de opgegeven reguliere "
+"expressie."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2002,6 +2123,8 @@ msgid ""
 "Checks whether there is a reference to a cell that contains a formula, and "
 "returns TRUE or FALSE."
 msgstr ""
+"Controleert of er een verwijzing is naar een cel die een formule bevat, en "
+"retourneert TRUE of FALSE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2163,6 +2286,12 @@ msgstr "Kleur op"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Color mode"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Color of maximum values"
 msgstr "Kleur van de maximale waarden"
 
@@ -2222,7 +2351,6 @@ msgstr "Kleuren"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Column"
 msgstr "Kolom"
@@ -2261,6 +2389,12 @@ msgstr "Kolom rechts"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Column statistics"
+msgstr "Kolomstatistieken"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Columns"
 msgstr "Kolommen"
@@ -2279,8 +2413,6 @@ msgstr "Combineert tekst uit meerdere tekenreeksen en/of matrices."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
-#: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_combo_chart.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Combo"
 msgstr "Combinatie"
@@ -2401,8 +2533,8 @@ msgstr "Aaneenschakeling van twee waarden."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Concise format (default)"
-msgstr "Compacte opmaak (standaard)"
+msgid "Concise formatxA0(default)"
+msgstr "Beknopte opmaak xA0(standaard)"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2632,6 +2764,12 @@ msgstr "Telt waarden uit een tabelachtig bereik."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Create carousel"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Create custom table style"
 msgstr "Aangepaste tabelstijl maken"
 
@@ -2846,6 +2984,12 @@ msgstr "Gegevensreeks"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/data_sources/data_source_link.js:0
+msgid "Data Sources"
+msgstr "Gegevensbronnen"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Data Validation"
 msgstr "Gegevensvalidatie"
@@ -2889,9 +3033,21 @@ msgstr "Gegevensreeks"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/data_sources/data_source_link.js:0
+msgid "Data source deleted"
+msgstr "Gegevensbron verwijderd"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Data validation"
 msgstr "Gegevensvalidatie"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Data visualization"
+msgstr "Datavisualisatie"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3190,6 +3346,12 @@ msgstr "Verwijder item"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Delete named range"
+msgstr "Benoemd bereik verwijderen"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Delete row %s"
 msgstr "Rij %s verwijderen"
@@ -3371,25 +3533,25 @@ msgstr "Weergavestijl"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % difference from \"%s\" : %s"
-msgstr ""
+msgstr "Weergegeven als % verschil met \"%s\": %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % difference from next \"%s\""
-msgstr ""
+msgstr "Weergegeven als % verschil met de volgende \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % difference from previous \"%s\""
-msgstr ""
+msgstr "Weergegeven als % verschil met de vorige \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % of \"%s\" : %s"
-msgstr ""
+msgstr "Weergegeven als % van \"%s\": %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3407,7 +3569,7 @@ msgstr "Weergegeven als % of eindtotaal"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % of next \"%s\""
-msgstr ""
+msgstr "Weergegeven als % van de volgende \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3425,13 +3587,13 @@ msgstr "Weergegeven als % of bovenliggende kolomtotaal"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % of parent row total"
-msgstr ""
+msgstr "Weergegeven als % van totaal van bovenliggende rij"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % of previous \"%s\""
-msgstr ""
+msgstr "Weergegeven als % van vorige \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3449,19 +3611,19 @@ msgstr "Weergegeven als % running totaal gebaseerd op \"%s\""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as difference from \"%s\" : %s"
-msgstr ""
+msgstr "Weergegeven als verschil met \"%s\": %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as difference from next \"%s\""
-msgstr ""
+msgstr "Weergegeven als verschil met de volgende \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as difference from previous \"%s\""
-msgstr ""
+msgstr "Weergegeven als verschil met de vorige \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3595,6 +3757,12 @@ msgstr "Afstand"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Distribution"
+msgstr "Verdeling"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Division by zero"
 msgstr "Delen door nul"
 
@@ -3612,7 +3780,6 @@ msgstr "Niet matchen met einde (standaard)"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Doughnut"
 msgstr "Donut"
@@ -3696,7 +3863,7 @@ msgstr "Link bewerken"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Edit pivot style"
-msgstr ""
+msgstr "Draaitabel-stijl bewerken"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3739,6 +3906,12 @@ msgstr "Energie"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Engineering"
 msgstr "Engineering"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Entire workbook"
+msgstr "Volledige werkmap"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4004,7 +4177,6 @@ msgstr "Vulkleur"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Filled Radar"
 msgstr "Ingevulde radardiagram"
@@ -4130,6 +4302,18 @@ msgstr "Eerste kwartiel (25e percentiel)"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Fit to height"
+msgstr "Aanpassen aan hoogte"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Fit to width"
+msgstr "Aanpassen aan breedte"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Fits points to exponential growth trend."
 msgstr "Zet punten uit tot een exponentiële groeikromme."
 
@@ -4230,6 +4414,12 @@ msgstr "Opmaaktype"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Formatting"
+msgstr "Opmaak"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Formatting style"
 msgstr "Opmaakstijl"
 
@@ -4250,6 +4440,12 @@ msgstr "Formules"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Freeze"
 msgstr "Vergrendelen"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Frequency"
+msgstr "Frequentie"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4338,25 +4534,6 @@ msgstr "Functie [[FUNCTION_NAME]] heeft geen resultaat gevonden."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"Functie [[FUNCTION_NAME]] verwacht dat criteria_bereik en criterium in paren "
-"zijn."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr ""
-"Functie [[FUNCTION_NAME]] verwacht dat criteria_bereik dezelfde dimensie "
-"heeft"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
 "Functie [[FUNCTION_NAME]] verwacht numerieke waarden voor %s, maar kreeg een "
@@ -4395,8 +4572,12 @@ msgstr "Functie [[FUNCTION_NAME]] parameter 2 waarde is buiten bereik."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
-#: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_funnel_chart.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Function calls"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Funnel"
 msgstr "Trechter"
@@ -4445,15 +4626,15 @@ msgstr "Algemeen"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/components/share_button/share_button.xml:0
-msgid "Generating sharing link"
-msgstr "Gedeelde link genereren"
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "General statistics"
+msgstr "Algemene statistieken"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_geo_chart.js:0
-msgid "Geo"
-msgstr "Wereldbol"
+#: code:addons/spreadsheet/static/src/components/share_button/share_button.xml:0
+msgid "Generating sharing link"
+msgstr "Gedeelde link genereren"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4463,15 +4644,15 @@ msgstr "Geodiagram"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
-msgid "Geo chart"
-msgstr "Geografisch diagram"
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Geo chart options"
 msgstr "Opties geodiagram"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/list/list_functions.js:0
+msgid "Get a dynamic Odoo list function."
+msgstr "Krijg een dynamische Odoo-lijstfunctie."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4525,7 +4706,7 @@ msgstr "Geeft informatie over een cel."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Gets the spilled range of an array formula."
-msgstr ""
+msgstr "Haalt het overlopende bereik op van een matrixformule."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4613,7 +4794,7 @@ msgstr "Groter dan of gelijk aan."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Green"
-msgstr ""
+msgstr "Groen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4630,6 +4811,7 @@ msgstr "Grijs"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Gridlines"
 msgstr "Rasterlijnen"
 
@@ -4793,6 +4975,12 @@ msgstr "Horizontale as"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Horizontal axis values"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Horizontal lookup"
 msgstr "Horizontaal opzoeken"
@@ -4889,13 +5077,13 @@ msgstr "ISO-weeknummer van het jaar."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Icon set"
-msgstr "Pictogrammenset"
+msgstr "Iconenset"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Icons"
-msgstr "Pictogrammen"
+msgstr "Iconen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4976,12 +5164,11 @@ msgstr "Kan in de evaluatie van [[FUNCTION_NAME]] '%s' niet vinden in '%s'."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"          number of rows of the second matrix (%s)."
+"equal to the           number of rows of the second matrix (%s)."
 msgstr ""
 "In [[FUNCTION_NAME]] moet het aantal kolommen van de eerste matrix (%s) "
-"gelijk zijn aan het\n"
-"          aantal rijen van de tweede matrix (%s)."
+"gelijk zijn aan het \n"
+"        aantal rijen van de tweede matrix (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5030,8 +5217,8 @@ msgid ""
 "Index for CHOOSE is invalid. Valid values are between 1 and %(choices)s "
 "inclusive."
 msgstr ""
-"De index voor CHOOSE is ongeldig. Geldige waarden liggen tussen 1 en "
-"%(choices)s inclusief."
+"De index voor CHOOSE is ongeldig. Geldige waarden liggen tussen 1 en %"
+"(choices)s inclusief."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5279,34 +5466,34 @@ msgstr "Ongeldige formule voor onderste buigpunt"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Invalid number of arguments for the %(functionName)s function. Expected "
-"%(maxArgPossible)s maximum, but got %(nbrArgSupplied)s instead."
+"Invalid number of arguments for the %(functionName)s function. Expected %"
+"(maxArgPossible)s maximum, but got %(nbrArgSupplied)s instead."
 msgstr ""
-"Ongeldig aantal argumenten voor de functie %(functionName)s. Maximaal "
-"%(maxArgPossible)s verwacht, maar %(nbrArgSupplied)s ontvangen."
+"Ongeldig aantal argumenten voor de functie %(functionName)s. Maximaal %"
+"(maxArgPossible)s verwacht, maar %(nbrArgSupplied)s ontvangen."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Invalid number of arguments for the %(functionName)s function. Expected "
-"%(minArgRequired)s minimum, but got %(nbrArgSupplied)s instead."
+"Invalid number of arguments for the %(functionName)s function. Expected %"
+"(minArgRequired)s minimum, but got %(nbrArgSupplied)s instead."
 msgstr ""
-"Ongeldig aantal argumenten voor functie %(functionName)s. Minimaal "
-"%(minArgRequired)s verwacht, maar %(nbrArgSupplied)s ontvangen."
+"Ongeldig aantal argumenten voor functie %(functionName)s. Minimaal %"
+"(minArgRequired)s verwacht, maar %(nbrArgSupplied)s ontvangen."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Invalid number of arguments for the %(functionName)s function. Repeatable "
-"arguments should be supplied in groups of %(nbrArgRepeating)s, with up to "
-"%(nbrArgOptional)s optional. Got %(nbrValueRemaining)s too many."
+"arguments should be supplied in groups of %(nbrArgRepeating)s, with up to %"
+"(nbrArgOptional)s optional. Got %(nbrValueRemaining)s too many."
 msgstr ""
 "Ongeldig aantal argumenten voor functie %(functionName)s. Herhaalbare "
 "argumenten moeten in groepen van %(nbrArgRepeating)s worden geleverd, met "
-"maximaal %(nbrArgOptional)s optionele argumenten. Er zijn "
-"%(nbrValueRemaining)s argument(en) te veel ontvangen."
+"maximaal %(nbrArgOptional)s optionele argumenten. Er zijn %"
+"(nbrValueRemaining)s argument(en) te veel ontvangen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5433,7 +5620,7 @@ msgstr "Is groter dan"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Is in Top/Bottom ranking"
-msgstr ""
+msgstr "Is in hoogste/laagste-ranglijst"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5475,13 +5662,13 @@ msgstr "Is een geldige datum"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Is value duplicate"
-msgstr ""
+msgstr "Is dubbele waarde"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Is value unique"
-msgstr ""
+msgstr "Is unieke waarde"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5537,6 +5724,12 @@ msgstr "Labels"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Labels are invalid"
 msgstr "Labels zijn ongeldig"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Landscape"
+msgstr "Liggend"
 
 #. module: spreadsheet
 #: model:ir.model,name:spreadsheet.model_res_lang
@@ -5624,6 +5817,12 @@ msgstr "Linker As"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Legal (216 x 356 mm)"
+msgstr "Legal (216 x 356 mm)"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Legend position"
 msgstr "Legenda positie"
@@ -5649,13 +5848,17 @@ msgstr "Minder dan."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Letter (216 x 279 mm)"
+msgstr "Letter (216 x 279 mm)"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Light"
 msgstr "Licht"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
-#: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_line_chart.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Line"
 msgstr "Regel"
@@ -5725,7 +5928,7 @@ msgstr "Regionale instelling"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Lock sheet"
-msgstr ""
+msgstr "Blad vergrendelen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5783,6 +5986,12 @@ msgstr "Lookup"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Lower bound value"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Lower inflection point must be smaller than upper inflection point"
 msgstr "Het onderste buigpunt moet kleiner zijn dan het bovenste buigpunt"
@@ -5804,6 +6013,24 @@ msgstr "MIN"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Magnetism"
 msgstr "Magnetisch"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Major horizontal gridlines"
+msgstr "Grote horizontale rasterlijnen"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Major vertical gridlines"
+msgstr "Grote verticale rasterlijnen"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Manage named ranges"
+msgstr "Benoemde bereiken beheren"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5836,6 +6063,8 @@ msgid ""
 "Match(es) cannot be replaced as they are part of a formula or inside a "
 "locked sheet"
 msgstr ""
+"Overeenkomsten kunnen niet worden vervangen omdat ze deel uitmaken van een "
+"formule of zich in een vergrendeld werkblad bevinden"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5882,6 +6111,7 @@ msgstr "Maxpunt"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_helpers.js:0
 msgid "Maximum"
 msgstr "Maximum"
@@ -5933,6 +6163,12 @@ msgstr "Opties meetwaarde \"%s\""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Measures"
 msgstr "Meetwaarden"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Median"
+msgstr "Mediaan"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6040,6 +6276,7 @@ msgstr "Minimale waarde of formule"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_helpers.js:0
 msgid "Minimum"
 msgstr "Minimum"
@@ -6079,6 +6316,18 @@ msgstr "Minimum waarde"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Minimum value in a numeric dataset."
 msgstr "Minimumwaarde in een numerieke gegevensset."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Minor horizontal gridlines"
+msgstr "Kleine horizontale rasterlijnen"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Minor vertical gridlines"
+msgstr "Kleine verticale rasterlijnen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6226,6 +6475,12 @@ msgstr "Naar rechts verplaatsen"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Multiple colors"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Name"
 msgstr "Naam"
@@ -6241,6 +6496,24 @@ msgstr "Veldnaam."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Name of the measure."
 msgstr "Naam van de meetwaarde."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Named Ranges"
+msgstr "Benoemde bereiken"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Named ranges"
+msgstr "Benoemde bereiken"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Named_Range"
+msgstr "Named_Range"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6280,9 +6553,21 @@ msgstr "Nieuw draaitabel"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Next"
+msgstr "Volgende"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Next coupon date after the settlement date."
 msgstr "Volgende datum kortingsbon na de datum van afrekening."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr "Nee"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6317,8 +6602,14 @@ msgstr "Geen kolommen"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "No content to print"
+msgstr "Geen inhoud om af te drukken"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "No legend available"
-msgstr ""
+msgstr "Geen legenda beschikbaar"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6337,6 +6628,12 @@ msgstr "Geen match."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No matches found."
 msgstr "Geen matches gevonden."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "No numeric values to display."
+msgstr "Geen numerieke waarden om weer te geven."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6391,6 +6688,12 @@ msgstr "Geen tekst om te splitsen."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No unique values found"
 msgstr "Geen unieke waarden gevonden"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "No values to display."
+msgstr "Geen waarden om weer te geven."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6585,6 +6888,12 @@ msgstr "OFFSET evalueert tot een bereik buiten het bereik."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/helpers/geo_json_service.js:0
+msgid "Oceania"
+msgstr "Oceanië"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "October"
 msgstr "Oktober"
@@ -6594,6 +6903,24 @@ msgstr "Oktober"
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Bar Chart"
 msgstr "Odoo staafdiagram"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Combo Chart"
+msgstr "Combinatiegrafiek Odoo"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Funnel Chart"
+msgstr "Trechtergrafiek Odoo"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Geo Chart"
+msgstr "Geografische grafiek Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6610,14 +6937,44 @@ msgstr "Odoo cirkeldiagram"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Pyramid Chart"
+msgstr "Odoo piramide-diagram"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Radar Chart"
 msgstr "Odoo radardiagram"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Scatter Chart"
+msgstr "Odoo spreidingsdiagram"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/hooks.js:0
 msgid "Odoo Spreadsheet"
 msgstr "Odoo Spreadsheet"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Sunburst Chart"
+msgstr "Odoo Zonnestraalgrafiek"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Treemap Chart"
+msgstr "Odoo Treemapdiagram"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Waterfall Chart"
+msgstr "Odoo watervaldiagram"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6671,6 +7028,7 @@ msgstr "Enkel een selectie van één enkele kolom kan worden gesplitst"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Only single-cell references are allowed to get the spilled range."
 msgstr ""
+"Alleen verwijzingen naar één cel mogen het overlopende bereik oproepen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6714,6 +7072,12 @@ msgstr "Sorteer op"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Orientation"
+msgstr "Afdrukstand"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Others"
 msgstr "Andere"
@@ -6729,6 +7093,12 @@ msgstr "Overloop"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Paint Format"
 msgstr "Opmaak kopiëren"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Paper"
+msgstr "Papier"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6803,13 +7173,17 @@ msgstr "Percentiel"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Performance"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Periodic payment for an annuity investment."
 msgstr "Periodieke betaling voor een lijfrente-investering."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
-#: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_pie_chart.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Pie"
 msgstr "Taart"
@@ -6824,13 +7198,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Pin the side panel"
-msgstr ""
+msgstr "Zijpaneel vastspelden"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, fuzzy
 msgid "Pivot"
-msgstr ""
+msgstr "Draaitabel"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6872,7 +7247,7 @@ msgstr "Draaitabel"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Pivot table style"
-msgstr ""
+msgstr "Stijl van draaitabel"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6918,7 +7293,7 @@ msgstr "Selecteer slechts één celbereik"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/list/list_data_source.js:0
 msgid "Please specify the property field name"
-msgstr ""
+msgstr "Geef de naam van het eigenschapsveld"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6934,10 +7309,15 @@ msgstr "Pop-outgrafiek"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Population Pyramid"
 msgstr "Bevolkingspiramide"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Portrait"
+msgstr "Staand"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7028,6 +7408,24 @@ msgstr "Prijs van een effect met periodieke rente."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Print"
+msgstr "Afdrukken"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Print Preview"
+msgstr "Afdrukvoorbeeld"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Print content"
+msgstr "Inhoud afdrukken"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Product of two numbers"
 msgstr "Product van twee getallen"
 
@@ -7063,12 +7461,6 @@ msgstr "Paars"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_pyramid_chart.js:0
-msgid "Pyramid"
-msgstr "Piramide"
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Q%(quarter)s"
 msgstr "K%(quarter)s"
@@ -7089,7 +7481,6 @@ msgstr "K%(quarter_number)s"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, fuzzy
 msgid "Q%(value)s"
 msgstr "Q%(value)s"
 
@@ -7150,8 +7541,6 @@ msgstr "R1C1-stijl"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
-#: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_radar_chart.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Radar"
 msgstr "Radar"
@@ -7215,6 +7604,12 @@ msgstr "Rangschikken van groot naar klein"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Rank smallest to largest"
 msgstr "Rangschikken van klein naar groot"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Re-analyze"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7366,6 +7761,8 @@ msgstr "Vervang alles"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Replace text in a string based on the supplied regular expression."
 msgstr ""
+"Vervang tekst in een tekenreeks op basis van de opgegeven reguliere "
+"expressie."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7394,8 +7791,9 @@ msgstr "Grootte resetten"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, fuzzy
 msgid "Result couldn't be automatically expanded."
-msgstr ""
+msgstr "Het resultaat kon niet automatisch worden uitgevouwen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7698,7 +8096,7 @@ msgstr "Geeft als resultaat de waarde afhankelijk van logische expressie."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Reverse icons"
-msgstr "Pictogrammen omkeren"
+msgstr "Iconen omkeren"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7793,6 +8191,12 @@ msgstr "Rijen"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Rows to ignore"
+msgstr "Rijen om te negeren"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Running total"
 msgstr "Lopend totaal"
@@ -7806,7 +8210,6 @@ msgstr "SOM"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, fuzzy
 msgid "Sample:"
 msgstr "Voorbeeld:"
 
@@ -7836,6 +8239,12 @@ msgstr "Opslaan"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Scale"
+msgstr "Schaal"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Scan by column"
 msgstr "Scannen per kolom"
@@ -7854,8 +8263,6 @@ msgstr "Scan de matrix per kolom. Standaard wordt de matrix per rij gescand."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
-#: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_scatter_chart.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Scatter"
 msgstr "Spreiden"
@@ -7961,8 +8368,20 @@ msgstr "Gegevens bekijken"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Select a single column to view statistics."
+msgstr "Selecteer een enkele kolom om statistieken te bekijken."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Select all"
 msgstr "Selecteer alle"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Selected cells (%s)"
+msgstr "Geselecteerde cellen (%s)"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8045,6 +8464,12 @@ msgstr "Blad1"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Sheets"
+msgstr "Bladeren"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Shift down"
 msgstr "Verplaats omlaag"
 
@@ -8112,6 +8537,12 @@ msgstr "Toon formulehulp"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Show gridlines"
+msgstr "Rasterlijnen weergeven"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Show headers"
 msgstr "Koppen weergeven"
 
@@ -8132,6 +8563,12 @@ msgstr "Toon meetwaarde als:"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Show measure titles:"
 msgstr "Titels van metingen weergeven:"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Show semi-transparent bubbles"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8288,10 +8725,9 @@ msgstr "Specifiek bereik"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, fuzzy
 msgid "Specifies how to match search_key with the items in lookup_range. "
 msgstr ""
-"Geeft aan hoe search_key moet worden gekoppeld aan de items in lookup_range. "
+"Geeft aan hoe search_key moet worden gematcht aan de items in lookup_range. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8394,28 +8830,24 @@ msgstr "Instelling spreadsheet"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Stacked Area"
 msgstr "Zone gestapeld"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Stacked Bar"
 msgstr "Staafdiagram"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Stacked Column"
 msgstr "Kolom gestapeld"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Stacked Line"
 msgstr "Lijn gestapeld"
@@ -8520,7 +8952,6 @@ msgstr "Doorhalen"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, fuzzy
 msgid "String to append in sequence."
 msgstr "Toe te voegen tekenreeks in reeks."
 
@@ -8599,8 +9030,6 @@ msgstr "Sommeert een bereik afhankelijk van meerdere criteria."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
-#: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_sunburst_chart.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Sunburst"
 msgstr "Sunburst"
@@ -8628,6 +9057,18 @@ msgstr "Zondag is de enige dag die telt als weekend"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Sunday/Monday are weekends"
 msgstr "Zondag/maandag tellen als weekend"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Switch to next column"
+msgstr "Wisselen naar volgende kolom"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Switch to previous column"
+msgstr "Wisselen naar vorige kolom"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8667,7 +9108,7 @@ msgstr "Tangens van een hoek in radialen."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Target must contain at least one zone"
-msgstr ""
+msgstr "Het doel moet ten minste één zone bevatten"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9134,14 +9575,20 @@ msgstr "De basis is ongeldig"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The bubble sizes range is invalid"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "The case-sensitive format of the result, enclosed in quotation marks. "
-"Examples: \"0.00\" rounded to 2 decimal places, \"hh:mm:ss\" for hour:"
-"minutes:seconds."
+"Examples: \"0.00\" rounded to 2 decimal places, \"hh:mm:ss\" for "
+"hour:minutes:seconds."
 msgstr ""
 "Het hoofdlettergevoelige formaat van het resultaat, tussen aanhalingstekens. "
-"Voorbeelden: \"0,00\" afgerond op 2 decimalen, \"hh:mm:ss\" voor uur:minuten:"
-"seconden."
+"Voorbeelden: \"0,00\" afgerond op 2 decimalen, \"hh:mm:ss\" voor "
+"uur:minuten:seconden."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9679,8 +10126,8 @@ msgstr "De einddatum (%s) moet positief of null zijn."
 msgid ""
 "The end_period (%(end)s) must be smaller or equal to the life (%(life)s)."
 msgstr ""
-"De eind_periode (%(end)s) moet kleiner of gelijk zijn aan de levensduur "
-"(%(life)s)."
+"De eind_periode (%(end)s) moet kleiner of gelijk zijn aan de levensduur (%"
+"(life)s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9839,8 +10286,8 @@ msgstr "De eerste waarde."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The first_period (%(first)s) must be smaller or equal to the last_period "
-"(%(last)s)."
+"The first_period (%(first)s) must be smaller or equal to the last_period (%"
+"(last)s)."
 msgstr ""
 "De eerste_periode (%(first)s) moet kleiner of gelijk zijn aan de "
 "laatste_periode (%(last)s)."
@@ -9937,6 +10384,13 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The function [[FUNCTION_NAME]] expects a reference to a cell or range."
+msgstr ""
+"De functie [[FUNCTION_NAME]] verwacht een verwijzing naar een cel of bereik."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "The function [[FUNCTION_NAME]] has an argument with value '%s'. It should be "
 "one of: %s."
@@ -10014,6 +10468,12 @@ msgstr "De hoge (%s) moet groter zijn dan of gelijk zijn aan de lage (%s)."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The high end of the random range."
 msgstr "Het hoge eind van het willekeurig bereik."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The horizontal axis values range is invalid"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10202,11 +10662,11 @@ msgstr "De matrix is niet inverteerbaar."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The maturity (%(maturity)s) must be strictly greater than the settlement "
-"(%(settlement)s)."
+"The maturity (%(maturity)s) must be strictly greater than the settlement (%"
+"(settlement)s)."
 msgstr ""
-"De looptijd (%(maturity)s) moet strikt groter zijn dan de afrekening "
-"(%(settlement)s)."
+"De looptijd (%(maturity)s) moet strikt groter zijn dan de afrekening (%"
+"(settlement)s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10351,6 +10811,23 @@ msgstr "De maand (%s) moet tussen 1 en 12 liggen."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The month component of the date."
 msgstr "De maandcomponent van de datum."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"The named range name is invalid. Valid names can contain letters, digits, "
+"underscores, and periods. The name cannot be only a number, TRUE, or FALSE."
+msgstr ""
+"De opgegeven bereiknaam is ongeldig. Geldige namen mogen letters, cijfers, "
+"onderstrepingstekens en punten bevatten. De naam mag niet alleen uit een "
+"getal, TRUE of FALSE bestaan."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The named range to update was not found."
+msgstr "Het benoemde bereik om bij te werken is niet gevonden."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10626,6 +11103,12 @@ msgid ""
 msgstr ""
 "Het aantal rijen of kolommen dat moet worden uitgesloten moet kleiner zijn "
 "dan het aantal elementen in de matrix."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/list/list_functions.js:0
+msgid "The number of rows parameter should be a positive number."
+msgstr "De parameter voor het aantal rijen moet een positief getal zijn."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10905,8 +11388,8 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The period (%(period)s) must be less than or equal life (%(life)s)."
 msgstr ""
-"De periode (%(period)s) moet kleiner zijn dan of gelijk aan het leven "
-"(%(life)s)."
+"De periode (%(period)s) moet kleiner zijn dan of gelijk aan het leven (%"
+"(life)s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11029,8 +11512,8 @@ msgstr "De prijsofferte wordt weergegeven met gebruik van decimale conventies."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The purchase_date (%(purchaseDate)s) must be before the first_period_end "
-"(%(firstPeriodEnd)s)."
+"The purchase_date (%(purchaseDate)s) must be before the first_period_end (%"
+"(firstPeriodEnd)s)."
 msgstr ""
 "De aankoopdatum (%(purchaseDate)s) moet voor het einde van de eerste_periode "
 "(%(firstPeriodEnd)s) liggen."
@@ -11289,6 +11772,20 @@ msgstr "Het bereik waarvan het aantal rijen wordt geretourneerd."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"The range you specified is outside of the sheet.\n"
+"\n"
+"If you meant to create a named range, named range cannot have the same name "
+"as a cell reference. Please choose another name."
+msgstr ""
+"Het door jou opgegeven bereik ligt buiten het werkblad.\n"
+"\n"
+"Als je een benoemd bereik wilde maken, mag dit niet dezelfde naam hebben als "
+"een celverwijzing. Kies een andere naam."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The rank from largest to smallest of the element to return."
 msgstr "De rang van grootste naar kleinste van het te retourneren element."
 
@@ -11337,8 +11834,14 @@ msgstr "Het aflossingsbedrag per 100 nominale waarde."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The reference is invalid."
+msgstr "De verwijzing is ongeldig."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The reference to get the spilled range from."
-msgstr ""
+msgstr "De referentie om het overlopende bereik uit op te halen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11440,8 +11943,8 @@ msgstr "De regel is om een onbekende reden ongeldig."
 msgid ""
 "The salvage (%(salvage)s) must be smaller or equal than the cost (%(cost)s)."
 msgstr ""
-"De berging (%(salvage)s) moet kleiner of gelijk zijn aan de kosten "
-"(%(cost)s)."
+"De berging (%(salvage)s) moet kleiner of gelijk zijn aan de kosten (%"
+"(cost)s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11650,8 +12153,8 @@ msgstr "De startdatum (%s) moet positief of null zijn."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The start_period (%(start)s) must be smaller or equal to the end_period "
-"(%(end)s)."
+"The start_period (%(start)s) must be smaller or equal to the end_period (%"
+"(end)s)."
 msgstr ""
 "De start_periode (%(start)s) moet kleiner of gelijk zijn aan de eind_periode "
 "(%(end)s)."
@@ -11703,7 +12206,7 @@ msgstr "De tekenreeks waaruit het juiste gedeelte wordt geretourneerd."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The string in which you want to replace text."
-msgstr ""
+msgstr "De tekenreeks waarin je tekst wilt vervangen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11763,7 +12266,7 @@ msgstr "De tekenreeks waarnaar moet worden gezocht binnen text_to_search."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The string to test."
-msgstr ""
+msgstr "De tekenreeks om te testen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11832,7 +12335,7 @@ msgstr "De tekst om te splitsen."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The text to use as the replacement."
-msgstr ""
+msgstr "De tekst die als vervanging moet worden gebruikt."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12152,7 +12655,7 @@ msgstr "De waarde moet een getal zijn"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value must be a positive number"
-msgstr ""
+msgstr "De waarde moet een positief getal zijn"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12248,13 +12751,13 @@ msgstr "De waarde moet groter zijn dan %s"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value must be in bottom %(value)s%(percentSymbol)s"
-msgstr ""
+msgstr "De waarde moet in de laagste %(value)s%(percentSymbol)s staan"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value must be in top %(value)s%(percentSymbol)s"
-msgstr ""
+msgstr "De waarde moet in de hoogste %(value)s%(percentSymbol)s staan"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12284,7 +12787,7 @@ msgstr "De waarde moet de datum %s zijn"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value must be unique"
-msgstr ""
+msgstr "De waarde moet uniek zijn"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12314,7 +12817,7 @@ msgstr "De waarde moet niet gelijk zijn aan %s"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value must not be unique"
-msgstr ""
+msgstr "De waarde mag niet uniek zijn"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12581,6 +13084,12 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The vertical axis values range is invalid"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "The weekend (%s) must be a string or a number in the range 1-7 or 11-17."
 msgstr ""
@@ -12723,6 +13232,12 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "This may take a while."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "This operation is not allowed due to an overlapping frozen pane."
 msgstr ""
@@ -12768,6 +13283,7 @@ msgstr "Dit bereik is ongeldig"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "This sheet is locked and cannot be modified. Please unlock it first."
 msgstr ""
+"Dit blad is vergrendeld en kan niet worden gewijzigd. Ontgrendel het eerst."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12889,6 +13405,18 @@ msgstr "Totaalrij"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Total rows"
+msgstr "Totaal rijen"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Total time"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Trailing moving average"
 msgstr "Voortschrijdend gemiddelde"
 
@@ -12927,13 +13455,6 @@ msgstr "Treemap"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Tree map colors"
 msgstr "Treemap kleuren"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
-#: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_treemap_chart.js:0
-msgid "Treemap"
-msgstr "Treemap"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13124,6 +13645,12 @@ msgstr "Unieke rijen in het opgegeven bronbereik."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Unique values"
+msgstr "Unieke waarden"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/helpers/geo_json_service.js:0
 msgid "United States"
 msgstr "Verenigde Staten"
@@ -13144,11 +13671,11 @@ msgstr "Onbekende functie: \"%s\""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Unlock sheet"
-msgstr ""
+msgstr "Blad ontgrendelen"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/pivot_helpers.js:0
+#: code:addons/spreadsheet/static/src/data_sources/data_source.js:0
 msgid "Unnamed Field"
 msgstr "Naamloos veld"
 
@@ -13156,7 +13683,7 @@ msgstr "Naamloos veld"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Unpin the side panel"
-msgstr ""
+msgstr "Zijpaneel losmaken"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13193,6 +13720,12 @@ msgstr "T/m huidige rij"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Update"
 msgstr "Bijwerken"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Upper bound value"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13313,7 +13846,7 @@ msgstr "Waarde ligt tussen %s en %s"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Value is duplicate"
-msgstr ""
+msgstr "Waarde is een duplicaat"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13337,13 +13870,13 @@ msgstr "Waarde is groter dan %s"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Value is in bottom %(value)s%(percentSymbol)s"
-msgstr ""
+msgstr "Waarde staat in laagste %(value)s%(percentSymbol)s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Value is in top %(value)s%(percentSymbol)s"
-msgstr ""
+msgstr "Waarde staat in hoogste %(value)s%(percentSymbol)s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13373,7 +13906,7 @@ msgstr "Waarde is niet gelijk aan %s"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Value is unique"
-msgstr ""
+msgstr "Waarde is uniek"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13474,7 +14007,6 @@ msgstr "Waarde of bereik dat in de steekproef moet worden opgenomen."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, fuzzy
 msgid "Value to average."
 msgstr "Waarde om het gemiddelde van te berekenen."
 
@@ -13623,8 +14155,6 @@ msgstr "W%(weekNumber)s"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/chart/index.js:0
-#: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_waterfall_chart.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Waterfall"
 msgstr "Waterval"
@@ -13691,8 +14221,8 @@ msgstr "Weeknummer van het jaar."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 msgid ""
-"Week value must be a string in the format %(example)s, but received "
-"%(received_value)s instead."
+"Week value must be a string in the format %(example)s, but received %"
+"(received_value)s instead."
 msgstr ""
 "Weekwaarde moet een tekenreeks zijn in het formaat %(example)s, maar er is "
 "in plaats daarvan %(received_value)s ontvangen."
@@ -13789,14 +14319,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
 "Of lege berichten wel of niet uit de splitsingsresultaten moeten worden "
 "verwijderd. Het standaardgedrag is om \n"
-"        opeenvolgende scheidingstekens als één (indien TRUE). Indien FALSE, "
-"worden lege celwaarden toegevoegd tussen opeenvolgende scheidingstekens."
+"        opeenvolgende scheidingstekens als één te behandelen (indien TRUE). "
+"Indien FALSE, worden lege celwaarden toegevoegd tussen opeenvolgende "
+"scheidingstekens."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -14032,6 +14562,12 @@ msgstr "Jaar"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr "Ja"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/helpers.js:0
 msgid "Yesterday"
 msgstr "Gisteren"
@@ -14047,6 +14583,25 @@ msgstr "Je kunt geen cellen samenvoegen binnen een bestaand filter."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
 msgstr "Je kunt geen overlappende tabellen maken."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"and image content will be pasted."
+msgstr ""
+"Je hebt inhoud gekopieerd uit een andere versie van de applicatie. Alleen "
+"tekst- en afbeeldingsinhoud wordt geplakt."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+msgid ""
+"You don't have the rights to export data. Please contact an Administrator."
+msgstr ""
+"Je hebt geen rechten om gegevens te exporteren. Neem contact op met een "
+"beheerder."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -14146,18 +14701,6 @@ msgstr "b wordt normaal berekend"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "b is forced to 1"
 msgstr "b wordt gedwongen tot 1"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-msgid "below"
-msgstr "onder"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-msgid "below or equal to"
-msgstr "lager dan of gelijk aan"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -14311,6 +14854,12 @@ msgstr "aantal rijen"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/list/list_functions.js:0
+msgid "number of rows to display"
+msgstr "aantal weer te geven rijen"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "one month ago"
 msgstr "een maand geleden"
@@ -14371,6 +14920,12 @@ msgstr "orde 6 (sextisch)"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "pages"
+msgstr "pagina's"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "return additional regression statistics"
 msgstr "geef extra regressiestatistieken terug"
@@ -14418,6 +14973,16 @@ msgstr "symbool"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/list/list_functions.js:0
+msgid ""
+"the default maximum number of rows (%s) has been reached. Please explicitely "
+"set the row_count parameter."
+msgstr ""
+"het standaardmaximum aantal rijen (%s) is bereikt. Stel de parameter "
+"row_count expliciet in."
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "the numeric value in start_unit to convert to end_unit"
 msgstr "de numerieke waarde in start_unit te converteren naar end_unit"
@@ -14445,6 +15010,12 @@ msgstr "vandaag"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "tomorrow"
 msgstr "morgen"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.xml:0
+msgid "x"
+msgstr "x"
 
 #. module: spreadsheet
 #. odoo-javascript
