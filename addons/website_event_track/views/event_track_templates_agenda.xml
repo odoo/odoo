@@ -178,7 +178,7 @@
     <div class="d-flex flex-column h-100" t-att-data-publish="track.website_published and 'on' or 'off'">
         <div class="o_we_agenda_card_content position-relative d-flex flex-column justify-content-center my-1">
             <div class="o_we_agenda_card_title mb-1">
-                <t t-if="track.website_published or is_event_user">
+                <t t-if="(track.description or track.partner_biography) and (track.website_published or is_event_user)">
                     <a t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-reset fw-bold stretched-link">
                         <t t-out="track.name"/>
                     </a>
