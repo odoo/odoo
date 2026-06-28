@@ -58,6 +58,13 @@
         <field name="description">Task Waiting</field>
         <field name="hidden" eval="True"/>
     </record>
+    <record id="mt_task_unassigned" model="mail.message.subtype">
+        <field name="name">Task Unassigned</field>
+        <field name="res_model">project.task</field>
+        <field name="default" eval="False"/>
+        <field name="sequence" eval="107"/>
+        <field name="description">Task Unassigned</field>
+    </record>
     <record id="mt_task_rating" model="mail.message.subtype">
         <field name="name">Task Rating</field>
         <field name="res_model">project.task</field>
@@ -163,5 +170,13 @@
         <field name="parent_id" ref="mt_task_waiting"/>
         <field name="relation_field">project_id</field>
         <field name="hidden" eval="True"/>
+    </record>
+    <record id="mt_project_task_unassigned" model="mail.message.subtype">
+        <field name="name">Task Unassigned</field>
+        <field name="sequence">26</field>
+        <field name="res_model">project.project</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" ref="mt_task_unassigned"/>
+        <field name="relation_field">project_id</field>
     </record>
 </odoo>
