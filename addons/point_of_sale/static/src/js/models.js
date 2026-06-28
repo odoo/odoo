@@ -2168,18 +2168,11 @@ class Orderline extends PosModel {
         return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
     }
     get_display_price_one(){
-        var rounding = this.pos.currency.rounding;
-        var price_unit = this.get_unit_price();
+        var all_prices = this.get_all_prices(1);
         if (this.pos.config.iface_tax_included !== 'total') {
-            return round_pr(price_unit * (1.0 - (this.get_discount() / 100.0)), rounding);
-        } else {
-            var product =  this.get_product();
-            var taxes_ids = this.tax_ids || product.taxes_id;
-            var product_taxes = this.pos.get_taxes_after_fp(taxes_ids, this.order.fiscal_position);
-            var all_taxes = this.compute_all(product_taxes, price_unit, 1, this.pos.currency.rounding);
-
-            return round_pr(all_taxes.total_included * (1 - this.get_discount()/100), rounding);
+            return all_prices.priceWithoutTax;
         }
+        return all_prices.priceWithTax;
     }
     get_display_price(){
         if (this.pos.config.iface_tax_included === 'total') {
