@@ -4,6 +4,7 @@ from lxml import etree, html
 from odoo import api, models
 from odoo.addons.base.models.ir_ui_view import MOVABLE_BRANDING
 from odoo.fields import Domain
+from odoo.tools.translate import StoredTranslations
 
 EDITING_ATTRIBUTES = MOVABLE_BRANDING + [
     'data-oe-type',
@@ -143,54 +144,20 @@ class IrUiView(models.Model):
         if not record_to[name_field_to] or not any(records_from.mapped(name_field_from)):
             return
 
-        lang_env = self.env.lang or 'en_US'
-        langs = {lang for lang, _ in self.env['res.lang'].get_installed()}
-
-        # 1. Get translations
-        records_from.flush_model([name_field_from])
-        records_from = records_from.with_context(check_translations=True)
-        record_to = record_to.with_context(check_translations=True)
-        existing_translation_dictionary = field_to.get_translation_dictionary(
-            record_to[name_field_to],
-            {lang: record_to.with_context(prefetch_langs=True, lang=lang)[name_field_to] for lang in langs if lang != lang_env}
-        )
-        extra_translation_dictionary = {}
+        # Extract term translations from all source records: 
+        term_updates: dict[str, dict[str, str]] = {}  # {lang: {src_term: translated_term}}
         for record_from in records_from:
-            extra_translation_dictionary.update(field_from.get_translation_dictionary(
-                record_from[name_field_from],
-                {lang: record_from.with_context(prefetch_langs=True, lang=lang)[name_field_from] for lang in langs if lang != lang_env}
-            ))
-        for term, extra_translation_values in extra_translation_dictionary.items():
-            existing_translation_values = existing_translation_dictionary.setdefault(term, {})
-            # Update only default translation values that aren't customized by the user.
-            for lang, extra_translation in extra_translation_values.items():
-                if existing_translation_values.get(lang, term) == term:
-                    existing_translation_values[lang] = extra_translation
-        translation_dictionary = existing_translation_dictionary
+            if (stored_from := field_from._get_stored_translations(record_from)):
+                for lang, src2term in StoredTranslations(stored_from).extract_term_translations(self.env, field_from).items():
+                    term_updates.setdefault(lang, {}).update(src2term)
 
-        # The `en_US` jsonb value should always be set, even if english is not
-        # installed. If we don't do this, the custom snippet `arch_db` will only
-        # have a `fr_BE` key but no `en_US` key.
-        langs.add('en_US')
+        if not term_updates:
+            return
 
-        # 2. Set translations
-        # The orm layer currently does not offer a way to keep the delayed
-        # translations when changing translations, so we craft the desired
-        # dict of translations and directly write it to the cache
-        stored_translation = field_to._get_stored_translations(record_to)
-        for lang in langs:
-            lang_ = ('_' + lang) if ('_' + lang) in stored_translation else lang
-            stored_translation[lang_] = field_to.translate(
-                lambda term: translation_dictionary.get(term, {}).get(lang),
-                record_to[name_field_to]
-            )
-            if not self.env.context.get('delay_translations') and lang_.startswith('_'):
-                stored_translation[lang] = stored_translation.pop(lang_)
-
-        field_to._update_cache(record_to.with_context(prefetch_langs=True), stored_translation, dirty=True)
-        # Call `write` to trigger compute etc (`modified()`)
-        record_to = record_to.with_context(check_translations=False)
-        record_to[name_field_to] = record_to[name_field_to]
+        # Get existing term translations from record_to
+        stored_to_dict = field_to._get_stored_translations(record_to)
+        new_stored = StoredTranslations(stored_to_dict).translated(self.env, field_to, term_updates, overwrite=False)
+        record_to[name_field_to] = new_stored
 
     @api.model
     def _find_available_name(self, name, used_names):
