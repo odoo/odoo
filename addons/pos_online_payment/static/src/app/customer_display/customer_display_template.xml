@@ -3,7 +3,7 @@
 
     <t t-name="pos_online_payment.CustomerFacingDisplayHead" t-inherit="point_of_sale.CustomerFacingDisplayHead" t-inherit-mode="extension">
         <xpath expr="//div[@class='resources']" position="inside">
-            <link rel="stylesheet" type="text/css" href="/pos_online_payment/static/src/css/customer_facing_display.css" />
+            <link rel="stylesheet" type="text/css" t-att-href="origin + '/pos_online_payment/static/src/css/customer_facing_display.css'" />
         </xpath>
     </t>
 
