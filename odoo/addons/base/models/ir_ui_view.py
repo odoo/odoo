@@ -2594,7 +2594,9 @@ class Model(models.AbstractModel):
                     self._cr.execute(query, (module, view_ref))
                     view_ref_res = self._cr.fetchone()
                     if view_ref_res:
-                        view_id = view_ref_res[0]
+                        view = View.browse(view_ref_res[0])
+                        if view.model == self._name:
+                            view_id = view_ref_res[0]
                 else:
                     _logger.warning(
                         '%r requires a fully-qualified external id (got: %r for model %s). '
