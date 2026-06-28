@@ -57,6 +57,9 @@ class ResCompany(models.Model):
         help="This account will be used on Downpayment invoices.",
         tracking=True,
     )
+    show_sol_numbers = fields.Boolean(
+        string="Line Numbers", help="Display line numbers on Sales Orders."
+    )
 
     sale_invoice_policy = fields.Selection(
         selection=SALE_INVOICE_POLICY, string="Invoicing Policy", default="order", required=True
