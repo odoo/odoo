@@ -1153,9 +1153,9 @@ class SaleOrder(models.Model):
             invoice_grouping_keys = self._get_invoice_grouping_keys()
             invoice_vals_list = sorted(
                 invoice_vals_list,
-                key=lambda x: [
-                    x.get(grouping_key) for grouping_key in invoice_grouping_keys
-                ]
+                key=lambda x: tuple(
+                    (x is None, x)
+                    for x in [x.get(grouping_key) for grouping_key in invoice_grouping_keys])
             )
             for _grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: [x.get(grouping_key) for grouping_key in invoice_grouping_keys]):
                 origins = set()
